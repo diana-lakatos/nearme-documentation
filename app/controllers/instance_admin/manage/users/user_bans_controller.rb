@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::Users::UserBansController < InstanceAdmin::Manage::BaseController
-
   def create
     @user_ban = UserBan.new
     @user_ban.user_id = params[:user_id]
@@ -24,5 +23,4 @@ class InstanceAdmin::Manage::Users::UserBansController < InstanceAdmin::Manage::
   def permitting_controller_class
     'manage'
   end
-
 end

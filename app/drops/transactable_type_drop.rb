@@ -13,8 +13,8 @@ class TransactableTypeDrop < BaseDrop
   # translated_bookable_noun
   #   translated name of this transactable type, based on current language
   delegate :id, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun,
-    :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
-    :search_input_name, :search_field_placeholder, :skip_location?, to: :source
+           :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
+           :search_input_name, :search_field_placeholder, :skip_location?, to: :source
 
   # name for the bookable item this transactable type represents (e.g. desk, room etc.)
   def name
@@ -102,13 +102,13 @@ class TransactableTypeDrop < BaseDrop
   # returns the container class and input size to be used for the search area
   # of the marketplace's homepage
   def calculate_elements
-    sum = 2 #search button
+    sum = 2 # search button
     sum += 4 if search_inputs.include? 'datepickers'
     sum += 2 if search_inputs.include? 'categories'
     sum += 2 if show_transactable_type_picker?
-    input_size = 12 - sum #span12
-    input_size /= 2 if (['geolocation', 'fulltext'] & search_inputs).size == 2 #two input fields
-    container = input_size == 2 ? "span12" : "span10 offset1"
+    input_size = 12 - sum # span12
+    input_size /= 2 if (%w(geolocation fulltext) & search_inputs).size == 2 # two input fields
+    container = input_size == 2 ? 'span12' : 'span10 offset1'
     [container, input_size]
   end
 
@@ -131,7 +131,7 @@ class TransactableTypeDrop < BaseDrop
 
   # returns true if transactable type picker should be shown
   def show_transactable_type_picker?
-    @context["transactable_type_picker"] != false && multiple_transactable_types? && PlatformContext.current.instance.tt_select_type != 'radio'
+    @context['transactable_type_picker'] != false && multiple_transactable_types? && PlatformContext.current.instance.tt_select_type != 'radio'
   end
 
   # array of category objects for this marketplace's service types
@@ -182,5 +182,4 @@ class TransactableTypeDrop < BaseDrop
   def new_data_upload_path
     routes.new_dashboard_company_transactable_type_data_upload_path(@source)
   end
-
 end

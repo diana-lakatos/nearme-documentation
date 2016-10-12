@@ -6,6 +6,6 @@ require 'rake'
 
 DesksnearMe::Application.load_tasks
 
-Rake::Task["db:seed"].enhance do
+Rake::Task['db:seed'].enhance do
   Utils::EnLocalesSeeder.new.go!
 end

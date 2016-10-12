@@ -2,17 +2,15 @@
 ## New user signup
 ##
 class V1::RegistrationsController < V1::BaseController
-
   def create
-
     # This is insecure!?
     @user = User.new(user_params)
 
-    @user.password = user_params["password"]
+    @user.password = user_params['password']
 
     if @user.save
       analytics_apply_user(@user)
-      event_tracker.signed_up(@user, { signed_up_via: 'api', provider: 'native'})
+      event_tracker.signed_up(@user, signed_up_via: 'api', provider: 'native')
       render json: @user
     else
       puts @user.errors.to_json
@@ -20,36 +18,35 @@ class V1::RegistrationsController < V1::BaseController
     end
   end
 
+  #
+  #
 
-  #
-  #
   private
-
 
   # Return user attributes we can update
   def user_params
-    json_params.slice("name", "email", "password")
+    json_params.slice('name', 'email', 'password')
   end
 
   #
   # Result for when registration has failed
-  private
-  def registration_failed_hash(user)
 
+  private
+
+  def registration_failed_hash(user)
     # Result hash
     hash = {
-      message: "Registration Failed",
+      message: 'Registration Failed',
       errors: []
     }
 
-    user.errors.each { |k, v|
+    user.errors.each do |k, v|
       hash[:errors] << {
-          resource: "User",
-          field: k,
-          code: (/already been taken/ =~ v ? "already_exists" : "invalid") }
-    }
+        resource: 'User',
+        field: k,
+        code: (/already been taken/ =~ v ? 'already_exists' : 'invalid') }
+    end
 
     hash
   end
-
 end

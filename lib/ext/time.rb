@@ -1,5 +1,5 @@
 class Time
   def to_minutes
-    self.hour * 60 + self.min
+    hour * 60 + min
   end
 end

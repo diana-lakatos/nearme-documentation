@@ -1,5 +1,4 @@
 class WorkflowStep::ActivityEventsWorkflow::BaseStep < WorkflowStep::BaseStep
-
   attr_reader :summary_data
 
   def initialize(summary_data, user_id)
@@ -25,5 +24,4 @@ class WorkflowStep::ActivityEventsWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @user.present?
   end
-
 end

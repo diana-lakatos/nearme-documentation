@@ -1,5 +1,4 @@
 class ApprovalRequestInitializer
-
   def initialize(object, user)
     @object = object
     @user = user
@@ -21,5 +20,4 @@ class ApprovalRequestInitializer
     end
     @object
   end
-
 end

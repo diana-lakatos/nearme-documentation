@@ -11,10 +11,10 @@ class AuthenticationTest < ActiveSupport::TestCase
     @user = FactoryGirl.build(:user, password: nil, instance_id: Instance.first.id)
     @user.save!(validate: false)
 
-    @valid_params = { :provider => "desksnearme",
-                      :uid      => "123456789",
-                      :token    => "abcd1234",
-                      :user_id  => @user.id }
+    @valid_params = { provider: 'desksnearme',
+                      uid: '123456789',
+                      token: 'abcd1234',
+                      user_id: @user.id }
   end
 
   context '#connections' do
@@ -49,7 +49,7 @@ class AuthenticationTest < ActiveSupport::TestCase
 
   context 'social connection' do
     class Authentication::DesksnearmeProvider < Authentication::BaseProvider
-      def initialize(params)
+      def initialize(_params)
       end
     end
 
@@ -61,29 +61,29 @@ class AuthenticationTest < ActiveSupport::TestCase
 
     should 'have provider for every available provider' do
       Authentication.available_providers.each do |provider|
-        assert_nothing_raised {
+        assert_nothing_raised do
           "Authentication::#{provider.downcase.capitalize}Provider".constantize
-        }
+        end
       end
     end
 
     should 'be created for different user if authentication with the same provider and uid has been removed previously' do
       Authentication.create(@valid_params).destroy
       @valid_params[:user_id] = FactoryGirl.create(:user).id
-      assert_nothing_raised {
+      assert_nothing_raised do
         Authentication.create!(@valid_params)
-      }
+      end
     end
   end
 
-  should "has a hash for info" do
+  should 'has a hash for info' do
     auth = Authentication.create(@valid_params)
-    auth.info["thing"] = "stuff"
-    assert_equal "stuff", auth.info["thing"]
+    auth.info['thing'] = 'stuff'
+    assert_equal 'stuff', auth.info['thing']
   end
 
   context '.with_valid_token' do
-    should "return Authentications with a valid access token" do
+    should 'return Authentications with a valid access token' do
       auth = FactoryGirl.create(:authentication, token_expired: false, token_expires_at: 3.days.from_now)
       auth_expired = FactoryGirl.create(:authentication, token_expires_at: 1.week.ago)
 
@@ -93,26 +93,26 @@ class AuthenticationTest < ActiveSupport::TestCase
   end
 
   context '#can_be_deleted?' do
-    should "not be deleted if user has nil password and he has no other authentications" do
+    should 'not be deleted if user has nil password and he has no other authentications' do
       auth = FactoryGirl.create(:user).authentications.create(@valid_params)
       auth.user.stubs(:has_password?).returns(false)
       refute auth.can_be_deleted?
     end
 
-    should "be deleted if user has not blank password and he has no other authentications" do
+    should 'be deleted if user has not blank password and he has no other authentications' do
       auth = FactoryGirl.create(:user).authentications.create(@valid_params)
       auth.user.stubs(:has_password?).returns(true)
       assert auth.can_be_deleted?
     end
 
-    should "be deleted if user has blank password but he has other authentications" do
+    should 'be deleted if user has blank password but he has other authentications' do
       auth = FactoryGirl.create(:user).authentications.create(@valid_params)
       auth.user.stubs(:has_password?).returns(false)
       auth.user.authentications << Authentication.create
       assert auth.can_be_deleted?
     end
 
-    should "be deleted if user has not blank password and he has other authentications" do
+    should 'be deleted if user has not blank password and he has other authentications' do
       auth = FactoryGirl.create(:user).authentications.create(@valid_params)
       auth.user.stubs(:has_password?).returns(true)
       auth.user.authentications << Authentication.create

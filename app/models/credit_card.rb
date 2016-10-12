@@ -18,15 +18,14 @@ class CreditCard < ActiveRecord::Base
   before_create :set_mode
   before_create :store!
   # we do not want to do this
-  #before_destroy :delete!
+  # before_destroy :delete!
 
-  scope :default, lambda { where(default_card: true).limit(1) }
+  scope :default, -> { where(default_card: true).limit(1) }
 
   validate :validate_card
   validates :instance_client, presence: true
 
   delegate :expires_at, :last_4, :name, to: :decorator, allow_nil: true
-
 
   [:number, :verification_value, :month, :year, :first_name, :last_name].each do |accessor|
     define_method("#{accessor}=") do |attribute|
@@ -40,9 +39,7 @@ class CreditCard < ActiveRecord::Base
   end
 
   def customer_id
-    if credit_card_token.blank?
-      instance_client.customer_id
-    end
+    instance_client.customer_id if credit_card_token.blank?
   end
 
   def store!
@@ -53,9 +50,9 @@ class CreditCard < ActiveRecord::Base
     self.response = original_response.to_yaml
 
     if success?
-      if self.instance_client.response.blank?
-        self.instance_client.response ||= self.response
-        self.instance_client.save!
+      if instance_client.response.blank?
+        instance_client.response ||= response
+        instance_client.save!
       end
       true
     else
@@ -133,8 +130,8 @@ class CreditCard < ActiveRecord::Base
 
     unless active_merchant_card.valid?
       errors.add(:base, I18n.t('buy_sell_market.checkout.invalid_cc'))
-      active_merchant_card.errors.each do |key,value|
-        if value.kind_of?(Array)
+      active_merchant_card.errors.each do |key, value|
+        if value.is_a?(Array)
           errors.add(key, value.flatten.first)
         else
           errors.add(key, value)
@@ -153,7 +150,7 @@ class CreditCard < ActiveRecord::Base
   def set_instance_client
     self.instance_client ||= payment_gateway.instance_clients.where(
       client: client,  test_mode: test_mode?).first_or_initialize(
-      client: client,  test_mode: test_mode?)
+        client: client,  test_mode: test_mode?)
     true
   end
 
@@ -162,4 +159,3 @@ class CreditCard < ActiveRecord::Base
     true
   end
 end
-

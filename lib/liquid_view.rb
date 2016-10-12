@@ -5,7 +5,7 @@
 #
 #   ActionView::Base::register_template_handler :liquid, LiquidView
 class LiquidView
-  LIQUID_ERROR = "Liquid Error"
+  LIQUID_ERROR = 'Liquid Error'
   PROTECTED_ASSIGNS = %w( template_root response _session template_class action_name request_origin session template
                           _response url _request _cookies variables_added _flash params _headers request cookies
                           ignore_missing_templates flash _params logger before_filter_chain_aborted headers )
@@ -37,9 +37,9 @@ class LiquidView
   end
 
   def render(source, local_assigns = {})
-    @view.controller.headers["Content-Type"] ||= 'text/html; charset=utf-8' if @view.controller.respond_to?(:headers)
+    @view.controller.headers['Content-Type'] ||= 'text/html; charset=utf-8' if @view.controller.respond_to?(:headers)
 
-    assigns = @view.assigns.reject{ |k,v| PROTECTED_ASSIGNS.include?(k) }
+    assigns = @view.assigns.reject { |k, _v| PROTECTED_ASSIGNS.include?(k) }
 
     assigns['platform_context'] = PlatformContext.current.decorate
     assigns['current_year'] = Date.current.year
@@ -60,10 +60,10 @@ class LiquidView
       end
     end
 
-    if content_for_layout = @view.instance_variable_get("@content_for_layout")
+    if content_for_layout = @view.instance_variable_get('@content_for_layout')
       assigns['content_for_layout'] = content_for_layout
     elsif @view.content_for?(:layout)
-      assigns["content_for_layout"] = @view.content_for(:layout)
+      assigns['content_for_layout'] = @view.content_for(:layout)
     end
     assigns.merge!(local_assigns.stringify_keys)
 
@@ -82,7 +82,7 @@ class LiquidView
     filters = filters_from_controller(controller) + [LiquidFilters]
 
     render_method = (::Rails.env.development? || ::Rails.env.test?) ? :render! : :render
-    liquid.send(render_method, assigns, :filters => filters, :registers => {:action_view => @view, :controller => @view.controller}).html_safe
+    liquid.send(render_method, assigns, filters: filters, registers: { action_view: @view, controller: @view.controller }).html_safe
   end
 
   def compilable?

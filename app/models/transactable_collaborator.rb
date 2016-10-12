@@ -7,12 +7,12 @@ class TransactableCollaborator < ActiveRecord::Base
   attr_accessor :actor
 
   counter_culture :user,
-    column_name: ->(p) { p.approved? ? 'transactable_collaborators_count' : nil },
-    column_names: { ["transactable_collaborators.approved_by_owner_at IS NOT NULL AND transactable_collaborators.approved_by_user_at IS NOT NULL AND transactable_collaborators.deleted_at IS NULL"] => 'transactable_collaborators_count' }
+                  column_name: ->(p) { p.approved? ? 'transactable_collaborators_count' : nil },
+                  column_names: { ['transactable_collaborators.approved_by_owner_at IS NOT NULL AND transactable_collaborators.approved_by_user_at IS NOT NULL AND transactable_collaborators.deleted_at IS NULL'] => 'transactable_collaborators_count' }
 
   belongs_to :transactable
 
-  validates :user, presence: { message: I18n.t(:not_exist)}
+  validates :user, presence: { message: I18n.t(:not_exist) }
   validates_uniqueness_of :user, scope: :transactable_id
 
   validates :transactable, presence: true
@@ -24,7 +24,6 @@ class TransactableCollaborator < ActiveRecord::Base
   after_create :trigger_workflow_alert_on_create!
   after_update :trigger_workflow_alert_on_update!
   before_destroy :trigger_workflow_alert_on_destroy!
-
 
   def name
     @name ||= user.try(:name)
@@ -38,13 +37,12 @@ class TransactableCollaborator < ActiveRecord::Base
     approved_by_owner_at.present? && approved_by_user_at.present?
   end
 
-  def approved=(approve=nil)
-    self.update_attribute(:approved_by_owner_at, Time.zone.now) if approve.present?
+  def approved=(approve = nil)
+    update_attribute(:approved_by_owner_at, Time.zone.now) if approve.present?
   end
 
   def approve_by_owner!
     touch(:approved_by_owner_at)
-
   end
 
   def approve_by_user!
@@ -78,28 +76,40 @@ class TransactableCollaborator < ActiveRecord::Base
 
   def trigger_workflow_alert_on_create!
     if approved_by_owner?
-      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorAddedByTransactableOwner, self.id)
+      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorAddedByTransactableOwner, id)
     elsif approved_by_user?
-      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorPendingApproval, self.id)
+      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorPendingApproval, id)
     end
   end
 
   def trigger_workflow_alert_on_update!
+<<<<<<< HEAD
     if approved_by_owner_at_changed? || rejected_by_owner_at_changed?
       if approved_by_owner?
         WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorApproved, self.id)
       else
         WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, self.transactable_id, self.user_id)
       end
+=======
+    if approved_by_owner_at_changed?
+      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorApproved, id)
+>>>>>>> staging
     end
   end
 
   def trigger_workflow_alert_on_destroy!
     if actor == transactable.creator
-      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, self.transactable_id, self.user_id)
+      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, transactable_id, user_id)
     elsif actor == user
-      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, self.transactable_id, self.user_id)
+      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, transactable_id, user_id)
     end
   end
 
+  def message_context_object
+    self
+  end
+
+  def user_message_recipient
+    user
+  end
 end

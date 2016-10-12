@@ -1,5 +1,4 @@
 class UsersWithUnreadMessagesFinder
-
   def find
     # We tie each user_message to its thread owner and to its thread recipient
     # We then keep only messages for which the author is different from its tied user (i.e. the tied user is the recipient)
@@ -17,6 +16,4 @@ class UsersWithUnreadMessagesFinder
       .where('um.created_at < ?', Time.now - 24.hours)
       .where('um.thread_owner_id != um.thread_recipient_id')
   end
-
 end
-

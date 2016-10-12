@@ -1,11 +1,10 @@
 class Utils::DefaultAlertsCreator::WorkflowCreator
-
   def initialize
     @steps = {}
   end
 
   def create_all!
-    raise NotImplemplementedError
+    fail NotImplemplementedError
   end
 
   protected
@@ -25,7 +24,7 @@ class Utils::DefaultAlertsCreator::WorkflowCreator
   end
 
   def workflow
-    if !@workflow
+    unless @workflow
       @workflow ||= Workflow.find_or_initialize_by(workflow_type: workflow_type)
       @workflow.name = workflow_type.humanize
       @workflow.save!
@@ -34,7 +33,7 @@ class Utils::DefaultAlertsCreator::WorkflowCreator
   end
 
   def step(associated_class)
-    if !@steps[associated_class]
+    unless @steps[associated_class]
       step = workflow.workflow_steps.find_or_initialize_by(associated_class: associated_class)
       step.associated_class = associated_class
       step.name ||= associated_class.demodulize.gsub(/(?<=[a-z])(?=[A-Z])/, ' ')
@@ -43,6 +42,4 @@ class Utils::DefaultAlertsCreator::WorkflowCreator
     end
     @steps[associated_class]
   end
-
 end
-

@@ -21,5 +21,4 @@ class PriceRange < Struct.new(:min, :max)
   def include_cents?(cents = 0)
     (min_cents..max_cents).cover?(cents)
   end
-
 end

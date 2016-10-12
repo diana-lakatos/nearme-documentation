@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class TransactableTypeTest < ActiveSupport::TestCase
-
   context '#destroying translations' do
-
     setup do
       @transactable_type = FactoryGirl.create(:transactable_type, name: 'My custom tt')
       @select_attribute = FactoryGirl.create(:custom_attribute, target: @transactable_type, name: 'some_attr', attribute_type: 'string', valid_values: %w(red green blue), html_tag: 'select', prompt: 'my prompt')
@@ -34,6 +32,5 @@ class TransactableTypeTest < ActiveSupport::TestCase
       assert t2.reload.present?
       assert t3.reload.present?
     end
-
   end
 end

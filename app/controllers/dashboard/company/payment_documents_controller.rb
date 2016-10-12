@@ -5,11 +5,11 @@ class Dashboard::Company::PaymentDocumentsController < Dashboard::Company::BaseC
     recurring_bookings_ids = @company.recurring_bookings.pluck(:id)
     purchases_ids = @company.purchases.pluck(:id)
     @files_sent_to_me = Attachable::PaymentDocument
-      .where("(attachable_id IN (?) AND attachable_type = 'Order') OR
+                        .where("(attachable_id IN (?) AND attachable_type = 'Order') OR
        (attachable_id IN (?) AND attachable_type = 'Reservation') OR
        (attachable_id IN (?) AND attachable_type = 'RecurringBooking') OR
        (attachable_id IN (?) AND attachable_type = 'Purchase')", order_ids, reservation_ids, recurring_bookings_ids, purchases_ids)
-      .paginate(page: params[:page])
+                        .paginate(page: params[:page])
   end
 
   def uploaded_by_me

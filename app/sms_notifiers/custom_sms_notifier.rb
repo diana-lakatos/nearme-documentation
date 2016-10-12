@@ -1,5 +1,4 @@
 class CustomSmsNotifier < InstanceSmsNotifier
-
   def custom_sms(step, workflow_alert_id)
     @step = step
     @workflow_alert = WorkflowAlert.find(workflow_alert_id)
@@ -48,6 +47,4 @@ class CustomSmsNotifier < InstanceSmsNotifier
       users.find { |ia| ia.user.accepts_sms? }.try(:user)
     end
   end
-
 end
-

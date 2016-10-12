@@ -1,5 +1,4 @@
 class UserDrop < BaseDrop
-
   include ActionView::Helpers::AssetUrlHelper
   include CategoriesHelper
   include ClickToCallButtonHelper
@@ -148,7 +147,7 @@ class UserDrop < BaseDrop
 
   # url to the app wizard for adding a new listing to the system
   def space_wizard_list_path
-    routes.new_user_session_path(:return_to => routes.space_wizard_list_path)
+    routes.new_user_session_path(return_to: routes.space_wizard_list_path)
   end
 
   # url to the app wizard for adding a new listing to the system, with tracking
@@ -174,7 +173,7 @@ class UserDrop < BaseDrop
   end
 
   # url to the section in the app for editing a user's profile
-  def edit_user_registration_url(with_token = false)
+  def edit_user_registration_url(_with_token = false)
     routes.edit_user_registration_path(token_key => @source.try(:temporary_token))
   end
 
@@ -190,7 +189,7 @@ class UserDrop < BaseDrop
 
   # url to reset password
   def reset_password_url
-    routes.edit_user_password_url(:reset_password_token => @source.try(:reset_password_token))
+    routes.edit_user_password_url(reset_password_token: @source.try(:reset_password_token))
   end
 
   # url to a user's public profile
@@ -251,7 +250,7 @@ class UserDrop < BaseDrop
 
   # url for verifying (confirming) a user's email
   def verify_user_url
-    routes.verify_user_path(@source.id, @source.email_verification_token, :track_email_event => true)
+    routes.verify_user_path(@source.id, @source.email_verification_token, track_email_event: true)
   end
 
   # url for verifying (confirming) a user's email
@@ -349,7 +348,7 @@ class UserDrop < BaseDrop
     build_categories_to_array(@source.buyer_profile.categories) if @source.buyer_profile
   end
 
-    # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => [array with children] } }
+  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => [array with children] } }
   def formatted_seller_categories
     build_categories_to_array(@source.seller_profile.categories) if @source.seller_profile
   end
@@ -468,18 +467,18 @@ class UserDrop < BaseDrop
   end
 
   def pending_transactables_for_current_user
-    Transactable.where(creator_id: @context['current_user'].id).with_state(:pending).
-    joins("LEFT Outer JOIN transactable_collaborators tc on
+    Transactable.where(creator_id: @context['current_user'].id).with_state(:pending)
+      .joins("LEFT Outer JOIN transactable_collaborators tc on
       tc.transactable_id = transactables.id and tc.user_id = #{@source.id} and
       tc.deleted_at is NULL")
   end
 
   def pending_transactables
-    pending_transactables_for_current_user.where("tc.id is NULL")
+    pending_transactables_for_current_user.where('tc.id is NULL')
   end
 
   def pending_collaborated_transactables
-    pending_transactables_for_current_user.where("tc.id is NOT NULL")
+    pending_transactables_for_current_user.where('tc.id is NOT NULL')
   end
 
   def has_company?
@@ -505,7 +504,7 @@ class UserDrop < BaseDrop
 
   # has inappropriate report for user
   def inappropriate_report_path
-    routes.inappropriate_report_path(id: @source.id, reportable_type: "User")
+    routes.inappropriate_report_path(id: @source.id, reportable_type: 'User')
   end
 
   # total count of unread messages in user inbox
@@ -538,5 +537,4 @@ class UserDrop < BaseDrop
   def social_connections
     @social_connections_cache ||= @source.social_connections
   end
-
 end

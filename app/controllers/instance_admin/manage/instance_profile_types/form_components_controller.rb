@@ -12,12 +12,11 @@ class InstanceAdmin::Manage::InstanceProfileTypes::FormComponentsController < In
                  when InstanceProfileType::BUYER
                    FormComponent::BUYER_PROFILE_TYPES
                  else
-                   raise NotImplementedError.new("Unknown profile_type: #{find_form_componentable.profile_type}")
+                   fail NotImplementedError.new("Unknown profile_type: #{find_form_componentable.profile_type}")
                  end
   end
 
   def resource_class
     InstanceProfileType
   end
-
 end

@@ -5,13 +5,13 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
     @transactable_type = transactable_type
     @params = params
     set_options_for_filters
-    @filters = {date_range: search.available_dates}
+    @filters = { date_range: search.available_dates }
     locations = {}
 
-    fetcher.each{|f|
+    fetcher.each do|f|
       locations[f.fields.location_id.first] ||= []
       locations[f.fields.location_id.first] << f.id
-    }
+    end
 
     location_ids = locations.keys
 
@@ -28,9 +28,9 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
       filtered_listings = Transactable.where(id: locations.values.flatten)
     end
     @search_results_count = fetcher.response[:aggregations]['filtered_aggregations']['distinct_locations'][:value]
-    @results = ::Location.includes(:location_address, :company, listings: [:transactable_type]).
-      where(id: location_ids).order_by_array_of_ids(order_ids).
-      merge(filtered_listings)
+    @results = ::Location.includes(:location_address, :company, listings: [:transactable_type])
+               .where(id: location_ids).order_by_array_of_ids(order_ids)
+               .merge(filtered_listings)
   end
 
   def per_page_elastic
@@ -41,14 +41,14 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
 
   def max_price
     return 0 if !@transactable_type.show_price_slider || results.blank?
-    max = fetcher.response[:aggregations]["filtered_aggregations"]["maximum_price"].try(:[],'value') || 0
+    max = fetcher.response[:aggregations]['filtered_aggregations']['maximum_price'].try(:[], 'value') || 0
     max / 100
   end
 
   def filters
     search_filters = {}
     search_filters[:location_type_filter] = search.location_types_ids if search.location_types_ids && !search.location_types_ids.empty?
-    search_filters[:listing_pricing_filter] = search.lgpricing_filters if not search.lgpricing_filters.empty?
+    search_filters[:listing_pricing_filter] = search.lgpricing_filters unless search.lgpricing_filters.empty?
     search_filters[:custom_attributes] = @params[:lg_custom_attributes] unless @params[:lg_custom_attributes].blank?
     search_filters
   end
@@ -58,5 +58,4 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
   def initialize_search_params
     { instance_id: PlatformContext.current.instance.id, transactable_type_id: @transactable_type.id }
   end
-
 end

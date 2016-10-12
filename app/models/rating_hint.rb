@@ -6,7 +6,7 @@ class RatingHint < ActiveRecord::Base
 
   belongs_to :rating_system
   belongs_to :instance
-  
+
   default_scope { order('value DESC') }
 
   def description_or_value

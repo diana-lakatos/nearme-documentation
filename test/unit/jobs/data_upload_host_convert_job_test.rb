@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class DataUploadHostConvertJobTest < ActiveSupport::TestCase
-
   setup do
     FactoryGirl.create(:data_upload)
   end

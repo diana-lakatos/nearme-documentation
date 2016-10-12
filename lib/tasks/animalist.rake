@@ -10,9 +10,7 @@ namespace :animalist do
 end
 
 class AnimalistRakeHelper
-
   class << self
-
     def go!
       InstanceView.where(instance_id: PlatformContext.current.instance.id, path: 'tag_page_content', handler: 'liquid', format: 'html', partial: true, view_type: 'view').destroy_all
       InstanceView.where(instance_id: PlatformContext.current.instance.id, path: 'tag_page_content', handler: 'liquid', format: 'html', partial: true, view_type: 'view').create! do |iv|
@@ -28,16 +26,14 @@ class AnimalistRakeHelper
     end
 
     def parse_episodes!(page_number = 1)
-
       url = "http://api.ddn.io/v1/episodes/#{page_number}?domain=animalist.com"
       uri = URI(url)
       response = JSON.parse(Net::HTTP.get(uri))
 
       puts "Parsing episodes for page: #{page_number}"
 
-      response["data"].each do |data|
-
-        page_slug = data["path"].split('/')[1]
+      response['data'].each do |data|
+        page_slug = data['path'].split('/')[1]
         page = Page.where(slug: page_slug, theme_id: PlatformContext.current.theme.id).first_or_initialize(path: page_slug.humanize)
         page.content = "{% include 'show_page_content.html' %}"
         page.css_content = ''
@@ -47,20 +43,20 @@ class AnimalistRakeHelper
 
         data_source = page.data_sources.where(type: 'DataSource::CustomSource', label: page_slug).first_or_create! do |ds|
           puts "\t\tneeded :)"
-          ds.settings = { endpoint: "http://api.ddn.io/v1#{data["path"]}?domain=animalist.com" }
+          ds.settings = { endpoint: "http://api.ddn.io/v1#{data['path']}?domain=animalist.com" }
         end
 
-        puts "\t\tAssociating data source with label: #{data["path"]}"
-        data_source_content = data_source.data_source_contents.where(external_id: data["id"]).first_or_create! do |dsc|
-          puts "\t\t\tNew data source content #{data["id"]}"
-          dsc.external_id = data["id"]
-          dsc.externally_created_at = data["publishTime"].to_time
-          uri = URI("http://api.ddn.io/v1#{data["path"]}?domain=animalist.com")
+        puts "\t\tAssociating data source with label: #{data['path']}"
+        data_source_content = data_source.data_source_contents.where(external_id: data['id']).first_or_create! do |dsc|
+          puts "\t\t\tNew data source content #{data['id']}"
+          dsc.external_id = data['id']
+          dsc.externally_created_at = data['publishTime'].to_time
+          uri = URI("http://api.ddn.io/v1#{data['path']}?domain=animalist.com")
           dsc.json_content =  JSON.parse(Net::HTTP.get(uri))
         end
 
         page.page_data_source_content.where(data_source_content: data_source_content, slug: page_slug).first_or_create!
-        page.page_data_source_content.where(data_source_content: data_source_content, slug: data["path"][1..-1]).first_or_create!
+        page.page_data_source_content.where(data_source_content: data_source_content, slug: data['path'][1..-1]).first_or_create!
         data_source_content.json_content['data']['tags']['data'].each do |tag|
           tag_page = Page.where(slug: tag['slug'], theme_id: PlatformContext.current.theme.id).first_or_initialize(path: tag['name'])
           tag_page.content = "{% include 'tag_page_content.html' %}"
@@ -69,13 +65,11 @@ class AnimalistRakeHelper
           tag_page.page_data_source_content.where(data_source_content: data_source_content, slug: tag['slug']).first_or_create!
         end
       end
-      if response["data"].any?
-        parse_episodes!(page_number + 1)
-      end
+      parse_episodes!(page_number + 1) if response['data'].any?
     end
 
     def page_content
-      %Q{
+      %{
 
 {% assign cache_key = "page" | append: params.page | append: "slug" | append: params.slug | append: "slug2" | append: params.slug2 | append: data_source_last_update  %}
 {% cache_for @cache_key %}
@@ -130,11 +124,10 @@ class AnimalistRakeHelper
   {% endif %}
 {% endcache_for %}
       }
-
     end
 
     def page_css
-      %Q{
+      %{
       body {
 background-color: #f4f4f4;
     color: #222;
@@ -270,11 +263,10 @@ ol, ul {
 
 
       }
-
     end
 
     def tag_page_content
-      %Q{
+      %{
 
 {% assign cache_key = "page" | append: params.page | append: "slug" | append: params.slug | append: data_source_last_update  %}
 {% cache_for cache_key %}
@@ -303,8 +295,6 @@ ol, ul {
 {% endcache_for %}
 
       }
-
     end
   end
 end
-

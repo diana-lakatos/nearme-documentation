@@ -1,7 +1,6 @@
 require 'sanitize'
 
 class CustomSanitizer
-
   def initialize(config = {})
     @config = Sanitize::Config.merge(Sanitize::Config::BASIC, config)
   end
@@ -13,5 +12,4 @@ class CustomSanitizer
   def strip_tags(html)
     Sanitize.fragment(html)
   end
-
 end

@@ -1,5 +1,4 @@
 class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def self.belongs_to_transactable_type?
     true
   end
@@ -39,5 +38,4 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @transactable.present?
   end
-
 end

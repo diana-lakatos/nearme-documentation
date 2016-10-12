@@ -8,7 +8,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
     SitemapService.stubs(:update_on_search_engines).returns(nil)
   end
 
-  context ".content_for" do
+  context '.content_for' do
     should 'use first #uploaded_sitemap' do
       @domain.uploaded_sitemap = fixture_file_upload('sitemap.xml')
       @domain.save
@@ -36,29 +36,29 @@ class SitemapServiceTest < ActiveSupport::TestCase
     end
   end
 
-  context "Generator" do
-    should "respond_to class attributes" do
+  context 'Generator' do
+    should 'respond_to class attributes' do
       assert SitemapService::Generator.respond_to?(:nodes)
       assert SitemapService::Generator.respond_to?(:xml)
     end
 
-    context "#initialize" do
+    context '#initialize' do
       setup do
         SitemapService::Generator.new(PlatformContext.current.instance)
         @xml = SitemapService::Generator.xml
       end
 
-      should "populate @@xml" do
+      should 'populate @@xml' do
         assert_not_nil @xml
         assert_equal Nokogiri::XML::Document, @xml.class
       end
 
-      should "contain nodes for each record" do
+      should 'contain nodes for each record' do
         # One for each record, and one for root path
-        assert_node_count(@xml, "urlset url", 3)
+        assert_node_count(@xml, 'urlset url', 3)
       end
 
-      should "contain comment marks for each class" do
+      should 'contain comment marks for each class' do
         # Opening and closing comment tags
         klasses = SitemapService::Node.descendants - [SitemapService::Node::FakeNode]
         klasses.each do |node_child_klass|
@@ -68,7 +68,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
       end
     end
 
-    should ".for_domain" do
+    should '.for_domain' do
       domain2 = create(:domain, target_id: PlatformContext.current.instance.id)
 
       xml1 = SitemapService::Generator.for_domain(@domain)
@@ -79,113 +79,113 @@ class SitemapServiceTest < ActiveSupport::TestCase
     end
   end
 
-  context "Node" do
-    context "Base" do
+  context 'Node' do
+    context 'Base' do
       setup do
         @timestamp = DateTime.now
         @object = OpenStruct.new(updated_at: @timestamp)
         @node = SitemapService::Node.new(@domain.url, @object)
       end
 
-      should "be able to access instance methods" do
+      should 'be able to access instance methods' do
         assert_raise SitemapService::InvalidLocationError do
           @node.location
         end
 
         assert_equal @timestamp.iso8601, @node.lastmod
-        assert_equal "weekly", @node.changefreq
-        assert_equal "0.5", @node.priority
+        assert_equal 'weekly', @node.changefreq
+        assert_equal '0.5', @node.priority
         assert_nil @node.image
       end
 
-      should "#to_xml" do
+      should '#to_xml' do
         node = SitemapService::Node::FakeNode.new(@domain.url, @object)
         xml = Nokogiri::XML(node.to_xml)
 
-        assert_node_content xml, "url loc", @domain.url + node.location
-        assert_node_content xml, "url lastmod", node.lastmod
-        assert_node_content xml, "url changefreq", node.changefreq
-        assert_node_content xml, "url priority", node.priority
+        assert_node_content xml, 'url loc', @domain.url + node.location
+        assert_node_content xml, 'url lastmod', node.lastmod
+        assert_node_content xml, 'url changefreq', node.changefreq
+        assert_node_content xml, 'url priority', node.priority
         assert_includes xml.content, node.image
       end
     end
 
-    context "StaticNode" do
+    context 'StaticNode' do
       setup do
-        @static_node = SitemapService::Node::StaticNode.new(@domain.url, "/")
+        @static_node = SitemapService::Node::StaticNode.new(@domain.url, '/')
       end
 
-      should "#location" do
-        assert_equal "/", @static_node.location
+      should '#location' do
+        assert_equal '/', @static_node.location
       end
 
-      should "#lastmod" do
+      should '#lastmod' do
         assert_nil @static_node.lastmod
       end
 
-      should "#changefreq" do
-        assert_equal "monthly", @static_node.changefreq
+      should '#changefreq' do
+        assert_equal 'monthly', @static_node.changefreq
       end
 
-      should "#priority" do
-        assert_equal "0.5", @static_node.priority
+      should '#priority' do
+        assert_equal '0.5', @static_node.priority
       end
     end
 
-    context "PageNode" do
+    context 'PageNode' do
       setup do
         @page_node = SitemapService::Node::PageNode.new(@domain.url, @page)
       end
 
-      should "#location" do
+      should '#location' do
         assert_equal url_helpers.pages_path(@page), @page_node.location
       end
 
-      should "#lastmod" do
+      should '#lastmod' do
         assert_equal @page.updated_at.iso8601, @page_node.lastmod
       end
 
-      should "#changefreq" do
-        assert_equal "weekly", @page_node.changefreq
+      should '#changefreq' do
+        assert_equal 'weekly', @page_node.changefreq
       end
 
-      should "#priority" do
-        assert_equal "0.5", @page_node.priority
+      should '#priority' do
+        assert_equal '0.5', @page_node.priority
       end
     end
 
-    context "TransactableNode" do
+    context 'TransactableNode' do
       setup do
         @transactable_node = SitemapService::Node::TransactableNode.new(@domain.url, @transactable)
       end
 
-      should "#location" do
+      should '#location' do
         assert_equal @transactable.decorate.show_path, @transactable_node.location
       end
 
-      should "#lastmod" do
+      should '#lastmod' do
         assert_equal @transactable.updated_at.iso8601, @transactable_node.lastmod
       end
 
-      should "#changefreq" do
-        assert_equal "daily", @transactable_node.changefreq
+      should '#changefreq' do
+        assert_equal 'daily', @transactable_node.changefreq
       end
 
-      should "#priority" do
-        assert_equal "0.5", @transactable_node.priority
+      should '#priority' do
+        assert_equal '0.5', @transactable_node.priority
       end
     end
   end
 
-  context "Callbacks" do
-    should "after_create #create_sitemap_node" do
+  context 'Callbacks' do
+    should 'after_create #create_sitemap_node' do
       5.times do
         create(:page)
         assert_nodes_between_comment(@domain, SitemapService::Node::PageNode.comment_mark, Page.count)
       end
     end
 
-    should "after_update #update_sitemap_node" do
+    should 'after_update #update_sitemap_node' do
       5.times do
         create(:page)
         assert_nodes_between_comment(@domain, SitemapService::Node::PageNode.comment_mark, Page.count)
@@ -196,20 +196,20 @@ class SitemapServiceTest < ActiveSupport::TestCase
       old_slug = page.slug
       old_path = url_helpers.pages_path(page.slug)
 
-      assert_node_content Nokogiri::XML(@domain.sitemap), "url loc", old_path
+      assert_node_content Nokogiri::XML(@domain.sitemap), 'url loc', old_path
 
-      page.slug = "another-path"
+      page.slug = 'another-path'
       page.save
 
       assert_not_equal old_slug, page.slug
 
       new_path = url_helpers.pages_path(page.slug)
 
-      assert_node_content Nokogiri::XML(@domain.sitemap), "url loc", new_path
-      assert_node_absence Nokogiri::XML(@domain.sitemap), "url loc", old_path
+      assert_node_content Nokogiri::XML(@domain.sitemap), 'url loc', new_path
+      assert_node_absence Nokogiri::XML(@domain.sitemap), 'url loc', old_path
     end
 
-    should "after_destroy #destroy_sitemap_node" do
+    should 'after_destroy #destroy_sitemap_node' do
       pages = []
       amount = 5
 
@@ -222,8 +222,8 @@ class SitemapServiceTest < ActiveSupport::TestCase
         # One node for the transactable, one for a product and another for root.
         amount = 2 + (Page.count - 1)
         page.destroy
-        assert_node_count Nokogiri::XML(@domain.reload.sitemap), "url loc", amount
-        assert_node_absence Nokogiri::XML(@domain.reload.sitemap), "url loc", page.slug
+        assert_node_count Nokogiri::XML(@domain.reload.sitemap), 'url loc', amount
+        assert_node_absence Nokogiri::XML(@domain.reload.sitemap), 'url loc', page.slug
       end
     end
   end
@@ -247,7 +247,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
     count = 0
     loop do
       break if current_node.comment?
-      count = count + 1 if current_node.element?
+      count += 1 if current_node.element?
       current_node = current_node.next_sibling
     end
     assert_equal expected_count, count
@@ -259,15 +259,15 @@ class SitemapServiceTest < ActiveSupport::TestCase
 
   class SitemapService::Node::FakeNode < SitemapService::Node
     def location
-      "/test/"
+      '/test/'
     end
 
     def image
-      "image.png"
+      'image.png'
     end
 
     def self.comment_mark
-      "fake"
+      'fake'
     end
   end
 end

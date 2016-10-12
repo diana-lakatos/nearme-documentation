@@ -2,7 +2,7 @@ class Admin::BaseController < ApplicationController
   before_filter :authenticate_user!
   before_filter :require_administrator
   before_filter :set_platform_context
-  before_filter :check_if_locked, only: [:new, :create, :edit, :update, :destroy], if: lambda { PlatformContext.current.present? }
+  before_filter :check_if_locked, only: [:new, :create, :edit, :update, :destroy], if: -> { PlatformContext.current.present? }
   skip_before_filter :redirect_if_marketplace_password_protected
 
   layout 'admin'
@@ -31,8 +31,5 @@ class Admin::BaseController < ApplicationController
     else
       PlatformContext.clear_current
     end
-
   end
-
 end
-

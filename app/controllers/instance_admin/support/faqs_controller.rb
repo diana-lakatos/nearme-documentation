@@ -1,7 +1,7 @@
 class InstanceAdmin::Support::FaqsController < InstanceAdmin::Manage::BaseController
   skip_before_filter :check_if_locked
   inherit_resources
-  defaults :resource_class => ::Support::Faq
+  defaults resource_class: ::Support::Faq
 
   def index
     @faqs = ::Support::Faq.all.rank(:position)
@@ -15,7 +15,7 @@ class InstanceAdmin::Support::FaqsController < InstanceAdmin::Manage::BaseContro
         redirect_to action: 'index'
       end
       format.json do
-        render :nothing => true
+        render nothing: true
       end
     end
   end
@@ -28,7 +28,7 @@ class InstanceAdmin::Support::FaqsController < InstanceAdmin::Manage::BaseContro
         redirect_to action: 'index'
       end
       format.json do
-        render :nothing => true
+        render nothing: true
       end
     end
   end

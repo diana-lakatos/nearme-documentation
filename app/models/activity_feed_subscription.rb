@@ -5,7 +5,7 @@ class ActivityFeedSubscription < ActiveRecord::Base
   belongs_to :followed, polymorphic: true, counter_cache: :followers_count
   belongs_to :follower, class_name: 'User', counter_cache: :following_count
 
-  scope :find_subscription, ->(follower, followed) {
+  scope :find_subscription, lambda { |follower, followed|
     where(follower: follower, followed: followed)
   }
 
@@ -29,19 +29,17 @@ class ActivityFeedSubscription < ActiveRecord::Base
 
   after_commit :destroy_events_related_to_this_subscription, on: :destroy
   def destroy_events_related_to_this_subscription
-    ActivityFeedEvent.where(event_source_id: self.id_was, event_source_type: "ActivityFeedSubscription").destroy_all
+    ActivityFeedEvent.where(event_source_id: id_was, event_source_type: 'ActivityFeedSubscription').destroy_all
   end
 
   def trigger_workflow_alert_for_new_follow
-    klass = case self.followed_type
-    when "Transactable"
+    klass = case followed_type
+    when 'Transactable'
       WorkflowStep::FollowerWorkflow::UserFollowedTransactable
     when 'User'
       WorkflowStep::FollowerWorkflow::UserFollowedUser
     end
-    WorkflowStepJob.perform(klass, self.id) if klass.present?
+    WorkflowStepJob.perform(klass, id) if klass.present?
     true
   end
-
 end
-

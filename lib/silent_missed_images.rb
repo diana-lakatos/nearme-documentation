@@ -10,5 +10,4 @@ class SilentMissedImages
       @app.call(env)
     end
   end
-
 end

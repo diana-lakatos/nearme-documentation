@@ -1,9 +1,7 @@
 require 'test_helper'
 class ApiCallerTest < ActiveSupport::TestCase
-
   module DummyWorkflow
     class DummyStep < WorkflowStep::BaseStep
-
       def initialize(dummy_arg)
         @dummy_arg = dummy_arg
       end
@@ -15,7 +13,6 @@ class ApiCallerTest < ActiveSupport::TestCase
       def should_be_processed?
         true
       end
-
     end
   end
 
@@ -31,8 +28,8 @@ class ApiCallerTest < ActiveSupport::TestCase
     setup do
       @arg = stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!', id: 5)))
       @step = DummyWorkflow::DummyStep.new(@arg)
-      stub_request(:put, "http://example.com/?special_arg=5").with(:body => "{\"name\":\"dummy name!\"}",
-         :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Custom-Header'=>'dummy name!', 'Host'=>'example.com', 'User-Agent'=>'Ruby'})
+      stub_request(:put, 'http://example.com/?special_arg=5').with(body: "{\"name\":\"dummy name!\"}",
+                                                                   headers: { 'Accept' => '*/*', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Custom-Header' => 'dummy name!', 'Host' => 'example.com', 'User-Agent' => 'Ruby' })
       WorkflowAlert.stubs(:find).returns(stub(default_hash))
     end
 
@@ -43,7 +40,7 @@ class ApiCallerTest < ActiveSupport::TestCase
     should 'properly store error' do
       Net::HTTP::Put.expects(:new).raises(StandardError.new('Epic fail'))
       Rails.application.config.marketplace_error_logger.class.any_instance.stubs(:log_issue).with do |error_type, msg|
-        error_type == MarketplaceErrorLogger::BaseLogger::API_CALL_ERROR && msg.include?("DummyWorkflow::DummyStep") && msg.include?("http://example.com/?special_arg=5") && msg.include?("Epic fail")
+        error_type == MarketplaceErrorLogger::BaseLogger::API_CALL_ERROR && msg.include?('DummyWorkflow::DummyStep') && msg.include?('http://example.com/?special_arg=5') && msg.include?('Epic fail')
       end
       ApiCaller.call(@step, 1)
     end
@@ -53,8 +50,8 @@ class ApiCallerTest < ActiveSupport::TestCase
     setup do
       @arg = stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!', id: 5)))
       @step = DummyWorkflow::DummyStep.new(@arg)
-      stub_request(:put, "http://example.com/?special_arg=5").with(:body => "{\"name\":\"dummy name!\"}",
-         :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Custom-Header'=>'dummy name!', 'Host'=>'example.com', 'User-Agent'=>'Ruby'})
+      stub_request(:put, 'http://example.com/?special_arg=5').with(body: "{\"name\":\"dummy name!\"}",
+                                                                   headers: { 'Accept' => '*/*', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Custom-Header' => 'dummy name!', 'Host' => 'example.com', 'User-Agent' => 'Ruby' })
     end
 
     should 'not call when prevented by liquid condition' do
@@ -74,8 +71,8 @@ class ApiCallerTest < ActiveSupport::TestCase
     setup do
       @arg = stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!', id: 5)))
       @step = DummyWorkflow::DummyStep.new(@arg)
-      stub_request(:put, "http://example.com/?special_arg=5").with(:body => "{\"name\":\"dummy name!\"}",
-         :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Custom-Header'=>'dummy name!', 'Host'=>'example.com', 'User-Agent'=>'Ruby'})
+      stub_request(:put, 'http://example.com/?special_arg=5').with(body: "{\"name\":\"dummy name!\"}",
+                                                                   headers: { 'Accept' => '*/*', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Custom-Header' => 'dummy name!', 'Host' => 'example.com', 'User-Agent' => 'Ruby' })
       WorkflowAlert.stubs(:find).returns(stub(default_hash))
       WorkflowAlertLogger.setup { |config| config.logger_type = :db }
     end
@@ -88,19 +85,17 @@ class ApiCallerTest < ActiveSupport::TestCase
     teardown do
       WorkflowAlertLogger.setup { |config| config.logger_type = :none }
     end
-
   end
 
   protected
 
   def default_hash
-    { endpoint: "http://example.com/?special_arg={{ dummy_arg.id }}",
+    { endpoint: 'http://example.com/?special_arg={{ dummy_arg.id }}',
       request_type: 'PUT',
       use_ssl: false,
-      payload_data: { name: "{{ dummy_arg.name }}" }.to_json,
-      headers:  { 'Custom-Header' => "{{ dummy_arg.name }}" }.to_json,
+      payload_data: { name: '{{ dummy_arg.name }}' }.to_json,
+      headers:  { 'Custom-Header' => '{{ dummy_arg.name }}' }.to_json,
       should_be_triggered?: true
     }
   end
-
 end

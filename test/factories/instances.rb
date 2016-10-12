@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :instance do
     sequence(:name) { |n| Instance.first ? "desks near me #{n}" : 'DesksNearMe' }
     bookable_noun 'Desk'
@@ -27,7 +26,7 @@ FactoryGirl.define do
 
     seller_attachments_access_level 'all'
 
-    after(:create) do |instance, evaluator|
+    after(:create) do |instance, _evaluator|
       instance.theme = FactoryGirl.create(:theme, owner: instance, instance_id: instance.id) unless instance.theme
       unless Domain.find_by_name('example.com').present?
         instance.domains = [FactoryGirl.create(:test_domain, target: instance, instance_id: instance.id)]
@@ -37,7 +36,7 @@ FactoryGirl.define do
     factory :instance_test_mode do
       test_mode true
       password_protected true
-      marketplace_password "123456"
+      marketplace_password '123456'
     end
 
     factory :instance_require_verification do
@@ -47,5 +46,4 @@ FactoryGirl.define do
       end
     end
   end
-
 end

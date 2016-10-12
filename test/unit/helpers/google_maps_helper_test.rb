@@ -5,7 +5,7 @@ class GoogleMapsHelperTest < ActionView::TestCase
 
   context '#google_maps_route_url' do
     should 'return valid url' do
-      url = "//maps.google.com/?daddr=Frisco&saddr=Cali"
+      url = '//maps.google.com/?daddr=Frisco&saddr=Cali'
       assert_equal url, google_maps_route_url(from: 'Cali', to: 'Frisco')
     end
   end

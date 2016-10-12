@@ -1,5 +1,4 @@
 class InstanceAdmin::Groups::GroupTypesController < InstanceAdmin::Manage::BaseController
-
   def index
     @group_types = GroupType.all
   end
@@ -20,5 +19,4 @@ class InstanceAdmin::Groups::GroupTypesController < InstanceAdmin::Manage::BaseC
   def group_type_params
     params.require(:group_type).permit(secured_params.transactable_type)
   end
-
 end

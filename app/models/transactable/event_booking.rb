@@ -1,5 +1,4 @@
 class Transactable::EventBooking < Transactable::ActionType
-
   has_one :schedule, as: :scheduable, dependent: :destroy, inverse_of: :scheduable
   has_one :pricing, as: :action
 
@@ -12,22 +11,22 @@ class Transactable::EventBooking < Transactable::ActionType
   validates_associated :pricings, if: :enabled?
 
   delegate :only_exclusive_price_available?, :book_it_out_available?,
-    :exclusive_price_available?, :is_free_booking?, :price, :unit, to: :pricing
+           :exclusive_price_available?, :is_free_booking?, :price, :unit, to: :pricing
 
   def available_prices
     pricing.price_information
   end
 
   def schedule_availability
-    next_available_occurrences(500, {end_date: 6.months.from_now}).map{|o| o[:occures_at]}
+    next_available_occurrences(500, end_date: 6.months.from_now).map { |o| o[:occures_at] }
   end
 
-  def open_on?(date, start_min = nil, end_min = nil)
+  def open_on?(date, start_min = nil, _end_min = nil)
     hour = start_min / 60
     minute = start_min - (60 * hour)
     Time.use_zone(timezone) do
       t = Time.zone.parse("#{date} #{hour}:#{minute}")
-      return false if schedule.schedule_exception_ranges(t).any?{ |range| range.cover?(occurrence) }
+      return false if schedule.schedule_exception_ranges(t).any? { |range| range.cover?(occurrence) }
       schedule.schedule.occurs_between?(t - 1.second, t) || schedule.schedule.occurs_on?(t)
     end
   end
@@ -46,7 +45,7 @@ class Transactable::EventBooking < Transactable::ActionType
       end_date = params[:end_date].try(:to_date).try(:end_of_day)
       exception_ranges = schedule.schedule_exception_ranges(@start_date)
       schedule.schedule.send(:enumerate_occurrences, @start_date + 1, end_date).each do |occurrence|
-        next if schedule.unavailable_period_enabled && exception_ranges.any?{ |range| range.cover?(occurrence) }
+        next if schedule.unavailable_period_enabled && exception_ranges.any? { |range| range.cover?(occurrence) }
         start_minute = occurrence.min + (60 * occurrence.hour)
         availability = quantity.to_i - desks_booked_on(occurrence.to_datetime, start_minute, start_minute)
         if availability > 0
@@ -64,10 +63,8 @@ class Transactable::EventBooking < Transactable::ActionType
   end
 
   def booking_module_options
-    super.merge({
-      fixed_price_cents: pricing.price_cents,
-      booking_type: 'schedule'
-    }).merge(pricing.availabile_discounts)
+    super.merge(fixed_price_cents: pricing.price_cents,
+                booking_type: 'schedule').merge(pricing.availabile_discounts)
   end
 
   def price_calculator(order)
@@ -79,5 +76,4 @@ class Transactable::EventBooking < Transactable::ActionType
   def pass_timezone_to_schedule
     schedule.try(:timezone=, transactable.timezone)
   end
-
 end

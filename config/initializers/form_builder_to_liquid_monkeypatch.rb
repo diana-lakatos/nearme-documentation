@@ -3,4 +3,3 @@ class ActionView::Helpers::FormBuilder
     @form_builder_drop ||= SimpleForm::FormBuilderDrop.new(self)
   end
 end
-

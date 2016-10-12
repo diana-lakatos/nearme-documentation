@@ -1,5 +1,4 @@
 class PaymentConfirmationExpiryJob < Job
-
   def after_initialize(reservation_id)
     @reservation = Order.find_by_id(reservation_id)
   end
@@ -15,4 +14,3 @@ class PaymentConfirmationExpiryJob < Job
     end
   end
 end
-

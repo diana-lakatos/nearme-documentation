@@ -1,20 +1,18 @@
 require 'test_helper'
 
 class UserMessageTest < ActiveSupport::TestCase
-
   context 'archived_for' do
-
     setup do
       @transactable = FactoryGirl.create(:transactable)
       @transactable_administrator = @transactable.administrator
       @user = FactoryGirl.create(:user)
 
       @user_message = FactoryGirl.create(:user_message,
-        thread_context: @transactable,
-        thread_owner: @user,
-        author: @user,
-        thread_recipient: @transactable_administrator
-      )
+                                         thread_context: @transactable,
+                                         thread_owner: @user,
+                                         author: @user,
+                                         thread_recipient: @transactable_administrator
+                                        )
     end
 
     should 'choose write field to store information about archiving' do
@@ -26,18 +24,17 @@ class UserMessageTest < ActiveSupport::TestCase
   end
 
   context 'mark as read' do
-
     setup do
       @transactable = FactoryGirl.create(:transactable)
       @transactable_administrator = @transactable.administrator
       @user = FactoryGirl.create(:user)
 
       @user_message = FactoryGirl.create(:user_message,
-        thread_context: @transactable,
-        thread_owner: @user,
-        author: @user,
-        thread_recipient: @transactable_administrator
-      )
+                                         thread_context: @transactable,
+                                         thread_owner: @user,
+                                         author: @user,
+                                         thread_recipient: @transactable_administrator
+                                        )
     end
 
     should 'mark as read for thread owner' do
@@ -54,7 +51,6 @@ class UserMessageTest < ActiveSupport::TestCase
   end
 
   context 'author_has_access_to_message_context' do
-
     should 'return true if reservation is a thread_context and author is company user' do
       @transactable = FactoryGirl.create(:transactable)
       @reservation = FactoryGirl.create(:reservation, transactable: @transactable)
@@ -74,7 +70,5 @@ class UserMessageTest < ActiveSupport::TestCase
 
       assert @user_message.author_has_access_to_message_context?
     end
-
   end
-
 end

@@ -1,5 +1,5 @@
 class CurrencyInput < SimpleForm::Inputs::GroupedCollectionSelectInput
-  COMMON_CODES = ['USD', 'EUR', 'NZD', 'AUD', 'GBP']
+  COMMON_CODES = %w(USD EUR NZD AUD GBP)
 
   def grouped_collection
     if allowed_currencies = options[:allowed_currencies].presence
@@ -47,6 +47,5 @@ class CurrencyInput < SimpleForm::Inputs::GroupedCollectionSelectInput
     def to_s
       iso_code
     end
-
   end
 end

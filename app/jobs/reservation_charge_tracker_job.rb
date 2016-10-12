@@ -5,7 +5,7 @@ class ReservationChargeTrackerJob < Job
 
   def perform
     if @reservation && @reservation.confirmed?
-      mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => @reservation.owner)
+      mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, current_user: @reservation.owner)
       event_tracker = Rails.application.config.event_tracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(@reservation.owner))
       event_tracker.track_charge(@reservation)
     else

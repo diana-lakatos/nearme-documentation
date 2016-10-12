@@ -23,5 +23,4 @@ class InstanceType::Searcher::GeolocationSearcher::Listing
     @max_fixed_price ||= (@results.map(&:action_type).map(&:pricings).flatten.map(&:price_cents).compact.max || 0).to_f / 100
     @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
   end
-
 end

@@ -3,11 +3,8 @@ module Metadata
     extend ActiveSupport::Concern
 
     included do
-
       after_commit :user_populate_instance_admins_metadata!
-      delegate :populate_instance_admins_metadata!, :to => :user, :prefix => true
-
+      delegate :populate_instance_admins_metadata!, to: :user, prefix: true
     end
-
   end
 end

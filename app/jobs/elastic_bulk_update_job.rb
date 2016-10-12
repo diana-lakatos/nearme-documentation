@@ -1,5 +1,4 @@
 class ElasticBulkUpdateJob < Job
-
   def after_initialize(klass, updates_hash)
     @klass = klass
     @updates_hash = updates_hash

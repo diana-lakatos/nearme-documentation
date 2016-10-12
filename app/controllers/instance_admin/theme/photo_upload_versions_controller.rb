@@ -1,5 +1,4 @@
 class InstanceAdmin::Theme::PhotoUploadVersionsController < InstanceAdmin::Theme::BaseController
-
   before_filter :set_breadcrumbs_title
 
   def index
@@ -49,7 +48,7 @@ class InstanceAdmin::Theme::PhotoUploadVersionsController < InstanceAdmin::Theme
     if uploader_name.present?
       if PhotoUploadVersion.can_regenerate_for_uploader?(uploader_name)
         flash[:success] = t('instance_admin.theme.photo_upload_versions.image_regeneration_scheduled')
-    
+
         ScheduledUploadersRegeneration.create(photo_uploader: uploader_name)
         RegenerateUploaderVersionsJob.perform(uploader_name)
 
@@ -66,13 +65,12 @@ class InstanceAdmin::Theme::PhotoUploadVersionsController < InstanceAdmin::Theme
 
   def set_breadcrumbs_title
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :title => t('instance_admin.general.manage') },
-      { :title => t('instance_admin.theme.photo_upload_versions.title') }
+      { title: t('instance_admin.general.manage') },
+      title: t('instance_admin.theme.photo_upload_versions.title')
     )
   end
 
   def photo_upload_version_params
     params.require(:photo_upload_version).permit(secured_params.photo_upload_version)
   end
-
 end

@@ -1,5 +1,4 @@
 class Dashboard::UserBlog::BlogPostsController < Dashboard::UserBlog::BaseController
-
   before_filter :find_user_blog_post, only: [:edit, :update, :destroy, :delete_image]
 
   def index

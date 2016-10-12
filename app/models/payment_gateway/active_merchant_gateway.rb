@@ -5,13 +5,11 @@ class PaymentGateway
     end
 
     def settings
-      super.merge({ test: test_mode? })
+      super.merge(test: test_mode?)
     end
 
     def gateway
-      if @gateway.nil?
-        @gateway = self.class.active_merchant_class.new(settings)
-      end
+      @gateway = self.class.active_merchant_class.new(settings) if @gateway.nil?
       @gateway
     end
 

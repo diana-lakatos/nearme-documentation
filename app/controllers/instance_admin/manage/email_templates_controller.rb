@@ -69,6 +69,4 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
   def find_transactable_type
     @transactable_type = TransactableType.find(params[:email_template][:transactable_type_id]) if params[:email_template][:transactable_type_id].present? rescue nil
   end
-
 end
-

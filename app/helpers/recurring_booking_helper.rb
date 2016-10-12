@@ -1,7 +1,6 @@
 module RecurringBookingHelper
-
   def recurring_booking_navigation_link(action)
-    (link_to(content_tag(:span, action.titleize), self.send("#{action}_recurring_bookings_path"), :class => "upcoming-reservations btn btn-medium btn-gray#{action==params[:action] ? " active" : "-darker"}")).html_safe
+    (link_to(content_tag(:span, action.titleize), send("#{action}_recurring_bookings_path"), class: "upcoming-reservations btn btn-medium btn-gray#{action == params[:action] ? ' active' : '-darker'}")).html_safe
   end
 
   def upcoming_recurring_booking_count
@@ -14,10 +13,9 @@ module RecurringBookingHelper
 
   def secure_recurring_listing_url(listing, options = {})
     if Rails.env.production?
-      options = options.reverse_merge(protocol: "https://")
+      options = options.reverse_merge(protocol: 'https://')
     end
 
     listing_recurring_bookings_url(listing, options)
   end
-
 end

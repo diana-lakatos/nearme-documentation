@@ -1,5 +1,4 @@
 class Dashboard::Company::UsersController < Dashboard::Company::BaseController
-
   def index
     @users = @company.users.without(current_user).ordered_by_email
   end
@@ -18,7 +17,7 @@ class Dashboard::Company::UsersController < Dashboard::Company::BaseController
   end
 
   def create
-    @user = User.where(:email => params[:user][:email]).first
+    @user = User.where(email: params[:user][:email]).first
     if !@user
       flash.now[:error] = t('flash_messages.manage.users.user_does_not_exists')
       new

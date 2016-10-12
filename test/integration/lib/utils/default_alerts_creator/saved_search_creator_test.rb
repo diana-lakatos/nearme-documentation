@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::SavedSearchCreatorTest < ActionDispatch::IntegrationTest
-
   setup do
     @saved_search_creator = Utils::DefaultAlertsCreator::SavedSearchCreator.new
   end
@@ -13,15 +12,14 @@ class Utils::DefaultAlertsCreator::SavedSearchCreatorTest < ActionDispatch::Inte
   end
 
   context 'methods' do
-
     setup do
       @user = FactoryGirl.create(:user)
       @saved_search = FactoryGirl.create(:saved_search,
-        user: @user,
-        query: '?loc=Auckland&query=&transactable_type_id=1&buyable=false'
-      )
+                                         user: @user,
+                                         query: '?loc=Auckland&query=&transactable_type_id=1&buyable=false'
+                                        )
       PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, name: 'custom.domain.com'))
-      SavedSearch.any_instance.stubs(:new_results).returns(31337)
+      SavedSearch.any_instance.stubs(:new_results).returns(31_337)
       FactoryGirl.create('listing_in_auckland')
     end
 
@@ -44,5 +42,4 @@ class Utils::DefaultAlertsCreator::SavedSearchCreatorTest < ActionDispatch::Inte
       end
     end
   end
-
 end

@@ -9,9 +9,7 @@ class Customization < ActiveRecord::Base
   belongs_to :custom_model_type
   belongs_to :customizable, polymorphic: true, touch: true
 
-
   def to_liquid
     @customization_drop ||= CustomizationDrop.new(self)
   end
-
 end

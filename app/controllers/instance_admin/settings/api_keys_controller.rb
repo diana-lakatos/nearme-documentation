@@ -24,6 +24,4 @@ class InstanceAdmin::Settings::ApiKeysController < InstanceAdmin::Settings::Base
   def find_api_key
     @api_key ||= ApiKey.find(params[:id])
   end
-
 end
-

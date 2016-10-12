@@ -12,42 +12,46 @@ FactoryGirl.define do
     end
 
     factory :data_upload_with_report do
-      parse_summary { { :new => {
-        "user" => 0,
-        "company" => 0,
-        "location" => 2,
-        "transactable" => 3,
-        "photo" => 4
-      },
-      :updated => {
-        "user" => 0,
-        "company" => 0,
-        "location" => 9,
-        "transactable" => 8,
-        "photo" => 7
-      },
-      :deleted => {
-        "user" => 1
-      } } }
+      parse_summary do
+        { new: {
+          'user' => 0,
+          'company' => 0,
+          'location' => 2,
+          'transactable' => 3,
+          'photo' => 4
+        },
+          updated: {
+            'user' => 0,
+            'company' => 0,
+            'location' => 9,
+            'transactable' => 8,
+            'photo' => 7
+          },
+          deleted: {
+            'user' => 1
+          } }
+      end
       imported_at { Time.zone.now - 1.hour }
       state 'succeeded'
 
       factory :data_upload_with_report_without_delete do
-        parse_summary { { :new => {
-          "user" => 0,
-          "company" => 0,
-          "location" => 2,
-          "transactable" => 3,
-          "photo" => 4
-        },
-        :updated => {
-          "user" => 0,
-          "company" => 0,
-          "location" => 9,
-          "transactable" => 8,
-          "photo" => 7
+        parse_summary do
+          { new: {
+            'user' => 0,
+            'company' => 0,
+            'location' => 2,
+            'transactable' => 3,
+            'photo' => 4
+          },
+            updated: {
+              'user' => 0,
+              'company' => 0,
+              'location' => 9,
+              'transactable' => 8,
+              'photo' => 7
+            }
         }
-        } }
+        end
       end
 
       factory :data_upload_with_validation_errors do
@@ -56,5 +60,4 @@ FactoryGirl.define do
       end
     end
   end
-
 end

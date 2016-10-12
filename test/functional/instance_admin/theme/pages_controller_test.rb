@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Theme::PagesControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
@@ -13,21 +12,20 @@ class InstanceAdmin::Theme::PagesControllerTest < ActionController::TestCase
     @page = FactoryGirl.create(:page, path: 'Page test')
     get :index
     assert_response :success
-    assert_select 'td', "Page test"
+    assert_select 'td', 'Page test'
   end
 
   context 'create' do
-
     should 'create a new page' do
       assert_difference 'Page.count', 1 do
-        post :create, page: { path: "New Page", content: "lorem ipsum" }
+        post :create, page: { path: 'New Page', content: 'lorem ipsum' }
       end
       assert_equal 'New Page', assigns(:page).path
     end
 
     should 'create a new redirect' do
       assert_difference 'Page.count', 1 do
-        post :create, page: { path: "New Redirect", redirect_url: "http://test.com" }
+        post :create, page: { path: 'New Redirect', redirect_url: 'http://test.com' }
       end
       assert_equal 'New Redirect', assigns(:page).path
       assert assigns(:page).redirect?
@@ -42,11 +40,11 @@ class InstanceAdmin::Theme::PagesControllerTest < ActionController::TestCase
     assert_redirected_to instance_admin_theme_pages_path
   end
 
-   context "previous versions of page" do
+  context 'previous versions of page' do
     setup do
       with_versioning do
         @page = FactoryGirl.create(:page, path: 'Page test')
-        @page.update! content: "Lorem"
+        @page.update! content: 'Lorem'
         @page.versions.update_all(whodunnit: 'me')
       end
     end
@@ -57,22 +55,20 @@ class InstanceAdmin::Theme::PagesControllerTest < ActionController::TestCase
       assert_select 'table tbody tr:first-child td:first-child', text: @page.versions.reorder(created_at: :desc).first.id.to_s
     end
 
-    should "be viewable" do
+    should 'be viewable' do
       get :show_version, id: @page.id, version_id: @page.versions.last.id
       assert_response :success
       assert_not_equal @page.content, @page.versions.last.reify.content
       assert_select 'textarea', @page.versions.last.reify.content
     end
 
-    should "be rollbackable" do
+    should 'be rollbackable' do
       last_version_id = @page.versions.last.id
       get :rollback, id: @page.id, version_id: last_version_id
       assert_redirected_to instance_admin_theme_pages_path
-      assert_equal "Page has been successfully restored to previous version", flash[:notice]
+      assert_equal 'Page has been successfully restored to previous version', flash[:notice]
       version = @page.versions.find last_version_id
       assert_equal @page.reload.content, version.reify.content
     end
   end
-
 end
-

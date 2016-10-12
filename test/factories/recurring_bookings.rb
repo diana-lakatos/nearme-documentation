@@ -26,6 +26,4 @@ FactoryGirl.define do
       state 'confirmed'
     end
   end
-
 end
-

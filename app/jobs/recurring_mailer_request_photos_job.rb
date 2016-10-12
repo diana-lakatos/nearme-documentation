@@ -1,6 +1,5 @@
 # Sends request_photos emails
 class RecurringMailerRequestPhotosJob < Job
-
   def after_initialize
     @sent_to_users = []
   end

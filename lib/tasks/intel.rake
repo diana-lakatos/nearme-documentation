@@ -1,11 +1,11 @@
 namespace :intel do
-  desc "Setup intel"
+  desc 'Setup intel'
 
   task groups: [:environment] do
     Instance.where(is_community: true).find_each do |instance|
       instance.set_context!
 
-      ['Public', 'Moderated', 'Private'].each do |name|
+      %w(Public Moderated Private).each do |name|
         group_type = GroupType.where(name: name).first_or_create!
 
         group_type.custom_validators.where(field_name: 'name').first_or_initialize.tap do |cv|
@@ -32,43 +32,38 @@ namespace :intel do
 
     WorkflowAlert
       .find_by(instance_id: 23, name: 'Member approved email')
-      .try(:update_columns , {
-        name: 'Notify user of approved join request',
-        template_path: 'group_mailer/notify_user_of_approved_join_request'
-      })
+      .try(:update_columns,         name: 'Notify user of approved join request',
+                                    template_path: 'group_mailer/notify_user_of_approved_join_request')
 
     Instance.where(is_community: true).find_each do |instance|
       Workflow.find_by(instance_id: instance.id, workflow_type: 'group_workflow').workflow_steps.each do |step|
         step.workflow_alerts.where(alert_type: 'email').each do |alert|
           alert.update!(
-            {
-              from: 'addresssoftware@developerzone.intel.com',
-              reply_to: 'addressno-reply@developerzone.intel.com'
-            }
+            from: 'addresssoftware@developerzone.intel.com',
+            reply_to: 'addressno-reply@developerzone.intel.com'
           )
         end
       end
     end
-
   end
 
-  task :setup => [:environment] do
+  task setup: [:environment] do
     Utils::EnLocalesSeeder.new.go!
     Instance.where(is_community: true).find_each do |i|
       puts "Processing #{i.name} - adding project type, categories, topics if needed"
       i.set_context!
       InstanceView.where(instance_id: i, path: 'home/index').destroy_all
 
-      i.update_attributes({name: 'Intel'})
+      i.update_attributes(name: 'Intel')
 
       puts "Processing #{i.name} - adding dummy pages"
       Page.where(instance_id: i).destroy_all
       [
-        { "Help" => 'https://software.intel.com/en-us/support?source=devmesh'},
-        {"Terms of Service"=> 'http://www.intel.com/content/www/us/en/legal/terms-of-use.html'},
-        {"Trademarks"=> 'http://www.intel.com/content/www/us/en/legal/trademarks.html'},
-        { "Privacy" => 'http://www.intel.com/content/www/us/en/privacy/intel-online-privacy-notice-summary.html'},
-        { "Cookies" => 'http://www.intel.com/content/www/us/en/privacy/intel-cookie-notice.html' }
+        { 'Help' => 'https://software.intel.com/en-us/support?source=devmesh' },
+        { 'Terms of Service' => 'http://www.intel.com/content/www/us/en/legal/terms-of-use.html' },
+        { 'Trademarks' => 'http://www.intel.com/content/www/us/en/legal/trademarks.html' },
+        { 'Privacy' => 'http://www.intel.com/content/www/us/en/privacy/intel-online-privacy-notice-summary.html' },
+        { 'Cookies' => 'http://www.intel.com/content/www/us/en/privacy/intel-cookie-notice.html' }
       ].each do |page|
         page.each do |text, url|
           Page.new(path: text, instance_id: i, theme_id: PlatformContext.current.theme.id, redirect_url: url, redirect_code: 301).save!
@@ -83,7 +78,7 @@ namespace :intel do
         category.save!
         Topic.where(name: topic_name).first_or_initialize.tap do |t|
           t.category = category
-          t.description = "Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices"
+          t.description = 'Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices'
         end.save!
       end
       project_type.custom_validators.where(field_name: 'name').first_or_initialize.tap do |cv|

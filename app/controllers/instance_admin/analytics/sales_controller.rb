@@ -1,5 +1,4 @@
 class InstanceAdmin::Analytics::SalesController < InstanceAdmin::Analytics::BaseController
-
   def show
     custom_properties_columns = CustomAttributes::CustomAttribute.with_deleted.where(
       target_type: 'TransactableType'
@@ -17,7 +16,7 @@ class InstanceAdmin::Analytics::SalesController < InstanceAdmin::Analytics::Base
     'LEFT JOIN reservation_periods '\
     'ON reservation_periods.reservation_id = orders.id '\
     "WHERE orders.instance_id = #{platform_context.instance.id} "\
-    "GROUP BY orders.id, transactables.id, transactable_types.id ORDER BY orders.created_at ASC"
+    'GROUP BY orders.id, transactables.id, transactable_types.id ORDER BY orders.created_at ASC'
 
     records_array = ActiveRecord::Base.connection.execute(sql)
 
@@ -45,6 +44,5 @@ class InstanceAdmin::Analytics::SalesController < InstanceAdmin::Analytics::Base
     respond_to do |format|
       format.csv { send_data csv }
     end
-
   end
 end

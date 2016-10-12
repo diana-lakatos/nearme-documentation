@@ -6,6 +6,6 @@ unless Rails.env.development?
 
   Pry.config.prompt = [
     proc { |*a| "#{env} #{old_prompt.first.call(*a)}" },
-    proc { |*a| "#{env} #{old_prompt.second.call(*a)}" },
+    proc { |*a| "#{env} #{old_prompt.second.call(*a)}" }
   ]
 end

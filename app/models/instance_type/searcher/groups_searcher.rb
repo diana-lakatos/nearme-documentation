@@ -37,5 +37,4 @@ class InstanceType::Searcher::GroupsSearcher
       lng: @current_user.try(:current_address).try(:longitude)
     }
   end
-
 end

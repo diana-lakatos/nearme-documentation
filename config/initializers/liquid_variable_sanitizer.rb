@@ -1,5 +1,4 @@
 module LiquidVariableExtensions
-
   def render(context)
     original_text = super(context)
     if original_text.is_a?(String) && !original_text.frozen? && !original_text.is_a?(ActiveSupport::SafeBuffer)
@@ -9,7 +8,6 @@ module LiquidVariableExtensions
       original_text
     end
   end
-
 end
 
 class Liquid::Variable

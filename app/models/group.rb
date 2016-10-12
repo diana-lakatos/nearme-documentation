@@ -8,11 +8,11 @@ class Group < ActiveRecord::Base
 
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id', class_name: 'GroupType'
   belongs_to :group_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
-  belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :groups
+  belongs_to :creator, -> { with_deleted }, class_name: 'User', inverse_of: :groups
 
   has_one :current_address, class_name: 'Address', as: :entity, dependent: :destroy
 
-  has_one  :cover_photo, -> { where(photo_role: 'cover') }, as: :owner, class_name: 'Photo', dependent: :destroy
+  has_one :cover_photo, -> { where(photo_role: 'cover') }, as: :owner, class_name: 'Photo', dependent: :destroy
   has_many :gallery_photos, -> { where(photo_role: nil) }, as: :owner, class_name: 'Photo'
   has_many :photos, as: :owner, dependent: :destroy
   has_many :links, as: :linkable, dependent: :destroy
@@ -121,7 +121,7 @@ class Group < ActiveRecord::Base
 
   def user_created_group_event
     event = :user_created_group
-    user = self.creator.try(:object).presence || self.creator
+    user = creator.try(:object).presence || creator
     affected_objects = [user]
     ActivityFeedService.create_event(event, self, affected_objects, self)
   end
@@ -134,8 +134,8 @@ class Group < ActiveRecord::Base
       user = User.find_by(email: group_member_email)
       next unless user.present?
 
-      if !group_members.for_user(user).exists? && user != self.creator
-        gm = self.group_members.build(
+      if !group_members.for_user(user).exists? && user != creator
+        gm = group_members.build(
           user: user,
           email: group_member_email,
           approved_by_owner_at: Time.zone.now
@@ -144,12 +144,11 @@ class Group < ActiveRecord::Base
 
         WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberAddedByGroupOwner, gm.id)
       end
-
     end
   end
 
   def restore_group_members
-    self.group_members.only_deleted.deleted_with_group(self).each do |member|
+    group_members.only_deleted.deleted_with_group(self).each do |member|
       member.restore(recursive: true)
     end
   end

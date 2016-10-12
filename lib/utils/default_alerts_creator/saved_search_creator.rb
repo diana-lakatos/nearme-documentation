@@ -1,5 +1,4 @@
 class Utils::DefaultAlertsCreator::SavedSearchCreator < Utils::DefaultAlertsCreator::WorkflowCreator
-
   def create_all!
     notify_user_of_daily_results!
     notify_user_of_weekly_results!
@@ -32,7 +31,4 @@ class Utils::DefaultAlertsCreator::SavedSearchCreator < Utils::DefaultAlertsCrea
   def workflow_type
     'saved_search'
   end
-
 end
-
-

@@ -1,6 +1,6 @@
 class InstanceAdmin::CustomTemplates::CustomThemes::InstanceViewsController < InstanceAdmin::CustomTemplates::BaseController
   include InstanceAdmin::Versionable
-  actions :all, except: [ :show ]
+  actions :all, except: [:show]
 
   before_filter :find_liquid_view, only: [:edit, :update, :destroy]
   set_resource_method :find_liquid_view
@@ -60,6 +60,4 @@ class InstanceAdmin::CustomTemplates::CustomThemes::InstanceViewsController < In
   def find_liquid_view
     @liquid_view ||= custom_theme.instance_views.custom_theme_views.find(params[:id])
   end
-
 end
-

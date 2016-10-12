@@ -1,5 +1,4 @@
 class DataImporter::XmlEntityCounter < DataImporter::File
-
   def initialize(path)
     super(path)
   end
@@ -14,6 +13,4 @@ class DataImporter::XmlEntityCounter < DataImporter::File
       sum += 1
     end
   end
-
 end
-

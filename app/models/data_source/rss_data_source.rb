@@ -1,7 +1,6 @@
 require 'rss'
 
 class DataSource::RssDataSource < DataSource
-
   def self.settings
     {
       endpoint: ''

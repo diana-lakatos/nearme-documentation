@@ -18,5 +18,4 @@ class GroupDrop < BaseDrop
   def edit_url_with_token
     urlify(routes.edit_dashboard_group_path(@group, token_key => @group.creator.try(:temporary_token), anchor: :collaborators))
   end
-
 end

@@ -1,12 +1,11 @@
 class Dashboard::Company::OrderItemsController < Dashboard::Company::BaseController
-
   before_filter :find_order
   before_filter :find_order_item, except: [:index, :new, :create]
   before_filter :check_owner, only: [:approve, :reject]
 
   def index
     @transactables = current_user.created_listings.without_state(:pending).order('created_at DESC')
-    @for_transactable = @transactables.find{ |t| t.id.to_s == params[:transactable_id] } if params[:transactable_id].present?
+    @for_transactable = @transactables.find { |t| t.id.to_s == params[:transactable_id] } if params[:transactable_id].present?
   end
 
   def show
@@ -28,7 +27,6 @@ class Dashboard::Company::OrderItemsController < Dashboard::Company::BaseControl
 
   def rejection_form
   end
-
 
   def rejection_form
   end

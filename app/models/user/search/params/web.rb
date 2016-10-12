@@ -1,5 +1,4 @@
 class User::Search::Params::Web < User::Search::Params
-
   attr_reader :sort, :order, :lg_custom_attributes, :lg_custom_attributes, :category_ids
 
   def initialize(options, instance_profile_type)
@@ -34,5 +33,4 @@ class User::Search::Params::Web < User::Search::Params
       []
     end
   end
-
 end

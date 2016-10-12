@@ -1,5 +1,4 @@
 class Dashboard::Company::WhiteLabelsController < Dashboard::Company::BaseController
-
   before_filter :find_or_create_theme, only: [:upload_image, :edit_image, :update_image, :destroy_image]
   before_filter :find_image, only: [:upload_image, :edit_image, :update_image, :destroy_image]
 
@@ -18,15 +17,15 @@ class Dashboard::Company::WhiteLabelsController < Dashboard::Company::BaseContro
   def upload_image
     @theme.send("#{@image_param}=", params[:image_data])
     if @theme.save
-      render :text => {
-        :url => @theme.send("#{@image_param}_url"),
-        :id => @image_param,
-        :resize_url =>  edit_theme_image_dashboard_company_white_label_path(image: @image_param),
-        :thumbnail_dimensions => {},
-        :destroy_url => destroy_theme_image_dashboard_company_white_label_path(image: @image_param)
-      }.to_json, :content_type => 'text/plain'
+      render text: {
+        url: @theme.send("#{@image_param}_url"),
+        id: @image_param,
+        resize_url: edit_theme_image_dashboard_company_white_label_path(image: @image_param),
+        thumbnail_dimensions: {},
+        destroy_url: destroy_theme_image_dashboard_company_white_label_path(image: @image_param)
+      }.to_json, content_type: 'text/plain'
     else
-      render :text => [{:error => @theme.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
+      render text: [{ error: @theme.errors.full_messages }].to_json, content_type: 'text/plain', status: 422
     end
   end
 
@@ -37,7 +36,7 @@ class Dashboard::Company::WhiteLabelsController < Dashboard::Company::BaseContro
   end
 
   def update_image
-    @theme.send("#{@image_param}_transformation_data=", { :crop => params[:crop], :rotate => params[:rotate] })
+    @theme.send("#{@image_param}_transformation_data=", crop: params[:crop], rotate: params[:rotate])
     if @theme.save
       render partial: 'dashboard/photos/resize_succeeded'
     else
@@ -48,7 +47,7 @@ class Dashboard::Company::WhiteLabelsController < Dashboard::Company::BaseContro
   def destroy_image
     @theme.send("remove_#{@image_param}!")
     @theme.save
-    render :text => { success: true, id: @image_param }, :content_type => 'text/plain', :status => 200
+    render text: { success: true, id: @image_param }, content_type: 'text/plain', status: 200
   end
 
   private
@@ -70,7 +69,7 @@ class Dashboard::Company::WhiteLabelsController < Dashboard::Company::BaseContro
   end
 
   def find_image
-    raise NotImplementedError unless %w(icon_image icon_retina_image favicon_image logo_image logo_retina_image hero_image).include?(params[:image])
+    fail NotImplementedError unless %w(icon_image icon_retina_image favicon_image logo_image logo_retina_image hero_image).include?(params[:image])
     @image = @theme.send(params[:image])
     @image_param = params[:image]
   end

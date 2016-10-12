@@ -1,16 +1,15 @@
 require 'test_helper'
 
 class SavedSearchesAlertsJobTest < ActiveSupport::TestCase
-
   setup do
-    stub_request(:get, "http://maps.googleapis.com/maps/api/geocode/json?address=Auckland&language=en&sensor=false").
-      with(headers: {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
-      to_return(status: 200, body: {}.to_json, headers: {})
+    stub_request(:get, 'http://maps.googleapis.com/maps/api/geocode/json?address=Auckland&language=en&sensor=false')
+      .with(headers: { 'Accept' => '*/*', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent' => 'Ruby' })
+      .to_return(status: 200, body: {}.to_json, headers: {})
     @user = FactoryGirl.create(:user)
     @saved_search = FactoryGirl.create(:saved_search,
-      user: @user,
-      query: '?loc=Auckland&query=&transactable_type_id=1&buyable=false'
-    )
+                                       user: @user,
+                                       query: '?loc=Auckland&query=&transactable_type_id=1&buyable=false'
+                                      )
     enable_elasticsearch!
   end
 
@@ -67,5 +66,4 @@ class SavedSearchesAlertsJobTest < ActiveSupport::TestCase
     SavedSearchesAlertsJob.perform(:daily)
     assert_not_equal 0, @saved_search.reload.new_results
   end
-
 end

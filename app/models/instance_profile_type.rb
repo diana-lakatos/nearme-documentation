@@ -18,7 +18,7 @@ class InstanceProfileType < ActiveRecord::Base
   has_many :custom_model_types, through: :custom_model_type_linkings
 
   delegate :translated_bookable_noun, :create_translations!, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
-    :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
+           :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
   DEFAULT  = 'default'.freeze
   SELLER  = 'seller'.freeze
@@ -58,7 +58,7 @@ class InstanceProfileType < ActiveRecord::Base
   end
 
   ['show_date_pickers?', 'display_location_type_filter?'].each do |method|
-    define_method(method){ false }
+    define_method(method) { false }
   end
 
   def to_liquid
@@ -66,8 +66,6 @@ class InstanceProfileType < ActiveRecord::Base
   end
 
   def has_fields?(profile_type)
-    form_components.where(form_type: profile_type).any? {|f| f.form_fields.present? }
+    form_components.where(form_type: profile_type).any? { |f| f.form_fields.present? }
   end
-
 end
-

@@ -1,5 +1,4 @@
 class SellerAttachmentsController < ApplicationController
-
   def index
     if !current_instance.seller_attachments_enabled?
       render nothing: true, status: :bad_request
@@ -32,5 +31,4 @@ class SellerAttachmentsController < ApplicationController
       when 'Transactable' then Transactable
       end.with_deleted.find(params[:seller_attachable_id])
   end
-
 end

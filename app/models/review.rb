@@ -8,7 +8,7 @@ class Review < ActiveRecord::Base
 
   LAST_30_DAYS = '30_days'
   LAST_6_MONTHS = '6_months'
-  DATE_VALUES = ['today', 'yesterday', 'week_ago', 'month_ago', '3_months_ago', '6_months_ago']
+  DATE_VALUES = %w(today yesterday week_ago month_ago 3_months_ago 6_months_ago)
 
   belongs_to :user, -> { with_deleted }
   belongs_to :seller, -> { with_deleted }, class_name: 'User'
@@ -23,8 +23,8 @@ class Review < ActiveRecord::Base
   before_validation :set_foreign_keys_and_subject, on: :create
   before_validation :set_displayable, on: :create
   validates_presence_of :rating, :user, :reviewable, :transactable_type
-  validates :rating, inclusion: { in: RatingConstants::VALID_VALUES , message: :rating_is_required }
-  validate  :creator_does_not_review_own_objects
+  validates :rating, inclusion: { in: RatingConstants::VALID_VALUES, message: :rating_is_required }
+  validate :creator_does_not_review_own_objects
   validates_uniqueness_of :user_id, scope: [:reviewable_id, :reviewable_type, :subject], conditions: -> { where(deleted_at: nil) }
 
   default_scope { order('reviews.created_at DESC') }
@@ -34,23 +34,23 @@ class Review < ActiveRecord::Base
   scope :with_transactable_type, ->(transactable_type_id) { where(transactable_type_id: transactable_type_id) }
   scope :by_reservations, ->(id) { where(reviewable_id: id, reviewable_type: 'Reservation').includes(rating_answers: [:rating_question]) }
   scope :by_line_items, ->(id) { where(reviewable_id: id, reviewable_type: ['LineItem::Transactable', 'LineItem']).includes(rating_answers: [:rating_question]) }
-  scope :by_search_query, -> (query) { joins(:user).where("users.name ILIKE ?", query) }
+  scope :by_search_query, -> (query) { joins(:user).where('users.name ILIKE ?', query) }
   scope :displayable, -> { where(displayable: true).joins(:rating_system).where('rating_systems.active = ?', true) }
-  scope :about_seller , -> (user) { displayable.where(seller_id: user.id, subject: RatingConstants::HOST).where.not(user_id: user.id) }
+  scope :about_seller, -> (user) { displayable.where(seller_id: user.id, subject: RatingConstants::HOST).where.not(user_id: user.id) }
   scope :about_buyer, -> (user) { displayable.where(buyer_id: user.id, subject: [RatingConstants::GUEST]).where.not(user_id: user.id) }
   scope :left_by_seller, -> (user) { displayable.where(seller_id: user.id, user_id: user.id, subject: RatingConstants::GUEST) }
   scope :left_by_buyer, -> (user) { displayable.where(buyer_id: user.id, user_id: user.id, subject: [RatingConstants::HOST, RatingConstants::TRANSACTABLE]) }
   scope :active_with_subject, -> (subject) { joins(:rating_system).merge(RatingSystem.active_with_subject(subject)) }
-  scope :for_type_of_transactable_type, -> (type) { joins(:rating_system).merge(RatingSystem.for_type_of_transactable_type(type) ) }
-  scope :for_transactables, -> (order_ids, line_items_ids) {
-    where(subject: RatingConstants::TRANSACTABLE).
-    where("(reviewable_id in (?) AND reviewable_type = 'Reservation') or (reviewable_id in (?) AND reviewable_type = 'LineItem::Transactable')", order_ids, line_items_ids)
+  scope :for_type_of_transactable_type, -> (type) { joins(:rating_system).merge(RatingSystem.for_type_of_transactable_type(type)) }
+  scope :for_transactables, lambda  { |order_ids, line_items_ids|
+    where(subject: RatingConstants::TRANSACTABLE)
+      .where("(reviewable_id in (?) AND reviewable_type = 'Reservation') or (reviewable_id in (?) AND reviewable_type = 'LineItem::Transactable')", order_ids, line_items_ids)
   }
 
   after_commit :expire_cache
 
   def recalculate_reviewable_average_rating
-    recalculate_by_type(-> { self.reviewable.transactable.recalculate_average_rating! })
+    recalculate_by_type(-> { reviewable.transactable.recalculate_average_rating! })
   end
 
   def expire_cache
@@ -98,16 +98,16 @@ class Review < ActiveRecord::Base
   def recalculate_by_type(recalculate_product)
     case rating_system.subject
     when RatingConstants::HOST
-      self.seller.recalculate_seller_average_rating!
-      self.buyer.recalculate_left_as_buyer_average_rating!
+      seller.recalculate_seller_average_rating!
+      buyer.recalculate_left_as_buyer_average_rating!
     when RatingConstants::GUEST
-      self.buyer.recalculate_buyer_average_rating!
-      self.seller.recalculate_left_as_seller_average_rating!
+      buyer.recalculate_buyer_average_rating!
+      seller.recalculate_left_as_seller_average_rating!
     when RatingConstants::TRANSACTABLE
       recalculate_product.call
-      self.buyer.recalculate_left_as_buyer_average_rating!
+      buyer.recalculate_left_as_buyer_average_rating!
     else
-      raise NotImplementedError
+      fail NotImplementedError
     end
     true
   end

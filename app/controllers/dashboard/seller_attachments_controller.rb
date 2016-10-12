@@ -1,5 +1,4 @@
 class Dashboard::SellerAttachmentsController < Dashboard::AssetsController
-
   before_action :get_file, only: :create
 
   def new
@@ -62,5 +61,4 @@ class Dashboard::SellerAttachmentsController < Dashboard::AssetsController
     @file = @listing_params[:attachments_attributes]['0'][:data]
     @title = @listing_params[:attachments_attributes]['0'][:title]
   end
-
 end

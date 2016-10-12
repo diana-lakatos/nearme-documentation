@@ -1,21 +1,19 @@
 require 'test_helper'
 
 class DnmKeyValueTest < ActiveSupport::TestCase
-
   setup do
     I18n.locale = :en
     @instance = PlatformContext.current.instance
-    @translation_global = FactoryGirl.create(:translation, :key => 'translation_key', :value => 'global value', instance_id: nil)
-    @default_translation = FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'default value', instance_id: nil)
-    @instance_translation = FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'instance value', instance_id: @instance.id)
+    @translation_global = FactoryGirl.create(:translation, key: 'translation_key', value: 'global value', instance_id: nil)
+    @default_translation = FactoryGirl.create(:translation, key: 'some_key_for_instance', value: 'default value', instance_id: nil)
+    @instance_translation = FactoryGirl.create(:translation, key: 'some_key_for_instance', value: 'instance value', instance_id: @instance.id)
     @backend = I18n::Backend::DNMKeyValue.new(nil)
     @backend.set_instance(@instance)
     @backend.update_cache(@instance.id)
-
   end
 
   should 'handle advanced features ' do
-    @translation_global = FactoryGirl.create(:translation, :key => 'advanced.feature.count.one', :value => 'one feature', instance_id: nil)
+    @translation_global = FactoryGirl.create(:translation, key: 'advanced.feature.count.one', value: 'one feature', instance_id: nil)
     @backend.update_cache(@instance.id)
     assert_equal({ one: 'one feature' }, translate('advanced.feature.count'))
   end
@@ -29,11 +27,11 @@ class DnmKeyValueTest < ActiveSupport::TestCase
   end
 
   # TODO: we do not have deleted feature, but this is to remember about unit test if we add it ;)
-  #should 'be able to notice translation was deleted' do
+  # should 'be able to notice translation was deleted' do
   #  @instance_translation.destroy
   #  @backend.update_cache(@instance.id)
   #  assert_equal 'default value', translate('some_key_for_instance')
-  #end
+  # end
 
   should 'get translation from given instance' do
     assert_equal 'instance value', translate('some_key_for_instance')
@@ -52,7 +50,7 @@ class DnmKeyValueTest < ActiveSupport::TestCase
   end
 
   should 'fallback to default if instance translation is empty' do
-    @translation = FactoryGirl.create(:translation, value: "", instance_id: @instance.id)
+    @translation = FactoryGirl.create(:translation, value: '', instance_id: @instance.id)
     @backend.update_cache(@instance.id)
     assert_equal 'global value', translate('translation_key')
   end

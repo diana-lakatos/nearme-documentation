@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class PaymentTest < ActiveSupport::TestCase
-
   context 'manual payment' do
     setup do
       @manual_payment = FactoryGirl.build(:manual_payment, state: 'paid')
@@ -13,7 +12,7 @@ class PaymentTest < ActiveSupport::TestCase
     end
   end
 
-  context "pending payment" do
+  context 'pending payment' do
     setup do
       @payment = FactoryGirl.create(:pending_payment)
     end
@@ -32,33 +31,33 @@ class PaymentTest < ActiveSupport::TestCase
       assert @payment.valid?
       assert @payment.successful_billing_authorization.present?
       assert_equal(
-        OpenStruct.new(authorization: "54533", success?: true),
+        OpenStruct.new(authorization: '54533', success?: true),
         @payment.successful_billing_authorization.response
       )
     end
 
-    should "not authorize when authorization response is not success" do
-      stub_active_merchant_interaction({success?: false, message: "fail"})
+    should 'not authorize when authorization response is not success' do
+      stub_active_merchant_interaction(success?: false, message: 'fail')
       @payment.credit_card_attributes = FactoryGirl.attributes_for(:credit_card_attributes)
       refute @payment.authorize
       billing_authorization = @payment.billing_authorizations.last
       assert_equal true, @payment.errors.present?
       assert_equal @payment.payment_gateway, billing_authorization.payment_gateway
       assert_equal billing_authorization.success?, false
-      assert_equal(billing_authorization.response, OpenStruct.new(authorization: "54533", success?: false, message: 'fail'))
+      assert_equal(billing_authorization.response, OpenStruct.new(authorization: '54533', success?: false, message: 'fail'))
     end
 
-    should "display internal error message to gateway user" do
+    should 'display internal error message to gateway user' do
       response = OpenStruct.new(code: '500', message: 'Internal server error')
       @payment.payment_gateway.gateway.stubs(:authorize).raises(ResponseError.new(response))
       @payment.credit_card_attributes = FactoryGirl.attributes_for(:credit_card_attributes)
       refute @payment.authorize
-      assert @payment.errors[:base].include?("Failed with 500 Internal server error")
+      assert @payment.errors[:base].include?('Failed with 500 Internal server error')
     end
   end
 
-  SUCCESS_RESPONSE = {"paid_amount"=>"10.00"}
-  FAILURE_RESPONSE = {"paid_amount"=>"10.00", "error"=>"fail"}
+  SUCCESS_RESPONSE = { 'paid_amount' => '10.00' }
+  FAILURE_RESPONSE = { 'paid_amount' => '10.00', 'error' => 'fail' }
 
   context 'authorized payment' do
     setup do
@@ -74,7 +73,7 @@ class PaymentTest < ActiveSupport::TestCase
     end
 
     should 'track charge in mixpanel after successful creation' do
-      stub_active_merchant_interaction({success?: true, params: SUCCESS_RESPONSE })
+      stub_active_merchant_interaction(success?: true, params: SUCCESS_RESPONSE)
       ReservationChargeTrackerJob.expects(:perform_later).with(@payment.payable.date.end_of_day, @payment.payable.id).once
       assert @payment.capture!
       assert_equal @payment.total_amount_cents, @payment.charges.last.amount
@@ -91,7 +90,7 @@ class PaymentTest < ActiveSupport::TestCase
     end
 
     should 'not charge when payment gateway fails' do
-      stub_active_merchant_interaction({success?: false, params: FAILURE_RESPONSE })
+      stub_active_merchant_interaction(success?: false, params: FAILURE_RESPONSE)
       refute @payment.capture!
       refute @payment.paid?
       charge = Charge.last
@@ -99,13 +98,13 @@ class PaymentTest < ActiveSupport::TestCase
       assert_equal FAILURE_RESPONSE, charge.response.params
     end
 
-    should "not capture while Internal Gateway error is raised" do
+    should 'not capture while Internal Gateway error is raised' do
       response = OpenStruct.new(code: '500', message: 'Internal server error')
       @payment.payment_gateway.gateway.stubs(:capture).raises(ResponseError.new(response))
       @payment.credit_card_attributes = FactoryGirl.attributes_for(:credit_card_attributes)
       refute @payment.capture!
       refute @payment.paid?
-      assert @payment.errors[:base].include?("Failed with 500 Internal server error")
+      assert @payment.errors[:base].include?('Failed with 500 Internal server error')
     end
   end
 
@@ -116,13 +115,13 @@ class PaymentTest < ActiveSupport::TestCase
 
     should 'find the right charge if there were failing attempts' do
       stub_active_merchant_interaction
-      FactoryGirl.create(:charge, payment: @payment, success: false, response: { id: "id" })
+      FactoryGirl.create(:charge, payment: @payment, success: false, response: { id: 'id' })
       @payment.refund!
       assert @payment.reload.refunded?
     end
 
     should 'not be refunded if failed' do
-      PaymentGateway::StripePaymentGateway.any_instance.expects(:gateway_refund).times(3).returns(Refund.new(:success => false))
+      PaymentGateway::StripePaymentGateway.any_instance.expects(:gateway_refund).times(3).returns(Refund.new(success: false))
       refute @payment.refund!
 
       stub_active_merchant_interaction
@@ -173,54 +172,52 @@ class PaymentTest < ActiveSupport::TestCase
         assert_equal 1100, @payment.refunds.last.amount_cents
       end
 
-
-      should "not refund while Internal Gateway error is raised" do
+      should 'not refund while Internal Gateway error is raised' do
         response = OpenStruct.new(code: '500', message: 'Internal server error')
         ActiveMerchant::Billing::StripeCustomGateway.any_instance.stubs(:refund).raises(ResponseError.new(response))
 
         refute @payment.refund!
         assert @payment.paid?
-        assert_equal 3, @payment.refunds.where(:success => false).count
-        refund_response = OpenStruct.new({success?: false, message: "Failed with 500 Internal server error"})
+        assert_equal 3, @payment.refunds.where(success: false).count
+        refund_response = OpenStruct.new(success?: false, message: 'Failed with 500 Internal server error')
         assert_equal refund_response, @payment.refunds.last.response
       end
     end
 
     context 'cancelation policy penalty' do
-
       setup do
         @payment.update_attribute(:cancellation_policy_penalty_percentage, 60)
       end
 
       should 'return have subtotal amount after refund equal to subtotal amount if no refund has been made' do
-        assert_equal 10000, @payment.subtotal_amount_cents_after_refund
+        assert_equal 10_000, @payment.subtotal_amount_cents_after_refund
       end
 
       should 'calculate proper number for amount_to_be_refunded if cancelled by guest' do
         @payment.payable.update_column(:state, 'cancelled_by_guest')
-        assert_equal 10000, @payment.subtotal_amount_cents
+        assert_equal 10_000, @payment.subtotal_amount_cents
         assert_equal 4000, @payment.amount_to_be_refunded
       end
 
       should 'calculate proper number for amount_to_be_refunded if cancelled by host' do
         @payment.payable.update_column(:state, 'cancelled_by_host')
-        assert_equal 10000, @payment.subtotal_amount_cents
-        assert_equal 11000, @payment.amount_to_be_refunded
+        assert_equal 10_000, @payment.subtotal_amount_cents
+        assert_equal 11_000, @payment.amount_to_be_refunded
       end
 
       should 'trigger refund method with proper amount when guest cancels ' do
         @payment.payable.update_column(:state, 'cancelled_by_guest')
-        PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).once.with do |amount, reference, response|
+        PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).once.with do |amount, _reference, _response|
           amount == 4000
-        end.returns(Refund.new(:success => true))
+        end.returns(Refund.new(success: true))
         @payment.refund!
       end
 
       should 'trigger refund method with proper amount when host cancels ' do
         @payment.payable.update_column(:state, 'cancelled_by_host')
-        PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).once.with do |amount, reference, response|
-          amount == 11000
-        end.returns(Refund.new(:success => true))
+        PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).once.with do |amount, _reference, _response|
+          amount == 11_000
+        end.returns(Refund.new(success: true))
         @payment.refund!
       end
 
@@ -228,7 +225,6 @@ class PaymentTest < ActiveSupport::TestCase
         @refund = FactoryGirl.create(:refund, payment: @payment, amount_cents: 3000)
         assert_equal @payment.subtotal_amount_cents - 3000, @payment.subtotal_amount_cents_after_refund
       end
-
     end
   end
 
@@ -248,10 +244,8 @@ class PaymentTest < ActiveSupport::TestCase
     setup do
       @reservation = FactoryGirl.create(:reservation)
       @reservation.payment.destroy
-      @payment = @reservation.build_payment(@reservation.shared_payment_attributes.merge({
-        payment_method: FactoryGirl.build(:credit_card_payment_method),
-        credit_card_attributes: FactoryGirl.attributes_for(:credit_card_attributes),
-        }))
+      @payment = @reservation.build_payment(@reservation.shared_payment_attributes.merge(payment_method: FactoryGirl.build(:credit_card_payment_method),
+                                                                                         credit_card_attributes: FactoryGirl.attributes_for(:credit_card_attributes)))
       @payment.save!
     end
 
@@ -259,7 +253,6 @@ class PaymentTest < ActiveSupport::TestCase
       assert @payment.company_id.present?
       assert_equal @payment.company_id, @payment.payable.company_id
     end
-
   end
 end
 

@@ -3,7 +3,7 @@ class AvailabilityTemplate < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  has_many :availability_rules, :as => :target, :inverse_of => :target, :dependent => :destroy
+  has_many :availability_rules, as: :target, inverse_of: :target, dependent: :destroy
   has_many :schedule_exception_rules, dependent: :destroy
 
   belongs_to :transactable_type
@@ -20,7 +20,7 @@ class AvailabilityTemplate < ActiveRecord::Base
   validates_associated :schedule_exception_rules
 
   # AR can't handle parent: [different_objects] condition.
-  scope :for_parents, -> (parents) {
+  scope :for_parents, lambda  { |parents|
     parents.compact!
     types = parents.group_by(&:class)
     if types.one?
@@ -28,7 +28,7 @@ class AvailabilityTemplate < ActiveRecord::Base
     else
       conditions = []
       types.each_pair do |type, objects|
-        conditions << send(:sanitize_sql_array, ["(parent_id in (?) AND parent_type = ?)", objects, type])
+        conditions << send(:sanitize_sql_array, ['(parent_id in (?) AND parent_type = ?)', objects, type])
       end
       where(conditions.join(' OR '))
     end
@@ -70,8 +70,7 @@ class AvailabilityTemplate < ActiveRecord::Base
     return true if schedule_exception_rules.blank?
 
     Time.use_zone(timezone) do
-      schedule_exception_rules.each { |sr| sr.parse_user_input }
+      schedule_exception_rules.each(&:parse_user_input)
     end
   end
-
 end

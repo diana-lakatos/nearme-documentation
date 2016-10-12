@@ -11,13 +11,13 @@ class TransactableType < ActiveRecord::Base
   AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction, OfferAction]
   SEARCH_VIEWS = %w(mixed list listing_mixed)
   AVAILABLE_SHOW_PATH_FORMATS = [
-    "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id",
-    "/:transactable_type_id/locations/:location_id/listings/:id",
-    "/:transactable_type_id/:location_id/listings/:id",
-    "/locations/:location_id/:id",
-    "/locations/:location_id/listings/:id",
-    "/:transactable_type_id/:id",
-    "/listings/:id"
+    '/transactable_types/:transactable_type_id/locations/:location_id/listings/:id',
+    '/:transactable_type_id/locations/:location_id/listings/:id',
+    '/:transactable_type_id/:location_id/listings/:id',
+    '/locations/:location_id/:id',
+    '/locations/:location_id/listings/:id',
+    '/:transactable_type_id/:id',
+    '/listings/:id'
   ].freeze
 
   INTERNAL_FIELDS = [
@@ -45,7 +45,7 @@ class TransactableType < ActiveRecord::Base
   has_many :custom_model_types, through: :custom_model_type_linkings
   has_many :custom_validators, as: :validatable
   has_many :additional_charge_types, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id
-  has_many :merchant_fees, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id, :as => :charge_type_target
+  has_many :merchant_fees, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id, as: :charge_type_target
   has_many :transactable_type_instance_views, dependent: :destroy
   has_many :instance_views, through: :transactable_type_instance_views
   has_many :transactables, dependent: :destroy, foreign_key: 'transactable_type_id'
@@ -59,21 +59,21 @@ class TransactableType < ActiveRecord::Base
   serialize :allowed_currencies, Array
   serialize :availability_options, Hash
 
-  after_update :destroy_translations!, if: lambda { |transactable_type| transactable_type.name_changed? || transactable_type.bookable_noun_changed? || transactable_type.lessor_changed? || transactable_type.lessee_changed? }
+  after_update :destroy_translations!, if: ->(transactable_type) { transactable_type.name_changed? || transactable_type.bookable_noun_changed? || transactable_type.lessor_changed? || transactable_type.lessee_changed? }
   before_validation :set_default_options
   after_create :create_translations!
   after_create :create_reservation_type!
 
   scope :searchable, -> { where(searchable: true) }
   scope :by_position, -> { order('position ASC') }
-  scope :order_by_array_of_names, -> (names) {
-    names_decorated = names.each_with_index.map {|tt, i| "WHEN transactable_types.name='#{tt}' THEN #{i}" }
+  scope :order_by_array_of_names, lambda  { |names|
+    names_decorated = names.each_with_index.map { |tt, i| "WHEN transactable_types.name='#{tt}' THEN #{i}" }
     order("CASE #{names_decorated.join(' ')} END") if names.present?
   }
   scope :found_and_sorted_by_names, -> (names) { where(name: names).order_by_array_of_names(names) }
 
   validates :name, :default_search_view, :searcher_type, presence: true
-  validates :category_search_type, presence: true, if: -> (transactable_type){ transactable_type.show_categories }
+  validates :category_search_type, presence: true, if: -> (transactable_type) { transactable_type.show_categories }
   validates_inclusion_of :show_path_format, in: AVAILABLE_SHOW_PATH_FORMATS, allow_nil: true
   validates_associated :action_types
 
@@ -85,7 +85,7 @@ class TransactableType < ActiveRecord::Base
   accepts_nested_attributes_for :merchant_fees, allow_destroy: true
 
   delegate :translated_bookable_noun, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
-    :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
+           :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
   validate do
     if type == 'TransactableType' && !(all_action_types.any?(&:enabled) || action_types.any?(&:enabled))
@@ -99,19 +99,19 @@ class TransactableType < ActiveRecord::Base
     [
       :name,
       [:name, self.class.last.try(:id).to_i + 1],
-      [:name, rand(1000000)]
+      [:name, rand(1_000_000)]
     ]
   end
 
   def any_rating_system_active?
-    self.rating_systems.any?(&:active)
+    rating_systems.any?(&:active)
   end
 
   def allowed_currencies
     super || instance.allowed_currencies
   end
 
-  def allowed_currencies=currencies
+  def allowed_currencies=(currencies)
     currencies.reject!(&:blank?)
     super(currencies)
   end
@@ -133,17 +133,15 @@ class TransactableType < ActiveRecord::Base
   end
 
   def create_reservation_type!
-    return true if self.reservation_type.present?
+    return true if reservation_type.present?
 
-    reservation_type = ReservationType.create!({
-     name: "#{self.name} checkout",
-     transactable_types: [self],
-     settings: {
-       "skip_payment_authorization" => "false",
-        "validate_on_adding_to_cart" => "true"
-      },
-      step_checkout: false
-    })
+    reservation_type = ReservationType.create!(name: "#{name} checkout",
+                                               transactable_types: [self],
+                                               settings: {
+                                                 'skip_payment_authorization' => 'false',
+                                                 'validate_on_adding_to_cart' => 'true'
+                                               },
+                                               step_checkout: false)
     Utils::FormComponentsCreator.new(reservation_type).create!
   end
 
@@ -152,7 +150,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   def self.mandatory_boolean_validation_rules
-    { "inclusion" => { "in" => [true, false], "allow_nil" => false } }
+    { 'inclusion' => { 'in' => [true, false], 'allow_nil' => false } }
   end
 
   def translation_manager
@@ -163,13 +161,13 @@ class TransactableType < ActiveRecord::Base
     @transactable_type_drop ||= TransactableTypeDrop.new(self)
   end
 
-  def has_action?(name)
+  def has_action?(_name)
     action_rfq?
   end
 
   def create_rating_systems
     RatingConstants::RATING_SYSTEM_SUBJECTS.each do |subject|
-      rating_system = self.rating_systems.create!(subject: subject)
+      rating_system = rating_systems.create!(subject: subject)
       RatingConstants::VALID_VALUES.each { |value| rating_system.rating_hints.create!(value: value) }
     end
   end
@@ -212,7 +210,7 @@ class TransactableType < ActiveRecord::Base
         at.enabled = false
       end
       action.pricings.first_or_initialize
-      self.association(:all_action_types).add_to_target(action)
+      association(:all_action_types).add_to_target(action)
     end
   end
 
@@ -227,10 +225,8 @@ class TransactableType < ActiveRecord::Base
   private
 
   def set_default_options
-    self.default_search_view ||=  available_search_views.first
+    self.default_search_view ||= available_search_views.first
     self.search_engine ||= 'elasticsearch'
     self.searcher_type ||= 'geo'
   end
-
 end
-

@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::TopicsController < InstanceAdmin::Manage::BaseController
-
   def edit
     @topic = Topic.find(params[:id])
     render layout: false

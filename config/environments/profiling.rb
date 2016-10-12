@@ -6,7 +6,7 @@ DesksnearMe::Application.configure do
 
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.default_url_options = { host: 'localhost:3000' }
   Rails.application.routes.default_url_options[:host] = 'localhost:3000'
   Rails.application.routes.default_url_options[:protocol] = 'http'
   config.active_support.deprecation = :log

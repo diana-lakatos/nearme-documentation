@@ -1,5 +1,4 @@
 class ReengagementOneBookingJob < Job
-
   def after_initialize(reservation_id)
     @reservation_id = reservation_id
   end

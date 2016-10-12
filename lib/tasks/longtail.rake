@@ -22,35 +22,32 @@ namespace :longtail do
     page.css_content = LongtailRakeHelper.spacer_page_css
     page.save!
     LongtailRakeHelper.parse_keywords!(page, 'bd6502da3bc87081bb32be0b7187534c')
-
   end
 end
 
 class LongtailRakeHelper
-
   class << self
-
-    def parse_keywords!(page, token, page_number = 1)
-      url = URI.parse("http://api-staging.longtailux.com/keywords/seo?page_limit=10000")
+    def parse_keywords!(page, token, _page_number = 1)
+      url = URI.parse('http://api-staging.longtailux.com/keywords/seo?page_limit=10000')
       http = Net::HTTP.new(url.host, url.port)
       req = Net::HTTP::Get.new(url)
-      req.add_field("Authorization", "Bearer #{token}")
+      req.add_field('Authorization', "Bearer #{token}")
       response = http.request(req)
       keywords = JSON.parse(response.body)
 
       @main_data_source = page.data_sources.where(type: 'DataSource::CustomSource', label: page.slug).first_or_create!
 
-      keywords["data"].each do |keyword|
+      keywords['data'].each do |keyword|
         ensure_100_requests_per_minute!
 
         host = "http://api-staging.longtailux.com/search/seo/#{keyword['attributes']['slug']}"
         url = URI.parse(host)
         http = Net::HTTP.new(url.host, url.port)
         req = Net::HTTP::Get.new(url)
-        req.add_field("Authorization", "Bearer #{token}")
+        req.add_field('Authorization', "Bearer #{token}")
         response = http.request(req)
         while response.body == 'Too Many Attempts.'
-          puts "Too many attempts, retrying after 5secs..."
+          puts 'Too many attempts, retrying after 5secs...'
           sleep(5)
           response = http.request(req)
         end
@@ -87,7 +84,6 @@ class LongtailRakeHelper
           dsc.json_content = parsed_body
         end
         page.page_data_source_contents.where(data_source_content: data_source_content, slug: keyword['attributes']['url'][1..-1]).first_or_create!
-
       end
     end
 
@@ -98,7 +94,7 @@ class LongtailRakeHelper
       if @first_request == Time.zone.now.strftime('%M').to_i
         @number_of_requests += 1
         if @number_of_requests == 100
-          puts "have to sleep, reached 100 requests in the same minute ("
+          puts 'have to sleep, reached 100 requests in the same minute ('
           loop do
             sleep(1)
           end while @first_request == Time.zone.now.strftime('%M').to_i
@@ -112,7 +108,7 @@ class LongtailRakeHelper
     end
 
     def generic_page_content
-      %Q{
+      %(
 {% assign cache_key = data_source_last_update | append: current_path %}
 {% cache_for cache_key, page %}
   {% assign dsc = @data_source_contents.first.json_content %}
@@ -212,11 +208,11 @@ class LongtailRakeHelper
 
   {% endif %}
 {% endcache_for %}
-      }
+            )
     end
 
     def spacer_page_content
-      %Q{
+      %{
   {% assign cache_key = data_source_last_update | append: current_path %}
   {% cache_for cache_key, page %}
     {% assign dsc = @data_source_contents.first.json_content %}
@@ -454,11 +450,10 @@ class LongtailRakeHelper
       {% endif %}
     {% endcache_for %}
       }
-
     end
 
     def spacer_page_css
-      %Q{
+      %{
 body {
   background: #fff !important;
 }
@@ -949,9 +944,6 @@ right:5%;
 }
 }
       }
-
     end
-
   end
 end
-

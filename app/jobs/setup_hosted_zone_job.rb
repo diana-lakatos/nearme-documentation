@@ -15,14 +15,14 @@ class SetupHostedZoneJob < Job
   def create_hosted_zone
     HostedZoneRepository.create @domain.name
   rescue Aws::Route53::Errors::HostedZoneAlreadyExists
-    # TODO capture error but do not stop - raygun?
+    # TODO: capture error but do not stop - raygun?
   end
 
-   def configure_alias_record
-     zone.add_target balancer
-  rescue Aws::Route53::Errors::InvalidChangeBatch
-    # TODO capture error but do not stop - raygun?
-  end
+  def configure_alias_record
+    zone.add_target balancer
+ rescue Aws::Route53::Errors::InvalidChangeBatch
+   # TODO: capture error but do not stop - raygun?
+ end
 
   def zone
     @zone ||= HostedZoneRepository.find_by_name @domain.name
@@ -30,7 +30,7 @@ class SetupHostedZoneJob < Job
 
   def balancer
     LoadBalancerRepository.find_by_name(@domain.load_balancer_name).tap do |b|
-      raise ArgumentError, "Could not find balancer #{ @domain.load_balancer_name} for domain #{@domain.name}" if b.load_balancer_name.nil?
+      fail ArgumentError, "Could not find balancer #{ @domain.load_balancer_name} for domain #{@domain.name}" if b.load_balancer_name.nil?
     end
   end
 end

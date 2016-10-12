@@ -41,6 +41,4 @@ class TransactableCollaboratorsController < ApplicationController
   def find_transactable
     @transactable = Transactable.find(params[:transactable_id] || params[:listing_id])
   end
-
 end
-

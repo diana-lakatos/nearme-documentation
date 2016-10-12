@@ -11,9 +11,8 @@ class CoverImageUploader < BaseUploader
 
   process :auto_orient
 
-
   self.dimensions = {
-    :thumbail => { :width => 200, :height => 200 },
+    thumbail: { width: 200, height: 200 }
   }
 
   ASPECT_RATIO = 6.7368421053
@@ -28,6 +27,4 @@ class CoverImageUploader < BaseUploader
   def clean_model
     model.update_attribute(:cover_image_transformation_data, nil)
   end
-
 end
-

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class DimensionsTemplateTest < ActiveSupport::TestCase
-
   setup do
     @dimensions_template = FactoryGirl.build(:dimensions_template)
   end
@@ -39,5 +38,4 @@ class DimensionsTemplateTest < ActiveSupport::TestCase
       assert_not @dimensions_template.save
     end
   end
-
 end

@@ -1,5 +1,4 @@
 class DateTimeHandler
-
   def initialize
   end
 
@@ -10,7 +9,7 @@ class DateTimeHandler
     when Date, DateTime, ActiveSupport::TimeWithZone, nil
       object
     else
-      raise NotImplementedError.new("Can't convert #{object.inspect} to datetime")
+      fail NotImplementedError.new("Can't convert #{object.inspect} to datetime")
     end
   end
 
@@ -21,7 +20,7 @@ class DateTimeHandler
     when Date, DateTime, ActiveSupport::TimeWithZone, nil
       object
     else
-      raise NotImplementedError.new("Can't convert #{object.inspect} to datetime")
+      fail NotImplementedError.new("Can't convert #{object.inspect} to datetime")
     end
   end
 
@@ -32,7 +31,7 @@ class DateTimeHandler
     when Date, DateTime, ActiveSupport::TimeWithZone, nil
       object
     else
-      raise NotImplementedError.new("Can't convert #{object.inspect} to time")
+      fail NotImplementedError.new("Can't convert #{object.inspect} to time")
     end
   end
 
@@ -43,8 +42,7 @@ class DateTimeHandler
     when String, nil
       object
     else
-      raise NotImplementedError.new("Can't convert #{object.inspect} (#{object.class.name}) to string")
+      fail NotImplementedError.new("Can't convert #{object.inspect} (#{object.class.name}) to string")
     end
   end
 end
-

@@ -3,9 +3,8 @@ module ActiveRecord::ActAsSupported
   extend ActiveSupport::Concern
 
   module ClassMethods
-
     def supported(*args)
-      args.each do |method_name, method_returns|
+      args.each do |method_name, _method_returns|
         define_method "supports_#{method_name}?" do
           true
         end
@@ -13,7 +12,7 @@ module ActiveRecord::ActAsSupported
     end
 
     def unsupported(*args)
-      args.each do |method_name, method_returns|
+      args.each do |method_name, _method_returns|
         define_method "supports_#{method_name}?" do
           false
         end

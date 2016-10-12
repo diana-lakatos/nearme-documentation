@@ -1,7 +1,7 @@
 class InstanceAdmin < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
-  has_metadata :without_db_column => true
+  has_metadata without_db_column: true
   auto_set_platform_context
   scoped_to_platform_context
 
@@ -18,8 +18,8 @@ class InstanceAdmin < ActiveRecord::Base
   delegate :name, to: :user, allow_nil: true
   delegate :first_permission_have_access_to, to: :instance_admin_role, allow_nil: true
 
-  scope :for_user, ->(user) {
-    return self.none if user.nil?
+  scope :for_user, lambda { |user|
+    return none if user.nil?
     where('instance_admins.user_id = ?', user.id)
   }
 
@@ -32,15 +32,15 @@ class InstanceAdmin < ActiveRecord::Base
   end
 
   def mark_as_instance_owner
-    self.update(instance_owner: true, instance_admin_role_id: InstanceAdminRole.administrator_role.try(:id))
-    instance.instance_admins.where(instance_owner: true).where.not(id: self.id).update_all(instance_owner: false)
+    update(instance_owner: true, instance_admin_role_id: InstanceAdminRole.administrator_role.try(:id))
+    instance.instance_admins.where(instance_owner: true).where.not(id: id).update_all(instance_owner: false)
   end
 
   private
 
   def mark_as_instance_owner_if_none
-    return unless self.instance_id
-    self.instance ||= Instance.find(self.instance_id)
+    return unless instance_id
+    self.instance ||= Instance.find(instance_id)
     if instance.instance_admins.empty?
       self.instance_owner = true
       self.instance_admin_role_id = InstanceAdminRole.administrator_role.try(:id)

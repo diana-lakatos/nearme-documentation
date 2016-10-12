@@ -1,8 +1,8 @@
 module GoogleMapsHelper
   def google_maps_road_map_url(options = {})
     params = google_maps_params(options.merge(
-      :location_type => :center,
-      :zoom => 16,
+                                  location_type: :center,
+                                  zoom: 16
     ))
     params[:markers] = "color:green|size:small|#{params[:center]}"
 
@@ -24,7 +24,7 @@ module GoogleMapsHelper
     height = options.delete(:height)
     sensor = options.delete(:sensor).present?.to_s
 
-    params = options.merge({ :sensor => sensor, :size => "#{width}x#{height}"})
+    params = options.merge(sensor: sensor, size: "#{width}x#{height}")
     params[location_type] = "#{latitude},#{longitude}" if location_type
     params
   end

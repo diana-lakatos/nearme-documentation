@@ -4,15 +4,15 @@ module Delayed
       module Notify
         def error(job, error)
           ::Raygun.track_exception(error,
-            custom_data: {
-              delayed: {
-                error_class:   error.class.name,
-                error_message: "#{error.class.name}: #{error.message}",
-                parameters:    {
-                  failed_job: job.inspect,
-                }
-              }
-          })
+                                   custom_data: {
+                                     delayed: {
+                                       error_class:   error.class.name,
+                                       error_message: "#{error.class.name}: #{error.message}",
+                                       parameters:    {
+                                         failed_job: job.inspect
+                                       }
+                                     }
+                                   })
           super if defined?(super)
         end
       end

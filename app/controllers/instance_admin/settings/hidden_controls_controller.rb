@@ -1,7 +1,6 @@
 class InstanceAdmin::Settings::HiddenControlsController < InstanceAdmin::Settings::BaseController
-
   def update
-    @instance.hidden_ui_controls = (params[:hidden_ui_controls] || {}).select { |k, v| v == '1' }
+    @instance.hidden_ui_controls = (params[:hidden_ui_controls] || {}).select { |_k, v| v == '1' }
 
     if @instance.save
       flash[:success] = t 'flash_messages.instance_admin.settings.hidden_controls.update'

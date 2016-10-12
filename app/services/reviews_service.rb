@@ -20,7 +20,7 @@ class ReviewsService
     CSV.generate do |csv|
       csv.add_row %w(id rating user created_at)
       reviews.each do |review|
-        csv.add_row review.attributes.values_at(*%w{id rating user_name created_at})
+        csv.add_row review.attributes.values_at(*%w(id rating user_name created_at))
       end
     end
   end
@@ -40,23 +40,21 @@ class ReviewsService
     return @rating_system_hash if @rating_system_hash.present?
     active_rating_systems = RatingSystem.includes(:rating_hints, :rating_questions, :transactable_type).active
     @rating_system_hash ||= {
-      transactable_type_id_per_subject: active_rating_systems.select{ |rs| rs.transactable_type.is_a?(TransactableType) }.inject({}){ |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
-      active_rating_systems: active_rating_systems.group_by { |rating_system| rating_system.transactable_type_id },
-      buyer_rating_system: active_rating_systems.with_subject(RatingConstants::GUEST).group_by { |rating_system| rating_system.transactable_type_id },
-      seller_rating_system: active_rating_systems.with_subject(RatingConstants::HOST).group_by { |rating_system| rating_system.transactable_type_id },
-      product_rating_system: active_rating_systems.with_subject(RatingConstants::TRANSACTABLE).group_by { |rating_system| rating_system.transactable_type_id }
+      transactable_type_id_per_subject: active_rating_systems.select { |rs| rs.transactable_type.is_a?(TransactableType) }.inject({}) { |hash, rs| hash[rs.subject] ||= []; hash[rs.subject] << rs.transactable_type_id; hash },
+      active_rating_systems: active_rating_systems.group_by(&:transactable_type_id),
+      buyer_rating_system: active_rating_systems.with_subject(RatingConstants::GUEST).group_by(&:transactable_type_id),
+      seller_rating_system: active_rating_systems.with_subject(RatingConstants::HOST).group_by(&:transactable_type_id),
+      product_rating_system: active_rating_systems.with_subject(RatingConstants::TRANSACTABLE).group_by(&:transactable_type_id)
     }
   end
-
 
   def get_reviews_by(reviewables)
     {
       seller_collection: Review.active_with_subject(RatingConstants::HOST).where(reviewable_id: reviewables[RatingConstants::HOST].to_a.map(&:id)).decorate,
-      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).where(reviewable_id: reviewables[RatingConstants::TRANSACTABLE].to_a.map(&:id) ).decorate,
+      product_collection: Review.active_with_subject(RatingConstants::TRANSACTABLE).where(reviewable_id: reviewables[RatingConstants::TRANSACTABLE].to_a.map(&:id)).decorate,
       buyer_collection: Review.active_with_subject(RatingConstants::GUEST).where(reviewable_id: reviewables[RatingConstants::GUEST].to_a.map(&:id)).decorate
     }
   end
-
 
   def get_line_items_for_owner_and_creator
     if get_rating_systems[:transactable_type_id_per_subject].any?
@@ -64,15 +62,15 @@ class ReviewsService
       active_systems_for_guest = get_rating_systems[:transactable_type_id_per_subject][RatingConstants::GUEST]
       active_systems_for_listing = get_rating_systems[:transactable_type_id_per_subject][RatingConstants::TRANSACTABLE]
 
-      host_line_item_scope = LineItem::Transactable.join_transactables.of_order_owner(@current_user).
-        merge(Order.reviewable).where('transactables.creator_id != ?', @current_user.id)
-      guest_line_item_scope = LineItem::Transactable.join_transactables.join_orders.of_lister(@current_user).
-        where("transactables.transactable_type_id IN (?)", active_systems_for_guest).merge(Order.reviewable).
-        where('orders.user_id != ?', @current_user.id)
+      host_line_item_scope = LineItem::Transactable.join_transactables.of_order_owner(@current_user)
+                             .merge(Order.reviewable).where('transactables.creator_id != ?', @current_user.id)
+      guest_line_item_scope = LineItem::Transactable.join_transactables.join_orders.of_lister(@current_user)
+                              .where('transactables.transactable_type_id IN (?)', active_systems_for_guest).merge(Order.reviewable)
+                              .where('orders.user_id != ?', @current_user.id)
 
       {
-        RatingConstants::TRANSACTABLE => host_line_item_scope.where("transactables.transactable_type_id IN (?)", active_systems_for_listing).by_archived_at(*filter_period),
-        RatingConstants::HOST => host_line_item_scope.where("transactables.transactable_type_id IN (?)", active_systems_for_host).by_archived_at(*filter_period),
+        RatingConstants::TRANSACTABLE => host_line_item_scope.where('transactables.transactable_type_id IN (?)', active_systems_for_listing).by_archived_at(*filter_period),
+        RatingConstants::HOST => host_line_item_scope.where('transactables.transactable_type_id IN (?)', active_systems_for_host).by_archived_at(*filter_period),
         RatingConstants::GUEST => guest_line_item_scope.by_archived_at(*filter_period)
       }
     else
@@ -106,7 +104,7 @@ class ReviewsService
     when '6_months_ago' then date_range 6.months.ago.to_date
     else
       date_range_array = @params[:date].split('-')
-      date_range_array.map! {|string| Date.strptime(string, '%m/%d/%Y') }
+      date_range_array.map! { |string| Date.strptime(string, '%m/%d/%Y') }
       date_range *date_range_array
     end
   end
@@ -129,10 +127,7 @@ class ReviewsService
     end
   end
 
-
   def key_for_constant(constant)
     :"#{constant}_ids"
   end
-
 end
-

@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::WaiverAgreementTemplatesController < InstanceAdmin::Manage::BaseController
-
   def index
     # scoping to instance is not duplicating <autoscope to platform context>. We have polymorphic association here, we want
     # to get only waiver agreement templates where target_type is Instance, not where instance_id = X

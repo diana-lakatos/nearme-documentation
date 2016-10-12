@@ -1,5 +1,4 @@
 module EventTracker::ReservationEvents
-
   def reviewed_a_booking(reservation, custom_options = {})
     track 'Reviewed a Booking', reservation, custom_options
   end
@@ -23,6 +22,4 @@ module EventTracker::ReservationEvents
   def booking_expired(reservation, custom_options = {})
     track 'Booking Expired', reservation, custom_options
   end
-
 end
-

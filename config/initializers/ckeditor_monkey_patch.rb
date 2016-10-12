@@ -14,4 +14,3 @@ module Ckeditor
     end
   end
 end
-

@@ -30,7 +30,7 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def proper_file_path
-    img_path = self.respond_to?(:current_url) ? current_url(:original) : self.url
+    img_path = self.respond_to?(:current_url) ? current_url(:original) : url
     img_path[0] == '/' ? Rails.root.join('public', img_path[1..-1]) : img_path
   end
 
@@ -56,7 +56,7 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def instance_id
-    raise NotImplementedError.new('PlatformContext must be present to upload to s3') if platform_context.try(:instance).nil?
+    fail NotImplementedError.new('PlatformContext must be present to upload to s3') if platform_context.try(:instance).nil?
     platform_context.instance.id
   end
 
@@ -81,8 +81,7 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   def current_url(version = nil, *args)
     if versions_generated? || !source_url
-      if (version.blank? && self.respond_to?(:transformation_data)) \
-      || (self.class.respond_to?(:delayed_versions) && self.class.delayed_versions.include?(version) && !versions_generated?)
+      if (version.blank? && self.respond_to?(:transformation_data)) || (self.class.respond_to?(:delayed_versions) && self.class.delayed_versions.include?(version) && !versions_generated?)
         version = :transformed
       end
       args.unshift(version) if version && version != :original
@@ -90,7 +89,7 @@ class BaseUploader < CarrierWave::Uploader::Base
     elsif source_url
       #  see https://developers.inkfilepicker.com/docs/web/#convert
       if version && dimensions[version]
-        source_url + "/convert?" + { :w => dimensions[version][:width], :h => dimensions[version][:height], :fit => 'crop' }.to_query
+        source_url + '/convert?' + { w: dimensions[version][:width], h: dimensions[version][:height], fit: 'crop' }.to_query
       else
         source_url
       end
@@ -109,7 +108,7 @@ class BaseUploader < CarrierWave::Uploader::Base
     super
   end
 
-  def delayed_processing?(image = nil)
+  def delayed_processing?(_image = nil)
     !!@delayed_processing
   end
 

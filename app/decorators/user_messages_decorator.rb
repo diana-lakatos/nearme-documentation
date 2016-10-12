@@ -1,5 +1,4 @@
 class UserMessagesDecorator < Draper::CollectionDecorator
-
   include Draper::LazyHelpers
 
   def initialize(collection, user)
@@ -8,25 +7,25 @@ class UserMessagesDecorator < Draper::CollectionDecorator
   end
 
   def inbox
-    @threaded_user_messages = threaded_user_messages.reject {|key, user_messages|
+    @threaded_user_messages = threaded_user_messages.reject do|_key, user_messages|
       # reject all threads that have all messages archived for @user
-      user_messages.all?{|user_message| user_message.archived_for?(@user) }
-    }
+      user_messages.all? { |user_message| user_message.archived_for?(@user) }
+    end
     self
   end
 
   def unread
-    @threaded_user_messages = threaded_user_messages.select { |key, user_messages|
+    @threaded_user_messages = threaded_user_messages.select do |_key, user_messages|
       # is in thread at least one message that is unread for @user
-      user_messages.any?{|user_message| user_message.unread_for?(@user) }
-    }
+      user_messages.any? { |user_message| user_message.unread_for?(@user) }
+    end
     self
   end
 
   def archived
-    @threaded_user_messages = threaded_user_messages.select { |key, user_messages|
-      user_messages.all?{|user_message| user_message.archived_for?(@user) }
-    }
+    @threaded_user_messages = threaded_user_messages.select do |_key, user_messages|
+      user_messages.all? { |user_message| user_message.archived_for?(@user) }
+    end
     self
   end
 
@@ -36,7 +35,7 @@ class UserMessagesDecorator < Draper::CollectionDecorator
 
   def mark_as_read_for(user)
     # All unread messages are marked as read
-    to_mark_as_read = decorated_collection.select{|m| m.unread_for?(user)}
+    to_mark_as_read = decorated_collection.select { |m| m.unread_for?(user) }
     if to_mark_as_read.present?
       to_mark_as_read.each do |message|
         message.mark_as_read_for!(user)
@@ -49,7 +48,7 @@ class UserMessagesDecorator < Draper::CollectionDecorator
   end
 
   def user_message_navigation_link(action, current_action, &block)
-    link_class = "btn btn-medium btn-gray"
+    link_class = 'btn btn-medium btn-gray'
     link_class += (current_action.to_sym == action) ? ' active' : '-darker'
     path = case action
     when :index
@@ -72,9 +71,6 @@ class UserMessagesDecorator < Draper::CollectionDecorator
   private
 
   def threaded_user_messages
-    @threaded_user_messages ||= decorated_collection.group_by{|user_message|
-      user_message.thread_scope
-    }.sort_by{|key, user_messages| user_messages.last.created_at }.reverse
+    @threaded_user_messages ||= decorated_collection.group_by(&:thread_scope).sort_by { |_key, user_messages| user_messages.last.created_at }.reverse
   end
-
 end

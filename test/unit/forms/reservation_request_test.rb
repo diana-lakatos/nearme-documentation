@@ -172,7 +172,6 @@
 #     end
 #   end
 
-
 #   context '#get_minimum_booking_minutes' do
 
 #     setup do

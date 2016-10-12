@@ -5,20 +5,20 @@ module Blog::ApplicationHelper
 
   def blog_title_tag
     @blog = get_blog_instance
-    content_for?(:title) ? content_for(:title) + " | " + @blog.name : @blog.name
+    content_for?(:title) ? content_for(:title) + ' | ' + @blog.name : @blog.name
   end
 
   def blog_rss_title
     @blog = get_blog_instance
     if params[:tags].present?
-      @blog.name + " | " + @selected_tags.map(&:capitalize).join(", ")
+      @blog.name + ' | ' + @selected_tags.map(&:capitalize).join(', ')
     else
       @blog.name
     end
   end
 
   def blog_rss_url(format: false)
-    base_url = format ? canonical_blog_url + ".rss" : canonical_blog_url
+    base_url = format ? canonical_blog_url + '.rss' : canonical_blog_url
 
     if params[:tags].present?
       base_url + "?tags=#{params[:tags]}"

@@ -76,7 +76,7 @@ class OrderDrop < BaseDrop
   end
 
   def translated_payment_method
-    I18n.t("dashboard.host_reservations.payment_methods." + (@order.payment.try(:payment_method).try(:payment_method_type) || 'pending').to_s)
+    I18n.t('dashboard.host_reservations.payment_methods.' + (@order.payment.try(:payment_method).try(:payment_method_type) || 'pending').to_s)
   end
 
   def outbound_shipment
@@ -149,7 +149,7 @@ class OrderDrop < BaseDrop
   end
 
   def transactable_user_messages
-    transactable.user_messages.where("author_id = :user_id OR thread_recipient_id = :user_id", user_id: @order.user_id)
+    transactable.user_messages.where('author_id = :user_id OR thread_recipient_id = :user_id', user_id: @order.user_id)
   end
 
   def properties
@@ -170,5 +170,4 @@ class OrderDrop < BaseDrop
     @first_line_item ||= @order.line_items.first || OpenStruct.new(included_tax_total_rate: 0, additional_tax_total_rate: 0)
     @first_line_item
   end
-
 end

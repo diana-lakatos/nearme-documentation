@@ -1,5 +1,4 @@
 class TransactableDrop < BaseDrop
-
   include AvailabilityRulesHelper
   include SearchHelper
   include MoneyRails::ActionViewExtension
@@ -137,11 +136,11 @@ class TransactableDrop < BaseDrop
       end
     end
 
-    days.each do |day, value|
+    days.each do |day, _value|
       days[day].sort! { |time1, time2| time1[0] <=> time2[0] }
     end
 
-    sorted_days = days.sort do |d1,d2|
+    sorted_days = days.sort do |d1, d2|
       if d1[0] != 0 && d2[0] != 0
         d1[0] <=> d2[0]
       elsif d1[0] == 0
@@ -167,7 +166,7 @@ class TransactableDrop < BaseDrop
       end
     end
 
-    sorted_days = days.sort do |d1,d2|
+    sorted_days = days.sort do |d1, d2|
       if d1[0] != 0 && d2[0] != 0
         d1[0] <=> d2[0]
       elsif d1[0] == 0
@@ -214,7 +213,7 @@ class TransactableDrop < BaseDrop
 
   # has inappropriate report for user
   def inappropriate_report_path
-    routes.inappropriate_report_path(id: @source.id, reportable_type: "Transactable")
+    routes.inappropriate_report_path(id: @source.id, reportable_type: 'Transactable')
   end
 
   # url to the listing page for this listing
@@ -239,7 +238,7 @@ class TransactableDrop < BaseDrop
 
   # returns the url to the first image for this listing, or, if missing, the url to a placeholder image
   def photo_url
-    photos.try(:first).try(:[],:space_listing) || image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
+    photos.try(:first).try(:[], :space_listing) || image_url(Placeholder.new(width: 410, height: 254).path).to_s
   end
 
   def photo_medium_url
@@ -252,9 +251,8 @@ class TransactableDrop < BaseDrop
   end
 
   def space_placeholder
-    image_url(Placeholder.new(:width => 895, :height => 554).path).to_s
+    image_url(Placeholder.new(width: 895, height: 554).path).to_s
   end
-
 
   # url to the section in the app for managing this listing, with tracking
   def manage_listing_url_with_tracking
@@ -267,7 +265,7 @@ class TransactableDrop < BaseDrop
 
   # url to the application wizard for publishing a new listing
   def space_wizard_list_path
-    routes.new_user_session_path(:return_to => routes.transactable_type_space_wizard_list_path(transactable_type))
+    routes.new_user_session_path(return_to: routes.transactable_type_space_wizard_list_path(transactable_type))
   end
 
   # url to the application wizard for publishing a new listing, with tracking
@@ -370,7 +368,7 @@ class TransactableDrop < BaseDrop
   end
 
   def all_free_pricings?
-    action_type.pricings.any?{ |p| !p.is_free_booking? }
+    action_type.pricings.any? { |p| !p.is_free_booking? }
   end
 
   def new_project_collaborator
@@ -425,5 +423,4 @@ class TransactableDrop < BaseDrop
   def confirmed_order
     line_item_orders.confirmed.first
   end
-
 end

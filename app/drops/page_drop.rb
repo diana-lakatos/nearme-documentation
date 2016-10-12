@@ -1,5 +1,4 @@
 class PageDrop < BaseDrop
-
   attr_reader :page
 
   delegate :slug, :updated_at, :id, to: :page

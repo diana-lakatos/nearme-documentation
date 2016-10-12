@@ -14,11 +14,11 @@ class Transactable::ActionType < ActiveRecord::Base
 
   delegate :timezone, :desks_booked_on, :quantity, to: :transactable
   delegate :favourable_pricing_rate, :service_fee_guest_percent,
-    :service_fee_host_percent, :available_units, :allow_custom_pricings?,
-    :allow_no_action?, :allow_action_rfq?, :action_continuous_dates_booking,
-    :cancellation_policy_enabled, :cancellation_policy_penalty_percentage,
-    :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
-    :hours_to_expiration, :hide_location_availability?, :allow_free_booking?, to: :transactable_type_action_type, allow_nil: true
+           :service_fee_host_percent, :available_units, :allow_custom_pricings?,
+           :allow_no_action?, :allow_action_rfq?, :action_continuous_dates_booking,
+           :cancellation_policy_enabled, :cancellation_policy_penalty_percentage,
+           :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
+           :hours_to_expiration, :hide_location_availability?, :allow_free_booking?, to: :transactable_type_action_type, allow_nil: true
 
   accepts_nested_attributes_for :pricings, allow_destroy: true, reject_if: :check_price_attributes
 
@@ -29,7 +29,7 @@ class Transactable::ActionType < ActiveRecord::Base
       possible_units: pricings.map(&:adjusted_unit).uniq,
       action_rfq: action_rfq,
       no_action: no_action || false,
-      favourable_pricing_rate: transactable_type_action_type.favourable_pricing_rate,
+      favourable_pricing_rate: transactable_type_action_type.favourable_pricing_rate
     }
   end
 
@@ -42,11 +42,11 @@ class Transactable::ActionType < ActiveRecord::Base
   end
 
   def pricings_for_types(price_types = [])
-    pricings.select{ |p| price_types.blank? || price_types.include?(p.units_to_s) }
+    pricings.select { |p| price_types.blank? || price_types.include?(p.units_to_s) }
   end
 
   def has_price?
-    pricings.any?{ |p| p.price_cents.to_i > 0 || p.exclusive_price_available? }
+    pricings.any? { |p| p.price_cents.to_i > 0 || p.exclusive_price_available? }
   end
 
   def bookable?
@@ -54,7 +54,7 @@ class Transactable::ActionType < ActiveRecord::Base
   end
 
   def pricing_for(units)
-    pricings.find{|p| p.units_to_s == units }
+    pricings.find { |p| p.units_to_s == units }
   end
 
   def price_for(units)
@@ -66,11 +66,11 @@ class Transactable::ActionType < ActiveRecord::Base
   end
 
   (AVAILABILE_UNITS + %w(is_free)).each do |u|
-    define_method("#{u}_booking?"){ pricings.any?(&:"#{u}_booking?") }
+    define_method("#{u}_booking?") { pricings.any?(&:"#{u}_booking?") }
   end
 
   AVAILABILE_UNITS.each do |u|
-    define_method("#{u}_pricings"){ pricings.select(&:"#{u}_booking?") }
+    define_method("#{u}_pricings") { pricings.select(&:"#{u}_booking?") }
   end
 
   def validate_all_dates_available(order)
@@ -105,7 +105,6 @@ class Transactable::ActionType < ActiveRecord::Base
   protected
 
   def check_price_attributes(attribs)
-    !enabled? || attribs[:enabled] != '1' ||  attribs[:exclusive_price].to_i == 0 && attribs[:price].to_i == 0 && !attribs[:is_free_booking]
+    !enabled? || attribs[:enabled] != '1' || attribs[:exclusive_price].to_i == 0 && attribs[:price].to_i == 0 && !attribs[:is_free_booking]
   end
-
 end

@@ -5,7 +5,7 @@ class CssParser::Parser
   def parse_block_into_rule_sets!(block, options = {}) # :nodoc:
     current_media_queries = [:all]
     if options[:media_types]
-      current_media_queries = options[:media_types].flatten.collect { |mt| CssParser.sanitize_media_query(mt)}
+      current_media_queries = options[:media_types].flatten.collect { |mt| CssParser.sanitize_media_query(mt) }
     end
 
     in_declarations = 0
@@ -23,9 +23,7 @@ class CssParser::Parser
     block.scan(/([\\]?[{}\s"]|(.[^\s"{}\\]*))/).each do |matches|
       token = matches[0]
 
-      if token =~ /\A"/ # found un-escaped double quote
-        in_string = !in_string
-      end       
+      in_string = !in_string if token =~ /\A"/ # found un-escaped double quote
 
       if in_declarations > 0
         # too deep, malformed declaration block
@@ -33,17 +31,17 @@ class CssParser::Parser
           in_declarations -= 1 if token =~ /\}/
           next
         end
-        
+
         if token =~ /\{/
           in_declarations += 1
           next
         end
-      
+
         current_declarations += token
 
-        if token =~ /\}/ and not in_string
+        if token =~ /\}/ && !in_string
           current_declarations.gsub!(/\}[\s]*$/, '')
-          
+
           in_declarations -= 1
 
           unless current_declarations.strip.empty?
@@ -60,7 +58,7 @@ class CssParser::Parser
         media_types = []
       elsif in_at_media_rule
         if token =~ /\{/
-          block_depth = block_depth + 1
+          block_depth += 1
           in_at_media_rule = false
           in_media_block = true
           current_media_queries << CssParser.sanitize_media_query(current_media_query)
@@ -74,12 +72,12 @@ class CssParser::Parser
         else
           current_media_query += token.strip + ' '
         end
-      elsif in_charset or token =~ /@charset/i
+      elsif in_charset || token =~ /@charset/i
         # iterate until we are out of the charset declaration
         in_charset = (token =~ /;/ ? false : true)
       else
-        if token =~ /\}/ and not in_string
-          block_depth = block_depth - 1
+        if token =~ /\}/ && !in_string
+          block_depth -= 1
 
           # reset the current media query scope
           if in_media_block
@@ -87,7 +85,7 @@ class CssParser::Parser
             in_media_block = false
           end
         else
-          if token =~ /\{/ and not in_string
+          if token =~ /\{/ && !in_string
             current_selectors.gsub!(/^[\s]*/, '')
             current_selectors.gsub!(/[\s]*$/, '')
             in_declarations += 1
@@ -98,7 +96,7 @@ class CssParser::Parser
       end
     end
 
-    # check for unclosed braces          
+    # check for unclosed braces
     if in_declarations > 0
       add_rule!(current_selectors, current_declarations, current_media_queries)
     end

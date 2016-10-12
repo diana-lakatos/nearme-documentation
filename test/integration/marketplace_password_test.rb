@@ -1,7 +1,6 @@
-require "test_helper"
+require 'test_helper'
 
 class MarketplacePasswordTest < ActionDispatch::IntegrationTest
-
   setup do
     @user = FactoryGirl.create(:user)
     @instance = PlatformContext.current.instance
@@ -53,6 +52,4 @@ class MarketplacePasswordTest < ActionDispatch::IntegrationTest
     get_via_redirect instance_admin_path
     assert_equal instance_admin_login_path, path
   end
-
 end
-

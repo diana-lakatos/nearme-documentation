@@ -10,5 +10,4 @@ module Encryptable
   def encryption_key
     DesksnearMe::Application.config.secret_token
   end
-
 end

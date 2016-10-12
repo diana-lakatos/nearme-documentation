@@ -1,6 +1,6 @@
 class StagingEmailInterceptor
   def self.delivering_email(mail)
-    rewrite = Proc.new do |address|
+    rewrite = proc do |_address|
       PlatformContext.current.instance.test_email.presence || DesksnearMe::Application.config.test_email
     end
 

@@ -1,5 +1,4 @@
 class Dashboard::Company::TransactablesController < Dashboard::Company::BaseController
-
   include AttachmentsHelper
 
   before_action :redirect_to_account_if_verification_required
@@ -80,11 +79,10 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def possible_sorts
-    ["created_at desc", "created_at asc"]
+    ['created_at desc', 'created_at asc']
   end
 
   def order_param
-    "transactables." + (possible_sorts.detect { |sort| sort == params[:order_by] }.presence || possible_sorts.first)
+    'transactables.' + (possible_sorts.detect { |sort| sort == params[:order_by] }.presence || possible_sorts.first)
   end
-
 end

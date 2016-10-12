@@ -1,8 +1,7 @@
 require 'test_helper'
 
 class V1::SocialControllerTest < ActionController::TestCase
-
-  test "should get data" do
+  test 'should get data' do
     authenticate!
     User.any_instance.stubs(:linked_to?).with('facebook').returns(false)
     User.any_instance.stubs(:linked_to?).with('twitter').returns(true)
@@ -11,5 +10,4 @@ class V1::SocialControllerTest < ActionController::TestCase
     get :show
     assert_response :success
   end
-
 end

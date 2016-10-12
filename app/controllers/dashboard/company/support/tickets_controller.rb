@@ -18,9 +18,9 @@ class Dashboard::Company::Support::TicketsController < Dashboard::Company::BaseC
 
   def filter_name
     {
-      "open" => translated_filter_name(:open),
-      "resolved" => translated_filter_name(:resolved),
-      "all" => translated_filter_name(:all)
+      'open' => translated_filter_name(:open),
+      'resolved' => translated_filter_name(:resolved),
+      'all' => translated_filter_name(:all)
     }
   end
 
@@ -31,9 +31,6 @@ class Dashboard::Company::Support::TicketsController < Dashboard::Company::BaseC
   end
 
   def translated_filter_name(name)
-    I18n.translate(name, scope: ['support', 'filter_name'])
+    I18n.translate(name, scope: %w(support filter_name))
   end
-
-
 end
-

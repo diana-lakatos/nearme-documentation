@@ -8,14 +8,13 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
     @company = FactoryGirl.create(:company, creator: @user)
     @location = FactoryGirl.create(:location, company: @company)
     @location2 = FactoryGirl.create(:location, company: @company)
-    @listing_type = "Desk"
+    @listing_type = 'Desk'
     @amenity_type = FactoryGirl.create(:amenity_type)
     @amenity = FactoryGirl.create(:amenity, amenity_type: @amenity_type)
     @transactable_type = TransactableType.first
   end
 
   context '#new' do
-
     should 'display available Waiver Agreement check boxes' do
       @waiver_agreement_template1 = FactoryGirl.create(:waiver_agreement_template, target: @company)
       @waiver_agreement_template2 = FactoryGirl.create(:waiver_agreement_template, target: @company)
@@ -25,17 +24,16 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
       assert_select 'label', @waiver_agreement_template2.name
       assert_select 'label', @waiver_agreement_template3.name
     end
-
   end
 
-  context "#create" do
+  context '#create' do
     setup do
       @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({ transactable_type_id: TransactableType.first.id,
-                                                                               photos_attributes: [FactoryGirl.attributes_for(:photo)],
-                                                                               properties: { listing_type: @listing_type },
-                                                                               description: "Aliquid eos ab quia officiis sequi.",
-                                                                               name: "Listing #{Random.rand(1000)}",
-                                                                               amenity_ids: [@amenity.id] }.merge(action_type_attibutes(nil, 10, 1, 'day')))
+                                                                              photos_attributes: [FactoryGirl.attributes_for(:photo)],
+                                                                              properties: { listing_type: @listing_type },
+                                                                              description: 'Aliquid eos ab quia officiis sequi.',
+                                                                              name: "Listing #{Random.rand(1000)}",
+                                                                              amenity_ids: [@amenity.id] }.merge(action_type_attibutes(nil, 10, 1, 'day')))
       @attributes.delete(:photo_not_required)
     end
 
@@ -47,47 +45,35 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
         user == @user
       end
 
-      post :create, {
-        transactable: @attributes.merge(location_id: @location2.id),
-        transactable_type_id: @transactable_type.id
-      }
+      post :create,         transactable: @attributes.merge(location_id: @location2.id),
+                            transactable_type_id: @transactable_type.id
       assert_equal 1, assigns(:transactable).amenities.size
     end
 
-    should "create transactable" do
+    should 'create transactable' do
       assert_difference('@location2.listings.count') do
-        post :create, {
-          transactable: @attributes.merge(location_id: @location2.id),
-          transactable_type_id: @transactable_type.id
-        }
+        post :create,           transactable: @attributes.merge(location_id: @location2.id),
+                                transactable_type_id: @transactable_type.id
       end
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     end
 
     context 'different subunit to unit conversion rate' do
-
       should 'work for currencies with 1 to 1 ratio' do
-        post :create, {
-          transactable: @attributes.merge(location_id: @location2.id, currency: 'JPY'),
-          transactable_type_id: @transactable_type.id
-        }
+        post :create,           transactable: @attributes.merge(location_id: @location2.id, currency: 'JPY'),
+                                transactable_type_id: @transactable_type.id
         assert_equal 10.to_money('JPY'), assigns(:transactable).action_type.day_pricings.first.price
-
       end
 
       should 'work for currencies with 5 to 1 ratio' do
-        post :create, {
-          transactable: @attributes.merge(location_id: @location2.id, currency: 'MGA'),
-          transactable_type_id: @transactable_type.id
-        }
+        post :create,           transactable: @attributes.merge(location_id: @location2.id, currency: 'MGA'),
+                                transactable_type_id: @transactable_type.id
         assert_equal 10.to_money('MGA'), assigns(:transactable).action_type.day_pricings.first.price
       end
 
       should 'work for currencies with 1000 to 1 ratio' do
-        post :create, {
-          transactable: @attributes.merge(location_id: @location2.id, currency: 'BHD'),
-          transactable_type_id: @transactable_type.id
-        }
+        post :create,           transactable: @attributes.merge(location_id: @location2.id, currency: 'BHD'),
+                                transactable_type_id: @transactable_type.id
         assert_equal 10.to_money('BHD'), assigns(:transactable).action_type.day_pricings.first.price
       end
     end
@@ -98,17 +84,14 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
       @attributes.delete(:photos_attributes)
 
       assert_no_difference('@location2.listings.count') do
-        post :create, {
-          transactable: @attributes.merge(location_id: @location2.id),
-          transactable_type_id: @transactable_type.id
-        }
+        post :create,           transactable: @attributes.merge(location_id: @location2.id),
+                                transactable_type_id: @transactable_type.id
       end
       assert_template :new
     end
   end
 
-  context "with transactable" do
-
+  context 'with transactable' do
     setup do
       @transactable = FactoryGirl.create(:transactable, location: @location, photos_count: 1, quantity: 2)
     end
@@ -126,7 +109,7 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
         @related_transactable = FactoryGirl.create(:transactable, :with_time_based_booking, location: @related_location, photos_count: 1)
       end
 
-      context "#edit" do
+      context '#edit' do
         should 'allow show edit form for related transactable' do
           get :edit, id: @related_transactable.id, transactable_type_id: @transactable_type.id
           assert_response :success
@@ -139,11 +122,11 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
         end
       end
 
-      context "#update" do
+      context '#update' do
         should 'allow update for related transactable' do
           put :update, id: @related_transactable.id,
-            transactable: { name: 'new name' }.merge(action_type_attibutes(@related_transactable.action_type, 10, 1, 'day')),
-            transactable_type_id: @transactable_type.id
+                       transactable: { name: 'new name' }.merge(action_type_attibutes(@related_transactable.action_type, 10, 1, 'day')),
+                       transactable_type_id: @transactable_type.id
           @related_transactable.reload
           assert_equal 'new name', @related_transactable.name
           assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
@@ -158,16 +141,16 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
 
         should 'properly update price if currency changes' do
           put :update, id: @related_transactable.id,
-            transactable: { currency: 'JPY' }.merge(action_type_attibutes(@related_transactable.action_type, 100, 1, 'day')),
-            transactable_type_id: @transactable_type.id
+                       transactable: { currency: 'JPY' }.merge(action_type_attibutes(@related_transactable.action_type, 100, 1, 'day')),
+                       transactable_type_id: @transactable_type.id
           @related_transactable.reload
           assert_equal 100.to_money('JPY'), @related_transactable.action_type.day_pricings.first.price
         end
       end
 
-      context "#destroy" do
+      context '#destroy' do
         should 'allow destroy for related transactable' do
-          Rails.application.config.event_tracker.any_instance.expects(:deleted_a_listing).with do |transactable, custom_options|
+          Rails.application.config.event_tracker.any_instance.expects(:deleted_a_listing).with do |transactable, _custom_options|
             transactable == assigns(:transactable)
           end
           assert_difference 'Transactable.count', -1 do
@@ -184,16 +167,16 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
       end
     end
 
-    should "update transactable" do
+    should 'update transactable' do
       put :update, id: @transactable.id,
-        transactable: { name: 'new name'}.merge(action_type_attibutes(@transactable.action_type, 10, 1, 'day')),
-        transactable_type_id: @transactable_type.id
+                   transactable: { name: 'new name' }.merge(action_type_attibutes(@transactable.action_type, 10, 1, 'day')),
+                   transactable_type_id: @transactable_type.id
       @transactable.reload
       assert_equal 'new name', @transactable.name
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     end
 
-    should "destroy transactable" do
+    should 'destroy transactable' do
       Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
         user == @user
       end
@@ -204,7 +187,7 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     end
 
-    should "track event from email" do
+    should 'track event from email' do
       Rails.application.config.event_tracker.any_instance.expects(:link_within_email_clicked).with do |user, custom_options|
         user == @user &&
           custom_options[:url] == '/dashboard/company/transactable_types/:transactable_type_id/transactables/:id/edit' &&
@@ -236,8 +219,7 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
       end
     end
 
-    context "someone else tries to manage our listing" do
-
+    context 'someone else tries to manage our listing' do
       setup do
         @other_user = FactoryGirl.create(:user)
         @other_company = FactoryGirl.create(:company, creator: @other_user)
@@ -251,13 +233,13 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
         end
       end
 
-      should "not update listing" do
+      should 'not update listing' do
         assert_raise Transactable::NotFound do
           put :update, id: @transactable.id, listing: { name: 'new name' }, transactable_type_id: @transactable_type.id
         end
       end
 
-      should "not destroy listing" do
+      should 'not destroy listing' do
         assert_raise Transactable::NotFound do
           delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id
         end
@@ -266,16 +248,14 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
   end
 
   context 'versions' do
-
     should 'track version change on create' do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({transactable_type_id: TransactableType.first.id, photos_attributes: [FactoryGirl.attributes_for(:photo)], properties: { listing_type: @listing_type }, description: "Aliquid eos ab quia officiis sequi.", name: "Listing #{Random.rand(1000)}" }.merge(action_type_attibutes(nil, 10, 1, 'day')))
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({ transactable_type_id: TransactableType.first.id, photos_attributes: [FactoryGirl.attributes_for(:photo)], properties: { listing_type: @listing_type }, description: 'Aliquid eos ab quia officiis sequi.', name: "Listing #{Random.rand(1000)}" }.merge(action_type_attibutes(nil, 10, 1, 'day')))
       @attributes.delete(:photo_not_required)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "create").count') do
         with_versioning do
-          post :create, { transactable: @attributes.merge(location_id: @location2.id), transactable_type_id: @transactable_type.id }
+          post :create, transactable: @attributes.merge(location_id: @location2.id), transactable_type_id: @transactable_type.id
         end
       end
-
     end
 
     should 'track version change on update' do
@@ -316,6 +296,4 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
       }]
     }
   end
-
-
 end

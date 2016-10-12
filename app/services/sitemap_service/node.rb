@@ -7,7 +7,7 @@ class SitemapService::Node
   end
 
   def location
-    raise SitemapService::InvalidLocationError.new("Please define $location in the child class.")
+    fail SitemapService::InvalidLocationError.new('Please define $location in the child class.')
   end
 
   def lastmod
@@ -16,13 +16,13 @@ class SitemapService::Node
 
   def changefreq
     # Allowed options: always|hourly|daily|weekly|monthly|yearly|never
-    "weekly"
+    'weekly'
   end
 
   def priority
     # We could bump a page's priority based on KPIs, e.g.:
     # how many orders this product had in the past 30 days? bookings? hits? conversions? etc.
-    return "0.5"
+    '0.5'
   end
 
   def image
@@ -34,11 +34,11 @@ class SitemapService::Node
       <url>
     XML
 
-    self.append_node!("loc", url_for(self.location))
-    self.append_node!("lastmod", self.lastmod) if self.lastmod.present?
-    self.append_node!("changefreq", self.changefreq)
-    self.append_node!("priority", self.priority)
-    self.append_image! if self.image.present?
+    self.append_node!('loc', url_for(location))
+    self.append_node!('lastmod', lastmod) if lastmod.present?
+    self.append_node!('changefreq', changefreq)
+    self.append_node!('priority', priority)
+    self.append_image! if image.present?
 
     self.xml += <<-XML
       </url>
@@ -46,7 +46,7 @@ class SitemapService::Node
 
     self.xml = self.xml.squish
 
-    return self.xml
+    self.xml
   end
 
   def url_helpers
@@ -64,8 +64,8 @@ class SitemapService::Node
       <$key>$value</$key>
     XML
 
-    self.xml.gsub!("$key", key)
-    self.xml.gsub!("$value", value)
+    self.xml.gsub!('$key', key)
+    self.xml.gsub!('$value', value)
   end
 
   def append_image!
@@ -75,6 +75,6 @@ class SitemapService::Node
       </image:image>
     XML
 
-    self.xml.gsub!("$image", self.image)
+    self.xml.gsub!('$image', image)
   end
 end

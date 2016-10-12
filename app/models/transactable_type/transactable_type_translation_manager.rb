@@ -14,9 +14,7 @@ class TransactableType::TransactableTypeTranslationManager < TranslationManager
 
   def destroy_translations!
     ids = Translation.where('locale = ? AND instance_id = ? AND key like ?', PlatformContext.current.instance.primary_locale, @object.instance_id, "#{translation_namespace_was}.%").inject([]) do |ids_to_delete, t|
-      if t.key  =~ /\A#{translation_namespace_was}\.(.+)\z/
-        ids_to_delete << t.id
-      end
+      ids_to_delete << t.id if t.key =~ /\A#{translation_namespace_was}\.(.+)\z/
       ids_to_delete
     end
     create_translations!

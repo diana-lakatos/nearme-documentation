@@ -71,7 +71,7 @@ class WishListItemDrop < BaseDrop
     end
   end
 
-  def polymorphic_wishlistable_path(wishlistable)
+  def polymorphic_wishlistable_path(_wishlistable)
     if @wishlistable.is_a?(Transactable)
       @wishlistable.decorate.show_path
     elsif @wishlistable.is_a?(Location)
@@ -85,5 +85,4 @@ class WishListItemDrop < BaseDrop
   def no_image
     asset_url 'placeholders/895x554.gif'
   end
-
 end

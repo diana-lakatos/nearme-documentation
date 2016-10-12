@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :location do
-    email "psherman@smilehouse.com"
-    description "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    email 'psherman@smilehouse.com'
+    description 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
     availability_template_id { (AvailabilityTemplate.first || FactoryGirl.create(:availability_template)).id }
     association(:location_type, factory: :location_type)
     company
@@ -70,6 +70,5 @@ FactoryGirl.define do
       association :location_address, factory: :address_ursynowska_address_components
       association(:company, factory: :white_label_company)
     end
-
   end
 end

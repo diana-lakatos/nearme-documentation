@@ -1,6 +1,5 @@
 module Elastic
   class QueryBuilder
-
     QUERY_BOOST = 1.0
     ENABLE_FUZZY = false
     ENABLE_PARTIAL = false
@@ -50,14 +49,14 @@ module Elastic
       {
         size: query_limit,
         from: query_offset,
-        fields: ["_id", "location_id"],
+        fields: %w(_id location_id),
         sort: sorting_options,
         query: match_query,
         filter: {
           bool: {
             must: @filters,
             must_not: [
-              exists: { field: "draft" }
+              exists: { field: 'draft' }
             ]
           }
         }
@@ -70,10 +69,10 @@ module Elastic
       query = {
         size: query_limit,
         from: query_offset,
-        fields: ["_id", "location_id"],
+        fields: %w(_id location_id),
         query: {
           filtered: {
-            query: match_query,
+            query: match_query
           }
         },
         sort: sorting_options,
@@ -81,19 +80,17 @@ module Elastic
           bool: {
             must: @filters,
             must_not: [
-              exists: { field: "draft" }
+              exists: { field: 'draft' }
             ]
           }
         }
       }.merge(aggregations)
       query[:query][:filtered].merge(
-        {
-          filter: {
-            not: {
-              filter: {
-                bool:{
-                  must: @not_filters
-                }
+        filter: {
+          not: {
+            filter: {
+              bool: {
+                must: @not_filters
               }
             }
           }
@@ -178,8 +175,8 @@ module Elastic
           end
         end.compact
       end
-      if @query[:lat] && @query[:lon] && (sorting_fields.empty? || sorting_fields.any?{|opt| opt['distance']} )
-        order = sorting_fields.find{|opt| opt['distance']}.try(:[],'distance').try(:[], :order)
+      if @query[:lat] && @query[:lon] && (sorting_fields.empty? || sorting_fields.any? { |opt| opt['distance'] })
+        order = sorting_fields.find { |opt| opt['distance'] }.try(:[], 'distance').try(:[], :order)
         sorting_fields << {
           _geo_distance: {
             geo_location: {
@@ -194,7 +191,7 @@ module Elastic
       elsif sorting_fields.empty?
         return ['_score']
       end
-      sorting_fields.reject{ |opt| opt['distance'] }
+      sorting_fields.reject { |opt| opt['distance'] }
     end
 
     def aggregations
@@ -214,12 +211,12 @@ module Elastic
               },
               maximum_price: {
                 max: {
-                  field: "all_prices"
+                  field: 'all_prices'
                 }
               },
               minimum_price: {
                 min: {
-                  field: "all_prices"
+                  field: 'all_prices'
                 }
               }
             }
@@ -251,17 +248,14 @@ module Elastic
 
       # You should enable fuzzy search manually. Not included in the current release
       if ENABLE_FUZZY
-        multi_match.merge!({
-          fuzziness: FUZZYNESS,
-          analyzer: ANALYZER
-        })
+        multi_match.merge!(fuzziness: FUZZYNESS,
+                           analyzer: ANALYZER)
       end
 
       multi_match
     end
 
     def apply_geo_search_filters
-
       if @transactable_type.show_price_slider && @query[:price] && (@query[:price][:min].present? || @query[:price][:max].present?)
         price_min = @query[:price][:min].to_f * 100
         price_max = @query[:price][:max].to_f * 100

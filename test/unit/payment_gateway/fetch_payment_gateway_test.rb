@@ -1,19 +1,18 @@
 require 'test_helper'
 
 class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
-
   setup do
     @payment_gateway = FactoryGirl.create(:fetch_payment_gateway)
   end
 
-  should "set fetch as processor for NZ companies with NZD currency" do
+  should 'set fetch as processor for NZ companies with NZD currency' do
     assert_equal ['NZD'], @payment_gateway.supported_currencies
     assert_equal ['NZ'], @payment_gateway.class.supported_countries
   end
 
-  should "set reservation as paid after success response" do
+  should 'set reservation as paid after success response' do
     stub_request(:post, /https:\/\/(my|demo).fetchpayments.co.nz\/webpayments\/MNSHandler.aspx/)
-      .to_return(:status => 200, :body => 'VERIFIED')
+      .to_return(status: 200, body: 'VERIFIED')
 
     @reservation = FactoryGirl.create(:reservation_with_remote_payment, currency: 'NZD')
     @reservation.payment.payment_response_params = SUCCESS_FETCH_RESPONSE
@@ -29,9 +28,9 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
     assert_equal SUCCESS_FETCH_RESPONSE, @charge.response
   end
 
-  should "set reservation as failed after declined response" do
+  should 'set reservation as failed after declined response' do
     stub_request(:post, /https:\/\/(my|demo).fetchpayments.co.nz\/webpayments\/MNSHandler.aspx/)
-      .to_return(:status => 200, :body => 'DECLINED')
+      .to_return(status: 200, body: 'DECLINED')
 
     @reservation = FactoryGirl.create(:reservation_with_remote_payment, currency: 'NZD')
     @reservation.payment.payment_response_params = FAILED_FETCH_RESPONSE
@@ -46,23 +45,22 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
   end
 
   FETCH_RESPONSE = {
-    "account_id" => "621380",
-    "item_name" => "Super cat",
-    "amount" => "1.03",
-    "transaction_id" => "P150100005007408",
-    "receipt_id" => "25001990",
-    "verifier" => "6D1911F685372EF19E255A12691AAD74",
-    "reservation_id" => "1"
+    'account_id' => '621380',
+    'item_name' => 'Super cat',
+    'amount' => '1.03',
+    'transaction_id' => 'P150100005007408',
+    'receipt_id' => '25001990',
+    'verifier' => '6D1911F685372EF19E255A12691AAD74',
+    'reservation_id' => '1'
   }
 
   SUCCESS_FETCH_RESPONSE = {
-    "transaction_status" => "2",
-    "response_text" => "Transaction Successful"
+    'transaction_status' => '2',
+    'response_text' => 'Transaction Successful'
   }.merge(FETCH_RESPONSE)
 
   FAILED_FETCH_RESPONSE = {
-    "transaction_status" => "11",
-    "response_text" => "Transaction Failed"
+    'transaction_status' => '11',
+    'response_text' => 'Transaction Failed'
   }.merge(FETCH_RESPONSE)
-
 end

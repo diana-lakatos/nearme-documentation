@@ -11,9 +11,9 @@ class Payout < ActiveRecord::Base
   belongs_to :payment_gateway
   belongs_to :reference, -> { with_deleted }, polymorphic: true
 
-  scope :successful, -> { where(:success => true) }
-  scope :pending, -> { where(:pending => true) }
-  scope :failed, -> { where(:pending => false, :success => false) }
+  scope :successful, -> { where(success: true) }
+  scope :pending, -> { where(pending: true) }
+  scope :failed, -> { where(pending: false, success: false) }
 
   monetize :amount_cents, with_model_currency: :currency
 
@@ -36,7 +36,7 @@ class Payout < ActiveRecord::Base
     self.pending = false
     self.response = response.to_yaml if response
     save!
-    self.reference.try(:success!)
+    reference.try(:success!)
   end
 
   def payout_failed(response)
@@ -44,7 +44,7 @@ class Payout < ActiveRecord::Base
     self.pending = false
     self.response = response.to_yaml
     save!
-    self.reference.try(:fail!)
+    reference.try(:fail!)
   end
 
   def failure_message
@@ -66,5 +66,4 @@ class Payout < ActiveRecord::Base
   def amount_money
     Money.new(amount, currency)
   end
-
 end

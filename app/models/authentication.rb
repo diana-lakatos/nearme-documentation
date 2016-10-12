@@ -1,5 +1,5 @@
 class Authentication < ActiveRecord::Base
-  class InvalidToken < Exception; end;
+  class InvalidToken < Exception; end
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
@@ -18,16 +18,16 @@ class Authentication < ActiveRecord::Base
 
   delegate :new_connections, :friend_ids, to: :social_connection, allow_nil: true
 
-  scope :with_valid_token, -> {
-    where('authentications.token_expires_at > ? OR authentications.token_expires_at IS NULL', Time.now).
-    where(token_expired: false)
+  scope :with_valid_token, lambda {
+    where('authentications.token_expires_at > ? OR authentications.token_expires_at IS NULL', Time.now)
+      .where(token_expired: false)
   }
 
   after_commit :find_friends, on: :create
   after_commit :update_info, on: :create
 
-  PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram", "Google", "GitHub"]
-  ALLOWED_LOGIN_PROVIDERS = PROVIDERS + ["SAML"] - ["Instagram"]
+  PROVIDERS = %w(Facebook LinkedIn Twitter Instagram Google GitHub)
+  ALLOWED_LOGIN_PROVIDERS = PROVIDERS + ['SAML'] - ['Instagram']
 
   def social_connection
     @social_connection ||= self.class.provider_class(provider).try(:new_from_authentication, self)
@@ -51,7 +51,7 @@ class Authentication < ActiveRecord::Base
   end
 
   def connections_count
-    self.connections.count
+    connections.count
   end
 
   def can_be_deleted?
@@ -60,11 +60,11 @@ class Authentication < ActiveRecord::Base
   end
 
   def expire_token!
-    self.update_column(:token_expired, true)
+    update_column(:token_expired, true)
   end
 
   def token_expired?
-    (self.token_expires && self.token_expires_at && self.token_expires_at.utc < Time.zone.now.utc) || self.token_expired
+    (token_expires && token_expires_at && token_expires_at.utc < Time.zone.now.utc) || token_expired
   end
 
   def update_info

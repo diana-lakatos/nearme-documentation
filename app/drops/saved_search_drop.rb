@@ -1,7 +1,6 @@
 class SavedSearchDrop < BaseDrop
-
   attr_reader :saved_search
-  
+
   # title
   #   title of this saved search
   # path
@@ -18,5 +17,4 @@ class SavedSearchDrop < BaseDrop
   def dashboard_saved_searches_url
     routes.dashboard_saved_searches_path
   end
-
 end

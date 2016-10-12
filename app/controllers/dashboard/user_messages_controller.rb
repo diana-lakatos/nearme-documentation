@@ -2,23 +2,23 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
   before_filter :redirect_to_login, only: [:new]
   skip_before_filter :authenticate_user!, only: [:new]
 
-  before_filter :missing_phone_number, only: [:new], unless: Proc.new { params[:skip] || current_user.mobile_number.present? }
+  before_filter :missing_phone_number, only: [:new], unless: proc { params[:skip] || current_user.mobile_number.present? }
 
   helper_method :user_messages_decorator
 
   def index
-    @threaded_user_messages = user_messages_decorator.inbox.fetch
+    @threaded_user_messages = order_messages(user_messages_decorator.inbox.fetch)
   end
 
   def archived
-    @threaded_user_messages = user_messages_decorator.archived.fetch
+    @threaded_user_messages = order_messages(user_messages_decorator.archived.fetch)
     render :index
   end
 
   def new
     @user_message = current_user.authored_messages.new.decorate
     @user_message.set_message_context_from_request_params(params)
-    render partial: "form"
+    render partial: 'form'
   end
 
   def create
@@ -30,7 +30,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
       if request.xhr?
         unless @user_message.first_in_thread?
-          render :partial => 'user_message_for_show', locals: { user_message: @user_message }
+          render partial: 'user_message_for_show', locals: { user_message: @user_message }
         else
           flash[:notice] = t('flash_messages.user_messages.message_sent')
           redirect_to dashboard_user_message_path(@user_message)
@@ -44,7 +44,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
     else
       @error = @user_message.errors.messages.values.flatten.first
       if request.xhr?
-        render :partial => "form"
+        render partial: 'form'
       else
         @displayed_user_message = @user_message
         @user_messages = UserMessage.for_thread(@user_message.thread_owner_with_deleted, @user_message.thread_recipient_with_deleted, @user_message.thread_context_with_deleted).by_created.decorate
@@ -73,7 +73,15 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
   private
 
   def user_messages_decorator
-    @user_messages_decorator ||= UserMessagesDecorator.new(current_user.user_messages, current_user)
+    @user_messages_decorator ||= UserMessagesDecorator.new(user_messages_scope, current_user)
+  end
+
+  def user_messages_scope
+    initial_scope = current_user.user_messages
+    if (@transactable = Transactable.find_by(id: params[:transactable_id]))
+      initial_scope = initial_scope.for_transactable(@transactable)
+    end
+    initial_scope
   end
 
   def redirect_to_login
@@ -97,5 +105,10 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
     end
 
     render :missing_phone_number
+  end
+
+  def order_messages(collection)
+    collection.sort! { |a, b| [a.last.last.the_other_user(current_user).name, a.last.last.created_at.to_i * -1] <=> [b.last.last.the_other_user(current_user).name, b.last.last.created_at.to_i * -1] } if params[:order_way] == 'author_name'
+    collection
   end
 end

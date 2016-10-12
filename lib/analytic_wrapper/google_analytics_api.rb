@@ -10,7 +10,7 @@ class AnalyticWrapper::GoogleAnalyticsApi
     @current_user = user
   end
 
-  def apply_user(user, options = {})
+  def apply_user(user, _options = {})
     @current_user = user
   end
 
@@ -42,7 +42,7 @@ class AnalyticWrapper::GoogleAnalyticsApi
   private
 
   def endpoint
-    "http://www.google-analytics.com/collect"
+    'http://www.google-analytics.com/collect'
   end
 
   def tracking_code
@@ -62,5 +62,4 @@ class AnalyticWrapper::GoogleAnalyticsApi
       an: PlatformContext.current.instance.name
     }
   end
-
 end

@@ -1,5 +1,4 @@
 class InstanceAdmin::Reports::ListingsController < InstanceAdmin::Reports::BaseController
-
   include ReportsProperties
 
   before_filter :set_breadcrumbs_title
@@ -51,8 +50,8 @@ class InstanceAdmin::Reports::ListingsController < InstanceAdmin::Reports::BaseC
 
   def set_breadcrumbs_title
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :title => t('instance_admin.general.reports') },
-      { :title => t('instance_admin.general.listings'), :url => instance_admin_reports_listings_path }
+      { title: t('instance_admin.general.reports') },
+      title: t('instance_admin.general.listings'), url: instance_admin_reports_listings_path
     )
   end
 
@@ -63,6 +62,4 @@ class InstanceAdmin::Reports::ListingsController < InstanceAdmin::Reports::BaseC
   def find_transactable
     @transactable = Transactable.find(params[:id])
   end
-
 end
-

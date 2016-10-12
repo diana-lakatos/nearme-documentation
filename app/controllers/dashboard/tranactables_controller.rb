@@ -47,7 +47,7 @@ class Dashboard::TransactablesController < Dashboard::BaseController
     draft = @transactable.draft
     @transactable.draft = nil if params[:submit]
     respond_to do |format|
-      format.html {
+      format.html do
         if @transactable.save
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to dashboard_project_type_projects_path(@transactable_type)
@@ -57,14 +57,14 @@ class Dashboard::TransactablesController < Dashboard::BaseController
           @transactable.draft = draft
           render :edit
         end
-      }
-      format.json {
+      end
+      format.json do
         if @transactable.save
-          render :json => { :success => true }
+          render json: { success: true }
         else
-          render :json => { :errors => @transactable.errors.full_messages }, :status => 422
+          render json: { errors: @transactable.errors.full_messages }, status: 422
         end
-      }
+      end
     end
   end
 
@@ -81,23 +81,20 @@ class Dashboard::TransactablesController < Dashboard::BaseController
   end
 
   def transactables
-    Transactable.joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id').
-      where('transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', current_user.id, current_user.id)
+    Transactable.joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id')
+      .where('transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', current_user.id, current_user.id)
   end
 
   def find_transactable
-    begin
-      @transactable = transactables.find(params[:id])
-      @transactable_type = @transactable.transactable_type
-    rescue ActiveRecord::RecordNotFound
-      raise Transactable::NotFound
-    end
+    @transactable = transactables.find(params[:id])
+    @transactable_type = @transactable.transactable_type
+  rescue ActiveRecord::RecordNotFound
+    raise Transactable::NotFound
   end
 
   def transactable_params
-    params.require(:transactable).permit(secured_params.project(@transactable_type, @transactable.nil? || current_user.id == @transactable.creator_id )).tap do |whitelisted|
+    params.require(:transactable).permit(secured_params.project(@transactable_type, @transactable.nil? || current_user.id == @transactable.creator_id)).tap do |whitelisted|
       whitelisted[:properties] = params[:transactable][:properties] rescue {}
     end
   end
-
 end

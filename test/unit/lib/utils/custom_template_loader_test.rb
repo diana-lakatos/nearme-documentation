@@ -1,13 +1,12 @@
 require 'test_helper'
 
 class Utils::CustomTemplateLoaderTest < ActiveSupport::TestCase
-
   setup do
     @custom_theme = FactoryGirl.create(:custom_theme)
     @custom_template_loader = Utils::CustomTemplateLoader.new(@custom_theme, File.join(Rails.root, 'test', 'assets', 'custom_templates', 'sample_theme'))
   end
 
-  context "load" do
+  context 'load' do
     should 'load views' do
       assert_equal 0, @custom_theme.instance_views.count
       assert_difference 'InstanceView.where(custom_theme_id: @custom_theme.id).count', 5 do
@@ -30,4 +29,3 @@ class Utils::CustomTemplateLoaderTest < ActiveSupport::TestCase
     end
   end
 end
-

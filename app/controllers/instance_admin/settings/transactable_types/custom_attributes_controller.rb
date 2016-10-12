@@ -7,5 +7,4 @@ class InstanceAdmin::Settings::TransactableTypes::CustomAttributesController < I
   def permitting_controller_class
     'settings'
   end
-
 end

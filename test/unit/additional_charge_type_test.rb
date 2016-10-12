@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class AdditionalChargeTypeTest < ActiveSupport::TestCase
-
   context 'associations' do
     # should have_many(:additional_charges)
     should belong_to(:additional_charge_type_target)
@@ -22,5 +21,4 @@ class AdditionalChargeTypeTest < ActiveSupport::TestCase
     act = FactoryGirl.build(:additional_charge_type)
     assert act.valid?, true
   end
-
 end

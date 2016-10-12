@@ -1,15 +1,13 @@
 require 'test_helper'
 
 class AuthenticationsControllerTest < ActionController::TestCase
-
   setup do
-    @password = "password123"
+    @password = 'password123'
   end
-
 
   # Social Authentication
 
-  test "authentication can be deleted if user has password set" do
+  test 'authentication can be deleted if user has password set' do
     create_signed_in_user_with_authentication
     Rails.application.config.event_tracker.any_instance.expects(:disconnected_social_provider).once.with do |user, custom_options|
       user == @user && custom_options == { provider: @user.authentications.first.provider }
@@ -19,9 +17,9 @@ class AuthenticationsControllerTest < ActionController::TestCase
     end
   end
 
-  test "authentication can be deleted if user has no  password but more than one authentications" do
+  test 'authentication can be deleted if user has no  password but more than one authentications' do
     create_signed_in_user_with_authentication
-    add_authentication("twitter", "abc123")
+    add_authentication('twitter', 'abc123')
     Rails.application.config.event_tracker.any_instance.expects(:disconnected_social_provider).once.with do |user, custom_options|
       user == @user && custom_options == { provider: @user.authentications.first.provider }
     end
@@ -30,7 +28,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
     end
   end
 
-  test "authentication cannot be deleted if user has no password and one authentication" do
+  test 'authentication cannot be deleted if user has no password and one authentication' do
     create_no_password_signed_in_user_and_authentication
     assert_log_not_triggered(:disconnected_social_provider)
     assert_no_difference('@user.authentications.count') do
@@ -38,9 +36,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
     end
   end
 
-
   context 'authentication flow' do
-
     setup do
       @provider = 'twitter'
       @uid = '123456'
@@ -51,16 +47,16 @@ class AuthenticationsControllerTest < ActionController::TestCase
       request.env['omniauth.auth'] = {
         'provider' => @provider,
         'uid' => @uid,
-        'info' => { 'email' => @email, 'name' => 'maciek', 'urls' => {'Twitter' => 'https://twitter.com/desksnearme'}},
+        'info' => { 'email' => @email, 'name' => 'maciek', 'urls' => { 'Twitter' => 'https://twitter.com/desksnearme' } },
         'credentials' => {
           'token' => @token,
           'secret' => @secret,
-          'expires_at' => 123456789
+          'expires_at' => 123_456_789
         }
       }
     end
 
-    should "redirect with message if already connected" do
+    should 'redirect with message if already connected' do
       @other_user = FactoryGirl.create(:user)
       add_authentication(@provider, @uid, @other_user)
       sign_in @user
@@ -72,7 +68,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert flash[:error].include?('already connected to other user')
     end
 
-    should "successfully sign in and log" do
+    should 'successfully sign in and log' do
       add_authentication(@provider, @uid, @user)
       Rails.application.config.event_tracker.any_instance.expects(:logged_in).once.with do |user, custom_options|
         user == @user && custom_options == { provider: @provider }
@@ -87,13 +83,13 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert flash[:success].include?('Signed in successfully')
     end
 
-    should "successfully create new authentication and log" do
+    should 'successfully create new authentication and log' do
       sign_in @user
       Rails.application.config.expects(:perform_social_jobs).twice.returns(true)
       raw = OpenStruct.new(id: 'dnm', username: 'desksnearme', name: 'Desks Near Me', url: 'https://twitter.com/desksnearme')
       raw.stubs(:profile_image_url).returns(nil)
       Twitter::REST::Client.any_instance.stubs(:user).once.returns(raw)
-      Twitter::REST::Client.any_instance.stubs(:friend_ids).once.returns(['1', '2'])
+      Twitter::REST::Client.any_instance.stubs(:friend_ids).once.returns(%w(1 2))
       Authentication.any_instance.stubs(:token_expired?).returns(false)
       Rails.application.config.event_tracker.any_instance.expects(:connected_social_provider).once.with do |user, custom_options|
         user == @user && custom_options == { provider: @provider }
@@ -109,7 +105,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert_equal 'https://twitter.com/desksnearme', @user.authentications.last.profile_url
     end
 
-    should "successfully create new authentication as alternative to setting password" do
+    should 'successfully create new authentication as alternative to setting password' do
       @user = FactoryGirl.create(:user_without_password)
       sign_in @user
       Rails.application.config.event_tracker.any_instance.expects(:connected_social_provider).once.with do |user, custom_options|
@@ -123,8 +119,8 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert_equal 'Authentication successful.', flash[:success]
     end
 
-    should "fail due to incorrect email" do
-      FactoryGirl.create(:user, :email => @email)
+    should 'fail due to incorrect email' do
+      FactoryGirl.create(:user, email: @email)
       sign_in @user
       assert_no_difference('User.count') do
         assert_no_difference('Authentication.count') do
@@ -134,9 +130,8 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert flash[:error].include?('is already linked to an account')
     end
 
-    context "should successfully sign up and log"  do
-
-      should "is tracked via mixpanel" do
+    context 'should successfully sign up and log'  do
+      should 'is tracked via mixpanel' do
         Rails.application.config.event_tracker.any_instance.expects(:signed_up).once.with do |user, custom_options|
           user == assigns(:oauth).authenticated_user && custom_options == { signed_up_via: 'other', provider: @provider }
         end
@@ -159,8 +154,8 @@ class AuthenticationsControllerTest < ActionController::TestCase
       end
     end
 
-    should "redirect to fill missing information if cannot create user" do
-      request.env['omniauth.auth'] = { 'provider' => @provider, 'uid' => @uid, 'info' => { } }
+    should 'redirect to fill missing information if cannot create user' do
+      request.env['omniauth.auth'] = { 'provider' => @provider, 'uid' => @uid, 'info' => {} }
       assert_no_difference('User.count') do
         assert_no_difference('Authentication.count') do
           post :create
@@ -199,7 +194,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
     auth = user.authentications.build
     auth.provider = provider
     auth.uid = uid
-    auth.token = "token"
+    auth.token = 'token'
     auth.save!
   end
 
@@ -213,11 +208,10 @@ class AuthenticationsControllerTest < ActionController::TestCase
     @user.instance_id = PlatformContext.current.instance.id
     @user.save!(validate: false)
     sign_in @user
-    add_authentication("facebook", "123456")
+    add_authentication('facebook', '123456')
     @user.authentications.each do |auth|
       auth.user = @user
       auth.user.save!
     end
   end
-
 end

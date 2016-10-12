@@ -1,12 +1,9 @@
 class WorkflowAlertLogger
   class Configuration
-
     attr_accessor :logger_type
-
   end
 
   class << self
-
     def setup
       yield(configuration)
     end
@@ -14,7 +11,6 @@ class WorkflowAlertLogger
     def configuration
       @configuration ||= ::WorkflowAlertLogger::Configuration.new
     end
-
   end
 
   def initialize(workflow_alert)
@@ -42,9 +38,7 @@ class WorkflowAlertLogger
       logger_log!
     when :none, nil
     else
-      raise "Unknow WorkflowAlertLogger logger type - #{self.class.configuration.logger_type.inspect}"
+      fail "Unknow WorkflowAlertLogger logger type - #{self.class.configuration.logger_type.inspect}"
     end
   end
-
 end
-

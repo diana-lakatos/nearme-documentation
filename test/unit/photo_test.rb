@@ -1,21 +1,18 @@
 require 'test_helper'
 
 class PhotoTest < ActiveSupport::TestCase
-
   should belong_to(:creator)
-  # TODO why?
+  # TODO: why?
   # should validate_presence_of(:image)
   should allow_value(nil).for(:caption)
   should ensure_length_of(:caption).is_at_most(120)
 
   context 'metadata' do
-
     setup do
       stub_image_url('http://www.example.com/image.jpg')
     end
 
     context 'triggering' do
-
       should 'not trigger populate metadata on listing if condition fails' do
         @transactable = FactoryGirl.create(:transactable)
         CarrierWave::SourceProcessing::Processor.any_instance.stubs(:enqueue_processing).returns(true)
@@ -29,11 +26,9 @@ class PhotoTest < ActiveSupport::TestCase
         Photo.any_instance.expects(:should_populate_metadata?).returns(true).at_least(1)
         FactoryGirl.create(:photo)
       end
-
     end
 
     context 'should_populate_metadata?' do
-
       setup do
         @photo = FactoryGirl.create(:photo)
       end
@@ -57,7 +52,7 @@ class PhotoTest < ActiveSupport::TestCase
       end
 
       should 'return true if caption was changed' do
-        @photo.update_attributes(:caption => 'caption was changed')
+        @photo.update_attributes(caption: 'caption was changed')
         assert @photo.should_populate_metadata?
       end
 
@@ -73,9 +68,6 @@ class PhotoTest < ActiveSupport::TestCase
         @photo.save!
         refute @photo.should_populate_metadata?
       end
-
     end
-
   end
-
 end

@@ -16,7 +16,7 @@ class Support::Tickets::TicketMessageAttachmentsController < Support::BaseContro
     if @ticket_message_attachment.save
       flash.now[:success] = t('flash_messages.support.ticket_message_attachment.created')
       render json: {
-        attachment_content: render_to_string(partial: 'support/ticket_message_attachments/attachment', locals: {form_name: @form_name, ticket_message_attachment: @ticket_message_attachment}),
+        attachment_content: render_to_string(partial: 'support/ticket_message_attachments/attachment', locals: { form_name: @form_name, ticket_message_attachment: @ticket_message_attachment }),
         modal_content: render_to_string(template: 'support/ticket_message_attachments/edit')
       }
     else
@@ -29,7 +29,7 @@ class Support::Tickets::TicketMessageAttachmentsController < Support::BaseContro
     @ticket_message_attachment.assign_attributes(attachment_params)
     if @ticket_message_attachment.save
       render json: {
-        attachment_content: render_to_string(partial: 'support/ticket_message_attachments/attachment', locals: {form_name: @form_name, ticket_message_attachment: @ticket_message_attachment}),
+        attachment_content: render_to_string(partial: 'support/ticket_message_attachments/attachment', locals: { form_name: @form_name, ticket_message_attachment: @ticket_message_attachment }),
         attachment_id: @ticket_message_attachment.id
       }
     else
@@ -46,7 +46,7 @@ class Support::Tickets::TicketMessageAttachmentsController < Support::BaseContro
   private
 
   def ensure_user_logged_in
-    if (request.xhr? && current_user.blank?)
+    if request.xhr? && current_user.blank?
       render json: { error_message: I18n.t('general.session_stale') }, status: 503
     end
     true
@@ -68,4 +68,3 @@ class Support::Tickets::TicketMessageAttachmentsController < Support::BaseContro
     @form_name = params.delete(:form_name).presence || params.delete(:formName)
   end
 end
-

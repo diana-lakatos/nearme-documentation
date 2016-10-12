@@ -1,7 +1,6 @@
 # Extracts necessary attributes from objects passed to track_charge
 
 class EventTracker::BaseTracker::Serializers::TrackSerializer
-
   def initialize(*objects)
     @objects = objects
   end
@@ -64,13 +63,13 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
       {
         booking_desks: object.quantity,
         booking_total: object.total_amount.try(:dollars),
-        booking_currency: object.currency,
+        booking_currency: object.currency
       }
     when Offer
       {
         booking_desks: object.quantity,
         booking_total: object.total_amount.try(:dollars),
-        booking_currency: object.currency,
+        booking_currency: object.currency
       }
     when User
       {
@@ -113,17 +112,15 @@ class EventTracker::BaseTracker::Serializers::TrackSerializer
     when Hash
       object
     else
-      raise "Can't serialize #{object}."
+      fail "Can't serialize #{object}."
     end
   end
 
   def self.get_prices(listing)
-    listing.action_type.pricings.map{|p| p.price_information.merge({ price: p.price.to_f })}
+    listing.action_type.pricings.map { |p| p.price_information.merge(price: p.price.to_f) }
   end
 
   def self.safe_get(object, property)
     object.respond_to?(property) ? object.send(property) : nil
   end
-
 end
-

@@ -13,7 +13,7 @@ class WorkflowStep::SpamReportWorkflow::SummaryStep < WorkflowStep::BaseStep
   #   current date
   def data
     {
-      amount_or_no: (@spam_report_count == 0 ? "no" : @spam_report_count),
+      amount_or_no: (@spam_report_count == 0 ? 'no' : @spam_report_count),
       date: I18n.l(Date.current, format: :short)
     }
   end

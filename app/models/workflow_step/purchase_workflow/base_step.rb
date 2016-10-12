@@ -1,5 +1,4 @@
 class WorkflowStep::PurchaseWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def self.belongs_to_transactable_type?
     true
   end
@@ -39,5 +38,4 @@ class WorkflowStep::PurchaseWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @pruchase.present?
   end
-
 end

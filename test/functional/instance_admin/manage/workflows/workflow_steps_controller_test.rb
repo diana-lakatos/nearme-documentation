@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::Workflows::WorkflowStepsControllerTest < ActionController::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.any_instance.stubs(:instance).returns(@instance)
@@ -11,12 +10,10 @@ class InstanceAdmin::Manage::Workflows::WorkflowStepsControllerTest < ActionCont
     sign_in @user
   end
 
-    should 'not raise exception' do
-      @workflow_step = FactoryGirl.create(:workflow_step)
-      assert_nothing_raised do
+  should 'not raise exception' do
+    @workflow_step = FactoryGirl.create(:workflow_step)
+    assert_nothing_raised do
       get :edit, workflow_id: @workflow_step.workflow_id, id: @workflow_step.id
-      end
     end
-
+  end
 end
-

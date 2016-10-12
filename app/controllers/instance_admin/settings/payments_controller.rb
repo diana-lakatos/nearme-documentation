@@ -1,5 +1,4 @@
 class InstanceAdmin::Settings::PaymentsController < InstanceAdmin::Settings::BaseController
-
   before_filter :find_payment_gateways
 
   def index

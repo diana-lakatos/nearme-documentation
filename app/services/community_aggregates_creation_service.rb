@@ -1,11 +1,10 @@
 class CommunityAggregatesCreationService
-
   def initialize
   end
 
   def create_aggregates
     Instance.find_each do |i|
-      next if !i.is_community?
+      next unless i.is_community?
       puts "-> Working on instance: #{i.domains.first.name}"
 
       i.set_context!
@@ -34,5 +33,4 @@ class CommunityAggregatesCreationService
       end
     end
   end
-
 end

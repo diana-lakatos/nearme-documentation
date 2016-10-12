@@ -1,5 +1,4 @@
 class MerchantAccountService::BraintreeMarketplace
-
   def initialize(merchant_account)
     @merchant_account = merchant_account
   end
@@ -17,6 +16,4 @@ class MerchantAccountService::BraintreeMarketplace
       merchant_account_id: internal_payment_gateway_account_id
     }
   end
-
 end
-

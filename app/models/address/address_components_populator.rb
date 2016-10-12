@@ -1,12 +1,11 @@
 class Address::AddressComponentsPopulator
-
   LIMIT = 500
 
   attr_accessor :result
 
   def initialize(location = nil, options = {})
     @location = location
-    @show_inspections = options.fetch(:show_inspections,false)
+    @show_inspections = options.fetch(:show_inspections, false)
   end
 
   def perform
@@ -40,11 +39,11 @@ class Address::AddressComponentsPopulator
       @location.address_components = wrapped_address_components
       output "###### address_components: #{@location.address_components}"
       if @location.save
-        output "###### and saved successfuly"
+        output '###### and saved successfuly'
       else
         output "###### but couldn't save: #{@location.errors.full_messages.inspect}"
       end
-      output ""
+      output ''
     end
   end
 
@@ -63,6 +62,7 @@ class Address::AddressComponentsPopulator
   end
 
   private
+
   def location_info
     return nil if @location.blank?
     "#{@location.id}: #{@location.address}; coordinates: '#{@location.latitude}, #{@location.longitude}'"
@@ -71,5 +71,4 @@ class Address::AddressComponentsPopulator
   def output(string)
     puts string if @show_inspections
   end
-
 end

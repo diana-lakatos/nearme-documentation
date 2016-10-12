@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :user_blog_post do
     title { Faker::Lorem.words(4).join(' ').titleize }
     content { Faker::Lorem.paragraphs(3).join('<br/><br/>') }
@@ -20,5 +19,4 @@ FactoryGirl.define do
       published_at { 1.week.ago }
     end
   end
-
 end

@@ -1,5 +1,4 @@
 class Dashboard::ReviewsController < Dashboard::BaseController
-
   def index
     completed_tab = params[:tab] == 'completed'
     @rating_systems = reviews_service.get_rating_systems
@@ -64,7 +63,6 @@ class Dashboard::ReviewsController < Dashboard::BaseController
     end
   end
 
-
   private
 
   def review_params
@@ -86,7 +84,7 @@ class Dashboard::ReviewsController < Dashboard::BaseController
   def render_errors(field)
     {
       "#{field}_error" => render_to_string(partial: "#{field}_error", layout: false,
-        locals: {error: @review.errors.messages[field].map(&:capitalize).join(', ')})
+                                           locals: { error: @review.errors.messages[field].map(&:capitalize).join(', ') })
     }
   end
 

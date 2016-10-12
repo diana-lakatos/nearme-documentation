@@ -1,5 +1,4 @@
 class Authentication::InfoUpdater
-
   attr_accessor :authentication, :user, :authentication_changes, :user_changes
 
   def initialize(authentication)
@@ -34,5 +33,4 @@ class Authentication::InfoUpdater
 
     self
   end
-
 end

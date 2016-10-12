@@ -30,14 +30,14 @@ class InstanceType::Searcher::UserSearcher
     if @params[:category_ids].present?
       category_ids = @params[:category_ids].split(',')
 
-      if @transactable_type.category_search_type == "AND"
+      if @transactable_type.category_search_type == 'AND'
         @fetcher = @fetcher.where("(select count(*) from categories_categorizables cc
           WHERE cc.categorizable_type = 'UserProfile' AND cc.categorizable_id = user_profiles.id
           AND cc.category_id in (?)) = ?", category_ids, category_ids.size)
       else
         @fetcher = @fetcher.joins("INNER JOIN categories_categorizables cc ON
-          cc.categorizable_type = 'UserProfile' AND cc.categorizable_id = user_profiles.id").
-          where("cc.category_id in (?)", category_ids)
+          cc.categorizable_type = 'UserProfile' AND cc.categorizable_id = user_profiles.id")
+                   .where('cc.category_id in (?)', category_ids)
       end
     end
 
@@ -56,7 +56,7 @@ class InstanceType::Searcher::UserSearcher
     queried_fields = [:first_name, :last_name, :name]
     if @params[:query_fields].present?
       params_fields = @params[:query_fields].split(',').map(&:to_sym)
-      params_fields.select!{ |field| (ALLOWED_QUERY_FIELDS + @transactable_type.custom_attributes.searchable.pluck(:name).map(&:to_sym)).include?(field) }
+      params_fields.select! { |field| (ALLOWED_QUERY_FIELDS + @transactable_type.custom_attributes.searchable.pluck(:name).map(&:to_sym)).include?(field) }
       queried_fields + params_fields
     else
       queried_fields

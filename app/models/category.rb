@@ -1,7 +1,6 @@
 require 'awesome_nested_set'
 
 class Category < ActiveRecord::Base
-
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -9,7 +8,7 @@ class Category < ActiveRecord::Base
   acts_as_nested_set dependent: :destroy, order: :position
 
   DISPLAY_OPTIONS = %w(tree autocomplete).freeze
-  SEARCH_OPTIONS = [["Include in search", "include"], ["Exclude from search", "exclude"]].freeze
+  SEARCH_OPTIONS = [['Include in search', 'include'], ['Exclude from search', 'exclude']].freeze
 
   has_many :categories_categorizables
   has_many :categorizable_transactables, through: :categories_categorizables, source: :transactable, foreign_key: :categorizable_id
@@ -40,14 +39,14 @@ class Category < ActiveRecord::Base
 
   scope :mandatory, -> { where(mandatory: true) }
   scope :searchable, -> { where(search_options: 'include') }
-  scope :transactables, -> { joins(:category_linkings).where(category_linkings: { category_linkable_type: 'TransactableType' } ) }
-  scope :users, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.default_profile_type } ) }
-  scope :sellers, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.seller_profile_type } ) }
-  scope :buyers, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.buyer_profile_type } ) }
-  scope :reservations, -> { joins(:category_linkings).where(category_linkings: { category_linkable_type: 'ReservationType' } ) }
+  scope :transactables, -> { joins(:category_linkings).where(category_linkings: { category_linkable_type: 'TransactableType' }) }
+  scope :users, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.default_profile_type }) }
+  scope :sellers, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.seller_profile_type }) }
+  scope :buyers, -> { joins(:category_linkings).where(category_linkings: { category_linkable: PlatformContext.current.instance.buyer_profile_type }) }
+  scope :reservations, -> { joins(:category_linkings).where(category_linkings: { category_linkable_type: 'ReservationType' }) }
 
   def autocomplete?
-    self.display_options == 'autocomplete'
+    display_options == 'autocomplete'
   end
 
   def child_index=(idx)
@@ -65,17 +64,17 @@ class Category < ActiveRecord::Base
   end
 
   def encoded_permalink
-    permalink.gsub("/", "%2F")
+    permalink.gsub('/', '%2F')
   end
 
   def include_in_search?
-    self.search_options.include?("include")
+    search_options.include?('include')
   end
 
   def pretty_name
-    ancestor_chain = self.ancestors.inject("") do |name, ancestor|
+    ancestor_chain = ancestors.inject('') do |name, ancestor|
       # we do not want the root category as it's duplicating content
-      name = name.to_s + "#{ancestor.translated_name} -> " unless ancestor.parent == nil
+      name = name.to_s + "#{ancestor.translated_name} -> " unless ancestor.parent.nil?
       name
     end
     ancestor_chain + translated_name
@@ -102,7 +101,7 @@ class Category < ActiveRecord::Base
   end
 
   def children_update
-    self.children.each(&:save)
+    children.each(&:save)
   end
 
   def translation_key
@@ -130,7 +129,7 @@ class Category < ActiveRecord::Base
       categorizable = category_linking.category_linkable
       if categorizable.try(:form_components)
         categorizable.form_components.each do |fc|
-          old_field = fc.form_fields.select{|pair| pair.first[1] =~ /Category - #{name_was}$/}
+          old_field = fc.form_fields.select { |pair| pair.first[1] =~ /Category - #{name_was}$/ }
           if old_field.present?
             if deleted_at
               fc.form_fields.delete(old_field[0])
@@ -151,6 +150,4 @@ class Category < ActiveRecord::Base
   def jsonapi_serializer_class_name
     'CategoryJsonSerializer'
   end
-
 end
-

@@ -1,15 +1,12 @@
 require 'test_helper'
 
 class Api::V3::TransactableCollaboratorsControllerTest < ActionController::TestCase
-
   context '#create' do
-
     setup do
       @transactable = FactoryGirl.create(:transactable)
     end
 
     context 'creator of the listing' do
-
       setup do
         set_authentication_header(@transactable.creator)
         @invited_user = FactoryGirl.create(:user)
@@ -32,7 +29,6 @@ class Api::V3::TransactableCollaboratorsControllerTest < ActionController::TestC
     end
 
     context 'not a creator of the listing' do
-
       setup do
         @user_who_asks_for_permission = FactoryGirl.create(:user)
         set_authentication_header(@user_who_asks_for_permission)
@@ -54,17 +50,14 @@ class Api::V3::TransactableCollaboratorsControllerTest < ActionController::TestC
         end
       end
     end
-
   end
 
   context 'accept' do
-
     setup do
       @transactable_collaborator = FactoryGirl.create(:transactable_collaborator)
     end
 
     context 'creator of the listing' do
-
       setup do
         set_authentication_header(@transactable_collaborator.transactable.creator)
       end
@@ -74,11 +67,9 @@ class Api::V3::TransactableCollaboratorsControllerTest < ActionController::TestC
         assert_not_nil @transactable_collaborator.reload.approved_by_owner_at
         assert_nil @transactable_collaborator.reload.approved_by_user_at
       end
-
     end
 
     context 'not a creator of the listing' do
-
       setup do
         set_authentication_header(@transactable_collaborator.user)
       end
@@ -90,17 +81,14 @@ class Api::V3::TransactableCollaboratorsControllerTest < ActionController::TestC
         assert_not_nil @transactable_collaborator.approved_by_user_at
       end
     end
-
   end
 
   context 'destroy' do
-
     setup do
       @transactable_collaborator = FactoryGirl.create(:transactable_collaborator)
     end
 
     context 'creator of the listing' do
-
       setup do
         set_authentication_header(@transactable_collaborator.transactable.creator)
       end
@@ -110,11 +98,9 @@ class Api::V3::TransactableCollaboratorsControllerTest < ActionController::TestC
           delete :destroy, transactable_id: @transactable_collaborator.transactable_id, id: @transactable_collaborator.id, format: :json
         end
       end
-
     end
 
     context 'not a creator of the listing' do
-
       setup do
         set_authentication_header(@transactable_collaborator.user)
       end
@@ -124,11 +110,9 @@ class Api::V3::TransactableCollaboratorsControllerTest < ActionController::TestC
           delete :destroy, transactable_id: @transactable_collaborator.transactable_id, id: @transactable_collaborator.id, format: :json
         end
       end
-
     end
 
     context 'random user' do
-
       should 'not take any effect' do
         set_authentication_header(FactoryGirl.create(:user))
         assert_raise 'ActiveRecord::NotFound' do
@@ -136,8 +120,5 @@ class Api::V3::TransactableCollaboratorsControllerTest < ActionController::TestC
         end
       end
     end
-
   end
-
 end
-

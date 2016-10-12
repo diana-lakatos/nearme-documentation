@@ -6,7 +6,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       @review_5_stars = FactoryGirl.create(:review, rating: '5')
       @review_3_stars = FactoryGirl.create(:review, rating: '3')
       user = @review_5_stars.user
-      @reviews_service = ReviewsService.new(user, { rating: ['5'], date: '' })
+      @reviews_service = ReviewsService.new(user, rating: ['5'], date: '')
     end
 
     should 'return reviews' do
@@ -19,7 +19,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
   context '#generate_csv_for' do
     setup do
       @reviews = FactoryGirl.create_list(:review, 2)
-      columns = *%w{id rating user_name created_at}
+      columns = *%w(id rating user_name created_at)
       @review_1 = @reviews.first.attributes.values_at(columns).join(',')
       @review_2 = @reviews.last.attributes.values_at(columns).join(',')
       user = @reviews.first.user
@@ -37,35 +37,35 @@ class ReviewsServiceTest < ActiveSupport::TestCase
   context '#filter_period' do
     setup do
       @user = FactoryGirl.create(:user)
-      @reviews_service = ReviewsService.new(@user, { rating: ['5'], date: '' })
+      @reviews_service = ReviewsService.new(@user, rating: ['5'], date: '')
     end
 
     should 'return period for 6 month' do
-      reviews_service = ReviewsService.new(@user, { period: '6_months' })
+      reviews_service = ReviewsService.new(@user, period: '6_months')
       period = reviews_service.filter_period
       assert_equal 6.months.ago.to_date, period
     end
 
     should 'return period for 2014 year' do
-      reviews_service = ReviewsService.new(@user, { period: '2014'})
+      reviews_service = ReviewsService.new(@user, period: '2014')
       period = reviews_service.filter_period
       assert_equal [DateTime.new(2014).to_date, DateTime.new(2014).end_of_year.to_date], period
     end
 
     should 'return period for 2013 year' do
-      reviews_service = ReviewsService.new(@user, { period: '2013'})
+      reviews_service = ReviewsService.new(@user, period: '2013')
       period = reviews_service.filter_period
       assert_equal [DateTime.new(2013).to_date, DateTime.new(2013).end_of_year.to_date], period
     end
 
     should 'return period for 2012 year' do
-      reviews_service = ReviewsService.new(@user, { period: '2012'})
+      reviews_service = ReviewsService.new(@user, period: '2012')
       period = reviews_service.filter_period
       assert_equal [DateTime.new(2012).to_date, DateTime.new(2012).end_of_year.to_date], period
     end
 
     should 'return period for 2011 year' do
-      reviews_service = ReviewsService.new(@user, { period: '2011'})
+      reviews_service = ReviewsService.new(@user, period: '2011')
       period = reviews_service.filter_period
       assert_equal [DateTime.new(2011).to_date, DateTime.new(2011).end_of_year.to_date], period
     end
@@ -77,7 +77,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should 'return period for 30 days with param' do
-      reviews_service = ReviewsService.new(@user, { period: '30_days' })
+      reviews_service = ReviewsService.new(@user, period: '30_days')
       period = reviews_service.filter_period
       assert_equal 30.days.ago.to_date, period
     end
@@ -180,4 +180,3 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     end
   end
 end
-

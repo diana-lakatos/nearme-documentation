@@ -1,5 +1,4 @@
 class Dashboard::ClickToCallPreferencesController < Dashboard::BaseController
-
   skip_before_filter :force_fill_in_wizard_form
 
   def edit
@@ -33,4 +32,3 @@ class Dashboard::ClickToCallPreferencesController < Dashboard::BaseController
     params.require(:user).permit(secured_params.click_to_call_preferences)
   end
 end
-

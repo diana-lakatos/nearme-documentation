@@ -1,5 +1,4 @@
 class InstanceAdmin::Groups::GroupTypes::CustomValidatorsController < InstanceAdmin::CustomValidatorsController
-
   protected
 
   def resource_class
@@ -19,15 +18,14 @@ class InstanceAdmin::Groups::GroupTypes::CustomValidatorsController < InstanceAd
   end
 
   def available_attributes
-    @attributes = Group.column_names.map{ |column| [column.humanize, column] }
+    @attributes = Group.column_names.map { |column| [column.humanize, column] }
   end
 
   def set_breadcrumbs
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :url => instance_admin_groups_group_types_path, :title => 'Group Type' },
-      { :title => @validatable.name.titleize },
-      { :url => redirect_path, :title => t('instance_admin.manage.transactable_types.custom_validators') }
+      { url: instance_admin_groups_group_types_path, title: 'Group Type' },
+      { title: @validatable.name.titleize },
+      url: redirect_path, title: t('instance_admin.manage.transactable_types.custom_validators')
     )
   end
-
 end

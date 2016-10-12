@@ -1,14 +1,13 @@
 class Admin::CustomAttributesController < Admin::ResourceController
-
   before_filter :find_transactable_type
-  before_filter :eval_parameters, :only => [:create, :update]
+  before_filter :eval_parameters, only: [:create, :update]
 
   def create
     resource = CustomAttributes::CustomAttribute.new(custom_attribute_params)
     resource.transactable_type_id = params[:transactable_type_id]
     resource.instance_id = TransactableType.find(params[:transactable_type_id]).instance_id
     if resource.save
-      redirect_to admin_transactable_type_custom_attribute_path(resource.transactable_type , resource)
+      redirect_to admin_transactable_type_custom_attribute_path(resource.transactable_type, resource)
     else
       render action: :new
     end
@@ -17,11 +16,10 @@ class Admin::CustomAttributesController < Admin::ResourceController
   def update
     resource = CustomAttributes::CustomAttribute.find(params[:id])
     if resource.update_attributes(custom_attribute_params)
-      redirect_to admin_transactable_type_custom_attribute_path(resource.transactable_type , resource)
+      redirect_to admin_transactable_type_custom_attribute_path(resource.transactable_type, resource)
     else
       render action: :edit
     end
-
   end
 
   def destroy

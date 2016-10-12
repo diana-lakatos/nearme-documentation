@@ -11,6 +11,4 @@ class Workflow < ActiveRecord::Base
   belongs_to :instance
 
   scope :for_workflow_type, -> (workflow_type) { where(workflow_type: workflow_type) }
-
 end
-

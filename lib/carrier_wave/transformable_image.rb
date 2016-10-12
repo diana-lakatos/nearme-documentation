@@ -48,6 +48,4 @@ module CarrierWave::TransformableImage
       data
     end || {}
   end
-
 end
-

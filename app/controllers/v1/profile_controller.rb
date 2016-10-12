@@ -1,5 +1,4 @@
 class V1::ProfileController < V1::BaseController
-
   # These endpoints require authentication
   before_filter :require_authentication
 
@@ -7,9 +6,7 @@ class V1::ProfileController < V1::BaseController
     render json: current_user
   end
 
-
   def update
-
     if current_user.update_attributes(profile_params)
       render json: current_user
     else
@@ -17,19 +14,17 @@ class V1::ProfileController < V1::BaseController
     end
   end
 
-
   # Upload the user's avatar
   def upload_avatar
-
-    tempfile = Tempfile.new("avatar")
+    tempfile = Tempfile.new('avatar')
     tempfile.binmode
     tempfile << request.body.read
     tempfile.rewind
 
     avatar_params = {
-      :filename => "avatar.jpg",
-      :type => "image/jpeg",
-      :tempfile => tempfile
+      filename: 'avatar.jpg',
+      type: 'image/jpeg',
+      tempfile: tempfile
     }
     user_avatar = ActionDispatch::Http::UploadedFile.new(avatar_params)
 
@@ -50,11 +45,11 @@ class V1::ProfileController < V1::BaseController
 
   #
   #
+
   private
 
   # Return user attributes we can update
   def profile_params
-    json_params.slice("name", "email", "phone")
+    json_params.slice('name', 'email', 'phone')
   end
-
 end

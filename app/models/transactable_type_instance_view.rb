@@ -4,6 +4,4 @@ class TransactableTypeInstanceView < ActiveRecord::Base
 
   belongs_to :transactable_type, touch: true
   belongs_to :instance_view, touch: true
-
 end
-

@@ -1,5 +1,4 @@
 class InstanceAdmin::Projects::TransactableTypes::CustomAttributesController < InstanceAdmin::CustomAttributesController
-
   protected
 
   def redirection_path
@@ -20,9 +19,9 @@ class InstanceAdmin::Projects::TransactableTypes::CustomAttributesController < I
 
   def set_breadcrumbs
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :url => instance_admin_projects_transactable_types_path, :title => 'Project Type' },
-      { :title => @target.name.titleize },
-      { :url => redirection_path, :title => t('instance_admin.manage.project_types.custom_attributes') }
+      { url: instance_admin_projects_transactable_types_path, title: 'Project Type' },
+      { title: @target.name.titleize },
+      url: redirection_path, title: t('instance_admin.manage.project_types.custom_attributes')
     )
   end
 end

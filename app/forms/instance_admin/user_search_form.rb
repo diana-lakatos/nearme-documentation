@@ -1,5 +1,4 @@
 class InstanceAdmin::UserSearchForm < SearchForm
-
   property :q, virtual: true
   property :date, virtual: true
   property :filters, virtual: true
@@ -12,27 +11,16 @@ class InstanceAdmin::UserSearchForm < SearchForm
   def to_search_params
     result = {}
 
-    if q.present?
-      result[:by_search_query] = ["%#{q}%"]
-    end
+    result[:by_search_query] = ["%#{q}%"] if q.present?
 
-    if date.present?
-      result[:with_date] = [date_from_params]
-    end
+    result[:with_date] = [date_from_params] if date.present?
 
-    if item_type_id.present?
-      result[:by_profile_type] = [item_type_id]
-    end
+    result[:by_profile_type] = [item_type_id] if item_type_id.present?
 
-    if filters.try(:include?, 'guest')
-      result[:is_guest] = nil
-    end
+    result[:is_guest] = nil if filters.try(:include?, 'guest')
 
-    if filters.try(:include?, 'host')
-      result[:is_host] = nil
-    end
+    result[:is_host] = nil if filters.try(:include?, 'host')
 
     result
   end
-
 end

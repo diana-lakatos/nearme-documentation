@@ -1,21 +1,20 @@
 class Listings::ReservationsController < ApplicationController
-
   skip_before_filter :filter_out_token, only: [:return_express_checkout, :cancel_express_checkout]
   skip_before_filter :log_out_if_token_exists, only: [:return_express_checkout, :cancel_express_checkout]
 
-  before_filter :secure_payment_with_token, :only => [:review, :address]
-  before_filter :load_payment_with_token, :only => [:review, :address]
+  before_filter :secure_payment_with_token, only: [:review, :address]
+  before_filter :load_payment_with_token, only: [:review, :address]
   before_filter :find_listing
   before_filter :find_reservation, only: [:booking_successful, :remote_payment, :booking_failed]
-  before_filter :build_reservation_request, :only => [:review, :address, :create, :store_reservation_request, :express_checkout]
-  before_filter :require_login_for_reservation, :only => [:review, :create, :address]
-  before_filter :find_current_country, :only => [:review, :create, :address]
+  before_filter :build_reservation_request, only: [:review, :address, :create, :store_reservation_request, :express_checkout]
+  before_filter :require_login_for_reservation, only: [:review, :create, :address]
+  before_filter :find_current_country, only: [:review, :create, :address]
   before_filter :prepare_for_review, only: [:review, :address]
 
   def review
     if @listing.possible_delivery?
       initialize_shipping_address
-      render :address and return
+      render(:address) && return
     end
   end
 
@@ -26,7 +25,7 @@ class Listings::ReservationsController < ApplicationController
     # We call shippo_api_token_present before checking shipping_address.valid? because that method may fail with an error if shippo settings are not correct and we
     # want the user to know that instead of throwing an error page
     if @reservation_request.delivery_type == 'pick_up' || ((shippo_settings_valid = current_instance.shippo_api.shippo_api_token_present?) && @reservation_request.reservation.shipments.first.shipping_address.valid? && (company_address_valid = @reservation_request.reservation.shipments.first.valid_sending_company_address?(@reservation_request.reservation)))
-      render :review and return
+      render(:review) && return
     end
 
     if !shippo_settings_valid
@@ -39,8 +38,8 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def load_payment_with_token
-    if request.ssl? and params["payment_token"]
-      user, reservation_params = User::PaymentTokenVerifier.find_token(params["payment_token"])
+    if request.ssl? && params['payment_token']
+      user, reservation_params = User::PaymentTokenVerifier.find_token(params['payment_token'])
       sign_in user
       params[:reservation_request] = reservation_params.symbolize_keys!
     end
@@ -107,11 +106,11 @@ class Listings::ReservationsController < ApplicationController
 
   def hourly_availability_schedule
     schedule = if params[:date].present?
-      date = Date.parse(params[:date])
-      @listing.action_type.hourly_availability_schedule(date).as_json
+                 date = Date.parse(params[:date])
+                 @listing.action_type.hourly_availability_schedule(date).as_json
     end
 
-    render :json => schedule.presence || {}
+    render json: schedule.presence || {}
   end
 
   # Store the reservation request in the session so that it can be restored when returning to the listings controller.
@@ -182,7 +181,7 @@ class Listings::ReservationsController < ApplicationController
   def build_reservation_request
     params[:reservation_request] ||= {}
     params[:reservation_request][:waiver_agreement_templates] ||= {}
-    params[:reservation_request][:waiver_agreement_templates] = params[:reservation_request][:waiver_agreement_templates].select { |k, v| v == "1" }.keys
+    params[:reservation_request][:waiver_agreement_templates] = params[:reservation_request][:waiver_agreement_templates].select { |_k, v| v == '1' }.keys
     params[:reservation_request][:payment][:payment_method_nonce] = params.delete(:payment_method_nonce) if params[:reservation_request][:payment]
     params[:reservation_request][:documents] = params[:reservation_request][:documents_attributes]
 
@@ -216,6 +215,6 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def reservation_request_params
-     params.require(:reservation_request).permit(secured_params.reservation_request(@listing.transactable_type.reservation_type))
+    params.require(:reservation_request).permit(secured_params.reservation_request(@listing.transactable_type.reservation_type))
   end
 end

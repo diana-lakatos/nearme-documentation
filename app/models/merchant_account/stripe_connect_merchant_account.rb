@@ -1,7 +1,6 @@
 require 'stripe'
 
 class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
-
   ATTRIBUTES = %w(account_type first_name last_name currency bank_routing_number bank_account_number tos  business_tax_id business_vat_id ssn_last_4 personal_id_number)
   ACCOUNT_TYPES = %w(individual company)
 
@@ -10,7 +9,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     'CA'   => %w(USD CAD),
     'AU'   => %w(AUD),
     'JP'   => %w(JPY),
-    'EUUK' => %w(EUR GBP USD),
+    'EUUK' => %w(EUR GBP USD)
   }
 
   include MerchantAccount::Concerns::DataAttributes
@@ -19,14 +18,14 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   has_one :current_address, class_name: 'Address', as: :entity
 
-  validates_presence_of   :bank_routing_number, :bank_account_number, :last_name, :first_name
-  validates_presence_of   :personal_id_number, if: Proc.new {|m| m.iso_country_code == 'US'}
-  validates_presence_of   :business_tax_id, if: Proc.new {|m| m.iso_country_code == 'US' && m.account_type == 'company'}
-  validates_inclusion_of  :account_type, in: ACCOUNT_TYPES
+  validates_presence_of :bank_routing_number, :bank_account_number, :last_name, :first_name
+  validates_presence_of :personal_id_number, if: proc { |m| m.iso_country_code == 'US' }
+  validates_presence_of :business_tax_id, if: proc { |m| m.iso_country_code == 'US' && m.account_type == 'company' }
+  validates_inclusion_of :account_type, in: ACCOUNT_TYPES
   validates_acceptance_of :tos
   validates_associated :owners
-  validate  :validate_current_address
-  validate  :validate_owners_documents
+  validate :validate_current_address
+  validate :validate_owners_documents
 
   accepts_nested_attributes_for :owners, allow_destroy: true
   accepts_nested_attributes_for :current_address
@@ -46,13 +45,13 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def handle_result(result)
     if result.id
       self.internal_payment_gateway_account_id = result.id
-      self.data[:fields_needed] = result.verification.fields_needed
+      data[:fields_needed] = result.verification.fields_needed
       upload_documents(result)
       self.response = result.to_yaml
       self.bank_account_number = result.bank_accounts.first.last4
-      self.data[:currency] = result.default_currency
+      data[:currency] = result.default_currency
       if result.keys.is_a?(Stripe::StripeObject)
-        self.data[:secret_key] = result.keys.secret
+        data[:secret_key] = result.keys.secret
       end
       change_state_if_needed(result)
       true
@@ -112,7 +111,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     else
       legal_entity_hash.merge!(additional_owners: [])
       owners[1..-1].each do |owner|
-
         dob = owner.dob_date
         legal_entity_hash[:additional_owners] << {
           first_name: owner.first_name,
@@ -123,7 +121,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
             city:        owner.address_city,
             postal_code: owner.address_postal_code,
             line1:       owner.address_line1,
-            line2:       owner.address_line2,
+            line2:       owner.address_line2
           },
           dob: {
             day:   dob.day,
@@ -161,7 +159,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     @address
   end
 
-  def change_state_if_needed(stripe_account, &block)
+  def change_state_if_needed(stripe_account, &_block)
     if !verified? && stripe_account.charges_enabled && stripe_account.transfers_enabled
       if stripe_account.verification.fields_needed.empty?
         verify(persisted?)
@@ -212,13 +210,12 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def fields_needed
-    self.data[:fields_needed] || []
+    data[:fields_needed] || []
   end
 
   def iso_country_code
     @iso_country_code ||= address.iso_country_code
   end
-
 
   def next_transfer_date(transfer_created_on = Date.today)
     case transfer_interval
@@ -229,27 +226,27 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       Time.current.to_date + (day_of_the_week - Time.current.wday).modulo(7).days
     when 'monthly'
       month = (Time.current.day > monthly_anchor) ? Time.current.month + 1 : Time.current.month
-      year = (month == 1 &&  Time.current.month == 12) ? Time.current.year + 1 : Time.current.year
+      year = (month == 1 && Time.current.month == 12) ? Time.current.year + 1 : Time.current.year
       Date.parse("#{monthly_anchor}/#{month}/#{year}")
     end
   end
 
   def weekly_or_monthly_transfers?
-    ['daily', 'monthly'].include?(transfer_interval)
+    %w(daily monthly).include?(transfer_interval)
   end
 
   private
 
   def payment_gateway_config
-    if self.data[:payment_gateway_config].blank?
-      self.data[:payment_gateway_config] = { }
+    if data[:payment_gateway_config].blank?
+      data[:payment_gateway_config] = {}
       if payment_gateway.config[:transfer_schedule] &&
-        ['daily', 'weekly', 'monthly'].include?(payment_gateway.config[:transfer_schedule][:interval])
-        self.data[:payment_gateway_config][:transfer_schedule] = payment_gateway.config[:transfer_schedule]
+         %w(daily weekly monthly).include?(payment_gateway.config[:transfer_schedule][:interval])
+        data[:payment_gateway_config][:transfer_schedule] = payment_gateway.config[:transfer_schedule]
       end
     end
 
-    self.data[:payment_gateway_config]
+    data[:payment_gateway_config]
   end
 
   def transfer_schedule
@@ -295,10 +292,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       owners.each do |o|
         if (o.attributes['document'] || o.document.file.try(:path)).blank?
           o.errors.add(:document, :blank)
-          errors.add(:base, I18n.t('dashboard.merchant_account.document') + " " + I18n.t('errors.messages.blank'))
+          errors.add(:base, I18n.t('dashboard.merchant_account.document') + ' ' + I18n.t('errors.messages.blank'))
         end
       end
     end
   end
-
 end

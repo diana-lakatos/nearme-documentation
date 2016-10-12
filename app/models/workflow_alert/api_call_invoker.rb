@@ -1,5 +1,4 @@
 class WorkflowAlert::ApiCallInvoker < WorkflowAlert::Invoker
-
   protected
 
   def processor_class
@@ -9,6 +8,4 @@ class WorkflowAlert::ApiCallInvoker < WorkflowAlert::Invoker
   def processor_method
     :call
   end
-
 end
-

@@ -28,4 +28,3 @@ class PaymentTransferDecorator < Draper::Decorator
     PaginatingDecorator
   end
 end
-

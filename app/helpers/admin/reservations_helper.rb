@@ -14,4 +14,3 @@ module Admin::ReservationsHelper
     end
   end
 end
-

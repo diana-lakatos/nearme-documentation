@@ -4,9 +4,9 @@ class ListingWebSerializer < ApplicationSerializer
 
   attribute :prices
   attribute :availability_template_id
-  attribute :availability_full_week, :key => :availability_rules_attributes
+  attribute :availability_full_week, key: :availability_rules_attributes
 
-  has_many :photos, :key => :photos_attributes
+  has_many :photos, key: :photos_attributes
 
   def prices
     object.action_type.available_prices_in_cents
@@ -21,13 +21,11 @@ class ListingWebSerializer < ApplicationSerializer
     # if target_type is not 'Listing' id is for parent Location, and the rules are provided as matching template for the listing
     object.action_type.availability_full_week.map do |d|
       {
-          days: d[:days],
-          id: d[:rules].map { |rule| rule.target_type == 'Transactable' ? rule.id : nil },
-          open_time: d[:rules].map(&:open_time).min,
-          close_time: d[:rules].map(&:close_time).max
-       }
+        days: d[:days],
+        id: d[:rules].map { |rule| rule.target_type == 'Transactable' ? rule.id : nil },
+        open_time: d[:rules].map(&:open_time).min,
+        close_time: d[:rules].map(&:close_time).max
+      }
     end
-
   end
-
 end

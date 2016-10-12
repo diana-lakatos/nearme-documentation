@@ -1,10 +1,9 @@
 class DefaultImageUploader < BaseImageUploader
-
   version :transformed do
     process transformed_version: :transformed
   end
 
-  def transformed_version(version)
+  def transformed_version(_version)
     if @model.photo_uploader.present? && @model.photo_uploader_version.present?
       photo_uploader = @model.photo_uploader.constantize
       uploader_version = @model.photo_uploader_version.to_sym
@@ -21,11 +20,10 @@ class DefaultImageUploader < BaseImageUploader
         height = override.height
       end
 
-      self.send(transformation, width, height)
+      send(transformation, width, height)
     else
       # This image will be discarded as the model will not be saved; required to be here
-      self.send(:resize_to_fill, 100, 100)
+      send(:resize_to_fill, 100, 100)
     end
   end
-
 end

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class MerchantAccountTest < ActiveSupport::TestCase
-
   context 'payment gateway with separate test/live merchant accounts' do
     setup do
       MerchantAccount::StripeConnectMerchantAccount.any_instance.stubs(:onboard!)

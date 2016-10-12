@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin::Manage::BaseController
-
   before_action :find_workflow_step
   before_action :find_custom_emails
   before_action :find_custom_email_layouts
@@ -64,4 +63,3 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
     'manage'
   end
 end
-

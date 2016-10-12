@@ -1,49 +1,48 @@
 module InstanceAdminHelper
-
   def support_link_to_filter(active_filter, filter)
     link = filter == 'open' ? '' : filter
-    link_to filter.titleize, url_for(:filter => link), class: "#{active_filter == filter ? 'active' : ''}"
+    link_to filter.titleize, url_for(filter: link), class: "#{active_filter == filter ? 'active' : ''}"
   end
 
   def support_ticket_title(ticket, length = 60)
-    truncate(mask_phone_and_email_if_necessary(ticket.recent_message.try(:message)), :length => length, :omission => '...').to_s
+    truncate(mask_phone_and_email_if_necessary(ticket.recent_message.try(:message)), length: length, omission: '...').to_s
   end
 
   def support_ticket_title_with_link(ticket)
     [
       support_ticket_title(ticket),
       " (#{ticket.messages.count})",
-      "<br />",
+      '<br />',
       link_to(ticket.open_text, instance_admin_support_ticket_path(ticket)).html_safe
     ].join.html_safe
   end
 
   def support_author(message)
-    return "" unless message
+    return '' unless message
     author = link_to_if message.user, message.full_name, message.user
     "by #{author}".html_safe
   end
 
   def is_active_instance_admin_nav_link(controller_name, settings)
     if settings[:controller_class].present?
-      "active" if settings[:controller_class] == controller.class.to_s
+      'active' if settings[:controller_class] == controller.class.to_s
     else
-      "active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last
+      'active' if controller.controller_name == (settings[:controller] || controller_name).split('/').last
     end
   end
 
   def instance_admin_ico_for_flash(key)
     case key.to_s
     when 'notice'
-      "ai-notice"
+      'ai-notice'
     when 'error'
-      "ai-error"
+      'ai-error'
     when 'success'
-      "ai-success"
+      'ai-success'
     when 'warning'
-      "fa fa-exclamation-triangle"
+      'fa fa-exclamation-triangle'
     when 'deleted'
-      "fa fa-trash-o"
+      'fa fa-trash-o'
     end
   end
 
@@ -76,7 +75,7 @@ module InstanceAdminHelper
   end
 
   def wish_lists_icon_sets
-    [['Heart', 'heart'], ['Thumbs Up', 'thumbs_up'], ['Tick', 'tick']]
+    [%w(Heart heart), ['Thumbs Up', 'thumbs_up'], %w(Tick tick)]
   end
 
   def wish_lists_icon_set_image(set_name)
@@ -86,7 +85,7 @@ module InstanceAdminHelper
   def languages
     I18nData.languages.map do |lang|
       translated_name = I18nData.languages(lang[0])[lang[0]].mb_chars.capitalize rescue lang[1].capitalize
-      [lang[1].capitalize, lang[0].downcase, {'data-translated' => translated_name}]
+      [lang[1].capitalize, lang[0].downcase, { 'data-translated' => translated_name }]
     end
   end
 
@@ -98,9 +97,9 @@ module InstanceAdminHelper
     case provider.downcase
     when 'facebook'
       if type == :key
-        "Facebook App ID"
+        'Facebook App ID'
       else
-        "Facebook App Secret"
+        'Facebook App Secret'
       end
     else
       "#{provider} Consumer #{type.to_s.capitalize}"
@@ -114,5 +113,4 @@ module InstanceAdminHelper
     end
     uploaders
   end
-
 end

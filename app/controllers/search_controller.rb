@@ -1,6 +1,5 @@
-require "will_paginate/array"
+require 'will_paginate/array'
 class SearchController < ApplicationController
-
   include SearchHelper
   include SearcherHelper
 
@@ -30,7 +29,7 @@ class SearchController < ApplicationController
     category_root_ids = Category.roots.map(&:id)
     @categories = Category.where(id: category_ids).order('position ASC, id ASC').to_a
     @categories_html = ''
-    @categories.reject!{|c| c.parent.present? && ( !category_root_ids.include?(c.parent.id) ) && !category_ids.include?(c.parent.id) }
+    @categories.reject! { |c| c.parent.present? && (!category_root_ids.include?(c.parent.id)) && !category_ids.include?(c.parent.id) }
     @categories.each do |category|
       next if category.children.blank?
       @categories_html << render_to_string(
@@ -41,7 +40,7 @@ class SearchController < ApplicationController
           header_name: category.translated_name,
           selected_values: params[:category_ids].split(',') || [],
           input_name: 'category_ids[]',
-          options: category.children.inject([]) { |options, c| options << [c.id, c.name]}
+          options: category.children.inject([]) { |options, c| options << [c.id, c.name] }
         }
       )
     end
@@ -49,9 +48,7 @@ class SearchController < ApplicationController
   end
 
   def ensure_valid_params
-    if !is_valid_single_param?(params[:transactable_type_id])
-      redirect_to :back
-    end
+    redirect_to :back unless is_valid_single_param?(params[:transactable_type_id])
   rescue
     # No referrer was present
     redirect_to root_path
@@ -66,13 +63,11 @@ class SearchController < ApplicationController
   def remember_search_query
     cookies[:last_search_query] = {
       value: searcher.search_query_values,
-      expires: (Time.zone.now + 1.hour),
+      expires: (Time.zone.now + 1.hour)
     }
   end
 
-  def searcher
-    @searcher
-  end
+  attr_reader :searcher
 
   def repeated_search?
     searcher.repeated_search?(cookies[:last_search_query])
@@ -83,7 +78,7 @@ class SearchController < ApplicationController
   end
 
   def first_result_page?
-    !params[:page] || params[:page].to_pagination_number==1
+    !params[:page] || params[:page].to_pagination_number == 1
   end
 
   def per_page
@@ -96,8 +91,8 @@ class SearchController < ApplicationController
 
   def store_search
     cookies[:last_search] = {
-      value: params.except(:controller, :action).select{ |k,v| v.present? }.to_json,
-      expires: 30.minutes.from_now,
+      value: params.except(:controller, :action).select { |_k, v| v.present? }.to_json,
+      expires: 30.minutes.from_now
     }
   end
 
@@ -109,5 +104,4 @@ class SearchController < ApplicationController
     params[:search_type] = 'projects' unless %w(people projects topics groups).include?(params[:search_type])
     @search_type = params[:search_type]
   end
-
 end

@@ -2,7 +2,8 @@ module CarrierWave
   module SourceProcessing
     class Processor
       def initialize(model, field)
-        @model, @field = model, field
+        @model = model
+        @field = field
       end
 
       # if external url has changed, we want to remove any transformations done to previous image. %column%_versions_generated_at is used
@@ -59,6 +60,5 @@ module CarrierWave
         @model["#{@field}_versions_generated_at"].present?
       end
     end
-
   end
 end

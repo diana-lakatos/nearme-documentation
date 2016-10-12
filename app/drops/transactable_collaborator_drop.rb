@@ -1,5 +1,4 @@
 class TransactableCollaboratorDrop < BaseDrop
-
   delegate :id, :user, :transactable, :approved_by_owner?, :approved_by_user?,
     :approved_by_user_at, :approved_by_owner_at, :transactable_id, :user_id, :created_at,
     :rejected_by_owner_at, :rejected_by_owner?, to: :source
@@ -17,11 +16,10 @@ class TransactableCollaboratorDrop < BaseDrop
   end
 
   def transactable_user_messages
-    @source.transactable.user_messages.where("author_id = :user_id OR thread_recipient_id = :user_id", user_id: @source.user_id)
+    @source.transactable.user_messages.where('author_id = :user_id OR thread_recipient_id = :user_id', user_id: @source.user_id)
   end
 
   def status
     approved_by_owner_at.nil? ? 'Pending' : rejected_by_owner_at.nil? ? 'Approved' : "Rejected"
   end
 end
-

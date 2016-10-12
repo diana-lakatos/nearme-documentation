@@ -2,7 +2,6 @@
 
 FactoryGirl.define do
   factory :instance_admin_role do
-
     sequence(:name) { |n| "InstanceAdminRole #{n}" }
     instance_id { (PlatformContext.current.instance || FactoryGirl.create(:instance)).id }
     permission_analytics true

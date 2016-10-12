@@ -9,29 +9,25 @@ module FeedbackDecoratorHelper
     if reservation? && feedback_object.transactable && feedback_object.transactable.has_photos?
       h.link_to(h.image_tag(feedback_object.transactable.photos.rank(:position).first.image_url(version)), feedback_object.transactable.decorate.show_path)
     else
-      h.image_tag "placeholders/895x554.gif"
+      h.image_tag 'placeholders/895x554.gif'
     end
   end
 
   def review_target_title(target)
-    if target == RatingConstants::TRANSACTABLE
-      return review_title
-    end
+    return review_title if target == RatingConstants::TRANSACTABLE
 
     get_user_by_target(target).try(:name)
   end
 
   def review_target_image(target)
-    if target == RatingConstants::TRANSACTABLE
-      return order_image
-    end
+    return order_image if target == RatingConstants::TRANSACTABLE
 
     user = get_user_by_target(target)
 
     if user
       h.image_tag user.avatar_url(:bigger)
     else
-      h.image_tag "placeholders/895x554.gif"
+      h.image_tag 'placeholders/895x554.gif'
     end
   end
 
@@ -52,5 +48,4 @@ module FeedbackDecoratorHelper
   def reservation?
     feedback_object.is_a?(Order)
   end
-
 end

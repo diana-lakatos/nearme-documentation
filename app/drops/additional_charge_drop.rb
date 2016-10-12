@@ -18,6 +18,4 @@ class AdditionalChargeDrop < BaseDrop
   def formatted_amount
     render_money(amount)
   end
-
 end
-

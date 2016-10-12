@@ -5,7 +5,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
   include ReservationTestSupport
 
   setup do
-    @company = prepare_company_with_charged_reservations(:reservation_count => 2)
+    @company = prepare_company_with_charged_reservations(reservation_count: 2)
 
     @reservation_1 = @company.reservations[0]
     @reservation_2 = @company.reservations[1]
@@ -16,7 +16,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
     ]
   end
 
-  context "creating" do
+  context 'creating' do
     setup do
       @payment_transfer = @company.payment_transfers.build
     end
@@ -27,10 +27,10 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @payment_transfer.payment_gateway = @payment_gateway
       @payment_transfer.save!
 
-      assert_equal 1, @payment_gateway.payment_transfers.with_token("tokenowski").count
+      assert_equal 1, @payment_gateway.payment_transfers.with_token('tokenowski').count
     end
 
-    should "only allow charges of the same currency" do
+    should 'only allow charges of the same currency' do
       @reservations = prepare_charged_reservations_for_transactable(@reservation_1.transactable)
       reservation = @reservations.last
       reservation.payment.destroy
@@ -51,14 +51,14 @@ class PaymentTransferTest < ActiveSupport::TestCase
       assert @payment_transfer.errors[:currency].present?
     end
 
-    should "assign instance id" do
+    should 'assign instance id' do
       @payment_transfer.payments = @payments
       @payment_transfer.save!
       @payment_transfer.reload
       assert_equal @payment_transfer.company.instance_id, @payment_transfer.instance_id
     end
 
-    should "calculate total_service_fee_cents" do
+    should 'calculate total_service_fee_cents' do
       @reservations = prepare_charged_reservations_for_transactable(@reservation_1.transactable)
       reservation = @reservations.last
       reservation.payment.destroy
@@ -79,7 +79,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
       assert_equal Money.new(300, 'NZD'), @payment_transfer.total_service_fee
     end
 
-    should "assign currency attribute" do
+    should 'assign currency attribute' do
       @payment_transfer.payments = @payments
       @payment_transfer.save!
       @payment_transfer.reload
@@ -87,41 +87,41 @@ class PaymentTransferTest < ActiveSupport::TestCase
       assert_equal @payments.first.currency, @payment_transfer.currency
     end
 
-    should "calculate amounts" do
+    should 'calculate amounts' do
       @payment_transfer.payments = @payments
       @payment_transfer.save!
 
       assert_equal @payments.map(&:subtotal_amount).sum - @payments.map(&:service_fee_amount_host).sum,
-        @payment_transfer.amount
+                   @payment_transfer.amount
 
       assert_equal @payments.map(&:service_fee_amount_guest).sum, @payment_transfer.service_fee_amount_guest
       assert_equal @payments.map(&:service_fee_amount_host).sum, @payment_transfer.service_fee_amount_host
     end
   end
 
-  context "correct amounts with advanced cancellation/refund policy" do
+  context 'correct amounts with advanced cancellation/refund policy' do
     setup do
       @company = FactoryGirl.build(:company)
       @payments = []
       @payments << @payment_1 = FactoryGirl.create(:paid_payment, company: @company,
-        :total_amount_cents => 1150,
-        :subtotal_amount_cents => 1000,
-        :service_fee_amount_guest_cents => 150,
-        :service_fee_amount_host_cents => 100,
-        :cancellation_policy_penalty_percentage => 60
-      )
+                                                                  total_amount_cents: 1150,
+                                                                  subtotal_amount_cents: 1000,
+                                                                  service_fee_amount_guest_cents: 150,
+                                                                  service_fee_amount_host_cents: 100,
+                                                                  cancellation_policy_penalty_percentage: 60
+                                                  )
       @payments << @payment_2 = FactoryGirl.create(:paid_payment, company: @company,
-        :total_amount_cents => 1200,
-        :subtotal_amount_cents => 1000,
-        :service_fee_amount_guest_cents => 200,
-        :service_fee_amount_host_cents => 150,
-        :cancellation_policy_penalty_percentage => 50
-      )
+                                                                  total_amount_cents: 1200,
+                                                                  subtotal_amount_cents: 1000,
+                                                                  service_fee_amount_guest_cents: 200,
+                                                                  service_fee_amount_host_cents: 150,
+                                                                  cancellation_policy_penalty_percentage: 50
+                                                  )
 
       @payment_transfer = @company.payment_transfers.build
     end
 
-    should "calculate correctly the total sum for transfers without refunds" do
+    should 'calculate correctly the total sum for transfers without refunds' do
       @payment_transfer.payments = @payments
       @payment_transfer.save!
 
@@ -130,7 +130,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
       assert_equal 100 + 150, @payment_transfer.service_fee_amount_host_cents
     end
 
-    should "calculate correctly the total sum for transfers with refunds" do
+    should 'calculate correctly the total sum for transfers with refunds' do
       @payment_1.payable.user_cancel!
       @payment_2.payable.host_cancel!
 
@@ -150,12 +150,12 @@ class PaymentTransferTest < ActiveSupport::TestCase
       # Payment one is 4$ is returned to guest, 1$ is host fee and $5 we should transfer
       assert_equal 600 + 0, @payment_transfer.amount_cents
       assert_equal 150 + 0, @payment_transfer.service_fee_amount_guest_cents
-      assert_equal 0   + 0, @payment_transfer.service_fee_amount_host_cents
+      assert_equal 0 + 0, @payment_transfer.service_fee_amount_host_cents
     end
   end
 
-  context "#gross_amount_cents" do
-    should "be the sum of the charge subtotals and the service fees" do
+  context '#gross_amount_cents' do
+    should 'be the sum of the charge subtotals and the service fees' do
       pt = PaymentTransfer.new
       pt.amount_cents = 50_00
       pt.service_fee_amount_guest_cents = 10_00
@@ -164,18 +164,17 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
   end
 
-  context ".pending" do
+  context '.pending' do
     should "include all PaymentTransfers that haven't been transferred" do
       pt1 = @company.payment_transfers.create!
       pt2 = @company.payment_transfers.create!
-      pt3 = @company.payment_transfers.create!(:transferred_at => Time.now)
+      pt3 = @company.payment_transfers.create!(transferred_at: Time.now)
 
       assert @company.payment_transfers.pending.include?(pt1)
       assert @company.payment_transfers.pending.include?(pt2)
       assert !@company.payment_transfers.pending.include?(pt3)
     end
   end
-
 
   context 'payout' do
     setup do
@@ -190,46 +189,44 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should 'be not paid if attempt to payout failed' do
-      stub_active_merchant_interaction({success?: false})
+      stub_active_merchant_interaction(success?: false)
       @payment_transfer.save!
       refute @payment_transfer.transferred?
     end
 
     should 'be paid if attempt to payout succeeded' do
-      stub_active_merchant_interaction({success?: true})
+      stub_active_merchant_interaction(success?: true)
       @payment_transfer.save!
       assert @payment_transfer.transferred?
     end
   end
 
   context 'possible_automated_payout_not_supported?' do
-
     setup do
       @payment_transfer = @company.payment_transfers.build(currency: 'USD')
       @payment_transfer.payments = @payments
       @paypal_gateway = FactoryGirl.create(:paypal_adaptive_payment_gateway)
     end
 
-    should "return true if possible processor exists but company has not provided settings" do
+    should 'return true if possible processor exists but company has not provided settings' do
       FactoryGirl.create(:paypal_adaptive_merchant_account, payment_gateway: @paypal_gateway, merchantable: FactoryGirl.create(:company))
       assert @payment_transfer.possible_automated_payout_not_supported?
     end
 
-    should "return false if there is no potential processor and company has not provided settings" do
+    should 'return false if there is no potential processor and company has not provided settings' do
       PaymentGateway.destroy_all
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
-    should "return false if there is no possible processor and company has provided settings" do
+    should 'return false if there is no possible processor and company has provided settings' do
       FactoryGirl.create(:paypal_adaptive_merchant_account, payment_gateway: @paypal_gateway, merchantable: @company)
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
-    should "return false if possible processor exists and company has provided settings" do
+    should 'return false if possible processor exists and company has provided settings' do
       FactoryGirl.create(:paypal_adaptive_merchant_account, payment_gateway: @paypal_gateway, merchantable: @company)
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
-
   end
 
   context 'foreign keys' do
@@ -248,7 +245,6 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     context 'update company' do
-
       should 'assign correct instance_id' do
         instance = FactoryGirl.create(:instance)
         @company.update_attribute(:instance_id, instance.id)

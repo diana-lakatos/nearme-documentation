@@ -1,6 +1,5 @@
 class Refund < ActiveRecord::Base
-
-  RECEIVERS = ['mpo', 'host', 'guest']
+  RECEIVERS = %w(mpo host guest)
 
   include Encryptable
   acts_as_paranoid
@@ -17,8 +16,8 @@ class Refund < ActiveRecord::Base
   scope :guest, -> { where(receiver: 'guest') }
   scope :host, -> { where(receiver: 'host') }
   scope :mpo, -> { where(receiver: 'mpo') }
-  scope :successful, -> { where(:success => true) }
-  scope :failed, -> { where(:success => false) }
+  scope :successful, -> { where(success: true) }
+  scope :failed, -> { where(success: false) }
 
   monetize :amount_cents, with_model_currency: :currency
 
@@ -33,5 +32,4 @@ class Refund < ActiveRecord::Base
     self.response = response
     save!
   end
-
 end

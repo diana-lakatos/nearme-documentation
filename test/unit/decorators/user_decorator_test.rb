@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class UserDecoratorTest < ActionView::TestCase
-
   context 'with one message sent to listings creator' do
     setup do
       @instance = FactoryGirl.create(:instance)
@@ -34,5 +33,4 @@ class UserDecoratorTest < ActionView::TestCase
       end
     end
   end
-
 end

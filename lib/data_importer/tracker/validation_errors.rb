@@ -1,7 +1,6 @@
 class DataImporter::Tracker::ValidationErrors < DataImporter::Tracker
-
   def initialize
-    @log_report = ""
+    @log_report = ''
   end
 
   def custom_validation_error(message)
@@ -29,5 +28,4 @@ class DataImporter::Tracker::ValidationErrors < DataImporter::Tracker
   def log(message)
     @log_report += message + "\n"
   end
-
 end

@@ -1,5 +1,4 @@
 class SpaceWizardController < ApplicationController
-
   before_filter :redirect_to_tt_version_list, only: [:list]
   before_filter :redirect_to_tt_version_new, only: [:new]
 
@@ -12,14 +11,13 @@ class SpaceWizardController < ApplicationController
   def destroy_photo
     @photo = Photo.find(params[:id])
     if can_delete_photo?(@photo, current_user) && @photo.destroy
-      render :text => { success: true, id: @photo.id }, :content_type => 'text/plain'
+      render text: { success: true, id: @photo.id }, content_type: 'text/plain'
     else
-      render :text => { :errors => @photo.errors.full_messages }, :status => 422, :content_type => 'text/plain'
+      render text: { errors: @photo.errors.full_messages }, status: 422, content_type: 'text/plain'
     end
   end
 
   private
-
 
   def redirect_to_tt_version_new
     redirect_to transactable_type_new_space_wizard_path(TransactableType.first)
@@ -36,4 +34,3 @@ class SpaceWizardController < ApplicationController
     false
   end
 end
-

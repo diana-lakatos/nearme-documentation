@@ -1,5 +1,4 @@
 class OfferDrop < OrderDrop
-
   attr_reader :offer
 
   def initialize(offer)
@@ -33,5 +32,4 @@ class OfferDrop < OrderDrop
   def edit_offer_url
     routes.edit_dashboard_order_url(@offer)
   end
-
 end

@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :content_holder do
     sequence(:name) { |n| "page-#{n}" }
     content { Faker::Lorem.paragraph }
@@ -7,5 +6,4 @@ FactoryGirl.define do
     instance_id { (PlatformContext.current.instance || FactoryGirl.create(:instance)).id }
     enabled true
   end
-
 end

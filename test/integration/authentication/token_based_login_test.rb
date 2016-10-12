@@ -8,7 +8,7 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
   end
 
   context 'using a valid token' do
-    context "redirects" do
+    context 'redirects' do
       should 'without token parameter' do
         get url_with_login_token(@verifier.generate)
         follow_redirect!
@@ -25,15 +25,15 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
 
       should 'remove question mark if no parameter was set' do
         get url_with_login_token(@verifier.generate)
-        assert !response.header["Location"].include?('/?')
+        assert !response.header['Location'].include?('/?')
       end
     end
 
-    should "login as the user and persist the session" do
+    should 'login as the user and persist the session' do
       get_via_redirect url_with_login_token(@verifier.generate)
       assert_logged_in_as @user
 
-      get_via_redirect "/"
+      get_via_redirect '/'
       assert_logged_in_as @user
     end
 
@@ -44,7 +44,7 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
         post_via_redirect new_user_session_path, 'user[email]' => @other_user.email, 'user[password]' => @other_user.password
       end
 
-      should "logout existing user and login with token instead" do
+      should 'logout existing user and login with token instead' do
         assert_logged_in_as @other_user
         get_via_redirect url_with_login_token(@verifier.generate)
         assert_not_logged_in_as @other_user
@@ -54,12 +54,12 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
   end
 
   context 'using an invalid token' do
-    should "expired token should not log in the user" do
+    should 'expired token should not log in the user' do
       get_via_redirect url_with_login_token(@verifier.generate(3.days.ago))
       assert_not_logged_in_as @user
     end
 
-    should "manipulated token should not log in the user" do
+    should 'manipulated token should not log in the user' do
       token = @verifier.generate(1.week.ago)
 
       # Manipulate the expiry time embedded in the token
@@ -71,13 +71,13 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
   end
 
   context 'using legacy authentication_token' do
-    should "fallback to that login method" do
+    should 'fallback to that login method' do
       get_via_redirect url_with_login_token(@user.authentication_token)
       assert_logged_in_as @user
     end
   end
 
-  context "dashboard/listings_controller integration" do
+  context 'dashboard/listings_controller integration' do
     setup do
       @transactable_type = TransactableType.first
       @transactable = FactoryGirl.create(:transactable, location: FactoryGirl.create(:location_in_auckland))
@@ -99,7 +99,7 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
 
     should 'be redirected back after login when token is wrong' do
       get_via_redirect edit_dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable, @temporary_token_name => 'this one is certainly wrong one')
-      post new_user_session_path, {'user[email]' => @user.email, 'user[password]' => @user.password}
+      post new_user_session_path, 'user[email]' => @user.email, 'user[password]' => @user.password
       assert_redirected_to new_user_session_path(return_to: new_user_session_url)
     end
   end

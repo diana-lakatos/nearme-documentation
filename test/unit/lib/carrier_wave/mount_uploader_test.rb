@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class MountUploaderTest < ActiveSupport::TestCase
-
   should 'assign dimensions' do
     photo = FactoryGirl.create(:photo)
     assert_not_nil(photo.image_original_width)
@@ -12,7 +11,8 @@ class MountUploaderTest < ActiveSupport::TestCase
     @user = FactoryGirl.build(:user)
     @user.avatar = File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
     @user.save!
-    width, height = @user.avatar_original_width, @user.avatar_original_height
+    width = @user.avatar_original_width
+    height = @user.avatar_original_height
     @user.avatar = File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
     @user.save!
     assert_not_equal(width, @user.avatar_original_width)
@@ -53,8 +53,7 @@ class MountUploaderTest < ActiveSupport::TestCase
 
   should 'recreate all versions if transformation data is changed' do
     photo = FactoryGirl.create(:photo)
-    photo.image_transformation_data = {rotate: 180}
+    photo.image_transformation_data = { rotate: 180 }
     VersionRegenerationJob.expects(:perform).with(Photo, photo.save! && photo.id, :image, true).once
   end
-
 end

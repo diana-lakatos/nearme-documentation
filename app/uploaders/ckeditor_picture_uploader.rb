@@ -22,4 +22,3 @@ class CkeditorPictureUploader < BaseCkeditorUploader
     Ckeditor.image_file_types
   end
 end
-

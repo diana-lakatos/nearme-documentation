@@ -1,5 +1,4 @@
 class TransactableType::CsvFieldsBuilder
-
   def initialize(importable, additional_models = [])
     @importable = importable
     @models = if import_model == :transactable
@@ -72,5 +71,4 @@ class TransactableType::CsvFieldsBuilder
   def import_model
     @import_model ||= @importable.class.name.sub('Type', '').underscore.to_sym
   end
-
 end

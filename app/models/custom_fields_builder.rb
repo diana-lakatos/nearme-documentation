@@ -1,5 +1,4 @@
 class CustomFieldsBuilder
-
   def initialize(form_component)
     @form_type = form_component.form_type
     @form_component = form_component
@@ -19,7 +18,7 @@ class CustomFieldsBuilder
           to_object_field_notation(location_fields, 'location') +
           to_object_field_notation(transactable_fields, 'transactable')
       else
-        raise NotImplementedError.new("Unknown form type: #{@form_type}")
+        fail NotImplementedError.new("Unknown form type: #{@form_type}")
       end
     when FormComponent::TRANSACTABLE_ATTRIBUTES
       to_object_field_notation(dashboard_transactable_fields, 'transactable')
@@ -29,27 +28,26 @@ class CustomFieldsBuilder
         to_object_field_notation(buyer_fields, 'buyer') +
         to_object_field_notation(seller_fields, 'seller')
     when FormComponent::INSTANCE_PROFILE_TYPES
-      to_object_field_notation(user_fields, 'user')+
-        to_object_field_notation(buyer_fields, 'buyer') +
+      to_object_field_notation(user_fields, 'user') + to_object_field_notation(buyer_fields, 'buyer') +
         to_object_field_notation(seller_fields, 'seller')
     when FormComponent::SELLER_PROFILE_TYPES
       to_object_field_notation(user_fields, 'user') +
-      to_object_field_notation(seller_fields, 'seller')
+        to_object_field_notation(seller_fields, 'seller')
     when FormComponent::BUYER_PROFILE_TYPES
       to_object_field_notation(user_fields, 'user') +
-      to_object_field_notation(buyer_fields, 'buyer')
+        to_object_field_notation(buyer_fields, 'buyer')
     when FormComponent::SELLER_REGISTRATION
-        to_object_field_notation(user_fields, 'user') +
-          to_object_field_notation(seller_fields, 'seller')
+      to_object_field_notation(user_fields, 'user') +
+        to_object_field_notation(seller_fields, 'seller')
     when FormComponent::BUYER_REGISTRATION
-        to_object_field_notation(user_fields, 'user') +
-          to_object_field_notation(seller_fields, 'buyer')
+      to_object_field_notation(user_fields, 'user') +
+        to_object_field_notation(seller_fields, 'buyer')
     when FormComponent::DEFAULT_REGISTRATION
-        to_object_field_notation(user_fields, 'user')
+      to_object_field_notation(user_fields, 'user')
     when FormComponent::LOCATION_ATTRIBUTES
-        to_object_field_notation(location_fields, 'location')
+      to_object_field_notation(location_fields, 'location')
     else
-      raise NotImplementedError
+      fail NotImplementedError
     end
   end
 
@@ -90,7 +88,7 @@ class CustomFieldsBuilder
       when 'transactable'
         transactable_fields
       else
-        raise NotImplementedError.new("Unknown object for which field #{field} was defined: #{object}. Valid objects: location, address, transactable, product")
+        fail NotImplementedError.new("Unknown object for which field #{field} was defined: #{object}. Valid objects: location, address, transactable, product")
       end
     end
   end
@@ -136,7 +134,6 @@ class CustomFieldsBuilder
   end
 
   def to_object_field_notation(array, object)
-    array.map { |field, label| { "#{object}" => field } }
+    array.map { |field, _label| { "#{object}" => field } }
   end
-
 end

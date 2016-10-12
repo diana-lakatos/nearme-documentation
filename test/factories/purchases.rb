@@ -4,7 +4,7 @@ FactoryGirl.define do
     association :user, name: 'Order'
     association :shipping_address, factory: :order_address
     association :billing_address, factory: :order_address
-    currency { Currency.find_by_iso_code("USD") || FactoryGirl.build(:currency)}
+    currency { Currency.find_by_iso_code('USD') || FactoryGirl.build(:currency) }
     state 'inactive'
     use_billing false
 

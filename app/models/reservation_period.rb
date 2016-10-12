@@ -5,12 +5,12 @@ class ReservationPeriod < ActiveRecord::Base
   belongs_to :reservation
   belongs_to :old_reservation
 
-  validates :date, :presence => true
+  validates :date, presence: true
   validate :validate_start_end_times
 
   # attr_accessible :date, :start_minute, :end_minute
 
-  delegate :transactable, :time_zone, :to => :reservation, allow_nil: true
+  delegate :transactable, :time_zone, to: :reservation, allow_nil: true
 
   # Returns the number of hours reserved on this date.
   # If no hourly time specified, it is assumed that the reservation is for all open
@@ -63,17 +63,18 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def to_liquid
-    @reservation_period_drop ||= ReservationPeriodDrop.new(self.decorate)
+    @reservation_period_drop ||= ReservationPeriodDrop.new(decorate)
   end
 
   private
 
   def validate_start_end_times
-    start_minute, end_minute = self[:start_minute], self[:end_minute]
+    start_minute = self[:start_minute]
+    end_minute = self[:end_minute]
     return unless start_minute || end_minute
 
     unless start_minute && end_minute && start_minute <= end_minute
-      errors.add(:base, "Booking start and end times are invalid")
+      errors.add(:base, 'Booking start and end times are invalid')
     end
   end
 end

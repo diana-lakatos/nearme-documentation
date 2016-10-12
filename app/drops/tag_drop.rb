@@ -1,6 +1,6 @@
 class TagDrop < BaseDrop
   attr_reader :tag
-  
+
   # name
   #   Tag's name
   # slug

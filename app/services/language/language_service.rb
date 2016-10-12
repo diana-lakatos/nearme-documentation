@@ -1,5 +1,4 @@
 class Language::LanguageService
-
   attr_reader :language_params, :fallback_languages, :available_languages
 
   def initialize(language_params = [], fallback_languages = [], available_languages = [])
@@ -15,11 +14,10 @@ class Language::LanguageService
   private
 
   def find_valid_locale(locales)
-    locales.find {|l| available_languages.include? l.try(:to_sym) }
+    locales.find { |l| available_languages.include? l.try(:to_sym) }
   end
 
   def clean_language_codes(codes)
     codes.reject(&:blank?).map(&:to_sym).uniq
   end
-
 end

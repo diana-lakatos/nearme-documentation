@@ -1,9 +1,6 @@
 class InstanceAdmin::Analytics::LogsController < InstanceAdmin::Analytics::BaseController
-
   def index
-    @logs = MarketplaceError.select('error_type', 'message', 'count(*) count',
-      "MAX(created_at) last_occurence", 'MAX(id) id').group(:error_type, :message, :instance_id).
-      order("last_occurence DESC").paginate(page: params[:page], per_page: 10)
+    @logs = MarketplaceErrorGroup.order('last_occurence DESC').paginate(page: params[:page], per_page: 10)
   end
 
   def destroy
@@ -23,8 +20,6 @@ class InstanceAdmin::Analytics::LogsController < InstanceAdmin::Analytics::BaseC
     @marketplace_errors = MarketplaceError.where(
       error_type: @marketplace_error.error_type,
       message: @marketplace_error.message
-    ).order("created_at DESC").paginate(page: params[:page], per_page: 1)
+    ).order('created_at DESC').paginate(page: params[:page], per_page: 1)
   end
-
 end
-

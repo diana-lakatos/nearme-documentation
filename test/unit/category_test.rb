@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class CategoryTest < ActiveSupport::TestCase
-
   context 'should acts as nested set' do
     setup do
       @locale = Locale.first
@@ -20,12 +19,12 @@ class CategoryTest < ActiveSupport::TestCase
       transactable.categories << @category_grand_child
       transactable.reload
       assert_equal [@category_grand_child], transactable.categories
-      assert_equal ({@category.name => { 'name' => @category.translated_name, 'children' => [] }}), transactable.reload.to_liquid.categories
+      assert_equal ({ @category.name => { 'name' => @category.translated_name, 'children' => [] } }), transactable.reload.to_liquid.categories
 
-      @category.name = "Some new name"
+      @category.name = 'Some new name'
       @category.save
       @category.reload
-      assert_equal ({@category.name => { 'name' => @category.translated_name, 'children' => [] }}), Transactable.find(transactable.id).to_liquid.categories
+      assert_equal ({ @category.name => { 'name' => @category.translated_name, 'children' => [] } }), Transactable.find(transactable.id).to_liquid.categories
     end
 
     should 'update children permalink' do
@@ -38,7 +37,6 @@ class CategoryTest < ActiveSupport::TestCase
     end
 
     should 'create familiy relations' do
-
       assert_equal [@category_child], @category.children
       assert_equal [@category_grand_child], @category_child.children
       assert_equal [@category_sibling], @category.siblings
@@ -67,7 +65,7 @@ class CategoryTest < ActiveSupport::TestCase
     end
 
     should 'maintain change descendants when category move around'  do
-      @category_sibling.update_attributes({ parent_id: @category.id, child_index: 1 })
+      @category_sibling.update_attributes(parent_id: @category.id, child_index: 1)
       @category.reload
       assert @category.self_and_descendants.include?(@category_sibling)
       assert @category.children.include?(@category_sibling)
@@ -85,7 +83,7 @@ class CategoryTest < ActiveSupport::TestCase
     should 'create translations for existing categories when adding new locale' do
       @locale = FactoryGirl.create(:locale, code: 'pl')
       @category.reload
-      assert_equal @category.name, @category.instance.translations.where({ locale: @locale.code, key: @category.translation_key }).first.value
+      assert_equal @category.name, @category.instance.translations.where(locale: @locale.code, key: @category.translation_key).first.value
     end
 
     should 'remove translations when category has been deleted' do
@@ -97,4 +95,3 @@ class CategoryTest < ActiveSupport::TestCase
     end
   end
 end
-

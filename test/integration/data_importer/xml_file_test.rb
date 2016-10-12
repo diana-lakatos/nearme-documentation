@@ -2,11 +2,10 @@ require 'test_helper'
 require 'helpers/gmaps_fake'
 
 class DataImporter::XmlFileTest < ActiveSupport::TestCase
-
   setup do
     GmapsFake.stub_requests
-    stub_image_url("http://www.example.com/image.jpg")
-    stub_image_url("http://www.example.com/photo.jpg")
+    stub_image_url('http://www.example.com/image.jpg')
+    stub_image_url('http://www.example.com/photo.jpg')
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
     FactoryGirl.create(:instance_profile_type)
@@ -23,23 +22,21 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
       expected_counts = get_counts_of_all_relevant_objects
       @xml_file.parse
       get_counts_of_all_relevant_objects.each do |k, v|
-        assert_equal expected_counts[k], v, "#{k.to_s} count changed after second parsing (duplicated?)"
+        assert_equal expected_counts[k], v, "#{k} count changed after second parsing (duplicated?)"
       end
     end
 
     context '#users' do
-
       should 'create the right number of users' do
         assert_equal 2, @instance.users.count
       end
 
       should 'should have the right amount of companies' do
-        assert_equal ["1"], User.find_by_email('user1@example.com').companies.pluck(:external_id).sort
-        assert_equal ["1", "2"], User.find_by_email('user2@example.com').companies.pluck(:external_id).sort
+        assert_equal ['1'], User.find_by_email('user1@example.com').companies.pluck(:external_id).sort
+        assert_equal %w(1 2), User.find_by_email('user2@example.com').companies.pluck(:external_id).sort
       end
 
       context '#companies' do
-
         should 'create the right amount of companies' do
           assert_equal 2, @instance.companies.count
         end
@@ -56,9 +53,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
           assert_equal "My second Company's", @company.name
         end
 
-
         context '#locations' do
-
           should 'create right amount of locations for first company' do
             assert_equal 2, @instance.companies.find_by_external_id('1').locations.count
           end
@@ -68,13 +63,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
           end
 
           should 'not aggregate locations with the same address that belong to different companies' do
-            assert_equal 2, @instance.locations.joins(:location_address).where('addresses.address like ?', "%Pulawska%").count
+            assert_equal 2, @instance.locations.joins(:location_address).where('addresses.address like ?', '%Pulawska%').count
           end
 
           context 'location at Ursynowska' do
-
             setup do
-              @location = @instance.locations.joins(:location_address).where('addresses.address like ?', "%Ursynowska%").first
+              @location = @instance.locations.joins(:location_address).where('addresses.address like ?', '%Ursynowska%').first
             end
 
             should 'create the right details for location at Ursynowska' do
@@ -83,13 +77,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               assert_equal 'Warsaw', @location.city
               assert_equal 'Masovian Voivodeship', @location.state
               assert_equal '02-605', @location.postcode
-              assert_equal "Be careful, cool place!", @location.special_notes
+              assert_equal 'Be careful, cool place!', @location.special_notes
               assert_equal 'location@example.com', @location.email
               assert_equal 'This is my cool location', @location.description
             end
 
             context '#listing' do
-
               should 'create the right amount of listing 1' do
                 assert_equal 2, @location.listings.count
               end
@@ -117,22 +110,17 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               end
 
               context '#photos' do
-
                 should 'have correct original url' do
                   assert_equal ['http://www.example.com/image.jpg', 'http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('1').photos.pluck(:image_original_url).sort
                   assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('2').photos.pluck(:image_original_url).sort
                 end
-
               end
-
             end
-
           end
 
           context 'location at Pulawska' do
-
             setup do
-              @location = @instance.locations.joins(:location_address).where('addresses.address like ?', "%Pulawska%").first
+              @location = @instance.locations.joins(:location_address).where('addresses.address like ?', '%Pulawska%').first
             end
 
             should 'create the right details for location at Pulawska' do
@@ -141,13 +129,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               assert_equal 'Warsaw', @location.city
               assert_equal 'Masovian Voivodeship', @location.state
               assert_nil @location.postcode
-              assert_equal "Be careful, cool2 place!", @location.special_notes
+              assert_equal 'Be careful, cool2 place!', @location.special_notes
               assert_equal 'location2@example.com', @location.email
               assert_equal 'This is my cool2 location', @location.description
             end
 
             context '#listing' do
-
               should 'create the right amount of listings for location at Pulawska' do
                 assert_equal 1, @location.listings.count
               end
@@ -164,12 +151,10 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               end
 
               context '#' do
-
                 should 'have correct original url (photo belonging to listing 3)' do
                   assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('3').photos.pluck(:image_original_url).sort
                 end
               end
-
             end
           end
         end
@@ -178,7 +163,6 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
   end
 
   context 'sending invitational emails' do
-
     setup do
       Utils::DefaultAlertsCreator::SignUpCreator.new.create_all!
     end
@@ -191,39 +175,34 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
     end
 
     should 'send emails only once to users if settting is on' do
-      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
+      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, name: 'custom.domain.com'))
       @xml_file = FactoryGirl.create(:xml_template_file_send_invitations)
       assert_difference('ActionMailer::Base.deliveries.count', 2) do
         @xml_file.parse
       end
     end
-
   end
 
   context 'host template' do
-
     setup do
       @xml_file = FactoryGirl.create(:host_xml_template_file)
     end
 
     context 'persist data' do
-
       setup do
         @xml_file.parse
       end
 
       context '#users' do
-
         should 'create the right number of users' do
           assert_equal 1, @instance.users.count
         end
 
         should 'should have the right amount of companies' do
-          assert_equal ["user-name@example.com"], User.find_by_email('user-name@example.com').companies.pluck(:external_id).sort
+          assert_equal ['user-name@example.com'], User.find_by_email('user-name@example.com').companies.pluck(:external_id).sort
         end
 
         context '#companies' do
-
           setup do
             @company = @instance.companies.find_by_external_id('user-name@example.com')
           end
@@ -233,19 +212,17 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
           end
 
           should '1 should have the right details' do
-            assert_equal "UserName UserLast", @company.name
+            assert_equal 'UserName UserLast', @company.name
           end
 
           context '#locations' do
-
             should 'create right amount of locations for first company' do
               assert_equal 2, @company.locations.count
             end
 
             context 'location at Ursynowska' do
-
               setup do
-                @location = @instance.locations.joins(:location_address).where('addresses.address like ?', "%Ursynowska%").first
+                @location = @instance.locations.joins(:location_address).where('addresses.address like ?', '%Ursynowska%').first
               end
 
               should 'create the right details for location at Ursynowska' do
@@ -254,13 +231,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 assert_equal 'Warsaw', @location.city
                 assert_equal 'Masovian Voivodeship', @location.state
                 assert_equal '02-605', @location.postcode
-                assert_equal "Be careful, cool place!", @location.special_notes
+                assert_equal 'Be careful, cool place!', @location.special_notes
                 assert_equal 'location@example.com', @location.email
                 assert_equal 'This is my cool location', @location.description
               end
 
               context '#listing' do
-
                 should 'create the right amount of listing 1' do
                   assert_equal 2, @location.listings.count
                 end
@@ -288,22 +264,17 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 end
 
                 context '#photos' do
-
                   should 'have correct original url' do
                     assert_equal ['http://www.example.com/image.jpg', 'http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('1').photos.pluck(:image_original_url).sort
                     assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('2').photos.pluck(:image_original_url).sort
                   end
-
                 end
-
               end
-
             end
 
             context 'location at Pulawska' do
-
               setup do
-                @location = @instance.locations.joins(:location_address).where('addresses.address like ?', "%Pulawska%").first
+                @location = @instance.locations.joins(:location_address).where('addresses.address like ?', '%Pulawska%').first
               end
 
               should 'create the right details for location at Pulawska' do
@@ -312,13 +283,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 assert_equal 'Warsaw', @location.city
                 assert_equal 'Masovian Voivodeship', @location.state
                 assert_nil @location.postcode
-                assert_equal "Be careful, cool2 place!", @location.special_notes
+                assert_equal 'Be careful, cool2 place!', @location.special_notes
                 assert_equal 'location2@example.com', @location.email
                 assert_equal 'This is my cool2 location', @location.description
               end
 
               context '#listing' do
-
                 should 'create the right amount of listings for location at Pulawska' do
                   assert_equal 2, @location.listings.count
                 end
@@ -348,14 +318,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                   assert_equal true, @listing.enabled
                   assert_equal 'my attrs! 4', @listing.properties.my_attribute
                 end
-
               end
             end
           end
         end
       end
     end
-
   end
 
   def get_absolute_file_path(name)
@@ -363,16 +331,16 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
   end
 
   def get_counts_of_all_relevant_objects
-    { :instance => Instance.count,
-      :user => User.count,
-      :company => Company.count,
-      :location => Location.count,
-      :address => Address.count,
-      :location_availability_rules => AvailabilityRule.where(target_type: 'Location').count,
-      :listing_availability_rules => AvailabilityRule.where(target_type: 'Transactable').count,
-      :location_amenities => AmenityHolder.where(holder_type: 'Location').count,
-      :listing => Transactable.count,
-      :photo => Photo.count
+    { instance: Instance.count,
+      user: User.count,
+      company: Company.count,
+      location: Location.count,
+      address: Address.count,
+      location_availability_rules: AvailabilityRule.where(target_type: 'Location').count,
+      listing_availability_rules: AvailabilityRule.where(target_type: 'Transactable').count,
+      location_amenities: AmenityHolder.where(holder_type: 'Location').count,
+      listing: Transactable.count,
+      photo: Photo.count
     }
   end
 end

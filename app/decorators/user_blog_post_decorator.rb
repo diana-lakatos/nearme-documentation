@@ -20,27 +20,19 @@ class UserBlogPostDecorator < UserBlogDecorator
   end
 
   def published_at
-    if object.published_at
-      l object.published_at.to_date, format: :long
-    end
+    l object.published_at.to_date, format: :long if object.published_at
   end
 
   def published_at_datetime
-    if object.published_at
-      l object.published_at.to_date, format: :long
-    end
+    l object.published_at.to_date, format: :long if object.published_at
   end
 
   def created_at
-    if object.published_at
-      l object.created_at.to_date, format: :long
-    end
+    l object.created_at.to_date, format: :long if object.published_at
   end
 
   def published_at_frontend
-    if object.published_at
-      l object.published_at.to_date, format: :day_and_month
-    end
+    l object.published_at.to_date, format: :day_and_month if object.published_at
   end
 
   def blog_post_excerpt

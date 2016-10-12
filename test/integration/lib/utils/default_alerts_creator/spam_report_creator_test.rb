@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::SpamReportCreatorTest < ActionDispatch::IntegrationTest
-
   setup do
     @spam_report_creator = Utils::DefaultAlertsCreator::SpamReportCreator.new
   end

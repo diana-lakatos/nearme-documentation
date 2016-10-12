@@ -6,8 +6,8 @@ class ActivityFeedServiceTest < ActiveSupport::TestCase
     @feed = ActivityFeedService.new(@user)
   end
 
-  context "instance methods" do
-    should "#events" do
+  context 'instance methods' do
+    should '#events' do
       # The number of events on follow returned by the ActivityFeedService should stay 0
       # as those events are hidden by default
       followed1 = create(:user)
@@ -56,17 +56,17 @@ class ActivityFeedServiceTest < ActiveSupport::TestCase
       assert_equal 2, @feed.events.count
     end
 
-    should "#owner_id" do
+    should '#owner_id' do
       assert @user.id == @feed.owner_id
     end
 
-    should "#owner_type" do
+    should '#owner_type' do
       assert @user.class.name == @feed.owner_type
     end
   end
 
-  context "class methods" do
-    should ".create_event" do
+  context 'class methods' do
+    should '.create_event' do
       followed = create(:user)
 
       # It should create a new event.

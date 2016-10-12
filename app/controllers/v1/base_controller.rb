@@ -1,5 +1,4 @@
 class V1::BaseController < ApplicationController
-
   respond_to :json
   skip_before_action :set_locale, :set_i18n_locale
 
@@ -20,20 +19,20 @@ class V1::BaseController < ApplicationController
     rescue MultiJson::LoadError
       raise DNM::InvalidJSON
     end
-    raise DNM::InvalidJSON if @json_params.blank?
+    fail DNM::InvalidJSON if @json_params.blank?
     @json_params
   end
 
   # Ensure the user is authenticated
   def require_authentication
     if current_user.nil?
-      render json: { message: "Invalid Authentication" }, status: 401
+      render json: { message: 'Invalid Authentication' }, status: 401
     end
   end
 
   # Return the current user
   def current_user
-    if !auth_token.nil?
+    unless auth_token.nil?
       @current_user ||= User.find_by(authentication_token: auth_token)
     end
   end
@@ -52,5 +51,4 @@ class V1::BaseController < ApplicationController
   def dnm_unauthorized(e)
     render json: { message: e.message }, status: 401
   end
-
 end

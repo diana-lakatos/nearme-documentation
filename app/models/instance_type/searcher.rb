@@ -1,5 +1,4 @@
 module InstanceType::Searcher
-
   attr_reader :results
 
   def result_count
@@ -44,7 +43,7 @@ module InstanceType::Searcher
   end
 
   def adjust_to_map
-    @params[:map_moved] == "true"
+    @params[:map_moved] == 'true'
   end
 
   def global_map
@@ -64,7 +63,7 @@ module InstanceType::Searcher
   end
 
   def count_query(query)
-    query.count("*", distinct: true)
+    query.count('*', distinct: true)
   end
 
   def postgres_filters?
@@ -108,15 +107,14 @@ module InstanceType::Searcher
   end
 
   def filterable_pricing
-    @filterable_pricing ||= transactable_type.action_types.map do |at|
+    @filterable_pricing ||= transactable_type.action_types.flat_map do |at|
       at.pricings.map do |pricing|
-        [pricing.units_to_s, pricing.units_translation("reservations.per_unit_price").downcase.titleize]
+        [pricing.units_to_s, pricing.units_translation('reservations.per_unit_price').downcase.titleize]
       end
-    end.flatten(1)
+    end
     if transactable_type.action_types.any?(&:allow_free_booking?)
-      @filterable_pricing << ['0_free', I18n.t("search.pricing_types.free")]
+      @filterable_pricing << ['0_free', I18n.t('search.pricing_types.free')]
     end
     @filterable_pricing.sort.uniq
   end
-
 end

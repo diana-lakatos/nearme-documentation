@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch::IntegrationTest
-
   setup do
     @recurring_booking_creator = Utils::DefaultAlertsCreator::RecurringBookingCreator.new
   end
@@ -30,11 +29,11 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
   context 'methods' do
     setup do
       @recurring_booking = FactoryGirl.create(:recurring_booking)
-      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
+      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, name: 'custom.domain.com'))
       @platform_context = PlatformContext.current
     end
 
-    should "#notify_guest_of_cancellation_by_host" do
+    should '#notify_guest_of_cancellation_by_host' do
       @recurring_booking_creator.notify_guest_of_cancellation_by_host_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
         WorkflowStepJob.perform(::WorkflowStep::RecurringBookingWorkflow::ListerCancelled, @recurring_booking.id)
@@ -46,7 +45,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       assert_equal "[#{@platform_context.decorate.name}] Your recurring booking for '#{@recurring_booking.transactable.name}' at #{@recurring_booking.location.street} was cancelled by the host", mail.subject
     end
 
-    should "#notify_host_of_cancellation_by_host" do
+    should '#notify_host_of_cancellation_by_host' do
       @recurring_booking_creator.notify_host_of_cancellation_by_host_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ListerCancelled, @recurring_booking.id)
@@ -57,7 +56,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       assert_equal "[#{@platform_context.decorate.name}] You just declined a recurring booking", mail.subject
     end
 
-    should "#notify_guest_of_cancellation_by_guest" do
+    should '#notify_guest_of_cancellation_by_guest' do
       @recurring_booking_creator.notify_guest_of_cancellation_by_guest_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::EnquirerCancelled, @recurring_booking.id)
@@ -68,7 +67,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       assert_equal "[#{@platform_context.decorate.name}] You just cancelled a recurring booking", mail.subject
     end
 
-    should "#notify_host_of_cancellation_by_guest" do
+    should '#notify_host_of_cancellation_by_guest' do
       @recurring_booking_creator.notify_host_of_cancellation_by_guest_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::EnquirerCancelled, @recurring_booking.id)
@@ -80,7 +79,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       assert_equal "[#{@platform_context.decorate.name}] #{@recurring_booking.owner.first_name} cancelled a recurring booking for '#{@recurring_booking.transactable.name}' at #{@recurring_booking.location.street}", mail.subject
     end
 
-    should "#notify_guest_of_expiration" do
+    should '#notify_guest_of_expiration' do
       @recurring_booking_creator.notify_guest_of_expiration_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::Expired, @recurring_booking.id)
@@ -161,7 +160,6 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
     end
 
     context 'guest rejection' do
-
       setup do
         @recurring_booking_creator.notify_guest_recurring_booking_rejected_email!
       end
@@ -232,26 +230,25 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
     end
 
     context 'sms' do
-
       setup do
-        Googl.stubs(:shorten).returns(stub(:short_url => "http://goo.gl/abf324"))
-        @recurring_booking.owner.update_attribute(:mobile_number, "987654421")
-        @recurring_booking.creator.update_attribute(:mobile_number, "124456789")
+        Googl.stubs(:shorten).returns(stub(short_url: 'http://goo.gl/abf324'))
+        @recurring_booking.owner.update_attribute(:mobile_number, '987654421')
+        @recurring_booking.creator.update_attribute(:mobile_number, '124456789')
       end
 
       context '#notify_host_with_confirmation sms' do
         setup do
           @recurring_booking_creator.notify_host_recurring_booking_created_and_pending_confirmation_sms!
         end
-        should "render with the reservation" do
+        should 'render with the reservation' do
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation.new(@recurring_booking.id))
-          assert_equal "+1124456789", sms.to
+          assert_equal '+1124456789', sms.to
           assert sms.body =~ Regexp.new("You have received a recurring booking request on #{@recurring_booking.instance.name}")
           assert sms.body =~ /Please confirm or decline from your dashboard:/
           assert sms.body =~ /http:\/\/goo.gl/
         end
 
-        should "not render if host had disabled sms notifications" do
+        should 'not render if host had disabled sms notifications' do
           @recurring_booking.creator.update_attribute(:sms_notifications_enabled, false)
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation.new(@recurring_booking.id))
           assert sms.is_a?(SmsNotifier::NullMessage), "#{sms.class} is not SmsNotifer::NullMessage"
@@ -259,7 +256,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         end
 
         should 'trigger proper sms' do
-          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(:invoke! => true)).once
+          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
           WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, @recurring_booking.id)
         end
       end
@@ -270,23 +267,18 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         end
 
         should 'trigger proper sms' do
-          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(:invoke! => true)).once
+          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
           WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed, @recurring_booking.id)
         end
 
-
-        should "render with the reservation" do
+        should 'render with the reservation' do
           @recurring_booking.update_column(:state, 'confirmed')
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed.new(@recurring_booking.id))
-          assert_equal "+1987654421", sms.to
+          assert_equal '+1987654421', sms.to
           assert sms.body =~ Regexp.new("Your recurring booking for #{@recurring_booking.transactable.name} was Confirmed. View booking:"), "wrong body: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl/, "Sms body does not include http://goo.gl: #{sms.body}"
         end
-
       end
-
     end
   end
-
-
 end

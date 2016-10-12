@@ -2,7 +2,6 @@
 # require 'rails/performance_test_help'
 # require 'helpers/gmaps_fake'
 
-
 # class DataUploadTest < ActionDispatch::PerformanceTest
 #   # Refer to the documentation for all available options
 #  self.profile_options = { formats: [:call_tree] }

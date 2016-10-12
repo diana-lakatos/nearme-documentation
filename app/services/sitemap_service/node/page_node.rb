@@ -9,6 +9,6 @@ class SitemapService::Node::PageNode < SitemapService::Node
   end
 
   def self.comment_mark
-    "pages"
+    'pages'
   end
 end

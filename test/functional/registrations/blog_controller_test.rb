@@ -7,7 +7,7 @@ class Registrations::BlogControllerTest < ActionController::TestCase
     @another_blog_post = FactoryGirl.create(:published_user_blog_post, user: @user)
     @unpublished_blog_post = FactoryGirl.create(:unpublished_user_blog_post, user: @user)
     @user.blog.instance.update_column(:user_blogs_enabled, true)
-    FactoryGirl.create(:published_user_blog_post) #non-related blog post
+    FactoryGirl.create(:published_user_blog_post) # non-related blog post
   end
 
   context 'user blog is disabled' do
@@ -44,8 +44,8 @@ class Registrations::BlogControllerTest < ActionController::TestCase
         refute assigns(:blog_posts).include?(@unpublished_blog_post)
         assert_equal [@another_blog_post.id, @blog_post.id].sort, assigns(:blog_posts).map(&:id).sort
         assert_response :success
-        assert_select "#infinite-scrolling .pagination .next_page", false
-        assert_select "#infinite-scrolling .pagination .previous_page", false
+        assert_select '#infinite-scrolling .pagination .next_page', false
+        assert_select '#infinite-scrolling .pagination .previous_page', false
       end
 
       should 'show pagination links' do
@@ -53,11 +53,10 @@ class Registrations::BlogControllerTest < ActionController::TestCase
         @blog_post = FactoryGirl.create(:published_user_blog_post, user: @user)
         get :index, user_id: @user.id
         assert_response :success
-        assert_select "#infinite-scrolling .pagination .next_page"
-        assert_select "#infinite-scrolling .pagination .previous_page"
+        assert_select '#infinite-scrolling .pagination .next_page'
+        assert_select '#infinite-scrolling .pagination .previous_page'
         refute response.body.include?('Liquid error')
       end
-
     end
 
     context '#show' do
@@ -74,6 +73,5 @@ class Registrations::BlogControllerTest < ActionController::TestCase
         assert_response :redirect
       end
     end
-
   end
 end

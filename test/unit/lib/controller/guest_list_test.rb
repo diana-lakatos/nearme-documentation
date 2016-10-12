@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class GuestListTest < ActiveSupport::TestCase
-
   context '#filter' do
     setup do
       stub_active_merchant_interaction
@@ -37,5 +36,4 @@ class GuestListTest < ActiveSupport::TestCase
       assert_equal @archived_reservations.sort_by(&:created_at).reverse, @guest_list.filter('archived').reservations
     end
   end
-
 end

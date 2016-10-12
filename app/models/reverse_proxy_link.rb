@@ -14,6 +14,4 @@ class ReverseProxyLink < ActiveRecord::Base
   def to_liquid
     @reverse_proxy_link_drop ||= ReverseProxyLinkDrop.new(self)
   end
-
 end
-

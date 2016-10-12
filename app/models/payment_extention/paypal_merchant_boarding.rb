@@ -1,6 +1,6 @@
 module PaymentExtention::PaypalMerchantBoarding
-  WP_PRO = "wp_pro"
-  ADDIPMT = "addipmt"
+  WP_PRO = 'wp_pro'
+  ADDIPMT = 'addipmt'
 
   def boarding_url(merchant)
     @merchant = merchant
@@ -24,39 +24,31 @@ module PaymentExtention::PaypalMerchantBoarding
 
   def boarding_url_params
     boarding_params = {
-      "partnerId" => settings["partner_id"],
-      "productIntentID" => available_products,
-      "displayMode" => "regular",
-      "integrationType" => "T",
-      "permissionNeeded" => merchant_permissions,
-      "returnToPartnerUrl" => host + "/dashboard/company/merchant_accounts/#{@merchant.id}/boarding_complete",
-      "receiveCredentials" => "FALSE",
-      "showPermissions" => "TRUE",
-      "productSelectionNeeded" => "FALSE",
-      "merchantID" => @merchant.merchant_token
+      'partnerId' => settings['partner_id'],
+      'productIntentID' => available_products,
+      'displayMode' => 'regular',
+      'integrationType' => 'T',
+      'permissionNeeded' => merchant_permissions,
+      'returnToPartnerUrl' => host + "/dashboard/company/merchant_accounts/#{@merchant.id}/boarding_complete",
+      'receiveCredentials' => 'FALSE',
+      'showPermissions' => 'TRUE',
+      'productSelectionNeeded' => 'FALSE',
+      'merchantID' => @merchant.merchant_token
     }
 
     # Work around for MPO PayPal based in Australia. Can be removed when PP deal with it on their side.
-    if PlatformContext.current.instance.default_country != "Australia"
-      boarding_params.merge!({"countryCode" => @merchant.iso_country_code})
+    if PlatformContext.current.instance.default_country != 'Australia'
+      boarding_params.merge!('countryCode' => @merchant.iso_country_code)
     end
 
-    boarding_params.map { |k,v| "#{k}=#{v}" }.join('&')
+    boarding_params.map { |k, v| "#{k}=#{v}" }.join('&')
   end
 
   def merchant_permissions
-    [
-      "EXPRESS_CHECKOUT",
-      "REFUND",
-      "AUTH_CAPTURE",
-      "REFERENCE_TRANSACTION",
-      "BILLING_AGREEMENT",
-      "DIRECT_PAYMENT"
-    ].join(',')
+    %w(EXPRESS_CHECKOUT REFUND AUTH_CAPTURE REFERENCE_TRANSACTION BILLING_AGREEMENT DIRECT_PAYMENT).join(',')
   end
 
   def boarding_supported_countries
-    ['US', 'GB', 'IT', 'ES', 'DE', 'FR', 'AT', 'BE', 'DK', 'NL', 'NO', 'PL', 'SE', 'CH', 'TR']
+    %w(US GB IT ES DE FR AT BE DK NL NO PL SE CH TR)
   end
-
 end

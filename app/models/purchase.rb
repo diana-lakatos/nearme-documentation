@@ -1,5 +1,4 @@
 class Purchase < Order
-
   validate :check_quantities, if: :skip_checkout_validation
 
   state_machine :state, initial: :inactive do
@@ -7,7 +6,7 @@ class Purchase < Order
     # after_transition confirmed: :completed, do: [:set_archived_at!]
 
     # event :complete do transition :confirmed => :completed; end
-    event :ship do transition :completed => :shipped; end
+    event :ship do transition completed: :shipped; end
   end
 
   def self.workflow_class
@@ -23,7 +22,7 @@ class Purchase < Order
     self.reservation_type = transactable.transactable_type.reservation_type
     self.currency = transactable.try(:currency)
     self.additional_charge_ids = attrs[:additional_charge_ids]
-    if transactable_line_item = transactable_line_items.find{ |li| li.line_item_source == transactable }
+    if transactable_line_item = transactable_line_items.find { |li| li.line_item_source == transactable }
       transactable_line_item.quantity += attrs[:quantity].to_i
     else
       transactable_line_items.build(
@@ -34,28 +33,28 @@ class Purchase < Order
         unit_price: transactable_pricing.price,
         line_itemable: self,
         service_fee_guest_percent: transactable_pricing.action.service_fee_guest_percent,
-        service_fee_host_percent: transactable_pricing.action.service_fee_host_percent,
+        service_fee_host_percent: transactable_pricing.action.service_fee_host_percent
       )
     end
 
     self.skip_checkout_validation = true
-    self.save
+    save
   end
 
   def check_quantities
-    errors.add(:base, I18n.t("activerecord.errors.models.order.maximim_quantity")) if transactable_line_items.any?(&:insufficient_stock?)
+    errors.add(:base, I18n.t('activerecord.errors.models.order.maximim_quantity')) if transactable_line_items.any?(&:insufficient_stock?)
   end
 
   def charge_and_confirm!
-    self.errors.clear
-    self.transactable_line_items.each { |t| t.validate_transactable_quantity(self) }
+    errors.clear
+    transactable_line_items.each { |t| t.validate_transactable_quantity(self) }
 
-    if self.errors.empty? && self.valid?
-      if self.unconfirmed? && (self.paid? || self.payment.capture!)
-          self.create_shipments!
-          self.confirm!
-          self.transactable_line_items.each(&:reduce_transactable_quantity!)
-          # We need to touch transactable so it's reindexed by ElasticSearch
+    if errors.empty? && self.valid?
+      if self.unconfirmed? && (self.paid? || payment.capture!)
+        self.create_shipments!
+        self.confirm!
+        transactable_line_items.each(&:reduce_transactable_quantity!)
+      # We need to touch transactable so it's reindexed by ElasticSearch
       else
         false
       end
@@ -63,7 +62,7 @@ class Purchase < Order
   end
 
   def return_transactable_quantity!
-    self.transactable_line_items.each(&:return_transactable_quantity!)
+    transactable_line_items.each(&:return_transactable_quantity!)
   end
 
   def with_payment?
@@ -85,7 +84,7 @@ class Purchase < Order
     @purchase_drop ||= OrderDrop.new(self)
   end
 
-  # TODO we could want to extend that
+  # TODO: we could want to extend that
   def can_approve_or_decline_checkout?
     true
   end
@@ -109,5 +108,4 @@ class Purchase < Order
   def remote_payment?
     false
   end
-
 end

@@ -1,5 +1,4 @@
 class DelayedReservation < Reservation
-
   attr_accessor :dates_fake, :checkout_update
 
   validate :dates_fake_present, if: -> { checkout_update }
@@ -9,7 +8,7 @@ class DelayedReservation < Reservation
   def skip_payment_authorization
     true
   end
-  alias :skip_payment_authorization? :skip_payment_authorization
+  alias_method :skip_payment_authorization?, :skip_payment_authorization
 
   def self.workflow_class
     Reservation
@@ -19,16 +18,16 @@ class DelayedReservation < Reservation
     self.attributes = attrs
     self.reservation_type = transactable.transactable_type.reservation_type
     self.settings = reservation_type.try(:settings)
-    self.owner_id = self.user_id
+    self.owner_id = user_id
     add_line_item_without_validation_setup
     save(validate: false)
   end
 
   def add_line_item_without_validation_setup
-    self.set_inheritated_data
-    self.set_minimum_booking_minutes
+    set_inheritated_data
+    set_minimum_booking_minutes
     set_dates_from_search
-    self.build_periods
+    build_periods
     self.quantity ||= 1
     self.skip_try_to_activate = true
   end
@@ -65,10 +64,9 @@ class DelayedReservation < Reservation
         if date.past? && !date.today?
           errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date'))
         end
-        periods.first.update_attributes({ date: date, start_minute: @start_minute, end_minute: @end_minute })
+        periods.first.update_attributes(date: date, start_minute: @start_minute, end_minute: @end_minute)
       end
     end
     true
   end
-
 end

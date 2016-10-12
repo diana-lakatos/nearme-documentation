@@ -4,8 +4,7 @@ FactoryGirl.define do
     association :amenity_type
 
     factory :wifi do
-      name "Wi-Fi"
+      name 'Wi-Fi'
     end
-
   end
 end

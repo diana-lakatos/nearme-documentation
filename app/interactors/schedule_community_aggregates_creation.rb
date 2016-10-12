@@ -8,4 +8,3 @@ class ScheduleCommunityAggregatesCreation
     CommunityAggregatesCreationJob.perform
   end
 end
-

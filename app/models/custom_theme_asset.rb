@@ -40,6 +40,4 @@ class CustomThemeAsset < ActiveRecord::Base
     instance.recalculate_cache_key! if custom_theme.in_use? || custom_theme.in_use_for_instance_admins?
     true
   end
-
 end
-

@@ -1,5 +1,4 @@
 class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings::BaseController
-
   def create
     @location_type = LocationType.new(location_type_params)
     if @location_type.save
@@ -14,9 +13,9 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings
   def update
     if request.xhr?
       @location_type = LocationType.find(params[:id])
-      render json: {success: @location_type.update_attributes(location_type_params)}
+      render json: { success: @location_type.update_attributes(location_type_params) }
     else
-      raise ActionController::MethodNotAllowed
+      fail ActionController::MethodNotAllowed
     end
   end
 
@@ -25,9 +24,9 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings
 
     if @location_type.locations.count > 0
       @replacement_types = LocationType.all - [@location_type]
-      render :destroy_and_replace_modal, :layout => false
+      render :destroy_and_replace_modal, layout: false
     else
-      render :destroy_modal, :layout => false
+      render :destroy_modal, layout: false
     end
   end
 

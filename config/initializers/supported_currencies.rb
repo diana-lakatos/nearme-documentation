@@ -6,10 +6,9 @@
 
 DesksnearMe::Application.config.supported_currencies = []
 require 'csv'
-CSV.foreach(Rails.root.join('config', 'supported_currencies.csv'), :headers => :first_row, :return_headers => false) do |row|
+CSV.foreach(Rails.root.join('config', 'supported_currencies.csv'), headers: :first_row, return_headers: false) do |row|
   DesksnearMe::Application.config.supported_currencies << {
-    :name => row[0],
-    :iso_code => row[1]
+    name: row[0],
+    iso_code: row[1]
   }
 end
-

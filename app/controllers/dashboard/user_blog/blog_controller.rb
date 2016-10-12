@@ -1,5 +1,4 @@
 class Dashboard::UserBlog::BlogController < Dashboard::UserBlog::BaseController
-
   before_filter :find_user_blog
 
   def show

@@ -2,7 +2,7 @@
 module ReservationTestSupport
   # Prepares a company and initializes some confirmed, charged reservations.
   def prepare_company_with_charged_reservations(options = {})
-    options.reverse_merge!(:reservation_count => 1)
+    options.reverse_merge!(reservation_count: 1)
 
     transactable = FactoryGirl.create(:transactable)
     transactable.action_type.transactable_type_action_type.update(
@@ -16,18 +16,18 @@ module ReservationTestSupport
   end
 
   # Prepares some charged reservations for a transactable
-  def prepare_charged_reservations_for_transactable(transactable, count = 1, options = {})
+  def prepare_charged_reservations_for_transactable(transactable, count = 1, _options = {})
     user = FactoryGirl.create(:user)
     payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
     payment_method = payment_gateway.payment_methods.first
     stub_active_merchant_interaction
 
-    date = Time.zone.now.advance(:weeks => 1).beginning_of_week.to_date
+    date = Time.zone.now.advance(weeks: 1).beginning_of_week.to_date
     reservations = []
-    count.times do |i|
-      reservation = FactoryGirl.create(:confirmed_reservation, transactable: transactable, company: transactable.company, currency: transactable.currency )
+    count.times do |_i|
+      reservation = FactoryGirl.create(:confirmed_reservation, transactable: transactable, company: transactable.company, currency: transactable.currency)
       reservation.payment.destroy
-      reservation.payment_attributes = {state: "paid", payment_method: payment_method, credit_card_attributes: FactoryGirl.attributes_for(:credit_card_attributes)}
+      reservation.payment_attributes = { state: 'paid', payment_method: payment_method, credit_card_attributes: FactoryGirl.attributes_for(:credit_card_attributes) }
       reservation.save
       reservations << reservation
     end

@@ -7,11 +7,11 @@ module Controller
     def initialize(user, recurring_booking = nil)
       @user = user
       if recurring_booking
-        @reservations_scope = recurring_booking.reservations.includes(:transactable => :location)
+        @reservations_scope = recurring_booking.reservations.includes(transactable: :location)
       else
         reservations = @user.listing_orders.reservations.order('orders.updated_at DESC')
-        @reservations_scope = reservations.includes(:transactable => :location)
-        @recurring_bookings_scope = @user.listing_recurring_bookings.includes(:transactable => :location).order('orders.created_at DESC')
+        @reservations_scope = reservations.includes(transactable: :location)
+        @recurring_bookings_scope = @user.listing_recurring_bookings.includes(transactable: :location).order('orders.created_at DESC')
       end
     end
 
@@ -58,7 +58,7 @@ module Controller
     private
 
     def available_states
-      %w{unconfirmed confirmed archived overdue}
+      %w(unconfirmed confirmed archived overdue)
     end
   end
 end

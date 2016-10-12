@@ -1,11 +1,10 @@
 module DashboardHelper
-
   def in_new_listing?
     (params[:action] == 'new' || params[:action] == 'edit') && params[:controller].include?('listings') && params[:id].blank?
   end
 
   def in_new_or_edit?
-    ['new', 'create', 'edit', 'update'].include?(params[:action])
+    %w(new create edit update).include?(params[:action])
   end
 
   def analytics_options
@@ -48,9 +47,7 @@ module DashboardHelper
   def dashboard_location_nav_class(location)
     classes = []
 
-    if @location && @location == location
-      classes << 'active'
-    end
+    classes << 'active' if @location && @location == location
 
     classes.join ' '
   end
@@ -81,13 +78,11 @@ module DashboardHelper
   end
 
   def dashboard_menu_item(key = nil, path = nil, options = {})
-    if !options[:not_hideable]
-      return nil if HiddenUiControls.find(key).hidden?
-    end
+    return nil if HiddenUiControls.find(key).hidden? unless options[:not_hideable]
     controller = params[:controller].split('/').last
     key_controller = key.split('/').last
     options.reverse_merge!(link_text: t("dashboard.nav.#{key_controller}"), active: nil)
-    content_tag :li, class: (options[:active] || (controller == key_controller && options[:active] == nil)) ? 'active' : '' do
+    content_tag :li, class: (options[:active] || (controller == key_controller && options[:active].nil?)) ? 'active' : '' do
       link_to options[:link_text], path
     end
   end
@@ -103,7 +98,7 @@ module DashboardHelper
     caption
   end
 
-  def booking_types_active_toggle(transactable, action_type, content = false)
+  def booking_types_active_toggle(transactable, action_type, _content = false)
     'active' if transactable.action_type.try(:transactable_type_action_type) == action_type
   end
 
@@ -120,13 +115,13 @@ module DashboardHelper
     end
   end
 
-  def hint_button(hint_text, placement: "right")
-    content_tag :button, type: "button", class: 'hint-toggler', data: { toggle: "tooltip", placement: placement }, title: hint_text do |variable|
+  def hint_button(hint_text, placement: 'right')
+    content_tag :button, type: 'button', class: 'hint-toggler', data: { toggle: 'tooltip', placement: placement }, title: hint_text do |_variable|
       t :toggle_hint
     end
   end
 
-  def dropdown_menu(label, options = nil, &block )
+  def dropdown_menu(label, options = nil, &block)
     toggler_id = 'dropdown-' + SecureRandom.hex(5)
 
     wrapper_class = 'dropdown'
@@ -144,9 +139,9 @@ module DashboardHelper
     toggler_label = label.to_s + ' ' + content_tag(:span, nil, class: 'caret')
 
     content_tag wrapper_tag, class: wrapper_class do
-      output = content_tag :a, toggler_label.html_safe, href: '#', id: toggler_id, type: "button", class: toggler_class, data: {toggle: "dropdown"}, aria: { haspopup: "true", expanded: "false" }
+      output = content_tag :a, toggler_label.html_safe, href: '#', id: toggler_id, type: 'button', class: toggler_class, data: { toggle: 'dropdown' }, aria: { haspopup: 'true', expanded: 'false' }
 
-      output += content_tag :ul, capture(&block), class: 'dropdown-menu', :"aria-labelledby" => toggler_id
+      output += content_tag :ul, capture(&block), class: 'dropdown-menu', "aria-labelledby": toggler_id
 
       output
     end
@@ -198,10 +193,10 @@ module DashboardHelper
   end
 
   def dashboard_transactable_photos_to_image_input_collection(photos)
-    collection = Array.new
+    collection = []
 
     photos.each do |photo|
-      item = Hash.new
+      item = {}
       item[:id] = photo.id
       item[:full_url] = photo.image_url
       item[:position] = photo.position
@@ -214,22 +209,22 @@ module DashboardHelper
       collection << item
     end
 
-    return collection
+    collection
   end
 
   def dashboard_panel_multi_tabs(items)
     return if items.count < 2
 
     out = ActiveSupport::SafeBuffer.new
-    active = items.select {|item| item[:active] }.first
+    active = items.find { |item| item[:active] }
 
-    if active == nil
+    if active.nil?
       items.first[:active] = true
       active = items.first
     end
 
     out << content_tag(:nav, class: 'panel-nav-mobile') do
-      dropdown_menu active[:name], { wrapper_class: 'links'} do
+      dropdown_menu active[:name], wrapper_class: 'links' do
         links = ActiveSupport::SafeBuffer.new
         items.each do |item|
           links << content_tag(:li, class: (item[:active] ? 'active' : nil)) do

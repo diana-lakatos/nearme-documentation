@@ -1,13 +1,12 @@
 class HiddenUiControls
-
-  class KeyNotFound < ActiveRecord::RecordNotFound;
+  class KeyNotFound < ActiveRecord::RecordNotFound
   end
 
   BUY_SELL_KEYS = [
-      'dashboard/orders',
-      'dashboard/orders_received',
-      'main_menu/my_orders',
-      'main_menu/cart',
+    'dashboard/orders',
+    'dashboard/orders_received',
+    'main_menu/my_orders',
+    'main_menu/cart'
   ]
 
   PROJECT_KEYS = [
@@ -15,59 +14,59 @@ class HiddenUiControls
   ]
 
   SERVICE_KEYS = [
-      'dashboard/user_reservations',
-      'dashboard/user_recurring_bookings',
-      'dashboard/transactables',
-      'dashboard/host_reservations',
-      'dashboard/host_recurring_bookings',
-      'registrations/show#services',
-      'registrations/sellers/show#services',
-      'registrations/buyers/show#services',
-      'main_menu/my_bookings',
-      'main_menu/my_subscriptions',
-      'dashboard/transactables/bulk_upload',
-      'dashboard/transactables/search'
+    'dashboard/user_reservations',
+    'dashboard/user_recurring_bookings',
+    'dashboard/transactables',
+    'dashboard/host_reservations',
+    'dashboard/host_recurring_bookings',
+    'registrations/show#services',
+    'registrations/sellers/show#services',
+    'registrations/buyers/show#services',
+    'main_menu/my_bookings',
+    'main_menu/my_subscriptions',
+    'dashboard/transactables/bulk_upload',
+    'dashboard/transactables/search'
   ]
 
   COMMON_KEYS = [
-      'dashboard/credit_cards',
-      'dashboard/user_messages',
-      'dashboard/companies',
-      'dashboard/payouts',
-      'dashboard/transfers',
-      'dashboard/analytics',
-      'dashboard/users',
-      'dashboard/waiver_agreement_templates',
-      'dashboard/white_labels',
-      'dashboard/tickets',
-      'dashboard/support/tickets',
-      'registrations/edit',
-      'dashboard/notification_preferences',
-      'dashboard/notification_preferences/emails',
-      'dashboard/notification_preferences/sms',
-      'registrations/click_to_call',
-      'registrations/social_accounts',
-      'dashboard/blog',
-      'registrations/show#reviews',
-      'registrations/show#blog_posts',
-      'registrations/sellers/show#reviews',
-      'registrations/sellers/show#blog_posts',
-      'registrations/buyers/show#reviews',
-      'registrations/buyers/show#blog_posts',
-      'dashboard/reviews',
-      'dashboard/reviews_completed',
-      'dashboard/reviews_rate',
-      'dashboard/wish_list_items',
-      'main_menu/manage_items',
-      'main_menu/cta',
-      'main_menu/rfq',
-      'main_menu/manage_blog',
-      'main_menu/wish_list',
-      'main_menu/account',
-      'main_menu/view_profile',
-      'main_menu/messages',
-      'dashboard/payment_documents/sent_to_me',
-      'dashboard/saved_searches',
+    'dashboard/credit_cards',
+    'dashboard/user_messages',
+    'dashboard/companies',
+    'dashboard/payouts',
+    'dashboard/transfers',
+    'dashboard/analytics',
+    'dashboard/users',
+    'dashboard/waiver_agreement_templates',
+    'dashboard/white_labels',
+    'dashboard/tickets',
+    'dashboard/support/tickets',
+    'registrations/edit',
+    'dashboard/notification_preferences',
+    'dashboard/notification_preferences/emails',
+    'dashboard/notification_preferences/sms',
+    'registrations/click_to_call',
+    'registrations/social_accounts',
+    'dashboard/blog',
+    'registrations/show#reviews',
+    'registrations/show#blog_posts',
+    'registrations/sellers/show#reviews',
+    'registrations/sellers/show#blog_posts',
+    'registrations/buyers/show#reviews',
+    'registrations/buyers/show#blog_posts',
+    'dashboard/reviews',
+    'dashboard/reviews_completed',
+    'dashboard/reviews_rate',
+    'dashboard/wish_list_items',
+    'main_menu/manage_items',
+    'main_menu/cta',
+    'main_menu/rfq',
+    'main_menu/manage_blog',
+    'main_menu/wish_list',
+    'main_menu/account',
+    'main_menu/view_profile',
+    'main_menu/messages',
+    'dashboard/payment_documents/sent_to_me',
+    'dashboard/saved_searches'
   ]
 
   OPTIONAL_KEYS = {
@@ -79,12 +78,12 @@ class HiddenUiControls
     index ? to_obj(keys(:auto)[index]) : OpenStruct.new(visible?: false, hidden?: true)
   end
 
-  def self.all(type=:auto)
+  def self.all(type = :auto)
     selected_keys = keys(type)
     selected_keys.map { |key| to_obj(key) }
   end
 
-  def self.keys(type=:auto)
+  def self.keys(type = :auto)
     selected_keys = case type
     when :auto
       # We now return all keys on auto

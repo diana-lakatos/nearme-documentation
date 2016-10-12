@@ -1,5 +1,4 @@
 module ActivityFeedHelper
-
   def feed_data
     return {} unless current_user
     {
@@ -35,5 +34,4 @@ module ActivityFeedHelper
       link_to_activity_feed_object block_contents, followed, target: target
     end
   end
-
 end

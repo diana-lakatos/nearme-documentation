@@ -12,7 +12,7 @@ class User::FriendFinder
     authentications.each do |authentication|
       new_friends = []
       begin
-        authentication.new_connections.each {|u| new_friends << u } if authentication.new_connections.present?
+        authentication.new_connections.each { |u| new_friends << u } if authentication.new_connections.present?
       rescue ::Authentication::InvalidToken
         authentication.expire_token!
         return false
@@ -29,6 +29,6 @@ class User::FriendFinder
       end
     end
 
-    return true
+    true
   end
 end

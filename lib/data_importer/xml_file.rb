@@ -1,5 +1,4 @@
 class DataImporter::XmlFile < DataImporter::File
-
   attr_accessor :trackers
 
   def initialize(path, transactable_type, options = {})
@@ -45,7 +44,7 @@ class DataImporter::XmlFile < DataImporter::File
     @node.xpath('company').each do |company_node|
       external_id = company_node['id']
       @company = Company.find_by_external_id(external_id)
-      if !@company
+      unless @company
         @company = Company.new do |c|
           assign_attributes(c, company_node)
           c.external_id = external_id
@@ -61,11 +60,9 @@ class DataImporter::XmlFile < DataImporter::File
           @node = company_node
           yield
 
-          trigger_event('parsing_finished', {
-            'location' => @synchronizer.delete_active_record_relation!(@company.locations),
-            'listing' => @synchronizer.delete_active_record_relation!(@company.listings),
-            'photo' => @synchronizer.delete_active_record_relation!(@company.photos)
-          })
+          trigger_event('parsing_finished',             'location' => @synchronizer.delete_active_record_relation!(@company.locations),
+                                                        'listing' => @synchronizer.delete_active_record_relation!(@company.listings),
+                                                        'photo' => @synchronizer.delete_active_record_relation!(@company.photos))
         else
           trigger_event('custom_validation_error', "Company #{@company.external_id} has no valid user, skipping")
           @company.destroy
@@ -177,7 +174,7 @@ class DataImporter::XmlFile < DataImporter::File
         trigger_event('object_valid', @listing)
         @listing.action_rfq = @enable_rfq
         @listing.skip_metadata = true
-        ApprovalRequestInitializer.new(@listing, @listing.try(:location).try(:company).try(:creator)).process if !@listing.is_trusted?
+        ApprovalRequestInitializer.new(@listing, @listing.try(:location).try(:company).try(:creator)).process unless @listing.is_trusted?
         @listing.save! if @listing.changed? || (@listing_photo_updated && @listing.new_record?)
         @listing.populate_photos_metadata! if @listing_photo_updated
         # We do this here, after the listing is saved and done because working on the categories association
@@ -223,11 +220,11 @@ class DataImporter::XmlFile < DataImporter::File
     ).first_or_initialize.becomes(@node.xpath('action_type/type').text.constantize)
     @object = @action_type
     yield
-    @action_type.transactable_type_action_type ||= @transactable_type.action_types.where("type ilike ?", "%#{@action_type.type.demodulize}%").first
+    @action_type.transactable_type_action_type ||= @transactable_type.action_types.where('type ilike ?', "%#{@action_type.type.demodulize}%").first
     @node.xpath('action_type/pricings/pricing').map do |pricing_attrs|
       pricing = @action_type.pricings.where(
         number_of_units: pricing_attrs.xpath('number_of_units').text,
-        unit: pricing_attrs.xpath('unit').text,
+        unit: pricing_attrs.xpath('unit').text
       ).first_or_initialize
       pricing.price_cents = pricing_attrs.xpath('price_cents').text.to_i if pricing_attrs.xpath('price_cents').text.to_i > 0
       pricing.is_free_booking = false if pricing_attrs.xpath('price_cents').text.to_i > 0
@@ -300,10 +297,8 @@ class DataImporter::XmlFile < DataImporter::File
     else
       lower_name = name.mb_chars.downcase
       @location_types[lower_name] ||= LocationType.where('lower(name) like ?', lower_name).first
-      raise "Unknown LocationType #{name}, valid names: #{LocationType.pluck(:name)}" if @location_types[lower_name].nil?
+      fail "Unknown LocationType #{name}, valid names: #{LocationType.pluck(:name)}" if @location_types[lower_name].nil?
       @location_types[lower_name]
     end
   end
-
 end
-

@@ -1,5 +1,4 @@
 class TransactableType::TimeBasedBooking < TransactableType::ActionType
-
   validates :pricings, presence: true, if: :enabled?
   validates_associated :pricings
 
@@ -8,5 +7,4 @@ class TransactableType::TimeBasedBooking < TransactableType::ActionType
   def available_units
     %w(day day_month night night_month hour)
   end
-
 end

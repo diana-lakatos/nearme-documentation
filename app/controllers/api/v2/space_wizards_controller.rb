@@ -1,6 +1,5 @@
 module Api
   class V2::SpaceWizardsController < BaseController
-
     skip_before_filter :require_authorization
     before_filter :find_transactable_type
     before_filter :set_common_variables
@@ -10,7 +9,7 @@ module Api
 
     # see no evil :(
     def create
-      params[:user][:companies_attributes]["0"][:name] = current_user.first_name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
+      params[:user][:companies_attributes]['0'][:name] = current_user.first_name if platform_context.instance.skip_company? && params[:user][:companies_attributes]['0'][:name].blank?
       set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
       set_proper_currency
       @user.get_seller_profile
@@ -25,7 +24,7 @@ module Api
       if params[:save_as_draft]
         remove_approval_requests
         @user.valid? # Send .valid? message to object to trigger any validation callbacks
-        @user.companies.first.update_metadata({draft_at: Time.now, completed_at: nil})
+        @user.companies.first.update_metadata(draft_at: Time.now, completed_at: nil)
         if @user.first_listing.new_record?
           @user.save(validate: false)
           fix_availability_templates
@@ -37,7 +36,7 @@ module Api
         render json: ApiSerializer.serialize_object(@user.first_listing)
       elsif @user.save
         @user.listings.first.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
-        @user.companies.first.update_metadata({draft_at: nil, completed_at: Time.now})
+        @user.companies.first.update_metadata(draft_at: nil, completed_at: Time.now)
         track_new_space_event
         track_new_company_event
 
@@ -99,8 +98,8 @@ module Api
       @user.companies.build if @user.companies.first.nil?
       @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
       @user.companies.first.locations.first.transactable_type = @transactable_type
-      @transactable = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id, booking_type: @transactable_type.booking_choices.first})
-      @transactable.attachment_ids = attachment_ids_for(@transactable) if params.has_key?(:attachment_ids)
+      @transactable = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build(transactable_type_id: @transactable_type.id, booking_type: @transactable_type.booking_choices.first)
+      @transactable.attachment_ids = attachment_ids_for(@transactable) if params.key?(:attachment_ids)
     end
 
     def redirect_to_dashboard_if_registration_completed
@@ -116,8 +115,8 @@ module Api
     def track_new_space_event
       @location = @user.locations.first
       @listing = @user.listings.first
-      event_tracker.created_a_location(@location , { via: 'wizard' })
-      event_tracker.created_a_listing(@listing, { via: 'wizard' })
+      event_tracker.created_a_location(@location, via: 'wizard')
+      event_tracker.created_a_listing(@listing, via: 'wizard')
       event_tracker.updated_profile_information(@user)
     end
 
@@ -127,35 +126,30 @@ module Api
     end
 
     def set_proper_currency
-      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:currency] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:currency].presence || PlatformContext.current.instance.default_currency
+      params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:currency] = params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:currency].presence || PlatformContext.current.instance.default_currency
     rescue
       nil
     end
 
     def set_listing_draft_timestamp(timestamp)
-      begin
-        params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:draft] = timestamp
-        params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:enabled] = true
-      rescue
-        nil
-      end
+      params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:draft] = timestamp
+      params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:enabled] = true
+    rescue
+      nil
     end
 
     def sanitize_price_parameters
-      begin
-        params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"].select { |k, v| k.include?('_price') }.each do |k, v|
-          params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][k] = v.to_f unless v.blank?
-        end
-      rescue
-        # no need to do anything
+      params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'].select { |k, _v| k.include?('_price') }.each do |k, v|
+        params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][k] = v.to_f unless v.blank?
       end
+    rescue
     end
 
     def wizard_params
       params.require(:user).permit(secured_params.user(transactable_type: @transactable_type)).tap do |whitelisted|
         (whitelisted[:seller_profile_attributes][:properties] = params[:user][:seller_profile_attributes][:properties]) rescue {}
         (whitelisted[:properties] = params[:user][:properties]) rescue {}
-        (whitelisted[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties]) rescue {}
+        (whitelisted[:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:properties] = params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:properties]) rescue {}
       end
     end
 
@@ -164,7 +158,5 @@ module Api
       build_approval_request_for_object(@user.companies.first)
       build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
     end
-
   end
-
 end

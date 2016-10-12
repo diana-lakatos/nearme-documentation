@@ -3,7 +3,7 @@ class SessionsController < Devise::SessionsController
   skip_before_filter :redirect_to_set_password_unless_unnecessary, only: [:destroy]
   before_filter :sso_logout, only: [:destroy]
   before_filter :omniauth_login, only: [:new]
-  skip_before_filter :require_no_authentication, only: [:show] , if: lambda { |c| request.xhr? }
+  skip_before_filter :require_no_authentication, only: [:show], if: ->(_c) { request.xhr? }
   skip_before_filter :redirect_if_marketplace_password_protected, only: [:store_correct_ip]
   after_filter :render_or_redirect_after_create, only: [:create]
   before_filter :nm_force_ssl, only: [:new]
@@ -17,8 +17,8 @@ class SessionsController < Devise::SessionsController
   def new
     super unless already_signed_in?
 
-    if !flash[:failed_login_attempt_with_email].nil?
-      params[:user] = { :email => flash[:failed_login_attempt_with_email], :password => '' }
+    unless flash[:failed_login_attempt_with_email].nil?
+      params[:user] = { email: flash[:failed_login_attempt_with_email], password: '' }
     end
 
     # populate errors but only if someone tried to submit form
@@ -50,7 +50,7 @@ class SessionsController < Devise::SessionsController
 
   def store_correct_ip
     session[:current_ip] = params[:ip]
-    render :nothing => true
+    render nothing: true
   end
 
   private
@@ -93,13 +93,13 @@ class SessionsController < Devise::SessionsController
   def render_view_with_errors
     flash[:alert] = nil
     self.response_body = nil
-    self.resource.email = params[:user][:email]
+    resource.email = params[:user][:email]
     if User.find_by_email(params[:user][:email])
-      self.resource.errors.add(:password, t('sign_up_form.incorrect_password'))
+      resource.errors.add(:password, t('sign_up_form.incorrect_password'))
     else
-      self.resource.errors.add(:email, t('sign_up_form.incorrect_email'))
+      resource.errors.add(:email, t('sign_up_form.incorrect_email'))
     end
-    render :template => login_from_instance_admin? ? "instance_admin/sessions/new" : "sessions/new"
+    render template: login_from_instance_admin? ? 'instance_admin/sessions/new' : 'sessions/new'
   end
 
   def login_from_instance_admin?
@@ -109,18 +109,14 @@ class SessionsController < Devise::SessionsController
   # if ajax call has been made from modal and user has been created, we need to tell
   # Modal that instead of rendering content in modal, it needs to redirect to new page
   def render_or_redirect_after_create
-    if request.xhr? && current_user
-      render_redirect_url_as_json
-    end
+    render_redirect_url_as_json if request.xhr? && current_user
   end
 
-  def after_sign_out_path_for(resource_or_scope)
+  def after_sign_out_path_for(_resource_or_scope)
     if PlatformContext.current.instance.is_community?
-      "https://signin.intel.com/Logout"
+      'https://signin.intel.com/Logout'
     else
       (request.referrer && request.referrer.include?('instance_admin')) ? instance_admin_login_path : root_path
     end
   end
-
 end
-

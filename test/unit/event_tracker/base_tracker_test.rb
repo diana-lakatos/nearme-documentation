@@ -7,9 +7,9 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
   setup do
     Draper::ViewContext.clear!
     @user = FactoryGirl.create(:user)
-    @mixpanel = stub() # Represents our internal MixpanelApi instance
-    @google_analytics = stub()
-    stub_mixpanel()
+    @mixpanel = stub # Represents our internal MixpanelApi instance
+    @google_analytics = stub
+    stub_mixpanel
     @old_tracker = Rails.application.config.event_tracker
     Rails.application.config.event_tracker = EventTracker::BaseTracker
     @tracker = Rails.application.config.event_tracker.new(@mixpanel, @google_analytics)
@@ -18,7 +18,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
   context 'track_charge' do
     setup do
       @listing = FactoryGirl.create(:transactable)
-      @reservation = FactoryGirl.create(:unconfirmed_reservation, :transactable => @listing)
+      @reservation = FactoryGirl.create(:unconfirmed_reservation, transactable: @listing)
       @reservation.payment = FactoryGirl.create(:authorized_payment)
       @reservation.save!
     end
@@ -27,24 +27,21 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
       # FIXME: test TrackChargeSerializer in dedicated unit test
       @mixpanel.expects(:track_charge).with(@reservation.service_fee_amount_guest.to_f)
       @mixpanel.expects(:track_charge).with(@reservation.service_fee_amount_guest.to_f, @reservation.host.id)
-      @google_analytics.expects(:track_charge).with({
-        amount: @reservation.service_fee_amount_guest.to_f + @reservation.service_fee_amount_host.to_f,
-        guest_fee: @reservation.service_fee_amount_guest.to_f,
-        host_fee: @reservation.service_fee_amount_host.to_f,
-        guest_id: @reservation.owner_id,
-        host_id: @reservation.host.id,
-        payment_id: @reservation.payment.id,
-        instance_name: @reservation.instance.name,
-        listing_name: @reservation.transactable.name,
-      })
+      @google_analytics.expects(:track_charge).with(amount: @reservation.service_fee_amount_guest.to_f + @reservation.service_fee_amount_host.to_f,
+                                                    guest_fee: @reservation.service_fee_amount_guest.to_f,
+                                                    host_fee: @reservation.service_fee_amount_host.to_f,
+                                                    guest_id: @reservation.owner_id,
+                                                    host_id: @reservation.host.id,
+                                                    payment_id: @reservation.payment.id,
+                                                    instance_name: @reservation.instance.name,
+                                                    listing_name: @reservation.transactable.name)
       @tracker.track_charge(@reservation)
     end
   end
 
   context 'store relevant invoked events' do
-
     setup do
-      @category = "User events"
+      @category = 'User events'
       expect_set_person_properties user_properties
       expect_event 'Logged In', user_properties
       @tracker.logged_in(@user)
@@ -60,13 +57,12 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
       @tracker.signed_up(@user)
       assert_equal ['Logged in', 'Signed up'], @tracker.triggered_client_taggable_methods
     end
-
   end
 
   context 'Listings' do
     setup do
       @listing = FactoryGirl.create(:transactable)
-      @category = "Listing events"
+      @category = 'Listing events'
     end
 
     should 'track listing creation' do
@@ -90,7 +86,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
       @listing = FactoryGirl.create(:transactable)
       @location = @listing.location.reload
       @search = build_search_params(options_with_location)
-      @category = "Location events"
+      @category = 'Location events'
     end
 
     should 'track location creation' do
@@ -114,15 +110,15 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
     end
 
     should 'track shared location via social media' do
-      expect_event 'Shared location via social media', location_properties.merge!({ provider: 'facebook', source: 'email' })
-      @tracker.shared_location_via_social_media(@location, { provider: 'facebook', source: 'email' })
+      expect_event 'Shared location via social media', location_properties.merge!(provider: 'facebook', source: 'email')
+      @tracker.shared_location_via_social_media(@location, provider: 'facebook', source: 'email')
     end
   end
 
   context 'Company' do
     setup do
       @company = FactoryGirl.create(:company)
-      @category = "Company events"
+      @category = 'Company events'
     end
 
     should 'track company creation' do
@@ -134,7 +130,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
   context 'Reservations' do
     setup do
       @reservation = FactoryGirl.create(:reservation)
-      @category = "Reservation events"
+      @category = 'Reservation events'
     end
 
     should 'track booking modal open' do
@@ -150,7 +146,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
     should 'track a booking confirmation' do
       expect_event 'Confirmed a Booking', reservation_properties
       # commented out because I don't think these are semantically correct?
-      #expect_charge @reservation.owner.id, 50.0
+      # expect_charge @reservation.owner.id, 50.0
       @tracker.confirmed_a_booking(@reservation)
     end
 
@@ -160,10 +156,10 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
     end
 
     should 'track a booking cancellation with custom options' do
-      expect_event 'Cancelled a Booking', reservation_properties.merge!({ actor: 'host'})
+      expect_event 'Cancelled a Booking', reservation_properties.merge!(actor: 'host')
       # commented out because I don't think these are semantically correct?
-      #expect_charge @reservation.owner.id, -50.0
-      @tracker.cancelled_a_booking(@reservation, { actor: 'host'})
+      # expect_charge @reservation.owner.id, -50.0
+      @tracker.cancelled_a_booking(@reservation, actor: 'host')
     end
 
     should 'track a booking expiry' do
@@ -173,9 +169,8 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
   end
 
   context 'Space Wizard' do
-
     setup do
-      @category = "Space wizard events"
+      @category = 'Space wizard events'
     end
 
     should 'track click list your bookable' do
@@ -190,9 +185,8 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
   end
 
   context 'Users' do
-
     setup do
-      @category = "User events"
+      @category = 'User events'
     end
 
     should 'track user sign up' do
@@ -239,21 +233,19 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
   end
 
   context 'Mailer' do
-
     setup do
-      @category = "Mailer events"
+      @category = 'Mailer events'
     end
 
     should 'track find a desk clicked' do
-      expect_event 'Clicked link within email', user_properties.merge!({ url: '/manage/locations', mailer: 'recurring_mailer/analytics' })
-      @tracker.link_within_email_clicked(@user, { url: '/manage/locations', mailer: 'recurring_mailer/analytics' })
+      expect_event 'Clicked link within email', user_properties.merge!(url: '/manage/locations', mailer: 'recurring_mailer/analytics')
+      @tracker.link_within_email_clicked(@user, url: '/manage/locations', mailer: 'recurring_mailer/analytics')
     end
 
     should 'track email sent' do
       expect_event 'Email Sent', {}
       @tracker.email_sent({})
     end
-
   end
 
   should 'trigger mixpanel method to get pixel based tracking url' do
@@ -273,7 +265,6 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
     @mixpanel.expects(:track).with(event_name, properties)
     @google_analytics.expects(:track).with(@category, event_name, properties)
   end
-
 
   def expect_charge(user_id, total_amount_dollars)
     @mixpanel.expects(:track_charge).with(user_id, total_amount_dollars)
@@ -312,7 +303,7 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
       listing_name: @listing.name,
       listing_quantity: @listing.quantity,
       listing_confirm: @listing.confirm_reservations,
-      listing_pricings: @listing.action_type.pricings.map{|p| p.price_information.merge({ price: p.price.to_f })},
+      listing_pricings: @listing.action_type.pricings.map { |p| p.price_information.merge(price: p.price.to_f) },
       listing_currency: @listing.currency,
       listing_url: @listing.decorate.show_url
     }
@@ -371,4 +362,3 @@ class EventTracker::BaseTrackerTest < ActiveSupport::TestCase
     }
   end
 end
-

@@ -15,4 +15,3 @@ class WorkflowStep::RecurringWorkflow::RequestPhotos < WorkflowStep::RecurringWo
     { listing: @transactable, user: @transactable.administrator }
   end
 end
-

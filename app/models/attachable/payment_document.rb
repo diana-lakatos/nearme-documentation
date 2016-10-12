@@ -11,8 +11,8 @@ class Attachable::PaymentDocument < Attachable::Attachment
 
   self.per_page = 20
 
-  scope :uploaded_by, ->(user_id){ where(user_id: user_id) }
-  scope :not_uploaded_by, ->(user_id){ where.not(user_id: user_id) }
+  scope :uploaded_by, ->(user_id) { where(user_id: user_id) }
+  scope :not_uploaded_by, ->(user_id) { where.not(user_id: user_id) }
 
   def is_file_required?
     payment_document_info.try(:document_requirement).try(:is_file_required?) || false

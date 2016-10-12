@@ -1,5 +1,4 @@
 class ThemeUpdateService
-
   def initialize(theme)
     @theme = theme
   end
@@ -20,5 +19,4 @@ class ThemeUpdateService
     WorkflowAlert.update_all(from: @theme.support_email)
     WorkflowAlert.update_all(reply_to: @theme.support_email)
   end
-
 end

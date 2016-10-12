@@ -16,4 +16,3 @@ class WorkflowStep::RecurringWorkflow::Analytics < WorkflowStep::RecurringWorkfl
     { company: @company, user: @user, listing: @company.listings.first }
   end
 end
-

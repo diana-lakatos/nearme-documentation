@@ -28,14 +28,14 @@ class AvailabilityRule::ListingStatus
     hash = {}
     current = start_date.beginning_of_month
     while current < @end_date
-      arr = hash[current.strftime("%Y-%-m")] = []
+      arr = hash[current.strftime('%Y-%-m')] = []
       current_day = current
       while current_day <= current.end_of_month
         arr << availability_for(current_day)
-        current_day = current_day.advance(:days => 1)
+        current_day = current_day.advance(days: 1)
       end
 
-      current = current.advance(:months => 1)
+      current = current.advance(months: 1)
     end
 
     hash
@@ -45,11 +45,11 @@ class AvailabilityRule::ListingStatus
 
   def booked_by_date
     @booked_by_date ||= begin
-      @listing.orders.reservations.confirmed.
-        joins(:periods).
-        where(:reservation_periods => { :date => @start_date..@end_date }).
-        group('reservation_periods.date').
-        sum(:quantity)
+      @listing.orders.reservations.confirmed
+      .joins(:periods)
+      .where(reservation_periods: { date: @start_date..@end_date })
+      .group('reservation_periods.date')
+      .sum(:quantity)
     end
   end
 

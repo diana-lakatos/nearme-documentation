@@ -1,5 +1,4 @@
 class Reservation < Order
-
   include Bookable
   include Categorizable
 
@@ -10,15 +9,15 @@ class Reservation < Order
 
   accepts_nested_attributes_for :periods, allow_destroy: true
 
-  validates :transactable, :presence => true
-  validates :transactable_pricing, :presence => true
+  validates :transactable, presence: true
+  validates :transactable_pricing, presence: true
 
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
 
-  validates :owner_id, :presence => true, :unless => lambda { owner.present? }
+  validates :owner_id, presence: true, unless: -> { owner.present? }
   validates :rejection_reason, length: { maximum: 255 }
-  validate :address_in_radius?, :if => lambda { address_in_radius }
-  validate :validate_order_for_action, on: :create, :if => lambda { transactable }
+  validate :address_in_radius?, if: -> { address_in_radius }
+  validate :validate_order_for_action, on: :create, if: -> { transactable }
 
   before_create :set_cancellation_policy
 
@@ -36,20 +35,20 @@ class Reservation < Order
     after_transition confirmed: [:cancelled_by_guest], do: [:charge_penalty!]
     after_transition unconfirmed: :confirmed, do: [:warn_user_of_expiration]
 
-    event :refund do transition :paid => :refunded; end
+    event :refund do transition paid: :refunded; end
   end
 
-  scope :for_transactable, -> (transactable) { where(:transactable_id => transactable.id) }
+  scope :for_transactable, -> (transactable) { where(transactable_id: transactable.id) }
 
   def add_line_item!(attrs)
     self.attributes = attrs
     self.book_it_out_discount = transactable_pricing.book_it_out_discount if attrs[:book_it_out] == 'true'
     self.reservation_type = transactable.transactable_type.reservation_type
-    self.build_periods
-    self.set_minimum_booking_minutes
+    build_periods
+    set_minimum_booking_minutes
     self.skip_checkout_validation = true
     self.settings = reservation_type.try(:settings)
-    self.save
+    save
   end
 
   def self.workflow_class
@@ -110,30 +109,30 @@ class Reservation < Order
       false
     end
   end
-  alias cancelable cancelable?
+  alias_method :cancelable, :cancelable?
 
   def cancellation_policy
     @cancellation_policy ||= Reservation::CancellationPolicy.new(self)
   end
 
-  def invoke_confirmation!(&block)
-    self.errors.clear
+  def invoke_confirmation!(&_block)
+    errors.clear
     unless skip_payment_authorization?
       action.try(:validate_all_dates_available, self)
     end
-    if self.errors.empty? && self.valid?
+    if errors.empty? && self.valid?
       if block_given? ? yield : true
         self.create_shipments!
         self.confirm!
         # We need to touch transactable so it's reindexed by ElasticSearch
-        self.transactable.touch
+        transactable.touch
       end
     end
   end
 
   def charge_and_confirm!
     invoke_confirmation! do
-      self.payment.capture!
+      payment.capture!
     end
   end
 
@@ -163,12 +162,12 @@ class Reservation < Order
       reload
       transactable_line_item.build_service_fee.try(:save!)
       transactable_line_item.build_host_fee.try(:save!)
-      self.update_payment_attributes
-      self.payment.payment_transfer.try(:send, :assign_amounts_and_currency)
-      if self.payment.authorize && self.payment.capture!
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeSucceeded, self.id)
+      update_payment_attributes
+      payment.payment_transfer.try(:send, :assign_amounts_and_currency)
+      if payment.authorize && payment.capture!
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeSucceeded, id)
       else
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeFailed, self.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeFailed, id)
       end
     end
     true
@@ -189,12 +188,12 @@ class Reservation < Order
       # FIXME: This should be moved to a background job base class, as per ApplicationController.
       #        The event_tracker calls can be executed from the Job instance.
       #        i.e. Essentially compose this as a 'non-http request' controller.
-      mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, :current_user => owner)
+      mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, current_user: owner)
       event_tracker = Rails.application.config.event_tracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(owner))
       event_tracker.booking_expired(self)
-      event_tracker.updated_profile_information(self.owner)
-      event_tracker.updated_profile_information(self.host)
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::Expired, self.id)
+      event_tracker.updated_profile_information(owner)
+      event_tracker.updated_profile_information(host)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::Expired, id)
     end
   end
 
@@ -203,11 +202,11 @@ class Reservation < Order
   end
 
   def first_period
-    periods.sort_by {|p| [p.date, p.start_minute] }.first
+    periods.sort_by { |p| [p.date, p.start_minute] }.first
   end
 
   def last_period
-    periods.sort_by {|p| [p.date, p.start_minute] }.last
+    periods.sort_by { |p| [p.date, p.start_minute] }.last
   end
 
   def last_date
@@ -294,12 +293,12 @@ class Reservation < Order
   end
 
   def warn_user_of_expiration
-    tt_action_type = self.transactable.try(:action_type).try(:transactable_type_action_type)
-    if self.ends_at.present? && tt_action_type.try(:type) == "TransactableType::TimeBasedBooking" &&
-      tt_action_type.send_alert_hours_before_expiry &&
-      tt_action_type.send_alert_hours_before_expiry_hours > 0
+    tt_action_type = transactable.try(:action_type).try(:transactable_type_action_type)
+    if ends_at.present? && tt_action_type.try(:type) == 'TransactableType::TimeBasedBooking' &&
+       tt_action_type.send_alert_hours_before_expiry &&
+       tt_action_type.send_alert_hours_before_expiry_hours > 0
 
-      WarnUserOfExpirationJob.perform_later(self.ends_at - tt_action_type.send_alert_hours_before_expiry_hours.hours, self.id)
+      WarnUserOfExpirationJob.perform_later(ends_at - tt_action_type.send_alert_hours_before_expiry_hours.hours, id)
     end
 
     true
@@ -309,10 +308,10 @@ class Reservation < Order
 
   def auto_confirm_reservation
     if transactable.confirm_reservations?
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, self.id)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, id)
     else
       charge_and_confirm!
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, self.id)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, id)
     end
   end
 
@@ -328,8 +327,7 @@ class Reservation < Order
     transactable_pricing.validate_order(self)
   end
 
-
-  #TODO: move to action
+  # TODO: move to action
   def address_in_radius?
     distance = transactable.location_address.distance_from(address.latitude, address.longitude)
     if distance > transactable.properties[:service_radius].to_i
@@ -347,5 +345,4 @@ class Reservation < Order
       self.cancellation_policy_penalty_percentage = transactable_pricing.action.cancellation_policy_penalty_percentage
     end
   end
-
 end

@@ -6,5 +6,4 @@ class CategoryJsonSerializer
   attribute :parent_name do
     object.parent.name
   end
-
 end

@@ -57,8 +57,8 @@ class CustomValidator < ActiveRecord::Base
     self.required == true || self.required.try(:to_i) == 1 ? (self.validation_rules['presence'] = {}) : self.validation_rules.delete('presence')
     if self.min_length.present? || self.max_length.present?
       self.validation_rules['length'] = {}
-      self.min_length.present? ? self.validation_rules['length']['minimum'] = self.min_length.to_i : self.validation_rules['length'].delete('minimum')
-      self.max_length.present? ? self.validation_rules['length']['maximum'] = self.max_length.to_i : self.validation_rules['length'].delete('maximum')
+      min_length.present? ? self.validation_rules['length']['minimum'] = min_length.to_i : self.validation_rules['length'].delete('minimum')
+      max_length.present? ? self.validation_rules['length']['maximum'] = max_length.to_i : self.validation_rules['length'].delete('maximum')
     else
       self.validation_rules.delete('length')
     end

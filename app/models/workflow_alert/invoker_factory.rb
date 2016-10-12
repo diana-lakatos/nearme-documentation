@@ -1,5 +1,4 @@
 class WorkflowAlert::InvokerFactory
-
   def self.get_invoker(alert)
     case alert.alert_type
     when 'email'
@@ -9,8 +8,7 @@ class WorkflowAlert::InvokerFactory
     when 'api_call'
       WorkflowAlert::ApiCallInvoker.new(alert)
     else
-      raise NotImplementedError.new("Unknown alert type: #{alert.alert_type}")
+      fail NotImplementedError.new("Unknown alert type: #{alert.alert_type}")
     end
   end
-
 end

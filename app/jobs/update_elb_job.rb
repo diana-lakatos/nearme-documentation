@@ -5,7 +5,7 @@ class UpdateElbJob < AbstractElbJob
     balancer.update_certificates!
     @domain.elb_updated!
   rescue
-    @domain.update_column(:error_message, $!.message)
+    @domain.update_column(:error_message, $ERROR_INFO.message)
     @domain.failed!
   end
 end

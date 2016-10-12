@@ -16,15 +16,15 @@ class DocumentsUpload < ActiveRecord::Base
   end
 
   def is_mandatory?
-    requirement == "mandatory"
+    requirement == 'mandatory'
   end
 
   def is_optional?
-    requirement == "optional"
+    requirement == 'optional'
   end
 
   def is_vendor_decides?
-    requirement == "vendor_decides"
+    requirement == 'vendor_decides'
   end
 
   def force_file_upload?
@@ -34,5 +34,4 @@ class DocumentsUpload < ActiveRecord::Base
   def to_obligation
     UploadObligation::LEVELS[REQUIREMENTS.index(requirement.to_sym)]
   end
-
 end

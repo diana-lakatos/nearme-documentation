@@ -1,5 +1,4 @@
 class BlogPostDrop < BaseDrop
-
   attr_reader :blog_post
 
   # title
@@ -104,5 +103,4 @@ class BlogPostDrop < BaseDrop
   def link_for_enquirer
     @blog_post.user.seller_profile ? '' : routes.user_path(@blog_post.user)
   end
-
 end

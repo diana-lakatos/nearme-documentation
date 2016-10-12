@@ -5,5 +5,4 @@ class Dashboard::DashboardController < ApplicationController
     company = current_user.companies.first
     redirect_to company ? dashboard_company_orders_received_index_path : dashboard_orders_path
   end
-
 end

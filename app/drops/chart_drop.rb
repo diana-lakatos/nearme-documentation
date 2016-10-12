@@ -1,5 +1,4 @@
 class ChartDrop < BaseDrop
-
   delegate :totals_by_currency, to: :source
 
   def values

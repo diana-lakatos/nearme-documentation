@@ -18,8 +18,8 @@ module Categorizable
       end
     end
 
-    def category_ids=ids
-      super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact.map(&:to_i))
+    def category_ids=(ids)
+      super(ids.map { |e| e.gsub(/\[|\]/, '').split(',') }.flatten.compact.map(&:to_i))
     end
 
     def common_categories(category)
@@ -27,7 +27,7 @@ module Categorizable
     end
 
     def common_categories_json(category)
-      JSON.generate(common_categories(category).map { |c| { id: c.id, name: c.translated_name }})
+      JSON.generate(common_categories(category).map { |c| { id: c.id, name: c.translated_name } })
     end
   end
 end

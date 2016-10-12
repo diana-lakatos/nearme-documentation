@@ -3,8 +3,8 @@ require 'test_helper'
 class RecurringMailerRequestPhotosJobTest < ActiveSupport::TestCase
   setup do
     @transactable = FactoryGirl.create(:transactable, :desksnearme, description: 'test',
-                       :last_request_photos_sent_at => 28.days.ago,
-                       enabled: true)
+                                                                    last_request_photos_sent_at: 28.days.ago,
+                                                                    enabled: true)
     @transactable.update_column(:activated_at, 28.days.ago)
   end
 

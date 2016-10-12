@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Admin::Blog::BlogInstancesControllerTest < ActionController::TestCase
   setup do
-    @user = FactoryGirl.create(:user, :admin => true)
+    @user = FactoryGirl.create(:user, admin: true)
     @blog_post = FactoryGirl.create(:blog_post)
     @blog_instance = @blog_post.blog_instance
     sign_in @user
@@ -15,7 +15,7 @@ class Admin::Blog::BlogInstancesControllerTest < ActionController::TestCase
 
   should 'update' do
     name = 'My Little bloge'
-    post :update, blog_instance: {:name => name}
+    post :update, blog_instance: { name: name }
     assert_equal @blog_instance.reload.name, name
   end
 end

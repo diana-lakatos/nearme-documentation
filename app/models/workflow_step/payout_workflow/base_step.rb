@@ -1,5 +1,4 @@
 class WorkflowStep::PayoutWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def initialize(company_id)
     @company = Company.find_by_id(company_id)
   end
@@ -21,5 +20,4 @@ class WorkflowStep::PayoutWorkflow::BaseStep < WorkflowStep::BaseStep
   def data
     { company: @company }
   end
-
 end

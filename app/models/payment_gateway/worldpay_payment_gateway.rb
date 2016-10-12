@@ -10,8 +10,6 @@ class PaymentGateway::WorldpayPaymentGateway < PaymentGateway
     ActiveMerchant::Billing::WorldpayGateway
   end
 
-  def refund_identification(charge)
-
+  def refund_identification(_charge)
   end
 end
-

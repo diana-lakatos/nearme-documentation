@@ -1,5 +1,4 @@
 class InstanceType::SearcherFactory
-
   attr_accessor :factory_type, :transactable_type, :params
 
   def initialize(transactable_type, params, result_view, current_user)
@@ -48,9 +47,9 @@ class InstanceType::SearcherFactory
 
   def user_searcher
     if elasticsearch?
-      "InstanceType::Searcher::Elastic::UserSearcher".constantize.new(@params, @current_user, @transactable_type)
+      'InstanceType::Searcher::Elastic::UserSearcher'.constantize.new(@params, @current_user, @transactable_type)
     else
-      "InstanceType::Searcher::UserSearcher".constantize.new(@params, @current_user, @transactable_type)
+      'InstanceType::Searcher::UserSearcher'.constantize.new(@params, @current_user, @transactable_type)
     end
   end
 
@@ -61,5 +60,4 @@ class InstanceType::SearcherFactory
       @factory_type == se
     end
   end
-
 end
