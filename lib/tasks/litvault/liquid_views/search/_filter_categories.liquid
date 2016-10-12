@@ -1,7 +1,7 @@
 {% assign categories = searcher.searchable_categories | rotate %}
 
 {% if categories.size > 0 %}
-<div class="search-results-filter">
+<div class="search-results-filter" data-search-filters-container>
     <h2>Filter by types:</h2>
 
     {% for root_category in categories %}

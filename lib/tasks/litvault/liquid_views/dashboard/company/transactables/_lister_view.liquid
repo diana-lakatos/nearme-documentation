@@ -26,13 +26,13 @@
       {% if transactable_collaborators != empty %}
         <h3>Request To View Case Details:</h3>
         <div class="table-responsive">
-          <table class="table">
+          <table class="table table-transactable-details">
             <thead>
               <tr>
-                <th>Handling Lawyer:</th>
-                <th>Date:</th>
-                <th>Status:</th>
-                <th>Action:</th>
+                <th>Handling Lawyer</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th class="actions">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -41,11 +41,11 @@
                   <td>{{ transactable_collaborator.user.name }}</td>
                   <td>{{ transactable_collaborator.created_at | to_date | l: 'short' }}</td>
                   <td>{{ transactable_collaborator.status }}</td>
-                  <td>
+                  <td class="actions">
                     {% if transactable_collaborator.transactable_user_messages.size > 0 %}
                       <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: transactable_collaborator.transactable_user_messages.first.id, skip: true }}">Reply</a>
                     {% else %}
-                      <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id ,user_id: transactable_collaborator.user.id, skip: true }}">Send Message</a>
+                      <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id ,user_id: transactable_collaborator.user.id, skip: true }}">Message</a>
                     {% endif %}
 
                     {{ transactable_collaborator.user.click_to_call_button }}
@@ -81,13 +81,13 @@
       {% if orders != empty  %}
         <h3>Offers ({{ orders.size }})</h3>
         <div class="table-responsive">
-          <table class="table">
+          <table class="table table-transactable-details">
             <thead>
               <tr>
-                <th>Handling Lawyer:</th>
-                <th>Offer Date:</th>
-                <th>Offer Status:</th>
-                <th>Offer Action:</th>
+                <th>Handling Lawyer</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th class="actions">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -96,7 +96,7 @@
                   <td>{{ order.user.name }}</td>
                   <td>{{ order.created_at | to_date | l: 'short' }}</td>
                   <td>{{ 'reservations.states.' | append: order.state | t }}</td>
-                  <td>
+                  <td class="actions">
                     {% if order.unconfirmed? %}
                       <a href="{{ order.payment_documents[0].file_url }}" target="_blank" class="btn btn-info">Review</a>
                       <a href="{{ order.rejection_form_path }}" data-modal="true" class="btn btn-danger">Reject</a>
@@ -112,13 +112,13 @@
     {% elsif current_status == "in progress" or current_status == "archived" and accepted_order != blank %}
       <h3>Offer Accepted</h3>
       <div class="table-responsive">
-        <table class="table">
+        <table class="table table-transactable-details">
           <thead>
             <tr>
-              <th>Handling Lawyer:</th>
-              <th>Offer Date:</th>
-              <th>Offer Status:</th>
-              <th>Accepted Date:</th>
+              <th>Handling Lawyer</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Accepted Date</th>
             </tr>
           </thead>
           <tbody>

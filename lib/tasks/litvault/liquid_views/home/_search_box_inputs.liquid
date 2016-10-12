@@ -13,10 +13,9 @@
             <span class="select-a">
                 <select name='lg_custom_attributes[state][]' id="form-field-state" class="unstyled-select">
                     <option value="">By State</option>
-                    {% for ca in platform_context.transactable_types.first.custom_attributes %}
-                    {% for value in ca.valid_values %}
+                    {% assign ca = platform_context.transactable_types.first.custom_attributes_as_hash %}
+                    {% for value in ca['states'].valid_values %}
                     <option value='{{ value }}'>{{ value }}</option>
-                    {% endfor %}
                     {% endfor %}
                 </select>
             </span>
