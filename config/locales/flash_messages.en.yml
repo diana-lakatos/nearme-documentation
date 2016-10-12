@@ -430,6 +430,7 @@ en:
         listing_updated: "Great, your listing's details have been updated."
         listing_cancelled: 'Your listing has been marked as completed.'
         phone_number_verification_needed: 'Please verify your mobile number first'
+        want_to_see_profile: "Before creating this project, you wanted to invite %{name}. Visit <a href='%{path}'>%{name}’s profile</a> to invite them."
       locations:
         add_your_company: "Please add your company first"
         space_added: "Great, your new location has been added!"
