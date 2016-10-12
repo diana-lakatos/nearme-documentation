@@ -22,7 +22,7 @@ bundle exec rubocop -v >/dev/null 2>&1 || { echo >&2 "${red}[Ruby Style][Fatal]:
 # Get only the staged files
 FILES="$(git diff --cached --name-only --diff-filter=AMC | grep "\.rb$" | tr '\n' ' ')"
 
-echo "${green}[Ruby Style][Info]: Checking Ruby Style${NC}"
+echo "${green}[Ruby Style][Info]: AutoCorrecting Ruby Style${NC}"
 
 if [ -n "$FILES" ]
 then
@@ -33,12 +33,13 @@ then
 	fi
 
 	# Run rubocop on the staged files
-	bundle exec rubocop ${FILES}
+	bundle exec rubocop -a ${FILES}
 
-	if [ $? -ne 0 ]; then
-	  echo "${red}[Ruby Style][Error]: Fix the issues and commit again${NC}"
-	  exit 1
-	fi
+	echo "${green}[Ruby Style][Info]: AutoCorrection done${NC}"
+	#if [ $? -ne 0 ]; then
+	#  echo "${red}[Ruby Style][Error]: Fix the issues and commit again${NC}"
+	#  exit 1
+	# fi
 else
 	echo "${green}[Ruby Style][Info]: No files to check${NC}"
 fi
