@@ -84,9 +84,9 @@ module AvailabilityRulesHelper
       end
       day_ranges.push(current_range)
 
-      day_part = day_ranges.map do |group|
-        str = Date::ABBR_DAYNAMES[group.first]
-        str += "&ndash;#{Date::ABBR_DAYNAMES[group.last]}" if group.count > 1
+      day_part = day_ranges.map do |range|
+        str = Date::ABBR_DAYNAMES[range.first]
+        str += "&ndash;#{Date::ABBR_DAYNAMES[range.last]}" if range.count > 1
         str
       end
 
