@@ -109,102 +109,135 @@ class LongtailRakeHelper
 
     def generic_page_content
       %(
+{% content_for 'meta' %}
+  <link rel='stylesheet' media='screen' href='https://rawgit.com/mdyd-dev/marketplaces/master/longtail/dist/app.css'>
+{% endcontent_for %}
+
+{% content_for 'body_bottom' %}
+  <script src='https://rawgit.com/mdyd-dev/marketplaces/master/longtail/dist/app.js'></script>
+{% endcontent_for %}
+
 {% assign cache_key = data_source_last_update | append: current_path %}
+
 {% cache_for cache_key, page %}
   {% assign dsc = @data_source_contents.first.json_content %}
   {% if params.slug2 == blank or dsc == blank %}
     <h1>404 does not exist.</h1>
   {% else %}
+    <ul class="breadcrumbs list-unstyled">
+      <li><a href="/"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+      <li><a href="{{ dsc.data.first.attributes.category_url }}">{{ dsc.data.first.attributes.category }}</a></li>
+      <li class="active"><a href="{{ dsc.data.first.attributes.url }}">{{ dsc.data.first.attributes.name | titleize }}</a></li>
+    </ul>
+
     {% assign dsc = @data_source_contents.first.json_content %}
-    <p>Found {{ dsc.data.first.relationships.items.data.count }} results for {{  dsc.data.first.attributes.name }}</p>
-    <p>Related listings:
+
+    <div>
+      <h4>Related listings:</h4>
       <ul>
         {% for similar_storage in dsc.data.first.relationships.similar_searches.data %}
           {% for included_link in dsc.included %}
             {% if included_link.id == similar_storage.id %}
-              <li><a href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ included_link.attributes.highlighted }}</a></li>
+              <li><a href="{{ included_link.attributes.url }}
+              ">{{ included_link.attributes.highlighted }}</a></li>
               {% break %}
             {% endif %}
           {% endfor %}
         {% endfor %}
       </ul>
-    </p>
-    <ol class="breadcrumb center ">
-      <li><a href="/?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><i class="fa fa-home" aria-hidden="true"></i></a></li>
-      <li><a href="{{ dsc.data.first.attributes.category_url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ dsc.data.first.attributes.category }}</a></li>
-      <li class="active"><a href="{{ dsc.data.first.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ dsc.data.first.attributes.name | titleize }}</a></li>
-    </ol>
-    <section class="results">
+    </div>
+
+    <section class="listings">
       {% for item in dsc.data.first.relationships.items.data %}
         {% for listing in dsc.included %}
           {% if listing.id == item.id %}
-            <article class="location" data-id="{{ listing.attributes.guid }}" data-name="{{ listing.attributes.name }}" data-latitude="{{ listing.attributes.latitude }}" data-longitude="{{ listing.attributes.longitude }}">
-              <div class="location-photos-container">
-                <div class="location-photos">
-                  <div class="carousel" id="location-gallery-{{ listing.attributes.guid }}" data-interval="false">
-                    <div class="carousel-inner">
-                      {% for photo in listing.attributes.photos %}
-                        <div class="item" {% if forloop.index == 1 %}style="display: block;"{% endif %}>
-                          <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp"><img src="{{ photo }}" alt="{{ listing.attributes.name }}"></a>
-                        </div>
-                      {% endfor %}
-                    </div>
-
-                    <div class="carousel-nav">
-                      <a href="#location-gallery-{{ listing.attributes.guid }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp" class="carousel-control left ico-chevron-left" data-slide="prev"></a>
-                      <a href="#location-gallery-{{ listing.attributes.guid }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp" class="carousel-control right ico-chevron-right" data-slide="next"></a>
-                    </div>
-                  </div>
-                </div>
+            <article class="listing {% if listing.attributes.photos.size == 0 %}listing-photos__empty{% endif %}">
+              <div class="listing-photos">
+                <ul class="listing-photos__carousel" data-carousel>
+                  {% if listing.attributes.photos.size == 0 %}
+                    <li class="active">
+                      <a href="{{ listing.attributes.url }}"><img src="http://placekitten.com/410/254" alt="{{ listing.attributes.name }}"></a>
+                    </li>
+                  {% elsif listing.attributes.photos.size == 1 %}
+                    <li class="active">
+                      <a href="{{ listing.attributes.url }}"><img src="{{ listing.attributes.photos[0] }}" alt="{{ listing.attributes.name }}"></a>
+                    </li>
+                  {% else %}
+                    <li class="listing-photos__carousel--prev"><a href="#" data-carousel-control="prev"><i class="fa fa-chevron-left"></i></a></li>
+                    {% for photo in listing.attributes.photos %}
+                      <li class="{% if forloop.index == 1 %}active{% endif %}" data-carousel-item>
+                        <a href="{{ listing.attributes.url }}"><img src="{{ photo }}" alt="{{ listing.attributes.name }}"></a>
+                      </li>
+                    {% endfor %}
+                    <li class="listing-photos__carousel--next"><a href="#" data-carousel-control="next"><i class="fa fa-chevron-right"></i></a></li>
+                  {% endif %}
+                </ul>
               </div>
-              <div class="location-data">
-                <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp" class="name">{{ listing.attributes.name }}</a>
-                <div data-add-favorite-button="true" data-path="/wish_list/{{ listing.attributes.guid }}/Transactable" data-wishlistable-type="Transactable" data-link-to-classes="btn btn-white btn-large ask" data-path-bulk="/wish_lists/bulk_show" data-object-id="{{ listing.attributes.guid }}" id="favorite-button-Transactable-{{ listing.attributes.guid }}">
-                </div>
-                <p class="subheader">
+
+              <div class="listing-data">
+                <h3><a href="{{ listing.attributes.url }}">
+                  {{ listing.attributes.name }}
+                </a></h3>
+
+                <h4><p class="listing-data__subheader">
                   {{ listing.attributes.address }}
-                </p>
-                <p class="details">
+                </p></h4>
+
+                <p class="listing-data__details">
                   {{ listing.attributes.snippet }}
                 </p>
               </div>
-              <div class="features">
-                {% for category in listing.attributes.categories  %}
-                  <div>
+
+              {% unless listing.attributes.categories == blank %}
+                <div class="listing-features">
+                  {% for category in listing.attributes.categories  %}
                     <p>{{ category.name }}</p>
-                    <div>
+                    <ul>
                       {% for child in category.children %}
-                        <p>{{ child }}</p>
+                        <li>{{ child }}</li>
                       {% endfor %}
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-              <div>
-                {% for price in listing.attributes.price %}
-                  <p>{{price[0]}} : {{ price[1] }}</p>
-                {% endfor %}
-                <a href="{{ listing.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp" class="btn">
-                  Reserve
-                </a>
+                    </ul>
+                  {% endfor %}
+                </div>
+              {% endunless %}
+
+              {% unless listing.attributes.price == blank %}
+                <div class="listing-pricing">
+                  <ul class="list-unstyled">
+                    {% for price in listing.attributes.price %}
+                      <li>{{price[0]}}: {{ price[1] }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endunless %}
+
+              <div class="listing-actions">
+                <ul class="list-unstyled">
+                  <li class="favorite-button-container" data-add-favorite-button="true" data-path="/wish_list/{{ listing.attributes.guid }}/Transactable" data-wishlistable-type="Transactable" data-link-to-classes="button button-default favorite-button" data-path-bulk="/wish_lists/bulk_show" data-object-id="{{ listing.attributes.guid }}" id="favorite-button-Transactable-{{ listing.attributes.guid }}" title="Add to favorites"></li>
+                  <li>
+                    <a href="{{ listing.attributes.url }}" class="button button-default">Reserve</a>
+                  </li>
+                </ul>
               </div>
             </article>
-            {% break %}
           {% endif %}
         {% endfor %}
       {% endfor %}
     </section>
 
-    <p>Related listings:
-      {% for related_storage in dsc.data.first.relationships.popular_searches.data %}
-        {% for included_link in dsc.included %}
-          {% if included_link.id == related_storage.id %}
-            <a href="{{ included_link.attributes.url }}?utm_source=LUX&amp;utm_medium=organic&amp;utm_campaign=iserp">{{ included_link.attributes.highlighted }}</a>
-            {% break %}
-          {% endif %}
+    <div class="related-items">
+      <h4>Related listings:</h4>
+      <ul class="list-unstyled">
+        {% for related_storage in dsc.data.first.relationships.popular_searches.data %}
+          {% for included_link in dsc.included %}
+            {% if included_link.id == related_storage.id %}
+              <li><a href="{{ included_link.attributes.url }}" class="button button-default button-small">{{ included_link.attributes.highlighted }}</a></li>
+              {% break %}
+            {% endif %}
+          {% endfor %}
         {% endfor %}
-      {% endfor %}
-    </p>
+      </ul>
+    </div>
 
   {% endif %}
 {% endcache_for %}
