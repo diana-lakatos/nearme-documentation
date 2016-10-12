@@ -46,6 +46,13 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       end
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       flash[:error] = t('manage.listings.no_trust_explanation') unless @transactable.is_trusted?
+
+      if session[:user_to_be_invited].present?
+        user = User.find(session[:user_to_be_invited])
+        path = profile_path(user.slug)
+        flash[:warning] = t('flash_messages.manage.listings.want_to_see_profile', path: path, name: user.first_name)
+        session[:user_to_be_invited] = nil
+      end
       event_tracker.created_a_listing(@transactable, via: 'dashboard')
       event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
@@ -158,7 +165,11 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   def transactable_params
     params.require(:transactable).permit(secured_params.transactable(@transactable_type, @transactable.new_record? || current_user.id == @transactable.creator_id)).tap do |whitelisted|
-      whitelisted[:properties] = params[:transactable][:properties] rescue {}
+      whitelisted[:properties] = begin
+                                   params[:transactable][:properties]
+                                 rescue
+                                   {}
+                                 end
     end
   end
 
@@ -201,11 +212,11 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   def transactables_scope
     @transactable_type.transactables
-      .joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL')
-      .uniq
-      .where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id)
-      .search_by_query([:name, :description], params[:query])
-      .apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
+                      .joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL')
+                      .uniq
+                      .where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id)
+                      .search_by_query([:name, :description], params[:query])
+                      .apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
   end
 
   def in_progress_scope
