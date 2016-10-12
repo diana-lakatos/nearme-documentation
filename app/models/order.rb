@@ -502,6 +502,10 @@ class Order < ActiveRecord::Base
     fire_state_event :reject
   end
 
+  def message_context_object
+    self
+  end
+
   private
 
   def skip_validation_for_custom_attributes

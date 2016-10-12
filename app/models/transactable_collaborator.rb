@@ -91,4 +91,12 @@ class TransactableCollaborator < ActiveRecord::Base
       WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, transactable_id, user_id)
     end
   end
+
+  def message_context_object
+    self
+  end
+
+  def user_message_recipient
+    user
+  end
 end
