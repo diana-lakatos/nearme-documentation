@@ -12,7 +12,7 @@ class Dashboard::Company::TransactableCollaboratorsController < Dashboard::BaseC
 
   def create_bulk
     @users = User.where(id: params[:transactable_collaborator][:user_ids])
-    users_attrs = @users.map {|u| { user_id: u.id, approved_by_owner_at: Time.zone.now } }
+    users_attrs = @users.map { |u| { user_id: u.id, approved_by_owner_at: Time.zone.now } }
     @transactable_collaborators = @transactable.transactable_collaborators.create(users_attrs)
 
     render json: { html: render_to_string(partial: 'create_bulk') }, status: 200

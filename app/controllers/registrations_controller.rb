@@ -18,9 +18,9 @@ class RegistrationsController < Devise::RegistrationsController
 
   before_filter :authenticate_scope!, only: [:edit, :update, :destroy, :avatar, :edit_avatar, :update_avatar, :destroy_avatar, :set_password,
                                              :update_password, :edit_notification_preferences, :update_notification_preferences, :social_accounts]
-  before_filter :find_supported_providers, :only => [:social_accounts, :update]
-  after_filter :render_or_redirect_after_create, :only => [:create]
-  before_filter :redirect_to_edit_profile_if_password_set, :only => [:set_password]
+  before_filter :find_supported_providers, only: [:social_accounts, :update]
+  after_filter :render_or_redirect_after_create, only: [:create]
+  before_filter :redirect_to_edit_profile_if_password_set, only: [:set_password]
   before_filter :set_user_profiles, only: [:edit]
 
   skip_before_filter :redirect_if_marketplace_password_protected, only: [:store_geolocated_location, :store_google_analytics_id, :update_password, :set_password]
@@ -367,7 +367,6 @@ class RegistrationsController < Devise::RegistrationsController
   private
 
   def set_user_profiles
-
     if resource.buyer_profile.nil? && resource.seller_profile.nil?
       resource.get_buyer_profile
       resource.get_seller_profile
@@ -376,7 +375,6 @@ class RegistrationsController < Devise::RegistrationsController
     @buyer_profile = resource.buyer_profile
     @seller_profile = resource.seller_profile
   end
-
 
   def find_company
     @company = current_user.try(:companies).try(:first)

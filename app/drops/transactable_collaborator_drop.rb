@@ -1,7 +1,7 @@
 class TransactableCollaboratorDrop < BaseDrop
   delegate :id, :user, :transactable, :approved_by_owner?, :approved_by_user?,
-    :approved_by_user_at, :approved_by_owner_at, :transactable_id, :user_id, :created_at,
-    :rejected_by_owner_at, :rejected_by_owner?, to: :source
+           :approved_by_user_at, :approved_by_owner_at, :transactable_id, :user_id, :created_at,
+           :rejected_by_owner_at, :rejected_by_owner?, to: :source
 
   def enquirerer_destroy_path
     routes.listing_transactable_collaborator_path(transactable, @source)
@@ -20,6 +20,6 @@ class TransactableCollaboratorDrop < BaseDrop
   end
 
   def status
-    approved_by_owner_at.nil? ? 'Pending' : rejected_by_owner_at.nil? ? 'Approved' : "Rejected"
+    approved_by_owner_at.nil? ? 'Pending' : rejected_by_owner_at.nil? ? 'Approved' : 'Rejected'
   end
 end

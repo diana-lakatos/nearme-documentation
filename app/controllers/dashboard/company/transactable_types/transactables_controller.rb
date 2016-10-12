@@ -1,5 +1,4 @@
 class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard::Company::TransactablesController
-
   before_action :find_transactable_type
   before_action :redirect_to_edit_if_single_transactable, only: [:index, :new, :create]
   before_action :redirect_to_new_if_single_transactable, only: [:index, :edit, :update]
@@ -33,8 +32,8 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
         WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @transactable.id)
       end
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
-      flash[:error] = t('manage.listings.no_trust_explanation') if !@transactable.is_trusted?
-      event_tracker.created_a_listing(@transactable, { via: 'dashboard' })
+      flash[:error] = t('manage.listings.no_trust_explanation') unless @transactable.is_trusted?
+      event_tracker.created_a_listing(@transactable, via: 'dashboard')
       event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
@@ -66,7 +65,7 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
 
     respond_to do |format|
-      format.html {
+      format.html do
         if @transactable.save
           @transactable.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
@@ -81,30 +80,30 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
           @attachments = @transactable.attachments
           render :edit
         end
-      }
-      format.json {
+      end
+      format.json do
         if @transactable.save
-          render :json => { :success => true }
+          render json: { success: true }
         else
-          render :json => { :errors => @transactable.errors.full_messages }, :status => 422
+          render json: { errors: @transactable.errors.full_messages }, status: 422
         end
-      }
+      end
     end
   end
 
   def enable
     if @transactable.enable!
-      render :json => { :success => true }
+      render json: { success: true }
     else
-      render :json => { :errors => @transactable.errors.full_messages }, :status => 422
+      render json: { errors: @transactable.errors.full_messages }, status: 422
     end
   end
 
   def disable
     if @transactable.disable!
-      render :json => { :success => true }
+      render json: { success: true }
     else
-      render :json => { :errors => @transactable.errors.full_messages }, :status => 422
+      render json: { errors: @transactable.errors.full_messages }, status: 422
     end
   end
 
@@ -124,15 +123,12 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
     redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type, status: params[:status])
   end
 
-
   private
 
   def find_transactable
-    begin
-      @transactable = @transactable_type.transactables.where(company_id: @company).find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      raise Transactable::NotFound
-    end
+    @transactable = @transactable_type.transactables.where(company_id: @company).find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    raise Transactable::NotFound
   end
 
   def transactable_params
@@ -142,12 +138,12 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
   end
 
   def transactables_scope
-    @transactable_type.transactables.
-      joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL').
-      uniq.
-      where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id).
-      search_by_query([:name, :description], params[:query]).
-      apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
+    @transactable_type.transactables
+      .joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL')
+      .uniq
+      .where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id)
+      .search_by_query([:name, :description], params[:query])
+      .apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
   end
 
   def find_transactable_type
@@ -169,5 +165,4 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
   def set_form_components
     @form_components = @transactable_type.form_components.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES).rank(:rank)
   end
-
 end

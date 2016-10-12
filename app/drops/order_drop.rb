@@ -14,14 +14,14 @@ class OrderDrop < BaseDrop
   # line_items
   #   an array of line items that belong to this order in the form of LineItem objects
   delegate :id, :user, :company, :number, :line_items, :line_item_adjustments,
-    :shipping_profile, :adjustment, :can_host_cancel?, :can_confirm?, :can_reject?,
-    :paid?, :unconfirmed?, :confirmed?, :inactive?, :manual_payment?, :can_complete_checkout?,
-    :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
-    :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :rejection_reason,
-    :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
-    :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
-    :transactable, :cancelled_at, :confirmed_at, :recurring_booking_periods, :creator,
-    :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing, to: :order
+           :shipping_profile, :adjustment, :can_host_cancel?, :can_confirm?, :can_reject?,
+           :paid?, :unconfirmed?, :confirmed?, :inactive?, :manual_payment?, :can_complete_checkout?,
+           :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
+           :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :rejection_reason,
+           :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
+           :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
+           :transactable, :cancelled_at, :confirmed_at, :recurring_booking_periods, :creator,
+           :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing, to: :order
 
   def initialize(order)
     @order = order.decorate

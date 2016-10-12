@@ -16,7 +16,7 @@ class OrderSearchService
     elsif state == 'not_archived'
       @orders = @order_scope.not_archived
     elsif state == 'draft'
-      @orders = @order_scope.not_archived.where("state = ? AND draft_at IS NOT NULL", 'inactive')
+      @orders = @order_scope.not_archived.where('state = ? AND draft_at IS NOT NULL', 'inactive')
     else
       @orders = @order_scope.not_archived.where(state: state)
     end
@@ -60,7 +60,7 @@ class OrderSearchService
       elsif state == 'not_archived'
         @orders = @order_scope.not_archived
       elsif state == 'draft'
-        @orders = @order_scope.not_archived.where("state = ? AND draft_at IS NOT NULL", 'inactive')
+        @orders = @order_scope.not_archived.where('state = ? AND draft_at IS NOT NULL', 'inactive')
       else
         @orders = @order_scope.not_archived.where(state: state)
       end

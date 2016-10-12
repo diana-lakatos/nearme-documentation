@@ -89,13 +89,13 @@ module TransactablesIndex
         availability_exceptions: availability_exceptions,
         all_prices: all_prices,
         all_price_types: price_types,
-        service_radius: self.properties.try(:service_radius),
-        open_hours: self.availability.try(:days_with_hours),
-        open_hours_during_week: self.availability.try(:open_hours_during_week),
-        completed_reservations: self.orders.reservations.reviewable.count,
-        seller_average_rating: self.creator.try(:seller_average_rating),
-        tags: self.tags_as_comma_string,
-        state: self.state
+        service_radius: properties.try(:service_radius),
+        open_hours: availability.try(:days_with_hours),
+        open_hours_during_week: availability.try(:open_hours_during_week),
+        completed_reservations: orders.reservations.reviewable.count,
+        seller_average_rating: creator.try(:seller_average_rating),
+        tags: tags_as_comma_string,
+        state: state
       )
     end
 

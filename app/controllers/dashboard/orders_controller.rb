@@ -82,8 +82,8 @@ class Dashboard::OrdersController < Dashboard::BaseController
   def ensure_merchant_account_exists
     return unless @reservation_type.require_merchant_account?
 
-    unless @company.merchant_accounts.any? { |m| m.verified? }
-      flash[:notice] = t("flash_messages.dashboard.order.valid_merchant_account_required")
+    unless @company.merchant_accounts.any?(&:verified?)
+      flash[:notice] = t('flash_messages.dashboard.order.valid_merchant_account_required')
       redirect_to edit_dashboard_company_payouts_path(redirect_url: new_dashboard_order_path(transactable_id: @transactable.id))
    end
   end

@@ -102,7 +102,7 @@ module Elastic
     def initial_service_filters
       searchable_transactable_type_ids = @query[:transactable_type_id].to_i
       [
-      	initial_instance_filter,
+        initial_instance_filter,
         initial_state_filter,
         {
           term: {
@@ -334,16 +334,16 @@ module Elastic
 
       if @query[:lg_custom_attributes]
         @query[:lg_custom_attributes].each do |key, value|
-          value.reject! { |c| c.empty? } if value.instance_of?(Array)
+          value.reject!(&:empty?) if value.instance_of?(Array)
 
           unless value.blank?
             @filters << {
               terms: {
                 "custom_attributes.#{key}" =>  if value.instance_of?(Array)
-                  value
-                else
-                  value.to_s.split(',')
-                end.map{ |val| val.downcase }
+                                                 value
+                                               else
+                                                 value.to_s.split(',')
+                end.map(&:downcase)
               }
             }
           end

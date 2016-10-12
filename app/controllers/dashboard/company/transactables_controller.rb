@@ -16,7 +16,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   private
 
   def find_transactable_types
-    @transactable_types = TransactableType.where((id = params.try(:[], 'transactable_type_id')).present? ? {id: id} : {})
+    @transactable_types = TransactableType.where((id = params.try(:[], 'transactable_type_id')).present? ? { id: id } : {})
   end
 
   def find_locations
@@ -52,17 +52,16 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   # Dashboard::Company::TransactableTypes::TransactablesController
 
   def transactables_scope
-
     # For Litvault we want to show all transactables but we could make a setting
     # and display only approved ones:
     # "AND pc.approved_by_owner_at IS NOT NULL"
 
-    Transactable.
-      joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL').
-      uniq.
-      where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id).
-      where(transactable_type: @transactable_types).
-      search_by_query([:name, :description], params[:query])
+    Transactable
+      .joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL')
+      .uniq
+      .where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id)
+      .where(transactable_type: @transactable_types)
+      .search_by_query([:name, :description], params[:query])
       .apply_filter(params[:filter], @transactable_types.map(&:cached_custom_attributes).flatten.uniq)
   end
 
