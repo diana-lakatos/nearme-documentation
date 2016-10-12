@@ -83,17 +83,12 @@ class TransactableCollaborator < ActiveRecord::Base
   end
 
   def trigger_workflow_alert_on_update!
-<<<<<<< HEAD
     if approved_by_owner_at_changed? || rejected_by_owner_at_changed?
       if approved_by_owner?
-        WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorApproved, self.id)
+        WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorApproved, id)
       else
-        WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, self.transactable_id, self.user_id)
+        WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, transactable_id, user_id)
       end
-=======
-    if approved_by_owner_at_changed?
-      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorApproved, id)
->>>>>>> staging
     end
   end
 
