@@ -7,7 +7,6 @@ class CleanupDbMigration < ActiveRecord::Migration
     drop_table :inquiries
     drop_table :partner_inquiries
     drop_table :instance_types
-    drop_table :instance_views_backup_20160926
     drop_table :listing_types
     drop_table :offers
     drop_table :old_recurring_booking_periods
