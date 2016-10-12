@@ -33,13 +33,14 @@ then
 	fi
 
 	# Run rubocop on the staged files
-	bundle exec rubocop -a ${FILES}
+    OUTPUT="$(bundle exec rubocop -a ${FILES} | tail -1)"
 
-	echo "${green}[Ruby Style][Info]: AutoCorrection done${NC}"
-	#if [ $? -ne 0 ]; then
-	#  echo "${red}[Ruby Style][Error]: Fix the issues and commit again${NC}"
-	#  exit 1
-	# fi
+    echo ${OUTPUT}
+
+    if [[ $OUTPUT == *"offense corrected"* ]]; then
+	  echo "${red}[Ruby Style][Error]: Commit again - files were autocorrected${NC}"
+	  exit 1
+	 fi
 else
 	echo "${green}[Ruby Style][Info]: No files to check${NC}"
 fi
