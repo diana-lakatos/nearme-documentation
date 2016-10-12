@@ -33,7 +33,7 @@ then
 	fi
 
 	# Run rubocop on the staged files
-    OUTPUT="$(bundle exec rubocop -a ${FILES} | tail -1)"
+    OUTPUT="$(bundle exec rubocop --force-exclusion -a ${FILES} | tail -1)"
 
     echo ${OUTPUT}
 

@@ -63,15 +63,17 @@ namespace :backup do
       puts "Stack name can't be blank"
     else
       Instance.find_each do |instance|
-        instance.domains.where(name: "#{instance.name.to_url}.#{stack_name}.near-me.com", instance: instance).first_or_create do |domain|
+        instance.domains.where(name: "#{instance.name.to_url}.#{stack_name}.near-me.com", instance: instance).first_or_create! do |domain|
           domain.use_as_default = !instance.domains.default.where.not(id: domain.id).exists?
         end
       end
+      Domain.all.select { |d| d.name.include?("#{stack_name}.near-me.com") }.each { |d| d.update_column(:secured, true) }
 
       dnm = Instance.first
-      dnm.domains.where(name: "#{stack_name}.near-me.com", instance: dnm).first_or_create do |domain|
+      dnm.domains.where(name: "#{stack_name}.near-me.com", instance: dnm).first_or_create! do |domain|
         domain.use_as_default = true
       end
+      dnm.update_column(secured: true)
 
       puts 'Stack domains created.'
     end

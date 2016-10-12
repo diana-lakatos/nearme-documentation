@@ -13,7 +13,7 @@
 
 ActiveRecord::Schema.define(version: 20_161_007_150_808) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+  enable_extension "plpgsql"
   enable_extension 'btree_gin'
   enable_extension 'btree_gist'
   enable_extension 'hstore'

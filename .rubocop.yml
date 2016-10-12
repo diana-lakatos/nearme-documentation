@@ -1,4 +1,8 @@
 Documentation:
   Enabled: false
-Metrics/LineLength:
-  Enabled: false
+AllCops:
+  Exclude:
+    - db/schema.rb
+  TargetRubyVersion: 2.2
+Rails:
+  Enabled: true
