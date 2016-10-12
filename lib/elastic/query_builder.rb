@@ -4,10 +4,10 @@ module Elastic
     ENABLE_FUZZY = false
     ENABLE_PARTIAL = false
     FUZZYNESS = 2
-    ANALYZER = 'snowball'
-    GEO_DISTANCE = 'plane'
-    GEO_UNIT = 'km'
-    GEO_ORDER = 'asc'
+    ANALYZER = 'snowball'.freeze
+    GEO_DISTANCE = 'plane'.freeze
+    GEO_UNIT = 'km'.freeze
+    GEO_ORDER = 'asc'.freeze
     MAX_RESULTS = 1000
     PER_PAGE = 20
     PAGE = 1
@@ -31,12 +31,12 @@ module Elastic
 
     def query_per_page
       per_page = @query[:per_page].to_i
-      (per_page > 0) ? per_page : PER_PAGE
+      per_page > 0 ? per_page : PER_PAGE
     end
 
     def query_page
       page = @query[:page].to_pagination_number
-      (page > 0) ? page : PAGE
+      page > 0 ? page : PAGE
     end
 
     def query_offset
@@ -239,8 +239,8 @@ module Elastic
 
       # You should enable fuzzy search manually. Not included in the current release
       if ENABLE_FUZZY
-        multi_match.merge!(fuzziness: FUZZYNESS,
-                           analyzer: ANALYZER)
+        multi_match[:fuzziness] = FUZZYNESS
+        multi_match[:analyzer] = ANALYZER
       end
 
       multi_match
@@ -345,14 +345,13 @@ module Elastic
 
       if @query[:lg_custom_attributes]
         @query[:lg_custom_attributes].each do |key, value|
-          unless value.blank? || value.empty? || value.none?(&:present?)
-            value = value.is_a?(Array) ? value : value.to_s.split(',')
-            @filters << {
-              terms: {
-                "custom_attributes.#{key}" => value.map(&:downcase)
-              }
+          value = value.is_a?(Array) ? value : value.to_s.split(',')
+          next if value.blank? || value.empty? || value.none?(&:present?)
+          @filters << {
+            terms: {
+              "custom_attributes.#{key}" => value.map(&:downcase)
             }
-          end
+          }
         end
       end
 
@@ -405,7 +404,7 @@ module Elastic
           }
         else
           date_range[:or] << { bool: {} }
-          date_range[:or].last[:bool][:must] = @query[:date_range].map(&:wday).uniq.map  do |day|
+          date_range[:or].last[:bool][:must] = @query[:date_range].map(&:wday).uniq.map do |day|
             {
               term: {
                 opened_on_days: day

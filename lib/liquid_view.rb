@@ -5,12 +5,12 @@
 #
 #   ActionView::Base::register_template_handler :liquid, LiquidView
 class LiquidView
-  LIQUID_ERROR = 'Liquid Error'
+  LIQUID_ERROR = 'Liquid Error'.freeze
   PROTECTED_ASSIGNS = %w( template_root response _session template_class action_name request_origin session template
                           _response url _request _cookies variables_added _flash params _headers request cookies
-                          ignore_missing_templates flash _params logger before_filter_chain_aborted headers )
+                          ignore_missing_templates flash _params logger before_filter_chain_aborted headers ).freeze
   PROTECTED_INSTANCE_VARIABLES = %w( @_request @controller @_first_render @_memoized__pick_template @view_paths
-                                     @helpers @assigns_added @template @_render_stack @template_format @assigns )
+                                     @helpers @assigns_added @template @_render_stack @template_format @assigns ).freeze
 
   Liquid::Template.register_tag('inject_content_holder_for_path', ContentHolderTagForPathTag)
   Liquid::Template.register_tag('inject_content_holder', ContentHolderTag)
@@ -47,6 +47,7 @@ class LiquidView
     assigns['params'] = params.except(*Rails.application.config.filter_parameters)
     assigns['current_url'] = @view.try(:controller).try(:request).try(:original_url)
     assigns['current_path'] = @view.try(:controller).try(:request).try(:path)
+    assigns['request_referer'] = @view.try(:controller).try(:request).try(:referer)
     assigns['current_full_path'] = @view.try(:controller).try(:request).try(:original_fullpath)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
     assigns['build_new_user'] = User.new.to_liquid
@@ -54,7 +55,7 @@ class LiquidView
     assigns['form_authenticity_token'] = @view.try(:controller).try(:form_authenticity_token)
     # this will need to be cached for performance reason
     if PlatformContext.current.custom_theme.present?
-      assigns['asset_url'] = PlatformContext.current.custom_theme.custom_theme_assets.inject({}) do |hash, custom_theme_asset|
+      assigns['asset_url'] = PlatformContext.current.custom_theme.custom_theme_assets.each_with_object({}) do |custom_theme_asset, hash|
         hash[custom_theme_asset.name] = custom_theme_asset.file.url
         hash
       end
@@ -81,7 +82,7 @@ class LiquidView
 
     filters = filters_from_controller(controller) + [LiquidFilters]
 
-    render_method = (::Rails.env.development? || ::Rails.env.test?) ? :render! : :render
+    render_method = ::Rails.env.development? || ::Rails.env.test? ? :render! : :render
     liquid.send(render_method, assigns, filters: filters, registers: { action_view: @view, controller: @view.controller }).html_safe
   end
 

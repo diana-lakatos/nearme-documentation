@@ -16,14 +16,14 @@
           <ul>
             <li>
               {% if listing.transactable_user_messages.size > 0 %}
-                <a class="button button-inverse"" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
+                <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
               {% else %}
-                <a class="button button-inverse"" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id ,user_id: listing.creator.id, skip: true }}">Message</a>
+                <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id ,user_id: listing.creator.id, skip: true }}">Message</a>
               {% endif %}
             </li>
-            <li><a href="{{ listing.creator.user_profile_url }}" class="button button-inverse">Lender's Closet</a></li>
+            <li><a href="{{ listing.creator.user_profile_url }}" class="button button-inverse button-small">Lender's Closet</a></li>
             {% if listing.creator.has_active_blog? %}
-              <li><a href="{{ listing.creator.user_blog_posts_list_path }}" class="button button-inverse">Lender's Blog</a></li>
+              <li><a href="{{ listing.creator.user_blog_posts_list_path }}" class="button button-inverse button-small">Lender's Blog</a></li>
             {% endif %}
           </ul>
         </div>

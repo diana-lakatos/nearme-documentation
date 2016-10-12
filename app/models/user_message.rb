@@ -13,11 +13,11 @@ class UserMessage < ActiveRecord::Base
   belongs_to :thread_context, -> { with_deleted }, polymorphic: true    # conversation context: Transactable, Reservation, User
   has_many :attachments, class_name: 'Attachable::Attachment', as: :attachable
 
-  validates_presence_of :author_id
-  validates_presence_of :thread_owner_id
-  validates_presence_of :thread_recipient_id
-  validates_presence_of :body, message: "Message can't be blank."
-  validates_length_of :body, maximum: 2000, message: 'Message cannot have more than 2000 characters.'
+  validates :author_id, presence: true
+  validates :thread_owner_id, presence: true
+  validates :thread_recipient_id, presence: true
+  validates :body, presence: { message: "Message can't be blank." }
+  validates :body, length: { maximum: 2000, message: 'Message cannot have more than 2000 characters.' }
 
   # Thread is defined by thread owner, thread recipient and thread context
   scope :for_thread, lambda { |thread_owner, thread_recipient, thread_context|
@@ -124,8 +124,8 @@ class UserMessage < ActiveRecord::Base
     thread_recipient.presence || User.with_deleted.find(thread_recipient_id)
   end
 
-  def set_message_context_from_request_params(params)
-    UserMessageThreadConfigurator.new(self, params).run
+  def set_message_context_from_request_params(params, current_user)
+    UserMessageThreadConfigurator.new(self, params, current_user).run
   end
 
   # check if author of this message can join conversation in message_context

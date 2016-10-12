@@ -1,5 +1,5 @@
 class Api::V3::InstancesController < Api::BaseController
-  skip_before_filter :verified_api_request?
+  skip_before_action :verified_api_request?
   skip_before_action :require_authorization
 
   def index
@@ -14,7 +14,7 @@ class Api::V3::InstancesController < Api::BaseController
   private
 
   def require_authentication
-    fail DNM::Unauthorized unless valid_token?
+    raise DNM::Unauthorized unless valid_token?
   end
 
   def valid_token?
@@ -45,7 +45,8 @@ class Api::V3::InstancesController < Api::BaseController
   def serialized_collection
     InstanceJsonSerializer.serialize(
       collection.order('created_at desc'),
-      is_collection: true)
+      is_collection: true
+    )
   end
 
   def collection
@@ -80,7 +81,7 @@ class InstanceFactory
 
   def create
     unless instance.domains.first.present?
-      fail ::DNM::Error, 'You must create a domain, e.g. your-market.near-me.com'
+      raise ::DNM::Error, 'You must create a domain, e.g. your-market.near-me.com'
     end
 
     instance.domains.first.use_as_default = true
@@ -130,6 +131,7 @@ class InstanceFactory
       name: @instance.bookable_noun
     )
     tp.action_types << TransactableType::TimeBasedBooking.new(
+      transactable_type: tp,
       confirm_reservations: true,
       pricings_attributes: [
         {

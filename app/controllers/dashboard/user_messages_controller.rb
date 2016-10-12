@@ -1,8 +1,8 @@
 class Dashboard::UserMessagesController < Dashboard::BaseController
-  before_filter :redirect_to_login, only: [:new]
-  skip_before_filter :authenticate_user!, only: [:new]
+  before_action :redirect_to_login, only: [:new]
+  skip_before_action :authenticate_user!, only: [:new]
 
-  before_filter :missing_phone_number, only: [:new], unless: proc { params[:skip] || current_user.mobile_number.present? }
+  before_action :missing_phone_number, only: [:new], unless: proc { params[:skip] || current_user.mobile_number.present? }
 
   helper_method :user_messages_decorator
 
@@ -17,24 +17,24 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
   def new
     @user_message = current_user.authored_messages.new.decorate
-    @user_message.set_message_context_from_request_params(params)
+    @user_message.set_message_context_from_request_params(params, current_user)
     render partial: 'form'
   end
 
   def create
     @user_message = current_user.authored_messages.new(message_params).decorate
-    @user_message.set_message_context_from_request_params(params)
+    @user_message.set_message_context_from_request_params(params, current_user)
 
     if @user_message.save
       @user_message.send_notification
 
       if request.xhr?
-        unless @user_message.first_in_thread?
-          render partial: 'user_message_for_show', locals: { user_message: @user_message }
-        else
+        if @user_message.first_in_thread?
           flash[:notice] = t('flash_messages.user_messages.message_sent')
           redirect_to dashboard_user_message_path(@user_message)
           render_redirect_url_as_json
+        else
+          render partial: 'user_message_for_show', locals: { user_message: @user_message }
         end
       else
         flash[:notice] = t('flash_messages.user_messages.message_sent')
@@ -86,7 +86,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
   def redirect_to_login
     return if user_signed_in?
-    session[:user_return_to] = request.referrer
+    session[:user_return_to] = request.referer
     redirect_to new_user_session_path
   end
 

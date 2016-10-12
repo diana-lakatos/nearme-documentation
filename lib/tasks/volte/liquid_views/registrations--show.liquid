@@ -1,3 +1,6 @@
+---
+partial: false
+---
 <div class="wrapper-a">
   <main class="search-results">
 
@@ -75,35 +78,30 @@
   </main>
 
   <aside class="search-sidebar">
-    <a href="#">< Back to my items</a>
+    {% if request_referer != blank %}
+      <a href="{{ request_referer }}">&laquo; Back</a>
+    {% endif %}
 
     <ul class="user-actions">
-      <li>
-        <a class="button button-inverse" data-modal="true" href="#" data-href="{{ 'new_user_message_path' | generate_url: user_id: user.id, skip: true }}">
-          READ BLOG
-        </a>
-      </li>
-
-      <li>
-        <a class="button button-inverse" data-modal="true" href="#" data-href="{{ 'new_user_message_path' | generate_url: user_id: user.id, skip: true }}">
-          Message
-        </a>
-      </li>
-
-      <li>
-        <a href="#" class="button button-inverse">Call Client</a>
-      </li>
-
       {% if user.has_active_blog? %}
         <li>
           <a href="{{ user.user_blog_posts_list_path }}" class="button button-inverse">
-            Lender's Blog
+            READ BLOG
           </a>
         </li>
       {% endif %}
+
+      <li>
+        <a class="button button-inverse" href="{{user.user_message_path}}" rel="modal">Message</a>
+      </li>
+
+      <li>
+        {{ user.click_to_call_button }}
+      </li>
+
     </ul>
 
-    {% if user.properties.biography != '' and user.properties.biography != nil %}
+    {% if user.properties.biography != blank %}
       <p class="text-bold">
         {{ 'general.about' | translate }}
 
@@ -139,6 +137,6 @@
 
     <hr />
 
-    <a href=''>{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
+    <a class="button-b action-flag" href="#" data-href="{{ user.inappropriate_report_path }}" data-modal="1">{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
   </aside>
 </div> <!-- Wrapper -->

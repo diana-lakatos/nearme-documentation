@@ -58,11 +58,7 @@ class ReservationDecorator < OrderDecorator
   end
 
   def tax_price
-    if total_tax_amount && total_tax_amount > 0
-      render_money(total_tax_amount)
-    else
-      nil
-    end
+    render_money(total_tax_amount) if total_tax_amount && total_tax_amount > 0
   end
 
   def total_price
@@ -115,7 +111,7 @@ class ReservationDecorator < OrderDecorator
 
   def dates_to_array
     periods.map do |period|
-      "#{I18n.l(period.date.to_date, :long)}"
+      I18n.l(period.date.to_date, :long).to_s
     end
   end
 
@@ -170,10 +166,6 @@ class ReservationDecorator < OrderDecorator
 
   def next_payment_transfer
     I18n.l(PaymentTransfers::SchedulerMethods.new(instance).next_payment_transfers_date, format: :long)
-  end
-
-  def user_message_recipient
-    owner
   end
 
   def user_message_summary(user_message)
