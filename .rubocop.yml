@@ -1,4 +1,7 @@
 Documentation:
   Enabled: false
-Metrics/LineLength:
-  Enabled: false
+AllCops:
+  Excludes:
+    - config/unicorn.rb
+    - db/**
+  RunRailsCops: true
