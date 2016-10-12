@@ -1,7 +1,6 @@
 Documentation:
   Enabled: false
 AllCops:
-  Excludes:
-    - config/unicorn.rb
-    - db/**
+  Exclude:
+    - db/schema.rb
   RunRailsCops: true
