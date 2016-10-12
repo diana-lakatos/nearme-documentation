@@ -3,4 +3,6 @@ Documentation:
 AllCops:
   Exclude:
     - db/schema.rb
-  RunRailsCops: true
+  TargetRubyVersion: 2.2
+Rails:
+  Enabled: true
