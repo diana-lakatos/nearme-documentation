@@ -1,6 +1,6 @@
 - thread_context = user_message.thread_context
 - author = user_message.author_with_deleted
-- message_with_user = user_message.thread_owner == current_user ? user_message.thread_recipient : user_message.thread_owner
+- message_with_user = user_message.the_other_user(current_user)
 
 .message{ class: user_message.css_class(current_user) }
   = link_to user_message.show_path do

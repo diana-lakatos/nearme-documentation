@@ -328,27 +328,27 @@ class User < ActiveRecord::Base
 
     def custom_order(order, user)
       case order
-        when /featured/i
-          featured
-        when /people_i_know/i
-          friends_of(user)
-        when /most_popular/i
-          order('followers_count DESC')
-        when /location/i
-          return all unless user
-          group('addresses.id, users.id').joins(:current_address).select('users.*')
-            .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance', select: 'users.*'))
-        when /number_of_projects/i
-          order('transactables_count + transactable_collaborators_count DESC')
-        when /custom_attributes./
-          parsed_order = order.match(/custom_attributes.([a-zA-Z\.\_\-]*)_(asc|desc)/)
-          order(ActiveRecord::Base.send(:sanitize_sql_array, ["cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}", { field_name: parsed_order[1] }]))
+      when /featured/i
+        featured
+      when /people_i_know/i
+        friends_of(user)
+      when /most_popular/i
+        order('followers_count DESC')
+      when /location/i
+        return all unless user
+        group('addresses.id, users.id').joins(:current_address).select('users.*')
+          .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance', select: 'users.*'))
+      when /number_of_projects/i
+        order('transactables_count + transactable_collaborators_count DESC')
+      when /custom_attributes./
+        parsed_order = order.match(/custom_attributes.([a-zA-Z\.\_\-]*)_(asc|desc)/)
+        order(ActiveRecord::Base.send(:sanitize_sql_array, ["cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}", { field_name: parsed_order[1] }]))
+      else
+        if PlatformContext.current.instance.is_community?
+          order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')
         else
-          if PlatformContext.current.instance.is_community?
-            order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')
-          else
-            all
-          end
+          all
+        end
       end
     end
   end
@@ -433,7 +433,7 @@ class User < ActiveRecord::Base
                          current_address.try(:iso_country_code) || country.try(:iso)
                        else
                          default_company.try(:iso_country_code)
-    end
+                       end
 
     iso_country_code.presence || PlatformContext.current.instance.default_country_code
   end
@@ -641,7 +641,7 @@ class User < ActiveRecord::Base
     authentications.collect do |a|
       begin
         a.social_connection.try(:connections)
-      # We need Exception => e as Authentication::InvalidToken inherits directly from Exception not StandardError
+        # We need Exception => e as Authentication::InvalidToken inherits directly from Exception not StandardError
       rescue Exception => e
         nil
       end
@@ -1089,6 +1089,17 @@ class User < ActiveRecord::Base
 
   def jsonapi_serializer_class_name
     'UserJsonSerializer'
+  end
+
+  def transactables_with_message
+    Transactable.where(id: (
+      user_messages.where(thread_context_type: 'Transactable').reorder('').uniq.pluck(:thread_context_id) |
+      user_messages.joins('JOIN transactable_collaborators tc ON tc.id = user_messages.thread_context_id').where(thread_context_type: 'TransactableCollaborator').uniq.reorder('').pluck('tc.transactable_id'))
+                      )
+  end
+
+  def message_context_object
+    self
   end
 
   private
