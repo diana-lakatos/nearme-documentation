@@ -90,6 +90,7 @@ class InstanceFactory
     begin
       Instance.transaction do
         instance.save!
+        # TODO: tap
         instance.domains.first.update_column(:state, 'elb_secured')
         instance.domains.first.update_column(:secured, true)
         user.save!
@@ -98,8 +99,9 @@ class InstanceFactory
     rescue
       raise ::DNM::Error, errors.join(', ')
     end
-
     instance.set_context!
+    instance.build_availability_templates
+    instance.save!
 
     Utils::FormComponentsCreator.new(instance).create!
 
@@ -123,13 +125,20 @@ class InstanceFactory
       end
     end
 
-    ipt = instance.instance_profile_types.create!(name: 'Seller', profile_type: InstanceProfileType::SELLER)
-    Utils::FormComponentsCreator.new(ipt).create!
-    ipt = instance.instance_profile_types.create!(name: 'Buyer', profile_type: InstanceProfileType::BUYER)
-    Utils::FormComponentsCreator.new(ipt).create!
-    tp = @instance.transactable_types.new(
-      name: @instance.bookable_noun
-    )
+    instance
+      .instance_profile_types
+      .create!(name: 'Seller', profile_type: InstanceProfileType::SELLER).tap do |type|
+      Utils::FormComponentsCreator.new(type).create!
+    end
+
+    instance
+      .instance_profile_types
+      .create!(name: 'Buyer', profile_type: InstanceProfileType::BUYER).tap do |type|
+      Utils::FormComponentsCreator.new(type).create!
+    end
+
+    tp = instance.transactable_types.new(name: instance.bookable_noun)
+
     tp.action_types << TransactableType::TimeBasedBooking.new(
       transactable_type: tp,
       confirm_reservations: true,
@@ -156,6 +165,8 @@ class InstanceFactory
         }
       ]
     )
+
+    tp.default_availability_template = instance.availability_templates.first
     tp.save!
 
     tp.create_rating_systems

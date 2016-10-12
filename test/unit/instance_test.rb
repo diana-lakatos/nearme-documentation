@@ -11,6 +11,9 @@ class InstanceTest < ActiveSupport::TestCase
     should 'should have 2 availability_templates' do
       @new_instance = FactoryGirl.create(:instance)
       @new_instance.set_context!
+      @new_instance.build_availability_templates
+      @new_instance.save!
+
       assert_equal 2, @new_instance.availability_templates.count
       assert_equal ['24/7', 'Working Week'], @new_instance.availability_templates.pluck(:name).sort
     end
