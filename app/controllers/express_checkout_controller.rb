@@ -1,6 +1,6 @@
 class ExpressCheckoutController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :find_payment
+  before_action :authenticate_user!
+  before_action :find_payment
 
   def return
     @payment.express_payer_id = params[:PayerID]
@@ -19,7 +19,7 @@ class ExpressCheckoutController < ApplicationController
   end
 
   def cancel
-    if @payment.paid?
+    if @payment.authorized? || @payment.paid?
       redirect_to dashboard_order_path(@payment.payable)
     else
       flash[:error] = t('flash_messages.reservations.payment_failed')
