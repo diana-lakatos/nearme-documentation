@@ -35,9 +35,9 @@ class ThemeTest < ActiveSupport::TestCase
 
     should 'add no follow to unknown links' do
       @theme.homepage_content = '<div>This is an <a href="http://unknown.link.com">Unknown Link</a></div>'
-      mock = mock()
-      mock.expects(:modify).with(@theme.homepage_content).once
-      RelNoFollowAdder.expects(:new).with(skip_domains: Domain.pluck(:name)).returns(mock)
+      content_mock = mock
+      content_mock.expects(:modify).with(@theme.homepage_content).once
+      RelNoFollowAdder.expects(:new).with(skip_domains: Domain.pluck(:name)).returns(content_mock)
       @theme.save
     end
 

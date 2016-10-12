@@ -19,7 +19,6 @@ class CleanupDbMigration < ActiveRecord::Migration
     drop_table :reservation_seats
     drop_table :spree_option_values_variants
     drop_table :user_instance_profiles
-    drop_table :workflow_alerts_backup_20160926
     drop_table :email_templates
 
     remove_column :categories, :user_id
