@@ -87,7 +87,7 @@ class PlatformContext
         result = @instance.domains.secured.where_hostname(@request_host)
       end
 
-      result = @instance.domains.secured.first if result.blank?
+      result ||= @instance.domains.secured.first
 
       if Rails.env.development? || Rails.env.test?
         result ||= @instance.domains.first

@@ -37,7 +37,7 @@ then
 
     echo ${OUTPUT}
 
-    if [[ $OUTPUT == *"offense corrected"* ]]; then
+    if [[ $OUTPUT == *" corrected"* ]]; then
 	  echo "${red}[Ruby Style][Error]: Commit again - files were autocorrected${NC}"
 	  exit 1
 	 fi
