@@ -1,10 +1,5 @@
 class CleanupDbMigration < ActiveRecord::Migration
   def up
-    # To be uncommented later - we do not want to run
-    # into exceptions during deploy
-    # due to old code still using these columns.
-    # Uncommenting this will be separate deploy.
-=begin
     drop_table :bids
     drop_table :countries_shipping_rules
     drop_table :industries
@@ -27,7 +22,6 @@ class CleanupDbMigration < ActiveRecord::Migration
     drop_table :user_instance_profiles
     drop_table :workflow_alerts_backup_20160926
     drop_table :email_templates
-
 
     remove_column :categories, :user_id
     remove_column :categories, :description
@@ -120,7 +114,6 @@ class CleanupDbMigration < ActiveRecord::Migration
     remove_column :users, :facebook_url
     remove_column :users, :google_plus_url
 
-
     remove_column :workflow_alert_monthly_aggregated_logs, :workflow_alert_id
     remove_column :workflow_alert_monthly_aggregated_logs, :integer
 
@@ -150,7 +143,6 @@ class CleanupDbMigration < ActiveRecord::Migration
     remove_column :instances, :test_stripe_public_key
     remove_column :instances, :stripe_currency
     remove_column :instances, :user_required_fields
-=end
   end
 
   def down
