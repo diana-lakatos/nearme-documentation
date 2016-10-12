@@ -1,6 +1,5 @@
 module Utils
   class CustomTemplateLoader
-
     def initialize(custom_theme, root_template_path)
       @custom_theme = custom_theme
       @custom_theme.instance.set_context!
@@ -51,7 +50,6 @@ module Utils
       Dir.glob("#{@root_template_path}/assets/font/**/*").each do |p|
         load_asset!(p, CustomThemeAsset::ThemeFontFile)
       end
-
     end
 
     def load_text!(p, klass)
@@ -70,7 +68,5 @@ module Utils
         asset.save!
       end
     end
-
   end
-
 end

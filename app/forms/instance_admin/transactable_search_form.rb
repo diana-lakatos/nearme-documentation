@@ -1,5 +1,4 @@
 class InstanceAdmin::TransactableSearchForm < SearchForm
-
   property :q, virtual: true
   property :date, virtual: true
   property :filters, virtual: true
@@ -13,18 +12,13 @@ class InstanceAdmin::TransactableSearchForm < SearchForm
     result = {}
 
     if q.present?
-      result[:search_by_query] = [['name', 'description', 'properties'], "%#{q}%"]
+      result[:search_by_query] = [%w(name description properties), "%#{q}%"]
     end
 
-    if date.present?
-      result[:with_date] = [date_from_params]
-    end
+    result[:with_date] = [date_from_params] if date.present?
 
-    if item_type_id.present?
-      result[:for_transactable_type_id] = [item_type_id]
-    end
+    result[:for_transactable_type_id] = [item_type_id] if item_type_id.present?
 
     result
   end
-
 end

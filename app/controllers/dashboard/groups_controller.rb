@@ -1,5 +1,4 @@
 class Dashboard::GroupsController < Dashboard::BaseController
-
   before_filter :find_group, only: [:edit, :update, :destroy]
   before_filter :can_moderate?, only: [:edit, :update, :destroy]
 
@@ -38,7 +37,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
     @group.draft_at = nil if params[:submit]
 
     respond_to do |format|
-      format.html {
+      format.html do
         if @group.save
           flash[:success] = t('flash_messages.manage.groups.updated')
           redirect_to dashboard_groups_path
@@ -48,14 +47,14 @@ class Dashboard::GroupsController < Dashboard::BaseController
           @group.draft_at = draft
           render :edit
         end
-      }
-      format.json {
+      end
+      format.json do
         if group.save
-          render :json => { :success => true }
+          render json: { success: true }
         else
-          render :json => { :errors => @group.errors.full_messages }, :status => 422
+          render json: { errors: @group.errors.full_messages }, status: 422
         end
-      }
+      end
     end
   end
 
@@ -67,14 +66,14 @@ class Dashboard::GroupsController < Dashboard::BaseController
 
   def video
     video_urls = params[:video_url].to_s.split(/\s*,\s*/)
-    video_urls = [""] if video_urls.blank?
+    video_urls = [''] if video_urls.blank?
 
     video_embedders = video_urls.map { |video_url| VideoEmbedder.new(video_url) }
 
-    if video_embedders.any? { |video_embedder| video_embedder.valid? }
+    if video_embedders.any?(&:valid?)
       render json: {
         html: video_embedders.map do |video_embedder|
-          video_embedder.valid? ? render_to_string(partial: 'video', object: video_embedder.video_url) : ""
+          video_embedder.valid? ? render_to_string(partial: 'video', object: video_embedder.video_url) : ''
         end.join
       }
     else
@@ -97,5 +96,4 @@ class Dashboard::GroupsController < Dashboard::BaseController
   def group_params
     params.require(:group).permit(secured_params.group)
   end
-
 end

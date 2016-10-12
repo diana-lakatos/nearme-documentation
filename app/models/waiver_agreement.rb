@@ -4,7 +4,7 @@ class WaiverAgreement < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  belongs_to :target, :polymorphic => true
+  belongs_to :target, polymorphic: true
   belongs_to :waiver_agreement_template
   belongs_to :instance
 
@@ -18,5 +18,4 @@ class WaiverAgreement < ActiveRecord::Base
     self.content = waiver_agreement_template.content
     self.name = waiver_agreement_template.name
   end
-
 end

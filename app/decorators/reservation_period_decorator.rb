@@ -12,5 +12,4 @@ class ReservationPeriodDecorator < Draper::Decorator
   def hourly_presenter
     @hourly_presenter ||= HourlyPresenter.new(date, start_minute, end_minute, time_zone)
   end
-
 end

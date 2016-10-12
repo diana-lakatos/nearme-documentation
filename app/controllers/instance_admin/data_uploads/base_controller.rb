@@ -1,5 +1,4 @@
 class InstanceAdmin::DataUploads::BaseController < InstanceAdmin::BaseController
-
   before_filter :find_importable
   before_filter :set_import_job, only: :create
 
@@ -29,11 +28,11 @@ class InstanceAdmin::DataUploads::BaseController < InstanceAdmin::BaseController
 
   def download_csv_template
     send_data DataImporter::CsvTemplateGenerator.new(@importable, true).generate,
-      filename: "#{@importable.name.parameterize}_csv_template.csv"
+              filename: "#{@importable.name.parameterize}_csv_template.csv"
   end
 
   def download_current_data
-    send_data DataImporter::CsvCurrentDataGenerator.new(@importable).generate_csv, filename: "current_data.csv"
+    send_data DataImporter::CsvCurrentDataGenerator.new(@importable).generate_csv, filename: 'current_data.csv'
   end
 
   private
@@ -43,6 +42,4 @@ class InstanceAdmin::DataUploads::BaseController < InstanceAdmin::BaseController
     params[:data_upload][:options][:sync_mode] = '0'
     params.require(:data_upload).permit(secured_params.data_upload).merge(uploader: current_user, importable: @importable)
   end
-
 end
-

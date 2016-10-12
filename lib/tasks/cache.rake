@@ -20,5 +20,4 @@ namespace :cache do
     CacheExpiration.send_expire_command 'RebuildInstanceView'
     CacheExpiration.send_expire_command 'RebuildCustomAttributes'
   end
-
 end

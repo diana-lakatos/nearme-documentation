@@ -7,5 +7,4 @@ FactoryGirl.define do
     association :uploader, factory: :user
     tag 'Informational'
   end
-
 end

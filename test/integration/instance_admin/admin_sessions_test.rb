@@ -1,7 +1,6 @@
-require "test_helper"
+require 'test_helper'
 
 class InstanceAdmin::AdminSessionsTest < ActionDispatch::IntegrationTest
-
   setup do
     @user = FactoryGirl.create(:user)
     @admin = FactoryGirl.create(:admin)

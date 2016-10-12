@@ -1,6 +1,5 @@
 module BuySellMarket::WillPaginateDashboardLinkRenderer
   class LinkRenderer < WillPaginate::ViewHelpers::LinkRenderer
-
     protected
 
     def page_number(page)
@@ -54,7 +53,7 @@ module BuySellMarket::WillPaginateDashboardLinkRenderer
     end
 
     def merge_get_params(url_params)
-      if @template.respond_to? :request and @template.request and @template.request.get?
+      if @template.respond_to?(:request) && @template.request && @template.request.get?
         symbolized_update(url_params, @template.params)
       end
       url_params
@@ -79,6 +78,5 @@ module BuySellMarket::WillPaginateDashboardLinkRenderer
     def parse_query_parameters(params)
       Rack::Utils.parse_nested_query(params)
     end
-
   end
 end

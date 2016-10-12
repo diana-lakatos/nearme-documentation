@@ -24,15 +24,14 @@ module DesksnearMe
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
     config.to_prepare do
-        Dir.glob(File.join(File.dirname(__FILE__), "../app/models/line_item/**.rb")) do |c|
-          Rails.configuration.cache_classes ? require(c) : load(c)
-        end
+      Dir.glob(File.join(File.dirname(__FILE__), '../app/models/line_item/**.rb')) do |c|
+        Rails.configuration.cache_classes ? require(c) : load(c)
+      end
     end
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -49,7 +48,7 @@ module DesksnearMe
     # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
 
     # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [
@@ -60,15 +59,15 @@ module DesksnearMe
     ]
 
     config.generators do |g|
-      g.test_framework :test_unit, :fixture => false
+      g.test_framework :test_unit, fixture: false
     end
     config.use_only_ssl = true
 
     # note that we *don't* want to rewite for the test env :)
     config.should_rewrite_email = Rails.env.staging? || Rails.env.development?
-    config.test_email           = ENV['DNM_TEST_EMAIL'] || "notifications@desksnear.me"
+    config.test_email           = ENV['DNM_TEST_EMAIL'] || 'notifications@desksnear.me'
 
-    config.action_mailer.default_url_options = { :host => 'desksnear.me' }
+    config.action_mailer.default_url_options = { host: 'desksnear.me' }
 
     # Access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = true
@@ -83,33 +82,33 @@ module DesksnearMe
 
     # Clould services credentials
     CarrierWave.configure do |config|
-      config.fog_attributes = {'Cache-Control'=>'max-age=315576000, public'}
+      config.fog_attributes = { 'Cache-Control' => 'max-age=315576000, public' }
       config.storage        = :file
     end
 
     # Development/Test specific keys/secrets for social properties.
-    config.linkedin_key = "4q9xfgn60bik"
-    config.linkedin_secret = "lRmKVrc0RPpfKDCV"
+    config.linkedin_key = '4q9xfgn60bik'
+    config.linkedin_secret = 'lRmKVrc0RPpfKDCV'
 
-    config.facebook_key = "432038396866156"
-    config.facebook_secret = "71af86082de1c38a3523a4c8f44aca2d"
+    config.facebook_key = '432038396866156'
+    config.facebook_secret = '71af86082de1c38a3523a4c8f44aca2d'
 
-    config.twitter_key = "Xas2mKTWPVpqrb5FXUnDg"
-    config.twitter_secret = "nR8pjJ9YcU3eK9pKUPFBNxZuJ5oMci2M96SpZ47Ik"
+    config.twitter_key = 'Xas2mKTWPVpqrb5FXUnDg'
+    config.twitter_secret = 'nR8pjJ9YcU3eK9pKUPFBNxZuJ5oMci2M96SpZ47Ik'
 
-    config.instagram_key = "566499e0d6e647518d8f4cec0a42f3d6"
-    config.instagram_secret = "5c0652ad06984bf09e4987c8fc5ea8f1"
+    config.instagram_key = '566499e0d6e647518d8f4cec0a42f3d6'
+    config.instagram_secret = '5c0652ad06984bf09e4987c8fc5ea8f1'
 
-    config.exceptions_app = self.routes
+    config.exceptions_app = routes
 
     # setting platform_context in app/middlewares/platform_context_setter.rb
     config.middleware.use Rack::Deflater
     config.middleware.use 'PlatformContextSetter'
     config.middleware.use 'ApiThrottler'
-    config.middleware.insert_before ActionDispatch::ParamsParser, "BadRequestCatcher"
+    config.middleware.insert_before ActionDispatch::ParamsParser, 'BadRequestCatcher'
 
-    config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
-    config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access
+    config.mixpanel = (YAML.load_file(Rails.root.join('config', 'mixpanel.yml'))[Rails.env] || {}).with_indifferent_access
+    config.google_analytics = (YAML.load_file(Rails.root.join('config', 'google_analytics.yml'))[Rails.env] || {}).with_indifferent_access
 
     config.perform_mixpanel_requests = true
     config.perform_google_analytics_requests = true
@@ -123,8 +122,6 @@ module DesksnearMe
     config.action_dispatch.rescue_responses.merge!('Transactable::NotFound' => :not_found)
 
     config.encrypt_sensitive_db_columns = true
-
-
 
     config.secure_app = true
     config.root_secured = true
@@ -141,9 +138,9 @@ module DesksnearMe
     config.private_upload_file_types = %w(jpg jpeg png pdf doc docx)
 
     config.webpack = {
-      :use_manifest => false,
-      :asset_manifest => {},
-      :common_manifest => {},
+      use_manifest: false,
+      asset_manifest: {},
+      common_manifest: {}
     }
 
     config.git_version = `git describe`.strip

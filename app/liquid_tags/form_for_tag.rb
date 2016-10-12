@@ -6,20 +6,20 @@ class FormForTag < Liquid::Block
   def initialize(tag_name, markup, tokens)
     super
     if markup =~ Syntax
-      @model_name = $1
+      @model_name = Regexp.last_match(1)
       @attributes = create_initial_hash_from_liquid_tag_markup(markup)
     else
-      raise SyntaxError.new('Invalid syntax for Form For tag - must pass object')
+      fail SyntaxError.new('Invalid syntax for Form For tag - must pass object')
     end
   end
 
   def render(context)
     @model = context[@model_name]
-    @attributes = normalize_liquid_tag_attributes(@attributes, context, ['html', 'wrapper_mappings'])
+    @attributes = normalize_liquid_tag_attributes(@attributes, context, %w(html wrapper_mappings))
     @attributes.merge!(form_options) if @attributes[:form_for_type].present?
     namespace = @model.try(:source) || @model_name.to_sym
 
-    raise "Object passed to form_for tag cannot be nil" if namespace.blank?
+    fail 'Object passed to form_for tag cannot be nil' if namespace.blank?
     context.stack do
       context.registers[:action_view].simple_form_for(namespace, @attributes) do |f|
         context['form_object'.freeze] = f
@@ -59,5 +59,4 @@ class FormForTag < Liquid::Block
 
     options
   end
-
 end

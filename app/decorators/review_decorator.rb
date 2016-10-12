@@ -31,7 +31,7 @@ class ReviewDecorator < Draper::Decorator
   end
 
   def link_to_new_tab(name, path)
-    h.link_to name, path, target: "_blank"
+    h.link_to name, path, target: '_blank'
   end
 
   def link_to_user_profile
@@ -48,7 +48,6 @@ class ReviewDecorator < Draper::Decorator
     else
       h.link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(reviewable.order.user)
     end
-
   end
 
   def link_to_seller_profile
@@ -61,13 +60,13 @@ class ReviewDecorator < Draper::Decorator
 
   def show_reviewable_info
     info = if params[:option] == 'reviews_left_by_seller' || params[:option] == 'reviews_left_by_buyer'
-      if object.rating_system.try(:subject) == 'transactable'
-        get_product_info
-      else
-        get_user_info
-      end
-    else
-      own_info
+             if object.rating_system.try(:subject) == 'transactable'
+               get_product_info
+             else
+               get_user_info
+             end
+           else
+             own_info
     end
 
     reviewable_info(info)

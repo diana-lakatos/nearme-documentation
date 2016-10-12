@@ -4,12 +4,12 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
   def initialize(transactable_type, params)
     @transactable_type = transactable_type
     @params = params
-    @filters = {date_range: []}
+    @filters = { date_range: [] }
   end
 
   def invoke
     set_options_for_filters
-    @filters = {date_range: search.available_dates}
+    @filters = { date_range: search.available_dates }
 
     listing_ids = fetcher.map(&:id)
 
@@ -25,8 +25,8 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
     end
     listings_scope = listings_scope.where(id: listing_ids)
 
-    @results = listings_scope.includes(:location, :location_address, :company, :photos, :transactable_type).
-      order_by_array_of_ids(order_ids)
+    @results = listings_scope.includes(:location, :location_address, :company, :photos, :transactable_type)
+               .order_by_array_of_ids(order_ids)
   end
 
   def filters
@@ -38,7 +38,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
 
   def max_price
     return 0 if !@transactable_type.show_price_slider || results.blank?
-    max = fetcher.response[:aggregations]["filtered_aggregations"]["maximum_price"].try(:[],'value') || 0
+    max = fetcher.response[:aggregations]['filtered_aggregations']['maximum_price'].try(:[], 'value') || 0
     max / 100
   end
 
@@ -47,5 +47,4 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
   def initialize_search_params
     { instance_id: PlatformContext.current.instance.id, transactable_type_id: @transactable_type.id }
   end
-
 end

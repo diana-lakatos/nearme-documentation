@@ -1,5 +1,4 @@
 class Webhooks::CommunicationsController < Webhooks::BaseController
-
   def status
     if params[:VerificationStatus].eql?('success')
       communication = Communication.find_by(request_key: params[:CallSid])
@@ -14,5 +13,4 @@ class Webhooks::CommunicationsController < Webhooks::BaseController
 
     head :ok
   end
-
 end

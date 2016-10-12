@@ -15,4 +15,3 @@ class PaymentGateway::SpreedlyPaymentGateway < PaymentGateway
     ActiveMerchant::Billing::SpreedlyCoreGateway
   end
 end
-

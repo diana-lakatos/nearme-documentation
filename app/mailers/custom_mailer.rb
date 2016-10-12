@@ -1,5 +1,4 @@
 class CustomMailer < InstanceMailer
-
   def custom_mail(step, workflow_id)
     @step = step
     return unless @step.should_be_processed?
@@ -19,7 +18,7 @@ class CustomMailer < InstanceMailer
       )
     else
       WorkflowAlertLogger.new(@workflow_alert).log!
-      if(locale = recipient_locale).present?
+      if (locale = recipient_locale).present?
         I18n.locale = locale
       end
       mail(options)

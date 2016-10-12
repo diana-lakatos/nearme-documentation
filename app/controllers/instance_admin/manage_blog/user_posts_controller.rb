@@ -38,5 +38,4 @@ class InstanceAdmin::ManageBlog::UserPostsController < InstanceAdmin::ManageBlog
   def post_params
     params.require(:user_blog_post).permit(secured_params.admin_user_blog_post)
   end
-
 end

@@ -1,12 +1,11 @@
 class LiquidStyledLinkRenderer < WillPaginate::ViewHelpers::LinkRenderer
-
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::TagHelper
 
   def tag(name, value, attributes = {})
     string_attributes = attributes.inject('') do |attrs, pair|
       unless pair.last.nil?
-        attrs << %( #{pair.first}="#{CGI::escapeHTML(pair.last.to_s)}")
+        attrs << %( #{pair.first}="#{CGI.escapeHTML(pair.last.to_s)}")
       end
       attrs
     end
@@ -91,7 +90,7 @@ class LiquidStyledLinkRenderer < WillPaginate::ViewHelpers::LinkRenderer
   end
 
   def merge_get_params(url_params)
-    if @template.respond_to? :request and @template.request and @template.request.get?
+    if @template.respond_to?(:request) && @template.request && @template.request.get?
       symbolized_update(url_params, @template.params)
     end
     url_params

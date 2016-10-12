@@ -14,7 +14,7 @@ class Api::V3::InstancesController < Api::BaseController
   private
 
   def require_authentication
-    raise DNM::Unauthorized unless valid_token?
+    fail DNM::Unauthorized unless valid_token?
   end
 
   def valid_token?
@@ -80,7 +80,7 @@ class InstanceFactory
 
   def create
     unless instance.domains.first.present?
-      raise ::DNM::Error, 'You must create a domain, e.g. your-market.near-me.com'
+      fail ::DNM::Error, 'You must create a domain, e.g. your-market.near-me.com'
     end
 
     instance.domains.first.use_as_default = true
@@ -127,7 +127,7 @@ class InstanceFactory
     ipt = instance.instance_profile_types.create!(name: 'Buyer', profile_type: InstanceProfileType::BUYER)
     Utils::FormComponentsCreator.new(ipt).create!
     tp = @instance.transactable_types.new(
-      name: @instance.bookable_noun,
+      name: @instance.bookable_noun
     )
     tp.action_types << TransactableType::TimeBasedBooking.new(
       confirm_reservations: true,
@@ -172,6 +172,5 @@ class InstanceFactory
 
     WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, instance.id, user.id, @password)
     instance
-
   end
 end

@@ -1,5 +1,4 @@
 class WorkflowStep::SupportWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def initialize(message_id)
     @message = Support::TicketMessage.find_by_id(message_id)
   end
@@ -14,7 +13,7 @@ class WorkflowStep::SupportWorkflow::BaseStep < WorkflowStep::BaseStep
 
   # In support emails lister is an admin who created last reply for the ticket
   def lister
-    @message.ticket.messages.map(&:user).compact.reject{ |u| u.email == enquirer.email}.first
+    @message.ticket.messages.map(&:user).compact.reject { |u| u.email == enquirer.email }.first
   end
 
   # message:
@@ -28,5 +27,4 @@ class WorkflowStep::SupportWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @message.present?
   end
-
 end

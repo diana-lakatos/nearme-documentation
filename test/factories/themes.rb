@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :theme do
     name 'DesksNearMe'
     site_name 'Desks Near Me'
@@ -15,11 +14,10 @@ FactoryGirl.define do
     twitter_url 'https://twitter.com/desksnearme'
     facebook_url 'https://www.facebook.com/DesksNearMe'
     owner_id { PlatformContext.current.instance.id }
-    owner_type "Instance"
+    owner_type 'Instance'
 
     factory :theme_with_logo_image do
       logo_image { fixture_file_upload(Rails.root.join('test', 'assets', 'foobear.jpeg'), 'image/jpeg') }
     end
-
   end
 end

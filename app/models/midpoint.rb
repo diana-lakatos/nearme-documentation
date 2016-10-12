@@ -1,5 +1,5 @@
 class Midpoint
-  attr :center
+  attr_reader :center
   delegate :radians, :distance_from, to: :center
   def initialize(*points)
     points.map!(&:to_f)

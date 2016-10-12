@@ -1,5 +1,4 @@
 class Admin::PlatformAdminsController < Admin::ResourceController
-
   def create
     if user = User.find_by_email(params[:platform_admin][:email])
       if user.admin?
@@ -22,7 +21,7 @@ class Admin::PlatformAdminsController < Admin::ResourceController
   protected
 
   def collection
-    @platform_admins ||= UsersService.new(nil, params).get_users.admin.paginate(:page => params[:page])
+    @platform_admins ||= UsersService.new(nil, params).get_users.admin.paginate(page: params[:page])
   end
 
   def platform_admin_params

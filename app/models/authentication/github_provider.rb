@@ -1,41 +1,32 @@
 require 'github_api'
 
 class Authentication::GithubProvider < Authentication::BaseProvider
-
-  META   = { name: "GitHub",
-             url: "http://github.com/",
-             auth: "OAuth 2" }
+  META   = { name: 'GitHub',
+             url: 'http://github.com/',
+             auth: 'OAuth 2' }
 
   def friend_ids
-    begin
-      @friend_ids ||= (following.map(&:id) + followers.map(&:id)).uniq
-    rescue
-      raise ::Authentication::InvalidToken
-    end
+    @friend_ids ||= (following.map(&:id) + followers.map(&:id)).uniq
+  rescue
+    raise ::Authentication::InvalidToken
   end
 
   def following
-    begin
-      @following ||= connection.users.followers.following
-    rescue
-      raise ::Authentication::InvalidToken
-    end
+    @following ||= connection.users.followers.following
+  rescue
+    raise ::Authentication::InvalidToken
   end
 
   def followers
-    begin
-      @followers ||= connection.users.followers.list
-    rescue
-      raise ::Authentication::InvalidToken
-    end
+    @followers ||= connection.users.followers.list
+  rescue
+    raise ::Authentication::InvalidToken
   end
 
   def info
-    begin
-      @info ||= Info.new(connection.users.get)
-    rescue
-      raise ::Authentication::InvalidToken
-    end
+    @info ||= Info.new(connection.users.get)
+  rescue
+    raise ::Authentication::InvalidToken
   end
 
   def revoke
@@ -45,26 +36,23 @@ class Authentication::GithubProvider < Authentication::BaseProvider
   end
 
   class Info < BaseInfo
-
     def initialize(raw)
       @raw          = raw
-      @uid          = raw["id"].presence
-      @username     = raw["login"]
-      @email        = raw["email"]
-      @name         = raw["name"]
-      @description  = raw["bio"]
-      @image_url    = raw["avatar_url"]
-      @profile_url  = raw["url"]
-      @location     = raw["location"]
+      @uid          = raw['id'].presence
+      @username     = raw['login']
+      @email        = raw['email']
+      @name         = raw['name']
+      @description  = raw['bio']
+      @image_url    = raw['avatar_url']
+      @profile_url  = raw['url']
+      @location     = raw['location']
       @provider     = 'GitHub'
     end
-
   end
 
   private
 
-    def connection
-      @connection ||= Github.new oauth_token: token
-    end
-
+  def connection
+    @connection ||= Github.new oauth_token: token
+  end
 end

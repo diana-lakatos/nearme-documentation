@@ -32,7 +32,7 @@ FactoryGirl.define do
       end
       trait :with_exclusive_price do
         has_exclusive_price '1'
-        exclusive_price_cents 89900
+        exclusive_price_cents 89_900
       end
     end
 
@@ -40,6 +40,5 @@ FactoryGirl.define do
       unit 'subscription_month'
       price_cents 1670
     end
-
   end
 end

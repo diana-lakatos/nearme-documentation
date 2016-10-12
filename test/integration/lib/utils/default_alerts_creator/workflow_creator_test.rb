@@ -1,11 +1,9 @@
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::WorkflowCreatorTest < ActionDispatch::IntegrationTest
-
   class DummyCreator < Utils::DefaultAlertsCreator::WorkflowCreator
-
     def create_dummy_alert
-      create_alert!({associated_class: WorkflowStep::ListingWorkflow::Created, name: 'name', path: 'some/path', subject: 'subject', alert_type: 'email', recipient_type: 'lister'})
+      create_alert!(associated_class: WorkflowStep::ListingWorkflow::Created, name: 'name', path: 'some/path', subject: 'subject', alert_type: 'email', recipient_type: 'lister')
     end
 
     def workflow_type

@@ -3,4 +3,3 @@ class Admin::CompaniesController < Admin::ResourceController
     params.require(:company).permit(secured_params.company)
   end
 end
-

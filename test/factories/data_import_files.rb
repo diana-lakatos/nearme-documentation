@@ -15,9 +15,9 @@ FactoryGirl.define do
       FactoryGirl.create(:location_type, name: 'My Type') unless LocationType.where(name: 'My Type').count > 0
       new(
         FactoryGirl.create(:data_upload,
-          csv_file: fixture_file_upload(Rails.root.join('test', 'assets', 'data_importer', 'csv', 'csv_template_file.csv'), 'text/csv'),
-          importable: FactoryGirl.create(:transactable_type_csv_template)
-        )
+                           csv_file: fixture_file_upload(Rails.root.join('test', 'assets', 'data_importer', 'csv', 'csv_template_file.csv'), 'text/csv'),
+                           importable: FactoryGirl.create(:transactable_type_csv_template)
+                          )
       )
     end
   end
@@ -43,19 +43,19 @@ FactoryGirl.define do
 
     factory :xml_template_file_send_invitations  do
       initialize_with do
-        new(Rails.root.join('test', 'assets', 'data_importer', 'xml', 'xml_template_file.xml'), FactoryGirl.create(:transactable_type_csv_template), { inviter: DataImporter::Inviter.new })
+        new(Rails.root.join('test', 'assets', 'data_importer', 'xml', 'xml_template_file.xml'), FactoryGirl.create(:transactable_type_csv_template), inviter: DataImporter::Inviter.new)
       end
     end
 
     factory :xml_template_file_sync_mode_invalid_transactable do
       initialize_with do
-        new(Rails.root.join('test', 'assets', 'data_importer', 'xml', 'xml_template_file_invalid_transactable.xml'), FactoryGirl.create(:transactable_type_csv_template), { synchronizer: DataImporter::Synchronizer.new })
+        new(Rails.root.join('test', 'assets', 'data_importer', 'xml', 'xml_template_file_invalid_transactable.xml'), FactoryGirl.create(:transactable_type_csv_template), synchronizer: DataImporter::Synchronizer.new)
       end
     end
 
     factory :xml_template_file_sync_mode do
       initialize_with do
-        new(Rails.root.join('test', 'assets', 'data_importer', 'xml', 'xml_template_file.xml'), FactoryGirl.create(:transactable_type_csv_template), { synchronizer: DataImporter::Synchronizer.new })
+        new(Rails.root.join('test', 'assets', 'data_importer', 'xml', 'xml_template_file.xml'), FactoryGirl.create(:transactable_type_csv_template), synchronizer: DataImporter::Synchronizer.new)
       end
     end
 
@@ -88,7 +88,5 @@ FactoryGirl.define do
         new(Rails.root.join('test', 'assets', 'data_importer', 'xml', 'xml_template_file_invalid_transactable.xml'), FactoryGirl.create(:transactable_type_csv_template))
       end
     end
-
   end
 end
-

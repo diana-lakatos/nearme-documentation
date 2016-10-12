@@ -16,8 +16,8 @@ class ScheduleExceptionRule < ActiveRecord::Base
 
   default_scope { order('created_at ASC') }
 
-  scope :at, -> (date) { where("duration_range_start <= ? AND duration_range_end >= ?", date, date) }
-  scope :future, -> (date = Date.current) { where("duration_range_end >= ?", date) }
+  scope :at, -> (date) { where('duration_range_start <= ? AND duration_range_end >= ?', date, date) }
+  scope :future, -> (date = Date.current) { where('duration_range_end >= ?', date) }
 
   def parse_user_input
     self.duration_range_start = date_time_handler.convert_to_datetime(user_duration_range_start).try(:beginning_of_day) if user_duration_range_start.present?
@@ -33,7 +33,7 @@ class ScheduleExceptionRule < ActiveRecord::Base
   end
 
   def range
-    {from: duration_range_start.to_date, to: duration_range_end.to_date}
+    { from: duration_range_start.to_date, to: duration_range_end.to_date }
   end
 
   def all_dates
@@ -54,4 +54,3 @@ class ScheduleExceptionRule < ActiveRecord::Base
     @date_time_handler ||= DateTimeHandler.new
   end
 end
-

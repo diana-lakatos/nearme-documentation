@@ -4,5 +4,4 @@ class LocaleInstanceView < ActiveRecord::Base
 
   belongs_to :locale, touch: true
   belongs_to :instance_view, touch: true
-
 end

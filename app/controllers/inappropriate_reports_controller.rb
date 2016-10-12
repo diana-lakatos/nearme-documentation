@@ -1,15 +1,14 @@
 class InappropriateReportsController < ApplicationController
-
   before_filter :find_reportable
   before_filter :redirect_unless_authenticated
 
   def create
     @report = InappropriateReport.new(reportable: @reportable, user: current_user, ip_address: request.remote_ip, reason: params[:inappropriate_report][:reason])
     if @report.save
-      flash[:notice] = t("inappropriate_reports.report_has_been_sent")
+      flash[:notice] = t('inappropriate_reports.report_has_been_sent')
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::InappropriateReported, @report.id)
     else
-      flash[:error] = t("inappropriate_reports.please_fill_in_reason")
+      flash[:error] = t('inappropriate_reports.please_fill_in_reason')
     end
     redirect_to @reportable.decorate.show_path
   end
@@ -39,7 +38,7 @@ class InappropriateReportsController < ApplicationController
 
   def find_reportable
     # For now we allow just Transactables
-    return if !['Transactable', 'User'].include?(params[:reportable_type])
+    return unless %w(Transactable User).include?(params[:reportable_type])
     @reportable = params[:reportable_type].constantize.find(params[:id])
     nil
   end

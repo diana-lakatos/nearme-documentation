@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class RequestParametersValidatorTest < ActiveSupport::TestCase
-
   test 'raising error when one of the single attribute contains invalid value' do
     assert_raise RequestParametersValidator::InvalidParameterError do
       RequestParametersValidator.new(example_single_attribute_key => { a: :b }).validate!
@@ -16,7 +15,7 @@ class RequestParametersValidatorTest < ActiveSupport::TestCase
 
   test 'not raising error when one of the irrelevant attribute contains invalid value' do
     assert_nothing_raised do
-      RequestParametersValidator.new(example_irrelevant_key => { a: :b}).validate!
+      RequestParametersValidator.new(example_irrelevant_key => { a: :b }).validate!
     end
   end
 
@@ -27,7 +26,7 @@ class RequestParametersValidatorTest < ActiveSupport::TestCase
         example_single_attribute_key => 1,
         example_single_attribute_key(1) => nil,
         example_single_attribute_key(2) => 'valid',
-        example_single_attribute_key(3) => '',
+        example_single_attribute_key(3) => ''
       ).validate!
     end
   end
@@ -57,6 +56,4 @@ class RequestParametersValidatorTest < ActiveSupport::TestCase
   def example_irrelevant_key
     'i am VUP - very unimportant parameter'
   end
-
 end
-

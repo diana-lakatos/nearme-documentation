@@ -7,10 +7,10 @@ class GroupMember < ActiveRecord::Base
   belongs_to :group
 
   counter_culture :group,
-    column_name: proc { |m| 'members_count' if m.approved? },
-    column_names: { ["group_members.approved_by_owner_at IS NOT NULL AND group_members.approved_by_user_at IS NOT NULL AND group_members.deleted_at IS NULL"] => 'members_count' }
+                  column_name: proc { |m| 'members_count' if m.approved? },
+                  column_names: { ['group_members.approved_by_owner_at IS NOT NULL AND group_members.approved_by_user_at IS NOT NULL AND group_members.deleted_at IS NULL'] => 'members_count' }
 
-  validates :user, presence: { message: I18n.t(:not_exist)}
+  validates :user, presence: { message: I18n.t(:not_exist) }
   validates_uniqueness_of :user, scope: :group_id
 
   validates :group, presence: true
@@ -61,11 +61,11 @@ class GroupMember < ActiveRecord::Base
   private
 
   def owner_cannot_leave_group
-    raise OwnerCannotLeaveGroup
+    fail OwnerCannotLeaveGroup
   end
 
   def owner_cannot_lose_moderate_rights
-    raise OwnerCannotLoseModerateRights
+    fail OwnerCannotLoseModerateRights
   end
 
   def destroyed_by_parent?

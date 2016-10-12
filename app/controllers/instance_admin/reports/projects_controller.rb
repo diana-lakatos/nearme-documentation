@@ -1,5 +1,4 @@
 class InstanceAdmin::Reports::ProjectsController < InstanceAdmin::Reports::BaseController
-
   def index
   end
 
@@ -25,6 +24,4 @@ class InstanceAdmin::Reports::ProjectsController < InstanceAdmin::Reports::BaseC
     @scope_type_class = TransactableType
     @scope_class = Transactable
   end
-
 end
-

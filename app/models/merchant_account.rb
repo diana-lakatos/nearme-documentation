@@ -33,7 +33,7 @@ class MerchantAccount < ActiveRecord::Base
     'paypal_express_chain'  => MerchantAccount::PaypalExpressChainMerchantAccount
   }
 
-  validates_presence_of :merchantable_id, :merchantable_type, :unless => lambda { |ic| ic.merchantable.present? }
+  validates_presence_of :merchantable_id, :merchantable_type, unless: ->(ic) { ic.merchantable.present? }
   validates_presence_of :payment_gateway
   validate :data_correctness
 
@@ -45,19 +45,19 @@ class MerchantAccount < ActiveRecord::Base
   scope :failed,   -> { where(state: 'failed') }
   scope :failed,   -> { where(state: 'voided') }
   scope :live,   -> { where(test: false) }
-  scope :active,   -> { where(state: ['pending', 'verified']) }
-  scope :mode_scope, -> (test_mode = PlatformContext.current.instance.test_mode? ){  test_mode ? where(test: true) : where(test: false) }
-  scope :paypal_express_chain,   -> { where(type: "MerchantAccount::PaypalExpressChainMerchantAccount") }
+  scope :active,   -> { where(state: %w(pending verified)) }
+  scope :mode_scope, -> (test_mode = PlatformContext.current.instance.test_mode?) {  test_mode ? where(test: true) : where(test: false) }
+  scope :paypal_express_chain,   -> { where(type: 'MerchantAccount::PaypalExpressChainMerchantAccount') }
 
   attr_accessor :skip_validation, :redirect_url
 
   before_create :set_test_mode_if_necessary
   before_create :onboard!
-  before_update :update_onboard!, unless: lambda { |merchant_account| merchant_account.skip_validation }
+  before_update :update_onboard!, unless: ->(merchant_account) { merchant_account.skip_validation }
 
   state_machine :state, initial: :pending do
-    after_transition  any => :verified, do: :set_possible_payout!
-    after_transition  :verified => :failed, do: :unset_possible_payout!
+    after_transition any => :verified, do: :set_possible_payout!
+    after_transition verified: :failed, do: :unset_possible_payout!
 
     event :to_pending do
       transition [:verified, :failed] => :pending
@@ -84,14 +84,14 @@ class MerchantAccount < ActiveRecord::Base
     @mechant_account_drop ||= MerchantAccountDrop.new(self)
   end
 
-  def data_correctness(*args)
+  def data_correctness(*_args)
   end
 
-  def onboard!(*args)
+  def onboard!(*_args)
   end
 
   def merchant_id
-    self.internal_payment_gateway_account_id
+    internal_payment_gateway_account_id
   end
 
   def void!
@@ -100,7 +100,7 @@ class MerchantAccount < ActiveRecord::Base
     unset_possible_payout!
   end
 
-  def update_onboard!(*args)
+  def update_onboard!(*_args)
   end
 
   def response_object
@@ -116,7 +116,7 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def to_attr
-    self.class.name.underscore.gsub("merchant_account/", '') + "_attributes"
+    self.class.name.underscore.gsub('merchant_account/', '') + '_attributes'
   end
 
   def parital_location
@@ -132,20 +132,20 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def set_possible_payout!
-    if !self.test? && self.merchantable && self.payment_gateway
-      transactables = self.merchantable.listings.where(currency: supported_currencies)
+    if !self.test? && merchantable && payment_gateway
+      transactables = merchantable.listings.where(currency: supported_currencies)
       transactables.update_all(possible_payout: true)
-      ElasticBulkUpdateJob.perform Transactable, transactables.map{ |listing| [listing.id, { possible_payout: true }]}
+      ElasticBulkUpdateJob.perform Transactable, transactables.map { |listing| [listing.id, { possible_payout: true }] }
     end
 
     true
   end
 
   def unset_possible_payout!
-    if !self.test? && self.merchantable && self.payment_gateway
-      self.merchantable.listings.update_all(possible_payout: false)
-      self.merchantable.merchant_accounts.live.verified.each(&:set_possible_payout!)
-      ElasticBulkUpdateJob.perform Transactable, self.merchantable.listings.map{ |listing| [listing.id, { possible_payout: false }]}
+    if !self.test? && merchantable && payment_gateway
+      merchantable.listings.update_all(possible_payout: false)
+      merchantable.merchant_accounts.live.verified.each(&:set_possible_payout!)
+      ElasticBulkUpdateJob.perform Transactable, merchantable.listings.map { |listing| [listing.id, { possible_payout: false }] }
     end
     true
   end
@@ -155,8 +155,8 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def translate_error_messages
-    if self.try(:errors).try(:messages).try("[]", :base).present?
-      self.errors.messages[:base] = self.errors.messages[:base].map do |error|
+    if try(:errors).try(:messages).try('[]', :base).present?
+      errors.messages[:base] = errors.messages[:base].map do |error|
         if TRANSLATED_ERRORS[error]
           TRANSLATED_ERRORS[error]
         else
@@ -174,6 +174,4 @@ class MerchantAccount < ActiveRecord::Base
     self.test = PlatformContext.current.instance.test_mode?
     true
   end
-
 end
-

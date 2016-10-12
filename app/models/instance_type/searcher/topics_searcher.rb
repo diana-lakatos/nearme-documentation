@@ -3,7 +3,7 @@ class InstanceType::Searcher::TopicsSearcher
 
   attr_reader :search
 
-  def initialize(params, current_user)
+  def initialize(params, _current_user)
     @params = params
     @results = fetcher
   end

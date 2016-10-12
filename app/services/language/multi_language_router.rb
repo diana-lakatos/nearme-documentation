@@ -1,5 +1,4 @@
 class Language::MultiLanguageRouter
-
   attr_reader :language_param, :current_locale
 
   def initialize(language_param, current_locale)
@@ -14,5 +13,4 @@ class Language::MultiLanguageRouter
   def url_params
     { language: current_locale }
   end
-
 end

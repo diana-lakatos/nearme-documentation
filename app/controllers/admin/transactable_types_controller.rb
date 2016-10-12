@@ -1,5 +1,4 @@
 class Admin::TransactableTypesController < Admin::ResourceController
-
   def create
     resource = TransactableType.new(transactable_type_params)
     if resource.save
@@ -16,7 +15,6 @@ class Admin::TransactableTypesController < Admin::ResourceController
     else
       render action: :edit
     end
-
   end
 
   def transactable_type_params

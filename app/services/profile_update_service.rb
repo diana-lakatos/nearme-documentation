@@ -38,7 +38,7 @@ class ProfileUpdateService
         end
       end
       if key == 'is_active'
-        attrs['user']['banned_at'] = Time.zone.now if !ActiveRecord::Type::Boolean.new.type_cast_from_user(attributes[:is_active])
+        attrs['user']['banned_at'] = Time.zone.now unless ActiveRecord::Type::Boolean.new.type_cast_from_user(attributes[:is_active])
       end
       if key == 'is_do_not_contact'
         attrs['user']['accept_emails'] = !ActiveRecord::Type::Boolean.new.type_cast_from_user(attributes[:is_do_not_contact])
@@ -80,5 +80,4 @@ class ProfileUpdateService
       country: :country
     }.with_indifferent_access
   end
-
 end

@@ -1,11 +1,10 @@
 class SitemapService::Node::TransactableNode < SitemapService::Node
-  
   def location
     @object.try(:decorate).try(:show_path)
   end
 
   def changefreq
-    "daily"
+    'daily'
   end
 
   def image
@@ -13,6 +12,6 @@ class SitemapService::Node::TransactableNode < SitemapService::Node
   end
 
   def self.comment_mark
-    "transactables"
+    'transactables'
   end
 end

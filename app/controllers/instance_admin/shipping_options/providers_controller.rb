@@ -46,5 +46,4 @@ class InstanceAdmin::ShippingOptions::ProvidersController < InstanceAdmin::Shipp
       sp.shipping_rules.build(name: 'Delivery & Return', price_cents: 0, processing_time: 0, use_shippo_for_price: true)
     end
   end
-
 end

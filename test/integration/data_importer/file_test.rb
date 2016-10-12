@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class DataImporter::FileTest < ActiveSupport::TestCase
-
   context '#initializize' do
-
     should 'take path to the file as argument' do
       DataImporter::File.new(get_absolute_file_path('data.csv'))
     end
@@ -13,7 +11,6 @@ class DataImporter::FileTest < ActiveSupport::TestCase
         DataImporter::File.new(get_absolute_file_path('/not/exists'))
       end
     end
-
   end
 
   private

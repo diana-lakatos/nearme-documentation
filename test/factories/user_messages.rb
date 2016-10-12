@@ -6,6 +6,6 @@ FactoryGirl.define do
     association :thread_context, factory: :transactable
     thread_owner { author }
     thread_recipient { author }
-    body "Hey whats up"
+    body 'Hey whats up'
   end
 end

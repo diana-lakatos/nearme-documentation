@@ -21,4 +21,3 @@ class LanguagesSelectTag < SelectTag
     %w(locales_languages_select)
   end
 end
-

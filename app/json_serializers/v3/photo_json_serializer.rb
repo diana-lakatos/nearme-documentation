@@ -8,5 +8,4 @@ class V3::PhotoJsonSerializer
   attribute :medium_url do
     object.image_url(:medium)
   end
-
 end

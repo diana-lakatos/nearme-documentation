@@ -1,59 +1,58 @@
 require 'test_helper'
 
 class UserMessagesDecoratorTest < ActionView::TestCase
-
   context 'instance scope' do
     setup do
       @user = FactoryGirl.create(:user)
       @user2 = FactoryGirl.create(:user)
       @user3 = FactoryGirl.create(:user)
       @user_message = FactoryGirl.create(:user_message,
-                                            thread_context: @user2,
-                                            thread_recipient: @user2,
-                                            thread_owner: @user,
-                                            author: @user,
-                                            read_for_recipient: true)
+                                         thread_context: @user2,
+                                         thread_recipient: @user2,
+                                         thread_owner: @user,
+                                         author: @user,
+                                         read_for_recipient: true)
 
       @answer_user_message = FactoryGirl.create(:user_message,
-                                                   thread_context: @user2,
-                                                   thread_recipient: @user2,
-                                                   thread_owner: @user,
-                                                   author: @user2)
+                                                thread_context: @user2,
+                                                thread_recipient: @user2,
+                                                thread_owner: @user,
+                                                author: @user2)
 
       @archived_user_message = FactoryGirl.create(:user_message,
-                                                     thread_owner: @user,
-                                                     thread_context: @user3,
-                                                     thread_recipient: @user3,
-                                                     author: @user,
-                                                     read_for_owner: true,
-                                                     archived_for_owner: true,
-                                                     archived_for_recipient: false)
+                                                  thread_owner: @user,
+                                                  thread_context: @user3,
+                                                  thread_recipient: @user3,
+                                                  author: @user,
+                                                  read_for_owner: true,
+                                                  archived_for_owner: true,
+                                                  archived_for_recipient: false)
       @instance = @user_message.instance
       @second_instance = FactoryGirl.create(:instance)
       FactoryGirl.create(:user_message,
-                            thread_context: @user2,
-                            thread_recipient: @user2,
-                            thread_owner: @user,
-                            author: @user,
-                            read_for_recipient: true,
-                            instance: @second_instance)
+                         thread_context: @user2,
+                         thread_recipient: @user2,
+                         thread_owner: @user,
+                         author: @user,
+                         read_for_recipient: true,
+                         instance: @second_instance)
 
       FactoryGirl.create(:user_message,
-                             thread_context: @user2,
-                             thread_recipient: @user2,
-                             thread_owner: @user,
-                             author: @user2,
-                             instance: @second_instance)
+                         thread_context: @user2,
+                         thread_recipient: @user2,
+                         thread_owner: @user,
+                         author: @user2,
+                         instance: @second_instance)
 
       FactoryGirl.create(:user_message,
-                             thread_owner: @user,
-                             thread_context: @user3,
-                             thread_recipient: @user3,
-                             author: @user,
-                             read_for_owner: true,
-                             archived_for_owner: true,
-                             archived_for_recipient: false,
-                             instance: @second_instance)
+                         thread_owner: @user,
+                         thread_context: @user3,
+                         thread_recipient: @user3,
+                         author: @user,
+                         read_for_owner: true,
+                         archived_for_owner: true,
+                         archived_for_recipient: false,
+                         instance: @second_instance)
 
       PlatformContext.current = PlatformContext.new(@instance)
     end
@@ -96,27 +95,27 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       @owner = FactoryGirl.create(:user)
       @listing = FactoryGirl.create(:transactable)
       @user_message = FactoryGirl.create(:user_message,
-                                            thread_context: @listing,
-                                            thread_recipient: @listing.administrator,
-                                            thread_owner: @owner,
-                                            author: @owner,
-                                            read_for_recipient: true)
+                                         thread_context: @listing,
+                                         thread_recipient: @listing.administrator,
+                                         thread_owner: @owner,
+                                         author: @owner,
+                                         read_for_recipient: true)
       @listing_administrator = @listing.administrator
 
       @answer_user_message = FactoryGirl.create(:user_message,
-                                                   thread_context: @listing,
-                                                   thread_recipient: @listing.administrator,
-                                                   thread_owner: @owner,
-                                                   author: @listing_administrator)
+                                                thread_context: @listing,
+                                                thread_recipient: @listing.administrator,
+                                                thread_owner: @owner,
+                                                author: @listing_administrator)
 
       @listing2 = FactoryGirl.create(:transactable)
       @archived_user_message = FactoryGirl.create(:user_message,
-                                                     thread_owner: @owner,
-                                                     thread_recipient: @listing2.administrator,
-                                                     author: @listing2.administrator,
-                                                     read_for_owner: true,
-                                                     archived_for_owner: true,
-                                                     archived_for_recipient: false)
+                                                  thread_owner: @owner,
+                                                  thread_recipient: @listing2.administrator,
+                                                  author: @listing2.administrator,
+                                                  read_for_owner: true,
+                                                  archived_for_owner: true,
+                                                  archived_for_recipient: false)
     end
 
     should 'return inbox' do
@@ -126,7 +125,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       creators_inbox = UserMessagesDecorator.new(@listing_administrator.user_messages,
-                                                    @listing_administrator).inbox.fetch
+                                                 @listing_administrator).inbox.fetch
       assert_equal 1, creators_inbox.size
       thread = owners_inbox.first[1]
       assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
@@ -139,7 +138,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       creators_unread = UserMessagesDecorator.new(@listing_administrator.user_messages,
-                                                    @listing_administrator).unread.fetch
+                                                  @listing_administrator).unread.fetch
       assert_equal 0, creators_unread.size
     end
 
@@ -153,9 +152,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
                                                     @listing_administrator).archived.fetch
       assert_equal 0, creators_archived.size
     end
-
   end
-
 
   context 'With a message sent from user to another user' do
     setup do
@@ -163,26 +160,26 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       @user2 = FactoryGirl.create(:user)
       @user3 = FactoryGirl.create(:user)
       @user_message = FactoryGirl.create(:user_message,
-                                            thread_context: @user2,
-                                            thread_recipient: @user2,
-                                            thread_owner: @user,
-                                            author: @user,
-                                            read_for_recipient: true)
+                                         thread_context: @user2,
+                                         thread_recipient: @user2,
+                                         thread_owner: @user,
+                                         author: @user,
+                                         read_for_recipient: true)
 
       @answer_user_message = FactoryGirl.create(:user_message,
-                                                   thread_context: @user2,
-                                                   thread_recipient: @user2,
-                                                   thread_owner: @user,
-                                                   author: @user2)
+                                                thread_context: @user2,
+                                                thread_recipient: @user2,
+                                                thread_owner: @user,
+                                                author: @user2)
 
       @archived_user_message = FactoryGirl.create(:user_message,
-                                                     thread_owner: @user,
-                                                     thread_context: @user3,
-                                                     thread_recipient: @user3,
-                                                     author: @user,
-                                                     read_for_owner: true,
-                                                     archived_for_owner: true,
-                                                     archived_for_recipient: false)
+                                                  thread_owner: @user,
+                                                  thread_context: @user3,
+                                                  thread_recipient: @user3,
+                                                  author: @user,
+                                                  read_for_owner: true,
+                                                  archived_for_owner: true,
+                                                  archived_for_recipient: false)
     end
 
     should 'return inbox' do
@@ -216,9 +213,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       user2_archived = UserMessagesDecorator.new(@user2.user_messages, @user2).archived.fetch
       assert_equal 0, user2_archived.size
     end
-
   end
-
 
   context 'With a message sent from host to reservation owner' do
     setup do
@@ -226,26 +221,26 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       @host = @reservation.transactable.administrator
       @another_user = FactoryGirl.create(:user)
       @user_message = FactoryGirl.create(:user_message,
-                                            thread_context: @reservation,
-                                            thread_recipient: @reservation.owner,
-                                            thread_owner: @host,
-                                            author: @host,
-                                            read_for_recipient: true)
+                                         thread_context: @reservation,
+                                         thread_recipient: @reservation.owner,
+                                         thread_owner: @host,
+                                         author: @host,
+                                         read_for_recipient: true)
 
       @answer_user_message = FactoryGirl.create(:user_message,
-                                                   thread_context: @reservation,
-                                                   thread_recipient: @reservation.owner,
-                                                   thread_owner: @host,
-                                                   author: @reservation.owner)
+                                                thread_context: @reservation,
+                                                thread_recipient: @reservation.owner,
+                                                thread_owner: @host,
+                                                author: @reservation.owner)
 
       @archived_user_message = FactoryGirl.create(:user_message,
-                                                     thread_owner: @host,
-                                                     thread_context: @another_user,
-                                                     thread_recipient: @another_user,
-                                                     author: @host,
-                                                     read_for_owner: true,
-                                                     archived_for_owner: true,
-                                                     archived_for_recipient: false)
+                                                  thread_owner: @host,
+                                                  thread_context: @another_user,
+                                                  thread_recipient: @another_user,
+                                                  author: @host,
+                                                  read_for_owner: true,
+                                                  archived_for_owner: true,
+                                                  archived_for_recipient: false)
     end
 
     should 'return inbox' do
@@ -279,8 +274,5 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       owner_archived = UserMessagesDecorator.new(@reservation.owner.user_messages, @reservation.owner).archived.fetch
       assert_equal 0, owner_archived.size
     end
-
   end
-
 end
-

@@ -7,7 +7,7 @@ class Dashboard::PhotosControllerTest < ActionController::TestCase
       @photo   = @listing.photos.first
       @user    = @listing.company.creator
 
-      @user.stubs(:photos => stub(:find => @photo))
+      @user.stubs(photos: stub(find: @photo))
       Dashboard::PhotosController.any_instance.stubs(:current_user).returns(@user)
       @photo.expects(:save).once.returns(true)
 

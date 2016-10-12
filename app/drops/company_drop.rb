@@ -16,7 +16,7 @@ class CompanyDrop < BaseDrop
   # payments_mailing_address
   #   the payments mailing address as an Address drop
   delegate :created_payment_transfers, :creator, :url, :description, :company_address,
-    :name, :payments_mailing_address, :merchant_accounts, to: :company
+           :name, :payments_mailing_address, :merchant_accounts, to: :company
 
   def initialize(company)
     @company = company
@@ -32,7 +32,6 @@ class CompanyDrop < BaseDrop
     created_payment_transfers.map { |payment_transfer| "#{payment_transfer.amount}#{payment_transfer.amount.currency.symbol}" }.join(', ')
   end
 
-
   # Url to the section for adding user's paypal account where he will get paid. Without tracking, includes authentication token.
   def add_paypal_path_with_token
     routes.edit_dashboard_company_payouts_path(anchor: 'company_paypal_email', token_key => @company.creator.temporary_token)
@@ -47,5 +46,4 @@ class CompanyDrop < BaseDrop
   def edit_path
     routes.edit_dashboard_company_path(@company)
   end
-
 end

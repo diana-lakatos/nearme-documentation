@@ -51,9 +51,9 @@ class Listings::Support::TicketsController < ApplicationController
     @pricing = @listing.action_type.pricings.find(@details[:transactable_pricing_id]).decorate if @details[:transactable_pricing_id]
     if @listing.event_booking?
       datetime = if !params[:details]
-        Time.at(@details[:dates].to_i).in_time_zone(@listing.timezone)
-      else
-        @details[:dates].try(:to_datetime)
+                   Time.at(@details[:dates].to_i).in_time_zone(@listing.timezone)
+                 else
+                   @details[:dates].try(:to_datetime)
       end
       @schedule_presenter = SchedulePresenter.new(datetime)
       @details[:dates] = datetime.to_s
@@ -78,13 +78,11 @@ class Listings::Support::TicketsController < ApplicationController
     else
       sub = "Offer: #{@listing.name} - "
     end
-    sub += "#{@ticket.reservation_details['quantity']}"# x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{I18n.t('hour', count: @hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
+    sub += "#{@ticket.reservation_details['quantity']}" # x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{I18n.t('hour', count: @hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
     sub
   end
 
   def ticket_params
     params.require(:support_ticket).permit(secured_params.support_ticket)
   end
-
 end
-

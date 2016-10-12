@@ -52,20 +52,20 @@ class AnalyticWrapper::MixpanelApi
     @anonymous_identity = options[:anonymous_identity] || (generate_anonymous_identity unless @current_user)
     @session_properties = (options[:session_properties] || {}).with_indifferent_access
     @request_details = (options[:request_details] || {}).with_indifferent_access
-    @request_details.merge!(:current_instance_id => PlatformContext.current.instance.id ) if PlatformContext.current.present?
+    @request_details.merge!(current_instance_id: PlatformContext.current.instance.id) if PlatformContext.current.present?
     @request = options[:request]
 
     extract_properties_from_params(options[:request_params])
   end
 
   # Assigns a user to this tracking instance, clearing any 'anonymous' state
-  def apply_user(user, options = { :alias => false })
+  def apply_user(user, options = { alias: false })
     @current_user = user
 
     # If we're currently an anonymous identity, we need to alias that
     # to the user user.
     if options[:alias] && anonymous_identity
-      MixpanelApiJob.perform(@mixpanel, :alias, distinct_id, { :distinct_id => anonymous_identity })
+      MixpanelApiJob.perform(@mixpanel, :alias, distinct_id, distinct_id: anonymous_identity)
     end
 
     @anonymous_identity = nil
@@ -75,7 +75,7 @@ class AnalyticWrapper::MixpanelApi
   def track(event_name, properties, options = {})
     # Assign the user ID for this session
     properties = properties.reverse_merge(
-      :distinct_id => distinct_id
+      distinct_id: distinct_id
     )
 
     # Assign any global properties
@@ -88,13 +88,12 @@ class AnalyticWrapper::MixpanelApi
 
   def pixel_track_url(event_name, properties, options = {})
     properties = properties.reverse_merge(
-      :distinct_id => distinct_id
+      distinct_id: distinct_id
     )
 
     # Assign any global properties
     properties.reverse_merge!(session_properties)
     properties.reverse_merge!(request_details)
-
 
     Rails.logger.info "Pixel based tracking mixpanel event: #{event_name}, #{properties}, #{options}"
     "<img src='#{@mixpanel.tracking_pixel(event_name, properties, options)}' width='1' height='1'>"
@@ -136,5 +135,4 @@ class AnalyticWrapper::MixpanelApi
       @session_properties[param] = params[param] if params[param]
     end
   end
-
 end

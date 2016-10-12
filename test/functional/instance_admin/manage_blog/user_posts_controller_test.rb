@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::ManageBlog::UserPostsControllerTest < ActionController::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
     @user = FactoryGirl.create(:user)
@@ -12,7 +11,6 @@ class InstanceAdmin::ManageBlog::UserPostsControllerTest < ActionController::Tes
   end
 
   context 'index' do
-
     should 'show a listing of user blog posts' do
       @blog_post = FactoryGirl.create :user_blog_post, title: 'Blog post'
       get :index
@@ -21,7 +19,6 @@ class InstanceAdmin::ManageBlog::UserPostsControllerTest < ActionController::Tes
   end
 
   context 'update' do
-
     should 'change user blog post' do
       @user_blog_post = FactoryGirl.create :user_blog_post
       assert_difference 'UserBlogPost.highlighted.count' do
@@ -33,7 +30,6 @@ class InstanceAdmin::ManageBlog::UserPostsControllerTest < ActionController::Tes
   end
 
   context 'destroy' do
-
     should 'destroy blog post' do
       @user_blog_post = FactoryGirl.create(:user_blog_post)
 

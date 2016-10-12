@@ -1,7 +1,6 @@
 require 'braintree'
 
 class Webhooks::BraintreeMarketplacesController < Webhooks::BaseWebhookController
-
   def webhook
     if request.get? && params[:bt_challenge].present?
       render text: @payment_gateway.verify_webhook(params[:bt_challenge])
@@ -27,20 +26,16 @@ class Webhooks::BraintreeMarketplacesController < Webhooks::BaseWebhookControlle
         company = merchant_account.merchantable
         if notification.disbursement.success
           # this actually means that disbursement has been scheduled, it still can fail
-          WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::DisbursementSucceeded, merchant_account.id, {
-            'amount' => notification.disbursement.amount,
-            'disbursement_date' => notification.disbursement.disbursement_date,
-            'transaction_ids' => notification.disbursement.transaction_ids
-          })
+          WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::DisbursementSucceeded, merchant_account.id,             'amount' => notification.disbursement.amount,
+                                                                                                                                'disbursement_date' => notification.disbursement.disbursement_date,
+                                                                                                                                'transaction_ids' => notification.disbursement.transaction_ids)
         else
           PaymentTransfer.where(id: company.payments.where(external_transaction_id: notification.disbursement.transaction_ids).uniq.pluck(:payment_transfer_id)).update_all(failed_at: Time.zone.now)
-          WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::DisbursementFailed, merchant_account.id, {
-            'exception_message' => notification.disbursement.exception_message,
-            'follow_up_action' => notification.disbursement.follow_up_action,
-            'amount' => notification.disbursement.amount,
-            'disbursement_date' => notification.disbursement.disbursement_date,
-            'transaction_ids' => notification.disbursement.transaction_ids
-          })
+          WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::DisbursementFailed, merchant_account.id,             'exception_message' => notification.disbursement.exception_message,
+                                                                                                                             'follow_up_action' => notification.disbursement.follow_up_action,
+                                                                                                                             'amount' => notification.disbursement.amount,
+                                                                                                                             'disbursement_date' => notification.disbursement.disbursement_date,
+                                                                                                                             'transaction_ids' => notification.disbursement.transaction_ids)
         end
       end
       merchant_account.try(:webhooks).try(:create!, response: notification.to_yaml)
@@ -53,5 +48,4 @@ class Webhooks::BraintreeMarketplacesController < Webhooks::BaseWebhookControlle
   def payment_gateway_class
     PaymentGateway::BraintreeMarketplacePaymentGateway
   end
-
 end

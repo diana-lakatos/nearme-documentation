@@ -8,9 +8,9 @@ module Approvable
 
   def is_trusted?
     if approval_request_templates.any?
-      self.approval_requests.approved.any?
+      approval_requests.approved.any?
     else
-      ancestors = [self.try(:company), self.try(:creator)].compact
+      ancestors = [try(:company), try(:creator)].compact
       if ancestors.first
         ancestors.first.is_trusted?
       else
@@ -29,7 +29,6 @@ module Approvable
   end
 
   def current_approval_requests
-    self.approval_requests.to_a.reject { |ar| !self.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
+    approval_requests.to_a.reject { |ar| !approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
   end
-
 end

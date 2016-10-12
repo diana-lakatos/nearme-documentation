@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::IntegrationTest
-
   setup do
     @listing_creator = Utils::DefaultAlertsCreator::ListingCreator.new
   end
@@ -20,11 +19,10 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
     setup do
       @platform_context = PlatformContext.current
       @instance = @platform_context.instance
-      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
+      PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, name: 'custom.domain.com'))
     end
 
     context 'draft listing' do
-
       setup do
         @listing_creator.create_draft_listing_created_email!
       end
@@ -66,7 +64,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert_equal subject, mail.subject
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
-      assert mail.html_part.body.include?("Your new listing rocks!")
+      assert mail.html_part.body.include?('Your new listing rocks!')
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
@@ -103,10 +101,10 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
         WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @listing.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_equal "New listing is pending approval", mail.subject
+      assert_equal 'New listing is pending approval', mail.subject
       assert mail.html_part.body.include?(@listing.name)
       assert_equal [@admin.email], mail.to
-      assert mail.html_part.body.include?("You can decide whether to approve")
+      assert mail.html_part.body.include?('You can decide whether to approve')
       assert_contains 'href="https://custom.domain.com/instance_admin/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
@@ -125,7 +123,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert_equal "#{@listing.name} has been approved!", mail.subject
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
-      assert mail.html_part.body.include?("It will be accessible for")
+      assert mail.html_part.body.include?('It will be accessible for')
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
@@ -161,7 +159,5 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert_equal [@user.email], mail.to
       assert_not_contains 'Liquid error:', mail.html_part.body
     end
-
   end
-
 end

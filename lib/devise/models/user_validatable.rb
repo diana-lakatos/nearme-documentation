@@ -17,26 +17,26 @@ module Devise
         base.extend ClassMethods
 
         base.class_eval do
-          validates_presence_of   :email, if: :email_required?
+          validates_presence_of :email, if: :email_required?
           validates_uniqueness_of :email, scope: [:instance_id, :external_id], allow_blank: true, if: :email_changed?
-          validate                :no_admin_with_such_email_exists, if: :email_changed?
-          validate                :no_account_hijacking_attempt, if: :email_changed?
-          validates               :email, email: true, if: :email_changed?
+          validate :no_admin_with_such_email_exists, if: :email_changed?
+          validate :no_account_hijacking_attempt, if: :email_changed?
+          validates :email, email: true, if: :email_changed?
 
-          validates_presence_of     :password, if: :password_required?
+          validates_presence_of :password, if: :password_required?
           validates_confirmation_of :password, if: :password_required?
-          validates_length_of       :password, within: password_length, allow_blank: true
+          validates_length_of :password, within: password_length, allow_blank: true
         end
       end
 
       protected
 
       def no_admin_with_such_email_exists
-        errors.add(:email, :taken) if User.admin.where(email: self.email).exists?
+        errors.add(:email, :taken) if User.admin.where(email: email).exists?
       end
 
       def no_account_hijacking_attempt
-        errors.add(:email, :taken) if User.where(email: self.email).exists? if self.external_id.blank?
+        errors.add(:email, :taken) if User.where(email: email).exists? if external_id.blank?
       end
 
       # Checks whether a password is needed or not. For validations only.

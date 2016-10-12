@@ -1,13 +1,12 @@
 require 'test_helper'
 
 class Authentication::LinkedinProviderTest < ActiveSupport::TestCase
-
   context 'Having a Linkedin provider' do
     setup do
       user = FactoryGirl.build(:user)
       @linkedin_provider = Authentication::LinkedinProvider.new(user: user,
-                                                               token: 'abcd',
-                                                               secret: 'dcba')
+                                                                token: 'abcd',
+                                                                secret: 'dcba')
     end
 
     should 'return info object' do
@@ -32,9 +31,8 @@ class Authentication::LinkedinProviderTest < ActiveSupport::TestCase
       connections = stub(all: [stub(id: '1'), stub(id: '2')])
       LinkedIn::API.any_instance.stubs(:connections).once.returns(connections)
 
-      assert_equal ['1', '2'], @linkedin_provider.friend_ids
+      assert_equal %w(1 2), @linkedin_provider.friend_ids
     end
-
 
     context 'when token is invalid' do
       setup do

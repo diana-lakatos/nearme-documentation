@@ -6,7 +6,7 @@ module Liquid
     end
 
     def render(context)
-      context.registers[:action_view].send(:content_for, @content_for_symbol){ super.html_safe }
+      context.registers[:action_view].send(:content_for, @content_for_symbol) { super.html_safe }
     end
   end
 

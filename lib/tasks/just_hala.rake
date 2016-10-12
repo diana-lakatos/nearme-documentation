@@ -1,8 +1,6 @@
 namespace :just_hala do
-
   desc 'Setup Just Hala'
   task setup: :environment do
-
     @instance = Instance.find(175)
     @instance.set_context!
     @instance.update_attributes(
@@ -15,46 +13,44 @@ namespace :just_hala do
       skip_company: true,
       split_registration: true,
       hidden_ui_controls: {
-      "dashboard/companies" => "1",
-      "dashboard/users" => "1",
-      "dashboard/waiver_agreement_templates" => "1",
-      "dashboard/white_labels" => "1",
-      "dashboard/transactables/bulk_upload" => "1",
-      "main_menu/view_profile" => "1"
+        'dashboard/companies' => '1',
+        'dashboard/users' => '1',
+        'dashboard/waiver_agreement_templates' => '1',
+        'dashboard/white_labels' => '1',
+        'dashboard/transactables/bulk_upload' => '1',
+        'main_menu/view_profile' => '1'
       }
     )
 
     if @service_type = @instance.transactable_types.first
-      @service_type.update!({
-        name: 'Ninja',
-        slug: 'ninja',
-        action_free_booking: false,
-        action_daily_booking: false,
-        action_weekly_booking: false,
-        action_monthly_booking: false,
-        action_regular_booking: true,
-        show_path_format: '/:transactable_type_id/:id',
-        cancellation_policy_enabled: "1",
-        cancellation_policy_hours_for_cancellation: 24,
-        cancellation_policy_penalty_hours: 1.5,
-        default_search_view: 'list',
-        skip_payment_authorization: true,
-        hours_for_guest_to_confirm_payment: 24,
-        single_transactable: true,
-        show_price_slider: true,
-        service_fee_guest_percent: 0,
-        service_fee_host_percent: 30,
-        skip_location: true,
-        show_categories: true,
-        category_search_type: 'AND',
-        bookable_noun: 'Ninja',
-        enable_photo_required: true,
-        min_hourly_price_cents: 50_00,
-        max_hourly_price_cents: 150_00,
-        lessor: 'Ninja',
-        lessee: 'Client',
-        enable_reviews: true
-      })
+      @service_type.update!(name: 'Ninja',
+                            slug: 'ninja',
+                            action_free_booking: false,
+                            action_daily_booking: false,
+                            action_weekly_booking: false,
+                            action_monthly_booking: false,
+                            action_regular_booking: true,
+                            show_path_format: '/:transactable_type_id/:id',
+                            cancellation_policy_enabled: '1',
+                            cancellation_policy_hours_for_cancellation: 24,
+                            cancellation_policy_penalty_hours: 1.5,
+                            default_search_view: 'list',
+                            skip_payment_authorization: true,
+                            hours_for_guest_to_confirm_payment: 24,
+                            single_transactable: true,
+                            show_price_slider: true,
+                            service_fee_guest_percent: 0,
+                            service_fee_host_percent: 30,
+                            skip_location: true,
+                            show_categories: true,
+                            category_search_type: 'AND',
+                            bookable_noun: 'Ninja',
+                            enable_photo_required: true,
+                            min_hourly_price_cents: 50_00,
+                            max_hourly_price_cents: 150_00,
+                            lessor: 'Ninja',
+                            lessee: 'Client',
+                            enable_reviews: true)
       @service_type.update_column(:cancellation_policy_enabled, Time.zone.now)
     else
       @service_type = @instance.transactable_types.create(
@@ -65,16 +61,16 @@ namespace :just_hala do
         action_free_booking: false,
         enable_photo_required: true,
         show_path_format: '/:transactable_type_id/:id',
-        cancellation_policy_enabled: "1",
+        cancellation_policy_enabled: '1',
         service_fee_guest_percent: 0,
         service_fee_host_percent: 30,
         cancellation_policy_hours_for_cancellation: 24,
         cancellation_policy_penalty_hours: 1.5,
-        action_hourly_booking: "1",
+        action_hourly_booking: '1',
         action_daily_booking: false,
         action_weekly_booking: false,
         action_monthly_booking: false,
-        availability_options: { "defer_availability_rules" => true, "confirm_reservations" => { "default_value" => true, "public" => true } },
+        availability_options: { 'defer_availability_rules' => true, 'confirm_reservations' => { 'default_value' => true, 'public' => true } },
         default_search_view: 'list',
         skip_payment_authorization: true,
         skip_location: true,
@@ -90,12 +86,10 @@ namespace :just_hala do
       )
     end
     @reservation_type = ReservationType.first || ReservationType.create!(name: 'Mission', transactable_types: TransactableType.all)
-    @reservation_type.update!({
-      settings: {
-        precise_search: true,
-        address_in_radius: true
-      }
-    })
+    @reservation_type.update!(settings: {
+                                precise_search: true,
+                                address_in_radius: true
+                              })
     reservation_components = @reservation_type.form_components.first || (Utils::FormComponentsCreator.new(@reservation_type).create! && @reservation_type.form_components.first)
     root_category = Category.where(name: 'Services').first_or_create!
     root_category.transactable_types = TransactableType.all
@@ -108,10 +102,10 @@ namespace :just_hala do
     end
     create_custom_attributes
     reservation_components.form_fields = [
-      { 'reservation' => 'service_category'},
-      { 'reservation' => 'dates'},
-      { 'reservation' => 'address'},
-      { 'reservation' => 'technical_description'},
+      { 'reservation' => 'service_category' },
+      { 'reservation' => 'dates' },
+      { 'reservation' => 'address' },
+      { 'reservation' => 'technical_description' }
     ]
 
     update_rating_system
@@ -137,7 +131,7 @@ namespace :just_hala do
 
   def update_rating_system
     @service_type.rating_systems.each do |rs|
-      rs.rating_hints.each {|rh| rh.description = "Test#{rh.value}" }
+      rs.rating_hints.each { |rh| rh.description = "Test#{rh.value}" }
       rs.rating_questions.first_or_initialize(text: 'Are you satisfied ?')
       rs.active = true
       rs.save
@@ -162,10 +156,10 @@ namespace :just_hala do
     if component
       component.name = 'What is your location?'
       component.form_fields = [
-         { "location" => "name" },
-         { "location" => "address" },
-         { "user" => "phone" },
-         { "transactable" => "service_radius" },
+        { 'location' => 'name' },
+        { 'location' => 'address' },
+        { 'user' => 'phone' },
+        { 'transactable' => 'service_radius' }
       ]
       component.save!
     end
@@ -175,79 +169,79 @@ namespace :just_hala do
       'Please complete the following Ninja Profile Questions'
     ])
     component.form_fields = [
-      { "transactable" => "name" },
-      { "transactable" => "description" },
-      { "transactable" => "price" },
-      { "transactable" => "photos" },
-      { "transactable" => "Category - Services" },
-      { "transactable" => "education" },
-      { "transactable" => "technical_certifications" },
-      { "transactable" => "languages" },
-      { "transactable" => "service_area" },
-      { "transactable" => "conditions" },
-      { "transactable" => "video_url" },
-      { "transactable" => "availability_rules" },
-      { "transactable" => "Custom Model - Testimonials" },
+      { 'transactable' => 'name' },
+      { 'transactable' => 'description' },
+      { 'transactable' => 'price' },
+      { 'transactable' => 'photos' },
+      { 'transactable' => 'Category - Services' },
+      { 'transactable' => 'education' },
+      { 'transactable' => 'technical_certifications' },
+      { 'transactable' => 'languages' },
+      { 'transactable' => 'service_area' },
+      { 'transactable' => 'conditions' },
+      { 'transactable' => 'video_url' },
+      { 'transactable' => 'availability_rules' },
+      { 'transactable' => 'Custom Model - Testimonials' }
     ]
     component.name = 'Please complete the following Ninja Profile Questions'
     component.save!
 
     component = FormComponent.find_by(form_type: 'buyer_registration')
     component.form_fields = [
-       { "user" => "name" },
-       { "user" => "email" },
-       { "user" => "password" },
-       { "user" => "phone" },
+      { 'user' => 'name' },
+      { 'user' => 'email' },
+      { 'user' => 'password' },
+      { 'user' => 'phone' }
     ]
     component.save!
 
     component = FormComponent.find_by(form_type: 'seller_registration')
     component.form_fields = [
-       { "user" => "name" },
-       { "user" => "email" },
-       { "user" => "password" },
-       { "user" => "phone" },
+      { 'user' => 'name' },
+      { 'user' => 'email' },
+      { 'user' => 'password' },
+      { 'user' => 'phone' }
     ]
     component.save!
 
     component = FormComponent.find_by(name: 'Profile')
     component.form_fields = [
-       { "user" => "name" },
-       { "user" => "email" },
-       { "user" => "password" },
-       { "user" => "phone" },
-       { "user" => "avatar" },
-       { "user" => "facebook_url" },
-       { "user" => "twitter_url" },
-       { "user" => "linkedin_url" },
-       { "user" => "instagram_url" },
-       { "user" => "google_plus_url" },
-       { "user" => "current_address" },
-       { "user" => "approval_requests" }
+      { 'user' => 'name' },
+      { 'user' => 'email' },
+      { 'user' => 'password' },
+      { 'user' => 'phone' },
+      { 'user' => 'avatar' },
+      { 'user' => 'facebook_url' },
+      { 'user' => 'twitter_url' },
+      { 'user' => 'linkedin_url' },
+      { 'user' => 'instagram_url' },
+      { 'user' => 'google_plus_url' },
+      { 'user' => 'current_address' },
+      { 'user' => 'approval_requests' }
     ]
     component.save!
 
     component = FormComponent.find_by(name: ['Details', 'Ninja Profile'])
     component.form_fields = [
-     { "transactable" => "enabled" },
-     { "transactable" => "approval_requests" },
-     { "transactable" => "waiver_agreement_templates" },
-     { "transactable" => "documents_upload" },
-     { "transactable" => "name" },
-     { "transactable" => "description" },
-     { "transactable" => "location_id" },
-     { "transactable" => "service_radius" },
-     { "transactable" => "schedule" },
-     { "transactable" => "price" },
-     { "transactable" => "photos" },
-     { "transactable" => "Category - Services" },
-     { "transactable" => "education" },
-     { "transactable" => "technical_certifications" },
-     { "transactable" => "languages" },
-     { "transactable" => "service_area" },
-     { "transactable" => "conditions" },
-     { "transactable" => "video_url" },
-     { "transactable" => "Custom Model - Testimonials" },
+      { 'transactable' => 'enabled' },
+      { 'transactable' => 'approval_requests' },
+      { 'transactable' => 'waiver_agreement_templates' },
+      { 'transactable' => 'documents_upload' },
+      { 'transactable' => 'name' },
+      { 'transactable' => 'description' },
+      { 'transactable' => 'location_id' },
+      { 'transactable' => 'service_radius' },
+      { 'transactable' => 'schedule' },
+      { 'transactable' => 'price' },
+      { 'transactable' => 'photos' },
+      { 'transactable' => 'Category - Services' },
+      { 'transactable' => 'education' },
+      { 'transactable' => 'technical_certifications' },
+      { 'transactable' => 'languages' },
+      { 'transactable' => 'service_area' },
+      { 'transactable' => 'conditions' },
+      { 'transactable' => 'video_url' },
+      { 'transactable' => 'Custom Model - Testimonials' }
     ]
     component.name = 'Ninja Profile'
     component.save!
@@ -274,79 +268,59 @@ namespace :just_hala do
   end
 
   def create_custom_attributes
-    @service_type.custom_attributes.where({
-      name: 'service_radius',
-      label: 'Service radius',
-      attribute_type: 'integer',
-      html_tag: 'input',
-      default_value: 5,
-      public: true
-    }).first_or_create!
-    @service_type.custom_attributes.where({
-      name: 'education',
-      label: 'Education',
-      attribute_type: 'string',
-      html_tag: 'textarea',
-      public: true
-    }).first_or_create!
-    @service_type.custom_attributes.where({
-      name: 'technical_certifications',
-      label: 'Technical Certifications',
-      attribute_type: 'string',
-      html_tag: 'textarea',
-      public: true
-    }).first_or_create!
-    languages = @service_type.custom_attributes.where({
-      name: 'languages',
-      label: 'Languages',
-      attribute_type: 'array',
-      html_tag: 'check_box_list',
-      public: true
-    }).first_or_create!
+    @service_type.custom_attributes.where(name: 'service_radius',
+                                          label: 'Service radius',
+                                          attribute_type: 'integer',
+                                          html_tag: 'input',
+                                          default_value: 5,
+                                          public: true).first_or_create!
+    @service_type.custom_attributes.where(name: 'education',
+                                          label: 'Education',
+                                          attribute_type: 'string',
+                                          html_tag: 'textarea',
+                                          public: true).first_or_create!
+    @service_type.custom_attributes.where(name: 'technical_certifications',
+                                          label: 'Technical Certifications',
+                                          attribute_type: 'string',
+                                          html_tag: 'textarea',
+                                          public: true).first_or_create!
+    languages = @service_type.custom_attributes.where(name: 'languages',
+                                                      label: 'Languages',
+                                                      attribute_type: 'array',
+                                                      html_tag: 'check_box_list',
+                                                      public: true).first_or_create!
     languages.valid_values = %w(English Spanish Chinese Tagalog Vietnamese Korean Farsi Russian Arabic French Italian Polish)
     languages.save!
-    @service_type.custom_attributes.where({
-      name: 'service_area',
-      label: 'Service Area',
-      attribute_type: 'string',
-      html_tag: 'textarea',
-      public: true
-    }).first_or_create!
-    @service_type.custom_attributes.where({
-      name: 'conditions',
-      label: 'Conditions',
-      attribute_type: 'string',
-      html_tag: 'textarea',
-      public: true
-    }).first_or_create!
-    @service_type.custom_attributes.where({
-      name: 'video_url',
-      label: 'Video URL',
-      attribute_type: 'string',
-      html_tag: 'input',
-      public: true
-    }).first_or_create!
-    mobile = @reservation_type.custom_attributes.where({
-      name: 'mobile_number',
-    }).first
+    @service_type.custom_attributes.where(name: 'service_area',
+                                          label: 'Service Area',
+                                          attribute_type: 'string',
+                                          html_tag: 'textarea',
+                                          public: true).first_or_create!
+    @service_type.custom_attributes.where(name: 'conditions',
+                                          label: 'Conditions',
+                                          attribute_type: 'string',
+                                          html_tag: 'textarea',
+                                          public: true).first_or_create!
+    @service_type.custom_attributes.where(name: 'video_url',
+                                          label: 'Video URL',
+                                          attribute_type: 'string',
+                                          html_tag: 'input',
+                                          public: true).first_or_create!
+    mobile = @reservation_type.custom_attributes.where(name: 'mobile_number').first
     mobile.destroy! if mobile
-    service_category = @reservation_type.custom_attributes.where({
-      name: 'service_category',
-      label: 'Confirm the services you are interested in',
-      attribute_type: 'array',
-      html_tag: 'check_box_list',
-      public: true,
-    }).first_or_initialize
+    service_category = @reservation_type.custom_attributes.where(name: 'service_category',
+                                                                 label: 'Confirm the services you are interested in',
+                                                                 attribute_type: 'array',
+                                                                 html_tag: 'check_box_list',
+                                                                 public: true).first_or_initialize
     service_category.valid_values =  %w(Mac PC Mobile Training)
     service_category.required = 1
     service_category.set_validation_rules!
-    @reservation_type.custom_attributes.where({
-      name: 'technical_description',
-      label: 'Technical Support Description',
-      attribute_type: 'string',
-      html_tag: 'textarea',
-      public: true
-    }).first_or_create!
+    @reservation_type.custom_attributes.where(name: 'technical_description',
+                                              label: 'Technical Support Description',
+                                              attribute_type: 'string',
+                                              html_tag: 'textarea',
+                                              public: true).first_or_create!
   end
 
   def create_views
@@ -354,28 +328,25 @@ namespace :just_hala do
       instance_id: @instance.id,
       path: 'listings/reservations/summary'
     ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %{
 <div></div>
 {% content_for domready %}
   $('input[type="checkbox"][disabled]').parent('label').tooltip({title: 'This Ninja does not provide such service. Please find another Ninja.', placement: 'top'});
 {% endcontent_for %}
       },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      locales: Locale.all,
-      view_type: 'view'
-    })
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               locales: Locale.all,
+               view_type: 'view')
     iv.save!
     iv = InstanceView.where(
       instance_id: @instance.id,
       path: 'dashboard/company/host_reservations/complete_reservation_top'
     ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: "
+    iv.update!(transactable_types: TransactableType.all,
+               body: "
 <h2>{{ 'dashboard.host_reservations.complete_reservation.client' | translate}}</h2>
 <p><a href='{{ reservation.owner.user_profile_url }}'>{{ @reservation.owner.name }}</a></p>
 
@@ -390,20 +361,18 @@ namespace :just_hala do
   <p>{{ reservation.rejection_reason }}</p>
 {% endif %}
 <hr>",
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
     iv = InstanceView.where(
       instance_id: @instance.id,
       partial: true,
       path: 'search/list/search_filters_boxes'
     ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %{
 <div class='search-filter-box-wrapper'>
   <div class="search-filter-box" data-filter data-search-filters-container>
     <h3>
@@ -496,20 +465,18 @@ namespace :just_hala do
   </div>
 </div>
 },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
     iv = InstanceView.where(
       instance_id: @instance.id,
       partial: true,
       path: 'listings/show'
     ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %{
 <div class="container-fluid">
   <article id="space">
     <div class="container-row">
@@ -732,20 +699,18 @@ namespace :just_hala do
   </article>
 </div>
 },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
     iv = InstanceView.where(
       instance_id: @instance.id,
       path: 'dashboard/user_reservations/reservation_details',
       partial: true
     ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 <div class="row">
   <div class="col-sm-3">
     <h3> Needs Help With:</h3>
@@ -786,83 +751,74 @@ namespace :just_hala do
   </div>
 </div>
 
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
 
     iv = InstanceView.where(
       instance_id: @instance.id,
       path: 'registrations/buyer_header',
       partial: true
     ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 <h2>{{ 'sign_up_form.buyer_sign_up_to' | translate: marketplace_name: platform_context.name }}</h2>
 <p class="transaction-side-switcher">Hire your own personal Ninja.</p>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
 
     iv = InstanceView.where(
       instance_id: @instance.id,
       path: 'registrations/seller_header',
       partial: true
     ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 <h2>{{ 'sign_up_form.seller_sign_up_to' | translate: marketplace_name: platform_context.name }}</h2>
 <p class="transaction-side-switcher">Looking to get technical help? {{ link_to_other }}</p>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
 
     iv = InstanceView.where(
       instance_id: @instance.id,
       path: 'registrations/buyer_footer',
       partial: true
     ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %{
 <p class="signup-help-note">Need help signing up? Call Member Services at <a href="tel:+18886465868">1-888-NINJUNU</a> (<a href="tel:+18886465868">1-888-646-5868</a>)</p>
       },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
 
     iv = InstanceView.where(
       instance_id: @instance.id,
       path: 'registrations/seller_footer',
       partial: true
     ).first_or_initialize
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %{
 <p class="signup-help-note">Need help signing up? Call Member Services at <a href="tel:+18886465868">1-888-NINJUNU</a> (<a href="tel:+18886465868">1-888-646-5868</a>)</p>
       },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
 
     theme_header
     home_carousel
@@ -883,21 +839,17 @@ namespace :just_hala do
       name: 'Just Hala CSS'
     ).first_or_initialize
 
-    ch.update!({
-      content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2369/just_hala.css'>",
-      inject_pages: ['any_page'],
-      position: 'head_bottom'
-    })
+    ch.update!(content: "<link rel='stylesheet' media='screen' href='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2369/just_hala.css'>",
+               inject_pages: ['any_page'],
+               position: 'head_bottom')
 
     ch = @instance.theme.content_holders.where(
       name: 'Just Hala JS'
     ).first_or_initialize
 
-    ch.update!({
-      content: "<script src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2330/just_hala.js'></script>",
-      inject_pages: ['any_page'],
-      position: 'body_bottom'
-    })
+    ch.update!(content: "<script src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/attachment_file/data/2330/just_hala.js'></script>",
+               inject_pages: ['any_page'],
+               position: 'body_bottom')
 
     @instance.theme.content_holders.where(
       name: 'just_hala_temp'
@@ -927,7 +879,7 @@ namespace :just_hala do
       slug = name.parameterize
       page = theme.pages.where(slug: slug).first_or_initialize
       page.path = name
-      page.content = %Q{
+      page.content = %(
 <h2>#{name}</h2>
 <p>Lorem ipsum dolor sit amet enim. Etiam ullamcorper. <strong>Suspendisse a pellentesque dui, non felis</strong>. Maecenas malesuada elit lectus felis, malesuada ultricies. Curabitur et ligula. Ut molestie a, ultricies porta urna. Vestibulum commodo volutpat a, convallis ac, laoreet enim. Phasellus fermentum in, dolor. <strong>Pellentesque facilisis. Nulla imperdiet sit amet magna.</strong> Vestibulum dapibus, mauris nec malesuada fames ac turpis velit, rhoncus eu, luctus et interdum adipiscing wisi. Aliquam erat ac ipsum. Integer aliquam purus. Lorem ipsum dolor sit amet enim. Etiam ullamcorper. Suspendisse a pellentesque dui, non felis. Maecenas malesuada elit lectus felis, malesuada ultricies. <strong>Curabitur et ligula. Ut molestie a, ultricies porta urna</strong>. Vestibulum commodo volutpat a, convallis ac, laoreet enim. </p>
 <ul>
@@ -936,7 +888,8 @@ namespace :just_hala do
   <li>Curabitur et ligula</li>
 </ul>
 <p>Lorem ipsum dolor sit amet enim. Etiam ullamcorper. Suspendisse a pellentesque dui, non felis. Maecenas malesuada elit lectus felis, malesuada ultricies. Curabitur et ligula. Ut molestie a, ultricies porta urna. Vestibulum commodo volutpat a, convallis ac, laoreet enim. Phasellus fermentum in, dolor. <strong>Pellentesque facilisis. Nulla imperdiet sit amet magna.</strong> Vestibulum dapibus, mauris nec malesuada fames ac turpis velit, rhoncus eu, luctus et interdum adipiscing wisi. </p>
-}
+
+)
       page.remote_hero_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2337/page-header.jpg'
       page.save!
     end
@@ -947,7 +900,7 @@ namespace :just_hala do
       theme.save!
     rescue
       puts "Validation failed! #{theme.pages.map { |p| p.valid?; [p.path, p.slug, p.errors.full_messages.join(', ')] } }"
-      raise "Fail"
+      raise 'Fail'
     end
   end
 
@@ -994,7 +947,6 @@ namespace :just_hala do
           t.save!
           puts "\t\tTranslation updated: key: #{key}, value: #{value} -> #{t.value}"
         end
-
       end
     end
     @instance.translations.where(
@@ -1222,75 +1174,73 @@ namespace :just_hala do
       key: 'dashboard.analytics.bookings'
     ).first_or_initialize.update!(value: 'Missions')
 
-    create_translation!('dashboard.user_reservations.title_count', "Missions (%{count})")
+    create_translation!('dashboard.user_reservations.title_count', 'Missions (%{count})')
 
-    create_translation!('general.generic_lessee_term', "client")
+    create_translation!('general.generic_lessee_term', 'client')
 
+    create_translation!('dashboard.host_reservations.no_unconfirmed_reservations', 'You have no unconfirmed missions.')
+    create_translation!('dashboard.host_reservations.no_confirmed_reservations', 'You have no confirmed missions.')
+    create_translation!('dashboard.host_reservations.no_archived_reservations', 'You have no archived missions.')
+    create_translation!('dashboard.host_reservations.no_overdue_reservations', 'You have no overdue missions.')
+    create_translation!('dashboard.host_reservations.no_reservations_promote_reservations', 'You currently have no missions.')
 
+    create_translation!('dashboard.analytics.no_reservations_yet', 'You currently do not have any missions.')
 
-    create_translation!('dashboard.host_reservations.no_unconfirmed_reservations', "You have no unconfirmed missions.")
-    create_translation!('dashboard.host_reservations.no_confirmed_reservations', "You have no confirmed missions.")
-    create_translation!('dashboard.host_reservations.no_archived_reservations', "You have no archived missions.")
-    create_translation!('dashboard.host_reservations.no_overdue_reservations', "You have no overdue missions.")
-    create_translation!('dashboard.host_reservations.no_reservations_promote_reservations', "You currently have no missions.")
+    create_translation!('simple_form.labels.transactable.confirm_reservations', 'Manually confirm missions')
 
-    create_translation!('dashboard.analytics.no_reservations_yet', "You currently do not have any missions.")
-
-    create_translation!('simple_form.labels.transactable.confirm_reservations', "Manually confirm missions")
-
-    create_translation!('dashboard.nav.user_reservations_count_html', "My Missions <span>%{count}</span>")
+    create_translation!('dashboard.nav.user_reservations_count_html', 'My Missions <span>%{count}</span>')
 
     create_translation!('dashboard.analytics.columns.bookings', 'Missions')
-    create_translation!('dashboard.analytics.total.bookings', "%{total} missions")
+    create_translation!('dashboard.analytics.total.bookings', '%{total} missions')
 
-    create_translation!('dashboard.host_reservations.pending_confirmation', "You must confirm this mission within <strong>%{time_to_expiry}</strong> or it will expire.")
+    create_translation!('dashboard.host_reservations.pending_confirmation', 'You must confirm this mission within <strong>%{time_to_expiry}</strong> or it will expire.')
 
-    create_translation!('dashboard.transactables.title.listings', "Ninja Profile")
-    create_translation!('dashboard.manage_listings.tab', "Ninja Profile")
+    create_translation!('dashboard.transactables.title.listings', 'Ninja Profile')
+    create_translation!('dashboard.manage_listings.tab', 'Ninja Profile')
 
-    create_translation!('dashboard.user_reservations.upcoming', "Missions Open")
-    create_translation!('dashboard.user_reservations.archived', "Missions Closed")
+    create_translation!('dashboard.user_reservations.upcoming', 'Missions Open')
+    create_translation!('dashboard.user_reservations.archived', 'Missions Closed')
 
-    create_translation!('dashboard.host_reservations.unconfirmed', "Missions Pending")
-    create_translation!('dashboard.host_reservations.confirmed', "Missions Open")
-    create_translation!('dashboard.host_reservations.archived', "Missions Closed")
+    create_translation!('dashboard.host_reservations.unconfirmed', 'Missions Pending')
+    create_translation!('dashboard.host_reservations.confirmed', 'Missions Open')
+    create_translation!('dashboard.host_reservations.archived', 'Missions Closed')
 
-    create_translation!('reservations.states.unconfirmed', "Pending")
-    create_translation!('reservations.states.confirmed', "Open")
-    create_translation!('reservations.states.archived', "Closed")
-    create_translation!('reservations.states.cancelled_by_guest', "Cancelled by Client")
-    create_translation!('reservations.states.cancelled_by_host', "Cancelled by Ninja")
+    create_translation!('reservations.states.unconfirmed', 'Pending')
+    create_translation!('reservations.states.confirmed', 'Open')
+    create_translation!('reservations.states.archived', 'Closed')
+    create_translation!('reservations.states.cancelled_by_guest', 'Cancelled by Client')
+    create_translation!('reservations.states.cancelled_by_host', 'Cancelled by Ninja')
 
-    create_translation!('top_navbar.manage_bookable', "My Ninja Profile")
-    create_translation!('top_navbar.bookings_received', "My Missions")
-    create_translation!('reservations_review.heading', "Book a Mission")
+    create_translation!('top_navbar.manage_bookable', 'My Ninja Profile')
+    create_translation!('top_navbar.bookings_received', 'My Missions')
+    create_translation!('reservations_review.heading', 'Book a Mission')
 
     create_translation!('reservations_review.errors.whoops', "Whoops! We couldn't book that mission.")
 
     create_translation!('reservations_review.errors.does_not_work_on_date', "Unfortunately, this ninja doesn't offer services during the time you requested.")
 
-    create_translation!('activemodel.errors.models.reservation_request.attributes.base.total_amount_changed', "Book a Mission")
-    create_translation!('dashboard.items.new_listing_full', "Create Ninja Profile")
+    create_translation!('activemodel.errors.models.reservation_request.attributes.base.total_amount_changed', 'Book a Mission')
+    create_translation!('dashboard.items.new_listing_full', 'Create Ninja Profile')
 
-    create_translation!('reservations_review.disabled_buttons.request', "Hiring...")
-    create_translation!('dashboard.transactables.view_html', "View Profile")
+    create_translation!('reservations_review.disabled_buttons.request', 'Hiring...')
+    create_translation!('dashboard.transactables.view_html', 'View Profile')
 
-    create_translation!('buy_sell_market.products.labels.summary', "Overall Rating:")
-    create_translation!('dashboard.items.delete_listing', "Delete Ninja Profile")
+    create_translation!('buy_sell_market.products.labels.summary', 'Overall Rating:')
+    create_translation!('dashboard.items.delete_listing', 'Delete Ninja Profile')
 
-    create_translation!('sign_up_form.link_to_buyer', "Become a member here")
-    create_translation!('sign_up_form.link_to_seller', "Become a ninja here")
+    create_translation!('sign_up_form.link_to_buyer', 'Become a member here')
+    create_translation!('sign_up_form.link_to_seller', 'Become a ninja here')
 
-    create_translation!('time.formats.short', "%l:%M %p")
+    create_translation!('time.formats.short', '%l:%M %p')
 
-    create_translation!('wish_lists.buttons.selected_state', "Favorite")
-    create_translation!('wish_lists.buttons.unselected_state', "Favorite")
+    create_translation!('wish_lists.buttons.selected_state', 'Favorite')
+    create_translation!('wish_lists.buttons.unselected_state', 'Favorite')
 
-    create_translation!('flash_messages.reservations.credit_card_will_be_charged', "Your credit card will be charged when mission is completed.")
-    create_translation!('flash_messages.space_wizard.space_listed', "Your ninja profile has been submitted to the marketplace for approval. Please watch for a message indicating that your profile has been approved, at which time you’ll be ready for Ninjunu tech missions!")
+    create_translation!('flash_messages.reservations.credit_card_will_be_charged', 'Your credit card will be charged when mission is completed.')
+    create_translation!('flash_messages.space_wizard.space_listed', 'Your ninja profile has been submitted to the marketplace for approval. Please watch for a message indicating that your profile has been approved, at which time you’ll be ready for Ninjunu tech missions!')
 
-    create_translation!('flash_messages.dashboard.locations.add_your_company', "Please complete your Ninja Profile first.")
-    create_translation!('flash_messages.dashboard.add_your_company', "Please complete your Ninja Profile first.")
+    create_translation!('flash_messages.dashboard.locations.add_your_company', 'Please complete your Ninja Profile first.')
+    create_translation!('flash_messages.dashboard.add_your_company', 'Please complete your Ninja Profile first.')
   end
 
   # Liquid view: Layouts > Theme Header
@@ -1301,9 +1251,8 @@ namespace :just_hala do
       partial: true
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 <div class='navbar navbar-inverse navbar-fixed-top'>
     <div class='navbar-inner nav-links'>
       <div class='container-fluid'>
@@ -1329,25 +1278,23 @@ namespace :just_hala do
       </div>
     </div>
 </div>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   # Liquid view: Home > Carousel
   def home_carousel
     iv = InstanceView.where(
       instance_id: @instance.id,
-      path: 'home/carousel',
+      path: 'home/carousel'
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 <div class='homepage-carousel carousel slide'>
   <div class='carousel-inner' role='listbox'>
     <div class='item active slide-01' data-slogan='Tech-savvy, anywhere, anytime'></div>
@@ -1356,25 +1303,23 @@ namespace :just_hala do
     <div class='item slide-04' data-slogan='Technology for the people'></div>
   </div>
 </div>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   # Liquid view: Home > Index
   def home_index
     iv = InstanceView.where(
       instance_id: @instance.id,
-      path: 'home/index',
+      path: 'home/index'
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 {% content_for 'hero' %}
   {% include 'home/carousel.html' %}
 
@@ -1398,25 +1343,23 @@ namespace :just_hala do
 {% endcontent_for %}
 
 {% include 'home/homepage_content.html' %}
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: false,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: false,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   # Liquid view: Home > Search > Geolocation
   def home_search_geolocation
     iv = InstanceView.where(
       instance_id: @instance.id,
-      path: 'home/search/geolocation',
+      path: 'home/search/geolocation'
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 <div class="{{ transactable_type.calculate_input_size }} search-field-wrapper">
   <input class="query" name="loc" placeholder="{{ transactable_type.geolocation_placeholder }}" type="text" />
 </div>
@@ -1432,25 +1375,23 @@ namespace :just_hala do
 <input id="suburb" name="suburb" type="hidden" value>
 <input id="street" name="street" type="hidden" value>
 <input id="postcode" name="postcode" type="hidden" value>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   # Liquid view: Home > Search Box Inputs
   def home_search_box_inputs
     iv = InstanceView.where(
       instance_id: @instance.id,
-      path: 'home/search_box_inputs',
+      path: 'home/search_box_inputs'
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 <form action="/search" class="home_search search-box {{ class_name }}" method="get">
   <div class="input-wrapper">
 
@@ -1506,25 +1447,23 @@ namespace :just_hala do
   <input type="hidden" name="transactable_type_class">
   <input type="submit"/>
 </form>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   # Liquid view: Home > Search > Category Multiple Choice
   def home_search_category_multiple_choice
     iv = InstanceView.where(
       instance_id: @instance.id,
-      path: 'home/search/category_multiple_choice',
+      path: 'home/search/category_multiple_choice'
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 <div class='category-multiple-choice'>
   {% for root_category in transactable_type.searchable_categories %}
     {% for category in root_category.children %}
@@ -1556,25 +1495,23 @@ namespace :just_hala do
     {% endfor %}
   {% endfor %}
 </div>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   # Liquid view: Home > Home Page Content
   def home_homepage_content
     iv = InstanceView.where(
       instance_id: @instance.id,
-      path: 'home/homepage_content',
+      path: 'home/homepage_content'
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %{
 <section id='how-it-works' class='how-it-works'>
   <div class='container-fluid'>
     <div class='row-fluid'>
@@ -1759,12 +1696,11 @@ namespace :just_hala do
   </div>
 </section>
       },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   # Liquid view: Theme > Footer
@@ -1775,9 +1711,8 @@ namespace :just_hala do
       partial: true
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 <footer>
   <div class="row-fluid">
 
@@ -1830,13 +1765,12 @@ namespace :just_hala do
     </div>
 
 </footer>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   # Liquid view: Search > List > Listing
@@ -1846,9 +1780,8 @@ namespace :just_hala do
       path: 'search/list/listing'
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %{
 <article class='listing' data-id="{{listing.id}}" data-name="{{listing.name}}" data-latitude="{{listing.latitude}}" data-longitude="{{listing.longitude}}" data-location-href="{{ listing.url }}">
   <header>
     {% if listing.has_photos? %}
@@ -1927,38 +1860,34 @@ namespace :just_hala do
   </footer>
 </article>
       },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
   end
-
 
   # Liquid view: Home > Search > Category Multiple Choice
 
   def wish_list_button_injection
     iv = InstanceView.where(
       instance_id: @instance.id,
-      path: 'shared/components/wish_list_button_injection',
+      path: 'shared/components/wish_list_button_injection'
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %{
 <div data-add-favorite-button="true" data-path="{{ object.wish_list_path }}", data-object-type="{{ object.class_name }}" data-link-to-classes="{{ link_to_classes}}">
   <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
 </div>
 
 <script>$(document).trigger('load:favoritebutton.nearme');</script>
       },
-      format: 'html',
-      handler: 'liquid',
-      partial: false,
-      view_type: 'view',
-      locales: Locale.all
-    })
+               format: 'html',
+               handler: 'liquid',
+               partial: false,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   def reservation_sidebar
@@ -1967,9 +1896,8 @@ namespace :just_hala do
       path: 'listings/reservations/sidebar'
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %(
 <aside>
   <div class='sidebar-wrapper'>
     <header>
@@ -1995,13 +1923,12 @@ namespace :just_hala do
     </div>
   </div>
 </aside>
-      },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+            ),
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   def review_stars
@@ -2010,9 +1937,8 @@ namespace :just_hala do
       path: 'buy_sell_market/products/stars'
     ).first_or_initialize
 
-    iv.update!({
-      transactable_types: TransactableType.all,
-      body: %Q{
+    iv.update!(transactable_types: TransactableType.all,
+               body: %{
 <span class='star-container'>
   {% for i in (1..stars) %}
     <img src='https://d2rw3as29v290b.cloudfront.net/instances/175/uploads/ckeditor/picture/data/2277/star_on.png' />
@@ -2026,22 +1952,21 @@ namespace :just_hala do
   <a>{{count}})</a>
 {% endif %}
       },
-      format: 'html',
-      handler: 'liquid',
-      partial: true,
-      view_type: 'view',
-      locales: Locale.all
-    })
+               format: 'html',
+               handler: 'liquid',
+               partial: true,
+               view_type: 'view',
+               locales: Locale.all)
   end
 
   def create_workflow_alerts
     WorkflowStep.where(associated_class: ['WorkflowStep::ReservationWorkflow::OneDayToBooking',
                                           'WorkflowStep::ReservationWorkflow::OneBookingSuggestions',
                                           'WorkflowStep::ListingWorkflow::Created'
-                                          ]).find_each do |ws|
-                                            ws.workflow_alerts.destroy_all
-                                          end
-    WorkflowAlert.find_by(id: 14364).try(:destroy)
+                                         ]).find_each do |ws|
+      ws.workflow_alerts.destroy_all
+    end
+    WorkflowAlert.find_by(id: 14_364).try(:destroy)
     @reservation_creator = Utils::DefaultAlertsCreator::ReservationCreator.new
     @reservation_creator.notify_host_of_approved_payment!
     @reservation_creator.notify_host_of_declined_payment!
@@ -2051,7 +1976,7 @@ namespace :just_hala do
     @user_creator.create_guest_welcome_email!
     @user_creator.create_host_welcome_email!
 
-    create_email('post_action_mailer/host_sign_up_welcome', %Q{
+    create_email('post_action_mailer/host_sign_up_welcome', %(
 <h2>Welcome, {{ user.first_name }}!</h2>
 
 <p>We are excited to welcome you to {{ platform_context.name }}!</p>
@@ -2065,9 +1990,9 @@ namespace :just_hala do
 
 <p>Cheers,</p>
 <p>{{ platform_context.name }}</p>
-                 })
+                                  ))
 
-    create_email('post_action_mailer/guest_sign_up_welcome', %Q{
+    create_email('post_action_mailer/guest_sign_up_welcome', %(
 <h2>Welcome, {{ user.first_name }}!</h2>
 
 <p>We are excited to welcome you to {{ platform_context.name }}!</p>
@@ -2080,9 +2005,9 @@ namespace :just_hala do
 
 <p>Cheers,</p>
 <p>{{ platform_context.name }}</p>
-                 })
+                                  ))
 
-    create_email('reservation_mailer/notify_host_of_expiration', %Q{
+    create_email('reservation_mailer/notify_host_of_expiration', %(
 <h2>Can we help, {{ user.first_name }}?</h2>
 
 <p>We noticed that you didn't confirm {{ reservation.owner.first_name }}'s mission at {{ reservation.address.address }} within the required 24 hour period.</p>
@@ -2093,9 +2018,9 @@ namespace :just_hala do
 
 <a class="btn" href="{{ platform_context.host | append:user.edit_user_registration_url_with_token_and_tracking | append:signature_for_tracking }}">Go to My Account</a>
 
-     })
+          ))
 
-    create_email('post_action_mailer/list_draft', %Q{
+    create_email('post_action_mailer/list_draft', %(
 <h2>Heads up, {{ user.first_name }}!</h2>
 
 <p>There are people looking for your skills in your area. Finish your Ninja Profile and get clients; it won't take long, we promise!</p>
@@ -2104,9 +2029,9 @@ namespace :just_hala do
 
 <p>We are here to help! If you have any questions, or need inspiration to complete your listing, please send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> {{ platform_context.phone_number }}.</p>
 
-     })
+          ))
 
-    create_email('reservation_mailer/notify_guest_of_cancellation_by_host', %Q{
+    create_email('reservation_mailer/notify_guest_of_cancellation_by_host', %(
 <h2>Change of plans, {{ user.first_name }}!</h2>
 
 <p>The mission has been cancelled by the <a href="{{ listing.show_url }}">{{platform_context.lessor}}</a>.</p>
@@ -2117,9 +2042,9 @@ namespace :just_hala do
 
 <p>We're always happy to help! Just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
 
-     })
+          ))
 
-    create_email('reservation_mailer/notify_guest_of_confirmation', %Q{
+    create_email('reservation_mailer/notify_guest_of_confirmation', %(
 
 <h2>You got it, {{ user.first_name }}!</h2>
 
@@ -2164,10 +2089,9 @@ namespace :just_hala do
 <a class="btn" href="{{ platform_context.host | append:user.bookings_dashboard_url_with_tracking_and_token | append:signature_for_tracking  }}">My Missions</a>
 
 <p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> {{ platform_context.phone_number }}.</p>
-                 })
+                                  ))
 
-
-    create_email('reservation_mailer/notify_guest_of_expiration', %Q{
+    create_email('reservation_mailer/notify_guest_of_expiration', %(
 <h2>Sorry, {{ user.first_name }}!</h2>
 
 <p>The mission has expired because the <a href="{{ listing.show_url }}">{{platform_context.lessor}}</a> has not confirmed it within the required 24 hours.</p>
@@ -2178,10 +2102,9 @@ namespace :just_hala do
 
 <p>We're always happy to help! Just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
 
-     })
+          ))
 
-
-    create_email('reservation_mailer/notify_guest_with_confirmation', %Q{
+    create_email('reservation_mailer/notify_guest_with_confirmation', %(
 <h2>Almost there, {{ user.first_name }}!</h2>
 
 <p class="first-paragraph">
@@ -2192,10 +2115,9 @@ The mission for <a href="{{ listing.listing_url }}">{{ listing.name }}</a> is wa
 
 <p>In the meantime, we're happy to help! If you have any questions about your mission, please send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>  {{ platform_context.phone_number }}.</p>
 
-                 })
+                                  ))
 
-
-    create_email('reservation_mailer/notify_host_of_cancellation_by_guest', %Q{
+    create_email('reservation_mailer/notify_host_of_cancellation_by_guest', %(
 
 <h2>Change of plans, {{ user.first_name }}!</h2>
 
@@ -2204,9 +2126,9 @@ The mission for <a href="{{ listing.listing_url }}">{{ listing.name }}</a> is wa
 <p>No worries! We are working hard to send more {{ platform_context.lessees }} your way.</p>
 
 <p>We're always happy to help! Just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
-                 })
+                                  ))
 
-    create_email('reservation_mailer/notify_host_of_cancellation_by_host', %Q{
+    create_email('reservation_mailer/notify_host_of_cancellation_by_host', %(
 
 <h2>What happened, {{ user.first_name }}?</h2>
 
@@ -2219,9 +2141,9 @@ The mission for <a href="{{ listing.listing_url }}">{{ listing.name }}</a> is wa
 <p>If you prefer, you can talk with us directly; just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
 
 <p>We'll be glad to help you!</p>
-                 })
+                                  ))
 
-    create_email('reservation_mailer/notify_guest_of_cancellation_by_guest', %Q{
+    create_email('reservation_mailer/notify_guest_of_cancellation_by_guest', %(
 
 <h2>What happened, {{ user.first_name }}?</h2>
 
@@ -2234,9 +2156,9 @@ The mission for <a href="{{ listing.listing_url }}">{{ listing.name }}</a> is wa
 <p>If you prefer, you can talk with us directly; just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
 
 <p>We'll be glad to help you!</p>
-                 })
+                                  ))
 
-    create_email('reservation_mailer/notify_host_of_confirmation', %Q{
+    create_email('reservation_mailer/notify_host_of_confirmation', %(
 
 <h2>Thanks, {{ user.first_name }}!</h2>
 
@@ -2245,9 +2167,9 @@ Thanks for confirming {{ reservation.owner.first_name }}'s mission! You can <a h
 </p>
 
 <p>If you need help, please contact us at <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
-                 })
+                                  ))
 
-    create_email('reservation_mailer/notify_host_of_rejection', %Q{
+    create_email('reservation_mailer/notify_host_of_rejection', %(
 
 <h2>Can we help, {{ user.first_name }}?</h2>
 
@@ -2256,9 +2178,9 @@ Thanks for confirming {{ reservation.owner.first_name }}'s mission! You can <a h
 <p>We'd love to know the reasons so we can provide a better service in the future for you and your potential {{ platform_context.lessees }}.</p>
 
 <p>Just reply to this email - we value your feedback!</p>
-                 })
+                                  ))
 
-    create_email('reservation_mailer/notify_host_with_confirmation', %Q{
+    create_email('reservation_mailer/notify_host_with_confirmation', %(
 
 <h2>Good news, {{ user.first_name }}!</h2>
 
@@ -2307,10 +2229,9 @@ Thanks for confirming {{ reservation.owner.first_name }}'s mission! You can <a h
 <p>Not ready for {{ platform_context.lessees }}? You can manage your clients <a href="{{ platform_context.host | append:listing.manage_guests_dashboard_url }}">here</a>.</p>
 
 <p>If you need help, send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
-                 })
+                                  ))
 
-
-    create_email('reservation_mailer/notify_host_without_confirmation', %Q{
+    create_email('reservation_mailer/notify_host_without_confirmation', %(
 <h2>Good news, {{ user.first_name }}!</h2>
 
 <p>
@@ -2357,22 +2278,22 @@ Thanks for confirming {{ reservation.owner.first_name }}'s mission! You can <a h
 
 <p>If you need help, send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
 
-               })
+                              ))
 
-    create_sms("reservation_sms_notifier/notify_guest_with_state_change", %Q{
+    create_sms('reservation_sms_notifier/notify_guest_with_state_change', %(
 Your mission for {{ reservation.transactable.name | truncate: 90 }} was {{ reservation.state_to_string }}. View mission: {{ platform_context.host | append:reservation.bookings_dashboard_url | shorten_url}}
-                 })
-    create_sms("reservation_sms_notifier/notify_host_with_confirmation", %Q{
+                                  ))
+    create_sms('reservation_sms_notifier/notify_host_with_confirmation', %(
 You have received a mission request on {{ platform_context.name | truncate: 50 }}. Please confirm or decline from your dashboard: {{ platform_context.host | append:reservation.manage_guests_dashboard_url | shorten_url}}
-                 })
+                                  ))
 
-    create_sms("user_message_sms_notifier/notify_user_about_new_message", %Q{
+    create_sms('user_message_sms_notifier/notify_user_about_new_message', %(
 [{{ @platform_context.name }}] New message from {{ user_message.author_first_name }}: "{{ user_message.body }}" {{ platform_context.host | append:user_message.show_path_with_token | shorten_url}}
-                 })
+                                  ))
 
     WorkflowAlert.where(template_path: 'company_sms_notifier/notify_host_of_no_payout_option').destroy_all
 
-    create_email('reservation_mailer/notify_guest_of_penalty_charge_succeeded', %Q{
+    create_email('reservation_mailer/notify_guest_of_penalty_charge_succeeded', %(
 <h2>Hello, {{ user.first_name }}?</h2>
 
 <p>We have noticed you have just canceled your mission.</p>
@@ -2382,10 +2303,9 @@ You have received a mission request on {{ platform_context.name | truncate: 50 }
 <p>The total cancelation fee is {{ reservation.formatted_total_amount }}</p>
 
 <p>We're always happy to help! If you have any questions about your booking or cancelation, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>
-                 })
+                                  ))
 
-
-    create_email('reservation_mailer/notify_guest_of_penalty_charge_failed', %Q{
+    create_email('reservation_mailer/notify_guest_of_penalty_charge_failed', %(
 <h2>Hello, {{ user.first_name }}?</h2>
 
 <p>We have noticed you have just canceled your mission.</p>
@@ -2397,9 +2317,8 @@ You have received a mission request on {{ platform_context.name | truncate: 50 }
 <p><a class="btn" href="{{ reservation.guest_show_url }}">Update payment information</a></p>
 
 <p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>
-                 })
+                                  ))
   end
-
 
   def create_email(path, body)
     iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: path, handler: 'liquid', format: 'html', partial: false).first_or_initialize
@@ -2435,7 +2354,7 @@ You have received a mission request on {{ platform_context.name | truncate: 50 }
       key = path + k
 
       if v.is_a? Hash
-        ret.merge! convert_hash_to_dot_notation(v, key + ".")
+        ret.merge! convert_hash_to_dot_notation(v, key + '.')
       else
         ret[key] = v
       end
@@ -2444,12 +2363,11 @@ You have received a mission request on {{ platform_context.name | truncate: 50 }
 
   def create_custom_validators!
     cv = CustomValidator.where(field_name: 'mobile_number', validatable: InstanceProfileType.seller.first).first_or_initialize
-    cv.required = "1"
+    cv.required = '1'
     cv.save!
 
     cv = CustomValidator.where(field_name: 'mobile_number', validatable: InstanceProfileType.buyer.first).first_or_initialize
-    cv.required = "1"
+    cv.required = '1'
     cv.save!
   end
-
 end

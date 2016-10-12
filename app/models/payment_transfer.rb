@@ -7,29 +7,29 @@ class PaymentTransfer < ActiveRecord::Base
   attr_encrypted :token, key: DesksnearMe::Application.config.secret_token
 
   FREQUENCIES = %w(monthly fortnightly weekly semiweekly daily manually)
-  DEFAULT_FREQUENCY = "fortnightly"
+  DEFAULT_FREQUENCY = 'fortnightly'
 
   belongs_to :company
   belongs_to :instance
   belongs_to :partner
   belongs_to :payment_gateway
 
-  has_many :payments, :dependent => :nullify
+  has_many :payments, dependent: :nullify
 
   has_many :payout_attempts,
-    -> { order 'created_at ASC' },
-    :class_name => 'Payout',
-    :as => :reference,
-    :dependent => :nullify
+           -> { order 'created_at ASC' },
+           class_name: 'Payout',
+           as: :reference,
+           dependent: :nullify
 
   after_create :assign_amounts_and_currency
   after_create :payout
 
-  scope :pending, -> {
+  scope :pending, lambda {
     where(transferred_at: nil)
   }
 
-  scope :transferred, -> {
+  scope :transferred, lambda {
     where("#{table_name}.transferred_at IS NOT NULL")
   }
 
@@ -79,7 +79,7 @@ class PaymentTransfer < ActiveRecord::Base
 
   # Attempt to payout through the billing gateway
   def payout
-    return if !payout_gateway.present?
+    return unless payout_gateway.present?
     return if transferred?
     return if amount <= 0
     return if payout_attempts.any?
@@ -92,9 +92,7 @@ class PaymentTransfer < ActiveRecord::Base
       payment_gateway_mode: payment_gateway_mode
     )
 
-    if payout.success
-      touch(:transferred_at)
-    end
+    touch(:transferred_at) if payout.success
   end
 
   def pending?
@@ -106,11 +104,11 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def fail!
-    self.update_column(:transferred_at, nil) if self.payout_attempts.reload.successful.count.zero? && persisted?
+    update_column(:transferred_at, nil) if payout_attempts.reload.successful.count.zero? && persisted?
   end
 
   def success!
-    if (payout = self.payout_attempts.reload.successful.first).present? && persisted?
+    if (payout = payout_attempts.reload.successful.first).present? && persisted?
       mark_transferred
     end
   end
@@ -126,20 +124,19 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def total_service_fee_cents
-    return self.service_fee_amount_host_cents + self.service_fee_amount_guest_cents
+    service_fee_amount_host_cents + service_fee_amount_guest_cents
   end
 
   def total_service_fee
     Money.new(total_service_fee_cents, currency)
   end
 
-
   private
 
   def assign_amounts_and_currency
     self.currency = payments.first.try(:currency)
     self.service_fee_amount_host_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_host_cents }
-    self.amount_cents = payments.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - self.service_fee_amount_host_cents
+    self.amount_cents = payments.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - service_fee_amount_host_cents
     self.service_fee_amount_guest_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_guest_cents }
     self.save!
   end

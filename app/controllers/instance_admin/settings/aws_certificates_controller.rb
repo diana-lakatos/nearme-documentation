@@ -23,7 +23,7 @@ class InstanceAdmin::Settings::AwsCertificatesController < InstanceAdmin::Settin
     respond_with :instance_admin, :settings, @certificate
 
   rescue Aws::ACM::Errors::ValidationException
-    flash[:error] = $!.message
+    flash[:error] = $ERROR_INFO.message
     render :new
   end
 
@@ -39,7 +39,7 @@ class InstanceAdmin::Settings::AwsCertificatesController < InstanceAdmin::Settin
     respond_with :instance_admin, :settings, resource
 
   rescue Aws::ACM::Errors::ResourceInUseException
-    flash[:error] = $!.message
+    flash[:error] = $ERROR_INFO.message
     respond_with :instance_admin, :settings, :aws_certificates
   end
 

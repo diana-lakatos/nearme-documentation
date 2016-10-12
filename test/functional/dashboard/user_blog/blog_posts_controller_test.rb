@@ -24,16 +24,16 @@ class Dashboard::UserBlog::BlogPostsControllerTest < ActionController::TestCase
     context '#update' do
       should 'update' do
         title = 'updated title'
-        put :update, id: @blog.id, user_blog_post: {title: title}
+        put :update, id: @blog.id, user_blog_post: { title: title }
         assert_equal @blog.reload.title, title
       end
     end
 
     context '#destroy' do
       should 'destroy' do
-        assert_difference('@user.blog_posts.count', -1) {
+        assert_difference('@user.blog_posts.count', -1) do
           delete :destroy, id: @blog.id
-        }
+        end
         assert_response :redirect
         assert_redirected_to dashboard_blog_path
       end
@@ -57,9 +57,9 @@ class Dashboard::UserBlog::BlogPostsControllerTest < ActionController::TestCase
   context '#create' do
     should 'create new blog post' do
       params = FactoryGirl.attributes_for(:user_blog_post)
-      assert_difference('@user.blog_posts.count') {
+      assert_difference('@user.blog_posts.count') do
         post :create, user_blog_post: params
-      }
+      end
       assert_response :redirect
       assert_redirected_to dashboard_blog_path
     end

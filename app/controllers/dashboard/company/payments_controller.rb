@@ -2,7 +2,6 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   before_filter :find_order
   before_filter :find_payment, except: [:new, :create]
 
-
   def mark_as_paid
     if @order.manual_payment? && !@order.paid?
       @order.payment.mark_as_paid!

@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::Workflows::WorkflowStepsController < InstanceAdmin::Manage::BaseController
-
   before_action :find_workflow
 
   def update
@@ -26,6 +25,4 @@ class InstanceAdmin::Manage::Workflows::WorkflowStepsController < InstanceAdmin:
   def permitting_controller_class
     'manage'
   end
-
 end
-

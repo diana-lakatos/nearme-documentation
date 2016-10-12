@@ -1,11 +1,11 @@
 class ListingSerializer < ApplicationSerializer
   PRICE_PERIODS = {
-    :free => nil,
-    :day => 'day'
+    free: nil,
+    day: 'day'
   }
 
   attributes :id, :name, :description, :company_name, :company_description, :currency,
-    :address, :quantity
+             :address, :quantity
 
   attribute :prices
   attribute :latitude,  key: :lat
@@ -18,16 +18,15 @@ class ListingSerializer < ApplicationSerializer
   def attributes
     hash = super
 
-    hash.merge!(:score => 0)
-    hash.merge!(:strict_match => true)
+    hash.merge!(score: 0)
+    hash.merge!(strict_match: true)
 
     # This remains for backwards compatibility for iOS
-    hash.merge!(:organizations => [])
+    hash.merge!(organizations: [])
     hash
   end
 
   def prices
     object.action_type.available_prices_in_cents
   end
-
 end

@@ -24,12 +24,10 @@ class PhoneCallsController < ApplicationController
       status_callback: status_webhooks_phone_calls_url
     )
 
-    current_user.outgoing_phone_calls.create({
-      from: current_user.communication.phone_number,
-      receiver_id: @user.id,
-      to: @user.communication.phone_number,
-      phone_call_key: @call.sid
-    })
+    current_user.outgoing_phone_calls.create(from: current_user.communication.phone_number,
+                                             receiver_id: @user.id,
+                                             to: @user.communication.phone_number,
+                                             phone_call_key: @call.sid)
   end
 
   def destroy
@@ -51,16 +49,16 @@ class PhoneCallsController < ApplicationController
 
   def phone_call_possible?
     unless current_user.communication.try(:verified?)
-      raise NoVerifiedPhoneNumber, I18n.t('errors.messages.communications.not_verified.current_user')
+      fail NoVerifiedPhoneNumber, I18n.t('errors.messages.communications.not_verified.current_user')
     end
 
     unless @user.communication.try(:verified?)
-      raise NoVerifiedPhoneNumber, I18n.t('errors.messages.communications.not_verified.listing_owner')
+      fail NoVerifiedPhoneNumber, I18n.t('errors.messages.communications.not_verified.listing_owner')
     end
   end
 
   def redirect_back
-    redirect_to :back if not request.xhr?
+    redirect_to :back unless request.xhr?
   end
 
   def request_error(exception)
@@ -72,5 +70,4 @@ class PhoneCallsController < ApplicationController
     @exception = exception
     render action: :unverified
   end
-
 end

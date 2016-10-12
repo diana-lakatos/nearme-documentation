@@ -14,27 +14,27 @@ class TransactableType::ActionType < ActiveRecord::Base
   delegate :default_currency, :hide_location_availability?, to: :transactable_type
 
   validates_presence_of :cancellation_policy_hours_for_cancellation,
-    :cancellation_policy_penalty_percentage,
-      if: :cancellation_policy_enabled
+                        :cancellation_policy_penalty_percentage,
+                        if: :cancellation_policy_enabled
   validates_inclusion_of :cancellation_policy_penalty_percentage,
-    in: 0..100, allow_nil: true,
-      message: 'must be between 0 and 100', if: :cancellation_policy_enabled
+                         in: 0..100, allow_nil: true,
+                         message: 'must be between 0 and 100', if: :cancellation_policy_enabled
 
   validates_numericality_of :hours_to_expiration, :minimum_booking_minutes,
-    :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage,
-      :cancellation_policy_penalty_hours, greater_than_or_equal_to: 0, allow_nil: true
+                            :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage,
+                            :cancellation_policy_penalty_hours, greater_than_or_equal_to: 0, allow_nil: true
 
-  accepts_nested_attributes_for :pricings, allow_destroy: true, reject_if: lambda { |attrs| attrs[:number_of_units].blank? && attrs[:unit].blank? }
+  accepts_nested_attributes_for :pricings, allow_destroy: true, reject_if: ->(attrs) { attrs[:number_of_units].blank? && attrs[:unit].blank? }
 
-  scope :bookable, -> { where.not(type: 'TransactableType::NoActionBooking')}
+  scope :bookable, -> { where.not(type: 'TransactableType::NoActionBooking') }
   scope :enabled, -> { where(enabled: true) }
 
   AVAILABILE_UNITS.each do |u|
-    define_method("#{u}_booking?"){ pricings.any?(&:"#{u}_booking?".to_sym) }
+    define_method("#{u}_booking?") { pricings.any?(&:"#{u}_booking?".to_sym) }
   end
 
   AVAILABILE_UNITS.each do |u|
-    define_method("#{u}_pricings"){ pricings.select(&:"#{u}_booking?") }
+    define_method("#{u}_pricings") { pricings.select(&:"#{u}_booking?") }
   end
 
   def is_no_action?
@@ -42,11 +42,11 @@ class TransactableType::ActionType < ActiveRecord::Base
   end
 
   def pricing_for(units)
-    pricings.find{|p| p.units_to_s == units }
+    pricings.find { |p| p.units_to_s == units }
   end
 
   def cancellation_policy_enabled=(val)
-    if val == "1"
+    if val == '1'
       self[:cancellation_policy_enabled] ||= Time.zone.now
     else
       self[:cancellation_policy_enabled] = nil
@@ -68,5 +68,4 @@ class TransactableType::ActionType < ActiveRecord::Base
       'Reservation'
     end
   end
-
 end

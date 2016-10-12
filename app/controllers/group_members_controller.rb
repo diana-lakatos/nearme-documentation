@@ -28,9 +28,9 @@ class GroupMembersController < ApplicationController
 
     respond_to do |format|
       format.js { render :create }
-      format.html {
+      format.html do
         redirect_to profile_path(current_user, anchor: :groups), notice: t('membership_accepted')
-      }
+      end
     end
   end
 
@@ -40,9 +40,9 @@ class GroupMembersController < ApplicationController
 
     respond_to do |format|
       format.js { render :create }
-      format.html {
+      format.html do
         redirect_to profile_path(current_user, anchor: :groups), notice: t('membership_accepted')
-      }
+      end
     end
   end
 
@@ -55,5 +55,4 @@ class GroupMembersController < ApplicationController
   def owner_cannot_leave_group(error)
     render json: error.message
   end
-
 end

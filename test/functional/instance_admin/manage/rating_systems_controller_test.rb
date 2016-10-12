@@ -21,6 +21,4 @@ class InstanceAdmin::Manage::RatingSystemsControllerTest < ActionController::Tes
       assert_template :index
     end
   end
-
 end
-

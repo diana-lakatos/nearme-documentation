@@ -8,15 +8,14 @@ class CommentsControllerTest < ActionController::TestCase
     sign_in @comment_creator
   end
 
-
-  test "should create comment" do
-    assert_difference "Comment.count", 1 do
-      post :create, transactable_id: @transactable, comment: {body: "Test body"}, format: :js
+  test 'should create comment' do
+    assert_difference 'Comment.count', 1 do
+      post :create, transactable_id: @transactable, comment: { body: 'Test body' }, format: :js
     end
     assert_response :success
   end
 
-  test "should list comment" do
+  test 'should list comment' do
     @comment = FactoryGirl.create :comment, creator: @comment_creator, commentable: @transactable
     xhr :get, :index, transactable_id: @transactable, format: :js
     assert_equal [@comment], assigns(:comments)

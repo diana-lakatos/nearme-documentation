@@ -14,7 +14,6 @@ class PaymentGateway::OgonePaymentGateway < PaymentGateway
   end
 
   def supported_currencies
-    ["EUR"]
+    ['EUR']
   end
 end
-

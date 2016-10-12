@@ -22,7 +22,6 @@ class MarketplaceSessionsController < ApplicationController
   private
 
   def layout_name
-    PlatformContext.current.instance.is_community? ? "community" : 'password_protected'
+    PlatformContext.current.instance.is_community? ? 'community' : 'password_protected'
   end
-
 end

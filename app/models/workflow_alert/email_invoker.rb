@@ -1,5 +1,4 @@
 class WorkflowAlert::EmailInvoker < WorkflowAlert::Invoker
-
   protected
 
   def processor_class
@@ -9,6 +8,4 @@ class WorkflowAlert::EmailInvoker < WorkflowAlert::Invoker
   def processor_method
     :custom_mail
   end
-
 end
-

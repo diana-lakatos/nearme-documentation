@@ -1,5 +1,4 @@
 class ShippingProfileDrop < BaseDrop
-
   attr_reader :shipping_profile
 
   delegate :name, :shipping_rules, to: :shipping_profile
@@ -7,5 +6,4 @@ class ShippingProfileDrop < BaseDrop
   def initialize(shipping_profile)
     @shipping_profile = shipping_profile
   end
-
 end

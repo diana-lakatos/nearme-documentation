@@ -12,7 +12,8 @@ class Reservation::ContiguousBlockFinder
     # block
     blocks = Hash.new { |hash, key| hash[key] = [] }
 
-    current_start, previous_date = nil, nil
+    current_start = nil
+    previous_date = nil
     dates.each do |date|
       if !previous_date || !contiguous?(previous_date, date)
         current_start = date
@@ -28,15 +29,15 @@ class Reservation::ContiguousBlockFinder
   def real_contiguous_blocks
     dates = @reservation.periods.map(&:date).sort
 
-    @dates ||= dates.inject([]) { |groups, datetime|
+    @dates ||= dates.inject([]) do |groups, datetime|
       date = datetime.to_date
-      if groups.last && ((groups.last.last+1.day) == date)
+      if groups.last && ((groups.last.last + 1.day) == date)
         groups.last << date
       else
         groups << [date]
       end
       groups
-    }
+    end
   end
 
   private
@@ -52,12 +53,12 @@ class Reservation::ContiguousBlockFinder
     return false if to < from
 
     while from < to
-      from = from.advance(:days => 1)
+      from = from.advance(days: 1)
 
       # Break if we reach a bookable date
       break if transactable.open_on?(from) && transactable.availability_for(from) >= @reservation.quantity
     end
 
-    return from == to
+    from == to
   end
 end

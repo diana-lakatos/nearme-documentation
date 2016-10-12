@@ -8,7 +8,7 @@ class UserDecorator < Draper::Decorator
   end
 
   def social_connections_for(provider)
-    social_connections_cache.select{|c| c.provider == provider}.first
+    social_connections_cache.find { |c| c.provider == provider }
   end
 
   def user_message_recipient
@@ -17,8 +17,8 @@ class UserDecorator < Draper::Decorator
 
   def name_with_affiliation(plain_text = false)
     if properties.try(:is_intel) == true
-      affiliation = "(Intel)"
-      affiliation = "<span>#{affiliation}</span>" if !plain_text
+      affiliation = '(Intel)'
+      affiliation = "<span>#{affiliation}</span>" unless plain_text
 
       "#{name} #{affiliation}".html_safe
     else
@@ -43,7 +43,7 @@ class UserDecorator < Draper::Decorator
   end
 
   def feed_follow_term(object)
-    feed_subscribed_to?(object) ? I18n.t("activity_feed.verbs.unfollow") : I18n.t("activity_feed.verbs.follow")
+    feed_subscribed_to?(object) ? I18n.t('activity_feed.verbs.unfollow') : I18n.t('activity_feed.verbs.follow')
   end
 
   def feed_follow_url(object)
@@ -54,7 +54,7 @@ class UserDecorator < Draper::Decorator
   end
 
   def feed_follow_http_method(object)
-    feed_subscribed_to?(object) ? "delete" : "post"
+    feed_subscribed_to?(object) ? 'delete' : 'post'
   end
 
   def show_path
@@ -63,11 +63,11 @@ class UserDecorator < Draper::Decorator
 
   private
 
-  def user_messages_decorator_for(instance)
+  def user_messages_decorator_for(_instance)
     @user_messages_decorator ||= UserMessagesDecorator.new(user_messages, object)
   end
 
   def social_connections_cache
-    @social_connections_cache ||= self.social_connections
+    @social_connections_cache ||= social_connections
   end
 end

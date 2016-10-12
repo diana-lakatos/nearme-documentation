@@ -1,5 +1,4 @@
 module AuthenticationsHelper
-
   class AuthProvider
     def initialize(auth)
       @auth = auth
@@ -19,7 +18,6 @@ module AuthenticationsHelper
   end
 
   class TwitterProvider < AuthProvider
-
     def destination_url
       "http://twitter.com/#{@auth['info']['nickname']}"
     end
@@ -29,12 +27,11 @@ module AuthenticationsHelper
     end
 
     def title
-      "Twitter"
+      'Twitter'
     end
   end
 
   class LinkedinProvider < AuthProvider
-
     def destination_url
       "#{@auth['info']['urls']['public_profile']}"
     end
@@ -44,13 +41,11 @@ module AuthenticationsHelper
     end
 
     def title
-      "LinkedIn"
+      'LinkedIn'
     end
-
   end
 
   class FacebookProvider < AuthProvider
-
     def destination_url
       "#{@auth['info']['urls']['link']}" rescue nil
     end
@@ -60,9 +55,8 @@ module AuthenticationsHelper
     end
 
     def title
-      "FaceBook"
+      'FaceBook'
     end
-
   end
 
   # Return an object wrapping the omniauth provider which provides some view-model methods

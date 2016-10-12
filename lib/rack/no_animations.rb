@@ -4,7 +4,7 @@ module Rack
   # in config/environments/test.rb
   # config.middleware.use Rack::NoAnimations
   class NoAnimations
-    def initialize(app, options = {})
+    def initialize(app, _options = {})
       @app = app
     end
 
@@ -22,7 +22,7 @@ module Rack
     private
 
     def html?
-      @headers["Content-Type"] =~ /html/
+      @headers['Content-Type'] =~ /html/
     end
 
     def inject(fragment)
@@ -37,7 +37,7 @@ module Rack
   }
 </style>
       EOF
-      fragment.gsub(%r{</head>}, disable_animations + "</head>")
+      fragment.gsub(%r{</head>}, disable_animations + '</head>')
     end
   end
 end

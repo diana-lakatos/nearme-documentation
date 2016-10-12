@@ -10,4 +10,3 @@ class WarnUserOfExpirationJob < Job
     end
   end
 end
-

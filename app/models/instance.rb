@@ -6,13 +6,13 @@ class Instance < ActiveRecord::Base
 
   has_paper_trail
 
-  has_metadata :accessors => [:support_metadata]
+  has_metadata accessors: [:support_metadata]
 
   attr_encrypted :marketplace_password, :olark_api_key,
-    :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
-    :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password, :shippo_api_token,
-    :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret, :support_imap_password, :webhook_token,
-    :google_consumer_key, :google_consumer_secret, :github_consumer_key, :github_consumer_secret, :google_maps_api_key
+                 :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
+                 :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password, :shippo_api_token,
+                 :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret, :support_imap_password, :webhook_token,
+                 :google_consumer_key, :google_consumer_secret, :github_consumer_key, :github_consumer_secret, :google_maps_api_key
 
   attr_accessor :mark_as_locked
   attr_accessor :custom_translations
@@ -23,22 +23,21 @@ class Instance < ActiveRecord::Base
   serialize :orders_received_tabs, Array
   serialize :my_orders_tabs, Array
 
-
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key)
   SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category)
   SEARCH_ENGINES = %w(postgresql elasticsearch)
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }
-  SEARCHABLE_CLASSES = ['TransactableType', 'InstanceProfileType']
+  SEARCHABLE_CLASSES = %w(TransactableType InstanceProfileType)
 
   API_KEYS.each do |meth|
     define_method(meth) do
-      self.test_mode? ? self.send('test_' + meth) : self.send('live_' + meth)
+      self.test_mode? ? send('test_' + meth) : send('live_' + meth)
     end
   end
 
   API_KEYS.each do |meth|
     define_method(meth + '=') do |arg|
-      self.send('live_' + meth + '=', arg)
+      send('live_' + meth + '=', arg)
     end
   end
 
@@ -47,26 +46,26 @@ class Instance < ActiveRecord::Base
   has_one :custom_theme_for_instance_admins, -> { where(in_use_for_instance_admins: true) }, as: :themeable, class_name: 'CustomTheme'
   has_many :api_keys
   has_many :custom_themes, as: :themeable
-  has_many :companies, :inverse_of => :instance
-  has_many :locations, :inverse_of => :instance
-  has_many :locations_impressions, :through => :locations, :inverse_of => :instance
-  has_many :location_types, :inverse_of => :instance
-  has_many :listing_amenity_types, :inverse_of => :instance
-  has_many :location_amenity_types, :inverse_of => :instance
-  has_many :listings, class_name: 'Transactable', :inverse_of => :instance
-  has_many :domains, :as => :target, dependent: :destroy
-  has_many :partners, :inverse_of => :instance
-  has_many :instance_admins, :inverse_of => :instance
-  has_many :instance_admin_roles, :inverse_of => :instance
-  has_many :reservations, :as => :platform_context_detail
+  has_many :companies, inverse_of: :instance
+  has_many :locations, inverse_of: :instance
+  has_many :locations_impressions, through: :locations, inverse_of: :instance
+  has_many :location_types, inverse_of: :instance
+  has_many :listing_amenity_types, inverse_of: :instance
+  has_many :location_amenity_types, inverse_of: :instance
+  has_many :listings, class_name: 'Transactable', inverse_of: :instance
+  has_many :domains, as: :target, dependent: :destroy
+  has_many :partners, inverse_of: :instance
+  has_many :instance_admins, inverse_of: :instance
+  has_many :instance_admin_roles, inverse_of: :instance
+  has_many :reservations, as: :platform_context_detail
   has_many :reservation_types, inverse_of: :instance
   # has_many :orders, :as => :platform_context_detail
-  has_many :payments, :through => :reservations, :inverse_of => :instance
-  has_many :instance_clients, :dependent => :destroy, :inverse_of => :instance
-  has_many :translations, :dependent => :destroy, :inverse_of => :instance
-  has_many :instance_billing_gateways, :dependent => :destroy, :inverse_of => :instance
-  has_one :blog_instance, :as => :owner
-  has_many :user_messages, :dependent => :destroy, :inverse_of => :instance
+  has_many :payments, through: :reservations, inverse_of: :instance
+  has_many :instance_clients, dependent: :destroy, inverse_of: :instance
+  has_many :translations, dependent: :destroy, inverse_of: :instance
+  has_many :instance_billing_gateways, dependent: :destroy, inverse_of: :instance
+  has_one :blog_instance, as: :owner
+  has_many :user_messages, dependent: :destroy, inverse_of: :instance
   has_many :faqs, class_name: 'Support::Faq'
   has_many :tickets, -> { where(target_type: 'Instance').order('created_at DESC') }, class_name: 'Support::Ticket'
   has_many :transactable_types
@@ -104,7 +103,7 @@ class Instance < ActiveRecord::Base
   validates :id, uniqueness: true
   validates :name, presence: true, length: { maximum: 255 }
   validates :marketplace_password, presence: { if: :password_protected }, length: { maximum: 255 }
-  validates :password_protected, presence: { if: :test_mode, message: I18n.t("activerecord.errors.models.instance.test_mode_needs_password") }
+  validates :password_protected, presence: { if: :test_mode, message: I18n.t('activerecord.errors.models.instance.test_mode_needs_password') }
   validates :olark_api_key, presence: { if: :olark_enabled }
   validates :payment_transfers_frequency, presence: true, inclusion: { in: PaymentTransfer::FREQUENCIES }
   validates :seller_attachments_access_level, inclusion: { in: SELLER_ATTACHMENTS_ACCESS_LEVELS + ['disabled'] }
@@ -113,7 +112,7 @@ class Instance < ActiveRecord::Base
   validates :support_imap_password, length: { maximum: 255 }
   validates :support_imap_server, length: { maximum: 255 }
 
-  accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? && params.has_key?(:name) }
+  accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? && params.key?(:name) }
   accepts_nested_attributes_for :theme
   accepts_nested_attributes_for :location_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :location_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
@@ -137,7 +136,7 @@ class Instance < ActiveRecord::Base
   after_save :recalculate_cache_key!, if: -> { custom_sanitize_config_changed? }
 
   def authentication_supported?(provider)
-    self.send(:"#{provider.downcase}_consumer_key").present? && self.send(:"#{provider.downcase}_consumer_secret").present?
+    send(:"#{provider.downcase}_consumer_key").present? && send(:"#{provider.downcase}_consumer_secret").present?
   end
 
   def allowed_countries_list
@@ -164,7 +163,7 @@ class Instance < ActiveRecord::Base
   end
 
   def locked?
-    self.master_lock.present?
+    master_lock.present?
   end
 
   def lock
@@ -200,7 +199,7 @@ class Instance < ActiveRecord::Base
   end
 
   def twilio_config
-    if (!self.test_mode? && Rails.env.production?)
+    if !self.test_mode? && Rails.env.production?
       if twilio_consumer_key.present? && twilio_consumer_secret.present? && twilio_from_number.present?
         { key: twilio_consumer_key, secret: twilio_consumer_secret, from: twilio_from_number }
       else
@@ -225,7 +224,6 @@ class Instance < ActiveRecord::Base
       secret: '0f9a2a5a9f847b0b135a94fe2aa7f346',
       from: '+1 510-478-9196'
     }
-
   end
 
   def default_test_twilio_config
@@ -241,7 +239,7 @@ class Instance < ActiveRecord::Base
   end
 
   def payment_gateways(country, currency)
-    PaymentGateway.payment_type.mode_scope.joins(:payment_countries, :payment_currencies).where(currencies: {iso_code: currency}, countries: {iso: country})
+    PaymentGateway.payment_type.mode_scope.joins(:payment_countries, :payment_currencies).where(currencies: { iso_code: currency }, countries: { iso: country })
   end
 
   def payment_gateway(country, currency)
@@ -249,7 +247,7 @@ class Instance < ActiveRecord::Base
   end
 
   def payout_gateways(country, currency)
-    PaymentGateway.payout_type.mode_scope.joins(:payment_countries, :payment_currencies).where(currencies: {iso_code: currency}, countries: {iso: country})
+    PaymentGateway.payout_type.mode_scope.joins(:payment_countries, :payment_currencies).where(currencies: { iso_code: currency }, countries: { iso: country })
   end
 
   def payout_gateway(country, currency)
@@ -257,7 +255,7 @@ class Instance < ActiveRecord::Base
   end
 
   def bookable?
-    @bookable ||= action_types.bookable.enabled.joins(:transactable_type).where(transactable_types: {deleted_at: nil}).any?
+    @bookable ||= action_types.bookable.enabled.joins(:transactable_type).where(transactable_types: { deleted_at: nil }).any?
   end
 
   def projectable?
@@ -273,14 +271,14 @@ class Instance < ActiveRecord::Base
   end
 
   def payment_gateway_mode
-    test_mode? ? "test" : "live"
+    test_mode? ? 'test' : 'live'
   end
 
   def onboarding_verification_required
     false
   end
 
-  def onboarding_verification_required=(arg)
+  def onboarding_verification_required=(_arg)
   end
 
   def default_domain
@@ -288,7 +286,7 @@ class Instance < ActiveRecord::Base
   end
 
   def documents_upload_enabled?
-    self.documents_upload.present? && self.documents_upload.enabled?
+    documents_upload.present? && documents_upload.enabled?
   end
 
   def annotated_id
@@ -301,7 +299,7 @@ class Instance < ActiveRecord::Base
 
   def custom_translations=(translations)
     %w(buy_sell_market.checkout.manual_payment buy_sell_market.checkout.manual_payment_description).each do |key|
-      t = Translation.where(instance_id: self.id, key: key, locale: I18n.locale).first_or_initialize
+      t = Translation.where(instance_id: id, key: key, locale: I18n.locale).first_or_initialize
       t.update_attribute(:value, translations[key])
     end
   end
@@ -335,7 +333,7 @@ class Instance < ActiveRecord::Base
   end
 
   def signature
-    [id, "Instance"].join(",")
+    [id, 'Instance'].join(',')
   end
 
   def recalculate_cache_key!
@@ -361,7 +359,7 @@ class Instance < ActiveRecord::Base
   end
 
   def generate_webhook_token
-    self.webhook_token = SecureRandom.uuid.gsub(/\-/,'')
+    self.webhook_token = SecureRandom.uuid.gsub(/\-/, '')
   end
 
   def seller_attachments_enabled
@@ -380,30 +378,30 @@ class Instance < ActiveRecord::Base
   end
 
   def build_availability_templates
-    unless self.availability_templates.any?
-    self.availability_templates.build(
-      name: 'Working Week',
-      instance: self,
-      description: 'Mon - Fri, 9:00 AM - 5:00 PM',
-      availability_rules_attributes: [{
-        days: (1..5).to_a,
+    unless availability_templates.any?
+      availability_templates.build(
+        name: 'Working Week',
         instance: self,
-        open_hour: 9, open_minute: 0,
-        close_hour: 17, close_minute: 0
-      }]
-    )
+        description: 'Mon - Fri, 9:00 AM - 5:00 PM',
+        availability_rules_attributes: [{
+          days: (1..5).to_a,
+          instance: self,
+          open_hour: 9, open_minute: 0,
+          close_hour: 17, close_minute: 0
+        }]
+      )
 
-    self.availability_templates.build(
-      name: '24/7',
-      instance: self,
-      description: 'Sunday - Saturday, 12am-11:59pm',
-      availability_rules_attributes: [{
-        days: (0..6).to_a,
+      availability_templates.build(
+        name: '24/7',
         instance: self,
-        open_hour: 0, open_minute: 0,
-        close_hour: 23, close_minute: 59
-      }]
-    )
+        description: 'Sunday - Saturday, 12am-11:59pm',
+        availability_rules_attributes: [{
+          days: (0..6).to_a,
+          instance: self,
+          open_hour: 0, open_minute: 0,
+          close_hour: 23, close_minute: 59
+        }]
+      )
     end
   end
 
@@ -421,7 +419,6 @@ class Instance < ActiveRecord::Base
   end
 
   def available_locales
-    self.locales.pluck(:code)
+    locales.pluck(:code)
   end
-
 end

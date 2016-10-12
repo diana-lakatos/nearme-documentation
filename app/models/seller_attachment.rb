@@ -1,5 +1,4 @@
 class SellerAttachment < Ckeditor::Asset
-
   include Thumbnable
 
   belongs_to :user
@@ -22,14 +21,14 @@ class SellerAttachment < Ckeditor::Asset
   end
 
   def set_initial_access_level
-    if !instance.seller_attachments_enabled?
-      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::SELLER_ATTACHMENTS_ERROR, "Tried to set initial access level on SellerAttachment while attachments are disabled", raise: true)
+    unless instance.seller_attachments_enabled?
+      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::SELLER_ATTACHMENTS_ERROR, 'Tried to set initial access level on SellerAttachment while attachments are disabled', raise: true)
     end
 
     self.access_level = if instance.seller_attachments_enabled? && !instance.seller_attachments_access_sellers_preference?
-        instance.seller_attachments_access_level
-      else
-        'all'
+                          instance.seller_attachments_access_level
+                        else
+                          'all'
       end
   end
 

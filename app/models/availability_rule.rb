@@ -5,7 +5,7 @@ class AvailabilityRule < ActiveRecord::Base
   # attr_accessible :day, :close_hour, :close_minute, :open_hour, :open_minute, :open_time, :close_time
 
   # === Associations
-  belongs_to :target, :polymorphic => true, touch: true
+  belongs_to :target, polymorphic: true, touch: true
   belongs_to :instance
 
   # === Validations
@@ -41,30 +41,32 @@ class AvailabilityRule < ActiveRecord::Base
 
   def minimum_booking_hours
     if target.respond_to?(:minimum_booking_minutes)
-      @minimum_booking_hours ||= (target.minimum_booking_minutes/60.0)
+      @minimum_booking_hours ||= (target.minimum_booking_minutes / 60.0)
     else
       1
     end
   end
 
   def open_time
-    "#{open_hour}:#{"%02d" % open_minute}" if open_hour && open_minute
+    "#{open_hour}:#{'%02d' % open_minute}" if open_hour && open_minute
   end
 
   def open_time=(time)
     self.open_hour, self.open_minute = date_time_handler.convert_to_time(time).strftime('%H:%M').split(':')
   rescue
-    self.open_hour, self.open_minute = [nil, nil]
+    self.open_hour = nil
+    self.open_minute = nil
   end
 
   def close_time
-    "#{close_hour}:#{"%02d" % close_minute}" if close_hour && close_minute
+    "#{close_hour}:#{'%02d' % close_minute}" if close_hour && close_minute
   end
 
   def close_time=(time)
     self.close_hour, self.close_minute = date_time_handler.convert_to_time(time).strftime('%H:%M').split(':')
   rescue
-    self.close_hour, self.close_minute = [nil, nil]
+    self.close_hour = nil
+    self.close_minute = nil
   end
 
   # Returns whether or not this availability rule is 'open' at a given hour & minute
@@ -91,7 +93,7 @@ class AvailabilityRule < ActiveRecord::Base
   end
 
   def floor_total_opening_time_in_hours
-    (close_time_minus_open_time_in_minutes/60).floor rescue nil
+    (close_time_minus_open_time_in_minutes / 60).floor rescue nil
   end
 
   def close_time_minus_open_time_in_minutes

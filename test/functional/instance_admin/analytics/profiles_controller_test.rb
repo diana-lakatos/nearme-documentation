@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Analytics::ProfilesControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     2.times do
@@ -28,5 +27,4 @@ class InstanceAdmin::Analytics::ProfilesControllerTest < ActionController::TestC
       assert_response :success
     end
   end
-
 end

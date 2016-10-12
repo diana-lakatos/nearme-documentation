@@ -1,5 +1,4 @@
 class Support::TicketDrop < BaseDrop
-
   attr_reader :ticket
 
   def initialize(ticket)
@@ -48,7 +47,7 @@ class Support::TicketDrop < BaseDrop
     when Instance
       routes.instance_admin_support_ticket_path(ticket)
     else
-      raise NotImplementedError.new("Unknown ticket target: #{ticket.target.class}")
+      fail NotImplementedError.new("Unknown ticket target: #{ticket.target.class}")
     end
   end
 

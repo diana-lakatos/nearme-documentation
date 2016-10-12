@@ -1,6 +1,5 @@
 
 class InstanceClient::BraintreeDecorator
-
   attr_accessor :instance_client
 
   def initialize(instance_client)
@@ -8,7 +7,7 @@ class InstanceClient::BraintreeDecorator
   end
 
   def customer_id
-    response.params["customer_vault_id"]
+    response.params['customer_vault_id']
   rescue
     nil
   end
@@ -23,4 +22,3 @@ class InstanceClient::BraintreeDecorator
     !!response.try(:test)
   end
 end
-

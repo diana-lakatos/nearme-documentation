@@ -1,5 +1,4 @@
 class LineItem::Additional < LineItem
-
   before_save :set_receiver
 
   def deletable?
@@ -11,5 +10,4 @@ class LineItem::Additional < LineItem
   def set_receiver
     self.receiver ||= line_item_source.try(:commission_receiver) || 'host'
   end
-
 end

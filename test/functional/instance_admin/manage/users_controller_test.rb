@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::UsersControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user, name: 'John X')
     @deleted_user = FactoryGirl.create(:user, name: 'Deleted Jane', email: 'jane@example.com').destroy
@@ -11,13 +10,12 @@ class InstanceAdmin::Manage::UsersControllerTest < ActionController::TestCase
   end
 
   context 'index' do
-
     should 'show a listing of users associated with current instance' do
       @user_from_other_instance = FactoryGirl.create(:user)
       @user_from_other_instance.update_attribute(:instance_id, FactoryGirl.create(:instance).id)
       get :index
-      assert_select 'td', "John X"
-      assert_select 'td', "Deleted Jane"
+      assert_select 'td', 'John X'
+      assert_select 'td', 'Deleted Jane'
       assert_equal [@user.id, @deleted_user.id].sort, assigns(:users).map(&:id).sort
     end
 
@@ -44,5 +42,4 @@ class InstanceAdmin::Manage::UsersControllerTest < ActionController::TestCase
       assert_not_nil @deleted_user.reload.deleted_at
     end
   end
-
 end

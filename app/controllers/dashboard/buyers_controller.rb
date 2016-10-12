@@ -1,5 +1,4 @@
 class Dashboard::BuyersController < Dashboard::BaseController
-
   before_filter :set_buyer_profile
   before_filter :set_form_components, only: [:edit, :update]
   skip_before_filter :force_fill_in_wizard_form
@@ -38,5 +37,4 @@ class Dashboard::BuyersController < Dashboard::BaseController
   def user_params
     params.require(:user).permit(secured_params.user)
   end
-
 end

@@ -7,13 +7,13 @@ class RequestParametersValidator
   end
 
   def validate!
-    raise InvalidParameterError unless valid_parameters?
+    fail InvalidParameterError unless valid_parameters?
   end
 
   protected
 
   def valid_parameters?
-     valid_single_parameters? && valid_array_parameters?
+    valid_single_parameters? && valid_array_parameters?
   end
 
   def valid_single_parameters?
@@ -28,10 +28,9 @@ class RequestParametersValidator
     array.blank? || array.try(:all?) { |value| valid_value?(value) }
   end
 
-
   def valid_value?(value)
     value.respond_to?(:to_i)
   end
 
-  class InvalidParameterError < StandardError; end;
+  class InvalidParameterError < StandardError; end
 end

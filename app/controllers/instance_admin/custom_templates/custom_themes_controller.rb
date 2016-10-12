@@ -1,6 +1,6 @@
 class InstanceAdmin::CustomTemplates::CustomThemesController < InstanceAdmin::CustomTemplates::BaseController
   include InstanceAdmin::Versionable
-  actions :all, :except => [ :show ]
+  actions :all, except: [:show]
 
   def index
     @custom_themes = CustomTheme.all
@@ -34,6 +34,4 @@ class InstanceAdmin::CustomTemplates::CustomThemesController < InstanceAdmin::Cu
   def custom_theme_params
     params.require(:custom_theme).permit(secured_params.custom_theme)
   end
-
 end
-

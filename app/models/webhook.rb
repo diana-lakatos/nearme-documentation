@@ -18,5 +18,4 @@ class Webhook < ActiveRecord::Base
   def params
     YAML.load(response)
   end
-
 end

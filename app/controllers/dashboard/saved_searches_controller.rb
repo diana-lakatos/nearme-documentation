@@ -1,5 +1,4 @@
 class Dashboard::SavedSearchesController < Dashboard::BaseController
-
   def search
     @saved_search = current_user.saved_searches.find(params[:id])
     @saved_search.touch(:last_viewed_at)
@@ -13,25 +12,25 @@ class Dashboard::SavedSearchesController < Dashboard::BaseController
   def create
     if request.xhr?
       saved_search = current_user.saved_searches.build(saved_search_params)
-      render json: {success: saved_search.save, title: saved_search.title }
+      render json: { success: saved_search.save, title: saved_search.title }
     else
-      raise ActionController::MethodNotAllowed
+      fail ActionController::MethodNotAllowed
     end
   end
 
   def update
     if request.xhr?
       saved_search = current_user.saved_searches.find(params[:id])
-      render json: {success: saved_search.update_attributes(saved_search_params), title: saved_search.title}
+      render json: { success: saved_search.update_attributes(saved_search_params), title: saved_search.title }
     else
-      raise ActionController::MethodNotAllowed
+      fail ActionController::MethodNotAllowed
     end
   end
 
   def destroy
     saved_search = current_user.saved_searches.find(params[:id])
     saved_search.destroy!
-    redirect_to({action: :index}, notice: t('flash_messages.dashboard.saved_searches.deleted'))
+    redirect_to({ action: :index }, notice: t('flash_messages.dashboard.saved_searches.deleted'))
   end
 
   def change_alerts_frequency
@@ -39,15 +38,13 @@ class Dashboard::SavedSearchesController < Dashboard::BaseController
       current_user.update_column(:saved_searches_alerts_frequency, params[:alerts_frequency])
       render nothing: true
     else
-      raise ActionController::MethodNotAllowed
+      fail ActionController::MethodNotAllowed
     end
   end
-
 
   private
 
   def saved_search_params
     params.require(:saved_search).permit(secured_params.saved_search)
   end
-
 end

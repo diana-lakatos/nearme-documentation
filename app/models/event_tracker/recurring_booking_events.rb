@@ -1,5 +1,4 @@
 module EventTracker::RecurringBookingEvents
-
   def reviewed_a_recurring_booking(recurring_booking, custom_options = {})
     track 'Reviewed a Recurring Booking', recurring_booking, custom_options
   end
@@ -23,6 +22,4 @@ module EventTracker::RecurringBookingEvents
   def recurring_booking_expired(recurring_booking, custom_options = {})
     track 'Recurring Booking Expired', recurring_booking, custom_options
   end
-
 end
-

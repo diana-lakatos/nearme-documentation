@@ -1,5 +1,4 @@
 class ReviewDrop < BaseDrop
-
   attr_reader :review
 
   # reviewable
@@ -9,5 +8,4 @@ class ReviewDrop < BaseDrop
   def initialize(review)
     @review = review.decorate
   end
-
 end

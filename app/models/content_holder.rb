@@ -5,14 +5,14 @@ class ContentHolder < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
   ANY_PAGE = 'any_page'.freeze
-  POSITIONS = [['Head', 'meta'], ['Head bottom', 'head_bottom'], ['Body top', 'body_top'], ['Body bottom', 'body_bottom']].freeze
+  POSITIONS = [%w(Head meta), ['Head bottom', 'head_bottom'], ['Body top', 'body_top'], ['Body bottom', 'body_bottom']].freeze
 
   default_scope { order('LOWER(name)') }
 
   scope :enabled, -> { where(enabled: true) }
-  scope :by_inject_pages, -> (path_group) { where("(? = ANY (inject_pages)) OR (? = ANY (inject_pages))", path_group, ANY_PAGE) }
+  scope :by_inject_pages, -> (path_group) { where('(? = ANY (inject_pages)) OR (? = ANY (inject_pages))', path_group, ANY_PAGE) }
   scope :no_inject_pages, -> { where("inject_pages = '{\"\"}' OR inject_pages = '{}'") }
-  scope :no_position, -> (positions) { where("position is NULL or position NOT IN (?)", positions)}
+  scope :no_position, -> (positions) { where('position is NULL or position NOT IN (?)', positions) }
 
   belongs_to :theme
   belongs_to :instance
@@ -40,5 +40,4 @@ class ContentHolder < ActiveRecord::Base
       content
     end
   end
-
 end

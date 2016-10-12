@@ -1,5 +1,4 @@
 class InstanceType::Searcher::Elastic::UserSearcher
-
   ALLOWED_QUERY_FIELDS = [:first_name, :last_name, :name, :country_name, :company_name, :tags].freeze
 
   include InstanceType::Searcher
@@ -21,18 +20,15 @@ class InstanceType::Searcher::Elastic::UserSearcher
 
     results = User.where(id: user_ids).not_admin
 
-
     results.includes(:current_address).order_by_array_of_ids(order_ids)
   end
 
   def fetcher
     @fetcher ||=
       begin
-        @search_params = @params.merge({
-          sort: (@params[:sort].presence || 'relevance').inquiry,
-          limit: @params[:per_page],
-          page: @params[:page]
-        })
+        @search_params = @params.merge(sort: (@params[:sort].presence || 'relevance').inquiry,
+                                       limit: @params[:per_page],
+                                       page: @params[:page])
 
         searcher_params = initialize_search_params.merge(@search_params)
 
@@ -49,7 +45,7 @@ class InstanceType::Searcher::Elastic::UserSearcher
   end
 
   def search_query_values
-    { :query => @params[:query] }
+    { query: @params[:query] }
   end
 
   def to_event_params
@@ -61,5 +57,4 @@ class InstanceType::Searcher::Elastic::UserSearcher
   def initialize_search_params
     { instance_id: PlatformContext.current.instance.id, instance_profile_type_id: @instance_profile_type.id }
   end
-
 end

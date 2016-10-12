@@ -1,13 +1,12 @@
 require 'test_helper'
 
 class CommunityReportingAggregateTest < ActiveSupport::TestCase
-
   setup do
     @user = create(:user)
   end
 
-  context "oldest reporting period" do
-    should "return correct oldest reporting period when activity feed event present" do
+  context 'oldest reporting period' do
+    should 'return correct oldest reporting period when activity feed event present' do
       activity_feed_event = FactoryGirl.create(:activity_feed_event)
       created_at = Time.now.utc.weeks_ago(5)
       activity_feed_event.update_column(:created_at, created_at)
@@ -16,15 +15,15 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
       assert_equal [created_at.at_beginning_of_week, created_at.at_end_of_week], oldest_period
     end
 
-    should "return correct oldest reporting period when activity feed event not present" do
+    should 'return correct oldest reporting period when activity feed event not present' do
       last_reporting_period = CommunityReportingAggregate.get_last_reporting_period
       oldest_period = CommunityReportingAggregate.get_oldest_reporting_period
       assert_equal last_reporting_period, oldest_period
     end
   end
 
-  context "statistics" do
-    should "create correct statistics for users" do
+  context 'statistics' do
+    should 'create correct statistics for users' do
       User.destroy_all
 
       now = Time.now.utc
@@ -46,7 +45,7 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
       assert_equal 2, cre.statistics[:number_of_new_users]
     end
 
-    should "create correct statistics for projects" do
+    should 'create correct statistics for projects' do
       Transactable.destroy_all
 
       now = Time.now.utc
@@ -68,7 +67,7 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
       assert_equal 2, cre.statistics[:number_of_new_projects]
     end
 
-    should "create correct statistics for number of collaborators" do
+    should 'create correct statistics for number of collaborators' do
       Transactable.destroy_all
       TransactableCollaborator.destroy_all
 
@@ -107,7 +106,7 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
       assert_equal 0, cre.statistics[:projects_with_21_or_more_collaborators]
     end
 
-    should "create correct statistics for number of followers" do
+    should 'create correct statistics for number of followers' do
       Transactable.destroy_all
       ActivityFeedSubscription.destroy_all
 
@@ -148,7 +147,7 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
       assert_equal 0, cre.statistics[:projects_with_501_or_more_followers]
     end
 
-    should "create correct statistics for number of updates" do
+    should 'create correct statistics for number of updates' do
       ActivityFeedEvent.destroy_all
 
       now = Time.now.utc
@@ -168,7 +167,7 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
       assert_equal 2, cre.statistics[:total_number_of_updates]
     end
 
-    should "create correct statistics for number of topics" do
+    should 'create correct statistics for number of topics' do
       Topic.destroy_all
 
       now = Time.now.utc
@@ -188,7 +187,7 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
       assert_equal 2, cre.statistics[:total_number_of_topics]
     end
 
-    should "create correct statistics for number of comments" do
+    should 'create correct statistics for number of comments' do
       Comment.destroy_all
 
       now = Time.now.utc
@@ -208,6 +207,4 @@ class CommunityReportingAggregateTest < ActiveSupport::TestCase
       assert_equal 2, cre.statistics[:total_number_of_comments]
     end
   end
-
 end
-

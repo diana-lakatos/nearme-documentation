@@ -4,7 +4,7 @@ class UploadObligation < ActiveRecord::Base
   scoped_to_platform_context
   acts_as_paranoid
 
-  LEVELS = ["Required", "Optional", "Not Required"]
+  LEVELS = ['Required', 'Optional', 'Not Required']
 
   validates_inclusion_of :level, in: LEVELS
 
@@ -26,14 +26,13 @@ class UploadObligation < ActiveRecord::Base
 
   def self.default_level
     if PlatformContext.current.instance.documents_upload.present? &&
-      PlatformContext.current.instance.documents_upload.is_mandatory?
+       PlatformContext.current.instance.documents_upload.is_mandatory?
       LEVELS[0]
     elsif PlatformContext.current.instance.documents_upload.present? &&
-      PlatformContext.current.instance.documents_upload.is_optional?
+          PlatformContext.current.instance.documents_upload.is_optional?
       LEVELS[1]
     else
       LEVELS[2]
     end
   end
-
 end

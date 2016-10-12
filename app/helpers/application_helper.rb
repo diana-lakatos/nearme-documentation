@@ -1,7 +1,6 @@
 require 'sanitize'
 
 module ApplicationHelper
-
   include FormHelper
   include TooltipHelper
   include CurrencyHelper
@@ -41,12 +40,12 @@ module ApplicationHelper
       raw([
         (show_title? ? content_for(:title) : nil),
         (additional_meta_title.present? ? additional_meta_title : nil)
-      ].compact.join(" | "))
+      ].compact.join(' | '))
     end
   end
 
   def meta_attr(content)
-    Sanitize.fragment(content).gsub(/\s+/,' ').strip.html_safe
+    Sanitize.fragment(content).gsub(/\s+/, ' ').strip.html_safe
   end
 
   def meta_description(description)
@@ -85,7 +84,6 @@ module ApplicationHelper
   end
 
   def truncate_with_ellipsis(body, length, html_options = {})
-
     body ||= ''
     if body.size > length
 
@@ -103,21 +101,20 @@ module ApplicationHelper
 
       content_tag(:p, html_options) do
         truncated_body_str.html_safe +
-        content_tag(:span, "&hellip;".html_safe, :class => 'truncated-ellipsis').html_safe +
-        content_tag(:span, excess_body.html_safe, :class => 'truncated-text hidden').html_safe
+          content_tag(:span, '&hellip;'.html_safe, class: 'truncated-ellipsis').html_safe +
+          content_tag(:span, excess_body.html_safe, class: 'truncated-text hidden').html_safe
       end
 
     else
       body
     end
-
   end
 
   def link_to_registration(constraint, secured_constraint, secure_links, options = {}, &block)
     options[:rel] = nil if secure_links
     constraint.merge!(secured_constraint) if secure_links
     options[:data] ||= {}
-    options[:data].merge!({ href: new_user_registration_url(constraint) })
+    options[:data].merge!(href: new_user_registration_url(constraint))
     link_to('#', options, &block)
   end
 
@@ -126,7 +123,7 @@ module ApplicationHelper
     options[:rel] = nil if secure_links?
     constraint.merge!(platform_context.secured_constraint) if secure_links?
     options[:data] ||= {}
-    options[:data].merge!({ href: new_user_session_url(constraint) })
+    options[:data].merge!(href: new_user_session_url(constraint))
     link_to('#', options, &block)
   end
 
@@ -134,7 +131,7 @@ module ApplicationHelper
     options = args.first || {}
     html_options = args.second || {}
 
-    unless html_options.key?(:disable_with) then html_options[:disable_with] = "Loading..." end
+    unless html_options.key?(:disable_with) then html_options[:disable_with] = 'Loading...' end
     if block_given?
       link_to(capture(&block), options, html_options)
     else
@@ -145,15 +142,15 @@ module ApplicationHelper
   def ico_for_flash(key)
     case key.to_s
     when 'notice'
-      "ico-check"
+      'ico-check'
     when 'success'
-      "ico-check"
+      'ico-check'
     when 'error'
-      "ico-warning"
+      'ico-warning'
     when 'warning'
-      "ico-warning"
+      'ico-warning'
     when 'deleted'
-      "ico-close"
+      'ico-close'
     end
   end
 
@@ -171,7 +168,7 @@ module ApplicationHelper
   end
 
   def array_to_unordered_list(arr = [])
-    arr.map{|s| "<li>#{s}</li>"}.join.prepend('<ul>') << '</ul>'
+    arr.map { |s| "<li>#{s}</li>" }.join.prepend('<ul>') << '</ul>'
   end
 
   def section_class(section_name = nil)
@@ -186,19 +183,18 @@ module ApplicationHelper
     classes = [
       theme_name,
       controller_name,
-      "#{controller_name}-#{params[:action]}",
+      "#{controller_name}-#{params[:action]}"
     ]
     if current_user
       classes << 'user-role-lister' if current_user.seller_profile
       classes << 'user-role-enquirer' if current_user.buyer_profile
     end
-    if controller_name == "pages" && params[:action] == "show"
+    if controller_name == 'pages' && params[:action] == 'show'
       classes << "page-#{@page.id}-#{@page.slug}"
     end
 
     classes.compact.join(' ')
   end
-
 
   def dnm_page_class
     [(content_for?(:top_sub_navigation) ? 'with-sub-navbar' : nil), (no_navbar? ? 'no-navbar' : nil)].compact.join(' ')
@@ -232,7 +228,7 @@ module ApplicationHelper
   end
 
   def nl2br(str)
-    str.to_s.gsub(/\r\n|\r|\n/, "<br />").html_safe
+    str.to_s.gsub(/\r\n|\r|\n/, '<br />').html_safe
   end
 
   def home_page?
@@ -266,11 +262,11 @@ module ApplicationHelper
 
   def orders_navigation_link(state)
     link_to(content_tag(:span, state.titleize), orders_path(state: state),
-      class: [
-        'upcoming-reservations',
-        'btn btn-medium',
-        "btn-gray#{state==(params[:state] || 'new') ? " active" : "-darker"}"
-      ]).html_safe
+            class: [
+              'upcoming-reservations',
+              'btn btn-medium',
+              "btn-gray#{state == (params[:state] || 'new') ? ' active' : '-darker'}"
+            ]).html_safe
   end
 
   def user_menu_instance_admin_path(users_instance_admin)
@@ -318,7 +314,7 @@ module ApplicationHelper
     end
 
     years = (Time.zone.now.year..(Time.zone.now + 15.years).year)
-    {month: months, year: years}
+    { month: months, year: years }
   end
 
   def selected_date_value(date)
@@ -337,7 +333,7 @@ module ApplicationHelper
     end
   end
 
-  def cache_expires_in_for(cache_model = '')
+  def cache_expires_in_for(_cache_model = '')
     Rails.configuration.default_cache_expires_in
   end
 
@@ -350,7 +346,7 @@ module ApplicationHelper
   end
 
   def javascript_i18n_include_tag
-    js_translations = I18n.t("js").to_json
+    js_translations = I18n.t('js').to_json
     date_formats = %w(default day_month_year month_year short day_and_month only_date_short only_date full_day_month long).inject({}) do |hash, key|
       hash[key] = I18n.t("date.formats.#{key}")
       hash
@@ -359,28 +355,28 @@ module ApplicationHelper
       hash[key] = I18n.t("time.formats.#{key}")
       hash
     end
-    %Q{
+    %(
       window.I18n = {};
-      window.I18n.locale = '#{I18n.locale.to_s}';
+      window.I18n.locale = '#{I18n.locale}';
       window.I18n.t = #{js_translations};
       window.I18n.dateFormats = #{date_formats.to_json};
       window.I18n.timeFormats = #{time_formats.to_json};
-      window.I18n.abbrMonthNames = '#{Date::ABBR_MONTHNAMES.compact.join("|")}';
-    }.html_safe
+      window.I18n.abbrMonthNames = '#{Date::ABBR_MONTHNAMES.compact.join('|')}';
+        ).html_safe
   end
 
   # Styled only for comunity layout
-  def readmore(text, limit=255)
+  def readmore(text, limit = 255)
     if text.size < limit
       simple_format auto_link(text, html: { target: '_blank', ref: 'nofollow' })
     else
       content = auto_link(text[0..limit], html: { target: '_blank', ref: 'nofollow' }) +
-        content_tag(:span, content_tag(:span, auto_link(text[limit + 1..-1], html: { target: '_blank', ref: 'nofollow' })), class: 'readmore-a', data: {label: t(:read_more)})
+                content_tag(:span, content_tag(:span, auto_link(text[limit + 1..-1], html: { target: '_blank', ref: 'nofollow' })), class: 'readmore-a', data: { label: t(:read_more) })
       simple_format content
     end
   end
 
-  def setup_activity_feed_event(event, target="_self")
+  def setup_activity_feed_event(event, target = '_self')
     event = ActivityFeedService::Event.new(event, target)
     OpenStruct.new(text: event.text, image: event.image)
   end
@@ -404,13 +400,13 @@ module ApplicationHelper
       'this-nth-day-of-month' => I18n.t('schedule.this_nth_day_of_month'),
       'this-nth-day-of-year' => I18n.t('schedule.this_nth_day_of_year'),
       'pascha-offset' => I18n.t('schedule.pascha_offset'),
-      'event-occured-less' => I18n.t('schedule.event_occured_less')}
+      'event-occured-less' => I18n.t('schedule.event_occured_less') }
   end
 
   def body_classes
     body_classes = []
-    body_classes << "signed-in" if user_signed_in?
-    body_classes.join(" ")
+    body_classes << 'signed-in' if user_signed_in?
+    body_classes.join(' ')
   end
 
   def header_image_for_event(event)
@@ -472,7 +468,7 @@ module ApplicationHelper
   end
 
   def parse_with_markdown(text)
-    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new({ escape_html: true }), autolink: true, tables: true, fenced_code_blocks: true)
+    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(escape_html: true), autolink: true, tables: true, fenced_code_blocks: true)
     markdown.render(text.to_s).html_safe
   end
 
@@ -480,6 +476,4 @@ module ApplicationHelper
     markdown = Redcarpet::Markdown.new(HtmlWithVideos.new({ escape_html: true }, embed_options), autolink: true, tables: true, fenced_code_blocks: true)
     markdown.render(text.to_s).html_safe
   end
-
 end
-

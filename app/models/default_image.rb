@@ -1,18 +1,8 @@
 class DefaultImage < ActiveRecord::Base
-
   auto_set_platform_context
   scoped_to_platform_context
 
-  PHOTO_UPLOADERS = [
-    'PhotoUploader',
-    'AvatarUploader',
-    'AuthorAvatarUploader',
-    'GroupCoverImageUploader',
-    'LinkImageUploader',
-    'SimpleAvatarUploader',
-    'TopicCoverImageUploader',
-    'TopicImageUploader'
-  ]
+  PHOTO_UPLOADERS = %w(PhotoUploader AvatarUploader AuthorAvatarUploader GroupCoverImageUploader LinkImageUploader SimpleAvatarUploader TopicCoverImageUploader TopicImageUploader)
 
   belongs_to :theme
 
@@ -23,6 +13,4 @@ class DefaultImage < ActiveRecord::Base
   validates_presence_of :photo_uploader
   validates_presence_of :photo_uploader_image
   validates_presence_of :photo_uploader_version
-
 end
-

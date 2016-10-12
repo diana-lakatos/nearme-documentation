@@ -6,4 +6,3 @@ module MarketplaceErrorLogger
     end
   end
 end
-

@@ -8,7 +8,7 @@ class LineItemDecorator < Draper::Decorator
 
   MAX_QTY_FOR_SELECT = 15
 
-  def name_with_link(target='')
+  def name_with_link(target = '')
     return name unless line_item_source.is_a?(Transactable)
 
     unless line_item_source.deleted?
@@ -22,7 +22,7 @@ class LineItemDecorator < Draper::Decorator
     object.description ? object.description : ''
   end
 
-  def short_description(chars=90)
+  def short_description(chars = 90)
     object.description.to_s.truncate chars, separator: ' '
   end
 
@@ -54,7 +54,7 @@ class LineItemDecorator < Draper::Decorator
     render_money(object.total.to_money(currency))
   end
 
-  def image(target='')
+  def image(target = '')
     return '' unless object.respond_to?(:transactable)
     unless object.transactable.deleted?
       link_to object.transactable.try(:decorate).try(:show_url), target: target do

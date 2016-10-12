@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ReviewTest < ActiveSupport::TestCase
-
   context 'before validation callbacks' do
     setup do
       @reviewable = FactoryGirl.create(:reservation)
@@ -21,7 +20,7 @@ class ReviewTest < ActiveSupport::TestCase
         end
       end
 
-      context  'TT has two sided reviews enabled' do
+      context 'TT has two sided reviews enabled' do
         setup do
           TransactableType.update_all(show_reviews_if_both_completed: true)
         end
@@ -30,26 +29,26 @@ class ReviewTest < ActiveSupport::TestCase
           refute FactoryGirl.create(:review, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::GUEST)).displayable
         end
 
-        should  'set to true for transactable review ' do
+        should 'set to true for transactable review ' do
           assert FactoryGirl.create(:review, user: @reviewable.owner, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::TRANSACTABLE)).displayable
         end
 
-        should  'set to true for guest review if corresponding review exists' do
+        should 'set to true for guest review if corresponding review exists' do
           FactoryGirl.create(:review, user: @reviewable.owner, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST))
           assert FactoryGirl.create(:review, user: @reviewable.creator, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::GUEST)).displayable
         end
 
-        should  'set to true for host review if corresponding review exists' do
+        should 'set to true for host review if corresponding review exists' do
           FactoryGirl.create(:review, user: @reviewable.creator, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::GUEST))
           assert FactoryGirl.create(:review, user: @reviewable.owner, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)).displayable
         end
 
-        should  'set to false if corresponding review exists but for transactable' do
+        should 'set to false if corresponding review exists but for transactable' do
           FactoryGirl.create(:review, user: @reviewable.owner, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::TRANSACTABLE))
           refute FactoryGirl.create(:review, user: @reviewable.owner, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)).displayable
         end
 
-        should  'set to false for host review if review exists for guest but for other reviewable' do
+        should 'set to false for host review if review exists for guest but for other reviewable' do
           other_reviewable = FactoryGirl.create(:reservation, owner: @reviewable.creator)
           FactoryGirl.create(:review, user: @reviewable.creator, reviewable: other_reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST))
           refute FactoryGirl.create(:review, user: @reviewable.creator, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::GUEST)).displayable
@@ -58,11 +57,11 @@ class ReviewTest < ActiveSupport::TestCase
     end
   end
 
-  context "scopes" do
+  context 'scopes' do
     setup do
-      @rating_system_of_seller = FactoryGirl.create(:rating_system, subject: "host")
-      @rating_system_of_product = FactoryGirl.create(:rating_system, subject: "transactable")
-      @rating_system_of_buyer = FactoryGirl.create(:rating_system, subject: "guest")
+      @rating_system_of_seller = FactoryGirl.create(:rating_system, subject: 'host')
+      @rating_system_of_product = FactoryGirl.create(:rating_system, subject: 'transactable')
+      @rating_system_of_buyer = FactoryGirl.create(:rating_system, subject: 'guest')
     end
 
     context 'links' do
@@ -157,7 +156,6 @@ class ReviewTest < ActiveSupport::TestCase
         assert_equal 2, Review.count
       end
     end
-
   end
 
   def assert_link_presence(review)

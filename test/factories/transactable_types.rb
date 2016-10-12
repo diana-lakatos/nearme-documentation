@@ -1,6 +1,5 @@
 FactoryGirl.define do
   factory :transactable_type, class: 'TransactableType' do
-
     sequence(:name) { |n| "Transactable Type #{n}" }
 
     bookable_noun 'Desk'
@@ -9,7 +8,7 @@ FactoryGirl.define do
     type 'TransactableType'
     searchable true
     enable_reviews true
-    show_path_format "/listings/:id"
+    show_path_format '/listings/:id'
     searcher_type 'geo'
     search_engine 'elasticsearch'
     # reservation_type
@@ -47,7 +46,6 @@ FactoryGirl.define do
         max_hourly_price_cents 100_00
         min_hourly_price_cents 11_00
       end
-
     end
 
     factory :transactable_type_buy_sell do
@@ -59,15 +57,15 @@ FactoryGirl.define do
 
     factory :transactable_type_location do
       after(:build) do |transactable_type|
-        transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
+        transactable_type.availability_templates << FactoryGirl.build(:availability_template, transactable_type: transactable_type)
       end
     end
 
     factory :transactable_type_csv_template do
       after(:build) do |transactable_type|
-        transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
+        transactable_type.availability_templates << FactoryGirl.build(:availability_template, transactable_type: transactable_type)
         transactable_type.custom_attributes = [
-          FactoryGirl.build(:custom_attribute_required, target: transactable_type, name: 'my_attribute', attribute_type: 'string'),
+          FactoryGirl.build(:custom_attribute_required, target: transactable_type, name: 'my_attribute', attribute_type: 'string')
         ]
       end
       after(:build) do |transactable_type|
@@ -77,11 +75,10 @@ FactoryGirl.define do
     end
 
     factory :transactable_type_current_data do
-
-      custom_csv_fields { [{'location' => 'name'}, {'location' => 'email'}, {'location' => 'external_id'}, {'location' => 'location_type'}, {'location' => 'description'}, { 'location' => 'special_notes'}, { 'address' => 'address'}, {'address' => 'city'}, { 'address' => 'street' }, { 'address' => 'suburb' }, { 'address' => 'state' }, { 'address' => 'postcode' }, { 'transactable' => 'for_1_hour_price_cents' }, { 'transactable' => 'for_1_day_price_cents' }, { 'transactable' => 'name' }, { 'transactable' => 'my_attribute' }, { 'transactable' => 'external_id' }, { 'transactable' => 'enabled' }, { 'photo' => 'image_original_url' }] }
+      custom_csv_fields { [{ 'location' => 'name' }, { 'location' => 'email' }, { 'location' => 'external_id' }, { 'location' => 'location_type' }, { 'location' => 'description' }, { 'location' => 'special_notes' }, { 'address' => 'address' }, { 'address' => 'city' }, { 'address' => 'street' }, { 'address' => 'suburb' }, { 'address' => 'state' }, { 'address' => 'postcode' }, { 'transactable' => 'for_1_hour_price_cents' }, { 'transactable' => 'for_1_day_price_cents' }, { 'transactable' => 'name' }, { 'transactable' => 'my_attribute' }, { 'transactable' => 'external_id' }, { 'transactable' => 'enabled' }, { 'photo' => 'image_original_url' }] }
 
       after(:build) do |transactable_type|
-        transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
+        transactable_type.availability_templates << FactoryGirl.build(:availability_template, transactable_type: transactable_type)
         transactable_type.custom_attributes = [
           FactoryGirl.build(:custom_attribute_required, target: transactable_type, name: 'my_attribute', label: 'My Attribute', attribute_type: 'string'),
           FactoryGirl.build(:custom_attribute, target: transactable_type, name: 'name', label: 'Name', attribute_type: 'string')
@@ -114,17 +111,16 @@ FactoryGirl.define do
   end
 
   factory :group_type, class: 'GroupType' do
-
     factory :public_group_type do
-      sequence(:name) { |n| "Public" }
+      sequence(:name) { |_n| 'Public' }
     end
 
     factory :moderated_group_type do
-      sequence(:name) { |n| "Moderated" }
+      sequence(:name) { |_n| 'Moderated' }
     end
 
     factory :private_group_type do
-      sequence(:name) { |n| "Private" }
+      sequence(:name) { |_n| 'Private' }
     end
   end
 end

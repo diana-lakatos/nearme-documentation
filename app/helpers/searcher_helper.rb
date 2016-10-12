@@ -1,5 +1,4 @@
 module SearcherHelper
-
   def result_view
     return @result_view = 'index' if PlatformContext.current.custom_theme.present?
     return @result_view = 'community' if PlatformContext.current.instance.is_community?
@@ -38,5 +37,4 @@ module SearcherHelper
     text += " for \"#{@searcher.query}\"" if searcher.query.present?
     text
   end
-
 end

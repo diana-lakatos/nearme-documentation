@@ -1,5 +1,4 @@
 class ApprovalRequestDrop < BaseDrop
-
   attr_reader :approval_request
 
   # notes

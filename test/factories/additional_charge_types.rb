@@ -12,7 +12,7 @@ FactoryGirl.define do
     end
 
     factory :transactable_additional_charge_type do
-      additional_charge_type_target {  [(Transactable.last || FactoryGirl.create(:transactable)).id, "Transactable"].join(",") }
+      additional_charge_type_target {  [(Transactable.last || FactoryGirl.create(:transactable)).id, 'Transactable'].join(',') }
       commission_receiver 'host'
     end
   end

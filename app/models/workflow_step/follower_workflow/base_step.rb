@@ -1,5 +1,4 @@
 class WorkflowStep::FollowerWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def initialize(activity_feed_subscription_id)
     @activity_feed_subscription = ActivityFeedSubscription.find_by(id: activity_feed_subscription_id)
     @followed = @activity_feed_subscription.try(:followed)
@@ -17,5 +16,4 @@ class WorkflowStep::FollowerWorkflow::BaseStep < WorkflowStep::BaseStep
   def workflow_type
     'follower_workflow'
   end
-
 end

@@ -1,5 +1,4 @@
 class InstanceAdmin::Projects::TransactableTypesController < InstanceAdmin::Manage::BaseController
-
   def index
     @project_types = TransactableType.where(name: 'Project')
   end
@@ -54,12 +53,9 @@ class InstanceAdmin::Projects::TransactableTypesController < InstanceAdmin::Mana
     params.require(:transactable_type).permit(secured_params.transactable_type).tap do |whitelisted|
       whitelisted[:custom_csv_fields] = params[:transactable_type][:custom_csv_fields].map { |el| el = el.split('=>'); { el[0] => el[1] } } if params[:transactable_type][:custom_csv_fields]
     end
-
   end
 
   def project_type_state_params
     params.require(:transactable_type).permit(:enable_reviews, :show_reviews_if_both_completed)
   end
-
 end
-

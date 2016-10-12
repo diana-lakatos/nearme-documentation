@@ -1,4 +1,4 @@
-class Dashboard::UserRecurringBookings::PaymentSubscriptionsController <  Dashboard::BaseController
+class Dashboard::UserRecurringBookings::PaymentSubscriptionsController < Dashboard::BaseController
   before_filter :find_recurring_booking
   before_filter :find_payment_subscription
   before_filter :find_unpaid_recurring_booking_periods
@@ -39,6 +39,4 @@ class Dashboard::UserRecurringBookings::PaymentSubscriptionsController <  Dashbo
   def find_unpaid_recurring_booking_periods
     @unpaid_recurring_booking_periods = @payment_subscription.subscriber.recurring_booking_periods.unpaid
   end
-
 end
-

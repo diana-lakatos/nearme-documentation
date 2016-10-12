@@ -1,5 +1,4 @@
 class InstanceClient::StripeDecorator
-
   attr_accessor :instance_client
 
   def initialize(instance_client)
@@ -7,7 +6,7 @@ class InstanceClient::StripeDecorator
   end
 
   def customer_id
-    response.params["id"]
+    response.params['id']
   rescue
     nil
   end
@@ -19,9 +18,8 @@ class InstanceClient::StripeDecorator
   end
 
   def test_mode?
-    !response.params["livemode"]
+    !response.params['livemode']
   rescue
     true
   end
 end
-

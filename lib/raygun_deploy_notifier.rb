@@ -32,5 +32,4 @@ class RaygunDeployNotifier
       puts "Error: Unable to notify Raygun #{env} about deployment!"
     end
   end
-
 end

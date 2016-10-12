@@ -4,7 +4,7 @@ class CertificateRequest < Form
   validates :domain, :country, :state, :city,
             :organization, :department,
             :common_name, :email,
-            :presence => true
+            presence: true
 
   def initialize(params = {})
     self.domain = params[:common_name]
@@ -19,13 +19,13 @@ class CertificateRequest < Form
 
   def attributes
     {
-      :country => self.country,
-      :state => self.state,
-      :city => self.city,
-      :organization => self.organization,
-      :department => self.department,
-      :common_name => self.common_name,
-      :email => self.email
+      country: country,
+      state: state,
+      city: city,
+      organization: organization,
+      department: department,
+      common_name: common_name,
+      email: email
     }
   end
 end

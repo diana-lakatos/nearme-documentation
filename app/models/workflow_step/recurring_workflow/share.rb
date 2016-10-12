@@ -15,4 +15,3 @@ class WorkflowStep::RecurringWorkflow::Share < WorkflowStep::RecurringWorkflow::
     { listing: @transactable, user: @transactable.administrator }
   end
 end
-

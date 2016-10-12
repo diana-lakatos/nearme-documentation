@@ -27,7 +27,7 @@ class Topic < ActiveRecord::Base
 
   scope :featured, -> { where(featured: true) }
 
-  scope :feed_not_followed_by_user, -> (current_user) {
+  scope :feed_not_followed_by_user, lambda  { |current_user|
     where.not(id: current_user.feed_followed_topics.pluck(:id))
   }
 
@@ -40,7 +40,7 @@ class Topic < ActiveRecord::Base
 
   def create_activity_feed_event
     event = :topic_created
-    affected_objects = [self] + self.transactables.to_a
+    affected_objects = [self] + transactables.to_a
     ActivityFeedService.create_event(event, self, affected_objects, self)
   end
 

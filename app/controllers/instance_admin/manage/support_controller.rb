@@ -11,9 +11,9 @@ class InstanceAdmin::Manage::SupportController < InstanceAdmin::Manage::BaseCont
 
   def filter_name
     {
-      "open" => translated_filter_name(:open),
-      "resolved" => translated_filter_name(:resolved),
-      "all" => translated_filter_name(:all)
+      'open' => translated_filter_name(:open),
+      'resolved' => translated_filter_name(:resolved),
+      'all' => translated_filter_name(:all)
     }
   end
 
@@ -24,6 +24,6 @@ class InstanceAdmin::Manage::SupportController < InstanceAdmin::Manage::BaseCont
   private
 
   def translated_filter_name(name)
-    I18n.translate(name, scope: ['instance_admin', 'manage', 'support', 'filter_name'])
+    I18n.translate(name, scope: %w(instance_admin manage support filter_name))
   end
 end

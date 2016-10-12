@@ -8,4 +8,3 @@ class ScheduleChargeSubscriptions
     ChargeSubscriptionsJob.perform if Rails.env.production?
   end
 end
-

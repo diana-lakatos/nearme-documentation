@@ -1,1 +1,1 @@
-require "active_merchant/billing/rails"
+require 'active_merchant/billing/rails'

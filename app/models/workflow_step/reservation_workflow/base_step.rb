@@ -1,5 +1,4 @@
 class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def self.belongs_to_transactable_type?
     true
   end
@@ -52,5 +51,4 @@ class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @reservation.present?
   end
-
 end

@@ -1,5 +1,4 @@
 class RequiredFieldChecker
-
   def initialize(object, attribute)
     @object = object
     @attribute = attribute.to_s
@@ -15,6 +14,4 @@ class RequiredFieldChecker
 
     is_required
   end
-
 end
-

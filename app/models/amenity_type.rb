@@ -4,12 +4,12 @@ class AmenityType < ActiveRecord::Base
   # attr_accessible :name, :amenities_attributes
 
   validates_presence_of :name
-  validates :name, :uniqueness => { scope: :instance_id }
+  validates :name, uniqueness: { scope: :instance_id }
 
   belongs_to :instance
   has_many :amenities, -> { order 'amenities.name ASC' }, dependent: :destroy
   has_many :locations, through: :amenities
-  has_many :listings, through: :amenities, class_name: "Transactable"
+  has_many :listings, through: :amenities, class_name: 'Transactable'
 
   accepts_nested_attributes_for :amenities, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
 
@@ -19,5 +19,4 @@ class AmenityType < ActiveRecord::Base
 
     amenity_type
   end
-
 end

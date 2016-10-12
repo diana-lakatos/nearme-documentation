@@ -25,7 +25,6 @@ class ActivityFeedController < ApplicationController
     end
   end
 
-
   # "See more" feature section
   #
   # Parameters that should be provided:
@@ -38,14 +37,14 @@ class ActivityFeedController < ApplicationController
   # containter      |  The container to append the new results
 
   def activity_feed
-    @container = params[:container].presence || "#activity"
+    @container = params[:container].presence || '#activity'
 
     options = {}
     options.merge!(user_feed: true) if params[:type] == 'User'
 
     @feed = ActivityFeedService.new(@object, options)
 
-    @partial = "shared/activity_status"
+    @partial = 'shared/activity_status'
     @as = :event
     @collection = @feed.events(pagination_params.merge(per_page: ActivityFeedService::Helpers::EVENTS_PER_PAGE))
 
@@ -55,9 +54,9 @@ class ActivityFeedController < ApplicationController
   end
 
   def following_people
-    @container = params[:container].presence || "#following-people"
+    @container = params[:container].presence || '#following-people'
 
-    @partial = "shared/person"
+    @partial = 'shared/person'
     @as = :user
     @collection = @object.feed_followed_users.custom_order(params[:sort], current_user).paginate(pagination_params)
 
@@ -67,9 +66,9 @@ class ActivityFeedController < ApplicationController
   end
 
   def following_transactables
-    @container = params[:container].presence || "#following-projects"
+    @container = params[:container].presence || '#following-projects'
 
-    @partial = "shared/transactable"
+    @partial = 'shared/transactable'
     @as = :transactable
     @collection = @object.feed_followed_transactables.active.custom_order(params[:sort]).paginate(pagination_params)
 
@@ -79,9 +78,9 @@ class ActivityFeedController < ApplicationController
   end
 
   def following_topics
-    @container = params[:container].presence || "#following-topics"
+    @container = params[:container].presence || '#following-topics'
 
-    @partial = "shared/topic"
+    @partial = 'shared/topic'
     @as = :topic
     @collection = @object.feed_followed_topics.paginate(pagination_params)
 
@@ -91,9 +90,9 @@ class ActivityFeedController < ApplicationController
   end
 
   def followers
-    @container = params[:container].presence || "#followers"
+    @container = params[:container].presence || '#followers'
 
-    @partial = "shared/person"
+    @partial = 'shared/person'
     @as = :user
     @collection = @object.feed_followers.custom_order(params[:sort], current_user).paginate(pagination_params)
 
@@ -103,9 +102,9 @@ class ActivityFeedController < ApplicationController
   end
 
   def projects
-    @container = params[:container].presence || "#projects"
+    @container = params[:container].presence || '#projects'
 
-    @partial = "shared/project"
+    @partial = 'shared/project'
     @as = :project
     @collection = @object.all_projects.enabled.custom_order(params[:sort]).paginate(pagination_params)
 
@@ -115,9 +114,9 @@ class ActivityFeedController < ApplicationController
   end
 
   def collaborators
-    @container = params[:container].presence || "#collaborators"
+    @container = params[:container].presence || '#collaborators'
 
-    @partial = "shared/person"
+    @partial = 'shared/person'
     @as = :user
     @collection = @object.collaborating_users.custom_order(params[:sort], current_user).paginate(pagination_params)
 
@@ -127,9 +126,9 @@ class ActivityFeedController < ApplicationController
   end
 
   def members
-    @container = params[:container].presence || "#members"
+    @container = params[:container].presence || '#members'
 
-    @partial = "shared/person"
+    @partial = 'shared/person'
     @as = :user
     @collection = @object.approved_members.custom_order(params[:sort], current_user).paginate(pagination_params)
 
@@ -141,13 +140,14 @@ class ActivityFeedController < ApplicationController
   private
 
   def set_object(whitelist)
-    @id, @type = params[:id], params[:type].try(:gsub, "Decorator", "")
-    render json: {}, status: 422 and return unless @id.present? && @type.present?
+    @id = params[:id]
+    @type = params[:type].try(:gsub, 'Decorator', '')
+    render(json: {}, status: 422) && return unless @id.present? && @type.present?
 
     if whitelist.include?(@type)
       @object = @type.constantize.find(@id)
     else
-      render json: {}, status: 422 and return
+      render(json: {}, status: 422) && return
     end
   end
 

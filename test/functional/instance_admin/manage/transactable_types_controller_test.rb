@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::TransactableTypesControllerTest < ActionController::TestCase
-
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.any_instance.stubs(:instance).returns(@instance)
@@ -13,12 +12,9 @@ class InstanceAdmin::Manage::TransactableTypesControllerTest < ActionController:
   end
 
   context 'update' do
-
     should 'store correctly custom csv fields' do
-      put :update, id: @transactable_type.id, transactable_type: { custom_csv_fields: ['location=>email', 'address=>city' ] }
-      assert_equal [{'location' => 'email'}, {'address' => 'city'}], @transactable_type.reload.custom_csv_fields
+      put :update, id: @transactable_type.id, transactable_type: { custom_csv_fields: ['location=>email', 'address=>city'] }
+      assert_equal [{ 'location' => 'email' }, { 'address' => 'city' }], @transactable_type.reload.custom_csv_fields
     end
-
   end
-
 end

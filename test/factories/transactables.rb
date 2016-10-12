@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :transactable_no_action, class: 'Transactable' do
     sequence(:name) { |n| "Listing #{n}" }
-    description "Aliquid eos ab quia officiis sequi."
+    description 'Aliquid eos ab quia officiis sequi.'
     ignore do
       photos_count 0
     end
@@ -16,7 +16,7 @@ FactoryGirl.define do
     after(:build) do |listing, evaluator|
       listing.action_type = FactoryGirl.build(:transactable_action_type, transactable: listing, transactable_type_action_type: listing.transactable_type.action_types.first)
       {
-        "listing_type" => "Desk"
+        'listing_type' => 'Desk'
       }.each do |key, value|
         listing.properties[key] ||= value if listing.properties[key].nil? if listing.properties.respond_to?(key)
       end
@@ -28,8 +28,7 @@ FactoryGirl.define do
     end
 
     factory :transactable do
-
-      after(:build) do |listing, evaluator|
+      after(:build) do |listing, _evaluator|
         listing.action_type = FactoryGirl.build(:time_based_booking, :with_prices, transactable: listing, transactable_type_action_type: listing.transactable_type.time_based_booking)
       end
 
@@ -46,7 +45,6 @@ FactoryGirl.define do
         end
 
         factory :listing_with_10_dollars_per_hour_and_24h do
-
           after(:create) do |listing|
             listing.action_type.availability_template = AvailabilityTemplate.find_by(name: '24/7')
             listing.save!
@@ -71,11 +69,10 @@ FactoryGirl.define do
 
       factory :transactable_with_doc_requirements do
         after(:build) do |transactable|
-          transactable.create_upload_obligation({level: UploadObligation::LEVELS[0]})
+          transactable.create_upload_obligation(level: UploadObligation::LEVELS[0])
           transactable.document_requirements << FactoryGirl.create(:document_requirement, item: transactable)
         end
       end
-
 
       factory :subscription_transactable do
         after(:build) do |listing|
@@ -110,14 +107,13 @@ FactoryGirl.define do
       end
 
       factory :listings_in_locations, traits: [:with_time_based_booking] do
-
         after(:build) do |listing|
           listing.action_type.pricings << FactoryGirl.build(:transactable_pricing, transactable_type_pricing: nil, number_of_units: 7)
           listing.action_type.pricings << FactoryGirl.build(:transactable_pricing, transactable_type_pricing: nil, number_of_units: 30)
         end
 
         factory :listing_at_5_5 do
-          association(:location, factory: :location, latitude: "5.0", longitude: "5.0")
+          association(:location, factory: :location, latitude: '5.0', longitude: '5.0')
         end
 
         factory :listing_in_auckland do
@@ -168,7 +164,6 @@ FactoryGirl.define do
           association(:location, factory: :location_in_san_francisco)
         end
 
-
         factory :listing_in_san_francisco_address_components do
           after(:build) do |listing|
             listing.name = "Listing in San Francisco #{Random.rand(1000)}"
@@ -190,8 +185,8 @@ FactoryGirl.define do
           listing.action_type.pricing_for('1_day').price_cents = 5000 + (100 * rand(50)).to_i
         end
 
-        after(:create) do |listing, evaluator|
-          listing.photos = FactoryGirl.create_list(:demo_photo, 2, creator: listing.location.creator, owner: listing )
+        after(:create) do |listing, _evaluator|
+          listing.photos = FactoryGirl.create_list(:demo_photo, 2, creator: listing.location.creator, owner: listing)
           listing.save!
         end
       end
@@ -201,19 +196,17 @@ FactoryGirl.define do
           new(transactable_type: (FactoryGirl.create(:transactable_type_listing_with_price_constraints)))
         end
       end
-
     end
 
     factory :transactable_project do
-
-      after(:build) do |listing, evaluator|
+      after(:build) do |listing, _evaluator|
         listing.build_action_type
         listing.action_type.transactable_type_action_type = TransactableType::ActionType.where(transactable_type_id: listing.transactable_type_id).first
       end
 
       factory :project do
-        name "Project Manhattan"
-        description "The Manhattan Project was a research and development project that produced the first nuclear weapon"
+        name 'Project Manhattan'
+        description 'The Manhattan Project was a research and development project that produced the first nuclear weapon'
         seek_collaborators true
         creator
         photo_not_required true
@@ -235,6 +228,5 @@ FactoryGirl.define do
         end
       end
     end
-
   end
 end

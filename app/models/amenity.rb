@@ -11,5 +11,4 @@ class Amenity < ActiveRecord::Base
   def category
     self[:category] || 'Other'
   end
-
 end

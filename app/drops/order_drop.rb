@@ -14,14 +14,14 @@ class OrderDrop < BaseDrop
   # line_items
   #   an array of line items that belong to this order in the form of LineItem objects
   delegate :id, :user, :company, :number, :line_items, :line_item_adjustments,
-    :shipping_profile, :adjustment, :can_host_cancel?, :can_confirm?, :can_reject?,
-    :paid?, :unconfirmed?, :confirmed?, :manual_payment?, :can_complete_checkout?,
-    :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
-    :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :rejection_reason,
-    :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
-    :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
-    :transactable, :cancelled_at, :confirmed_at, :recurring_booking_periods, :creator,
-    :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing, to: :order
+           :shipping_profile, :adjustment, :can_host_cancel?, :can_confirm?, :can_reject?,
+           :paid?, :unconfirmed?, :confirmed?, :manual_payment?, :can_complete_checkout?,
+           :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
+           :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :rejection_reason,
+           :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
+           :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
+           :transactable, :cancelled_at, :confirmed_at, :recurring_booking_periods, :creator,
+           :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing, to: :order
 
   def initialize(order)
     @order = order.decorate
@@ -76,7 +76,7 @@ class OrderDrop < BaseDrop
   end
 
   def translated_payment_method
-    I18n.t("dashboard.host_reservations.payment_methods." + (@order.payment.try(:payment_method).try(:payment_method_type) || 'pending').to_s)
+    I18n.t('dashboard.host_reservations.payment_methods.' + (@order.payment.try(:payment_method).try(:payment_method_type) || 'pending').to_s)
   end
 
   def outbound_shipment
@@ -149,7 +149,7 @@ class OrderDrop < BaseDrop
   end
 
   def transactable_user_messages
-    transactable.user_messages.where("author_id = :user_id OR thread_recipient_id = :user_id", user_id: @order.user_id)
+    transactable.user_messages.where('author_id = :user_id OR thread_recipient_id = :user_id', user_id: @order.user_id)
   end
 
   def properties
@@ -162,5 +162,4 @@ class OrderDrop < BaseDrop
     @first_line_item ||= @order.line_items.first || OpenStruct.new(included_tax_total_rate: 0, additional_tax_total_rate: 0)
     @first_line_item
   end
-
 end

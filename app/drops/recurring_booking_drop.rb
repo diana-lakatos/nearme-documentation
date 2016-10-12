@@ -1,5 +1,4 @@
 class RecurringBookingDrop < OrderDrop
-
   attr_reader :recurring_booking
 
   # quantity
@@ -25,10 +24,10 @@ class RecurringBookingDrop < OrderDrop
   # total_payable_to_host_formatted
   #   total amount payable to host formatted as a string with currency symbol and cents
   delegate :quantity, :subtotal_price, :guest_service_fee, :total_price, :pending?,
-    :credit_card_payment?, :rejection_reason, :owner, :has_service_fee?,
-    :additional_charges, :with_delivery?, :last_unpaid_amount, :total_payable_to_host_formatted, :total_units_text,
-    :manage_booking_status_info, :manage_booking_status_info_new,
-    to: :recurring_booking
+           :credit_card_payment?, :rejection_reason, :owner, :has_service_fee?,
+           :additional_charges, :with_delivery?, :last_unpaid_amount, :total_payable_to_host_formatted, :total_units_text,
+           :manage_booking_status_info, :manage_booking_status_info_new,
+           to: :recurring_booking
 
   # transactable_type
   #   the object describing the type of item to be booked (e.g. desk, room etc.)
@@ -69,15 +68,14 @@ class RecurringBookingDrop < OrderDrop
     routes.dashboard_user_recurring_bookings_path(token_key => @recurring_booking.owner.temporary_token)
   end
 
-
   def guest_show_url
     path = case @recurring_booking.state
            when 'confirmed', 'unconfirmed', 'overdued'
-            'active_dashboard_user_recurring_bookings_url'
+             'active_dashboard_user_recurring_bookings_url'
            else
              'archived_dashboard_user_recurring_bookings_url'
            end
-    routes.send(path, anchor: "recurring_booking_#{@recurring_booking.id}", host: PlatformContext.current.decorate.host, token_key => @recurring_booking.owner.temporary_token )
+    routes.send(path, anchor: "recurring_booking_#{@recurring_booking.id}", host: PlatformContext.current.decorate.host, token_key => @recurring_booking.owner.temporary_token)
   end
 
   # url to the dashboard area for managing own reservations with tracking
@@ -125,9 +123,8 @@ class RecurringBookingDrop < OrderDrop
     @recurring_booking.state.to_s.humanize
   end
 
-  #returns translated number of units and unit for booking
+  # returns translated number of units and unit for booking
   def booking_units
-    @recurring_booking.transactable_pricing.decorate.units_translation("dashboard.user_recurring_bookings.every_unit_price")
+    @recurring_booking.transactable_pricing.decorate.units_translation('dashboard.user_recurring_bookings.every_unit_price')
   end
-
 end

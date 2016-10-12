@@ -1,5 +1,4 @@
-class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceController
-
+class InstanceAdmin::FormComponentsController < InstanceAdmin::ResourceController
   before_filter :find_form_componentable
   before_filter :set_breadcrumbs_title
 
@@ -9,7 +8,7 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
 
   def new
     @form_type = params[:form_type]
-    @form_component = @form_componentable.form_components.build(:form_type => @form_type)
+    @form_component = @form_componentable.form_components.build(form_type: @form_type)
   end
 
   def create
@@ -67,17 +66,16 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
     @form_component = @form_componentable.form_components.find(params[:id])
     @form_component.update_attribute(:rank_position, params[:rank_position])
     respond_to do |format|
-      format.json {
-        render :json => { :success => true }
-      }
+      format.json do
+        render json: { success: true }
+      end
     end
-
   end
 
   private
 
   def resource_class
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
   def find_form_componentable
@@ -89,7 +87,7 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
   end
 
   def permitting_controller_class
-    @controller_scope ||='manage'
+    @controller_scope ||= 'manage'
   end
 
   def redirect_path
@@ -98,9 +96,9 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
 
   def set_breadcrumbs_title
     @breadcrumbs_title = BreadcrumbsList.new(
-      { :url => polymorphic_url([:instance_admin, @controller_scope, resource_class]), :title => t("instance_admin.#{@controller_scope}.#{translation_key}.#{translation_key}") },
-      { :title => @form_componentable.name.titleize },
-      { :title => t('instance_admin.manage.transactable_types.form_components') }
+      { url: polymorphic_url([:instance_admin, @controller_scope, resource_class]), title: t("instance_admin.#{@controller_scope}.#{translation_key}.#{translation_key}") },
+      { title: @form_componentable.name.titleize },
+      title: t('instance_admin.manage.transactable_types.form_components')
     )
   end
 
@@ -109,6 +107,5 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
       whitelisted[:form_fields] = params[:form_component][:form_fields].map { |el| el = el.split('=>'); { el[0].try(:strip) => el[1].try(:strip) } } if params[:form_component][:form_fields]
       whitelisted[:form_fields] ||= []
     end
-
   end
 end

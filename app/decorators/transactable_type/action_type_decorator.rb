@@ -8,5 +8,4 @@ class TransactableType::ActionTypeDecorator < Draper::Decorator
       [I18n.t("pricing.instance_admin.#{unit}", count: 1), unit]
     end
   end
-
 end

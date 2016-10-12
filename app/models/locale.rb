@@ -3,7 +3,7 @@ class Locale < ActiveRecord::Base
   scoped_to_platform_context
 
   # Generates /^\/(aa|ab|af|ak|sq|am|ar|an|hy|as|...|zu)(?=\/|$)/
-  DOMAIN_PATTERN = %r(^/(#{I18nData.languages.map { |l| Regexp.escape(l[0].downcase) }.join('|')})(?=/|$))
+  DOMAIN_PATTERN = %r{^/(#{I18nData.languages.map { |l| Regexp.escape(l[0].downcase) }.join('|')})(?=/|$)}
 
   belongs_to :instance, touch: true
   has_many :locale_instance_views, dependent: :destroy
@@ -24,17 +24,17 @@ class Locale < ActiveRecord::Base
   scope :by_created_at, -> { order('created_at ASC') }
 
   def self.remove_locale_from_url(url)
-    url.sub!(DOMAIN_PATTERN) { $2 || '' }
+    url.sub!(DOMAIN_PATTERN) { Regexp.last_match(2) || '' }
     url.replace('/') if url.empty?
     url
   end
 
   def self.change_locale_in_url(url, new_locale)
-    url.sub!(DOMAIN_PATTERN) { $2 || "/#{new_locale}" }
+    url.sub!(DOMAIN_PATTERN) { Regexp.last_match(2) || "/#{new_locale}" }
     if url == '/'
       url.sub!('/', "/#{new_locale}")
     else
-       url = "/#{new_locale}" + url unless url =~ DOMAIN_PATTERN
+      url = "/#{new_locale}" + url unless url =~ DOMAIN_PATTERN
     end
     url
   end
@@ -68,9 +68,7 @@ class Locale < ActiveRecord::Base
   private
 
   def create_tranlsation_keys_for_categories
-    Category.find_each do |category|
-      category.create_translation_key
-    end
+    Category.find_each(&:create_translation_key)
   end
 
   def remove_primary
@@ -91,5 +89,4 @@ class Locale < ActiveRecord::Base
   def check_user_settings
     instance.users.where(language: code).update_all(language: instance.primary_locale)
   end
-
 end

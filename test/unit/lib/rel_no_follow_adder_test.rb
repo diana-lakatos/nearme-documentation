@@ -1,13 +1,11 @@
 require 'test_helper'
 
 class RelNoFollowAdderTest < ActiveSupport::TestCase
-
   setup do
-    @rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => ['allowed.domain.com']})
+    @rel_no_follow_adder = RelNoFollowAdder.new(skip_domains: ['allowed.domain.com'])
   end
 
   context 'single link' do
-
     should 'have no follow if its domain is not known' do
       assert_equal '<div><a href="http://example.com" rel="nofollow">Should have no follow</a></div>', @rel_no_follow_adder.modify('<div><a href="http://example.com">Should have no follow</a></div>')
     end
@@ -35,7 +33,6 @@ class RelNoFollowAdderTest < ActiveSupport::TestCase
     should 'not add nofollow to relative link' do
       assert_equal '<div><a href="/some/path">Without nofollow</a></div>', @rel_no_follow_adder.modify('<div><a href="/some/path">Without nofollow</a></div>')
     end
-
   end
 
   context 'multiple links' do
@@ -59,5 +56,4 @@ class RelNoFollowAdderTest < ActiveSupport::TestCase
   def link_without_no_follow
     '<a href="http://allowed.domain.com">Without nofollow</a>'
   end
-
 end

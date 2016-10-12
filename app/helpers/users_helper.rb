@@ -5,9 +5,9 @@ module UsersHelper
 
   def user_country_name_options
     if (allowed_countries = current_instance.allowed_countries_list).present?
-      allowed_countries.map { |c| [c.name, c.name, {:'data-calling-code' => c.calling_code}] }.sort_by(&:first)
+      allowed_countries.map { |c| [c.name, c.name, { 'data-calling-code': c.calling_code }] }.sort_by(&:first)
     else
-      Country.all.map { |c| [c.name, c.name, {:'data-calling-code' => c.calling_code}] }.sort_by(&:first)
+      Country.all.map { |c| [c.name, c.name, { 'data-calling-code': c.calling_code }] }.sort_by(&:first)
     end
   end
 
@@ -32,15 +32,13 @@ module UsersHelper
   end
 
   def render_social_connection(user, authentication)
-    return "" unless authentication
-    icon = "ico-" + social_icon(authentication.provider)
-    render('registrations/social_connection', {
-      icon: icon,
-      provider: authentication.provider,
-      count: authentication.total_social_connections,
-      link: user.social_url(authentication.provider),
-      rel: nil
-    })
+    return '' unless authentication
+    icon = 'ico-' + social_icon(authentication.provider)
+    render('registrations/social_connection',       icon: icon,
+                                                    provider: authentication.provider,
+                                                    count: authentication.total_social_connections,
+                                                    link: user.social_url(authentication.provider),
+                                                    rel: nil)
   end
 
   def param_reviews_page_present?
@@ -65,7 +63,7 @@ module UsersHelper
   end
 
   def user_video_embed_html(user)
-    return if !user.properties.respond_to?(:video_url)
+    return unless user.properties.respond_to?(:video_url)
     video_embedder = VideoEmbedder.new(user.properties.video_url, iframe_attributes: { width: 350, height: 175 })
     video_embedder.html.html_safe
   end

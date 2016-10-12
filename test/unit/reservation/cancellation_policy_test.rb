@@ -1,9 +1,7 @@
 require 'test_helper'
 
 class Reservation::CancellationPolicyTest < ActiveSupport::TestCase
-
   context '#cancelable' do
-
     setup do
       @reservation = stub(
         skip_payment_authorization?: false,
@@ -25,7 +23,5 @@ class Reservation::CancellationPolicyTest < ActiveSupport::TestCase
         refute @cancellation_policy.cancelable?
       end
     end
-
   end
-
 end

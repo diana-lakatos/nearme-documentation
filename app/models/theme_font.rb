@@ -26,10 +26,8 @@ class ThemeFont < ActiveRecord::Base
 
   def theme_font_changed?
     attrs = attributes.keys - %w(updated_at)
-    attrs.any? { |attr|
+    attrs.any? do |attr|
       send("#{attr}_changed?")
-    }
+    end
   end
-
 end
-

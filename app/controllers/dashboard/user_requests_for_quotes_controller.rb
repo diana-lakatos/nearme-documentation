@@ -1,5 +1,4 @@
 class Dashboard::UserRequestsForQuotesController < Dashboard::BaseController
-
   def index
     @filter = filter
     @filter_name = filter_name[@filter]
@@ -19,15 +18,13 @@ class Dashboard::UserRequestsForQuotesController < Dashboard::BaseController
 
   def filter_name
     {
-      "open" => translated_filter_name(:open),
-      "resolved" => translated_filter_name(:resolved),
-      "all" => translated_filter_name(:all)
+      'open' => translated_filter_name(:open),
+      'resolved' => translated_filter_name(:resolved),
+      'all' => translated_filter_name(:all)
     }
   end
 
   def translated_filter_name(name)
-    I18n.translate(name, scope: ['support', 'filter_name'])
+    I18n.translate(name, scope: %w(support filter_name))
   end
-
 end
-

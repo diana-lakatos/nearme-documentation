@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Reports::TransactablesControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
@@ -12,17 +11,15 @@ class InstanceAdmin::Reports::TransactablesControllerTest < ActionController::Te
   should 'update transactable settings' do
     transactable = FactoryGirl.create(:transactable, photos_count: 1)
 
-    put :update, { id: transactable.id,
-                   transactable: {
+    put :update, id: transactable.id,
+                 transactable: {
                    enabled: true
-                   }
                  }
     assert_equal true, transactable.reload.enabled
 
-    put :update, { id: transactable.id,
-                   transactable: {
+    put :update, id: transactable.id,
+                 transactable: {
                    enabled: false
-                   }
                  }
     assert_equal false, transactable.reload.enabled
   end
@@ -32,7 +29,7 @@ class InstanceAdmin::Reports::TransactablesControllerTest < ActionController::Te
 
     assert_equal true, Transactable.exists?(transactable)
 
-    delete :destroy, { id: transactable.id }
+    delete :destroy, id: transactable.id
 
     assert_equal false, Transactable.exists?(transactable)
   end
@@ -40,11 +37,9 @@ class InstanceAdmin::Reports::TransactablesControllerTest < ActionController::Te
   should 'see transactable information' do
     transactable = FactoryGirl.create(:transactable, photos_count: 1)
 
-    get :show, { id: transactable.id }
+    get :show, id: transactable.id
 
     assert_select 'th', 'Attribute'
     assert_select 'th', 'Value'
   end
-
 end
-

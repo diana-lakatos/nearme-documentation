@@ -17,7 +17,7 @@ class WorkflowStep::BaseStep
     true
   end
 
-  def mail_attachments(alert)
+  def mail_attachments(_alert)
     []
   end
 
@@ -30,7 +30,7 @@ class WorkflowStep::BaseStep
   def callback_to_prepare_data_for_check
   end
 
-  def callback_to_adjust_data_after_check(rendered_view)
+  def callback_to_adjust_data_after_check(_rendered_view)
   end
 
   def transactable_type_id
@@ -52,7 +52,7 @@ class WorkflowStep::BaseStep
   end
 
   def workflow_type
-    raise NotImplementedError.new("#{self.class.name} must implemented workflow_type method")
+    fail NotImplementedError.new("#{self.class.name} must implemented workflow_type method")
   end
 
   def data
@@ -62,8 +62,7 @@ class WorkflowStep::BaseStep
   def invokable_alert?(alert)
     # this config will be set to true in production and test environment, false in application.rb
     return true if Rails.application.config.force_sending_all_workflow_alerts
-    return true unless ['sms', 'api_call'].include?(alert.alert_type)
+    return true unless %w(sms api_call).include?(alert.alert_type)
     PlatformContext.current.instance.enable_sms_and_api_workflow_alerts_on_staging? ? true : false
   end
-
 end

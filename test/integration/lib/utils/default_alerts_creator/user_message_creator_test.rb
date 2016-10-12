@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::IntegrationTest
-
   setup do
     @user_message_creator = Utils::DefaultAlertsCreator::UserMessageCreator.new
   end
@@ -43,11 +42,11 @@ class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::Inte
 
     context 'sms' do
       setup do
-        @instance = FactoryGirl.create(:instance, :name => 'DesksNearMe')
-        @domain = FactoryGirl.create(:domain, :name => 'notifcations.com', :target => @instance)
+        @instance = FactoryGirl.create(:instance, name: 'DesksNearMe')
+        @domain = FactoryGirl.create(:domain, name: 'notifcations.com', target: @instance)
         PlatformContext.current = PlatformContext.new(@instance)
-        @author = FactoryGirl.create(:user, :name => "Krzysztof Test")
-        @recipient = FactoryGirl.create(:user, :mobile_number => "124456789")
+        @author = FactoryGirl.create(:user, name: 'Krzysztof Test')
+        @recipient = FactoryGirl.create(:user, mobile_number: '124456789')
         @recipient.stubs(:temporary_token).returns('abc')
         @user_message = FactoryGirl.create(:user_message,
                                            thread_context: @recipient,
@@ -56,38 +55,34 @@ class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::Inte
                                            thread_recipient: @recipient,
                                            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.'
                                           )
-        Googl.stubs(:shorten).with("https://notifcations.com/users/#{@recipient.id}/user_messages/#{@user_message.id}?token=abc").returns(stub(:short_url => "http://goo.gl/abc324"))
+        Googl.stubs(:shorten).with("https://notifcations.com/users/#{@recipient.id}/user_messages/#{@user_message.id}?token=abc").returns(stub(short_url: 'http://goo.gl/abc324'))
         UserMessage.any_instance.stubs(:recipient).returns(@recipient)
       end
 
       context 'create_user_message_from_lister_sms!' do
-
         setup do
           @user_message_creator.create_user_message_created_sms!
         end
 
         should 'trigger proper sms' do
-          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(:invoke! => true)).once
+          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
           WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::Created, @user_message.id)
         end
 
-        should "render with the user_message" do
+        should 'render with the user_message' do
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::UserMessageWorkflow::Created.new(@user_message.id))
           assert_equal @recipient.full_mobile_number, sms.to
           assert sms.body =~ /\[DesksNearMe\] New message from Krzysztof: \"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invid...\"/i, "Sms body does not include expected content: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl\/abc324/
         end
 
-        should "not render if user had disabled sms notification for new messages" do
+        should 'not render if user had disabled sms notification for new messages' do
           @recipient.update_attribute(:sms_notifications_enabled, false)
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::UserMessageWorkflow::Created.new(@user_message.id))
           assert sms.is_a?(SmsNotifier::NullMessage)
           refute sms.deliver
         end
       end
-
     end
   end
-
 end
-

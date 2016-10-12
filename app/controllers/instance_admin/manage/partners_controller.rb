@@ -1,5 +1,4 @@
 class InstanceAdmin::Manage::PartnersController < InstanceAdmin::Manage::BaseController
-
   def index
   end
 

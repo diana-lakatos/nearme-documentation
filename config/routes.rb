@@ -1,24 +1,22 @@
 DesksnearMe::Application.routes.draw do
-
-  #favicon for scraping
+  # favicon for scraping
   get '/favicon.ico', to: 'favicon#show'
 
   get '/test_endpoint', to: 'webhooks/base#test'
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
 
-  namespace :v1, :defaults => {:format => 'json'} do
-
+  namespace :v1, defaults: { format: 'json' } do
     resource :authentication, only: [:create]
-    post 'authentication/:provider', :to => 'authentications#social'
+    post 'authentication/:provider', to: 'authentications#social'
 
     resource :registration, only: [:create]
 
-    get 'profile', :to => 'profile#show'
-    match 'profile', :to => 'profile#update', via: [:put, :patch]
-    post 'profile/avatar/:filename', :to => 'profile#upload_avatar'
-    delete 'profile/avatar', :to => 'profile#destroy_avatar'
+    get 'profile', to: 'profile#show'
+    match 'profile', to: 'profile#update', via: [:put, :patch]
+    post 'profile/avatar/:filename', to: 'profile#upload_avatar'
+    delete 'profile/avatar', to: 'profile#destroy_avatar'
 
-    get 'iplookup', :to => 'iplookup#index'
+    get 'iplookup', to: 'iplookup#index'
 
     resources :locations do
       collection do
@@ -29,7 +27,6 @@ DesksnearMe::Application.routes.draw do
     resources :photos
 
     resources :listings, only: [:show, :create, :update, :destroy] do
-
       member do
         post 'reservation'
         post 'availability'
@@ -61,19 +58,18 @@ DesksnearMe::Application.routes.draw do
   end
 
   scope '(:language)', language: /[a-z]{2}/, defaults: { language: nil } do
-
     # Legacy pages redirect. Can be removed in Feb 16th. The redirect matches the route below.
-    get "/pages/:slug(.:format)", to: 'pages#redirect'
+    get '/pages/:slug(.:format)', to: 'pages#redirect'
 
-    get "/transactable_types/:transactable_type_id/locations/:location_id/listings/:id", to: 'listings#show', as: 'transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
-    get "/:transactable_type_id/locations/:location_id/listings/:id", to: 'listings#show', as: 'short_transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
-    get "/:transactable_type_id/:location_id/listings/:id", to: 'listings#show', as: 'short_transactable_type_short_location_listing', constraints: Constraints::TransactableTypeConstraints.new
+    get '/transactable_types/:transactable_type_id/locations/:location_id/listings/:id', to: 'listings#show', as: 'transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
+    get '/:transactable_type_id/locations/:location_id/listings/:id', to: 'listings#show', as: 'short_transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
+    get '/:transactable_type_id/:location_id/listings/:id', to: 'listings#show', as: 'short_transactable_type_short_location_listing', constraints: Constraints::TransactableTypeConstraints.new
     # making (:id) optional for now even though it's required for legacy urls in a format of locations/:location_id
-    get "/locations/:location_id/(:id)", to: 'listings#show', as: 'location'
-    get "/locations/:location_id/listings/:id", to: 'listings#show', as: 'location_listing'
+    get '/locations/:location_id/(:id)', to: 'listings#show', as: 'location'
+    get '/locations/:location_id/listings/:id', to: 'listings#show', as: 'location_listing'
 
-    resources :listings, :only => [:show] do
-      resources :orders, :controller => 'listings/orders' do
+    resources :listings, only: [:show] do
+      resources :orders, controller: 'listings/orders' do
         collection do
           post :store_order
         end
@@ -85,9 +81,9 @@ DesksnearMe::Application.routes.draw do
         get :booking_module
       end
 
-      resource :social_share, :only => [:new], :controller => 'listings/social_share'
+      resource :social_share, only: [:new], controller: 'listings/social_share'
 
-      resources :recurring_bookings, :only => [:create, :update], :controller => "listings/recurring_bookings" do
+      resources :recurring_bookings, only: [:create, :update], controller: 'listings/recurring_bookings' do
         collection do
           post :review
           post :store_recurring_booking_request
@@ -98,9 +94,9 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :tickets, only: [:new, :create], :controller => 'listings/support/tickets'
+      resources :tickets, only: [:new, :create], controller: 'listings/support/tickets'
 
-      resources :reservations, :only => [:create, :update], :controller => 'listings/reservations' do
+      resources :reservations, only: [:create, :update], controller: 'listings/reservations' do
         collection do
           post :review
           post :address
@@ -114,7 +110,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
     end
-    get "/:transactable_type_id/:id", to: 'listings#show', as: 'short_transactable_type_listing', constraints: Constraints::TransactableTypeConstraints.new
+    get '/:transactable_type_id/:id', to: 'listings#show', as: 'short_transactable_type_listing', constraints: Constraints::TransactableTypeConstraints.new
 
     get 'comments/index'
     get 'comments/create'
@@ -128,7 +124,6 @@ DesksnearMe::Application.routes.draw do
         get :return
         get :cancel
       end
-
     end
 
     namespace :cart do
@@ -149,14 +144,14 @@ DesksnearMe::Application.routes.draw do
       post '/create', to: 'instance_wizard#create'
     end
 
-    root :to => "home#index"
+    root to: 'home#index'
 
-    match "/404", :to => "errors#not_found", :via => :all
-    match "/422", :to => "errors#server_error", :via => :all
-    match "/500", :to => "errors#server_error", :via => :all
+    match '/404', to: 'errors#not_found', via: :all
+    match '/422', to: 'errors#server_error', via: :all
+    match '/500', to: 'errors#server_error', via: :all
 
     namespace :support do
-      root :to => 'dashboard#index'
+      root to: 'dashboard#index'
       resources :tickets, only: [:index, :new, :create, :show] do
         resources :ticket_messages, only: [:create]
         resources :ticket_message_attachments, only: [:new, :create, :edit, :update, :destroy], controller: 'tickets/ticket_message_attachments'
@@ -167,12 +162,12 @@ DesksnearMe::Application.routes.draw do
 
     namespace :admin do
       namespace :blog do
-        get '/', :to => redirect("/admin/blog/blog_posts")
+        get '/', to: redirect('/admin/blog/blog_posts')
         resources :blog_posts
         resource :blog_instance, only: [:edit, :update]
       end
 
-      get '/', :to => "dashboard#show"
+      get '/', to: 'dashboard#show'
       resources :users do
         member do
           post :login_as
@@ -199,7 +194,7 @@ DesksnearMe::Application.routes.draw do
 
       resources :instance_creators
 
-      resources :instances, :only => [:index, :show, :edit, :update] do
+      resources :instances, only: [:index, :show, :edit, :update] do
         member do
           post :lock
         end
@@ -214,7 +209,7 @@ DesksnearMe::Application.routes.draw do
           end
         end
       end
-      resources :transactable_types, :only => [] do
+      resources :transactable_types, only: [] do
         resources :custom_attributes
       end
       resources :pages
@@ -232,7 +227,6 @@ DesksnearMe::Application.routes.draw do
     get 'wish_list/:id/:wishlistable_type', to: 'wish_lists#show', as: 'wish_list'
     get 'wish_lists/bulk_show', to: 'wish_lists#bulk_show', as: 'bulk_show_wish_lists'
     post 'wish_lists', to: 'wish_lists#create', as: 'wish_lists'
-
 
     namespace :instance_admin do
       get '/', to: 'base#index'
@@ -269,11 +263,10 @@ DesksnearMe::Application.routes.draw do
             get :download_report
           end
         end
-
       end
 
       namespace :settings do
-        get '/', :to => 'base#index'
+        get '/', to: 'base#index'
         resources :domains do
           resource :hosted_zone do
             resources :resource_records
@@ -284,14 +277,14 @@ DesksnearMe::Application.routes.draw do
         resources :certificate_uploads, only: [:new, :create, :destroy]
 
         resources :api_keys, only: [:index, :create, :destroy]
-        resource :hidden_controls, only: [:show, :update], :controller => 'hidden_controls'
+        resource :hidden_controls, only: [:show, :update], controller: 'hidden_controls'
         resource :certificate_request, only: [:new, :create]
-        resource :configuration, :only => [:show, :update], :controller => 'configuration' do
+        resource :configuration, only: [:show, :update], controller: 'configuration' do
           collection do
             post :lock
           end
         end
-        resource :integrations, :only => [:show, :update], :controller => 'integrations' do
+        resource :integrations, only: [:show, :update], controller: 'integrations' do
           collection do
             post :countries
             post :payment_gateways
@@ -300,11 +293,11 @@ DesksnearMe::Application.routes.draw do
             match :create_or_update_payment_gateway, via: [:post, :put, :patch]
           end
         end
-        resource :locations, :only => [:show, :update], :controller => 'locations'
+        resource :locations, only: [:show, :update], controller: 'locations'
         resources :location_types, only: [:index, :create, :update, :destroy_modal, :destroy] do
           get 'destroy_modal', on: :member
         end
-        resource :listings, :only => [:show, :update], :controller => 'listings'
+        resource :listings, only: [:show, :update], controller: 'listings'
         resources :payments
         resources :payment_gateways, controller: 'payments/payment_gateways', except: [:show]
         resources :tax_regions do
@@ -312,9 +305,9 @@ DesksnearMe::Application.routes.draw do
             put :update_settings
           end
         end
-        resource :translations, :only => [:show, :update], :controller => 'translations'
-        resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
-        resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'
+        resource :translations, only: [:show, :update], controller: 'translations'
+        resource :cancellation_policy, only: [:show, :update], controller: 'cancellation_policy'
+        resource :documents_upload, except: [:index, :destroy], controller: 'documents_upload'
         resource :seller_attachments, only: %i(show update destroy), controller: 'seller_attachments'
 
         resources :locales, except: [:show], controller: 'locales' do
@@ -342,7 +335,6 @@ DesksnearMe::Application.routes.draw do
       end
 
       namespace :custom_templates do
-
         concern :versionable do
           member do
             get :versions
@@ -355,13 +347,12 @@ DesksnearMe::Application.routes.draw do
           resources :instance_views, controller: 'custom_themes/instance_views', concerns: :versionable
           resources :custom_theme_assets, controller: 'custom_themes/custom_theme_assets', concerns: :versionable
         end
-
       end
 
       namespace :theme do
-        get '/', :to => 'base#index'
-        resource :info, :only => [:show, :update], :controller => 'info'
-        resource :design, :only => [:show, :update], :controller => 'design' do
+        get '/', to: 'base#index'
+        resource :info, only: [:show, :update], controller: 'info'
+        resource :design, only: [:show, :update], controller: 'design' do
           member do
             delete 'delete_font'
           end
@@ -402,7 +393,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       namespace :manage do
-        get '/', :to => 'base#index'
+        get '/', to: 'base#index'
 
         resources :additional_charge_types, except: [:show]
         resources :projects, only: [:edit, :update]
@@ -425,7 +416,7 @@ DesksnearMe::Application.routes.draw do
           resources :workflow_alerts, except: [:index], controller: 'workflows/workflow_alerts'
         end
 
-        resources :instance_profile_types, :only => [:index, :destroy, :update] do
+        resources :instance_profile_types, only: [:index, :destroy, :update] do
           collection do
             post :enable
           end
@@ -530,16 +521,16 @@ DesksnearMe::Application.routes.draw do
 
         resources :partners
 
-        resources :admins, :only => [:index, :create]
+        resources :admins, only: [:index, :create]
         namespace :admins do
-          resources :instance_admins, :only => [:create, :update, :destroy, :index]
-          resources :instance_admin_roles, :only => [:create, :update, :destroy, :index]
+          resources :instance_admins, only: [:create, :update, :destroy, :index]
+          resources :instance_admin_roles, only: [:create, :update, :destroy, :index]
         end
 
-        resources :email_layout_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
-        resources :email_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
-        resources :sms_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
-        resources :waiver_agreement_templates, :only => [:index, :create, :update, :destroy]
+        resources :email_layout_templates, only: [:index, :new, :create, :edit, :update, :destroy]
+        resources :email_templates, only: [:index, :new, :create, :edit, :update, :destroy]
+        resources :sms_templates, only: [:index, :new, :create, :edit, :update, :destroy]
+        resources :waiver_agreement_templates, only: [:index, :create, :update, :destroy]
 
         resource :wish_lists, only: [:show, :update]
         resource :search, only: [:show, :update], controller: 'search' do
@@ -557,7 +548,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       namespace :manage_blog do
-        get '/', :to => 'base#index'
+        get '/', to: 'base#index'
         resources :posts do
           member do
             delete :delete_image
@@ -595,7 +586,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       namespace :projects do
-        get '/', :to => 'base#index'
+        get '/', to: 'base#index'
         resources :transactable_types do
           resources :custom_attributes, controller: 'transactable_types/custom_attributes'
           resources :custom_validators, controller: 'transactable_types/custom_validators'
@@ -615,7 +606,7 @@ DesksnearMe::Application.routes.draw do
         end
         resources :topics
 
-        resources :spam_reports, only: [ :index, :show, :destroy ] do
+        resources :spam_reports, only: [:index, :show, :destroy] do
           member do
             post :ignore
           end
@@ -638,7 +629,6 @@ DesksnearMe::Application.routes.draw do
           post :restore, on: :member
         end
       end
-
     end
 
     resources :inappropriate_reports
@@ -668,54 +658,53 @@ DesksnearMe::Application.routes.draw do
           end
         end
       end
-
     end
 
     resources :onboarding
 
-    get "/auth/failure", to: "authentications#failure"
-    devise_for :users, :controllers => {:registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords'}
+    get '/auth/failure', to: 'authentications#failure'
+    devise_for :users, controllers: { registrations: 'registrations', sessions: 'sessions', passwords: 'passwords' }
     devise_scope :user do
-      post "users/avatar", :to => "registrations#avatar", :as => "avatar"
-      get "users/status", :to => "registrations#status", :as => "status"
-      get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
-      match "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar", via: [:patch, :put]
-      delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
+      post 'users/avatar', to: 'registrations#avatar', as: 'avatar'
+      get 'users/status', to: 'registrations#status', as: 'status'
+      get 'users/edit_avatar', to: 'registrations#edit_avatar', as: 'edit_avatar'
+      match 'users/update_avatar', to: 'registrations#update_avatar', as: 'update_avatar', via: [:patch, :put]
+      delete 'users/avatar', to: 'registrations#destroy_avatar', as: 'destroy_avatar'
 
-      post "users/cover_image", :to => "registrations#cover_image", :as => "cover_image"
-      get "users/cover_image", :to => "registrations#edit_cover_image", :as => "edit_cover_image"
-      match "users/cover_image", :to => "registrations#update_cover_image", :as => "update_cover_image", via: [:patch, :put]
-      delete "users/cover_image", :to => "registrations#destroy_cover_image", :as => "destroy_cover_image"
+      post 'users/cover_image', to: 'registrations#cover_image', as: 'cover_image'
+      get 'users/cover_image', to: 'registrations#edit_cover_image', as: 'edit_cover_image'
+      match 'users/cover_image', to: 'registrations#update_cover_image', as: 'update_cover_image', via: [:patch, :put]
+      delete 'users/cover_image', to: 'registrations#destroy_cover_image', as: 'destroy_cover_image'
 
-      get "users/set_password", :to => "registrations#set_password", :as => "set_password"
-      match "users/update_password", :to => "registrations#update_password", :as => "update_password", via: [:patch, :put]
-      get "users/edit_notification_preferences", :to => "registrations#edit_notification_preferences", :as => "edit_notification_preferences"
-      match "users/update_notification_preferences", :to => "registrations#update_notification_preferences", :as => "update_notification_preferences", via: [:patch, :put]
-      post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
-      post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
-      get "users/", :to => "registrations#new"
-      get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
-      get "users/:id", :to => "registrations#show", :as => "profile"
-      get "users/:user_id/blog", :to => "registrations/blog#index", :as => "user_blog_posts_list"
-      get "users/:user_id/blog/:id", :to => "registrations/blog#show", :as => "user_blog_post_show"
-      get "sellers/:user_id", :to => "registrations/sellers#show", :as => "seller_profile"
-      get "buyers/:user_id", :to => "registrations/buyers#show", :as => "buyer_profile"
-      get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
-      get "dashboard/edit_profile", :to => "registrations#edit", :as => "dashboard_profile"
-      get "dashboard/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
-      patch "users/:user_id/mobile_number", :to => "registrations#mobile_number", :as => "mobile_number_user"
+      get 'users/set_password', to: 'registrations#set_password', as: 'set_password'
+      match 'users/update_password', to: 'registrations#update_password', as: 'update_password', via: [:patch, :put]
+      get 'users/edit_notification_preferences', to: 'registrations#edit_notification_preferences', as: 'edit_notification_preferences'
+      match 'users/update_notification_preferences', to: 'registrations#update_notification_preferences', as: 'update_notification_preferences', via: [:patch, :put]
+      post 'users/store_google_analytics_id', to: 'registrations#store_google_analytics_id', as: 'store_google_analytics'
+      post 'users/store_geolocated_location', to: 'registrations#store_geolocated_location', as: 'store_geolocated_location'
+      get 'users/', to: 'registrations#new'
+      get 'users/verify/:id/:token', to: 'registrations#verify', as: 'verify_user'
+      get 'users/:id', to: 'registrations#show', as: 'profile'
+      get 'users/:user_id/blog', to: 'registrations/blog#index', as: 'user_blog_posts_list'
+      get 'users/:user_id/blog/:id', to: 'registrations/blog#show', as: 'user_blog_post_show'
+      get 'sellers/:user_id', to: 'registrations/sellers#show', as: 'seller_profile'
+      get 'buyers/:user_id', to: 'registrations/buyers#show', as: 'buyer_profile'
+      get 'users/unsubscribe/:signature', to: 'registrations#unsubscribe', as: 'unsubscribe'
+      get 'dashboard/edit_profile', to: 'registrations#edit', as: 'dashboard_profile'
+      get 'dashboard/social_accounts', to: 'registrations#social_accounts', as: 'social_accounts'
+      patch 'users/:user_id/mobile_number', to: 'registrations#mobile_number', as: 'mobile_number_user'
 
-      match "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip", via: [:patch, :put]
+      match 'users/store_correct_ip', to: 'sessions#store_correct_ip', as: 'store_correct_ip', via: [:patch, :put]
 
-      get "/instance_admin/sessions/new", :to => "instance_admin/sessions#new", :as => 'instance_admin_login'
-      post "/instance_admin/sessions", :to => "instance_admin/sessions#create"
-      delete "/instance_admin/sessions", :to => "instance_admin/sessions#destroy"
+      get '/instance_admin/sessions/new', to: 'instance_admin/sessions#new', as: 'instance_admin_login'
+      post '/instance_admin/sessions', to: 'instance_admin/sessions#create'
+      delete '/instance_admin/sessions', to: 'instance_admin/sessions#destroy'
     end
 
-    get "users/:id/reviews_collections", :to => "user_reviews#reviews_collections", :as => "reviews_collections"
+    get 'users/:id/reviews_collections', to: 'user_reviews#reviews_collections', as: 'reviews_collections'
 
     resources :listings, :users, :reservations, :recurring_bookings, :offers, :delayed_reservations, only: [] do
-      resources :user_messages, controller: "dashboard/user_messages", except: [:index] do
+      resources :user_messages, controller: 'dashboard/user_messages', except: [:index] do
         patch :archive
         put :archive
       end
@@ -773,7 +762,7 @@ DesksnearMe::Application.routes.draw do
         resource :analytics
         resources :order_items
 
-        # TODO move orders_received scope to company/orders scope
+        # TODO: move orders_received scope to company/orders scope
         resources :orders do
           resources :payment_subscriptions
           resources :order_items do
@@ -785,7 +774,7 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
-        # TODO move orders_received scoep to company/orders scope
+        # TODO: move orders_received scoep to company/orders scope
         # plese add new controllers in orders scope
         resources :orders_received, except: [:edit] do
           member do
@@ -891,19 +880,19 @@ DesksnearMe::Application.routes.draw do
           end
         end
         resource :transfers
-        resources :users, :except => [:edit, :update] do
+        resources :users, except: [:edit, :update] do
           member do
             get :collaborations_for_current_user
           end
         end
         resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
 
-        resources :white_labels, :only => [:edit, :update, :show] do
+        resources :white_labels, only: [:edit, :update, :show] do
           member do
-            delete 'destroy_image/:image', :action => :destroy_image, :as => 'destroy_theme_image'
-            get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
-            match 'update_image/:image', :action => :update_image, :as => 'update_theme_image', via: [:post, :put]
-            match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
+            delete 'destroy_image/:image', action: :destroy_image, as: 'destroy_theme_image'
+            get 'edit_image/:image', action: :edit_image, as: 'edit_theme_image'
+            match 'update_image/:image', action: :update_image, as: 'update_theme_image', via: [:post, :put]
+            match 'upload_image/:image', action: :upload_image, as: 'upload_theme_image', via: [:post, :put]
           end
         end
         namespace :support do
@@ -912,7 +901,7 @@ DesksnearMe::Application.routes.draw do
             resources :ticket_message_attachments, only: [:create, :edit, :update, :destroy]
           end
         end
-      end #ends company namespace
+      end # ends company namespace
 
       resources :transactable_types, only: [:index] do
         resources :transactables, only: [:new, :create]
@@ -950,9 +939,9 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :photos, :only => [:create, :destroy, :edit, :update]
+      resources :photos, only: [:create, :destroy, :edit, :update]
       resources :seller_attachments, only: %i(new create update destroy)
-      resources :reviews, :only => [:index, :create, :update, :destroy] do
+      resources :reviews, only: [:index, :create, :update, :destroy] do
         collection do
           get :rate
           get :completed
@@ -971,7 +960,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :user_requests_for_quotes, only: [:index, :show]
-      resources :user_reservations, :except => [:update, :destroy, :show] do
+      resources :user_reservations, except: [:update, :destroy, :show] do
         member do
           post :user_cancel
           get :export
@@ -996,7 +985,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :user_recurring_bookings, :except => [:destroy] do
+      resources :user_recurring_bookings, except: [:destroy] do
         member do
           get :booking_successful_modal
           post :user_cancel
@@ -1025,8 +1014,7 @@ DesksnearMe::Application.routes.draw do
           get :search
         end
       end
-
-    end #end /dashboard namespace
+    end # end /dashboard namespace
 
     resources :featured_items, only: :index
 
@@ -1040,31 +1028,31 @@ DesksnearMe::Application.routes.draw do
 
     get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
 
-    get "/search/categories", :to => "search#categories"
-    get "/search/(:search_type)", :to => "search#index", :as => :search
+    get '/search/categories', to: 'search#categories'
+    get '/search/(:search_type)', to: 'search#index', as: :search
 
-    resource :event_tracker, only: [:create], :controller => 'event_tracker'
+    resource :event_tracker, only: [:create], controller: 'event_tracker'
 
-    resources :authentications, :only => [:create, :destroy] do
+    resources :authentications, only: [:create, :destroy] do
       collection do
         post :clear # Clear authentications stored in session
       end
     end
 
-    post "/follow", to: "activity_feed#follow", as: :follow
-    delete "/unfollow", to: "activity_feed#unfollow", as: :unfollow
+    post '/follow', to: 'activity_feed#follow', as: :follow
+    delete '/unfollow', to: 'activity_feed#unfollow', as: :unfollow
 
-    get "/see_more_activity_feed", to: "activity_feed#activity_feed", as: :see_more_activity_feed
-    get "/see_more_following_people", to: "activity_feed#following_people", as: :see_more_following_people
-    get "/see_more_following_transactables", to: "activity_feed#following_transactables", as: :see_more_following_transactables
-    get "/see_more_following_topics", to: "activity_feed#following_topics", as: :see_more_following_topics
-    get "/see_more_followers", to: "activity_feed#followers", as: :see_more_followers
-    get "/see_more_transactables", to: "activity_feed#transactables", as: :see_more_transactables
-    get "/see_more_collaborators", to: "activity_feed#collaborators", as: :see_more_collaborators
-    get "/see_more_members", to: "activity_feed#members", as: :see_more_members
-    get "/see_more_groups", to: "activity_feed#groups", as: :see_more_groups
+    get '/see_more_activity_feed', to: 'activity_feed#activity_feed', as: :see_more_activity_feed
+    get '/see_more_following_people', to: 'activity_feed#following_people', as: :see_more_following_people
+    get '/see_more_following_transactables', to: 'activity_feed#following_transactables', as: :see_more_following_transactables
+    get '/see_more_following_topics', to: 'activity_feed#following_topics', as: :see_more_following_topics
+    get '/see_more_followers', to: 'activity_feed#followers', as: :see_more_followers
+    get '/see_more_transactables', to: 'activity_feed#transactables', as: :see_more_transactables
+    get '/see_more_collaborators', to: 'activity_feed#collaborators', as: :see_more_collaborators
+    get '/see_more_members', to: 'activity_feed#members', as: :see_more_members
+    get '/see_more_groups', to: 'activity_feed#groups', as: :see_more_groups
 
-    resources :user_status_updates, only: [ :create ]
+    resources :user_status_updates, only: [:create]
 
     resources :activity_feed_event do
       resources :spam_reports,  only: [:create, :destroy] do
@@ -1089,24 +1077,24 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :transactable_types do
-      get '/new', as: "new_space_wizard", controller: 'transactable_types/space_wizard', action: 'new'
-      get "/list", as: "space_wizard_list", controller: 'transactable_types/space_wizard', action: 'list'
-      post "/list", controller: 'transactable_types/space_wizard', action: 'submit_listing'
-      post "/submit_item", controller: 'transactable_types/space_wizard', action: 'submit_item'
+      get '/new', as: 'new_space_wizard', controller: 'transactable_types/space_wizard', action: 'new'
+      get '/list', as: 'space_wizard_list', controller: 'transactable_types/space_wizard', action: 'list'
+      post '/list', controller: 'transactable_types/space_wizard', action: 'submit_listing'
+      post '/submit_item', controller: 'transactable_types/space_wizard', action: 'submit_item'
     end
 
     resources :project_types do
       resources :project_wizard, only: [:new, :create], controller: 'project_types/project_wizard'
-      resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
+      resources :categories, only: [:index, :show], controller: 'transactable_types/categories'
     end
 
     scope '/space' do
-      get '/new' => 'space_wizard#new', :as => "new_space_wizard"
-      get "/list" => "space_wizard#list", :as => "space_wizard_list"
-      post "/list" => "space_wizard#submit_listing"
-      match "/list" => "space_wizard#submit_listing", via: [:put, :patch]
-      match "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo", via: [:post, :put]
-      delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
+      get '/new' => 'space_wizard#new', :as => 'new_space_wizard'
+      get '/list' => 'space_wizard#list', :as => 'space_wizard_list'
+      post '/list' => 'space_wizard#submit_listing'
+      match '/list' => 'space_wizard#submit_listing', via: [:put, :patch]
+      match '/photo' => 'space_wizard#submit_photo', :as => 'space_wizard_photo', via: [:post, :put]
+      delete '/photo/:id' => 'space_wizard#destroy_photo', :as => 'destroy_space_wizard_photo'
     end
 
     resources :waiver_agreement_templates, only: [:show]
@@ -1145,25 +1133,25 @@ DesksnearMe::Application.routes.draw do
       resources :phone_calls, only: [:new, :create, :destroy]
     end
 
-    get "/:slug/(:slug2)/(:slug3)(.:format)", to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
+    get '/:slug/(:slug2)/(:slug3)(.:format)', to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
 
     # delayed_job web gui
-    match "/delayed_job" => DelayedJobWeb, :anchor => false, via: [:get, :post]
+    match '/delayed_job' => DelayedJobWeb, :anchor => false, via: [:get, :post]
 
-    get "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
-    get "/W-hotels-desks-near-me", to: 'locations#w_hotels'
+    get '/w-hotels-desks-near-me', to: 'locations#w_hotels', as: :w_hotels_location
+    get '/W-hotels-desks-near-me', to: 'locations#w_hotels'
 
-    get "/rent-accounting-desks", to: 'locations#vertical_accounting'
-    get "/rent-legal-desks", to: 'locations#vertical_law'
-    get "/rent-hairdressing-booth-stations", to: redirect(subdomain: 'rent-salon-space', path: '/')
-    get "/rent-design-desks", to: 'locations#vertical_design'
+    get '/rent-accounting-desks', to: 'locations#vertical_accounting'
+    get '/rent-legal-desks', to: 'locations#vertical_law'
+    get '/rent-hairdressing-booth-stations', to: redirect(subdomain: 'rent-salon-space', path: '/')
+    get '/rent-design-desks', to: 'locations#vertical_design'
 
-    get "/sitemap.xml", to: "seo#sitemap", format: "xml", as: :sitemap
-    get "/robots.txt", to: "seo#robots", format: "txt", as: :robots
+    get '/sitemap.xml', to: 'seo#sitemap', format: 'xml', as: :sitemap
+    get '/robots.txt', to: 'seo#robots', format: 'txt', as: :robots
   end
 
   namespace :webhooks do
-    resource :'profile', only: [] do
+    resource :profile, only: [] do
       collection do
         match 'create_profile', via: [:get, :post], as: :create_profile, action: :create
         match '', via: [:get, :post], as: :webhook, action: :webhook
@@ -1194,5 +1182,4 @@ DesksnearMe::Application.routes.draw do
   mount Ckeditor::Engine => '/ckeditor'
 
   get '/dynamic_theme/:stylesheet-:theme_id-:updated_at.css', to: 'dynamic_themes#show', as: :dynamic_theme, format: 'css', constraints: { stylesheet: /(new_ui|application|dashboard)/ }
-
 end

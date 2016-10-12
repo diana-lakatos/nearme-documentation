@@ -1,5 +1,4 @@
 class TransactableType::NoActionBooking < TransactableType::ActionType
-
   def available_units
     []
   end
@@ -17,5 +16,4 @@ class TransactableType::NoActionBooking < TransactableType::ActionType
   end
 
   alias_method :allow_no_action?, :allow_no_action
-
 end

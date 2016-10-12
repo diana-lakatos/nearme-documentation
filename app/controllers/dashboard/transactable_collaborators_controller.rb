@@ -1,5 +1,4 @@
 class Dashboard::TransactableCollaboratorsController < Dashboard::BaseController
-
   before_filter :find_transactable
 
   def destroy
@@ -17,7 +16,7 @@ class Dashboard::TransactableCollaboratorsController < Dashboard::BaseController
           flash[:error] = I18n.t('transactable_collaborator.cant_remove_collaborator')
           redirect_to dashboard_company_transactable_type_transactables_path(@transactable.transactable_type)
         end
-        format.json { render json: { result: I18n.t('transactable_collaborator.cant_remove_collaborator') }}
+        format.json { render json: { result: I18n.t('transactable_collaborator.cant_remove_collaborator') } }
       end
     end
   end

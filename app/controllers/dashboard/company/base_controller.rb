@@ -15,6 +15,4 @@ class Dashboard::Company::BaseController < Dashboard::BaseController
       redirect_to transactable_type_new_space_wizard_path(TransactableType.first)
     end
   end
-
 end
-

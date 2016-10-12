@@ -1,7 +1,6 @@
 require 'rack/throttle'
 
 class ApiThrottler < Rack::Throttle::Hourly
-
   def allowed?(request)
     need_throttle?(request) ? count_request(request) <= max_per_window : true
   end
@@ -24,7 +23,7 @@ class ApiThrottler < Rack::Throttle::Hourly
   end
 
   # see https://github.com/bendiken/rack-throttle/blob/master/lib/rack/throttle/limiter.rb#L145
-  def client_identifier(request)
+  def client_identifier(_request)
     "api-cache-#{PlatformContext.current.instance.id}"
   end
 
@@ -37,8 +36,6 @@ class ApiThrottler < Rack::Throttle::Hourly
   end
 
   def max_per_window
-    999999
+    999_999
   end
-
 end
-

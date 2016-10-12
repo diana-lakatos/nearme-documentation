@@ -13,5 +13,4 @@ class CustomAttributeDrop < BaseDrop
   def initialize(custom_attribute)
     @custom_attribute = custom_attribute
   end
-
 end

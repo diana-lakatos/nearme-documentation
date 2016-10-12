@@ -3,12 +3,11 @@ module Metadata
     extend ActiveSupport::Concern
 
     included do
-
       attr_accessor :skip_metadata
-      after_commit :listing_populate_photos_metadata!, :if => lambda { |p| !p.skip_metadata && p.should_populate_metadata? }
-      after_update :listing_populate_photos_metadata!, :if => lambda { |p| !p.skip_metadata && p.should_populate_metadata? }
+      after_commit :listing_populate_photos_metadata!, if: ->(p) { !p.skip_metadata && p.should_populate_metadata? }
+      after_update :listing_populate_photos_metadata!, if: ->(p) { !p.skip_metadata && p.should_populate_metadata? }
       # We need this because on restore the other callbacks are not called and metadata is not restored
-      after_restore :listing_populate_photos_metadata!, :if => lambda { |p| !p.skip_metadata }
+      after_restore :listing_populate_photos_metadata!, if: ->(p) { !p.skip_metadata }
 
       def should_populate_metadata?
         deleted? || (listing.present? && relevant_attribute_changed?)
@@ -39,8 +38,6 @@ module Metadata
       def to_location_metadata
         to_listing_metadata
       end
-
     end
-
   end
 end

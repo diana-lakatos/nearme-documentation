@@ -4,10 +4,10 @@ class SitemapService::Node::StaticNode < SitemapService::Node
   end
 
   def changefreq
-    "monthly"
+    'monthly'
   end
 
   def self.comment_mark
-    "root"
+    'root'
   end
 end

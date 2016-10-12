@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Dashboard::UserBlog::BlogControllerTest < ActionController::TestCase
-
   context '#index' do
     setup do
       @user = FactoryGirl.create(:user)
@@ -30,7 +29,7 @@ class Dashboard::UserBlog::BlogControllerTest < ActionController::TestCase
 
     should 'update blog settings' do
       name = 'My little pony blog'
-      patch :update, user_blog: {name: name}
+      patch :update, user_blog: { name: name }
       assert_response :redirect
       assert_redirected_to edit_dashboard_blog_path
       assert_equal @user.blog.reload.name, name

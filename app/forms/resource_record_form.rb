@@ -14,7 +14,7 @@ class ResourceRecordForm < Form
     end
 
   rescue Aws::Route53::Errors::ServiceError
-    errors.add :base, $!.to_s
+    errors.add :base, $ERROR_INFO.to_s
     false
   end
 

@@ -31,6 +31,4 @@ class Reservation::FixedPriceCalculator
   def listing
     @reservation.transactable
   end
-
 end
-

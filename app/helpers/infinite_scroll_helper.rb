@@ -1,6 +1,6 @@
 module InfiniteScrollHelper
-  def options_for_infinite_scroll(type, options={})
-    self.send("#{type}_infinite_scroll_options", options)
+  def options_for_infinite_scroll(type, options = {})
+    send("#{type}_infinite_scroll_options", options)
   end
 
   def activity_feed_infinite_scroll_options(options)

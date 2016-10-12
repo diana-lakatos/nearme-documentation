@@ -5,7 +5,6 @@ module Payable
   extend ActiveSupport::Concern
 
   included do
-
     attr_accessor :additional_charge_ids
 
     has_one :payment, as: :payable
@@ -22,8 +21,8 @@ module Payable
 
     accepts_nested_attributes_for :payment
     accepts_nested_attributes_for :payment_subscription
-    accepts_nested_attributes_for :transactable_line_items, allow_destroy: Proc.new {|p| p.inactive? }
-    accepts_nested_attributes_for :additional_line_items, allow_destroy: Proc.new {|p| p.deleteable? }
+    accepts_nested_attributes_for :transactable_line_items, allow_destroy: proc { |p| p.inactive? }
+    accepts_nested_attributes_for :additional_line_items, allow_destroy: proc { |p| p.deleteable? }
 
     validates_associated :line_items
 
@@ -33,9 +32,8 @@ module Payable
 
     delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, :billing_authorizations, to: :payment, allow_nil: true
 
-
     def authorize_payment
-      if (payment && payment.valid? && payment.pending? && self.valid?)
+      if payment && payment.valid? && payment.pending? && self.valid?
         if (skip_payment_authorization? || payment.authorize) && inactive? && (payment.credit_card.blank? || payment.credit_card.store!)
           activate! unless payment.express_checkout_payment?
         end
@@ -47,15 +45,15 @@ module Payable
     def build_first_line_item
       if line_items.blank? && transactable_line_items.blank? && additional_line_items.blank?
         transactable_line_items.build(
-          user: self.user,
-          name: self.transactable.name,
-          quantity: self.quantity,
-          line_item_source: self.transactable,
+          user: user,
+          name: transactable.name,
+          quantity: quantity,
+          line_item_source: transactable,
           unit_price: price_calculator.price,
           line_itemable: self,
           service_fee_guest_percent: action.service_fee_guest_percent,
           service_fee_host_percent: action.service_fee_host_percent,
-          transactable_pricing_id: self.try(:transactable_pricing_id)
+          transactable_pricing_id: try(:transactable_pricing_id)
         )
       end
     end
@@ -64,7 +62,7 @@ module Payable
       return true unless respond_to?(:additional_charge_types)
 
       additional_charge_types.get_mandatory_and_optional_charges(additional_charge_ids).uniq.map do |act|
-        self.additional_line_items.where(line_item_source_id: act.id, line_item_source_type: act.class.name, ).first_or_create(
+        additional_line_items.where(line_item_source_id: act.id, line_item_source_type: act.class.name).first_or_create(
           line_itemable: self,
           line_item_source: act,
           optional: act.optional?,
@@ -77,7 +75,7 @@ module Payable
     end
 
     def update_payment_attributes
-      self.payment.attributes = shared_payment_attributes
+      payment.attributes = shared_payment_attributes
     end
 
     def has_service_fee?
@@ -85,15 +83,15 @@ module Payable
     end
 
     def transactable_line_items_attributes=(tli_attrs)
-      tli_attrs.each {|k, v| v.merge!(line_itemable: self) }
+      tli_attrs.each { |_k, v| v.merge!(line_itemable: self) }
       super(tli_attrs)
     end
 
-    def payment_attributes=(payment_attrs={})
+    def payment_attributes=(payment_attrs = {})
       super(payment_attrs.merge(shared_payment_attributes))
     end
 
-    def payment_subscription_attributes=(payment_subscription_attrs={})
+    def payment_subscription_attributes=(payment_subscription_attrs = {})
       super(payment_subscription_attrs.merge(shared_payment_subscription_attributes))
     end
 

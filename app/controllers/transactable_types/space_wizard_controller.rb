@@ -8,19 +8,19 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   before_filter :redirect_to_dashboard_if_registration_completed, only: [:new, :list]
   before_filter :redirect_to_dashboard_if_started_other_listing, only: [:new, :list]
   before_filter :set_form_components
-  before_filter :set_common_variables, :only => [:list, :submit_listing]
-  before_filter :sanitize_price_parameters, :only => [:submit_listing]
-  before_filter :set_theme, :only => [:list, :submit_item]
+  before_filter :set_common_variables, only: [:list, :submit_listing]
+  before_filter :sanitize_price_parameters, only: [:submit_listing]
+  before_filter :set_theme, only: [:list, :submit_item]
 
   layout :dashboard_or_community_layout
 
   def new
     flash.keep(:warning)
-    event_tracker.clicked_list_your_bookable({source: request.referer ? URI(request.referer).path : "direct"})
+    event_tracker.clicked_list_your_bookable(source: request.referer ? URI(request.referer).path : 'direct')
     if current_user
       redirect_to transactable_type_space_wizard_list_path(@transactable_type)
     else
-      redirect_to new_user_registration_url(:wizard => 'space', :return_to => transactable_type_space_wizard_list_url(@transactable_type))
+      redirect_to new_user_registration_url(wizard: 'space', return_to: transactable_type_space_wizard_list_url(@transactable_type))
     end
   end
 
@@ -37,13 +37,13 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def submit_listing
     if platform_context.instance.skip_company?
-        params[:user][:companies_attributes] ||= {}
-        params[:user][:companies_attributes]["0"] ||= {}
-        if params[:user][:companies_attributes]["0"][:name].blank?
-          params[:user][:companies_attributes]["0"][:name] = current_user.first_name
-        else
-          @user.company_name ||= params[:user][:companies_attributes]["0"][:name]
-        end
+      params[:user][:companies_attributes] ||= {}
+      params[:user][:companies_attributes]['0'] ||= {}
+      if params[:user][:companies_attributes]['0'][:name].blank?
+        params[:user][:companies_attributes]['0'][:name] = current_user.first_name
+      else
+        @user.company_name ||= params[:user][:companies_attributes]['0'][:name]
+      end
     end
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.get_seller_profile
@@ -59,7 +59,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     if params[:save_as_draft]
       remove_approval_requests
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
-      @user.companies.first.update_metadata({draft_at: Time.now, completed_at: nil})
+      @user.companies.first.update_metadata(draft_at: Time.now, completed_at: nil)
       if @user.first_listing.nil? || @user.first_listing.new_record?
         @user.save(validate: false)
         fix_availability_templates
@@ -72,7 +72,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       redirect_to transactable_type_space_wizard_list_path(@transactable_type)
     elsif @user.save
       @user.listings.first.try(:action_type).try(:schedule).try(:create_schedule_from_schedule_rules)
-      @user.companies.first.update_metadata({draft_at: nil, completed_at: Time.now})
+      @user.companies.first.update_metadata(draft_at: nil, completed_at: Time.now)
       track_new_space_event
       track_new_company_event
 
@@ -166,8 +166,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
     @user.companies.first.locations.first.transactable_type = @transactable_type
     if @transactable_type.require_transactable_during_onboarding?
-      @transactable = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id})
-      @transactable.attachment_ids = attachment_ids_for(@transactable) if params.has_key?(:attachment_ids)
+      @transactable = @user.companies.first.locations.first.listings.first || @user.companies.first.locations.first.listings.build(transactable_type_id: @transactable_type.id)
+      @transactable.attachment_ids = attachment_ids_for(@transactable) if params.key?(:attachment_ids)
     end
   end
 
@@ -184,8 +184,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   def track_new_space_event
     @location = @user.locations.first
     @listing = @user.listings.first
-    event_tracker.created_a_location(@location , { via: 'wizard' })
-    event_tracker.created_a_listing(@listing, { via: 'wizard' })
+    event_tracker.created_a_location(@location, via: 'wizard')
+    event_tracker.created_a_listing(@listing, via: 'wizard')
     event_tracker.updated_profile_information(@user)
   end
 
@@ -195,33 +195,28 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def set_transactable_type_id
-    params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:transactable_type_id] = @transactable_type.id
+    params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:transactable_type_id] = @transactable_type.id
   end
 
   def set_listing_draft_timestamp(timestamp)
-    begin
-      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:draft] = timestamp
-      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:enabled] = true
-    rescue
-      nil
-    end
+    params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:draft] = timestamp
+    params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:enabled] = true
+  rescue
+    nil
   end
 
   def sanitize_price_parameters
-    begin
-      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"].select { |k, v| k.include?('_price') }.each do |k, v|
-        params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][k] = v.to_f unless v.blank?
-      end
-    rescue
-      # no need to do anything
+    params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'].select { |k, _v| k.include?('_price') }.each do |k, v|
+      params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][k] = v.to_f unless v.blank?
     end
+  rescue
   end
 
   def wizard_params
     params.require(:user).permit(secured_params.user(transactable_type: @transactable_type)).tap do |whitelisted|
       (whitelisted[:seller_profile_attributes][:properties] = params[:user][:seller_profile_attributes][:properties]) rescue {}
       (whitelisted[:properties] = params[:user][:properties]) rescue {}
-      (whitelisted[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties]) rescue {}
+      (whitelisted[:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:properties] = params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:properties]) rescue {}
     end
   end
 
@@ -250,6 +245,4 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       redirect_to transactable_type_new_space_wizard_path(listing.transactable_type)
     end
   end
-
 end
-

@@ -1,5 +1,4 @@
 class TagsController < ApplicationController
-
   before_action :coerce_query
   before_action :find_user
   before_action :empty_result
@@ -25,5 +24,4 @@ class TagsController < ApplicationController
   def empty_result
     render(json: [], root: false) if params[:q].nil?
   end
-
 end

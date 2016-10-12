@@ -14,7 +14,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
       if @order.user_cancel
         # we want to make generic workflows probably. Maybe even per TT [ many to many ]
         WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::EnquirerCancelled".constantize, @order.id)
-        event_tracker.cancelled_a_booking(@order, { actor: 'guest' })
+        event_tracker.cancelled_a_booking(@order, actor: 'guest')
         event_tracker.updated_profile_information(@order.owner)
         event_tracker.updated_profile_information(@order.host)
         flash[:success] = t('flash_messages.reservations.reservation_cancelled')
@@ -53,7 +53,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
         return
       end
 
-      flash[:notice] = ""  unless @order.inactive?
+      flash[:notice] = ''  unless @order.inactive?
       flash[:error] = @order.errors.full_messages.join(',<br />')
       event_tracker.updated_profile_information(@order.owner)
       event_tracker.updated_profile_information(@order.host)
@@ -76,10 +76,10 @@ class Dashboard::OrdersController < Dashboard::BaseController
   private
 
   def ensure_merchant_account_exists
-     unless @company.merchant_accounts.any? { |m| m.verified? }
-      flash[:notice] = t("flash_messages.dashboard.order.valid_merchant_account_required")
+    unless @company.merchant_accounts.any?(&:verified?)
+      flash[:notice] = t('flash_messages.dashboard.order.valid_merchant_account_required')
       redirect_to edit_dashboard_company_payouts_path(redirect_url: new_dashboard_order_path(transactable_id: @transactable.id))
-    end
+   end
   end
 
   def find_transactable
@@ -95,11 +95,9 @@ class Dashboard::OrdersController < Dashboard::BaseController
   def build_payment_documents
     @order.transactables.each do |transactable|
       if transactable.document_requirements.blank? &&
-        PlatformContext.current.instance.force_file_upload?
-        transactable.document_requirements.create({
-          label: I18n.t("upload_documents.file.default.label"),
-          description: I18n.t("upload_documents.file.default.description")
-        })
+         PlatformContext.current.instance.force_file_upload?
+        transactable.document_requirements.create(label: I18n.t('upload_documents.file.default.label'),
+                                                  description: I18n.t('upload_documents.file.default.description'))
       end
 
       requirement_ids = @order.payment_documents.map do |pd|
@@ -107,7 +105,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
       end
 
       if transactable.upload_obligation.blank? &&
-        PlatformContext.current.instance.documents_upload_enabled?
+         PlatformContext.current.instance.documents_upload_enabled?
         transactable.create_upload_obligation(level: UploadObligation.default_level)
       end
 
@@ -144,5 +142,4 @@ class Dashboard::OrdersController < Dashboard::BaseController
   def order_params
     params.require(:order).permit(secured_params.order(@order.transactable.transactable_type.reservation_type))
   end
-
 end

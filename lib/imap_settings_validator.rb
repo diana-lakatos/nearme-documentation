@@ -1,7 +1,6 @@
 require 'net/imap'
 
 class ImapSettingsValidator
-
   def initialize(instance)
     @instance = instance
   end
@@ -20,6 +19,4 @@ class ImapSettingsValidator
   rescue
     false
   end
-
 end
-

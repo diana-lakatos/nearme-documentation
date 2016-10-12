@@ -51,13 +51,13 @@ module Chargeable
     def service_additional_charges_cents
       # We reject additional charges marked for destruction because otherwise the total amount will not
       # reflect the unselected additional charges on the last post of the purchase
-      additional_charges.select{|a| a.commission_receiver == 'mpo' && !a.marked_for_destruction? }.map(&:amount_cents).sum
+      additional_charges.select { |a| a.commission_receiver == 'mpo' && !a.marked_for_destruction? }.map(&:amount_cents).sum
     end
 
     def host_additional_charges_cents
       # We reject additional charges marked for destruction because otherwise the total amount will not
       # reflect the unselected additional charges on the last post of the purchase
-      additional_charges.select{|a| a.commission_receiver == 'host' && !a.marked_for_destruction? }.map(&:amount_cents).sum
+      additional_charges.select { |a| a.commission_receiver == 'host' && !a.marked_for_destruction? }.map(&:amount_cents).sum
     end
 
     def total_additional_charges_cents
@@ -65,7 +65,7 @@ module Chargeable
     end
 
     def monetize(amount)
-      Money.new(amount*Money::Currency.new(self.currency).subunit_to_unit, currency)
+      Money.new(amount * Money::Currency.new(currency).subunit_to_unit, currency)
     end
 
     def total_amount_cents
@@ -79,6 +79,5 @@ module Chargeable
     def total_payable_to_host_cents
       total_amount_cents - total_service_amount_cents
     end
-
   end
 end

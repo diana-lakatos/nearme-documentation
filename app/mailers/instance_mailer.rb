@@ -24,7 +24,7 @@ class InstanceMailer < ActionMailer::Base
     @user_to_which_email_will_be_sent = User.with_deleted.find_by_email(Array(to).first)
 
     @email_method = template
-    custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: @email_method.split('/')[0].humanize})
+    custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge(template: template, campaign: @email_method.split('/')[0].humanize)
 
     @mailer_signature = generate_signature
     @signature_for_tracking = "&email_signature=#{@mailer_signature}"
@@ -32,7 +32,7 @@ class InstanceMailer < ActionMailer::Base
     track_sending_email(custom_tracking_options)
     self.class.layout _layout, platform_context: @platform_context, locale: I18n.locale
     render_options = { platform_context: @platform_context, locale: I18n.locale }
-    render_options.merge!({layout: layout_path}) if layout_path.present?
+    render_options.merge!(layout: layout_path) if layout_path.present?
 
     options.merge!(
       subject: subject,
@@ -76,14 +76,14 @@ class InstanceMailer < ActionMailer::Base
   end
 
   def get_tracking_code(custom_tracking_options)
-    event_tracker.pixel_track_url("Email Opened", custom_tracking_options)
+    event_tracker.pixel_track_url('Email Opened', custom_tracking_options)
   end
 
   def event_tracker
     @mixpanel_wrapper ||= AnalyticWrapper::MixpanelApi.new(
-      AnalyticWrapper::MixpanelApi.mixpanel_instance(),
-      :current_user       => @user_to_which_email_will_be_sent,
-      :request_details    => { current_instance_id: @platform_context.instance.id }
+      AnalyticWrapper::MixpanelApi.mixpanel_instance,
+      current_user: @user_to_which_email_will_be_sent,
+      request_details: { current_instance_id: @platform_context.instance.id }
     )
     @event_tracker ||= Rails.application.config.event_tracker.new(@mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(@user_to_which_email_will_be_sent))
     @event_tracker
@@ -97,5 +97,4 @@ class InstanceMailer < ActionMailer::Base
     verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
     verifier.generate(@email_method)
   end
-
 end

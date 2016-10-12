@@ -1,5 +1,4 @@
 class InstanceAdmin::ReviewSearchForm < SearchForm
-
   property :q, virtual: true
   property :rating, virtual: true
   property :date, virtual: true
@@ -10,20 +9,14 @@ class InstanceAdmin::ReviewSearchForm < SearchForm
   end
 
   def to_search_params
-    result = { 
+    result = {
     }
 
-    if q.present?
-      result[:by_search_query] = ["%#{q}%"]
-    end
+    result[:by_search_query] = ["%#{q}%"] if q.present?
 
-    if rating.present?
-      result[:with_rating] = [rating]
-    end
+    result[:with_rating] = [rating] if rating.present?
 
-    if date.present?
-      result[:with_date] = [date_from_params]
-    end
+    result[:with_date] = [date_from_params] if date.present?
 
     if transactable_type.present?
       result[:with_transactable_type] = [transactable_type]
@@ -31,5 +24,4 @@ class InstanceAdmin::ReviewSearchForm < SearchForm
 
     result
   end
-
 end

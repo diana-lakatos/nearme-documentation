@@ -29,5 +29,4 @@ class ShippingProfile < ActiveRecord::Base
   def to_liquid
     @shipping_profile_drop ||= ShippingProfileDrop.new(self)
   end
-
 end

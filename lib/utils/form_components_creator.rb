@@ -1,6 +1,5 @@
 module Utils
   class FormComponentsCreator
-
     def initialize(form_componentable, options = {})
       @creator = case form_componentable
                  when ReservationType
@@ -20,34 +19,33 @@ module Utils
                    when InstanceProfileType::DEFAULT
                      InstanceProfileCreator
                    else
-                     raise NotImplementedError
+                     fail NotImplementedError
                    end
                  when Instance
                    LocationFormComponentsCreator
                  else
-                   raise NotImplementedError.new("Invalid form componentable: #{form_componentable.class}")
+                   fail NotImplementedError.new("Invalid form componentable: #{form_componentable.class}")
                  end.new(form_componentable)
     end
 
     def create!
       @creator.create!
     end
-
   end
 
   class BaseComponentCreator
-    class AlreadyCreatedError < StandardError; end;
+    class AlreadyCreatedError < StandardError; end
 
     def initialize(form_componentable)
       @form_componentable = form_componentable
     end
 
     def create!
-      raise NotImplementedError
+      fail NotImplementedError
     end
 
     def create_components!(components, ui_version = nil)
-      raise AlreadyCreatedError.new("This #{@form_componentable.class} already has form components for #{@form_type_class} populated") if @form_componentable.form_components.where(form_type: @form_type_class).count > 0
+      fail AlreadyCreatedError.new("This #{@form_componentable.class} already has form components for #{@form_type_class} populated") if @form_componentable.form_components.where(form_type: @form_type_class).count > 0
       components.each do |component|
         next if component[:fields].nil?
 
@@ -57,11 +55,9 @@ module Utils
         @form_componentable.form_components.create!(options)
       end
     end
-
   end
 
   class LocationFormComponentsCreator < BaseComponentCreator
-
     def create!
       create_location_form_components!
     end
@@ -83,17 +79,15 @@ module Utils
               { 'location' => 'special_notes' },
               { 'location' => 'availability_rules' },
               { 'location' => 'amenities' },
-              { 'location' => 'assigned_waiver_agreement_templates' },
+              { 'location' => 'assigned_waiver_agreement_templates' }
             ]
           }
         ]
       )
     end
-
   end
 
   class ReservationComponentCreator < BaseComponentCreator
-
     def create!
       create_dashboard_form!
     end
@@ -103,9 +97,9 @@ module Utils
 
       create_components!([
         {
-          name: "Review",
+          name: 'Review',
           fields: [
-            { 'reservation' => 'payments' },
+            { 'reservation' => 'payments' }
           ]
         }
       ])
@@ -113,7 +107,6 @@ module Utils
   end
 
   class TransactableComponentCreator < BaseComponentCreator
-
     def create!
       create_space_wizard!
       create_dashboard_form!
@@ -128,19 +121,19 @@ module Utils
         },
         {
           name: 'Tell us a little about your company',
-          fields: [ {'company' => 'name'}, {'company' => 'address'}]
+          fields: [{ 'company' => 'name' }, { 'company' => 'address' }]
         },
         {
           name: "Where is your #{@form_componentable.name} located?",
-          fields: [ { 'location' => 'name'}, { 'location' => 'description'}, { 'location' => 'address'}, { 'location' => 'location_type'}, { 'location' => 'phone'} ]
+          fields: [{ 'location' => 'name' }, { 'location' => 'description' }, { 'location' => 'address' }, { 'location' => 'location_type' }, { 'location' => 'phone' }]
         },
         {
           name: "Please tell us about the #{@form_componentable.name} you're listing",
-          fields: [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'custom_type' }, { 'transactable' => 'quantity' }, { 'transactable' => 'currency' }, { 'transactable' => 'price' }, { 'transactable' => 'availability_rules' }, { 'transactable' => 'photos' } ]
+          fields: [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'custom_type' }, { 'transactable' => 'quantity' }, { 'transactable' => 'currency' }, { 'transactable' => 'price' }, { 'transactable' => 'availability_rules' }, { 'transactable' => 'photos' }]
         },
         {
-          name: "And finally, your contact information?",
-          fields: [{'user' => 'phone'}]
+          name: 'And finally, your contact information?',
+          fields: [{ 'user' => 'phone' }]
         }
       ])
     end
@@ -150,9 +143,9 @@ module Utils
       create_components!(
         [
           {
-            name: 'Details', fields: %w( name listing_type description amenity_types photos location_id waiver_agreement_templates documents_upload approval_requests ).map {|field| { 'transactable' => field } }
+            name: 'Details', fields: %w( name listing_type description amenity_types photos location_id waiver_agreement_templates documents_upload approval_requests ).map { |field| { 'transactable' => field } }
           },
-          { name: 'Pricing & Availability', fields: %w( confirm_reservations enabled price schedule availability_rules currency quantity book_it_out exclusive_price action_rfq capacity ).map {|field| { 'transactable' => field } }
+          { name: 'Pricing & Availability', fields: %w( confirm_reservations enabled price schedule availability_rules currency quantity book_it_out exclusive_price action_rfq capacity ).map { |field| { 'transactable' => field } }
           }
         ],
         'new_dashboard')
@@ -170,11 +163,11 @@ module Utils
       create_components!([
         {
           name: I18n.t('registrations.tell_us'),
-          fields: [ { 'user' => 'name' } ]
+          fields: [{ 'user' => 'name' }]
         },
         {
           name: "#{@form_componentable.name.try(:pluralize)} Details",
-          fields: [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'topics' }, { 'transactable' => 'photos' } ]
+          fields: [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'topics' }, { 'transactable' => 'photos' }]
         }
       ])
     end
@@ -183,15 +176,14 @@ module Utils
       @form_type_class = FormComponent::TRANSACTABLE_ATTRIBUTES
       create_components!([
         {
-          name: "Main",
-          fields: [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'topics' }, { 'transactable' => 'photos' } ]
+          name: 'Main',
+          fields: [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'topics' }, { 'transactable' => 'photos' }]
         }
       ])
     end
   end
 
   class InstanceProfileCreator < BaseComponentCreator
-
     def create!
       create_dashboard_form!
       create_default_registration!
@@ -202,7 +194,7 @@ module Utils
       create_components!([
         {
           name: 'Profile',
-          fields: [{ "user" => "public_profile" }, { "user" => "password" }, { "user" => "email" }, { "user" => "phone" }, { "user" => "job_title" }, { "user" => "avatar" }, { "user" => "biography" }, { "user" => "facebook_url" }, { "user" => "twitter_url" }, { "user" => "linkedin_url" }, { "user" => "instagram_url" }, { "user" => "skills_and_interests" }, { "user" => "name" }, { "user" => "first_name" }, { "user" => "middle_name" }, { "user" => "last_name" }, { "user" => "gender" }, { "user" => "drivers_licence_number" }, { "user" => "gov_number" }, { "user" => "approval_requests" }, { "user" => "google_plus_url" }, { "user" => "degree"}, { "user" => "language" }, { "user" => "time_zone" }, { "user" => "company_name" } ]
+          fields: [{ 'user' => 'public_profile' }, { 'user' => 'password' }, { 'user' => 'email' }, { 'user' => 'phone' }, { 'user' => 'job_title' }, { 'user' => 'avatar' }, { 'user' => 'biography' }, { 'user' => 'facebook_url' }, { 'user' => 'twitter_url' }, { 'user' => 'linkedin_url' }, { 'user' => 'instagram_url' }, { 'user' => 'skills_and_interests' }, { 'user' => 'name' }, { 'user' => 'first_name' }, { 'user' => 'middle_name' }, { 'user' => 'last_name' }, { 'user' => 'gender' }, { 'user' => 'drivers_licence_number' }, { 'user' => 'gov_number' }, { 'user' => 'approval_requests' }, { 'user' => 'google_plus_url' }, { 'user' => 'degree' }, { 'user' => 'language' }, { 'user' => 'time_zone' }, { 'user' => 'company_name' }]
         }
       ])
     end
@@ -212,14 +204,13 @@ module Utils
       create_components!([
         {
           name: 'Registration',
-          fields: [{ "user" => "name" }, { "user" => "email" }, { "user" => "password" } ]
+          fields: [{ 'user' => 'name' }, { 'user' => 'email' }, { 'user' => 'password' }]
         }
       ])
     end
   end
 
   class InstanceSellerProfileCreator < BaseComponentCreator
-
     def create!
       create_dashboard_form!
       create_seller_registration!
@@ -240,14 +231,13 @@ module Utils
       create_components!([
         {
           name: 'Registration',
-          fields: [{ "user" => "name" }, { "user" => "email" }, { "user" => "password" } ]
+          fields: [{ 'user' => 'name' }, { 'user' => 'email' }, { 'user' => 'password' }]
         }
       ])
     end
   end
 
   class InstanceBuyerProfileCreator < BaseComponentCreator
-
     def create!
       create_dashboard_form!
       create_buyer_registration!
@@ -268,11 +258,9 @@ module Utils
       create_components!([
         {
           name: 'Registration',
-          fields: [{ "user" => "name" }, { "user" => "email" }, { "user" => "password" } ]
+          fields: [{ 'user' => 'name' }, { 'user' => 'email' }, { 'user' => 'password' }]
         }
       ])
     end
   end
-
 end
-

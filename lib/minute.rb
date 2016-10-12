@@ -1,5 +1,5 @@
 class Minute
-  def initialize minutes, date=Time.zone.now.to_date
+  def initialize(minutes, date = Time.zone.now.to_date)
     @minutes = minutes.to_i
     @date = date
   end

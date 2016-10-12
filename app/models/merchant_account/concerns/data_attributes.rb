@@ -11,9 +11,8 @@ module MerchantAccount::Concerns::DataAttributes
 
       define_method "#{attr}=" do |val|
         attribute_will_change!(attr)
-        self.data[attr] = val
+        data[attr] = val
       end
     end
   end
-
 end

@@ -1,5 +1,4 @@
 class Dashboard::Company::Support::TicketMessagesController < Dashboard::Company::BaseController
-
   def create
     message = ::Support::TicketMessage.new(support_ticket_message_params)
     message.user = current_user
@@ -41,7 +40,7 @@ class Dashboard::Company::Support::TicketMessagesController < Dashboard::Company
   end
 
   def close?
-    params[:commit] == "Send and Resolve"
+    params[:commit] == 'Send and Resolve'
   end
 
   def support_ticket_message_params

@@ -6,10 +6,7 @@ class PaymentVoidJob < Job
   def perform
     @payment = Payment.with_deleted.find_by(id: @payment_id)
     @reservation = @payment.payable
-    return if !(@reservation.expired? || @reservation.rejected? || @reservation.cancelled_by_guest?)
-    if @payment.authorized? && @payment.active_merchant_payment?
-      @payment.void!
-    end
+    return unless @reservation.expired? || @reservation.rejected? || @reservation.cancelled_by_guest?
+    @payment.void! if @payment.authorized? && @payment.active_merchant_payment?
   end
 end
-

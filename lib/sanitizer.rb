@@ -1,7 +1,6 @@
 require 'sanitize'
 
 class Sanitizer
-
   def self.sanitze(html)
     Sanitize.fragment(html, config)
   end
@@ -15,5 +14,4 @@ class Sanitizer
   def self.config
     Sanitize::Config::BASIC
   end
-
 end

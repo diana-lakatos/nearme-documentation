@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Authentication::BaseProviderIntegrationTest < ActiveSupport::TestCase
-
   context 'new connections' do
     should 'find new friends' do
       @me = FactoryGirl.create(:user)
@@ -9,19 +8,19 @@ class Authentication::BaseProviderIntegrationTest < ActiveSupport::TestCase
       @me.authentications << @auth
 
       @friends = []
-      3.times {
+      3.times do
         friend = FactoryGirl.create(:user)
         friend.authentications << FactoryGirl.create(:authentication, provider: 'facebook')
         @me.add_friend(friend)
         @friends << friend
-      }
+      end
 
       @social_friends = []
-      3.times {
+      3.times do
         friend = FactoryGirl.create(:user)
         friend.authentications << FactoryGirl.create(:authentication, provider: 'facebook')
         @social_friends << friend
-      }
+      end
 
       friend_ids = (@friends + @social_friends).collect(&:authentications).flatten.collect(&:uid)
 

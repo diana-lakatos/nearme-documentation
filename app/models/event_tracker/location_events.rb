@@ -1,5 +1,4 @@
 module EventTracker::LocationEvents
-
   def created_a_location(location, custom_options = {})
     track 'Created a Location', location, custom_options
   end
@@ -19,6 +18,4 @@ module EventTracker::LocationEvents
   def shared_location_via_social_media(location, custom_options = {})
     track 'Shared location via social media', location, custom_options
   end
-
 end
-

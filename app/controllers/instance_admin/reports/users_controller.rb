@@ -1,5 +1,4 @@
 class InstanceAdmin::Reports::UsersController < InstanceAdmin::Reports::BaseController
-
   private
 
   def set_scopes
@@ -8,4 +7,3 @@ class InstanceAdmin::Reports::UsersController < InstanceAdmin::Reports::BaseCont
     @scope_class = User
   end
 end
-

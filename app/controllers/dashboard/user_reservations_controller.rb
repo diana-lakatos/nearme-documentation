@@ -1,6 +1,5 @@
 class Dashboard::UserReservationsController < Dashboard::BaseController
-
-  before_filter :only => [:user_cancel] do |controller|
+  before_filter only: [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
       flash[:error] = t('flash_messages.reservations.invalid_operation')
       redirect_to redirection_path
@@ -13,7 +12,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
     if reservation.cancelable?
       if reservation.user_cancel
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, reservation.id)
-        event_tracker.cancelled_a_booking(reservation, { actor: 'guest' })
+        event_tracker.cancelled_a_booking(reservation, actor: 'guest')
         event_tracker.updated_profile_information(reservation.owner)
         event_tracker.updated_profile_information(reservation.host)
         flash[:success] = t('flash_messages.reservations.reservation_cancelled')
@@ -33,7 +32,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
   def export
     respond_to do |format|
       format.ics do
-        render :text => ReservationIcsBuilder.new(reservation, current_user).to_s
+        render text: ReservationIcsBuilder.new(reservation, current_user).to_s
       end
     end
   end
@@ -107,11 +106,9 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
   end
 
   def reservation
-    begin
-      @reservation ||= current_user.orders.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      raise Reservation::NotFound
-    end
+    @reservation ||= current_user.orders.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    raise Reservation::NotFound
   end
 
   def allowed_events
@@ -129,5 +126,4 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
       dashboard_company_orders_received_index_path
     end
   end
-
 end

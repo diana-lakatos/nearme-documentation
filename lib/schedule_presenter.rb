@@ -8,11 +8,6 @@ class SchedulePresenter
   end
 
   def selected_date_summary
-    if @datetime.present?
-      I18n.l(@datetime, format: :long)
-    end
+    I18n.l(@datetime, format: :long) if @datetime.present?
   end
-
-
 end
-

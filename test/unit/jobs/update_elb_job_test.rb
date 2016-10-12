@@ -9,7 +9,7 @@ class UpdateElbJobTest < ActiveSupport::TestCase
 
     should 'trigger Ballancer update' do
       @domain.update_column(:state, 'elb_secured')
-      balancer = stub(dns_name: nil, :update_certificates! => nil)
+      balancer = stub(dns_name: nil, update_certificates!: nil)
       balancer.expects(:update_certificates!)
       NearMe::Balancer.expects(:new).returns(balancer)
       UpdateElbJob.perform(@domain.id)

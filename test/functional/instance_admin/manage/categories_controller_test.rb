@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::CategoriesControllerTest < ActionController::TestCase
-
   setup do
     @categorizable = FactoryGirl.create(:transactable_type_csv_template)
     @user = FactoryGirl.create(:user)
@@ -63,6 +62,5 @@ class InstanceAdmin::Manage::CategoriesControllerTest < ActionController::TestCa
       end
       assert_redirected_to instance_admin_manage_categories_path
     end
-
   end
 end

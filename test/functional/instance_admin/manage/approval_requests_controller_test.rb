@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InstanceAdmin::Manage::ApprovalRequestsControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user, name: 'John Approval')
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
@@ -14,23 +13,19 @@ class InstanceAdmin::Manage::ApprovalRequestsControllerTest < ActionController::
   end
 
   context 'index' do
-
     should 'show a listing of approval requests' do
       get :index
-      assert_select 'td', { text: "John Approval" }
+      assert_select 'td', text: 'John Approval'
     end
 
     should 'not find approval request which does not exist' do
-      get :index, { q: "Jane" }
-      assert_select 'td', { count: 0 }
+      get :index, q: 'Jane'
+      assert_select 'td', count: 0
     end
 
     should 'find approval request by name' do
-      get :index, { q: "John" }
-      assert_select 'td', { count: 1, text: "John Approval" }
+      get :index, q: 'John'
+      assert_select 'td', count: 1, text: 'John Approval'
     end
-
-
   end
-
 end

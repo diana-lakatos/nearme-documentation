@@ -1,9 +1,8 @@
 require 'test_helper'
 
 class Api::V3::UsersControllerTest < ActionController::TestCase
-
   context '#create' do
-    should "should create user with valid attributes" do
+    should 'should create user with valid attributes' do
       assert_difference('User.count') do
         post :create, user: user_attributes, format: :json
       end
@@ -24,7 +23,7 @@ class Api::V3::UsersControllerTest < ActionController::TestCase
 
       should 'sign up after accepting ToS' do
         assert_difference('User.count') do
-          post :create, user: user_attributes.merge({accept_terms_of_service: "1"}), format: :json
+          post :create, user: user_attributes.merge(accept_terms_of_service: '1'), format: :json
           assert_equal ApiSerializer.serialize_object(assigns(:user)), JSON.parse(response.body).slice('data')
         end
       end
@@ -36,6 +35,4 @@ class Api::V3::UsersControllerTest < ActionController::TestCase
   def user_attributes
     { name: 'Test User', email: 'user@example.com', password: 'secret' }
   end
-
 end
-

@@ -17,6 +17,4 @@ class TextFilter < ActiveRecord::Base
   rescue => e
     errors.add(:regexp, e.to_s)
   end
-
 end
-

@@ -5,12 +5,10 @@ class Authentication::BaseProviderTest < ActiveSupport::TestCase
   end
 
   setup do
-    @user = stub(:friends => [])
-    auth = OpenStruct.new({
-      user: @user,
-      token: 'abcd',
-      secret: 'dcba'
-    })
+    @user = stub(friends: [])
+    auth = OpenStruct.new(user: @user,
+                          token: 'abcd',
+                          secret: 'dcba')
 
     @provider = Authentication::TestProvider.new_from_authentication(auth)
   end
@@ -27,12 +25,12 @@ class Authentication::BaseProviderTest < ActiveSupport::TestCase
   context 'new connections' do
     context 'find new friends' do
       setup do
-        users_stub = stub(:without => [])
-        @provider.stubs(:connections => users_stub)
+        users_stub = stub(without: [])
+        @provider.stubs(connections: users_stub)
       end
 
       should 'for user without friends' do
-        @provider.stubs(:user => stub(:friends => []))
+        @provider.stubs(user: stub(friends: []))
 
         @provider.connections.expects(:without).with([])
         @provider.new_connections
@@ -40,7 +38,7 @@ class Authentication::BaseProviderTest < ActiveSupport::TestCase
 
       should 'for user with friend' do
         user = BasicObject.new
-        @provider.stubs(:user => stub(:friends => [user]))
+        @provider.stubs(user: stub(friends: [user]))
         @provider.connections.expects(:without).with([user])
         @provider.new_connections
       end

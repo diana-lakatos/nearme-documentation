@@ -1,32 +1,30 @@
 class DataImporter::Tracker::Summary < DataImporter::Tracker
-
   attr_reader :new_entities, :updated_entities, :deleted_entities
 
   def initialize
     @time_start = Time.zone.now.to_f
-    @new_entities = { 'user' => 0, 'company'=>  0, 'location' => 0, 'transactable' => 0, 'photo' => 0 }
+    @new_entities = { 'user' => 0, 'company' => 0, 'location' => 0, 'transactable' => 0, 'photo' => 0 }
     @updated_entities = { 'user' => 0, 'company' => 0, 'location' => 0, 'transactable' => 0, 'photo' => 0 }
     @deleted_entities = {}
   end
 
-  def object_created(object, *args)
+  def object_created(object, *_args)
     increment(object)
   end
 
-  def parsing_finished(hash, *args)
+  def parsing_finished(hash, *_args)
     hash.each { |entity, count| deleted(entity, count) }
   end
 
-  def object_not_saved(object, *args)
+  def object_not_saved(object, *_args)
     decrement(object)
   end
 
-  def object_valid(object, *args)
+  def object_valid(object, *_args)
     increment(object)
   end
 
   protected
-
 
   def increment(entity)
     @entity = entity
@@ -39,11 +37,11 @@ class DataImporter::Tracker::Summary < DataImporter::Tracker
     proper_hash[key] -= 1
   end
 
-  def deleted(entity, count)
+  def deleted(_entity, count)
     @deleted_entities[key] = count
   end
 
-  def deleted_decrement(str_key, count)
+  def deleted_decrement(str_key, _count)
     @deleted_entities[str_key] -= 1
   end
 
@@ -53,9 +51,7 @@ class DataImporter::Tracker::Summary < DataImporter::Tracker
     @entity.persisted? ? @updated_entities : @new_entities
   end
 
-
   def key
-    @entity.class.name.underscore.tr(' ','_')
+    @entity.class.name.underscore.tr(' ', '_')
   end
-
 end

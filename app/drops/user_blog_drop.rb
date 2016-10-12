@@ -38,5 +38,4 @@ class UserBlogDrop < BaseDrop
   def header_image_url
     @blog.header_image.url
   end
-
 end

@@ -11,7 +11,7 @@ class InstanceType::Searcher::GeolocationSearcher::Location
   def filters
     search_filters = {}
     search_filters[:location_type_filter] = search.location_types_ids if search.location_types_ids && !search.location_types_ids.empty?
-    search_filters[:listing_pricing_filter] = search.lgpricing_filters if not search.lgpricing_filters.empty?
+    search_filters[:listing_pricing_filter] = search.lgpricing_filters unless search.lgpricing_filters.empty?
     search_filters[:custom_attributes] = @params[:lg_custom_attributes] unless @params[:lg_custom_attributes].blank?
     search_filters
   end
@@ -21,5 +21,4 @@ class InstanceType::Searcher::GeolocationSearcher::Location
     @max_fixed_price ||= (@results.map(&:listings).flatten.map(&:action_type).map(&:pricings).flatten.map(&:price_cents).compact.max).to_f / 100
     @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
   end
-
 end

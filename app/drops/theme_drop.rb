@@ -1,5 +1,4 @@
 class ThemeDrop < BaseDrop
-
   attr_reader :theme
 
   # blog_url
@@ -21,10 +20,9 @@ class ThemeDrop < BaseDrop
   # pages
   #   array of pages created for this marketplace by the marketplace admin
   delegate :blog_url, :gplus_url, :twitter_url, :facebook_url, :support_url,
-    :address, :phone_number, :site_name, :pages, to: :theme
+           :address, :phone_number, :site_name, :pages, to: :theme
 
   def initialize(theme)
     @theme = theme
   end
-
 end

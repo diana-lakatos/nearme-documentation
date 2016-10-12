@@ -9,6 +9,6 @@ class Webhooks::BaseWebhookController < Webhooks::BaseController
   end
 
   def payment_gateway_class
-    raise NotImplementedError
+    fail NotImplementedError
   end
 end

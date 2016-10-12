@@ -1,13 +1,11 @@
 require 'test_helper'
 
 class InstanceAdmin::BaseControllerTest < ActionController::TestCase
-
   setup do
     sign_in FactoryGirl.create(:user)
   end
 
   context 'authorization' do
-
     context 'instance admin' do
       setup do
         InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
@@ -18,11 +16,9 @@ class InstanceAdmin::BaseControllerTest < ActionController::TestCase
         get :index
         assert_redirected_to root_path
       end
-
     end
 
     context 'authorization' do
-
       setup do
         InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
       end
@@ -40,7 +36,5 @@ class InstanceAdmin::BaseControllerTest < ActionController::TestCase
         assert_redirected_to root_path
       end
     end
-
   end
-
 end

@@ -1,5 +1,4 @@
 class Api::BaseController < ActionController::Base
-
   force_ssl if: -> { Rails.application.config.use_only_ssl }
 
   respond_to :json
@@ -19,7 +18,7 @@ class Api::BaseController < ActionController::Base
 
   # Ensure the user is authenticated
   def require_authentication
-    raise DNM::Unauthorized unless current_user
+    fail DNM::Unauthorized unless current_user
   end
 
   def require_authorization
@@ -55,7 +54,7 @@ class Api::BaseController < ActionController::Base
   end
 
   def valid_api_token?
-    authenticate_or_request_with_http_token do |token, options|
+    authenticate_or_request_with_http_token do |token, _options|
       current_instance.api_keys.active.exists?(token: token)
     end
   end
@@ -80,7 +79,7 @@ class Api::BaseController < ActionController::Base
     begin
       Raygun.configuration.custom_data = {
         platform_context: platform_context.to_h,
-        request_params: params.reject { |k,v| Rails.application.config.filter_parameters.include?(k.to_sym) },
+        request_params: params.reject { |k, _v| Rails.application.config.filter_parameters.include?(k.to_sym) },
         current_user_id: current_user.try(:id),
         process_pid: Process.pid,
         process_ppid: Process.ppid,
@@ -138,20 +137,20 @@ class Api::BaseController < ActionController::Base
 
                     # Gather information about requests
                     request_details = {
-                      :current_host => request.try(:host)
+                      current_host: request.try(:host)
                     }
 
                     # Detect an anonymous identifier, if any.
                     anonymous_identity = cookies.signed[:mixpanel_anonymous_id]
 
                     AnalyticWrapper::MixpanelApi.new(
-                      AnalyticWrapper::MixpanelApi.mixpanel_instance(),
-                      :current_user => current_user,
-                      :request_details => request_details,
-                      :anonymous_identity => anonymous_identity,
-                      :session_properties => session_properties,
-                      :request_params => params,
-                      :request => user_signed_in? ? nil : request # we assume that logged in user is not a bot
+                      AnalyticWrapper::MixpanelApi.mixpanel_instance,
+                      current_user: current_user,
+                      request_details: request_details,
+                      anonymous_identity: anonymous_identity,
+                      session_properties: session_properties,
+                      request_params: params,
+                      request: user_signed_in? ? nil : request # we assume that logged in user is not a bot
                     )
                   end
   end
@@ -161,6 +160,4 @@ class Api::BaseController < ActionController::Base
   def google_analytics
     @google_analytics ||= AnalyticWrapper::GoogleAnalyticsApi.new(current_user)
   end
-
-
 end

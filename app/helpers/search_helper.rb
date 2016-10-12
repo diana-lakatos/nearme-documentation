@@ -34,31 +34,29 @@ module SearchHelper
     else
       listing_price = listing.lowest_price_with_type(filter_pricing)
       if listing_price
-        periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
+        periods = { monthly: 'month', weekly: 'week', daily: 'day', hourly: 'hour' }
         "From <span>#{render_money(listing_price[0])}</span> / #{periods[listing_price[1]]}".html_safe
       end
     end
   end
 
-  def meta_title_for_search(platform_context, search, transactable_type_name = '')
+  def meta_title_for_search(_platform_context, search, transactable_type_name = '')
     location_types_names = search.try(:lntypes).blank? ? [] : search.lntypes.pluck(:name)
 
     title = params.try(:[], :lg_custom_attributes).try(:[], :listing_type)
-    title = title.present? && title.respond_to?(:gsub) ? title.gsub(",", ", ") : (location_types_names.empty? ? transactable_type_name : '')
+    title = title.present? && title.respond_to?(:gsub) ? title.gsub(',', ', ') : (location_types_names.empty? ? transactable_type_name : '')
 
-    title += %Q{#{location_types_names.join(', ')}}
+    title += %(#{location_types_names.join(', ')})
     search_location = []
     search_location << search.city
     search_location << (search.is_united_states? ? search.state_short : search.state)
-    search_location.reject!{|sl| sl.blank?}
-    if not search_location.empty?
-      title += %Q{ in #{search_location.join(', ')}}
-    end
+    search_location.reject!(&:blank?)
+    title += %( in #{search_location.join(', ')}) unless search_location.empty?
 
     title += if title.empty?
-      I18n.t("metadata.search.title.search")
-    else
-      search_location.empty? ? I18n.t("metadata.search.title.in") : ', '
+               I18n.t('metadata.search.title.search')
+             else
+               search_location.empty? ? I18n.t('metadata.search.title.in') : ', '
     end
 
     title += search.country.to_s
@@ -66,7 +64,7 @@ module SearchHelper
     title
   end
 
-  def meta_description_for_search(platform_context, search)
+  def meta_description_for_search(platform_context, _search)
     platform_context.theme.description
   end
 
@@ -80,7 +78,7 @@ module SearchHelper
       root_category.children.map do |category|
         content_tag :li, class: 'nav-item' do
           label = label_tag "category_#{category.id}", class: 'category-label' do
-            content_tag(:span, check_box_tag("category_ids[]", category.id, selected.include?(category.id.to_s), {id: "category_#{category.id}", class: 'category-checkbox'}), class: 'category-checkbox-container') +
+            content_tag(:span, check_box_tag('category_ids[]', category.id, selected.include?(category.id.to_s), id: "category_#{category.id}", class: 'category-checkbox'), class: 'category-checkbox-container') +
             content_tag(:span, category.translated_name, class: 'category-title')
           end
           label + category_tree(category, current_category, max_level - 1, selected)
@@ -88,5 +86,4 @@ module SearchHelper
       end.join("\n").html_safe
     end
   end
-
 end

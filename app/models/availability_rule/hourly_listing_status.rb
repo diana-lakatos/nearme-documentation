@@ -21,10 +21,10 @@ class AvailabilityRule::HourlyListingStatus
   end
 
   def build_time_quantities
-    @transactable.orders.reservations.confirmed.joins(:periods).
-     where(:reservation_periods => { :date => @date }).
-     select('orders.quantity as quantity_booked, reservation_periods.start_minute, reservation_periods.end_minute').
-     each do |period|
+    @transactable.orders.reservations.confirmed.joins(:periods)
+      .where(reservation_periods: { date: @date })
+      .select('orders.quantity as quantity_booked, reservation_periods.start_minute, reservation_periods.end_minute')
+      .each do |period|
       if period.start_minute.present?
         range = (period.start_minute.to_i..period.end_minute.to_i)
         @schedule.keys.each { |k| @schedule[k] -= period.quantity_booked.to_i if range.include?(k.to_i)  }
@@ -33,5 +33,4 @@ class AvailabilityRule::HourlyListingStatus
       end
     end
   end
-
 end

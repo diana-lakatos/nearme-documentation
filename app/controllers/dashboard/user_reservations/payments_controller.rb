@@ -1,4 +1,4 @@
-class Dashboard::UserReservations::PaymentsController <  Dashboard::BaseController
+class Dashboard::UserReservations::PaymentsController < Dashboard::BaseController
   before_filter :find_order
   before_filter :find_payment
   before_filter :check_if_actionable, only: [:approve, :rejection_form, :reject]

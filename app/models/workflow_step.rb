@@ -15,6 +15,4 @@ class WorkflowStep < ActiveRecord::Base
   scope :for_associated_class, -> (event) { where(associated_class: event) }
 
   serialize :custom_options, Hash
-
 end
-

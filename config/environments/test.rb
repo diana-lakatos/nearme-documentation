@@ -1,6 +1,6 @@
 DesksnearMe::Application.configure do
   config.use_only_ssl = false
-  Rails.application.routes.default_url_options[:host] = "example.com"
+  Rails.application.routes.default_url_options[:host] = 'example.com'
   config.action_controller.allow_forgery_protection    = false
   config.action_controller.perform_caching = false
   config.action_dispatch.show_exceptions = false
@@ -9,7 +9,7 @@ DesksnearMe::Application.configure do
   config.cache_classes = true
   config.consider_all_requests_local       = true
   config.serve_static_files = true
-  config.static_cache_control = "public, max-age=3600"
+  config.static_cache_control = 'public, max-age=3600'
   config.assets.compile = true
   config.assets.raise_runtime_errors = false
 

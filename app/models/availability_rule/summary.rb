@@ -16,10 +16,10 @@ class AvailabilityRule::Summary
   end
 
   # Iterate over each day in the week if no rule is available for a day an new empty rule is created
-  def full_week(monday_first = true)
+  def full_week(_monday_first = true)
     result = []
     each_day do |day, rules|
-      result << { day: day, rules: (rules || [AvailabilityRule.new(:days => [day])])}
+      result << { day: day, rules: (rules || [AvailabilityRule.new(days: [day])]) }
     end
     result
   end
@@ -38,12 +38,11 @@ class AvailabilityRule::Summary
   #           :start_minute - Start minute of the day
   #           :end_minute - End minute of the day
   def open_on?(options)
-    raise ArgumentError.new("Options must be a hash") unless options.is_a?(Hash)
+    fail ArgumentError.new('Options must be a hash') unless options.is_a?(Hash)
 
     day = options[:day]
     day ||= options[:date] && options[:date].wday
-    raise ArgumentError.new("Must provide day of week") unless day
-
+    fail ArgumentError.new('Must provide day of week') unless day
 
     rules = rules_for_day(day)
     return false if rules.empty?
@@ -53,11 +52,11 @@ class AvailabilityRule::Summary
     end
 
     if options[:start_minute]
-      return false unless rules.any? { |rule| rule.open_at?(options[:start_minute]/60, options[:start_minute]%60) }
+      return false unless rules.any? { |rule| rule.open_at?(options[:start_minute] / 60, options[:start_minute] % 60) }
     end
 
     if options[:end_minute]
-      return false unless rules.any? { |rule| rule.open_at?(options[:end_minute]/60, options[:end_minute]%60) }
+      return false unless rules.any? { |rule| rule.open_at?(options[:end_minute] / 60, options[:end_minute] % 60) }
     end
 
     return false if options[:date] && unavailable_for?(options[:date].in_time_zone)
@@ -66,9 +65,8 @@ class AvailabilityRule::Summary
   end
 
   def unavailable_for?(date)
-    @unavailable_periods.any?{ |range| range.cover?(date) }
+    @unavailable_periods.any? { |range| range.cover?(date) }
   end
-
 
   # Returns an array of days that the listing is open for
   # Days are 0..6, where 0 is Sunday and 6 is Saturday
@@ -92,7 +90,7 @@ class AvailabilityRule::Summary
 
   def days_with_hours
     days_open.map do |day|
-      hours_open_for(day).map{ |hour| hour + (day + 1) * 100}
+      hours_open_for(day).map { |hour| hour + (day + 1) * 100 }
     end.flatten
   end
 
@@ -129,9 +127,5 @@ class AvailabilityRule::Summary
     @rules.map(&:day_close_minute).max
   end
 
-  def rules
-    @rules
-  end
-
+  attr_reader :rules
 end
-

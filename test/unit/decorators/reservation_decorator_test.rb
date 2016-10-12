@@ -1,11 +1,9 @@
 require 'test_helper'
 
 class ReservationDecoratorTest < ActionView::TestCase
-
   include MoneyRails::ActionViewExtension
 
   context 'A decorated reservation in a fixed date' do
-
     setup do
       @time = DateTime.new(2014, 1, 1).in_time_zone
       travel_to(@time)
@@ -17,7 +15,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'return selected_dates_summary' do
-      assert_equal "<p>January 06, 2014</p>", @reservation.selected_dates_summary
+      assert_equal '<p>January 06, 2014</p>', @reservation.selected_dates_summary
     end
 
     should 'return short_dates' do
@@ -41,21 +39,19 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     context 'with periods with duration tru two weeks' do
-
       setup do
         @reservation.add_period(Date.new(2014, 1, 13))
         @reservation.add_period(Date.new(2014, 1, 14))
       end
 
       should 'return selected_dates_summary' do
-        expected = "<p>January 06, 2014</p><hr /><p>January 13, 2014 &ndash; January 14, 2014</p>"
+        expected = '<p>January 06, 2014</p><hr /><p>January 13, 2014 &ndash; January 14, 2014</p>'
         assert_equal expected, @reservation.selected_dates_summary(separator: :hr)
       end
 
       should 'return short_dates' do
         assert_equal I18n.l(Date.new(2014, 1, 06), format: :day_and_month), @reservation.short_dates
       end
-
     end
 
     teardown do
@@ -64,15 +60,14 @@ class ReservationDecoratorTest < ActionView::TestCase
   end
 
   context 'A free reservation' do
-
     setup do
       TransactableType.first.update_columns(service_fee_guest_percent: 0)
       @payment = FactoryGirl.build(:manual_payment)
       transactable = FactoryGirl.create(:transactable, :free_listing)
       @reservation = FactoryGirl.build(:unconfirmed_reservation,
-        transactable: transactable,
-        transactable_pricing: transactable.action_type.pricings.first,
-        payment: @payment).decorate
+                                       transactable: transactable,
+                                       transactable_pricing: transactable.action_type.pricings.first,
+                                       payment: @payment).decorate
       @reservation.charge_and_confirm!
     end
 
@@ -100,8 +95,8 @@ class ReservationDecoratorTest < ActionView::TestCase
   context 'A priced unconfirmed reservation' do
     setup do
       @reservation = FactoryGirl.create(:reservation).decorate
-                                       # subtotal_amount_cents: 50_00,
-                                       # service_fee_amount_guest_cents: 5_00).decorate
+      # subtotal_amount_cents: 50_00,
+      # service_fee_amount_guest_cents: 5_00).decorate
     end
 
     should 'return that its Pending' do
@@ -115,7 +110,7 @@ class ReservationDecoratorTest < ActionView::TestCase
       @reservation.stubs(:paid?).returns(true)
     end
 
-    should "return right paid amount" do
+    should 'return right paid amount' do
       assert_equal '$55', @reservation.paid
     end
 
@@ -148,7 +143,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'return hourly_summary_for_first_period with date and default hours' do
-      assert_equal "01/01/2014 9:00&ndash;17:00 (8.00 hours)", @reservation.hourly_summary_for_first_period(true)
+      assert_equal '01/01/2014 9:00&ndash;17:00 (8.00 hours)', @reservation.hourly_summary_for_first_period(true)
     end
 
     should 'return hourly_summary_for_first_period without date and with special hours' do
@@ -166,5 +161,4 @@ class ReservationDecoratorTest < ActionView::TestCase
       travel_back
     end
   end
-
 end

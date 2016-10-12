@@ -1,6 +1,5 @@
 module Elastic
   class QueryBuilder::UsersQueryBuilder < QueryBuilder
-
     def initialize(query, searchable_custom_attributes = nil, instance_profile_type)
       @query = query
       @searchable_custom_attributes = searchable_custom_attributes || []
@@ -28,7 +27,6 @@ module Elastic
     end
 
     def match_query
-
       if @query[:query].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
@@ -53,18 +51,16 @@ module Elastic
                 order: sort[2],
                 nested_filter: {
                   term: {
-                      'user_profiles.instance_profile_type_id': @instance_profile_type.id
-                    }
-                 }
+                    'user_profiles.instance_profile_type_id': @instance_profile_type.id
+                  }
                 }
+              }
             }
           end
         end.compact
       end
 
-      if sorting_fields.empty?
-        return ['_score']
-      end
+      return ['_score'] if sorting_fields.empty?
 
       sorting_fields
     end
@@ -87,7 +83,7 @@ module Elastic
         }
       ]
 
-       if @query[:category_ids].present?
+      if @query[:category_ids].present?
         category_ids = @query[:category_ids].split(',')
         if @instance_profile_type.category_search_type == 'OR'
           user_profiles_filters << {
@@ -104,7 +100,7 @@ module Elastic
             }
           end
         end
-      end
+     end
 
       if @query[:lg_custom_attributes]
         @query[:lg_custom_attributes].each do |key, value|
@@ -112,7 +108,7 @@ module Elastic
             user_profiles_filters <<
               {
                 match: {
-                  "user_profiles.properties.#{key}" => value.to_s.split(',').map{ |val| val.downcase }.join(' OR ')
+                  "user_profiles.properties.#{key}" => value.to_s.split(',').map(&:downcase).join(' OR ')
                 }
               }
           end
@@ -123,7 +119,7 @@ module Elastic
         initial_instance_filter + [
           {
             nested: {
-              path: "user_profiles",
+              path: 'user_profiles',
               query: {
                 bool: {
                   must: user_profiles_filters
@@ -150,6 +146,5 @@ module Elastic
         }
       ]
     end
-
   end
 end

@@ -12,5 +12,4 @@ class Reservation::CancellationPolicy
   def cancelable?
     @reservation.starts_at > @cancel_threshold
   end
-
 end

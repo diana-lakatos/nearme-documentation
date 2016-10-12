@@ -1,18 +1,18 @@
 FactoryGirl.define do
   factory :payment_gateway do
-    test_settings { {api_key: "present"} }
-    live_settings { {api_key: "present"} }
+    test_settings { { api_key: 'present' } }
+    live_settings { { api_key: 'present' } }
 
-    after :build do |payment_gateway, payment_methods|
+    after :build do |payment_gateway, _payment_methods|
       build_active_payment_methods(payment_gateway)
     end
 
     before(:create) do |payment_gateway|
-      payment_gateway.payment_countries << (Country.find_by_iso("US") || FactoryGirl.create(:country_us))
+      payment_gateway.payment_countries << (Country.find_by_iso('US') || FactoryGirl.create(:country_us))
     end
 
     before(:create) do |payment_gateway|
-      payment_gateway.payment_currencies << (Currency.find_by_iso_code("USD") || FactoryGirl.create(:currency_us))
+      payment_gateway.payment_currencies << (Currency.find_by_iso_code('USD') || FactoryGirl.create(:currency_us))
     end
 
     after :create do |payment_gateway|
@@ -21,10 +21,10 @@ FactoryGirl.define do
 
     factory :paypal_payment_gateway, class: PaymentGateway::PaypalPaymentGateway do
       before(:create) do |payment_gateway|
-        payment_gateway.payment_currencies << (Currency.find_by_iso_code("JPY") || FactoryGirl.create(:currency_jpy))
+        payment_gateway.payment_currencies << (Currency.find_by_iso_code('JPY') || FactoryGirl.create(:currency_jpy))
       end
 
-      test_settings {
+      test_settings do
         {
           email: 'sender_test@example.com',
           login: 'john_test',
@@ -32,8 +32,8 @@ FactoryGirl.define do
           signature: 'sig_test',
           app_id: 'app-123_test'
         }
-      }
-      live_settings {
+      end
+      live_settings do
         {
           email: 'sender_live@example.com',
           login: 'john_live',
@@ -41,11 +41,11 @@ FactoryGirl.define do
           signature: 'sig_live',
           app_id: 'app-123_live'
         }
-      }
+      end
     end
 
     factory :paypal_adaptive_payment_gateway, class: PaymentGateway::PaypalAdaptivePaymentGateway do
-      test_settings {
+      test_settings do
         {
           email: 'sender_test@example.com',
           login: 'john_test',
@@ -53,8 +53,8 @@ FactoryGirl.define do
           signature: 'sig_test',
           app_id: 'app-123_test'
         }
-      }
-      live_settings {
+      end
+      live_settings do
         {
           email: 'sender_live@example.com',
           login: 'john_live',
@@ -62,54 +62,53 @@ FactoryGirl.define do
           signature: 'sig_live',
           app_id: 'app-123_live'
         }
-      }
+      end
     end
 
-
     factory :paypal_express_payment_gateway, class: PaymentGateway::PaypalExpressPaymentGateway do
-      test_settings {
+      test_settings do
         {
           email: 'sender_test@example.com',
           login: 'john_test',
           password: 'pass_test',
           signature: 'sig_test',
           app_id: 'app-123_test',
-          partner_id: "2EWXNHVCGY3JL"
+          partner_id: '2EWXNHVCGY3JL'
         }
-      }
-      live_settings {
+      end
+      live_settings do
         {
           email: 'sender_live@example.com',
           login: 'john_live',
           password: 'pass_live',
           signature: 'sig_live',
           app_id: 'app-123_live',
-          partner_id: "2EWXNHVCGY3JL"
+          partner_id: '2EWXNHVCGY3JL'
         }
-      }
+      end
     end
 
     factory :paypal_express_chain_payment_gateway, class: PaymentGateway::PaypalExpressChainPaymentGateway do
-      test_settings {
+      test_settings do
         {
           email: 'sender_test@example.com',
           login: 'john_test',
           password: 'pass_test',
           signature: 'sig_test',
           app_id: 'app-123_test',
-          partner_id: "2EWXNHVCGY3JL"
+          partner_id: '2EWXNHVCGY3JL'
         }
-      }
-      live_settings {
+      end
+      live_settings do
         {
           email: 'sender_live@example.com',
           login: 'john_live',
           password: 'pass_live',
           signature: 'sig_live',
           app_id: 'app-123_live',
-          partner_id: "2EWXNHVCGY3JL"
+          partner_id: '2EWXNHVCGY3JL'
         }
-      }
+      end
     end
 
     factory :stripe_payment_gateway, class: PaymentGateway::StripePaymentGateway do
@@ -118,13 +117,12 @@ FactoryGirl.define do
     end
 
     factory :fetch_payment_gateway, class: PaymentGateway::FetchPaymentGateway do
-
       before(:create) do |payment_gateway|
-        payment_gateway.payment_countries = [Country.find_by_iso("NZ") || FactoryGirl.create(:country_nz)]
+        payment_gateway.payment_countries = [Country.find_by_iso('NZ') || FactoryGirl.create(:country_nz)]
       end
 
       before(:create) do |payment_gateway|
-        payment_gateway.payment_currencies = [Currency.find_by_iso_code("NZD") || FactoryGirl.create(:currency_nzd)]
+        payment_gateway.payment_currencies = [Currency.find_by_iso_code('NZD') || FactoryGirl.create(:currency_nzd)]
       end
 
       test_settings { { account_id: '123456789', secret_key: '987654321' } }
@@ -132,18 +130,18 @@ FactoryGirl.define do
     end
 
     factory :braintree_payment_gateway, class: PaymentGateway::BraintreePaymentGateway do
-      test_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD'} }
-      live_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD'} }
+      test_settings { { merchant_id: '123456789', public_key: '987654321', private_key: '321543', supported_currency: 'USD' } }
+      live_settings { { merchant_id: '123456789', public_key: '987654321', private_key: '321543', supported_currency: 'USD' } }
     end
 
     factory :braintree_marketplace_payment_gateway, class: PaymentGateway::BraintreeMarketplacePaymentGateway do
-      test_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD', master_merchant_account_id: 'master_id'} }
-      live_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD', master_merchant_account_id: 'master_id'} }
+      test_settings { { merchant_id: '123456789', public_key: '987654321', private_key: '321543', supported_currency: 'USD', master_merchant_account_id: 'master_id' } }
+      live_settings { { merchant_id: '123456789', public_key: '987654321', private_key: '321543', supported_currency: 'USD', master_merchant_account_id: 'master_id' } }
     end
 
     factory :stripe_connect_payment_gateway, class: PaymentGateway::StripeConnectPaymentGateway do
-      test_settings { {login: "123456789"} }
-      live_settings { {login: "123456789"} }
+      test_settings { { login: '123456789' } }
+      live_settings { { login: '123456789' } }
     end
 
     factory :manual_payment_gateway, class: PaymentGateway::ManualPaymentGateway do

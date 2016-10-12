@@ -11,7 +11,7 @@ class WillPaginateTag < Liquid::Tag
     @attributes['renderer'] = pagination_renderer if @attributes['renderer']
     @attributes = normalize_liquid_tag_attributes(@attributes, context)
 
-    @attributes = normalize_liquid_tag_attributes(@attributes, context, ['html', 'wrapper_mappings'])
+    @attributes = normalize_liquid_tag_attributes(@attributes, context, %w(html wrapper_mappings))
     context.registers[:action_view].send(:will_paginate, context[@collection], @attributes)
   end
 
@@ -25,5 +25,4 @@ class WillPaginateTag < Liquid::Tag
       fail NotImplementedError.new("Valid renderer options are: 'dashboard', but #{@attributes['renderer']} was given. Typo?")
     end
   end
-
 end

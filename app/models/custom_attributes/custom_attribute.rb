@@ -21,7 +21,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   end
 
   def expire_cache_options
-    { target_type: self.target_type, target_id: self.target_id }
+    { target_type: target_type, target_id: target_id }
   end
 
   def to_liquid
@@ -33,16 +33,16 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   end
 
   def custom_attribute_for_csv
-    { custom_attribute_object => self.name }
+    { custom_attribute_object => name }
   end
 
   private
 
   def add_to_csv
-    if self.required? && self.target.try(:custom_csv_fields)
-      unless self.target.custom_csv_fields.include?(custom_attribute_for_csv)
-        self.target.custom_csv_fields << custom_attribute_for_csv
-        self.target.save!
+    if self.required? && target.try(:custom_csv_fields)
+      unless target.custom_csv_fields.include?(custom_attribute_for_csv)
+        target.custom_csv_fields << custom_attribute_for_csv
+        target.save!
       end
     end
   end

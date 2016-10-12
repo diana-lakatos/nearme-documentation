@@ -46,7 +46,7 @@ class FormComponent < ActiveRecord::Base
 
   def form_fields_except(types)
     if types.present?
-      form_fields.select{ |ff| (ff.values.first =~ /#{types}/).nil? }
+      form_fields.select { |ff| (ff.values.first =~ /#{types}/).nil? }
     else
       form_fields
     end
@@ -62,7 +62,7 @@ class FormComponent < ActiveRecord::Base
       when InstanceProfileType::BUYER
         [BUYER_PROFILE_TYPES, BUYER_REGISTRATION]
       else
-        raise NotImplementedError
+        fail NotImplementedError
       end
     elsif form_componentable.instance_of?(TransactableType)
       [SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES]
@@ -71,8 +71,7 @@ class FormComponent < ActiveRecord::Base
     elsif form_componentable.instance_of?(Instance)
       [LOCATION_ATTRIBUTES]
     else
-      raise NotImplementedError
+      fail NotImplementedError
     end
   end
 end
-

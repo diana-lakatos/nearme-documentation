@@ -1,5 +1,4 @@
 class WorkflowStep::GroupWorkflow::BaseStep < WorkflowStep::BaseStep
-
   def initialize(membership_id)
     @membership = GroupMember.find_by(id: membership_id)
     @group = @membership.try(:group)
@@ -37,5 +36,4 @@ class WorkflowStep::GroupWorkflow::BaseStep < WorkflowStep::BaseStep
   def workflow_type
     'group_workflow'
   end
-
 end

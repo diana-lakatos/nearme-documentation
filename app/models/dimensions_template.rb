@@ -1,22 +1,21 @@
 class DimensionsTemplate < ActiveRecord::Base
-
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
 
   UNITS_OF_MEASURE = {
     'imperial' => {
-      'length' => ['in', 'ft'],
-      'weight' => ['oz', 'lb'],
+      'length' => %w(in ft),
+      'weight' => %w(oz lb)
     },
     'metric' => {
-      'length' => ['cm', 'm'],
-      'weight' => ['g', 'kg'],
+      'length' => %w(cm m),
+      'weight' => %w(g kg)
     }
   }
 
   belongs_to :instance
-  belongs_to :creator, :foreign_key => :creator_id, class_name: User
+  belongs_to :creator, foreign_key: :creator_id, class_name: User
   belongs_to :entity, polymorphic: true
 
   before_update :remove_shippo_id
@@ -24,11 +23,11 @@ class DimensionsTemplate < ActiveRecord::Base
 
   scope :defaults, -> { where(use_as_default: true) }
 
-  validates_presence_of  :weight, :height, :width, :depth
-  validates_with UnitsOfMeasureValidator, :attributes => [:unit_of_measure, :weight_unit, :height_unit, :width_unit, :depth_unit]
+  validates_presence_of :weight, :height, :width, :depth
+  validates_with UnitsOfMeasureValidator, attributes: [:unit_of_measure, :weight_unit, :height_unit, :width_unit, :depth_unit]
   validates_numericality_of :weight, :height, :width, :depth, greater_than: 0
 
-  ['depth', 'height', 'width'].each do |dimension|
+  %w(depth height width).each do |dimension|
     define_method "converted_#{dimension}" do
       if common_unit?
         self[dimension]
@@ -43,17 +42,17 @@ class DimensionsTemplate < ActiveRecord::Base
   end
 
   def get_shippo_id
-    self.shippo_id.presence || create_shippo_parcel[:object_id]
+    shippo_id.presence || create_shippo_parcel[:object_id]
   end
 
   def create_shippo_parcel
-    parcel = instance.shippo_api.create_parcel(self.to_shippo)
+    parcel = instance.shippo_api.create_parcel(to_shippo)
     update_column :shippo_id, parcel[:object_id]
     parcel
   end
 
   def update_default
-    DimensionsTemplate.defaults.where.not(id: self.id).update_all(use_as_default: false)
+    DimensionsTemplate.defaults.where.not(id: id).update_all(use_as_default: false)
   end
 
   def to_shippo
@@ -91,7 +90,6 @@ class DimensionsTemplate < ActiveRecord::Base
   end
 
   def imperial?
-    unit_of_measure == "imperial"
+    unit_of_measure == 'imperial'
   end
-
 end

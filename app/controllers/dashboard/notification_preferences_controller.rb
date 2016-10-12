@@ -1,5 +1,4 @@
 class Dashboard::NotificationPreferencesController < Dashboard::BaseController
-
   def edit
     @user = current_user
     @notification_preference = @user.notification_preference || @user.build_notification_preference
@@ -20,4 +19,3 @@ class Dashboard::NotificationPreferencesController < Dashboard::BaseController
     params.require(:user).permit(secured_params.notification_preferences)
   end
 end
-

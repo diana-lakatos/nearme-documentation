@@ -21,8 +21,8 @@ class Authentication::BaseProvider
   end
 
   def self.provider
-    provider_name = self.to_s.demodulize.split('Provider')[0].downcase
-    raise NotImplementedError if provider_name == 'base'
+    provider_name = to_s.demodulize.split('Provider')[0].downcase
+    fail NotImplementedError if provider_name == 'base'
     provider_name
   end
 
@@ -35,11 +35,11 @@ class Authentication::BaseProvider
   end
 
   def is_oauth_1?
-    self.class::META[:auth] == "OAuth 1.0a"
+    self.class::META[:auth] == 'OAuth 1.0a'
   end
 
   def connections
-    @connections = User.joins(:authentications).where(authentications: {uid: self.friend_ids, provider: provider})
+    @connections = User.joins(:authentications).where(authentications: { uid: friend_ids, provider: provider })
   rescue
     []
   end
@@ -49,43 +49,40 @@ class Authentication::BaseProvider
   end
 
   def revoke
-    raise NotImplementedError
+    fail NotImplementedError
   end
-
 
   protected
 
   def connection
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
   def friend_ids
-    raise NotImplementedError
+    fail NotImplementedError
   end
 
   class BaseInfo
-
     attr_accessor :raw, :provider, :uid, :username, :email, :name, :first_name, :last_name,
-      :description, :location, :verified,
-      :image_url, :profile_url, :website_url
+                  :description, :location, :verified,
+                  :image_url, :profile_url, :website_url
 
     def to_hash
       {
-        "nickname"    => username,
-        "email"       => email,
-        "name"        => name,
-        "first_name"  => first_name,
-        "last_name"   => last_name,
-        "image"       => image_url,
-        "description" => description,
-        "urls"        => {
+        'nickname'    => username,
+        'email'       => email,
+        'name'        => name,
+        'first_name'  => first_name,
+        'last_name'   => last_name,
+        'image'       => image_url,
+        'description' => description,
+        'urls'        => {
           provider    => profile_url,
-          "Website"   => website_url
+          'Website'   => website_url
         },
-        "location" => location,
-        "verified" => verified
+        'location' => location,
+        'verified' => verified
       }
     end
-
   end
 end

@@ -10,7 +10,6 @@ class SendActivityEventsSummaryJob < Job
       }
 
       User.select('notification_preferences.*, users.*').joins(:recurring_notification_preference).find_each do |user|
-
         #
         # Groups
         #
@@ -18,14 +17,14 @@ class SendActivityEventsSummaryJob < Job
         if user.group_updates_enabled?
           user.group_collaborated.not_public.each do |group|
             status_update_quantity = ActivityFeedEvent
-              .with_identifiers("{Group_#{group.id}}")
-              .where(event: 'user_updated_group_status')
-              .where('created_at >= ?', 1.week.ago.beginning_of_day).count
+                                     .with_identifiers("{Group_#{group.id}}")
+                                     .where(event: 'user_updated_group_status')
+                                     .where('created_at >= ?', 1.week.ago.beginning_of_day).count
 
             comments_quantity = ActivityFeedEvent
-              .with_identifiers("{Group_#{group.id}}")
-              .where(event: 'user_commented')
-              .where('created_at >= ?', 1.week.ago.beginning_of_day).count
+                                .with_identifiers("{Group_#{group.id}}")
+                                .where(event: 'user_commented')
+                                .where('created_at >= ?', 1.week.ago.beginning_of_day).count
 
             summary_data[:groups] << {
               name: group.name,
@@ -44,14 +43,14 @@ class SendActivityEventsSummaryJob < Job
         if user.project_updates_enabled?
           user.transactables.each do |transactable|
             status_update_quantity = ActivityFeedEvent
-              .with_identifiers("{Transactable_#{transactable.id}}")
-              .where(event: 'user_updated_transactable_status')
-              .where('created_at >= ?', 1.week.ago.beginning_of_day).count
+                                     .with_identifiers("{Transactable_#{transactable.id}}")
+                                     .where(event: 'user_updated_transactable_status')
+                                     .where('created_at >= ?', 1.week.ago.beginning_of_day).count
 
             comments_quantity = ActivityFeedEvent
-              .with_identifiers("{Transactable_#{transactable.id}}")
-              .where(event: 'user_commented_on_transactable')
-              .where('created_at >= ?', 1.week.ago.beginning_of_day).count
+                                .with_identifiers("{Transactable_#{transactable.id}}")
+                                .where(event: 'user_commented_on_transactable')
+                                .where('created_at >= ?', 1.week.ago.beginning_of_day).count
 
             summary_data[:projects] << {
               name: transactable.name,

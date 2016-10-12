@@ -1,5 +1,4 @@
 class ReverseProxyLinkDrop < BaseDrop
-
   attr_reader :source
 
   def initialize(source)
@@ -11,5 +10,4 @@ class ReverseProxyLinkDrop < BaseDrop
   # name
   #   returns name
   delegate :id, :name, :destination_path, :use_on_path, to: :source
-
 end

@@ -1,7 +1,7 @@
 class PaymentGateway::PaystationPaymentGateway < PaymentGateway
   include PaymentGateway::ActiveMerchantGateway
 
-  supported  :credit_card_payment
+  supported :credit_card_payment
 
   def self.settings
     {
@@ -15,7 +15,6 @@ class PaymentGateway::PaystationPaymentGateway < PaymentGateway
   end
 
   def supported_currencies
-    ["NZD"]
+    ['NZD']
   end
 end
-

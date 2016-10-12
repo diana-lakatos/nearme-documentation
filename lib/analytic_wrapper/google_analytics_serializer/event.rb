@@ -2,7 +2,6 @@
 
 # see https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 class AnalyticWrapper::GoogleAnalyticsSerializer::Event
-
   def initialize(category, action, additional_params = {})
     @category = category
     @action = action
@@ -15,12 +14,9 @@ class AnalyticWrapper::GoogleAnalyticsSerializer::Event
   end
 
   def serialize
-    (@label.present? ? { el: @label } : {} ).merge(
-    @value.present? ? { ev: @value } : {}).merge({
-      t: "event",
-      ec: @category,
-      ea: @action
-    })
+    (@label.present? ? { el: @label } : {}).merge(
+      @value.present? ? { ev: @value } : {}).merge(t: 'event',
+                                                   ec: @category,
+                                                   ea: @action)
   end
-
 end

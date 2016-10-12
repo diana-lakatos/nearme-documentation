@@ -1,5 +1,4 @@
 module EventTracker::UserEvents
-
   def signed_up(user, custom_options = {})
     set_person_properties user, custom_options
     track 'Signed Up', user, custom_options
@@ -34,4 +33,3 @@ module EventTracker::UserEvents
     track 'User closed browser window when photo not processed before form submit', user, custom_options
   end
 end
-

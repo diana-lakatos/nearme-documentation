@@ -1,5 +1,4 @@
 class InstanceAdmin::GroupSearchForm < SearchForm
-
   property :q, virtual: true
   property :date, virtual: true
   property :filters, virtual: true
@@ -11,15 +10,10 @@ class InstanceAdmin::GroupSearchForm < SearchForm
   def to_search_params
     result = {}
 
-    if q.present?
-      result[:by_search_query] = ["%#{q}%"]
-    end
+    result[:by_search_query] = ["%#{q}%"] if q.present?
 
-    if date.present?
-      result[:with_date] = [date_from_params]
-    end
+    result[:with_date] = [date_from_params] if date.present?
 
     result
   end
-
 end

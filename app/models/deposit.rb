@@ -21,16 +21,14 @@ class Deposit < ActiveRecord::Base
   def build_payment(payment_attributes)
     super(
       payment_attributes.merge(
-        {
-          company: company,
-          currency: currency,
-          subtotal_amount_cents: deposit_amount.cents,
-          service_fee_amount_guest_cents:  0,
-          service_fee_amount_host_cents:  0,
-          service_additional_charges_cents: 0,
-          host_additional_charges_cents:  0,
-          payable: self
-        }
+        company: company,
+        currency: currency,
+        subtotal_amount_cents: deposit_amount.cents,
+        service_fee_amount_guest_cents:  0,
+        service_fee_amount_host_cents:  0,
+        service_additional_charges_cents: 0,
+        host_additional_charges_cents:  0,
+        payable: self
       )
     )
   end

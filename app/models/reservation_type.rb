@@ -16,11 +16,10 @@ class ReservationType < ActiveRecord::Base
   has_many :custom_model_types, through: :custom_model_type_linkings
 
   delegate :translated_bookable_noun, :create_translations!, :translation_namespace,
-    :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
-    :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
+           :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
+           :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
   validates :name, :transactable_types, presence: true
-
 
   store_accessor :settings, :address_in_radius, :validate_on_adding_to_cart, :skip_payment_authorization
 
@@ -29,13 +28,12 @@ class ReservationType < ActiveRecord::Base
   end
 
   def validate_on_adding_to_cart
-    super == "true"
+    super == 'true'
   end
-  alias :validate_on_adding_to_cart? :validate_on_adding_to_cart
+  alias_method :validate_on_adding_to_cart?, :validate_on_adding_to_cart
 
   def skip_payment_authorization
-    super == "true"
+    super == 'true'
   end
-  alias :skip_payment_authorization? :skip_payment_authorization
-
+  alias_method :skip_payment_authorization?, :skip_payment_authorization
 end

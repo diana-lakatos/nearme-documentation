@@ -6,4 +6,3 @@ class CustomThemeAsset::ThemeJsFile < CustomThemeAsset
     true
   end
 end
-

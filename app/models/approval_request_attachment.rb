@@ -13,8 +13,6 @@ class ApprovalRequestAttachment < ActiveRecord::Base
   scope :for_request_or_free,     -> (request_id) { where(approval_request_id: [nil, request_id]) }
 
   mount_uploader :file, PrivateFileUploader
-  validates_presence_of :file, unless: lambda { |ara| ara.file.present? || ara.file_cache.present? || !ara.required? }
+  validates_presence_of :file, unless: ->(ara) { ara.file.present? || ara.file_cache.present? || !ara.required? }
   skip_callback :commit, :after, :remove_file!
-
 end
-

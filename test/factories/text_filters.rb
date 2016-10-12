@@ -19,6 +19,5 @@ FactoryGirl.define do
       regexp '(?:\(?([0-9]{3})\)?[-. ]?)?([0-9]{3})[-. ]?([0-9]{4})'
       replacement_text '[7PHONE FILTERED]'
     end
-
   end
 end

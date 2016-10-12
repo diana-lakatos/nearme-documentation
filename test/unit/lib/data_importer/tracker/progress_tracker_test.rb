@@ -1,9 +1,8 @@
 require 'test_helper'
 
 class DataImporter::Tracker::ProgressTrackerTest < ActiveSupport::TestCase
-
   setup do
-    @data_upload = stub()
+    @data_upload = stub
     @progress_tracker = DataImporter::Tracker::ProgressTracker.new(@data_upload, 1000)
   end
 
@@ -52,7 +51,7 @@ class DataImporter::Tracker::ProgressTrackerTest < ActiveSupport::TestCase
           @progress_tracker.object_created(Location.new)
         end
         # i starts from 0, first progress update is with 1, last is 100, hence +1
-        @data_upload.expects(:update_column).once.with(:progress_percentage, i+1)
+        @data_upload.expects(:update_column).once.with(:progress_percentage, i + 1)
         @progress_tracker.object_created(Location.new)
       end
     end
@@ -64,7 +63,5 @@ class DataImporter::Tracker::ProgressTrackerTest < ActiveSupport::TestCase
       end
       @progress_tracker.object_created(User.new)
     end
-
   end
 end
-

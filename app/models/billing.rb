@@ -1,5 +1,4 @@
 module Billing
-
   # Generic billing gateway error
   Error = Class.new(::StandardError)
 

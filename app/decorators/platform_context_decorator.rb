@@ -1,5 +1,4 @@
 class PlatformContextDecorator
-
   delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?, :project_space_wizard_path,
            :platform_context_detail, :secured_constraint, to: :platform_context
 
@@ -18,10 +17,10 @@ class PlatformContextDecorator
   end
 
   def single_type?
-    self.transactable_types.count == 1
+    transactable_types.count == 1
   end
 
-  #reverse compatibility
+  # reverse compatibility
   def service_types
     @platform_context.transactable_types
   end
@@ -43,12 +42,12 @@ class PlatformContextDecorator
   end
 
   def build_url_for_path(path)
-    raise "Expected relative path, got #{path}" unless path[0] == '/'
+    fail "Expected relative path, got #{path}" unless path[0] == '/'
     "https://#{host}#{path}"
   end
 
   def support_email_for(error_code)
-    support_email_splited = self.support_email.split('@')
+    support_email_splited = support_email.split('@')
     support_email_splited.join("+#{error_code}@")
   end
 
@@ -69,16 +68,16 @@ class PlatformContextDecorator
   end
 
   def stripe_public_key
-    # TODO - remove stripe public key as it's not used anymore
+    # TODO: - remove stripe public key as it's not used anymore
     PaymentGateway::StripePaymentGateway.first.settings[:public_key] rescue nil
   end
 
   def supported_payout_via_ach?
-    Billing::Gateway::Processor::Outgoing::ProcessorFactory.supported_payout_via_ach?(self.instance)
+    Billing::Gateway::Processor::Outgoing::ProcessorFactory.supported_payout_via_ach?(instance)
   end
 
   def bookable_nouns
-    @bookable_nouns ||= transactable_types.map { |tt| tt.translated_bookable_noun }.to_sentence(last_word_connector: I18n.t('general.or_spaced'))
+    @bookable_nouns ||= transactable_types.map(&:translated_bookable_noun).to_sentence(last_word_connector: I18n.t('general.or_spaced'))
   end
 
   def bookable_nouns_plural
@@ -93,11 +92,7 @@ class PlatformContextDecorator
     Rails.env.development? || Rails.env.test? ? DesksnearMe::Application.config.facebook_key : instance.facebook_consumer_key
   end
 
-
   private
 
-  def platform_context
-    @platform_context
-  end
-
+  attr_reader :platform_context
 end

@@ -24,6 +24,5 @@ FactoryGirl.define do
     factory :transactable_type_purchase_pricing do
       unit 'item'
     end
-
   end
 end

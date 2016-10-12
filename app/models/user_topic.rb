@@ -4,6 +4,4 @@ class UserTopic < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :instance
-
 end
-

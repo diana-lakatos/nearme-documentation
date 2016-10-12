@@ -1,5 +1,4 @@
 class WorkflowStep::SignUpWorkflow::AccountCreated < WorkflowStep::SignUpWorkflow::BaseStep
-
   # user:
   #  User object
   # location:
@@ -7,6 +6,4 @@ class WorkflowStep::SignUpWorkflow::AccountCreated < WorkflowStep::SignUpWorkflo
   def data
     { user: @user, location: @user.locations.first }
   end
-
 end
-

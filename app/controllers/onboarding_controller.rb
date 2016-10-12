@@ -1,5 +1,4 @@
 class OnboardingController < ApplicationController
-
   include Wicked::Wizard
 
   before_filter :redirect_if_completed
@@ -32,7 +31,7 @@ class OnboardingController < ApplicationController
       @user.update_attributes(user_params)
       render_wizard @user
     else
-      raise NotImplementedError
+      fail NotImplementedError
     end
   end
 
@@ -50,7 +49,7 @@ class OnboardingController < ApplicationController
     when :location
       @address = @user.current_address || @user.build_current_address
     when :integrations
-      cookies[:redirect_after_callback_to] = {value: view_context.wizard_path(step), expires: 10.minutes.from_now}
+      cookies[:redirect_after_callback_to] = { value: view_context.wizard_path(step), expires: 10.minutes.from_now }
       @supported_providers = Authentication.available_providers
     when :followings
       quantity = 6
@@ -89,5 +88,4 @@ class OnboardingController < ApplicationController
   def redirect_if_completed
     redirect_to root_path if !user_signed_in? || current_user.onboarding_completed
   end
-
 end

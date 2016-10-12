@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Authentication::FacebookProviderTest < ActiveSupport::TestCase
-
   context 'Having a Facebook provider' do
     setup do
       user = FactoryGirl.build(:user)
@@ -11,7 +10,7 @@ class Authentication::FacebookProviderTest < ActiveSupport::TestCase
     end
 
     should 'return info object' do
-      raw = {'id' => 'dnm', 'username' => 'desksnearme', 'name' => 'Desks Near Me'}
+      raw = { 'id' => 'dnm', 'username' => 'desksnearme', 'name' => 'Desks Near Me' }
       Koala::Facebook::API.any_instance.stubs(:get_object).with('me').once.returns(raw)
 
       assert_equal 'dnm', @facebook_provider.info.uid
@@ -30,10 +29,10 @@ class Authentication::FacebookProviderTest < ActiveSupport::TestCase
     end
 
     should 'return friend_ids' do
-      connections = [{"id" => 1}, {"id" => 2}]
+      connections = [{ 'id' => 1 }, { 'id' => 2 }]
       Koala::Facebook::API.any_instance.stubs(:get_connections).once.returns(connections)
 
-      assert_equal ['1', '2'], @facebook_provider.friend_ids
+      assert_equal %w(1 2), @facebook_provider.friend_ids
     end
 
     context 'when token is invalid' do

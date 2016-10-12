@@ -1,5 +1,4 @@
 class WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit < WorkflowStep::CollaboratorWorkflow::BaseStep
-
   def initialize(transactable_id, user_id)
     @transactable = Transactable.find_by(id: transactable_id)
     @enquirer = User.find_by(id: user_id)

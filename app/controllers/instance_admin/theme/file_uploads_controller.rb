@@ -1,7 +1,6 @@
 class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseController
-
   def index
-    @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).order(:id => :desc)
+    @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).order(id: :desc)
     @files = Ckeditor::Paginatable.new(@files).page(params[:page])
     @file = Ckeditor::Asset.new
   end
@@ -32,7 +31,7 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
           flash[:notice] = I18n.t('flash_messages.instance_admin.theme.file_uploads.created')
           redirect_to instance_admin_theme_file_uploads_path
         else
-          @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).order(:id => :desc)
+          @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).order(id: :desc)
           @files = Ckeditor::Paginatable.new(@files).page(params[:page])
           flash[:error] = I18n.t('flash_messages.instance_admin.theme.file_uploads.failed', errors: @file.errors.full_messages.join(', '))
           render :index
@@ -42,7 +41,7 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
       if request.xhr?
         render text: I18n.t('flash_messages.instance_admin.theme.file_uploads.failed', errors: @file.errors.full_messages.join(', '))
       else
-        @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).order(:id => :desc)
+        @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).order(id: :desc)
         @files = Ckeditor::Paginatable.new(@files).page(params[:page])
         flash[:error] = 'Please attach file.'
         render action: :index
@@ -53,7 +52,7 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
   def search
     @query = params[:search][:query] if params[:search] && params[:search][:query]
     escaped_search_param = ActiveRecord::Base.connection.quote_like_string(@query.to_s)
-    @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).where("data_file_name ILIKE ?", "%#{escaped_search_param}%").order(:id => :desc)
+    @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).where('data_file_name ILIKE ?', "%#{escaped_search_param}%").order(id: :desc)
     @files = Ckeditor::Paginatable.new(@files).page(params[:page])
 
     render 'index'
@@ -64,14 +63,12 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
     @file.try(:destroy)
 
     respond_to do |format|
-      format.js {
-        render :text => %Q"
+      format.js do
+        render text: %"
               jQuery('#picture_#{@file.try(:id)}').remove();
               jQuery('#attachment_file_#{@file.try(:id)}').remove();
         "
-      }
+      end
     end
   end
-
 end
-

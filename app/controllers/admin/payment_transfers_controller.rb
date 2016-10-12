@@ -1,5 +1,4 @@
 class Admin::PaymentTransfersController < Admin::ResourceController
-
   def transferred
     resource.mark_transferred
     flash[:notice] = t('flash_messages.payments.marked_transferred')
@@ -15,6 +14,4 @@ class Admin::PaymentTransfersController < Admin::ResourceController
   def collection_default_scope
     'pending'
   end
-
 end
-

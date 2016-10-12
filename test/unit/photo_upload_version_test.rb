@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class PhotoUploadVersionTest < ActiveSupport::TestCase
-
   context 'photo upload versions' do
     should 'test resize of photos' do
       PhotoUploader.enable_processing = true
@@ -13,7 +12,7 @@ class PhotoUploadVersionTest < ActiveSupport::TestCase
       puv.apply_transform = 'resize_to_fill'
       puv.width = 313
       puv.height = 296
-      puv.photo_uploader = "PhotoUploader"
+      puv.photo_uploader = 'PhotoUploader'
       puv.version_name = 'space_listing'
       puv.save!
 
@@ -24,5 +23,4 @@ class PhotoUploadVersionTest < ActiveSupport::TestCase
       PhotoUploader.enable_processing = false
     end
   end
-
 end

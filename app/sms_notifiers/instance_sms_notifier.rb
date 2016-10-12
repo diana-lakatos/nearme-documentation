@@ -4,10 +4,8 @@ class InstanceSmsNotifier < SmsNotifier
 
   def details_for_lookup
     {
-      :instance_id => PlatformContext.current.try(:instance).try(:id),
-      :i18n_locale => I18n.locale
+      instance_id: PlatformContext.current.try(:instance).try(:id),
+      i18n_locale: I18n.locale
     }
   end
-
-
 end

@@ -8,12 +8,11 @@ class ApiCallerJob < Job
   end
 
   def perform
-    raise "Unknown PlatformContext" if PlatformContext.current.nil?
+    fail 'Unknown PlatformContext' if PlatformContext.current.nil?
     @caller_class.send(@caller_method, *@args).try(:deliver)
   end
 
   def self.priority
     0
   end
-
 end

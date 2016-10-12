@@ -8,12 +8,12 @@ Devise::TokenAuthenticatable.setup do |config|
 end
 
 Devise.setup do |config|
-  config.mailer_sender = "support@desksnear.me"
+  config.mailer_sender = 'support@desksnear.me'
 
   require 'devise/orm/active_record'
-  config.case_insensitive_keys = [ :email ]
+  config.case_insensitive_keys = [:email]
 
-  config.strip_whitespace_keys = [ :email ]
+  config.strip_whitespace_keys = [:email]
   config.skip_session_storage = [:http_auth]
 
   config.stretches = Rails.env.test? ? 1 : 10
@@ -29,7 +29,7 @@ Devise.setup do |config|
   config.http_authenticatable_on_xhr = false
 
   config.password_length = 6..128
-  config.mailer = "DeviseMailer"
+  config.mailer = 'DeviseMailer'
 
   config.warden do |manager|
     manager.failure_app = CustomFailure

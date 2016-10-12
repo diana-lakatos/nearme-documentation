@@ -17,16 +17,16 @@ class UserMessage < ActiveRecord::Base
   validates_presence_of :thread_owner_id
   validates_presence_of :thread_recipient_id
   validates_presence_of :body, message: "Message can't be blank."
-  validates_length_of :body, maximum: 2000, message: "Message cannot have more than 2000 characters."
+  validates_length_of :body, maximum: 2000, message: 'Message cannot have more than 2000 characters.'
 
   # Thread is defined by thread owner, thread recipient and thread context
-  scope :for_thread, ->(thread_owner, thread_recipient, thread_context) {
+  scope :for_thread, lambda { |thread_owner, thread_recipient, thread_context|
     where(thread_context_id: thread_context.id, thread_context_type: thread_context.class.to_s, thread_owner_id: thread_owner.id, thread_recipient_id: thread_recipient.id)
   }
-  scope :for_user, ->(user) {
+  scope :for_user, lambda { |user|
     where('thread_owner_id = ? OR thread_recipient_id = ?', user.id, user.id).order('user_messages.created_at asc')
   }
-  scope :by_created, -> {order('created_at desc')}
+  scope :by_created, -> { order('created_at desc') }
 
   after_create :update_recipient_unread_message_counter, :mark_as_read_for_author
 
@@ -73,11 +73,11 @@ class UserMessage < ActiveRecord::Base
   def archive_for!(user)
     column = archived_column_for(user)
     UserMessage.where(
-        thread_owner_id: thread_owner_id,
-        thread_recipient_id: thread_recipient_id,
-        thread_context_id: thread_context_id,
-        thread_context_type: thread_context_type
-    ).update_all( column => true )
+      thread_owner_id: thread_owner_id,
+      thread_recipient_id: thread_recipient_id,
+      thread_context_id: thread_context_id,
+      thread_context_type: thread_context_type
+    ).update_all(column => true)
 
     update_unread_message_counter_for(user)
   end
@@ -88,13 +88,13 @@ class UserMessage < ActiveRecord::Base
 
   def send_notification
     return if thread_context_type.blank?
-    WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::Created, self.id)
+    WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::Created, id)
     return if thread_context_type != 'Transactable'
 
     if author == thread_context.administrator
-      WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::TransactableMessageFromLister, self.id)
+      WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::TransactableMessageFromLister, id)
     else
-      WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::TransactableMessageFromEnquirer, self.id)
+      WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::TransactableMessageFromEnquirer, id)
     end
   end
 
@@ -139,9 +139,9 @@ class UserMessage < ActiveRecord::Base
   end
 
   def update_unread_message_counter_for(user)
-    actual_count = user.reload.decorate.unread_user_message_threads_for(self.instance).fetch.size
+    actual_count = user.reload.decorate.unread_user_message_threads_for(instance).fetch.size
     user.instance_unread_messages_threads_count ||= {}
-    user.instance_unread_messages_threads_count[self.instance_id] = actual_count
+    user.instance_unread_messages_threads_count[instance_id] = actual_count
     user.save!
   end
 

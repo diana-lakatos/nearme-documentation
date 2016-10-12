@@ -1,5 +1,4 @@
 class SavedSearch < ActiveRecord::Base
-
   ALERTS_FREQUENCIES = %w(daily weekly)
 
   auto_set_platform_context
@@ -13,7 +12,7 @@ class SavedSearch < ActiveRecord::Base
 
   scope :desc, -> { order('id DESC') }
 
-  validates :title, presence: true, uniqueness: {scope: :user_id}
+  validates :title, presence: true, uniqueness: { scope: :user_id }
   validates :user_id, :query, presence: true
 
   before_create :set_last_viewed_at, :change_sort
@@ -42,7 +41,7 @@ class SavedSearch < ActiveRecord::Base
   end
 
   def unseen_results
-    alert_logs.where("created_at > ?", last_viewed_at).sum(:results_count)
+    alert_logs.where('created_at > ?', last_viewed_at).sum(:results_count)
   end
 
   def to_liquid
@@ -58,5 +57,4 @@ class SavedSearch < ActiveRecord::Base
   def change_sort
     self.query = query.gsub(/&sort=(\w+)?/, '') + '&sort=created_at&order=desc'
   end
-
 end

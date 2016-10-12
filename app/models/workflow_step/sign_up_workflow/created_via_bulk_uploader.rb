@@ -1,5 +1,4 @@
 class WorkflowStep::SignUpWorkflow::CreatedViaBulkUploader < WorkflowStep::SignUpWorkflow::BaseStep
-
   def initialize(user_id, password)
     @user = User.find(user_id)
     @password = password
@@ -20,6 +19,4 @@ class WorkflowStep::SignUpWorkflow::CreatedViaBulkUploader < WorkflowStep::SignU
   def data
     { user: @user, user_password: @password }
   end
-
 end
-

@@ -2,7 +2,6 @@ require 'test_helper'
 require 'helpers/gmaps_fake'
 
 class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
-
   def setup
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
@@ -14,33 +13,30 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @category2 = FactoryGirl.create(:category)
     @category1.update_column(:permalink, 'category1_permalink')
     @category2.update_column(:permalink, 'category2_permalink')
-
   end
 
   context 'current data' do
-
     should 'not skip empty location and include multiple photos' do
       setup_current_data
       setup_data_for_other_user
-      assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), "r") { |io| io.read}), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
+      assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), 'r') { |io| io.read }), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
     end
 
     should 'generate proper current data for custom fields' do
       @transactable_type.update_attribute(:custom_csv_fields, [
-        {'transactable' => 'my_attribute'},
-        {'location' => 'email'},
-        {'address' => 'city'},
-        {'location' => 'external_id'},
-        {'address' => 'street'} ,
-        {'photo' => 'image_original_url'},
-        {'transactable' => 'external_id'},
-        {'location' => 'description'}
+        { 'transactable' => 'my_attribute' },
+        { 'location' => 'email' },
+        { 'address' => 'city' },
+        { 'location' => 'external_id' },
+        { 'address' => 'street' },
+        { 'photo' => 'image_original_url' },
+        { 'transactable' => 'external_id' },
+        { 'location' => 'description' }
       ])
       setup_current_data
       setup_data_for_other_user
-      assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data_custom_fields.csv'), "r") { |io| io.read}), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
+      assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data_custom_fields.csv'), 'r') { |io| io.read }), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
     end
-
   end
 
   should 'should not raise exception for blank file' do
@@ -52,7 +48,6 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
         assert_no_difference 'Address.count' do
           assert_no_difference 'Transactable.count' do
             assert_no_difference 'Photo.count' do
-
               DataUploadHostConvertJob.perform(@data_upload.id)
               assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
             end
@@ -153,7 +148,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   should 'should be able to restore location instead of creating new one' do
     setup_current_data
     setup_data_for_other_user
-    @listing_to_not_be_reverted = FactoryGirl.create(:transactable, :with_time_based_booking, location: @location_empty, name: 'my name2', properties: { my_attribute: 'attribute'})
+    @listing_to_not_be_reverted = FactoryGirl.create(:transactable, :with_time_based_booking, location: @location_empty, name: 'my name2', properties: { my_attribute: 'attribute' })
     @listing_to_not_be_reverted.destroy
     assert_no_difference 'Location.count' do
       @location_empty.destroy
@@ -266,13 +261,11 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @other_listing_one.action_type.pricing_for('1_day').update(price: 10)
     stub_image_url('http://www.example.com/other-image.jpg')
     @other_photo_one = FactoryGirl.create(:photo, owner: @other_listing_one, image_original_url: 'http://www.example.com/other-image.jpg')
-    @other_listing_two = FactoryGirl.create(:transactable, :with_time_based_booking, location: @other_location_not_empty, name: 'the other', properties: { my_attribute: 'attribute' }, external_id: "no-touch")
+    @other_listing_two = FactoryGirl.create(:transactable, :with_time_based_booking, location: @other_location_not_empty, name: 'the other', properties: { my_attribute: 'attribute' }, external_id: 'no-touch')
     @other_listing_two.action_type.pricing_for('1_day').update(price: 10)
   end
 
   def setup_data_upload(csv_path, sync_mode = false)
     @data_upload = FactoryGirl.create(:data_upload, sync_mode: sync_mode, importable: @transactable_type, csv_file: File.open(csv_path), target: @company, uploader: @user)
   end
-
 end
-
