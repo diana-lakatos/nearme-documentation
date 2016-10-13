@@ -24,7 +24,7 @@
 
                     <div class="properties">
                         <p class="price">
-                            <strong>${{ user.buyer_properties['hourly_rate']}} USD / hr</strong>
+                            <strong>{{ user.buyer_properties['hourly_rate_decimal'] | price_with_cents_with_currency }} USD / hr</strong>
                         </p>
                         <dl class="property">
                             <dt>Discounts:</dt>
