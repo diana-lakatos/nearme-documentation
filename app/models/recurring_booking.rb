@@ -57,6 +57,13 @@ class RecurringBooking < Order
     RecurringBooking
   end
 
+  def try_to_activate!
+    return true unless inactive? && valid?
+    return true if payment_subscription.blank?
+
+    activate! if payment_subscription.credit_card.try(:success?)
+  end
+
   def activate_order!
     schedule_expiry
     auto_confirm_reservation
@@ -189,7 +196,7 @@ class RecurringBooking < Order
   def total_amount_calculator
     @total_amount_calculator ||= RecurringBooking::SubscriptionPriceCalculator.new(self)
   end
-  alias_method :price_calculator, :total_amount_calculator
+  alias price_calculator total_amount_calculator
 
   def monthly?
     transactable_pricing.unit == 'subscription_month'

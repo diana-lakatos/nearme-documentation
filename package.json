@@ -1,6 +1,10 @@
 {
   "name": "desksnearme",
+<<<<<<< HEAD
   "version": "10.8.0-111",
+=======
+  "version": "10.8.0-67",
+>>>>>>> 8793580... NM-6001 checkout fixes and adjustments
   "description": "All documentation is set out on the [GitHub Wiki](https://near-me.atlassian.net/wiki/).",
   "private": true,
   "directories": {},

@@ -34,7 +34,12 @@ class DelayedReservation < Reservation
     set_dates_from_search
     build_periods
     self.quantity ||= 1
-    self.skip_try_to_activate = true
+  end
+
+  def try_to_activate!
+    return true unless inactive? && valid?
+
+    activate!
   end
 
   def before_checkout_callback

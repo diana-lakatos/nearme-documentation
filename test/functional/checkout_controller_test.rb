@@ -27,11 +27,9 @@ class CheckoutControllerTest < ActionController::TestCase
     should 'should not save on authorization failure' do
       authorize_response = OpenStruct.new(success?: false, error: 'No $$$ on account')
       PaymentGateway.any_instance.expects(:gateway_authorize).returns(authorize_response)
-      assert_difference('Payment.count') do
+      assert_no_difference('Payment.count') do
         put :update, order_params_for(@reservation)
       end
-      payment = Payment.last
-      refute payment.authorized?
     end
 
     should 'store successful authorization' do

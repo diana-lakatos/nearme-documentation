@@ -47,8 +47,7 @@ class SecuredParams
      :input_html_options_string,
      :wrapper_html_options_string,
      :validation_only_on_update,
-     valid_values: []
-    ]
+     valid_values: []]
   end
 
   def custom_validator
@@ -571,11 +570,11 @@ class SecuredParams
   def payment_gateway_config(config_settings)
     config = []
     config_settings.each do |key, value|
-      if value.instance_of?(Hash) && !value.key?(:valid_values)
-        config << [key => payment_gateway_config(value)]
-      else
-        config << key
-      end
+      config << if value.instance_of?(Hash) && !value.key?(:valid_values)
+                  [key => payment_gateway_config(value)]
+                else
+                  key
+                end
     end
 
     config
@@ -1447,6 +1446,7 @@ class SecuredParams
       :delivery_type,
       :delivery_ids,
       :dates,
+      :step_control,
       :total_amount_check,
       :transactable_pricing_id,
       :transactable_id,
