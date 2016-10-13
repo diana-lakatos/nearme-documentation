@@ -2732,8 +2732,9 @@ en:
   user_reviews:
     reviews_about_this_seller: "How others rated %{first_name} as a seller"
     reviews_left_by_this_seller: "How %{first_name} rated others as a seller"
-    reviews_about_this_buyer: "How others rated %{first_name} as an buyer"
-    reviews_left_by_this_buyer: "How %{first_name} rated others as an buyer"
+    reviews_about_this_buyer: "How others rated %{first_name} as a buyer"
+    reviews_left_by_this_buyer: "How %{first_name} rated others as a buyer"
+    reviews_about_product: "How %{first_name} rated products as a buyer"
 
   payouts:
     email_not_correct: "This email is not correct."
