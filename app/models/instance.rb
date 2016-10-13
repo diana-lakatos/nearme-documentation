@@ -23,15 +23,15 @@ class Instance < ActiveRecord::Base
   serialize :orders_received_tabs, Array
   serialize :my_orders_tabs, Array
 
-  API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key)
-  SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category)
-  SEARCH_ENGINES = %w(postgresql elasticsearch)
-  SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }
-  SEARCHABLE_CLASSES = %w(TransactableType InstanceProfileType)
+  API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key).freeze
+  SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category).freeze
+  SEARCH_ENGINES = %w(postgresql elasticsearch).freeze
+  SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }.freeze
+  SEARCHABLE_CLASSES = %w(TransactableType InstanceProfileType).freeze
 
   API_KEYS.each do |meth|
     define_method(meth) do
-      self.test_mode? ? send('test_' + meth) : send('live_' + meth)
+      test_mode? ? send('test_' + meth) : send('live_' + meth)
     end
   end
 
@@ -125,13 +125,13 @@ class Instance < ActiveRecord::Base
 
   delegate :force_file_upload?, to: :documents_upload, allow_nil: true
 
-  scope :with_support_imap, -> {  where("support_imap_username <> '' AND encrypted_support_imap_password  <> '' AND support_imap_server  <> '' AND support_imap_port IS NOT NULL") }
+  scope :with_support_imap, -> { where("support_imap_username <> '' AND encrypted_support_imap_password  <> '' AND support_imap_server  <> '' AND support_imap_port IS NOT NULL") }
 
   scope :with_deleted, -> { all }
 
   store_accessor :search_settings, :tt_select_type
 
-  before_create :generate_webhook_token, :build_availability_templates
+  before_create :generate_webhook_token
   before_update :check_lock
   after_save :recalculate_cache_key!, if: -> { custom_sanitize_config_changed? }
 
@@ -145,12 +145,12 @@ class Instance < ActiveRecord::Base
 
   def allowed_currencies=(currencies)
     currencies.reject!(&:blank?)
-    write_attribute(:allowed_currencies, currencies)
+    self[:allowed_currencies] = currencies
   end
 
   def allowed_countries=(countries)
     countries.reject!(&:blank?)
-    write_attribute(:allowed_countries, countries)
+    self[:allowed_countries] = countries
   end
 
   def check_lock
@@ -179,11 +179,11 @@ class Instance < ActiveRecord::Base
   end
 
   def lessor
-    read_attribute(:lessor).presence || 'host'
+    self[:lessor].presence || 'host'
   end
 
   def lessee
-    read_attribute(:lessee).presence || 'guest'
+    self[:lessee].presence || 'guest'
   end
 
   def to_liquid
@@ -199,7 +199,7 @@ class Instance < ActiveRecord::Base
   end
 
   def twilio_config
-    if !self.test_mode? && Rails.env.production?
+    if !test_mode? && Rails.env.production?
       if twilio_consumer_key.present? && twilio_consumer_secret.present? && twilio_from_number.present?
         { key: twilio_consumer_key, secret: twilio_consumer_secret, from: twilio_from_number }
       else
@@ -215,7 +215,7 @@ class Instance < ActiveRecord::Base
   end
 
   def test_mode?
-    read_attribute(:test_mode) || (!Rails.env.staging? && !Rails.env.production?)
+    self[:test_mode] || (!Rails.env.staging? && !Rails.env.production?)
   end
 
   def default_twilio_config
@@ -317,7 +317,7 @@ class Instance < ActiveRecord::Base
   end
 
   def default_currency
-    read_attribute(:default_currency).presence || 'USD'
+    self[:default_currency].presence || 'USD'
   end
 
   def set_context!
@@ -341,7 +341,7 @@ class Instance < ActiveRecord::Base
   end
 
   def require_payout?
-    !test_mode? && self.require_payout_information?
+    !test_mode? && require_payout_information?
   end
 
   def fast_recalculate_cache_key!
@@ -355,17 +355,17 @@ class Instance < ActiveRecord::Base
   end
 
   def instance_owner
-    instance_admins.where(instance_owner: true).first.try(:user)
+    instance_admins.find_by(instance_owner: true).try(:user)
   end
 
   def generate_webhook_token
-    self.webhook_token = SecureRandom.uuid.gsub(/\-/, '')
+    self.webhook_token = SecureRandom.uuid.delete('-')
   end
 
   def seller_attachments_enabled
     seller_attachments_access_level != 'disabled'
   end
-  alias_method :seller_attachments_enabled?, :seller_attachments_enabled
+  alias seller_attachments_enabled? seller_attachments_enabled
 
   def seller_attachments_enabled=(val)
     self.seller_attachments_access_level = 'disabled' if val == '0'

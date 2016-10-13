@@ -1,5 +1,5 @@
 class Api::V3::InstancesController < Api::BaseController
-  skip_before_filter :verified_api_request?
+  skip_before_action :verified_api_request?
   skip_before_action :require_authorization
 
   def index
@@ -14,7 +14,7 @@ class Api::V3::InstancesController < Api::BaseController
   private
 
   def require_authentication
-    fail DNM::Unauthorized unless valid_token?
+    raise DNM::Unauthorized unless valid_token?
   end
 
   def valid_token?
@@ -43,9 +43,8 @@ class Api::V3::InstancesController < Api::BaseController
   protected
 
   def serialized_collection
-    InstanceJsonSerializer.serialize(
-      collection.order('created_at desc'),
-      is_collection: true)
+    InstanceJsonSerializer.serialize collection.order('created_at desc'),
+                                     is_collection: true
   end
 
   def collection
@@ -80,7 +79,7 @@ class InstanceFactory
 
   def create
     unless instance.domains.first.present?
-      fail ::DNM::Error, 'You must create a domain, e.g. your-market.near-me.com'
+      raise ::DNM::Error, 'You must create a domain, e.g. your-market.near-me.com'
     end
 
     instance.domains.first.use_as_default = true
@@ -89,6 +88,7 @@ class InstanceFactory
     begin
       Instance.transaction do
         instance.save!
+        # TODO: tap
         instance.domains.first.update_column(:state, 'elb_secured')
         instance.domains.first.update_column(:secured, true)
         user.save!
@@ -97,8 +97,9 @@ class InstanceFactory
     rescue
       raise ::DNM::Error, errors.join(', ')
     end
-
     instance.set_context!
+    instance.build_availability_templates
+    instance.save!
 
     Utils::FormComponentsCreator.new(instance).create!
 
@@ -122,13 +123,20 @@ class InstanceFactory
       end
     end
 
-    ipt = instance.instance_profile_types.create!(name: 'Seller', profile_type: InstanceProfileType::SELLER)
-    Utils::FormComponentsCreator.new(ipt).create!
-    ipt = instance.instance_profile_types.create!(name: 'Buyer', profile_type: InstanceProfileType::BUYER)
-    Utils::FormComponentsCreator.new(ipt).create!
-    tp = @instance.transactable_types.new(
-      name: @instance.bookable_noun
-    )
+    instance
+      .instance_profile_types
+      .create!(name: 'Seller', profile_type: InstanceProfileType::SELLER).tap do |type|
+      Utils::FormComponentsCreator.new(type).create!
+    end
+
+    instance
+      .instance_profile_types
+      .create!(name: 'Buyer', profile_type: InstanceProfileType::BUYER).tap do |type|
+      Utils::FormComponentsCreator.new(type).create!
+    end
+
+    tp = instance.transactable_types.new(name: instance.bookable_noun)
+
     tp.action_types << TransactableType::TimeBasedBooking.new(
       confirm_reservations: true,
       pricings_attributes: [
@@ -154,6 +162,8 @@ class InstanceFactory
         }
       ]
     )
+
+    tp.default_availability_template = instance.availability_templates.first
     tp.save!
 
     tp.create_rating_systems
