@@ -20,7 +20,7 @@ partial: false
         <li {{ ca.wrapper_html_options }}>
           <fieldset>
             <legend>{{ ca.label }}</legend>
-            <select {{ ca.input_html_options }} class="form-control ordinary-select" name="lg_custom_attributes[{{ ca.name }}][]" id="">
+            <select {{ ca.input_html_options }} class="form-control" name="lg_custom_attributes[{{ ca.name }}][]" id="">
               <option value="">Please select</option>
               {% for opt in ca.valid_values %}
                 <option value="{{ opt }}" {% if params['lg_custom_attributes']['item_type'][0] == opt %}selected{% endif %}>{{ opt }}</option>
@@ -33,7 +33,7 @@ partial: false
           <fieldset>
             <legend>Location</legend>
             <input type="text" name="item_location_city" id="item_location_city" placeholder="City" />
-            <select class="form-control ordinary-select" name="item_location_state" id="item_location_state">
+            <select class="form-control" name="item_location_state" id="item_location_state">
               <option value="">Select State</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -64,7 +64,7 @@ partial: false
         <li>
           <fieldset>
             <legend>Price</legend>
-            <select class="form-control ordinary-select" name="price[max]" id="price">
+            <select class="form-control" name="price[max]" id="price">
               <option value="">Please select</option>
               <option value="50">Under $50</option>
               <option value="100">Under $100</option>
@@ -91,7 +91,7 @@ partial: false
         <form class="form-inline" data-search-form="filters">
           <label for="sort_by">
             Sort by:
-            <select class="form-control ordinary-select" name="sort" id="sort_by">
+            <select class="form-control" name="sort" id="sort_by">
               <option value="name_asc" {% if searcher.sort == 'name_asc' %}selected{% endif %}>Alphabetically ascending</option>
               <option value="name_desc" {% if searcher.sort == 'name_desc' %}selected{% endif %}>Alphabetically descending</option>
               <option value="all_prices_asc" {% if searcher.sort == 'all_prices_asc' %}selected{% endif %}>Price ascending</option>

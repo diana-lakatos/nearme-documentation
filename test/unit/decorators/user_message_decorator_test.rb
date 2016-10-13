@@ -112,7 +112,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       @archived_user_message = FactoryGirl.create(:user_message,
                                                   thread_owner: @owner,
                                                   thread_recipient: @listing2.administrator,
-                                                  author: @listing2.administrator,
+                                                  author: @owner,
                                                   read_for_owner: true,
                                                   archived_for_owner: true,
                                                   archived_for_recipient: false)

@@ -23,6 +23,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
   def create
     @user_message = current_user.authored_messages.new(message_params).decorate
+    @user_message.author = current_user
     @user_message.set_message_context_from_request_params(params, current_user)
 
     if @user_message.save
@@ -47,7 +48,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
         render partial: 'form'
       else
         @displayed_user_message = @user_message
-        @user_messages = UserMessage.for_thread(@user_message.thread_owner_with_deleted, @user_message.thread_recipient_with_deleted, @user_message.thread_context_with_deleted).by_created.decorate
+        @user_messages = UserMessage.for_thread(*for_thread_arguments(@user_message)).by_created.decorate
         render :show
       end
     end
@@ -55,16 +56,25 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
   def show
     @displayed_user_message = current_user.user_messages.find(params[:id]).decorate
-    @user_message = current_user.authored_messages.new(replying_to_id: @displayed_user_message.id)
-    @user_messages = UserMessage.for_thread(@displayed_user_message.thread_owner_with_deleted, @displayed_user_message.thread_recipient_with_deleted, @displayed_user_message.thread_context_with_deleted).by_created.decorate
+    @user_message = current_user.authored_messages.build(
+      replying_to_id: @displayed_user_message.id,
+      thread_recipient: @displayed_user_message.the_other_user(current_user),
+      thread_context: @displayed_user_message.thread_context,
+      thread_owner: @displayed_user_message.thread_owner
+    )
+
+    @user_messages = UserMessage.for_thread(*for_thread_arguments(@user_message)).by_created.decorate
     @user_messages.mark_as_read_for(current_user)
 
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def archive
-    @user_message = current_user.user_messages.find(params[:user_message_id])
-    @user_message.archive_for!(current_user)
+    @displayed_user_message = current_user.user_messages.find(params[:user_message_id])
+
+    @user_messages = UserMessage.for_thread(*for_thread_arguments(@displayed_user_message))
+                                .find_each { |um| um.archive_for!(current_user) }
+    @displayed_user_message.update_unread_message_counter_for(current_user)
 
     flash[:notice] = t('flash_messages.user_messages.message_archived')
     redirect_to dashboard_user_messages_path
@@ -110,5 +120,16 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
   def order_messages(collection)
     collection.sort! { |a, b| [a.last.last.the_other_user(current_user).name, a.last.last.created_at.to_i * -1] <=> [b.last.last.the_other_user(current_user).name, b.last.last.created_at.to_i * -1] } if params[:order_way] == 'author_name'
     collection
+  end
+
+  def for_thread_arguments(user_message)
+    [
+      [
+        user_message.thread_owner,
+        user_message.thread_recipient,
+        user_message.author
+      ].uniq.map(&:id),
+      user_message.thread_context_with_deleted
+    ]
   end
 end

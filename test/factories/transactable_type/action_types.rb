@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :transactable_type_action_type, class: TransactableType::ActionType do
     type 'TransactableType::NoActionBooking'
-    transactable_type { TransactableType.first }
     minimum_booking_minutes 60
     service_fee_guest_percent 10.0
     service_fee_host_percent 10.0

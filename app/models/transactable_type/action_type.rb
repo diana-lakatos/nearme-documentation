@@ -11,19 +11,19 @@ class TransactableType::ActionType < ActiveRecord::Base
   has_many :pricings, as: :action, inverse_of: :action
   has_many :transactable_action_types, class_name: 'Transactable::ActionType', foreign_key: :transactable_type_action_type_id
 
-  delegate :default_currency, :hide_location_availability?, to: :transactable_type
+  delegate :default_currency, :hide_location_availability?, to: :transactable_type, allow_nil: true
 
-  validates_presence_of :cancellation_policy_hours_for_cancellation,
-                        :cancellation_policy_penalty_percentage,
-                        if: :cancellation_policy_enabled
-  validates_inclusion_of :cancellation_policy_penalty_percentage,
-                         in: 0..100, allow_nil: true,
-                         message: 'must be between 0 and 100', if: :cancellation_policy_enabled
+  validates :cancellation_policy_hours_for_cancellation,
+            :cancellation_policy_penalty_percentage,
+            presence: { if: :cancellation_policy_enabled }
+  validates :cancellation_policy_penalty_percentage,
+            inclusion: { in: 0..100, allow_nil: true,
+                         message: 'must be between 0 and 100', if: :cancellation_policy_enabled }
 
-  validates_numericality_of :hours_to_expiration, :minimum_booking_minutes,
-                            :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage,
-                            :cancellation_policy_penalty_hours, :minimum_lister_service_fee,
-                            greater_than_or_equal_to: 0, allow_nil: true
+  validates :hours_to_expiration, :minimum_booking_minutes,
+            :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage,
+            :cancellation_policy_penalty_hours, :minimum_lister_service_fee,
+            numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
   accepts_nested_attributes_for :pricings, allow_destroy: true, reject_if: ->(attrs) { attrs[:number_of_units].blank? && attrs[:unit].blank? }
 
