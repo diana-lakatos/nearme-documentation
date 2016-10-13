@@ -62,13 +62,13 @@
           <li><a href="#" data-image-gallery-zoom="-1"><i class="fa fa-minus" aria-hidden="true"></i></a></li>
         </ul>
 
-          {% if photos_count > 0 %}
-          <ul class="image-gallery__list">
-            {% assign index = 0 %}
-            {% for photo in photos %}
-              <li data-image-gallery-image><a href="#"><img src="{{ photo.space_listing }}" data-image-gallery-full-image-url="{{ photo.original }}" /></a></li>
-            {% endfor %}
-          </ul>
+          {% if photos_count > 1 %}
+            <ul class="image-gallery__list">
+              {% assign index = 0 %}
+              {% for photo in photos %}
+                <li data-image-gallery-image><a href="#"><img src="{{ photo.space_listing }}" data-image-gallery-full-image-url="{{ photo.original }}" /></a></li>
+              {% endfor %}
+            </ul>
           {% endif %}
       </div>
     </div> <!-- Image gallery -->
@@ -139,22 +139,27 @@
     </div> <!-- Item details -->
   </div> <!-- Item sidebar -->
 
-  <div class="item-tags" data-item-tags>
-    <h4>Tags:</h4>
-    <ul>
-      {% for tag in listing.tags %}
-        {% if forloop.index <= 5 %}
-          <li><a href="#" class="button button-inverse">{{ tag.name }}</a></li>
-        {% else %}
-          <li class="item-tags__hide" data-item-tags-hidden><a href="#" class="button button-inverse">{{ tag.name }}</a></li>
-        {% endif %}
 
-        {% if forloop.index == listing.tags.size %}
-          <li class="item-tags__view-more" data-item-tags-toggle><a href="#" class="button button-inverse">view more</a></li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  </div> <!-- Item tags -->
+  {% if listing.tags.size > 0 %}
+    <div class="item-tags" data-item-tags>
+      <h4>Tags:</h4>
+      <ul>
+        {% for tag in listing.tags %}
+          {% if forloop.index <= 5 %}
+            <li><a href="#" class="button button-inverse">{{ tag.name }}</a></li>
+          {% else %}
+            <li class="item-tags__hide" data-item-tags-hidden><a href="#" class="button button-inverse">{{ tag.name }}</a></li>
+          {% endif %}
+
+          {% if listing.tags.size > 5 %}
+            {% if forloop.index == listing.tags.size %}
+              <li class="item-tags__view-more" data-item-tags-toggle><a href="#" class="button button-inverse">view more</a></li>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div> <!-- Item tags -->
+  {% endif %}
 
   <div class="item-disclaimers">
     <h2>Cancellation policy</h2>
