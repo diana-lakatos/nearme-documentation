@@ -20,6 +20,9 @@ class TransactableCollaboratorDrop < BaseDrop
   end
 
   def status
-    approved_by_owner_at.nil? ? 'Pending' : rejected_by_owner_at.nil? ? 'Approved' : 'Rejected'
+    return 'Pending' if approved_by_owner_at.nil? && rejected_by_owner_at.nil?
+
+    return 'Rejected' if rejected_by_owner_at.present?
+    return 'Approved' if approved_by_owner_at.present?
   end
 end

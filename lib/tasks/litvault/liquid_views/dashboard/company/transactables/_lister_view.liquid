@@ -19,7 +19,7 @@
         {% include 'dashboard/company/transactables/lister_actions.html' %}
       </div>
     </div>
-    {% if current_status == "pending" %}
+    {% if current_status == 'pending' %}
 
       {% assign transactable_collaborators = transactable.transactable_collaborators %}
 
@@ -60,6 +60,7 @@
 
                     {% if transactable_collaborator.status != 'Rejected' %}
                       {% form_for transactable_collaborator, url: @transactable_collaborator.update_path, method: 'put', remote: true %}
+                        <input type='hidden' name='transactable_collaborator[approved_by_owner_at]' value=''>
                         <input type='hidden' name='transactable_collaborator[rejected_by_owner_at]' value='{{ "now" | parse_time }}'>
                         <input type='submit' class="btn btn-danger" data-confirm="Are you sure?" value='Reject'>
                       {% endform_for %}
@@ -74,7 +75,7 @@
       {% endif %}
     {% endif %}
 
-    {% if current_status == "pending" %}
+    {% if current_status == 'pending' %}
 
       {% assign orders = current_user | get_lister_orders: transactable %}
 
