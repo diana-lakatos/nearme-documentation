@@ -29,7 +29,6 @@ class PaymentAuthorizer
 
   def process!
     return false unless @authorizable.valid?
-
     @response = @payment_gateway.gateway_authorize(@payment.total_amount.cents, credit_card_or_token, @options)
     @response.success? ? handle_success : handle_failure
   end
@@ -61,6 +60,7 @@ class PaymentAuthorizer
     @payment.billing_authorizations.build(billing_authoriazation_params.merge(success: false)) if @authorizable.respond_to?(:billing_authorizations)
     @payment.errors.add(:base, @response.message)
     @payment.errors.add(:base, I18n.t('activemodel.errors.models.payment.attributes.base.authorization_failed'))
+
     false
   end
 

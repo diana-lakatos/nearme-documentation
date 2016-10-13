@@ -9,6 +9,12 @@ class Purchase < Order
     event :ship do transition completed: :shipped; end
   end
 
+  def try_to_activate!
+    return true unless inactive? && valid?
+
+    activate! if payment && payment.authorized?
+  end
+
   def self.workflow_class
     Purchase
   end
@@ -49,10 +55,10 @@ class Purchase < Order
     errors.clear
     transactable_line_items.each { |t| t.validate_transactable_quantity(self) }
 
-    if errors.empty? && self.valid?
-      if self.unconfirmed? && (self.paid? || payment.capture!)
-        self.create_shipments!
-        self.confirm!
+    if errors.empty? && valid?
+      if unconfirmed? && (paid? || payment.capture!)
+        create_shipments!
+        confirm!
         transactable_line_items.each(&:reduce_transactable_quantity!)
       # We need to touch transactable so it's reindexed by ElasticSearch
       else

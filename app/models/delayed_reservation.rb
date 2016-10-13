@@ -34,7 +34,12 @@ class DelayedReservation < Reservation
     set_dates_from_search
     build_periods
     self.quantity ||= 1
-    self.skip_try_to_activate = true
+  end
+
+  def try_to_activate!
+    return true unless inactive? && valid?
+
+    activate!
   end
 
   def before_checkout_callback
@@ -66,9 +71,7 @@ class DelayedReservation < Reservation
           errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date'))
           return false
         end
-        if date.past? && !date.today?
-          errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date'))
-        end
+        errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date')) if date.past? && !date.today?
         periods.first.update_attributes(date: date, start_minute: @start_minute, end_minute: @end_minute)
       end
     end
