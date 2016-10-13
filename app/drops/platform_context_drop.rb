@@ -94,7 +94,8 @@ class PlatformContextDrop < BaseDrop
            :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
            :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?,
            :active_rating_systems_present?, :webhook_token, :instance, :enable_geo_localization, :split_registration?,
-           :enquirer_blogs_enabled, :lister_blogs_enabled, to: :platform_context_decorator
+           :enquirer_blogs_enabled, :lister_blogs_enabled,
+           :transactable_types_ordered, :transactable_types_as_hash, to: :platform_context_decorator
 
   def initialize(platform_context_decorator)
     @platform_context_decorator = platform_context_decorator

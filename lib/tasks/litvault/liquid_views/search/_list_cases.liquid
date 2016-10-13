@@ -5,7 +5,7 @@
   {% assign role = 'enquirer' %}
 {% endif %}
 
-<section class="search-form-wrapper">
+<section class="search-form-wrapper" id="listing_search">
   <div class="container-fluid">
     <div class="search-form-inner">
 
@@ -25,25 +25,25 @@
             <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params.query }}">
           </div>
 
-          <div class="state-filter">
+          <div class="state-filter" data-search-filters-container>
             <label for="field-state" class="struct-label">Filter by state</label>
             <span class="select-a">
               <select name="lg_custom_attributes[state][]" id="field-state" class="unstyled-select">
                 <option value="">By State</option>
-                {% for ca in platform_context.transactable_types.first.custom_attributes %}
-                  {% for value in ca.valid_values %}
-                    <option value='{{ value }}' {% if value == searcher.lg_custom_attributes_hash['state'].first %} selected {% endif %}>{{ value }}</option>
-                  {% endfor %}
+                {% assign ca = platform_context.transactable_types.first.custom_attributes_as_hash %}
+                {% for value in ca['states'].valid_values %}
+                  <option value='{{ value }}' {% if value == searcher.lg_custom_attributes_hash['state'].first %} selected {% endif %}>{{ value }}</option>
                 {% endfor %}
               </select>
             </span>
           </div>
 
-          <fieldset class="type-filter">
+          <fieldset class="type-filter" data-search-filters-container>
             <legend class="struct-label">Case type</legend>
 
             <ul>
-              {% for transactable_type in platform_context.transactable_types %}
+              {% assign tts = platform_context.transactable_types_ordered | reverse %}
+              {% for transactable_type in tts %}
                 {% assign zero = params.transactable_type_id | minus: transactable_type.id %}
                 <li>
                   <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" id="transactable-type-{{ transactable_type.id }}" {% if zero == 0 %} checked {% endif %}>
@@ -65,11 +65,11 @@
 
 <div class="search-results-wrapper">
   <div class="container-fluid">
-    <section class="search-results">
+    <section class="search-results" id="results">
       <div class="search-results-query-info">
         <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
         {% if searcher.result_count > 0 %}
-        <div class="search-sort-form">
+        <div class="search-sort-form" data-search-filters-container>
           <div>
             <label for="search-order">Sort by:</label>
             <span class="select-a">

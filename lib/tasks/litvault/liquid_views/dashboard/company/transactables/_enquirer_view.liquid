@@ -35,12 +35,12 @@
 
     <h3>Request To View Case Details:</h3>
     <div class="table-responsive">
-      <table class="table">
+      <table class="table table-transactable-details">
         <thead>
           <tr>
-            <th>Handling Lawyer:</th>
-            <th>Date:</th>
-            <th>Status:</th>
+            <th>Handling Lawyer</th>
+            <th>Date</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -59,12 +59,12 @@
       {% assign order = orders.last %}
       <h3>Offer</h3>
       <div class="table-responsive">
-        <table class="table">
+        <table class="table table-transactable-details">
           <thead>
             <tr>
-              <th>Offer Date:</th>
-              <th>Offer Status:</th>
-              <th>Offer Action:</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th class="actions">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -74,16 +74,16 @@
                 {{ 'reservations.states.' | append: order.state | t }}
               </td>
               {% if order.unconfirmed_or_draft? %}
-                <td>
+                <td class="actions">
                   {% if order.is_draft? %}
                     <a class="btn btn-info" href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
                   {% endif %}
                   <a class="btn btn-danger" href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure you want to cancel?">{{ 'general.cancel' | t }}</a>
                 </td>
               {% elsif order.confirmed? %}
-                <td>Confirmed at {{ order.confirmed_at | l: 'long' }}</td>
+                <td class="actions">Confirmed at {{ order.confirmed_at | l: 'long' }}</td>
               {% else %}
-                <td>Cancelled at {{ order.id }}</td>
+                <td class="actions">Cancelled at {{ order.id }}</td>
               {% endif %}
             </tr>
           </tbody>

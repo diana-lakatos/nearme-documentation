@@ -168,6 +168,8 @@ module.exports = class SearchSearchController extends SearchController
     @updateMapWithListingResults()
 
   showResults: (html) ->
+    wrap = $('<div>' + html + '</div>')
+    html = wrap.find('#results')
     @resultsContainer().replaceWith(html)
     @resultsContainer().find("input[data-authenticity-token]").val($('meta[name="authenticity_token"]').attr('content'));
     $('.pagination').hide()

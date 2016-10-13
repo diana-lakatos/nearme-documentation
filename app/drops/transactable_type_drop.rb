@@ -151,6 +151,10 @@ class TransactableTypeDrop < BaseDrop
     @source.custom_attributes
   end
 
+  def custom_attributes_as_hash
+    Hash[@source.custom_attributes.map { |ca| [ca.name, ca] }]
+  end
+
   def class_name
     @source.class.name
   end

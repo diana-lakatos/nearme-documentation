@@ -1,4 +1,4 @@
-<section class="search-form-wrapper">
+<section class="search-form-wrapper" id="listing_search">
   <div class="container-fluid">
     <div class="search-form-inner">
 
@@ -18,7 +18,7 @@
             <label for="field-q" class="struct-label">Search keyword</label>
             <input type="text" name="q" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
           </div>
-          <div class="state-filter">
+          <div class="state-filter" data-search-filters-container>
             <label for="field-state" class="struct-label">Filter by state</label>
             <span class="select-a">
               <select name="lg_custom_attributes[state][]" id="field-state" class="unstyled-select">
@@ -48,7 +48,7 @@
         <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
       </div>
 
-      <div class="search-results-items">
+      <div class="search-results-items" id="results">
         {% for user in searcher.results %}
           <article class="search-result user-a" id="user-{{ user.id }}">
 

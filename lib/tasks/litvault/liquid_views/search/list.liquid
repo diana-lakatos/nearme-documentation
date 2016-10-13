@@ -7,3 +7,7 @@
 {% else %}
     {% include 'search/list_cases.html' %}
 {% endif %}
+
+{% content_for 'domready' %}
+    $(document).trigger('init:list:searchresults.nearme');
+{% endcontent_for %}
