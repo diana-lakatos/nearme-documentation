@@ -64,7 +64,8 @@ partial: false
         <li>
           <fieldset>
             <legend>Price</legend>
-            <select class="form-control" name="price[max]" id="price">
+            <input type="hidden" name="price[min]" value="0" data-price-min-input />
+            <select class="form-control" name="price[max]" id="price" data-price-select>
               <option value="">Please select</option>
               <option value="50">Under $50</option>
               <option value="100">Under $100</option>
@@ -72,7 +73,7 @@ partial: false
               <option value="300">Under $300</option>
               <option value="400">Under $400</option>
               <option value="500">Under $500</option>
-              <option value="1000000">$500+</option>
+              <option value="1000000" data-price-min="500">$500+</option>
             </select>
           </fieldset>
         </li>
