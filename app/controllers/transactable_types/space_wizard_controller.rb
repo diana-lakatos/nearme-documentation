@@ -73,7 +73,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
           flash[:success] = t('flash_messages.space_wizard.draft_saved')
           redirect_to transactable_type_space_wizard_list_path(@transactable_type)
         end
-        format.json { render json: nil, status: :ok}
+        format.json { render json: nil, status: :ok }
       end
     elsif @user.save
       @user.listings.first.try(:action_type).try(:schedule).try(:create_schedule_from_schedule_rules)

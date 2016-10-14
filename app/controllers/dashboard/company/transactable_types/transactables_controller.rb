@@ -140,17 +140,21 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
 
   def transactable_params
     params.require(:transactable).permit(secured_params.transactable(@transactable_type, @transactable.new_record? || current_user.id == @transactable.creator_id)).tap do |whitelisted|
-      whitelisted[:properties] = params[:transactable][:properties] rescue {}
+      whitelisted[:properties] = begin
+                                   params[:transactable][:properties]
+                                 rescue
+                                   {}
+                                 end
     end
   end
 
   def transactables_scope
     @transactable_type.transactables
-      .joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL')
-      .uniq
-      .where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id)
-      .search_by_query([:name, :description], params[:query])
-      .apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
+                      .joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL')
+                      .uniq
+                      .where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id)
+                      .search_by_query([:name, :description], params[:query])
+                      .apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
   end
 
   def find_transactable_type

@@ -6,9 +6,9 @@ class Review < ActiveRecord::Base
 
   self.per_page = 10
 
-  LAST_30_DAYS = '30_days'
-  LAST_6_MONTHS = '6_months'
-  DATE_VALUES = %w(today yesterday week_ago month_ago 3_months_ago 6_months_ago)
+  LAST_30_DAYS = '30_days'.freeze
+  LAST_6_MONTHS = '6_months'.freeze
+  DATE_VALUES = %w(today yesterday week_ago month_ago 3_months_ago 6_months_ago).freeze
 
   belongs_to :user, -> { with_deleted }
   belongs_to :seller, -> { with_deleted }, class_name: 'User'
@@ -22,10 +22,10 @@ class Review < ActiveRecord::Base
 
   before_validation :set_foreign_keys_and_subject, on: :create
   before_validation :set_displayable, on: :create
-  validates_presence_of :rating, :user, :reviewable, :transactable_type
+  validates :rating, :user, :reviewable, :transactable_type, presence: true
   validates :rating, inclusion: { in: RatingConstants::VALID_VALUES, message: :rating_is_required }
   validate :creator_does_not_review_own_objects
-  validates_uniqueness_of :user_id, scope: [:reviewable_id, :reviewable_type, :subject], conditions: -> { where(deleted_at: nil) }
+  validates :user_id, uniqueness: { scope: [:reviewable_id, :reviewable_type, :subject], conditions: -> { where(deleted_at: nil) } }
 
   default_scope { order('reviews.created_at DESC') }
 
@@ -42,7 +42,7 @@ class Review < ActiveRecord::Base
   scope :left_by_buyer, -> (user) { displayable.where(buyer_id: user.id, user_id: user.id, subject: [RatingConstants::HOST, RatingConstants::TRANSACTABLE]) }
   scope :active_with_subject, -> (subject) { joins(:rating_system).merge(RatingSystem.active_with_subject(subject)) }
   scope :for_type_of_transactable_type, -> (type) { joins(:rating_system).merge(RatingSystem.for_type_of_transactable_type(type)) }
-  scope :for_transactables, lambda  { |order_ids, line_items_ids|
+  scope :for_transactables, lambda { |order_ids, line_items_ids|
     where(subject: RatingConstants::TRANSACTABLE)
       .where("(reviewable_id in (?) AND reviewable_type = 'Reservation') or (reviewable_id in (?) AND reviewable_type = 'LineItem::Transactable')", order_ids, line_items_ids)
   }
@@ -107,7 +107,7 @@ class Review < ActiveRecord::Base
       recalculate_product.call
       buyer.recalculate_product_avarage_rating!
     else
-      fail NotImplementedError
+      raise NotImplementedError
     end
     true
   end

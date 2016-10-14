@@ -36,9 +36,9 @@ module ActiveMerchant
 
       def reaise_error(error)
         if error.http_status == 404
-          fail ActiveRecord::RecordNotFound
+          raise ActiveRecord::RecordNotFound
         else
-          fail error
+          raise error
         end
       end
 

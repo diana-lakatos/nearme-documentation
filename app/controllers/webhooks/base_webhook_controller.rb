@@ -1,6 +1,6 @@
 class Webhooks::BaseWebhookController < Webhooks::BaseController
-  skip_before_filter :redirect_if_marketplace_password_protected
-  before_filter :find_payment_gateway
+  skip_before_action :redirect_if_marketplace_password_protected
+  before_action :find_payment_gateway
 
   protect_from_forgery except: :webhook
 
@@ -11,6 +11,6 @@ class Webhooks::BaseWebhookController < Webhooks::BaseController
   end
 
   def payment_gateway_class
-    fail NotImplementedError
+    raise NotImplementedError
   end
 end

@@ -1,12 +1,12 @@
 class RegistrationsController < Devise::RegistrationsController
   before_action :set_role_if_blank
   before_action :configure_permitted_parameters, only: :create
-  skip_before_filter :redirect_to_set_password_unless_unnecessary, only: [:update_password, :set_password]
-  skip_before_filter :filter_out_token, only: [:verify, :unsubscribe]
-  skip_before_filter :force_fill_in_wizard_form
-  before_filter :nm_force_ssl, only: [:new]
-  before_filter :find_company, only: [:social_accounts, :edit]
-  before_filter :set_form_components, only: [:edit, :update]
+  skip_before_action :redirect_to_set_password_unless_unnecessary, only: [:update_password, :set_password]
+  skip_before_action :filter_out_token, only: [:verify, :unsubscribe]
+  skip_before_action :force_fill_in_wizard_form
+  before_action :nm_force_ssl, only: [:new]
+  before_action :find_company, only: [:social_accounts, :edit]
+  before_action :set_form_components, only: [:edit, :update]
 
   # NB: Devise calls User.new_with_session when building the new User resource.
   # We use this to apply any Provider based authentications to the user record.
@@ -14,16 +14,16 @@ class RegistrationsController < Devise::RegistrationsController
 
   # We extend the create action to clear out any stored Provider auth data used during
   # registration.
-  before_filter :set_return_to, only: [:new, :create]
+  before_action :set_return_to, only: [:new, :create]
 
-  before_filter :authenticate_scope!, only: [:edit, :update, :destroy, :avatar, :edit_avatar, :update_avatar, :destroy_avatar, :set_password,
+  before_action :authenticate_scope!, only: [:edit, :update, :destroy, :avatar, :edit_avatar, :update_avatar, :destroy_avatar, :set_password,
                                              :update_password, :edit_notification_preferences, :update_notification_preferences, :social_accounts]
-  before_filter :find_supported_providers, only: [:social_accounts, :update]
-  after_filter :render_or_redirect_after_create, only: [:create]
-  before_filter :redirect_to_edit_profile_if_password_set, only: [:set_password]
-  before_filter :set_user_profiles, only: [:edit]
+  before_action :find_supported_providers, only: [:social_accounts, :update]
+  after_action :render_or_redirect_after_create, only: [:create]
+  before_action :redirect_to_edit_profile_if_password_set, only: [:set_password]
+  before_action :set_user_profiles, only: [:edit]
 
-  skip_before_filter :redirect_if_marketplace_password_protected, only: [:store_geolocated_location, :store_google_analytics_id, :update_password, :set_password]
+  skip_before_action :redirect_if_marketplace_password_protected, only: [:store_geolocated_location, :store_google_analytics_id, :update_password, :set_password]
 
   def new
     @legal_page_present = Page.exists?(slug: 'legal')
@@ -92,11 +92,11 @@ class RegistrationsController < Devise::RegistrationsController
 
   def show
     @theme_name = 'buy-sell-theme'
-    if current_user.try(:admin?)
-      @user = User.find(params[:id])
-    else
-      @user = User.not_admin.find(params[:id])
-    end
+    @user = if current_user.try(:admin?)
+              User.find(params[:id])
+            else
+              User.not_admin.find(params[:id])
+            end
 
     if platform_context.instance.is_community?
       @projects = IntelFakerService.projects(4)
@@ -122,7 +122,7 @@ class RegistrationsController < Devise::RegistrationsController
         @reviews_left_by_buyer_count = Review.left_by_buyer(@user).active_with_subject(RatingConstants::HOST).count
         @reviews_left_about_product_count = Review.left_by_buyer(@user).active_with_subject(RatingConstants::TRANSACTABLE).count
         @total_reviews_count = @reviews_count + @reviews_about_buyer_count + @reviews_left_by_seller_count +
-          @reviews_left_by_buyer_count + @reviews_left_about_product_count
+                               @reviews_left_by_buyer_count + @reviews_left_about_product_count
       end
     end
     respond_to :html
@@ -162,7 +162,7 @@ class RegistrationsController < Devise::RegistrationsController
     else
       @buyer_profile = resource.get_buyer_profile
       @seller_profile = resource.get_seller_profile
-      flash.now[:error] = (@user.errors.full_messages).join(', ')
+      flash.now[:error] = @user.errors.full_messages.join(', ')
       @company = current_user.companies.first
       @country = resource.country_name
       render :edit, layout: dashboard_or_community_layout
@@ -170,7 +170,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def destroy
-    fail ActionController::RoutingError, 'Feature disabled'
+    raise ActionController::RoutingError, 'Feature disabled'
   end
 
   def avatar
@@ -293,11 +293,11 @@ class RegistrationsController < Devise::RegistrationsController
       verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
       begin
         mailer_name = verifier.verify(params[:signature])
-        unless current_user.unsubscribed?(mailer_name)
+        if current_user.unsubscribed?(mailer_name)
+          flash[:warning] = t('flash_messages.registrations.already_unsubscribed')
+        else
           current_user.unsubscribe(mailer_name)
           flash[:success] = t('flash_messages.registrations.unsubscribed_successfully')
-        else
-          flash[:warning] = t('flash_messages.registrations.already_unsubscribed')
         end
       rescue ActiveSupport::MessageVerifier::InvalidSignature
       end
@@ -387,7 +387,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def signed_up_via
-    if !request.referrer.nil? && request.referrer.include?('return_to=%2Fspace%2Flist&wizard=space')
+    if !request.referer.nil? && request.referer.include?('return_to=%2Fspace%2Flist&wizard=space')
       'flow'
     else
       'other'
@@ -397,7 +397,7 @@ class RegistrationsController < Devise::RegistrationsController
   # if ajax call has been made from modal and user has been created, we need to tell
   # Modal that instead of rendering content in modal, it needs to redirect to new page
   def render_or_redirect_after_create
-    render_redirect_url_as_json if @user.persisted? if request.xhr?
+    render_redirect_url_as_json if request.xhr? && @user.persisted?
   end
 
   def redirect_to_edit_profile_if_password_set
@@ -413,12 +413,12 @@ class RegistrationsController < Devise::RegistrationsController
   def configure_permitted_parameters
     arguments = [:name, :email, :accept_terms_of_service, :password, :password_confirmation, :custom_validation, :force_profile]
     arguments += case params[:role]
-                           when 'buyer'
-                             secured_params.user
-                           when 'seller'
-                             secured_params.user
-                           else
-                             []
+                 when 'buyer'
+                   secured_params.user
+                 when 'seller'
+                   secured_params.user
+                 else
+                   []
                            end
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(*arguments) }
   end

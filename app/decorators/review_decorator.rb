@@ -24,9 +24,9 @@ class ReviewDecorator < Draper::Decorator
     return I18n.t('instance_admin.manage.reviews.index.missing') if reviewable.nil?
 
     case object.rating_system.try(:subject)
-      when RatingConstants::HOST then link_to_new_tab(I18n.t('helpers.reviews.user'), profile_path(reviewable.seller_type_review_receiver))
-      when RatingConstants::GUEST then link_to_new_tab(I18n.t('helpers.reviews.user'), profile_path(reviewable.buyer_type_review_receiver))
-      when RatingConstants::TRANSACTABLE then link_to_new_tab(I18n.t('helpers.reviews.product'), transactable_path)
+    when RatingConstants::HOST then link_to_new_tab(I18n.t('helpers.reviews.user'), profile_path(reviewable.seller_type_review_receiver))
+    when RatingConstants::GUEST then link_to_new_tab(I18n.t('helpers.reviews.user'), profile_path(reviewable.buyer_type_review_receiver))
+    when RatingConstants::TRANSACTABLE then link_to_new_tab(I18n.t('helpers.reviews.product'), transactable_path)
     end
   end
 
@@ -59,14 +59,14 @@ class ReviewDecorator < Draper::Decorator
   end
 
   def show_reviewable_info
-    info = if ['reviews_left_by_seller', 'reviews_left_by_buyer', 'reviews_left_about_product'].include? params[:option]
-      if object.rating_system.try(:subject) == 'transactable'
-        get_product_info
-      else
-        get_user_info
-      end
-    else
-      own_info
+    info = if %w(reviews_left_by_seller reviews_left_by_buyer reviews_left_about_product).include? params[:option]
+             if object.rating_system.try(:subject) == 'transactable'
+               get_product_info
+             else
+               get_user_info
+             end
+           else
+             own_info
     end
 
     reviewable_info(info)

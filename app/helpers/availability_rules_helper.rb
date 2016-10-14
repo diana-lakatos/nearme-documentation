@@ -44,7 +44,7 @@ module AvailabilityRulesHelper
     options = []
     (0..23).each do |hour|
       [0, 15, 30, 45].each do |minute|
-        hour_for_display = hour % 12 == 0 ? 12 : hour % 12
+        hour_for_display = (hour % 12).zero? ? 12 : hour % 12
         options << ["#{hour_for_display}:#{'%0.2d' % minute} #{hour < 12 ? 'AM' : 'PM'}", "#{hour}:#{'%0.2d' % minute}", { 'data-time': "#{hour}#{'%0.2d' % minute}" }]
       end
     end
