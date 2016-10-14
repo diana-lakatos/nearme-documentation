@@ -1,16 +1,16 @@
 <ul class="actions-a">
-  <li><a href='{{ transactable.edit_path }}' class="btn btn-primary">Edit Case</a></li>
   {% if current_status != 'archived' %}
+    <li><a href='{{ transactable.edit_path }}' class="btn btn-primary">Edit Case</a></li>
     <li><a href="{{ transactable.show_path }}" class="btn btn-default">View Case Details</a></li>
   {% endif %}
 
-{% comment %}
-  <li>
-    {% assign form_url = order.offer_cancel_url %}
+  {% if current_status == 'in progress' %}
+    <li>
+      {% assign form_url = order.offer_cancel_url %}
 
-    {% form_for order, url: @form_url %}
-      <input type='submit' class="btn btn-warning" value='Close case'>
-    {% endform_for %}
-  </li>
-{% endcomment %}
+      {% form_for order, url: @form_url, method: 'post' %}
+        <input type='submit' class="btn btn-warning" value='Close case' data-confirm="Are you sure that you want to cancel this offer?">
+      {% endform_for %}
+    </li>
+  {% endif %}
 </ul>

@@ -153,6 +153,10 @@ class Offer < Order
     true
   end
 
+  def schedule_refund
+    true
+  end
+
   def can_reject?
     state == 'unconfirmed'
   end

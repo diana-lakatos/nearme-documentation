@@ -16,7 +16,7 @@
         {% include 'dashboard/user_reservations/reservation_details', reservation: reservation %}
       </div>
       <div class="col-md-3">
-        {% include 'dashboard/company/transactables/lister_actions.html' %}
+        {% include 'dashboard/company/transactables/lister_actions.html', order: accepted_order %}
       </div>
     </div>
     {% if current_status == 'pending' %}
