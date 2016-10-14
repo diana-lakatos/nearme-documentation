@@ -580,4 +580,10 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  # This will no longer be needed in Rails 5
+  def redirect_back_or_default(default = root_path, options = {})
+    redirect_to (request.referer.present? ? :back : default), options
+  end
+
 end
