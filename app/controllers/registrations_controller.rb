@@ -119,8 +119,10 @@ class RegistrationsController < Devise::RegistrationsController
         @reviews_count = Review.about_seller(@user).count
         @reviews_about_buyer_count = Review.about_buyer(@user).count
         @reviews_left_by_seller_count = Review.left_by_seller(@user).count
-        @reviews_left_by_buyer_count = Review.left_by_buyer(@user).count
-        @total_reviews_count = @reviews_count + @reviews_about_buyer_count + @reviews_left_by_seller_count + @reviews_left_by_buyer_count
+        @reviews_left_by_buyer_count = Review.left_by_buyer(@user).active_with_subject(RatingConstants::HOST).count
+        @reviews_left_about_product_count = Review.left_by_buyer(@user).active_with_subject(RatingConstants::TRANSACTABLE).count
+        @total_reviews_count = @reviews_count + @reviews_about_buyer_count + @reviews_left_by_seller_count +
+          @reviews_left_by_buyer_count + @reviews_left_about_product_count
       end
     end
     respond_to :html

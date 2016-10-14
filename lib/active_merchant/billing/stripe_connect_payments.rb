@@ -24,8 +24,22 @@ module ActiveMerchant
         nil
       end
 
-      def parse_webhook(id)
-        Stripe::Event.retrieve(id)
+      def parse_webhook(id, merchant_account_id = nil)
+        if merchant_account_id.present?
+          Stripe::Event.retrieve([{ id: id }, { stripe_account: merchant_account_id }])
+        else
+          Stripe::Event.retrieve(id)
+        end
+      rescue Stripe::InvalidRequestError => e
+        raise_error(e)
+      end
+
+      def reaise_error(error)
+        if error.http_status == 404
+          fail ActiveRecord::RecordNotFound
+        else
+          fail error
+        end
       end
 
       def retrieve_account(id)

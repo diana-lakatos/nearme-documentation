@@ -105,7 +105,7 @@ class Review < ActiveRecord::Base
       seller.recalculate_left_as_seller_average_rating!
     when RatingConstants::TRANSACTABLE
       recalculate_product.call
-      buyer.recalculate_left_as_buyer_average_rating!
+      buyer.recalculate_product_avarage_rating!
     else
       fail NotImplementedError
     end

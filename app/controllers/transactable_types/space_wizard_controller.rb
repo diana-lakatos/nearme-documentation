@@ -3,14 +3,14 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   include AttachmentsHelper
 
-  skip_before_filter :force_fill_in_wizard_form
-  before_filter :find_transactable_type
-  before_filter :redirect_to_dashboard_if_registration_completed, only: [:new, :list]
-  before_filter :redirect_to_dashboard_if_started_other_listing, only: [:new, :list]
-  before_filter :set_form_components
-  before_filter :set_common_variables, only: [:list, :submit_listing]
-  before_filter :sanitize_price_parameters, only: [:submit_listing]
-  before_filter :set_theme, only: [:list, :submit_item]
+  skip_before_action :force_fill_in_wizard_form
+  before_action :find_transactable_type
+  before_action :redirect_to_dashboard_if_registration_completed, only: [:new, :list]
+  before_action :redirect_to_dashboard_if_started_other_listing, only: [:new, :list]
+  before_action :set_form_components
+  before_action :set_common_variables, only: [:list, :submit_listing]
+  before_action :sanitize_price_parameters, only: [:submit_listing]
+  before_action :set_theme, only: [:list, :submit_item]
 
   layout :dashboard_or_community_layout
 
@@ -89,6 +89,12 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       end
       flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: @transactable_type.translated_bookable_noun)
       flash[:error] = t('manage.listings.no_trust_explanation') if @user.listings.first.present? && !@user.listings.first.is_trusted?
+      if session[:user_to_be_invited].present?
+        user = User.find(session[:user_to_be_invited])
+        path = profile_path(user.slug)
+        flash[:warning] = t('flash_messages.manage.listings.want_to_see_profile', path: path, name: user.first_name)
+        session[:user_to_be_invited] = nil
+      end
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
@@ -162,7 +168,11 @@ class TransactableTypes::SpaceWizardController < ApplicationController
                elsif @user.country_name.present?
                  @user.country_name
                else
-                 request.location.country rescue nil
+                 begin
+                   request.location.country
+                 rescue
+                   nil
+                 end
                end
   end
 
@@ -219,9 +229,21 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def wizard_params
     params.require(:user).permit(secured_params.user(transactable_type: @transactable_type)).tap do |whitelisted|
-      (whitelisted[:seller_profile_attributes][:properties] = params[:user][:seller_profile_attributes][:properties]) rescue {}
-      (whitelisted[:properties] = params[:user][:properties]) rescue {}
-      (whitelisted[:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:properties] = params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:properties]) rescue {}
+      begin
+        (whitelisted[:seller_profile_attributes][:properties] = params[:user][:seller_profile_attributes][:properties])
+      rescue
+        {}
+      end
+      begin
+        (whitelisted[:properties] = params[:user][:properties])
+      rescue
+        {}
+      end
+      begin
+        (whitelisted[:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:properties] = params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:properties])
+      rescue
+        {}
+      end
     end
   end
 
@@ -234,9 +256,9 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def can_delete_photo?(photo, user)
-    return true if photo.creator == user                         # if the user created the photo
-    return true if photo.listing.administrator == user    # if the user is an admin of the photos content
-    return true if user.companies.first.listings.include?(photo.listing)     # if the photo content is a listing and belongs to company
+    return true if photo.creator == user # if the user created the photo
+    return true if photo.listing.administrator == user # if the user is an admin of the photos content
+    return true if user.companies.first.listings.include?(photo.listing) # if the photo content is a listing and belongs to company
   end
 
   def set_theme

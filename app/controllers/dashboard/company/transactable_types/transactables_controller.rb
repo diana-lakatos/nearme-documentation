@@ -33,6 +33,13 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
       end
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       flash[:error] = t('manage.listings.no_trust_explanation') unless @transactable.is_trusted?
+
+      if session[:user_to_be_invited].present?
+        user = User.find(session[:user_to_be_invited])
+        path = profile_path(user.slug)
+        flash[:warning] = t('flash_messages.manage.listings.want_to_see_profile', path: path, name: user.first_name)
+        session[:user_to_be_invited] = nil
+      end
       event_tracker.created_a_listing(@transactable, via: 'dashboard')
       event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
