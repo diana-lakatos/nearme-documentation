@@ -1,6 +1,6 @@
 <header>
   <div class='row'>
-    <div class='col-xs-7'>
+    <div class='col-xs-12 col-md-7'>
       {% if reservation.transactable != blank and reservation.transactable.deleted? != true %}
         <h2>
           <a href="{{ reservation.transactable.show_path }}">
@@ -18,7 +18,7 @@
       {% endif %}
     </div>
 
-    <div class='col-xs-5'>
+    <div class='col-xs-12 col-md-5'>
       <div class='order-status'>
         {% if reservation.archived_at and reservation.state == 'confirmed' %}
           <span class='confirmed'>
@@ -65,23 +65,24 @@
     </dl>
   </div>
 </div>
+
 {% if reservation.lister_confirmed_at != blank %}
   <form class="item-reservation__shipping-details row">
-    <div class="col-xs-10">
+    <div class="col-xs-12 col-md-10 col-lg-8">
       <div class="row">
-        <div class="col-xs-6 form-group">
+        <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[pickup_date]">Pick Up Date:</label>
           <input disabled="disabled" type="text" class="form-control" value="9/18/2016" name="shipping_details[pickup_date]" />
         </div>
-        <div class="col-xs-6 form-group">
+        <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[return_date]">Shipping Return Date:</label>
           <input disabled="disabled" type="text" class="form-control" value="9/25/2016" name="shipping_details[return_date]" />
         </div>
-        <div class="col-xs-6 form-group">
+        <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[lender_pickup]">Lender Pick Up Address:</label>
           <input disabled="disabled" type="text" class="form-control" value="9001 Lender Street, St. Louis MO, 63141" name="shipping_details[lender_pickup]" />
         </div>
-        <div class="col-xs-6 form-group">
+        <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[lender_ship]">Lender Ship To Address:</label>
           <input disabled="disabled" type="text" class="form-control" value="9001 Lender Street, St. Louis MO, 63141" name="shipping_details[lender_ship]" />
         </div>
@@ -120,52 +121,52 @@
     <a class="button button-inverse" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: reservation.user_messages.first.id }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
   {% endif %}
 
-    {% if reservation.confirmed? %}
-      {% if reservation.inbound_shipment.label_url != blank %}
-        <a class="btn btn-default" href="{{ reservation.inbound_shipment.label_url }}">{{ 'dashboard.user_reservations.return_label' | t }}</a>
-      {% endif %}
-      {% if reservation.outbound_shipment.tracking_url_provider != blank %}
-        <a class="btn btn-default" href="{{ reservation.outbound_shipment.tracking_url_provider }}">{{ 'dashboard.user_reservations.track_package' | t }}</a>
-      {% endif %}
+  {% if reservation.confirmed? %}
+    {% if reservation.inbound_shipment.label_url != blank %}
+      <a class="btn btn-default" href="{{ reservation.inbound_shipment.label_url }}">{{ 'dashboard.user_reservations.return_label' | t }}</a>
+    {% endif %}
+    {% if reservation.outbound_shipment.tracking_url_provider != blank %}
+      <a class="btn btn-default" href="{{ reservation.outbound_shipment.tracking_url_provider }}">{{ 'dashboard.user_reservations.track_package' | t }}</a>
+    {% endif %}
+  {% endif %}
+
+  {% if reservation.unconfirmed? %}
+    {% if reservation.lister_confirmed_at and reservation.enquirer_confirmed_at == blank %}
+      <form class="edit_reservation" action="{{ 'approve_dashboard_order_path' | generate_url: id: reservation.id }}" accept-charset="UTF-8" method="post">
+        <input name="utf8" type="hidden" value="&#x2713;" />
+        <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+        <input type="submit" name="commit" value="RENT ITEM" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-inverse" />
+      </form>
     {% endif %}
 
-    {% if reservation.unconfirmed? %}
-      {% if reservation.lister_confirmed_at and reservation.enquirer_confirmed_at == blank %}
-        <form class="edit_reservation" action="{{ 'approve_dashboard_order_path' | generate_url: id: reservation.id }}" accept-charset="UTF-8" method="post">
-          <input name="utf8" type="hidden" value="&#x2713;" />
-          <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
-          <input type="submit" name="commit" value="RENT ITEM" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-inverse" />
-        </form>
-      {% endif %}
+    {% if reservation.enquirer_confirmed_at == blank %}
+      <form class="cancel_reservation" action="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: reservation.id }}" accept-charset="UTF-8" method="post">
+        <input name="utf8" type="hidden" value="&#x2713;" />
+        <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+        <input type="submit" name="commit" value="CANCEL" data-confirm="{{ 'dashboard.user_reservations.cancel_confirmation' | t }}" class="button button-inverse" data-disable-with="{{ 'general.processing' | t }}" />
+      </form>
+    {% endif %}
+  {% endif %}
 
-      {% if reservation.enquirer_confirmed_at == blank %}
-        <form class="cancel_reservation" action="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: reservation.id }}" accept-charset="UTF-8" method="post">
-          <input name="utf8" type="hidden" value="&#x2713;" />
-          <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
-          <input type="submit" name="commit" value="CANCEL" data-confirm="{{ 'dashboard.user_reservations.cancel_confirmation' | t }}" class="button button-inverse" data-disable-with="{{ 'general.processing' | t }}" />
-        </form>
+  {% if reservation.enquirer_approved_at and reservation.payment.pending? or reservation.payment.voided? %}
+    <span>
+      <a class="button button-inverse" data-modal='true' href="{{ 'edit_dashboard_user_reservation_payment_path' | generate_url: user_reservation_id: reservation.id, id: reservation.payment.id }}">{{ 'dashboard.user_reservations.update_credit_card' | t }}</a>
+    </span>
+    <div class="cc-error">{{ 'dashboard.user_reservations.must_change_credit_card' | t }}</div>
+  {% endif %}
+
+  {% unless reservation.archived? %}
+    {% if reservation.cancelable? and reservation.lister_confirmed_at == blank %}
+      {% if reservation.penalty_charge_apply? %}
+        <div class="cc-error">
+          {{ 'dashboard.user_reservations.penalty_charge_will_apply' | t: penalty_hours: reservation.cancellation_policy_penalty_hours, penalty_fee: reservation.formatted_penalty_fee, hours_for_cancellation: reservation.cancellation_policy_hours_for_cancellation) }}
+        </div>
       {% endif %}
     {% endif %}
-
-    {% if reservation.enquirer_approved_at and reservation.payment.pending? or reservation.payment.voided? %}
-      <span>
-        <a class="button button-inverse" data-modal='true' href="{{ 'edit_dashboard_user_reservation_payment_path' | generate_url: user_reservation_id: reservation.id, id: reservation.payment.id }}">{{ 'dashboard.user_reservations.update_credit_card' | t }}</a>
-      </span>
-      <div class="cc-error">{{ 'dashboard.user_reservations.must_change_credit_card' | t }}</div>
+    {% if reservation.remote_payment? and reservation.paid? == false and reservation.archived? == false %}
+      <a class="btn btn-default" href="{{ 'remote_payment_dashboard_user_reservation_path' | generate_url: reservation.id }}">
+        {{ 'dashboard.user_reservations.pay_now' | t }}
+      </a>
     {% endif %}
-
-    {% unless reservation.archived? %}
-      {% if reservation.cancelable? and reservation.lister_confirmed_at == blank %}
-        {% if reservation.penalty_charge_apply? %}
-          <div class="cc-error">
-            {{ 'dashboard.user_reservations.penalty_charge_will_apply' | t: penalty_hours: reservation.cancellation_policy_penalty_hours, penalty_fee: reservation.formatted_penalty_fee, hours_for_cancellation: reservation.cancellation_policy_hours_for_cancellation) }}
-          </div>
-        {% endif %}
-      {% endif %}
-      {% if reservation.remote_payment? and reservation.paid? == false and reservation.archived? == false %}
-        <a class="btn btn-default" href="{{ 'remote_payment_dashboard_user_reservation_path' | generate_url: reservation.id }}">
-          {{ 'dashboard.user_reservations.pay_now' | t }}
-        </a>
-      {% endif %}
-    {% endunless %}
+  {% endunless %}
 </div>

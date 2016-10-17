@@ -1,6 +1,6 @@
 <header>
   <div class='row'>
-    <div class='col-xs-7'>
+    <div class='col-xs-12 col-md-7'>
       {% if reservation.transactable != blank and reservation.transactable.deleted? != true %}
         <h2>
           <a href="{{ reservation.transactable.show_path }}">
@@ -18,7 +18,7 @@
       {% endif %}
     </div>
 
-    <div class='col-xs-5'>
+    <div class='col-xs-12 col-md-5'>
       <div class='order-status'>
         {% if reservation.archived_at and reservation.state == 'confirmed' %}
           <span class='confirmed'>
@@ -71,21 +71,21 @@
 </div>
 {% if reservation.lister_confirmed_at != blank %}
   <form class="item-reservation__shipping-details row">
-    <div class="col-xs-10">
+    <div class="col-xs-12 col-md-10 col-lg-8">
       <div class="row">
-        <div class="col-xs-6 form-group">
+        <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[pickup_date]">Pick Up Date:</label>
           <input disabled="disabled" type="text" class="form-control" value="9/18/2016" name="shipping_details[pickup_date]" />
         </div>
-        <div class="col-xs-6 form-group">
+        <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[return_date]">Shipping Return Date:</label>
           <input disabled="disabled" type="text" class="form-control" value="9/25/2016" name="shipping_details[return_date]" />
         </div>
-        <div class="col-xs-6 form-group">
+        <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[lender_pickup]">Lender Pick Up Address:</label>
           <input disabled="disabled" type="text" class="form-control" value="9001 Lender Street, St. Louis MO, 63141" name="shipping_details[lender_pickup]" />
         </div>
-        <div class="col-xs-6 form-group">
+        <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[lender_ship]">Lender Ship To Address:</label>
           <input disabled="disabled" type="text" class="form-control" value="9001 Lender Street, St. Louis MO, 63141" name="shipping_details[lender_ship]" />
         </div>
@@ -118,11 +118,11 @@
 <hr class="hr-contrast" />
 
 <div class='reservation-actions'>
-    {% if reservation.user_messages.size == 0 %}
-      <a class="button button-inverse" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: reservation.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
-    {% else %}
-      <a class="button button-inverse" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: reservation.user_messages.first.id }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
-    {% endif %}
+  {% if reservation.user_messages.size == 0 %}
+    <a class="button button-inverse" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: reservation.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+  {% else %}
+    <a class="button button-inverse" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: reservation.user_messages.first.id }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+  {% endif %}
 
   {% include 'dashboard/company/host_reservations/owner_actions', reservation: reservation %}
 

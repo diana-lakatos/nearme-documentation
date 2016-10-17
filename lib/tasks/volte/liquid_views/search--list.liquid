@@ -13,14 +13,14 @@ partial: false
   </div>
 
   <aside class="search-sidebar">
-    <form class="form-horizontal" data-search-form="filters">
+    <form class="form-horizontal no-inheritance" data-search-form="filters">
       <ul>
         {% assign attributes = searcher.filterable_custom_attributes | reverse %}
         {% for ca in attributes %}
         <li {{ ca.wrapper_html_options }}>
           <fieldset>
             <legend>{{ ca.label }}</legend>
-            <select {{ ca.input_html_options }} class="form-control" name="lg_custom_attributes[{{ ca.name }}][]" id="">
+            <select {{ ca.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ ca.name }}][]" id="">
               <option value="">Please select</option>
               {% for opt in ca.valid_values %}
                 <option value="{{ opt }}" {% if params['lg_custom_attributes']['item_type'][0] == opt %}selected{% endif %}>{{ opt }}</option>
@@ -33,7 +33,7 @@ partial: false
           <fieldset>
             <legend>Location</legend>
             <input type="text" name="item_location_city" id="item_location_city" placeholder="City" />
-            <select class="form-control" name="item_location_state" id="item_location_state">
+            <select class="form-control custom-select" name="item_location_state" id="item_location_state">
               <option value="">Select State</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -65,7 +65,7 @@ partial: false
           <fieldset>
             <legend>Price</legend>
             <input type="hidden" name="price[min]" value="0" data-price-min-input />
-            <select class="form-control" name="price[max]" id="price" data-price-select>
+            <select class="form-control custom-select" name="price[max]" id="price" data-price-select>
               <option value="">Please select</option>
               <option value="50">Under $50</option>
               <option value="100">Under $100</option>
@@ -155,7 +155,7 @@ partial: false
               </li>
               {% if listing.creator.has_active_blog? %}
                 <li class="item-actions__secondary">
-                  <a href="{{ listing.creator.user_blog_posts_list_path }}" class="button button-inverse button-small ">Lender's Blog</a>
+                  <a href="{{ listing.creator.user_blog_posts_list_path }}" class="button button-inverse button-small">Lender's Blog</a>
                 </li>
               {% endif %}
             </ul>
