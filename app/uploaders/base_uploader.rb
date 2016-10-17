@@ -30,7 +30,7 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def proper_file_path
-    img_path = self.respond_to?(:current_url) ? current_url(:original) : url
+    img_path = respond_to?(:current_url) ? current_url(:original) : url
     img_path[0] == '/' ? Rails.root.join('public', img_path[1..-1]) : img_path
   end
 
@@ -52,12 +52,12 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def instance_prefix
+    raise NotImplementedError, 'PlatformContext must be present to upload to s3' if instance_id.nil?
     "instances/#{instance_id}"
   end
 
   def instance_id
-    fail NotImplementedError.new('PlatformContext must be present to upload to s3') if platform_context.try(:instance).nil?
-    platform_context.instance.id
+    model.try(:instance_id) || platform_context.instance.id
   end
 
   def versions_generated?
@@ -81,7 +81,7 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   def current_url(version = nil, *args)
     if versions_generated? || !source_url
-      if (version.blank? && self.respond_to?(:transformation_data)) || (self.class.respond_to?(:delayed_versions) && self.class.delayed_versions.include?(version) && !versions_generated?)
+      if (version.blank? && respond_to?(:transformation_data)) || (self.class.respond_to?(:delayed_versions) && self.class.delayed_versions.include?(version) && !versions_generated?)
         version = :transformed
       end
       args.unshift(version) if version && version != :original
@@ -126,7 +126,8 @@ class BaseUploader < CarrierWave::Uploader::Base
       .theme.reload
       .default_images.where(
         photo_uploader: self.class.to_s,
-        photo_uploader_version: version)
+        photo_uploader_version: version
+      )
       .first
   end
 end

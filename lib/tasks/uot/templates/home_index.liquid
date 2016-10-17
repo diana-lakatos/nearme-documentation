@@ -79,7 +79,7 @@
                 <h2 class="hx-a">Watch Our Video</h2>
             </header>
             <div class="video-container">
-                <iframe width="1280" height="720" src="https://www.youtube.com/embed/VqnilLKrzUo" frameborder="0" allowfullscreen></iframe>
+                <iframe width="1280" height="720" src="https://www.youtube.com/embed/VqnilLKrzUo?rel=0" frameborder="0" allowfullscreen></iframe>
             </div>
         </section>
 
@@ -182,65 +182,38 @@
             {% endcomment %}
         </section>
 
-        <section class="blog-posts-cta">
-            <header class="section-header">
-                <h2 class="hx-a">Blog Post Feed</h2>
-                <h3 class="hx-b">Learn from our UoT Experts!</h3>
-            </header>
+        {% if platform_context.highlighted_blog_posts != empty %}
+          <section class="blog-posts-cta">
+              <header class="section-header">
+                  <h2 class="hx-a">Blog Post Feed</h2>
+                  <h3 class="hx-b">Learn from our UoT Experts!</h3>
+              </header>
 
-            <div class="wrapper">
-                <article itemscope itemtype="http://schema.org/BlogPosting">
-                    <a href="./" itemprop="url">
-                        <figure><img src="https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2719/blog-post-a.jpg" alt="should be dynamic" itemprop="image"></figure>
-                        <div class="content">
-                            <h4 itemprop="headline">Full long blog title in case it goes to two lines on layout</h4>
-                            <div class="meta">
-                                posted <time datetime="2016-07-07" itemprop="datePublished">July 7, 2016</time>
-                                <div class="author" itemprop="author">by Cesar Keller</div>
+              {% for blog_post in platform_context.highlighted_blog_posts %}
+                <div class="wrapper">
+                    <article itemscope itemtype="http://schema.org/BlogPosting">
+                      <a href="{{ blog_post.post_path }}" itemprop="url">
+                        <figure><img src="{{ blog_post.author_avatar_url }}" alt="should be dynamic" itemprop="image"></figure>
+                            <div class="content">
+                              <h4 itemprop="headline">{{ blog_post.title }}</h4>
+                                <div class="meta">
+                                  posted <time datetime="{{ blog_post.published_at | to_date | l: 'short' }}" itemprop="datePublished">{{ blog_post.published_at | to_date | l: 'long'}}</time>
+                                  <div class="author" itemprop="author">by {{ blog_post.author_name }}</div>
+                                </div>
+                                <div itemprop="description">
+                                  <p>{{ blog_post.excerpt | truncate: 200 }}</p>
+                                </div>
+                                <strong class="cta">Read More</strong>
                             </div>
-                            <div itemprop="description">
-                                <p>Nulla ad illum illum consequat defui metuo fere. Camur abigo quibus rusticus iusto in utinam ne capio facilisi ad olim saluto luptatum&hellip;</p>
-                            </div>
-                            <strong class="cta">Read More</strong>
-                        </div>
-                    </a>
-                </article>
-                <article itemscope itemtype="http://schema.org/BlogPosting">
-                    <a href="./" itemprop="url">
-                        <figure><img src="https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2717/blog-post-b.jpg" alt="should be dynamic" itemprop="image"></figure>
-                        <div class="content">
-                            <h4 itemprop="headline">Full long blog title in case it goes to two lines on layout</h4>
-                            <div class="meta">
-                                posted <time datetime="2016-07-07" itemprop="datePublished">July 7, 2016</time>
-                                <div class="author" itemprop="author">by Cesar Keller</div>
-                            </div>
-                            <div itemprop="description">
-                                <p>Nulla ad illum illum consequat defui metuo fere. Camur abigo quibus rusticus iusto in utinam ne capio facilisi ad olim saluto luptatum&hellip;</p>
-                            </div>
-                            <strong class="cta">Read More</strong>
-                        </div>
-                    </a>
-                </article>
-                <article itemscope itemtype="http://schema.org/BlogPosting">
-                    <a href="./" itemprop="url">
-                        <figure><img src="https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2718/blog-post-c.jpg" alt="should be dynamic" itemprop="image"></figure>
-                        <div class="content">
-                            <h4 itemprop="headline">Full long blog title in case it goes to two lines on layout</h4>
-                            <div class="meta">
-                                posted <time datetime="2016-07-07" itemprop="datePublished">July 7, 2016</time>
-                                <div class="author" itemprop="author">by Cesar Keller</div>
-                            </div>
-                            <div itemprop="description">
-                                <p>Nulla ad illum illum consequat defui metuo fere. Camur abigo quibus rusticus iusto in utinam ne capio facilisi ad olim saluto luptatum&hellip;</p>
-                            </div>
-                            <strong class="cta">Read More</strong>
-                        </div>
-                    </a>
-                </article>
-            </div>
+                        </a>
+                    </article>
+                </div>
+              {% endfor %}
 
-            <p class="more-a"><a href="/blog" class="button-a">Visit Our Blog</a></p>
-        </section>
+              <p class="more-a"><a href="/blog" class="button-a">Visit Our Blog</a></p>
+          </section>
+        {% endif %}
+
     </div>
 </main>
 
@@ -277,4 +250,3 @@
         </div>
     </div>
 </section>
-
