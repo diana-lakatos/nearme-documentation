@@ -3,39 +3,39 @@ class WorkflowStep::PurchaseWorkflow::BaseStep < WorkflowStep::BaseStep
     true
   end
 
-  def initialize(pruchase_id)
-    @pruchase = Order.find_by_id(pruchase_id)
+  def initialize(purchase_id)
+    @purchase = Order.find_by_id(purchase_id)
   end
 
   def workflow_type
-    'pruchase'
+    'purchase'
   end
 
   def lister
-    @pruchase.host
+    @purchase.host
   end
 
   def enquirer
-    @pruchase.owner
+    @purchase.owner
   end
 
-  # pruchase:
+  # purchase:
   #   Reservation object
-  # user:
+  # lister:
   #   listing User object
-  # host:
+  # enquirer:
   #   enquiring User object
   # listing:
   #   Transactable object
   def data
-    { pruchase: @pruchase, user: lister, host: enquirer, listing: @pruchase.transactable }
+    { purchase: @purchase, lister: lister, enquirer: enquirer, listing: @purchase.transactable }
   end
 
   def transactable_type_id
-    @pruchase.try(:listing).try(:transactable_type_id)
+    @purchase.try(:listing).try(:transactable_type_id)
   end
 
   def should_be_processed?
-    @pruchase.present?
+    @purchase.present?
   end
 end
