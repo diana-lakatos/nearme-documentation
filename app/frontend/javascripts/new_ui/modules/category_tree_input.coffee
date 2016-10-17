@@ -40,7 +40,6 @@ module.exports = class CategoryTreeInput
 
       checkbox:
         three_state: false,
-        cascade: 'up',
         tie_selection: false
 
     @treeContainer.jstree(conf)
@@ -54,7 +53,6 @@ module.exports = class CategoryTreeInput
       unless @isMultiple
         currentId = data.node.id
         parentIds = data.node.parents
-
         $.each data.instance.get_checked(true), (index, item) ->
           return if currentId == item.id or $.inArray(item.id, parentIds) > -1
           data.instance.uncheck_node(item.id)
