@@ -26,6 +26,7 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
     pricings.map(&:price_information)
   end
 
+  # @return [Boolean] whether overnight booking is enabled for this action type
   def overnight_booking?
     night_booking?
   end
@@ -34,6 +35,7 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
     super || transactable.location.try(:availability_template)
   end
 
+  # @return [Array<ScheduleExceptionRule>] array of schedule exception rules for future dates
   def availability_exceptions
     availability_template.try(:future_availability_exceptions)
   end

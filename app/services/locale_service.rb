@@ -23,8 +23,8 @@ class LocaleService
 
   private
 
-  # @params_locale => locale taken from URL itself
-  # @user_locale => locale taken from User.language
+  # \@params_locale => locale taken from URL itself
+  # \@user_locale => locale taken from User.language
   #
   # 1) Redirect if @user_locale is different than @primary_locale and no @params_locale is given
   # 2) Not redirect if @params_locale == @user_locale

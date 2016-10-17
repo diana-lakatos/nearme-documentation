@@ -29,8 +29,11 @@ class BaseDrop < Liquid::Drop
 
   include MoneyRails::ActionViewExtension
 
+  # @return [Object]
   attr_reader :source
 
+  # The drop class
+  # @return [String]
   def drop_class
     self.class.to_s
   end

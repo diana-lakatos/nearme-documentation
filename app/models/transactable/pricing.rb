@@ -96,14 +96,17 @@ class Transactable::Pricing < ActiveRecord::Base
     unit.in? %w( ar hectare )
   end
 
+  # @return [Boolean] whether the "book it out" action is available for this listing
   def book_it_out_available?
     (transactable_type_pricing.nil? || transactable_type_pricing.allow_book_it_out_discount?) && has_book_it_out_discount?
   end
 
+  # @return [Boolean] whether an exclusive price has been defined for this listing
   def exclusive_price_available?
     (transactable_type_pricing.nil? || transactable_type_pricing.allow_exclusive_price?) && has_exclusive_price?
   end
 
+  # @return [Boolean] whether the exclusive price defined for this listing is the only price defined for this listing
   def only_exclusive_price_available?
     exclusive_price_available? && price.to_f.zero?
   end

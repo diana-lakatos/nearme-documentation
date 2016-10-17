@@ -17,6 +17,7 @@ class SavedSearch < ActiveRecord::Base
 
   before_create :set_last_viewed_at, :change_sort
 
+  # @return [String] the full url path of the query
   def path
     Rails.application.routes.url_helpers.search_path + query
   end

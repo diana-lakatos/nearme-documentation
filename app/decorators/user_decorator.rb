@@ -15,6 +15,8 @@ class UserDecorator < Draper::Decorator
     object
   end
 
+  # @return [String] formatted string containing the name and user's affiliation;
+  #   only applies to the Intel marketplace
   def name_with_affiliation(plain_text = false)
     if properties.try(:is_intel) == true
       affiliation = '(Intel)'
@@ -30,6 +32,8 @@ class UserDecorator < Draper::Decorator
     link_to user_message.thread_context.name, profile_path(user_message.thread_context.slug)
   end
 
+  # @return [String] location of the user taken from its associated current_address {Address} object or, if not present,
+  #   from the country_name basic user profile field
   def display_location
     object.current_address ? object.current_address.to_s : object.country_name
   end
@@ -38,6 +42,7 @@ class UserDecorator < Draper::Decorator
     content_tag :p, object.current_address.address, class: 'location' if object.current_address
   end
 
+  # @return [Boolean] whether the user has any friends (followed users)
   def has_friends
     @count.nil? ? @count = !friends.count.zero? : @count
   end

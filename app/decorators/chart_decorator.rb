@@ -39,6 +39,8 @@ class ChartDecorator < Draper::CollectionDecorator
     [result]
   end
 
+  # @return [Hash<String, Money>] hash containing the currency as keys
+  #   and the sums for each currency as values
   def totals_by_currency
     hash = {}
     decorated_collection.group_by(&:currency).each do |currency, currency_values|

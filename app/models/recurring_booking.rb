@@ -83,6 +83,7 @@ class RecurringBooking < Order
     false
   end
 
+  # @return [FalseClass] false
   def with_delivery?
     false
   end

@@ -12,6 +12,7 @@ class Ckeditor::Asset < ActiveRecord::Base
   validates :data, presence: true
 
   belongs_to :instance
+  belongs_to :user
 
   class << self
     def user_friendly_global_asset_access_levels

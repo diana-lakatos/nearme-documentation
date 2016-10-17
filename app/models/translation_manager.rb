@@ -21,6 +21,8 @@ class TranslationManager
     "#{translation_namespace}.#{key}"
   end
 
+  # @return [String] represents the item to be booked (e.g. desk, room etc.)
+  #   taken from translations (e.g. translation key of the form 'transactable_type.desk.name')
   def translated_bookable_noun(count = 1)
     find_key_with_count('name', count)
   end
@@ -54,6 +56,7 @@ class TranslationManager
     "#{key_with_namespace(key)}.other"
   end
 
+  # @return [String] translation key suffix that is added to translations specific to this transactable type
   def translation_key_suffix
     underscore(@object.name)
   end
@@ -75,6 +78,7 @@ class TranslationManager
     string.underscore.tr(' ', '_') rescue ''
   end
 
+  # @return [String] translation namespace that is a prefix for translation keys specific to this transactable type
   def translation_namespace
     underscore("#{@object.class.name.demodulize}.#{@object.name}")
   end

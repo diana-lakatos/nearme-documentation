@@ -1,10 +1,12 @@
 class InstanceProfileTypeDrop < BaseDrop
+  # @return [InstanceProfileType]
   attr_reader :instance_profile_type
 
-  # id
-  #   numeric identifier for this instance profile type
-  # profile_type
-  #   Type of instance profile type
+  # @!method id
+  #   @return [Integer] numeric identifier for this instance profile type
+  # @!method profile_type
+  #   Type of instance profile
+  #   @return (see InstanceProfileType#profile_type)
   delegate :id, :profile_type, to: :instance_profile_type
 
   def initialize(instance_profile_type)
@@ -12,26 +14,28 @@ class InstanceProfileTypeDrop < BaseDrop
     @decorated = @instance_profile_type.decorate
   end
 
-  # Translated name
+  # @return [String] name from translations
   def name
     @instance_profile_type.translated_bookable_noun(1)
   end
 
-  # Translated name
+  # @return (see InstanceProfileTypeDrop#name)
   def bookable_noun
     name
   end
 
+  # @return [Array<String>] ['fulltext']
   def search_inputs
     ['fulltext']
   end
 
+  # @todo Investigate and remove invalid method
   def custom_search_inputs
     @context['custom_search_inputs']
   end
 
-  # returns the container class and input size to be used for the search area
-  # of the marketplace's homepage
+  # @return [Array<(String, Integer)>] the container class and input size to be used for the 
+  #   search area of the marketplace's homepage
   def calculate_elements
     sum = 2 # search button
     sum += 4 if search_inputs.include? 'datepickers'
@@ -43,36 +47,39 @@ class InstanceProfileTypeDrop < BaseDrop
     [container, input_size]
   end
 
-  # returns the container class to be used for the search area
-  # of the marketplace's homepage
+  # @return [String] the container class to be used for the search area
+  #   of the marketplace's homepage
   def calculate_container
     calculate_elements[0]
   end
 
-  # returns the input size to be used for the search area of the
-  # marketplace's homepage
+  # @return [Integer] the input size to be used for the search area of the
+  #   marketplace's homepage
   def calculate_input_size
     "span#{calculate_elements[1]}"
   end
 
-  # returns true if this marketplace has multiple service types defined
+  # @return [Boolean] whether this marketplace has multiple service types defined
   def multiple_transactable_types?
     PlatformContext.current.instance.transactable_types.searchable.many?
   end
 
-  # returns true if transactable type picker should be shown
+  # @return [Boolean] whether transactable type picker should be shown
   def show_transactable_type_picker?
     @context['transactable_type_picker'] != false && multiple_transactable_types? && PlatformContext.current.instance.tt_select_type != 'radio'
   end
 
+  # @return [String] instance profile type class name
   def class_name
     @instance_profile_type.class.name
   end
 
+  # @return [String] id to be used for a corresponding form element
   def select_id
     "#{class_name}-#{id}"
   end
 
+  # @return [Array<Category>] searchable categories for the instance profile type
   def searchable_categories
     @instance_profile_type.categories.searchable.roots
   end

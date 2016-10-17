@@ -1,5 +1,5 @@
-# Usage: {% featured_items target: users, amount: 6 %}
-# or: {% featured_items target: services, amount: 6, type: Boat %}
+# Usage: !{% featured_items target: users, amount: 6 %}
+# or: !{% featured_items target: services, amount: 6, type: Boat %}
 #
 
 class FeaturedItemsTag < Liquid::Tag

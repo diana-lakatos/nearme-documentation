@@ -31,11 +31,13 @@ class UserBlogPost < ActiveRecord::Base
     end
   end
 
+  # @return [UserBlogPost] the previously published user blog post
   def previous_blog_post
     @previous_blog_post ||= user.blog_posts.published.order('published_at DESC').where('published_at < ?',
                                                                                        published_at).first
   end
 
+  # @return [UserBlogPost] the next published user blog post
   def next_blog_post
     @next_blog_post ||= user.blog_posts.published.order('published_at DESC').where('published_at > ?',
                                                                                    published_at).last

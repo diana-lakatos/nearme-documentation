@@ -2,27 +2,29 @@ class Support::TicketMessageDrop < BaseDrop
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
 
+  # @return [Support::TicketMessage]
   attr_reader :message
 
   def initialize(message)
     @message = message.decorate
   end
 
+  # @todo Investigate no longer working / should be removed?
   def date
     message.date
   end
 
-  # date/time when this message was created as a string
+  # @return [String] date/time when this message was created
   def created_at
     I18n.l(message.created_at, format: :short)
   end
 
-  # the full name of the support recipient
+  # @return [String] the full name of the support recipient
   def full_name
     message.full_name
   end
 
-  # reservations dates tied to this message thread as an html formatted string
+  # @return [String] reservations dates tied to this message thread as an html formatted string
   def dates
     @date_presenter = DatePresenter.new(@message.ticket.reservation_dates)
     if !@message.ticket.reservation_details['start_minute'].present? && !@message.ticket.reservation_details['end_minute'].present?
@@ -32,7 +34,7 @@ class Support::TicketMessageDrop < BaseDrop
     end
   end
 
-  # reservation dates tied to this message thread in a raw non-html string
+  # @return [String] reservation dates tied to this message thread in a raw non-html string
   def dates_no_html
     @date_presenter = DatePresenter.new(@message.ticket.reservation_dates)
     if !@message.ticket.reservation_details['start_minute'].present? && !@message.ticket.reservation_details['end_minute'].present?
@@ -42,12 +44,12 @@ class Support::TicketMessageDrop < BaseDrop
     end
   end
 
-  # the contents of this message as an html-formatted string
+  # @return [String] the contents of this message as an html-formatted string
   def message_html
     simple_format(message.message)
   end
 
-  # the contents of this message
+  # @return [String] the contents of this message
   def message_text
     message.message
   end

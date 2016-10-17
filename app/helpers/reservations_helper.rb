@@ -57,6 +57,8 @@ module ReservationsHelper
     end
   end
 
+  # @return [Integer] total orders for this user (received - not in the 'inactive' state, unconfirmed;
+  #   and placed - unconfirmed and not archived)
   def reservations_count_for_user(user)
     open_host = user.default_company.blank? ? 0 : user.default_company.orders.active.unconfirmed.count
     not_archived = user.orders.unconfirmed.not_archived.count

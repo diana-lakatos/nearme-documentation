@@ -1,13 +1,19 @@
 class CustomAttributeDrop < BaseDrop
+  # @return [CustomAttributes::CustomAttribute]
   attr_reader :custom_attribute
 
-  # name
+  # @!method name
   #   Custom attribute name
-  # label
+  #   @return (see CustomAttributes::CustomAttribute#name)
+  # @!method label
   #   Custom attribute label
-  # label_key
+  #   @return (see CustomAttributes::CustomAttribute#label)
+  # @!method label_key
   #   Translation key for label
-
+  #   @return [String]
+  # @!method valid_values
+  #   Valid values for the custom attribute
+  #   @return (see CustomAttributes::CustomAttribute#valid_values)
   delegate :name, :label, :label_key, :valid_values, to: :custom_attribute
 
   def initialize(custom_attribute)
