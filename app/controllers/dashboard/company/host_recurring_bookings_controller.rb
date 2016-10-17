@@ -41,7 +41,8 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
         ].join(' ')
       end
     end
-    redirect_to :back
+
+    redirect_back_or_default
   end
 
   def rejection_form
