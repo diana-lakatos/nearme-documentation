@@ -6,3 +6,9 @@ AllCops:
   TargetRubyVersion: 2.2
 Rails:
   Enabled: true
+Style/IfUnlessModifier:
+  MaxLineLength: 130
+Style/WhileUntilModifier:
+  MaxLineLength: 130
+Metrics/LineLength:
+  Max: 130
