@@ -42,7 +42,7 @@
 
 # buyer profile
 5403:
-  - user: public_profile
+  - buyer: enabled
   - buyer: board_certification
   - buyer: number_of_jury_trials
   - buyer: total_settlements
