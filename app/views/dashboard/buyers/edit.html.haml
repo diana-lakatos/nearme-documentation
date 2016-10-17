@@ -4,7 +4,7 @@
   %h1= yield :title
 
   .options
-    = link_to t('dashboard.user_profile.view_profile'), user_path(current_user)
+    = link_to t('dashboard.user_profile.view_profile'), user_path(current_user), target: "_blank"
 
 = render 'dashboard/shared/profile_nav', active: :buyer
 
