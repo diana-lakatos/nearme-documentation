@@ -117,9 +117,7 @@ class PlatformContextDrop < BaseDrop
   end
 
   # root path for this marketplace
-  def root_path
-    routes.root_path
-  end
+  delegate :root_path, to: :routes
 
   # full url to the root of the marketplace
   def host
@@ -180,6 +178,11 @@ class PlatformContextDrop < BaseDrop
 
   def split_registration?
     @instance.split_registration?
+  end
+
+  def highlighted_blog_posts
+    # tmp solution until we have proper solution to fetch any data on any page
+    @platform_context_decorator.instance.user_blog_posts.highlighted.by_date.limit(3)
   end
 
   private
