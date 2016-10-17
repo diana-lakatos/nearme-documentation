@@ -10,6 +10,7 @@ namespace :litvault do
     time = Benchmark.realtime do
       @instance = Instance.find(198)
       @instance.update_attributes(
+        default_country: 'United States',
         tt_select_type: 'radio',
         split_registration: true,
         enable_reply_button_on_host_reservations: true,

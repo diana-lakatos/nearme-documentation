@@ -16,9 +16,12 @@
   <div class="container-fluid">
     <div class="listing-a">
       <article class="listing-details">
-        <div class="back-to-results">
-          <a data-back-to-search-results-link href="/search/people">Back to lawyer search</a>
-        </div>
+        {% assign search_result = 'referer'  | request_parameter | matches: 'search' %}
+        {% if search_result %}
+          <div class="back-to-results">
+            <a data-back-to-search-results-link href="/search/people">Back to lawyer search</a>
+          </div>
+        {% endif %}
         <div class="summary">
           <div class="listing-user-header">
             <div class="meta">
