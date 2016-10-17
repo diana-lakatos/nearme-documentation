@@ -8,10 +8,15 @@ class DelayedReservation < Reservation
   def skip_payment_authorization
     true
   end
-  alias_method :skip_payment_authorization?, :skip_payment_authorization
+  alias skip_payment_authorization? skip_payment_authorization
 
   def self.workflow_class
     Reservation
+  end
+
+  # archived_at should not be set based on ends_at for this Order
+  def set_archived_at
+    true
   end
 
   def add_line_item!(attrs)

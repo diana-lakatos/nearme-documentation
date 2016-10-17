@@ -4,6 +4,6 @@ class OrderMarkAsArchivedJob < Job
   end
 
   def perform
-    @order.mark_as_archived!
+    @order.mark_as_archived! if @order.ends_at.present? && @order.ends_at > Time.now
   end
 end
