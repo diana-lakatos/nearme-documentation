@@ -17,9 +17,7 @@ namespace :litvault do
         seller_attachments_enabled: true,
         seller_attachments_access_level: 'collaborators',
         hidden_ui_controls: { 'main_menu/cta': 1 },
-        skip_company: true,
-        seller_attachments_enabled: '1',
-        seller_attachments_access_level: 'collaborators'
+        skip_company: true
       )
       @instance.set_context!
 
