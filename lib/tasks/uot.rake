@@ -349,9 +349,9 @@ namespace :uot do
                                                                 public: true,
                                                                 searchable: true)
 
-      create_custom_attribute(@instance_profile_type,           name: 'hourly_rate',
+      create_custom_attribute(@instance_profile_type,           name: 'hourly_rate_decimal',
                                                                 label: 'Hourly rate',
-                                                                attribute_type: 'integer',
+                                                                attribute_type: 'decimal',
                                                                 html_tag: 'input',
                                                                 required: '1',
                                                                 validation_only_on_update: true,
@@ -548,7 +548,7 @@ namespace :uot do
         { 'user' => 'current_address' },
         { 'user' => 'mobile_phone' },
         { 'buyer' => 'linkedin_url' },
-        { 'buyer' => 'hourly_rate' },
+        { 'buyer' => 'hourly_rate_decimal' },
         { 'buyer' => 'workplace_type' },
         { 'buyer' => 'discounts_available' },
         { 'buyer' => 'discounts_description' },

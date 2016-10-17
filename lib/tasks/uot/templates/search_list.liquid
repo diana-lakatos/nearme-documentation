@@ -33,8 +33,8 @@
                 <span class="select-a">
                     <select id="search-order" name="sort" class="unstyled-select">
                         <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Relevance</option>
-                        <option {% if params['sort'] == 'custom_attributes.hourly_rate_asc'  %}selected{% endif %} value='custom_attributes.hourly_rate_asc'>Hourly rate ascending</option>
-                        <option {% if params['sort'] == 'custom_attributes.hourly_rate_desc' %}selected{% endif %} value='custom_attributes.hourly_rate_desc'>Houry rate descending</option>
+                        <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_asc'  %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_asc'>Hourly rate ascending</option>
+                        <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_desc' %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_desc'>Houry rate descending</option>
                     </select>
                 </span>
             </div>
@@ -63,7 +63,7 @@
 
                                 <div class="properties">
                                     <p class="price">
-                                        <strong>{{ user.buyer_properties.hourly_rate }} USD / hr</strong>
+                                        <strong>{{ user.buyer_properties.hourly_rate_decimal | price_with_cents_with_currency }} USD / hr</strong>
                                     </p>
                                     <dl class="property">
                                         <dt>Discounts:</dt>
