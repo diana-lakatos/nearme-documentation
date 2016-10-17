@@ -51,7 +51,7 @@ class Order < ActiveRecord::Base
   validate :validate_acceptance_of_waiver_agreements, on: :update, if: -> { should_validate_field?('reservation', 'waiver_agreements') }
 
   before_validation :copy_billing_address, :remove_empty_documents
-  before_validation :set_owner, :build_return_shipment, :skip_validation_for_custom_attributes
+  before_validation :set_owner, :build_return_shipment, :skip_validation_for_custom_attributes, :set_owner_for_payment_documents
   after_save :try_to_activate!, unless: -> { skip_try_to_activate }
 
   state_machine :state, initial: :inactive do
@@ -510,6 +510,16 @@ class Order < ActiveRecord::Base
 
   def skip_validation_for_custom_attributes
     self.skip_custom_attribute_validation = !checkout_update
+    true
+  end
+
+  def set_owner_for_payment_documents
+    if payment_documents.present?
+      payment_documents.each do |payment_document|
+        payment_document.user = owner if payment_document.new_record?
+      end
+    end
+
     true
   end
 
