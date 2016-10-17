@@ -6,7 +6,7 @@ module FeedbackDecoratorHelper
   def order_image
     version = :space_listing
 
-    if reservation? && feedback_object.transactable && feedback_object.transactable.has_photos?
+    if (reservation? || line_item?) && feedback_object.transactable && feedback_object.transactable.has_photos?
       h.link_to(h.image_tag(feedback_object.transactable.photos.rank(:position).first.image_url(version)), feedback_object.transactable.decorate.show_path)
     else
       h.image_tag 'placeholders/895x554.gif'
@@ -40,9 +40,19 @@ module FeedbackDecoratorHelper
       else
         user = feedback_object.owner
       end
+    elsif line_item?
+      if target == RatingConstants::HOST
+        user = feedback_object.transactable.creator
+      else
+        user = feedback_object.user
+      end
     end
 
     user
+  end
+
+  def line_item?
+    feedback_object.is_a?(LineItem::Transactable)
   end
 
   def reservation?
