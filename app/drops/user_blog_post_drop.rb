@@ -47,6 +47,10 @@ class UserBlogPostDrop < BaseDrop
     @blog_post.hero_image.url
   end
 
+  def medium_hero_image_url
+    @blog_post.hero_image.url(:medium)
+  end
+
   # check if hero image is present
   def hero_image_present?
     @blog_post.hero_image.present?

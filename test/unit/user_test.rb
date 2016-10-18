@@ -268,34 +268,34 @@ class UserTest < ActiveSupport::TestCase
   context 'reservations' do
     should 'find rejected reservations' do
       @user = FactoryGirl.create(:user, orders: [
-        FactoryGirl.create(:reservation, state: 'unconfirmed'),
-        FactoryGirl.create(:reservation, state: 'rejected')
-      ])
+                                   FactoryGirl.create(:reservation, state: 'unconfirmed'),
+                                   FactoryGirl.create(:reservation, state: 'rejected')
+                                 ])
       assert_equal 1, @user.rejected_reservations.count
     end
 
     should 'find confirmed reservations' do
       @user = FactoryGirl.create(:user, orders: [
-        FactoryGirl.create(:reservation, state: 'unconfirmed'),
-        FactoryGirl.create(:reservation, state: 'confirmed')
-      ])
+                                   FactoryGirl.create(:reservation, state: 'unconfirmed'),
+                                   FactoryGirl.create(:reservation, state: 'confirmed')
+                                 ])
       assert_equal 1, @user.confirmed_reservations.count
     end
 
     should 'find expired reservations' do
       @user = FactoryGirl.create(:user, orders: [
-        FactoryGirl.create(:reservation, state: 'unconfirmed'),
-        FactoryGirl.create(:reservation, state: 'expired')
-      ])
+                                   FactoryGirl.create(:reservation, state: 'unconfirmed'),
+                                   FactoryGirl.create(:reservation, state: 'expired')
+                                 ])
       assert_equal 1, @user.expired_reservations.count
     end
 
     should 'find cancelled reservations' do
       @user = FactoryGirl.create(:user, orders: [
-        FactoryGirl.create(:reservation, state: 'unconfirmed'),
-        FactoryGirl.create(:reservation, state: 'cancelled_by_guest'),
-        FactoryGirl.create(:reservation, state: 'cancelled_by_host')
-      ])
+                                   FactoryGirl.create(:reservation, state: 'unconfirmed'),
+                                   FactoryGirl.create(:reservation, state: 'cancelled_by_guest'),
+                                   FactoryGirl.create(:reservation, state: 'cancelled_by_host')
+                                 ])
       assert_equal 2, @user.cancelled_reservations.count
     end
   end
@@ -392,7 +392,7 @@ class UserTest < ActiveSupport::TestCase
     @user = FactoryGirl.build(:user)
     @user.avatar = File.open(File.expand_path('../../assets/image_no_extension', __FILE__))
     @user.avatar_versions_generated_at = Time.zone.now
-    assert @user.save
+    assert @user.valid?, @user.errors.full_messages.join(', ')
   end
 
   should 'have mailer unsubscriptions' do
@@ -751,14 +751,14 @@ class UserTest < ActiveSupport::TestCase
 
     should 'allow to create new account with external id if other user exists with this email in this marketplace but with external_id set' do
       @user = FactoryGirl.create(:user, external_id: 'something')
-      assert_nothing_raised  do
+      assert_nothing_raised do
         FactoryGirl.create(:user, email: @user.email, external_id: 'else')
       end
     end
 
     should 'allow to create new account with external id if other user exists with this email in this marketplace without external_id set' do
       @user = FactoryGirl.create(:user)
-      assert_nothing_raised  do
+      assert_nothing_raised do
         FactoryGirl.create(:user, email: @user.email, external_id: 'else')
       end
     end
@@ -836,7 +836,7 @@ class UserTest < ActiveSupport::TestCase
     @company = FactoryGirl.create(:company, creator: @user)
     @location = FactoryGirl.create(:location, company_id: @company.id)
     @listing = FactoryGirl.create(:transactable, location: @location)
-    @photo  = FactoryGirl.create(:photo, listing: @listing, creator: @photo)
+    @photo = FactoryGirl.create(:photo, listing: @listing, creator: @photo)
     @reservation = FactoryGirl.create(:reservation, user: @user, transactable: @listing)
     @reservation_period = @reservation.periods.first
     @payment = @reservation.payment
@@ -845,8 +845,7 @@ class UserTest < ActiveSupport::TestCase
     FactoryGirl.build(:upload_obligation, level: UploadObligation::LEVELS[0], item: @listing)
     document_requirement = FactoryGirl.create(:document_requirement, item: @listing)
     @payment_document = FactoryGirl.create(:attachable_payment_document, attachable: @reservation, user: @user,
-                                                                         payment_document_info: FactoryGirl.create(:payment_document_info, document_requirement: document_requirement)
-                                          )
+                                                                         payment_document_info: FactoryGirl.create(:payment_document_info, document_requirement: document_requirement))
     @objects = [@user, @authentication, @company,
                 @location, @listing, @photo, @payment_document]
   end

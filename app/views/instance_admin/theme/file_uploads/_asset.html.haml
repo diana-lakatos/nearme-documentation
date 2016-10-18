@@ -1,3 +1,4 @@
+- @tt ||= TransactableType.first
 = content_tag(:div, :id => dom_id(asset), :class => "gal-item", :"data-url" => image_path(asset.url)) do
   = link_to image_tag('filebrowser/gal_del.png',
     :title => I18n.t('ckeditor.buttons.delete')),
@@ -14,7 +15,7 @@
       .img-name
         = link_to asset.title.presence || asset.filename, asset.url, target: '_blank'
       .img-name
-        Access: #{asset.access_level.presence || 'public <i class="fa fa-globe"></i>'.html_safe}
+        Access: #{Ckeditor::Asset.friendly_access_level_name(asset.access_level.presence) || 'public <i class="fa fa-globe"></i>'.html_safe}
       .time-size
         .time
           = asset.format_created_at

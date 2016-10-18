@@ -1,6 +1,7 @@
 # encoding: utf-8
-class LinkImageUploader < BaseImageUploader
-  include DynamicPhotoUploads
+class LinkImageUploader < BaseUploader
+  include CarrierWave::DynamicPhotoUploads
+  include CarrierWave::ImageDefaults
 
   self.dimensions = {
     standard: { width: 240, height: 80, transform: :resize_to_fill },

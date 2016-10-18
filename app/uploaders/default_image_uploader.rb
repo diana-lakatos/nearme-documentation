@@ -1,4 +1,5 @@
-class DefaultImageUploader < BaseImageUploader
+class DefaultImageUploader < BaseUploader
+  include CarrierWave::ImageDefaults
   version :transformed do
     process transformed_version: :transformed
   end
@@ -8,7 +9,8 @@ class DefaultImageUploader < BaseImageUploader
       photo_uploader = @model.photo_uploader.constantize
       uploader_version = @model.photo_uploader_version.to_sym
 
-      override = PlatformContext.current.theme.reload.photo_upload_versions.where(version_name: uploader_version, photo_uploader: photo_uploader).first
+      override = PlatformContext.current.theme.reload.photo_upload_versions
+                                .where(version_name: uploader_version, photo_uploader: photo_uploader).first
 
       if override.blank?
         transformation = photo_uploader.dimensions[uploader_version][:transform]

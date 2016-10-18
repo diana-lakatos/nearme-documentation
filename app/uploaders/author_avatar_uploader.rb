@@ -1,7 +1,8 @@
 # Used in UserBlogPost only
-class AuthorAvatarUploader < BaseImageUploader
+class AuthorAvatarUploader < BaseUploader
   include CarrierWave::TransformableImage
-  include DynamicPhotoUploads
+  include CarrierWave::DynamicPhotoUploads
+  include CarrierWave::ImageDefaults
 
   self.dimensions = {
     thumb: { width: 96, height: 96, transform: :resize_to_fill },
