@@ -1,7 +1,6 @@
 var path = require('path');
 var fs = require('fs');
 var gutil = require('gulp-util');
-var modernizr = require('gulp-modernizr');
 var del = require('del');
 
 module.exports = function(gulp, config){
@@ -16,12 +15,6 @@ module.exports = function(gulp, config){
     jqueryMap: path.join(config.paths.node_modules, 'jquery', 'dist', 'jquery.min.map'),
     placeholders: path.join(config.paths.javascripts, 'vendor', 'placeholders.js')
   };
-
-  var modernizrConfig = {
-    options: ['setClasses'],
-    tests: ['geolocation', 'svg', 'touchevents', 'canvas', 'filereader']
-  };
-
 
   gulp.task('vendor:checkfiles', function(){
     for (var file in files) {
@@ -63,18 +56,6 @@ module.exports = function(gulp, config){
             .pipe(gulp.dest(config.paths.tmp));
   });
 
-  gulp.task('vendor:modernizr', function(){
-    gulp.src(path.join(config.paths.javascripts, '*.js'))
-            .pipe(modernizr(modernizrConfig))
-            .pipe(gulp.dest(path.join(config.paths.output, 'vendor')));
-  });
-
-  gulp.task('vendor:modernizr:dist', function(){
-    gulp.src(path.join(config.paths.javascripts, '*.js'))
-            .pipe(modernizr(modernizrConfig))
-            .pipe(gulp.dest(path.join(config.paths.tmp, 'vendor')));
-  });
-
   gulp.task('vendor:jquery', function() {
     gulp.src([files.jquery, files.jqueryMap])
             .pipe(gulp.dest(path.join(config.paths.output, 'vendor')));
@@ -114,6 +95,6 @@ module.exports = function(gulp, config){
   });
 
     // Aggregate taks
-  gulp.task('vendor', ['vendor:checkfiles', 'vendor:modernizr', 'vendor:ckeditor', 'vendor:raygun', 'vendor:jquery', 'vendor:polyfills']);
-  gulp.task('vendor:dist', ['vendor:checkfiles', 'vendor:modernizr:dist', 'vendor:ckeditor:dist', 'vendor:raygun:dist', 'vendor:jquery:dist', 'vendor:polyfills:dist']);
+  gulp.task('vendor', ['vendor:checkfiles', 'vendor:ckeditor', 'vendor:raygun', 'vendor:jquery', 'vendor:polyfills']);
+  gulp.task('vendor:dist', ['vendor:checkfiles', 'vendor:ckeditor:dist', 'vendor:raygun:dist', 'vendor:jquery:dist', 'vendor:polyfills:dist']);
 };
