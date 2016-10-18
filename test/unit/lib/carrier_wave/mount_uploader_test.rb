@@ -44,13 +44,6 @@ class MountUploaderTest < ActiveSupport::TestCase
     photo.save!
   end
 
-  should 'only set timestamp if uploader does not respond to delayed_versions' do
-    theme = FactoryGirl.build(:theme_with_logo_image)
-    VersionRegenerationJob.expects(:perform).never
-    theme.save!
-    assert_not_nil(theme.logo_image_versions_generated_at)
-  end
-
   should 'recreate all versions if transformation data is changed' do
     photo = FactoryGirl.create(:photo)
     photo.image_transformation_data = { rotate: 180 }

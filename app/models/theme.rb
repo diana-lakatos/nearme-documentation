@@ -3,10 +3,10 @@ class Theme < ActiveRecord::Base
   has_paper_trail ignore: [:updated_at]
   auto_set_platform_context
   acts_as_paranoid
-  DEFAULT_EMAIL = 'support@desksnear.me'
-  DEFAULT_PHONE_NUMBER = '1.888.998.3375'
-  COLORS = %w(blue red orange green gray black white)
-  COLORS_DEFAULT_VALUES = %w(41bf8b e83d33 FF8D00 6651af 394449 1e2222 fafafa)
+  DEFAULT_EMAIL = 'support@desksnear.me'.freeze
+  DEFAULT_PHONE_NUMBER = '1.888.998.3375'.freeze
+  COLORS = %w(blue red orange green gray black white).freeze
+  COLORS_DEFAULT_VALUES = %w(41bf8b e83d33 FF8D00 6651af 394449 1e2222 fafafa).freeze
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
@@ -32,7 +32,7 @@ class Theme < ActiveRecord::Base
   validates :tagline, length: { maximum: 255 }
   validates :contact_email, presence: true, email: true, if: ->(t) { t.owner.try(:domains).try(:first).present? }
   validates :support_email, presence: true, email: true, if: ->(t) { t.owner.try(:domains).try(:first).present? }
-  validates_length_of :description, maximum: 250
+  validates :description, length: { maximum: 250 }
 
   mount_uploader :icon_image, ThemeImageUploader
   mount_uploader :icon_retina_image, ThemeImageUploader
@@ -55,14 +55,13 @@ class Theme < ActiveRecord::Base
   end
 
   before_validation :unhexify_colors
-  before_save :add_no_follow_to_unknown_links, if: ->(theme) { theme.homepage_content.present? && theme.homepage_content_changed? }
 
   def contact_email_with_fallback
-    read_attribute(:contact_email).presence || DEFAULT_EMAIL
+    self[:contact_email].presence || DEFAULT_EMAIL
   end
 
   def phone_number
-    read_attribute(:phone_number) || DEFAULT_PHONE_NUMBER
+    self[:phone_number] || DEFAULT_PHONE_NUMBER
   end
 
   def phone_number_noformat
@@ -85,15 +84,14 @@ class Theme < ActiveRecord::Base
     end
 
     current_attributes.keys.each do |attribute|
-      if attribute =~ /_image$/
-        url = send("#{attribute}_url")
-        if url[0] == '/'
-          Rails.logger.debug 'local file storage not supported'
-        else
-          cloned_theme.send("remote_#{attribute}_url=", url)
-        end if url
-        current_attributes.delete(attribute)
-      end
+      next unless attribute =~ /_image$/
+      url = send("#{attribute}_url")
+      if url[0] == '/'
+        Rails.logger.debug 'local file storage not supported'
+      else
+        cloned_theme.send("remote_#{attribute}_url=", url)
+      end if url
+      current_attributes.delete(attribute)
     end
     current_attributes.each do |k, v|
       cloned_theme.send("#{k}=", v)
@@ -102,7 +100,7 @@ class Theme < ActiveRecord::Base
   end
 
   def hex_color(color)
-    fail ArgumentError unless COLORS.include?(color.to_s)
+    raise ArgumentError unless COLORS.include?(color.to_s)
     value = send(:"color_#{color}")
     return '' if value.to_s.empty?
     self.class.hexify(value)
@@ -163,10 +161,5 @@ class Theme < ActiveRecord::Base
       value = send("color_#{color}")
       send(:"color_#{color}=", Theme.unhexify(value))
     end
-  end
-
-  def add_no_follow_to_unknown_links
-    rel_no_follow_adder = RelNoFollowAdder.new(skip_domains: Domain.pluck(:name))
-    self.homepage_content = rel_no_follow_adder.modify(homepage_content)
   end
 end

@@ -1,5 +1,5 @@
 class InstanceAdmin::Theme::PhotoUploadVersionsController < InstanceAdmin::Theme::BaseController
-  before_filter :set_breadcrumbs_title
+  before_action :set_breadcrumbs_title
 
   def index
     @photo_upload_versions = @theme.photo_upload_versions
@@ -49,7 +49,7 @@ class InstanceAdmin::Theme::PhotoUploadVersionsController < InstanceAdmin::Theme
       if PhotoUploadVersion.can_regenerate_for_uploader?(uploader_name)
         flash[:success] = t('instance_admin.theme.photo_upload_versions.image_regeneration_scheduled')
 
-        ScheduledUploadersRegeneration.create(photo_uploader: uploader_name)
+        ScheduledUploadersRegeneration.create!(photo_uploader: uploader_name)
         RegenerateUploaderVersionsJob.perform(uploader_name)
 
         redirect_to instance_admin_theme_photo_upload_versions_path

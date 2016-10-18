@@ -1,9 +1,7 @@
 class GroupCoverImageUploader < BaseUploader
   include CarrierWave::TransformableImage
-  include DynamicPhotoUploads
-
-  cattr_reader :delayed_versions
-  process :auto_orient
+  include CarrierWave::DynamicPhotoUploads
+  include CarrierWave::Cleanable
 
   self.dimensions = {
     medium: { width: 720, height: nil, transform: :resize_to_fit },
@@ -16,12 +14,5 @@ class GroupCoverImageUploader < BaseUploader
 
   version :thumbnail do
     process dynamic_version: :thumbnail
-  end
-
-  def auto_orient
-    manipulate! do |img|
-      img.auto_orient
-      img
-    end
   end
 end

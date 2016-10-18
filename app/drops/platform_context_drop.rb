@@ -51,8 +51,6 @@ class PlatformContextDrop < BaseDrop
   #   hero_image.url returns the url of this hero_image
   # tagline
   #   tagline for this marketplace as string
-  # homepage_content
-  #   HTML for the homepage (theme) as set in the admin section by the marketplace admin
   # fulltext_geo_search?
   #   returns true if searcher_type for the marketplace is "fulltext_geo"
   # is_company_theme?
@@ -84,7 +82,7 @@ class PlatformContextDrop < BaseDrop
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :facebook_url, :twitter_url, :gplus_url,
            :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
            :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number, :phone_number_noformat,
-           :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
+           :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline,
            :is_company_theme?, :call_to_action, :projectable?, :bookable?, :transactable_types, :action_rfq?,
            :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
            :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?,

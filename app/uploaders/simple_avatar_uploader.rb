@@ -1,6 +1,6 @@
-class SimpleAvatarUploader < BaseImageUploader
-  include CarrierWave::MiniMagick
-  include DynamicPhotoUploads
+class SimpleAvatarUploader < BaseUploader
+  include CarrierWave::DynamicPhotoUploads
+  include CarrierWave::ImageDefaults
 
   self.dimensions = {
     thumb: { width: 96, height: 96, transform: :resize_to_fill },

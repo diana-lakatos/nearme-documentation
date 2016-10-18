@@ -1,7 +1,7 @@
 # encoding: utf-8
 class CkeditorPictureUploader < BaseCkeditorUploader
   include CarrierWave::MiniMagick
-  include DynamicPhotoUploads
+  include CarrierWave::DynamicPhotoUploads
 
   process :read_dimensions
 
