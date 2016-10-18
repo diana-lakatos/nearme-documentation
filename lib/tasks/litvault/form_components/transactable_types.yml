@@ -29,6 +29,13 @@
         - transactable: case_short_description
         - transactable: case_full_description
 
+    - name: "Disclaimers"
+      fields:
+        - user: states
+        - user: professional_liability_insurance
+        - user: liability_occurence_limits_information
+        - user: no_limitations_agreement
+
 
   TRANSACTABLE_ATTRIBUTES:
     -
@@ -117,6 +124,13 @@
         - transactable: description_of_records
         - transactable: underlying_records_documents
         - transactable: other_matters
+
+    - name: "Disclaimers"
+      fields:
+        - user: states
+        - user: professional_liability_insurance
+        - user: liability_occurence_limits_information
+        - user: no_limitations_agreement
 
   TRANSACTABLE_ATTRIBUTES:
     -
