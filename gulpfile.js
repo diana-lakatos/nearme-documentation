@@ -29,5 +29,6 @@ require('./gulp/serve')(gulp, browserSync, config);
 require('./gulp/watch')(gulp, config);
 require('./gulp/build')(gulp, config);
 require('./gulp/version')(gulp, config);
+require('./gulp/modernizr')(gulp, config);
 
 gulp.task('default', ['build']);

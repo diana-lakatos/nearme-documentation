@@ -46,5 +46,7 @@ module.exports = function(gulp, config) {
     ], { cwd: config.paths.stylesheets }, ['styles:application', 'styles:newui']);
   });
 
-  gulp.task('watch', ['watch:scss', 'watch:images', 'watch:fonts', 'watch:webpack', 'watch:lint']);
+  gulp.task('watch', ['watch:scss', 'watch:images', 'watch:fonts', 'watch:webpack', 'watch:lint'], function(){
+    gulp.start('modernizr');
+  });
 };
