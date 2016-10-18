@@ -102,13 +102,13 @@
                 <th scope="col">Handling Lawyer</th>
                 <th scope="col">Offer Date</th>
               </tr>
-              {% for collaborator in listing.transactable_collaborators %}
+              {% for order in listing.orders %}
                 <tr>
                   <td>
-                    {{ collaborator.user.name }}
+                    {{ order.user.name }}
                   </td>
                   <td>
-                    {{ collaborator.created_at | to_date | l: 'short' }}
+                    {{ order.created_at | to_date | l: 'short' }}
                   </td>
                 </tr>
               {% endfor %}
