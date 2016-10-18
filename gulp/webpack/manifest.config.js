@@ -6,15 +6,15 @@ var _ = require('lodash');
 var config = require('./main.config.js');
 
 config.output = _.merge(config.output, {
-    path: path.join(config.appFolder, 'tmp', 'assets'),
-    chunkFilename: '[id]-bundle.js'
+  path: path.join(config.appFolder, 'tmp', 'assets'),
+  chunkFilename: '[id]-bundle.js'
 });
 
 config.plugins.push(
     new webpack.optimize.CommonsChunkPlugin('common', 'common.js'),
     new ChunkManifestPlugin({
-        filename: 'webpack-common-manifest.json',
-        manifestVariable: 'webpackBundleManifest',
+      filename: 'webpack-common-manifest.json',
+      manifestVariable: 'webpackBundleManifest',
     })
 );
 
