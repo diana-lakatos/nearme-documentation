@@ -16,9 +16,9 @@ module LiquidFilters
     else
       Googl.shorten(url).short_url
     end
-  rescue => e
+  rescue Exception => e
     if Rails.env.production?
-      MarketplaceLogger.error('Url Shortening Error', e.to_s, raise: false)
+      MarketplaceLogger.error('Url Shortening Error', e.to_s + ' :: ' + url, raise: false)
       ''
     else
       'http://limitreached'
