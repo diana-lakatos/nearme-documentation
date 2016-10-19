@@ -8,72 +8,72 @@ var gutil = require('gulp-util');
 const appFolder = path.join(__dirname,'..','..');
 
 var config = {
-    appFolder: appFolder,
+  appFolder: appFolder,
     /* the base path which will be used to resolve entry points */
-    context: path.join(appFolder, 'app', 'frontend', 'javascripts')
+  context: path.join(appFolder, 'app', 'frontend', 'javascripts')
 };
 
 config.entry = {
-    newui: 'newui-entry.js',
-    application: 'application-entry.js',
-    instanceadmin: 'instanceadmin-entry.js',
-    instancewizard: 'instancewizard-entry.js',
-    blog: 'blog-entry.js',
-    blogadmin: 'blogadmin-entry.js',
-    dashboard: 'dashboard-entry.js',
-    admin: 'admin-entry.js',
-    community: 'community-entry.js'
+  newui: 'newui-entry.js',
+  application: 'application-entry.js',
+  instanceadmin: 'instanceadmin-entry.js',
+  instancewizard: 'instancewizard-entry.js',
+  blog: 'blog-entry.js',
+  blogadmin: 'blogadmin-entry.js',
+  dashboard: 'dashboard-entry.js',
+  admin: 'admin-entry.js',
+  community: 'community-entry.js'
 };
 
 var assetHost = gutil.env.asset_host || '';
 
 config.output = {
     // this is our app/assets/javascripts directory, which is part of the Sprockets pipeline
-    path: path.join(appFolder, 'public', 'assets'),
+  path: path.join(appFolder, 'public', 'assets'),
     // the filename of the compiled bundle, e.g. app/assets/javascripts/bundle.js
-    filename: '[name]-bundle.js',
+  filename: '[name]-bundle.js',
     // if the webpack code-splitting feature is enabled, this is the path it'll use to download bundles
-    publicPath: assetHost + '/assets/',
-    crossOriginLoading: 'anonymous'
+  publicPath: assetHost + '/assets/',
+  crossOriginLoading: 'anonymous'
 };
 
 config.externals = {
-    jquery: 'window.jQuery',
-    'expose?jQuery|expose?$!jquery': 'window.jQuery',
-    modernizr: 'Modernizr'
+  jquery: 'window.jQuery',
+  'expose?jQuery|expose?$!jquery': 'window.jQuery',
+  modernizr: 'Modernizr'
 };
 
 config.resolve = {
     // tell webpack which extensions to auto search when it resolves modules. With this,
     // you'll be able to do `require('./utils')` instead of `require('./utils.js')`
-    extensions: ['', '.js', '.coffee'],
-    modulesDirectories: ['node_modules', '.']
+  extensions: ['', '.js', '.coffee'],
+  modulesDirectories: ['node_modules', '.']
 };
 
 config.plugins = [
-    new webpack.ProvidePlugin({
-        '$': 'jquery',
-        'jQuery': 'jquery',
-        'window.jQuery': 'jquery',
-        'Modernizr': 'modernizr',
-        '_': 'underscore'
-    }),
-    new webpack.optimize.DedupePlugin()
+  new webpack.ProvidePlugin({
+    '$': 'jquery',
+    'jQuery': 'jquery',
+    'window.jQuery': 'jquery',
+    'Modernizr': 'modernizr',
+    '_': 'underscore'
+  }),
+  new webpack.optimize.DedupePlugin()
 ];
 
 config.module = {
-    loaders: [
+  loaders: [
         { test: /\.coffee$/, loader: 'coffee-loader' },
-        {
-            test: /\.js$/,
-            exclude: /(node_modules|vendor)/,
-            loader: 'babel',
-            query: {
-                cacheDirectory: true
-            }
-        },
+    {
+      test: /\.js$/,
+      exclude: /(node_modules|vendor)/,
+      loader: 'babel',
+      query: {
+        cacheDirectory: true
+      }
+    },
         { test: /\.css$/, loader: 'style-loader!css-loader' }
-    ]
+  ]
 };
 
 module.exports = config;

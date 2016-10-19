@@ -42,18 +42,18 @@ module.exports = function(gulp, config) {
                 .pipe(f) // do not output webpack manifest files in global manifest.json
                 .pipe(manifest())
                 .pipe(gulp.dest(config.paths.output)); // write manifest to build dir
-              });
+    });
 
     gulp.task('webpack-manifest:' + environment, ['manifest:' + environment], function(){
             // at this point we have webpack-asset-manifest and webpack-common-manifest
             // as revisioned files as well, so we need to remove digests from these files
-            return gulp.src(path.join(config.paths.output,'webpack-*-manifest-*.json'))
+      return gulp.src(path.join(config.paths.output,'webpack-*-manifest-*.json'))
                 .pipe(vinylPaths(del))  // clean up old revisioned files
                 .pipe(rename(function(path){
                   path.basename = path.basename.replace(/webpack-(common|asset)-manifest-[a-f0-9]+/, 'webpack-$1-manifest');
                 }))
                 .pipe(gulp.dest(config.paths.output));
-              });
+    });
   }
 
   registerEnvironmentTasks(gulp, 'test');
@@ -61,5 +61,5 @@ module.exports = function(gulp, config) {
   registerEnvironmentTasks(gulp, 'production');
 
     // Aliases
-    gulp.task('dist', ['build:production']);
-  };
+  gulp.task('dist', ['build:production']);
+};
