@@ -50,7 +50,7 @@
     required: true
     validation_only_on_update: true
   no_limitations_agreement:
-    label: 'I acknowledge and confirm all of the following: that I am in good standing with in the states where I practice law, have no past or pending grievances and attorney discipline, have no past or pending legal Malpractice Claims.'
+    label: 'I acknowledge and confirm all of the following: that I am in good standing within the states where I practice law, have no past or pending grievances and attorney discipline, have no past or pending legal Malpractice Claims.'
     attribute_type: boolean
     html_tag: check_box
     required: true
@@ -62,7 +62,7 @@
 # buyer profile
 580:
   board_certification:
-    label: 'Board Cerification'
+    label: 'Board Certification'
     html_tag: radio_buttons
     valid_values:
       - "Yes"
