@@ -192,6 +192,7 @@ class PlatformContextDrop < BaseDrop
   def set_blank_theme_name
     @context.registers[:action_view].instance_variable_set('@theme_name', '')
     '' # return empty string so nothing is displayed
+  end
 
   def highlighted_blog_posts
     # tmp solution until we have proper solution to fetch any data on any page
