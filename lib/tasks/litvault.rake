@@ -4,6 +4,15 @@ require 'utils/form_components_creator'
 
 namespace :litvault do
 
+  desc 'Update liquid LitVault'
+  task update_liquid: :environment do
+    @instance = Instance.find(198)
+    @instance.set_context!
+
+    setup = LitvaultSetup.new(@instance, File.join(Rails.root, 'lib', 'tasks', 'litvault'))
+    setup.create_liquid_views
+  end
+
   desc 'Setup LitVault'
   task setup: :environment do
 

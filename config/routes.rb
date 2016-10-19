@@ -776,7 +776,7 @@ DesksnearMe::Application.routes.draw do
 
         # TODO: move orders_received scoep to company/orders scope
         # plese add new controllers in orders scope
-        resources :orders_received, except: [:edit] do
+        resources :orders_received do
           member do
             post :accept
             post :confirm

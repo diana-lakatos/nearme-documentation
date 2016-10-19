@@ -107,7 +107,6 @@ class User < ActiveRecord::Base
   has_many :transactable_collaborators
   has_many :approved_transactable_collaborations, -> { approved }, class_name: 'TransactableCollaborator'
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
-  has_many :orders, foreign_key: 'owner_id'
   has_many :recurring_bookings, foreign_key: 'owner_id'
   has_many :relationships, class_name: 'UserRelationship', foreign_key: 'follower_id', dependent: :destroy
   has_many :reverse_relationships, class_name: 'UserRelationship', foreign_key: 'followed_id', dependent: :destroy

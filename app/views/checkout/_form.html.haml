@@ -91,3 +91,8 @@
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
       $(document).trigger('init:tooltips.nearme', '.reservation-summary, .checkout');
     });
+
+- if disabled
+  - content_for :script do
+    :javascript
+      $('form#checkout-form :input').prop("disabled", true);

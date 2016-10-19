@@ -99,7 +99,7 @@
                   <td>{{ 'reservations.states.' | append: order.state | t }}</td>
                   <td class="actions">
                     {% if order.unconfirmed? %}
-                      <a href="{{ order.payment_documents[0].file_url }}" target="_blank" class="btn btn-info">Review</a>
+                      <a href="{{  'edit_dashboard_company_orders_received_path' | generate_url: order.id  }}" class="btn btn-info">Review</a>
                       <a href="{{ order.rejection_form_path }}" data-modal="true" class="btn btn-danger">Reject</a>
                       <a href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: orders_received_id: order.id }}" class="btn btn-success" data-modal="true">Accept</a>
                     {% endif %}

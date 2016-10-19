@@ -3,9 +3,6 @@
     -
       name: 'Review'
       fields:
-        - buyer: states
-        - buyer: 'Category - Group Case Categories'
-        - buyer: 'Category - Individual Case Categories'
         - reservation: name_of_client_or_clients
 
     -
