@@ -10,6 +10,7 @@
 
       <div class="flex-container">
         <div class="user-bar__name">
+          <strong>by:</strong>
           <a href="{{ listing.creator.user_profile_url }}">{% if listing.creator.properties.use_alias_as_name == '1' %}{{ listing.creator.properties.user_alias }}{% else %}{{ listing.creator.name }}{% endif %}</a>
         </div>
         <div class="user-bar__action-bar">
@@ -57,7 +58,8 @@
 
       <div class="image-gallery__controls-container">
         <ul class="image-gallery__zoom-controls">
-          <li><a href="#" data-image-gallery-zoom="1"><i class="fa fa-arrows-alt" aria-hidden="true"></i></a></li>
+          <!-- Temp. disabled -->
+          <!--<li><a href="#" data-toggle="modal" data-target="#fullscreen-gallery"><i class="fa fa-arrows-alt" aria-hidden="true"></i></a></li> -->
           <li><a href="#" data-image-gallery-zoom="+1"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
           <li><a href="#" data-image-gallery-zoom="-1"><i class="fa fa-minus" aria-hidden="true"></i></a></li>
         </ul>
@@ -77,7 +79,7 @@
   <div class="item-sidebar">
     <div class="item-actions">
       <ul>
-        <li class="separated">
+        <li>
           <form id="order_form_{{ listing.id }}" novalidate="novalidate" class="order" action="{{ 'listing_orders_path' | generate_url: listing }}" accept-charset="UTF-8" method="post">
             <input name="utf8" type="hidden" value="">
             <input name="authenticity_token" value="{{ form_authenticity_token }}" data-authenticity-token type="hidden">
@@ -85,9 +87,9 @@
             <input value="{{ listing.action_type.pricings.first.id }}" type="hidden" name="order[transactable_pricing_id]" id="order_transactable_pricing_id">
             <input type="submit" class="button button-default" value="REQUEST ITEM">
           </form>
-        <li><a data-listing-availability-toggle data-listing-availability-periods={{ listing.unavailable_periods }} class="button button-default datetimepicker"><input type="hidden" />CHECK AVAILABILITY</a></li>
+        <li><a data-listing-availability-toggle data-listing-availability-periods={{ listing.unavailable_periods }} class="button button-secondary datetimepicker"><input type="hidden" />CHECK AVAILABILITY</a></li>
         <li>
-          <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="button button-default" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
+          <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
             <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
           </div>
         </li>
@@ -97,10 +99,10 @@
     <div class="item-details">
      <ul>
         <li class="active">
-          <a data-toggle='tab' href='#tab-details'>Details</a>
+          <a data-toggle='tab' href='#tab-details'>DETAILS</a>
         </li>
         <li>
-          <a data-toggle='tab' href='#tab-description'>Description</a>
+          <a data-toggle='tab' href='#tab-description'>DESCRIPTION</a>
         </li>
       </ul>
       <div class="tab-content">
@@ -162,8 +164,37 @@
   {% endif %}
 
   <div class="item-disclaimers">
-    <h2>Cancellation policy</h2>
+    <h5 class="text-center">Cancellation Policy</h5>
+    <h2 class="text-center">What You Need To Know</h2>
 
-    <p>What do you need to know... lorem ipsum</p>
+    <div class="cancellation-policy">
+      <h3>Cancellation Policies</h3>
+
+      <p>All users must comply with a standardised cancellation policy that The Volte will enforce to protect both Borrower and Lender alike. Each listing and reservation on our site reminds users of the cancellation policy.</p>
+
+      <p>A lender can cancel an order at any time prior to shipping without a liability to the Borrower. All amounts paid by the Borrower to the Lender will be refunded to the Borrower minus any service fees owed or paid to The Volte.</p>
+
+      <p>A Borrower can cancel an order 24 or more hours ahead of shipping without any liability to the Lender. All amounts paid by the Borrower to the Lender will be refunded minus any service fees owed or paid to The Volte.</p>
+
+      <p>A Borrower can cancel an order within the 24 hour from the shipping time and the lender will retain 20% of the rental cost. The remaining 80% of the Rental Fee will be refunded to the Borrower minus any service fees owed or paid to The Volte.</p>
+
+      <p><a href='/terms-of-service'>View Cancellation Policy Details ></a></p>
+    </div>
   </div>
 </div> <!-- Wrapper -->
+
+
+<div id="fullscreen-gallery" class="modal hide fade modal-fullscreen" aria-hidden="true" aria-labelledby="fullscreen-gallery-label" role="dialog" tabindex="-1">
+  <div id="fullscreen-gallery-content" class="modal-body">
+    <div class="listing-photos" data-photo-aspect-w="895" data-photo-aspect-h="554">
+      <div class="carousel" id="photos-container-enlarged" style="height: auto;">
+          <div class="carousel-inner">
+              <div class="item active" data-modalize="true">
+                <img data-src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/images/photo/image/8852/fullscreen_b62e345f-d8da-41b3-bf49-9dbe15d5418d.jpg?1458614163" alt="Cascade Room" title="Cascade Room">
+              </div>
+          </div>
+        <button class="btn close" type="button" data-dismiss="modal"><span class="ico-close"></span></button>
+      </div>
+    </div>
+  </div>
+</div>
