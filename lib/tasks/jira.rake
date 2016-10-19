@@ -6,7 +6,7 @@ namespace :jira do
     description = 'Sprint 40 and bit of 41'
     epics_wip = ['"The Volte"', '"LitVault"'].join(', ')
     jira_wrapper = JiraWrapper.new
-    jql = "Sprint IN (60, 61) and status IN (\"Ready for Production\", \"IN QA\", \"Tests Failed\") AND (\"Epic Link\" NOT IN (#{epics_wip}) OR \"Epic Link\" = NULL)"
+    jql = "Sprint IN (61, 62) and status IN (\"Ready for Production\", \"IN QA\", \"Tests Failed\") AND (\"Epic Link\" NOT IN (#{epics_wip}) OR \"Epic Link\" = NULL AND fixVersion IS NULL)"
     puts jql
     issues = jira_wrapper.issues(jql)
 
