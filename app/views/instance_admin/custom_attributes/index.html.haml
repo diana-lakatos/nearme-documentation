@@ -14,7 +14,7 @@
           - @custom_attributes.each do |resource|
             %tr
               %td= resource.name.humanize
-              %td= resource.searchable
+              %td= resource.searchable || resource.search_in_query
               %td= resource.public
               %td= resource.required?
               %td= link_to t('instance_admin.edit'), edit_polymorphic_url([:instance_admin, @controller_scope, @target, resource]), class: 'pull-right'
