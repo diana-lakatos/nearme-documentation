@@ -11,7 +11,7 @@ class ChartItemDecorator < Draper::Decorator
       object.impressions_count.to_i
     when Transactable
       object.listings_count.to_i
-    when Reservation
+    when Order
       1
     end
   end
