@@ -28,34 +28,6 @@ class ThemeTest < ActiveSupport::TestCase
     end
   end
 
-  context '#homepage_content' do
-    setup do
-      @theme = @instance.theme
-    end
-
-    should 'add no follow to unknown links' do
-      @theme.homepage_content = '<div>This is an <a href="http://unknown.link.com">Unknown Link</a></div>'
-      content_mock = mock
-      content_mock.expects(:modify).with(@theme.homepage_content).once
-      RelNoFollowAdder.expects(:new).with(skip_domains: Domain.pluck(:name)).returns(content_mock)
-      @theme.save
-    end
-
-    should 'not try to add no follow if content has not changed' do
-      @theme.update_attribute(:homepage_content, '<div>This is an <a href="http://unknown.link.com">Unknown Link</a></div>')
-      @theme.expects(:add_no_follow_to_unknown_links).never
-      @theme.name = 'updated theme'
-      assert @theme.save
-    end
-
-    should 'try to add no follow if content has not changed' do
-      @theme.update_attribute(:homepage_content, '<div>This is an <a href="http://unknown.link.com">Unknown Link</a></div>')
-      @theme.expects(:add_no_follow_to_unknown_links).once
-      @theme.homepage_content = 'new <a href="http://unknown.link.com">Unknown Link</a>'
-      assert @theme.save
-    end
-  end
-
   context '::hexify' do
     should 'format hex color with #' do
       assert_equal '#006699', Theme.hexify('006699')

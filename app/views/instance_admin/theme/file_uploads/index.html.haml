@@ -4,10 +4,10 @@
       %h4 New asset
       .row
         .input-container.col-xs-12.col-md-4
-          = f.input :title, input_html: { class: 'form-control' }
+          = f.input :title, placeholder: 'Add user friendly file name', input_html: { class: 'form-control' }
 
         .input-container.col-xs-12.col-md-4.col-md-offset-2
-          = f.input :access_level, collection: Ckeditor::Asset::GLOBAL_ASSET_ACCESS_LEVELS, include_blank: true
+          = f.input :access_level, collection: Ckeditor::Asset.user_friendly_global_asset_access_levels, include_blank: true
 
       .row
         .input-container.col-xs-6
@@ -15,7 +15,7 @@
           = f.input :data, label: 'Files', input_html: { data: { file: true } }
 
       .row
-        = f.submit 'Send assets', class: 'btn btn-primary'
+        = f.submit 'Upload File', class: 'btn btn-primary'
 
   %hr
 

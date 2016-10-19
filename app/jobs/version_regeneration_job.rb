@@ -16,10 +16,8 @@ class VersionRegenerationJob < Job
   def perform
     @object = @klass_name.constantize.find(@object_id)
     CarrierWave::SourceProcessing::Processor.new(@object, @field).generate_versions(@all)
-    if @object.is_a?(Photo) && @object.listing.present?
-      @object.listing_populate_photos_metadata!
-    end
+    @object.listing_populate_photos_metadata! if @object.is_a?(Photo) && @object.listing.present?
   rescue ActiveRecord::RecordNotFound
-    # photo was deleted
+    Rails.logger.debug("#{@klass_name} id=#{@object_id} was deleted")
   end
 end

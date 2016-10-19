@@ -40,8 +40,6 @@
 
     = yield(:meta)
     = csrf_meta_tag
-    - if !platform_context.stripe_public_key.blank?
-      = tag :meta, :name => "stripe-key", :content => platform_context.stripe_public_key
 
     = render 'layouts/favicon'
 

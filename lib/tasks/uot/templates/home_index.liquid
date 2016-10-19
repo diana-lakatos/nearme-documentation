@@ -189,11 +189,11 @@
                   <h3 class="hx-b">Learn from our UoT Experts!</h3>
               </header>
 
-              {% for blog_post in platform_context.highlighted_blog_posts %}
-                <div class="wrapper">
+              <div class="wrapper">
+                {% for blog_post in platform_context.highlighted_blog_posts %}
                     <article itemscope itemtype="http://schema.org/BlogPosting">
                       <a href="{{ blog_post.post_path }}" itemprop="url">
-                        <figure><img src="{{ blog_post.author_avatar_url }}" alt="should be dynamic" itemprop="image"></figure>
+                        <figure><img src="{{ blog_post.hero_image_url }}" alt="should be dynamic" itemprop="image"></figure>
                             <div class="content">
                               <h4 itemprop="headline">{{ blog_post.title }}</h4>
                                 <div class="meta">
@@ -207,8 +207,8 @@
                             </div>
                         </a>
                     </article>
-                </div>
-              {% endfor %}
+                {% endfor %}
+              </div>
 
               <p class="more-a"><a href="/blog" class="button-a">Visit Our Blog</a></p>
           </section>

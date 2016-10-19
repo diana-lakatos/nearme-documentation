@@ -23,23 +23,10 @@ class Instance < ActiveRecord::Base
   serialize :orders_received_tabs, Array
   serialize :my_orders_tabs, Array
 
-  API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key).freeze
   SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category).freeze
   SEARCH_ENGINES = %w(postgresql elasticsearch).freeze
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }.freeze
   SEARCHABLE_CLASSES = %w(TransactableType InstanceProfileType).freeze
-
-  API_KEYS.each do |meth|
-    define_method(meth) do
-      test_mode? ? send('test_' + meth) : send('live_' + meth)
-    end
-  end
-
-  API_KEYS.each do |meth|
-    define_method(meth + '=') do |arg|
-      send('live_' + meth + '=', arg)
-    end
-  end
 
   has_one :theme, as: :owner
   has_one :custom_theme, -> { where(in_use: true) }, as: :themeable
