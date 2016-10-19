@@ -1,0 +1,19 @@
+<h2>You got it, {{ enquirer.first_name }}!</h2>
+
+<p>Your purchase of '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' has been confirmed! Here it is:</p>
+
+<div class="booking-details">
+
+  <div class="row">
+    <strong style='display: inline-block;'>{{listing.lessor | capitalize}}</strong>
+    <span style="float: right;"><a href="{{ platform_context.host | append:listing.administrator.user_profile_url }}">{{ lister.first_name }}</a></span>
+  </div>
+
+  <div class="row">
+    <strong style='display: inline-block;'>What</strong>
+    <span style="float: right;"><a href="{{ listing.listing_url }}">{{ listing.name }}</a></span>
+  </div>
+
+</div>
+
+<p>We're always happy to help! If you have any questions about your purchase, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>

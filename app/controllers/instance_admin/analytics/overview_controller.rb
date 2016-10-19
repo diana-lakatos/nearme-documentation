@@ -4,10 +4,10 @@ class InstanceAdmin::Analytics::OverviewController < InstanceAdmin::Analytics::B
     @listings_chart = ChartDecorator.decorate(@last_month_listings, :last_30_days, labels_max_count: 31)
 
     @last_month_revenue = Payment.where(payable_type: 'Reservation').paid.last_x_days(30)
-                          .order('created_at ASC')
+                                 .order('created_at ASC')
     @revenue_chart = ChartDecorator.decorate(@last_month_revenue, :last_30_days, labels_max_count: 31)
 
-    @last_month_bookings = Reservation.last_x_days(30).order('created_at ASC')
+    @last_month_bookings = Order.last_x_days(30).where('state != ?', 'inactive').order('created_at ASC')
     @bookings_chart = ChartDecorator.decorate(@last_month_bookings, :last_30_days, labels_max_count: 31)
   end
 end

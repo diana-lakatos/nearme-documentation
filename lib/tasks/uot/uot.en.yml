@@ -171,7 +171,7 @@ en:
         "Languages": 'Languages'
         "Industry": 'Industry'
         "travel": 'Travel'
-        "hourly_rate": 'Hourly Rate'
+        "hourly_rate_decimal": 'Hourly Rate'
         "linkedin_url": 'Linkedin URL'
   buy_sell_market:
     products:

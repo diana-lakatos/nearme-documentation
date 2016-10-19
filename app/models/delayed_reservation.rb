@@ -8,10 +8,15 @@ class DelayedReservation < Reservation
   def skip_payment_authorization
     true
   end
-  alias_method :skip_payment_authorization?, :skip_payment_authorization
+  alias skip_payment_authorization? skip_payment_authorization
 
   def self.workflow_class
     Reservation
+  end
+
+  # archived_at should not be set based on ends_at for this Order
+  def set_archived_at
+    true
   end
 
   def add_line_item!(attrs)
@@ -61,9 +66,7 @@ class DelayedReservation < Reservation
           errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date'))
           return false
         end
-        if date.past? && !date.today?
-          errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date'))
-        end
+        errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date')) if date.past? && !date.today?
         periods.first.update_attributes(date: date, start_minute: @start_minute, end_minute: @end_minute)
       end
     end

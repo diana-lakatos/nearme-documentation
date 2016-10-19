@@ -73,7 +73,7 @@ For payments use any Security Code (CCV), Expiration date that is in future and 
 
 In Rails Console run:
 
-    Domain.find_each { |d| d.update_attribute(:name, d.name.gsub('near-me.com', 'lvh.me')) }
+    Domain.find_each { |d| d.update_column(:name, d.name.gsub('near-me.com', 'lvh.me')) }
 
 To access the Instance you need locally, find its domain with the 'lvh.me' part and use instead of 'localhost'.
 

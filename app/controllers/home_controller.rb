@@ -21,7 +21,7 @@ class HomeController < ApplicationController
 
         @projects = Transactable.active.featured.where.not(id: current_user.feed_followed_transactables).take(3)
         @users = User.featured.includes(:current_address).where.not(id: current_user.feed_followed_users).take(8)
-        render :tutorial if current_user.should_render_tutorial?
+        render(:tutorial) && return if current_user.should_render_tutorial?
       end
     end
     respond_to :html

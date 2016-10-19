@@ -9,9 +9,31 @@ class Ckeditor::Asset < ActiveRecord::Base
   GLOBAL_ASSET_ACCESS_LEVELS = %w(listers enquirers).freeze
 
   delegate :url, :current_path, :content_type, to: :data
-  validates_presence_of :data
+  validates :data, presence: true
 
   belongs_to :instance
+
+  class << self
+    def user_friendly_global_asset_access_levels
+      return GLOBAL_ASSET_ACCESS_LEVELS unless PlatformContext.current.decorate.single_type?
+      @tt = PlatformContext.current.decorate.transactable_types.first
+      # must have same values as GLOBAL_ASSET_ACCESS_LEVELS
+      [[@tt.translated_lessor, 'listers'], [@tt.translated_lessee, 'enquirers']]
+    end
+
+    def friendly_access_level_name(access_level)
+      return GLOBAL_ASSET_ACCESS_LEVELS unless PlatformContext.current.decorate.single_type?
+      @tt = PlatformContext.current.decorate.transactable_types.first
+      case access_level
+      when 'listers'
+        @tt.translated_lessor
+      when 'enquirers'
+        @tt.translated_lessee
+      else
+        access_level
+      end
+    end
+  end
 
   ACCESS_LEVELS.each do |al|
     define_method "accessible_to_#{al}?" do

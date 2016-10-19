@@ -1,6 +1,6 @@
 class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::BaseController
-  before_filter :find_listing, except: [:show, :index]
-  before_filter :find_recurring_booking, except: [:show, :index]
+  before_action :find_listing, except: [:show, :index]
+  before_action :find_recurring_booking, except: [:show, :index]
 
   def index
     @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
@@ -9,11 +9,11 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
 
   # Originally in Manage::RecurringBookingsController
   def show
-    if current_user.companies.any?
-      @locations  = current_user.companies.first.locations
-    else
-      @locations = []
-    end
+    @locations = if current_user.companies.any?
+                   current_user.companies.first.locations
+                 else
+                   []
+                 end
 
     @recurring_booking = current_user.listing_recurring_bookings.find(params[:id]).decorate
     @guest_list = Controller::GuestList.new(current_user, @recurring_booking).filter(params[:state])
@@ -41,7 +41,8 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
         ].join(' ')
       end
     end
-    redirect_to :back
+
+    redirect_back_or_default
   end
 
   def rejection_form

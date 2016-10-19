@@ -1,9 +1,8 @@
 # encoding: utf-8
-class PhotoUploader < BaseImageUploader
+class PhotoUploader < BaseUploader
   include CarrierWave::TransformableImage
-  include DynamicPhotoUploads
-
-  cattr_reader :delayed_versions
+  include CarrierWave::DynamicPhotoUploads
+  include CarrierWave::ImageDefaults
 
   SPACE_FULL_IMAGE_W = 895
   SPACE_FULL_IMAGE_H = 554

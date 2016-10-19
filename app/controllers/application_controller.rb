@@ -23,15 +23,15 @@ class ApplicationController < ActionController::Base
   before_action :set_raygun_custom_data
   before_action :filter_out_token
   before_action :sign_out_if_signed_out_from_intel_sso, if: -> { should_log_out_from_intel? }
-  before_filter :set_paper_trail_whodunnit
-  before_filter :force_fill_in_wizard_form
+  before_action :set_paper_trail_whodunnit
+  before_action :force_fill_in_wizard_form
 
-  around_filter :set_time_zone
+  around_action :set_time_zone
 
   # We need to persist some mixpanel attributes for subsequent
   # requests.
-  after_filter :apply_persisted_mixpanel_attributes
-  after_filter :store_client_taggable_events
+  after_action :apply_persisted_mixpanel_attributes
+  after_action :store_client_taggable_events
 
   def current_user
     super.try(:decorate)
@@ -169,7 +169,11 @@ class ApplicationController < ActionController::Base
     @mixpanel ||= begin
                     # Load any persisted session properties
                     session_properties = if cookies.signed[:mixpanel_session_properties].present?
-                                           ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties]) rescue nil
+                                           begin
+                                             ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties])
+                                           rescue
+                                             nil
+                                           end
                                          end
 
                     # Gather information about requests
@@ -249,9 +253,7 @@ class ApplicationController < ActionController::Base
   helper_method :secure_links?
 
   def nm_force_ssl
-    if require_ssl?
-      redirect_to url_for(platform_context.secured_constraint.merge(return_to: params[:return_to]))
-    end
+    redirect_to url_for(platform_context.secured_constraint.merge(return_to: params[:return_to])) if require_ssl?
   end
 
   def require_ssl?
@@ -335,9 +337,7 @@ class ApplicationController < ActionController::Base
   #
   # Assumes that the current response is a redirect.
   def render_redirect_url_as_json
-    unless response.location.present?
-      fail 'No redirect url provided. Need to call redirect_to first.'
-    end
+    raise 'No redirect url provided. Need to call redirect_to first.' unless response.location.present?
 
     redirect_json = { redirect: response.location }
     # Clear out existing response
@@ -350,9 +350,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_redirect_as_script
-    unless response.location.present?
-      fail 'No redirect url provided. Need to call redirect_to first.'
-    end
+    raise 'No redirect url provided. Need to call redirect_to first.' unless response.location.present?
 
     redirect_script = "document.location = '#{response.location}'"
     self.response_body = nil
@@ -465,9 +463,7 @@ class ApplicationController < ActionController::Base
   end
 
   def find_current_country
-    if current_ip && current_ip != '127.0.0.1'
-      @country = Geocoder.search(current_ip).first.try(:country)
-    end
+    @country = Geocoder.search(current_ip).first.try(:country) if current_ip && current_ip != '127.0.0.1'
     @country ||= 'United States'
   rescue
     @country ||= 'United States'
@@ -579,5 +575,10 @@ class ApplicationController < ActionController::Base
         redirect_to dashboard_profile_path
       end
     end
+  end
+
+  # This will no longer be needed in Rails 5
+  def redirect_back_or_default(default = root_path, options = {})
+    redirect_to (request.referer.present? ? :back : default), options
   end
 end

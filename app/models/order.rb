@@ -51,7 +51,7 @@ class Order < ActiveRecord::Base
   validate :validate_acceptance_of_waiver_agreements, on: :update, if: -> { should_validate_field?('reservation', 'waiver_agreements') }
 
   before_validation :copy_billing_address, :remove_empty_documents
-  before_validation :set_owner, :build_return_shipment, :skip_validation_for_custom_attributes
+  before_validation :set_owner, :build_return_shipment, :skip_validation_for_custom_attributes, :set_owner_for_payment_documents
   after_save :try_to_activate!, unless: -> { skip_try_to_activate }
 
   state_machine :state, initial: :inactive do
@@ -71,7 +71,7 @@ class Order < ActiveRecord::Base
     event :completed                do transition confirmed: :completed; end
   end
 
-  scope :searchable, -> { without_state(:inactive)  }
+  scope :searchable, -> { without_state(:inactive) }
   scope :cart, -> { with_state(:inactive) }
   scope :complete, -> { without_state(:inactive) }
   scope :active, -> { without_state(:inactive) }
@@ -102,7 +102,7 @@ class Order < ActiveRecord::Base
   scope :offers, -> { where(type: %w(Offer)) }
   scope :for_lister_or_enquirer, -> (company, user) { where('orders.company_id = ? OR orders.user_id = ?', company.id, user.id) }
 
-  scope :on, lambda  { |date|
+  scope :on, lambda { |date|
     joins(:periods)
       .where('reservation_periods.date' => date)
       .where(state: [:confirmed, :unconfirmed])
@@ -113,7 +113,7 @@ class Order < ActiveRecord::Base
     with_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired)
   }
 
-  scope :by_period, lambda  { |start_date, end_date = Time.zone.today.end_of_day|
+  scope :by_period, lambda { |start_date, end_date = Time.zone.today.end_of_day|
     where(created_at: start_date..end_date)
   }
 
@@ -123,7 +123,7 @@ class Order < ActiveRecord::Base
   # via orders_received_tabs and my_orders_tabs Instance attributes
 
   def self.workflow_class
-    fail NotImplementedError
+    raise NotImplementedError
   end
 
   def self.dashboard_tabs(company_dashboard = false)
@@ -135,9 +135,7 @@ class Order < ActiveRecord::Base
   end
 
   def schedule_refund(_transition, run_at = Time.zone.now)
-    if payment.paid? && !skip_payment_authorization?
-      PaymentRefundJob.perform_later(run_at, payment.id)
-    end
+    PaymentRefundJob.perform_later(run_at, payment.id) if payment.paid? && !skip_payment_authorization?
     true
   end
 
@@ -229,7 +227,7 @@ class Order < ActiveRecord::Base
   end
 
   def completed_form_component_ids
-    read_attribute(:completed_form_component_ids).to_s.split(',')
+    self[:completed_form_component_ids].to_s.split(',')
   end
 
   def with_delivery?
@@ -244,9 +242,8 @@ class Order < ActiveRecord::Base
   def remove_empty_documents
     payment_documents.each do |document|
       unless document.valid?
-        unless PlatformContext.current.instance.documents_upload.is_mandatory? || document.document_requirement.is_file_required?
-          payment_documents.delete document
-        end
+        next if PlatformContext.current.instance.documents_upload.is_mandatory? || document.document_requirement.is_file_required?
+        payment_documents.delete document
       end
     end
   end
@@ -293,9 +290,7 @@ class Order < ActiveRecord::Base
   end
 
   def first_booking_job
-    if user.orders.reservations.active.count == 1
-      ReengagementOneBookingJob.perform_later(last_date.in_time_zone + 7.days, id)
-    end
+    ReengagementOneBookingJob.perform_later(last_date.in_time_zone + 7.days, id) if user.orders.reservations.active.count == 1
   end
 
   def shipping_address
@@ -367,12 +362,12 @@ class Order < ActiveRecord::Base
   def validate_on_adding_to_cart
     super == 'true'
   end
-  alias_method :validate_on_adding_to_cart?, :validate_on_adding_to_cart
+  alias validate_on_adding_to_cart? validate_on_adding_to_cart
 
   def skip_payment_authorization
     super == 'true'
   end
-  alias_method :skip_payment_authorization?, :skip_payment_authorization
+  alias skip_payment_authorization? skip_payment_authorization
 
   def waiver_agreement_templates
     @waiver_agreement_templates ? @waiver_agreement_templates.select { |_k, v| v == '1' } : []
@@ -382,7 +377,7 @@ class Order < ActiveRecord::Base
     waiver_agreements.destroy_all
     @waiver_agreement_templates = selected_waiver_agreement_templates
     assigned_waiver_agreement_templates.select { |w| waiver_agreement_templates.include?(w.id.to_s) }.each do |t|
-      if self.persisted?
+      if persisted?
         waiver_agreements.create(waiver_agreement_template: t, vendor_name: host.try(:name), guest_name: owner.name, target: self)
       else
         waiver_agreements.build(waiver_agreement_template: t, vendor_name: host.try(:name), guest_name: owner.name, target: self)
@@ -393,9 +388,7 @@ class Order < ActiveRecord::Base
   def validate_acceptance_of_waiver_agreements
     assigned_waiver_agreement_templates.each do |wat|
       wat_id = wat.id
-      unless waiver_agreement_templates.include?("#{wat_id}")
-        errors.add(wat.name, I18n.t('errors.messages.accepted'))
-      end
+      errors.add(wat.name, I18n.t('errors.messages.accepted')) unless waiver_agreement_templates.include?(wat_id.to_s)
     end
   end
 
@@ -421,14 +414,12 @@ class Order < ActiveRecord::Base
   def recalculate_service_fees!
     if service_fee_line_items.any?
       service_fee_line_items.first.update_attribute(:unit_price_cents,
-                                                    transactable_line_items.map { |t| t.total_price_cents * t.service_fee_guest_percent.to_f / BigDecimal(100) }.sum
-                                                   )
+                                                    transactable_line_items.map { |t| t.total_price_cents * t.service_fee_guest_percent.to_f / BigDecimal(100) }.sum)
     end
 
     if host_fee_line_items.any?
       host_fee_line_items.first.update_attribute(:unit_price_cents,
-                                                 transactable_line_items.map { |t| t.total_price_cents * t.service_fee_host_percent.to_f / BigDecimal(100) }.sum
-                                                )
+                                                 transactable_line_items.map { |t| t.total_price_cents * t.service_fee_host_percent.to_f / BigDecimal(100) }.sum)
     end
   end
 
@@ -490,9 +481,7 @@ class Order < ActiveRecord::Base
     steps.join('|')
   end
 
-  def confirm_reservations?
-    transactable.confirm_reservations?
-  end
+  delegate :confirm_reservations?, to: :transactable
 
   def transactable_pricing
     super || transactable_line_items.first.transactable_pricing
@@ -514,10 +503,18 @@ class Order < ActiveRecord::Base
     true
   end
 
-  def try_to_activate!
-    if inactive? && (skip_payment_authorization? || payment && payment.authorized?)
-      activate!
+  def set_owner_for_payment_documents
+    if payment_documents.present?
+      payment_documents.each do |payment_document|
+        payment_document.user = owner if payment_document.new_record?
+      end
     end
+
+    true
+  end
+
+  def try_to_activate!
+    activate! if inactive? && (skip_payment_authorization? || payment && payment.authorized?)
   end
 
   def send_rejected_workflow_alerts!

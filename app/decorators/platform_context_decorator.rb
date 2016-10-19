@@ -50,7 +50,7 @@ class PlatformContextDecorator
   end
 
   def build_url_for_path(path)
-    fail "Expected relative path, got #{path}" unless path[0] == '/'
+    raise "Expected relative path, got #{path}" unless path[0] == '/'
     "https://#{host}#{path}"
   end
 
@@ -75,25 +75,12 @@ class PlatformContextDecorator
     timestamp.try(:utc).try(:to_s, :number)
   end
 
-  def stripe_public_key
-    # TODO: - remove stripe public key as it's not used anymore
-    PaymentGateway::StripePaymentGateway.first.settings[:public_key] rescue nil
-  end
-
-  def supported_payout_via_ach?
-    Billing::Gateway::Processor::Outgoing::ProcessorFactory.supported_payout_via_ach?(instance)
-  end
-
   def bookable_nouns
     @bookable_nouns ||= transactable_types.map(&:translated_bookable_noun).to_sentence(last_word_connector: I18n.t('general.or_spaced'))
   end
 
   def bookable_nouns_plural
     @bookable_nouns_plural ||= transactable_types.map { |tt| tt.translated_bookable_noun(10) }.to_sentence(last_word_connector: I18n.t('general.or_spaced'))
-  end
-
-  def homepage_content
-    Liquid::Template.parse(theme.homepage_content).render(nil, filters: [LiquidFilters]).html_safe
   end
 
   def facebook_key
