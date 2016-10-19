@@ -16,6 +16,7 @@ class InstanceAdmin::Analytics::SalesController < InstanceAdmin::Analytics::Base
     'LEFT JOIN reservation_periods '\
     'ON reservation_periods.reservation_id = orders.id '\
     "WHERE orders.instance_id = #{platform_context.instance.id} "\
+    "AND orders.state != 'inactive' "\
     'GROUP BY orders.id, transactables.id, transactable_types.id ORDER BY orders.created_at ASC'
 
     records_array = ActiveRecord::Base.connection.execute(sql)
