@@ -50,14 +50,16 @@ partial: false
                 <label class="availability-filter datetimepicker">
                   <i class="fa fa-calendar"></i>
                   From:
-                  <input type="text" name="availability_exceptions[from]" class="form-control" data-availability-filter="from" />
+                  <input type="text" name="availability_exceptions[from]-datetimepicker" class="form-control" data-availability-filter="from" />
+                  <input type="hidden" name="availability_exceptions[from]" />
                 </label>
               </li>
               <li>
                 <label class="availability-filter datetimepicker">
                   <i class="fa fa-calendar"></i>
                   To:
-                  <input type="text" name="availability_exceptions[to]" class="form-control" data-availability-filter="to" />
+                  <input type="text" name="availability_exceptions[to]-datetimepicker" class="form-control" data-availability-filter="to" />
+                  <input type="hidden" name="availability_exceptions[to]" />
                 </label>
               </li>
             </ul>
