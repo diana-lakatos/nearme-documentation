@@ -19,9 +19,12 @@
   <div class="container-fluid">
     <div class="listing-a">
       <article class="listing-details">
-        <div class="back-to-results">
-          <a href="/search">Back to Case Results</a>
-        </div>
+        {% assign search_result = request_referer | matches: 'search' %}
+        {% if search_result %}
+          <div class="back-to-results">
+            <a href="/search">Back to Case Results</a>
+          </div>
+        {% endif %}
         <div class="summary">
           <h1>{{ listing.name }}</h1>
           <div class="meta">
