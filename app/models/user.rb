@@ -290,7 +290,7 @@ class User < ActiveRecord::Base
     # This needs to be checked, why did he remove it?
     def filtered_by_role(values)
       if values.present? && 'Other'.in?(values)
-        role_attribute = current_instance.default_profile_type.custom_attributes.find_by(name: 'role')
+        role_attribute = PlatformContext.current.instance.default_profile_type.custom_attributes.find_by(name: 'role')
         values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
       end
 
@@ -346,7 +346,7 @@ class User < ActiveRecord::Base
         parsed_order = order.match(/custom_attributes.([a-zA-Z\.\_\-]*)_(asc|desc)/)
         order(ActiveRecord::Base.send(:sanitize_sql_array, ["cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}", { field_name: parsed_order[1] }]))
       else
-        if current_instance.is_community?
+        if PlatformContext.current.instance.is_community?
           order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')
         else
           all
