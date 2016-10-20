@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161018130214) do
+ActiveRecord::Schema.define(version: 20161020083811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -564,6 +564,14 @@ ActiveRecord::Schema.define(version: 20161018130214) do
   add_index "countries", ["iso"], name: "index_countries_on_iso", unique: true, using: :btree
   add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
 
+  create_table "countries_shipping_rules", id: false, force: :cascade do |t|
+    t.integer "country_id",       null: false
+    t.integer "shipping_rule_id", null: false
+  end
+
+  add_index "countries_shipping_rules", ["country_id", "shipping_rule_id"], name: "country_shipping_rule_idx", using: :btree
+  add_index "countries_shipping_rules", ["shipping_rule_id", "country_id"], name: "shipping_rule_country_idx", using: :btree
+
   create_table "country_payment_gateways", force: :cascade do |t|
     t.string   "country_alpha2_code", limit: 255
     t.integer  "payment_gateway_id"
@@ -900,6 +908,24 @@ ActiveRecord::Schema.define(version: 20161018130214) do
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
   add_index "domains", ["name"], name: "index_domains_on_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "domains", ["target_id", "target_type"], name: "index_domains_on_target_id_and_target_type", using: :btree
+
+  create_table "email_templates", force: :cascade do |t|
+    t.text     "html_body"
+    t.text     "text_body"
+    t.string   "path",         limit: 255
+    t.string   "from",         limit: 255
+    t.string   "to",           limit: 255
+    t.string   "bcc",          limit: 255
+    t.string   "reply_to",     limit: 255
+    t.string   "subject",      limit: 255
+    t.boolean  "partial",                  default: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.integer  "theme_id"
+    t.boolean  "custom_email",             default: false
+  end
+
+  add_index "email_templates", ["theme_id"], name: "index_email_templates_on_theme_id", using: :btree
 
   create_table "form_components", force: :cascade do |t|
     t.string   "name",                          limit: 255
@@ -1264,23 +1290,21 @@ ActiveRecord::Schema.define(version: 20161018130214) do
     t.string   "line_itemable_type"
     t.integer  "transactable_pricing_id"
     t.string   "name"
-    t.string   "type",                             limit: 255
-    t.integer  "unit_price_cents",                                                      default: 0
-    t.float    "quantity",                                                              default: 0.0
+    t.string   "type",                       limit: 255
+    t.integer  "unit_price_cents",                                                default: 0
+    t.float    "quantity",                                                        default: 0.0
     t.string   "receiver"
     t.boolean  "optional"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "additional_tax_total_rate",                    precision: 10, scale: 2, default: 0.0
-    t.decimal  "additional_tax_price_cents",                   precision: 10, scale: 2, default: 0.0
-    t.decimal  "included_tax_total_rate",                      precision: 10, scale: 2, default: 0.0
-    t.decimal  "included_tax_price_cents",                     precision: 10, scale: 2, default: 0.0
-    t.decimal  "service_fee_guest_percent",                    precision: 5,  scale: 2, default: 0.0
-    t.decimal  "service_fee_host_percent",                     precision: 5,  scale: 2, default: 0.0
+    t.decimal  "additional_tax_total_rate",              precision: 10, scale: 2, default: 0.0
+    t.decimal  "additional_tax_price_cents",             precision: 10, scale: 2, default: 0.0
+    t.decimal  "included_tax_total_rate",                precision: 10, scale: 2, default: 0.0
+    t.decimal  "included_tax_price_cents",               precision: 10, scale: 2, default: 0.0
+    t.decimal  "service_fee_guest_percent",              precision: 5,  scale: 2, default: 0.0
+    t.decimal  "service_fee_host_percent",               precision: 5,  scale: 2, default: 0.0
     t.text     "description"
-    t.text     "properties"
-    t.integer  "minimum_lister_service_fee_cents",                                      default: 0
   end
 
   add_index "line_items", ["instance_id"], name: "index_line_items_on_instance_id", using: :btree
@@ -1395,34 +1419,16 @@ ActiveRecord::Schema.define(version: 20161018130214) do
   add_index "mailer_unsubscriptions", ["user_id", "mailer"], name: "index_mailer_unsubscriptions_on_user_id_and_mailer", unique: true, using: :btree
   add_index "mailer_unsubscriptions", ["user_id"], name: "index_mailer_unsubscriptions_on_user_id", using: :btree
 
-  create_table "marketplace_error_groups", force: :cascade do |t|
-    t.integer  "instance_id"
-    t.string   "error_type"
-    t.text     "message"
-    t.string   "message_digest"
-    t.datetime "last_occurence"
-    t.integer  "marketplace_errors_count", default: 0, null: false
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "marketplace_error_groups", ["instance_id", "error_type", "message_digest"], name: "meg_instance_type_digest", unique: true, using: :btree
-
   create_table "marketplace_errors", force: :cascade do |t|
     t.integer  "instance_id"
-    t.string   "error_type",                 limit: 255
+    t.string   "error_type",  limit: 255
     t.text     "message"
     t.text     "stacktrace"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "url"
-    t.string   "message_digest"
-    t.integer  "marketplace_error_group_id"
   end
-
-  add_index "marketplace_errors", ["instance_id", "error_type", "message_digest"], name: "errors_type_digest_instance", using: :btree
 
   create_table "merchant_account_owners", force: :cascade do |t|
     t.integer  "instance_id"
@@ -1542,8 +1548,6 @@ ActiveRecord::Schema.define(version: 20161018130214) do
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
     t.boolean  "is_free_booking",                                           default: false
-    t.datetime "lister_confirmed_at"
-    t.datetime "enquirer_confirmed_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -1570,11 +1574,11 @@ ActiveRecord::Schema.define(version: 20161018130214) do
   add_index "page_data_source_contents", ["instance_id", "page_id", "data_source_content_id", "slug"], name: "pdsc_on_foreign_keys", using: :btree
 
   create_table "pages", force: :cascade do |t|
-    t.string   "path",                      limit: 255,                         null: false
+    t.string   "path",                      limit: 255,                 null: false
     t.text     "content"
     t.string   "hero_image",                limit: 255
-    t.datetime "created_at",                                                    null: false
-    t.datetime "updated_at",                                                    null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
     t.integer  "theme_id"
     t.string   "slug",                      limit: 255
     t.integer  "position"
@@ -2553,8 +2557,6 @@ ActiveRecord::Schema.define(version: 20161018130214) do
     t.boolean  "confirm_reservations",                       default: true
     t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
     t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
-    t.integer  "minimum_lister_service_fee_cents",           default: 0
-    t.boolean  "both_side_confirmation",                     default: false
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree
@@ -2817,7 +2819,6 @@ ActiveRecord::Schema.define(version: 20161018130214) do
     t.boolean  "highlighted",                                         default: false
     t.integer  "instance_id"
     t.datetime "author_avatar_img_versions_generated_at"
-    t.datetime "hero_image_versions_generated_at"
   end
 
   create_table "user_blogs", force: :cascade do |t|
@@ -2922,14 +2923,11 @@ ActiveRecord::Schema.define(version: 20161018130214) do
     t.datetime "updated_at"
     t.string   "name",                                   limit: 255
     t.boolean  "admin"
-    t.datetime "confirmation_sent_at"
-    t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "reset_password_sent_at"
     t.integer  "failed_attempts",                                    default: 0
     t.string   "authentication_token",                   limit: 255
     t.string   "avatar",                                 limit: 255
-    t.string   "confirmation_token",                     limit: 255
     t.string   "phone",                                  limit: 255
     t.string   "country_name",                           limit: 255
     t.string   "mobile_number",                          limit: 255
@@ -3184,5 +3182,4 @@ ActiveRecord::Schema.define(version: 20161018130214) do
     t.text     "events_metadata"
     t.string   "workflow_type",   limit: 255
   end
-
 end
