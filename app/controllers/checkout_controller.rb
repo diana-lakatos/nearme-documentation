@@ -1,9 +1,9 @@
 class CheckoutController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :set_theme
-  before_filter :set_order
-  before_filter :build_payment_documents, only: [:show, :back]
-  before_filter :set_countries_states, only: [:show, :update, :back]
+  before_action :authenticate_user!
+  before_action :set_theme
+  before_action :set_order
+  before_action :build_payment_documents, only: [:show, :back]
+  before_action :set_countries_states, only: [:show, :update, :back]
 
   def show
     @order.try(:last_search_json=, cookies[:last_search])
@@ -20,15 +20,17 @@ class CheckoutController < ApplicationController
         return
       end
 
-      flash[:notice] = ''  unless @order.inactive?
+      flash[:notice] = '' unless @order.inactive?
       flash[:error] = @order.errors.full_messages.join(',<br />')
     else
       set_countries_states
       flash[:error] = @order.errors.full_messages.join(',<br />')
+
+      render(:show) && return
     end
 
     if @order.inactive?
-      render :show
+      redirect_to action: :show
     else
       event_tracker.updated_profile_information(@order.owner)
       event_tracker.updated_profile_information(@order.host)
@@ -42,7 +44,7 @@ class CheckoutController < ApplicationController
 
   def back
     @order.previous_step!
-    render :show
+    redirect_to action: :show
   end
 
   def get_states
@@ -70,7 +72,7 @@ class CheckoutController < ApplicationController
   end
 
   def set_order
-    @order =  current_user.orders.find(params[:order_id]).try(:decorate)
+    @order = current_user.orders.cart.find(params[:order_id]).try(:decorate)
 
     if @order.blank?
       flash[:error] = t('buy_sell_market.checkout.order_missing')
@@ -96,15 +98,14 @@ class CheckoutController < ApplicationController
       end
 
       transactable.document_requirements.each do |req|
-        if !req.item.upload_obligation.not_required? && !requirement_ids.include?(req.id)
-          @order.payment_documents.build(
-            attachable: @order,
-            user: @user,
-            payment_document_info_attributes: {
-              document_requirement: req
-            }
-          )
-        end
+        next unless !req.item.upload_obligation.not_required? && !requirement_ids.include?(req.id)
+        @order.payment_documents.build(
+          attachable: @order,
+          user: @user,
+          payment_document_info_attributes: {
+            document_requirement: req
+          }
+        )
       end
     end
   end

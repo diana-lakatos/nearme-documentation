@@ -2,8 +2,6 @@ class Offer < Order
   # validates :host_line_items, presence: true
   delegate :action, to: :transactable_pricing
 
-  after_update :activate!, if: :inactive?
-
   has_many :host_line_items, as: :line_itemable
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
 
@@ -126,8 +124,8 @@ class Offer < Order
 
   def reject_related_offers!
     related_offers = Offer.unconfirmed
-                     .joins("INNER JOIN line_items ON line_items.line_itemable_id = orders.id AND line_items.line_itemable_type = 'Offer'")
-                     .where("line_items.line_item_source_type = 'Transactable' AND line_items.line_item_source_id = ?", transactable.id).where.not(id: id)
+                          .joins("INNER JOIN line_items ON line_items.line_itemable_id = orders.id AND line_items.line_itemable_type = 'Offer'")
+                          .where("line_items.line_item_source_type = 'Transactable' AND line_items.line_item_source_id = ?", transactable.id).where.not(id: id)
 
     related_offers.each(&:reject!)
   end
@@ -159,12 +157,12 @@ class Offer < Order
   def enquirer_cancelable
     state == 'unconfirmed'
   end
-  alias_method :enquirer_cancelable?, :enquirer_cancelable
+  alias enquirer_cancelable? enquirer_cancelable
 
   def enquirer_editable
     state.in? %w(unconfirmed inactive)
   end
-  alias_method :enquirer_editable?, :enquirer_editable
+  alias enquirer_editable? enquirer_editable
 
   def to_liquid
     @offer_drop ||= OfferDrop.new(self)

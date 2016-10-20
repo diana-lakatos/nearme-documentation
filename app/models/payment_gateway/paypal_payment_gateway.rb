@@ -40,6 +40,10 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
     @token ||= @response.token
   end
 
+  def store
+    false
+  end
+
   def redirect_url
     gateway.redirect_url_for(token)
   end

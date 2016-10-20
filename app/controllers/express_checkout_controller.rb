@@ -24,7 +24,6 @@ class ExpressCheckoutController < ApplicationController
     else
       flash[:error] = t('flash_messages.reservations.payment_failed')
       @order = @payment.payable
-      @order.restart_checkout!
       @payment.destroy
 
       redirect_to order_checkout_path(@order)

@@ -18,10 +18,16 @@ class PaymentAuthorizer::PaypalExpressPaymentAuthorizer < PaymentAuthorizer
   private
 
   def setup_authorization
-    response = @payment_gateway.process_express_checkout(@authorizable,         return_url: @authorizable.express_return_url,
-                                                                                cancel_return_url: @authorizable.express_cancel_return_url,
-                                                                                ip: '127.0.0.1')
+    response = @payment_gateway.process_express_checkout(
+      @authorizable,
+      return_url: @authorizable.express_return_url,
+      cancel_return_url: @authorizable.express_cancel_return_url,
+      ip: '127.0.0.1'
+    )
+
     if response.success?
+      @authorizable.restore_cached_step!
+
       @payment.express_checkout_redirect_url = @payment_gateway.redirect_url
       @payment.payment_method = @payment_gateway.payment_methods.first
       @payment.express_token = @payment_gateway.token
