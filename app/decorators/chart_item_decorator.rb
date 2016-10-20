@@ -13,17 +13,19 @@ class ChartItemDecorator < Draper::Decorator
       object.listings_count.to_i
     when Reservation
       1
+    when Offer
+      1
     end
   end
 
   def formatted_date
     time = case object
-    when Impression
-      Time.strptime(object.impression_date.to_s, '%Y-%m-%d')
-    when Transactable
-      Time.strptime(object.listing_date.to_s, '%Y-%m-%d')
-    else
-      object.created_at
+           when Impression
+             Time.strptime(object.impression_date.to_s, '%Y-%m-%d')
+           when Transactable
+             Time.strptime(object.listing_date.to_s, '%Y-%m-%d')
+           else
+             object.created_at
     end
     I18n.l(time.to_date, format: :day_and_month)
   end

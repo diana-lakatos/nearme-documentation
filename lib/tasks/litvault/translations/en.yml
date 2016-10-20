@@ -71,6 +71,9 @@ en:
       upcoming: "Offers Open"
 
   flash_messages:
+    manage:
+      listings:
+        listing_cancelled: 'Your Case is now archived.'
     dashboard:
       add_your_company: "Please complete your Case first."
       locations:
