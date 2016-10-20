@@ -40,6 +40,7 @@ class InstanceWizardController < ActionController::Base
         @instance.domains.first.update_column(:secured, true)
         @user.save!
         @user.update_column(:instance_id, @instance.id)
+        @instance.theme.update_column(:instance_id, @instance.id)
       end
     rescue
       flash.now[:error] = @user.errors.full_messages.to_sentence +
