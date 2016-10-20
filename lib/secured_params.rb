@@ -493,6 +493,7 @@ class SecuredParams
       :hours_to_expiration,
       :minimum_booking_minutes,
       :service_fee_guest_percent, :service_fee_host_percent,
+      :minimum_lister_service_fee,
       :favourable_pricing_rate,
       :cancellation_policy_enabled,
       :cancellation_policy_penalty_percentage,
@@ -506,6 +507,7 @@ class SecuredParams
       :confirm_reservations,
       :send_alert_hours_before_expiry,
       :send_alert_hours_before_expiry_hours,
+      :both_side_confirmation,
       pricings_attributes: nested(transactable_type_pricing),
       schedule_attributes: nested(schedule),
       availability_template_attributes: nested(availability_template)

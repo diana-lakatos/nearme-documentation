@@ -4,7 +4,7 @@ class TransactableDecorator < Draper::Decorator
 
   delegate_all
 
-  def user_message_recipient
+  def user_message_recipient(_current_user)
     administrator
   end
 
@@ -14,11 +14,11 @@ class TransactableDecorator < Draper::Decorator
 
   def price_with_currency(price_name_or_object)
     actual_price = nil
-    if price_name_or_object.respond_to?(:fractional)
-      actual_price = price_name_or_object
-    else
-      actual_price = send(price_name_or_object)
-    end
+    actual_price = if price_name_or_object.respond_to?(:fractional)
+                     price_name_or_object
+                   else
+                     send(price_name_or_object)
+                   end
 
     render_money(Money.new(actual_price.try(:fractional), currency.blank? ? PlatformContext.current.instance.default_currency : currency))
   end
@@ -65,7 +65,7 @@ class TransactableDecorator < Draper::Decorator
   protected
 
   def build_link(suffix = 'path', options = {})
-    options.merge!(language: I18n.locale) if PlatformContext.current.try(:instance).try(:available_locales).try(:many?)
+    options[:language] = I18n.locale if PlatformContext.current.try(:instance).try(:available_locales).try(:many?)
     if transactable_type.show_path_format
       case transactable_type.show_path_format
       when '/:transactable_type_id/:id'

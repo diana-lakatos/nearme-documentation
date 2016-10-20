@@ -1,26 +1,31 @@
-{% if listing.transactable_type.show_page_enabled? %}
-  {% assign photos = listing.photos %}
-{% else %}
-  {% assign photos = listing.location.photos_count %}
-{% endif %}
+{% assign photos = listing.photos %}
 {% assign photos_count = photos | size %}
 
 <div class="wrapper-a">
 
   <div class="item-top-bar">
     <div class="user-bar">
-      <div class="user-bar__photo" style="background-image: url('https://unsplash.it/200/200?image=0')">
+      <div class="user-bar__photo" style="background-image: url('{{ listing.creator.avatar_url_thumb }}')">
       </div>
 
       <div class="flex-container">
         <div class="user-bar__name">
-          <a href="#">User Name</a>
+          <strong>by:</strong>
+          <a href="{{ listing.creator.user_profile_url }}">{% if listing.creator.properties.use_alias_as_name == '1' %}{{ listing.creator.properties.user_alias }}{% else %}{{ listing.creator.name }}{% endif %}</a>
         </div>
         <div class="user-bar__action-bar">
           <ul>
-            <li><a href="#" class="button button-inverse">Message</a></li>
-            <li><a href="#" class="button button-inverse">Lender's Closet</a></li>
-            <li><a href="#" class="button button-inverse">Lender's Blog</a></li>
+            <li>
+              {% if listing.transactable_user_messages.size > 0 %}
+                <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
+              {% else %}
+                <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id ,user_id: listing.creator.id, skip: true }}">Message</a>
+              {% endif %}
+            </li>
+            <li><a href="{{ listing.creator.user_profile_url }}" class="button button-inverse button-small">Lender's Closet</a></li>
+            {% if listing.creator.has_active_blog? %}
+              <li><a href="{{ listing.creator.user_blog_posts_list_path }}" class="button button-inverse button-small">Lender's Blog</a></li>
+            {% endif %}
           </ul>
         </div>
       </div>
@@ -28,14 +33,12 @@
 
     <div class="item-pricing">
       <dl>
-        <dt>4 days: </dt>
-        <dd>$1000 AUD</dd>
-        <dt>8 days: </dt>
-        <dd>$1500 AUD</dd>
-        <dt>30 days: </dt>
-        <dd>$3000 AUD</dd>
+        {% for price in listing.action_type.sorted_pricings %}
+          <dt>{{ price.number_of_units }} days: </dt>
+          <dd>${{ price.price.amount }} AUD</dd>
+        {% endfor %}
         <dt>Bond value: </dt>
-        <dd>$3000 AUD</dd>
+        <dd>${{ listing.properties.bond_value }} AUD</dd>
       </dl>
     </div>
   </div>
@@ -43,30 +46,31 @@
 
   <div class="item-content">
     <div class="item-name">
-      <h1>{%if listing.transactable_type.show_page_enabled? %}{{ listing.name | filter_text }}{%else%}{{ location.name | filter_text }}{%endif%}</h1>
+      <h1>{{ listing.name | filter_text }}</h1>
     </div>
 
     <div class="image-gallery" data-image-gallery>
       <div class="image-gallery__container">
       {% if photos_count > 0 %}
-        <div class="image-gallery__container-image" style="background-image: url('{{ photos[0].golden  }}')" data-image-gallery-full-image></div>
+        <div class="image-gallery__container-image" style="background-image: url('{{ photos[0].original  }}'); background-size: 100%;" data-image-gallery-full-image></div>
       {% endif %}
       </div>
 
       <div class="image-gallery__controls-container">
         <ul class="image-gallery__zoom-controls">
-          <li><a href="#" data-image-gallery-zoom="1">X</a></li>
-          <li><a href="#" data-image-gallery-zoom="+1">+</a></li>
-          <li><a href="#" data-image-gallery-zoom="-1">&ndash;</a></li>
+          <!-- Temp. disabled -->
+          <!--<li><a href="#" data-toggle="modal" data-target="#fullscreen-gallery"><i class="fa fa-arrows-alt" aria-hidden="true"></i></a></li> -->
+          <li><a href="#" data-image-gallery-zoom="+1"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+          <li><a href="#" data-image-gallery-zoom="-1"><i class="fa fa-minus" aria-hidden="true"></i></a></li>
         </ul>
 
-          {% if photos_count > 0 %}
-          <ul class="image-gallery__list">
-            {% assign index = 0 %}
-            {% for photo in photos %}
-              <li data-image-gallery-image><a href="#"><img src="{{ photo.golden }}" data-image-gallery-full-image-url="{{ photo.golden }}" /></a></li>
-            {% endfor %}
-          </ul>
+          {% if photos_count > 1 %}
+            <ul class="image-gallery__list">
+              {% assign index = 0 %}
+              {% for photo in photos %}
+                <li data-image-gallery-image><a href="#"><img src="{{ photo.space_listing }}" data-image-gallery-full-image-url="{{ photo.original }}" /></a></li>
+              {% endfor %}
+            </ul>
           {% endif %}
       </div>
     </div> <!-- Image gallery -->
@@ -75,52 +79,122 @@
   <div class="item-sidebar">
     <div class="item-actions">
       <ul>
-        <li class="separated"><a href="#" class="button button-default">REQUEST ITEM</a></li>
-        <li><a href="#" class="button button-default button-disabled">CHECK AVAILABILITY</a></li>
-        <li><a href="#" class="button button-default button-disabled">ADD AS FAVORITE</a></li>
+        <li>
+          <form id="order_form_{{ listing.id }}" novalidate="novalidate" class="order" action="{{ 'listing_orders_path' | generate_url: listing }}" accept-charset="UTF-8" method="post">
+            <input name="utf8" type="hidden" value="">
+            <input name="authenticity_token" value="{{ form_authenticity_token }}" data-authenticity-token type="hidden">
+            <input value="{{ listing.id }}" type="hidden" name="order[transactable_id]" id="order_transactable_id">
+            <input value="{{ listing.action_type.pricings.first.id }}" type="hidden" name="order[transactable_pricing_id]" id="order_transactable_pricing_id">
+            <input type="submit" class="button button-default" value="REQUEST ITEM">
+          </form>
+        <li><a data-listing-availability-toggle data-listing-availability-periods={{ listing.unavailable_periods }} class="button button-secondary datetimepicker"><input type="hidden" />CHECK AVAILABILITY</a></li>
+        <li>
+          <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
+            <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
+          </div>
+        </li>
       </ul>
     </div> <!-- Item actions -->
 
     <div class="item-details">
      <ul>
         <li class="active">
-          <a data-toggle='tab' href='#tab-details'>Details</a>
+          <a data-toggle='tab' href='#tab-details'>DETAILS</a>
         </li>
         <li>
-          <a data-toggle='tab' href='#tab-description'>Description</a>
+          <a data-toggle='tab' href='#tab-description'>DESCRIPTION</a>
         </li>
       </ul>
       <div class="tab-content">
         <div class="tab-pane active" id="tab-details">
-          <h3>Tralalal intro details</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor.
-          </p>
+          <dl>
+            <dt>Item:</dt> <dd>{{ listing.properties.item_type }}</dd>
+            {% if listing.properties.item_type == 'Dress' %}
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_dress }}</dd>
+              <dt>Size:</dt> <dd>{{ listing.properties.dress_size }}</dd>
+              <dt>Length:</dt> <dd>{{ listing.properties.dress_length }}</dd>
+            {% elsif listing.properties.item_type == 'Bag' %}
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_bag }}</dd>
+              <dt>Length:</dt> <dd>{{ listing.properties.dress_length }}</dd>
+            {% elsif listing.properties.item_type == 'Millinery' %}
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_milinery }}</dd>
+              <dt>Size:</dt> <dd>{{ listing.properties.milinery_size }}</dd>
+            {% elsif listing.properties.item_type == 'Outerwear' %}
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_outerwear}}</dd>
+              <dt>Size:</dt> <dd>{{ listing.properties.outerwear_size }}</dd>
+            {% elsif listing.properties.item_type == 'Accessories' %}
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_accessories }}</dd>
+            {% endif %}
+            <dt>Color:</dt> <dd>{{ listing.properties.color }}</dd>
+            <dt>Designer:</dt> <dd>{{ listing.properties.designer_name }}</dd>
+            <dt>Location:</dt> <dd>{{ listing.location.city }}, {{ listing.location.state }}</dd>
+            <dt>Retail Value:</dt>  <dd>{{ listing.properties.retail_value }}</dd>
+            <dt>Dry Cleaning:</dt>  <dd>{{ listing.properties.dry_cleaning }}</dd>
+          </dl>
         </div>
         <div class="tab-pane" id="tab-description">
-          <h3>Tralalal intro description</h3>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor.
+            {{ listing.description }}
           </p>
         </div>
       </div>
     </div> <!-- Item details -->
   </div> <!-- Item sidebar -->
 
-  <div class="item-tags">
-    <h4>Tags:</h4>
-    <ul>
-      <li><a href="#" class="button button-inverse">Wedding</a></li>
-      <li><a href="#" class="button button-inverse">Like New</a></li>
-      <li><a href="#" class="button button-inverse">Black</a></li>
-      <li><a href="#" class="button button-inverse">Dress</a></li>
-      <li><a href="#" class="button button-inverse item-tags__view-more">view more</a></li>
-    </ul>
-  </div> <!-- Item tags -->
+
+  {% if listing.tags.size > 0 %}
+    <div class="item-tags" data-item-tags>
+      <h4>Tags:</h4>
+      <ul>
+        {% for tag in listing.tags %}
+          {% if forloop.index <= 5 %}
+            <li><a href="#" class="button button-inverse">{{ tag.name }}</a></li>
+          {% else %}
+            <li class="item-tags__hide" data-item-tags-hidden><a href="#" class="button button-inverse">{{ tag.name }}</a></li>
+          {% endif %}
+
+          {% if listing.tags.size > 5 %}
+            {% if forloop.index == listing.tags.size %}
+              <li class="item-tags__view-more" data-item-tags-toggle><a href="#" class="button button-inverse">view more</a></li>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div> <!-- Item tags -->
+  {% endif %}
 
   <div class="item-disclaimers">
-    <h2>Cancellation policy</h2>
+    <h5 class="text-center">Cancellation Policy</h5>
+    <h2 class="text-center">What You Need To Know</h2>
 
-    <p>What do you need to know... lorem ipsum</p>
+    <div class="cancellation-policy">
+      <h3>Cancellation Policies</h3>
+
+      <p>All users must comply with a standardised cancellation policy that The Volte will enforce to protect both Borrower and Lender alike. Each listing and reservation on our site reminds users of the cancellation policy.</p>
+
+      <p>A lender can cancel an order at any time prior to shipping without a liability to the Borrower. All amounts paid by the Borrower to the Lender will be refunded to the Borrower minus any service fees owed or paid to The Volte.</p>
+
+      <p>A Borrower can cancel an order 24 or more hours ahead of shipping without any liability to the Lender. All amounts paid by the Borrower to the Lender will be refunded minus any service fees owed or paid to The Volte.</p>
+
+      <p>A Borrower can cancel an order within the 24 hour from the shipping time and the lender will retain 20% of the rental cost. The remaining 80% of the Rental Fee will be refunded to the Borrower minus any service fees owed or paid to The Volte.</p>
+
+      <p><a href='/terms-of-service'>View Cancellation Policy Details ></a></p>
+    </div>
   </div>
 </div> <!-- Wrapper -->
+
+
+<div id="fullscreen-gallery" class="modal hide fade modal-fullscreen" aria-hidden="true" aria-labelledby="fullscreen-gallery-label" role="dialog" tabindex="-1">
+  <div id="fullscreen-gallery-content" class="modal-body">
+    <div class="listing-photos" data-photo-aspect-w="895" data-photo-aspect-h="554">
+      <div class="carousel" id="photos-container-enlarged" style="height: auto;">
+          <div class="carousel-inner">
+              <div class="item active" data-modalize="true">
+                <img data-src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/images/photo/image/8852/fullscreen_b62e345f-d8da-41b3-bf49-9dbe15d5418d.jpg?1458614163" alt="Cascade Room" title="Cascade Room">
+              </div>
+          </div>
+        <button class="btn close" type="button" data-dismiss="modal"><span class="ico-close"></span></button>
+      </div>
+    </div>
+  </div>
+</div>

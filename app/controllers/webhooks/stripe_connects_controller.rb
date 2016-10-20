@@ -1,6 +1,6 @@
 module Webhooks
   class StripeConnectsController < Webhooks::BaseWebhookController
-    before_filter :fetch_event
+    before_action :fetch_event
 
     def webhook
       case @event.type

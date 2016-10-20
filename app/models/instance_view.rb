@@ -8,12 +8,12 @@ class InstanceView < ActiveRecord::Base
   has_many :locale_instance_views, dependent: :destroy
   has_many :locales, through: :locale_instance_views
 
-  VIEW_VIEW = 'view'
-  CUSTOM_VIEW = 'custom_view'
-  EMAIL_VIEW = 'email'
-  SMS_VIEW = 'sms'
-  EMAIL_LAYOUT_VIEW = 'mail_layout'
-  VIEW_TYPES = [SMS_VIEW, EMAIL_VIEW, EMAIL_LAYOUT_VIEW, VIEW_VIEW, CUSTOM_VIEW]
+  VIEW_VIEW = 'view'.freeze
+  CUSTOM_VIEW = 'custom_view'.freeze
+  EMAIL_VIEW = 'email'.freeze
+  SMS_VIEW = 'sms'.freeze
+  EMAIL_LAYOUT_VIEW = 'mail_layout'.freeze
+  VIEW_TYPES = [SMS_VIEW, EMAIL_VIEW, EMAIL_LAYOUT_VIEW, VIEW_VIEW, CUSTOM_VIEW].freeze
 
   DEFAULT_EMAIL_TEMPLATES_PATHS = [
     'activity_events_mailer/activity_events_summary',
@@ -529,11 +529,11 @@ class InstanceView < ActiveRecord::Base
     where('(instance_views.instance_id IS NULL OR instance_views.instance_id = ?)', instance_id)
   }
 
-  scope :for_transactable_type_id, lambda  { |id|
+  scope :for_transactable_type_id, lambda { |id|
     joins(:transactable_type_instance_views).where(transactable_type_instance_views: { transactable_type_id: id })
   }
 
-  scope :for_locale, lambda  { |locale|
+  scope :for_locale, lambda { |locale|
     joins(locale_instance_views: :locale).where(locales: { code: locale })
   }
 
@@ -574,7 +574,7 @@ class InstanceView < ActiveRecord::Base
   end
 
   def self.not_customized_email_templates_paths
-    custom_paths = for_instance_id(PlatformContext.current.instance.id).custom_emails.pluck(:path, :format).inject({}) do |hash, arr|
+    custom_paths = for_instance_id(PlatformContext.current.instance.id).custom_emails.pluck(:path, :format).each_with_object({}) do |arr, hash|
       hash[arr[0]] ||= []
       hash[arr[0]] << arr[1]
       hash
@@ -595,7 +595,7 @@ class InstanceView < ActiveRecord::Base
   end
 
   def self.not_customized_email_template_layouts_paths
-    custom_paths = for_instance_id(PlatformContext.current.instance.id).custom_email_layouts.pluck(:path, :format).inject({}) do |hash, arr|
+    custom_paths = for_instance_id(PlatformContext.current.instance.id).custom_email_layouts.pluck(:path, :format).each_with_object({}) do |arr, hash|
       hash[arr[0]] ||= []
       hash[arr[0]] << arr[1]
       hash
@@ -607,12 +607,12 @@ class InstanceView < ActiveRecord::Base
     custom_paths
   end
 
-  validates_presence_of :body
-  validates_presence_of :path
+  validates :body, presence: true
+  validates :path, presence: true
 
   validates :locales, length: { minimum: 1 }
-  validates_inclusion_of :handler, in: ActionView::Template::Handlers.extensions.map(&:to_s)
-  validates_inclusion_of :format, in: Mime::SET.symbols.map(&:to_s)
+  validates :handler, inclusion: { in: ActionView::Template::Handlers.extensions.map(&:to_s) }
+  validates :format, inclusion: { in: Mime::SET.symbols.map(&:to_s) }
   validate :does_not_duplicate_locale_and_transactable_type
 
   def does_not_duplicate_locale_and_transactable_type

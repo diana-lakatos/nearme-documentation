@@ -3,7 +3,7 @@ class PaymentDrop < BaseDrop
 
   delegate :id, :billing_authorizations, :successful_billing_authorization,
            :successful_charge, :test_mode?, :active_merchant_payment?, :payable,
-           :currency, :total_amount, :created_at, :sum, :amount,
+           :currency, :total_amount, :created_at, :sum, :amount, :pending?, :voided?,
            to: :payment
 
   def initialize(payment)

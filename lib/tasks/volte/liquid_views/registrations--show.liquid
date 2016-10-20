@@ -1,0 +1,142 @@
+---
+partial: false
+---
+<div class="wrapper-a">
+  <main class="search-results">
+
+    <div class="user-bar__name">
+      <h1>
+        <a href="{{ user.user_profile_url }}">
+          {% if user.properties.use_alias_as_name == '1' %}
+            {{ user.properties.user_alias }}
+          {% else %}
+            {{ user.name }}
+          {% endif %}
+        </a>
+      </h1>
+    </div>
+
+    <section class="search-results__items">
+      {% for listing in user.listings %}
+        {% assign photos = listing.photos %}
+
+        <article data-listing>
+          <div class="item-photo">
+            <img src="{{ photos[0].space_listing }}" />
+          </div>
+
+            <div class="item-info">
+              <div class="item-description">
+                <div class="item-name">
+                  <h4>
+                    <a href="{{ listing.show_path }}" data-listing-path>{{ listing.name | filter_text }}</a>
+                  </h4>
+                  <p>
+                    {% if listing.properties.designer_name != '' and listing.properties.designer_name != nil %}
+                      Designer:
+                      {{ listing.properties.designer_name }}
+                    {% endif %}
+                  </p>
+                </div>
+              </div>
+
+              <div class="item-pricing">
+                <dl>
+                  {% for price in listing.action_type.sorted_pricings %}
+                    <dt>{{ price.number_of_units }} days: </dt>
+                    <dd>${{ price.price.amount }} AUD</dd>
+                  {% endfor %}
+
+                  <dt>Bond value: </dt>
+                  <dd>${{ listing.properties.bond_value }} AUD</dd>
+                </dl>
+              </div>
+            </div>
+
+            <div class="item-actions">
+              <ul>
+                <li class="item-actions__primary">
+                  <form id="order_form_{{ listing.id }}" novalidate="novalidate" class="order" action="{{ 'listing_orders_path' | generate_url: listing }}" accept-charset="UTF-8" method="post">
+                    <input name="utf8" type="hidden" value="">
+                    <input name="authenticity_token" value="{{ form_authenticity_token }}" data-authenticity-token type="hidden">
+                    <input value="{{ listing.id }}" type="hidden" name="order[transactable_id]" id="order_transactable_id">
+                    <input value="{{ listing.action_type.pricings.first.id }}" type="hidden" name="order[transactable_pricing_id]" id="order_transactable_pricing_id">
+                    <input type="submit" class="button button-default button-small" value="REQUEST ITEM">
+                  </form>
+                </li>
+                <li class="item-actions__secondary">
+                  <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="button button-inverse button-small" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
+                    <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
+                  </div>
+                </li>
+              </ul>
+            </div> <!-- Item actions -->
+
+        </article>
+      {% endfor %}
+    </section>
+  </main>
+
+  <aside class="search-sidebar">
+    {% if request_referer != blank %}
+      <a href="{{ request_referer }}">&laquo; Back</a>
+    {% endif %}
+
+    <ul class="user-actions">
+      {% if user.has_active_blog? %}
+        <li>
+          <a href="{{ user.user_blog_posts_list_path }}" class="button button-inverse">
+            READ BLOG
+          </a>
+        </li>
+      {% endif %}
+
+      <li>
+        <a class="button button-inverse" href="{{user.user_message_path}}" rel="modal">Message</a>
+      </li>
+
+      <li>
+        {{ user.click_to_call_button }}
+      </li>
+
+    </ul>
+
+    {% if user.properties.biography != blank %}
+      <p class="text-bold">
+        {{ 'general.about' | translate }}
+
+        {% if user.properties.use_alias_as_name == '1' %}
+          {{ user.properties.user_alias }}
+        {% else %}
+          {{ user.name }}
+        {% endif %}
+
+        {{ user.properties.biography }}
+      </p>
+
+      <hr />
+    {% endif %}
+
+    {% assign listings_count = user.listings | size %}
+
+    <ul>
+      <li>
+        <strong>{{ listings_count }}</strong> {{ 'transactables.items_listed' | translate }}
+      </li>
+      <li>
+        <strong>{{ user.completed_host_reservations_count }}</strong> {{ 'transactables.items_rented' | translate }}
+      </li>
+      <li>
+        {{ 'registrations.member_since' | translate }} <strong>{{ user.created_at | to_date | l: 'short' }}</strong>
+      </li>
+    </ul>
+
+    <hr />
+
+    <p><strong>Lender verified</strong></p>
+
+    <hr />
+
+    <a class="button-b action-flag" href="#" data-href="{{ user.inappropriate_report_path }}" data-modal="1">{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
+  </aside>
+</div> <!-- Wrapper -->

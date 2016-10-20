@@ -302,6 +302,7 @@ en:
         space_not_deleted: "We couldn't delete %{name}"
         updated: "Great, your location has been updated!"
       reservations:
+        lender_confirmed_both_side_confirmation: "You have confirmed the reservation!"
         reservation_already_confirmed: "This reservation has already been confirmed."
         reservation_cancelled: "You have cancelled this reservation."
         reservation_confirmed: "You have confirmed the reservation!"

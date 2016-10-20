@@ -28,6 +28,25 @@ class Dashboard::OrdersController < Dashboard::BaseController
     redirect_to request.referer.presence || dashboard_orders_path
   end
 
+  def approve
+    @order.update_attribute(:pending_guest_confirmation, nil)
+
+    if @order.unconfirmed?
+      @order.enquirer_confirmed_at = Time.now
+      @order.save
+      @order.invoke_confirmation!
+      if @order.payment.authorize && @order.payment.capture!
+        flash[:notice] = t('flash_messages.payments.successful_approval')
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPayment, @order.id)
+      else
+        @order.payment.void!
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPaymentButCaptureFailed, @order.id)
+        flash[:warning] = t('flash_messages.payments.failed_to_approve')
+      end
+    end
+    redirect_to dashboard_orders_path
+  end
+
   def show
     @order = @order.decorate
   end

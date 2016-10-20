@@ -8,6 +8,8 @@ class LineItem::Transactable < LineItem
 
   validate :validate_unit_price_cents
 
+  before_create :store_properties
+
   def transactable
     line_item_source
   end
@@ -59,7 +61,7 @@ class LineItem::Transactable < LineItem
     if line_itemable.service_fee_line_items.any?
       service_fee = line_itemable.service_fee_line_items.first
       service_fee.update_attribute(
-        :unit_price_cents, service_fee.unit_price_cents + (total_price_cents * service_fee_guest_percent.to_f / BigDecimal(100))
+        :unit_price_cents, calculate_fee(service_fee_guest_percent, service_fee.unit_price_cents)
       )
     else
       if line_itemable.persisted?
@@ -90,7 +92,7 @@ class LineItem::Transactable < LineItem
     if line_itemable.host_fee_line_items.any?
       host_fee = line_itemable.host_fee_line_items.first
       host_fee.update_attribute(
-        :unit_price_cents, host_fee.unit_price_cents + (total_price_cents * service_fee_host_percent.to_f / BigDecimal(100))
+        :unit_price_cents, calculate_fee(service_fee_host_percent, current_fee: host_fee.unit_price_cents, minimum: minimum_lister_service_fee_cents)
       )
     else
       if line_itemable.persisted?
@@ -105,7 +107,7 @@ class LineItem::Transactable < LineItem
     {
       line_itemable: line_itemable,
       line_item_source: current_instance,
-      unit_price_cents: calculate_fee(service_fee_host_percent)
+      unit_price_cents: calculate_fee(service_fee_host_percent, minimum: minimum_lister_service_fee_cents)
     }
   end
 
@@ -115,7 +117,13 @@ class LineItem::Transactable < LineItem
     errors.add :unit_price, :equal_to, count: 0 if !unit_price_cents.zero? && line_itemable && line_itemable.is_free_booking?
   end
 
-  def calculate_fee(fee_percent)
-    (total_price * fee_percent.to_f / BigDecimal(100)).to_money(currency).cents
+  def calculate_fee(fee_percent, options = { current_fee: 0, minimum: 0 })
+    # changed the code to ignore current_fee, previous version: options[:current_fee].to_i + <percentage of new>
+    [(total_price * fee_percent.to_f / BigDecimal(100)).to_money(currency).cents, options[:minimum].to_i].max
+  end
+
+  def store_properties
+    self.properties = line_item_source.try(:properties).try(:to_h).try(:to_json)
+    true
   end
 end

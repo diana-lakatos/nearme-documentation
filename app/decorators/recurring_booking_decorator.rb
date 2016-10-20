@@ -137,7 +137,7 @@ class RecurringBookingDecorator < OrderDecorator
 
   def dates_to_array(for_reservations = nil)
     for_reservations ||= reservations
-    for_reservations.map { |r| r.periods.map { |p| "#{I18n.l(p.date.to_date, format: :short)}" } }.flatten
+    for_reservations.map { |r| r.periods.map { |p| I18n.l(p.date.to_date, format: :short).to_s } }.flatten
   end
 
   def manage_guests_action_column_class
@@ -151,7 +151,7 @@ class RecurringBookingDecorator < OrderDecorator
 
     first == last ? first : "#{first} - #{last}"
   end
-  alias_method :long_dates, :short_dates
+  alias long_dates short_dates
 
   def format_reservation_periods
     periods.map do |period|
@@ -182,10 +182,6 @@ class RecurringBookingDecorator < OrderDecorator
 
   def manage_booking_status_info_new
     raw("You must confirm this booking within <strong>#{time_to_expiry(expires_at)}</strong> or it will expire.")
-  end
-
-  def user_message_recipient
-    owner
   end
 
   def user_message_summary(user_message)
@@ -252,7 +248,7 @@ class RecurringBookingDecorator < OrderDecorator
 
   # [[20 Nov 2012, 21 Nov 2012, 22 Nov 2012], [5 Dec 2012], [7 Dec 2012, 8 Dec 2012]]
   def dates_in_groups
-    periods.map(&:date).sort.inject([]) do |groups, datetime|
+    periods.map(&:date).sort.each_with_object([]) do |datetime, groups|
       date = datetime.to_date
       if groups.last && ((groups.last.last + 1.day) == date)
         groups.last << date

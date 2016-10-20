@@ -178,6 +178,10 @@ class PlatformContextDrop < BaseDrop
     @instance.split_registration?
   end
 
+  def rails_env
+    Rails.env
+  end
+
   def highlighted_blog_posts
     # tmp solution until we have proper solution to fetch any data on any page
     @platform_context_decorator.instance.user_blog_posts.highlighted.by_date.limit(3)

@@ -54,13 +54,21 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   # TODO: this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
   # The idea is to move all host action for all Order types here
   def confirm
+    if params[:order] && order_params.present?
+      render action: :confirmation_form unless @order.update(order_params)
+    end
     if @order.confirmed?
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     elsif @order.unconfirmed?
+      @order.lister_confirmed!
       if @order.skip_payment_authorization?
         @order.invoke_confirmation!
       else
         @order.charge_and_confirm!
+      end
+
+      if @order.lister_confirmed_at && @order.action.both_side_confirmation
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerConfirmedWithDoubleConfirmation, @order.id)
       end
 
       if @order.confirmed?
@@ -77,6 +85,8 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
           flash[:warning] = t('flash_messages.manage.reservations.reservation_confirmed_but_not_charged')
         end
 
+      elsif @order.action.both_side_confirmation
+        flash[:success] = t('flash_messages.manage.reservations.lender_confirmed_both_side_confirmation')
       else
         flash[:error] = [
           t('flash_messages.manage.reservations.reservation_not_confirmed'),
@@ -91,6 +101,10 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def rejection_form
+    render layout: false
+  end
+
+  def confirmation_form
     render layout: false
   end
 

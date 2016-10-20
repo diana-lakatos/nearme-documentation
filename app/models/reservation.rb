@@ -27,7 +27,7 @@ class Reservation < Order
   delegate :location, :show_company_name, :transactable_type_id, :transactable_type, to: :transactable
   delegate :administrator=, to: :location
   delegate :action, to: :transactable_pricing
-  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :action, allow_nil: true
+  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents, to: :action, allow_nil: true
   delegate :display_additional_charges?, to: :transactable, allow_nil: true
   delegate :address_in_radius, to: :reservation_type, allow_nil: true
   delegate :event_booking?, to: :transactable_pricing
@@ -116,7 +116,7 @@ class Reservation < Order
   def invoke_confirmation!(&_block)
     errors.clear
     action.try(:validate_all_dates_available, self) unless skip_payment_authorization?
-    if errors.empty? && valid?
+    if errors.empty? && valid? && check_double_cofirmation
       if block_given? ? yield : true
         create_shipments!
         confirm!
@@ -124,6 +124,18 @@ class Reservation < Order
         transactable.touch
       end
     end
+  end
+
+  def check_double_cofirmation
+    !action.both_side_confirmation || (lister_confirmed_at && enquirer_confirmed_at)
+  end
+
+  def lister_confirmed!
+    update_attribute :lister_confirmed_at, Time.now
+  end
+
+  def enquirer_confirmed!
+    update_attribute :enquirer_confirmed_at, Time.now
   end
 
   def charge_and_confirm!

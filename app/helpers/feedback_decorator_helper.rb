@@ -35,17 +35,17 @@ module FeedbackDecoratorHelper
     user = nil
 
     if reservation?
-      if target == RatingConstants::HOST
-        user = feedback_object.transactable.creator
-      else
-        user = feedback_object.owner
-      end
+      user = if target == RatingConstants::HOST
+               feedback_object.transactable.creator
+             else
+               feedback_object.owner
+             end
     elsif line_item?
-      if target == RatingConstants::HOST
-        user = feedback_object.transactable.creator
-      else
-        user = feedback_object.user
-      end
+      user = if target == RatingConstants::HOST
+               feedback_object.transactable.creator
+             else
+               feedback_object.user
+             end
     end
 
     user

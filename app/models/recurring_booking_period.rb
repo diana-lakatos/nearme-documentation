@@ -43,25 +43,12 @@ class RecurringBookingPeriod < ActiveRecord::Base
     0
   end
 
-  def recalculate_fees!
-    service_fee_line_items.destroy_all
-    host_fee_line_items.destroy_all
-
-    transactable_line_items.each do |tli|
-      tli.attributes = {
-        service_fee_guest_percent: action.service_fee_guest_percent,
-        service_fee_host_percent: action.service_fee_host_percent
-      }
-      tli.build_host_fee
-      tli.build_service_fee
-    end
-  end
-
   def set_service_fees
     transactable_line_items.each do |tli|
       tli.attributes = {
         service_fee_guest_percent: action.service_fee_guest_percent,
-        service_fee_host_percent: action.service_fee_host_percent
+        service_fee_host_percent: action.service_fee_host_percent,
+        minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents
       }
     end
   end

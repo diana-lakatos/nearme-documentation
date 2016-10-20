@@ -7,7 +7,7 @@ class Utils::DefaultAlertsCreator::PurchaseCreator < Utils::DefaultAlertsCreator
   end
 
   def notify_host_of_confirmation!
-    create_alert!(associated_class: WorkflowStep::PurchaseWorkflow::ManuallyConfirmed, name: 'notify_host_of_confirmation', path: 'purchase_mailer/notify_host_of_confirmation', subject: "[{{platform_context.name}}] Thanks for confirming!", alert_type: 'email', recipient_type: 'lister')
+    create_alert!(associated_class: WorkflowStep::PurchaseWorkflow::ManuallyConfirmed, name: 'notify_host_of_confirmation', path: 'purchase_mailer/notify_host_of_confirmation', subject: '[{{platform_context.name}}] Thanks for confirming!', alert_type: 'email', recipient_type: 'lister')
   end
 
   def notify_guest_of_confirmation!
@@ -27,5 +27,4 @@ class Utils::DefaultAlertsCreator::PurchaseCreator < Utils::DefaultAlertsCreator
   def workflow_type
     'purchase'
   end
-
 end

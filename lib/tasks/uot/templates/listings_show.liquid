@@ -137,7 +137,7 @@
                 <ul class="company-properties">
                   <li><b>{{ listing.creator.transactables_count }}</b> Projects Posted</li>
                   <li><b>{{ listing.creator.completed_transactables_count }}</b> Projects Completed</li>
-                    <li>Member Since {{ listing.creator.created_at | to_date | l: 'short' }}</li>
+                  <li>{{ 'registrations.member_since' | translate }} {{ listing.creator.created_at | to_date | l: 'short' }}</li>
                 </ul>
 
                 <hr>

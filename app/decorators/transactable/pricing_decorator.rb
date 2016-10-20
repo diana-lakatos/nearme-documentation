@@ -26,4 +26,8 @@ class Transactable::PricingDecorator < Draper::Decorator
 
     render_money(Money.new(actual_price.try(:fractional), currency.blank? ? PlatformContext.current.instance.default_currency : currency))
   end
+
+  def price_for_select
+    [units_translation('search.per_unit_price'), price_with_currency(price)].join(' - ')
+  end
 end

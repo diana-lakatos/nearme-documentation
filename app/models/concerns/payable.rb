@@ -61,6 +61,7 @@ module Payable
           line_itemable: self,
           service_fee_guest_percent: action.service_fee_guest_percent,
           service_fee_host_percent: action.service_fee_host_percent,
+          minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents,
           transactable_pricing_id: try(:transactable_pricing_id)
         )
       end
@@ -102,6 +103,21 @@ module Payable
 
     def payment_subscription_attributes=(payment_subscription_attrs = {})
       super(payment_subscription_attrs.merge(shared_payment_subscription_attributes))
+    end
+
+    def recalculate_fees!
+      service_fee_line_items.destroy_all
+      host_fee_line_items.destroy_all
+
+      transactable_line_items.each do |tli|
+        tli.attributes = {
+          service_fee_guest_percent: action.service_fee_guest_percent,
+          service_fee_host_percent: action.service_fee_host_percent,
+          minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents
+        }
+        tli.build_host_fee
+        tli.build_service_fee
+      end
     end
 
     def shared_payment_attributes
