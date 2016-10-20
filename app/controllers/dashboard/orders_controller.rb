@@ -34,7 +34,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def new
-    @order = @transactable_pricing.order_class.where(user: current_user, transactable_id: @transactable.id).first_or_initialize
+    @order = @transactable_pricing.order_class.where(user: current_user, transactable_id: @transactable.id, state: 'pending').first_or_initialize
     if @order.persisted?
       redirect_to(action: 'edit', id: @order)
     else
@@ -58,7 +58,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
     if @order.inactive? && @order.save_draft && @order.save(validate: false)
       @update_path = dashboard_order_path(@order)
       respond_to do |format|
-        format.json { render json: nil, status: :ok}
+        format.json { render json: nil, status: :ok }
         format.html do
           flash[:notice] = t('flash_messages.orders.draft_saved')
           render template: 'checkout/show'
@@ -70,7 +70,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
         return
       end
 
-      flash[:notice] = ''  unless @order.inactive?
+      flash[:notice] = '' unless @order.inactive?
       flash[:error] = @order.errors.full_messages.join(',<br />')
       event_tracker.updated_profile_information(@order.owner)
       event_tracker.updated_profile_information(@order.host)
@@ -129,15 +129,14 @@ class Dashboard::OrdersController < Dashboard::BaseController
       end
 
       transactable.document_requirements.each do |req|
-        if !req.item.upload_obligation.not_required? && !requirement_ids.include?(req.id)
-          @order.payment_documents.build(
-            attachable: @order,
-            user: @user,
-            payment_document_info_attributes: {
-              document_requirement: req
-            }
-          )
-        end
+        next unless !req.item.upload_obligation.not_required? && !requirement_ids.include?(req.id)
+        @order.payment_documents.build(
+          attachable: @order,
+          user: @user,
+          payment_document_info_attributes: {
+            document_requirement: req
+          }
+        )
       end
     end
   end
