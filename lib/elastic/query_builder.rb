@@ -322,19 +322,23 @@ module Elastic
       end
 
       if @query[:availability_exceptions].present?
-        from = Date.parse(@query[:availability_exceptions][:from])
-        to = Date.parse(@query[:availability_exceptions][:to])
+        from = to = nil
+        from = Date.parse(@query[:availability_exceptions][:from]) if @query[:availability_exceptions][:from].present?
+        to = Date.parse(@query[:availability_exceptions][:to]) if @query[:availability_exceptions][:to].present?
 
-        @filters << {
-          not: {
-            range: {
-              availability_exceptions: {
-                gte: from,
-                lte: to
+        if from.present? || to.present?
+          hash = {
+            not: {
+              range: {
+                availability_exceptions: {
+                }
               }
             }
           }
-        }
+          hash[:not][:range][:availability_exceptions][:gte] = from if from.present?
+          hash[:not][:range][:availability_exceptions][:lte] = to if to.present?
+          @filters << hash
+        end
       end
 
       if @query[:date].blank? && @query[:time_from].present? || @query[:time_to].present?

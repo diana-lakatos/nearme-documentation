@@ -1,18 +1,20 @@
 ---
 partial: false
 ---
+
 {% assign xhr = params['is_xhr'] == 'true' %}
 
 {% unless xhr %}
 <div class="wrapper-a search-list">
   <div class="search-box">
     <form class="search-form" action="/search" method="GET" data-search-form="filters" data-search-form-container>
-      <input type="text" name="query" placeholder="Item name" data-search-form="query" autofocus="autofocus" value="{{ params['query'] }}" />
+      <input type="text" name="query" placeholder="Enter keywords to search for items" data-search-form="query" autofocus="autofocus" value="{{ params['query'] }}" />
       <button class="button button-default" data-search-form="submit">SEARCH</button>
     </form>
   </div>
 
   <aside class="search-sidebar">
+    <h4>Filter by:</h4>
     <form class="form-horizontal no-inheritance" data-search-form="filters">
       <ul>
         {% assign attributes = searcher.filterable_custom_attributes | reverse %}
@@ -108,35 +110,20 @@ partial: false
     <section class="search-results__items">
       {% for listing in searcher.results %}
         <article data-listing>
-          <div class="item-photo">
-            <img src="{{ listing.photos[0].space_listing }}" />
+          <div class="item-description">
+            <h2><a href="{{ listing.show_path }}" data-listing-path>{{ listing.name }}</a></h2>
+            {% if listing.properties.designer_name != blank %}
+              <h4 class="item-designer">
+                <strong>Designer:</strong>
+                {{ listing.properties.designer_name }}
+              </h4>
+            {% endif %}
           </div>
-          <div class="item-info">
-            <div class="item-description">
-              <h2><a href="{{ listing.show_path }}" data-listing-path>{{ listing.name }}</a></h2>
-              <p><strong>Designer:</strong> {{ listing.properties.designer_name }}</p>
-            </div>
-            <div class="item-pricing">
-              <dl>
-                {% for price in listing.action_type.sorted_pricings %}
-                  <dt>{{ price.number_of_units }} days: </dt>
-                  <dd>${{ price.price.amount }} AUD</dd>
-                {% endfor %}
-                <dt>Bond value: </dt>
-                <dd>${{ listing.properties.bond_value }} AUD</dd>
-              </dl>
-            </div>
 
-            <div class="lender-info">
-              <p>Lender: <a href="{{ listing.creator.user_profile_url }}">{% if listing.creator.properties.use_alias_as_name == '1' %}{{ listing.creator.properties.user_alias }}{% else %}{{ listing.creator.name }}{% endif %}</a>
-              </p>
-              {% if listing.transactable_user_messages.size > 0 %}
-                <a class="button button-inverse" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
-              {% else %}
-                <a class="button button-inverse" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id, user_id: listing.creator.id, skip: true }}">Message</a>
-              {% endif %}
-            </div>
+          <div class="item-photo">
+            <img src="{{ listing.photos[0].large }}" />
           </div>
+
           <div class="item-actions">
             <ul>
               <li class="item-actions__primary">
@@ -148,8 +135,14 @@ partial: false
                   <input type="submit" class="button button-default" value="REQUEST ITEM">
                 </form>
               </li>
+              <li>
+                <a data-listing-availability-toggle data-listing-availability-periods={{ listing.unavailable_periods }} class="datetimepicker button button-secondary">
+                  <input type="hidden" />
+                  CHECK AVAILABILITY
+                </a>
+              </li>
               <li class="item-actions__secondary">
-                <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="button button-default" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
+                <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
                   <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
                 </div>
               </li>
@@ -160,10 +153,40 @@ partial: false
               {% endif %}
             </ul>
 
-            <p class="item-availability">
-              <a data-listing-availability-toggle data-listing-availability-periods={{ listing.unavailable_periods }} class="datetimepicker"><input type="hidden" />Check item availability</a>
-            </p>
+            <div class="item-pricing">
+              <dl>
+                {% for price in listing.action_type.sorted_pricings %}
+                  <dt>{{ price.number_of_units }} days: </dt>
+                  <dd>${{ price.price.amount }} AUD</dd>
+                {% endfor %}
+                <dt>Bond value: </dt>
+                <dd>${{ listing.properties.bond_value }} AUD</dd>
+              </dl>
+            </div>
           </div>
+
+          <div class="item-info">
+            <p>
+              <strong>Lender:</strong>
+              {% if listing.creator.properties.use_alias_as_name == '1' %}{{ listing.creator.properties.user_alias }}{% else %}{{ listing.creator.name }}{% endif %}
+            </p>
+
+            <ul>
+              {% if listing.transactable_user_messages.size > 0 %}
+                <li>
+                  <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
+                </li>
+              {% else %}
+                <li>
+                  <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id, user_id: listing.creator.id, skip: true }}">Message</a>
+                </li>
+              {% endif %}
+              <li>
+                <a class="button button-inverse button-small" href="{{ listing.creator.user_profile_url }}">Lender's Closet</a>
+              </li>
+            </ul>
+          </div>
+
         </article>
       {% endfor %}
     </section>
