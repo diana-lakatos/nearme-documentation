@@ -47,19 +47,23 @@ module SearchHelper
     title = title.present? && title.respond_to?(:gsub) ? title.gsub(',', ', ') : (location_types_names.empty? ? transactable_type_name : '')
 
     title += %(#{location_types_names.join(', ')})
-    search_location = []
-    search_location << search.city
-    search_location << (search.is_united_states? ? search.state_short : search.state)
-    search_location.reject!(&:blank?)
-    title += %( in #{search_location.join(', ')}) unless search_location.empty?
 
-    title += if title.empty?
-               I18n.t('metadata.search.title.search')
-             else
-               search_location.empty? ? I18n.t('metadata.search.title.in') : ', '
+    if search.respond_to?(:city)
+      search_location = []
+
+      search_location << search.try(:city)
+      search_location << (search.is_united_states? ? search.state_short : search.state)
+      search_location.reject!(&:blank?)
+      title += %( in #{search_location.join(', ')}) unless search_location.empty?
+
+      title += if title.empty?
+                 I18n.t('metadata.search.title.search')
+               else
+                 search_location.empty? ? I18n.t('metadata.search.title.in') : ', '
+      end
+
+      title += search.country.to_s
     end
-
-    title += search.country.to_s
 
     title
   end

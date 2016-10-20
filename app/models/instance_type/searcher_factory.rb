@@ -37,7 +37,7 @@ class InstanceType::SearcherFactory
 
   def community_searcher
     if @params[:search_type] == 'people'
-      @transactable_type = InstanceProfileType.default.first
+      @transactable_type = InstanceProfileType.default.first unless @transactable_type.is_a?(InstanceProfileType)
       @factory_type = @transactable_type.search_engine
       user_searcher
     else
