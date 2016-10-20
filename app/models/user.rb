@@ -381,7 +381,7 @@ class User < ActiveRecord::Base
   end
 
   def has_buyer_profile?
-    buyer_profile.present? && current_instance.buyer_profile_enabled? && buyer_profile.has_fields?(FormComponent::SELLER_PROFILE_TYPES)
+    buyer_profile.present? && current_instance.buyer_profile_enabled? && buyer_profile.has_fields?(FormComponent::BUYER_PROFILE_TYPES)
   end
 
   def custom_validators
