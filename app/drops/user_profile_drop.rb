@@ -1,7 +1,7 @@
 class UserProfileDrop < BaseDrop
   attr_accessor :source
 
-  delegate :customizations, to: :source
+  delegate :customizations, :onboarded_at, to: :source
 
   def initialize(profile)
     @source = profile
