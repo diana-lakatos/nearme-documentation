@@ -18,12 +18,12 @@ class UserProfile < ActiveRecord::Base
 
   after_create :create_company_if_needed
 
-  SELLER  = 'seller'.freeze
+  SELLER = 'seller'.freeze
   BUYER = 'buyer'.freeze
   DEFAULT = 'default'.freeze
   PROFILE_TYPES = [SELLER, BUYER, DEFAULT].freeze
 
-  validates_inclusion_of :profile_type, in: PROFILE_TYPES
+  validates :profile_type, inclusion: { in: PROFILE_TYPES }
 
   before_create :assign_defaults
 
@@ -39,13 +39,13 @@ class UserProfile < ActiveRecord::Base
   end
 
   def field_blank_or_changed?(field_name)
-    return true unless self.persisted?
+    return true unless persisted?
     db_field_value = UserProfile.find_by(id: id).properties[field_name]
     properties[field_name].blank? || (db_field_value != properties[field_name])
   end
 
   def category_blank_or_changed?(category)
-    return true unless self.persisted?
+    return true unless persisted?
     db_value = UserProfile.find_by(id: id).common_categories(category)
     common_categories(category).blank? || (db_value != common_categories(category))
   end
@@ -68,6 +68,9 @@ class UserProfile < ActiveRecord::Base
       elsif profile_type == SELLER
         WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerOnboarded, user_id)
       end
+      true
+    else
+      false
     end
   end
 
