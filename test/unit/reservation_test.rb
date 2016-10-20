@@ -194,7 +194,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'not be cancelable if at least one period has past' do
-        @reservation.add_period((Time.zone.today - 2.day))
+        @reservation.add_period((Time.zone.today - 2.days))
         @reservation.save!
         refute @reservation.cancelable
       end
@@ -440,21 +440,20 @@ class ReservationTest < ActiveSupport::TestCase
         FactoryGirl.create(:manual_payment_method)
 
         @transactable = FactoryGirl.build(:transactable, quantity: 10)
-        @user    = FactoryGirl.build(:user)
-        @reservation = FactoryGirl.build(:reservation, user: @user, owner: @user, transactable: @transactable, transactable_pricing: @transactable.action_type.pricings.first)
+        @user = FactoryGirl.build(:user)
+        @reservation = FactoryGirl.build(:reservation, user: @user, transactable: @transactable, transactable_pricing: @transactable.action_type.pricings.first)
       end
 
       should 'set total, subtotal and service fee cost after creating a new reservation' do
         dates              = [Time.zone.today, Date.tomorrow, Time.zone.today + 5, Time.zone.today + 6].map do |d|
           d += 1 if d.wday == 6
-          d += 1 if d.wday == 0
+          d += 1 if d.wday.zero?
           d
         end
-        quantity           =  5
+        quantity = 5
 
         reservation = @transactable.reservations.build(
           user: @user,
-          owner: @user,
           quantity: quantity,
           transactable: @transactable,
           transactable_pricing: @transactable.action_type.pricings.first,
@@ -474,8 +473,8 @@ class ReservationTest < ActiveSupport::TestCase
           klass == WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation
         end
 
-        dates              = [1.week.from_now.monday]
-        quantity           =  2
+        dates = [1.week.from_now.monday]
+        quantity = 2
         assert reservation = @transactable.reserve!(@user, dates, quantity)
 
         assert_not_nil reservation.total_amount_cents
@@ -500,7 +499,6 @@ class ReservationTest < ActiveSupport::TestCase
       should 'charge a service fee to credit card paid reservations' do
         reservation = @transactable.reservations.build(
           user: @user,
-          owner: @user,
           date: 1.week.from_now.monday,
           quantity: 1,
           transactable: @transactable,
@@ -514,7 +512,6 @@ class ReservationTest < ActiveSupport::TestCase
       should 'charge a service fee to manual payment reservations' do
         reservation = @transactable.reservations.build(
           user: @user,
-          owner: @user,
           date: 1.week.from_now.monday,
           quantity: 1,
           transactable: @transactable,
@@ -547,7 +544,7 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation.periods.build date: Time.zone.today.advance(weeks: 1).beginning_of_week, start_minute: 9 * 60, end_minute: 12 * 60
         @reservation.reload
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents * @reservation.quantity +
-          @reservation.service_fee_amount_guest.cents, @reservation.total_amount.cents
+                     @reservation.service_fee_amount_guest.cents, @reservation.total_amount.cents
       end
     end
   end

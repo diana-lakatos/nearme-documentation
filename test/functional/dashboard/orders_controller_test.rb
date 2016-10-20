@@ -20,7 +20,7 @@ class Dashboard::OrdersControllerTest < ActionController::TestCase
       end
 
       should 'if any upcoming bookings' do
-        @reservation = FactoryGirl.create(:future_unconfirmed_reservation, owner: @user)
+        @reservation = FactoryGirl.create(:future_unconfirmed_reservation, user: @user)
         get :index, state: 'unconfirmed'
         assert_response :success
         assert_select '.order', 1
@@ -29,7 +29,7 @@ class Dashboard::OrdersControllerTest < ActionController::TestCase
       end
 
       should 'if any archived bookings' do
-        FactoryGirl.create(:confirmed_reservation, archived_at: Time.zone.now, owner: @user)
+        FactoryGirl.create(:confirmed_reservation, archived_at: Time.zone.now, user: @user)
         get :index, state: 'archived'
         assert_response :success
         assert_select '.order', 1
@@ -37,7 +37,7 @@ class Dashboard::OrdersControllerTest < ActionController::TestCase
 
       context 'with upcoming reservation' do
         setup do
-          @reservation = FactoryGirl.create(:future_unconfirmed_reservation, owner: @user)
+          @reservation = FactoryGirl.create(:future_unconfirmed_reservation, user: @user)
           get :index, state: 'unconfirmed'
           assert_response :success
           assert_select '.order', 1

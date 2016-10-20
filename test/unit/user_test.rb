@@ -585,14 +585,14 @@ class UserTest < ActiveSupport::TestCase
       should 'cancel any pending unconfirmed reservations' do
         # We need to stub void request on reservation
 
-        @reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user)
+        @reservation = FactoryGirl.create(:unconfirmed_reservation, user: @user)
         @user.destroy
         assert @reservation.reload.cancelled_by_guest?
         assert @reservation.payment.voided?
       end
 
       should 'cancel any pending reservations' do
-        @reservation = FactoryGirl.create(:confirmed_reservation, owner: @user)
+        @reservation = FactoryGirl.create(:confirmed_reservation, user: @user)
         @user.destroy
         refute @reservation.reload.cancelled_by_guest?
         assert @reservation.confirmed?
