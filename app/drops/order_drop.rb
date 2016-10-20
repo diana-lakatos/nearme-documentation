@@ -115,6 +115,10 @@ class OrderDrop < BaseDrop
     routes.cancel_dashboard_company_orders_received_path(order)
   end
 
+  def order_complete_url
+    routes.complete_dashboard_company_orders_received_path(order)
+  end
+
   def rejection_form_path
     routes.rejection_form_dashboard_company_orders_received_path(order)
   end

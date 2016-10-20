@@ -74,7 +74,13 @@ en:
     manage:
       listings:
         listing_cancelled: 'Your Case is now archived.'
+      order:
+        canceled: 'Your Case is now archived.'
+        approved: 'Your Case has been moved to archive.'
     dashboard:
+      order:
+        canceled: 'Your Case is now archived.'
+        approved: 'Your Case has been moved to archive'
       add_your_company: "Please complete your Case first."
       locations:
         add_your_company: "Please complete your Case first."
