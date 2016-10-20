@@ -25,11 +25,12 @@ namespace :litvault do
         enable_reply_button_on_host_reservations: true,
         seller_attachments_enabled: true,
         seller_attachments_access_level: 'collaborators',
+        hidden_ui_controls: { 'main_menu/cta': 1 },
         hidden_ui_controls: {
-          'main_menu/cta': 1,
-          'dashboard/payouts': 1,
-          'dashboard/transfers': 1,
-          },
+         'main_menu/cta': 1,
+         'dashboard/payouts': 1,
+         'dashboard/transfers': 1,
+        },
         skip_company: true
       )
       @instance.set_context!
