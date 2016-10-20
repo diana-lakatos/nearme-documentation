@@ -80,9 +80,7 @@ class InstanceFactory
   end
 
   def create
-    unless instance.domains.first.present?
-      raise ::DNM::Error, 'You must create a domain, e.g. your-market.near-me.com'
-    end
+    raise ::DNM::Error, 'You must create a domain, e.g. your-market.near-me.com' unless instance.domains.first.present?
 
     instance.domains.first.use_as_default = true
     instance.theme.support_email = instance.theme.contact_email

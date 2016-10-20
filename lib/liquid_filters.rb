@@ -83,11 +83,11 @@ module LiquidFilters
   def get_lowest_price_with_options(object, lgpricing_filters, options = {})
     lgpricing_filters ||= []
 
-    if options[:full_price]
-      pricing = object.lowest_full_price(lgpricing_filters)
-    else
-      pricing = object.lowest_price(lgpricing_filters)
-    end
+    pricing = if options[:full_price]
+                object.lowest_full_price(lgpricing_filters)
+              else
+                object.lowest_price(lgpricing_filters)
+              end
 
     if pricing.nil? || pricing.is_free_booking?
       { 'free' => true }
@@ -103,7 +103,7 @@ module LiquidFilters
   def lowest_price_with_cents_with_currency(object, lgpricing_filters = [])
     pricing = object.lowest_price(lgpricing_filters)
     if pricing
-      { 'price' => price_with_cents_with_currency(pricing.price), 'period' =>  pricing.decorate.units_translation('search.per_unit_price', 'search') }
+      { 'price' => price_with_cents_with_currency(pricing.price), 'period' => pricing.decorate.units_translation('search.per_unit_price', 'search') }
     else
       {}
     end
@@ -172,7 +172,7 @@ module LiquidFilters
   def translate(key, options = {})
     I18n.t(key, options.deep_symbolize_keys)
   end
-  alias_method :t, :translate
+  alias t translate
 
   def localize(datetime, format = 'long')
     if datetime
@@ -180,7 +180,7 @@ module LiquidFilters
       I18n.l(datetime, format: format.to_sym)
     end
   end
-  alias_method :l, :localize
+  alias l localize
 
   def add_to_date(date, number_of_days)
     date + number_of_days.days
@@ -246,9 +246,7 @@ module LiquidFilters
   end
 
   def request_parameter(method)
-    if @context.registers[:controller].request.respond_to?(method)
-      @context.registers[:controller].request.send(method.to_sym)
-    end
+    @context.registers[:controller].request.send(method.to_sym) if @context.registers[:controller].request.respond_to?(method)
   end
 
   def image_url(path_to_file)
@@ -439,8 +437,8 @@ module LiquidFilters
     sort_option = %w(created_at name).detect { |valid_key| options['sort'] == valid_key } || 'created_at'
     sort_direction = %w(asc desc).detect { |valid_key| options['direction'] == valid_key } || 'desc'
     Ckeditor::Asset.where(access_level: access_level)
-      .where('data_file_name LIKE ? OR title LIKE ?', "%#{options['query']}%", "%#{options['query']}%")
-      .order("#{sort_option} #{sort_direction}")
-      .paginate(page: options['page'] || 1, per_page: [(options['per_page'] || 10).to_i, 50].min)
+                   .where('data_file_name LIKE ? OR title LIKE ?', "%#{options['query']}%", "%#{options['query']}%")
+                   .order("#{sort_option} #{sort_direction}")
+                   .paginate(page: options['page'] || 1, per_page: [(options['per_page'] || 10).to_i, 50].min)
   end
 end

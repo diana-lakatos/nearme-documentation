@@ -652,7 +652,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resources :comments, only: [:update, :create, :index, :destroy] do
-        resources :spam_reports,  only: [:create, :destroy] do
+        resources :spam_reports, only: [:create, :destroy] do
           collection do
             delete :cancel
           end
@@ -1056,14 +1056,14 @@ DesksnearMe::Application.routes.draw do
     resources :user_status_updates, only: [:create]
 
     resources :activity_feed_event do
-      resources :spam_reports,  only: [:create, :destroy] do
+      resources :spam_reports, only: [:create, :destroy] do
         collection do
           delete :cancel
         end
       end
 
       resources :comments, only: [:update, :create, :index, :destroy] do
-        resources :spam_reports,  only: [:create, :destroy] do
+        resources :spam_reports, only: [:create, :destroy] do
           collection do
             delete :cancel
           end
@@ -1073,7 +1073,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :activity_feed_subscription, only: [] do
       resources :comments, only: [:update, :create, :index, :destroy] do
-        resources :comment_spam_reports,  only: [:create, :destroy]
+        resources :comment_spam_reports, only: [:create, :destroy]
       end
     end
 

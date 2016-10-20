@@ -6,9 +6,9 @@ class User < ActiveRecord::Base
   include Approvable
   include CommunityValidators
 
-  SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects]
+  SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects].freeze
   MAX_NAME_LENGTH = 30
-  SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation)
+  SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation).freeze
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -206,7 +206,7 @@ class User < ActiveRecord::Base
     joins(:followers).select('"users".*, "user_relationships"."follower_id" AS mutual_friendship_source')
   }
 
-  scope :friends_of, lambda  { |user|
+  scope :friends_of, lambda { |user|
     joins(
       sanitize_sql(['INNER JOIN user_relationships ur on ur.followed_id = users.id and ur.follower_id = ?', user.id])
     ) if user.try(:id)
@@ -216,7 +216,7 @@ class User < ActiveRecord::Base
     where('users.instance_id': instance.id)
   }
 
-  scope :feed_not_followed_by_user, lambda  { |current_user|
+  scope :feed_not_followed_by_user, lambda { |current_user|
     where.not(id: current_user.feed_followed_users.pluck(:id))
   }
 
@@ -231,15 +231,15 @@ class User < ActiveRecord::Base
   scope :by_topic, -> (topic_ids) do
     if topic_ids.present?
       with_joined_transactable_collaborations.created_transactables
-        .joins(' LEFT OUTER JOIN transactable_topics pt on pt.transactable_id = pc.transactable_id OR pt.transactable_id = p.id ')
-        .where('pt.topic_id IN (?)', topic_ids).group('users.id')
+                                             .joins(' LEFT OUTER JOIN transactable_topics pt on pt.transactable_id = pc.transactable_id OR pt.transactable_id = p.id ')
+                                             .where('pt.topic_id IN (?)', topic_ids).group('users.id')
     end
   end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
   scope :by_profile_type, -> (ipt_id) { includes(:user_profiles).where(user_profiles: { instance_profile_type_id: ipt_id }) if ipt_id.present? }
   scope :with_enabled_profile, -> (_ipt_id) { where(user_profiles: { enabled: true }) }
 
-  scope :order_by_array_of_ids, lambda  { |user_ids|
+  scope :order_by_array_of_ids, lambda { |user_ids|
     user_ids ||= []
     user_ids_decorated = user_ids.each_with_index.map { |lid, i| "WHEN users.id=#{lid} THEN #{i}" }
     order("CASE #{user_ids_decorated.join(' ')} END") if user_ids.present?
@@ -259,12 +259,12 @@ class User < ActiveRecord::Base
                     if: ->(u) { u.phone.present? || u.validation_for(:phone).try(:is_required?) }
   validates :mobile_number, phone_number: true,
                             if: ->(u) { u.mobile_number.present? || u.validation_for(:mobile_number).try(:is_required?) }
-  validates_presence_of :country_name, :mobile_number, if:  ->(u)  { u.validation_for(:phone).try(:is_required?) }
+  validates :country_name, :mobile_number, presence: { if:  ->(u) { u.validation_for(:phone).try(:is_required?) } }
 
-  validates_inclusion_of :saved_searches_alerts_frequency, in: SavedSearch::ALERTS_FREQUENCIES
+  validates :saved_searches_alerts_frequency, inclusion: { in: SavedSearch::ALERTS_FREQUENCIES }
 
   validates_associated :companies, if: :verify_associated
-  validates_acceptance_of :accept_terms_of_service, on: :create, allow_nil: false, if: ->(u) { PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation }
+  validates :accept_terms_of_service, acceptance: { on: :create, allow_nil: false, if: ->(u) { PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation } }
 
   class << self
     def find_for_database_authentication(warden_conditions)
@@ -337,7 +337,7 @@ class User < ActiveRecord::Base
       when /location/i
         return all unless user
         group('addresses.id, users.id').joins(:current_address).select('users.*')
-          .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance', select: 'users.*'))
+                                       .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance', select: 'users.*'))
       when /number_of_projects/i
         order('transactables_count + transactable_collaborators_count DESC')
       when /custom_attributes./
@@ -368,7 +368,7 @@ class User < ActiveRecord::Base
   def get_default_profile
     default_profile || build_default_profile(instance_profile_type: PlatformContext.current.instance.try('default_profile_type'))
   end
-  alias_method :build_profile, :get_default_profile
+  alias build_profile get_default_profile
 
   def custom_validators
     case force_profile
@@ -420,9 +420,7 @@ class User < ActiveRecord::Base
                                 ["transactables.*,
            (SELECT pc.id from transactable_collaborators pc WHERE pc.transactable_id = transactables.id AND (pc.user_id = ? OR pc.email = ?) AND (approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
                                  ",
-                                 id, email
-                                ]
-                               )
+                                 id, email])
       )
     end
     transactables
@@ -454,19 +452,13 @@ class User < ActiveRecord::Base
     end.compact
   end
 
-  alias_method :properties, :default_properties
+  alias properties default_properties
 
-  def category_ids=(ids)
-    default_profile.category_ids = ids
-  end
+  delegate :category_ids=, to: :default_profile
 
-  def category_ids
-    default_profile.category_ids
-  end
+  delegate :category_ids, to: :default_profile
 
-  def categories
-    default_profile.categories
-  end
+  delegate :categories, to: :default_profile
 
   def common_categories(category)
     categories & category.descendants
@@ -498,7 +490,7 @@ class User < ActiveRecord::Base
 
   def name(avoid_stack_too_deep = nil)
     avoid_stack_too_deep = false if avoid_stack_too_deep.nil?
-    name_from_components(avoid_stack_too_deep).presence || read_attribute(:name).to_s.split.collect { |w| w[0] = w[0].capitalize; w }.join(' ')
+    name_from_components(avoid_stack_too_deep).presence || self[:name].to_s.split.collect { |w| w[0] = w[0].capitalize; w }.join(' ')
   end
 
   def name_from_components(avoid_stack_too_deep)
@@ -507,15 +499,15 @@ class User < ActiveRecord::Base
   end
 
   def first_name
-    (read_attribute(:first_name)) || get_first_name_from_name
+    self[:first_name] || get_first_name_from_name
   end
 
   def middle_name
-    (read_attribute(:middle_name)) || get_middle_name_from_name
+    self[:middle_name] || get_middle_name_from_name
   end
 
   def last_name
-    (read_attribute(:last_name)) || get_last_name_from_name
+    self[:last_name] || get_last_name_from_name
   end
 
   def name_with_state
@@ -580,12 +572,12 @@ class User < ActiveRecord::Base
 
   def field_blank_or_changed?(field_name)
     # ugly hack, but properties do not respond to _changed, _was etc.
-    if self.respond_to?(field_name)
-      if self.respond_to?("#{field_name}_changed?")
+    if respond_to?(field_name)
+      if respond_to?("#{field_name}_changed?")
         send(field_name).blank? || send("#{field_name}_changed?")
       # check if it's association. The idea is to avoid send(field_name) in case the field name is "destroy" etc
       elsif self.class.reflect_on_association(field_name)
-        send(field_name).blank? || send("#{field_name}").changed?
+        send(field_name).blank? || send(field_name.to_s).changed?
       else
         db_field_value = User.find(id).properties[field_name]
         properties[field_name].blank? || (db_field_value != properties[field_name])
@@ -622,16 +614,16 @@ class User < ActiveRecord::Base
   end
 
   def add_friend(users, auth = nil)
-    fail ArgumentError, "Invalid Authentication for User ##{id}" if auth && auth.user != self
+    raise ArgumentError, "Invalid Authentication for User ##{id}" if auth && auth.user != self
     Array.wrap(users).each do |user|
       next if friends.exists?(user)
       friend_auth = auth.nil? ? nil : user.authentications.where(provider: auth.provider).first
       user.follow!(self, friend_auth)
-      self.follow!(user, auth)
+      follow!(user, auth)
     end
   end
 
-  alias_method :add_friends, :add_friend
+  alias add_friends add_friend
 
   def friends
     followed_users.without(self)
@@ -709,9 +701,7 @@ class User < ActiveRecord::Base
   end
 
   def first_listing
-    if default_company && default_company.locations.first
-      default_company.locations.first.listings.first
-    end
+    default_company.locations.first.listings.first if default_company && default_company.locations.first
   end
 
   def has_listing_without_price?
@@ -772,11 +762,11 @@ class User < ActiveRecord::Base
   end
 
   def should_render_tutorial?
-    if self.tutorial_displayed?
+    if tutorial_displayed?
       false
     else
       self.tutorial_displayed = true
-      self.save!
+      save!
     end
   end
 
@@ -785,7 +775,7 @@ class User < ActiveRecord::Base
   end
 
   def is_location_administrator?
-    administered_locations.size > 0
+    !administered_locations.empty?
   end
 
   def user_messages
@@ -828,7 +818,7 @@ class User < ActiveRecord::Base
   end
 
   def administered_locations_pageviews_30_day_total
-    scoped_locations = (!companies.count.zero? && self == companies.first.creator) ? companies.first.locations : administered_locations
+    scoped_locations = !companies.count.zero? && self == companies.first.creator ? companies.first.locations : administered_locations
     scoped_locations = scoped_locations.with_searchable_listings
     Impression.where('impressionable_type = ? AND impressionable_id IN (?) AND DATE(impressions.created_at) >= ?', 'Location', scoped_locations.pluck(:id), Date.current - 30.days).count
   end
@@ -848,7 +838,7 @@ class User < ActiveRecord::Base
   end
 
   def recover_companies
-    created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [deleted_at, banned_at].compact.first, [deleted_at, banned_at].compact.first + 30.seconds).each do |company|
+    created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [deleted_at, banned_at].compact.first, [deleted_at, banned_at].compact.first + 30.seconds).find_each do |company|
       begin
         company.restore(recursive: true)
       rescue
@@ -880,8 +870,8 @@ class User < ActiveRecord::Base
 
   def social_url(provider)
     authentications.where(provider: provider)
-      .where('profile_url IS NOT NULL')
-      .order('created_at asc').last.try(:profile_url)
+                   .where('profile_url IS NOT NULL')
+                   .order('created_at asc').last.try(:profile_url)
   end
 
   def active_for_authentication?
@@ -926,7 +916,7 @@ class User < ActiveRecord::Base
   end
 
   def instance_profile_type_id
-    read_attribute(:instance_profile_type_id) || instance_profile_type.try(:id)
+    self[:instance_profile_type_id] || instance_profile_type.try(:id)
   end
 
   # HACK: for compatibiltiy reason, to be removed soon
@@ -943,22 +933,21 @@ class User < ActiveRecord::Base
   end
 
   def default_wish_list
-    unless wish_lists.any?
-      wish_lists.create default: true, name: I18n.t('wish_lists.name')
-    end
+    wish_lists.create default: true, name: I18n.t('wish_lists.name') unless wish_lists.any?
 
     wish_lists.default.first
   end
 
   def question_average_rating(reviews)
     @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
-                               .group(:rating_question_id).average(:rating)
+                                           .group(:rating_question_id).average(:rating)
   end
 
   def recalculate_seller_average_rating!
     seller_average_rating = reviews_about_seller.average(:rating) || 0.0
-    self.update_columns(
-      seller_average_rating: seller_average_rating, updated_at: Time.now)
+    update_columns(
+      seller_average_rating: seller_average_rating, updated_at: Time.now
+    )
     ElasticBulkUpdateJob.perform Transactable, listings.searchable.map do |listing|
       [listing.id, { seller_average_rating: seller_average_rating }]
     end
@@ -966,11 +955,11 @@ class User < ActiveRecord::Base
 
   def recalculate_buyer_average_rating!
     buyer_average_rating = reviews_about_buyer.average(:rating) || 0.0
-    self.update_columns(buyer_average_rating: buyer_average_rating, updated_at: Time.now)
+    update_columns(buyer_average_rating: buyer_average_rating, updated_at: Time.now)
   end
 
   def recalculate_left_as_seller_average_rating!
-    self.update_columns(
+    update_columns(
       left_by_seller_average_rating: Review.left_by_seller(self).average(:rating) || 0.0,
       updated_at: Time.now
     )
@@ -978,7 +967,7 @@ class User < ActiveRecord::Base
 
   def recalculate_left_as_buyer_average_rating!
     left_by_buyer_avg = Review.left_by_buyer(self).active_with_subject(RatingConstants::HOST).average(:rating) || 0.0
-    self.update_columns(
+    update_columns(
       left_by_buyer_average_rating: left_by_buyer_avg,
       updated_at: Time.now
     )
@@ -986,7 +975,7 @@ class User < ActiveRecord::Base
 
   def recalculate_product_avarage_rating!
     product_avg = Review.left_by_buyer(self).active_with_subject(RatingConstants::TRANSACTABLE).average(:rating) || 0.0
-    self.update_columns(
+    update_columns(
       product_average_rating: product_avg,
       updated_at: Time.now
     )
@@ -1011,7 +1000,7 @@ class User < ActiveRecord::Base
   end
 
   def can_update_feed_status?(record)
-    record == self || self.is_instance_owner? || record.try(:creator) === self || record.try(:user_id) === id
+    record == self || is_instance_owner? || record.try(:creator) === self || record.try(:user_id) === id
   end
 
   def social_friends
@@ -1038,9 +1027,7 @@ class User < ActiveRecord::Base
   end
 
   def payout_payment_gateways
-    if @payment_gateways.nil?
-      @payment_gateways = instance.payout_gateways(iso_country_code, all_currencies)
-    end
+    @payment_gateways = instance.payout_gateways(iso_country_code, all_currencies) if @payment_gateways.nil?
     @payment_gateways
   end
 
@@ -1062,11 +1049,11 @@ class User < ActiveRecord::Base
     msgs = []
 
     errors.each do |field|
-      if field =~ /\.properties/
-        msgs += errors.get(field)
-      else
-        msgs += errors.full_messages_for(field)
-      end
+      msgs += if field =~ /\.properties/
+                errors.get(field)
+              else
+                errors.full_messages_for(field)
+              end
     end
     msgs
   end
@@ -1084,9 +1071,7 @@ class User < ActiveRecord::Base
   end
 
   def has_verified_phone_number
-    unless has_verified_number?
-      errors.add(:mobile_number, I18n.t('errors.messages.not_verified_phone'))
-    end
+    errors.add(:mobile_number, I18n.t('errors.messages.not_verified_phone')) unless has_verified_number?
   end
 
   def required?(attribute)
@@ -1108,8 +1093,7 @@ class User < ActiveRecord::Base
   def transactables_with_message
     Transactable.where(id: (
       user_messages.where(thread_context_type: 'Transactable').reorder('').uniq.pluck(:thread_context_id) |
-      user_messages.joins('JOIN transactable_collaborators tc ON tc.id = user_messages.thread_context_id').where(thread_context_type: 'TransactableCollaborator').uniq.reorder('').pluck('tc.transactable_id'))
-                      )
+      user_messages.joins('JOIN transactable_collaborators tc ON tc.id = user_messages.thread_context_id').where(thread_context_type: 'TransactableCollaborator').uniq.reorder('').pluck('tc.transactable_id')))
   end
 
   def message_context_object
@@ -1132,16 +1116,10 @@ class User < ActiveRecord::Base
 
   # This validation is necessary due to the inconsistency of the name inputs in the app
   def validate_name_length_from_fullname
-    if get_first_name_from_name.length > MAX_NAME_LENGTH
-      errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGTH)
-    end
+    errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGTH) if get_first_name_from_name.length > MAX_NAME_LENGTH
 
-    if get_middle_name_from_name.length > MAX_NAME_LENGTH
-      errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGTH)
-    end
+    errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGTH) if get_middle_name_from_name.length > MAX_NAME_LENGTH
 
-    if get_last_name_from_name.length > MAX_NAME_LENGTH
-      errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH)
-    end
+    errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH) if get_last_name_from_name.length > MAX_NAME_LENGTH
   end
 end

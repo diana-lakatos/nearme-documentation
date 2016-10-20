@@ -63,7 +63,7 @@ class DelayedReservation < Reservation
   def enquirer_cancelable
     state == 'unconfirmed'
   end
-  alias_method :enquirer_cancelable?, :enquirer_cancelable
+  alias enquirer_cancelable? enquirer_cancelable
 
   def rebuild_first_line_item
     if transactable_line_items.any?
@@ -101,11 +101,9 @@ class DelayedReservation < Reservation
           errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date'))
           return false
         end
-        if date.past? && !date.today?
-          errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date'))
-        end
+        errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date')) if date.past? && !date.today?
         if transactable_pricing.day_booking? && periods.count != transactable_pricing.number_of_units
-          @dates = transactable_pricing.number_of_units.times.map do |unit|
+          @dates = Array.new(transactable_pricing.number_of_units) do |unit|
             (date + unit.day).to_date.to_s
           end.join(',')
           periods.destroy_all

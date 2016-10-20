@@ -116,7 +116,7 @@ class Reservation < Order
   def invoke_confirmation!(&_block)
     errors.clear
     action.try(:validate_all_dates_available, self) unless skip_payment_authorization?
-    if errors.empty? && self.valid? && check_double_cofirmation
+    if errors.empty? && valid? && check_double_cofirmation
       if block_given? ? yield : true
         create_shipments!
         confirm!
