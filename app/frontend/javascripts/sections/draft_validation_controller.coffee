@@ -14,7 +14,10 @@ module.exports = class DraftValidationController
     if @form.find('[data-autosave-draft]').length == 0
       return false
 
-    @form.find('input').change (event) =>
+    if @form.find('input[type="submit"]:disabled').length > 0
+      return false
+
+    @form.find('input, textarea').change (event) =>
       field = $(event.target)
       if @formMethod == "PATCH"
         method = 'PUT'
@@ -22,11 +25,12 @@ module.exports = class DraftValidationController
         method = 'POST'
 
       $.ajax
-        type: method,
-        dataType: "json",
-        url: @formAction,
-        data: @form.serialize() + "&save_draft=true&save_as_draft=true",
-        error: @handleAjaxError,
+        type: method
+        url: @formAction
+        data: @form.serialize() + "&save_draft=true&save_as_draft=true"
+        dataType: 'JSON'
+        cache: false
+        error: @handleAjaxError
         success: @handleAjaxSuccess(field)
 
       true
