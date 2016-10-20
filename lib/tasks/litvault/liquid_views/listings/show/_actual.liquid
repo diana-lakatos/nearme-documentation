@@ -94,27 +94,30 @@
         </div>
         {% endif %}
 
-        <div class="listing-section offers-made">
-          <h2>Offers Made</h2>
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Handling Lawyer</th>
-                <th scope="col">Offer Date</th>
-              </tr>
-              {% for order in listing.orders %}
+        {% if listing.orders.size > 0 %}
+          <div class="listing-section offers-made">
+            <h2>Offers Made</h2>
+            <table>
+              <thead>
                 <tr>
-                  <td>
-                    {{ order.user.name }}
-                  </td>
-                  <td>
-                    {{ order.created_at | to_date | l: 'short' }}
-                  </td>
+                  <th scope="col">Handling Lawyer</th>
+                  <th scope="col">Offer Date</th>
                 </tr>
-              {% endfor %}
-            </thead>
-          </table>
-        </div>
+                {% for order in listing.orders %}
+                  <tr>
+                    <td>
+                      {{ order.user.name }}
+                    </td>
+                    <td>
+                      {{ order.created_at | to_date | l: 'short' }}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </thead>
+            </table>
+          </div>
+        {% endif %}
+
 
         {% if can_make_offer == true %}
           <div class="make-an-offer">
