@@ -247,6 +247,22 @@ module Elastic
     end
 
     def apply_geo_search_filters
+      if @query[:item_location_city].present?
+        @filters << {
+          term: {
+            location_city: @query[:item_location_city].downcase.tr(' ', '_')
+          }
+        }
+      end
+
+      if @query[:item_location_state].present?
+        @filters << {
+          term: {
+            location_state: @query[:item_location_state].downcase.tr(' ', '_')
+          }
+        }
+      end
+
       if @transactable_type.show_price_slider && @query[:price] && (@query[:price][:min].present? || @query[:price][:max].present?)
         price_min = @query[:price][:min].to_f * 100
         price_max = @query[:price][:max].to_f * 100
@@ -284,49 +300,41 @@ module Elastic
       end
 
       if @query[:date].present?
-        begin
-          date = Date.parse(@query[:date])
-          day = date.wday + 1
-          from_hour = day * 100 + (@query[:time_from].presence || '0:00').split(':').first.to_i
-          to_hour = day * 100 + (@query[:time_to].presence || '23:00').split(':').first.to_i
+        date = Date.parse(@query[:date])
+        day = date.wday + 1
+        from_hour = day * 100 + (@query[:time_from].presence || '0:00').split(':').first.to_i
+        to_hour = day * 100 + (@query[:time_to].presence || '23:00').split(':').first.to_i
 
-          @filters << {
-            range: {
-              open_hours: {
-                gte: from_hour,
-                lte: to_hour
-              }
+        @filters << {
+          range: {
+            open_hours: {
+              gte: from_hour,
+              lte: to_hour
             }
           }
+        }
 
-          @filters << {
-            not: {
-              term: { availability_exceptions: date }
-            }
+        @filters << {
+          not: {
+            term: { availability_exceptions: date }
           }
-        rescue ArgumentError
-          # wrong date
-        end
+        }
       end
 
       if @query[:availability_exceptions].present?
-        begin
-          from = Date.parse(@query[:availability_exceptions][:from])
-          to = Date.parse(@query[:availability_exceptions][:to])
+        from = Date.parse(@query[:availability_exceptions][:from])
+        to = Date.parse(@query[:availability_exceptions][:to])
 
-          @filters << {
-            not: {
-              range: {
-                availability_exceptions: {
-                  gte: from,
-                  lte: to
-                }
+        @filters << {
+          not: {
+            range: {
+              availability_exceptions: {
+                gte: from,
+                lte: to
               }
             }
           }
-        rescue ArgumentError
-          # wrong date
-        end
+        }
       end
 
       if @query[:date].blank? && @query[:time_from].present? || @query[:time_to].present?

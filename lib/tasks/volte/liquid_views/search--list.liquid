@@ -93,8 +93,8 @@ partial: false
           <label for="sort_by">
             Sort by:
             <select class="form-control" name="sort" id="sort_by">
-              <option value="name_asc" {% if searcher.sort == 'name_asc' %}selected{% endif %}>Alphabetically ascending</option>
-              <option value="name_desc" {% if searcher.sort == 'name_desc' %}selected{% endif %}>Alphabetically descending</option>
+              <option value="name_asc" {% if searcher.sort == 'name_asc' %}selected{% endif %}>Item name ascending</option>
+              <option value="name_desc" {% if searcher.sort == 'name_desc' %}selected{% endif %}>Item name descending</option>
               <option value="all_prices_asc" {% if searcher.sort == 'all_prices_asc' %}selected{% endif %}>Price ascending</option>
               <option value="all_prices_desc" {% if searcher.sort == 'all_prices_desc' %}selected{% endif %}>Price descending</option>
               <option value="created_at_desc" {% if searcher.sort == 'created_at_desc' %}selected{% endif %}>Date entered</option>

@@ -39,6 +39,8 @@ module TransactablesIndex
         indexes :all_price_types, type: 'string'
 
         indexes :location_type_id, type: 'integer'
+        indexes :location_city, type: 'string'
+        indexes :location_state, type: 'string'
 
         indexes :geo_location, type: 'geo_point'
         indexes :service_radius, type: 'integer'
@@ -63,11 +65,10 @@ module TransactablesIndex
       custom_attribs = transactable_type.cached_custom_attributes.map { |c| c[0] }
 
       for custom_attribute in custom_attribs
-        if properties.respond_to?(custom_attribute)
-          val = properties.send(custom_attribute)
-          val = Array(val).map { |v| v.to_s.downcase }
-          custom_attrs[custom_attribute] = (val.size == 1 ? val.first : val)
-        end
+        next unless properties.respond_to?(custom_attribute)
+        val = properties.send(custom_attribute)
+        val = Array(val).map { |v| v.to_s.downcase }
+        custom_attrs[custom_attribute] = (val.size == 1 ? val.first : val)
       end
 
       allowed_keys = Transactable.mappings.to_hash[:transactable][:properties].keys.delete_if { |prop| prop == :custom_attributes }
@@ -83,6 +84,8 @@ module TransactablesIndex
         geo_location: geo_location,
         custom_attributes: custom_attrs,
         location_type_id: location.try(:location_type_id),
+        location_city: location.try(:city).try(:downcase).try(:gsub, ' ', '_'),
+        location_state: location.try(:state).try(:downcase).try(:gsub, ' ', '_'),
         categories: categories.pluck(:id),
         availability: schedule_availability,
         availability_exceptions: availability_exceptions,
