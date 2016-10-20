@@ -1,3 +1,5 @@
+- disabled = false if !defined?(disabled)
+
 .checkout-wizard{ :"data-shipping-country-controller" => true, :"data-payment-controller" => true  }
   - sidebar = capture_haml do
     = render 'checkout/sidebar', order: @order unless @order.instance_of?(Purchase)
@@ -13,5 +15,5 @@
 
     - if @order.inactive? || @order.unconfirmed?
 
-      = render 'checkout/form'
+      = render 'checkout/form', disabled: disabled
 
