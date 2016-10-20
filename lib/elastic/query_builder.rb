@@ -161,7 +161,10 @@ module Elastic
       sorting_fields = []
       if @query[:sort].present?
         sorting_fields = @query[:sort].split(',').compact.map do |sort_option|
-          if sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
+          next unless sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
+          if sort[1].eql? 'name'
+            { 'name.raw' => { order: sort[2] } }
+          else
             { sort[1] => { order: sort[2] } }
           end
         end.compact

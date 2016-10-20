@@ -17,7 +17,7 @@ module TransactablesIndex
           end
         end
 
-        indexes :name, type: 'string'
+        indexes :name, type: 'string', fields: { raw: { type:  'string', index: 'not_analyzed' } }
         indexes :description, type: 'string'
 
         indexes :object_properties, type: 'object'
