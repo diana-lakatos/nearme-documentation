@@ -7,6 +7,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :nm_force_ssl, only: [:new]
   before_action :find_company, only: [:social_accounts, :edit]
   before_action :set_form_components, only: [:edit, :update]
+  before_action :redirect_from_default, only: [:edit, :update]
 
   # NB: Devise calls User.new_with_session when building the new User resource.
   # We use this to apply any Provider based authentications to the user record.
@@ -151,9 +152,7 @@ class RegistrationsController < Devise::RegistrationsController
     # to avoid duplication, as the approval request is already set by assign_attributes
     # and build_approval_request_for_object
     if resource.update_with_password(all_params.except(:approval_requests_attributes))
-      if @user.try(:language).try(:to_sym) != I18n.locale
-        I18n.locale = @user.try(:language).try(:to_sym) || :en
-      end
+      I18n.locale = @user.try(:language).try(:to_sym) || :en if @user.try(:language).try(:to_sym) != I18n.locale
 
       set_flash_message :success, :updated
       sign_in(resource, bypass: true)
@@ -445,5 +444,11 @@ class RegistrationsController < Devise::RegistrationsController
     @role = %w(seller buyer).detect { |r| r == params[:role] }
     @role ||= 'default'
     @form_component = FormComponent.find_by(form_type: "FormComponent::#{@role.upcase}_REGISTRATION".constantize)
+  end
+
+  def redirect_from_default
+    return if current_user.has_default_profile?
+    redirect_to(edit_dashboard_seller_path) && return if current_user.has_seller_profile?
+    redirect_to(edit_dashboard_buyer_path) && return if current_user.has_buyer_profile?
   end
 end

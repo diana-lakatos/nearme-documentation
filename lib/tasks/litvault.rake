@@ -316,9 +316,9 @@ namespace :litvault do
     end
 
     def create_or_update_form_components_for_instance_profile_types
-      # cleanup - remove unused seller profile component
-      seller_profile_fc = FormComponent.where(id: 5401).first
-      seller_profile_fc.destroy! if seller_profile_fc
+      FormComponent.find_by_id(5399).try(:destroy)
+      seller_profile_fc = FormComponent.where(id: 5401).with_deleted.first
+      seller_profile_fc.update_attributes(deleted_at: nil)
 
       puts "\nUpdating existing form components"
       instance_profile_types = YAML.load_file(File.join(@theme_path, 'form_components', 'instance_profile_types.yml'))

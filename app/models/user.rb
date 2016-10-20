@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
   has_one :seller_profile, -> { seller }, class_name: 'UserProfile'
   has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
   has_one :default_profile, -> { default }, class_name: 'UserProfile'
-  has_one :communication, ->(_user) { where(provider_key: PlatformContext.current.instance.twilio_config[:key]) }, dependent: :destroy
+  has_one :communication, ->(_user) { where(provider_key: current_instance.twilio_config[:key]) }, dependent: :destroy
 
   has_one :notification_preference, dependent: :destroy
   has_one :recurring_notification_preference, -> { NotificationPreference.recurring }, class_name: 'NotificationPreference'
@@ -290,7 +290,7 @@ class User < ActiveRecord::Base
     # This needs to be checked, why did he remove it?
     def filtered_by_role(values)
       if values.present? && 'Other'.in?(values)
-        role_attribute = PlatformContext.current.instance.default_profile_type.custom_attributes.find_by(name: 'role')
+        role_attribute = current_instance.default_profile_type.custom_attributes.find_by(name: 'role')
         values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
       end
 
@@ -346,7 +346,7 @@ class User < ActiveRecord::Base
         parsed_order = order.match(/custom_attributes.([a-zA-Z\.\_\-]*)_(asc|desc)/)
         order(ActiveRecord::Base.send(:sanitize_sql_array, ["cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}", { field_name: parsed_order[1] }]))
       else
-        if PlatformContext.current.instance.is_community?
+        if current_instance.is_community?
           order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')
         else
           all
@@ -360,17 +360,29 @@ class User < ActiveRecord::Base
   end
 
   def get_seller_profile
-    seller_profile || build_seller_profile(instance_profile_type: PlatformContext.current.instance.try('seller_profile_type'))
+    seller_profile || build_seller_profile(instance_profile_type: current_instance.try('seller_profile_type'))
   end
 
   def get_buyer_profile
-    buyer_profile || build_buyer_profile(instance_profile_type: PlatformContext.current.instance.try('buyer_profile_type'))
+    buyer_profile || build_buyer_profile(instance_profile_type: current_instance.try('buyer_profile_type'))
   end
 
   def get_default_profile
-    default_profile || build_default_profile(instance_profile_type: PlatformContext.current.instance.try('default_profile_type'))
+    default_profile || build_default_profile(instance_profile_type: current_instance.try('default_profile_type'))
   end
   alias build_profile get_default_profile
+
+  def has_default_profile?
+    default_profile.present? && current_instance.default_profile_enabled? && default_profile.has_fields?(FormComponent::INSTANCE_PROFILE_TYPES)
+  end
+
+  def has_seller_profile?
+    seller_profile.present? && current_instance.seller_profile_enabled? && seller_profile.has_fields?(FormComponent::SELLER_PROFILE_TYPES)
+  end
+
+  def has_buyer_profile?
+    buyer_profile.present? && current_instance.buyer_profile_enabled? && buyer_profile.has_fields?(FormComponent::SELLER_PROFILE_TYPES)
+  end
 
   def custom_validators
     case force_profile
@@ -395,7 +407,7 @@ class User < ActiveRecord::Base
     omniauth_coercions = OmniAuthCoercionService.new(omniauth)
     self.name = omniauth_coercions.name if name.blank?
     self.email = omniauth_coercions.email if email.blank?
-    self.external_id ||= omniauth_coercions.external_id if PlatformContext.current.instance.is_community?
+    self.external_id ||= omniauth_coercions.external_id if current_instance.is_community?
 
     authentications.build(
       provider: omniauth['provider'],
@@ -429,13 +441,13 @@ class User < ActiveRecord::Base
   end
 
   def iso_country_code
-    iso_country_code = if PlatformContext.current.instance.skip_company?
+    iso_country_code = if current_instance.skip_company?
                          current_address.try(:iso_country_code) || country.try(:iso)
                        else
                          default_company.try(:iso_country_code)
                        end
 
-    iso_country_code.presence || PlatformContext.current.instance.default_country_code
+    iso_country_code.presence || current_instance.default_country_code
   end
 
   def all_transactables_count
@@ -703,9 +715,7 @@ class User < ActiveRecord::Base
   end
 
   def first_listing
-    if default_company && default_company.locations.first
-      default_company.locations.first.listings.first
-    end
+    default_company.locations.first.listings.first if default_company && default_company.locations.first
   end
 
   def has_listing_without_price?
@@ -937,9 +947,7 @@ class User < ActiveRecord::Base
   end
 
   def default_wish_list
-    unless wish_lists.any?
-      wish_lists.create default: true, name: I18n.t('wish_lists.name')
-    end
+    wish_lists.create default: true, name: I18n.t('wish_lists.name') unless wish_lists.any?
 
     wish_lists.default.first
   end
@@ -1033,9 +1041,7 @@ class User < ActiveRecord::Base
   end
 
   def payout_payment_gateways
-    if @payment_gateways.nil?
-      @payment_gateways = instance.payout_gateways(iso_country_code, all_currencies)
-    end
+    @payment_gateways = instance.payout_gateways(iso_country_code, all_currencies) if @payment_gateways.nil?
     @payment_gateways
   end
 
@@ -1079,9 +1085,7 @@ class User < ActiveRecord::Base
   end
 
   def has_verified_phone_number
-    unless has_verified_number?
-      errors.add(:mobile_number, I18n.t('errors.messages.not_verified_phone'))
-    end
+    errors.add(:mobile_number, I18n.t('errors.messages.not_verified_phone')) unless has_verified_number?
   end
 
   def required?(attribute)
@@ -1126,16 +1130,14 @@ class User < ActiveRecord::Base
 
   # This validation is necessary due to the inconsistency of the name inputs in the app
   def validate_name_length_from_fullname
-    if get_first_name_from_name.length > MAX_NAME_LENGTH
-      errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGTH)
-    end
+    errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGTH) if get_first_name_from_name.length > MAX_NAME_LENGTH
 
-    if get_middle_name_from_name.length > MAX_NAME_LENGTH
-      errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGTH)
-    end
+    errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGTH) if get_middle_name_from_name.length > MAX_NAME_LENGTH
 
-    if get_last_name_from_name.length > MAX_NAME_LENGTH
-      errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH)
-    end
+    errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH) if get_last_name_from_name.length > MAX_NAME_LENGTH
+  end
+
+  def current_instance
+    PlatformContext.current.instance
   end
 end
