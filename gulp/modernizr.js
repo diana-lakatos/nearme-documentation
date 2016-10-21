@@ -8,6 +8,41 @@ const gutil = require('gulp-util');
 /* These tests are excluded solely because they affect design in an unpredictable way due to css classes conflicts */
 var excludedTests = ['hidden', 'dom/hidden', 'flash', 'css/columns', 'csscolumns'];
 
+var tests = [
+  'animation',
+  'canvas',
+  'checked',
+  'contains',
+  'cssanimations',
+  'csscalc',
+  'cssgradients',
+  'csspointerevents',
+  'csstransforms',
+  'details',
+  'filereader',
+  'flexbox',
+  'geolocation',
+  'hsla',
+  'input',
+  'opacity',
+  'placeholder',
+  'progressbar_meter',
+  'rgba',
+  'search',
+  'sizes',
+  'svg',
+  'target',
+  'template',
+  'texttrackapi_track',
+  'time',
+  'touchevents',
+  'setclasses'
+];
+
+var options = [
+  'setClasses'
+];
+
 excludedTests.forEach((test)=>{
   var index = modernizrConfigAll['feature-detects'].indexOf(test);
   if (index > -1) {
@@ -38,12 +73,11 @@ module.exports = function(gulp, config) {
     gulp.task(`modernizr:${environment}`, ['styles:dist', `webpack:${environment}`], ()=>{
       customizr({
         dest: path.join(config.paths.tmp, 'vendor','modernizr.js'),
-        options: ['setClasses'],
+        options: options,
         uglify: true,
+        tests: tests,
         excludeTests: excludedTests,
-        files: {
-          src: [path.join(config.paths.tmp, '**/*.{js,css}')]
-        }
+        crawl: false
       });
     });
   }
