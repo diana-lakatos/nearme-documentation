@@ -69,8 +69,6 @@ class CleanupDbMigration < ActiveRecord::Migration
 
     remove_column :payment_subscriptions, :partner_id
 
-    remove_column :photos, :photo_role
-
     remove_column :refunds, :credit_card_id
 
     remove_column :reservation_periods, :line_item_id

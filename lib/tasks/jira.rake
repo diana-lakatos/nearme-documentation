@@ -1,4 +1,5 @@
 require 'chronic'
+require_relative '../jira_wrapper.rb'
 
 namespace :jira do
   desc 'Populate new foreign keys and flags'
@@ -24,9 +25,6 @@ namespace :jira do
     @jira_helper = JiraHelper.new
     @jira_wrapper = JiraWrapper.new
 
-    tag = @jira_wrapper.initiate_hotfix!
-    puts "Relasing hotfix - #{tag}"
-
     @commits_for_hotfix = []
 
     (@jira_helper.jira_commits + @jira_helper.non_jira_commits).each do |commit|
@@ -36,7 +34,7 @@ namespace :jira do
 
     issues = []
     @jira_helper.jira_commits.each do |commit_for_hotfix|
-      issues << @jira_helper.find_issue(@jira_helper.to_jira_number([commit_for_hotfix]).first)
+      issues << @jira_wrapper.find_issue(@jira_helper.to_jira_number([commit_for_hotfix]).first)
     end
 
     @jira_wrapper.ensure_version_present!(
@@ -46,16 +44,16 @@ namespace :jira do
       user_start_date: 'today',
       start_date: 'today'
     )
-    JiraReleaser.new(issues).release(jira_wrapper.next_tag(2))
+    JiraReleaser.new(issues).release(@jira_wrapper.next_tag(2))
   end
 end
 
 class JiraHelper
+  JIRA_FORMAT = /^\A[a-zA-Z]{2,4}[\s-]\d{2,5}/
   extend Forwardable
   attr_accessor :commit_parser, :client
 
   class GitCommitParser
-    JIRA_FORMAT = /^\A[a-zA-Z]{2,4}[\s-]\d{2,5}/
     attr_reader :base_revision, :new_revision
 
     def initialize(base_revision, new_revision)
@@ -68,7 +66,7 @@ class JiraHelper
     end
 
     def jira_commits
-      @jira_commits ||= commits_between_revisions.select { |c| c =~ JIRA_FORMAT }
+      @jira_commits ||= commits_between_revisions.select { |c| c =~ JiraHelper::JIRA_FORMAT }
     end
 
     def non_jira_commits
@@ -97,7 +95,7 @@ class JiraHelper
   end
 
   def to_jira_number(array)
-    array.map { |a| a.scan(JIRA_FORMAT).first }
+    array.map { |a| a.scan(JiraHelper::JIRA_FORMAT).first }
   end
 
   def full_names(numbers, array)
@@ -132,7 +130,7 @@ class JiraReleaser
     end
     puts "\nTotal number of issues: #{total_count}\n"
 
-    puts 'Do you want to proceed?'
+    puts 'Do you want to proceed? [y]'
     user_input = STDIN.gets.strip
     if user_input.strip != 'y'
       puts 'ABORT'
