@@ -39,7 +39,7 @@ module.exports = function(gulp, config) {
       customizr({
         dest: path.join(config.paths.tmp, 'vendor','modernizr.js'),
         options: ['setClasses'],
-        uglify: false,
+        uglify: true,
         excludeTests: excludedTests,
         files: {
           src: [path.join(config.paths.tmp, '**/*.{js,css}')]
