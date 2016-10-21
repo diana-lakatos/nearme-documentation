@@ -1,7 +1,7 @@
 const path = require('path');
 const customizr = require('customizr');
 const modernizr = require('modernizr');
-let modernizrConfigAll = require('modernizr/lib/config-all.json');
+const modernizrConfigAll = require('modernizr/lib/config-all.json');
 const fs = require('fs');
 const gutil = require('gulp-util');
 
