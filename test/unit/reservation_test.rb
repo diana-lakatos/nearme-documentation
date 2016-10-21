@@ -499,11 +499,13 @@ class ReservationTest < ActiveSupport::TestCase
       should 'charge a service fee to credit card paid reservations' do
         reservation = @transactable.reservations.build(
           user: @user,
+          owner: @user,
           date: 1.week.from_now.monday,
           quantity: 1,
           transactable: @transactable,
           transactable_pricing: @transactable.action_type.pricings.first
         )
+
         reservation.save
         assert_not_equal 0, reservation.service_fee_amount_guest.cents
         assert_not_equal 0, reservation.service_fee_amount_host.cents
@@ -512,6 +514,7 @@ class ReservationTest < ActiveSupport::TestCase
       should 'charge a service fee to manual payment reservations' do
         reservation = @transactable.reservations.build(
           user: @user,
+          owner: @user,
           date: 1.week.from_now.monday,
           quantity: 1,
           transactable: @transactable,
