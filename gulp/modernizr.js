@@ -9,7 +9,7 @@ const gutil = require('gulp-util');
 var excludedTests = ['hidden', 'dom/hidden', 'flash', 'css/columns', 'csscolumns'];
 
 excludedTests.forEach((test)=>{
-  let index = modernizrConfigAll['feature-detects'].indexOf(test);
+  var index = modernizrConfigAll['feature-detects'].indexOf(test);
   if (index > -1) {
     modernizrConfigAll['feature-detects'].splice(index, 1);
     gutil.log(gutil.colors.yellow(`Excluded modernizr test: ${test}`));
