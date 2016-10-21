@@ -3,6 +3,8 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
 
   supported :immediate_payout, :credit_card_payment, :multiple_currency, :partial_refunds, :recurring_payment
 
+  delegate :parse_webhook, :retrieve_account, :onboard!, :update_onboard!, :find_transfer_transactions, to: :gateway
+
   validate :validate_config_hash
 
   # def self.supported_countries
@@ -58,25 +60,9 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
     @gateway ||= ActiveMerchant::Billing::StripeConnectPayments.new(settings)
   end
 
-  def parse_webhook(*args)
-    gateway.parse_webhook(*args)
-  end
-
-  def retrieve_account(*args)
-    gateway.retrieve_account(*args)
-  end
-
-  def onboard!(*args)
-    gateway.onboard!(*args)
-  end
-
-  def update_onboard!(*args)
-    gateway.update_onboard!(*args)
-  end
-
   def charge(user, amount, currency, payment, token)
     charge_record = super(user, amount.to_i, currency, payment, token)
-    if charge_record.try(:success?)
+    if charge_record.try(:success?) && !direct_charge?
       payment_transfer = payment.company.payment_transfers.create!(
         payments: [payment.reload],
         payment_gateway_mode: mode,
@@ -90,8 +76,9 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   def custom_options
   end
 
-  def process_payout(_merchant_account, _amount, _reference)
+  def process_payout(_merchant_account, _amount, _payment_transfer)
     # TODO: integrate Stripe Transfer API for manual transfer_schedule
+
     payout_pending(@pay_response)
   end
 

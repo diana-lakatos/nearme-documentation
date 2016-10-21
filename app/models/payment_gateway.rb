@@ -29,7 +29,7 @@ class PaymentGateway < ActiveRecord::Base
 
   belongs_to :payment_gateway
 
-  has_many :active_payment_methods, -> (_object) { active.except_free },  class_name: 'PaymentMethod'
+  has_many :active_payment_methods, -> (_object) { active.except_free }, class_name: 'PaymentMethod'
   has_many :active_free_payment_methods, -> (_object) { active.free }, class_name: 'PaymentMethod'
   has_many :billing_authorizations
   has_many :credit_cards
@@ -37,7 +37,7 @@ class PaymentGateway < ActiveRecord::Base
   has_many :payouts
   has_many :instance_clients, dependent: :destroy
   has_many :merchant_accounts, dependent: :destroy
-  has_many :payments, through: :billing_authorizations
+  has_many :payments
   has_many :payment_transfers
   has_many :payment_gateways_countries, dependent: :destroy
   has_many :payment_countries, through: :payment_gateways_countries, source: 'country'
@@ -57,23 +57,23 @@ class PaymentGateway < ActiveRecord::Base
     errors.add(:payment_methods, 'At least one payment method must be selected') if active? && !supports_payout? && !payment_methods.any?(&:active?)
   end
 
-  AUTH_ERROR = 'Payment Gateway authorization error'
-  CAPTURE_ERROR = 'Payment Gateway capture error'
-  VOID_ERROR = 'Payment Gateway void error'
-  REFUND_ERROR = 'Payment Gateway refund error'
-  STORE_ERROR = 'Payment Gateway credit card store error'
-  UNSTORE_ERROR = 'Payment Gateway credit card delete error'
-  PURCHASE_ERROR = 'Payment Gateway purchase error'
+  AUTH_ERROR = 'Payment Gateway authorization error'.freeze
+  CAPTURE_ERROR = 'Payment Gateway capture error'.freeze
+  VOID_ERROR = 'Payment Gateway void error'.freeze
+  REFUND_ERROR = 'Payment Gateway refund error'.freeze
+  STORE_ERROR = 'Payment Gateway credit card store error'.freeze
+  UNSTORE_ERROR = 'Payment Gateway credit card delete error'.freeze
+  PURCHASE_ERROR = 'Payment Gateway purchase error'.freeze
 
   PAYOUT_GATEWAYS = {
     'PayPal Adpative Payments (Payouts)' => 'PaymentGateway::PaypalAdaptivePaymentGateway'
-  }
+  }.freeze
 
   IMMEDIATE_PAYOUT_GATEWAYS = {
     'Braintree Marketplace' => 'PaymentGateway::BraintreeMarketplacePaymentGateway',
     'PayPal Express In Chain Payments' => 'PaymentGateway::PaypalExpressChainPaymentGateway',
     'Stripe Connect' => 'PaymentGateway::StripeConnectPaymentGateway'
-  }
+  }.freeze
 
   PAYMENT_GATEWAYS = {
     'AuthorizeNet' => 'PaymentGateway::AuthorizeNetPaymentGateway',
@@ -92,7 +92,7 @@ class PaymentGateway < ActiveRecord::Base
     'Stripe Connect' => 'PaymentGateway::StripeConnectPaymentGateway',
     'Worldpay' => 'PaymentGateway::WorldpayPaymentGateway',
     'Offline Payment' => 'PaymentGateway::ManualPaymentGateway'
-  }
+  }.freeze
 
   MAX_REFUND_ATTEMPTS = 3
 
@@ -112,7 +112,7 @@ class PaymentGateway < ActiveRecord::Base
   #- CLASS METHODS STARTS HERE
 
   def self.supported_countries
-    fail NotImplementedError.new("#{name} has not implemented self.supported_countries")
+    raise NotImplementedError, "#{name} has not implemented self.supported_countries"
   end
 
   def config_settings
@@ -124,11 +124,11 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def active?
-    self.live_active? || self.test_active?
+    live_active? || test_active?
   end
 
   def active_in_current_mode?
-    test_mode? ? self.test_active? : self.live_active?
+    test_mode? ? test_active? : live_active?
   end
 
   def client_token
@@ -165,7 +165,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def self.active_merchant_class
-    fail NotImplementedError.new("#{name} active_merchant_class not implemented")
+    raise NotImplementedError, "#{name} active_merchant_class not implemented"
   end
 
   def self.model_name
@@ -245,7 +245,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def supports_currency?(currency)
-    return true if self.supports_any_currency?
+    return true if supports_any_currency?
     supported_currencies.include?(currency)
   end
 
@@ -351,7 +351,7 @@ class PaymentGateway < ActiveRecord::Base
       receiver: 'guest'
     )
 
-    fail PaymentGateway::RefundNotSupportedError, "Refund isn't supported or is not implemented. Please refund this user directly on your gateway account." unless defined?(refund_identification)
+    raise PaymentGateway::RefundNotSupportedError, "Refund isn't supported or is not implemented. Please refund this user directly on your gateway account." unless defined?(refund_identification)
 
     options = custom_refund_options.merge(currency: currency)
     options.merge!(@merchant_account.custom_options) if @merchant_account
