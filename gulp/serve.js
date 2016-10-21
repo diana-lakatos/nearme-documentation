@@ -2,7 +2,7 @@ var path = require('path');
 
 module.exports = function(gulp, browserSync, config) {
 
-  gulp.task('serve:run', ['styles', 'images', 'fonts', 'watch', 'vendor'], function(){
+  gulp.task('serve:run', ['styles', 'images', 'fonts', 'watch', 'vendor', 'modernizr'], function(){
     browserSync.init({
       proxy: 'localhost:3000'
     });
