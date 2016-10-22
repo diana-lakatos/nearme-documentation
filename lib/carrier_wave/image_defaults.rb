@@ -4,14 +4,12 @@ module CarrierWave
 
     included do
       include CarrierWave::MiniMagick
+      include CarrierWave::Optimizable
       cattr_reader :delayed_versions
       process :auto_orient
 
       def auto_orient
-        manipulate! do |img|
-          img.auto_orient
-          img
-        end
+        manipulate! { |img| img.tap(&:auto_orient) }
       end
 
       # Add a white list of extensions which are allowed to be uploaded.
@@ -23,7 +21,6 @@ module CarrierWave
       # Offers a placeholder while image is not uploaded yet
       def default_url(*args)
         default_image, version = get_default_image_and_version(*args)
-
         if default_image.blank? || self.class == DefaultImageUploader
           default_placeholder(version)
         else

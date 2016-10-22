@@ -2,7 +2,7 @@ module CarrierWave::TransformableImage
   extend ActiveSupport::Concern
 
   included do
-    version :transformed do
+    version :transformed, from_version: :optimized do
       process :apply_rotate
       process :apply_crop
     end
