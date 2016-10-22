@@ -15,9 +15,12 @@ en:
       with_time_zone: '%m/%d/%Y %H:%M (%Z)'
       short_with_time_zone: '%-H:%M (%Z)'
       day_and_month: '%b %d'
+      day_month_year: '%d-%m-%Y'
+
   date:
     yesterday: Yesterday
     formats:
       long: '%B %d, %Y'
       short: '%m/%d/%Y'
       day_and_month: '%b %d'
+      day_month_year: '%d-%m-%Y'
