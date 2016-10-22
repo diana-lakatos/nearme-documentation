@@ -13,6 +13,8 @@ require 'elasticsearch/rails/instrumentation'
 
 module DesksnearMe
   class Application < Rails::Application
+    # for NewRelic
+    GC::Profiler.enable
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -116,10 +118,10 @@ module DesksnearMe
     # we do not use it, but won't harm
     config.active_job.queue_adapter = :delayed_job
 
-    config.action_dispatch.rescue_responses.merge!('Page::NotFound' => :not_found)
-    config.action_dispatch.rescue_responses.merge!('Location::NotFound' => :not_found)
-    config.action_dispatch.rescue_responses.merge!('UserBlog::NotFound' => :not_found)
-    config.action_dispatch.rescue_responses.merge!('Transactable::NotFound' => :not_found)
+    config.action_dispatch.rescue_responses['Page::NotFound'] = :not_found
+    config.action_dispatch.rescue_responses['Location::NotFound'] = :not_found
+    config.action_dispatch.rescue_responses['UserBlog::NotFound'] = :not_found
+    config.action_dispatch.rescue_responses['Transactable::NotFound'] = :not_found
 
     config.encrypt_sensitive_db_columns = true
 
@@ -153,9 +155,7 @@ module DesksnearMe
     config.raygun_js_api_key = ENV['RAYGUN_JS_API_KEY']
 
     version_parts = /^([0-9]+\.[0-9]+\.[0-9]+)-?([0-9]+)?(-[0-9a-z]+)?$/i.match(config.git_version)
-    if version_parts
-      config.app_version = "#{version_parts[1]}.#{(version_parts[2] || 0)}"
-    end
+    config.app_version = "#{version_parts[1]}.#{(version_parts[2] || 0)}" if version_parts
 
     config.verify_api_requests = true
 
