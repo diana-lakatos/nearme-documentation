@@ -185,6 +185,14 @@ class Order < ActiveRecord::Base
     type != 'Purchase'
   end
 
+  def lister_confirmed!
+    touch(:lister_confirmed_at)
+  end
+
+  def enquirer_confirmed!
+    touch(:enquirer_confirmed_at)
+  end
+
   def number
     sprintf "#{self.class.name[0]}%08d", id
   end

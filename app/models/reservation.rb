@@ -127,15 +127,7 @@ class Reservation < Order
   end
 
   def check_double_cofirmation
-    !action.both_side_confirmation || (lister_confirmed_at && enquirer_confirmed_at)
-  end
-
-  def lister_confirmed!
-    update_attribute :lister_confirmed_at, Time.now
-  end
-
-  def enquirer_confirmed!
-    update_attribute :enquirer_confirmed_at, Time.now
+    !action.both_side_confirmation || (lister_confirmed_at.present? && enquirer_confirmed_at.present?)
   end
 
   def charge_and_confirm!

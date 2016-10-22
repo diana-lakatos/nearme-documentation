@@ -1,5 +1,5 @@
 class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseController
-  before_filter :find_order, except: :index
+  before_action :find_order, except: :index
 
   def index
     @order_search_service = OrderSearchService.new(order_scope, params)
@@ -67,7 +67,8 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
         @order.charge_and_confirm!
       end
 
-      if @order.lister_confirmed_at && @order.action.both_side_confirmation
+      # ChrisS, what's the point of checkig if lister_confirmed_at is present if we made sure it is couple lines above?
+      if @order.lister_confirmed_at.present? && @order.action.both_side_confirmation
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerConfirmedWithDoubleConfirmation, @order.id)
       end
 
