@@ -46,6 +46,7 @@ module Payable
       return true unless @payment_step
       return true if payment.blank?
       return true unless payment.pending?
+      return true if skip_payment_authorization
 
       payment.try(:authorize!)
     end
