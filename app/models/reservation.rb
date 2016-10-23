@@ -311,12 +311,6 @@ class Reservation < Order
     end
   end
 
-  def try_to_activate!
-    return true unless inactive? && valid?
-
-    activate! if payment && payment.authorized?
-  end
-
   # ----- VALIDATIONS ------
 
   def validate_order_for_action

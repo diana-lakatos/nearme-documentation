@@ -9,12 +9,6 @@ class Purchase < Order
     event :ship do transition completed: :shipped; end
   end
 
-  def try_to_activate!
-    return true unless inactive? && valid?
-
-    activate! if payment && payment.authorized?
-  end
-
   def self.workflow_class
     Purchase
   end

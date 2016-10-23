@@ -39,7 +39,7 @@ class DelayedReservation < Reservation
   def try_to_activate!
     return true unless inactive? && valid?
 
-    activate!
+    activate! if payment && payment.pending?
   end
 
   def before_checkout_callback
