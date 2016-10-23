@@ -531,7 +531,7 @@ class Order < ActiveRecord::Base
   def try_to_activate!
     return true unless inactive? && valid?
 
-    activate!
+    activate! if payment && payment.authorized?
   end
 
   def send_rejected_workflow_alerts!

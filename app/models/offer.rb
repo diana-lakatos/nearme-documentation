@@ -5,6 +5,13 @@ class Offer < Order
   has_many :host_line_items, as: :line_itemable
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
 
+  def try_to_activate!
+    return true unless inactive? && valid?
+    return true if draft_at?
+
+    activate!
+  end
+
   def complete!
     if can_complete?
       touch(:archived_at)
