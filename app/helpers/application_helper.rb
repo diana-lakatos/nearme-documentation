@@ -114,7 +114,7 @@ module ApplicationHelper
     options[:rel] = nil if secure_links
     constraint.merge!(secured_constraint) if secure_links
     options[:data] ||= {}
-    options[:data].merge!(href: new_user_registration_url(constraint))
+    options[:data][:href] = new_user_registration_url(constraint)
     link_to('#', options, &block)
   end
 
@@ -123,7 +123,7 @@ module ApplicationHelper
     options[:rel] = nil if secure_links?
     constraint.merge!(platform_context.secured_constraint) if secure_links?
     options[:data] ||= {}
-    options[:data].merge!(href: new_user_session_url(constraint))
+    options[:data][:href] = new_user_session_url(constraint)
     link_to('#', options, &block)
   end
 
@@ -131,7 +131,7 @@ module ApplicationHelper
     options = args.first || {}
     html_options = args.second || {}
 
-    unless html_options.key?(:disable_with) then html_options[:disable_with] = 'Loading...' end
+    html_options[:disable_with] = 'Loading...' unless html_options.key?(:disable_with)
     if block_given?
       link_to(capture(&block), options, html_options)
     else
@@ -189,9 +189,7 @@ module ApplicationHelper
       classes << 'user-role-lister' if current_user.seller_profile
       classes << 'user-role-enquirer' if current_user.buyer_profile
     end
-    if controller_name == 'pages' && params[:action] == 'show'
-      classes << "page-#{@page.id}-#{@page.slug}"
-    end
+    classes << "page-#{@page.id}-#{@page.slug}" if controller_name == 'pages' && params[:action] == 'show'
 
     classes.compact.join(' ')
   end
@@ -224,7 +222,7 @@ module ApplicationHelper
   end
 
   def render_olark?
-    not params[:controller] == 'locations' && params[:action] == 'show'
+    !(params[:controller] == 'locations' && params[:action] == 'show')
   end
 
   def nl2br(str)
@@ -325,7 +323,7 @@ module ApplicationHelper
   end
 
   def selected_transactable_type(transactable_type_id, default_text = '')
-    transactable_type = TransactableType.find_by_id(transactable_type_id)
+    transactable_type = TransactableType.find_by(id: transactable_type_id)
     if transactable_type
       transactable_type.name
     else
@@ -347,12 +345,16 @@ module ApplicationHelper
 
   def javascript_i18n_include_tag
     js_translations = I18n.t('js').to_json
-    date_formats = %w(default day_month_year month_year short day_and_month only_date_short only_date full_day_month long).inject({}) do |hash, key|
+    date_formats = %w(default day_month_year month_year short day_and_month only_date_short only_date full_day_month long).each_with_object({}) do |key, hash|
       hash[key] = I18n.t("date.formats.#{key}")
       hash
     end
-    time_formats = %w(default short long with_time_zone day_and_month short_with_time_zone).inject({}) do |hash, key|
+    time_formats = %w(default short long with_time_zone day_and_month short_with_time_zone).each_with_object({}) do |key, hash|
       hash[key] = I18n.t("time.formats.#{key}")
+      hash
+    end
+    datepicker_formats = %w(dformat).each_with_object({}) do |key, hash|
+      hash[key] = I18n.t("datepicker.#{key}")
       hash
     end
     %(
@@ -361,6 +363,7 @@ module ApplicationHelper
       window.I18n.t = #{js_translations};
       window.I18n.dateFormats = #{date_formats.to_json};
       window.I18n.timeFormats = #{time_formats.to_json};
+      window.I18n.datepickerFormats = #{datepicker_formats.to_json};
       window.I18n.abbrMonthNames = '#{Date::ABBR_MONTHNAMES.compact.join('|')}';
         ).html_safe
   end
@@ -400,7 +403,8 @@ module ApplicationHelper
       'this-nth-day-of-month' => I18n.t('schedule.this_nth_day_of_month'),
       'this-nth-day-of-year' => I18n.t('schedule.this_nth_day_of_year'),
       'pascha-offset' => I18n.t('schedule.pascha_offset'),
-      'event-occured-less' => I18n.t('schedule.event_occured_less') }
+      'event-occured-less' => I18n.t('schedule.event_occured_less')
+    }
   end
 
   def body_classes

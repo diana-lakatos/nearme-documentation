@@ -17,7 +17,7 @@ module.exports = class ReservationReviewController
       altField: '#order_dates'
       altFormat: 'yy-mm-dd'
       minDate: new Date()
-      dateFormat: window.I18n.dateFormats['day_month_year'].replace('%d', 'dd').replace('%m', 'mm').replace('%Y', 'yy')
+      dateFormat: window.I18n.datepickerFormats['dformat'].replace('%d', 'dd').replace('%m', 'mm').replace('%Y', 'yy')
       beforeShowDay: (date) ->
         opened_days = $(@).data('open-on-days')
         except_periods = $(@).data('except-periods')
