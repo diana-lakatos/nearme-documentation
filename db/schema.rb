@@ -1273,21 +1273,23 @@ ActiveRecord::Schema.define(version: 20161020083811) do
     t.string   "line_itemable_type"
     t.integer  "transactable_pricing_id"
     t.string   "name"
-    t.string   "type",                       limit: 255
-    t.integer  "unit_price_cents",                                                default: 0
-    t.float    "quantity",                                                        default: 0.0
+    t.string   "type",                             limit: 255
+    t.integer  "unit_price_cents",                                                      default: 0
+    t.float    "quantity",                                                              default: 0.0
     t.string   "receiver"
     t.boolean  "optional"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "additional_tax_total_rate",              precision: 10, scale: 2, default: 0.0
-    t.decimal  "additional_tax_price_cents",             precision: 10, scale: 2, default: 0.0
-    t.decimal  "included_tax_total_rate",                precision: 10, scale: 2, default: 0.0
-    t.decimal  "included_tax_price_cents",               precision: 10, scale: 2, default: 0.0
-    t.decimal  "service_fee_guest_percent",              precision: 5,  scale: 2, default: 0.0
-    t.decimal  "service_fee_host_percent",               precision: 5,  scale: 2, default: 0.0
+    t.decimal  "additional_tax_total_rate",                    precision: 10, scale: 2, default: 0.0
+    t.decimal  "additional_tax_price_cents",                   precision: 10, scale: 2, default: 0.0
+    t.decimal  "included_tax_total_rate",                      precision: 10, scale: 2, default: 0.0
+    t.decimal  "included_tax_price_cents",                     precision: 10, scale: 2, default: 0.0
+    t.decimal  "service_fee_guest_percent",                    precision: 5,  scale: 2, default: 0.0
+    t.decimal  "service_fee_host_percent",                     precision: 5,  scale: 2, default: 0.0
     t.text     "description"
+    t.integer  "minimum_lister_service_fee_cents",                                      default: 0
+    t.text     "properties"
   end
 
   add_index "line_items", ["instance_id"], name: "index_line_items_on_instance_id", using: :btree
@@ -1549,12 +1551,9 @@ ActiveRecord::Schema.define(version: 20161020083811) do
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
     t.boolean  "is_free_booking",                                           default: false
-<<<<<<< HEAD
-=======
+    t.datetime "draft_at"
     t.datetime "lister_confirmed_at"
     t.datetime "enquirer_confirmed_at"
->>>>>>> origin/staging
-    t.datetime "draft_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -2567,12 +2566,8 @@ ActiveRecord::Schema.define(version: 20161020083811) do
     t.boolean  "allow_drafts",                               default: false, null: false
     t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
     t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
-<<<<<<< HEAD
-=======
     t.integer  "minimum_lister_service_fee_cents",           default: 0
     t.boolean  "both_side_confirmation",                     default: false
-    t.boolean  "allow_drafts",                               default: false, null: false
->>>>>>> origin/staging
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree
