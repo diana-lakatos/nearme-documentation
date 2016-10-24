@@ -175,7 +175,8 @@ group :development do
   gem 'mailcatcher'
   gem 'active_record_query_trace'
   gem 'web-console', '~> 2.0'
-  gem 'rubocop'
+  gem 'rubocop', require: false
+  gem 'overcommit', require: false
 end
 
 group :test do
