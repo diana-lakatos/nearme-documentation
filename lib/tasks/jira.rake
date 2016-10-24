@@ -83,16 +83,20 @@ end
 
 class JiraReleaser
 
-  def initialize(issues)
+  def initialize
     jira_helper = JiraHelper.new
+    jira_wrapper = JiraWrapper.new
+    puts "All commits: "
     (jira_helper.jira_commits + jira_helper.non_jira_commits).each do |commit|
       puts commit
-      @commits_for_hotfix << commit
     end
 
+    puts "\n------------------\n"
+    puts "Jira numbers"
     @issues = []
-    jira_helper.jira_commits.each do |commit_for_hotfix|
-      @issues << @jira_wrapper.find_issue(jira_helper.to_jira_number([commit_for_hotfix]).first)
+    jira_helper.jira_commits.each do |jira_commit|
+      number = jira_helper.to_jira_number([jira_commit]).first.tr(' ', '-')
+      @issues << jira_wrapper.find_issue(number)
     end
   end
 

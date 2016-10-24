@@ -13,7 +13,7 @@ class JiraWrapper
     unless version(name).present?
 
       splitted_version = name.split('.')
-      if version.last == '0'
+      if splitted_version.last == '0'
         previous_version = [splitted_version[0], splitted_version[1].to_i - 1, 0].join('.')
         old_version = version(previous_version)
         raise 'Previous version was not found!!!' if old_version.nil?
