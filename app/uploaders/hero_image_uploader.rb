@@ -7,7 +7,7 @@ class HeroImageUploader < BaseUploader
     medium: { width: 720, height: nil, transform: :resize_to_fit }
   }
 
-  version :medium do
+  version :medium, from_version: :optimized do
     process dynamic_version: :medium
   end
 end

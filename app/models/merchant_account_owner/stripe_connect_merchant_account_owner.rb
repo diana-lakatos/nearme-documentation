@@ -1,7 +1,7 @@
 require 'stripe'
 
 class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountOwner
-  ADDRESS_ATTRIBUTES = %w(address_country address_state address_city address_postal_code address_line1 address_line2)
+  ADDRESS_ATTRIBUTES = %w(address_country address_state address_city address_postal_code address_line1 address_line2).freeze
   ATTRIBUTES = %w(dob_formated dob first_name last_name) + ADDRESS_ATTRIBUTES
 
   include MerchantAccount::Concerns::DataAttributes
@@ -18,7 +18,7 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
     else
       begin
         self.dob = Date.strptime(dob_formated, date_format).strftime(default_date_format).to_s
-        dob_formated = dob.to_date.strftime(date_format).to_s
+        self.dob_formated = dob.to_date.strftime(date_format).to_s
       rescue
         errors.add :dob, :invalid
       end

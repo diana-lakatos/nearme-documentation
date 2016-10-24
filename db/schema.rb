@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161018130214) do
+ActiveRecord::Schema.define(version: 20161020083811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -563,6 +563,14 @@ ActiveRecord::Schema.define(version: 20161018130214) do
 
   add_index "countries", ["iso"], name: "index_countries_on_iso", unique: true, using: :btree
   add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
+
+  create_table "countries_shipping_rules", id: false, force: :cascade do |t|
+    t.integer "country_id",       null: false
+    t.integer "shipping_rule_id", null: false
+  end
+
+  add_index "countries_shipping_rules", ["country_id", "shipping_rule_id"], name: "country_shipping_rule_idx", using: :btree
+  add_index "countries_shipping_rules", ["shipping_rule_id", "country_id"], name: "shipping_rule_country_idx", using: :btree
 
   create_table "country_payment_gateways", force: :cascade do |t|
     t.string   "country_alpha2_code", limit: 255
@@ -1541,6 +1549,11 @@ ActiveRecord::Schema.define(version: 20161018130214) do
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
     t.boolean  "is_free_booking",                                           default: false
+<<<<<<< HEAD
+=======
+    t.datetime "lister_confirmed_at"
+    t.datetime "enquirer_confirmed_at"
+>>>>>>> origin/staging
     t.datetime "draft_at"
   end
 
@@ -2554,6 +2567,12 @@ ActiveRecord::Schema.define(version: 20161018130214) do
     t.boolean  "allow_drafts",                               default: false, null: false
     t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
     t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
+<<<<<<< HEAD
+=======
+    t.integer  "minimum_lister_service_fee_cents",           default: 0
+    t.boolean  "both_side_confirmation",                     default: false
+    t.boolean  "allow_drafts",                               default: false, null: false
+>>>>>>> origin/staging
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree

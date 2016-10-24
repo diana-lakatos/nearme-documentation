@@ -1,12 +1,11 @@
 - title t('user_messages.title')
-- user_message = @user_messages.last.try(:decorate) || @user_message
-- thread_recipient = user_message.thread_owner == current_user ? user_message.thread_recipient : user_message.thread_owner
+- user_message = @user_message.decorate
 
 - content_for :page_header do
   %h1
     = link_to t('user_messages.title'), dashboard_user_messages_path
     >
-    = link_to(thread_recipient.first_name, thread_recipient)
+    = link_to(user_message.thread_recipient.first_name, user_message.thread_recipient)
 
 
 .inbox-thread
@@ -22,8 +21,8 @@
   %p.thread-locked= t('user_messages.thread_locked')
 
 .form-actions
-  - if user_message.persisted? && !user_message.archived_for?(current_user)
-    = link_to t('user_messages.archive_html'), user_message.archive_path, method: :put
+  - if (detect = @user_messages.detect(&:persisted?)) && !user_message.archived_for?(current_user)
+    = link_to t('user_messages.archive_html'), detect.archive_path, method: :put
 
 - if request.xhr?
   :javascript

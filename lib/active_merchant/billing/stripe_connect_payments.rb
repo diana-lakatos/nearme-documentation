@@ -34,6 +34,16 @@ module ActiveMerchant
         raise_error(e)
       end
 
+      def find_transfer_transactions(transfer_id, merchant_account_id)
+        if merchant_account_id.present?
+          Stripe::BalanceTransaction.all({ transfer: transfer_id }, stripe_account: merchant_account_id)
+        else
+          Stripe::BalanceTransaction.all(transfer: transfer_id)
+        end
+      rescue Stripe::InvalidRequestError => e
+        raise_error(e)
+      end
+
       def raise_error(error)
         if error.http_status == 404
           raise ActiveRecord::RecordNotFound

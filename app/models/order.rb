@@ -10,7 +10,7 @@ class Order < ActiveRecord::Base
   include Modelable
   include Payable
 
-  attr_accessor :skip_checkout_validation, :delivery_ids, :skip_try_to_activate, :checkout_update, :save_draft, :cancel_draft
+  attr_accessor :skip_checkout_validation, :delivery_ids, :checkout_update, :save_draft, :cancel_draft
 
   store_accessor :settings, :validate_on_adding_to_cart, :skip_payment_authorization
 
@@ -52,7 +52,7 @@ class Order < ActiveRecord::Base
 
   before_validation :copy_billing_address, :remove_empty_documents
   before_validation :set_owner, :build_return_shipment, :skip_validation_for_custom_attributes, :set_owner_for_payment_documents
-  after_save :try_to_activate!, unless: -> { skip_try_to_activate }
+  after_save :try_to_activate!
 
   state_machine :state, initial: :inactive do
     after_transition inactive: :unconfirmed, do: :activate_order!
@@ -117,7 +117,8 @@ class Order < ActiveRecord::Base
     where(created_at: start_date..end_date)
   }
 
-  delegate :photos, to: :transactable, allow_nil: true
+  delegate :action, to: :transactable_pricing
+  delegate :photos, :confirm_reservations?, to: :transactable, allow_nil: true
 
   # You can customize order tabs (states) displauyed in dashboard
   # via orders_received_tabs and my_orders_tabs Instance attributes
@@ -186,6 +187,14 @@ class Order < ActiveRecord::Base
     type != 'Purchase'
   end
 
+  def lister_confirmed!
+    touch(:lister_confirmed_at)
+  end
+
+  def enquirer_confirmed!
+    touch(:enquirer_confirmed_at)
+  end
+
   def number
     sprintf "#{self.class.name[0]}%08d", id
   end
@@ -200,18 +209,23 @@ class Order < ActiveRecord::Base
     end.any?
   end
 
-  before_update :set_completed_form_component_ids
-  def set_completed_form_component_ids
-    self.completed_form_component_ids = (completed_form_component_ids + [next_form_component_id]).join(',')
+  def step_control
+    @step_control ||= (completed_form_component_ids + [next_form_component_id]).join(',')
+  end
+
+  def step_control=(step_control_attribute)
+    if step_control == step_control_attribute
+      self.completed_form_component_ids = (completed_form_component_ids + [next_form_component_id]).join(',')
+    end
   end
 
   def next_form_component_id
-    next_form_component.try(:id)
+    @next_form_component_id ||= next_form_component.try(:id)
   end
 
   def next_form_component
     return nil if reservation_type.blank?
-    reservation_type.form_components.where.not(id: completed_form_component_ids).order(:rank).find { |fc| fc.form_fields_except(skip_steps).any? }
+    @next_form_component ||= reservation_type.form_components.where.not(id: completed_form_component_ids).order(:rank).find { |fc| fc.form_fields_except(skip_steps).any? }
   end
 
   def all_form_components
@@ -226,8 +240,12 @@ class Order < ActiveRecord::Base
     update_column(:completed_form_component_ids, completed_form_component_ids[0..-2].join(','))
   end
 
+  def restore_cached_step!
+    update_column(:completed_form_component_ids, completed_form_component_ids.join(','))
+  end
+
   def completed_form_component_ids
-    self[:completed_form_component_ids].to_s.split(',')
+    @completed_ids ||= self[:completed_form_component_ids].to_s.split(',')
   end
 
   def with_delivery?
@@ -240,11 +258,12 @@ class Order < ActiveRecord::Base
   end
 
   def remove_empty_documents
+    return if PlatformContext.current.instance.documents_upload.try(:is_mandatory?)
+
     payment_documents.each do |document|
-      unless document.valid?
-        next if PlatformContext.current.instance.documents_upload.is_mandatory? || document.document_requirement.is_file_required?
-        payment_documents.delete document
-      end
+      next if document.valid? || document.is_file_required?
+
+      payment_documents.delete(document)
     end
   end
 
@@ -481,8 +500,6 @@ class Order < ActiveRecord::Base
     steps.join('|')
   end
 
-  delegate :confirm_reservations?, to: :transactable
-
   def transactable_pricing
     super || transactable_line_items.first.transactable_pricing
   end
@@ -514,7 +531,9 @@ class Order < ActiveRecord::Base
   end
 
   def try_to_activate!
-    activate! if inactive? && (skip_payment_authorization? || payment && payment.authorized?)
+    return true unless inactive? && valid?
+
+    activate! if payment && payment.authorized?
   end
 
   def send_rejected_workflow_alerts!

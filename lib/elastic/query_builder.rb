@@ -4,10 +4,10 @@ module Elastic
     ENABLE_FUZZY = false
     ENABLE_PARTIAL = false
     FUZZYNESS = 2
-    ANALYZER = 'snowball'
-    GEO_DISTANCE = 'plane'
-    GEO_UNIT = 'km'
-    GEO_ORDER = 'asc'
+    ANALYZER = 'snowball'.freeze
+    GEO_DISTANCE = 'plane'.freeze
+    GEO_UNIT = 'km'.freeze
+    GEO_ORDER = 'asc'.freeze
     MAX_RESULTS = 1000
     PER_PAGE = 20
     PAGE = 1
@@ -31,12 +31,12 @@ module Elastic
 
     def query_per_page
       per_page = @query[:per_page].to_i
-      (per_page > 0) ? per_page : PER_PAGE
+      per_page > 0 ? per_page : PER_PAGE
     end
 
     def query_page
       page = @query[:page].to_pagination_number
-      (page > 0) ? page : PAGE
+      page > 0 ? page : PAGE
     end
 
     def query_offset
@@ -170,7 +170,10 @@ module Elastic
       sorting_fields = []
       if @query[:sort].present?
         sorting_fields = @query[:sort].split(',').compact.map do |sort_option|
-          if sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
+          next unless sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
+          if sort[1].eql? 'name'
+            { 'name.raw' => { order: sort[2] } }
+          else
             { sort[1] => { order: sort[2] } }
           end
         end.compact
@@ -248,14 +251,30 @@ module Elastic
 
       # You should enable fuzzy search manually. Not included in the current release
       if ENABLE_FUZZY
-        multi_match.merge!(fuzziness: FUZZYNESS,
-                           analyzer: ANALYZER)
+        multi_match[:fuzziness] = FUZZYNESS
+        multi_match[:analyzer] = ANALYZER
       end
 
       multi_match
     end
 
     def apply_geo_search_filters
+      if @query[:item_location_city].present?
+        @filters << {
+          term: {
+            location_city: @query[:item_location_city].downcase.tr(' ', '_')
+          }
+        }
+      end
+
+      if @query[:item_location_state].present?
+        @filters << {
+          term: {
+            location_state: @query[:item_location_state].downcase.tr(' ', '_')
+          }
+        }
+      end
+
       if @transactable_type.show_price_slider && @query[:price] && (@query[:price][:min].present? || @query[:price][:max].present?)
         price_min = @query[:price][:min].to_f * 100
         price_max = @query[:price][:max].to_f * 100
@@ -293,28 +312,44 @@ module Elastic
       end
 
       if @query[:date].present?
-        begin
-          date = Date.parse(@query[:date])
-          day = date.wday + 1
-          from_hour = day * 100 + (@query[:time_from].presence || '0:00').split(':').first.to_i
-          to_hour = day * 100 + (@query[:time_to].presence || '23:00').split(':').first.to_i
+        date = Date.parse(@query[:date])
+        day = date.wday + 1
+        from_hour = day * 100 + (@query[:time_from].presence || '0:00').split(':').first.to_i
+        to_hour = day * 100 + (@query[:time_to].presence || '23:00').split(':').first.to_i
 
-          @filters << {
-            range: {
-              open_hours: {
-                gte: from_hour,
-                lte: to_hour
+        @filters << {
+          range: {
+            open_hours: {
+              gte: from_hour,
+              lte: to_hour
+            }
+          }
+        }
+
+        @filters << {
+          not: {
+            term: { availability_exceptions: date }
+          }
+        }
+      end
+
+      if @query[:availability_exceptions].present?
+        from = to = nil
+        from = Date.parse(@query[:availability_exceptions][:from]) if @query[:availability_exceptions][:from].present?
+        to = Date.parse(@query[:availability_exceptions][:to]) if @query[:availability_exceptions][:to].present?
+
+        if from.present? || to.present?
+          hash = {
+            not: {
+              range: {
+                availability_exceptions: {
+                }
               }
             }
           }
-
-          @filters << {
-            not: {
-              term: { availability_exceptions: date }
-            }
-          }
-        rescue ArgumentError
-          # wrong date
+          hash[:not][:range][:availability_exceptions][:gte] = from if from.present?
+          hash[:not][:range][:availability_exceptions][:lte] = to if to.present?
+          @filters << hash
         end
       end
 
@@ -334,19 +369,15 @@ module Elastic
 
       if @query[:lg_custom_attributes]
         @query[:lg_custom_attributes].each do |key, value|
+          value = value.is_a?(Array) ? value : value.to_s.split(',')
           value.reject!(&:empty?) if value.instance_of?(Array)
 
-          unless value.blank?
-            @filters << {
-              terms: {
-                "custom_attributes.#{key}" =>  if value.instance_of?(Array)
-                                                 value
-                                               else
-                                                 value.to_s.split(',')
-                end.map(&:downcase)
-              }
+          next if value.blank? || value.empty? || value.none?(&:present?)
+          @filters << {
+            terms: {
+              "custom_attributes.#{key}" => value.map(&:downcase)
             }
-          end
+          }
         end
       end
 
@@ -399,7 +430,7 @@ module Elastic
           }
         else
           date_range[:or] << { bool: {} }
-          date_range[:or].last[:bool][:must] = @query[:date_range].map(&:wday).uniq.map  do |day|
+          date_range[:or].last[:bool][:must] = @query[:date_range].map(&:wday).uniq.map do |day|
             {
               term: {
                 opened_on_days: day

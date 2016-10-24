@@ -82,14 +82,13 @@ class Payment < ActiveRecord::Base
   scope :transferred, -> { where.not(payment_transfer_id: nil) }
 
   scope :total_by_currency, lambda {
-    paid.group('payments.currency')
-      .select('
-        payments.currency,
-        SUM(
-          payments.subtotal_amount_cents
-          + payments.service_fee_amount_guest_cents
-        )
-           ')
+    paid.group('payments.currency').select('
+      payments.currency,
+      SUM(
+        payments.subtotal_amount_cents
+        + payments.service_fee_amount_guest_cents
+      )
+   ')
   }
 
   accepts_nested_attributes_for :credit_card
@@ -138,9 +137,11 @@ class Payment < ActiveRecord::Base
     define_method("#{pmt}_payment?") { payment_method.try(:payment_method_type) == pmt.to_s }
   end
 
-  def authorize
+  def authorize!
     !!(valid? && payment_gateway.authorize(self, authorize_options))
   end
+
+  alias authorize authorize!
 
   def authorize_options
     options = {
@@ -149,23 +150,19 @@ class Payment < ActiveRecord::Base
       payment_method_nonce: payment_method_nonce
     }
 
-    if merchant_account.try(:verified?)
-      options.merge!(application_fee: total_service_amount_cents)
-    end
+    options[:application_fee] = total_service_amount_cents if merchant_account.try(:verified?)
 
     options
   end
 
   def capture!
-    return true if manual_payment? || total_amount_cents == 0
+    return true if manual_payment? || total_amount_cents.zero?
     return false unless active_merchant_payment?
 
     charge = payment_gateway.charge(payable.owner, total_amount.cents, currency, self, authorization_token)
 
     if charge.success?
-      if payable.respond_to?(:date)
-        ReservationChargeTrackerJob.perform_later(payable.date.end_of_day, payable.id)
-      end
+      ReservationChargeTrackerJob.perform_later(payable.date.end_of_day, payable.id) if payable.respond_to?(:date)
       # this works for braintree, might not work for others - to be moved to separate class etc, and ideally somewhere else... hackish hack as a quick win
       update_attribute(:external_transaction_id, authorization_token)
       mark_as_paid!
@@ -345,11 +342,11 @@ class Payment < ActiveRecord::Base
   def subtotal_amount_cents_after_refund
     result = nil
 
-    if cancelled_by_host?
-      result = 0
-    else
-      result = subtotal_amount.cents + host_additional_charges.cents - refunds.guest.successful.sum(:amount_cents)
-    end
+    result = if cancelled_by_host?
+               0
+             else
+               subtotal_amount.cents + host_additional_charges.cents - refunds.guest.successful.sum(:amount_cents)
+             end
 
     result
   end
@@ -357,9 +354,7 @@ class Payment < ActiveRecord::Base
   def final_service_fee_amount_host_cents
     result = service_fee_amount_host.cents
 
-    if cancelled_by_host? || (cancelled_by_guest? && !payable.penalty_charge_apply?)
-      result = 0
-    end
+    result = 0 if cancelled_by_host? || (cancelled_by_guest? && !payable.penalty_charge_apply?)
 
     result
   end
@@ -377,7 +372,7 @@ class Payment < ActiveRecord::Base
   end
 
   def total_amount_cents
-    read_attribute(:total_amount_cents) || 0
+    self[:total_amount_cents] || 0
   end
 
   def amount
@@ -440,7 +435,7 @@ class Payment < ActiveRecord::Base
   end
 
   def express_token=(token)
-    write_attribute(:express_token, token)
+    self[:express_token] = token
     unless token.blank?
       details = payment_gateway.gateway(subject).details_for(token)
       self.express_payer_id = details.params['payer_id']
@@ -473,7 +468,7 @@ class Payment < ActiveRecord::Base
   end
 
   def authorization_token
-    if self.persisted?
+    if persisted?
       successful_billing_authorization.try(:token)
     else
       billing_authorizations.find(&:success?).try(:token)

@@ -26,20 +26,29 @@ module Payable
 
     validates_associated :line_items
 
-    before_update :authorize_payment
     before_create :build_first_line_item
     after_save :create_additional_charges
 
     delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, :billing_authorizations, to: :payment, allow_nil: true
 
-    def authorize_payment
-      if payment && payment.valid? && payment.pending? && self.valid?
-        if (skip_payment_authorization? || payment.authorize) && inactive? && (payment.credit_card.blank? || payment.credit_card.store!)
-          activate! unless payment.express_checkout_payment?
-        end
-      elsif payment_subscription && payment_subscription.valid? && payment.blank? && self.valid? && payment_subscription.credit_card.store!
-        activate! if try(:inactive?)
-      end
+    before_update :store_credit_card!
+    def store_credit_card!
+      credit_card = payment.try(:credit_card) || payment_subscription.try(:credit_card)
+
+      return true if credit_card.blank?
+      return true unless credit_card.payment_gateway.supports_recurring_payment?
+
+      credit_card.store!
+    end
+
+    before_update :authorize_payment!
+    def authorize_payment!
+      return true unless @payment_step
+      return true if payment.blank?
+      return true unless payment.pending?
+      return true if skip_payment_authorization
+
+      payment.try(:authorize!)
     end
 
     def build_first_line_item
@@ -53,6 +62,7 @@ module Payable
           line_itemable: self,
           service_fee_guest_percent: action.service_fee_guest_percent,
           service_fee_host_percent: action.service_fee_host_percent,
+          minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents,
           transactable_pricing_id: try(:transactable_pricing_id)
         )
       end
@@ -88,11 +98,27 @@ module Payable
     end
 
     def payment_attributes=(payment_attrs = {})
+      @payment_step = true
       super(payment_attrs.merge(shared_payment_attributes))
     end
 
     def payment_subscription_attributes=(payment_subscription_attrs = {})
       super(payment_subscription_attrs.merge(shared_payment_subscription_attributes))
+    end
+
+    def recalculate_fees!
+      service_fee_line_items.destroy_all
+      host_fee_line_items.destroy_all
+
+      transactable_line_items.each do |tli|
+        tli.attributes = {
+          service_fee_guest_percent: action.service_fee_guest_percent,
+          service_fee_host_percent: action.service_fee_host_percent,
+          minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents
+        }
+        tli.build_host_fee
+        tli.build_service_fee
+      end
     end
 
     def shared_payment_attributes

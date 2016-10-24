@@ -26,7 +26,7 @@ class Location < ActiveRecord::Base
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :impressions, as: :impressionable, dependent: :destroy
-  has_many :listings, dependent:  :destroy, inverse_of: :location, class_name: 'Transactable'
+  has_many :listings, dependent: :destroy, inverse_of: :location, class_name: 'Transactable'
   has_many :payments, through: :reservations
   has_many :photos, through: :listings
   has_many :reservations, through: :listings
@@ -46,7 +46,7 @@ class Location < ActiveRecord::Base
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
            :latitude, :longitude, :state_code, :iso_country_code, :street_number, to: :location_address, allow_nil: true
 
-  validates_presence_of :company
+  validates :company, presence: true
   validates :email, email: true, allow_nil: true
   validates_with CustomValidators
 
@@ -82,7 +82,7 @@ class Location < ActiveRecord::Base
                                                                   dependent: :delete_all,
                                                                   class_name: 'FriendlyId::Slug'
 
-  scope :filtered_by_location_types_ids,  ->(location_types_ids) { where(location_type_id: location_types_ids) }
+  scope :filtered_by_location_types_ids, ->(location_types_ids) { where(location_type_id: location_types_ids) }
   scope :no_id, -> { where id: nil }
   scope :near, ->(*args) { all.merge(Address.near(*args).select('locations.*')) }
   scope :bounding_box, ->(box, _midpoint) { all.merge(Address.within_bounding_box(Address.sanitize_bounding_box(box.reverse)).select('locations.*')) }
@@ -127,14 +127,14 @@ class Location < ActiveRecord::Base
   end
 
   def assign_default_availability_rules
-    self.availability_template ||= instance.availability_templates.first
+    self.availability_template ||= (listings.first.try(:transactable_type).try(:default_availability_template) || instance.availability_templates.first)
   end
 
   def name
     @name ||= if validation_for(:name)
-                read_attribute(:name)
+                self[:name]
               else
-                read_attribute(:name).presence || [company.name, street].compact.join(' @ ')
+                self[:name].presence || [company.name, street].compact.join(' @ ')
     end
   end
 
@@ -143,7 +143,7 @@ class Location < ActiveRecord::Base
   end
 
   def description
-    read_attribute(:description).presence || listings.first.try(:description).presence || ''
+    self[:description].presence || listings.first.try(:description).presence || ''
   end
 
   def administrator
@@ -156,11 +156,11 @@ class Location < ActiveRecord::Base
   end
 
   def email
-    read_attribute(:email).presence || creator.try(:email)
+    self[:email].presence || creator.try(:email)
   end
 
   def phone=(phone)
-    creator.phone = phone if creator.phone.blank? if creator
+    creator.phone = phone if creator && creator.phone.blank?
   end
 
   def to_liquid
@@ -196,7 +196,7 @@ class Location < ActiveRecord::Base
   end
 
   def update_schedules_timezones(force = false)
-    if force || self.time_zone_changed?
+    if force || time_zone_changed?
       Schedule.where(
         scheduable_type: 'Transactable::EventBooking',
         scheduable_id: listings.map { |l| l.event_booking.try(:id) }.compact

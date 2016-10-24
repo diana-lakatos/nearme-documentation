@@ -17,7 +17,7 @@ module.exports = class ReservationReviewController
       altField: '#order_dates'
       altFormat: 'yy-mm-dd'
       minDate: new Date()
-      dateFormat: window.I18n.dateFormats['day_month_year'].replace('%d', 'dd').replace('%m', 'mm').replace('%Y', 'yy')
+      dateFormat: window.I18n.datepickerFormats['dformat'].replace('%d', 'dd').replace('%m', 'mm').replace('%Y', 'yy')
       beforeShowDay: (date) ->
         opened_days = $(@).data('open-on-days')
         except_periods = $(@).data('except-periods')
@@ -51,6 +51,8 @@ module.exports = class ReservationReviewController
     else
       opts.filter('[data-no-options]').remove()
       if opts.filter('[selected]').length == 0 || opts.filter('[selected]').is('[disabled]')
-        opts.filter('[selected]').attr('selected', false)
-        opts.filter(':not([disabled])').first().attr('selected', 'selected')
+        opts.filter('[selected]').prop('selected', false)
+        opts.filter(':not([disabled])').first().prop('selected', true)
         @startTimeInput.trigger('change')
+        @startTimeInput.val(@startTimeInput.val());
+

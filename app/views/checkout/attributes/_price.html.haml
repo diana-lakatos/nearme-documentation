@@ -1,0 +1,2 @@
+- if only_inputs.empty? || only_inputs.include?(:price)
+  = f.input :transactable_pricing_id, as: :select, collection: f.object.transactable_pricing.action.pricings.by_price.decorate, label_method: :price_for_select, include_blank: false

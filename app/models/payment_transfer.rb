@@ -6,8 +6,8 @@ class PaymentTransfer < ActiveRecord::Base
 
   attr_encrypted :token, key: DesksnearMe::Application.config.secret_token
 
-  FREQUENCIES = %w(monthly fortnightly weekly semiweekly daily manually)
-  DEFAULT_FREQUENCY = 'fortnightly'
+  FREQUENCIES = %w(monthly fortnightly weekly semiweekly daily manually).freeze
+  DEFAULT_FREQUENCY = 'fortnightly'.freeze
 
   belongs_to :company
   belongs_to :instance
@@ -64,6 +64,7 @@ class PaymentTransfer < ActiveRecord::Base
   def transferred?
     transferred_at.present?
   end
+  alias paid? transferred?
 
   def mark_transferred
     touch(:transferred_at)
@@ -96,7 +97,7 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def pending?
-    payout_attempts.last && payout_attempts.last.pending?
+    payout_attempts.last.present? && payout_attempts.last.pending?
   end
 
   def failed?
@@ -104,6 +105,7 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def fail!
+    mark_as_failed
     update_column(:transferred_at, nil) if payout_attempts.reload.successful.count.zero? && persisted?
   end
 
@@ -138,19 +140,15 @@ class PaymentTransfer < ActiveRecord::Base
     self.service_fee_amount_host_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_host_cents }
     self.amount_cents = payments.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - service_fee_amount_host_cents
     self.service_fee_amount_guest_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_guest_cents }
-    self.save!
+    save!
   end
 
   def validate_all_charges_in_currency
-    unless payments.map(&:currency).uniq.length <= 1
-      errors.add :currency, 'all paid out payments must be in the same currency'
-    end
+    errors.add :currency, 'all paid out payments must be in the same currency' unless payments.map(&:currency).uniq.length <= 1
   end
 
   def payout_gateway
-    if @payout_gateway.nil?
-      @payout_gateway = payment_gateway || instance.payout_gateway(company.iso_country_code, currency)
-    end
+    @payout_gateway = payment_gateway || instance.payout_gateway(company.iso_country_code, currency) if @payout_gateway.nil?
     @payout_gateway
   end
 end

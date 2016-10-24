@@ -153,11 +153,11 @@ class RegistrationsController < Devise::RegistrationsController
     # and build_approval_request_for_object
     if resource.update_with_password(all_params.except(:approval_requests_attributes))
       I18n.locale = @user.try(:language).try(:to_sym) || :en if @user.try(:language).try(:to_sym) != I18n.locale
-
+      onboarded = @user.buyer_profile.try(:mark_as_onboarded!) || @user.seller_profile.try(:mark_as_onboarded!)
       set_flash_message :success, :updated
       sign_in(resource, bypass: true)
       event_tracker.updated_profile_information(@user)
-      redirect_to dashboard_profile_path
+      redirect_to dashboard_profile_path(onboarded: onboarded)
     else
       @buyer_profile = resource.get_buyer_profile
       @seller_profile = resource.get_seller_profile

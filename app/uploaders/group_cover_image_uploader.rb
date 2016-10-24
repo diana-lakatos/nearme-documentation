@@ -8,11 +8,11 @@ class GroupCoverImageUploader < BaseUploader
     thumbnail: { width: 200, height: 175, transform: :resize_to_fill }
   }
 
-  version :medium do
+  version :medium, from_version: :optimized do
     process dynamic_version: :medium
   end
 
-  version :thumbnail do
+  version :thumbnail, from_version: :optimized do
     process dynamic_version: :thumbnail
   end
 end

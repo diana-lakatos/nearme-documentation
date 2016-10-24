@@ -15,7 +15,7 @@ class CheckoutControllerTest < ActionController::TestCase
     Rails.application.config.event_tracker.any_instance.expects(:reviewed_a_booking).with do |reservation|
       reservation == assigns(:order)
     end
-    get :show, order_id: @reservation.id
+    get :show, params: { order_id: @reservation.id }
     assert_response 200
   end
 
@@ -27,17 +27,15 @@ class CheckoutControllerTest < ActionController::TestCase
     should 'should not save on authorization failure' do
       authorize_response = OpenStruct.new(success?: false, error: 'No $$$ on account')
       PaymentGateway.any_instance.expects(:gateway_authorize).returns(authorize_response)
-      assert_difference('Payment.count') do
-        put :update, order_params_for(@reservation)
+      assert_no_difference('Payment.count') do
+        put :update, params: order_params_for(@reservation)
       end
-      payment = Payment.last
-      refute payment.authorized?
     end
 
     should 'store successful authorization' do
       authorize_response = OpenStruct.new(success?: true, authorization: 'abc')
       PaymentGateway.any_instance.expects(:gateway_authorize).returns(authorize_response)
-      put :update, order_params_for(@transactable)
+      put :update, params: order_params_for(@transactable)
       payment = Payment.last
       assert_equal 'abc', payment.authorization_token
       assert payment.authorized?
@@ -62,7 +60,7 @@ class CheckoutControllerTest < ActionController::TestCase
     end
 
     assert_no_difference 'Reservation.count' do
-      put :update, order_params_for(@transactable)
+      put :update, params: order_params_for(@transactable)
     end
 
     assert_response :redirect
@@ -76,7 +74,7 @@ class CheckoutControllerTest < ActionController::TestCase
         OrderExpiryJob.expects(:perform_later).with do |expires_at, _id|
           expires_at == 24.hours.from_now
         end
-        put :update, order_params_for(@transactable)
+        put :update, params: order_params_for(@transactable)
       end
     end
   end
@@ -95,7 +93,7 @@ class CheckoutControllerTest < ActionController::TestCase
         Twilio::REST::RequestError.any_instance.stubs(:code).returns(21_614)
         SmsNotifier::Message.any_instance.stubs(:send_twilio_message).raises(Twilio::REST::RequestError, "The 'To' number +16665554444 is not a valid phone number")
         assert_nothing_raised do
-          put :update, order_params_for(@transactable)
+          put :update, params: order_params_for(@transactable)
         end
         assert @response.body.include?('redirect')
         assert_redirected_to dashboard_order_path(Reservation.last)

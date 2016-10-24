@@ -2,11 +2,14 @@ class Offer < Order
   # validates :host_line_items, presence: true
   delegate :action, to: :transactable_pricing
 
-  before_update :set_draft_at
-  after_update :activate!, if: ->(_record) { self.inactive? && !(save_draft || cancel_draft) }
-
   has_many :host_line_items, as: :line_itemable
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
+
+  def try_to_activate!
+    return true unless inactive? && valid? && !(save_draft || cancel_draft)
+
+    activate!
+  end
 
   def complete!
     if can_complete?
@@ -49,7 +52,8 @@ class Offer < Order
       unit_price: transactable_pricing.price,
       line_itemable: self,
       service_fee_guest_percent: transactable_pricing.action.service_fee_guest_percent,
-      service_fee_host_percent: transactable_pricing.action.service_fee_host_percent
+      service_fee_host_percent: transactable_pricing.action.service_fee_host_percent,
+      minimum_lister_service_fee_cents: transactable_pricing.action.minimum_lister_service_fee_cents
     )
 
     transactable_type.merchant_fees.each do |merchant_fee|
@@ -127,8 +131,8 @@ class Offer < Order
 
   def reject_related_offers!
     related_offers = Offer.unconfirmed
-                     .joins("INNER JOIN line_items ON line_items.line_itemable_id = orders.id AND line_items.line_itemable_type = 'Offer'")
-                     .where("line_items.line_item_source_type = 'Transactable' AND line_items.line_item_source_id = ?", transactable.id).where.not(id: id)
+                          .joins("INNER JOIN line_items ON line_items.line_itemable_id = orders.id AND line_items.line_itemable_type = 'Offer'")
+                          .where("line_items.line_item_source_type = 'Transactable' AND line_items.line_item_source_id = ?", transactable.id).where.not(id: id)
 
     related_offers.each(&:reject!)
   end
@@ -164,23 +168,19 @@ class Offer < Order
   def enquirer_cancelable
     state == 'unconfirmed'
   end
-  alias_method :enquirer_cancelable?, :enquirer_cancelable
+  alias enquirer_cancelable? enquirer_cancelable
 
   def enquirer_editable
     state.in? %w(unconfirmed inactive)
   end
-  alias_method :enquirer_editable?, :enquirer_editable
+  alias enquirer_editable? enquirer_editable
 
   def to_liquid
     @offer_drop ||= OfferDrop.new(self)
   end
 
   def set_draft_at
-    if save_draft
-      self.draft_at = Time.now
-    else
-      self.draft_at = nil
-    end
+    self.draft_at = (Time.now if save_draft)
 
     true
   end

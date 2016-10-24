@@ -30,7 +30,7 @@ module ListingsHelper
   end
 
   def selected_listing_siblings(location, listing, user = current_user)
-    @siblings ||= ((user && user.companies.first == location.company) ? location.listings.active : location.listings.visible) - [listing]
+    @siblings ||= (user && user.companies.first == location.company ? location.listings.active : location.listings.visible) - [listing]
   end
 
   def space_listing_placeholder_path(options = {})
@@ -50,6 +50,11 @@ module ListingsHelper
 
   def get_availability_template_object(parent)
     if parent.availability_template && parent.custom_availability_template?
+      parent.availability_template
+    elsif parent.availability_template
+      default_template = parent.availability_template
+      parent.availability_template = default_template.dup
+      parent.availability_template.availability_rules = default_template.availability_rules.map(&:dup)
       parent.availability_template
     else
       parent.availability_templates.first_or_initialize do |at|

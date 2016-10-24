@@ -18,12 +18,10 @@ class OrderDecorator < Draper::Decorator
     with_delivery?
   end
 
-  def location
-    transactable.location
-  end
+  delegate :location, to: :transactable
 
-  def user_message_recipient
-    owner
+  def user_message_recipient(current_user)
+    current_user == owner ? creator : owner
   end
 
   #===============================
@@ -69,11 +67,10 @@ class OrderDecorator < Draper::Decorator
       next if shipment.shipping_method.processing_time.blank?
 
       processing_time = shipment.shipping_method.processing_time.to_i
-      if processing_time > 0
-        date = (shipment.shipped_at + processing_time.days).to_date
-        result = I18n.l(date, format: :long)
-        break
-      end
+      next unless processing_time > 0
+      date = (shipment.shipped_at + processing_time.days).to_date
+      result = I18n.l(date, format: :long)
+      break
     end
 
     result
@@ -152,10 +149,10 @@ class OrderDecorator < Draper::Decorator
   private
 
   def status_info(text)
-    unless completed?
-      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, { class: 'ico-pending' }, nil)
-    else
+    if completed?
       "<i class='ico-check'></i>".html_safe
+    else
+      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, { class: 'ico-pending' }, nil)
     end
   end
 
@@ -165,10 +162,8 @@ class OrderDecorator < Draper::Decorator
     address.attributes = address_info.dup.attributes if address_info
     address.firstname ||= user.first_name
     address.lastname ||= user.last_name
-    address.phone ||= "#{user.phone}"
-    if user.country && !address.phone.include?('+')
-      address.phone ||= "+#{user.country.calling_code} #{address.phone}"
-    end
+    address.phone ||= user.phone.to_s
+    address.phone ||= "+#{user.country.calling_code} #{address.phone}" if user.country && !address.phone.include?('+')
 
     address
   end

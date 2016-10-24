@@ -1,61 +1,33 @@
 require 'chronic'
+require_relative '../jira_wrapper.rb'
 
 namespace :jira do
   desc 'Populate new foreign keys and flags'
-  task release_sprint: :environment do
-    description = 'Sprint 40 and bit of 41'
-    epics_wip = ['"The Volte"', '"LitVault"'].join(', ')
+  task release: :environment do
     jira_wrapper = JiraWrapper.new
-    jql = "Sprint IN (61, 62) and status IN (\"Ready for Production\", \"IN QA\", \"Tests Failed\") AND (\"Epic Link\" NOT IN (#{epics_wip}) OR \"Epic Link\" = NULL AND fixVersion IS NULL)"
-    puts jql
-    issues = jira_wrapper.issues(jql)
-
     jira_wrapper.ensure_version_present!(
       name: jira_wrapper.next_tag(1),
-      description: description,
-      user_released_data: 'today',
-      user_start_date: 'last week monday',
-      start_date: 'last week monday'
+      description: 'Regular Release'
     )
-    JiraReleaser.new(issues).release(jira_wrapper.next_tag(1))
+    JiraReleaser.new.release(jira_wrapper.next_tag(1))
   end
 
-  task :release_hotfix do
-    @jira_helper = JiraHelper.new
-    @jira_wrapper = JiraWrapper.new
-
-    tag = @jira_wrapper.initiate_hotfix!
-    puts "Relasing hotfix - #{tag}"
-
-    @commits_for_hotfix = []
-
-    (@jira_helper.jira_commits + @jira_helper.non_jira_commits).each do |commit|
-      puts commit
-      @commits_for_hotfix << commit
-    end
-
-    issues = []
-    @jira_helper.jira_commits.each do |commit_for_hotfix|
-      issues << @jira_helper.find_issue(@jira_helper.to_jira_number([commit_for_hotfix]).first)
-    end
-
-    @jira_wrapper.ensure_version_present!(
+  task :release_minor do
+    jira_wrapper = JiraWrapper.new
+    jira_wrapper.ensure_version_present!(
       name: @jira_wrapper.next_tag(2),
-      description: 'Hotfix',
-      user_released_data: 'today',
-      user_start_date: 'today',
-      start_date: 'today'
+      description: 'Hotfix'
     )
     JiraReleaser.new(issues).release(jira_wrapper.next_tag(2))
   end
 end
 
 class JiraHelper
+  JIRA_FORMAT = /^\A[a-zA-Z]{2,4}[\s-]\d{2,5}/
   extend Forwardable
   attr_accessor :commit_parser, :client
 
   class GitCommitParser
-    JIRA_FORMAT = /^\A[a-zA-Z]{2,4}[\s-]\d{2,5}/
     attr_reader :base_revision, :new_revision
 
     def initialize(base_revision, new_revision)
@@ -68,7 +40,7 @@ class JiraHelper
     end
 
     def jira_commits
-      @jira_commits ||= commits_between_revisions.select { |c| c =~ JIRA_FORMAT }
+      @jira_commits ||= commits_between_revisions.select { |c| c =~ JiraHelper::JIRA_FORMAT }
     end
 
     def non_jira_commits
@@ -97,7 +69,7 @@ class JiraHelper
   end
 
   def to_jira_number(array)
-    array.map { |a| a.scan(JIRA_FORMAT).first }
+    array.map { |a| a.scan(JiraHelper::JIRA_FORMAT).first }
   end
 
   def full_names(numbers, array)
@@ -111,8 +83,23 @@ end
 
 class JiraReleaser
 
-  def initialize(issues)
-    @issues = issues
+  def initialize
+    jira_helper = JiraHelper.new
+    jira_wrapper = JiraWrapper.new
+    puts "All commits: "
+    (jira_helper.jira_commits + jira_helper.non_jira_commits).each do |commit|
+      puts commit
+    end
+
+    @issues = []
+    puts "\n--- Finding issues in jira... ---\n"
+    numbers = jira_helper.jira_commits.map { |jira_commit| jira_helper.to_jira_number([jira_commit]).first.tr(' ', '-') }.uniq
+
+    total = numbers.size
+    numbers.each_with_index do |number, index|
+      puts "#{index + 1}/#{total}" if ((index + 1) % 10).zero?
+      @issues << jira_wrapper.find_issue(number)
+    end
   end
 
   def release(fixVersion)
@@ -132,7 +119,7 @@ class JiraReleaser
     end
     puts "\nTotal number of issues: #{total_count}\n"
 
-    puts 'Do you want to proceed?'
+    puts 'Do you want to proceed? [y]'
     user_input = STDIN.gets.strip
     if user_input.strip != 'y'
       puts 'ABORT'
@@ -143,6 +130,7 @@ class JiraReleaser
     i = 0
     @issues.each do |issue|
       i += 1
+      puts issue.key
       @jira_wrapper.assign_version(issue, fixVersion)
       puts "Version assigned to #{i}/#{total_count}" if (i % 10).zero?
     end

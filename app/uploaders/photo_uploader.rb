@@ -75,7 +75,7 @@ class PhotoUploader < BaseUploader
     process dynamic_version: :fit_to_activity_feed
   end
 
-  version :fullscreen, if: :generate_transactable_versions? do
+  version :fullscreen, from_version: :optimized, if: :generate_transactable_versions? do
     process dynamic_version: :fullscreen
   end
 

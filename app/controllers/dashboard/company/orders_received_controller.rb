@@ -1,5 +1,5 @@
 class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseController
-  before_filter :find_order, except: :index
+  before_action :find_order, except: :index
 
   def index
     @order_search_service = OrderSearchService.new(order_scope, params)
@@ -13,7 +13,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   def edit
     @order = current_user.listing_orders.find(params[:id])
 
-    render template: 'checkout/show', locals: {disabled: true}
+    render template: 'checkout/show', locals: { disabled: true }
   end
 
   def update
@@ -56,13 +56,22 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   # TODO: this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
   # The idea is to move all host action for all Order types here
   def confirm
+    if params[:order] && order_params.present?
+      render action: :confirmation_form unless @order.update(order_params)
+    end
     if @order.confirmed?
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     elsif @order.unconfirmed?
+      @order.lister_confirmed!
       if @order.skip_payment_authorization?
         @order.invoke_confirmation!
       else
         @order.charge_and_confirm!
+      end
+
+      # ChrisS, what's the point of checkig if lister_confirmed_at is present if we made sure it is couple lines above?
+      if @order.lister_confirmed_at.present? && @order.action.both_side_confirmation
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerConfirmedWithDoubleConfirmation, @order.id)
       end
 
       if @order.confirmed?
@@ -79,6 +88,8 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
           flash[:warning] = t('flash_messages.manage.reservations.reservation_confirmed_but_not_charged')
         end
 
+      elsif @order.action.both_side_confirmation
+        flash[:success] = t('flash_messages.manage.reservations.lender_confirmed_both_side_confirmation')
       else
         flash[:error] = [
           t('flash_messages.manage.reservations.reservation_not_confirmed'),
@@ -93,6 +104,10 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def rejection_form
+    render layout: false
+  end
+
+  def confirmation_form
     render layout: false
   end
 

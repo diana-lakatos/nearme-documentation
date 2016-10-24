@@ -2,7 +2,7 @@ class FormAttributes
   CKEFIELDS = {
     # transactable: [:description],
     offer: [:description]
-  }
+  }.freeze
 
   def user
     [
@@ -83,7 +83,7 @@ class FormAttributes
 
   def reservation(reservation_type = nil)
     [:address, :dates, :guest_notes, :waiver_agreements, :payments, :payment_documents,
-     :billing_address, :shipping, :shipping_options] +
+     :billing_address, :shipping, :shipping_options, :price, :start_date, :shipping_address_google] +
       extra_attributes(reservation_type.categories.roots, 'Category') +
       reservation_type.custom_attributes.public_display.pluck(:name) +
       extra_attributes(reservation_type.custom_model_types, 'Custom Model')

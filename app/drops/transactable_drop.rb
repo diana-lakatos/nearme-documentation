@@ -220,7 +220,7 @@ class TransactableDrop < BaseDrop
   def url
     @source.show_url
   end
-  alias_method :listing_url, :url
+  alias listing_url url
 
   def show_path
     @source.show_path
@@ -355,7 +355,11 @@ class TransactableDrop < BaseDrop
   end
 
   def last_search
-    @last_search ||= JSON.parse(@context.registers[:action_view].cookies['last_search']) rescue {}
+    @last_search ||= begin
+                       JSON.parse(@context.registers[:action_view].cookies['last_search'])
+                     rescue
+                       {}
+                     end
   end
 
   # is schedule booking enabled for this listing
@@ -422,5 +426,16 @@ class TransactableDrop < BaseDrop
 
   def confirmed_order
     line_item_orders.confirmed.first
+  end
+
+  def transactable_user_messages
+    return [] unless @context['current_user']
+    @source.user_messages.where('author_id = :user_id OR thread_recipient_id = :user_id', user_id: @context['current_user'].id)
+  end
+
+  def unavailable_periods
+    Time.use_zone(@source.timezone) do
+      @source.availability_exceptions.map(&:range).to_json
+    end
   end
 end

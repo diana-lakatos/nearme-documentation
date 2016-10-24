@@ -90,14 +90,10 @@ class UserDrop < BaseDrop
   end
 
   # plural of the user's name
-  def name_pluralize
-    name.pluralize
-  end
+  delegate :pluralize, to: :name, prefix: true
 
   # plural of the user's first name
-  def first_name_pluralize
-    first_name.pluralize
-  end
+  delegate :pluralize, to: :first_name, prefix: true
 
   # returns true if the profile of the user has been marked as public
   def public_profile?
@@ -142,7 +138,7 @@ class UserDrop < BaseDrop
   # string identifying the location where the user books items
   # this method may be used if reservation_city is not present
   def reservation_name
-    self.reservation_city? ? @source.orders.reservations.first.listing.location.city : @source.orders.reservations.first.listing.location.name
+    reservation_city? ? @source.orders.reservations.first.listing.location.city : @source.orders.reservations.first.listing.location.name
   end
 
   # url to the app wizard for adding a new listing to the system
@@ -207,6 +203,10 @@ class UserDrop < BaseDrop
     else
       routes.profile_path(@source.slug)
     end
+  end
+
+  def listings
+    @source.listings
   end
 
   def show_services_tab?
@@ -325,9 +325,7 @@ class UserDrop < BaseDrop
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
   def categories
-    if @categories.nil?
-      @categories = build_categories_hash_for_object(@source, Category.users.roots.includes(:children))
-    end
+    @categories = build_categories_hash_for_object(@source, Category.users.roots.includes(:children)) if @categories.nil?
     @categories
   end
 
@@ -440,18 +438,18 @@ class UserDrop < BaseDrop
   # implemented to make things easier as Liquid does not
   # have a not operator
   def only_buyer_profile?
-    self.has_buyer_profile? && !self.has_seller_profile?
+    has_buyer_profile? && !has_seller_profile?
   end
 
   # whether the user only has a seller profile
   # implemented to make things easier as Liquid does not
   # have a not operator
   def only_seller_profile?
-    !self.has_buyer_profile? && self.has_seller_profile?
+    !has_buyer_profile? && has_seller_profile?
   end
 
   def has_verified_merchant_account
-    @source.companies.first.try(:merchant_accounts).try(:any?) { |ma| ma.verified? }
+    @source.companies.first.try(:merchant_accounts).try(:any?, &:verified?)
   end
 
   def has_pending_transactables?
@@ -468,7 +466,7 @@ class UserDrop < BaseDrop
 
   def pending_transactables_for_current_user
     Transactable.where(creator_id: @context['current_user'].id).with_state(:pending)
-      .joins("LEFT Outer JOIN transactable_collaborators tc on
+                .joins("LEFT Outer JOIN transactable_collaborators tc on
       tc.transactable_id = transactables.id and tc.user_id = #{@source.id} and
       tc.deleted_at is NULL")
   end
@@ -482,7 +480,7 @@ class UserDrop < BaseDrop
   end
 
   def has_company?
-    @source.companies.size > 0
+    !@source.companies.empty?
   end
 
   def company_id

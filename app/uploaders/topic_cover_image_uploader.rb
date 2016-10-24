@@ -9,11 +9,11 @@ class TopicCoverImageUploader < BaseUploader
     big: { width: 575, height: 441, transform: :resize_to_fill }
   }
 
-  version :big do
+  version :big, from_version: :optimized do
     process dynamic_version: :big
   end
 
-  version :medium do
+  version :medium, from_version: :optimized do
     process dynamic_version: :medium
   end
 

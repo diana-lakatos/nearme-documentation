@@ -43,8 +43,10 @@ class Api::V3::InstancesController < Api::BaseController
   protected
 
   def serialized_collection
-    InstanceJsonSerializer.serialize collection.order('created_at desc'),
-                                     is_collection: true
+    InstanceJsonSerializer.serialize(
+      collection.order('created_at desc'),
+      is_collection: true
+    )
   end
 
   def collection
@@ -78,9 +80,7 @@ class InstanceFactory
   end
 
   def create
-    unless instance.domains.first.present?
-      raise ::DNM::Error, 'You must create a domain, e.g. your-market.near-me.com'
-    end
+    raise ::DNM::Error, 'You must create a domain, e.g. your-market.near-me.com' unless instance.domains.first.present?
 
     instance.domains.first.use_as_default = true
     instance.theme.support_email = instance.theme.contact_email
@@ -138,6 +138,7 @@ class InstanceFactory
     tp = instance.transactable_types.new(name: instance.bookable_noun)
 
     tp.action_types << TransactableType::TimeBasedBooking.new(
+      transactable_type: tp,
       confirm_reservations: true,
       pricings_attributes: [
         {

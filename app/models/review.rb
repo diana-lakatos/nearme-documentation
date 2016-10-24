@@ -76,17 +76,13 @@ class Review < ActiveRecord::Base
       review = Review.find_by(reviewable_id: reviewable_id, reviewable_type: reviewable_type, subject: [RatingConstants::HOST, RatingConstants::GUEST])
       review.try(:update_column, :displayable, true)
       review.try(:recalculate_reviewable_average_rating)
-      if review.nil? && transactable_type.show_reviews_if_both_completed
-        self.displayable = false
-      end
+      self.displayable = false if review.nil? && transactable_type.show_reviews_if_both_completed
     end
     true
   end
 
   def creator_does_not_review_own_objects
-    if buyer_id == seller_id
-      errors.add(:base, I18n.t('errors.messages.cant_review_own_product'))
-    end
+    errors.add(:base, I18n.t('errors.messages.cant_review_own_product')) if buyer_id == seller_id
   end
 
   def to_liquid

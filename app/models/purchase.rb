@@ -33,7 +33,8 @@ class Purchase < Order
         unit_price: transactable_pricing.price,
         line_itemable: self,
         service_fee_guest_percent: transactable_pricing.action.service_fee_guest_percent,
-        service_fee_host_percent: transactable_pricing.action.service_fee_host_percent
+        service_fee_host_percent: transactable_pricing.action.service_fee_host_percent,
+        minimum_lister_service_fee_cents: transactable_pricing.action.minimum_lister_service_fee_cents
       )
     end
 
@@ -49,10 +50,10 @@ class Purchase < Order
     errors.clear
     transactable_line_items.each { |t| t.validate_transactable_quantity(self) }
 
-    if errors.empty? && self.valid?
-      if self.unconfirmed? && (self.paid? || payment.capture!)
-        self.create_shipments!
-        self.confirm!
+    if errors.empty? && valid?
+      if unconfirmed? && (paid? || payment.capture!)
+        create_shipments!
+        confirm!
         transactable_line_items.each(&:reduce_transactable_quantity!)
       # We need to touch transactable so it's reindexed by ElasticSearch
       else

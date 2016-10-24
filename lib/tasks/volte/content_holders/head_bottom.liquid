@@ -4,20 +4,22 @@ inject_pages: any_page
 position: head_bottom
 ---
 
-<link rel='stylesheet' media='screen' href='https://rawgit.com/mdyd-dev/marketplaces/master/volte-webpack/dist/app.css'>
-
-<!-- <link rel='stylesheet' media='screen' href='http://localhost:8080/app.css'> -->
+{% if platform_context.rails_env == 'development' %}
+  <link rel='stylesheet' media='screen' href='http://localhost:8080/app.css'>
+{% else %}
+  <link rel='stylesheet' media='screen' href='https://rawgit.com/mdyd-dev/marketplaces/master/volte-webpack/dist/app.css'>
+{% endif %}
 
 <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,400italic,600,700,700italic&amp;amp;subset=latin,latin-ext" rel="stylesheet" />
 
 <script type="text/javascript">
-$(document).ready(function() {
-  if($('[data-money-value-container]').length > 0) {
-    $('[data-money-value-container]').each(function(){
-      $(this).append("<div class='input-group'><div class='input-group-addon'>$</div></div>");
-      var symbol_container = $(this).find('.input-group-addon');
-      $(this).find('[data-money-value]').insertAfter(symbol_container);
-    })
-  }
-});
+  $(function() {
+    if($('[data-money-value-container]').length > 0) {
+      $('[data-money-value-container]').each(function(){
+        $(this).append("<div class='input-group'><div class='input-group-addon'>$</div></div>");
+        var symbol_container = $(this).find('.input-group-addon');
+        $(this).find('[data-money-value]').insertAfter(symbol_container);
+      })
+    }
+  });
 </script>

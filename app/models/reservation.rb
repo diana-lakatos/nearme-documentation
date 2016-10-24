@@ -21,15 +21,15 @@ class Reservation < Order
 
   before_create :set_cancellation_policy
 
-  alias_method :seller_type_review_receiver, :creator
-  alias_method :buyer_type_review_receiver, :user
+  alias seller_type_review_receiver creator
+  alias buyer_type_review_receiver user
 
   delegate :location, :show_company_name, :transactable_type_id, :transactable_type, to: :transactable
   delegate :administrator=, to: :location
-  delegate :action, to: :transactable_pricing
-  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :action, allow_nil: true
+  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents, to: :action, allow_nil: true
   delegate :display_additional_charges?, to: :transactable, allow_nil: true
   delegate :address_in_radius, to: :reservation_type, allow_nil: true
+  delegate :event_booking?, to: :transactable_pricing
 
   state_machine :state, initial: :inactive do
     after_transition confirmed: [:cancelled_by_guest], do: [:charge_penalty!]
@@ -99,15 +99,14 @@ class Reservation < Order
 
   def cancelable?
     return false if can_approve_or_decline_checkout? || has_to_update_credit_card? || archived_at.present?
-    case
-    when confirmed?, unconfirmed?
+    if confirmed? || unconfirmed?
       # A reservation can be canceled if not already canceled and all of the dates are in the future
       cancellation_policy.cancelable?
     else
       false
     end
   end
-  alias_method :cancelable, :cancelable?
+  alias cancelable cancelable?
 
   def cancellation_policy
     @cancellation_policy ||= Reservation::CancellationPolicy.new(self)
@@ -115,17 +114,19 @@ class Reservation < Order
 
   def invoke_confirmation!(&_block)
     errors.clear
-    unless skip_payment_authorization?
-      action.try(:validate_all_dates_available, self)
-    end
-    if errors.empty? && self.valid?
+    action.try(:validate_all_dates_available, self) unless skip_payment_authorization?
+    if errors.empty? && valid? && check_double_cofirmation
       if block_given? ? yield : true
-        self.create_shipments!
-        self.confirm!
+        create_shipments!
+        confirm!
         # We need to touch transactable so it's reindexed by ElasticSearch
         transactable.touch
       end
     end
+  end
+
+  def check_double_cofirmation
+    !action.both_side_confirmation || (lister_confirmed_at.present? && enquirer_confirmed_at.present?)
   end
 
   def charge_and_confirm!
@@ -153,7 +154,7 @@ class Reservation < Order
 
   def charge_penalty!
     if penalty_charge_apply?
-      fail('Charging penalty when there exist already authorized/paid payment!') if payment.present? && (payment.paid? || payment.authorized?)
+      raise('Charging penalty when there exist already authorized/paid payment!') if payment.present? && (payment.paid? || payment.authorized?)
       line_items.where.not(id: transactable_line_item.id).destroy_all
 
       transactable_line_item.update_columns(unit_price_cents: penalty_fee_subtotal.cents, quantity: 1, name: 'Cancellation Penalty')
@@ -258,10 +259,6 @@ class Reservation < Order
     !transactable_pricing.is_free_booking? && transactable_pricing.day_booking?
   end
 
-  def event_booking?
-    transactable_pricing.event_booking?
-  end
-
   def can_complete_checkout?
     archived_at.nil? && skip_payment_authorization? && (payment.pending? || payment.voided?) && pending_guest_confirmation.nil?
   end
@@ -310,12 +307,6 @@ class Reservation < Order
     else
       charge_and_confirm!
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, id)
-    end
-  end
-
-  def try_to_activate!
-    if state == 'inactive' && (skip_payment_authorization? || payment && payment.authorized?)
-      activate!
     end
   end
 

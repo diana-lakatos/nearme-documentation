@@ -1,9 +1,10 @@
 class UserMessageThreadConfigurator
-  AVAILABLE_CONTEXTS = [Transactable, User, Reservation, RecurringBooking, Purchase, DelayedReservation, Offer, TransactableCollaborator]
+  AVAILABLE_CONTEXTS = [Transactable, User, Reservation, RecurringBooking, Purchase, DelayedReservation, Offer, TransactableCollaborator].freeze
 
-  def initialize(user_message, request_params)
+  def initialize(user_message, request_params, current_user)
     @user_message = user_message
     @request_params = request_params
+    @current_user = current_user
   end
 
   def run
@@ -28,7 +29,7 @@ class UserMessageThreadConfigurator
       @message_context = @message_context.find(@request_params[context_id_key]).decorate
     end
 
-    fail DNM::MessageContextNotAvailable if @message_context.nil?
+    raise DNM::MessageContextNotAvailable if @message_context.nil?
   end
 
   def set_thread_owner
@@ -40,10 +41,10 @@ class UserMessageThreadConfigurator
 
     @user_message.thread_context = @message_context.message_context_object
 
-    fail DNM::MessageContextNotAvailable unless @user_message.author_has_access_to_message_context?
+    raise DNM::MessageContextNotAvailable unless @user_message.author_has_access_to_message_context?
   end
 
   def set_thread_recipient
-    @user_message.thread_recipient = @message_context.user_message_recipient
+    @user_message.thread_recipient = @message_context.user_message_recipient(@current_user)
   end
 end

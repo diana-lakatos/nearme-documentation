@@ -134,6 +134,7 @@ en:
     show: 'Show'
     none: "None"
     customized: ' - customized'
+    about: 'About'
     day:
       one: "day"
       other: "days"
@@ -163,6 +164,8 @@ en:
         the_listing: 'The listing'
         admin_logout_confirmation: 'This will log you out and re-log you in as location administrator.'
   transactables:
+    items_listed: 'Items Listed'
+    items_rented: 'Items Rented'
     disable_shipping: 'Disable shipping'
     rental_shipping_types:
       no_rental: 'Not rental'
@@ -2230,6 +2233,7 @@ en:
       update_product_review: 'Update a product review'
 
   registrations:
+    member_since: 'Member Since'
     tell_us: 'Tell us a little about yourself'
     custom_attributes: 'Custom Attributes'
     sort: 'Sort:'

@@ -17,13 +17,13 @@ end
 
 Then /^I should see this question in my inbox marked as read$/ do
   visit dashboard_user_messages_path
+  page.should have_content 'Short one'
+  page.should have_content model('user').first_name
   page.should_not have_content('Inbox (1)')
   page.should have_content('Messages')
   page.should have_content('Inbox')
-  page.should have_content model('user').first_name
   # we might want to re-add this to new ui
   # page.should have_content @listing.name
-  page.should have_content 'Short one'
 end
 
 When /^I log in as this listings creator$/ do

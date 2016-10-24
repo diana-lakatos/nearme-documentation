@@ -1,6 +1,6 @@
 class DefaultImageUploader < BaseUploader
   include CarrierWave::ImageDefaults
-  version :transformed do
+  version :transformed, from_version: :optimized do
     process transformed_version: :transformed
   end
 

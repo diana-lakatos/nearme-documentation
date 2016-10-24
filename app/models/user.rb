@@ -387,6 +387,10 @@ class User < ActiveRecord::Base
   def has_buyer_profile?
     buyer_profile.present? && current_instance.buyer_profile_enabled? && buyer_profile.has_fields?(FormComponent::BUYER_PROFILE_TYPES)
   end
+<<<<<<< HEAD
+=======
+  alias build_profile get_default_profile
+>>>>>>> origin/staging
 
   def custom_validators
     case force_profile

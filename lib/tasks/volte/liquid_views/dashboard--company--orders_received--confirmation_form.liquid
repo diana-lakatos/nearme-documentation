@@ -1,0 +1,95 @@
+---
+partial: false
+---
+
+<header class="dialog__header">
+  <h2 id="dialog__title">Approve Request</h2>
+</header>
+
+<hr/>
+
+{% assign form_url = 'confirm_dashboard_company_orders_received_path' | generate_url: order.id, listing_id: order.transactable.id %}
+
+{% form_for order, as: 'order', form_for_type: 'dashboard', url: @form_url %}
+  <div class="dialog__body">
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Item Rental Summary</h3>
+
+        <dl class="clearfix">
+          <dt>Borrower:</dt>
+          <dd>{{ order.owner.name }}</dd>
+          <dt>Item:</dt>
+          <dd>
+            {% if order.transactable != blank %}
+              <a href="{{ order.transactable.show_path }}">
+                {{ order.transactable.name }}
+              </a>
+            {% endif %}
+          </dd>
+
+          <dt>Shipping Package:</dt>
+          <dd>-----</dd>
+
+          <dt>Borrower ship to address:</dt>
+          <dd>------</dd>
+
+          {% assign requested_dates = order.long_dates %}
+          {% assign requested_dates_size = requested_dates.size %}
+
+          <dt>Period:</dt>
+          <dd>{{ order.transactable_pricing.number_of_units }} days</dd>
+
+          <dt>Rental date:</dt>
+          <dd>{{ order.start_date | to_date | l: 'short' }}</dd>
+
+          <dt>Return date:</dt>
+          <dd>{{ order.end_date | to_date | l: 'short'  }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            {% input rejection_reason, label: 'Pick Up Date', wrapper_html-class: 'datetimepicker', input_html-data-datetimepicker: "true" %}
+          </div>
+          <div class="col-xs-12 col-md-6">
+            {% input rejection_reason, label: 'Shipping Return Date', wrapper_html-class: 'datetimepicker', input_html-data-datetimepicker: "true" %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            {% input rejection_reason, label: 'Lender Pick Up Address', input_html-value: '9001 Lender Street, St. Louis MO, 63141' %}
+          </div>
+          <div class="col-xs-12 col-md-6">
+            {% input rejection_reason, label: 'Lender Ship To Address', input_html-value: '9001 Lender Street, St. Louis MO, 63141' %}
+          </div>
+        </div>
+
+        <hr/>
+
+        <h4>Total Cost</h4>
+
+        <dl class="item-pricing">
+          <dt>Item Rental ({{ order.transactable_pricing.number_of_units }} days)</dt>
+          <dd>{{ order.transactable_pricing.price | price_with_cents_with_currency }}</dd>
+
+          <dt>Shipping</dt>
+          <dd>-----</dd>
+
+          <dt>&nbsp;</dt>
+          <dd><strong>{{ order.total_price }}</strong></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog__actions">
+    {% submit Approve, class: 'button button-default' %}
+    <a href="#" class="button button-inverse" data-modal-close>Cancel</a>
+  </div>
+{% endform_for%}

@@ -12,7 +12,7 @@ class Webhook < ActiveRecord::Base
 
   # Just to make it easier to browse those webhooks in console
   def parse
-    webhookable.payment_gateway.parse_webhook(params[:id], webhookable.data[:secret_key])
+    webhookable.payment_gateway.parse_webhook(params[:id], params[:user_id])
   end
 
   def params

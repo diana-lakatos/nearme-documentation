@@ -11,7 +11,7 @@ class UserDecorator < Draper::Decorator
     social_connections_cache.find { |c| c.provider == provider }
   end
 
-  def user_message_recipient
+  def user_message_recipient(_current_user)
     object
   end
 

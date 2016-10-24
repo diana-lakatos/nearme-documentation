@@ -24,7 +24,6 @@ class ExpressCheckoutController < ApplicationController
     else
       flash[:error] = t('flash_messages.reservations.payment_failed')
       @order = @payment.payable
-      @order.restart_checkout!
       @payment.destroy
 
       redirect_to order_checkout_path(@order)
@@ -35,6 +34,6 @@ class ExpressCheckoutController < ApplicationController
 
   def find_payment
     @order = current_user.orders.find(params[:order_id])
-    @payment = Payment.where(payable_id: @order.id, payable_type: @order.class.name).find_by_express_token!(params[:token])
+    @payment = Payment.where(payable_id: @order.id, payable_type: @order.class.name).find_by!(express_token: params[:token])
   end
 end

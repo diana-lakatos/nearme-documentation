@@ -9,11 +9,11 @@ class TopicImageUploader < BaseUploader
     medium: { width: 460, height: 340, transform: :resize_to_fill }
   }
 
-  version :small do
+  version :small, from_version: :optimized do
     process dynamic_version: :small
   end
 
-  version :medium do
+  version :medium, from_version: :optimized do
     process dynamic_version: :medium
   end
 

@@ -29,30 +29,25 @@ class SecuredParams
   end
 
   def custom_attribute
-    [
-      :name,
-      :attribute_type,
-      :html_tag,
-      :prompt,
-      :required,
-      :min_length,
-      :max_length,
-      :default_value,
-      :min_value,
-      :max_value,
-      :step,
-      :public,
-      :label,
-      :placeholder,
-      :hint,
-      :searchable,
-      :input_html_options,
-      :wrapper_html_options,
-      :input_html_options_string,
-      :wrapper_html_options_string,
-      :validation_only_on_update,
-      valid_values: []
-    ]
+    [:name,
+     :attribute_type,
+     :html_tag,
+     :prompt,
+     :required,
+     :min_length,
+     :max_length,
+     :default_value,
+     :public,
+     :label,
+     :placeholder,
+     :hint,
+     :searchable,
+     :input_html_options,
+     :wrapper_html_options,
+     :input_html_options_string,
+     :wrapper_html_options_string,
+     :validation_only_on_update,
+     valid_values: []]
   end
 
   def custom_validator
@@ -498,6 +493,7 @@ class SecuredParams
       :hours_to_expiration,
       :minimum_booking_minutes,
       :service_fee_guest_percent, :service_fee_host_percent,
+      :minimum_lister_service_fee,
       :favourable_pricing_rate,
       :cancellation_policy_enabled,
       :cancellation_policy_penalty_percentage,
@@ -512,6 +508,7 @@ class SecuredParams
       :confirm_reservations,
       :send_alert_hours_before_expiry,
       :send_alert_hours_before_expiry_hours,
+      :both_side_confirmation,
       pricings_attributes: nested(transactable_type_pricing),
       schedule_attributes: nested(schedule),
       availability_template_attributes: nested(availability_template)
@@ -574,11 +571,11 @@ class SecuredParams
   def payment_gateway_config(config_settings)
     config = []
     config_settings.each do |key, value|
-      if value.instance_of?(Hash) && !value.key?(:valid_values)
-        config << [key => payment_gateway_config(value)]
-      else
-        config << key
-      end
+      config << if value.instance_of?(Hash) && !value.key?(:valid_values)
+                  [key => payment_gateway_config(value)]
+                else
+                  key
+                end
     end
 
     config
@@ -1452,6 +1449,7 @@ class SecuredParams
       :delivery_type,
       :delivery_ids,
       :dates,
+      :step_control,
       :total_amount_check,
       :transactable_pricing_id,
       :transactable_id,

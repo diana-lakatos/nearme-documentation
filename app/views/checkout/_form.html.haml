@@ -1,6 +1,7 @@
 - disabled = false if !defined?(disabled)
 
 = simple_form_for @order, as: :order,  url: @update_path || order_checkout_path(@order), html: { id: 'checkout-form', class: 'form-horizontal' } do |f|
+  = f.hidden_field :step_control
 
   - if f.object.reservation_type
 
@@ -20,6 +21,7 @@
                   %li{class: form_component.id == @order.next_form_component_id ? 'current' : nil}= form_component.name
 
         -# Single form component
+
         - f.object.all_form_components.each_with_index do |form_component, index|
           - if form_component.form_fields_except(@order.skip_steps).any?
             - if !@order.reservation_type.step_checkout || form_component.id == @order.next_form_component_id
@@ -29,7 +31,6 @@
                   - if form_components_count > 1
                     %span.step-no= "#{index + 1}."
                   = form_component.name
-
                 - form_component.form_fields.each do |form_field|
                   - model = form_field.keys.first
                   - field = form_field[model]

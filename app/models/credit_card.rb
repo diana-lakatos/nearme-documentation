@@ -33,7 +33,7 @@ class CreditCard < ActiveRecord::Base
       active_merchant_card.send("#{accessor}=", attribute.try(:to_s).try(:strip))
     end
 
-    define_method("#{accessor}") do
+    define_method(accessor.to_s) do
       active_merchant_card.send(accessor)
     end
   end
@@ -56,7 +56,7 @@ class CreditCard < ActiveRecord::Base
       end
       true
     else
-      errors.add(:base, original_response.params['error']['message'])
+      errors.add(:base, original_response.params['error'].try('[]', 'message'))
       false
     end
   end
@@ -80,17 +80,17 @@ class CreditCard < ActiveRecord::Base
   end
 
   def token
-    if success?
-      decorator.try(:token)
-    else
-      nil
-    end
+    decorator.try(:token) if success?
   end
 
   def success?
     return true if persisted? && response.blank?
 
-    has_response = response.present? rescue false
+    has_response = begin
+                     response.present?
+                   rescue
+                     false
+                   end
     if has_response
       !!YAML.load(response).try(&:success?)
     else
@@ -126,21 +126,17 @@ class CreditCard < ActiveRecord::Base
   end
 
   def validate_card
-    return true if success?
+    return true if success? || active_merchant_card.valid?
 
-    unless active_merchant_card.valid?
-      errors.add(:base, I18n.t('buy_sell_market.checkout.invalid_cc'))
-      active_merchant_card.errors.each do |key, value|
-        if value.is_a?(Array)
-          errors.add(key, value.flatten.first)
-        else
-          errors.add(key, value)
-        end
+    errors.add(:base, I18n.t('buy_sell_market.checkout.invalid_cc'))
+    active_merchant_card.errors.each do |key, value|
+      if value.is_a?(Array)
+        errors.add(key, value.flatten.first)
+      else
+        errors.add(key, value)
       end
-      false
-    else
-      true
     end
+    false
   end
 
   def options
@@ -149,8 +145,8 @@ class CreditCard < ActiveRecord::Base
 
   def set_instance_client
     self.instance_client ||= payment_gateway.instance_clients.where(
-      client: client,  test_mode: test_mode?).first_or_initialize(
-        client: client,  test_mode: test_mode?)
+      client: client,  test_mode: test_mode?
+    ).first_or_initialize
     true
   end
 

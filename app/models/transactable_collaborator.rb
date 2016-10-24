@@ -13,7 +13,7 @@ class TransactableCollaborator < ActiveRecord::Base
   belongs_to :transactable
 
   validates :user, presence: { message: I18n.t(:not_exist) }
-  validates_uniqueness_of :user, scope: :transactable_id
+  validates :user, uniqueness: { scope: :transactable_id }
 
   validates :transactable, presence: true
 
@@ -104,7 +104,7 @@ class TransactableCollaborator < ActiveRecord::Base
     self
   end
 
-  def user_message_recipient
-    user
+  def user_message_recipient(current_user)
+    current_user == user ? transactable.creator : user
   end
 end
