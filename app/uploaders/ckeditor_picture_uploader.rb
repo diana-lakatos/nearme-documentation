@@ -10,11 +10,11 @@ class CkeditorPictureUploader < BaseCkeditorUploader
     content: { width: 800, height: 800, transform: :resize_to_limit }
   }
 
-  version :thumb do
+  version :thumb, from_version: :optimized do
     process dynamic_version: :thumb
   end
 
-  version :content do
+  version :content, from_version: :optimized do
     process dynamic_version: :content
   end
 

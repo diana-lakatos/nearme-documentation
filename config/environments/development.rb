@@ -10,7 +10,7 @@ DesksnearMe::Application.configure do
   config.eager_load = false
   config.use_only_ssl = false
 
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.reload_classes_only_on_change = true
 
   config.action_mailer.raise_delivery_errors = false
