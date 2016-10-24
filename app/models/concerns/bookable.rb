@@ -14,7 +14,7 @@ module Bookable
 
     accepts_nested_attributes_for :address
 
-    validates :quantity, numericality: { greater_than_or_equal_to: 1  } # , less_than_or_equal_to: :transactable_quantity }
+    validates :quantity, numericality: { greater_than_or_equal_to: 1 } # , less_than_or_equal_to: :transactable_quantity }
 
     before_validation :set_inheritated_data, on: :create, if: -> { transactable }
     before_validation :set_excusive_quantity, on: :create, if: -> { exclusive_price? }
@@ -24,7 +24,11 @@ module Bookable
     def form_address(last_search_json)
       return address if address.present?
       if last_search_json
-        last_search = JSON.parse(last_search_json, symbolize_names: true) rescue {}
+        last_search = begin
+                        JSON.parse(last_search_json, symbolize_names: true)
+                      rescue
+                        {}
+                      end
         build_address(address: last_search[:loc], longitude: last_search[:lng], latitude: last_search[:lat])
       else
         build_address
@@ -37,12 +41,16 @@ module Bookable
           self.dates = booking_date_from_search
           self.start_time = booking_time_start_from_search
         end
-        self.dates_fake = I18n.l(Date.parse(dates), format: :day_month_year)
+        self.dates_fake = I18n.l(Date.parse(dates), format: I18n.t('datepicker.dformat'))
       end
     end
 
     def last_search
-      @last_search ||= JSON.parse(@last_search_json) rescue {}
+      @last_search ||= begin
+                         JSON.parse(@last_search_json)
+                       rescue
+                         {}
+                       end
     end
 
     def booking_date_from_search

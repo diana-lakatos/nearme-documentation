@@ -51,6 +51,8 @@ module.exports = class ReservationReviewController
     else
       opts.filter('[data-no-options]').remove()
       if opts.filter('[selected]').length == 0 || opts.filter('[selected]').is('[disabled]')
-        opts.filter('[selected]').attr('selected', false)
-        opts.filter(':not([disabled])').first().attr('selected', 'selected')
+        opts.filter('[selected]').prop('selected', false)
+        opts.filter(':not([disabled])').first().prop('selected', true)
         @startTimeInput.trigger('change')
+        @startTimeInput.val(@startTimeInput.val());
+
