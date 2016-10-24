@@ -638,6 +638,7 @@ ActiveRecord::Schema.define(version: 20161020083811) do
     t.boolean  "searchable",                            default: false
     t.boolean  "validation_only_on_update",             default: false
     t.hstore   "properties",                            default: {},    null: false
+    t.boolean  "search_in_query",                       default: false, null: false
   end
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
@@ -1288,8 +1289,8 @@ ActiveRecord::Schema.define(version: 20161020083811) do
     t.decimal  "service_fee_guest_percent",                    precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",                     precision: 5,  scale: 2, default: 0.0
     t.text     "description"
-    t.text     "properties"
     t.integer  "minimum_lister_service_fee_cents",                                      default: 0
+    t.text     "properties"
   end
 
   add_index "line_items", ["instance_id"], name: "index_line_items_on_instance_id", using: :btree
