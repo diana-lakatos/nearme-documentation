@@ -261,7 +261,7 @@ class User < ActiveRecord::Base
                     if: ->(u) { u.phone.present? || u.validation_for(:phone).try(:is_required?) }
   validates :mobile_number, phone_number: true,
                             if: ->(u) { u.mobile_number.present? || u.validation_for(:mobile_number).try(:is_required?) }
-  validates :country_name, :mobile_number, presence: { if:  ->(u) { u.validation_for(:phone).try(:is_required?) } }
+  validates :country_name, :mobile_number, presence: { if: ->(u) { u.validation_for(:phone).try(:is_required?) } }
 
   validates :saved_searches_alerts_frequency, inclusion: { in: SavedSearch::ALERTS_FREQUENCIES }
 
@@ -387,10 +387,6 @@ class User < ActiveRecord::Base
   def has_buyer_profile?
     buyer_profile.present? && current_instance.buyer_profile_enabled? && buyer_profile.has_fields?(FormComponent::BUYER_PROFILE_TYPES)
   end
-<<<<<<< HEAD
-=======
-  alias build_profile get_default_profile
->>>>>>> origin/staging
 
   def custom_validators
     case force_profile
@@ -628,7 +624,7 @@ class User < ActiveRecord::Base
   end
 
   def following?(other_user)
-    relationships.find_by_followed_id(other_user.id)
+    relationships.find_by(followed_id: other_user.id)
   end
 
   def follow!(other_user, auth = nil)
@@ -672,7 +668,7 @@ class User < ActiveRecord::Base
   end
 
   def mutual_friendship_source
-    self.class.find_by_id(self[:mutual_friendship_source].to_i) if self[:mutual_friendship_source]
+    self.class.find_by(id: self[:mutual_friendship_source].to_i) if self[:mutual_friendship_source]
   end
 
   def mutual_friends
@@ -684,7 +680,7 @@ class User < ActiveRecord::Base
   end
 
   def country
-    Country.find_by_name(country_name) if country_name.present?
+    Country.find_by(name: country_name) if country_name.present?
   end
 
   # Returns the mobile number with the full international calling prefix
