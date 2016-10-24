@@ -38,7 +38,7 @@ then
     echo ${OUTPUT}
 
     if [[ $OUTPUT == *" corrected"* ]]; then
-	  echo "${red}[Ruby Style][Error]: Commit again - files were autocorrected${NC}"
+	  echo "${red}[Ruby Style][Error]: Style guide has been violated. Please run the following command and then commit again:${NC}\nbundle exec rubocop --force-exclusion -a ${FILES}\n"
 	  exit 1
 	 fi
 else
