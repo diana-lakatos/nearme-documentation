@@ -437,7 +437,8 @@ namespace :volte do
         { 'user' => 'google_url' },
         { 'user' => 'instagram_url' },
         { 'user' => 'twitter_url' },
-        { 'user' => 'pinterest_url' }
+        { 'user' => 'pinterest_url' },
+        { 'user' => 'avatar' }
       ]
 
       component.save!
