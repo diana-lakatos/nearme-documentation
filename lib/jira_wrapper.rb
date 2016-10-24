@@ -8,15 +8,27 @@ class JiraWrapper
     @client = JIRA::Client.new(username: 'jira-api', password: 'N#arM3123adam', context_path: '', site: 'https://near-me.atlassian.net', rest_base_path: '/rest/api/2', auth_type: :basic, read_timeout: 120)
   end
 
-  def ensure_version_present!(name:, start_date:, user_released_data:, user_start_date:, description:)
+  def ensure_version_present!(name:, description:)
     puts "Ensuring version exists: #{name}"
     unless version(name).present?
+
+      splitted_version = name.split('.')
+      if splitted_version.last == '0'
+        previous_version = [splitted_version[0], splitted_version[1].to_i - 1, 0].join('.')
+        old_version = version(previous_version)
+        raise 'Previous version was not found!!!' if old_version.nil?
+        user_start_date = old_version.userReleaseDate
+      else
+        user_start_date = Time.current.strftime('%-d/%b/%y')
+      end
+      user_released_date = Time.current.strftime('%-d/%b/%y')
+
       hash = {
         description: description,
         name: name,
         projectId: NM_PROJECT_ID,
-        userStartDate: Chronic.parse(user_start_date).strftime('%-d/%b/%y'),
-        userReleaseDate: Chronic.parse(user_released_data).strftime('%-d/%b/%y')
+        userStartDate: user_start_date,
+        userReleaseDate: user_released_date
       }
       puts "\tDoes not exists, creating: #{hash.inspect}"
       current_version = @client.Version.build
@@ -66,8 +78,6 @@ class JiraWrapper
 
   def assign_version(issue, fixVersion)
     issue.save(fields: { fixVersions: [{ name: fixVersion }] })
-  rescue => e
-    puts "Error for card: #{issue.key}. #{e}"
   end
 
   def version(tag)
