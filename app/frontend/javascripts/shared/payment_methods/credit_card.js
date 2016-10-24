@@ -18,8 +18,9 @@ class PaymentMethodCreditCard {
     this._ui.newCreditCard = container.querySelector('.nm-new-credit-card-form');
     this._ui.creditCardSwitcher = container.querySelector('.nm-credit-card-option-select');
 
+    var that = this;
+
     if (!window.Stripe) {
-      var that = this;
       let s = document.createElement('script');
       s.src = 'https://js.stripe.com/v2/';
       s.addEventListener('load', function() {
