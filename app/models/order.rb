@@ -116,6 +116,7 @@ class Order < ActiveRecord::Base
     where(created_at: start_date..end_date)
   }
 
+  delegate :action, to: :transactable_pricing
   delegate :photos, :confirm_reservations?, to: :transactable, allow_nil: true
 
   # You can customize order tabs (states) displauyed in dashboard

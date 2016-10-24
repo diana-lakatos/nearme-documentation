@@ -78,8 +78,6 @@ class JiraWrapper
 
   def assign_version(issue, fixVersion)
     issue.save(fields: { fixVersions: [{ name: fixVersion }] })
-  rescue => e
-    puts "Error for card: #{issue.key}. #{e}"
   end
 
   def version(tag)

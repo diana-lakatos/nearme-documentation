@@ -91,11 +91,13 @@ class JiraReleaser
       puts commit
     end
 
-    puts "\n------------------\n"
-    puts "Jira numbers"
     @issues = []
-    jira_helper.jira_commits.each do |jira_commit|
-      number = jira_helper.to_jira_number([jira_commit]).first.tr(' ', '-')
+    puts "\n--- Finding issues in jira... ---\n"
+    numbers = jira_helper.jira_commits.map { |jira_commit| jira_helper.to_jira_number([jira_commit]).first.tr(' ', '-') }.uniq
+
+    total = numbers.size
+    numbers.each_with_index do |number, index|
+      puts "#{index + 1}/#{total}" if ((index + 1) % 10).zero?
       @issues << jira_wrapper.find_issue(number)
     end
   end
@@ -128,6 +130,7 @@ class JiraReleaser
     i = 0
     @issues.each do |issue|
       i += 1
+      puts issue.key
       @jira_wrapper.assign_version(issue, fixVersion)
       puts "Version assigned to #{i}/#{total_count}" if (i % 10).zero?
     end
