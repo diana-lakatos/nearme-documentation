@@ -7,7 +7,7 @@ class Offer < Order
 
   def try_to_activate!
     return true unless inactive? && valid?
-    return true if draft_at?
+    return true if draft_at.present?
 
     activate!
   end
