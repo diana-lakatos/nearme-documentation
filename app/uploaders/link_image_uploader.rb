@@ -8,11 +8,11 @@ class LinkImageUploader < BaseUploader
     medium: { width: 144, height: 89, transform: :resize_to_fill }
   }
 
-  version :standard do
+  version :standard, from_version: :optimized do
     process dynamic_version: :standard
   end
 
-  version :medium do
+  version :medium, from_version: :optimized do
     process dynamic_version: :medium
   end
 end

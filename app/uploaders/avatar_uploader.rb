@@ -36,7 +36,7 @@ class AvatarUploader < BaseUploader
     process dynamic_version: :large
   end
 
-  version :community_small do
+  version :community_small, from_version: :optimized do
     process dynamic_version: :community_small
   end
 
