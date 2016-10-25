@@ -65,8 +65,8 @@ class Order < ActiveRecord::Base
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
     event :reject                   do transition unconfirmed: :rejected; end
-    event :host_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_host, if: ->(order) { order.cancelable? }; end
-    event :user_cancel              do transition [:unconfirmed, :confirmed] => :cancelled_by_guest, if: ->(reservation) { reservation.archived_at.nil? }; end
+    event :host_cancel              do transition [:inactive, :unconfirmed, :confirmed] => :cancelled_by_host, if: ->(order) { order.cancelable? }; end
+    event :user_cancel              do transition [:inactive, :unconfirmed, :confirmed] => :cancelled_by_guest, if: ->(reservation) { reservation.archived_at.nil? }; end
     event :expire                   do transition unconfirmed: :expired; end
     event :completed                do transition confirmed: :completed; end
   end
@@ -208,13 +208,19 @@ class Order < ActiveRecord::Base
     end.any?
   end
 
+  def checkout_completed?
+    return false if completed_form_component_ids.blank?
+    return false if reservation_type.form_components.where.not(id: completed_form_component_ids).any?
+    true
+  end
+
   def step_control
-    @step_control ||= (completed_form_component_ids + [next_form_component_id]).join(',')
+    @step_control ||= (cached_completed_form_component_ids + [next_form_component_id]).join(',')
   end
 
   def step_control=(step_control_attribute)
     if step_control == step_control_attribute
-      self.completed_form_component_ids = (completed_form_component_ids + [next_form_component_id]).join(',')
+      self.completed_form_component_ids = (cached_completed_form_component_ids + [next_form_component_id]).join(',')
     end
   end
 
@@ -224,7 +230,7 @@ class Order < ActiveRecord::Base
 
   def next_form_component
     return nil if reservation_type.blank?
-    @next_form_component ||= reservation_type.form_components.where.not(id: completed_form_component_ids).order(:rank).find { |fc| fc.form_fields_except(skip_steps).any? }
+    @next_form_component ||= reservation_type.form_components.where.not(id: cached_completed_form_component_ids).order(:rank).find { |fc| fc.form_fields_except(skip_steps).any? }
   end
 
   def all_form_components
@@ -236,14 +242,18 @@ class Order < ActiveRecord::Base
   end
 
   def previous_step!
-    update_column(:completed_form_component_ids, completed_form_component_ids[0..-2].join(','))
+    update_column(:completed_form_component_ids, cached_completed_form_component_ids[0..-2].join(','))
   end
 
   def restore_cached_step!
-    update_column(:completed_form_component_ids, completed_form_component_ids.join(','))
+    update_column(:completed_form_component_ids, cached_completed_form_component_ids.join(','))
   end
 
   def completed_form_component_ids
+    self[:completed_form_component_ids].to_s.split(',')
+  end
+
+  def cached_completed_form_component_ids
     @completed_ids ||= self[:completed_form_component_ids].to_s.split(',')
   end
 

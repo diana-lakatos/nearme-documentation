@@ -64,7 +64,7 @@
               - if form_component.id == @order.next_form_component_id ||  @order.next_form_component_id.nil? || !@order.reservation_type.try(:step_checkout?)
                 .checkout-wizard-actions
                   .row
-                    - if @order.reservation_type.try(:step_checkout?) && @order.completed_form_component_ids.any? && !@order.next_form_component_id.nil?
+                    - if @order.reservation_type.try(:step_checkout?) && @order.cached_completed_form_component_ids.any? && !@order.next_form_component_id.nil?
                       .span3
                         = link_to back_order_checkout_path(@order), class: 'btn blue prev', data: { disable_with: t('general.processing') } do
                           = t('buy_sell_market.checkout.buttons.back')
