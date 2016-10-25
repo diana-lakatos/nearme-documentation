@@ -6,7 +6,8 @@ class Offer < Order
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
 
   def try_to_activate!
-    return true unless inactive? && valid? && !(save_draft || cancel_draft)
+    return true unless inactive? && valid?
+    return true if save_draft || cancel_draft || draft_at?
 
     activate!
   end

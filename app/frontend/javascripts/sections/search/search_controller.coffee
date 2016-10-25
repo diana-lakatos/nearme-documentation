@@ -173,12 +173,13 @@ module.exports = class SearchSearchController extends SearchController
     @resultsContainer().replaceWith(html)
     @resultsContainer().find("input[data-authenticity-token]").val($('meta[name="authenticity_token"]').attr('content'));
     $('.pagination').hide()
+    @updateResultsCount()
 
   updateResultsCount: ->
     count = @resultsContainer().find('.listing:not(.hidden)').length
     inflection = 'result'
     inflection += 's' unless count == 1
-    @resultsCountContainer.html("#{count} #{inflection}")
+    @resultsCountContainer.html("<b>#{count}</b> #{inflection}")
 
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->

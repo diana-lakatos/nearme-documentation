@@ -41,7 +41,8 @@ namespace :litvault do
         show_categories: true,
         category_search_type: 'AND',
         searchable: true,
-        search_only_enabled_profiles: true
+        search_only_enabled_profiles: false,
+        search_engine: 'postgresql'
       })
 
       setup = LitvaultSetup.new(@instance, File.join(Rails.root, 'lib', 'tasks', 'litvault'))

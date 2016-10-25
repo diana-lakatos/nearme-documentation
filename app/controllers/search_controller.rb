@@ -3,13 +3,15 @@ class SearchController < ApplicationController
   include SearchHelper
   include SearcherHelper
 
-  before_filter :ensure_valid_params
-  before_filter :find_transactable_type
+  before_action :ensure_valid_params
+  before_action :find_transactable_type
   before_action :assign_transactable_type_id_to_lookup_context
   before_action :store_search
 
-  before_action :parse_uot_search_params, if: -> { PlatformContext.current.instance.id.eql?(195) || params[:search_type] == 'people' }
-  before_action :parse_community_search_params, if: -> { PlatformContext.current.instance.is_community? }
+  before_action :parse_uot_search_params, if:
+    -> { PlatformContext.current.instance.id.eql?(195) || params[:search_type] == 'people' }
+  before_action :parse_community_search_params, if:
+    -> { PlatformContext.current.instance.is_community? }
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
@@ -17,7 +19,9 @@ class SearchController < ApplicationController
     search_params = params.merge(per_page: per_page)
     @searcher = InstanceType::SearcherFactory.new(@transactable_type, search_params, result_view, current_user).get_searcher
     @searcher.paginate_results([(params[:page].presence || 1).to_i, 1].max, per_page)
-    event_tracker.conducted_a_search(@searcher.search, @searcher.to_event_params.merge(result_view: result_view)) if should_log_conducted_search?
+    if should_log_conducted_search?
+      event_tracker.conducted_a_search(@searcher.search, @searcher.to_event_params.merge(result_view: result_view))
+    end
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     remember_search_query
 
@@ -29,7 +33,7 @@ class SearchController < ApplicationController
     category_root_ids = Category.roots.map(&:id)
     @categories = Category.where(id: category_ids).order('position ASC, id ASC').to_a
     @categories_html = ''
-    @categories.reject! { |c| c.parent.present? && (!category_root_ids.include?(c.parent.id)) && !category_ids.include?(c.parent.id) }
+    @categories.reject! { |c| c.parent.present? && !category_root_ids.include?(c.parent.id) && !category_ids.include?(c.parent.id) }
     @categories.each do |category|
       next if category.children.blank?
       @categories_html << render_to_string(
