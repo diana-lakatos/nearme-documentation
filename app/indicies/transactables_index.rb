@@ -4,20 +4,24 @@ module TransactablesIndex
   included do |_base|
     cattr_accessor :custom_attributes
 
-    settings(index: { number_of_shards: 1 }) do
+    settings(index: { number_of_shards: 1 })
+
+    def self.set_es_mapping(instance = PlatformContext.current.try(:instance))
       mapping do
         indexes :custom_attributes, type: 'object' do
           if TransactableType.table_exists?
-            mapped = TransactableType.all.map do |transactable_type|
-              transactable_type.custom_attributes.pluck(:name)
-            end.flatten.uniq
-            for custom_attribute in mapped
-              indexes custom_attribute, type: 'string', index: 'not_analyzed'
+            all_custom_attributes = CustomAttributes::CustomAttribute
+                                    .where(target: TransactableType.where(instance: instance))
+                                    .pluck(:name, :attribute_type).uniq
+
+            all_custom_attributes.each do |attribute_name, attribute_type|
+              type = attribute_type.in?(%w(integer boolean float)) ? attribute_type : 'string'
+              indexes attribute_name, type: type, index: 'not_analyzed'
             end
           end
         end
 
-        indexes :name, type: 'string', fields: { raw: { type:  'string', index: 'not_analyzed' } }
+        indexes :name, type: 'string', fields: { raw: { type: 'string', index: 'not_analyzed' } }
         indexes :description, type: 'string'
 
         indexes :object_properties, type: 'object'
@@ -111,11 +115,14 @@ module TransactablesIndex
 
     def self.searchable_custom_attributes(transactable_type = nil)
       if transactable_type.present?
-        # m[0] - name, m[7] - searchable
-        transactable_type.cached_custom_attributes.map { |m| "custom_attributes.#{m[0]}" if m[7] == true }.compact.uniq
+        transactable_type.cached_custom_attributes.map do |custom_attribute|
+          if custom_attribute[CustomAttributes::CustomAttribute::SEARCH_IN_QUERY]
+            "custom_attributes.#{custom_attribute[CustomAttributes::CustomAttribute::NAME]}"
+          end
+        end.compact.uniq
       else
-        TransactableType.where(searchable: true).map do |transactable_type|
-          transactable_type.custom_attributes.where(searchable: true).map { |m| "custom_attributes.#{m.name}" }
+        TransactableType.where(searchable: true).map do |tt|
+          tt.custom_attributes.where(searchable: true).map { |m| "custom_attributes.#{m.name}" }
         end.flatten.uniq
       end
     end
