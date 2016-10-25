@@ -4,7 +4,6 @@ FactoryGirl.define do
     attribute_type 'string'
     label 'My Label'
     hint 'this is my hint'
-    required 0
 
     after(:create) do |attribute|
       CustomAttributes::CustomAttribute.clear_cache(attribute.target_type, attribute.target_id) if attribute.target_type && attribute.target_id
@@ -15,11 +14,12 @@ FactoryGirl.define do
       name 'listing_type'
       valid_values { ['Desk', 'Meeting Room', 'Office Space', 'Salon Booth'] }
       attribute_type 'string'
-      required 1
     end
 
     factory :custom_attribute_required do
-      validation_rules { { presence: {} } }
+      after(:build) do |attribute|
+        attribute.custom_validators.build(required: '1', field_name: attribute.name)
+      end
     end
 
     factory :custom_attribute_array do
@@ -68,14 +68,18 @@ FactoryGirl.define do
       required '1'
       public '1'
       label 'License number'
-      validation_rules { { presence: {} } }
+      after(:build) do |attribute|
+        attribute.custom_validators.build(required: '1', field_name: attribute.name)
+      end
     end
 
     factory :user_custom_attribute do
       target { InstanceProfileType.default.first || FactoryGirl.create(:instance_profile_type) }
       attribute_type 'string'
       factory :required_user_custom_attribute do
-        validation_rules { { 'presence' => {} } }
+        after(:build) do |attribute|
+          attribute.custom_validators.build(required: '1', field_name: attribute.name)
+        end
       end
     end
   end

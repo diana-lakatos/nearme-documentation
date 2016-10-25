@@ -11,12 +11,9 @@ module CustomAttributes
         has_many :custom_attributes, options
 
         define_method(:cached_custom_attributes) do
-          CustomAttributes::CustomAttribute.get_from_cache(self.id, self.class.name)
+          CustomAttributes::CustomAttribute.get_from_cache(id, self.class.name)
         end
-
       end
     end
-
   end
 end
-

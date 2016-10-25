@@ -372,6 +372,10 @@ class User < ActiveRecord::Base
   alias build_profile get_default_profile
 
   def custom_validators
+    @custom_validators ||= all_current_profiles.map(&:custom_validators).flatten.compact
+  end
+
+  def all_current_profiles
     case force_profile
     when 'buyer'
       get_buyer_profile
@@ -379,10 +383,13 @@ class User < ActiveRecord::Base
       get_seller_profile
     end
     self.force_profile = nil
-    profiles = (UserProfile::PROFILE_TYPES - Array(skip_validations_for).map(&:to_s)).map do |profile_type|
+    @all_current_profiles ||= (UserProfile::PROFILE_TYPES - Array(skip_validations_for).map(&:to_s)).map do |profile_type|
       send("#{profile_type}_profile")
     end.compact
-    @custom_validators ||= profiles.map(&:custom_validators).flatten.compact
+  end
+
+  def custom_attributes_custom_validators
+    @custom_attributes_custom_validators ||= all_current_profiles.map(&:custom_attributes_custom_validators).flatten.compact
   end
 
   def validation_for(field_names)

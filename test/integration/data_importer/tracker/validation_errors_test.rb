@@ -58,7 +58,7 @@ class DataImporter::Tracker::ValidationErrorsTest < ActiveSupport::TestCase
     @xml_file.trackers << @validation_errors_tracker
     @xml_file.parse
 
-    assert @validation_errors_tracker.to_s.include?('Validation error for Transactable 1: ')
+    assert_contains 'Validation error for Transactable 1: ', @validation_errors_tracker.to_s
     assert @validation_errors_tracker.to_s.include?("My attribute can't be blank")
     assert @validation_errors_tracker.to_s.include?('Validation error for Location 1: ')
   end
