@@ -203,6 +203,7 @@ end
 gem 'mailman'
 
 gem 'nearme', path: 'vendor/gems/nearme', require: false
+gem 'sendle_api', path: 'vendor/gems/sendle_api', require: false
 gem 'custom_attributes', path: 'vendor/gems/custom_attributes'
 
 gem 'figaro'

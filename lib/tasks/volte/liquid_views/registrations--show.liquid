@@ -1,19 +1,13 @@
 ---
 partial: false
 ---
-{% capture user_name %}
-  {% if user.properties.use_alias_as_name == '1' %}
-    {{ user.properties.user_alias }}
-  {% else %}
-    {{ user.name }}
-  {% endif %}
 {% endcapture %}
 <div class="wrapper-a">
   <main class="user-closet">
 
     <header class="user-closet-header">
-      <img src="{{ user.avatar_url_big }}" alt="{{ user_name }}">
-      <h1>{{ user_name }}</h1>
+      <img src="{{ user.avatar_url_big }}" alt="{{ user.name }}">
+      <h1>{{ user.name }}</h1>
     </header>
 
     <section class="user-closet-listing">
@@ -78,13 +72,7 @@ partial: false
     {% if user.properties.biography != blank %}
       <p class="text-bold">
         {{ 'general.about' | translate }}
-
-        {% if user.properties.use_alias_as_name == '1' %}
-          {{ user.properties.user_alias }}
-        {% else %}
-          {{ user.name }}
-        {% endif %}
-
+        {{ user.name }}
         {{ user.properties.biography | nl2br }}
       </p>
 

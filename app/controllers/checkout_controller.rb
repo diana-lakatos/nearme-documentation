@@ -1,3 +1,63 @@
+# frozen_string_literal: true
+# TODO: move to sep file
+module Checkouts
+  class ShippingAddressBuilder
+    def self.build(order, user)
+      new(order, user).shipping_address
+    end
+
+    def initialize(order, user)
+      @order = order
+      @user = user
+    end
+
+    def shipping_address
+      return @order.shipping_address if @order.shipping_address
+
+      @order.build_shipping_address firstname: firstname,
+                                    lastname: lastname,
+                                    phone: phone,
+                                    email: email,
+                                    address: google_address,
+                                    instance_id: @order.instance_id
+    end
+
+    private
+
+    def email
+      user_address.email || @user.email
+    end
+
+    def firstname
+      user_address.firstname || @user.first_name
+    end
+
+    def lastname
+      user_address.lastname || @user.last_name
+    end
+
+    def phone
+      user_address.phone || @user.full_mobile_number
+    end
+
+    def google_address
+      user_google_address || default_address
+    end
+
+    def default_address
+      Address.new
+    end
+
+    def user_google_address
+      user_address.address && user_address.address.dup
+    end
+
+    def user_address
+      @user_address ||= @user.shipping_addresses.last || @user.shipping_addresses.build
+    end
+  end
+end
+
 class CheckoutController < ApplicationController
   before_action :authenticate_user!
   before_action :set_theme
@@ -8,6 +68,7 @@ class CheckoutController < ApplicationController
   def show
     @order.try(:last_search_json=, cookies[:last_search])
     @order.object.try(:before_checkout_callback)
+    @order.shipping_address = Checkouts::ShippingAddressBuilder.build(@order, @order.user)
   end
 
   def update

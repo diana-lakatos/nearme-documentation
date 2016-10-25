@@ -1,6 +1,5 @@
 class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin::ShippingOptions::BaseController
   before_filter :set_breadcrumbs
-
   before_filter :get_company
 
   def index

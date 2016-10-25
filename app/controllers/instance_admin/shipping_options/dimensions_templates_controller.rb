@@ -1,3 +1,4 @@
+# TODO: delete
 class InstanceAdmin::ShippingOptions::DimensionsTemplatesController < InstanceAdmin::ShippingOptions::BaseController
   before_filter :set_breadcrumbs
 

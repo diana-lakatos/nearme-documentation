@@ -1,3 +1,4 @@
+# TODO: destroy
 class Dashboard::Company::DimensionsTemplatesController < Dashboard::Company::BaseController
   skip_before_filter :redirect_unless_registration_completed
 

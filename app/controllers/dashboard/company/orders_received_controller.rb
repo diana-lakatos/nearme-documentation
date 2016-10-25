@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseController
   before_action :find_order, except: :index
 
@@ -7,6 +8,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def show
+    prepare_order_for_shipping
     @order = @order.decorate
   end
 
@@ -54,9 +56,12 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   # TODO: this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
   # The idea is to move all host action for all Order types here
   def confirm
+    prepare_order_for_shipping
+
     if params[:order] && order_params.present?
-      render action: :confirmation_form unless @order.update(order_params)
+      render(action: :confirmation_form) && return unless @order.update(order_params)
     end
+
     if @order.confirmed?
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     elsif @order.unconfirmed?
@@ -67,7 +72,6 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
         @order.charge_and_confirm!
       end
 
-      # ChrisS, what's the point of checkig if lister_confirmed_at is present if we made sure it is couple lines above?
       if @order.lister_confirmed_at.present? && @order.action.both_side_confirmation
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerConfirmedWithDoubleConfirmation, @order.id)
       end
@@ -93,15 +97,18 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     else
       flash[:error] = t('dashboard.host_reservations.reservation_is_expired') if @reservation.expired?
     end
-
     redirect_to request.referer.presence || location_after_save
+    render_redirect_url_as_json if request.xhr?
   end
 
   def rejection_form
     render layout: false
   end
 
+  # TODO: this should be more conditional? not every order has shippings
   def confirmation_form
+    prepare_order_for_shipping
+
     render layout: false
   end
 
@@ -140,5 +147,12 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
 
   def rejection_reason
     params[:order][:rejection_reason] if params[:order] && params[:order][:rejection_reason]
+  end
+
+  # TODO: REFACTOR: perhaps this better to be factory
+  def prepare_order_for_shipping
+    return if @order.confirmed?
+    Shippings::DeliveryFactory.build(order: @order)
+    Commands::BuildShippingLineItems.new(order: @order).prepare
   end
 end

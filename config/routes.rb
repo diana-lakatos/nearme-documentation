@@ -296,6 +296,11 @@ DesksnearMe::Application.routes.draw do
         resources :location_types, only: [:index, :create, :update, :destroy_modal, :destroy] do
           get 'destroy_modal', on: :member
         end
+
+        namespace :shippings do
+          resources :shipping_providers
+        end
+
         resources :payments
         resources :payment_gateways, controller: 'payments/payment_gateways', except: [:show]
         resources :tax_regions do

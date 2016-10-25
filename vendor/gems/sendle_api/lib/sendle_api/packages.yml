@@ -1,0 +1,35 @@
+-
+  name: Satchel
+  description: A4 + 500g # cubic_centimetre: 1000
+  weight: 0.5
+  width: 29.7
+  depth: 1
+  height: 42
+-
+  name: Shoebox
+  description: 2kg + 8L # cubic_centimetre: 8_000 = 20 * 20 * 20
+  weight: 2
+  width: 20
+  depth: 20
+  height: 20
+-
+  name: Briefcase
+  description: 5kg + 20L # cubic_centimetre: 20_000 = 25 * 25 * 32
+  weight: 5
+  width: 25
+  depth: 25
+  height: 32
+-
+  name: Carry-on
+  description: 10kg + 40L # cubic_centimetre: 40_000
+  weight: 10
+  width: 48
+  depth: 24
+  height: 35
+-
+  name: Luggage
+  description: 25kg + 100L # cubic_centimetre: 100_000
+  weight: 25
+  width: 100
+  depth: 25
+  height: 40

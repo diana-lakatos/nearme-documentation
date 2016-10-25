@@ -4,7 +4,7 @@ module UsersHelper
   end
 
   def user_country_name_options
-    if (allowed_countries = current_instance.allowed_countries_list).present?
+    if (allowed_countries = current_instance.allowed_country_list).present?
       allowed_countries.map { |c| [c.name, c.name, { 'data-calling-code': c.calling_code }] }.sort_by(&:first)
     else
       Country.all.map { |c| [c.name, c.name, { 'data-calling-code': c.calling_code }] }.sort_by(&:first)

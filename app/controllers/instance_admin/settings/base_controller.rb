@@ -1,6 +1,6 @@
 class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
-  before_filter :find_instance
-  before_filter :find_instance_translations
+  before_action :find_instance
+  before_action :find_instance_translations
 
   def index
     redirect_to instance_admin_settings_configuration_path
