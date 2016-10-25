@@ -8,7 +8,7 @@ require 'simplecov'
 # files.
 CodeClimate::TestReporter.start
 
-require "json_spec/cucumber"
+require 'json_spec/cucumber'
 require 'cucumber/rails'
 
 require 'capybara-screenshot/cucumber'
@@ -16,7 +16,6 @@ Capybara::Screenshot.autosave_on_failure = true
 
 require 'rack/utils'
 Capybara.app = Rack::ShowExceptions.new(DesksnearMe::Application)
-
 
 Capybara.default_wait_time = 10
 
@@ -48,7 +47,7 @@ ActionController::Base.allow_rescue = false
 begin
   DatabaseCleaner.strategy = :truncation
 rescue NameError
-  raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
+  raise 'You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it.'
 end
 
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
@@ -71,9 +70,8 @@ Before '~@photo' do
   PhotoUploader.enable_processing = false
 end
 
-Around('@elasticsearch') do |scenario, block|
+Around('@elasticsearch') do |_scenario, block|
   Rails.application.config.use_elastic_search = true
-  Transactable.__elasticsearch__.index_name = 'transactables_test'
   Transactable.__elasticsearch__.create_index!(force: true)
   Transactable.searchable.import
   block.call

@@ -19,7 +19,7 @@
 
 class PlatformContext
   DEFAULT_REDIRECT_CODE = 302
-  NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'
+  NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'.freeze
   @@instance_view_cache_key = {}
 
   attr_reader :domain, :platform_context_detail, :instance, :theme, :custom_theme, :domain,
@@ -34,9 +34,7 @@ class PlatformContext
 
   def self.current=(platform_context)
     Thread.current[:platform_context] = platform_context
-    if platform_context.present?
-      after_setting_current_callback(platform_context)
-    end
+    after_setting_current_callback(platform_context) if platform_context.present?
   end
 
   def self.after_setting_current_callback(platform_context)
@@ -45,6 +43,12 @@ class PlatformContext
     I18N_DNM_BACKEND.set_instance(platform_context.instance) if defined? I18N_DNM_BACKEND
     I18n.locale = platform_context.instance.primary_locale
     CacheExpiration.update_memory_cache
+    set_es_mappings
+  end
+
+  def self.set_es_mappings
+    Transactable.set_es_mapping
+    User.set_es_mapping
   end
 
   def self.get_instance_view_cache_key(instance_id)
@@ -75,7 +79,7 @@ class PlatformContext
     when Instance
       initialize_with_instance(object)
     else
-      fail "Can't initialize PlatformContext with object of class #{object.class}"
+      raise "Can't initialize PlatformContext with object of class #{object.class}"
     end
   end
 
@@ -83,15 +87,11 @@ class PlatformContext
     Rails.cache.fetch("secured_domains_for_#{@request_host}_#{@instance.cache_key}") do
       result = nil
 
-      unless @request_host.blank?
-        result = @instance.domains.secured.where_hostname(@request_host)
-      end
+      result = @instance.domains.secured.where_hostname(@request_host) unless @request_host.blank?
 
       result ||= @instance.domains.secured.first
 
-      if Rails.env.development? || Rails.env.test?
-        result ||= @instance.domains.first
-      end
+      result ||= @instance.domains.first if Rails.env.development? || Rails.env.test?
 
       result
     end
@@ -104,13 +104,13 @@ class PlatformContext
       if PlatformContext.current.instance.id == Instance.first.id
         { host: Rails.application.routes.default_url_options[:host], protocol: 'https', only_path: false }
       else
-        fail NotImplementedError.new("Marketplace '#{instance.name}' has not configured secured domain")
+        raise NotImplementedError, "Marketplace '#{instance.name}' has not configured secured domain"
       end
     end
   end
 
   def secured?
-    (root_secured?) || @domain.try(:secured?)
+    root_secured? || @domain.try(:secured?)
   end
 
   def require_ssl?
@@ -222,7 +222,7 @@ class PlatformContext
     { request_host: @request_host }.merge(
       Hash[instance_variables
            .reject { |iv| iv.to_s == '@request_host' || iv.to_s == '@decorator' }
-           .map { |iv| iv.to_s.gsub('@', '') }
+           .map { |iv| iv.to_s.delete('@') }
            .map { |iv| ["#{iv}_id", send(iv).try(:id)] }]
     )
   end
@@ -236,7 +236,7 @@ class PlatformContext
   def overwrite_custom_theme(user)
     return false if @custom_theme.try(:in_use_for_instance_admins?)
     return false if user.nil?
-    return false unless user.metadata["#{@instance.id}"].try(:keys).try(:include?, 'instance_admins_metadata') || user.admin?
+    return false unless user.metadata[@instance.id.to_s].try(:keys).try(:include?, 'instance_admins_metadata') || user.admin?
     @custom_theme = @platform_context_detail.custom_theme_for_instance_admins if @platform_context_detail.try(:custom_theme_for_instance_admins).present?
   end
 

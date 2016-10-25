@@ -8,8 +8,8 @@ class TransactableType < ActiveRecord::Base
   acts_as_custom_attributes_set
 
   AVAILABLE_TYPES = ['Listing'].freeze
-  AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction, OfferAction]
-  SEARCH_VIEWS = %w(mixed list listing_mixed)
+  AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction, OfferAction].freeze
+  SEARCH_VIEWS = %w(mixed list listing_mixed).freeze
   AVAILABLE_SHOW_PATH_FORMATS = [
     '/transactable_types/:transactable_type_id/locations/:location_id/listings/:id',
     '/:transactable_type_id/locations/:location_id/listings/:id',
@@ -23,7 +23,7 @@ class TransactableType < ActiveRecord::Base
   INTERNAL_FIELDS = [
     :name, :description, :capacity, :quantity, :confirm_reservations,
     :last_request_photos_sent_at, :capacity
-  ]
+  ].freeze
 
   has_many :action_types, -> { enabled }, dependent: :destroy
   has_many :all_action_types, dependent: :destroy, class_name: 'TransactableType::ActionType'
@@ -66,7 +66,7 @@ class TransactableType < ActiveRecord::Base
 
   scope :searchable, -> { where(searchable: true) }
   scope :by_position, -> { order('position ASC') }
-  scope :order_by_array_of_names, lambda  { |names|
+  scope :order_by_array_of_names, lambda { |names|
     names_decorated = names.each_with_index.map { |tt, i| "WHEN transactable_types.name='#{tt}' THEN #{i}" }
     order("CASE #{names_decorated.join(' ')} END") if names.present?
   }
@@ -74,7 +74,7 @@ class TransactableType < ActiveRecord::Base
 
   validates :name, :default_search_view, :searcher_type, presence: true
   validates :category_search_type, presence: true, if: -> (transactable_type) { transactable_type.show_categories }
-  validates_inclusion_of :show_path_format, in: AVAILABLE_SHOW_PATH_FORMATS, allow_nil: true
+  validates :show_path_format, inclusion: { in: AVAILABLE_SHOW_PATH_FORMATS, allow_nil: true }
   validates_associated :action_types
 
   accepts_nested_attributes_for :custom_attributes, update_only: true
@@ -128,9 +128,7 @@ class TransactableType < ActiveRecord::Base
     translation_manager.find_key_with_count('lessee', count)
   end
 
-  def create_translations!
-    translation_manager.create_translations!
-  end
+  delegate :create_translations!, to: :translation_manager
 
   def create_reservation_type!
     return true if reservation_type.present?
@@ -220,6 +218,13 @@ class TransactableType < ActiveRecord::Base
 
   def required_custom_attributes_for_csv(import_model = 'transactable')
     required_custom_attributes.map { |required_attribute| { import_model => required_attribute.name } }
+  end
+
+  def update_es_mapping
+    Transactable.set_es_mapping
+    Transactable.update_mapping!
+  rescue StandardError => e
+    MarketplaceLogger.error('ES Update Mapping Error', e.to_s, raise: false)
   end
 
   private

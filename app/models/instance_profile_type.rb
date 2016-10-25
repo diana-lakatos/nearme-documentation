@@ -3,7 +3,7 @@ class InstanceProfileType < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  SEARCH_VIEWS = %w(list)
+  SEARCH_VIEWS = %w(list).freeze
 
   acts_as_custom_attributes_set
   belongs_to :instance
@@ -20,12 +20,12 @@ class InstanceProfileType < ActiveRecord::Base
   delegate :translated_bookable_noun, :create_translations!, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
            :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
-  DEFAULT  = 'default'.freeze
-  SELLER  = 'seller'.freeze
+  DEFAULT = 'default'.freeze
+  SELLER = 'seller'.freeze
   BUYER = 'buyer'.freeze
   PROFILE_TYPES = [DEFAULT, SELLER, BUYER].freeze
 
-  validates_inclusion_of :profile_type, in: PROFILE_TYPES
+  validates :profile_type, inclusion: { in: PROFILE_TYPES }
 
   scope :default, -> { where(profile_type: DEFAULT) }
   scope :seller, -> { where(profile_type: SELLER) }
@@ -63,5 +63,12 @@ class InstanceProfileType < ActiveRecord::Base
 
   def has_fields?(profile_type)
     form_components.where(form_type: profile_type).any? { |f| f.form_fields.present? }
+  end
+
+  def update_es_mapping
+    User.set_es_mapping
+    User.update_mapping!
+  rescue StandardError => e
+    MarketplaceLogger.error('ES Update Mapping Error', e.to_s, raise: false)
   end
 end

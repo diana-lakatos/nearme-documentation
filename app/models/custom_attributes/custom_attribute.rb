@@ -9,11 +9,14 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   scoped_to_platform_context
 
   after_save :create_translations, :add_to_csv
+  after_create :update_es_mapping, if: ->(ca) { %w(TransactableType InstanceProfileType).include?(ca.target_type) }
 
   scope :searchable, -> { where(searchable: true) }
   scope :public_display, -> { where(public: true) }
 
-  validates_presence_of :valid_values, if: :searchable
+  validates :valid_values, presence: { if: :searchable }
+
+  delegate :update_es_mapping, to: :target
 
   def create_translations
     ::CustomAttributes::CustomAttribute::TranslationCreator.new(self).create_translations!
@@ -39,7 +42,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   private
 
   def add_to_csv
-    if self.required? && target.try(:custom_csv_fields)
+    if required? && target.try(:custom_csv_fields)
       unless target.custom_csv_fields.include?(custom_attribute_for_csv)
         target.custom_csv_fields << custom_attribute_for_csv
         target.save!

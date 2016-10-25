@@ -116,7 +116,7 @@ class Instance < ActiveRecord::Base
 
   scope :with_deleted, -> { all }
 
-  store_accessor :search_settings, :tt_select_type
+  store_accessor :search_settings, :tt_select_type, :use_individual_index
 
   before_create :generate_webhook_token
   before_update :check_lock
@@ -222,7 +222,7 @@ class Instance < ActiveRecord::Base
   end
 
   def default_country_code
-    Country.find_by_name(default_country).try(:iso)
+    Country.find_by(name: default_country).try(:iso)
   end
 
   def payment_gateways(country, currency)
@@ -403,9 +403,5 @@ class Instance < ActiveRecord::Base
   def new_ui?
     Rails.logger.error("ERROR! new_ui? method should be deprecated, called from: #{caller[0]}")
     true
-  end
-
-  def available_locales
-    locales.pluck(:code)
   end
 end
