@@ -220,7 +220,7 @@ class TransactableDrop < BaseDrop
   def url
     @source.show_url
   end
-  alias_method :listing_url, :url
+  alias listing_url url
 
   def show_path
     @source.show_path
@@ -355,7 +355,11 @@ class TransactableDrop < BaseDrop
   end
 
   def last_search
-    @last_search ||= JSON.parse(@context.registers[:action_view].cookies['last_search']) rescue {}
+    @last_search ||= begin
+                       JSON.parse(@context.registers[:action_view].cookies['last_search'])
+                     rescue
+                       {}
+                     end
   end
 
   # is schedule booking enabled for this listing
@@ -429,9 +433,22 @@ class TransactableDrop < BaseDrop
     @source.user_messages.where('author_id = :user_id OR thread_recipient_id = :user_id', user_id: @context['current_user'].id)
   end
 
-  def unavailable_periods
+  # returns ranges of rented periods {from: date, to: date}
+  def rented_range_periods
     Time.use_zone(@source.timezone) do
-      @source.availability_exceptions.map(&:range).to_json
+      @source.line_item_orders.with_state(:confirmed).map(&:period_range)
     end
+  end
+
+  # returns ranges of unavailable periods {from: date, to: date}
+  def unavailable_range_periods
+    Time.use_zone(@source.timezone) do
+      @source.availability_exceptions.map(&:range)
+    end
+  end
+
+  # returns json with ranges of rented and unavailable periods {from: date, to: date}
+  def unavailable_periods
+    (unavailable_range_periods + rented_range_periods).uniq.to_json
   end
 end
