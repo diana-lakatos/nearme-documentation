@@ -440,7 +440,21 @@ namespace :volte do
         { 'user' => 'pinterest_url' },
         { 'user' => 'avatar' }
       ]
+      component.save!
 
+      component = @instance.form_components.where(form_type: 'location_attributes').first_or_initialize
+      component.form_fields = [
+        { 'location' => 'name' },
+        { 'location' => 'address' },
+        { 'location' => 'time_zone' },
+        { 'location' => 'description' },
+        { 'location' => 'location_type' },
+        { 'location' => 'email' },
+        { 'location' => 'administrator' },
+        { 'location' => 'special_notes' },
+        { 'location' => 'amenities' },
+        { 'location' => 'assigned_waiver_agreement_templates' }
+      ]
       component.save!
     end
 
