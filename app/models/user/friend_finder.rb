@@ -12,8 +12,10 @@ class User::FriendFinder
     authentications.each do |authentication|
       new_friends = []
       begin
-        authentication.new_connections.each { |u| new_friends << u } if authentication.new_connections.present?
-      rescue ::Authentication::InvalidToken
+        Array(authentication.new_connections).each do |u|
+          new_friends << u
+        end
+      rescue Authentication::InvalidToken
         authentication.expire_token!
         return false
       end

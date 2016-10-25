@@ -634,8 +634,7 @@ class User < ActiveRecord::Base
     authentications.collect do |a|
       begin
         a.social_connection.try(:connections)
-        # We need Exception => e as Authentication::InvalidToken inherits directly from Exception not StandardError
-      rescue Exception => e
+      rescue StandardError => e
         nil
       end
     end.flatten.compact

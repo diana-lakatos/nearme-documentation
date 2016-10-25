@@ -1,14 +1,16 @@
 require 'koala'
 
 class Authentication::FacebookProvider < Authentication::BaseProvider
-  META   = { name: 'Facebook',
-             url: 'http://facebook.com/',
-             auth: 'OAuth 2' }
+  META = {
+    name: 'Facebook',
+    url: 'http://facebook.com/',
+    auth: 'OAuth 2'
+  }.freeze
 
   def friend_ids
     @friend_ids ||= connection.get_connections('me', 'friends').collect { |f| f['id'].to_s }
   rescue Koala::Facebook::AuthenticationError
-    raise ::Authentication::InvalidToken
+    raise ::Authentication::InvalidToken, $ERROR_INFO.inspect
   end
 
   def info

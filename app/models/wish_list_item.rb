@@ -4,7 +4,7 @@ class WishListItem < ActiveRecord::Base
 
   PERMITTED_CLASSES = %w(Location Transactable User)
 
-  class NotPermitted < Exception
+  class NotPermitted < StandardError
   end
 
   belongs_to :wishlistable, polymorphic: true, touch: true
