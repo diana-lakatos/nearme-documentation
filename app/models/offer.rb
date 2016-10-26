@@ -1,5 +1,4 @@
 class Offer < Order
-
   has_many :host_line_items, as: :line_itemable
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
 
@@ -8,6 +7,7 @@ class Offer < Order
 
   def try_to_activate!
     return true unless inactive? && valid? && checkout_completed?
+    return true if draft_at?
 
     activate!
   end
@@ -181,11 +181,7 @@ class Offer < Order
   end
 
   def set_draft_at
-    self.draft_at = if save_draft
-      Time.current
-    else
-      nil
-    end
+    self.draft_at = (Time.current if save_draft)
 
     true
   end

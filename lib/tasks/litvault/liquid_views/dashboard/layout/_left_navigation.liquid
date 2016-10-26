@@ -205,7 +205,7 @@
         <span>{{ 'dashboard.nav.account' | t }}</span>
         <ul>
           <li id="dashboard-nav-edit" class="{% if profile_edit_selected %}selected{% endif %}">
-            <a href="{{ 'dashboard_profile_path' | generate_url }}">{{ 'dashboard.nav.edit' | t }}</a>
+            <a href="{{ 'dashboard_profile_path' | generate_url }}">Edit Profile</a>
           </li>
           {% if current_user.has_active_credit_cards? %}
             {% assign payment_gateway_id = '' | get_payment_gateway_id %}
