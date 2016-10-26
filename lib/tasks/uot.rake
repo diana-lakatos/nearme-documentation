@@ -843,6 +843,7 @@ namespace :uot do
       create_email('offer_mailer/notify_guest_of_cancellation_by_guest')
       create_email('offer_mailer/notify_guest_with_confirmation')
       create_email('offer_mailer/notify_host_with_confirmation')
+      create_email('offer_mailer/notify_host_of_confirmation')
       create_email('user_message_mailer/notify_user_about_new_message')
       create_email('transactable_mailer/transactable_owner_added_collaborator_email')
       create_email('transactable_mailer/collaborator_declined')
