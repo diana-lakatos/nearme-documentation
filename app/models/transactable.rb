@@ -14,11 +14,11 @@ class Transactable < ActiveRecord::Base
   include Approvable
   include Taggable
 
-  DEFAULT_ATTRIBUTES = %w(name description capacity)
+  DEFAULT_ATTRIBUTES = %w(name description capacity).freeze
 
-  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Collaborators']
+  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Collaborators'].freeze
 
-  DATE_VALUES = %w(today yesterday week_ago month_ago 3_months_ago 6_months_ago)
+  DATE_VALUES = %w(today yesterday week_ago month_ago 3_months_ago 6_months_ago).freeze
 
   # This must go before has_custom_attributes because of how the errors for the custom
   # attributes are added to the instance
@@ -34,8 +34,6 @@ class Transactable < ActiveRecord::Base
   has_many :additional_charge_types, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
-  has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder
-  has_many :amenities, through: :amenity_holders, inverse_of: :listings
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :billing_authorizations, as: :reference
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
@@ -128,9 +126,7 @@ class Transactable < ActiveRecord::Base
                     :set_possible_payout, :set_action_type
   after_create :set_external_id
   after_save do
-    if availability.try(:days_open).present?
-      update_column(:opened_on_days, availability.days_open.sort)
-    end
+    update_column(:opened_on_days, availability.days_open.sort) if availability.try(:days_open).present?
     true
   end
   after_destroy :close_request_for_quotes
@@ -163,11 +159,11 @@ class Transactable < ActiveRecord::Base
   scope :searchable, -> { require_payout? ? active.visible.with_possible_payout : active.visible }
   scope :with_possible_payout, -> { where(possible_payout: true) }
   scope :without_possible_payout, -> { where(possible_payout: false) }
-  scope :for_transactable_type_id, -> transactable_type_id { where(transactable_type_id: transactable_type_id) }
+  scope :for_transactable_type_id, -> (transactable_type_id) { where(transactable_type_id: transactable_type_id) }
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((transactables.properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
 
-  scope :not_booked_relative, lambda  { |start_date, end_date|
+  scope :not_booked_relative, lambda { |start_date, end_date|
     joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (
        SELECT MIN(qty) as min_qty, transactable_id, count(*) as number_of_days_booked
        FROM (SELECT SUM(orders.quantity) as qty, orders.transactable_id, reservation_periods.date
@@ -184,7 +180,7 @@ class Transactable < ActiveRecord::Base
       .where('(COALESCE(min_spots_taken_per_transactable_during_date_period.min_qty, 0) < transactables.quantity OR min_spots_taken_per_transactable_during_date_period.number_of_days_booked <= ?)', (end_date - start_date).to_i)
   }
 
-  scope :not_booked_absolute, lambda  { |start_date, end_date|
+  scope :not_booked_absolute, lambda { |start_date, end_date|
     joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (
        SELECT MAX(qty) as max_qty, transactable_id
        FROM (SELECT SUM(orders.quantity) as qty, orders.transactable_id, reservation_periods.date
@@ -202,27 +198,27 @@ class Transactable < ActiveRecord::Base
   }
 
   # see http://www.postgresql.org/docs/9.4/static/functions-array.html
-  scope :only_opened_on_at_least_one_of, lambda  { |days|
+  scope :only_opened_on_at_least_one_of, lambda { |days|
     # check overlap -> && operator
     # for now only regular booking are supported - fixed price transactables are just returned
     where('? = ANY (transactables.available_actions) OR transactables.opened_on_days @> \'{?}\'', 'event', days)
   }
 
-  scope :only_opened_on_all_of, lambda  { |days|
+  scope :only_opened_on_all_of, lambda { |days|
     # check if opened_on_days contains days -> @> operator
     # for now only regular booking are supported - fixed price transactables are just returned
     where('? = ANY (transactables.available_actions) OR transactables.opened_on_days @> \'{?}\'', 'event', days)
   }
 
   # TODO: change schedule
-  scope :overlaps_schedule_start_date, lambda  { |date|
+  scope :overlaps_schedule_start_date, lambda { |date|
     where("
       ((select count(*) from schedules where scheduable_id = transactables.id and scheduable_type = '#{self}' limit 1) = 0)
       OR
       (?::timestamp::date >= (select sr_start_datetime from schedules where scheduable_id = transactables.id and scheduable_type = '#{self}' limit 1)::timestamp::date)", date)
   }
 
-  scope :order_by_array_of_ids, lambda  { |listing_ids|
+  scope :order_by_array_of_ids, lambda { |listing_ids|
     listing_ids_decorated = listing_ids.each_with_index.map { |lid, i| "WHEN transactables.id=#{lid} THEN #{i}" }
     order("CASE #{listing_ids_decorated.join(' ')} END") if listing_ids.present?
   }
@@ -230,7 +226,7 @@ class Transactable < ActiveRecord::Base
   scope :with_date, ->(date) { where(created_at: date) }
   scope :by_topic, -> (topic_ids) { includes(:transactable_topics).where(transactable_topics: { topic_id: topic_ids }) if topic_ids.present? }
   scope :seek_collaborators, -> { where(seek_collaborators: true) }
-  scope :feed_not_followed_by_user, lambda  { |current_user|
+  scope :feed_not_followed_by_user, lambda { |current_user|
     where.not(id: current_user.feed_followed_transactables.pluck(:id))
   }
 
@@ -244,7 +240,7 @@ class Transactable < ActiveRecord::Base
   validates :quantity, presence: true, numericality: { greater_than: 0 }, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
 
   validates :topics, length: { minimum: 1 }, if: -> (record) { record.topics_required && !record.draft.present? }
-  validates_presence_of :dimensions_template, if: ->(record) { record.shipping_profile.try(:shippo?) }
+  validates :dimensions_template, presence: { if: ->(record) { record.shipping_profile.try(:shippo?) } }
 
   validates_associated :approval_requests, :action_type
   validates :name, length: { maximum: 255 }, allow_blank: true
@@ -384,9 +380,7 @@ class Transactable < ActiveRecord::Base
     if lowest_price.present?
       full_price_cents = lowest_price.price
 
-      unless service_fee_guest_percent.to_f.zero?
-        full_price_cents *= (1 + service_fee_guest_percent / 100.0)
-      end
+      full_price_cents *= (1 + service_fee_guest_percent / 100.0) unless service_fee_guest_percent.to_f.zero?
 
       full_price_cents += Money.new(AdditionalChargeType.where(status: 'mandatory').sum(:amount_cents), full_price_cents.currency.iso_code)
       lowest_price.price = full_price_cents
@@ -404,7 +398,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def reserve!(reserving_user, dates, quantity, pricing = action_type.pricings.first)
-    payment_method  = PaymentMethod.manual.first
+    payment_method = PaymentMethod.manual.first
     reservation = Reservation.new(
       user: reserving_user,
       owner: reserving_user,
@@ -415,7 +409,7 @@ class Transactable < ActiveRecord::Base
     )
     reservation.build_payment(reservation.shared_payment_attributes.merge(payment_method: payment_method))
     dates.each do |date|
-      fail ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
+      raise ::DNM::PropertyUnavailableOnDate.new(date, quantity) unless available_on?(date, quantity)
       reservation.add_period(date)
     end
     reservation.save!
@@ -460,7 +454,7 @@ class Transactable < ActiveRecord::Base
 
   def order_attributes
     {
-      currency_id: Currency.find_by_iso_code(currency).try(:id),
+      currency_id: Currency.find_by(iso_code: currency).try(:id),
       company: company
     }
   end
@@ -480,7 +474,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def payout_information_missing?
-    instance.require_payout? && !self.possible_payout?
+    instance.require_payout? && !possible_payout?
   end
 
   def enable!
@@ -505,7 +499,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def self.csv_fields(transactable_type)
-    transactable_type.action_types.map(&:pricings).flatten.inject({}) do |hash, pricing|
+    transactable_type.action_types.map(&:pricings).flatten.each_with_object({}) do |pricing, hash|
       hash[:"for_#{pricing.units_to_s}_price_cents"] = "for_#{pricing.units_to_s}_price_cents".humanize
       hash
     end.merge(
@@ -515,7 +509,7 @@ class Transactable < ActiveRecord::Base
       listing_categories: 'Listing categories',
       currency: 'Currency', minimum_booking_minutes: 'Minimum booking minutes'
     ).reverse_merge(
-      transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
+      transactable_type.custom_attributes.shared.pluck(:name, :label).each_with_object({}) do |arr, hash|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
         hash
       end
@@ -523,7 +517,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def transactable_type_id
-    read_attribute(:transactable_type_id) || transactable_type.try(:id)
+    self[:transactable_type_id] || transactable_type.try(:id)
   end
 
   def set_external_id
@@ -535,12 +529,12 @@ class Transactable < ActiveRecord::Base
   end
 
   def has_reviews?
-    reviews.size > 0
+    !reviews.empty?
   end
 
   def question_average_rating
     @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.map(&:id))
-                               .group(:rating_question_id).average(:rating)
+                                           .group(:rating_question_id).average(:rating)
   end
 
   def recalculate_average_rating!
@@ -568,7 +562,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def currency
-    read_attribute(:currency).presence || transactable_type.try(:default_currency)
+    self[:currency].presence || transactable_type.try(:default_currency)
   end
 
   def translation_namespace
@@ -596,20 +590,18 @@ class Transactable < ActiveRecord::Base
   end
 
   def timezone_info
-    unless Time.zone.name == timezone
-      I18n.t('activerecord.attributes.transactable.timezone_info', timezone: timezone)
-    end
+    I18n.t('activerecord.attributes.transactable.timezone_info', timezone: timezone) unless Time.zone.name == timezone
   end
 
   def get_error_messages
     msgs = []
 
     errors.each do |field|
-      if field =~ /\.properties/
-        msgs += errors.get(field)
-      else
-        msgs += errors.full_messages_for(field)
-      end
+      msgs += if field =~ /\.properties/
+                errors.get(field)
+              else
+                errors.full_messages_for(field)
+              end
     end
     msgs
   end
@@ -745,9 +737,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def set_confirm_reservations
-    if confirm_reservations.nil?
-      self.confirm_reservations = action_type.transactable_type_action_type.confirm_reservations
-    end
+    self.confirm_reservations = action_type.transactable_type_action_type.confirm_reservations if confirm_reservations.nil?
     true
   end
 
@@ -762,7 +752,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def document_requirement_hidden?(attributes)
-    attributes.merge!(_destroy: '1') if attributes['removed'] == '1'
+    attributes[:_destroy] = '1' if attributes['removed'] == '1'
     attributes['hidden'] == '1'
   end
 
@@ -776,9 +766,7 @@ class Transactable < ActiveRecord::Base
 
   # Counter culture does not play along well (on destroy) with acts_as_paranoid
   def fix_counter_caches
-    if creator && !creator.destroyed?
-      creator.update_column(:transactables_count, creator.listings.where(draft: nil).count)
-    end
+    creator.update_column(:transactables_count, creator.listings.where(draft: nil).count) if creator && !creator.destroyed?
     true
   end
 
@@ -789,7 +777,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def restore_photos
-    photos.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', deleted_at - 30.seconds, deleted_at + 30.seconds).each do |photo|
+    photos.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', deleted_at - 30.seconds, deleted_at + 30.seconds).find_each do |photo|
       begin
         photo.restore(recursive: true)
       rescue
@@ -798,7 +786,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def restore_links
-    links.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', deleted_at - 30.seconds, deleted_at + 30.seconds).each do |link|
+    links.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', deleted_at - 30.seconds, deleted_at + 30.seconds).find_each do |link|
       begin
         link.restore(recursive: true)
       rescue
@@ -820,7 +808,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def restore_transactable_collaborators
-    transactable_collaborators.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', deleted_at - 30.seconds, deleted_at + 30.seconds).each do |tc|
+    transactable_collaborators.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', deleted_at - 30.seconds, deleted_at + 30.seconds).find_each do |tc|
       begin
         tc.restore(recursive: true)
       rescue

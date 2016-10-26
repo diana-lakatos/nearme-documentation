@@ -33,9 +33,6 @@
   .control-group
     = render 'dashboard/company/transactables/form_fields/availability', f: f, id_prefix: 'user_companies_locations_availability_template_id'
 
-- unless instance.location_amenity_types.count.zero?
-  = f.association :amenities, :collection => instance.location_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
-
 - if (only_inputs.empty? || only_inputs.include?(:assigned_waiver_agreement_templates)) && f.object.company.waiver_agreement_templates.count > 0
   %h2 Waiver Agreement Templates
   = f.association :waiver_agreement_templates, collection: f.object.company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes

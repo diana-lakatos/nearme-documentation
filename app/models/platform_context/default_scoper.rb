@@ -15,7 +15,7 @@
 #   a) partner has scoping enabled [ partner.search_scope_option == 'all_associated_listings' ]
 #   In this case we want to add WHERE('models.partner_id = ?', <partner_id) to all queries. This will be applied only to models that have
 #   column partner_id. If they don't have it, we assume that model should not be scoped to partner and then we just add query for instance_id
-#   instead ( This is the case for example for AmenityType, ListingType, LocationType etc. - they are shared between partners).
+#   instead ( This is the case for example for ListingType, LocationType etc. - they are shared between partners).
 #   We also want to scope to listings_public = true where appropriate.
 #
 #   b) partner has scoping disabled [ partner.search_scope_option == 'no_scoping' ]
@@ -61,7 +61,7 @@ module PlatformContext::DefaultScoper
 
   included do
     def self.scoped_to_platform_context(options = {})
-      if self.table_exists?
+      if table_exists?
         scope_builder = DefaultScopeBuilder.new(self, options)
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
           default_scope lambda { self.platform_context_default_scope }
@@ -128,7 +128,7 @@ module PlatformContext::DefaultScoper
 
     def return_company_scope_if_white_label_company
       if @klass.column_names.include?('company_id') || Company == @klass
-        return %(
+        %(
           if PlatformContext.current.white_label_company.present?
             #{company_scope_query_based_on_klass}
           else
@@ -146,7 +146,7 @@ module PlatformContext::DefaultScoper
 
     def return_partner_scope_if_partner
       if @klass.column_names.include?('partner_id')
-        return %{
+        %{
           if PlatformContext.current.partner.present? && PlatformContext.current.partner.search_scope_option == 'all_associated_listings'
             scope.where(:"#{@klass.table_name}.partner_id" => PlatformContext.current.partner.id)
           else

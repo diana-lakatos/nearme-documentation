@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161025113547) do
+ActiveRecord::Schema.define(version: 20161027110202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -626,7 +626,7 @@ ActiveRecord::Schema.define(version: 20161025113547) do
     t.text     "validation_rules"
     t.text     "valid_values"
     t.datetime "deleted_at"
-    t.text     "label"
+    t.string   "label",                     limit: 255
     t.text     "input_html_options"
     t.text     "wrapper_html_options"
     t.text     "hint"
@@ -637,7 +637,6 @@ ActiveRecord::Schema.define(version: 20161025113547) do
     t.string   "target_type",               limit: 255
     t.boolean  "searchable",                            default: false
     t.boolean  "validation_only_on_update",             default: false
-    t.hstore   "properties",                            default: {},    null: false
     t.boolean  "search_in_query",                       default: false, null: false
   end
 
@@ -1166,6 +1165,23 @@ ActiveRecord::Schema.define(version: 20161025113547) do
 
   add_index "instance_views", ["instance_id", "path", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
 
+  create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "instance_type_id"
+    t.integer  "instance_id"
+    t.text     "body"
+    t.string   "path",                 limit: 255
+    t.string   "locale",               limit: 255
+    t.string   "format",               limit: 255
+    t.string   "handler",              limit: 255
+    t.boolean  "partial"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "view_type",            limit: 255
+    t.integer  "transactable_type_id"
+    t.integer  "custom_theme_id"
+  end
+
   create_table "instances", force: :cascade do |t|
     t.string   "name",                                          limit: 255
     t.datetime "created_at",                                                                                                null: false
@@ -1554,7 +1570,6 @@ ActiveRecord::Schema.define(version: 20161025113547) do
     t.boolean  "is_free_booking",                                           default: false
     t.datetime "lister_confirmed_at"
     t.datetime "enquirer_confirmed_at"
-    t.datetime "draft_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -1839,6 +1854,7 @@ ActiveRecord::Schema.define(version: 20161025113547) do
     t.boolean  "mark_to_be_bulk_update_deleted",             default: false
     t.integer  "owner_id"
     t.string   "owner_type"
+    t.string   "photo_role"
   end
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
@@ -1956,11 +1972,10 @@ ActiveRecord::Schema.define(version: 20161025113547) do
     t.string   "name"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
-    t.hstore   "settings",                 default: {}
-    t.boolean  "step_checkout",            default: false
-    t.boolean  "require_merchant_account", default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.hstore   "settings",      default: {}
+    t.boolean  "step_checkout", default: false
   end
 
   add_index "reservation_types", ["instance_id"], name: "index_reservation_types_on_instance_id", using: :btree
@@ -2505,7 +2520,6 @@ ActiveRecord::Schema.define(version: 20161025113547) do
     t.datetime "deleted_at"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
-    t.datetime "rejected_by_owner_at"
   end
 
   add_index "transactable_collaborators", ["instance_id"], name: "index_transactable_collaborators_on_instance_id", using: :btree
@@ -2568,7 +2582,6 @@ ActiveRecord::Schema.define(version: 20161025113547) do
     t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
     t.integer  "minimum_lister_service_fee_cents",           default: 0
     t.boolean  "both_side_confirmation",                     default: false
-    t.boolean  "allow_drafts",                               default: false, null: false
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree
@@ -2697,7 +2710,6 @@ ActiveRecord::Schema.define(version: 20161025113547) do
     t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
     t.boolean  "require_transactable_during_onboarding",                                         default: true
     t.boolean  "access_restricted_to_invited"
-    t.boolean  "auto_seek_collaborators",                                                        default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3177,6 +3189,38 @@ ActiveRecord::Schema.define(version: 20161025113547) do
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
   add_index "workflow_alerts", ["template_path", "workflow_step_id", "recipient_type", "alert_type", "deleted_at"], name: "index_workflows_alerts_on_templ_step_recipient_alert_and_del", unique: true, using: :btree
+
+  create_table "workflow_alerts_backup_20160926", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.string   "name",                      limit: 255
+    t.string   "alert_type",                limit: 255
+    t.string   "recipient_type",            limit: 255
+    t.string   "template_path",             limit: 255
+    t.integer  "workflow_step_id"
+    t.integer  "instance_id"
+    t.text     "options"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "delay"
+    t.text     "subject"
+    t.string   "layout_path",               limit: 255
+    t.text     "custom_options"
+    t.string   "from",                      limit: 255
+    t.string   "reply_to",                  limit: 255
+    t.string   "cc",                        limit: 255
+    t.string   "bcc",                       limit: 255
+    t.string   "recipient",                 limit: 255
+    t.string   "from_type",                 limit: 255
+    t.string   "reply_to_type",             limit: 255
+    t.text     "endpoint"
+    t.string   "request_type"
+    t.boolean  "use_ssl"
+    t.text     "payload_data"
+    t.text     "headers"
+    t.text     "prevent_trigger_condition"
+    t.string   "bcc_type"
+  end
 
   create_table "workflow_steps", force: :cascade do |t|
     t.string   "name",             limit: 255

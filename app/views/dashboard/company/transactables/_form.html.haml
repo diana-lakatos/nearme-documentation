@@ -25,9 +25,6 @@
           - when 'approval_requests'
             = render 'dashboard/shared/fields/approval_requests', f: f
 
-          - when 'amenity_types'
-            = render "dashboard/company/transactables/form_fields/amenity_types", f: f
-
           - when 'price'
             = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: form_component.form_fields, model: model
 

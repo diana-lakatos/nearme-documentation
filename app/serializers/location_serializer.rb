@@ -1,5 +1,5 @@
 class LocationSerializer < ActiveModel::Serializer
-  attributes :id, :name, :description, :email, :phone, :latitude, :longitude, :location_type_id, :special_notes, :formatted_address, :amenity_ids
+  attributes :id, :name, :description, :email, :phone, :latitude, :longitude, :location_type_id, :special_notes, :formatted_address
 
   attributes :availability_template_id
 
@@ -8,7 +8,7 @@ class LocationSerializer < ActiveModel::Serializer
   has_many :listings, class_name: 'Transactable', serializer: ListingWebSerializer
 
   def availability_template_id
-    (!object.availability_template_id.nil?) ? object.availability_template_id : 'custom'
+    !object.availability_template_id.nil? ? object.availability_template_id : 'custom'
   end
 
   def availability_full_week

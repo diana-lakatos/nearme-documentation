@@ -9,7 +9,7 @@ FactoryGirl.define do
     factory :form_component_location do
       form_type { FormComponent::LOCATION_ATTRIBUTES }
       form_componentable { PlatformContext.current.instance || Instance.first }
-      form_fields { [{ 'location' => 'name' }, { 'location' => 'address' }, { 'location' => 'time_zone' }, { 'location' => 'description' }, { 'location' => 'location_type' }, { 'location' => 'email' }, { 'location' => 'administrator' }, { 'location' => 'special_notes' }, { 'location' => 'availability_rules' }, { 'location' => 'amenities' }, { 'location' => 'assigned_waiver_agreement_templates' }] }
+      form_fields { [{ 'location' => 'name' }, { 'location' => 'address' }, { 'location' => 'time_zone' }, { 'location' => 'description' }, { 'location' => 'location_type' }, { 'location' => 'email' }, { 'location' => 'administrator' }, { 'location' => 'special_notes' }, { 'location' => 'availability_rules' }, { 'location' => 'assigned_waiver_agreement_templates' }] }
     end
 
     factory :form_component_transactable do

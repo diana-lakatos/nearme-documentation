@@ -1,4 +1,4 @@
-{% cache_for location, location.company, location.amenities, location.availability, description %}
+{% cache_for location, location.company, location.availability, description %}
   <h2>{{ 'location.the_location' || translate }}</h2>
   <p>{{ location.description | filter_text | custom_sanitize }}</p>
   <div class='amenities-block'>
@@ -12,23 +12,6 @@
     </div>
   </div>
 
-  {% if location.amenities.size > 0 %}
-  <div class='amenities-block'>
-    <div class='amenities-header'>
-      <h3>{{ 'location.amenities' | translate }}</h3>
-    </div>
-    <div class='amenities-container'>
-      {% assign amenities = location.amenities | in_groups_of:4 %}
-      {% for group in amenities %}
-        <div class='row-fluid amenities-row'>
-            {% for amenity in group %}
-                <div class='span3' title="{{ amenity }}">{{ amenity }}</div>
-            {% endfor %}
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
   <div class='clearfix'></div>
   <article class='company'>
     <h2>

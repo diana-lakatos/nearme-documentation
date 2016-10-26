@@ -25,9 +25,6 @@
 - if only_inputs.empty? || only_inputs.include?(:capacity)
   = f.input :capacity, required: f.object.required?(:capacity), wrapper_html: { class: 'form-control-xs' }
 
-- if only_inputs.empty? || only_inputs.include?(:amenities)
-  = render 'dashboard/company/transactables/form_fields/amenity_types', f: f
-
 - if only_inputs.empty? || only_inputs.include?(:price)
   = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: form_fields, model: model
 

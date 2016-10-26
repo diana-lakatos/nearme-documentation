@@ -53,7 +53,6 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    get 'amenities', to: 'amenities#index'
     get 'organizations', to: 'organizations#index'
   end
 
@@ -297,7 +296,6 @@ DesksnearMe::Application.routes.draw do
         resources :location_types, only: [:index, :create, :update, :destroy_modal, :destroy] do
           get 'destroy_modal', on: :member
         end
-        resource :listings, only: [:show, :update], controller: 'listings'
         resources :payments
         resources :payment_gateways, controller: 'payments/payment_gateways', except: [:show]
         resources :tax_regions do

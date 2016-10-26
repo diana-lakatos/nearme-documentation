@@ -228,7 +228,6 @@ en:
         currency: 'Currency'
         location_address:
           address: 'Address'
-        amenities: 'Amenities'
         location_type: 'Location type'
 
       companies:
@@ -304,7 +303,6 @@ en:
           monthly_subscription: 'monthly subscription'
         book_it_out_minimum_qty: "Book It Out minimum quantity"
         book_it_out_discount: "Book It Out discount"
-        amenities: "Amenities"
         fixed_price: "Fixed price"
         location: "Location"
       transactable_type:

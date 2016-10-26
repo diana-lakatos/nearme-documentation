@@ -20,7 +20,6 @@ class DataImporter::XmlFile < DataImporter::File
       parse_companies do
         parse_locations do
           parse_availabilities
-          parse_amenities
           parse_listings do
             parse_action do
               parse_availabilities
@@ -45,7 +44,6 @@ class DataImporter::XmlFile < DataImporter::File
     @node.xpath('company').each do |company_node|
       external_id = company_node['id']
       @company = Company.find_by(external_id: external_id)
-
       unless @company.present?
         @company = Company.new do |c|
           assign_attributes(c, company_node)
@@ -84,7 +82,6 @@ class DataImporter::XmlFile < DataImporter::File
 
       next unless email.present?
       @user = User.find_by(email: email)
-
       if @user.nil?
         @user = User.new do |u|
           password = SecureRandom.hex(8)
@@ -131,7 +128,6 @@ class DataImporter::XmlFile < DataImporter::File
       if @location.deleted?
         Location.transaction do
           @location.update_column(:deleted_at, nil)
-          AmenityHolder.with_deleted.where(holder: @location).update_all(deleted_at: nil)
           ApprovalRequest.with_deleted.where(owner: @location).update_all(deleted_at: nil)
           Impression.with_deleted.where(impressionable: @location).update_all(deleted_at: nil)
         end
@@ -185,7 +181,6 @@ class DataImporter::XmlFile < DataImporter::File
         Transactable.transaction do
           @listing.update_column(:deleted_at, nil)
           AvailabilityRule.with_deleted.where(target: @listing).update_all(deleted_at: nil)
-          AmenityHolder.with_deleted.where(holder: @listing).update_all(deleted_at: nil)
           ApprovalRequest.with_deleted.where(owner: @listing).update_all(deleted_at: nil)
           Impression.with_deleted.where(impressionable: @listing).update_all(deleted_at: nil)
         end
@@ -292,13 +287,6 @@ class DataImporter::XmlFile < DataImporter::File
           trigger_event('object_not_valid', @photo, @photo.image_original_url)
         end
       end
-    end
-  end
-
-  def parse_amenities
-    @object.amenities.destroy_all
-    @node.xpath('amenities/amenity').each do |amenity_node|
-      @object.amenities << Amenity.find_by(name: value_of('name', amenity_node))
     end
   end
 
