@@ -42,6 +42,7 @@ class SecuredParams
      :placeholder,
      :hint,
      :searchable,
+     :search_in_query,
      :input_html_options,
      :wrapper_html_options,
      :input_html_options_string,

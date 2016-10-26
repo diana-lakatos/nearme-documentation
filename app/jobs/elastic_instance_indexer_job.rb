@@ -10,8 +10,9 @@ class ElasticInstanceIndexerJob < Job
   end
 
   def perform
-    Transactable.searchable.import force: @force
-  rescue StandardError => e
-    raise e if e.is_a?(Faraday::Error::ConnectionFailed)
+    unless Transactable.__elasticsearch__.client.indices.exists? index: Transactable.index_name
+      Transactable.__elasticsearch__.create_index! force: @force
+    end
+    Transactable.searchable.import force: @force, batch_size: 100
   end
 end

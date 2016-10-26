@@ -243,6 +243,7 @@ class User < ActiveRecord::Base
     user_ids_decorated = user_ids.each_with_index.map { |lid, i| "WHEN users.id=#{lid} THEN #{i}" }
     order("CASE #{user_ids_decorated.join(' ')} END") if user_ids.present?
   }
+  scope :searchable, -> {}
 
   scope :buyers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::BUYER])) }
   scope :sellers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::SELLER])) }
@@ -709,9 +710,7 @@ class User < ActiveRecord::Base
   end
 
   def all_company_transactables
-    if company = default_company
-      company.listings
-    end
+    default_company.listings
   end
 
   def first_transactable

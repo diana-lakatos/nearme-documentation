@@ -1,5 +1,5 @@
 class SavedSearch < ActiveRecord::Base
-  ALERTS_FREQUENCIES = %w(daily weekly)
+  ALERTS_FREQUENCIES = %w(daily weekly).freeze
 
   auto_set_platform_context
   scoped_to_platform_context
@@ -55,6 +55,6 @@ class SavedSearch < ActiveRecord::Base
   end
 
   def change_sort
-    self.query = query.gsub(/&sort=(\w+)?/, '') + '&sort=created_at&order=desc'
+    self.query = query.gsub(/(&)?sort=([a-z\.\_\,]+)?/, '') + '&sort=created_at_desc'
   end
 end

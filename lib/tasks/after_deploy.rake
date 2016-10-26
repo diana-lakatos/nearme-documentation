@@ -5,14 +5,11 @@ namespace :after_deploy do
     Rails.cache.clear
     RedisCache.clear
 
-    begin
-      # puts 'Updating ES Transactables index mappings'
-      # Transactable.__elasticsearch__.client.indices.put_mapping index: 'transactables', type: 'transactable', body: Transactable.mappings
-      job_id = ElasticInstanceIndexerJob.perform.id
-      puts "Updating ES documents id DJ ##{job_id}"
-    rescue StandardError => e
-      raise e if Rails.application.config.use_elastic_search
-    end
+    # This section will be rebuilt to use alias mechanism
+    # Instance.pluck(:id).each do |instance_id|
+    #   job_id = ElasticInstanceIndexerJob.perform('Instance', instance_id).id
+    #   puts "Updating ES documents for instance #{instance_id} DJ##{job_id}"
+    # end if Rails.application.config.use_elastic_search
 
     puts 'Removing all jobs from queue recurring-jobs'
     Delayed::Job.where(queue: 'recurring-jobs').delete_all

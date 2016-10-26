@@ -64,9 +64,9 @@ ActiveSupport::TestCase.class_eval do
 
   def action_type_attibutes(options)
     pricings = if options[:prices]
-                 options[:prices].each.with_index.inject({}) do |result, values|
+                 options[:prices].each.with_index.each_with_object({}) do |values, result|
                    price, index = values
-                   result["#{index}"] = {
+                   result[index.to_s] = {
                      enabled: '1',
                      transactable_type_pricing_id: TransactableType.first.time_based_booking.pricing_for(price[0].to_s).try(:id),
                      price: price[1],
@@ -111,7 +111,8 @@ ActiveSupport::TestCase.class_eval do
   end
 
   def with_carrier_wave_processing(&_blk)
-    before, CarrierWave::Uploader::Base.enable_processing = CarrierWave::Uploader::Base.enable_processing, true
+    before = CarrierWave::Uploader::Base.enable_processing
+    CarrierWave::Uploader::Base.enable_processing = true
     yield
   ensure
     CarrierWave::Uploader::Base.enable_processing = before
@@ -269,7 +270,6 @@ end
 
 def enable_elasticsearch!(&_block)
   Rails.application.config.use_elastic_search = true
-  Transactable.__elasticsearch__.index_name = 'transactables_test'
   Transactable.__elasticsearch__.create_index!(force: true)
   yield if block_given?
   Transactable.__elasticsearch__.refresh_index!

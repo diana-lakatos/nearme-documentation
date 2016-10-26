@@ -1,8 +1,10 @@
 module Elastic
   class QueryBuilder::UsersQueryBuilder < QueryBuilder
-    def initialize(query, searchable_custom_attributes = nil, instance_profile_type)
+    def initialize(query, instance_profile_type:, searchable_custom_attributes: [], query_searchable_attributes: [])
       @query = query
-      @searchable_custom_attributes = searchable_custom_attributes || []
+
+      @searchable_custom_attributes = searchable_custom_attributes
+      @query_searchable_attributes = query_searchable_attributes
       @instance_profile_type = instance_profile_type
 
       @filters = []
@@ -30,9 +32,34 @@ module Elastic
       if @query[:query].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
-
-        { simple_query_string: build_multi_match(@query[:query], @searchable_custom_attributes + searchable_main_attributes) }
+        {
+          bool: {
+            should: [
+              {
+                simple_query_string: {
+                  query: @query[:query],
+                  fields: search_by_query_attributes
+                }
+              },
+              {
+                nested: {
+                  path: 'user_profiles',
+                  query: {
+                    multi_match: {
+                      query: @query[:query],
+                      fields: @query_searchable_attributes
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
       end
+    end
+
+    def search_by_query_attributes
+      searchable_main_attributes + @query_searchable_attributes
     end
 
     def searchable_main_attributes
@@ -44,19 +71,18 @@ module Elastic
 
       if @query[:sort].present?
         sorting_fields = @query[:sort].split(',').compact.map do |sort_option|
-          if sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
-            sort_column = "user_profiles.properties.#{sort[1].split('.').last}"
-            {
-              sort_column => {
-                order: sort[2],
-                nested_filter: {
-                  term: {
-                    'user_profiles.instance_profile_type_id': @instance_profile_type.id
-                  }
+          next unless sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
+          sort_column = "user_profiles.properties.#{sort[1].split('.').last}.raw"
+          {
+            sort_column => {
+              order: sort[2],
+              nested_filter: {
+                term: {
+                  'user_profiles.instance_profile_type_id': @instance_profile_type.id
                 }
               }
             }
-          end
+          }
         end.compact
       end
 
@@ -73,12 +99,12 @@ module Elastic
       user_profiles_filters = [
         {
           match: {
-            "user_profiles.enabled": true
+            'user_profiles.enabled': true
           }
         },
         {
           match: {
-            "user_profiles.instance_profile_type_id": @instance_profile_type.id
+            'user_profiles.instance_profile_type_id': @instance_profile_type.id
           }
         }
       ]
@@ -88,14 +114,14 @@ module Elastic
         if @instance_profile_type.category_search_type == 'OR'
           user_profiles_filters << {
             terms: {
-              "user_profiles.category_ids": category_ids.map(&:to_i)
+              'user_profiles.category_ids': category_ids.map(&:to_i)
             }
           }
         elsif @instance_profile_type.category_search_type == 'AND'
           category_ids.each do |category|
             user_profiles_filters << {
               terms: {
-                "user_profiles.category_ids": [category.to_i]
+                'user_profiles.category_ids': [category.to_i]
               }
             }
           end
@@ -104,14 +130,13 @@ module Elastic
 
       if @query[:lg_custom_attributes]
         @query[:lg_custom_attributes].each do |key, value|
-          unless value.blank?
-            user_profiles_filters <<
-              {
-                match: {
-                  "user_profiles.properties.#{key}" => value.to_s.split(',').map(&:downcase).join(' OR ')
-                }
+          next if value.blank?
+          user_profiles_filters <<
+            {
+              match: {
+                "user_profiles.properties.#{key}.raw" => value.to_s.split(',').map(&:downcase).join(' OR ')
               }
-          end
+            }
         end
       end
 

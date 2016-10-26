@@ -212,6 +212,10 @@ class Reservation < Order
     periods.sort_by(&:date).last.date
   end
 
+  def period_range
+    { from: first_period.date, to: last_period.date }
+  end
+
   def owner_including_deleted
     User.unscoped { owner }
   end

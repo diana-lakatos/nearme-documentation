@@ -2,6 +2,10 @@ require 'chronic'
 require_relative '../jira_wrapper.rb'
 
 namespace :jira do
+  task prepare: :environment do
+    JiraReleaser.new.prepare
+  end
+
   desc 'Populate new foreign keys and flags'
   task release: :environment do
     jira_wrapper = JiraWrapper.new
@@ -102,6 +106,17 @@ class JiraReleaser
     end
   end
 
+  def prepare
+    @issues.each do |issue|
+      puts "Checking issue: #{issue.key}"
+      # available_transitions = @client.Transition.all(:issue => issue)
+      next unless ['ready for qa'].include?(issue.status.name.downcase)
+      puts "\tmoving to test"
+      transition = issue.transitions.build
+      transition.save!('transition' => { 'id' => 291 })
+    end
+  end
+
   def release(fixVersion)
     @jira_wrapper = JiraWrapper.new
     @jira_helper = JiraHelper.new
@@ -149,6 +164,6 @@ class JiraCardPrinter
   \tassignee: #{issue_hash[:assignee]}
   \tepic: #{issue_hash[:epic]}
   \tsprint: #{issue_hash[:sprint]}
-        )
+    )
   end
 end

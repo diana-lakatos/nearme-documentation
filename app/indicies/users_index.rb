@@ -4,7 +4,9 @@ module UsersIndex
   included do |_base|
     cattr_accessor :custom_attributes
 
-    settings(index: { number_of_shards: 1 }) do
+    settings(index: { number_of_shards: 1 })
+
+    def self.set_es_mapping(instance = PlatformContext.current.try(:instance))
       mapping do
         indexes :first_name, type: 'string'
         indexes :last_name, type: 'string'
@@ -24,11 +26,13 @@ module UsersIndex
           indexes :category_ids, type: 'integer'
           indexes :properties, type: 'object' do
             if InstanceProfileType.table_exists?
-              mapped = InstanceProfileType.all.map(&:custom_attributes).flatten
+              all_custom_attributes = CustomAttributes::CustomAttribute
+                                      .where(target: InstanceProfileType.where(instance: instance))
+                                      .pluck(:name, :attribute_type).uniq
 
-              mapped.each do |custom_attribute|
-                type = custom_attribute.attribute_type.in?(%w(integer boolean float)) ? custom_attribute.attribute_type : 'string'
-                indexes custom_attribute.name, type: type, index: 'not_analyzed'
+              all_custom_attributes.each do |attribute_name, attribute_type|
+                type = attribute_type.in?(%w(integer boolean float)) ? attribute_type : 'string'
+                indexes attribute_name, type: type, fields: { 'raw': { type: type, index: 'not_analyzed' } }
               end
             end
           end
@@ -44,14 +48,13 @@ module UsersIndex
       profiles = user_profiles.map do |user_profile|
         custom_attributes = {}
         custom_attributes_by_type.each do |custom_attribute|
-          if user_profile.properties.respond_to?(custom_attribute)
-            val = user_profile.properties.send(custom_attribute)
-            val = Array(val).map { |v| v.to_s.downcase }
-            if custom_attributes[custom_attribute].present?
-              (Array(custom_attributes[custom_attribute]) + val).flatten
-            else
-              custom_attributes[custom_attribute] = (val.size == 1 ? val.first : val)
-            end
+          next unless user_profile.properties.respond_to?(custom_attribute)
+          val = user_profile.properties.send(custom_attribute)
+          val = Array(val).map { |v| v.to_s.downcase }
+          if custom_attributes[custom_attribute].present?
+            (Array(custom_attributes[custom_attribute]) + val).flatten
+          else
+            custom_attributes[custom_attribute] = (val.size == 1 ? val.first : val)
           end
         end
 
@@ -59,9 +62,7 @@ module UsersIndex
                                                                                      category_ids: user_profile.categories.map(&:id))
       end
 
-      allowed_keys = User.mappings.to_hash[:user][:properties].keys.delete_if { |prop| prop == :custom_attributes }
-
-      as_json(only: allowed_keys).merge(
+      as_json(only: User.mappings.to_hash[:user][:properties].keys).merge(
         instance_profile_type_ids: user_profiles.map(&:instance_profile_type_id),
         tags: tags_as_comma_string,
         user_profiles: profiles
@@ -73,24 +74,34 @@ module UsersIndex
     end
 
     def self.regular_search(query, instance_profile_type = nil)
-      query_builder = Elastic::QueryBuilder::UsersQueryBuilder.new(
-        query.with_indifferent_access,
-        searchable_custom_attributes(instance_profile_type),
-        instance_profile_type
-      )
+      query_builder = Elastic::QueryBuilder::UsersQueryBuilder.new(query.with_indifferent_access,
+                                                                   searchable_custom_attributes: searchable_custom_attributes(instance_profile_type),
+                                                                   query_searchable_attributes: search_in_query_custom_attributes(instance_profile_type),
+                                                                   instance_profile_type: instance_profile_type)
 
       __elasticsearch__.search(query_builder.regular_query)
     end
 
-    def self.searchable_custom_attributes(instance_profile_type = nil)
+    def self.search_in_query_custom_attributes(instance_profile_type)
       if instance_profile_type.present?
-        # m[0] - name, m[7] - searchable
         instance_profile_type.cached_custom_attributes.map do |custom_attribute|
-          "user_profiles.properties.#{ custom_attribute[0] }" if custom_attribute[7] == true
+          if custom_attribute[CustomAttributes::CustomAttribute::SEARCH_IN_QUERY]
+            "user_profiles.properties.#{custom_attribute[CustomAttributes::CustomAttribute::NAME]}"
+          end
+        end.compact.uniq
+      end
+    end
+
+    def self.searchable_custom_attributes(instance_profile_type)
+      if instance_profile_type.present?
+        instance_profile_type.cached_custom_attributes.map do |custom_attribute|
+          if custom_attribute[CustomAttributes::CustomAttribute::SEARCHABLE]
+            "user_profiles.properties.#{custom_attribute[CustomAttributes::CustomAttribute::NAME]}"
+          end
         end.compact.uniq
       else
-        InstanceProfileType.where(searchable: true).map do |instance_profile_type|
-          instance_profile_type.custom_attributes.where(searchable: true).map do |custom_attribute|
+        InstanceProfileType.where(searchable: true).map do |ipt|
+          ipt.custom_attributes.where(searchable: true).map do |custom_attribute|
             "user_profiles.properties.#{custom_attribute.name}"
           end
         end.flatten.uniq
