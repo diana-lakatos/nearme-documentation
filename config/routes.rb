@@ -496,6 +496,7 @@ DesksnearMe::Application.routes.draw do
         resources :merchant_accounts do
           member do
             get :void
+            get :pending
           end
         end
 
@@ -510,14 +511,18 @@ DesksnearMe::Application.routes.draw do
             post :generate
           end
         end
+        resources :partners
         resources :payments, only: [:index, :show, :update]
         resources :orders, only: [:index, :show] do
           member do
             post :generate_next_period
           end
         end
-
-        resources :partners
+        resources :webhooks, only: [:index, :show, :destroy] do
+          member do
+            post :retry
+          end
+        end
 
         resources :admins, only: [:index, :create]
         namespace :admins do

@@ -1,5 +1,6 @@
 class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   belongs_to :instance
+  has_many :webhooks, class_name: 'Webhook::StripeConnectWebhook', foreign_key: 'payment_gateway_id'
 
   supported :immediate_payout, :credit_card_payment, :multiple_currency, :partial_refunds, :recurring_payment
 

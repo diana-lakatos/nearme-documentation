@@ -7,6 +7,8 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   delegate :verify_webhook, :parse_webhook, :find_transaction, :find_merchant, :onboard!, :update_onboard!,
            :client_token, :payment_settled?, to: :gateway
 
+  has_many :webhooks, class_name: 'Webhook::BraintreeMarketplaceWebhook', foreign_key: 'payment_gateway_id'
+
   def self.supported_countries
     ['US']
   end

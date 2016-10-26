@@ -1,0 +1,8 @@
+- if @webhook.error.present?
+  .row
+    %b Error:
+    %p= @webhook.error
+.row
+  %b Response:
+  %p= @webhook.notification.to_yaml
+

@@ -45,7 +45,7 @@ class PaymentGateway < ActiveRecord::Base
   has_many :payment_currencies, through: :payment_gateways_currencies, source: 'currency'
   has_many :payment_methods, dependent: :destroy
   has_many :refunds
-  has_many :webhooks, as: :webhookable, dependent: :destroy
+  has_many :webhooks, dependent: :destroy
 
   accepts_nested_attributes_for :payment_methods, reject_if: :all_blank
 

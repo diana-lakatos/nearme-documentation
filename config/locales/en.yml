@@ -1705,7 +1705,7 @@ en:
       header: 'Merchant account details'
       pending: 'Your merchant account is pending verification.'
       verified: 'Your merchant account has been verified.'
-      void: 'Your merchant account has been voided.'
+      voided: 'Your merchant account has been voided.'
       failed: 'Verification of your merchant account failed.'
       currency: 'Currency'
       select_currency: '- Select Currency -'

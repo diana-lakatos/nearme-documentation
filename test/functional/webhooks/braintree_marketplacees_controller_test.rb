@@ -17,9 +17,13 @@ class Webhooks::BraintreeMarketplacesControllerTest < ActionController::TestCase
     end
 
     context '#webhook' do
-      should 'get request should verify braintree marketplace' do
+      should 'post request should verify braintree marketplace' do
+        sample_notification = Braintree::WebhookTesting.sample_notification(
+          'check',
+          "id_#{@company.id}"
+        )
         WorkflowStepJob.expects(:perform).never
-        get :webhook, bt_challenge: '123'
+        post :webhook, bt_signature: sample_notification[:bt_signature], bt_payload: sample_notification[:bt_payload]
         assert :success
       end
 
