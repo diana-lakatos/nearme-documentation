@@ -82,7 +82,7 @@ class BlogPostDrop < BaseDrop
 
   # url for author's avatar thumb image
   def author_avatar_thumb_url
-    @blog_post.author_avatar.url(:thumb)
+    @blog_post.author_avatar.url(:medium)
   end
 
   # url for author's avatar medium image
