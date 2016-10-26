@@ -20,9 +20,6 @@ module.exports = class PhotoCollection
     if @multiplePhoto()
       @initializeSortable()
       @reorderSortableList()
-    if sessioncamConfiguration?
-      sessioncamConfiguration.customDataObjects.push( { key: "event", value: "first_listing_form_visit" } )
-
 
   add: ->
     photo = new PhotoView

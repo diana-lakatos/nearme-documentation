@@ -1,15 +1,15 @@
 class Listings::ReservationsController < ApplicationController
-  skip_before_filter :filter_out_token, only: [:return_express_checkout, :cancel_express_checkout]
-  skip_before_filter :log_out_if_token_exists, only: [:return_express_checkout, :cancel_express_checkout]
+  skip_before_action :filter_out_token, only: [:return_express_checkout, :cancel_express_checkout]
+  skip_before_action :log_out_if_token_exists, only: [:return_express_checkout, :cancel_express_checkout]
 
-  before_filter :secure_payment_with_token, only: [:review, :address]
-  before_filter :load_payment_with_token, only: [:review, :address]
-  before_filter :find_listing
-  before_filter :find_reservation, only: [:booking_successful, :remote_payment, :booking_failed]
-  before_filter :build_reservation_request, only: [:review, :address, :create, :store_reservation_request, :express_checkout]
-  before_filter :require_login_for_reservation, only: [:review, :create, :address]
-  before_filter :find_current_country, only: [:review, :create, :address]
-  before_filter :prepare_for_review, only: [:review, :address]
+  before_action :secure_payment_with_token, only: [:review, :address]
+  before_action :load_payment_with_token, only: [:review, :address]
+  before_action :find_listing
+  before_action :find_reservation, only: [:booking_successful, :remote_payment, :booking_failed]
+  before_action :build_reservation_request, only: [:review, :address, :create, :store_reservation_request, :express_checkout]
+  before_action :require_login_for_reservation, only: [:review, :create, :address]
+  before_action :find_current_country, only: [:review, :create, :address]
+  before_action :prepare_for_review, only: [:review, :address]
 
   def review
     if @listing.possible_delivery?
@@ -62,10 +62,6 @@ class Listings::ReservationsController < ApplicationController
       elsif @reservation.payment.express_checkout_payment? && @reservation.payment.express_checkout_redirect_url
         redirect_to @reservation.payment.express_checkout_redirect_url
       else
-        event_tracker.updated_profile_information(@reservation.owner)
-        event_tracker.updated_profile_information(@reservation.host)
-        event_tracker.requested_a_booking(@reservation)
-
         card_message = @reservation.payment.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
         flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
         redirect_to booking_successful_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
@@ -76,15 +72,11 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def return_express_checkout
-    payment = Payment.find_by_express_token!(params[:token])
+    payment = Payment.find_by!(express_token: params[:token])
     payment.express_payer_id = params[:PayerID]
     reservation = payment.payable
 
     if payment.authorize && reservation.reload.save
-      event_tracker.updated_profile_information(reservation.owner)
-      event_tracker.updated_profile_information(reservation.host)
-      event_tracker.requested_a_booking(reservation)
-
       redirect_to booking_successful_dashboard_user_reservation_path(reservation, host: platform_context.decorate.host)
     else
       redirect_to booking_failed_dashboard_user_reservation_path(reservation, host: platform_context.decorate.host)
@@ -92,7 +84,7 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def cancel_express_checkout
-    payment = Payment.find_by_express_token!(params[:token])
+    payment = Payment.find_by!(express_token: params[:token])
     flash[:error] = t('flash_messages.reservations.booking_failed')
     reservation = payment.payable
     redirect_to reservation.transactable.decorate.show_path, status: 301
@@ -117,7 +109,7 @@ class Listings::ReservationsController < ApplicationController
   def store_reservation_request
     session[:stored_reservation_listing_id] = @listing.id
     session[:stored_reservation_trigger] ||= {}
-    session[:stored_reservation_trigger]["#{@listing.id}"] = params[:commit]
+    session[:stored_reservation_trigger][@listing.id.to_s] = params[:commit]
 
     # Marshals the booking request parameters into a better structured hash format for transmission and
     # future assignment to the Bookings JS controller.
@@ -153,14 +145,13 @@ class Listings::ReservationsController < ApplicationController
   def initialize_shipping_address
     user_last_address = current_user.shipping_addresses.last.try(:dup)
     @reservation_request.reservation.shipments.new(
-      shipping_address:  user_last_address || ShippingAddress.new(email: current_user.email, phone: current_user.full_mobile_number)
+      shipping_address: user_last_address || ShippingAddress.new(email: current_user.email, phone: current_user.full_mobile_number)
     )
   end
 
   def prepare_for_review
     build_approval_request_for_object(current_user)
     reservations_service.build_documents
-    event_tracker.reviewed_a_booking(@reservation_request.reservation)
   end
 
   def require_login_for_reservation

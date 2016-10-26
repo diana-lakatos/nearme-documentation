@@ -109,11 +109,6 @@ module DesksnearMe
     config.middleware.use 'ApiThrottler'
     config.middleware.insert_before ActionDispatch::ParamsParser, 'BadRequestCatcher'
 
-    config.mixpanel = (YAML.load_file(Rails.root.join('config', 'mixpanel.yml'))[Rails.env] || {}).with_indifferent_access
-    config.google_analytics = (YAML.load_file(Rails.root.join('config', 'google_analytics.yml'))[Rails.env] || {}).with_indifferent_access
-
-    config.perform_mixpanel_requests = true
-    config.perform_google_analytics_requests = true
     config.perform_social_jobs = true
     # we do not use it, but won't harm
     config.active_job.queue_adapter = :delayed_job

@@ -1,12 +1,11 @@
 class SessionsController < Devise::SessionsController
-  skip_before_filter :force_fill_in_wizard_form
-  skip_before_filter :redirect_to_set_password_unless_unnecessary, only: [:destroy]
-  before_filter :sso_logout, only: [:destroy]
-  before_filter :omniauth_login, only: [:new]
-  skip_before_filter :require_no_authentication, only: [:show], if: ->(_c) { request.xhr? }
-  skip_before_filter :redirect_if_marketplace_password_protected, only: [:store_correct_ip]
-  after_filter :render_or_redirect_after_create, only: [:create]
-  before_filter :nm_force_ssl, only: [:new]
+  skip_before_action :force_fill_in_wizard_form
+  skip_before_action :redirect_to_set_password_unless_unnecessary, only: [:destroy]
+  before_action :sso_logout, only: [:destroy]
+  before_action :omniauth_login, only: [:new]
+  skip_before_action :require_no_authentication, only: [:show], if: ->(_c) { request.xhr? }
+  after_action :render_or_redirect_after_create, only: [:create]
+  before_action :nm_force_ssl, only: [:new]
   layout :resolve_layout
 
   def require_no_authentication
@@ -30,9 +29,7 @@ class SessionsController < Devise::SessionsController
   end
 
   def create
-    if params[:user] && params[:user][:email]
-      flash[:failed_login_attempt_with_email] = params[:user][:email].to_s[0..100]
-    end
+    flash[:failed_login_attempt_with_email] = params[:user][:email].to_s[0..100] if params[:user] && params[:user][:email]
 
     super
 
@@ -40,17 +37,8 @@ class SessionsController < Devise::SessionsController
       # The request was not interrupted by Devise and we also have a current_user object, which
       # means it succeeded so we clear our flash variable
       flash[:failed_login_attempt_with_email] = nil
-
       current_user.remember_me!
-      update_analytics_google_id(current_user)
-      analytics_apply_user(current_user)
-      event_tracker.logged_in(current_user, provider: Auth::Omni.new(session[:omniauth]).provider)
     end
-  end
-
-  def store_correct_ip
-    session[:current_ip] = params[:ip]
-    render nothing: true
   end
 
   private
@@ -94,7 +82,7 @@ class SessionsController < Devise::SessionsController
     flash[:alert] = nil
     self.response_body = nil
     resource.email = params[:user][:email]
-    if User.find_by_email(params[:user][:email])
+    if User.find_by(email: params[:user][:email])
       resource.errors.add(:password, t('sign_up_form.incorrect_password'))
     else
       resource.errors.add(:email, t('sign_up_form.incorrect_email'))
@@ -116,7 +104,7 @@ class SessionsController < Devise::SessionsController
     if PlatformContext.current.instance.is_community?
       'https://signin.intel.com/Logout'
     else
-      (request.referrer && request.referrer.include?('instance_admin')) ? instance_admin_login_path : root_path
+      request.referer && request.referer.include?('instance_admin') ? instance_admin_login_path : root_path
     end
   end
 end

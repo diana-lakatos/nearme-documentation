@@ -147,20 +147,6 @@ ActiveSupport::TestCase.class_eval do
     request.headers['UserAuthorization'] = user.authentication_token
   end
 
-  def assert_log_triggered(*args)
-    Rails.application.config.event_tracker.any_instance.expects(event).with do
-      yield(*args)
-    end
-  end
-
-  def assert_log_not_triggered(event)
-    Rails.application.config.event_tracker.any_instance.expects(event).never
-  end
-
-  def stub_mixpanel
-    stub_request(:get, /.*api\.mixpanel\.com.*/)
-  end
-
   def mailer_stub
     stub(deliver: true)
   end

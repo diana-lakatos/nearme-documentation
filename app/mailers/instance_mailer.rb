@@ -21,18 +21,13 @@ class InstanceMailer < ActionMailer::Base
     subject  = options.delete(:subject)
     reply_to = options.delete(:reply_to)
     # do not change name of this var :) if you change it to @user, it will overwrite variables set by workflow step :)
-    @user_to_which_email_will_be_sent = User.with_deleted.find_by_email(Array(to).first)
+    @user_to_which_email_will_be_sent = User.with_deleted.find_by(email: Array(to).first)
 
     @email_method = template
-    custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge(template: template, campaign: @email_method.split('/')[0].humanize)
 
-    @mailer_signature = generate_signature
-    @signature_for_tracking = "&email_signature=#{@mailer_signature}"
-
-    track_sending_email(custom_tracking_options)
     self.class.layout _layout, platform_context: @platform_context, locale: I18n.locale
     render_options = { platform_context: @platform_context, locale: I18n.locale }
-    render_options.merge!(layout: layout_path) if layout_path.present?
+    render_options[:layout] = layout_path if layout_path.present?
 
     options.merge!(
       subject: subject,
@@ -43,8 +38,14 @@ class InstanceMailer < ActionMailer::Base
     )
 
     message = super(options) do |format|
-      format.html { render(template, render_options) + get_tracking_code(custom_tracking_options).html_safe }
-      format.text { render(template, render_options) rescue '' }
+      format.html { render(template, render_options) }
+      format.text do
+        begin
+                      render(template, render_options)
+                    rescue
+                      ''
+                    end
+      end
     end
 
     attachment_parts = []
@@ -73,28 +74,5 @@ class InstanceMailer < ActionMailer::Base
       instance_id: PlatformContext.current.try(:instance).try(:id),
       i18n_locale: I18n.locale
     }
-  end
-
-  def get_tracking_code(custom_tracking_options)
-    event_tracker.pixel_track_url('Email Opened', custom_tracking_options)
-  end
-
-  def event_tracker
-    @mixpanel_wrapper ||= AnalyticWrapper::MixpanelApi.new(
-      AnalyticWrapper::MixpanelApi.mixpanel_instance,
-      current_user: @user_to_which_email_will_be_sent,
-      request_details: { current_instance_id: @platform_context.instance.id }
-    )
-    @event_tracker ||= Rails.application.config.event_tracker.new(@mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(@user_to_which_email_will_be_sent))
-    @event_tracker
-  end
-
-  def track_sending_email(custom_tracking_options)
-    event_tracker.email_sent(custom_tracking_options)
-  end
-
-  def generate_signature
-    verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
-    verifier.generate(@email_method)
   end
 end

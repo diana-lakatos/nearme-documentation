@@ -53,8 +53,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
         flash[:warning] = t('flash_messages.manage.listings.want_to_see_profile', path: path, name: user.first_name)
         session[:user_to_be_invited] = nil
       end
-      event_tracker.created_a_listing(@transactable, via: 'dashboard')
-      event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
       @global_errors = filter_error_messages(@transactable.errors.full_messages)
@@ -73,7 +71,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @photos = @transactable.photos
     @attachments = @transactable.attachments
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def update
@@ -89,9 +86,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
         if @transactable.save
           @transactable.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
-          unless @transactable.is_trusted?
-            flash[:error] = t('manage.listings.no_trust_explanation')
-          end
+          flash[:error] = t('manage.listings.no_trust_explanation') unless @transactable.is_trusted?
           redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
         else
           @global_errors = filter_error_messages(@transactable.errors.full_messages)
@@ -128,7 +123,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def destroy
-    TransactableDestroyerService.new(@transactable, event_tracker, current_user).destroy
+    TransactableDestroyerService.new(@transactable).destroy
 
     flash[:deleted] = t('flash_messages.manage.listings.listing_deleted')
     redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)

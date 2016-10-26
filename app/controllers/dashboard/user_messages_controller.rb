@@ -65,8 +65,6 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
     @user_messages = UserMessage.for_thread(*for_thread_arguments(@user_message)).by_created.decorate
     @user_messages.mark_as_read_for(current_user)
-
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def archive

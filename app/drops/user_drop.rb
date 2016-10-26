@@ -125,7 +125,7 @@ class UserDrop < BaseDrop
 
   # path to the search section in the application, with tracking
   def search_url_with_tracking
-    routes.search_path(track_email_event: true)
+    routes.search_path()
   end
 
   # returns true if the city where the user books items is present
@@ -151,7 +151,7 @@ class UserDrop < BaseDrop
 
   # url to the app wizard for adding a new listing to the system, with tracking
   def space_wizard_list_url_with_tracking
-    routes.space_wizard_list_path(token_key => @source.try(:temporary_token), track_email_event: true)
+    routes.space_wizard_list_path(token_key => @source.try(:temporary_token))
   end
 
   def manage_locations_url
@@ -159,11 +159,11 @@ class UserDrop < BaseDrop
   end
 
   def manage_locations_url_with_tracking
-    routes.dashboard_company_transactable_types_path(track_email_event: true)
+    routes.dashboard_company_transactable_types_path()
   end
 
   def manage_locations_url_with_tracking_and_token
-    routes.dashboard_company_transactable_types_path(token_key => @source.try(:temporary_token), track_email_event: true)
+    routes.dashboard_company_transactable_types_path(token_key => @source.try(:temporary_token))
   end
 
   # url to the section in the app for editing a user's profile
@@ -183,7 +183,7 @@ class UserDrop < BaseDrop
 
   # url to the section in the app for editing a user's profile, with authentication token and tracking
   def edit_user_registration_url_with_token_and_tracking
-    routes.edit_user_registration_path(token_key => @source.try(:temporary_token), :track_email_event => true)
+    routes.edit_user_registration_path(token_key => @source.try(:temporary_token))
   end
 
   # url to reset password
@@ -248,12 +248,12 @@ class UserDrop < BaseDrop
   # url to the section in the application where a user can change his password
   # with authentication token and tracking
   def set_password_url_with_token_and_tracking
-    routes.set_password_path(token_key => @source.try(:temporary_token), :track_email_event => true)
+    routes.set_password_path(token_key => @source.try(:temporary_token))
   end
 
   # url for verifying (confirming) a user's email
   def verify_user_url
-    routes.verify_user_path(@source.id, @source.email_verification_token, track_email_event: true)
+    routes.verify_user_path(@source.id, @source.email_verification_token)
   end
 
   # url for verifying (confirming) a user's email
@@ -268,7 +268,7 @@ class UserDrop < BaseDrop
 
   # url to the section in the application for managing a user's own bookings, with tracking
   def bookings_dashboard_url_with_tracking
-    routes.dashboard_user_reservations_path(track_email_event: true)
+    routes.dashboard_user_reservations_path()
   end
 
   # url to the section in the application for managing a user's own bookings, with authentication
@@ -280,7 +280,7 @@ class UserDrop < BaseDrop
   # url to the section in the application for managing a user's own bookings, with authentication
   # token, and tracking
   def bookings_dashboard_url_with_tracking_and_token
-    routes.dashboard_user_reservations_path(token_key => @source.try(:temporary_token), track_email_event: true)
+    routes.dashboard_user_reservations_path(token_key => @source.try(:temporary_token))
   end
 
   # listings in and around a user's location, limited to a 100 km radius and a maximum of 3 results

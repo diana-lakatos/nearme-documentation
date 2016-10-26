@@ -680,7 +680,6 @@ DesksnearMe::Application.routes.draw do
       match 'users/update_password', to: 'registrations#update_password', as: 'update_password', via: [:patch, :put]
       get 'users/edit_notification_preferences', to: 'registrations#edit_notification_preferences', as: 'edit_notification_preferences'
       match 'users/update_notification_preferences', to: 'registrations#update_notification_preferences', as: 'update_notification_preferences', via: [:patch, :put]
-      post 'users/store_google_analytics_id', to: 'registrations#store_google_analytics_id', as: 'store_google_analytics'
       post 'users/store_geolocated_location', to: 'registrations#store_geolocated_location', as: 'store_geolocated_location'
       get 'users/', to: 'registrations#new'
       get 'users/verify/:id/:token', to: 'registrations#verify', as: 'verify_user'
@@ -1031,8 +1030,6 @@ DesksnearMe::Application.routes.draw do
 
     get '/search/categories', to: 'search#categories'
     get '/search/(:search_type)', to: 'search#index', as: :search
-
-    resource :event_tracker, only: [:create], controller: 'event_tracker'
 
     resources :authentications, only: [:create, :destroy] do
       collection do

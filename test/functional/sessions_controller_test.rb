@@ -6,15 +6,8 @@ class SessionsControllerTest < ActionController::TestCase
     @request.env['devise.mapping'] = Devise.mappings[:user]
   end
 
-  should 'successfully track in mixpanel' do
-    Rails.application.config.event_tracker.any_instance.expects(:logged_in).with do |user, custom_options|
-      user == @user && custom_options == { provider: 'native' }
-    end
-    post :create, user: { email: @user.email, password: @user.password }
-  end
-
   should 'be automatically remembered' do
-    post :create, user: { email: @user.email, password: @user.password }
+    post :create, { user: { email: @user.email, password: @user.password } }
     @user.reload
     assert @user.remember_token
     assert_equal Time.zone.today, @user.remember_created_at.to_date
@@ -28,7 +21,7 @@ class SessionsControllerTest < ActionController::TestCase
 
   should 'not be able to log in to banned instance' do
     @user.update_attribute(:banned_at, Time.zone.now)
-    post :create, user: { email: @user.email, password: @user.password }
+    post :create, { user: { email: @user.email, password: @user.password } }
     assert_equal 'Your account has not been activated yet.', flash[:alert]
   end
 
@@ -36,7 +29,7 @@ class SessionsControllerTest < ActionController::TestCase
     should 'not track new version after each login' do
       assert_no_difference('PaperTrail::Version.where("item_type = ?", "User").count') do
         with_versioning do
-          post :create, user: { email: @user.email, password: @user.password }
+          post :create, { user: { email: @user.email, password: @user.password } }
         end
       end
     end

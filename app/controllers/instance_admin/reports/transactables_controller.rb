@@ -1,7 +1,7 @@
 class InstanceAdmin::Reports::TransactablesController < InstanceAdmin::Reports::BaseController
   def destroy
     @transactable = Transactable.find(params[:id])
-    TransactableDestroyerService.new(@transactable, event_tracker, @transactable.creator).destroy
+    TransactableDestroyerService.new(@transactable).destroy
 
     flash[:deleted] = t('flash_messages.instance_admin.reports.listings.successfully_deleted')
     redirect_to instance_admin_reports_transactables_path
