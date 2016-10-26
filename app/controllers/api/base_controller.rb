@@ -18,7 +18,7 @@ class Api::BaseController < ActionController::Base
 
   # Ensure the user is authenticated
   def require_authentication
-    fail DNM::Unauthorized unless current_user
+    raise DNM::Unauthorized unless current_user
   end
 
   def require_authorization
@@ -122,42 +122,5 @@ class Api::BaseController < ActionController::Base
 
   def secured_params
     @secured_params ||= SecuredParams.new
-  end
-
-  def event_tracker
-    @event_tracker ||= Rails.application.config.event_tracker.new(mixpanel, google_analytics)
-  end
-
-  def mixpanel
-    @mixpanel ||= begin
-                    # Load any persisted session properties
-                    session_properties = if cookies.signed[:mixpanel_session_properties].present?
-                                           ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties]) rescue nil
-                                         end
-
-                    # Gather information about requests
-                    request_details = {
-                      current_host: request.try(:host)
-                    }
-
-                    # Detect an anonymous identifier, if any.
-                    anonymous_identity = cookies.signed[:mixpanel_anonymous_id]
-
-                    AnalyticWrapper::MixpanelApi.new(
-                      AnalyticWrapper::MixpanelApi.mixpanel_instance,
-                      current_user: current_user,
-                      request_details: request_details,
-                      anonymous_identity: anonymous_identity,
-                      session_properties: session_properties,
-                      request_params: params,
-                      request: user_signed_in? ? nil : request # we assume that logged in user is not a bot
-                    )
-                  end
-  end
-
-  helper_method :mixpanel
-
-  def google_analytics
-    @google_analytics ||= AnalyticWrapper::GoogleAnalyticsApi.new(current_user)
   end
 end

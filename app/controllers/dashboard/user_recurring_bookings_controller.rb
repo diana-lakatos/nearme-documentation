@@ -1,5 +1,5 @@
 class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
-  before_filter only: [:user_cancel] do |controller|
+  before_action only: [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
       flash[:error] = t('flash_messages.reservations.invalid_operation')
       redirect_to dashboard_user_recurring_bookings_path
@@ -8,9 +8,6 @@ class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
 
   def user_cancel
     if recurring_booking.guest_cancel
-      event_tracker.cancelled_a_recurring_booking(recurring_booking, actor: 'guest')
-      event_tracker.updated_profile_information(recurring_booking.owner)
-      event_tracker.updated_profile_information(recurring_booking.host)
       flash[:deleted] = t('flash_messages.reservations.reservation_cancelled')
     else
       flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')

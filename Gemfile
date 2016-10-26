@@ -101,9 +101,7 @@ gem 'orm_adapter', '~> 0.5.0' # needed for ckeditor, see https://github.com/gale
 gem 'sanitize', require: false
 
 gem 'useragent', require: false
-gem 'mixpanel', '4.0.2', require: false
 
-gem 'rest-client', require: false
 gem 'jira-ruby', require: false
 gem 'daemons' # used by DelayedJob
 

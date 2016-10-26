@@ -162,7 +162,6 @@ class Payment < ActiveRecord::Base
     charge = payment_gateway.charge(payable.owner, total_amount.cents, currency, self, authorization_token)
 
     if charge.success?
-      ReservationChargeTrackerJob.perform_later(payable.date.end_of_day, payable.id) if payable.respond_to?(:date)
       # this works for braintree, might not work for others - to be moved to separate class etc, and ideally somewhere else... hackish hack as a quick win
       update_attribute(:external_transaction_id, authorization_token)
       mark_as_paid!

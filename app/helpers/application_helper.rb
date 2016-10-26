@@ -77,12 +77,6 @@ module ApplicationHelper
     content_for(:meta_og_image) { image }
   end
 
-  def apply_analytics?
-    # Enable mixpanel in all environments. We use a different account for
-    # production.
-    true
-  end
-
   def truncate_with_ellipsis(body, length, html_options = {})
     body ||= ''
     if body.size > length

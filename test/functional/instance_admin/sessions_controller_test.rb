@@ -7,10 +7,7 @@ class InstanceAdmin::SessionsControllerTest < ActionController::TestCase
   end
 
   should 'successfully sign up and track and redirected to instance admin' do
-    Rails.application.config.event_tracker.any_instance.expects(:logged_in).with do |user, custom_options|
-      user == @user && custom_options == { provider: 'native' }
-    end
-    post :create, user: { email: @user.email, password: @user.password }, return_to: instance_admin_path
+    post :create, { user: { email: @user.email, password: @user.password }, return_to: instance_admin_path }
     assert_redirected_to instance_admin_path
   end
 

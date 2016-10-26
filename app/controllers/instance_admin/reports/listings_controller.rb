@@ -1,8 +1,8 @@
 class InstanceAdmin::Reports::ListingsController < InstanceAdmin::Reports::BaseController
   include ReportsProperties
 
-  before_filter :set_breadcrumbs_title
-  before_filter :find_transactable, only: [:edit, :update, :show, :destroy]
+  before_action :set_breadcrumbs_title
+  before_action :find_transactable, only: [:edit, :update, :show, :destroy]
 
   def index
     @transactable_search_form = InstanceAdmin::TransactableSearchForm.new
@@ -25,7 +25,7 @@ class InstanceAdmin::Reports::ListingsController < InstanceAdmin::Reports::BaseC
   end
 
   def destroy
-    TransactableDestroyerService.new(@transactable, event_tracker, @transactable.creator).destroy
+    TransactableDestroyerService.new(@transactable).destroy
 
     flash[:deleted] = t('flash_messages.instance_admin.reports.listings.successfully_deleted')
     redirect_to instance_admin_reports_listings_path
@@ -35,7 +35,7 @@ class InstanceAdmin::Reports::ListingsController < InstanceAdmin::Reports::BaseC
     @transactable_search_form = InstanceAdmin::TransactableSearchForm.new
     @transactable_search_form.validate(params)
     @transactables = SearchService.new(Transactable.order('created_at ASC')).search(@transactable_search_form.to_search_params)
-    @transactable_type = TransactableType.find_by_id(params[:item_type_id])
+    @transactable_type = TransactableType.find_by(id: params[:item_type_id])
 
     csv = export_data_to_csv_for_transactables(@transactables, @transactable_type)
 

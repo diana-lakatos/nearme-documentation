@@ -22,7 +22,7 @@ class RegistrationsController < Devise::RegistrationsController
   after_action :render_or_redirect_after_create, only: [:create]
   before_action :redirect_to_edit_profile_if_password_set, only: [:set_password]
 
-  skip_before_action :redirect_if_marketplace_password_protected, only: [:store_geolocated_location, :store_google_analytics_id, :update_password, :set_password]
+  skip_before_action :redirect_if_marketplace_password_protected, only: [:store_geolocated_location, :update_password, :set_password]
 
   def new
     @legal_page_present = Page.exists?(slug: 'legal')
@@ -48,12 +48,6 @@ class RegistrationsController < Devise::RegistrationsController
                                             source: cookies.signed[:source],
                                             campaign: cookies.signed[:campaign],
                                             language: I18n.locale)
-        update_analytics_google_id(@user)
-        analytics_apply_user(@user)
-        event_tracker.signed_up(@user,           referrer_id: platform_context.platform_context_detail.id,
-                                                 referrer_type: platform_context.platform_context_detail.class.to_s,
-                                                 signed_up_via: signed_up_via,
-                                                 provider: Auth::Omni.new(session[:omniauth]).provider)
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role
         when 'default'
@@ -84,7 +78,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit
     @country = current_user.country_name
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     build_approval_request_for_object(current_user) unless current_user.is_trusted?
     @buyer_profile = resource.get_buyer_profile
     @seller_profile = resource.get_seller_profile
@@ -157,7 +150,6 @@ class RegistrationsController < Devise::RegistrationsController
 
       set_flash_message :success, :updated
       sign_in(resource, bypass: true)
-      event_tracker.updated_profile_information(@user)
       redirect_to dashboard_profile_path(onboarded: onboarded)
     else
       @buyer_profile = resource.get_buyer_profile
@@ -247,7 +239,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_password
     @user = current_user
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def update_password
@@ -269,7 +260,6 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
-      event_tracker.track_event_within_email(@user, request) if params[:track_email_event]
       flash[:success] = t('flash_messages.registrations.address_verified')
       redirect_to @user.listings.count > 0 ? dashboard_path : edit_user_registration_path
     else
@@ -280,12 +270,6 @@ class RegistrationsController < Devise::RegistrationsController
       end
       redirect_to root_path
     end
-  end
-
-  def store_google_analytics_id
-    cookies[:google_analytics_id] = params[:id]
-    update_analytics_google_id(current_user)
-    render nothing: true
   end
 
   def unsubscribe

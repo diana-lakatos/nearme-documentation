@@ -1,9 +1,9 @@
 module Api
   class V3::SpaceWizardsController < BaseController
-    skip_before_filter :require_authorization
-    before_filter :find_transactable_type
-    before_filter :set_common_variables
-    before_filter :sanitize_price_parameters
+    skip_before_action :require_authorization
+    before_action :find_transactable_type
+    before_action :set_common_variables
+    before_action :sanitize_price_parameters
 
     include AttachmentsHelper
 
@@ -31,7 +31,6 @@ module Api
         if @user.first_listing.new_record?
           @user.save(validate: false)
           fix_availability_templates
-          track_saved_draft_event
           WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.id)
         else
           @user.save(validate: false)
@@ -40,8 +39,6 @@ module Api
       elsif @user.save
         @user.listings.first.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
         @user.companies.first.update_metadata(draft_at: nil, completed_at: Time.now)
-        track_new_space_event
-        track_new_company_event
 
         WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @user.first_listing.id) unless @user.first_listing.is_trusted?
         WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.id)
@@ -93,7 +90,11 @@ module Api
                  elsif @user.country_name.present?
                    @user.country_name
                  else
-                   request.location.country rescue nil
+                   begin
+                     request.location.country
+                   rescue
+                     nil
+                   end
                  end
     end
 
@@ -109,23 +110,6 @@ module Api
       if current_user.try(:registration_completed?)
         redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
       end
-    end
-
-    def track_saved_draft_event
-      event_tracker.saved_a_draft
-    end
-
-    def track_new_space_event
-      @location = @user.locations.first
-      @listing = @user.listings.first
-      event_tracker.created_a_location(@location, via: 'wizard')
-      event_tracker.created_a_listing(@listing, via: 'wizard')
-      event_tracker.updated_profile_information(@user)
-    end
-
-    def track_new_company_event
-      @company = @user.companies.first
-      event_tracker.created_a_company(@company) unless current_instance.skip_company?
     end
 
     def set_proper_currency
@@ -150,9 +134,21 @@ module Api
 
     def wizard_params
       params.require(:user).permit(secured_params.user(transactable_type: @transactable_type)).tap do |whitelisted|
-        (whitelisted[:seller_profile_attributes][:properties] = params[:user][:seller_profile_attributes][:properties]) rescue {}
-        (whitelisted[:properties] = params[:user][:properties]) rescue {}
-        (whitelisted[:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][:properties] = params[:user][:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][:properties]) rescue {}
+        begin
+          (whitelisted[:seller_profile_attributes][:properties] = params[:user][:seller_profile_attributes][:properties])
+        rescue
+          {}
+        end
+        begin
+          (whitelisted[:properties] = params[:user][:properties])
+        rescue
+          {}
+        end
+        begin
+          (whitelisted[:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][:properties] = params[:user][:companies_attributes][0][:locations_attributes][0][:listings_attributes][0][:properties])
+        rescue
+          {}
+        end
       end
     end
 

@@ -183,15 +183,6 @@ class Reservation < Order
   def perform_expiry!
     if unconfirmed? && !deleted?
       expire!
-
-      # FIXME: This should be moved to a background job base class, as per ApplicationController.
-      #        The event_tracker calls can be executed from the Job instance.
-      #        i.e. Essentially compose this as a 'non-http request' controller.
-      mixpanel_wrapper = AnalyticWrapper::MixpanelApi.new(AnalyticWrapper::MixpanelApi.mixpanel_instance, current_user: owner)
-      event_tracker = Rails.application.config.event_tracker.new(mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(owner))
-      event_tracker.booking_expired(self)
-      event_tracker.updated_profile_information(owner)
-      event_tracker.updated_profile_information(host)
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::Expired, id)
     end
   end

@@ -24,7 +24,7 @@ class CompanyDrop < BaseDrop
 
   # Url to the section for adding user's paypal account where he will get paid. Includes tracking and authentication token.
   def add_paypal_url_with_tracking_and_token
-    routes.edit_dashboard_company_payouts_path(token_key => @company.creator.temporary_token, track_email_event: true)
+    routes.edit_dashboard_company_payouts_path(token_key => @company.creator.temporary_token)
   end
 
   # returns list of created payment transfer as a string (list of currency amounts)

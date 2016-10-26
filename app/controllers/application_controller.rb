@@ -28,11 +28,6 @@ class ApplicationController < ActionController::Base
 
   around_action :set_time_zone
 
-  # We need to persist some mixpanel attributes for subsequent
-  # requests.
-  after_action :apply_persisted_mixpanel_attributes
-  after_action :store_client_taggable_events
-
   def current_user
     super.try(:decorate)
   end
@@ -157,61 +152,6 @@ class ApplicationController < ActionController::Base
 
   helper_method :bookable?, :projectable?
 
-  # Provides an EventTracker instance for the current request.
-  #
-  # Use this for triggering predefined events from actions via
-  # the application controllers.
-  def event_tracker
-    @event_tracker ||= Rails.application.config.event_tracker.new(mixpanel, google_analytics)
-  end
-
-  def mixpanel
-    @mixpanel ||= begin
-                    # Load any persisted session properties
-                    session_properties = if cookies.signed[:mixpanel_session_properties].present?
-                                           begin
-                                             ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties])
-                                           rescue
-                                             nil
-                                           end
-                                         end
-
-                    # Gather information about requests
-                    request_details = {
-                      current_host: request.try(:host)
-                    }
-
-                    # Detect an anonymous identifier, if any.
-                    anonymous_identity = cookies.signed[:mixpanel_anonymous_id]
-
-                    AnalyticWrapper::MixpanelApi.new(
-                      AnalyticWrapper::MixpanelApi.mixpanel_instance,
-                      current_user: current_user,
-                      request_details: request_details,
-                      anonymous_identity: anonymous_identity,
-                      session_properties: session_properties,
-                      request_params: params
-                    )
-                  end
-  end
-
-  helper_method :mixpanel
-
-  def google_analytics
-    @google_analytics ||= AnalyticWrapper::GoogleAnalyticsApi.new(current_user)
-  end
-
-  helper_method :google_analytics
-
-  # Stores cross-request mixpanel options.
-  #
-  # We need to load up some persisted properties to automatically assign to events
-  # as global properties.
-  def apply_persisted_mixpanel_attributes
-    cookies.signed.permanent[:mixpanel_anonymous_id] = mixpanel.anonymous_identity
-    cookies.signed.permanent[:mixpanel_session_properties] = ActiveSupport::JSON.encode(mixpanel.session_properties)
-  end
-
   # Used in controller actions that require authentication
   def set_cache_buster
     response.headers['Cache-Control'] = 'no-cache, no-store, max-age=0, must-revalidate'
@@ -221,11 +161,6 @@ class ApplicationController < ActionController::Base
 
   def first_time_visited?
     @first_time_visited ||= cookies.count.zero?
-  end
-
-  def analytics_apply_user(user, with_alias = true)
-    store_user_browser_details(user)
-    event_tracker.apply_user(user, alias: with_alias)
   end
 
   def store_user_browser_details(user)
@@ -240,10 +175,6 @@ class ApplicationController < ActionController::Base
     end
   rescue Exception => ex
     Rails.logger.error "Storing user #{user.try(:id)} browser details #{user_agent} failed: #{ex}"
-  end
-
-  def current_user=(user)
-    analytics_apply_user(user)
   end
 
   def secure_links?
@@ -369,35 +300,6 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-
-  def update_analytics_google_id(user)
-    if user
-      if user.google_analytics_id != cookies[:google_analytics_id] && cookies[:google_analytics_id].present?
-        user.update_attribute(:google_analytics_id, cookies[:google_analytics_id])
-      end
-    end
-  end
-
-  def user_google_analytics_id
-    current_user.try(:google_analytics_id) ? current_user.google_analytics_id : cookies.signed[:google_analytics_id]
-  end
-
-  helper_method :user_google_analytics_id
-
-  def store_client_taggable_events
-    if @event_tracker.present?
-      session[:triggered_client_taggable_events] ||= []
-      session[:triggered_client_taggable_events] += @event_tracker.triggered_client_taggable_methods
-    end
-  end
-
-  def get_and_clear_stored_client_taggable_events
-    events = session[:triggered_client_taggable_events] || []
-    session[:triggered_client_taggable_events] = nil
-    events
-  end
-
-  helper_method :get_and_clear_stored_client_taggable_events
 
   def register_lookup_context_detail(detail_name)
     lookup_context.class.register_detail(detail_name.to_sym) { nil }

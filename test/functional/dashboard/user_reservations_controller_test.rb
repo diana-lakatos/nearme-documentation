@@ -1,28 +1,6 @@
 require 'test_helper'
 
 class Dashboard::UserReservationsControllerTest < ActionController::TestCase
-  context '#event_tracker' do
-    should 'track and redirect a host to the My Bookings page when they cancel a booking' do
-      @reservation = FactoryGirl.create(:future_unconfirmed_reservation)
-      sign_in @reservation.owner
-      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::EnquirerCancelled, @reservation.id)
-
-      Rails.application.config.event_tracker.any_instance.expects(:cancelled_a_booking).with do |reservation, custom_options|
-        reservation == assigns(:reservation) && custom_options == { actor: 'guest' }
-      end
-      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
-        user == assigns(:reservation).owner
-      end
-      Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
-        user == assigns(:reservation).host
-      end
-
-      stub_active_merchant_interaction
-      post :user_cancel, listing_id: @reservation.transactable.id, id: @reservation.id
-      assert_redirected_to dashboard_orders_path
-    end
-  end
-
   context 'export' do
     should 'be exportable to .ics format' do
       @transactable = FactoryGirl.create(:transactable, name: 'ICS Listing')
@@ -36,7 +14,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
         sign_in @reservation.owner
 
         url = dashboard_user_reservations_url(id: @reservation.id, host: Rails.application.routes.default_url_options[:host])
-        get :export, format: :ics, listing_id: @reservation.transactable.id, id: @reservation.id
+        get :export, { format: :ics, listing_id: @reservation.transactable.id, id: @reservation.id }
         assert_response :success
         assert_equal 'text/calendar', response.content_type
         expected_result = ['BEGIN:VCALENDAR',
@@ -106,7 +84,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
         should 'allow to cancel if cancelation policy does not apply' do
           stub_active_merchant_interaction
           assert_select 'form[action=?]', user_cancel_dashboard_user_reservation_path(@reservation)
-          post :user_cancel, id: @reservation
+          post :user_cancel, { id: @reservation }
           assert_redirected_to dashboard_orders_path
           assert_select '.order', 0
           assert @reservation.reload.cancelled?
@@ -124,7 +102,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
           assert_response :success
           assert_select '.order', 1
           assert_select '.order form', 0
-          post :user_cancel, id: @reservation
+          post :user_cancel, { id: @reservation }
           assert_redirected_to dashboard_orders_path
           assert_not @reservation.reload.cancelled?
         end
@@ -136,7 +114,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
           assert_response :success
           assert_select '.order', 1
           assert_select '.order form', 0
-          post :user_cancel, id: @reservation
+          post :user_cancel, { id: @reservation }
           assert_redirected_to dashboard_orders_path
           assert_not @reservation.reload.cancelled?
         end
@@ -159,7 +137,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
             assert_select '.order', 1
             assert_select '.order form', 0
             stub_active_merchant_interaction
-            post :user_cancel, id: @reservation
+            post :user_cancel, { id: @reservation }
             assert_redirected_to dashboard_orders_path
             assert_not @reservation.reload.cancelled?
           end
@@ -175,7 +153,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
       sign_in @reservation.owner
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
         with_versioning do
-          post :user_cancel, listing_id: @reservation.transactable.id, id: @reservation.id
+          post :user_cancel, { listing_id: @reservation.transactable.id, id: @reservation.id }
         end
       end
     end
