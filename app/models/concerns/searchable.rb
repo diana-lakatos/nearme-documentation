@@ -17,7 +17,9 @@ module Searchable
 
     include "#{to_s.demodulize.pluralize}Index".constantize
 
-    def self.index_name
+    index_name -> { define_index_name }
+
+    def self.define_index_name
       if PlatformContext.current.try(:instance) && PlatformContext.current.instance.search_settings['use_individual_index'] == 'true'
         "#{to_s.demodulize.pluralize.downcase}-#{Rails.env}-#{PlatformContext.current.try(:instance).try(:id)}"
       else
