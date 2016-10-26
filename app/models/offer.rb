@@ -1,9 +1,10 @@
 class Offer < Order
-  # validates :host_line_items, presence: true
-  delegate :action, to: :transactable_pricing
 
   has_many :host_line_items, as: :line_itemable
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
+
+  delegate :action, to: :transactable_pricing
+  before_update :set_draft_at
 
   def try_to_activate!
     return true unless inactive? && valid? && checkout_completed?
@@ -181,7 +182,11 @@ class Offer < Order
   end
 
   def set_draft_at
-    self.draft_at = (Time.now if save_draft)
+    self.draft_at = if save_draft
+      Time.current
+    else
+      nil
+    end
 
     true
   end

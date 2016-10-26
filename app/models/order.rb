@@ -211,6 +211,7 @@ class Order < ActiveRecord::Base
 
   def checkout_completed?
     return false if completed_form_component_ids.blank?
+    return true unless reservation_type.step_checkout?
     return false if reservation_type.form_components.where.not(id: completed_form_component_ids).any?
     true
   end
