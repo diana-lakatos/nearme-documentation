@@ -7,7 +7,6 @@ class Offer < Order
 
   def try_to_activate!
     return true unless inactive? && valid? && checkout_completed?
-    return true if draft_at?
 
     activate!
   end
