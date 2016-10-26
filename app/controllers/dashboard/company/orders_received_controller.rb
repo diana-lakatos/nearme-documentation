@@ -87,7 +87,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
         end
 
       elsif @order.action.both_side_confirmation
-        flash[:success] = t('flash_messages.manage.reservations.lender_confirmed_both_side_confirmation')
+        flash[:success] = t('flash_messages.dashboard.reservations.lender_confirmed_both_side_confirmation')
       else
         flash[:error] = [
           t('flash_messages.manage.reservations.reservation_not_confirmed'),

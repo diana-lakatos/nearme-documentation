@@ -6,7 +6,8 @@ class Offer < Order
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
 
   def try_to_activate!
-    return true unless inactive? && valid?
+    return true unless inactive? && valid? && checkout_completed?
+    return true if draft_at?
 
     activate!
   end
@@ -162,7 +163,7 @@ class Offer < Order
   end
 
   def enquirer_cancelable
-    state == 'unconfirmed'
+    draft_at? || (state == 'unconfirmed')
   end
   alias enquirer_cancelable? enquirer_cancelable
 
