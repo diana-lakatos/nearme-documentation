@@ -4,7 +4,9 @@ module Encryptable
   extend ActiveSupport::Concern
 
   included do
-    attr_encrypted_options.merge!(key: :encryption_key, encryptor: AttrEncryptedEncryptor)
+    # TODO: Update defaults https://github.com/attr-encrypted/attr_encrypted#deprecations
+    attr_encrypted_options.merge!(key: :encryption_key,
+                                  encryptor: AttrEncryptedEncryptor)
   end
 
   def encryption_key
