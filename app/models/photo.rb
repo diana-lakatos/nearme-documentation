@@ -21,7 +21,7 @@ class Photo < ActiveRecord::Base
 
   validates :image, presence: true,  if: ->(p) { !p.image_original_url.present? }
 
-  validates_length_of :caption, maximum: 120, allow_blank: true
+  validates :caption, length: { maximum: 120, allow_blank: true }
 
   mount_uploader :image, PhotoUploader
 
@@ -58,7 +58,7 @@ class Photo < ActiveRecord::Base
   end
 
   def original_image_url
-    image_url(:original)
+    image.url(:optimized) =~ /\/\/placehold\.it/ ? image.url : image.url(:optimized)
   end
 
   def self.xml_attributes

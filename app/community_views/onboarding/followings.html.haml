@@ -15,9 +15,9 @@
             .cell
               / card
               .card-b.is-active
-                %figure{:style => "background-image: url(#{person.avatar.url(:community_small)});"}
+                %figure{:style => "background-image: url(#{person.avatar.url(:medium)});"}
                   = link_to user_path(person) do
-                    = image_tag person.avatar.url(:community_small)
+                    = image_tag person.avatar.url(:medium)
                 .wrap
                   = f.input "people][", as: :boolean, checked_value: person.id, input_html: { checked: "checked", class: 'tick-a', id: "follow-person-#{person.id}" }, wrapper_html: { class: 'check' }, wrapper: :inline_checkbox, label_html: { id: "follow-person-#{person.id}", class: 'no-label' }
 
@@ -38,9 +38,9 @@
             .cell
               / card
               .card-b.is-active
-                %figure{:style => "background-image: url(#{project.photos.first.image.url(:project_small)});"}
+                %figure{:style => "background-image: url(#{project.photos.first.image.url(:medium)});"}
                   = link_to root_url do
-                    = image_tag project.photos.first.image.url(:project_small)
+                    = image_tag project.photos.first.image.url(:medium)
                 .wrap
                   = f.input 'projects][', as: :boolean, checked_value: project.id, input_html: { checked: "checked", class: 'tick-a', id: "follow-project-#{project.id}" }, wrapper_html: { class: 'check' }, wrapper: :inline_checkbox, label_html: { id: "follow-project-#{project.id}", class: 'no-label' }
 

@@ -37,7 +37,7 @@
               %tr
                 %td.col-picture
                   = link_to group_path(group) do
-                    = image_tag group.cover_image.url(:project_thumbnail)
+                    = image_tag group.cover_image.url(:thumb)
                 %td.col-name
                   = link_to group.name, group_path(group)
                 %td.col-summary

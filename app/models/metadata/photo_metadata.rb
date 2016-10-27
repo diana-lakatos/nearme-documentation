@@ -22,7 +22,7 @@ module Metadata
       def to_listing_metadata
         {
           listing_name: listing.name,
-          original: image_url(:original),
+          original: image.url(:optimized),
           fullscreen: image.url(:fullscreen),
           space_listing: image.url(:space_listing),
           golden:  image.url(:golden),

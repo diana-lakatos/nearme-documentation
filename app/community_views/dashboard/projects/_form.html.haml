@@ -26,7 +26,7 @@
 
       = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
                                       dashboard_photos_path,
-                                      Photo.new.image.thumbnail_dimensions[:project_thumbnail],
+                                      { width: 200, height: 175, transform: :resize_to_fill },
                                       t('simple_form.labels.listing.add_photo'),
                                       :required => true,
                                       :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
@@ -40,7 +40,7 @@
             - next unless photo.persisted?
 
             .photo-item{:id => "photo-" + photo.id.to_s}
-              = image_tag photo.image_url(:project_thumbnail)
+              = image_tag photo.image_url(:thumb)
               .media-actions
                 %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_dashboard_photo_path(photo), :'ajax-options' => { id: photo.id }}, :title => t('forms.photos.collection.rotate_and_crop')}
                   %span.intelicon-edit

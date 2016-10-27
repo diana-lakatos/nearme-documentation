@@ -12,12 +12,12 @@ class PhotoUploader < BaseUploader
     medium: { width: 144, height: 89, transform: :resize_to_fill },
     large: { width: 1280, height: 960, transform: :resize_to_fill },
     space_listing: { width: 410, height: 254, transform: :resize_to_fill },
-    project_cover: { width: 680, height: 546, transform: :resize_to_fill },
-    project_thumbnail: { width: 200, height: 175, transform: :resize_to_fill },
-    project_small: { width: 250, height: 200, transform: :resize_to_fill },
+    # project_cover: { width: 680, height: 546, transform: :resize_to_fill }, -> fullscreen
+    # project_thumbnail: { width: 200, height: 175, transform: :resize_to_fill }, -> thumb
+    # project_small: { width: 250, height: 200, transform: :resize_to_fill }, -> medium
     golden: { width: SPACE_FULL_IMAGE_W, height: SPACE_FULL_IMAGE_H, transform: :resize_to_fill },
     fullscreen: { width: 1200, height: 800, transform: :resize_to_fit },
-    fit_to_activity_feed: { width: 600, height: 482, transform: :resize_to_fill }
+    # fit_to_activity_feed: { width: 600, height: 482, transform: :resize_to_fill } -> space_listing
   }
 
   ASPECT_RATIO = 16.0 / 10.0
@@ -39,52 +39,34 @@ class PhotoUploader < BaseUploader
     end
   end
 
-  version :thumb, from_version: :transformed, if: :generate_transactable_versions? do
+  version :thumb, from_version: :transformed, if: :delayed_processing? do
     process dynamic_version: :thumb
+    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :medium, from_version: :transformed do
     process dynamic_version: :medium
+    process optimize: OPTIMIZE_SETTINGS
   end
 
-  version :large, from_version: :transformed, if: :generate_transactable_versions? do
+  version :large, from_version: :transformed, if: :delayed_processing? do
     process dynamic_version: :large
+    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :space_listing, from_version: :transformed do
     process dynamic_version: :space_listing
+    process optimize: OPTIMIZE_SETTINGS
   end
 
-  version :golden, from_version: :transformed, if: :generate_transactable_versions? do
+  version :golden, from_version: :transformed, if: :delayed_processing? do
     process dynamic_version: :golden
+    process optimize: OPTIMIZE_SETTINGS
   end
 
-  version :project_cover, from_version: :transformed, if: :generate_project_versions? do
-    process dynamic_version: :project_cover
-  end
-
-  version :project_thumbnail, from_version: :transformed do
-    process dynamic_version: :project_thumbnail
-  end
-
-  version :project_small, from_version: :transformed, if: :generate_project_versions? do
-    process dynamic_version: :project_small
-  end
-
-  version :fit_to_activity_feed, from_version: :transformed, if: :generate_project_versions? do
-    process dynamic_version: :fit_to_activity_feed
-  end
-
-  version :fullscreen, from_version: :optimized, if: :generate_transactable_versions? do
+  version :fullscreen, if: :delayed_processing? do
     process dynamic_version: :fullscreen
-  end
-
-  def generate_transactable_versions?(_image)
-    delayed_processing? && model.try(:owner_type) != 'Project'
-  end
-
-  def generate_project_versions?(_image)
-    %w(Transactable Group).include?(model.try(:owner_type))
+    process optimize: OPTIMIZE_SETTINGS
   end
 
   protected

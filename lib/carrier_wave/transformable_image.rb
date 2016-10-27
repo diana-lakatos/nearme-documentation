@@ -2,9 +2,10 @@ module CarrierWave::TransformableImage
   extend ActiveSupport::Concern
 
   included do
-    version :transformed, from_version: :optimized do
+    version :transformed, if: :delayed_processing? do
       process :apply_rotate
       process :apply_crop
+      process optimize: CarrierWave::Optimizable::OPTIMIZE_SETTINGS
     end
   end
 

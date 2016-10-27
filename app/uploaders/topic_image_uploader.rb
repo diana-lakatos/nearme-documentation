@@ -9,12 +9,14 @@ class TopicImageUploader < BaseUploader
     medium: { width: 460, height: 340, transform: :resize_to_fill }
   }
 
-  version :small, from_version: :optimized do
+  version :small do
     process dynamic_version: :small
+    process optimize: OPTIMIZE_SETTINGS
   end
 
-  version :medium, from_version: :optimized do
+  version :medium do
     process dynamic_version: :medium
+    process optimize: OPTIMIZE_SETTINGS
   end
 
   ASPECT_RATIO = 8.0 / 7.0

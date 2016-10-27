@@ -8,11 +8,13 @@ class LinkImageUploader < BaseUploader
     medium: { width: 144, height: 89, transform: :resize_to_fill }
   }
 
-  version :standard, from_version: :optimized do
+  version :standard do
     process dynamic_version: :standard
+    process optimize: OPTIMIZE_SETTINGS
   end
 
-  version :medium, from_version: :optimized do
+  version :medium do
     process dynamic_version: :medium
+    process optimize: OPTIMIZE_SETTINGS
   end
 end

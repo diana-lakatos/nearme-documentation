@@ -36,7 +36,7 @@
           %ul.gallery-a
             - @group.gallery_photos.each do |photo|
               %li
-                = image_tag photo.image_url(:project_thumbnail)
+                = image_tag photo.image_url(:thumb)
 
       - if @group.properties.try(:videos).present?
         %section.videos
