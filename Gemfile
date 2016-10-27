@@ -1,4 +1,4 @@
-ruby '2.2.4'
+ruby '2.3.1'
 
 source 'http://rubygems.org'
 
@@ -9,7 +9,7 @@ gem 'elasticsearch-rails'
 gem 'patron'
 
 gem 'redis'
-gem 'redis-rails', '~> 4.0.0'
+gem 'redis-rails', '~> 4'
 gem 'raygun4ruby'
 gem 'liquid', '3.0.6'
 gem 'active_model_serializers', '~> 0.8.1'
@@ -18,7 +18,7 @@ gem 'rabl'
 gem 'carrierwave'
 gem 'carrierwave-imageoptim'
 gem 'image_optim_pack'
-gem 'devise', '3.5.1'
+gem 'devise', '3.5.4'
 gem 'devise-token_authenticatable'
 gem 'rack-throttle'
 
@@ -63,7 +63,7 @@ gem 'nokogiri', '~> 1.6.0'
 gem 'ri_cal', require: false
 gem 'draper'
 gem 'counter_culture'
-gem 'ice_cube', require: false
+gem 'ice_cube', '0.13.0', require: false # upgrading to 0.14.0 breaks things
 gem 'rails_autolink'
 
 gem 'i18n-active_record',
@@ -84,7 +84,7 @@ gem 'delayed_job_active_record'
 gem 'delayed_job_web'
 gem 'delayed_job_recurring'
 gem 'rdiscount', require: false
-gem 'attr_encrypted'
+gem 'attr_encrypted', '~> 1'
 gem 'stripe', require: false
 gem 'paypal-sdk-rest', '~> 1.3.2'
 gem 'paypal-sdk-merchant'
@@ -172,7 +172,7 @@ group :development do
   gem 'parallel_tests'
   gem 'mailcatcher'
   gem 'active_record_query_trace'
-  gem 'web-console', '~> 2.0'
+  gem 'web-console'
   gem 'rubocop', require: false
   gem 'overcommit', require: false
 end
@@ -180,12 +180,12 @@ end
 group :test do
   gem 'rspec', '2.14.1'
   gem 'codeclimate-test-reporter', require: false
-  gem 'capybara', '2.4.4'
+  gem 'capybara'
   gem 'launchy'
-  gem 'capybara-webkit', '1.7.0'
+  gem 'capybara-webkit'
   gem 'capybara-screenshot'
-  gem 'cucumber-rails', '~> 1.4.0', require: false
-  gem 'cucumber', '~> 1.3.0'
+  gem 'cucumber-rails', require: false
+  gem 'cucumber'
   gem 'database_cleaner'
   gem 'email_spec'
   gem 'json_spec'
