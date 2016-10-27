@@ -370,9 +370,7 @@ class SecuredParams
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
       domains_attributes: nested(domain),
-      listing_amenity_types_attributes: nested(amenity_type),
       location_types_attributes: nested(location_type),
-      location_amenity_types_attributes: nested(amenity_type),
       text_filters_attributes: nested(text_filter),
       transactable_types_attributes: nested(transactable_type),
       translations_attributes: nested(translation),
@@ -532,13 +530,6 @@ class SecuredParams
       :order_class_name
     ]
  end
-
-  def amenity_type
-    [
-      :name,
-      amenities_attributes: nested(amenity)
-    ]
-  end
 
   def location_type
     [
@@ -859,7 +850,6 @@ class SecuredParams
       location_address_attributes: nested(address),
       listings_attributes: nested(transactable(transactable_type)),
       approval_requests_attributes: nested(approval_request),
-      amenity_ids: [],
       waiver_agreement_template_ids: []
     ] + address
   end
@@ -884,7 +874,6 @@ class SecuredParams
       photos_attributes: nested(photo),
       approval_requests_attributes: nested(approval_request),
       photo_ids: [],
-      amenity_ids: [],
       category_ids: [],
       dimensions_template_attributes: nested(dimensions_template),
       attachment_ids: [],
@@ -1080,13 +1069,6 @@ class SecuredParams
       :open_time,
       :close_time,
       days: []
-    ]
-  end
-
-  def amenity
-    [
-      :name,
-      :amenity_type_id
     ]
   end
 

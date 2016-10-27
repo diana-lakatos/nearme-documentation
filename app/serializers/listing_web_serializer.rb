@@ -1,6 +1,6 @@
 class ListingWebSerializer < ApplicationSerializer
   root :listing
-  attributes :id, :name, :description, :quantity, :confirm_reservations, :location_id, :amenity_ids
+  attributes :id, :name, :description, :quantity, :confirm_reservations, :location_id
 
   attribute :prices
   attribute :availability_template_id

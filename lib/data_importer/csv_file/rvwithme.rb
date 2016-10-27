@@ -12,7 +12,7 @@ class DataImporter::CsvFile::Rvwithme < DataImporter::CsvFile
 
   def location_attributes
     {
-      address: ([@current_row[1], @current_row[2], @current_row[3]].join(', ')),
+      address: [@current_row[1], @current_row[2], @current_row[3]].join(', '),
       email: @current_row[6].downcase,
       phone: @current_row[4]
     }
@@ -20,14 +20,10 @@ class DataImporter::CsvFile::Rvwithme < DataImporter::CsvFile
 
   def address_attributes
     {
-      address: ([@current_row[1], @current_row[2], @current_row[3]].join(', ')),
+      address: [@current_row[1], @current_row[2], @current_row[3]].join(', '),
       suburb: @current_row[2],
       postcode: @current_row[3]
     }.tap { |arr| arr[:formatted_address] = arr[:address] }
-  end
-
-  def provided_amenities
-    []
   end
 
   def listing_attributes

@@ -10,11 +10,11 @@ class DataImporter::CsvToXmlConverter
 
   def add_object(klass, builder, options = {}, &block)
     klass_symbol = options.fetch(:klass_symbol, klass.name.underscore.to_sym)
-    if klass_symbol == :listing
-      @xml_attributes[klass_symbol] ||= klass.xml_attributes(@transactable_type)
-    else
-      @xml_attributes[klass_symbol] ||= klass.xml_attributes
-    end
+    @xml_attributes[klass_symbol] ||= if klass_symbol == :listing
+                                        klass.xml_attributes(@transactable_type)
+                                      else
+                                        klass.xml_attributes
+                                      end
     attributes_names = @xml_attributes[klass_symbol]
     attributes_values = @hash[klass_symbol]
 
@@ -63,12 +63,12 @@ class DataImporter::CsvToXmlConverter
 
     if pricings.any?
       type = case pricings.last[:unit]
-        when 'event'
-          'Transactable::EventBooking'
-        when /subscription/
-          'Transactable::SubscriptionBooking'
-        else
-          'Transactable::TimeBasedBooking'
+             when 'event'
+               'Transactable::EventBooking'
+             when /subscription/
+               'Transactable::SubscriptionBooking'
+             else
+               'Transactable::TimeBasedBooking'
         end
       insert_to_xml([:type], { type: type }, builder)
 
@@ -84,14 +84,6 @@ class DataImporter::CsvToXmlConverter
         end
       end
     end
-  end
-
-  def add_amenities(builder, scope)
-    @hash[scope][:amenities].each do |amenity|
-      unless amenity_already_added?(amenity)
-        insert_with_new_node(:amenity, [:name], { name: amenity }, builder)
-      end
-    end if @hash[scope][:amenities]
   end
 
   def convert
@@ -112,7 +104,6 @@ class DataImporter::CsvToXmlConverter
           build_location do
             build_address if new_location?
             build_availabilities if new_location?
-            build_amenities
             build_listing do
               build_photos
               build_action_type do
@@ -154,7 +145,6 @@ class DataImporter::CsvToXmlConverter
         @address_builder = add_node(@location_builder, 'location_address')
         @listing_builder = add_node(@location_builder, 'listings')
         @availability_builder = add_node(@location_builder, 'availability_rules')
-        @amenity_builder = add_node(@location_builder, 'amenities')
       end
     end
     yield if @hash[:location][:external_id].present?
@@ -182,7 +172,6 @@ class DataImporter::CsvToXmlConverter
   def new_location?
     if @last_location != @hash[:location][:external_id]
       @last_listing = nil
-      clear_amenities
       true
     else
       false
@@ -191,20 +180,6 @@ class DataImporter::CsvToXmlConverter
 
   def store_last_location
     @last_location = @hash[:location][:external_id]
-  end
-
-  def clear_amenities
-    @stored_amenities = []
-  end
-
-  def store_amenity(amenity)
-    @stored_amenities << amenity
-  end
-
-  def amenity_already_added?(amenity)
-    @stored_amenities.include?(amenity).tap do |already_stored|
-      @stored_amenities << amenity unless already_stored
-    end
   end
 
   def new_company?
@@ -235,10 +210,6 @@ class DataImporter::CsvToXmlConverter
     else
       false
     end
-  end
-
-  def build_amenities
-    add_amenities(@amenity_builder, @scope)
   end
 
   def build_listing

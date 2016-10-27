@@ -13,7 +13,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   #
   test 'create should be successfulxxx' do
     location = get_authenticated_location
-    post :create,       listing: {
+    post :create, listing: {
       photos_attributes: [FactoryGirl.attributes_for(:photo)],
       location_id: location.id,
       name: 'My listing',
@@ -21,7 +21,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
       listing_type: 'Desk',
       quantity: 10
     }.merge(action_type_attibutes(nil, 10, 1, 'hour')),
-                        format: 'json'
+                  format: 'json'
     assert_response :success
   end
 
@@ -100,7 +100,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
       end
 
       raw_post :reservation, { id: @listing.id }, valid_reservation_params.to_json
-      @reservation = Transactable.find_by_id(@listing.id).reservations.first
+      @reservation = Transactable.find_by(id: @listing.id).reservations.first
     end
 
     should 'respond with success' do
@@ -264,8 +264,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
       'price' => {
         'min' => 25.00,
         'max' => 100.00
-      },
-      'amenities' => %w(wifi projector view)
+      }
     }
   end
 

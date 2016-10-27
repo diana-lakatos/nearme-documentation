@@ -157,9 +157,4 @@ class LocationDrop < BaseDrop
   def location_type_name
     @location.location_type.try(:name)
   end
-
-  # names of amenities for this location
-  def amenities
-    @location.amenities.order('name ASC').pluck(:name)
-  end
 end

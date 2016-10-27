@@ -452,7 +452,6 @@ namespace :volte do
         { 'location' => 'email' },
         { 'location' => 'administrator' },
         { 'location' => 'special_notes' },
-        { 'location' => 'amenities' },
         { 'location' => 'assigned_waiver_agreement_templates' }
       ]
       component.save!

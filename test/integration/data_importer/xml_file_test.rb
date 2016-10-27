@@ -32,8 +32,8 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
       end
 
       should 'should have the right amount of companies' do
-        assert_equal ['1'], User.find_by_email('user1@example.com').companies.pluck(:external_id).sort
-        assert_equal %w(1 2), User.find_by_email('user2@example.com').companies.pluck(:external_id).sort
+        assert_equal ['1'], User.find_by(email: 'user1@example.com').companies.pluck(:external_id).sort
+        assert_equal %w(1 2), User.find_by(email: 'user2@example.com').companies.pluck(:external_id).sort
       end
 
       context '#companies' do
@@ -42,24 +42,24 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
         end
 
         should '1 should have the right details' do
-          @company = @instance.companies.find_by_external_id('1')
+          @company = @instance.companies.find_by(external_id: '1')
           assert_equal "My Company's", @company.name
           assert_equal 'http://www.mycompany.example.com', @company.url
           assert_equal 'company@example.com', @company.email
         end
 
         should '2 should have the right details' do
-          @company = @instance.companies.find_by_external_id('2')
+          @company = @instance.companies.find_by(external_id: '2')
           assert_equal "My second Company's", @company.name
         end
 
         context '#locations' do
           should 'create right amount of locations for first company' do
-            assert_equal 2, @instance.companies.find_by_external_id('1').locations.count
+            assert_equal 2, @instance.companies.find_by(external_id: '1').locations.count
           end
 
           should 'create right amount of locations for second company' do
-            assert_equal 1, @instance.companies.find_by_external_id('2').locations.count
+            assert_equal 1, @instance.companies.find_by(external_id: '2').locations.count
           end
 
           should 'not aggregate locations with the same address that belong to different companies' do
@@ -88,7 +88,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               end
 
               should 'have the right details (listing1)' do
-                @listing = @location.listings.find_by_external_id('1')
+                @listing = @location.listings.find_by(external_id: '1')
                 assert_equal true, @listing.confirm_reservations
                 assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                 assert_equal 10, @listing.action_type.price_cents_for('1_day')
@@ -99,7 +99,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               end
 
               should 'have the right details (listing2)' do
-                @listing = @location.listings.find_by_external_id('2')
+                @listing = @location.listings.find_by(external_id: '2')
                 assert_equal true, @listing.confirm_reservations
                 assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                 assert_equal 10, @listing.action_type.price_cents_for('1_day')
@@ -111,8 +111,8 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
               context '#photos' do
                 should 'have correct original url' do
-                  assert_equal ['http://www.example.com/image.jpg', 'http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('1').photos.pluck(:image_original_url).sort
-                  assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('2').photos.pluck(:image_original_url).sort
+                  assert_equal ['http://www.example.com/image.jpg', 'http://www.example.com/photo.jpg'], @location.listings.find_by(external_id: '1').photos.pluck(:image_original_url).sort
+                  assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by(external_id: '2').photos.pluck(:image_original_url).sort
                 end
               end
             end
@@ -140,7 +140,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               end
 
               should 'have the right details (listing3)' do
-                @listing = @location.listings.find_by_external_id('3')
+                @listing = @location.listings.find_by(external_id: '3')
                 assert_equal true, @listing.confirm_reservations
                 assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                 assert_equal 10, @listing.action_type.price_cents_for('1_day')
@@ -152,7 +152,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
               context '#' do
                 should 'have correct original url (photo belonging to listing 3)' do
-                  assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('3').photos.pluck(:image_original_url).sort
+                  assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by(external_id: '3').photos.pluck(:image_original_url).sort
                 end
               end
             end
@@ -199,12 +199,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
         end
 
         should 'should have the right amount of companies' do
-          assert_equal ['user-name@example.com'], User.find_by_email('user-name@example.com').companies.pluck(:external_id).sort
+          assert_equal ['user-name@example.com'], User.find_by(email: 'user-name@example.com').companies.pluck(:external_id).sort
         end
 
         context '#companies' do
           setup do
-            @company = @instance.companies.find_by_external_id('user-name@example.com')
+            @company = @instance.companies.find_by(external_id: 'user-name@example.com')
           end
 
           should 'create the right amount of companies' do
@@ -242,7 +242,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 end
 
                 should 'have the right details (listing1)' do
-                  @listing = @location.listings.find_by_external_id('1')
+                  @listing = @location.listings.find_by(external_id: '1')
                   assert_equal true, @listing.confirm_reservations
                   assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                   assert_equal 10, @listing.action_type.price_cents_for('1_day')
@@ -253,7 +253,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 end
 
                 should 'have the right details (listing2)' do
-                  @listing = @location.listings.find_by_external_id('2')
+                  @listing = @location.listings.find_by(external_id: '2')
                   assert_equal true, @listing.confirm_reservations
                   assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                   assert_equal 10, @listing.action_type.price_cents_for('1_day')
@@ -265,8 +265,8 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
                 context '#photos' do
                   should 'have correct original url' do
-                    assert_equal ['http://www.example.com/image.jpg', 'http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('1').photos.pluck(:image_original_url).sort
-                    assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('2').photos.pluck(:image_original_url).sort
+                    assert_equal ['http://www.example.com/image.jpg', 'http://www.example.com/photo.jpg'], @location.listings.find_by(external_id: '1').photos.pluck(:image_original_url).sort
+                    assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by(external_id: '2').photos.pluck(:image_original_url).sort
                   end
                 end
               end
@@ -294,7 +294,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 end
 
                 should 'have the right details (listing3)' do
-                  @listing = @location.listings.find_by_external_id('3')
+                  @listing = @location.listings.find_by(external_id: '3')
                   assert_equal true, @listing.confirm_reservations
                   assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                   assert_equal 10, @listing.action_type.price_cents_for('1_day')
@@ -305,11 +305,11 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 end
 
                 should 'have correct original url (photo belonging to listing 3)' do
-                  assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('3').photos.pluck(:image_original_url).sort
+                  assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by(external_id: '3').photos.pluck(:image_original_url).sort
                 end
 
                 should 'have the right details (listing4)' do
-                  @listing = @location.listings.find_by_external_id('4')
+                  @listing = @location.listings.find_by(external_id: '4')
                   assert_equal true, @listing.confirm_reservations
                   assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                   assert_equal 10, @listing.action_type.price_cents_for('1_day')
@@ -338,9 +338,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
       address: Address.count,
       location_availability_rules: AvailabilityRule.where(target_type: 'Location').count,
       listing_availability_rules: AvailabilityRule.where(target_type: 'Transactable').count,
-      location_amenities: AmenityHolder.where(holder_type: 'Location').count,
       listing: Transactable.count,
-      photo: Photo.count
-    }
+      photo: Photo.count }
   end
 end

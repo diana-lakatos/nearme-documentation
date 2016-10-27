@@ -199,7 +199,7 @@ class TransactableDrop < BaseDrop
 
   # url to the search section of the marketplace, with tracking
   def search_url_with_tracking
-    routes.search_path()
+    routes.search_path
   end
 
   # url to display favorite button
@@ -271,11 +271,6 @@ class TransactableDrop < BaseDrop
   # url to the application wizard for publishing a new listing, with tracking
   def space_wizard_list_url_with_tracking
     routes.transactable_type_space_wizard_list_path(transactable_type, token_key => @user.try(:temporary_token))
-  end
-
-  # list of the names of the amenities defined for this listing
-  def amenities
-    @amenities ||= @source.amenities.order('name ASC').pluck(:name)
   end
 
   # url to the section of the app for sending a message to the administrator

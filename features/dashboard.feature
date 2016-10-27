@@ -11,10 +11,6 @@ Feature: As a user of the site
       And a location_type exists with name: "Business"
       And a location_type exists with name: "Co-working"
       And a transactable_type_listing exists with name: "Listing"
-      And a amenity_type exists with name: "AmenityType1"
-      And a amenity exists with amenity_type: the amenity_type, name: "Amenity1"
-      And a amenity exists with amenity_type: the amenity_type, name: "Amenity2"
-      And a amenity exists with amenity_type: the amenity_type, name: "Amenity3"
       And the transactable_type_listing exists
       And instance has default availability templates
 

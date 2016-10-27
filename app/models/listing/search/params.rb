@@ -5,7 +5,7 @@ class Listing::Search::Params
   MIN_SEARCH_RADIUS = 7.0 # in miles
 
   attr_accessor :geocoder
-  attr_reader :availability, :price, :amenities, :options, :search_area, :midpoint, :bounding_box, :location
+  attr_reader :availability, :price, :options, :search_area, :midpoint, :bounding_box, :location
 
   def initialize(options, _transactable_type)
     @geocoder = Listing::Search::Geocoder
@@ -25,8 +25,6 @@ class Listing::Search::Params
                     else
                       NullAvailability.new
     end
-
-    @amenities = [*@options[:amenities]].map(&:to_i)
 
     @price = if @options[:price].present?
                PriceRange.new(@options[:price][:min], @options[:price][:max])
@@ -70,7 +68,9 @@ class Listing::Search::Params
   end
 
   def is_numeric?(str)
-    str.present? && Float(str) rescue false
+    str.present? && Float(str)
+  rescue
+    false
   end
 
   def bounding_box

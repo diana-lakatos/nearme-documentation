@@ -1,7 +1,5 @@
 = render 'instance_admin/settings/location_types/index', instance: @instance
 = render 'instance_admin/settings/location_types/new'
-= simple_nested_form_for @instance, :url => instance_admin_settings_locations_path, :html => { :multipart => true } do |f|
-  = render 'instance_admin/settings/shared/amenities', type: 'location', f: f
 
 .settings-controller-modal
   = render 'instance_admin/shared/modal', heading: "Delete type"

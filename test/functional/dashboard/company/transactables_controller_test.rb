@@ -8,8 +8,6 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     @location = FactoryGirl.create(:location, company: @company)
     @location2 = FactoryGirl.create(:location, company: @company)
     @listing_type = 'Desk'
-    @amenity_type = FactoryGirl.create(:amenity_type)
-    @amenity = FactoryGirl.create(:amenity, amenity_type: @amenity_type)
     @transactable_type = TransactableType.first
   end
 
@@ -18,7 +16,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       @waiver_agreement_template1 = FactoryGirl.create(:waiver_agreement_template, target: @company)
       @waiver_agreement_template2 = FactoryGirl.create(:waiver_agreement_template, target: @company)
       @waiver_agreement_template3 = FactoryGirl.create(:waiver_agreement_template, target: @company)
-      get :new, { transactable_type_id: @transactable_type.id }
+      get :new, transactable_type_id: @transactable_type.id
       assert_select 'label', @waiver_agreement_template1.name
       assert_select 'label', @waiver_agreement_template2.name
       assert_select 'label', @waiver_agreement_template3.name
@@ -31,36 +29,31 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
                                                                               photos_attributes: [FactoryGirl.attributes_for(:photo)],
                                                                               properties: { listing_type: @listing_type },
                                                                               description: 'Aliquid eos ab quia officiis sequi.',
-                                                                              name: "Listing #{Random.rand(1000)}",
-                                                                              amenity_ids: [@amenity.id] }.merge(action_type_attibutes(nil, 10, 1, 'day')))
+                                                                              name: "Listing #{Random.rand(1000)}" }
+        .merge(action_type_attibutes(nil, 10, 1, 'day')))
       @attributes.delete(:photo_not_required)
-    end
-
-    should 'log' do
-      post :create, { transactable: @attributes.merge(location_id: @location2.id), transactable_type_id: @transactable_type.id }
-      assert_equal 1, assigns(:transactable).amenities.size
     end
 
     should 'create transactable' do
       assert_difference('@location2.listings.count') do
-        post :create, { transactable: @attributes.merge(location_id: @location2.id), transactable_type_id: @transactable_type.id }
+        post :create, transactable: @attributes.merge(location_id: @location2.id), transactable_type_id: @transactable_type.id
       end
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     end
 
     context 'different subunit to unit conversion rate' do
       should 'work for currencies with 1 to 1 ratio' do
-        post :create, { transactable: @attributes.merge(location_id: @location2.id, currency: 'JPY'), transactable_type_id: @transactable_type.id }
+        post :create, transactable: @attributes.merge(location_id: @location2.id, currency: 'JPY'), transactable_type_id: @transactable_type.id
         assert_equal 10.to_money('JPY'), assigns(:transactable).action_type.day_pricings.first.price
       end
 
       should 'work for currencies with 5 to 1 ratio' do
-        post :create, { transactable: @attributes.merge(location_id: @location2.id, currency: 'MGA'), transactable_type_id: @transactable_type.id }
+        post :create, transactable: @attributes.merge(location_id: @location2.id, currency: 'MGA'), transactable_type_id: @transactable_type.id
         assert_equal 10.to_money('MGA'), assigns(:transactable).action_type.day_pricings.first.price
       end
 
       should 'work for currencies with 1000 to 1 ratio' do
-        post :create, { transactable: @attributes.merge(location_id: @location2.id, currency: 'BHD'), transactable_type_id: @transactable_type.id }
+        post :create, transactable: @attributes.merge(location_id: @location2.id, currency: 'BHD'), transactable_type_id: @transactable_type.id
         assert_equal 10.to_money('BHD'), assigns(:transactable).action_type.day_pricings.first.price
       end
     end
@@ -71,7 +64,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       @attributes.delete(:photos_attributes)
 
       assert_no_difference('@location2.listings.count') do
-        post :create, { transactable: @attributes.merge(location_id: @location2.id), transactable_type_id: @transactable_type.id }
+        post :create, transactable: @attributes.merge(location_id: @location2.id), transactable_type_id: @transactable_type.id
       end
       assert_template :new
     end
@@ -97,20 +90,20 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
       context '#edit' do
         should 'allow show edit form for related transactable' do
-          get :edit, { id: @related_transactable.id, transactable_type_id: @transactable_type.id }
+          get :edit, id: @related_transactable.id, transactable_type_id: @transactable_type.id
           assert_response :success
         end
 
         should 'not allow show edit form for unrelated transactable' do
           assert_raises(Transactable::NotFound) do
-            get :edit, { id: @transactable.id, transactable_type_id: @transactable_type.id }
+            get :edit, id: @transactable.id, transactable_type_id: @transactable_type.id
           end
         end
       end
 
       context '#update' do
         should 'allow update for related transactable' do
-          put :update, { id: @related_transactable.id, transactable: { name: 'new name' }.merge(action_type_attibutes(@related_transactable.action_type, 10, 1, 'day')), transactable_type_id: @transactable_type.id }
+          put :update, id: @related_transactable.id, transactable: { name: 'new name' }.merge(action_type_attibutes(@related_transactable.action_type, 10, 1, 'day')), transactable_type_id: @transactable_type.id
           @related_transactable.reload
           assert_equal 'new name', @related_transactable.name
           assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
@@ -118,13 +111,13 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
         should 'properly update price if currency is set to JPY' do
           @related_transactable.update_attribute(:currency, 'JPY')
-          put :update, { id: @related_transactable.id, transactable: action_type_attibutes(@related_transactable.action_type, 100, 1, 'day'), transactable_type_id: @transactable_type.id }
+          put :update, id: @related_transactable.id, transactable: action_type_attibutes(@related_transactable.action_type, 100, 1, 'day'), transactable_type_id: @transactable_type.id
           @related_transactable.reload
           assert_equal 100.to_money('JPY'), @related_transactable.action_type.day_pricings.first.price
         end
 
         should 'properly update price if currency changes' do
-          put :update, { id: @related_transactable.id, transactable: { currency: 'JPY' }.merge(action_type_attibutes(@related_transactable.action_type, 100, 1, 'day')), transactable_type_id: @transactable_type.id }
+          put :update, id: @related_transactable.id, transactable: { currency: 'JPY' }.merge(action_type_attibutes(@related_transactable.action_type, 100, 1, 'day')), transactable_type_id: @transactable_type.id
           @related_transactable.reload
           assert_equal 100.to_money('JPY'), @related_transactable.action_type.day_pricings.first.price
         end
@@ -133,21 +126,21 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       context '#destroy' do
         should 'allow destroy for related transactable' do
           assert_difference 'Transactable.count', -1 do
-            delete :destroy, { id: @related_transactable.id, transactable_type_id: @transactable_type.id }
+            delete :destroy, id: @related_transactable.id, transactable_type_id: @transactable_type.id
           end
           assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
         end
 
         should 'not allow destroy for unrelated transactable' do
           assert_no_difference('Transactable.count') do
-            assert_raises(Transactable::NotFound) { delete :destroy, { id: @transactable.id, transactable_type_id: @transactable_type.id } }
+            assert_raises(Transactable::NotFound) { delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id }
           end
         end
       end
     end
 
     should 'update transactable' do
-      put :update, { id: @transactable.id, transactable: { name: 'new name' }.merge(action_type_attibutes(@transactable.action_type, 10, 1, 'day')), transactable_type_id: @transactable_type.id }
+      put :update, id: @transactable.id, transactable: { name: 'new name' }.merge(action_type_attibutes(@transactable.action_type, 10, 1, 'day')), transactable_type_id: @transactable_type.id
       @transactable.reload
       assert_equal 'new name', @transactable.name
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
@@ -155,7 +148,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
     should 'destroy transactable' do
       assert_difference('@user.listings.count', -1) do
-        delete :destroy, { id: @transactable.id, transactable_type_id: @transactable_type.id }
+        delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id
       end
 
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
@@ -171,11 +164,11 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       should 'notify guest about reservation expiration when listing is deleted' do
         WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Expired, @reservation1.id)
         WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Expired, @reservation2.id)
-        delete :destroy, { id: @transactable.id, transactable_type_id: @transactable_type.id }
+        delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id
       end
 
       should 'mark reservations as expired' do
-        delete :destroy, { id: @transactable.id, transactable_type_id: @transactable_type.id }
+        delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id
         assert_equal 'expired', @reservation1.reload.state
         assert_equal 'expired', @reservation2.reload.state
       end
@@ -191,19 +184,19 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
       should 'handle lack of permission to edit properly' do
         assert_raise Transactable::NotFound do
-          get :edit, { id: @transactable.id, transactable_type_id: @transactable_type.id }
+          get :edit, id: @transactable.id, transactable_type_id: @transactable_type.id
         end
       end
 
       should 'not update listing' do
         assert_raise Transactable::NotFound do
-          put :update, { id: @transactable.id, listing: { name: 'new name' }, transactable_type_id: @transactable_type.id }
+          put :update, id: @transactable.id, listing: { name: 'new name' }, transactable_type_id: @transactable_type.id
         end
       end
 
       should 'not destroy listing' do
         assert_raise Transactable::NotFound do
-          delete :destroy, { id: @transactable.id, transactable_type_id: @transactable_type.id }
+          delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id
         end
       end
     end
@@ -215,7 +208,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       @attributes.delete(:photo_not_required)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "create").count') do
         with_versioning do
-          post :create, { transactable: @attributes.merge(location_id: @location2.id), transactable_type_id: @transactable_type.id }
+          post :create, transactable: @attributes.merge(location_id: @location2.id), transactable_type_id: @transactable_type.id
         end
       end
     end
@@ -224,7 +217,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       @transactable = FactoryGirl.create(:transactable, location: @location, quantity: 2, photos_count: 1)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "update").count') do
         with_versioning do
-          put :update, { id: @transactable.id, transactable: { name: 'new name' }, transactable_type_id: @transactable_type.id }
+          put :update, id: @transactable.id, transactable: { name: 'new name' }, transactable_type_id: @transactable_type.id
         end
       end
     end
@@ -233,7 +226,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       @transactable = FactoryGirl.create(:transactable, location: @location, quantity: 2)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "destroy").count') do
         with_versioning do
-          delete :destroy, { id: @transactable.id, transactable_type_id: @transactable_type.id }
+          delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id
         end
       end
     end
