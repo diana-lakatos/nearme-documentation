@@ -1,5 +1,5 @@
 Given /^Visitor goes to the user page$/ do
-  visit user_path(@user)
+  visit user_path(@user, tab: 'reviews')
 end
 
 Given /^User exists$/ do
@@ -21,7 +21,6 @@ Then /^Sees no reviews blank state$/ do
 end
 
 Given /^Reviews about the seller exist$/ do
-
   @listing = FactoryGirl.create(:transactable)
   @reservation = FactoryGirl.create(:reservation, transactable: @listing)
   @user = @listing.creator
@@ -31,7 +30,7 @@ Given /^Reviews about the seller exist$/ do
 end
 
 Then /^Sees one seller reviews$/ do
-  page.should have_css('.review', count: 1)
+  page.should have_css('#reviews', count: 1)
   page.should have_content(@user.first_name)
 end
 
@@ -48,7 +47,7 @@ And /^seller respond to review$/ do
 end
 
 Given /^TransactableType has show_reviews_if_both_completed field set to (.*)$/ do |value|
-  TransactableType.first.update_column :show_reviews_if_both_completed, value == "true"
+  TransactableType.first.update_column :show_reviews_if_both_completed, value == 'true'
 end
 
 Then /^Sees sorting reviews dropdown with selected Left by this seller option$/ do

@@ -68,6 +68,7 @@ class UserDrop < BaseDrop
            :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
            :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
            :communication, :created_at, :has_buyer_profile?, :default_company, :company_name, :instance_admins_metadata,
+           :total_reviews_count,
            to: :source
 
   def class_name
@@ -89,14 +90,10 @@ class UserDrop < BaseDrop
   end
 
   # plural of the user's name
-  def name_pluralize
-    name.pluralize
-  end
+  delegate :pluralize, to: :name, prefix: true
 
   # plural of the user's first name
-  def first_name_pluralize
-    first_name.pluralize
-  end
+  delegate :pluralize, to: :first_name, prefix: true
 
   # returns true if the profile of the user has been marked as public
   def public_profile?
@@ -125,7 +122,7 @@ class UserDrop < BaseDrop
 
   # path to the search section in the application, with tracking
   def search_url_with_tracking
-    routes.search_path()
+    routes.search_path
   end
 
   # returns true if the city where the user books items is present
@@ -141,7 +138,7 @@ class UserDrop < BaseDrop
   # string identifying the location where the user books items
   # this method may be used if reservation_city is not present
   def reservation_name
-    self.reservation_city? ? @source.orders.reservations.first.listing.location.city : @source.orders.reservations.first.listing.location.name
+    reservation_city? ? @source.orders.reservations.first.listing.location.city : @source.orders.reservations.first.listing.location.name
   end
 
   # url to the app wizard for adding a new listing to the system
@@ -159,7 +156,7 @@ class UserDrop < BaseDrop
   end
 
   def manage_locations_url_with_tracking
-    routes.dashboard_company_transactable_types_path()
+    routes.dashboard_company_transactable_types_path
   end
 
   def manage_locations_url_with_tracking_and_token
@@ -194,6 +191,21 @@ class UserDrop < BaseDrop
   # url to a user's public profile
   def user_profile_url
     routes.profile_path(@source.slug)
+  end
+
+  # url to reviews in user's public profile
+  def reviews_user_profile_url
+    routes.profile_path(@source.slug, tab: 'reviews')
+  end
+
+  # url to services in user's public profile
+  def services_user_profile_url
+    routes.profile_path(@source.slug, tab: 'services')
+  end
+
+  # url to blog posts in user's public profile
+  def blog_posts_user_profile_url
+    routes.profile_path(@source.slug, tab: 'blog_posts')
   end
 
   # url for seller/buyer/default user profile
@@ -268,7 +280,7 @@ class UserDrop < BaseDrop
 
   # url to the section in the application for managing a user's own bookings, with tracking
   def bookings_dashboard_url_with_tracking
-    routes.dashboard_user_reservations_path()
+    routes.dashboard_user_reservations_path
   end
 
   # url to the section in the application for managing a user's own bookings, with authentication
@@ -328,9 +340,7 @@ class UserDrop < BaseDrop
 
   # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
   def categories
-    if @categories.nil?
-      @categories = build_categories_hash_for_object(@source, Category.users.roots.includes(:children))
-    end
+    @categories = build_categories_hash_for_object(@source, Category.users.roots.includes(:children)) if @categories.nil?
     @categories
   end
 
@@ -443,18 +453,18 @@ class UserDrop < BaseDrop
   # implemented to make things easier as Liquid does not
   # have a not operator
   def only_buyer_profile?
-    self.has_buyer_profile? && !self.has_seller_profile?
+    has_buyer_profile? && !has_seller_profile?
   end
 
   # whether the user only has a seller profile
   # implemented to make things easier as Liquid does not
   # have a not operator
   def only_seller_profile?
-    !self.has_buyer_profile? && self.has_seller_profile?
+    !has_buyer_profile? && has_seller_profile?
   end
 
   def has_verified_merchant_account
-    @source.companies.first.try(:merchant_accounts).try(:any?) { |ma| ma.verified? }
+    @source.companies.first.try(:merchant_accounts).try(:any?, &:verified?)
   end
 
   def has_pending_transactables?
@@ -471,7 +481,7 @@ class UserDrop < BaseDrop
 
   def pending_transactables_for_current_user
     Transactable.where(creator_id: @context['current_user'].id).with_state(:pending)
-      .joins("LEFT Outer JOIN transactable_collaborators tc on
+                .joins("LEFT Outer JOIN transactable_collaborators tc on
       tc.transactable_id = transactables.id and tc.user_id = #{@source.id} and
       tc.deleted_at is NULL")
   end
@@ -485,7 +495,7 @@ class UserDrop < BaseDrop
   end
 
   def has_company?
-    @source.companies.size > 0
+    !@source.companies.empty?
   end
 
   def company_id

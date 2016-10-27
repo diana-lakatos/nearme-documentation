@@ -15,18 +15,18 @@
         %nav
           %ul.nav.nav-pills.nav-stacked
             %li{ class: active_profile_tab_class(:general) }
-              %a{:href => "#general", 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.general'
+              %a{:href => '#general', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.general'
 
             - unless hide_tab?('services') || @listings.nil?
               %li{ class: active_profile_tab_class(:services) }
                 %a{href: '#services', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.services'
 
             - if RatingSystem.active.any?
-              %li
+              %li{ class: active_profile_tab_class(:reviews) }
                 %a{href: '#reviews', 'data-toggle' => 'tab', class: 'reviews-tab'}= t 'user_profile.labels.tabs.reviews', count: @total_reviews_count
 
             - if platform_context.instance.blogging_enabled?(@user) && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
-              %li
+              %li{ class: active_profile_tab_class(:blog_posts) }
                 %a{href: '#blog_posts', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.blog_posts'
 
       .span9
@@ -42,7 +42,7 @@
                 = render 'registrations/profile/no_content', tab: 'services', user: @user
 
           - if RatingSystem.active.any?
-            #reviews.tab-pane
+            #reviews.tab-pane{ class: active_profile_tab_class(:reviews) }
               - if @total_reviews_count > 0
                 = render 'registrations/profile/tabs/reviews'
               - else
@@ -50,7 +50,7 @@
 
           - if platform_context.instance.blogging_enabled?(@user) && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
             - unless hide_tab?('blog_posts')
-              #blog_posts.tab-pane
+              #blog_posts.tab-pane{ class: active_profile_tab_class(:blog_posts) }
                 - if @user.blog.present? && @user.has_published_posts?
                   = render 'registrations/profile/tabs/blog_posts', user: @user
                 - else

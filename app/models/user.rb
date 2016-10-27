@@ -1099,6 +1099,10 @@ class User < ActiveRecord::Base
     self
   end
 
+  def total_reviews_count
+    ReviewAggregator.new(self).total if RatingSystem.active.any?
+  end
+
   private
 
   def get_first_name_from_name
