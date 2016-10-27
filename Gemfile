@@ -172,7 +172,6 @@ group :development do
   gem 'parallel_tests'
   gem 'mailcatcher'
   gem 'active_record_query_trace'
-  gem 'web-console'
   gem 'rubocop', require: false
   gem 'overcommit', require: false
 end
@@ -219,8 +218,8 @@ gem 'parser', require: false
 
 gem 'routing-filter', '~> 0.5.0'
 
-gem 'sprockets'
-gem 'sprockets-rails'
+gem 'sprockets', '2.11.0'
+gem 'sprockets-rails', '2.3.2'
 gem 'cocoon'
 
 gem 'redcarpet'
