@@ -8,19 +8,17 @@ class Webhook::StripeConnectWebhook < Webhook
   ].freeze
 
   def process!
-    increment!(:retry_count)
+    process_error('Webhook not found', raise: false) if event.blank?
+    process_error("Webhook type #{event.type} not allowed", raise: false) unless ALLOWED_WEBHOOKS.include?(event.type)
+    process_error('Mode mismatch', raise: false) if payment_gateway_mode != payment_gateway.mode
 
-    raise 'Mode mismatch' if payment_gateway_mode != payment_gateway.mode
-    raise 'Webhook not found' if event.blank?
-    raise "Webhook type #{event.type} not allowed" unless ALLOWED_WEBHOOKS.include?(event.type)
+    increment!(:retry_count)
 
     success = send(event_handler)
     success ? archive : mark_as_failed
 
   rescue => e
-    self.error = e.to_s
-    mark_as_failed
-    raise e
+    process_error(e)
   end
 
   def webhook_type

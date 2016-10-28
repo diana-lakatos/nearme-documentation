@@ -10,14 +10,15 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   }.freeze
 
   def process!
+    process_error('Webhook not found', raise: false) if notification.blank?
+    process_error("Webhook type #{notification.kind} not allowed", raise: false) unless ALLOWED_WEBHOOKS.include?(notification.kind)
+    process_error('Mode mismatch', raise: false) if payment_gateway_mode != payment_gateway.mode
+
     increment!(:retry_count)
 
-    raise 'Webhook not found' if notification.blank?
-    raise "Webhook type #{notification.kind} not allowed" unless ALLOWED_WEBHOOKS.keys.include?(notification.kind)
-
     success = send(ALLOWED_WEBHOOKS[notification.kind])
-    true
     success ? archive : mark_as_failed
+
   rescue => e
     self.error = e.to_s
     mark_as_failed
