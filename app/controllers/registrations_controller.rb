@@ -173,7 +173,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit_avatar
     if request.xhr?
-      render partial: 'dashboard/photos/resize_form', locals: { form_url: update_avatar_path, object: current_user.avatar, object_url: current_user.avatar_url(:original) }
+      render partial: 'dashboard/photos/resize_form', locals: { form_url: update_avatar_path, object: current_user.avatar, object_url: current_user.avatar.url }
     end
   end
 
@@ -209,7 +209,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit_cover_image
     if request.xhr?
-      render partial: 'dashboard/photos/resize_form', locals: { form_url: update_cover_image_path, object: current_user.cover_image, object_url: current_user.cover_image_url(:original) }
+      render partial: 'dashboard/photos/resize_form', locals: { form_url: update_cover_image_path, object: current_user.cover_image, object_url: current_user.cover_image.url }
     end
   end
 

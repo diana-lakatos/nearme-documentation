@@ -1,6 +1,7 @@
 # encoding: utf-8
 class CkeditorPictureUploader < BaseCkeditorUploader
   include CarrierWave::MiniMagick
+  include CarrierWave::ImageDefaults
   include CarrierWave::DynamicPhotoUploads
 
   process :read_dimensions
@@ -10,12 +11,14 @@ class CkeditorPictureUploader < BaseCkeditorUploader
     content: { width: 800, height: 800, transform: :resize_to_limit }
   }
 
-  version :thumb, from_version: :optimized do
+  version :thumb do
     process dynamic_version: :thumb
+    process optimize: OPTIMIZE_SETTINGS
   end
 
-  version :content, from_version: :optimized do
+  version :content do
     process dynamic_version: :content
+    process optimize: OPTIMIZE_SETTINGS
   end
 
   def extension_white_list

@@ -30,7 +30,7 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def proper_file_path
-    img_path = respond_to?(:current_url) ? current_url(:original) : url
+    img_path = url
     img_path[0] == '/' ? Rails.root.join('public', img_path[1..-1]) : img_path
   end
 
@@ -71,33 +71,12 @@ class BaseUploader < CarrierWave::Uploader::Base
       # We add 10 minutes because versions_generated_at is slightly in the past as to
       # our requirements
       "#{super_url}?v=#{model["#{mounted_as}_versions_generated_at"].to_i + 10.minutes.to_i}"
-    # Versions not generated, we have a default url and the version requested is a delayed version, so we use the default_url
     elsif !versions_generated? && respond_to?(:default_url) && self.class.respond_to?(:delayed_versions) && self.class.delayed_versions.include?(args.first)
+      # Versions not generated, we have a default url and the version requested is a delayed version, so we use the default_url
       default_url(*args)
     else
       super_url
     end
-  end
-
-  def current_url(version = nil, *args)
-    if versions_generated? || !source_url
-      if (version.blank? && respond_to?(:transformation_data)) || (self.class.respond_to?(:delayed_versions) && self.class.delayed_versions.include?(version) && !versions_generated?)
-        version = :transformed
-      end
-      args.unshift(version) if version && version != :original
-      url(*args)
-    elsif source_url
-      #  see https://developers.inkfilepicker.com/docs/web/#convert
-      if version && dimensions[version]
-        source_url + '/convert?' + { w: dimensions[version][:width], h: dimensions[version][:height], fit: 'crop' }.to_query
-      else
-        source_url
-      end
-    end
-  end
-
-  def source_url
-    model["#{mounted_as}_original_url"].presence
   end
 
   def self.version(name, options = {}, &block)

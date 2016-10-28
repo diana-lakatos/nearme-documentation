@@ -9,12 +9,14 @@ class TopicCoverImageUploader < BaseUploader
     big: { width: 575, height: 441, transform: :resize_to_fill }
   }
 
-  version :big, from_version: :optimized do
+  version :big do
     process dynamic_version: :big
+    process optimize: OPTIMIZE_SETTINGS
   end
 
-  version :medium, from_version: :optimized do
+  version :medium do
     process dynamic_version: :medium
+    process optimize: OPTIMIZE_SETTINGS
   end
 
   ASPECT_RATIO = 6.7368421053

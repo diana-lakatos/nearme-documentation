@@ -7,11 +7,13 @@ class SimpleAvatarUploader < BaseUploader
     medium: { width: 144, height: 144, transform: :resize_to_fill }
   }
 
-  version :thumb, from_version: :optimized do
+  version :thumb do
     process dynamic_version: :thumb
+    process optimize: OPTIMIZE_SETTINGS
   end
 
-  version :medium, from_version: :optimized do
+  version :medium do
     process dynamic_version: :medium
+    process optimize: OPTIMIZE_SETTINGS
   end
 end
