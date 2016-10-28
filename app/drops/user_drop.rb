@@ -69,8 +69,8 @@ class UserDrop < BaseDrop
            :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
            :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
            :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
-           :communication, :created_at, :has_buyer_profile?, :default_company, :company_name, :instance_admins_metadata,
-           :total_reviews_count,
+           :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
+           :company_name, :instance_admins_metadata, :total_reviews_count,
            to: :source
 
   def class_name
@@ -140,7 +140,8 @@ class UserDrop < BaseDrop
   # string identifying the location where the user books items
   # this method may be used if reservation_city is not present
   def reservation_name
-    reservation_city? ? @source.orders.reservations.first.listing.location.city : @source.orders.reservations.first.listing.location.name
+    listing_location = @source.orders.reservations.first.listing.location
+    reservation_city? ? listing_location.city : listing_location.name
   end
 
   # url to the app wizard for adding a new listing to the system
@@ -353,7 +354,7 @@ class UserDrop < BaseDrop
     @categories
   end
 
-  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
+  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'comma separated children' } }
   def formatted_categories
     build_formatted_categories(@source.categories)
   end
@@ -473,10 +474,6 @@ class UserDrop < BaseDrop
     pending_transactables.any?
   end
 
-  def pending_transactables
-    @source.created_listings.with_state(:pending)
-  end
-
   def completed_transactables_count
     @source.created_listings.with_state(:completed).count
   end
@@ -499,8 +496,9 @@ class UserDrop < BaseDrop
   def unconfirmed_received_orders_count
     @unconfirmed_received_orders_count ||= @source.listing_orders.unconfirmed.count
   end
+
   def has_company?
-    !@source.companies.empty?
+    @source.companies.present?
   end
 
   def company_id
@@ -532,11 +530,15 @@ class UserDrop < BaseDrop
 
   # total count of user transactables with state pending
   def pending_transactables_count
-    if has_seller_profile?
-      @source.transactables.with_state(:pending).count
-    elsif has_buyer_profile?
-      @source.approved_transactables_collaborated.with_state(:pending).count
-    end
+    seller_pending_transactables_count || buyer_pending_transactables_count
+  end
+
+  def seller_pending_transactables_count
+    @source.transactables.with_state(:pending).count if has_seller_profile?
+  end
+
+  def buyer_pending_transactables_count
+    @source.approved_transactables_collaborated.with_state(:pending).count if has_buyer_profile?
   end
 
   def user_menu_instance_admin_path
