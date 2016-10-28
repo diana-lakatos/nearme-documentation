@@ -60,6 +60,8 @@ class UserDrop < BaseDrop
   #   returns id of first user company
   # reservations_count
   #   returns number of reservations
+  # unconfirmed_received_orders_count
+  #   returns number of unconfirmed orders
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
            :with_mutual_friendship_source, :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
@@ -494,6 +496,9 @@ class UserDrop < BaseDrop
     pending_transactables_for_current_user.where('tc.id is NOT NULL')
   end
 
+  def unconfirmed_received_orders_count
+    @unconfirmed_received_orders_count ||= @source.listing_orders.unconfirmed.count
+  end
   def has_company?
     !@source.companies.empty?
   end
