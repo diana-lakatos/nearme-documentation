@@ -72,6 +72,8 @@ en:
         could_not_validate: 'Your IMAP settings appear to be invalid'
         validation_successful: 'Your IMAP settings are valid'
       manage:
+        webhooks:
+          deleted: 'Webhook has been deleted.'
         tax_region:
           created: 'Tax region has been created.'
           deleted: 'Tax region has been deleted.'

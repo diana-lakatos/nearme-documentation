@@ -96,6 +96,7 @@ class MerchantAccount < ActiveRecord::Base
 
   def void!
     # We use update_attribute to prevent validation errors
+    self.skip_validation = true
     update_attribute(:state, :voided)
     unset_possible_payout!
   end

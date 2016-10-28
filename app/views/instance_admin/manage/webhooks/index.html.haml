@@ -1,0 +1,11 @@
+.content-container
+  %h4
+    = t("instance_admin.manage.payments.resource.plural.#{resource_class.name.underscore}")
+
+  = render 'list_table'
+
+.row
+  .text-container
+    .pull-right
+      = will_paginate @webhooks
+

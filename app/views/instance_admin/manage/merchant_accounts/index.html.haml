@@ -22,7 +22,7 @@
             %th= t('instance_admin.manage.merchant_account.state')
             %th= t('instance_admin.manage.merchant_account.payment_gateway')
             %th= t('instance_admin.manage.merchant_account.created_at')
-            %th= t('instance_admin.manage.merchant_account.void')
+            %th= t('instance_admin.manage.merchant_account.action')
             %th= t('instance_admin.manage.merchant_account.details')
 
         - @merchant_accounts.each do |merchant_account|
@@ -38,9 +38,11 @@
             %td= l(merchant_account.created_at, format: :long)
             %td
               - if merchant_account.verified?
-                = link_to 'Void', void_instance_admin_manage_merchant_account_path(merchant_account), data: { confirm: "Are you sure you want to void this Merchant?"}
+                = link_to 'Void account', void_instance_admin_manage_merchant_account_path(merchant_account), data: { confirm: "Are you sure you want to void this Merchant? This acction is irreversible!"}
+                %span= '| '
+                = link_to 'Mark as pending', pending_instance_admin_manage_merchant_account_path(merchant_account), data: { confirm: "Are you sure you want to mark this merchant as pending?"}
               - else
-                \------
+                none
 
             %td= link_to 'Details',  instance_admin_manage_merchant_account_path(merchant_account)
 

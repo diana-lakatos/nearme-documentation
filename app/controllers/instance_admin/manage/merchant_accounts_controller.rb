@@ -1,5 +1,6 @@
 class InstanceAdmin::Manage::MerchantAccountsController < InstanceAdmin::Manage::BaseController
-  skip_before_filter :check_if_locked
+  skip_before_action :check_if_locked
+  before_action :find_merchant_account, except: :index
 
   def index
     params[:mode] ||= PlatformContext.current.instance.test_mode ? 'test' : 'live'
@@ -14,7 +15,6 @@ class InstanceAdmin::Manage::MerchantAccountsController < InstanceAdmin::Manage:
   end
 
   def void
-    @merchant_account = MerchantAccount.find(params[:id])
     if @merchant_account.verified?
       if @merchant_account.void!
         flash[:success] = 'Merchant voided successfuly!'
@@ -25,5 +25,18 @@ class InstanceAdmin::Manage::MerchantAccountsController < InstanceAdmin::Manage:
       flash[:warning] = 'This Merchant is not verified.'
     end
     redirect_to :back
+  end
+
+  def pending
+    @merchant_account.to_pending!
+    flash[:success] = 'Merchant is now pending changes!'
+    redirect_to :back
+  end
+
+  private
+
+  def find_merchant_account
+    @merchant_account = MerchantAccount.find(params[:id])
+    @merchant_account.skip_validation = true
   end
 end
