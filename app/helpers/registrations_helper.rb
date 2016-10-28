@@ -1,11 +1,9 @@
 module RegistrationsHelper
   def build_link_for(provider, class_for_links)
-    if (authentication = Authentication.find_by_provider_and_user_id(provider.downcase, current_user.id))
+    if (authentication = Authentication.find_by(provider: provider.downcase, user_id: current_user.id))
       # authentication already exists in the database
       class_for_links += ' connected'
-      unless authentication.can_be_deleted?
-        class_for_links += ' provider-not-disconnectable'
-      end
+      class_for_links += ' provider-not-disconnectable' unless authentication.can_be_deleted?
       link_to authentication_path(authentication), method: :delete, class: class_for_links do
         content_tag(:span, t('registrations.social_accounts.disconnect'), class: "padding ico-#{provider.downcase}")
       end
@@ -22,11 +20,13 @@ module RegistrationsHelper
     name = name.to_sym
     active_class = 'active'
 
-    if (params[:services_page].present? && name == :services) ||
-       (name == :general && params[:services_page].blank?)
+    param_tab = params[:tab]
+    tabs = %w(general services reviews blog_posts)
 
-      return active_class
-    end
+    services_conditions = params[:services_page].present? && name == :services && param_tab.nil?
+    general_conditions = name == :general && params[:services_page].blank? && !tabs.include?(param_tab)
+
+    return active_class if (param_tab.to_s == name.to_s) || services_conditions || general_conditions
 
     default
   end
