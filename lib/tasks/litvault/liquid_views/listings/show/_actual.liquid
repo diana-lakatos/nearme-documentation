@@ -9,7 +9,7 @@
 {% else %}
   {% assign can_make_offer = true %}
   {% for order in orders %}
-    {% if order.state == 'unconfirmed' %}
+    {% if order.state == 'unconfirmed' or order.state == 'confirmed' %}
       {% assign can_make_offer = false %}
     {% endif %}
   {% endfor %}
