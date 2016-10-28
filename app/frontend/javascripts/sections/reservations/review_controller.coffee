@@ -22,7 +22,8 @@ module.exports = class ReservationReviewController
         opened_days = $(@).data('open-on-days')
         except_periods = $(@).data('except-periods')
         for period in except_periods
-          return false if new Date(period.from + " 00:00:00") <= date && date <= new Date(period.to + " 23:59:59")
+          if new Date(period.from.replace(/-/g, "/") + " 00:00:00") <= date && date <= new Date(period.to.replace(/-/g, "/") + " 23:59:59")
+            return [ false ]
 
         [ opened_days.indexOf(date.getDay()) > -1 ]
       onSelect: (date_string) =>
