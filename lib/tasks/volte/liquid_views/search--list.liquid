@@ -14,6 +14,7 @@ partial: false
   </div>
 
   <aside class="search-sidebar">
+    <button data-toggle-search-filters class="button button-default search-sidebar__filter-search-button">Filter search</button>
     <h4>Filter by:</h4>
     <form class="form-horizontal no-inheritance" data-search-form="filters">
       <ul>
@@ -35,11 +36,6 @@ partial: false
           <fieldset>
             <legend>Location</legend>
             <input type="text" name="item_location_city" id="item_location_city" placeholder="City" />
-            <select class="form-control custom-select" name="item_location_state" id="item_location_state">
-              <option value="">Select State</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
           </fieldset>
         </li>
         <li>
@@ -87,111 +83,72 @@ partial: false
 {% endunless %}
 
   <main class="search-results" data-search-form="results">
-    <div class="search-results__summary">
-      <div class="results-number">
-        <p>{{ searcher.result_count }} Results</p>
+    {% if searcher.results.size == 0 %}
+      <p class="empty-resultset">
+        There are no results to show.
+      </p>
+    {% else %}
+      <div class="search-results__summary">
+        <div class="results-number">
+          <p>{{ searcher.result_count }} Results</p>
+        </div>
+
+        <div class="results-sorting">
+          <form class="form-inline" data-search-form="filters">
+            <label for="sort_by">
+              Sort by:
+              <select class="form-control" name="sort" id="sort_by">
+                <option value="name_asc" {% if searcher.sort == 'name_asc' %}selected{% endif %}>Item name ascending</option>
+                <option value="name_desc" {% if searcher.sort == 'name_desc' %}selected{% endif %}>Item name descending</option>
+                <option value="all_prices_asc" {% if searcher.sort == 'all_prices_asc' %}selected{% endif %}>Price ascending</option>
+                <option value="all_prices_desc" {% if searcher.sort == 'all_prices_desc' %}selected{% endif %}>Price descending</option>
+                <option value="created_at_desc" {% if searcher.sort == 'created_at_desc' or searcher.sort == 'relevance' %}selected{% endif %}>Date entered</option>
+                <option value="popularity" {% if searcher.sort == 'popularity' %}selected{% endif %}>Popularity</option>
+              </select>
+            </label>
+          </form>
+        </div>
       </div>
 
-      <div class="results-sorting">
-        <form class="form-inline" data-search-form="filters">
-          <label for="sort_by">
-            Sort by:
-            <select class="form-control" name="sort" id="sort_by">
-              <option value="name_asc" {% if searcher.sort == 'name_asc' %}selected{% endif %}>Item name ascending</option>
-              <option value="name_desc" {% if searcher.sort == 'name_desc' %}selected{% endif %}>Item name descending</option>
-              <option value="all_prices_asc" {% if searcher.sort == 'all_prices_asc' %}selected{% endif %}>Price ascending</option>
-              <option value="all_prices_desc" {% if searcher.sort == 'all_prices_desc' %}selected{% endif %}>Price descending</option>
-              <option value="created_at_desc" {% if searcher.sort == 'created_at_desc' %}selected{% endif %}>Date entered</option>
-              <option value="popularity" {% if searcher.sort == 'popularity' %}selected{% endif %}>Popularity</option>
-            </select>
-          </label>
-        </form>
-      </div>
-    </div>
+      <section class="search-results__items">
+        {% for listing in searcher.results %}
+          <article data-listing>
+            <a href="{{ listing.show_path }}" class="listing-link">
+              <figure>
+                <img src="{{ listing.photos[0].large }}" />
+                <figcaption>
+                  {% assign price_option = listing | lowest_price_without_cents_with_currency %}
+                  <dl class="rent-price">
+                    <dt>Rent</dt>
+                    <dd>{{ price_option.price }}</dd>
+                  </dl>
 
-    <section class="search-results__items">
-      {% for listing in searcher.results %}
-        <article data-listing>
-          <div class="item-description">
-            <h2><a href="{{ listing.show_path }}" data-listing-path>{{ listing.name }}</a></h2>
-            {% if listing.properties.designer_name != blank %}
-              <h4 class="item-designer">
-                <strong>Designer:</strong>
-                {{ listing.properties.designer_name }}
-              </h4>
-            {% endif %}
-          </div>
+                  <dl class="retail-bond-value">
+                    <dt>Bond</dt>
+                    <dd>{{ listing.properties.bond_value | price_without_cents_with_currency }}</dd>
+                    {% if listing.properties.retail_value != blank %}
+                    <dt>Retail</dt>
+                    <dd>{{ listing.properties.retail_value | price_without_cents_with_currency }}</dd>
+                    {% endif %}
+                  </dl>
 
-          <div class="item-photo">
-            <img src="{{ listing.photos[0].large }}" />
-          </div>
 
-          <div class="item-actions">
-            <ul>
-              <li class="item-actions__primary">
-                <form id="order_form_{{ listing.id }}" novalidate="novalidate" class="order" action="{{ 'listing_orders_path' | generate_url: listing }}" accept-charset="UTF-8" method="post">
-                  <input name="utf8" type="hidden" value="">
-                  <input name="authenticity_token" value="{{ form_authenticity_token }}" data-authenticity-token type="hidden">
-                  <input value="{{ listing.id }}" type="hidden" name="order[transactable_id]" id="order_transactable_id">
-                  <input value="{{ listing.action_type.pricings.first.id }}" type="hidden" name="order[transactable_pricing_id]" id="order_transactable_pricing_id">
-                  <input type="submit" class="button button-default" value="REQUEST ITEM">
-                </form>
-              </li>
-              <li>
-                <a data-listing-availability-toggle data-listing-availability-periods={{ listing.unavailable_periods }} class="datetimepicker button button-secondary">
-                  <input type="hidden" />
-                  CHECK AVAILABILITY
-                </a>
-              </li>
-              <li class="item-actions__secondary">
-                <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
-                  <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
-                </div>
-              </li>
-              {% if listing.creator.has_active_blog? %}
-                <li class="item-actions__secondary">
-                  <a href="{{ listing.creator.user_blog_posts_list_path }}" class="button button-inverse button-small">Lender's Blog</a>
-                </li>
-              {% endif %}
-            </ul>
+                  {% if listing.properties.designer_name != blank %}
+                    <span class="designer">{{ listing.properties.designer_name }}</span>
+                  {% endif %}
+                </figcaption>
+              </figure>
+            </a>
 
-            <div class="item-pricing">
-              <dl>
-                {% for price in listing.action_type.sorted_pricings %}
-                  <dt>{{ price.number_of_units }} days: </dt>
-                  <dd>${{ price.price.amount }} AUD</dd>
-                {% endfor %}
-                <dt>Bond value: </dt>
-                <dd>${{ listing.properties.bond_value }} AUD</dd>
-              </dl>
-            </div>
-          </div>
+            <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}"></div>
 
-          <div class="item-info">
-            <p>
-              <strong>Lender:</strong>
-              {% if listing.creator.properties.use_alias_as_name == '1' %}{{ listing.creator.properties.user_alias }}{% else %}{{ listing.creator.name }}{% endif %}
-            </p>
-
-            <ul>
-              {% if listing.transactable_user_messages.size > 0 %}
-                <li>
-                  <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
-                </li>
-              {% else %}
-                <li>
-                  <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id, user_id: listing.creator.id, skip: true }}">Message</a>
-                </li>
-              {% endif %}
-              <li>
-                <a class="button button-inverse button-small" href="{{ listing.creator.user_profile_url }}">Lender's Closet</a>
-              </li>
-            </ul>
-          </div>
-
-        </article>
-      {% endfor %}
-    </section>
+            <a href="{{ listing.creator.user_profile_url }}" class="lender-link">
+              <img src="{{ listing.creator.avatar_url_thumb }}" alt="{% if listing.creator.properties.use_alias_as_name == '1' %}{{ listing.creator.properties.user_alias }}{% else %}{{ listing.creator.name }}{% endif %}">
+            </a>
+          </article>
+        {% endfor %}
+      </section>
+    {% endif %}
   </main>
 {% unless xhr %}
 </div>
