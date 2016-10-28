@@ -101,7 +101,7 @@
                     {% if order.unconfirmed? %}
                       <a href="{{  'edit_dashboard_company_orders_received_path' | generate_url: order.id  }}" class="btn btn-info">Review</a>
                       <a href="{{ order.rejection_form_path }}" data-modal="true" class="btn btn-danger">Reject</a>
-                      <a href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: orders_received_id: order.id }}" class="btn btn-success" data-modal="true">Accept</a>
+                      <a href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: orders_received_id: order.id, redirect_to: current_path | append: '?status=in+progress'  }}" class="btn btn-success" data-modal="true">Accept</a>
                     {% endif %}
                   </td>
                 </tr>
