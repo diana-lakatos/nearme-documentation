@@ -3,50 +3,42 @@
 
 <div class="wrapper-a">
 
-  <div class="item-top-bar">
-    <div class="user-bar">
-      <div class="user-bar__photo" style="background-image: url('{{ listing.creator.avatar_url_thumb }}')">
-      </div>
-
-      <div class="flex-container">
-        <div class="user-bar__name">
-          <strong>by:</strong>
-          <a href="{{ listing.creator.user_profile_url }}">{% if listing.creator.properties.use_alias_as_name == '1' %}{{ listing.creator.properties.user_alias }}{% else %}{{ listing.creator.name }}{% endif %}</a>
-        </div>
-        <div class="user-bar__action-bar">
-          <ul>
-            <li>
-              {% if listing.transactable_user_messages.size > 0 %}
-                <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
-              {% else %}
-                <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id ,user_id: listing.creator.id, skip: true }}">Message</a>
-              {% endif %}
-            </li>
-            <li><a href="{{ listing.creator.user_profile_url }}" class="button button-inverse button-small">Lender's Closet</a></li>
-            {% if listing.creator.has_active_blog? %}
-              <li><a href="{{ listing.creator.user_blog_posts_list_path }}" class="button button-inverse button-small">Lender's Blog</a></li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="item-pricing">
-      <dl>
-        {% for price in listing.action_type.sorted_pricings %}
-          <dt>{{ price.number_of_units }} days: </dt>
-          <dd>${{ price.price.amount }} AUD</dd>
-        {% endfor %}
-        <dt>Bond value: </dt>
-        <dd>${{ listing.properties.bond_value }} AUD</dd>
-      </dl>
-    </div>
-  </div>
-
-
   <div class="item-content">
-    <div class="item-name">
-      <h1>{{ listing.name | filter_text }}</h1>
+
+    <div class="item-header">
+      <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
+        <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
+      </div>
+      <h1 class="item-name">{{ listing.name | filter_text }}</h1>
+    </div>
+
+
+
+    {% capture user_name %}
+      {% if listing.creator.properties.use_alias_as_name == '1' %}
+        {{ listing.creator.properties.user_alias }}
+      {% else %}
+        {{ listing.creator.name }}
+      {% endif %}
+
+    {% endcapture %}
+    <div class="user-info">
+      <img src="{{ listing.creator.avatar_url_thumb }}" alt="{{ user_name | trim }}" class="avatar">
+      <h2>by: <a href="{{ listing.creator.user_profile_url }}">{{ user_name | trim }}</a></h2>
+
+      <ul class="user-actions">
+        <li>
+          {% if listing.transactable_user_messages.size > 0 %}
+            <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'dashboard_user_message_path' | generate_url: listing.transactable_user_messages.first.id, skip: true }}">Message</a>
+          {% else %}
+            <a class="button button-inverse button-small" data-modal="true" data-href="{{ 'new_listing_user_message_path' | generate_url: listing.id ,user_id: listing.creator.id, skip: true }}">Message</a>
+          {% endif %}
+        </li>
+        <li><a href="{{ listing.creator.user_profile_url }}" class="button button-inverse button-small">Show Closet</a></li>
+        {% if listing.creator.has_active_blog? %}
+          <li><a href="{{ listing.creator.user_blog_posts_list_path }}" class="button button-inverse button-small">Blog</a></li>
+        {% endif %}
+      </ul>
     </div>
 
     <div class="image-gallery" data-image-gallery>
@@ -76,6 +68,7 @@
   </div> <!-- Item content -->
 
   <div class="item-sidebar">
+
     <div class="item-actions">
       <ul>
         <li>
@@ -87,13 +80,30 @@
             <input type="submit" class="button button-default" value="REQUEST ITEM">
           </form>
         <li><a data-listing-availability-toggle data-listing-availability-periods={{ listing.unavailable_periods }} class="button button-secondary datetimepicker"><input type="hidden" />CHECK AVAILABILITY</a></li>
-        <li>
-          <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
-            <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
-          </div>
-        </li>
       </ul>
     </div> <!-- Item actions -->
+
+    <div class="item-pricing">
+      <dl class="price">
+        {% for price in listing.action_type.sorted_pricings %}
+          <dt>{{ price.number_of_units }} days </dt>
+          <dd>{{ price.price.amount | price_with_cents_with_currency }} AUD</dd>
+        {% endfor %}
+      </dl>
+      {% if listing.properties.retail_value != blank %}
+      <dl class="retail-value">
+        <dt>Retail value:</dt>
+        <dd>{{ listing.properties.retail_value | price_with_cents_with_currency }} AUD</dd></dd>
+      </dl>
+      {% endif %}
+
+      {% if listing.properties.bond_value != blank %}
+      <dl class="bond-value">
+        <dt>Bond value:</dt>
+        <dd>{{ listing.properties.bond_value | price_with_cents_with_currency}} AUD</dd>
+      </dl>
+      {% endif %}
+    </div>
 
     <div class="item-details">
      <ul>
@@ -127,7 +137,6 @@
             <dt>Color:</dt> <dd>{{ listing.properties.color }}</dd>
             <dt>Designer:</dt> <dd>{{ listing.properties.designer_name }}</dd>
             <dt>Location:</dt> <dd>{{ listing.location.city }}, {{ listing.location.state }}</dd>
-            <dt>Retail Value:</dt>  <dd>{{ listing.properties.retail_value }}</dd>
             <dt>Dry Cleaning:</dt>  <dd>{{ listing.properties.dry_cleaning }}</dd>
           </dl>
         </div>
