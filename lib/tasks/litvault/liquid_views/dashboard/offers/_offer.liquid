@@ -120,7 +120,7 @@ Add disabled custom attributes here as below
     <div class='col-sm-2'>{{ reservation.state }}</div>
     <div class='col-sm-2'>
       Edit Offer |
-      <a href="#" onclick="$('form#cancel_reservation').submit()" data-disable-with="{{ 'general.processing' | t }}" >{{ 'general.cancel' | t }}</a>
+      <button type="button" data-disable-with="{{ 'general.processing' | t }}" data-submit-form="#cancel_reservation">Cancel</button>
     </div>
     <form class="edit_reservation" id="cancel_reservation" action="{{ 'user_cancel_dashboard_user_reservation_path' | generate_url: reservation.id }}" accept-charset="UTF-8" method="post">
       <input name="utf8" type="hidden" value="&#x2713;" />
