@@ -112,7 +112,7 @@ partial: false
 
       <section class="search-results__items">
         {% for listing in searcher.results %}
-          <article data-listing>
+          <article class="transactable-listing-item" data-listing>
             <a href="{{ listing.show_path }}" class="listing-link">
               <figure>
                 <img src="{{ listing.photos[0].large }}" />
