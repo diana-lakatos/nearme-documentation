@@ -16,4 +16,20 @@ datepickers = (context = 'body')->
     }
   })
 
+  $(context).find('[data-date-range-picker]').each (index, wrap)->
+    wrap = $(wrap)
+    return if (wrap.data('initialised'))
+    wrap.data('initialised', true)
+
+    startDatePicker = wrap.find('[data-date-range-picker-start]').closest('.datetimepicker')
+    endDatePicker = wrap.find('[data-date-range-picker-end]').closest('.datetimepicker')
+
+    endDatePicker.data('DateTimePicker').useCurrent(false)
+
+    startDatePicker.on 'dp.change', (e)=>
+      endDatePicker.data('DateTimePicker').minDate(e.date)
+
+    endDatePicker.on 'dp.change', (e)=>
+      startDatePicker.data('DateTimePicker').maxDate(e.date)
+
 module.exports = datepickers
