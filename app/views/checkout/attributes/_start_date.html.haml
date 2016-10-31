@@ -1,4 +1,4 @@
 - if only_inputs.empty? || only_inputs.include?(:start_date)
-  .small-inputs{data: {'reservation-dates-controller' => f.object.skip_payment_authorization?, 'validator-url': detect_overlapping_listing_reservations_path(f.object.transactable) }}
+  .small-inputs{data: {'reservation-dates-controller' => f.object.skip_payment_authorization?, 'validator-url': detect_overlapping_listing_reservations_path(f.object.transactable), 'check-overlapping-dates': f.object.reservation_type.check_overlapping_dates }}
     = f.input :dates_fake, input_html: {class: 'jquery-datepicker', data: { except_periods: f.object.transactable.to_liquid.unavailable_periods, open_on_days: f.object.transactable.opened_on_days, days_with_ranges: f.object.transactable.availability.days_with_ranges }}, required: true, label: t('simple_form.labels.reservations.dates')
     = f.input :dates, as: :hidden, input_html: { value: f.object.dates.presence || Date.today }
