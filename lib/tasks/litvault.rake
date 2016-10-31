@@ -25,7 +25,6 @@ namespace :litvault do
         enable_reply_button_on_host_reservations: true,
         seller_attachments_enabled: true,
         seller_attachments_access_level: 'collaborators',
-        hidden_ui_controls: { 'main_menu/cta': 1 },
         hidden_ui_controls: {
          'main_menu/cta': 1,
          'dashboard/payouts': 1,
@@ -656,11 +655,14 @@ namespace :litvault do
 
       def create_custom_attribute(object, name, hash)
           hash = hash.with_indifferent_access
-          attr = object.custom_attributes.where({
+          custom_attribute = object.custom_attributes.where({
             name: name
           }).first_or_initialize
-          attr.assign_attributes(hash)
-          attr.set_validation_rules!
+          custom_attribute.custom_validators.destroy_all
+
+          custom_attribute.assign_attributes(hash)
+          custom_attribute.save!
+          custom_attribute.custom_validators.each {|cv| cv.save! }
       end
 
       def remove_unused_categories(categories)

@@ -12,10 +12,25 @@
     html_tag: 'textarea'
   linkedin_url:
     label: "LinkedIn URL"
+    placeholder: 'http://'
+    custom_validators_attributes:
+      "[0]":
+        regex_expression: '^https?\:\/\/.*'
+        regex_validation: true
   googleplus_url:
     label: "Google Plus URL"
+    placeholder: 'http://'
+    custom_validators_attributes:
+      "[0]":
+        regex_expression: '^https?\:\/\/.*'
+        regex_validation: true
   twitter_url:
     label: "Twitter URL"
+    placeholder: 'http://'
+    custom_validators_attributes:
+      "[0]":
+        regex_expression: '^https?\:\/\/.*'
+        regex_validation: true
   bio:
     label: "Bio"
     html_tag: textarea
