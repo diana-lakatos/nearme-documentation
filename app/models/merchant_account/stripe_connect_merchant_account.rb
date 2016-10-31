@@ -1,8 +1,8 @@
 require 'stripe'
 
 class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
-  ATTRIBUTES = %w(account_type first_name last_name currency bank_routing_number bank_account_number tos  business_tax_id business_vat_id ssn_last_4 personal_id_number)
-  ACCOUNT_TYPES = %w(individual company)
+  ATTRIBUTES = %w(account_type first_name last_name currency bank_routing_number bank_account_number tos business_tax_id business_vat_id ssn_last_4 personal_id_number).freeze
+  ACCOUNT_TYPES = %w(individual company).freeze
 
   SUPPORTED_CURRENCIES = {
     'US'   => %w(USD),
@@ -10,7 +10,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     'AU'   => %w(AUD),
     'JP'   => %w(JPY),
     'EUUK' => %w(EUR GBP USD)
-  }
+  }.freeze
 
   include MerchantAccount::Concerns::DataAttributes
 
@@ -18,11 +18,11 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   has_one :current_address, class_name: 'Address', as: :entity
 
-  validates_presence_of :bank_routing_number, :bank_account_number, :last_name, :first_name
-  validates_presence_of :personal_id_number, if: proc { |m| m.iso_country_code == 'US' }
-  validates_presence_of :business_tax_id, if: proc { |m| m.iso_country_code == 'US' && m.account_type == 'company' }
-  validates_inclusion_of :account_type, in: ACCOUNT_TYPES
-  validates_acceptance_of :tos
+  validates :bank_routing_number, :bank_account_number, :last_name, :first_name, presence: true
+  validates :personal_id_number, presence: { if: proc { |m| m.iso_country_code == 'US' } }
+  validates :business_tax_id, presence: { if: proc { |m| m.iso_country_code == 'US' && m.account_type == 'company' } }
+  validates :account_type, inclusion: { in: ACCOUNT_TYPES }
+  validates :tos, acceptance: true
   validates_associated :owners
   validate :validate_current_address
   validate :validate_owners_documents
@@ -50,9 +50,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       self.response = result.to_yaml
       self.bank_account_number = result.bank_accounts.first.last4
       data[:currency] = result.default_currency
-      if result.keys.is_a?(Stripe::StripeObject)
-        data[:secret_key] = result.keys.secret
-      end
+      data[:secret_key] = result.keys.secret if result.keys.is_a?(Stripe::StripeObject)
       change_state_if_needed(result)
       true
     elsif result.error
@@ -107,9 +105,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     }
 
     if owners.count == 1
-      legal_entity_hash.merge!(additional_owners: nil)
+      legal_entity_hash[:additional_owners] = nil
     else
-      legal_entity_hash.merge!(additional_owners: [])
+      legal_entity_hash[:additional_owners] = []
       owners[1..-1].each do |owner|
         dob = owner.dob_date
         legal_entity_hash[:additional_owners] << {
@@ -160,15 +158,16 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def change_state_if_needed(stripe_account, &_block)
+    void! && return if stripe_account.verification.disabled_reason.present?
     if !verified? && stripe_account.charges_enabled && stripe_account.transfers_enabled
-      if stripe_account.verification.fields_needed.empty?
+      if stripe_account.verification.fields_needed.empty? && stripe_account.legal_entity.verification.status == 'verified'
         verify(persisted?)
         yield('verified') if block_given?
       else
         failure(persisted?)
         yield('failed') if block_given?
       end
-    elsif verified? && (!stripe_account.charges_enabled || !stripe_account.transfers_enabled || !stripe_account.verification.fields_needed.empty?)
+    elsif verified? && ((stripe_account.legal_entity.verification.status != 'verified') || !stripe_account.charges_enabled || !stripe_account.transfers_enabled || !stripe_account.verification.fields_needed.empty?)
       failure(persisted?)
       yield('failed') if block_given?
     end
@@ -226,7 +225,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       Time.current.to_date + (day_of_the_week - Time.current.wday).modulo(7).days
     when 'monthly'
       month = (Time.current.day > monthly_anchor) ? Time.current.month + 1 : Time.current.month
-      year = (month == 1 && Time.current.month == 12) ? Time.current.year + 1 : Time.current.year
+      year = month == 1 && Time.current.month == 12 ? Time.current.year + 1 : Time.current.year
       Date.parse("#{monthly_anchor}/#{month}/#{year}")
     end
   end
@@ -282,9 +281,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     current_address.parse_address_components!
     current_address.errors.clear
 
-    if current_address.check_address && current_address.errors.any?
-      errors.add(:current_address, :inacurate)
-    end
+    errors.add(:current_address, :inacurate) if current_address.check_address && current_address.errors.any?
   end
 
   def validate_owners_documents

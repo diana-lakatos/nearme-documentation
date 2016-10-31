@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
-                           :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
+                           :unlock_token, :locked_at, :browser, :browser_version, :platform,
                            :avatar_versions_generated_at, :last_geolocated_location_longitude,
                            :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out,
                            :avatar_transformation_data, :metadata]
@@ -390,6 +390,10 @@ class User < ActiveRecord::Base
   end
 
   def custom_validators
+    @custom_validators ||= all_current_profiles.map(&:custom_validators).flatten.compact
+  end
+
+  def all_current_profiles
     case force_profile
     when 'buyer'
       get_buyer_profile
@@ -397,10 +401,13 @@ class User < ActiveRecord::Base
       get_seller_profile
     end
     self.force_profile = nil
-    profiles = (UserProfile::PROFILE_TYPES - Array(skip_validations_for).map(&:to_s)).map do |profile_type|
+    @all_current_profiles ||= (UserProfile::PROFILE_TYPES - Array(skip_validations_for).map(&:to_s)).map do |profile_type|
       send("#{profile_type}_profile")
     end.compact
-    @custom_validators ||= profiles.map(&:custom_validators).flatten.compact
+  end
+
+  def custom_attributes_custom_validators
+    @custom_attributes_custom_validators ||= all_current_profiles.map(&:custom_attributes_custom_validators).flatten.compact
   end
 
   def validation_for(field_names)
@@ -652,8 +659,7 @@ class User < ActiveRecord::Base
     authentications.collect do |a|
       begin
         a.social_connection.try(:connections)
-        # We need Exception => e as Authentication::InvalidToken inherits directly from Exception not StandardError
-      rescue Exception => e
+      rescue StandardError => e
         nil
       end
     end.flatten.compact
@@ -1115,6 +1121,10 @@ class User < ActiveRecord::Base
 
   def message_context_object
     self
+  end
+
+  def total_reviews_count
+    ReviewAggregator.new(self).total if RatingSystem.active.any?
   end
 
   private

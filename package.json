@@ -1,6 +1,6 @@
 {
   "name": "desksnearme",
-  "version": "10.9.1-171",
+  "version": "10.10.0-18",
   "description": "All documentation is set out on the [GitHub Wiki](https://near-me.atlassian.net/wiki/).",
   "private": true,
   "directories": {},
@@ -75,6 +75,7 @@
     "cropper": "^1.0.0",
     "eonasdan-bootstrap-datetimepicker": "^4.17.37",
     "font-awesome": "^4.6.0",
+    "gulp": "^3.9.1",
     "gulp-modernizr": "^1.0.0-alpha",
     "history.js": "^1.8.0",
     "jquery": "^2.2.0",

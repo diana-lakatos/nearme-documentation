@@ -20,7 +20,6 @@ class DataImporter::XmlFile < DataImporter::File
       parse_companies do
         parse_locations do
           parse_availabilities
-          parse_amenities
           parse_listings do
             parse_action do
               parse_availabilities
@@ -36,6 +35,7 @@ class DataImporter::XmlFile < DataImporter::File
   def parse_instance
     @node.xpath('companies').each do |instance_node|
       @node = instance_node
+
       yield
     end
   end
@@ -43,13 +43,14 @@ class DataImporter::XmlFile < DataImporter::File
   def parse_companies
     @node.xpath('company').each do |company_node|
       external_id = company_node['id']
-      @company = Company.find_by_external_id(external_id)
-      unless @company
+      @company = Company.find_by(external_id: external_id)
+      unless @company.present?
         @company = Company.new do |c|
           assign_attributes(c, company_node)
           c.external_id = external_id
         end
       end
+
       @synchronizer.company = @company
       @synchronizer.mark_all_object_to_delete!
       trigger_event('object_created', @company)
@@ -58,6 +59,7 @@ class DataImporter::XmlFile < DataImporter::File
         parse_users(company_node)
         if @company.creator.present?
           @node = company_node
+
           yield
 
           trigger_event('parsing_finished',             'location' => @synchronizer.delete_active_record_relation!(@company.locations),
@@ -75,12 +77,14 @@ class DataImporter::XmlFile < DataImporter::File
 
   def parse_users(company_node)
     company_node.xpath('users//user').each do |user_node|
-      email = user_node.xpath('email').text.downcase
-      name = user_node.xpath('name').text
-      @user = User.find_by_email(email)
+      email = value_of('email', user_node).tap(&:downcase!)
+      name = value_of('name', user_node)
+
+      next unless email.present?
+      @user = User.find_by(email: email)
       if @user.nil?
         @user = User.new do |u|
-          password =  SecureRandom.hex(8)
+          password = SecureRandom.hex(8)
           u.email = email
           u.password = password
           u.name = name
@@ -89,13 +93,21 @@ class DataImporter::XmlFile < DataImporter::File
           @new_users_emails[email] = password
         end
       end
-      if @user.valid?
-        trigger_event('object_valid', @user) unless @users_emails.include?(email)
-        @users_emails << email
-        @user.save!
-        @company.creator_id = @user.id if @company.creator.nil?
-        @company.users << @user unless @company.users.include?(@user)
-        @company.save!
+
+      if @user.persisted? || @user.valid?
+        unless @users_emails.include?(email)
+          trigger_event('object_valid', @user, @user.email)
+          @users_emails << email
+        end
+
+        @user.save!(validate: false)
+
+        if @company.creator.nil?
+          @company.creator_id = @user.id
+          @company.save(validate: false)
+        end
+
+        @company.users << @user unless @company.company_users.pluck(:user_id).include?(@user.id)
       else
         trigger_event('object_not_valid', @user, @user.email)
         @new_users_emails.delete(email)
@@ -107,17 +119,18 @@ class DataImporter::XmlFile < DataImporter::File
     @node.xpath('locations/location').each do |location_node|
       @photo_updated = false
       external_id = location_node['id']
-      @location = Location.with_deleted.where(company: @company, external_id: external_id, instance_id: PlatformContext.current.instance.id).first || @company.locations.build
+      @location = Location.with_deleted.where(company_id: @company.id, external_id: external_id, instance_id: PlatformContext.current.instance.id).first || @company.locations.build
       assign_attributes(@location, location_node)
       @location = @synchronizer.unmark_object(@location)
-      @location.location_type = find_location_type(location_node.xpath('location_type').text)
+      @location.location_type = find_location_type(value_of('location_type', location_node))
       @node = location_node
       @object = @location
       if @location.deleted?
-        @location.update_column(:deleted_at, nil)
-        AmenityHolder.with_deleted.where(holder: @location).update_all(deleted_at: nil)
-        ApprovalRequest.with_deleted.where(owner: @location).update_all(deleted_at: nil)
-        Impression.with_deleted.where(impressionable: @location).update_all(deleted_at: nil)
+        Location.transaction do
+          @location.update_column(:deleted_at, nil)
+          ApprovalRequest.with_deleted.where(owner: @location).update_all(deleted_at: nil)
+          Impression.with_deleted.where(impressionable: @location).update_all(deleted_at: nil)
+        end
       end
 
       # We do this here because assigning / building a location address to a
@@ -131,8 +144,11 @@ class DataImporter::XmlFile < DataImporter::File
 
       if @location.valid?
         trigger_event('object_valid', @location)
+
         yield
+
         @address.save if @address.changed? && !@location.changed? && @location.valid? && !@location.new_record?
+
         if @location.changed?
           if @location.save
             @location.populate_photos_metadata! if @photo_updated
@@ -162,14 +178,16 @@ class DataImporter::XmlFile < DataImporter::File
       @listing.categories_not_required = true
       @listing = @synchronizer.unmark_object(@listing)
       if @listing.deleted?
-        @listing.update_column(:deleted_at, nil)
-        AvailabilityRule.with_deleted.where(target: @listing).update_all(deleted_at: nil)
-        AmenityHolder.with_deleted.where(holder: @listing).update_all(deleted_at: nil)
-        ApprovalRequest.with_deleted.where(owner: @listing).update_all(deleted_at: nil)
-        Impression.with_deleted.where(impressionable: @listing).update_all(deleted_at: nil)
+        Transactable.transaction do
+          @listing.update_column(:deleted_at, nil)
+          AvailabilityRule.with_deleted.where(target: @listing).update_all(deleted_at: nil)
+          ApprovalRequest.with_deleted.where(owner: @listing).update_all(deleted_at: nil)
+          Impression.with_deleted.where(impressionable: @listing).update_all(deleted_at: nil)
+        end
       end
 
       yield
+
       if @listing.valid?
         trigger_event('object_valid', @listing)
         @listing.action_rfq = @enable_rfq
@@ -188,12 +206,12 @@ class DataImporter::XmlFile < DataImporter::File
   end
 
   def assign_listing_categories(listing_node, listing)
-    categories = listing_node.xpath('listing_categories').text
+    categories = value_of('listing_categories', listing_node)
     if categories.present?
       # This will work always because @listing.categories_not_required was set earlier
       listing.categories = []
       categories.split(/\s*,\s*/).each do |category_permalink|
-        category = Category.find_by_permalink(category_permalink)
+        category = Category.find_by(permalink: category_permalink)
         listing.categories << category if category.present?
       end
       listing.save
@@ -212,22 +230,24 @@ class DataImporter::XmlFile < DataImporter::File
   end
 
   def parse_action
-    return if @node.xpath('action_type/type').text.blank?
+    return if value_of('action_type/type', @node).blank?
     @action_type = Transactable::ActionType.where(
       transactable: @listing,
       enabled: true,
-      type: @node.xpath('action_type/type').text
-    ).first_or_initialize.becomes(@node.xpath('action_type/type').text.constantize)
+      type: value_of('action_type/type', @node)
+    ).first_or_initialize.becomes(value_of('action_type/type', @node).constantize)
     @object = @action_type
+
     yield
+
     @action_type.transactable_type_action_type ||= @transactable_type.action_types.where('type ilike ?', "%#{@action_type.type.demodulize}%").first
     @node.xpath('action_type/pricings/pricing').map do |pricing_attrs|
       pricing = @action_type.pricings.where(
-        number_of_units: pricing_attrs.xpath('number_of_units').text,
-        unit: pricing_attrs.xpath('unit').text
+        number_of_units: value_of('number_of_units', pricing_attrs),
+        unit: value_of('unit', pricing_attrs)
       ).first_or_initialize
-      pricing.price_cents = pricing_attrs.xpath('price_cents').text.to_i if pricing_attrs.xpath('price_cents').text.to_i > 0
-      pricing.is_free_booking = false if pricing_attrs.xpath('price_cents').text.to_i > 0
+      pricing.price_cents = value_of('price_cents', pricing_attrs).to_i if value_of('price_cents', pricing_attrs).to_i > 0
+      pricing.is_free_booking = false if value_of('price_cents', pricing_attrs).to_i > 0
       pricing.transactable_type_pricing ||= @action_type.transactable_type_action_type && @action_type.transactable_type_action_type.pricings.where(pricing.slice(:number_of_units, :unit)).first
       pricing.save if @listing.persisted?
     end
@@ -238,36 +258,35 @@ class DataImporter::XmlFile < DataImporter::File
 
   def parse_photos
     if @synchronizer.performing_real_operations? # no need to store this in memory if no sync mode
-      @photos_hash = @listing.photos.inject({}) do |hash, p|
+      @photos_hash = @listing.photos.each_with_object({}) do |p, hash|
         hash[p.image_original_url] = p
         hash
       end
     end
-    @node.xpath('photos/photo').each do |photo_node|
-      if @listing.photos.map(&:image_original_url).include?(photo_node.xpath('image_original_url').text)
-        trigger_event('object_not_created', 'photo')
-        @synchronizer.unmark_object!(@photos_hash[photo_node.xpath('image_original_url').text]) if @photos_hash.present?
-      else
-        @photo_updated = true
-        @listing_photo_updated = true
-        if @listing.persisted?
-          @photo = @listing.photos.create(image_original_url: photo_node.xpath('image_original_url').text, skip_metadata: true)
-        else
-          @photo = @listing.photos.build(image_original_url: photo_node.xpath('image_original_url').text, skip_metadata: true)
-          # We do this because of a bug in Rails (possibly) whereby if the @photo object is saved as a consequence of the saving
-          # of the parent association (i.e. @listing.save), @photo's previous_changes will be blank, thus not triggering the regeneration
-          # of the versions in lib/carrier_wave/delayed_versions.rb
-          @photo.force_regenerate_versions = true
-        end
-        trigger_event('object_created', @photo)
-      end
-    end
-  end
 
-  def parse_amenities
-    @object.amenities.destroy_all
-    @node.xpath('amenities/amenity').each do |amenity_node|
-      @object.amenities << Amenity.find_by_name(amenity_node.xpath('name').text)
+    @node.xpath('photos/photo').each do |photo_node|
+      if @listing.photos.map(&:image_original_url).include?(value_of('image_original_url', photo_node))
+        trigger_event('object_not_created', 'photo')
+        @synchronizer.unmark_object!(@photos_hash[value_of('image_original_url', photo_node)]) if @photos_hash.present?
+      else
+        if remote_file_exists?(value_of('image_original_url', photo_node))
+          @photo_updated = true
+          @listing_photo_updated = true
+          if @listing.persisted?
+            @photo = @listing.photos.create(image_original_url: value_of('image_original_url', photo_node), skip_metadata: true)
+          else
+            @photo = @listing.photos.build(image_original_url: value_of('image_original_url', photo_node), skip_metadata: true)
+            # We do this because of a bug in Rails (possibly) whereby if the @photo object is saved as a consequence of the saving
+            # of the parent association (i.e. @listing.save), @photo's previous_changes will be blank, thus not triggering the regeneration
+            # of the versions in lib/carrier_wave/delayed_versions.rb
+            @photo.force_regenerate_versions = true
+          end
+          trigger_event('object_created', @photo)
+        else
+          @photo = Photo.new(image_original_url: value_of('image_original_url', photo_node), skip_metadata: true)
+          trigger_event('object_not_valid', @photo, @photo.image_original_url)
+        end
+      end
     end
   end
 
@@ -279,13 +298,13 @@ class DataImporter::XmlFile < DataImporter::File
 
   def assign_attributes(object, node)
     xml_attributes = Transactable === object ? object.class.xml_attributes(@transactable_type) : object.class.xml_attributes
-    object.attributes = xml_attributes.inject({}) do |attributes, attribute|
+    object.attributes = xml_attributes.each_with_object({}) do |attribute, attributes|
       # Company's properties are something else entirely, we do not want to assign to that
       if object.respond_to?(:properties) && !object.respond_to?(attribute) && !object.is_a?(Company)
         attributes[:properties] ||= {}
-        attributes[:properties][attribute] = node.xpath(attribute.to_s).text
+        attributes[:properties][attribute] = value_of(attribute, node)
       elsif object.respond_to?(attribute)
-        attributes[attribute] = node.xpath(attribute.to_s).text unless :location_type == attribute.to_sym || node.xpath(attribute.to_s).text.blank?
+        attributes[attribute] = value_of(attribute, node) unless :location_type == attribute.to_sym || value_of(attribute, node).blank?
       end
       attributes
     end
@@ -297,8 +316,26 @@ class DataImporter::XmlFile < DataImporter::File
     else
       lower_name = name.mb_chars.downcase
       @location_types[lower_name] ||= LocationType.where('lower(name) like ?', lower_name).first
-      fail "Unknown LocationType #{name}, valid names: #{LocationType.pluck(:name)}" if @location_types[lower_name].nil?
+      raise "Unknown LocationType #{name}, valid names: #{LocationType.pluck(:name)}" if @location_types[lower_name].nil?
       @location_types[lower_name]
+    end
+  end
+
+  def value_of(attribute, node)
+    node.xpath(attribute.to_s).text
+  end
+
+  def remote_file_exists?(photo_url)
+    if photo_url =~ ActionView::Helpers::AssetUrlHelper::URI_REGEXP
+      url = URI.parse(photo_url)
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = (url.scheme == 'https')
+
+      http.start do |http|
+        return http.head(url.request_uri).content_type.start_with? 'image'
+      end
+    else
+      false
     end
   end
 end

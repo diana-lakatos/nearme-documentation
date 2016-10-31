@@ -108,7 +108,6 @@ module Metadata::Base
             tmp_#{metadata_column} = #{metadata_column}
             if self.persisted?
               update_columns(#{metadata_column}: self.#{metadata_column}, updated_at: Time.now)
-              self.touch
             end
             self.#{metadata_column} = tmp_#{metadata_column}
           end

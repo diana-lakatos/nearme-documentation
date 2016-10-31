@@ -8,11 +8,10 @@ module Auth
       @auth_params['credentials'] ||= {}
     end
 
-    def create_user(google_analytics_id, role)
+    def create_user(role)
       user = User.new
       user.force_profile = role
       user.apply_omniauth(@auth_params)
-      user.google_analytics_id = google_analytics_id
       user.save
     end
 
@@ -46,7 +45,7 @@ module Auth
 
     def email_taken_by_other_user?(current_user)
       if email = @auth_params['info']['email'].presence
-        user = User.find_by_email(@auth_params['info']['email'])
+        user = User.find_by(email: @auth_params['info']['email'])
         current_user.try(:email) != email && user.present? && Authentication.where('user_id = ? AND provider = ?', user.id, provider).count.zero?
       else
         false
@@ -59,12 +58,12 @@ module Auth
       elsif authentication
         authentication.user
       else
-        fail 'No user specified!'
+        raise 'No user specified!'
       end
     end
 
     def authentication
-      @authentication ||= Authentication.find_by_provider_and_uid(provider, uid)
+      @authentication ||= Authentication.find_by(provider: provider, uid: uid)
     end
 
     def provider
@@ -88,7 +87,11 @@ module Auth
       if provider == 'linkedin'
         Time.zone.now + 60.days
       else
-        Time.at(@auth_params['credentials']['expires_at']) rescue nil
+        begin
+          Time.at(@auth_params['credentials']['expires_at'])
+        rescue
+          nil
+        end
       end
     end
   end

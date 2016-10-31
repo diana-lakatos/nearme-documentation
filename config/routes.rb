@@ -53,7 +53,6 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    get 'amenities', to: 'amenities#index'
     get 'organizations', to: 'organizations#index'
   end
 
@@ -297,7 +296,6 @@ DesksnearMe::Application.routes.draw do
         resources :location_types, only: [:index, :create, :update, :destroy_modal, :destroy] do
           get 'destroy_modal', on: :member
         end
-        resource :listings, only: [:show, :update], controller: 'listings'
         resources :payments
         resources :payment_gateways, controller: 'payments/payment_gateways', except: [:show]
         resources :tax_regions do
@@ -498,6 +496,7 @@ DesksnearMe::Application.routes.draw do
         resources :merchant_accounts do
           member do
             get :void
+            get :pending
           end
         end
 
@@ -512,14 +511,18 @@ DesksnearMe::Application.routes.draw do
             post :generate
           end
         end
+        resources :partners
         resources :payments, only: [:index, :show, :update]
         resources :orders, only: [:index, :show] do
           member do
             post :generate_next_period
           end
         end
-
-        resources :partners
+        resources :webhooks, only: [:index, :show, :destroy] do
+          member do
+            post :retry
+          end
+        end
 
         resources :admins, only: [:index, :create]
         namespace :admins do
@@ -680,7 +683,6 @@ DesksnearMe::Application.routes.draw do
       match 'users/update_password', to: 'registrations#update_password', as: 'update_password', via: [:patch, :put]
       get 'users/edit_notification_preferences', to: 'registrations#edit_notification_preferences', as: 'edit_notification_preferences'
       match 'users/update_notification_preferences', to: 'registrations#update_notification_preferences', as: 'update_notification_preferences', via: [:patch, :put]
-      post 'users/store_google_analytics_id', to: 'registrations#store_google_analytics_id', as: 'store_google_analytics'
       post 'users/store_geolocated_location', to: 'registrations#store_geolocated_location', as: 'store_geolocated_location'
       get 'users/', to: 'registrations#new'
       get 'users/verify/:id/:token', to: 'registrations#verify', as: 'verify_user'
@@ -1048,8 +1050,6 @@ DesksnearMe::Application.routes.draw do
 
     get '/search/categories', to: 'search#categories'
     get '/search/(:search_type)', to: 'search#index', as: :search
-
-    resource :event_tracker, only: [:create], controller: 'event_tracker'
 
     resources :authentications, only: [:create, :destroy] do
       collection do

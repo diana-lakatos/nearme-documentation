@@ -82,7 +82,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
     OpenStruct.new(
       "created": 1_326_853_478,
       "livemode": false,
-      "id": 'evt_00000000000000',
+      "id": "evt_#{Random.new_seed}",
       "type": options[:type],
       "object": 'event',
       "request": nil,

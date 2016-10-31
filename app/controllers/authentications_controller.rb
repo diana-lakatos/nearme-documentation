@@ -1,18 +1,16 @@
 class AuthenticationsController < ApplicationController
   include LoginLinksHelper
 
-  skip_before_filter :set_locale
-  skip_before_filter :redirect_to_set_password_unless_unnecessary, only: [:create, :setup]
-  skip_before_filter :verify_authenticity_token
-  skip_before_filter :force_fill_in_wizard_form
+  skip_before_action :set_locale
+  skip_before_action :redirect_to_set_password_unless_unnecessary, only: [:create, :setup]
+  skip_before_action :verify_authenticity_token
+  skip_before_action :force_fill_in_wizard_form
   before_action :set_role
 
   def set_role
     if current_instance.split_registration?
       @role ||= 'buyer'
-      if env['omniauth.params'].present?
-        @role = %w(seller buyer).detect { |r| r == env['omniauth.params']['role'] }
-      end
+      @role = %w(seller buyer).detect { |r| r == env['omniauth.params']['role'] } if env['omniauth.params'].present?
     end
     @role ||= 'default'
   end
@@ -42,7 +40,7 @@ class AuthenticationsController < ApplicationController
       same_user_already_logged_in
       # There is no authentication in our system, and the user is not logged in. Hence, we create a new user and then new authentication
     else
-      if @oauth.create_user(cookies[:google_analytics_id], @role)
+      if @oauth.create_user(@role)
         case @role
         when 'default'
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @oauth.authentication.user.id)
@@ -69,7 +67,6 @@ class AuthenticationsController < ApplicationController
     @authentication = current_user.authentications.find(params[:id])
     if @authentication.can_be_deleted?
       @authentication.really_destroy!
-      log_disconnect_social_provider
       flash[:deleted] = t('flash_messages.authentications.disconnected',
                           provider_name: @authentication.provider.titleize)
     else
@@ -127,9 +124,6 @@ class AuthenticationsController < ApplicationController
     flash[:success] = t('flash_messages.authentications.signed_in_successfully') if use_flash_messages?
     @oauth.remember_user!
     @oauth.update_token_info
-    update_analytics_google_id(@oauth.authenticated_user)
-    log_logged_in
-
     @oauth.authenticated_user.logged_out! if @oauth.authenticated_user.respond_to?('logged_out!')
     sign_in_and_redirect(:user, @oauth.authenticated_user)
   end
@@ -143,15 +137,12 @@ class AuthenticationsController < ApplicationController
 
   def new_authentication_for_existing_user
     @oauth.create_authentication!(current_user)
-    log_connect_social_provider
     flash[:success] = t('flash_messages.authentications.authentication_successful')
     redirect_to redirect_after_callback_to || social_accounts_path
   end
 
   def new_user_created_successfully
     @oauth.authenticated_user
-    log_sign_up
-    log_connect_social_provider
     @oauth.remember_user!
     @oauth.update_token_info
     flash[:success] = t('flash_messages.authentications.signed_in_successfully') if use_flash_messages?
@@ -161,24 +152,6 @@ class AuthenticationsController < ApplicationController
   def failed_to_create_new_user
     session[:omniauth] = @omniauth.try(:except, 'extra')
     redirect_to new_user_registration_url(wizard: wizard_id, role: @role)
-  end
-
-  def log_sign_up
-    analytics_apply_user(@oauth.authenticated_user)
-    event_tracker.signed_up(@oauth.authenticated_user, signed_up_via: 'other', provider: @oauth.provider)
-  end
-
-  def log_logged_in
-    analytics_apply_user(@oauth.authenticated_user)
-    event_tracker.logged_in(@oauth.authenticated_user, provider: @oauth.provider)
-  end
-
-  def log_connect_social_provider
-    event_tracker.connected_social_provider(@oauth.authenticated_user, provider: @oauth.provider)
-  end
-
-  def log_disconnect_social_provider
-    event_tracker.disconnected_social_provider(@authentication.user, provider: @authentication.provider)
   end
 
   private

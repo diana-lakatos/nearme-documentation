@@ -5,13 +5,16 @@ module CustomAttributes
         extend ActiveSupport::Concern
 
         included do
-
           def custom_property_type_cast(value, type)
             return [] if value.nil? && type == :array
             return nil if value.nil?
             case type
             when :string, :text        then value
-            when :integer              then value.to_i rescue value ? 1 : 0
+            when :integer              then begin
+                                              value.to_i
+                                            rescue
+                                              value ? 1 : 0
+                                            end
             when :float                then value.to_f
             when :decimal              then ActiveRecord::Type::Decimal.new.type_cast_from_database(value)
             when :datetime, :timestamp then ActiveRecord::Type::DateTime.new.type_cast_from_database(value).try(:in_time_zone)
@@ -23,9 +26,7 @@ module CustomAttributes
             else value
             end
           end
-
         end
-
       end
     end
   end

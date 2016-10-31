@@ -8,8 +8,6 @@ class CheckoutController < ApplicationController
   def show
     @order.try(:last_search_json=, cookies[:last_search])
     @order.object.try(:before_checkout_callback)
-
-    event_tracker.reviewed_a_booking(@order)
   end
 
   def update
@@ -32,10 +30,6 @@ class CheckoutController < ApplicationController
     if @order.inactive?
       redirect_to action: :show
     else
-      event_tracker.updated_profile_information(@order.owner)
-      event_tracker.updated_profile_information(@order.host)
-      event_tracker.requested_a_booking(@order)
-
       card_message = @order.payment.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
       redirect_to dashboard_order_path(@order)

@@ -13,13 +13,8 @@ module.exports = class AttachmentInput
     @collection = @container.find('[data-attachment-collection]')
     @preventEarlySubmission()
     @processing = 0
-
     @bindEvents()
-
     @initializeFileUpload()
-
-    if sessioncamConfiguration?
-      sessioncamConfiguration.customDataObjects.push( { key: "event", value: "first_listing_form_visit" } )
 
   bindEvents: ->
     @listenToDeleteFile()

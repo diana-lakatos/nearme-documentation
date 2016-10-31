@@ -13,9 +13,6 @@ DesksnearMe::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
   config.assets.digest = false
   config.exceptions_app = nil
-  # Don't perform mixpanel and google analytics requests for development
-  config.perform_mixpanel_requests = false
-  config.perform_google_analytics_requests = false
   config.perform_social_jobs = false
 
   config.encrypt_sensitive_db_columns = true

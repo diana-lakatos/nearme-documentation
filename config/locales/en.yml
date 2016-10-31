@@ -1397,7 +1397,6 @@ en:
       confirm_delete: 'Are you sure you want to delete this listing?'
       remove_amenity: 'Remove'
       view_edit_location: 'view / edit location'
-      location_amenities: 'Location Amenities'
       add_waiver: 'add another waiver requirement'
       add_document: 'add another document requirement'
       required_documents: 'Please enter the documents your customers will need to provide before booking this service.'
@@ -1707,7 +1706,7 @@ en:
       header: 'Merchant account details'
       pending: 'Your merchant account is pending verification.'
       verified: 'Your merchant account has been verified.'
-      void: 'Your merchant account has been voided.'
+      voided: 'Your merchant account has been voided.'
       failed: 'Verification of your merchant account failed.'
       currency: 'Currency'
       select_currency: '- Select Currency -'
@@ -2602,7 +2601,6 @@ en:
   location:
     the_location: 'The location'
     hours: 'Hours'
-    amenities: 'Amenities'
 
     confirmations:
       admin_login: 'This will log you out and re-log you in as location administrator.'
@@ -2761,9 +2759,6 @@ en:
       title: 'Braintree'
       terms_of_service_html: '%{name} uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement available at <a href="https://www.braintreepayments.com/legal/gateway-agreement">https://www.braintreepayments.com/legal/gateway-agreement</a>, and the applicable bank agreement available at <a href="https://www.braintreepayments.com/legal/cea-wells">https://www.braintreepayments.com/legal/cea-wells</a>'
       credit_card_subscription_info: "A credit card is required in the case of a cancellation to provide a refund of the booking charge to the Guest."
-
-  amenities_attribute: 'Amenities'
-  amenity_attribute: 'amenity'
 
   ckeditor_custom:
     file_uploads:

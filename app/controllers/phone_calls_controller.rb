@@ -1,7 +1,7 @@
 require 'twilio-ruby'
 
 class PhoneCallsController < ApplicationController
-  class NoVerifiedPhoneNumber < Exception; end
+  class NoVerifiedPhoneNumber < StandardError; end
 
   rescue_from Twilio::REST::RequestError, with: :request_error
   rescue_from NoVerifiedPhoneNumber, with: :unverified_error

@@ -9,16 +9,15 @@ class ListingsController < ApplicationController
   before_action :redirect_if_non_canonical_url, only: [:show], if: :not_community?
   before_action :assign_transactable_type_id_to_lookup_context, if: :not_community?
 
-  before_filter :find_project, only: [:show], if: :is_community?
-  before_filter :redirect_if_draft, only: [:show], if: :is_community?
-  before_filter :build_comment, only: [:show], if: :is_community?
+  before_action :find_project, only: [:show], if: :is_community?
+  before_action :redirect_if_draft, only: [:show], if: :is_community?
+  before_action :build_comment, only: [:show], if: :is_community?
 
   def show
     if !PlatformContext.current.instance.is_community?
       @section_name = 'listings'
 
       @listing.track_impression(request.remote_ip)
-      event_tracker.viewed_a_listing(@listing, logged_in: user_signed_in?)
       @reviews = @listing.reviews.paginate(page: params[:reviews_page])
 
       @rating_questions = RatingSystem.active_with_subject(RatingConstants::TRANSACTABLE).try(:rating_questions)
@@ -37,11 +36,11 @@ class ListingsController < ApplicationController
     if @listing.action_type
       @action_type = @listing.action_type.decorate
 
-      if params[:unavailable].eql?('true')
-        action_type_template = 'unavailable'
-      else
-        action_type_template = @action_type.object.class.name.demodulize.underscore
-      end
+      action_type_template = if params[:unavailable].eql?('true')
+                               'unavailable'
+                             else
+                               @action_type.object.class.name.demodulize.underscore
+                             end
 
       render template: "listings/action_types/#{action_type_template}", layout: false
     end
@@ -82,9 +81,7 @@ class ListingsController < ApplicationController
 
   def find_location
     @location = @listing.location
-    if params[:location_id].present? && params[:location_id] != @location.slug
-      redirect_to @listing.show_path, status: 301
-    end
+    redirect_to @listing.show_path, status: 301 if params[:location_id].present? && params[:location_id] != @location.slug
   end
 
   def find_transactable_type
@@ -96,18 +93,18 @@ class ListingsController < ApplicationController
 
   def find_siblings
     @listing_siblings = @location.listings.includes(:transactable_type).where.not(id: @listing.id)
-    if @transactable_type.groupable_with_others?
-      @listing_siblings = @listing_siblings.for_groupable_transactable_types
-    else
-      @listing_siblings = @listing_siblings.for_transactable_type_id(@transactable_type.id)
-    end
-    if current_user_can_manage_location?
-      # We only show non-draft listings even to the admin because otherwise weird errors can occur
-      # when showing him incomplete listings, especially if he tries to book it
-      @listing_siblings = @listing_siblings.active
-    else
-      @listing_siblings = @listing_siblings.searchable
-    end
+    @listing_siblings = if @transactable_type.groupable_with_others?
+                          @listing_siblings.for_groupable_transactable_types
+                        else
+                          @listing_siblings.for_transactable_type_id(@transactable_type.id)
+                        end
+    @listing_siblings = if current_user_can_manage_location?
+                          # We only show non-draft listings even to the admin because otherwise weird errors can occur
+                          # when showing him incomplete listings, especially if he tries to book it
+                          @listing_siblings.active
+                        else
+                          @listing_siblings.searchable
+                        end
   end
 
   def redirect_if_listing_inactive
@@ -149,7 +146,7 @@ class ListingsController < ApplicationController
 
   def restore_initial_bookings_from_stored_reservation
     if params[:restore_reservations].to_i == @listing.id && session[:stored_order_transactable_id]
-      @form_trigger = session[:stored_order_trigger]["#{@listing.id}"].presence || 'Book'
+      @form_trigger = session[:stored_order_trigger][@listing.id.to_s].presence || 'Book'
       @initial_bookings = session[:stored_order_bookings][@listing.id]
     else
       @initial_bookings = {}

@@ -150,7 +150,7 @@ class ReservationDrop < OrderDrop
 
   # url for confirming the recurring booking with tracking
   def reservation_confirm_url_with_tracking
-    routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.transactable.administrator.try(:temporary_token), track_email_event: true)
+    routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.transactable.administrator.try(:temporary_token))
   end
 
   # url to the reviews section in the user's dashboard

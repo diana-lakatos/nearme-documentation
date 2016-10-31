@@ -80,7 +80,7 @@ class RecurringBookingDrop < OrderDrop
 
   # url to the dashboard area for managing own reservations with tracking
   def bookings_dashboard_url_with_tracking
-    routes.dashboard_user_recurring_bookings_path(token_key => @recurring_booking.owner.temporary_token, track_email_event: true)
+    routes.dashboard_user_recurring_bookings_path(token_key => @recurring_booking.owner.temporary_token)
   end
 
   # reservation dates separated with <hr>
@@ -105,7 +105,7 @@ class RecurringBookingDrop < OrderDrop
 
   # url for confirming the recurring booking with tracking
   def reservation_confirm_url_with_tracking
-    routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, listing_id: @recurring_booking.transactable, token_key => @recurring_booking.creator.try(:temporary_token), :track_email_event => true)
+    routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, listing_id: @recurring_booking.transactable, token_key => @recurring_booking.creator.try(:temporary_token))
   end
 
   # reservation date (first date)

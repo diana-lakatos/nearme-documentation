@@ -178,9 +178,12 @@ class Company < ActiveRecord::Base
 
   def validate_url_format
     return if url.blank?
-
     # We parse and normalize with Addressable to make sure we catch unicode domains as well
-    parsed = Addressable::URI.parse(url)
+
+    parsed = begin Addressable::URI.parse(url)
+             rescue Addressable::URI::InvalidURIError
+               ''
+             end
     normalized = parsed.try(:normalize).to_s
 
     valid = URL_REGEXP.match(normalized)
@@ -189,7 +192,6 @@ class Company < ActiveRecord::Base
               rescue
                 false
               end
-
     errors.add(:url, 'must be a valid URL') unless valid
   end
 

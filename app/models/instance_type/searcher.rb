@@ -26,10 +26,6 @@ module InstanceType::Searcher
     category.children.inject([]) { |options, c| options << [c.id, c.translated_name] }
   end
 
-  def should_log_conducted_search?
-    @params[:loc].present? || @params[:query].present?
-  end
-
   def to_event_params
     { search_query: query, result_count: result_count }.merge(filters)
   end

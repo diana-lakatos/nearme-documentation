@@ -14,7 +14,7 @@ module CarrierWave::DelayedVersions
 
       alias_method "original_#{column}_url", "#{column}_url"
       define_method "#{column}_url" do |*args|
-        send(column).current_url(*args)
+        send(column).url(*args)
       end
 
       before_save do

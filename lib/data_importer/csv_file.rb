@@ -24,31 +24,27 @@ class DataImporter::CsvFile < DataImporter::File
   end
 
   def user_attributes
-    fail NotImplementedError
+    raise NotImplementedError
   end
 
   def company_attributes
-    fail NotImplementedError
+    raise NotImplementedError
   end
 
   def location_attributes
-    fail NotImplementedError
+    raise NotImplementedError
   end
 
   def address_attributes
-    fail NotImplementedError
+    raise NotImplementedError
   end
 
   def listing_attributes
-    fail NotImplementedError
+    raise NotImplementedError
   end
 
   def photo_attributes
-    fail NotImplementedError
-  end
-
-  def amenities
-    []
+    raise NotImplementedError
   end
 
   def send_invitation

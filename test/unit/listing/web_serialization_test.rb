@@ -16,7 +16,6 @@ class Listing::WebSerializationTest < ActiveSupport::TestCase
       assert_equal @listing.action_type.day_pricings.first.price_cents, @json[:prices].find { |p| p[:unit] == 'day' }[:price_cents]
       assert_equal @listing.action_type.hour_pricings.first.price_cents, @json[:prices].find { |p| p[:unit] == 'hour' }[:price_cents]
       assert_equal 7, @json[:availability_rules_attributes].count
-      assert @json[:amenity_ids].empty?
     end
   end
 end

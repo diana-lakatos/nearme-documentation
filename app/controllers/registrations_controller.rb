@@ -24,7 +24,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :redirect_to_edit_profile_if_password_set, only: [:set_password]
   before_action :set_user_profiles, only: [:edit]
 
-  skip_before_action :redirect_if_marketplace_password_protected, only: [:store_geolocated_location, :store_google_analytics_id, :update_password, :set_password]
+  skip_before_action :redirect_if_marketplace_password_protected, only: [:store_geolocated_location, :update_password, :set_password]
 
   def new
     @legal_page_present = Page.exists?(slug: 'legal')
@@ -50,12 +50,6 @@ class RegistrationsController < Devise::RegistrationsController
                                             source: cookies.signed[:source],
                                             campaign: cookies.signed[:campaign],
                                             language: I18n.locale)
-        update_analytics_google_id(@user)
-        analytics_apply_user(@user)
-        event_tracker.signed_up(@user,           referrer_id: platform_context.platform_context_detail.id,
-                                                 referrer_type: platform_context.platform_context_detail.class.to_s,
-                                                 signed_up_via: signed_up_via,
-                                                 provider: Auth::Omni.new(session[:omniauth]).provider)
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role
         when 'default'
@@ -86,7 +80,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit
     @country = current_user.country_name
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     build_approval_request_for_object(current_user) unless current_user.is_trusted?
     render :edit, layout: dashboard_or_community_layout
   end
@@ -116,15 +109,8 @@ class RegistrationsController < Devise::RegistrationsController
       if @company.present?
         @listings = @company.listings.searchable.includes(:location).paginate(page: params[:services_page], per_page: 8)
       end
-      if RatingSystem.active.any?
-        @reviews_count = Review.about_seller(@user).count
-        @reviews_about_buyer_count = Review.about_buyer(@user).count
-        @reviews_left_by_seller_count = Review.left_by_seller(@user).count
-        @reviews_left_by_buyer_count = Review.left_by_buyer(@user).active_with_subject(RatingConstants::HOST).count
-        @reviews_left_about_product_count = Review.left_by_buyer(@user).active_with_subject(RatingConstants::TRANSACTABLE).count
-        @total_reviews_count = @reviews_count + @reviews_about_buyer_count + @reviews_left_by_seller_count +
-                               @reviews_left_by_buyer_count + @reviews_left_about_product_count
-      end
+
+      @total_reviews_count = @user.total_reviews_count if RatingSystem.active.any?
     end
     respond_to :html
   end
@@ -156,7 +142,6 @@ class RegistrationsController < Devise::RegistrationsController
       onboarded = @user.buyer_profile.try(:mark_as_onboarded!) || @user.seller_profile.try(:mark_as_onboarded!)
       set_flash_message :success, :updated
       sign_in(resource, bypass: true)
-      event_tracker.updated_profile_information(@user)
       redirect_to dashboard_profile_path(onboarded: onboarded)
     else
       @buyer_profile = resource.get_buyer_profile
@@ -187,7 +172,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit_avatar
     if request.xhr?
-      render partial: 'dashboard/photos/resize_form', locals: { form_url: update_avatar_path, object: current_user.avatar, object_url: current_user.avatar_url(:original) }
+      render partial: 'dashboard/photos/resize_form', locals: { form_url: update_avatar_path, object: current_user.avatar, object_url: current_user.avatar.url }
     end
   end
 
@@ -223,7 +208,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit_cover_image
     if request.xhr?
-      render partial: 'dashboard/photos/resize_form', locals: { form_url: update_cover_image_path, object: current_user.cover_image, object_url: current_user.cover_image_url(:original) }
+      render partial: 'dashboard/photos/resize_form', locals: { form_url: update_cover_image_path, object: current_user.cover_image, object_url: current_user.cover_image.url }
     end
   end
 
@@ -246,7 +231,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_password
     @user = current_user
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def update_password
@@ -268,7 +252,6 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(params[:id])
     if @user.verify_email_with_token(params[:token])
       sign_in(@user)
-      event_tracker.track_event_within_email(@user, request) if params[:track_email_event]
       flash[:success] = t('flash_messages.registrations.address_verified')
       redirect_to @user.listings.count > 0 ? dashboard_path : edit_user_registration_path
     else
@@ -279,12 +262,6 @@ class RegistrationsController < Devise::RegistrationsController
       end
       redirect_to root_path
     end
-  end
-
-  def store_google_analytics_id
-    cookies[:google_analytics_id] = params[:id]
-    update_analytics_google_id(current_user)
-    render nothing: true
   end
 
   def unsubscribe

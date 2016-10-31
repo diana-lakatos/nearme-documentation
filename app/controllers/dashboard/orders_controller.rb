@@ -15,9 +15,6 @@ class Dashboard::OrdersController < Dashboard::BaseController
       if @order.user_cancel
         # we want to make generic workflows probably. Maybe even per TT [ many to many ]
         WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::EnquirerCancelled".constantize, @order.id)
-        event_tracker.cancelled_a_booking(@order, actor: 'guest')
-        event_tracker.updated_profile_information(@order.owner)
-        event_tracker.updated_profile_information(@order.host)
         flash[:success] = t('flash_messages.reservations.reservation_cancelled')
       else
         flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')
@@ -91,9 +88,6 @@ class Dashboard::OrdersController < Dashboard::BaseController
 
       flash[:notice] = '' unless @order.inactive?
       flash[:error] = @order.errors.full_messages.join(',<br />')
-      event_tracker.updated_profile_information(@order.owner)
-      event_tracker.updated_profile_information(@order.host)
-      event_tracker.requested_a_booking(@order)
 
       card_message = @order.payment.try(:credit_card_payment?) ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
@@ -148,7 +142,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
       end
 
       transactable.document_requirements.each do |req|
-        next unless !req.item.upload_obligation.not_required? && !requirement_ids.include?(req.id)
+        next if req.item.upload_obligation.not_required? || requirement_ids.include?(req.id)
         @order.payment_documents.build(
           attachable: @order,
           user: @user,

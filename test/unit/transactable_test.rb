@@ -115,7 +115,7 @@ class TransactableTest < ActiveSupport::TestCase
       should 'initialize metadata' do
         @listing.expects(:update_metadata).with(photos_metadata: [{
                                                   listing_name: @photo.listing.name,
-                                                  original: @photo.image_url(:original),
+                                                  original: @photo.image_url(:optimized),
                                                   space_listing: @photo.image_url(:space_listing),
                                                   golden: @photo.image_url(:golden),
                                                   large: @photo.image_url(:large),
@@ -139,25 +139,25 @@ class TransactableTest < ActiveSupport::TestCase
 
         should 'update existing metadata' do
           @listing.expects(:update_metadata).with(photos_metadata: [
-            {
-              listing_name: @photo.listing.name,
-              original: @photo.image_url(:original),
-              space_listing: @photo.image_url(:space_listing),
-              golden: @photo.image_url(:golden),
-              large: @photo.image_url(:large),
-              fullscreen: @photo.image_url(:fullscreen),
-              caption: @photo.caption
-            },
-            {
-              listing_name: @photo2.listing.name,
-              original: @photo2.image_url(:original),
-              space_listing: @photo2.image_url(:space_listing),
-              golden: @photo2.image_url(:golden),
-              large: @photo2.image_url(:large),
-              fullscreen: @photo2.image_url(:fullscreen),
-              caption: @photo2.caption
-            }
-          ])
+                                                    {
+                                                      listing_name: @photo.listing.name,
+                                                      original: @photo.image_url(:optimized),
+                                                      space_listing: @photo.image_url(:space_listing),
+                                                      golden: @photo.image_url(:golden),
+                                                      large: @photo.image_url(:large),
+                                                      fullscreen: @photo.image_url(:fullscreen),
+                                                      caption: @photo.caption
+                                                    },
+                                                    {
+                                                      listing_name: @photo2.listing.name,
+                                                      original: @photo2.image_url(:optimized),
+                                                      space_listing: @photo2.image_url(:space_listing),
+                                                      golden: @photo2.image_url(:golden),
+                                                      large: @photo2.image_url(:large),
+                                                      fullscreen: @photo2.image_url(:fullscreen),
+                                                      caption: @photo2.caption
+                                                    }
+                                                  ])
           @listing.populate_photos_metadata!
         end
       end
@@ -217,7 +217,7 @@ class TransactableTest < ActiveSupport::TestCase
         res = @listing.reserve!(FactoryGirl.build(:user), dates, 1, @listing.action_type.day_pricings.first)
         res.confirm
         # wednesday, thursday, friday = 3, saturday, sunday = 2 -> monday is sixth day
-        assert_equal tuesday + 6.day, @listing.action_type.first_available_date
+        assert_equal tuesday + 6.days, @listing.action_type.first_available_date
       end
     end
 
@@ -248,7 +248,7 @@ class TransactableTest < ActiveSupport::TestCase
 
       monday = Time.zone.today.sunday + 1
       travel_to monday.beginning_of_day do
-        assert_equal monday + 2.day, @listing.action_type.first_available_date
+        assert_equal monday + 2.days, @listing.action_type.first_available_date
       end
     end
   end

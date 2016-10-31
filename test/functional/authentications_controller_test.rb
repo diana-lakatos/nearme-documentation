@@ -9,30 +9,23 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
   test 'authentication can be deleted if user has password set' do
     create_signed_in_user_with_authentication
-    Rails.application.config.event_tracker.any_instance.expects(:disconnected_social_provider).once.with do |user, custom_options|
-      user == @user && custom_options == { provider: @user.authentications.first.provider }
-    end
     assert_difference('@user.authentications.count', -1) do
-      delete :destroy, id: @user.authentications.first.id
+      delete :destroy, { id: @user.authentications.first.id }
     end
   end
 
   test 'authentication can be deleted if user has no  password but more than one authentications' do
     create_signed_in_user_with_authentication
     add_authentication('twitter', 'abc123')
-    Rails.application.config.event_tracker.any_instance.expects(:disconnected_social_provider).once.with do |user, custom_options|
-      user == @user && custom_options == { provider: @user.authentications.first.provider }
-    end
     assert_difference('@user.authentications.count', -1) do
-      delete :destroy, id: @user.authentications.first.id
+      delete :destroy, { id: @user.authentications.first.id }
     end
   end
 
   test 'authentication cannot be deleted if user has no password and one authentication' do
     create_no_password_signed_in_user_and_authentication
-    assert_log_not_triggered(:disconnected_social_provider)
     assert_no_difference('@user.authentications.count') do
-      delete :destroy, id: @user.authentications.first.id
+      delete :destroy, { id: @user.authentications.first.id }
     end
   end
 
@@ -70,9 +63,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
 
     should 'successfully sign in and log' do
       add_authentication(@provider, @uid, @user)
-      Rails.application.config.event_tracker.any_instance.expects(:logged_in).once.with do |user, custom_options|
-        user == @user && custom_options == { provider: @provider }
-      end
       Authentication.any_instance.expects(:update_info)
 
       assert_no_difference('User.count') do
@@ -91,9 +81,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
       Twitter::REST::Client.any_instance.stubs(:user).once.returns(raw)
       Twitter::REST::Client.any_instance.stubs(:friend_ids).once.returns(%w(1 2))
       Authentication.any_instance.stubs(:token_expired?).returns(false)
-      Rails.application.config.event_tracker.any_instance.expects(:connected_social_provider).once.with do |user, custom_options|
-        user == @user && custom_options == { provider: @provider }
-      end
       assert_no_difference('User.count') do
         assert_difference('Authentication.count') do
           post :create
@@ -108,9 +95,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
     should 'successfully create new authentication as alternative to setting password' do
       @user = FactoryGirl.create(:user_without_password)
       sign_in @user
-      Rails.application.config.event_tracker.any_instance.expects(:connected_social_provider).once.with do |user, custom_options|
-        user == @user && custom_options == { provider: @provider }
-      end
       assert_no_difference('User.count') do
         assert_difference('Authentication.count') do
           post :create
@@ -130,17 +114,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
       assert flash[:error].include?('is already linked to an account')
     end
 
-    context 'should successfully sign up and log'  do
-      should 'is tracked via mixpanel' do
-        Rails.application.config.event_tracker.any_instance.expects(:signed_up).once.with do |user, custom_options|
-          user == assigns(:oauth).authenticated_user && custom_options == { signed_up_via: 'other', provider: @provider }
-        end
-        Rails.application.config.event_tracker.any_instance.expects(:connected_social_provider).once.with do |user, custom_options|
-          user == assigns(:oauth).authenticated_user && custom_options == {  provider: @provider }
-        end
-
-        post :create
-      end
+    context 'should successfully sign up and log' do
 
       should 'create user with auth.' do
         assert_difference('User.count') do

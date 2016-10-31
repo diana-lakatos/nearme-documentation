@@ -1,20 +1,17 @@
 class Dashboard::UserReservationsController < Dashboard::BaseController
-  before_filter only: [:user_cancel] do |controller|
+  before_action only: [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
       flash[:error] = t('flash_messages.reservations.invalid_operation')
       redirect_to redirection_path
     end
   end
 
-  before_filter :reservation, only: [:booking_successful_modal, :booking_failed_modal]
+  before_action :reservation, only: [:booking_successful_modal, :booking_failed_modal]
 
   def user_cancel
     if reservation.cancelable?
       if reservation.user_cancel
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, reservation.id)
-        event_tracker.cancelled_a_booking(reservation, actor: 'guest')
-        event_tracker.updated_profile_information(reservation.owner)
-        event_tracker.updated_profile_information(reservation.host)
         flash[:success] = t('flash_messages.reservations.reservation_cancelled')
       else
         flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')
@@ -43,7 +40,6 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
     @upcoming_count = @reservations.count
     @archived_count = current_user.orders.reservations.archived.count
 
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     render :index
   end
 

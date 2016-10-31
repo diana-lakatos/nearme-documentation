@@ -9,8 +9,6 @@ class V1::RegistrationsController < V1::BaseController
     @user.password = user_params['password']
 
     if @user.save
-      analytics_apply_user(@user)
-      event_tracker.signed_up(@user, signed_up_via: 'api', provider: 'native')
       render json: @user
     else
       puts @user.errors.to_json
@@ -44,7 +42,8 @@ class V1::RegistrationsController < V1::BaseController
       hash[:errors] << {
         resource: 'User',
         field: k,
-        code: (/already been taken/ =~ v ? 'already_exists' : 'invalid') }
+        code: (/already been taken/ =~ v ? 'already_exists' : 'invalid')
+      }
     end
 
     hash

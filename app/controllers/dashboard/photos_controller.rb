@@ -11,16 +11,16 @@ class Dashboard::PhotosController < Dashboard::AssetsController
 
       sizes = {}
       @photo.image.thumbnail_dimensions.each_with_index do |dimensions, _index|
-        sizes[dimensions[0]] = { width: dimensions[1][:width], height: dimensions[1][:height], url: @photo.image_url(dimensions[0].to_sym) }
+        sizes[dimensions[0]] = { width: dimensions[1][:width], height: dimensions[1][:height], url: @photo.image.url(dimensions[0].to_sym) }
       end
 
-      sizes[:full] = { url: @photo.image_url }
+      sizes[:full] = { url: @photo.image.url }
 
       render text: {
         id: @photo.id,
         transactable_id: @photo.owner_id,
-        thumbnail_dimensions: ['Group'].include?(@owner_type) ? @photo.image.thumbnail_dimensions[:project_thumbnail] : @photo.image.thumbnail_dimensions[:medium],
-        url: ['Group'].include?(@owner_type) ? @photo.image_url(:project_thumbnail) : @photo.image_url(:medium),
+        thumbnail_dimensions: ['Group'].include?(@owner_type) ? { width: 200, height: 175, transform: :resize_to_fill } : @photo.image.thumbnail_dimensions[:medium],
+        url: ['Group'].include?(@owner_type) ? @photo.image.url(:thumb) : @photo.image.url(:medium),
         destroy_url: destroy_space_wizard_photo_path(@photo),
         resize_url: edit_dashboard_photo_path(@photo),
         sizes: sizes
@@ -34,7 +34,7 @@ class Dashboard::PhotosController < Dashboard::AssetsController
   def edit
     @photo = current_user.photos.find(params[:id])
     if request.xhr?
-      render partial: 'dashboard/photos/resize_form', locals: { form_url: dashboard_photo_path(@photo), object: @photo.image, object_url: @photo.image_url(:original) }
+      render partial: 'dashboard/photos/resize_form', locals: { form_url: dashboard_photo_path(@photo), object: @photo.image, object_url: @photo.original_image_url }
     end
   end
 
@@ -44,7 +44,7 @@ class Dashboard::PhotosController < Dashboard::AssetsController
     if @photo.save
       render partial: 'dashboard/photos/resize_succeeded'
     else
-      render partial: 'dashboard/photos/resize_form', locals: { form_url: dashboard_photo_path(@photo), object: @photo.image, object_url: @photo.image_url(:original) }
+      render partial: 'dashboard/photos/resize_form', locals: { form_url: dashboard_photo_path(@photo), object: @photo.image, object_url: @photo.original_image_url }
     end
   end
 

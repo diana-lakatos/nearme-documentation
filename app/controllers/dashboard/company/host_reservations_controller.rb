@@ -1,11 +1,10 @@
 class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseController
-  before_filter :find_reservation, except: [:index]
-  before_filter :check_if_pending_guest_confirmation, only: [:complete_reservation, :submit_complete_reservation]
-  before_filter :redirect_to_account_if_verification_required
+  before_action :find_reservation, except: [:index]
+  before_action :check_if_pending_guest_confirmation, only: [:complete_reservation, :submit_complete_reservation]
+  before_action :redirect_to_account_if_verification_required
 
   def index
     @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def confirm
@@ -20,9 +19,6 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       end
       if @reservation.confirmed?
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
-        event_tracker.confirmed_a_booking(@reservation)
-        track_reservation_update_profile_informations
-        event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
         flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
       else
         flash[:error] = [
@@ -31,9 +27,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
         ].join("\n")
       end
     else
-      if @reservation.expired?
-        flash[:error] = t('dashboard.host_reservations.reservation_is_expired')
-      end
+      flash[:error] = t('dashboard.host_reservations.reservation_is_expired') if @reservation.expired?
     end
 
     redirect_to redirection_path
@@ -45,8 +39,6 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
 
   def reject
     if @reservation.reject(rejection_reason)
-      event_tracker.rejected_a_booking(@reservation)
-      track_reservation_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
@@ -65,8 +57,6 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
   def host_cancel
     if @reservation.host_cancel
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id)
-      event_tracker.cancelled_a_booking(@reservation, actor: 'host')
-      track_reservation_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_cancelled')
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
@@ -150,11 +140,6 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
 
   def rejection_reason
     params[:reservation][:rejection_reason] if params[:reservation] && params[:reservation][:rejection_reason]
-  end
-
-  def track_reservation_update_profile_informations
-    event_tracker.updated_profile_information(@reservation.owner)
-    event_tracker.updated_profile_information(@reservation.host)
   end
 
   def check_if_pending_guest_confirmation

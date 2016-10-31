@@ -41,7 +41,7 @@ class FormAttributes
       :description, :email, :info, :time_zone,
       :phone, :availability_rules, :special_notes,
       :location_type, :photos, :name, :address, :administrator,
-      :amenities, :assigned_waiver_agreement_templates
+      :assigned_waiver_agreement_templates
     ]
   end
 
@@ -61,7 +61,7 @@ class FormAttributes
   def dashboard_transactable(transactable_type = nil)
     [
       :confirm_reservations, :name, :description, :location_id, :approval_requests,
-      :enabled, :amenity_types, :price, :currency, :schedule, :photos, :tags,
+      :enabled, :price, :currency, :schedule, :photos, :tags,
       :waiver_agreement_templates, :documents_upload, :quantity, :book_it_out,
       :exclusive_price, :action_rfq, :capacity, :seller_attachments,
       :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info,

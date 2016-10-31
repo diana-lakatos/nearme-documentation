@@ -16,7 +16,6 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def new
     flash.keep(:warning)
-    event_tracker.clicked_list_your_bookable(source: request.referer ? URI(request.referer).path : 'direct')
     if current_user
       redirect_to transactable_type_space_wizard_list_path(@transactable_type)
     else
@@ -31,8 +30,6 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     build_approval_requests
     @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(owner_id: nil)
     @attachments = (@user.first_listing.try(:attachments) || []) + @user.attachments.where(assetable_id: nil)
-    event_tracker.viewed_list_your_bookable
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def submit_listing
@@ -63,7 +60,6 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       if @user.first_listing.nil? || @user.first_listing.new_record?
         @user.save(validate: false)
         fix_availability_templates
-        track_saved_draft_event
         WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.try(:id))
       else
         @user.save(validate: false)
@@ -78,9 +74,6 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     elsif @user.save
       @user.listings.first.try(:action_type).try(:schedule).try(:create_schedule_from_schedule_rules)
       @user.companies.first.update_metadata(draft_at: nil, completed_at: Time.now)
-      track_new_space_event
-      track_new_company_event
-
       if @transactable_type.require_transactable_during_onboarding?
         WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @user.first_listing.try(:id)) unless @user.first_listing.try(:is_trusted?)
         WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.try(:id))
@@ -99,7 +92,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
       @attachments = @user.first_listing ? @user.first_listing.attachments : nil
-      @global_errors = filter_error_messages(@user.errors.full_messages + @user.properties.errors.full_messages)
+      @global_errors = filter_error_messages(@user.errors.full_messages +
+                                             @user.properties.errors.full_messages)
       render :list
     end
   end
@@ -190,23 +184,6 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     if current_user.try(:registration_completed?)
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     end
-  end
-
-  def track_saved_draft_event
-    event_tracker.saved_a_draft
-  end
-
-  def track_new_space_event
-    @location = @user.locations.first
-    @listing = @user.listings.first
-    event_tracker.created_a_location(@location, via: 'wizard')
-    event_tracker.created_a_listing(@listing, via: 'wizard')
-    event_tracker.updated_profile_information(@user)
-  end
-
-  def track_new_company_event
-    @company = @user.companies.first
-    event_tracker.created_a_company(@company) unless platform_context.instance.skip_company?
   end
 
   def set_transactable_type_id

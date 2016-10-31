@@ -8,11 +8,8 @@ class RegistrationsControllerTest < ActionController::TestCase
 
   context 'actions' do
     should 'successfully sign up and track' do
-      Rails.application.config.event_tracker.any_instance.expects(:signed_up).with do |user, custom_options|
-        user == assigns(:user) && custom_options == { referrer_id: PlatformContext.current.instance.id, referrer_type: 'Instance', signed_up_via: 'other', provider: 'native' }
-      end
       assert_difference('User.count') do
-        post :create, user: user_attributes
+        post :create, { user: user_attributes }
       end
     end
 
@@ -23,14 +20,14 @@ class RegistrationsControllerTest < ActionController::TestCase
 
       should 'not sign up without accepting terms if required' do
         assert_no_difference('User.count') do
-          post :create, user: user_attributes
+          post :create, { user: user_attributes }
         end
         assert_select 'p.error-block', 'must be accepted'
       end
 
       should 'sign up after accepting ToS' do
         assert_difference('User.count') do
-          post :create, user: user_attributes.merge(accept_terms_of_service: '1')
+          post :create, { user: user_attributes.merge(accept_terms_of_service: '1') }
         end
       end
     end
@@ -38,7 +35,7 @@ class RegistrationsControllerTest < ActionController::TestCase
     should 'show profile' do
       sign_in @user
 
-      get :show, id: @user.slug
+      get :show, { id: @user.slug }
 
       assert_response 200
       assert_select '.user-profile__header h1', @user.first_name
@@ -54,7 +51,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       tw = FactoryGirl.create(:authentication, provider: 'twitter', total_social_connections: 5)
       @user.authentications << [fb, ln, tw]
 
-      get :show, id: @user.slug
+      get :show, { id: @user.slug }
 
       assert_response 200
       assert_select '#verifications dt', 'Email Address'
@@ -64,14 +61,14 @@ class RegistrationsControllerTest < ActionController::TestCase
     end
 
     should 'not display company info on user profile when user does not have a company' do
-      get :show, id: @user.id
+      get :show, { id: @user.id }
       assert_response 200
       assert_select '.vendor-profile .shop-info p', false
     end
 
     should 'show company info on user profile' do
       FactoryGirl.create(:company, creator: @user)
-      get :show, id: @user.id
+      get :show, { id: @user.id }
 
       assert_response 200
       assert_select '#shop-info h2', 'Company Info'
@@ -80,7 +77,7 @@ class RegistrationsControllerTest < ActionController::TestCase
     should 'display edit actions if user is logged in' do
       FactoryGirl.create(:company, creator: @user)
       sign_in @user
-      get :show, id: @user.id
+      get :show, { id: @user.id }
 
       assert_response 200
       assert_select '#vendor-profile a', 'Edit'
@@ -90,7 +87,7 @@ class RegistrationsControllerTest < ActionController::TestCase
 
   context 'verify' do
     should 'verify user if token and id are correct' do
-      get :verify, id: @user.id, token: @user.email_verification_token
+      get :verify, { id: @user.id, token: @user.email_verification_token }
       @user.reload
       @controller.current_user.id == @user.id
       assert @user.verified_at
@@ -100,19 +97,19 @@ class RegistrationsControllerTest < ActionController::TestCase
       @company = FactoryGirl.create(:company, creator: @user)
       @location = FactoryGirl.create(:location, company: @company)
       FactoryGirl.create(:transactable, location: @location)
-      get :verify, id: @user.id, token: @user.email_verification_token
+      get :verify, { id: @user.id, token: @user.email_verification_token }
       assert_redirected_to dashboard_path
     end
 
     should 'redirect verified user without listing to settings' do
-      get :verify, id: @user.id, token: @user.email_verification_token
+      get :verify, { id: @user.id, token: @user.email_verification_token }
       assert_redirected_to edit_user_registration_path
     end
 
     should 'handle situation when user is verified' do
       @user.verified_at = Time.zone.now
       @user.save!
-      get :verify, id: @user.id, token: @user.email_verification_token
+      get :verify, { id: @user.id, token: @user.email_verification_token }
       @user.reload
       assert_nil @controller.current_user
       assert @user.verified_at
@@ -120,12 +117,12 @@ class RegistrationsControllerTest < ActionController::TestCase
 
     should 'not verify user if id is incorrect' do
       assert_raise ActiveRecord::RecordNotFound do
-        get :verify, id: (@user.id + 1), token: @user.email_verification_token
+        get :verify, { id: (@user.id + 1), token: @user.email_verification_token }
       end
     end
 
     should 'not verify user if token is incorrect' do
-      get :verify, id: @user.id, token: @user.email_verification_token + 'incorrect'
+      get :verify, { id: @user.id, token: @user.email_verification_token + 'incorrect' }
       @user.reload
       assert_nil @controller.current_user
       assert !@user.verified_at
@@ -145,13 +142,13 @@ class RegistrationsControllerTest < ActionController::TestCase
     context 'on first visit' do
       should 'be stored in both cookie and db' do
         @request.env['HTTP_REFERER'] = 'https://example.com/'
-        get :new, source: 'xxx', campaign: 'yyy'
+        get :new, { source: 'xxx', campaign: 'yyy' }
         assert_equal 'xxx', cookies.signed[:source]
         assert_equal 'yyy', cookies.signed[:campaign]
         assert_equal 'https://example.com/', session[:referer]
 
-        post :create, user: user_attributes
-        user = User.find_by_email('user@example.com')
+        post :create, { user: user_attributes }
+        user = User.find_by(email: 'user@example.com')
         assert_equal 'xxx', user.source
         assert_equal 'yyy', user.campaign
         assert_equal 'https://example.com/', user.referer
@@ -167,16 +164,16 @@ class RegistrationsControllerTest < ActionController::TestCase
         assert_equal 'https://example.com/', session[:referer]
 
         @request.env['HTTP_REFERER'] = 'http://homepage.com/'
-        get :new, source: 'xxx', campaign: 'yyy'
-        assert_nil cookies.signed[:source]
-        assert_nil cookies.signed[:campaign]
-        assert_equal 'https://example.com/', session[:referer]
+        get :new, { source: 'xxx', campaign: 'yyy' }
+        assert_equal 'xxx', cookies.signed[:source]
+        assert_equal 'yyy', cookies.signed[:campaign]
+        assert_equal 'http://homepage.com/', session[:referer]
 
-        post :create, user: user_attributes
-        user = User.find_by_email('user@example.com')
-        assert_nil user.source
-        assert_nil user.campaign
-        assert_equal 'https://example.com/', user.referer
+        post :create, { user: user_attributes }
+        user = User.find_by(email: 'user@example.com')
+        assert_equal 'xxx', user.source
+        assert_equal 'yyy', user.campaign
+        assert_equal 'http://homepage.com/', user.referer
       end
     end
 
@@ -184,7 +181,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       should 'store transformation data and rotate' do
         sign_in @user
         stub_image_url('http://www.example.com/image.jpg')
-        post :update_avatar, format: :js, crop: { w: 1, h: 2, x: 10, y: 20 }, rotate: 90
+        post :update_avatar, { format: :js, crop: { w: 1, h: 2, x: 10, y: 20 }, rotate: 90 }
         @user = assigns(:user)
         assert_not_nil @user.avatar_transformation_data
         assert_equal({ 'w' => 1, 'h' => 2, 'x' => 10, 'y' => 20 }, @user.avatar_transformation_data[:crop])
@@ -194,7 +191,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       should 'show error message when transformation fails' do
         sign_in @user
         stub_image_url('http://www.example.com/image.jpg')
-        put :update_avatar, format: :js, crop: { w: -1000, h: 2.0, x: 10, y: 20 }, rotate: 90
+        put :update_avatar, { format: :js, crop: { w: -1000, h: 2.0, x: 10, y: 20 }, rotate: 90 }
         response.body.include?('Unable to save image')
       end
 
@@ -221,7 +218,7 @@ class RegistrationsControllerTest < ActionController::TestCase
           tempfile: File.open(Rails.root.join('test/fixtures/listing.jpg')),
           filename: 'avatar.jpg'
         )
-        post :avatar, avatar: avatar_file
+        post :avatar, { avatar: avatar_file }
         assert_response :success
         assert_not_nil @user.reload['avatar']
       end
@@ -232,7 +229,7 @@ class RegistrationsControllerTest < ActionController::TestCase
     should 'track version change on create' do
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "User", "create").count') do
         with_versioning do
-          post :create, user: user_attributes
+          post :create, { user: user_attributes }
         end
       end
     end
@@ -241,7 +238,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       sign_in @user
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "User", "update").count') do
         with_versioning do
-          put :update, id: @user, user: { name: 'Updated Name' }
+          put :update, { id: @user, user: { name: 'Updated Name' } }
         end
       end
     end
@@ -260,8 +257,8 @@ class RegistrationsControllerTest < ActionController::TestCase
       PlatformContext.any_instance.stubs(:instance).returns(@instance)
       Instance.any_instance.stubs(:default_profile_type).returns(FactoryGirl.create(:instance_profile_type))
       User.any_instance.stubs(:custom_validators).returns([])
-      post :create, user: user_attributes
-      user = User.find_by_email('user@example.com')
+      post :create, { user: user_attributes }
+      user = User.find_by(email: 'user@example.com')
       assert_equal @partner.id, user.partner_id
       assert_equal @domain.id, user.domain_id
       assert_equal @instance.id, user.instance_id
@@ -277,7 +274,7 @@ class RegistrationsControllerTest < ActionController::TestCase
 
     should 'save sms_notifications_enabled and sms_preferences' do
       sign_in @user
-      put :update_notification_preferences, user: { sms_notifications_enabled: '0', sms_preferences: { new_reservation: '1' } }
+      put :update_notification_preferences, { user: { sms_notifications_enabled: '0', sms_preferences: { new_reservation: '1' } } }
       @user.reload
       refute @user.sms_notifications_enabled
       assert_equal @user.sms_preferences, 'new_reservation' => '1'
@@ -286,7 +283,7 @@ class RegistrationsControllerTest < ActionController::TestCase
     should 'not overwrite sms preferences on profile update' do
       sign_in @user
       assert_equal @user.sms_preferences, 'user_message' => '1', 'reservation_state_changed' => '1', 'new_reservation' => '1'
-      put :update, id: @user, user: { name: 'Dave' }
+      put :update, { id: @user, user: { name: 'Dave' } }
       assert_equal @user.reload.sms_preferences, 'user_message' => '1', 'reservation_state_changed' => '1', 'new_reservation' => '1'
     end
   end

@@ -1,8 +1,8 @@
 module Api
   class V3::UsersController < BaseController
-    skip_before_filter :require_authentication, only: [:create, :show]
-    skip_before_filter :require_authorization
-    before_filter :find_user, only: [:show]
+    skip_before_action :require_authentication, only: [:create, :show]
+    skip_before_action :require_authorization
+    before_action :find_user, only: [:show]
 
     def create
       params[:user] ||= {}
@@ -14,9 +14,6 @@ module Api
       @user.custom_validation = true
 
       if @user.save
-        event_tracker.signed_up(@user,           referrer_id: PlatformContext.current.platform_context_detail.id,
-                                                 referrer_type: PlatformContext.current.platform_context_detail.class.to_s,
-                                                 signed_up_via: 'api')
         sign_in(@user)
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role

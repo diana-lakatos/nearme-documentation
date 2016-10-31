@@ -2,7 +2,7 @@ class TransactableSerializer < ApplicationSerializer
   PRICE_PERIODS = {
     free: nil,
     day: 'day'
-  }
+  }.freeze
 
   attributes :id, :name, :description, :company_name, :company_description,
              :address, :price, :quantity
@@ -11,17 +11,16 @@ class TransactableSerializer < ApplicationSerializer
   attribute :longitude, key: :lon
 
   has_many :photos
-  has_many :amenities, embed: :ids
 
   # FIXME: for some reason this method is reloading all assocations again?
   def attributes
     hash = super
 
-    hash.merge!(score: 0)
-    hash.merge!(strict_match: true)
+    hash[:score] = 0
+    hash[:strict_match] = true
 
     # This remains for backwards compatibility for iOS
-    hash.merge!(organizations: [])
+    hash[:organizations] = []
     hash
   end
 

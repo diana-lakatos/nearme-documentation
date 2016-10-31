@@ -9,6 +9,8 @@ class ReservationType < ActiveRecord::Base
   has_many :transactable_types
   has_many :form_components, as: :form_componentable
   has_many :custom_validators, as: :validatable
+
+  has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
   has_many :category_linkings, as: :category_linkable, dependent: :destroy
   has_many :categories, through: :category_linkings
 
@@ -30,10 +32,10 @@ class ReservationType < ActiveRecord::Base
   def validate_on_adding_to_cart
     super == 'true'
   end
-  alias_method :validate_on_adding_to_cart?, :validate_on_adding_to_cart
+  alias validate_on_adding_to_cart? validate_on_adding_to_cart
 
   def skip_payment_authorization
     super == 'true'
   end
-  alias_method :skip_payment_authorization?, :skip_payment_authorization
+  alias skip_payment_authorization? skip_payment_authorization
 end

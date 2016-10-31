@@ -56,8 +56,8 @@ class PaymentTest < ActiveSupport::TestCase
     end
   end
 
-  SUCCESS_RESPONSE = { 'paid_amount' => '10.00' }
-  FAILURE_RESPONSE = { 'paid_amount' => '10.00', 'error' => 'fail' }
+  SUCCESS_RESPONSE = { 'paid_amount' => '10.00' }.freeze
+  FAILURE_RESPONSE = { 'paid_amount' => '10.00', 'error' => 'fail' }.freeze
 
   context 'authorized payment' do
     setup do
@@ -70,23 +70,6 @@ class PaymentTest < ActiveSupport::TestCase
       @payment.update_attribute(:paid_at, nil)
       @payment.refund!
       refute @payment.reload.refunded?
-    end
-
-    should 'track charge in mixpanel after successful creation' do
-      stub_active_merchant_interaction(success?: true, params: SUCCESS_RESPONSE)
-      ReservationChargeTrackerJob.expects(:perform_later).with(@payment.payable.date.end_of_day, @payment.payable.id).once
-      assert @payment.capture!
-      assert_equal @payment.total_amount_cents, @payment.charges.last.amount
-      assert @payment.charges.last.success
-      assert @payment.paid?
-
-      charge = Charge.last
-      assert charge.success?
-      assert_equal @host.id, charge.user_id
-      assert_equal 110_00, charge.amount
-      assert_equal 'USD', charge.currency
-      assert_equal SUCCESS_RESPONSE, charge.response.params
-      assert_equal @payment, charge.payment
     end
 
     should 'not charge when payment gateway fails' do

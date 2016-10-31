@@ -43,7 +43,7 @@ Given /^#{capture_model} should be updated$/ do |model|
   if model=='the location'
     location = Location.last
     assert_location_data(location)
-    page.should have_content(location.name, visible: true)
+    page.should have_content(location.name)
   else
     listing = Transactable.first
     assert_listing_data(listing, true)

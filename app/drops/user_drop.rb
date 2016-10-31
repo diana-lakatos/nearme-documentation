@@ -60,6 +60,8 @@ class UserDrop < BaseDrop
   #   returns id of first user company
   # reservations_count
   #   returns number of reservations
+  # unconfirmed_received_orders_count
+  #   returns number of unconfirmed orders
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
            :with_mutual_friendship_source, :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
@@ -67,8 +69,8 @@ class UserDrop < BaseDrop
            :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
            :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
            :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
-           :communication, :created_at, :has_buyer_profile?, :default_company, :company_name, :instance_admins_metadata,
-           :companies,
+           :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
+           :company_name, :instance_admins_metadata, :total_reviews_count,
            to: :source
 
   def class_name
@@ -122,7 +124,7 @@ class UserDrop < BaseDrop
 
   # path to the search section in the application, with tracking
   def search_url_with_tracking
-    routes.search_path(track_email_event: true)
+    routes.search_path
   end
 
   # returns true if the city where the user books items is present
@@ -138,7 +140,8 @@ class UserDrop < BaseDrop
   # string identifying the location where the user books items
   # this method may be used if reservation_city is not present
   def reservation_name
-    reservation_city? ? @source.orders.reservations.first.listing.location.city : @source.orders.reservations.first.listing.location.name
+    listing_location = @source.orders.reservations.first.listing.location
+    reservation_city? ? listing_location.city : listing_location.name
   end
 
   # url to the app wizard for adding a new listing to the system
@@ -148,7 +151,7 @@ class UserDrop < BaseDrop
 
   # url to the app wizard for adding a new listing to the system, with tracking
   def space_wizard_list_url_with_tracking
-    routes.space_wizard_list_path(token_key => @source.try(:temporary_token), track_email_event: true)
+    routes.space_wizard_list_path(token_key => @source.try(:temporary_token))
   end
 
   def manage_locations_url
@@ -156,11 +159,11 @@ class UserDrop < BaseDrop
   end
 
   def manage_locations_url_with_tracking
-    routes.dashboard_company_transactable_types_path(track_email_event: true)
+    routes.dashboard_company_transactable_types_path
   end
 
   def manage_locations_url_with_tracking_and_token
-    routes.dashboard_company_transactable_types_path(token_key => @source.try(:temporary_token), track_email_event: true)
+    routes.dashboard_company_transactable_types_path(token_key => @source.try(:temporary_token))
   end
 
   # url to the section in the app for editing a user's profile
@@ -180,7 +183,7 @@ class UserDrop < BaseDrop
 
   # url to the section in the app for editing a user's profile, with authentication token and tracking
   def edit_user_registration_url_with_token_and_tracking
-    routes.edit_user_registration_path(token_key => @source.try(:temporary_token), :track_email_event => true)
+    routes.edit_user_registration_path(token_key => @source.try(:temporary_token))
   end
 
   # url to reset password
@@ -191,6 +194,21 @@ class UserDrop < BaseDrop
   # url to a user's public profile
   def user_profile_url
     routes.profile_path(@source.slug)
+  end
+
+  # url to reviews in user's public profile
+  def reviews_user_profile_url
+    routes.profile_path(@source.slug, tab: 'reviews')
+  end
+
+  # url to services in user's public profile
+  def services_user_profile_url
+    routes.profile_path(@source.slug, tab: 'services')
+  end
+
+  # url to blog posts in user's public profile
+  def blog_posts_user_profile_url
+    routes.profile_path(@source.slug, tab: 'blog_posts')
   end
 
   # url for seller/buyer/default user profile
@@ -245,12 +263,12 @@ class UserDrop < BaseDrop
   # url to the section in the application where a user can change his password
   # with authentication token and tracking
   def set_password_url_with_token_and_tracking
-    routes.set_password_path(token_key => @source.try(:temporary_token), :track_email_event => true)
+    routes.set_password_path(token_key => @source.try(:temporary_token))
   end
 
   # url for verifying (confirming) a user's email
   def verify_user_url
-    routes.verify_user_path(@source.id, @source.email_verification_token, track_email_event: true)
+    routes.verify_user_path(@source.id, @source.email_verification_token)
   end
 
   # url for verifying (confirming) a user's email
@@ -265,7 +283,7 @@ class UserDrop < BaseDrop
 
   # url to the section in the application for managing a user's own bookings, with tracking
   def bookings_dashboard_url_with_tracking
-    routes.dashboard_user_reservations_path(track_email_event: true)
+    routes.dashboard_user_reservations_path
   end
 
   # url to the section in the application for managing a user's own bookings, with authentication
@@ -277,7 +295,7 @@ class UserDrop < BaseDrop
   # url to the section in the application for managing a user's own bookings, with authentication
   # token, and tracking
   def bookings_dashboard_url_with_tracking_and_token
-    routes.dashboard_user_reservations_path(token_key => @source.try(:temporary_token), track_email_event: true)
+    routes.dashboard_user_reservations_path(token_key => @source.try(:temporary_token))
   end
 
   # listings in and around a user's location, limited to a 100 km radius and a maximum of 3 results
@@ -336,7 +354,7 @@ class UserDrop < BaseDrop
     @categories
   end
 
-  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'string with all children separated with comma' } }
+  # returns hash of categories { "<name>" => { "name" => '<translated_name>', "children" => 'comma separated children' } }
   def formatted_categories
     build_formatted_categories(@source.categories)
   end
@@ -456,10 +474,6 @@ class UserDrop < BaseDrop
     pending_transactables.any?
   end
 
-  def pending_transactables
-    @source.created_listings.with_state(:pending)
-  end
-
   def completed_transactables_count
     @source.created_listings.with_state(:completed).count
   end
@@ -479,8 +493,12 @@ class UserDrop < BaseDrop
     pending_transactables_for_current_user.where('tc.id is NOT NULL')
   end
 
+  def unconfirmed_received_orders_count
+    @unconfirmed_received_orders_count ||= @source.listing_orders.unconfirmed.count
+  end
+
   def has_company?
-    !@source.companies.empty?
+    @source.companies.present?
   end
 
   def company_id
@@ -512,11 +530,15 @@ class UserDrop < BaseDrop
 
   # total count of user transactables with state pending
   def pending_transactables_count
-    if has_seller_profile?
-      @source.transactables.with_state(:pending).count
-    elsif has_buyer_profile?
-      @source.approved_transactables_collaborated.with_state(:pending).count
-    end
+    seller_pending_transactables_count || buyer_pending_transactables_count
+  end
+
+  def seller_pending_transactables_count
+    @source.transactables.with_state(:pending).count if has_seller_profile?
+  end
+
+  def buyer_pending_transactables_count
+    @source.approved_transactables_collaborated.with_state(:pending).count if has_buyer_profile?
   end
 
   def user_menu_instance_admin_path

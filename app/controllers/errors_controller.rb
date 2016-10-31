@@ -18,7 +18,7 @@ class ErrorsController < ApplicationController
     else
       render template: 'errors/not_found', status: 404, formats: [:html]
     end
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error "error while rendering not found: #{e}"
     server_error
   end

@@ -1,15 +1,14 @@
 class Listings::RecurringBookingsController < ApplicationController
-  before_filter :find_listing
-  before_filter :require_login_for_recurring_booking, only: [:review, :create]
-  before_filter :build_recurring_booking_request, only: [:review, :create]
-  before_filter :secure_payment_with_token, only: [:review]
-  before_filter :load_payment_with_token, only: [:review]
-  before_filter :find_recurring_booking, only: [:booking_successful]
-  before_filter :find_current_country, only: [:review, :create]
-  before_filter :set_section_name, only: [:review, :create]
+  before_action :find_listing
+  before_action :require_login_for_recurring_booking, only: [:review, :create]
+  before_action :build_recurring_booking_request, only: [:review, :create]
+  before_action :secure_payment_with_token, only: [:review]
+  before_action :load_payment_with_token, only: [:review]
+  before_action :find_recurring_booking, only: [:booking_successful]
+  before_action :find_current_country, only: [:review, :create]
+  before_action :set_section_name, only: [:review, :create]
 
   def review
-    event_tracker.reviewed_a_recurring_booking(@recurring_booking_request.recurring_booking)
   end
 
   def load_payment_with_token
@@ -34,13 +33,9 @@ class Listings::RecurringBookingsController < ApplicationController
     if @recurring_booking_request.process
       if @recurring_booking_request.confirm_reservations?
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, @recurring_booking.id)
-        event_tracker.updated_profile_information(@recurring_booking.owner)
-        event_tracker.updated_profile_information(@recurring_booking.host)
       else
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, @recurring_booking_request.recurring_booking.id)
       end
-
-      event_tracker.requested_a_recurring_booking(@recurring_booking)
       card_message = t('flash_messages.reservations.credit_card_will_be_charged')
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
 
@@ -65,9 +60,7 @@ class Listings::RecurringBookingsController < ApplicationController
   private
 
   def require_login_for_recurring_booking
-    unless user_signed_in?
-      redirect_to new_user_registration_path(return_to: @listing.decorate.show_path)
-    end
+    redirect_to new_user_registration_path(return_to: @listing.decorate.show_path) unless user_signed_in?
   end
 
   def find_listing

@@ -26,7 +26,7 @@ class UserMessageDrop < BaseDrop
   # url to the section in the app for viewing the message
   # includes authentication token and tracking
   def url_with_tracking
-    routes.listing_user_message_path(@user_message.thread_context, @user_message, token_key => @user_message.recipient.temporary_token, :track_email_event => true)
+    routes.listing_user_message_path(@user_message.thread_context, @user_message, token_key => @user_message.recipient.temporary_token)
   end
 
   # first name of the thread owner (user that started the conversation)

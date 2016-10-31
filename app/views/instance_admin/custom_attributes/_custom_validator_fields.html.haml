@@ -1,0 +1,21 @@
+- show_remove ||= false
+- f.object.set_accessors
+.nested-container.nested-fields
+  .row
+    .input-container.col-xs-6
+      = f.input :valid_values, label: t('instance_admin.manage.custom_validators.valid_values_separate_with_comma'), wrapper_html_options: { class: 'for-select-tag' }, input_html: { value: f.object.valid_values.join(', '), style: "width: 100%;" }
+  .row
+    .input-container.col-xs-4
+      = f.input :required, as: :boolean, inline_label: true
+    .input-container.col-xs-4
+      = f.input :min_length, input_html: { class: 'form-control' }
+    .input-container.col-xs-4
+      = f.input :max_length, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-4
+      = f.input :regex_validation, as: :boolean, inline_label: true
+    .input-container.col-xs-8
+      = f.input :regex_expression, input_html: { class: 'form-control' }
+  - if show_remove
+    .row
+      = link_to_remove_association I18n.t('remove', default: 'Remove'), f, class: 'btn btn-primary btn-margin-top'

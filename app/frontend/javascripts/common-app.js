@@ -277,17 +277,6 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-  var els = document.getElementById('load-sessioncam');
-  if (!els) {
-    return;
-  }
-
-  require.ensure('exports?ServiceTickDetection!./analytics/sessioncam', function(require){
-    window.ServiceTickDetection = require('exports?ServiceTickDetection!./analytics/sessioncam');
-  });
-});
-
-DNM.registerInitializer(function(){
   var els = $('input[type="color"]');
   if (els.length === 0) {
     return;

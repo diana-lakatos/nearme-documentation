@@ -40,6 +40,8 @@ class Authentication::BaseProvider
 
   def connections
     @connections = User.joins(:authentications).where(authentications: { uid: friend_ids, provider: provider })
+  rescue Authentication::InvalidToken
+    raise ::Authentication::InvalidToken, $ERROR_INFO.inspect
   rescue
     []
   end

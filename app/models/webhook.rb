@@ -8,14 +8,34 @@ class Webhook < ActiveRecord::Base
   attr_encrypted :response, marshal: true
 
   belongs_to :webhookable, polymorphic: true
+  belongs_to :payment_gateway
+  belongs_to :merchant_account
   belongs_to :instance
 
-  # Just to make it easier to browse those webhooks in console
-  def parse
-    webhookable.payment_gateway.parse_webhook(params[:id], params[:user_id])
+  before_create :set_payment_gateway_mode
+
+  state_machine :state, initial: :pending do
+    event :mark_as_failed do transition [:failed, :pending, :archived] => :failed; end
+    event :archive do transition [:pending, :failed] => :archived; end
   end
 
+  # We use params method only to display saved YAML webhook request
+  # Use event method to fetch any webhook information
   def params
-    YAML.load(response)
+    YAML.load(response || '') || {}
+  end
+
+  def set_payment_gateway_mode
+    self.payment_gateway_mode = (livemode? ? 'live' : 'test')
+  end
+
+  def webhook_type
+    nil
+  end
+
+  def process_error(error_message, should_raise: true)
+    self.error = error_message.to_s
+    mark_as_failed
+    should_raise ? raise(error_message) : return
   end
 end

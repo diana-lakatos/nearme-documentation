@@ -19,10 +19,6 @@ class SearchController < ApplicationController
     search_params = params.merge(per_page: per_page)
     @searcher = InstanceType::SearcherFactory.new(@transactable_type, search_params, result_view, current_user).get_searcher
     @searcher.paginate_results([(params[:page].presence || 1).to_i, 1].max, per_page)
-    if should_log_conducted_search?
-      event_tracker.conducted_a_search(@searcher.search, @searcher.to_event_params.merge(result_view: result_view))
-    end
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     remember_search_query
 
     render "search/#{result_view}", formats: [:html]
@@ -59,11 +55,6 @@ class SearchController < ApplicationController
   end
 
   private
-
-  def should_log_conducted_search?
-    first_result_page? && ignore_search_event_flag_false? && searcher.should_log_conducted_search? && !repeated_search?
-  end
-
   def remember_search_query
     cookies[:last_search_query] = {
       value: searcher.search_query_values,

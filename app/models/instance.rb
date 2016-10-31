@@ -37,8 +37,6 @@ class Instance < ActiveRecord::Base
   has_many :locations, inverse_of: :instance
   has_many :locations_impressions, through: :locations, inverse_of: :instance
   has_many :location_types, inverse_of: :instance
-  has_many :listing_amenity_types, inverse_of: :instance
-  has_many :location_amenity_types, inverse_of: :instance
   has_many :listings, class_name: 'Transactable', inverse_of: :instance
   has_many :domains, as: :target, dependent: :destroy
   has_many :partners, inverse_of: :instance
@@ -102,8 +100,6 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? && params.key?(:name) }
   accepts_nested_attributes_for :theme
   accepts_nested_attributes_for :location_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
-  accepts_nested_attributes_for :location_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
-  accepts_nested_attributes_for :listing_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |params| params[:value].blank? && params[:id].blank? }
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
   accepts_nested_attributes_for :all_payment_gateways, allow_destroy: true

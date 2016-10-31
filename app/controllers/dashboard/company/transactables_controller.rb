@@ -7,7 +7,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   def index
     @transactables = transactables_scope.order(order_param).paginate(page: params[:page], per_page: 20)
-
     @in_progress_transactables = in_progress_scope.order(order_param).paginate(page: params[:in_progress_page], per_page: 20)
     @archived_transactables = archived_scope.order(order_param).paginate(page: params[:archived_page], per_page: 20)
     @pending_transactables = pending_scope.order(order_param).paginate(page: params[:pending_page], per_page: 20)

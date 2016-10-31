@@ -14,13 +14,11 @@ module CustomAttributes
           ATTRIBUTE_TYPE = 1 unless defined?(ATTRIBUTE_TYPE)
           VALUE = 2 unless defined?(VALUE)
           PUBLIC = 3 unless defined?(PUBLIC)
-          VALIDATION_RULES = 4 unless defined?(VALIDATION_RULES)
-          VALID_VALUES = 5 unless defined?(VALID_VALUES)
-          HTML_TAG = 6 unless defined?(HTML_TAG)
 
-          SEARCHABLE = 7 unless defined?(SEARCHABLE)
-          SEARCH_IN_QUERY = 8 unless defined?(SEARCH_IN_QUERY)
-          VALIDATION_ONLY_ON_UPDATE = 9 unless defined?(VALIDATION_ONLY_ON_UPDATE)
+          VALID_VALUES = 4 unless defined?(VALID_VALUES)
+          HTML_TAG = 5 unless defined?(HTML_TAG)
+          SEARCHABLE = 6 unless defined?(SEARCHABLE)
+          SEARCH_IN_QUERY = 7 unless defined?(SEARCH_IN_QUERY)
 
           ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean).freeze unless defined?(ATTRIBUTE_TYPES)
           HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list range).freeze unless defined?(HTML_TAGS)
@@ -30,7 +28,6 @@ module CustomAttributes
           scope :not_internal, -> { where.not(internal: true) }
           scope :shared, -> { where(public: true) }
           scope :with_changed_attributes, -> (target_id, target_type, updated_at) { where('target_id = ? AND target_type = ? AND updated_at > ?', target_id, target_type, updated_at) }
-          scope :required, -> { where(['validation_rules ilike ?', '%presence%']) }
 
           validates_presence_of :name, :attribute_type
           validates_uniqueness_of :name, scope: [:target_id, :target_type, :deleted_at]
@@ -40,7 +37,6 @@ module CustomAttributes
           belongs_to :instance
 
           serialize :valid_values, Array
-          serialize :validation_rules, JSON
           store :input_html_options
           store :wrapper_html_options
 
@@ -85,8 +81,8 @@ module CustomAttributes
           def self.cashed_attribute_names
             # Order is very important! if you need to add something, add it at the end
             [
-              :name, :attribute_type, :default_value, :public, :validation_rules, :valid_values, :html_tag,
-              :searchable, :search_in_query, :validation_only_on_update
+              :name, :attribute_type, :default_value, :public, :valid_values, :html_tag,
+              :searchable, :search_in_query
             ]
           end
 
@@ -147,31 +143,8 @@ module CustomAttributes
             string.underscore.tr(' ', '_')
           end
 
-          def set_validation_rules
-            self.validation_rules ||= {}
-
-            required == true || required.try(:to_i) == 1 ? (self.validation_rules['presence'] = {}) : self.validation_rules.delete('presence')
-            if min_length.present? || max_length.present?
-
-              self.validation_rules['length'] = {}
-              min_length.present? ? self.validation_rules['length']['minimum'] = min_length.to_i : self.validation_rules['length'].delete('minimum')
-              max_length.present? ? self.validation_rules['length']['maximum'] = max_length.to_i : self.validation_rules['length'].delete('maximum')
-            else
-              self.validation_rules.delete('length')
-            end
-          end
-
-          def set_validation_rules!
-            set_validation_rules
-            save!
-          end
-
           def target_type=(sType)
             super(sType.to_s)
-          end
-
-          def required?
-            validation_rules.try(:keys).try(:include?, 'presence')
           end
         end
       end

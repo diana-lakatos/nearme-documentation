@@ -12,9 +12,6 @@ class CheckoutControllerTest < ActionController::TestCase
   end
 
   should 'track booking review open' do
-    Rails.application.config.event_tracker.any_instance.expects(:reviewed_a_booking).with do |reservation|
-      reservation == assigns(:order)
-    end
     get :show, { order_id: @reservation.id }
     assert_response 200
   end
@@ -48,17 +45,6 @@ class CheckoutControllerTest < ActionController::TestCase
     WorkflowStepJob.expects(:perform).with do |klass, _id|
       klass == WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation && assigns(:order).id
     end
-
-    Rails.application.config.event_tracker.any_instance.expects(:requested_a_booking).with do |reservation|
-      reservation == assigns(:order)
-    end
-    Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
-      user == assigns(:order).owner
-    end
-    Rails.application.config.event_tracker.any_instance.expects(:updated_profile_information).with do |user|
-      user == assigns(:order).host
-    end
-
     assert_no_difference 'Reservation.count' do
       put :update, order_params_for(@transactable)
     end

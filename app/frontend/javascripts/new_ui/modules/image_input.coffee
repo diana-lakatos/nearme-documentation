@@ -44,9 +44,6 @@ module.exports = class ImageInput
 
     @bindEvents()
 
-    if sessioncamConfiguration?
-      sessioncamConfiguration.customDataObjects.push( { key: "event", value: "first_listing_form_visit" } )
-
   bindEvents: ->
     @listenToDeletePhoto()
     @listenToEditPhoto()

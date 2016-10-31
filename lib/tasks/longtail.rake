@@ -27,8 +27,8 @@ end
 
 class LongtailRakeHelper
   class << self
-    def parse_keywords!(page, token, _page_number = 1)
-      url = URI.parse('http://api-staging.longtailux.com/keywords/seo?page_limit=10000')
+    def parse_keywords!(page, token, url = 'http://api-staging.longtailux.com/keywords/seo?page_limit=10000')
+      url = URI.parse(url)
       http = Net::HTTP.new(url.host, url.port)
       req = Net::HTTP::Get.new(url)
       req.add_field('Authorization', "Bearer #{token}")
@@ -57,33 +57,37 @@ class LongtailRakeHelper
           next
         end
 
-        data_source_content = @main_data_source.data_source_contents.where(external_id: keyword['id']).first_or_create! do |dsc|
-          puts "\tNew data source content for #{keyword['attributes']['slug']}"
-          dsc.external_id = keyword['id']
-          dsc.externally_created_at = nil
-          parsed_body = JSON.parse(response.body)
-          parsed_body['included'].each_with_index do |item, index|
-            transactable = Transactable.with_deleted.find_by(id: item['attributes']['guid'])
-            if transactable.nil?
-              puts "\t\tSkipping additional attributes - no transactable #{item['attributes']['guid']}"
-              next
-            end
-            parsed_body['included'][index]['attributes']['price'] = {}
-            transactable.action_type.pricings.each do |pricing|
-              parsed_body['included'][index]['attributes']['price'][pricing.unit] = pricing.price.to_s
-            end
-            parsed_body['included'][index]['attributes']['photos'] = transactable.photos_metadata.try(:map) { |p| p['space_listing'] }
-            parsed_body['included'][index]['attributes']['address'] = transactable.formatted_address
-            parsed_body['included'][index]['attributes']['latitude'] = transactable.latitude
-            parsed_body['included'][index]['attributes']['longitude'] = transactable.longitude
-            transactable.properties.to_h.each do |k, v|
-              parsed_body['included'][index]['attributes'][k] = v
-            end
-            parsed_body['included'][index]['attributes']['categories'] = transactable.to_liquid.categories
+        data_source_content = @main_data_source.data_source_contents.where(external_id: keyword['id']).first_or_create!
+        puts "\tNew data source content for #{keyword['attributes']['slug']}"
+        data_source_content.external_id = keyword['id']
+        data_source_content.externally_created_at = nil
+        parsed_body = JSON.parse(response.body)
+        parsed_body['included'].each_with_index do |item, index|
+          transactable = Transactable.with_deleted.find_by(id: item['attributes']['guid'])
+          if transactable.nil?
+            puts "\t\tSkipping additional attributes - no transactable #{item['attributes']['guid']}"
+            next
           end
-          dsc.json_content = parsed_body
+          parsed_body['included'][index]['attributes']['price'] = {}
+          transactable.action_type.pricings.each do |pricing|
+            parsed_body['included'][index]['attributes']['price'][pricing.unit] = pricing.price.to_s
+          end
+          parsed_body['included'][index]['attributes']['photos'] = transactable.photos_metadata.try(:map) { |p| p['space_listing'] }
+          parsed_body['included'][index]['attributes']['address'] = transactable.formatted_address
+          parsed_body['included'][index]['attributes']['latitude'] = transactable.latitude
+          parsed_body['included'][index]['attributes']['longitude'] = transactable.longitude
+          parsed_body['included'][index]['attributes']['currency'] = transactable.currency
+          transactable.properties.to_h.each do |k, v|
+            parsed_body['included'][index]['attributes'][k] = v
+          end
+          parsed_body['included'][index]['attributes']['categories'] = transactable.to_liquid.categories
         end
+        data_source_content.json_content = parsed_body
+        data_source_content.save!
         page.page_data_source_contents.where(data_source_content: data_source_content, slug: keyword['attributes']['url'][1..-1]).first_or_create!
+      end
+      if keywords["links"]["next"].present?
+        parse_keywords!(page, token, keywords["links"]["next"])
       end
     end
 

@@ -6,6 +6,8 @@ AllCops:
   TargetRubyVersion: 2.2
 Rails:
   Enabled: true
+Rails/HttpPositionalArguments:
+  Enabled: false
 Style/IfUnlessModifier:
   MaxLineLength: 130
 Style/WhileUntilModifier:

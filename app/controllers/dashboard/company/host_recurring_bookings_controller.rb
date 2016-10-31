@@ -4,7 +4,6 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
 
   def index
     @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   # Originally in Manage::RecurringBookingsController
@@ -24,10 +23,7 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     else
       if @recurring_booking.confirm
-        event_tracker.confirmed_a_recurring_booking(@recurring_booking)
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed, @recurring_booking.id)
-        track_recurring_booking_update_profile_informations
-        event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
         if @recurring_booking.reload.paid_until.present?
           flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
         else
@@ -51,8 +47,6 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
 
   def reject
     if @recurring_booking.reject(rejection_reason)
-      event_tracker.rejected_a_recurring_booking(@recurring_booking)
-      track_recurring_booking_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
@@ -63,8 +57,6 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
 
   def host_cancel
     if @recurring_booking.host_cancel
-      event_tracker.cancelled_a_recurring_booking(@recurring_booking, actor: 'host')
-      track_recurring_booking_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_cancelled')
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
@@ -88,11 +80,6 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
 
   def rejection_reason
     params[:recurring_booking][:rejection_reason] if params[:recurring_booking] && params[:recurring_booking][:rejection_reason]
-  end
-
-  def track_recurring_booking_update_profile_informations
-    event_tracker.updated_profile_information(@recurring_booking.owner)
-    event_tracker.updated_profile_information(@recurring_booking.host)
   end
 
   def workflow_alerts_hash

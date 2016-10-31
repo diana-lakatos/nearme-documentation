@@ -75,12 +75,8 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
       end
 
       if @order.confirmed?
-        event_tracker.confirmed_a_recurring_booking(@order)
         WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::ManuallyConfirmed".constantize, @order.id)
 
-        track_order_update_profile_informations
-        event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
-        event_tracker.confirmed_a_booking(@order)
         if @order.reload.paid_until.present? || !@order.instance_of?(RecurringBooking)
           flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
         else
@@ -113,8 +109,6 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
 
   def reject
     if @order.reject(rejection_reason)
-      event_tracker.rejected_a_booking(@order)
-      track_order_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
@@ -128,11 +122,6 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
 
   def order_scope
     @order_scope ||= @company.orders.active
-  end
-
-  def track_order_update_profile_informations
-    event_tracker.updated_profile_information(@order.owner)
-    event_tracker.updated_profile_information(@order.host)
   end
 
   def location_after_save

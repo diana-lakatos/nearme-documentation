@@ -248,11 +248,11 @@ class UserDocumentationGenerator
     data_comment = find_data_method_comment(ast, comments_association)
 
     if data_comment.blank?
-      fail Exception, "could not find data method comment: #{file}"
+      raise StandardError, "could not find data method comment: #{file}"
     end
 
     parse_variables_from_data_comment(data_comment)
-  rescue Exception => e
+  rescue StandardError => e
     {}
   end
 

@@ -1,4 +1,4 @@
-{% cache_for listing, listing.availability, listing.amenities, listing.company, description %}
+{% cache_for listing, listing.availability, listing.company, description %}
   <h2>{{ 'transactable_types.locations.listings.the_listing' || translate }}</h2>
   <p>{{ listing.description | filter_text | custom_sanitize }}</p>
 
@@ -13,23 +13,6 @@
     </div>
   </div>
 
-  {% if listing.amenities.size > 0 %}
-      <div class='amenities-block'>
-        <div class='amenities-header'>
-          <h3>{{ 'location.amenities' | translate }}</h3>
-        </div>
-        <div class='amenities-container'>
-          {% assign amenities = listing.amenities | in_groups_of:4 %}
-          {% for group in amenities %}
-            <div class='row-fluid amenities-row'>
-                {% for amenity in group %}
-                    <div class='span3' title="{{ amenity }}">{{ amenity }}</div>
-                {% endfor %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-  {% endif %}
   <div class="clearfix"></div>
 
   <article class='company'>

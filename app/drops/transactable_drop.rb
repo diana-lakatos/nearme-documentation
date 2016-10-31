@@ -194,12 +194,12 @@ class TransactableDrop < BaseDrop
 
   # url to the dashboard area for managing received bookings, with tracking
   def manage_guests_dashboard_url_with_tracking
-    routes.dashboard_company_host_reservations_path(token_key => @source.administrator.try(:temporary_token), :track_email_event => true)
+    routes.dashboard_company_host_reservations_path(token_key => @source.administrator.try(:temporary_token))
   end
 
   # url to the search section of the marketplace, with tracking
   def search_url_with_tracking
-    routes.search_path(track_email_event: true)
+    routes.search_path
   end
 
   # url to display favorite button
@@ -259,7 +259,7 @@ class TransactableDrop < BaseDrop
     if PlatformContext.current.instance.is_community?
       urlify(routes.edit_dashboard_project_type_project_path(@source.transactable_type, @source, token_key => @source.creator.try(:temporary_token), anchor: :collaborators))
     else
-      routes.edit_dashboard_company_transactable_type_transactable_path(@source.location, @source, track_email_event: true, token_key => @source.administrator.try(:temporary_token))
+      routes.edit_dashboard_company_transactable_type_transactable_path(@source.location, @source, token_key => @source.administrator.try(:temporary_token))
     end
   end
 
@@ -270,12 +270,7 @@ class TransactableDrop < BaseDrop
 
   # url to the application wizard for publishing a new listing, with tracking
   def space_wizard_list_url_with_tracking
-    routes.transactable_type_space_wizard_list_path(transactable_type, token_key => @user.try(:temporary_token), track_email_event: true)
-  end
-
-  # list of the names of the amenities defined for this listing
-  def amenities
-    @amenities ||= @source.amenities.order('name ASC').pluck(:name)
+    routes.transactable_type_space_wizard_list_path(transactable_type, token_key => @user.try(:temporary_token))
   end
 
   # url to the section of the app for sending a message to the administrator
@@ -333,17 +328,17 @@ class TransactableDrop < BaseDrop
 
   # url for sharing this location on Facebook
   def facebook_social_share_url
-    routes.new_listing_social_share_path(@source, provider: 'facebook', track_email_event: true)
+    routes.new_listing_social_share_path(@source, provider: 'facebook')
   end
 
   # url for sharing this location on Twitter
   def twitter_social_share_url
-    routes.new_listing_social_share_path(@source, provider: 'twitter', track_email_event: true)
+    routes.new_listing_social_share_path(@source, provider: 'twitter')
   end
 
   # url for sharing this location on LinkedIn
   def linkedin_social_share_url
-    routes.new_listing_social_share_path(@source, provider: 'linkedin', track_email_event: true)
+    routes.new_listing_social_share_path(@source, provider: 'linkedin')
   end
 
   def booking_module_path

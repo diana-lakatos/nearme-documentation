@@ -12,10 +12,6 @@ module SearchHelper
     params[:availability].present? && params[:availability][:quantity].to_i || 1
   end
 
-  def search_amenities
-    params[:amenities].present? && params[:amenities].map(&:to_i) || []
-  end
-
   def search_price_min
     (params[:price].present? && params[:price][:min]) || 0
   end
@@ -45,8 +41,17 @@ module SearchHelper
 
     title = params.try(:[], :lg_custom_attributes).try(:[], :listing_type)
     title = title.present? && title.respond_to?(:gsub) ? title.gsub(',', ', ') : (location_types_names.empty? ? transactable_type_name : '')
-
-    title += %(#{location_types_names.join(', ')})
+    title += location_types_names.join(', ').to_s
+    search_location = []
+    search_location << search.city
+    search_location << (search.is_united_states? ? search.state_short : search.state)
+    search_location.reject!(&:blank?)
+    title += %( in #{search_location.join(', ')}) unless search_location.empty?
+    title += if title.empty?
+               I18n.t('metadata.search.title.search')
+             else
+               search_location.empty? ? I18n.t('metadata.search.title.in') : ', '
+    end
 
     if search.respond_to?(:city)
       search_location = []
@@ -83,7 +88,7 @@ module SearchHelper
         content_tag :li, class: 'nav-item' do
           label = label_tag "category_#{category.id}", class: 'category-label' do
             content_tag(:span, check_box_tag('category_ids[]', category.id, selected.include?(category.id.to_s), id: "category_#{category.id}", class: 'category-checkbox'), class: 'category-checkbox-container') +
-            content_tag(:span, category.translated_name, class: 'category-title')
+              content_tag(:span, category.translated_name, class: 'category-title')
           end
           label + category_tree(category, current_category, max_level - 1, selected)
         end

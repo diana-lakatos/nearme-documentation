@@ -20,8 +20,6 @@ class Location < ActiveRecord::Base
   serialize :address_components, JSON
   serialize :info, Hash
 
-  has_many :amenity_holders, as: :holder, dependent: :destroy
-  has_many :amenities, through: :amenity_holders
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy

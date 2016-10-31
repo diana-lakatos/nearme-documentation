@@ -17,16 +17,16 @@ module CustomAttributes
           key = custom_attributes_array[CustomAttribute::NAME]
           type = custom_attributes_array[CustomAttribute::ATTRIBUTE_TYPE].to_sym
 
-          define_method(key) { custom_property_type_cast(@hash[key], "#{type}".to_sym) }
-          define_method("#{key}?") { self.send("#{key}") } if type == :boolean
+          define_method(key) { custom_property_type_cast(@hash[key], type.to_s.to_sym) }
+          define_method("#{key}?") { send(key.to_s) } if type == :boolean
           if type == :array
             define_method("#{key}=") do |val|
               @model.send("#{store_accessor_name}_will_change!")
-              if val.kind_of?(Array)
-                @hash[key] = val.join(',')
-              else
-                @hash[key] = val
-              end
+              @hash[key] = if val.is_a?(Array)
+                             val.join(',')
+                           else
+                             val
+                           end
             end
           else
             define_method("#{key}=") do |val|
@@ -38,6 +38,14 @@ module CustomAttributes
       end
     end
 
+    def skip_custom_attribute_validation
+      @model.skip_custom_attribute_validation
+    end
+
+    def custom_validators
+      @model.custom_attribute_custom_validators
+    end
+
     def persisted?
       false
     end
@@ -47,7 +55,7 @@ module CustomAttributes
     end
 
     def [](key)
-      self.send(key)
+      send(key)
     end
 
     def []=(key, value)
@@ -57,6 +65,5 @@ module CustomAttributes
     def to_liquid
       @hash
     end
-
   end
 end

@@ -18,7 +18,7 @@ FactoryGirl.define do
     end
 
     after(:build) do |transactable_type|
-      transactable_type.custom_attributes << FactoryGirl.build(:custom_attribute, :listing_types)
+      transactable_type.custom_attributes << FactoryGirl.build(:custom_attribute, :listing_types, target: transactable_type)
       transactable_type.action_types << FactoryGirl.build(:transactable_type_time_based_action, transactable_type: transactable_type)
     end
 
@@ -38,7 +38,6 @@ FactoryGirl.define do
       after(:build) do |transactable_type|
         TransactableType.transaction do
           transactable_type.availability_templates << FactoryGirl.build(:availability_template, transactable_type: transactable_type)
-          transactable_type.custom_attributes << FactoryGirl.build(:custom_attribute, :listing_types)
         end
       end
 

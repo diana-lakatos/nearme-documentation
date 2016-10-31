@@ -1,7 +1,7 @@
 class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceController
-  before_filter :find_target
-  before_filter :normalize_valid_values, only: [:create, :update]
-  before_filter :set_breadcrumbs
+  before_action :find_target
+  before_action :normalize_valid_values, only: [:create, :update]
+  before_action :set_breadcrumbs
 
   def index
     @custom_attributes = @target.custom_attributes.order('name')
@@ -16,14 +16,25 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
 
   def edit
     @custom_attribute = @target.custom_attributes.listable.find(params[:id])
-    @custom_attribute.required = @custom_attribute.validation_rules['presence'] == {} rescue false
-    @custom_attribute.min_length = @custom_attribute.validation_rules['length']['minimum'] rescue nil
-    @custom_attribute.max_length = @custom_attribute.validation_rules['length']['maximum'] rescue nil
+    @custom_attribute.required = begin
+                                   @custom_attribute.validation_rules['presence'] == {}
+                                 rescue
+                                   false
+                                 end
+    @custom_attribute.min_length = begin
+                                     @custom_attribute.validation_rules['length']['minimum']
+                                   rescue
+                                     nil
+                                   end
+    @custom_attribute.max_length = begin
+                                     @custom_attribute.validation_rules['length']['maximum']
+                                   rescue
+                                     nil
+                                   end
   end
 
   def create
     @custom_attribute = @target.custom_attributes.build(custom_attributes_params)
-    @custom_attribute.set_validation_rules
     if @custom_attribute.save
       flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.created'
       redirect_to redirection_path
@@ -36,7 +47,6 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
   def update
     @custom_attribute = @target.custom_attributes.find(params[:id])
     @custom_attribute.attributes = custom_attributes_params
-    @custom_attribute.set_validation_rules
     if @custom_attribute.save
       flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.updated'
       redirect_to redirection_path
@@ -56,7 +66,7 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
   protected
 
   def resource_class
-    fail NotImplementedError
+    raise NotImplementedError
   end
 
   def set_breadcrumbs

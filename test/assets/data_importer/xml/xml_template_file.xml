@@ -114,7 +114,6 @@
           </listing>
         </listings>
         <availability_rules/>
-        <amenities/>
       </location>
       <location id="2">
         <name><![CDATA[location name]]></name>
@@ -175,7 +174,6 @@
           </listing>
         </listings>
         <availability_rules/>
-        <amenities/>
       </location>
     </locations>
   </company>
@@ -243,7 +241,6 @@
           </listing>
         </listings>
         <availability_rules/>
-        <amenities/>
       </location>
     </locations>
   </company>

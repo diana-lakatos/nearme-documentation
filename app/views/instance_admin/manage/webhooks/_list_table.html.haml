@@ -1,0 +1,46 @@
+.row
+  = form_tag '', :method => 'get', enforce_utf8: :false do
+    .row
+      .input-container
+        = text_field_tag :query, nil, placeholder: "Event ID", class: 'form-control'
+      .col-xs-3
+        = select_tag :payment_gateway_id, options_from_collection_for_select(@payment_gateways, "id", "name", params[:payment_gateway_id]), include_blank: "All Payment Gateways", class: "selectpicker"
+      .col-xs-2
+        = select_tag :state, options_for_select(Webhook.state_machine.states.map{|s| [s.name.capitalize, s.name] } , params[:state]), include_blank: "In all states", class: "selectpicker"
+      .col-xs-1
+        = select_tag :mode, options_for_select([["Live", 'live'], ["Test", 'test']], params[:mode]), class: "selectpicker"
+      .col-xs-2
+        = submit_tag "Search", :name => nil, class: 'btn btn-light'
+  .table-container.col-xs-12
+    %table.table.table-striped.sortable
+      %thead
+        %tr
+          %th= t('instance_admin.manage.webhooks.id')
+          %th= t('instance_admin.manage.webhooks.payment_gateway')
+          %th= t('instance_admin.manage.webhooks.state')
+          %th= t('instance_admin.manage.webhooks.mode')
+          %th= t('instance_admin.manage.webhooks.webhook_type')
+          %th= t('instance_admin.manage.webhooks.created_at')
+          %th= t('instance_admin.manage.webhooks.retry_count')
+          %th= t('instance_admin.manage.webhooks.details')
+
+      - @webhooks.each do |webhook|
+        %tr
+          %td= webhook.id
+          %td= webhook.payment_gateway.try(:name)
+          %td= webhook.state.try(:capitalize)
+          %td= webhook.payment_gateway_mode
+          %td= webhook.webhook_type
+          %td= l(webhook.created_at, format: :long)
+          %td= webhook.retry_count
+          %td
+            = link_to 'Details', "javascript:void(0);", data: {modal: true, href: instance_admin_manage_webhook_path(webhook) }
+            - if webhook.failed?
+              = link_to 'Retry', retry_instance_admin_manage_webhook_path(webhook), method: :post
+            - if webhook.archived?
+              %span= ' | '
+              = link_to 'Delete', instance_admin_manage_webhook_path(webhook), method: :delete, data: { confirm: "Are you sure?" }
+
+- content_for :script do
+  = render 'shared/modal'
+

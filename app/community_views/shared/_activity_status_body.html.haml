@@ -4,7 +4,7 @@
   - header_image = "intel/status-a-chat-a.png"
 - elsif [:user_added_photos_to_project, :user_added_photos_to_group].include?(event.event.to_sym) && event.event_source.is_a?(Photo)
   - followed = event.followed
-  - big_image = event.event_source.image.url(:fit_to_activity_feed)
+  - big_image = event.event_source.image.url(:space_listing)
 - else
   - followed = event.followed
   - body = event.description

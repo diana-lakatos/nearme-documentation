@@ -6,6 +6,7 @@ class InstanceProfileType < ActiveRecord::Base
   SEARCH_VIEWS = %w(list).freeze
 
   acts_as_custom_attributes_set
+  has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
   belongs_to :instance
   has_many :users, through: :user_profiles
   has_many :user_profiles
