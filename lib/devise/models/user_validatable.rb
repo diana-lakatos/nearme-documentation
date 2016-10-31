@@ -25,7 +25,8 @@ module Devise
 
           validates_presence_of :password, if: :password_required?
           validates_confirmation_of :password, if: :password_required?
-          validates_length_of :password, within: password_length, allow_blank: true
+
+          validates_with PasswordValidator, if: proc { password.present? || password_confirmation.present? }
         end
       end
 
@@ -36,7 +37,7 @@ module Devise
       end
 
       def no_account_hijacking_attempt
-        errors.add(:email, :taken) if User.where(email: email).exists? if external_id.blank?
+        errors.add(:email, :taken) if external_id.blank? && User.where(email: email).exists?
       end
 
       # Checks whether a password is needed or not. For validations only.
