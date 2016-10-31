@@ -99,7 +99,8 @@
       <div class='col-sm-3'>
         Review
         {% if order.can_confirm? %}
-          | <a href="#" onclick="$('form#confirm_reservation').submit()" data-disable-with="{{ 'general.processing' | t }}" >Accept</a>
+          |
+          <button type="button" data-submit-form="#confirm_reservation" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-info">Accept</button>
         {% endif %}
         {% if order.can_reject? %}
           | <a data-modal="true" href="{{ 'rejection_form_dashboard_company_host_reservation_path' | generate_url: order.id, listing_id: order.transactable.id }}">Reject</a>
@@ -149,7 +150,7 @@
       {% endif %}
     {% endif %}
     <a class="btn btn-info" href="{{ reservation.transactable.show_path }}">{{ 'dashboard.user_reservations.view_case' | t}}</a>
-    <a class="btn btn-info" href="#" onclick="$('form#archive_reservation').submit()" data-disable-with="{{ 'general.processing' | t }}" >{{ 'dashboard.user_reservations.close_case' | t }}</a>
+    <button type="button" class="btn btn-info" data-submit-form="#archive_reservation" data-disable-with="{{ 'general.processing' | t }}">{{ 'dashboard.user_reservations.close_case' | t }}</button>
   </div>
   <form class="edit_reservation" id="archive_reservation" action="{{ 'archive_dashboard_company_orders_received_path' | generate_url: reservation.id }}" accept-charset="UTF-8" method="post">
     <input name="utf8" type="hidden" value="&#x2713;" />
