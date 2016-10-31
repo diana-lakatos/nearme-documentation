@@ -142,7 +142,7 @@
         </div>
         <div class="tab-pane" id="tab-description">
           <p>
-            {{ listing.description }}
+            {{ listing.description | filter_text | custom_sanitize }}
           </p>
         </div>
       </div>

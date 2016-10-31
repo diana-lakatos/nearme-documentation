@@ -407,7 +407,9 @@ class User < ActiveRecord::Base
   end
 
   def custom_attributes_custom_validators
-    @custom_attributes_custom_validators ||= all_current_profiles.map(&:custom_attributes_custom_validators).flatten.compact
+    @custom_attributes_custom_validators ||= all_current_profiles.each_with_object({}) do |profile_type, object|
+      object[:"#{profile_type.profile_type}_properties"] = profile_type.custom_attributes_custom_validators.presence || []
+    end
   end
 
   def validation_for(field_names)

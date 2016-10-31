@@ -1,0 +1,8 @@
+<h2>Thanks, {{ lister.first_name }}!</h2>
+
+<p class="first-paragraph">
+Thanks for confirming {{ enquirer.first_name }}'s booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'. You can <a href="{{ platform_context.host | append:listing.in_progress_index_url }}">manage {{ listing.lessee }} bookings via the Dashboard</a>.
+</p>
+
+<p>If you need help, send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>
+

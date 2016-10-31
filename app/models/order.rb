@@ -119,7 +119,6 @@ class Order < ActiveRecord::Base
 
   delegate :action, to: :transactable_pricing
   delegate :photos, :confirm_reservations?, to: :transactable, allow_nil: true
-  delegate :custom_attributes_custom_validators, to: :reservation_type, allow_nil: true
 
   # You can customize order tabs (states) displauyed in dashboard
   # via orders_received_tabs and my_orders_tabs Instance attributes
@@ -523,6 +522,10 @@ class Order < ActiveRecord::Base
 
   def message_context_object
     self
+  end
+
+  def custom_attributes_custom_validators
+    @custom_attributes_custom_validators ||= { properties: reservation_type.custom_attributes_custom_validators }
   end
 
   private

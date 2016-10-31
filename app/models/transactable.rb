@@ -257,7 +257,7 @@ class Transactable < ActiveRecord::Base
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
            :custom_validators, :show_company_name, :display_additional_charges?, :auto_accept_invitation_as_collaborator?,
-           :custom_attributes_custom_validators, :auto_seek_collaborators?, to: :transactable_type
+           :auto_seek_collaborators?, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
@@ -697,6 +697,10 @@ class Transactable < ActiveRecord::Base
 
   def message_context_object
     self
+  end
+
+  def custom_attributes_custom_validators
+    @custom_attributes_custom_validators ||= { properties: transactable_type.custom_attributes_custom_validators }
   end
 
   private
