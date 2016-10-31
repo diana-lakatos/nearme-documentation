@@ -5,7 +5,6 @@
 - if object.respond_to?(:latitude)
   %meta{property:"place:location:latitude", content: object.latitude }
   %meta{property:"place:location:longitude", content: object.longitude }
-  %meta{property:"place:location:longitude", content: object.longitude }
 %meta{property:"og:site_name", content: meta_attr(platform_context.name) }
 %meta{property:"og:url", content: url }
 - if object.respond_to?(:photos_metadata)
