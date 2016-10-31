@@ -31,9 +31,6 @@ namespace :after_deploy do
     puts 'Creating default locales'
     Utils::EnLocalesSeeder.new.go!
 
-    puts 'Notifying Raygun about deployment'
-    RaygunDeployNotifier.send!
-
     puts 'Refreshing themes'
     Theme.refresh_all!
   end

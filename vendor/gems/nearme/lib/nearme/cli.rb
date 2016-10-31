@@ -2,6 +2,7 @@ require 'thor'
 require 'nearme'
 require 'slack-notifier'
 require_relative '../../../../../lib/jira_wrapper.rb'
+require_relative '../../../../../lib/raygun_deploy_notifier.rb'
 
 module NearMe
   class CLI < Thor
@@ -63,6 +64,7 @@ DESC
         production_notifier.ping("Production release started #{options[:branch]} -> #{options[:stack]}. You can <a href='#{production_release_notes}'>Check Release Notes</a>. Details in #eng-deploys", icon_emoji: ':see_no_evil:')
         cmd = "newrelic deployments -a \"Desks Near Me\" -e production -r #{@production_deploy} -u #{ENV['AWS_USER']}"
         `#{cmd}`
+        RaygunDeployNotifier.send!
       end
       if options[:watch]
         puts 'Waiting until deploy is done.'
