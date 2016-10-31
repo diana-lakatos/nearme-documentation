@@ -4,10 +4,13 @@ class CustomValidators < ActiveModel::Validator
     return true if should_skip_validation?
     invoke_validators(@record, @record.custom_validators)
     return true if should_skip_custom_attributes_validation?
-    invoke_validators(@record.properties,
-                      custom_attributes_custom_validators)
-    return true if @record.try(:properties).try(:errors).blank?
-    @record.properties.errors.full_messages.each { |message| @record.errors.add(:properties, message) }
+    @record.custom_attributes_custom_validators.each do |data_store_name, validators|
+      invoke_validators(@record.send(data_store_name), validators)
+      return true if @record.send(:"#{data_store_name}").errors.blank?
+      @record.send(:"#{data_store_name}")
+             .errors
+             .full_messages.each { |message| @record.errors.add(:"#{data_store_name}", message) }
+    end
   end
 
   protected
@@ -34,7 +37,7 @@ class CustomValidators < ActiveModel::Validator
   end
 
   def should_skip_custom_attributes_validation?
-    !@record.respond_to?(:properties) || @record.skip_custom_attribute_validation
+    !@record.respond_to?(:custom_attributes_custom_validators) || @record.skip_custom_attribute_validation
   end
 
   def should_skip_validator?(validator)
