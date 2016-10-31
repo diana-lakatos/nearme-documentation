@@ -6,7 +6,6 @@ class CustomValidators < ActiveModel::Validator
     return true if should_skip_custom_attributes_validation?
     @record.custom_attributes_custom_validators.each do |data_store_name, validators|
       invoke_validators(@record.send(data_store_name), validators)
-      return true if @record.send(:"#{data_store_name}").errors.blank?
       @record.send(:"#{data_store_name}")
              .errors
              .full_messages.each { |message| @record.errors.add(:"#{data_store_name}", message) }
