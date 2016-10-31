@@ -1,8 +1,7 @@
 module CustomAttributes
   class CustomAttribute::FormElementDecorator
-
-    delegate :name, :label, :errors, :valid_values, :input_html_options, :wrapper_html_options, :validation_rules, :html_tag,
-      :label_key, :attribute_type, :prompt_key, :placeholder_key, :hint_key, to: :attribute
+    delegate :name, :label, :errors, :valid_values, :input_html_options, :wrapper_html_options, :html_tag,
+             :label_key, :attribute_type, :prompt_key, :placeholder_key, :hint_key, :required?, to: :attribute
 
     attr_accessor :attribute
 
@@ -30,7 +29,7 @@ module CustomAttributes
                                when :check_box_list
                                  CustomAttribute::FormElementDecorator::CheckBoxList.new(attribute)
                                else
-                                 raise NotImplementedError.new("Not implemented options for #{html_tag}")
+                                 raise NotImplementedError, "Not implemented options for #{html_tag}"
                                end
     end
 
@@ -44,17 +43,10 @@ module CustomAttributes
         input_html: input_html_options,
         label: I18n.translate(attribute.label_key, default: attribute.name.try(:humanize)),
         hint: I18n.translate(attribute.hint_key, default: '').presence || nil,
-        placeholder: I18n.translate(attribute.placeholder_key, default:  '').presence || nil,
+        placeholder: I18n.translate(attribute.placeholder_key, default: '').presence || nil,
         include_blank: I18n.translate(attribute.prompt_key, default: '').presence || nil,
         required: required?
       }
     end
-
-    private
-
-    def required?
-      @required ||= validation_rules.present? && !validation_rules["presence"].nil?
-    end
-
   end
 end

@@ -12,27 +12,7 @@ module CustomAttributes
         raise '(vendor/gems/custom_attributes) please provide mandatory :target_id option' if @options[:target_id].nil?
         raise '(vendor/gems/custom_attributes) please provide mandatory :target_type option' if @options[:target_type].nil?
 
-        define_method(:custom_attributes_names_types_hash) do
-          custom_attributes.inject({}) do |hstore_attrs, attr_array|
-            hstore_attrs[attr_array[0]] = attr_array[1].to_sym
-            hstore_attrs
-          end
-        end
-
-        define_method(:custom_attributes_names_default_values_hash) do
-          custom_attributes.inject({}) do |hstore_attrs, attr_array|
-            hstore_attrs[attr_array[0]] = attr_array[2]
-            hstore_attrs
-          end
-        end
-
-
-        class_eval <<-RUBY, __FILE__, __LINE__+1
-
-          validate do
-            CustomAttributes::CustomValidator.new(:#{@options[:store_accessor_name]}).validate(self)
-            self.errors.add(:#{@options[:store_accessor_name]}, self.#{@options[:store_accessor_name]}.errors.full_messages.join(', ')) if self.#{@options[:store_accessor_name]}.errors.any?
-          end
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1
 
           def #{@options[:store_accessor_name]}_attributes=(attrs)
             attrs.each do |key, value|
@@ -101,9 +81,7 @@ module CustomAttributes
             end.compact
           end
         RUBY
-
       end
     end
-
   end
 end

@@ -4,7 +4,7 @@ class FileMimeTypeValidator < ActiveModel::EachValidator
   CHECKS    = [:content_type].freeze
 
   DEFAULT_TOKENIZER = ->(value) { value.split(//) }
-  RESERVED_OPTIONS  = [:content_type, :tokenizer]
+  RESERVED_OPTIONS  = [:content_type, :tokenizer].freeze
 
   def initialize(options)
     super
@@ -13,40 +13,34 @@ class FileMimeTypeValidator < ActiveModel::EachValidator
   def check_validity!
     keys = CHECKS & options.keys
 
-    if keys.empty?
-      fail ArgumentError, 'Patterns unspecified. Specify the :content_type option.'
-    end
+    raise ArgumentError, 'Patterns unspecified. Specify the :content_type option.' if keys.empty?
 
     keys.each do |key|
       value = options[key]
 
-      unless valid_content_type_option?(value)
-        fail ArgumentError, ":#{key} must be a String or a Regexp or an Array"
-      end
+      raise ArgumentError, ":#{key} must be a String or a Regexp or an Array" unless valid_content_type_option?(value)
 
-      if key.is_a?(Array) && key == :content_type
-        options[key].each do |val|
-          fail ArgumentError, "#{val} must be a String or a Regexp" unless val.is_a?(String) || val.is_a?(Regexp)
-        end
+      next unless key.is_a?(Array) && key == :content_type
+      options[key].each do |val|
+        raise ArgumentError, "#{val} must be a String or a Regexp" unless val.is_a?(String) || val.is_a?(Regexp)
       end
     end
   end
 
   def validate_each(record, attribute, value)
-    fail(ArgumentError, 'A CarrierWave::Uploader::Base object was expected') unless value.is_a? CarrierWave::Uploader::Base
+    raise(ArgumentError, 'A CarrierWave::Uploader::Base object was expected') unless value.is_a? CarrierWave::Uploader::Base
     value = (options[:tokenizer] || DEFAULT_TOKENIZER).call(value) if value.is_a?(String)
-    return if value.length == 0
+    return if value.empty?
 
     CHECKS.each do |key|
       next unless check_value = options[key]
 
-      if key == :content_type
-        if check_value.is_a?(String) || check_value.is_a?(Regexp)
-          do_validation(value, check_value, key, record, attribute)
-        else
-          check_value.each do |pattern|
-            do_validation(value, pattern, key, record, attribute)
-          end
+      next unless key == :content_type
+      if check_value.is_a?(String) || check_value.is_a?(Regexp)
+        do_validation(value, check_value, key, record, attribute)
+      else
+        check_value.each do |pattern|
+          do_validation(value, pattern, key, record, attribute)
         end
       end
     end

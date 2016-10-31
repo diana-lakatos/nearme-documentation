@@ -9,11 +9,14 @@ class CustomValidator < ActiveRecord::Base
   serialize :valid_values, Array
   serialize :validation_rules, JSON
 
+  before_validation :set_field_name
   before_validation :set_validation_rules
 
   validates :field_name, presence: true
 
   attr_accessor :required, :min_length, :max_length
+
+  scope :required, -> { where(['custom_validators.validation_rules ilike ?', '%presence%']) }
 
   def inclusion?
     validation_rules.keys.include?('inclusion') || valid_values.present?
@@ -26,9 +29,21 @@ class CustomValidator < ActiveRecord::Base
   end
 
   def set_accessors
-    self.required   = validation_rules['presence'] == {} rescue false
-    self.min_length = validation_rules['length']['minimum'] rescue nil
-    self.max_length = validation_rules['length']['maximum'] rescue nil
+    self.required   = begin
+                        validation_rules['presence'] == {}
+                      rescue
+                        false
+                      end
+    self.min_length = begin
+                        validation_rules['length']['minimum']
+                      rescue
+                        nil
+                      end
+    self.max_length = begin
+                        validation_rules['length']['maximum']
+                      rescue
+                        nil
+                      end
   end
 
   def length_rules
@@ -49,6 +64,11 @@ class CustomValidator < ActiveRecord::Base
     else
       super
     end
+  end
+
+  def set_field_name
+    self.field_name = validatable.name if validatable_type == 'CustomAttributes::CustomAttribute' && validatable.present?
+    true
   end
 
   def set_validation_rules

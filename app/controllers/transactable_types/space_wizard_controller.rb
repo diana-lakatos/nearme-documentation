@@ -87,7 +87,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
       @attachments = @user.first_listing ? @user.first_listing.attachments : nil
-      @global_errors = filter_error_messages(@user.errors.full_messages + @user.properties.errors.full_messages)
+      @global_errors = filter_error_messages(@user.errors.full_messages +
+                                             @user.properties.errors.full_messages)
       render :list
     end
   end
