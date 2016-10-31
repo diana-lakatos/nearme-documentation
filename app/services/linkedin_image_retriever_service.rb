@@ -12,7 +12,7 @@ class LinkedinImageRetrieverService
 
     # Will be nil or "" if array is empty
     elements.first.to_s
-  rescue Exception
+  rescue StandardError
     nil
   end
 end

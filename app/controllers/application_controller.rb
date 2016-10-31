@@ -173,7 +173,7 @@ class ApplicationController < ActionController::Base
         user.save! if user.changed?
       end
     end
-  rescue Exception => ex
+  rescue StandardError => ex
     Rails.logger.error "Storing user #{user.try(:id)} browser details #{user_agent} failed: #{ex}"
   end
 
