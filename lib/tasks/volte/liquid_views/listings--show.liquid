@@ -44,7 +44,7 @@
     <div class="image-gallery" data-image-gallery>
       <div class="image-gallery__container">
       {% if photos_count > 0 %}
-        <div class="image-gallery__container-image" style="background-image: url('{{ photos[0].original  }}'); background-size: 100%;" data-image-gallery-full-image></div>
+        <div class="image-gallery__container-image" style="background-image: url('{{ photos[0].original  }}'); background-size: contain;" data-image-gallery-full-image></div>
       {% endif %}
       </div>
 
