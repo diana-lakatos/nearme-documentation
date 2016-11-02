@@ -24,7 +24,7 @@ module.exports = function(gulp, config) {
 
   function registerEnvironmentTasks(gulp, environment) {
     gulp.task('build:' + environment, ['clean'], function(){
-      return gulp.start(['webpack-manifest:' + environment, 'version']);
+      return gulp.start(['webpack-manifest:' + environment]);
     });
 
     gulp.task('manifest:' + environment, distTasks.concat(['modernizr:' + environment]), function(){
