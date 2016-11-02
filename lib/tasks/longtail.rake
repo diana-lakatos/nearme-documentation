@@ -115,6 +115,7 @@ class LongtailRakeHelper
       %(
 {% content_for 'meta' %}
   <link rel='stylesheet' media='screen' href='https://rawgit.com/mdyd-dev/marketplaces/master/longtail/dist/app.css'>
+  <!--<link rel='stylesheet' media='screen' href='http://lvh.me:8080/app.css'>-->
 {% endcontent_for %}
 
 {% content_for 'body_bottom' %}
@@ -160,7 +161,7 @@ class LongtailRakeHelper
                 <ul class="listing-photos__carousel" data-carousel>
                   {% if listing.attributes.photos.size == 0 %}
                     <li class="active">
-                      <a href="{{ listing.attributes.url }}"><img src="http://placekitten.com/410/254" alt="{{ listing.attributes.name }}"></a>
+                      <a href="{{ listing.attributes.url }}"><img src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/picture/data/3190/placeholder.png" alt="Photos unavailable or still processing" /></a>
                     </li>
                   {% elsif listing.attributes.photos.size == 1 %}
                     <li class="active">
