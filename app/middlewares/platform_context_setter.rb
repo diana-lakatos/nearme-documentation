@@ -38,7 +38,7 @@ class PlatformContextSetter
                   end
 
         additional_headers = { 'UserId' => user_id }
-        additional_headers['UserName'] =  User.find(user_id).name if user_id.present?
+        additional_headers['UserName'] = User.find(user_id).name if user_id.present?
         reverse_proxy_middleware.custom_headers = JSON.parse(rule.headers).merge(additional_headers)
         reverse_proxy_middleware.call
       else

@@ -43,6 +43,7 @@ class PlatformContext
     I18N_DNM_BACKEND.set_instance(platform_context.instance) if defined? I18N_DNM_BACKEND
     I18n.locale = platform_context.instance.primary_locale
     CacheExpiration.update_memory_cache
+    NewRelic::Agent.add_custom_attributes(instance_id: platform_context.instance.id)
     set_es_mappings
   end
 
