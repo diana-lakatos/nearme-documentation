@@ -256,7 +256,7 @@
       {% assign notification_preferences_show = 'dashboard/notification_preferences' | is_visible %}
       {% assign notification_preferences_path = 'edit_dashboard_notification_preferences_path' | generate_url %}
       {% assign notification_preferences_selected = current_path | matches: notification_preferences_path %}
-      {% assign social_accounts_show = 'dashboard/social_accounts' | is_visible %}
+      {% assign social_accounts_show = 'registrations/social_accounts' | is_visible %}
       {% assign social_accounts_path = 'social_accounts_path' | generate_url %}
       {% assign social_accounts_selected = current_path | matches: social_accounts_path %}
       {% assign saved_searches_show = 'dashboard/saved_searches' | is_visible %}
