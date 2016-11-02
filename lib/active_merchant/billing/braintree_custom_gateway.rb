@@ -55,7 +55,9 @@ module ActiveMerchant
 
       def create_transaction_parameters(money, credit_card_or_vault_id, options)
         super.tap do |parameters|
-          parameters[:service_fee_amount] = options[:service_fee_amount] if options[:service_fee_amount]
+          # we use ActiveMerchant 'amount' method to parse cents integer to
+          # dollar with cents format 400 cents to '4.00' which is expected by braintree
+          parameters[:service_fee_amount] = amount(options[:service_fee_amount]).to_s if options[:service_fee_amount]
           parameters[:payment_method_nonce] = options[:payment_method_nonce] if options[:payment_method_nonce]
         end
       end
