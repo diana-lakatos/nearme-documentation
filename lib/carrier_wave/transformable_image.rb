@@ -5,7 +5,6 @@ module CarrierWave::TransformableImage
     version :transformed, if: :delayed_processing? do
       process :apply_rotate
       process :apply_crop
-      process optimize: CarrierWave::Optimizable::OPTIMIZE_SETTINGS
     end
   end
 

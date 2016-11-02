@@ -7,7 +7,7 @@
   .contain
     .project-a
       %figure
-        = image_tag @transactable.cover_photo.image_url(:fullscreen), alt: @transactable.name
+        = image_tag @transactable.cover_photo.image_url(:golden), alt: @transactable.name
         - if @transactable.featured?
           %figcaption
             = t :featured

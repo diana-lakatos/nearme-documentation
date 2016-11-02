@@ -9,6 +9,5 @@ class HeroImageUploader < BaseUploader
 
   version :medium do
     process dynamic_version: :medium
-    process optimize: OPTIMIZE_SETTINGS
   end
 end
