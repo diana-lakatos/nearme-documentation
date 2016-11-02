@@ -46,19 +46,7 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
   end
 
   def date_format
-    case I18n.locale
-    when 'us' then '%m-%d-%Y'
-    else
-      default_date_format
-    end
-  end
-
-  def date_format
-    case I18n.locale
-    when :en then '%m-%d-%Y'
-    else
-      default_date_format
-    end
+    I18n.t('date.formats.stripe') || default_date_format
   end
 
   def date_format_readable

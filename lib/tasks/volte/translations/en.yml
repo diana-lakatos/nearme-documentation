@@ -3,6 +3,7 @@ en:
     dformat: "%H:%M"
   date:
     formats:
+      stripe: '%d-%m-%Y'
       day_month_year: "%d/%m/%Y"
   pricing:
     unavailability:

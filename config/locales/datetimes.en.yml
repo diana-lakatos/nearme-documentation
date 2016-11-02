@@ -8,6 +8,7 @@ en:
     jsformat: 'h:i a'               # picking format of the time (this is the default, can be ommited)
   dayViewHeaderFormat: 'MMMM YYYY'  # picking format of the time (this is the default, can be ommited)
 
+
   time:
     formats:
       short: '%-H:%M'
@@ -24,3 +25,4 @@ en:
       short: '%m/%d/%Y'
       day_and_month: '%b %d'
       day_month_year: '%d-%m-%Y'
+      stripe: '%m-%d-%Y'
