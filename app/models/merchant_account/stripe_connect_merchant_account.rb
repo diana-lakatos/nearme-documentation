@@ -213,7 +213,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def iso_country_code
-    @iso_country_code ||= address.iso_country_code
+    @iso_country_code ||= address.iso_country_code || merchantable.iso_country_code
   end
 
   def next_transfer_date(transfer_created_on = Date.today)

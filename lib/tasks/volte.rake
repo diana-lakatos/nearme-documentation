@@ -78,8 +78,9 @@ namespace :volte do
         cancellation_policy_enabled: '1',
         cancellation_policy_hours_for_cancellation: 24, # RT to confirm
         cancellation_policy_penalty_percentage: 30, # RT to confirm
-        service_fee_guest_percent: 0,
-        service_fee_host_percent: 15
+        service_fee_guest_percent: 5,
+        service_fee_host_percent: 15,
+        minimum_lister_service_fee_cents: 500
       )
 
       transactable_type.time_based_booking.both_side_confirmation = true
@@ -706,9 +707,9 @@ namespace :volte do
 
     def create_custom_attribute(object, hash)
       hash = hash.with_indifferent_access
-      attr = object.custom_attributes.where(name: hash.delete(:name)).first_or_initialize
-      attr.assign_attributes(hash)
-      attr.set_validation_rules!
+      ca = object.custom_attributes.where(name: hash.delete(:name)).first_or_initialize
+      ca.assign_attributes(hash)
+      ca.save!
     end
   end
 end
