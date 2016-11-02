@@ -16,6 +16,9 @@ class ConfigurePhotoUploaderForDevmesh < ActiveRecord::Migration
       PhotoUploadVersion.create!(apply_transform: 'resize_to_fill',
                                  width:  600, height: 482, version_name: 'space_listing',
                                  photo_uploader: 'PhotoUploader')
+      PhotoUploadVersion.create!(apply_transform: 'resize_to_fill',
+                                 width:  1200, height: 800, version_name: 'golden',
+                                 photo_uploader: 'PhotoUploader')
 
       PhotoUploadVersion.create!(apply_transform: 'resize_to_fill',
                                  width:  250, height: 200, version_name: 'medium',

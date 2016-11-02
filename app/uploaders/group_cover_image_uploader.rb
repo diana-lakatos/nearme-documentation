@@ -11,11 +11,9 @@ class GroupCoverImageUploader < BaseUploader
 
   version :medium do
     process dynamic_version: :medium
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :thumbnail do
     process dynamic_version: :thumbnail
-    process optimize: OPTIMIZE_SETTINGS
   end
 end

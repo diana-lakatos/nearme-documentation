@@ -19,7 +19,7 @@ class MountUploaderTest < ActiveSupport::TestCase
 
     should 'return proper url for delayed versions after generation' do
       assert_match /\/\/placehold.it\/895x554(.+)/, @photo.image.url(:golden)
-      CarrierWave::SourceProcessing::Processor.new(@photo, :image).generate_versions(false)
+      CarrierWave::SourceProcessing::Processor.new(@photo, :image).generate_versions
       assert_match(/instances\/1\/uploads\/images\/photo\/image/, @photo.image.url(:golden))
     end
   end

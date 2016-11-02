@@ -58,7 +58,7 @@ class Photo < ActiveRecord::Base
   end
 
   def original_image_url
-    image.url(:optimized) =~ /\/\/placehold\.it/ ? image.url : image.url(:optimized)
+    image.url
   end
 
   def self.xml_attributes

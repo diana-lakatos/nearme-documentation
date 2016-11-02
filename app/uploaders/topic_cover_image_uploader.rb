@@ -11,12 +11,10 @@ class TopicCoverImageUploader < BaseUploader
 
   version :big do
     process dynamic_version: :big
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :medium do
     process dynamic_version: :medium
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   ASPECT_RATIO = 6.7368421053
