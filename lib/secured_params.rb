@@ -787,7 +787,7 @@ class SecuredParams
   end
 
   def merchant_account(merchant_account)
-    attributes == [:id, :redirect_url]
+    attributes = [:id, :redirect_url]
     attributes << merchant_account.class::ATTRIBUTES
     attributes << { current_address_attributes: nested(address) }
     attributes << { payment_subscription_attributes: nested(payment_subscription) }
