@@ -58,8 +58,10 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
                                           .where.not(valid_values: nil)
                                           .where.not(valid_values: [])
                                           .first_or_initialize
-      custom_validator.valid_values = valid_values
-      custom_validator.save!
+      if custom_validator.valid_values != valid_values
+        custom_validator.valid_values = valid_values
+        custom_validator.save!
+      end
     end
     true
   end

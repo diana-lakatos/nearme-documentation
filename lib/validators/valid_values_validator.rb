@@ -32,14 +32,20 @@ class ValidValuesValidator
   def initialize(record:, field_name:, valid_values:)
     @record = record
     @field_name = field_name
-    @value = Value.new(@record.send(field_name))
+    @values = normalize_values(@record.send(field_name))
     @valid_values = valid_values
   end
 
   def validate
-    return true unless @value.present? && @valid_values.try(:any?)
+    return true unless @values.any? && @valid_values.try(:any?)
     @record.errors.add(@field_name,
                        :inclusion,
-                       value: @value) unless @value.included_in?(@valid_values)
+                       value: @values.join(', ')) unless @values.any? { |v| v.included_in?(@valid_values) }
+  end
+
+  protected
+
+  def normalize_values(values)
+    Array(values).map { |value| value.present? ? Value.new(value) : nil }.compact
   end
 end
