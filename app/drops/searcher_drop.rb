@@ -28,4 +28,8 @@ class SearcherDrop < BaseDrop
   def number_of_results
     [total_entries, (per_page * current_page)].min
   end
+
+  def filterable_custom_attributes_hash
+    filterable_custom_attributes.each_with_object({}) { |ca, hash| hash[ca.name] = ca }
+  end
 end
