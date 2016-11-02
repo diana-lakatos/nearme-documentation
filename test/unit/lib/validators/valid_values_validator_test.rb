@@ -28,6 +28,15 @@ class ValidValuesValidatorTest < ActiveSupport::TestCase
     assert_equal '', @dummy_class.errors.full_messages.join(', ')
   end
 
+  should 'pass validation if attribute is valid' do
+    @dummy_class.name = 'a'
+    ValidValuesValidator.new(record: @dummy_class,
+                             field_name: :name,
+                             valid_values: %w(a b c))
+                        .validate
+    assert_equal '', @dummy_class.errors.full_messages.join(', ')
+  end
+
   should 'not be case sensitive' do
     @dummy_class.name = 'A'
     ValidValuesValidator.new(record: @dummy_class,
@@ -62,5 +71,23 @@ class ValidValuesValidatorTest < ActiveSupport::TestCase
                              valid_values: nil)
                         .validate
     assert_equal '', @dummy_class.errors.full_messages.join(', ')
+  end
+
+  should 'pass validation if attribute is array but all values are valid' do
+    @dummy_class.name = %w(a b)
+    ValidValuesValidator.new(record: @dummy_class,
+                             field_name: :name,
+                             valid_values: %w(a b c))
+                        .validate
+    assert_equal '', @dummy_class.errors.full_messages.join(', ')
+  end
+
+  should 'not pass validation if attribute is array which contains invalid value' do
+    @dummy_class.name = %w(a d)
+    ValidValuesValidator.new(record: @dummy_class,
+                             field_name: :name,
+                             valid_values: %w(a b c))
+                        .validate
+    assert_equal 'Name is not included in the list', @dummy_class.errors.full_messages.join(', ')
   end
 end

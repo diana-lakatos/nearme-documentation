@@ -40,7 +40,7 @@ class ValidValuesValidator
     return true unless @values.any? && @valid_values.try(:any?)
     @record.errors.add(@field_name,
                        :inclusion,
-                       value: @values.join(', ')) unless @values.any? { |v| v.included_in?(@valid_values) }
+                       value: @values.join(', ')) unless @values.all? { |v| v.included_in?(@valid_values) }
   end
 
   protected
