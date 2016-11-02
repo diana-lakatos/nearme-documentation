@@ -3,8 +3,8 @@
     %p= mobile_menu_caption
     = image_tag 'themes/buy_sell/hamburger.png'
   %ul#mobile-nav-list.nav.collapse
-    = dashboard_menu_item 'dashboard/user_reservations', dashboard_user_reservations_path,
-      active: (params[:controller].include?('user_recurring_bookings') || params[:controller].include?('user_reservations'))
+    = dashboard_menu_item 'dashboard/user_reservations', dashboard_orders_path,
+      active: (params[:controller].include?('dashboard/orders') || params[:controller].include?('user_reservations'))
 
     = dashboard_menu_item 'dashboard/user_messages', dashboard_user_messages_path
     - if platform_context.instance.action_rfq?

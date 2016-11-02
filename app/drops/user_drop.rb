@@ -272,7 +272,7 @@ class UserDrop < BaseDrop
 
   # url for verifying (confirming) a user's email
   def bookings_dashboard_url
-    routes.dashboard_user_reservations_path
+    routes.dashboard_orders_path
   end
 
   # returns true if the email address is verified
@@ -282,19 +282,19 @@ class UserDrop < BaseDrop
 
   # url to the section in the application for managing a user's own bookings, with tracking
   def bookings_dashboard_url_with_tracking
-    routes.dashboard_user_reservations_path
+    routes.dashboard_orders_path
   end
 
   # url to the section in the application for managing a user's own bookings, with authentication
   # token
   def bookings_dashboard_url_with_token
-    routes.dashboard_user_reservations_path(token_key => @source.try(:temporary_token))
+    routes.dashboard_orders_path(token_key => @source.try(:temporary_token))
   end
 
   # url to the section in the application for managing a user's own bookings, with authentication
   # token, and tracking
   def bookings_dashboard_url_with_tracking_and_token
-    routes.dashboard_user_reservations_path(token_key => @source.try(:temporary_token))
+    routes.dashboard_orders_path(token_key => @source.try(:temporary_token))
   end
 
   # listings in and around a user's location, limited to a 100 km radius and a maximum of 3 results
@@ -499,6 +499,7 @@ class UserDrop < BaseDrop
   def unconfirmed_received_orders_count
     @unconfirmed_received_orders_count ||= @source.listing_orders.unconfirmed.count
   end
+
   def has_company?
     !@source.companies.empty?
   end
