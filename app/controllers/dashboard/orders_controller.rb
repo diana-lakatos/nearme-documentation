@@ -26,16 +26,19 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def approve
-    @order.update_attribute(:pending_guest_confirmation, nil)
-
     if @order.unconfirmed?
-      @order.enquirer_confirmed_at = Time.now
-      @order.save
-      @order.invoke_confirmation!
-      if @order.payment.authorize && @order.payment.capture!
+      @order.update_attribute(:pending_guest_confirmation, nil)
+      @order.touch(:enquirer_confirmed_at)
+      @order.invoke_confirmation! do
+        @order.payment.authorize unless @order.payment.authorized?
+        @order.payment.capture!
+      end
+      if @order.confirmed? && @order.payment.paid?
         flash[:notice] = t('flash_messages.payments.successful_approval')
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPayment, @order.id)
       else
+        @order.touch(:pending_guest_confirmation)
+        @order.update_attribute(:enquirer_confirmed_at, nil)
         @order.payment.void!
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPaymentButCaptureFailed, @order.id)
         flash[:warning] = t('flash_messages.payments.failed_to_approve')
