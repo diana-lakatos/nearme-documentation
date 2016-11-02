@@ -117,6 +117,10 @@ class LongtailRakeHelper
   <script src='https://rawgit.com/mdyd-dev/marketplaces/master/longtail/dist/app.js'></script>
 {% endcontent_for %}
 
+{% content_for 'meta_description' %}
+  {{ @data_source_contents.first.json_content.data.first.attributes.name }}
+{% endcontent_for %}
+
 {% assign cache_key = data_source_last_update | append: current_path %}
 
 {% cache_for cache_key, page %}
@@ -205,7 +209,8 @@ class LongtailRakeHelper
                 <div class="listing-pricing">
                   <ul class="list-unstyled">
                     {% for price in listing.attributes.price %}
-                      <li>{{price[0]}}: {{ price[1] }}</li>
+                      {% assign price_key = "reservations." | append: price[0] | append: '.one' %}
+                      <li>{{ price[1] | pricify: listing.attributes.currency }} / {{price_key | t }}</li>
                     {% endfor %}
                   </ul>
                 </div>
