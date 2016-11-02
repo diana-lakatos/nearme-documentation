@@ -3,14 +3,14 @@
     = f.input :id, as: :hidden
 
     = f.input :label, required: false
-    .form-inline
-      = f.input :user_duration_range_start, as: :date_picker, wrapper_html: { class: 'form-control-sm'}, label: t('exception_start', scope: [:pricing, :schedule]),  label_html: { class: 'block-label' }, required: false
+    .form-inline{ 'data-date-range-picker' => '' }
+      = f.input :user_duration_range_start, as: :date_picker, wrapper_html: { class: 'form-control-sm'}, label: t('exception_start', scope: [:pricing, :schedule]),  label_html: { class: 'block-label' }, required: false, input_html: { :'data-date-range-picker-start' => '' }
 
       .form-unit.label-offset
         %b
           = t :from_to_separator, scope: [:pricing, :unavailability]
 
-      = f.input :user_duration_range_end, as: :date_picker, wrapper_html: { class: 'form-control-sm label-offset'}, label: false, required: false
+      = f.input :user_duration_range_end, as: :date_picker, wrapper_html: { class: 'form-control-sm label-offset'}, label: false, required: false, input_html: { :'data-date-range-picker-end' => '' }
 
   .col-xs-1
     = link_to_remove_association(f) do
