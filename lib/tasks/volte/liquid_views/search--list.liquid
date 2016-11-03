@@ -8,6 +8,8 @@ partial: false
 <div class="wrapper-a search-list">
   <div class="search-box">
     <form class="search-form" action="/search" method="GET" data-search-form="filters" data-search-form-container>
+      <input type="hidden" name="per_page" value="{{ searcher.per_page }}" id="input-per-page">
+      <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
       <input type="text" name="query" placeholder="Enter keywords to search for items" data-search-form="query" autofocus="autofocus" value="{{ params['query'] }}" />
       <button class="button button-default" data-search-form="submit">SEARCH</button>
     </form>
@@ -283,6 +285,12 @@ partial: false
           </article>
         {% endfor %}
       </section>
+
+      {% if searcher.next_page %}
+      <p class="search-results-more-trigger">
+        <button type="button" class="button button-default" data-page='{{ searcher.next_page }}'>More Results</button>
+      </p>
+      {% endif %}
     {% endif %}
   </main>
 {% unless xhr %}
