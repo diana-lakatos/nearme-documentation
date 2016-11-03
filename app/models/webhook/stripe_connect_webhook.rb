@@ -127,8 +127,8 @@ class Webhook::StripeConnectWebhook < Webhook
   end
 
   def set_merchant_account
-    return if event.try('[]', :user_id).blank?
+    return if params[:user_id].blank?
 
-    self.merchant_account = payment_gateway.find_by(internal_payment_gateway_account_id: parmas[:user_id])
+    self.merchant_account = payment_gateway.find_by(internal_payment_gateway_account_id: params[:user_id])
   end
 end
