@@ -1,7 +1,8 @@
 ---
 partial: false
 ---
-
+{% assign xhr = params['is_xhr'] == 'true' %}
+{% unless xhr %}
 <div class="wrapper-a search-list">
   <div class="search-box">
     <form class="search-form" action="/search" method="GET" data-search-form="filters" data-search-form-container>
@@ -214,6 +215,7 @@ partial: false
       </ul>
     </form>
   </aside>
+{% endunless %}
 
   <main class="search-results" data-search-form="results">
     {% if searcher.results.size == 0 %}
@@ -289,4 +291,7 @@ partial: false
       {% endif %}
     {% endif %}
   </main>
+{% unless xhr %}
 </div>
+{% endunless %}
+
