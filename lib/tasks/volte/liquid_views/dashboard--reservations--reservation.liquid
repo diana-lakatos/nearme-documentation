@@ -131,12 +131,19 @@
   {% endif %}
 
   {% if reservation.unconfirmed? %}
-    {% if reservation.lister_confirmed_at and reservation.enquirer_confirmed_at == blank %}
-      <form class="edit_reservation" action="{{ 'approve_dashboard_order_path' | generate_url: id: reservation.id }}" accept-charset="UTF-8" method="post">
-        <input name="utf8" type="hidden" value="&#x2713;" />
-        <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
-        <input type="submit" name="commit" value="RENT ITEM" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-inverse" />
-      </form>
+    {% if reservation.has_to_update_credit_card? %}
+      <span>
+        <a class="btn btn-warning" data-modal='true' href="{{ 'edit_dashboard_user_reservation_payment_path' | generate_url: user_reservation_id: reservation.id, id: reservation.payment.id }}">{{ 'dashboard.user_reservations.update_credit_card' | t }}</a>
+      </span>
+      <div class="cc-error">{{ 'dashboard.user_reservations.must_change_credit_card' | t }}</div>
+    {% else %}
+      {% if reservation.lister_confirmed_at and reservation.enquirer_confirmed_at == blank %}
+        <form class="edit_reservation" action="{{ 'approve_dashboard_order_path' | generate_url: id: reservation.id }}" accept-charset="UTF-8" method="post">
+          <input name="utf8" type="hidden" value="&#x2713;" />
+          <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+          <input type="submit" name="commit" value="RENT ITEM" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-inverse" />
+        </form>
+      {% endif %}
     {% endif %}
 
     {% if reservation.enquirer_confirmed_at == blank %}
@@ -146,13 +153,6 @@
         <input type="submit" name="commit" value="CANCEL" data-confirm="{{ 'dashboard.user_reservations.cancel_confirmation' | t }}" class="button button-inverse" data-disable-with="{{ 'general.processing' | t }}" />
       </form>
     {% endif %}
-  {% endif %}
-
-  {% if reservation.enquirer_approved_at and reservation.payment.pending? or reservation.payment.voided? %}
-    <span>
-      <a class="button button-inverse" data-modal='true' href="{{ 'edit_dashboard_user_reservation_payment_path' | generate_url: user_reservation_id: reservation.id, id: reservation.payment.id }}">{{ 'dashboard.user_reservations.update_credit_card' | t }}</a>
-    </span>
-    <div class="cc-error">{{ 'dashboard.user_reservations.must_change_credit_card' | t }}</div>
   {% endif %}
 
   {% unless reservation.archived? %}

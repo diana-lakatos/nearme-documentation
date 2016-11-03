@@ -3,7 +3,7 @@ require 'test_helper'
 class MountUploaderTest < ActiveSupport::TestCase
   context '#url' do
     setup do
-      CarrierWave::SourceProcessing::Processor.any_instance.stubs(:enqueue_processing).with(false).returns(true)
+      CarrierWave::SourceProcessing::Processor.any_instance.stubs(:enqueue_processing).returns(true)
       @photo = FactoryGirl.create(:photo, image_versions_generated_at: nil)
     end
 
@@ -19,7 +19,7 @@ class MountUploaderTest < ActiveSupport::TestCase
 
     should 'return proper url for delayed versions after generation' do
       assert_match /\/\/placehold.it\/895x554(.+)/, @photo.image.url(:golden)
-      CarrierWave::SourceProcessing::Processor.new(@photo, :image).generate_versions(false)
+      CarrierWave::SourceProcessing::Processor.new(@photo, :image).generate_versions
       assert_match(/instances\/1\/uploads\/images\/photo\/image/, @photo.image.url(:golden))
     end
   end

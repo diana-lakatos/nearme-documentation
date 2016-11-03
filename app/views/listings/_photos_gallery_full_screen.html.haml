@@ -13,7 +13,7 @@
             - listing_name = location.try(:name)
 
           .item{:class => ("active" if index == 0), :'data-modalize' => true}
-            %img{:alt => listing_name, :title => listing_name, :'data-src' => photo.fullscreen_url}
+            %img{:alt => listing_name, :title => listing_name, :'data-src' => photo.image.url}
             .info
               .caption
                 = "#{photo.caption} #{listing_name}".strip

@@ -10,11 +10,9 @@ class LinkImageUploader < BaseUploader
 
   version :standard do
     process dynamic_version: :standard
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :medium do
     process dynamic_version: :medium
-    process optimize: OPTIMIZE_SETTINGS
   end
 end

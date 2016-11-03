@@ -999,6 +999,7 @@ class SecuredParams
       :step_checkout,
       :validate_on_adding_to_cart,
       :skip_payment_authorization,
+      :check_overlapping_dates,
       transactable_type_ids: []
     ]
   end

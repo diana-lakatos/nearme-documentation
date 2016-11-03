@@ -13,12 +13,10 @@ class CkeditorPictureUploader < BaseCkeditorUploader
 
   version :thumb do
     process dynamic_version: :thumb
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :content do
     process dynamic_version: :content
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   def extension_white_list

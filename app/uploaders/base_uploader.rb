@@ -80,9 +80,9 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def self.version(name, options = {}, &block)
-    if [:delayed_processing?, :generate_transactable_versions?, :generate_project_versions?].include?(options[:if])
-      @@delayed_versions ||= []
-      @@delayed_versions << name
+    if [:delayed_processing?].include?(options[:if])
+      @@delayed_versions ||= Set.new
+      @@delayed_versions.add(name)
     end
     super
   end
