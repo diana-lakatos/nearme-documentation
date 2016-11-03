@@ -10,10 +10,10 @@ module CarrierWave
       jpegtran: false,
       pngcrush: false,
       pngout: false,
-      pngquant: true,
+      pngquant: false,
       svgo: false,
-      jpegoptim: { allow_lossy: true, max_quality: 75 },
-      optipng: { level: 6 }
+      jpegoptim: { allow_lossy: true, max_quality: 85 },
+      optipng: { level: 2 }
     }.freeze
 
     included do
