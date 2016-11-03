@@ -165,7 +165,7 @@ class LongtailRakeHelper
                 <ul class="listing-photos__carousel" data-carousel>
                   {% if listing.attributes.photos.size == 0 %}
                     <li class="active">
-                      <a href="{{ listing.attributes.url }}"><img src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/picture/data/3190/placeholder.png" alt="Photos unavailable or still processing" /></a>
+                      <a href="{{ listing.attributes.url }}"><img src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/attachment_file/data/3228/placeholder.svg" alt="Photos unavailable or still processing" /></a>
                     </li>
                   {% elsif listing.attributes.photos.size == 1 %}
                     <li class="active">
