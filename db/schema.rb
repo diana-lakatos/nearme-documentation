@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161102163626) do
+ActiveRecord::Schema.define(version: 20161102231453) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -3084,11 +3084,19 @@ ActiveRecord::Schema.define(version: 20161102163626) do
   create_table "webhooks", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "webhookable_id"
-    t.string   "webhookable_type",   limit: 255
+    t.string   "webhookable_type",     limit: 255
     t.text     "encrypted_response"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.integer  "payment_gateway_id"
+    t.integer  "merchant_account_id"
+    t.string   "type"
+    t.string   "state"
+    t.text     "error"
+    t.string   "payment_gateway_mode"
+    t.integer  "retry_count",                      default: 0
+    t.string   "external_id"
   end
 
   add_index "webhooks", ["instance_id", "webhookable_id", "webhookable_type"], name: "index_webhooks_on_instance_id_and_webhookable", using: :btree
