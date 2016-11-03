@@ -276,4 +276,19 @@ class TransactableTest < ActiveSupport::TestCase
       assert_equal 'Changed', @transactable.links[0].text
     end
   end
+
+  context 'with event based bookings' do
+    setup do
+      @listing = FactoryGirl.create(:transactable, :fixed_price)
+    end
+
+    should 'clear transactable opened_on_days if moved to event based booking' do
+      @listing.update_column(:opened_on_days, [0,1,2,3])
+      @listing.reload
+      assert_equal [0,1,2,3], @listing.opened_on_days
+
+      @listing.save
+      assert_equal [], @listing.opened_on_days
+    end
+  end
 end
