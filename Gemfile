@@ -81,7 +81,6 @@ gem 'font-awesome-rails'
 gem 'will_paginate'
 
 gem 'delayed_job_active_record'
-gem 'delayed_job_web'
 gem 'delayed_job_recurring'
 gem 'rdiscount', require: false
 gem 'attr_encrypted', '~> 1'
