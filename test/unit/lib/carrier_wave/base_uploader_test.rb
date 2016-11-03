@@ -3,7 +3,7 @@ require 'test_helper'
 class MountUploaderTest < ActiveSupport::TestCase
   context '#url' do
     setup do
-      CarrierWave::SourceProcessing::Processor.any_instance.stubs(:enqueue_processing).with(false).returns(true)
+      CarrierWave::SourceProcessing::Processor.any_instance.stubs(:enqueue_processing).returns(true)
       @photo = FactoryGirl.create(:photo, image_versions_generated_at: nil)
     end
 
