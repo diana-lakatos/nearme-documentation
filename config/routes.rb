@@ -1136,9 +1136,6 @@ DesksnearMe::Application.routes.draw do
 
     get '/:slug/(:slug2)/(:slug3)(.:format)', to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
 
-    # delayed_job web gui
-    match '/delayed_job' => DelayedJobWeb, :anchor => false, via: [:get, :post]
-
     get '/w-hotels-desks-near-me', to: 'locations#w_hotels', as: :w_hotels_location
     get '/W-hotels-desks-near-me', to: 'locations#w_hotels'
 
