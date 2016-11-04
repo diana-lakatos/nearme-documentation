@@ -115,16 +115,27 @@ class LongtailRakeHelper
       %(
 {% content_for 'meta' %}
   <link rel='stylesheet' media='screen' href='https://rawgit.com/mdyd-dev/marketplaces/master/longtail/dist/app.css'>
-  <!--<link rel='stylesheet' media='screen' href='http://lvh.me:8080/app.css'>-->
+  <meta name='keywords' content="{{ @data_source_contents.first.json_content.data.first.attributes.name }}">
 {% endcontent_for %}
 
 {% content_for 'body_bottom' %}
   <script src='https://rawgit.com/mdyd-dev/marketplaces/master/longtail/dist/app.js'></script>
 {% endcontent_for %}
 
+{% for included_item in data_source_contents.first.json_content.included %}
+  {% if included_item.attributes.snippet != blank %}
+    {% assign first_snippet = included_item.attributes.snippet %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% assign description_content = first_snippet | replace_first: '... ', '' | prepend: '... ' | prepend: @data_source_contents.first.json_content.data.first.attributes.name %}
 {% content_for 'meta_description' %}
-  {{ @data_source_contents.first.json_content.data.first.attributes.name }}
+  {{ description_content | truncate: 165  }}
 {% endcontent_for %}
+
+{% assign title_text = @data_source_contents.first.json_content.data.first.attributes.name | append: ' - ' | append: @data_source_contents.first.json_content.data.first.relationships.items.data.size | append: '  %}
+{% title title_text %}
 
 {% assign cache_key = data_source_last_update | append: current_path %}
 
