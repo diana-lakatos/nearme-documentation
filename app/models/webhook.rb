@@ -41,9 +41,9 @@ class Webhook < ActiveRecord::Base
     nil
   end
 
-  def process_error(error_message, should_raise: true)
+  def process_error(error_message, should_raise: false)
     self.error = error_message.to_s
     mark_as_failed
-    should_raise ? raise(error_message) : return
+    should_raise ? raise(error_message) : true
   end
 end
