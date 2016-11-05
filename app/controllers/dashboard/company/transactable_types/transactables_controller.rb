@@ -1,9 +1,9 @@
 class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard::Company::TransactablesController
   before_action :find_transactable_type
+  before_action :find_transactable, except: [:index, :new, :create]
+  before_action :set_form_components, except: [:index, :enable, :disable, :destroy]
   before_action :redirect_to_edit_if_single_transactable, only: [:index, :new, :create]
   before_action :redirect_to_new_if_single_transactable, only: [:index, :edit, :update]
-  before_action :set_form_components, except: [:index, :enable, :disable, :destroy]
-  before_action :find_transactable, except: [:index, :new, :create]
 
   def new
     @transactable = @transactable_type.transactables.build company: @company
@@ -40,8 +40,6 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
         flash[:warning] = t('flash_messages.manage.listings.want_to_see_profile', path: path, name: user.first_name)
         session[:user_to_be_invited] = nil
       end
-      event_tracker.created_a_listing(@transactable, via: 'dashboard')
-      event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
       @global_errors = filter_error_messages(@transactable.errors.full_messages)
@@ -60,7 +58,6 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
     @photos = @transactable.photos
     @attachments = @transactable.attachments
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def update
@@ -76,9 +73,7 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
         if @transactable.save
           @transactable.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
-          unless @transactable.is_trusted?
-            flash[:error] = t('manage.listings.no_trust_explanation')
-          end
+          flash[:error] = t('manage.listings.no_trust_explanation') unless @transactable.is_trusted?
           redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
         else
           @global_errors = filter_error_messages(@transactable.errors.full_messages)
@@ -115,7 +110,7 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
   end
 
   def destroy
-    TransactableDestroyerService.new(@transactable, event_tracker, current_user).destroy
+    TransactableDestroyerService.new(@transactable).destroy
 
     flash[:deleted] = t('flash_messages.manage.listings.listing_deleted')
     redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
@@ -132,10 +127,22 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
 
   private
 
+  def set_form_components
+    @form_components = @transactable_type.form_components.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES).rank(:rank)
+  end
+
+  def find_locations
+    @locations = @company.locations
+  end
+
   def find_transactable
     @transactable = @transactable_type.transactables.where(company_id: @company).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     raise Transactable::NotFound
+  end
+
+  def find_transactable_type
+    @transactable_type = TransactableType.find(params[:transactable_type_id])
   end
 
   def transactable_params
@@ -146,19 +153,6 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
                                    {}
                                  end
     end
-  end
-
-  def transactables_scope
-    @transactable_type.transactables
-                      .joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL')
-                      .uniq
-                      .where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id)
-                      .search_by_query([:name, :description], params[:query])
-                      .apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
-  end
-
-  def find_transactable_type
-    @transactable_type = TransactableType.find(params[:transactable_type_id])
   end
 
   def redirect_to_edit_if_single_transactable
@@ -173,7 +167,12 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
     end
   end
 
-  def set_form_components
-    @form_components = @transactable_type.form_components.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES).rank(:rank)
+  def transactables_scope
+    @transactable_type.transactables
+                      .joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL')
+                      .uniq
+                      .where('transactables.company_id = ? OR transactables.creator_id = ? OR (pc.user_id = ? AND pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL)', @company.id, current_user.id, current_user.id)
+                      .search_by_query([:name, :description], params[:query])
+                      .apply_filter(params[:filter], @transactable_type.cached_custom_attributes)
   end
 end
