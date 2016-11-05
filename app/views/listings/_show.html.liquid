@@ -42,9 +42,11 @@
                   </div>
                 </div>
               {% endif %}
-              <button class="enlarge btn" type="button" data-gallery-enlarge="true" data-toggle="modal" data-target="#fullscreen-gallery">
-              <span class="ico-enlarge"></span>
-              </button>
+              {% if photos_count > 0 %}
+                <button class="enlarge btn" type="button" data-gallery-enlarge="true" data-toggle="modal" data-target="#fullscreen-gallery">
+                  <span class="ico-enlarge"></span>
+                </button>
+              {% endif %}
               {% if photos_count > 1 %}
                 <div class="carousel-nav">
                   <a href="#photos-container" class="carousel-control left ico-chevron-left" data-slide='prev'></a>
