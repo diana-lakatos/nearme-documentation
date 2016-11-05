@@ -83,19 +83,15 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   end
 
   def mark_transfers_as_failed
-<<<<<<< HEAD
-    PaymentTransfer.where(id: event_transfers_ids).update_all(failed_at: Time.zone.now)
-=======
-    disbursement_transfers.each { |t| t.payout_attempts.last.payout_failed(notification) }
+    disbursement_transfers.each { |t| t.payout_attempts.last.payout_failed(event) }
   end
 
   def mark_transfers_as_transferred
-    disbursement_transfers.each { |t| t.payout_attempts.last.payout_successful(notification) }
+    disbursement_transfers.each { |t| t.payout_attempts.last.payout_successful(event) }
   end
 
   def disbursement_transfers
-    PaymentTransfer.where(id: notification_transfers_ids)
->>>>>>> NM-4381 fix braintree payout
+    PaymentTransfer.where(id: event_transfers_ids)
   end
 
   def event_transfers_ids
