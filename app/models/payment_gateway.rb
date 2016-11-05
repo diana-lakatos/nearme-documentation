@@ -415,7 +415,7 @@ class PaymentGateway < ActiveRecord::Base
         reference: reference,
         payment_gateway_mode: mode
       )
-      process_payout(merchant_account, amount, reference)
+      response = process_payout(merchant_account, amount, reference)
       @payout
     else
       OpenStruct.new(success: false)
@@ -452,7 +452,7 @@ class PaymentGateway < ActiveRecord::Base
 
   def build_payment_methods(active = false)
     PaymentMethod::PAYMENT_METHOD_TYPES.each do |payment_method|
-      if send("supports_#{payment_method}_payment?") && payment_methods.find_by_payment_method_type(payment_method).blank?
+      if send("supports_#{payment_method}_payment?") && payment_methods.find_by(payment_method_type: payment_method).blank?
         payment_methods.build(payment_method_type: payment_method, active: active, instance_id: instance_id)
       end
     end

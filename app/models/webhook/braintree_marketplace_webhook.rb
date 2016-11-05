@@ -10,31 +10,29 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   }.freeze
 
   def process!
-    process_error('Webhook not found', raise: false) if notification.blank?
-    process_error("Webhook type #{notification.kind} not allowed", raise: false) unless ALLOWED_WEBHOOKS.include?(notification.kind)
-    process_error('Mode mismatch', raise: false) if payment_gateway_mode != payment_gateway.mode
+    process_error('Webhook not found') && return if event.blank?
+    process_error("Webhook type #{event.kind} not allowed") && return unless ALLOWED_WEBHOOKS.include?(event.kind)
+    process_error('Mode mismatch') && return if payment_gateway_mode != payment_gateway.mode
 
     increment!(:retry_count)
 
-    success = send(ALLOWED_WEBHOOKS[notification.kind])
+    success = send(ALLOWED_WEBHOOKS[event.kind])
     success ? archive : mark_as_failed
 
   rescue => e
-    self.error = e.to_s
-    mark_as_failed
-    raise e
+    process_error(e, should_raise: true)
   end
 
   def webhook_test
     true
   end
 
-  def notification
-    @notification ||= payment_gateway.parse_webhook(params[:bt_signature], params[:bt_payload])
+  def event
+    @event ||= payment_gateway.parse_webhook(params[:bt_signature], params[:bt_payload])
   end
 
   def merchant_account_external_id
-    (notification.merchant_account || notification.disbursement.try(:merchant_account)).try(:id)
+    (event.merchant_account || event.disbursement.try(:merchant_account)).try(:id)
   end
 
   def set_merchant_account
@@ -43,6 +41,8 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   end
 
   def merchant_account_approve
+    return true if merchant_account.try(:verified?)
+
     merchant_account.skip_validation = true
     merchant_account.verify!
     WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::MerchantAccountApproved, merchant_account.id)
@@ -52,45 +52,58 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   def merchant_account_decline
     merchant_account.skip_validation = true
     merchant_account.failure!
-    WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::MerchantAccountDeclined, merchant_account.id, notification.try(:errors).try(:map, &:message).try(:join, ', '))
+    WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::MerchantAccountDeclined, merchant_account.id, event.try(:errors).try(:map, &:message).try(:join, ', '))
     true
   end
 
   def dusbursement_update
-    if notification.disbursement.success
+    if event.disbursement.success
       # this actually means that disbursement has been scheduled, it still can fail
       WorkflowStepJob.perform(
         WorkflowStep::PaymentGatewayWorkflow::DisbursementSucceeded,
         merchant_account.id,
-        'amount' => notification.disbursement.amount,
-        'disbursement_date' => notification.disbursement.disbursement_date,
-        'transaction_ids' => notification.disbursement.transaction_ids
+        'amount' => event.disbursement.amount,
+        'disbursement_date' => event.disbursement.disbursement_date,
+        'transaction_ids' => event.disbursement.transaction_ids
       )
+      mark_transfers_as_transferred
     else
       mark_transfers_as_failed
       WorkflowStepJob.perform(
         WorkflowStep::PaymentGatewayWorkflow::DisbursementFailed,
         merchant_account.id,
-        'exception_message' => notification.disbursement.exception_message,
-        'follow_up_action' => notification.disbursement.follow_up_action,
-        'amount' => notification.disbursement.amount,
-        'disbursement_date' => notification.disbursement.disbursement_date,
-        'transaction_ids' => notification.disbursement.transaction_ids
+        'exception_message' => event.disbursement.exception_message,
+        'follow_up_action' => event.disbursement.follow_up_action,
+        'amount' => event.disbursement.amount,
+        'disbursement_date' => event.disbursement.disbursement_date,
+        'transaction_ids' => event.disbursement.transaction_ids
       )
     end
     true
   end
 
   def mark_transfers_as_failed
-    PaymentTransfer.where(id: notification_transfers_ids).update_all(failed_at: Time.zone.now)
+<<<<<<< HEAD
+    PaymentTransfer.where(id: event_transfers_ids).update_all(failed_at: Time.zone.now)
+=======
+    disbursement_transfers.each { |t| t.payout_attempts.last.payout_failed(notification) }
   end
 
-  def notification_transfers_ids
-    merchant_account.payments.where(external_transaction_id: notification.disbursement.transaction_ids).uniq.pluck(:payment_transfer_id)
+  def mark_transfers_as_transferred
+    disbursement_transfers.each { |t| t.payout_attempts.last.payout_successful(notification) }
+  end
+
+  def disbursement_transfers
+    PaymentTransfer.where(id: notification_transfers_ids)
+>>>>>>> NM-4381 fix braintree payout
+  end
+
+  def event_transfers_ids
+    merchant_account.payments.where(external_transaction_id: event.disbursement.transaction_ids).uniq.pluck(:payment_transfer_id)
   end
 
   def webhook_type
-    notification.kind
+    event.kind
   end
 
   def livemode?

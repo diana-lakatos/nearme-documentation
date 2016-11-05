@@ -25,6 +25,14 @@ class Webhook < ActiveRecord::Base
     YAML.load(response || '') || {}
   end
 
+  def show_event
+    begin
+      event.to_yaml.gsub(' ', '&nbsp;&nbsp;').gsub("\n", '<br/>')
+    rescue
+      "Can't fetch this event"
+    end
+  end
+
   def set_payment_gateway_mode
     self.payment_gateway_mode = (livemode? ? 'live' : 'test')
   end
@@ -33,9 +41,9 @@ class Webhook < ActiveRecord::Base
     nil
   end
 
-  def process_error(error_message, should_raise: true)
+  def process_error(error_message, should_raise: false)
     self.error = error_message.to_s
     mark_as_failed
-    should_raise ? raise(error_message) : return
+    should_raise ? raise(error_message) : true
   end
 end

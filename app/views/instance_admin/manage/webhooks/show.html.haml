@@ -4,5 +4,5 @@
     %p= @webhook.error
 .row
   %b Response:
-  %p= @webhook.notification.to_yaml
+  %p= raw @webhook.show_event
 
