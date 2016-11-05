@@ -54,10 +54,8 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   def ensure_custom_validators_are_properly_setup!
     if valid_values.any?
-      custom_validator = custom_validators.where(field_name: name)
-                                          .where.not(valid_values: nil)
-                                          .where.not(valid_values: [])
-                                          .first_or_initialize
+      custom_validator = custom_validators
+                         .detect { |cv| cv.field_name == name && cv.valid_values.present? } || custom_validators.build
       if custom_validator.valid_values != valid_values
         custom_validator.valid_values = valid_values
         custom_validator.save!
