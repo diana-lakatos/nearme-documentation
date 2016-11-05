@@ -36,11 +36,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     if platform_context.instance.skip_company?
       params[:user][:companies_attributes] ||= {}
       params[:user][:companies_attributes]['0'] ||= {}
-      if params[:user][:companies_attributes]['0'][:name].blank?
-        params[:user][:companies_attributes]['0'][:name] = current_user.first_name
-      else
-        @user.company_name ||= params[:user][:companies_attributes]['0'][:name]
-      end
+      params[:user][:companies_attributes]['0'][:name] ||= current_user.first_name
+      @user.company_name ||= params[:user][:companies_attributes]['0'][:name]
     end
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.get_seller_profile
@@ -191,8 +188,12 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def set_listing_draft_timestamp(timestamp)
+    params[:user][:companies_attributes]['0'][:id] ||= @user.companies.first.id
+    params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:id] ||= @user.companies.first.locations.first.id
     params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:draft] = timestamp
     params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:enabled] = true
+    params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:id] ||= @user.companies.first.locations.first.listings.first.id
+    params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:action_types_attributes][0][:id] ||= @user.companies.first.locations.first.listings.first.action_types_attributes.first.id
   rescue
     nil
   end
