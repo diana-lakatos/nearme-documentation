@@ -10,9 +10,9 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   }.freeze
 
   def process!
-    process_error('Webhook not found', raise: false) if event.blank?
-    process_error("Webhook type #{event.kind} not allowed", raise: false) unless ALLOWED_WEBHOOKS.include?(event.kind)
-    process_error('Mode mismatch', raise: false) if payment_gateway_mode != payment_gateway.mode
+    process_error('Webhook not found') && return if event.blank?
+    process_error("Webhook type #{event.kind} not allowed") && return unless ALLOWED_WEBHOOKS.include?(event.kind)
+    process_error('Mode mismatch') && return if payment_gateway_mode != payment_gateway.mode
 
     increment!(:retry_count)
 
@@ -20,9 +20,7 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
     success ? archive : mark_as_failed
 
   rescue => e
-    self.error = e.to_s
-    mark_as_failed
-    raise e
+    process_error(e, should_raise: true)
   end
 
   def webhook_test
@@ -43,6 +41,8 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   end
 
   def merchant_account_approve
+    return true if merchant_account.try(:verified?)
+
     merchant_account.skip_validation = true
     merchant_account.verify!
     WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::MerchantAccountApproved, merchant_account.id)
@@ -66,6 +66,7 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
         'disbursement_date' => event.disbursement.disbursement_date,
         'transaction_ids' => event.disbursement.transaction_ids
       )
+      mark_transfers_as_transferred
     else
       mark_transfers_as_failed
       WorkflowStepJob.perform(
@@ -82,7 +83,19 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   end
 
   def mark_transfers_as_failed
+<<<<<<< HEAD
     PaymentTransfer.where(id: event_transfers_ids).update_all(failed_at: Time.zone.now)
+=======
+    disbursement_transfers.each { |t| t.payout_attempts.last.payout_failed(notification) }
+  end
+
+  def mark_transfers_as_transferred
+    disbursement_transfers.each { |t| t.payout_attempts.last.payout_successful(notification) }
+  end
+
+  def disbursement_transfers
+    PaymentTransfer.where(id: notification_transfers_ids)
+>>>>>>> NM-4381 fix braintree payout
   end
 
   def event_transfers_ids
