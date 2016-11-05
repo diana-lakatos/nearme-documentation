@@ -171,18 +171,15 @@ class LongtailRakeHelper
       {% for item in dsc.data.first.relationships.items.data %}
         {% for listing in dsc.included %}
           {% if listing.id == item.id %}
-            <article class="listing {% if listing.attributes.photos.size == 0 %}listing-photos__empty{% endif %}">
+            {% assign photos_count = listing.attributes.photos | size %}
+            <article class="listing {% if photos_count == 0 %}listing-photos__empty{% endif %}">
               <div class="listing-photos">
                 <ul class="listing-photos__carousel" data-carousel>
-                  {% if listing.attributes.photos.size == 0 %}
-                    <li class="active">
-                      <a href="{{ listing.attributes.url }}"><img src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/attachment_file/data/3228/placeholder.svg" alt="Photos unavailable or still processing" /></a>
-                    </li>
-                  {% elsif listing.attributes.photos.size == 1 %}
+                  {% if photos_count == 1 %}
                     <li class="active">
                       <a href="{{ listing.attributes.url }}"><img src="{{ listing.attributes.photos[0] }}" alt="{{ listing.attributes.name }}"></a>
                     </li>
-                  {% else %}
+                  {% elsif photos_count > 1 %}
                     <li class="listing-photos__carousel--prev"><a href="#" data-carousel-control="prev"><i class="fa fa-chevron-left"></i></a></li>
                     {% for photo in listing.attributes.photos %}
                       <li class="{% if forloop.index == 1 %}active{% endif %}" data-carousel-item>
@@ -190,6 +187,12 @@ class LongtailRakeHelper
                       </li>
                     {% endfor %}
                     <li class="listing-photos__carousel--next"><a href="#" data-carousel-control="next"><i class="fa fa-chevron-right"></i></a></li>
+                  {% else %}
+                    <li class="active">
+                      <a href="{{ listing.attributes.url }}">
+                        <img src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/attachment_file/data/3228/placeholder.svg" alt="Photos unavailable or still processing" />
+                      </a>
+                    </li>
                   {% endif %}
                 </ul>
               </div>
