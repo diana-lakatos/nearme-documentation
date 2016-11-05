@@ -258,18 +258,8 @@ partial: false
                     <dd>{{ price_option.price }}</dd>
                   </dl>
 
-                  <dl class="retail-bond-value">
-                    <dt>Bond</dt>
-                    <dd>{{ listing.properties.bond_value | price_without_cents_with_currency }}</dd>
-                    {% if listing.properties.retail_value != blank %}
-                    <dt>Retail</dt>
-                    <dd>{{ listing.properties.retail_value | price_without_cents_with_currency }}</dd>
-                    {% endif %}
-                  </dl>
-
-
                   {% if listing.properties.designer_name != blank %}
-                    <span class="designer">{{ listing.properties.designer_name }}</span>
+                    <span class="designer"><span>by</span> {{ listing.properties.designer_name }}</span>
                   {% endif %}
                 </figcaption>
               </figure>
