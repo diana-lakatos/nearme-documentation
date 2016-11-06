@@ -189,6 +189,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def set_listing_draft_timestamp(timestamp)
     params[:user][:companies_attributes]['0'][:id] ||= @user.companies.first.id
+    params[:user][:companies_attributes]['0'][:company_address_attributes][:id] ||= @user.companies.first.company_address.try(:id)
     params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:id] ||= @user.companies.first.locations.first.id
     params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:draft] = timestamp
     params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:enabled] = true
