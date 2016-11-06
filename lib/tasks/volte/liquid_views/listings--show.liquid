@@ -123,16 +123,16 @@
               <dt>Size:</dt> <dd>{{ listing.properties.dress_size }}</dd>
               <dt>Length:</dt> <dd>{{ listing.properties.dress_length }}</dd>
             {% elsif listing.properties.item_type == 'Bag' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_bag }}</dd>
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_bag | split: ',' | join: ', '  }}</dd>
               <dt>Length:</dt> <dd>{{ listing.properties.dress_length }}</dd>
             {% elsif listing.properties.item_type == 'Millinery' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_milinery }}</dd>
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_milinery | split: ',' | join: ', '  }}</dd>
               <dt>Size:</dt> <dd>{{ listing.properties.milinery_size }}</dd>
             {% elsif listing.properties.item_type == 'Outerwear' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_outerwear}}</dd>
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_outerwear | split: ',' | join: ', ' }}</dd>
               <dt>Size:</dt> <dd>{{ listing.properties.outerwear_size }}</dd>
             {% elsif listing.properties.item_type == 'Accessories' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_accessories }}</dd>
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_accessories | split: ',' | join: ', '  }}</dd>
             {% endif %}
             <dt>Color:</dt> <dd>{{ listing.properties.color }}</dd>
             <dt>Designer:</dt> <dd>{{ listing.properties.designer_name }}</dd>
