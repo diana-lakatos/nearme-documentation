@@ -182,10 +182,10 @@ module.exports = class ImageInput
     options = preview.find('.form-images__options')
 
     if data.sizes?
-      preview.find('figure').append("<a href='#{data.sizes.full.url}' class='action--preview'><img src='#{data.sizes.space_listing.url}'></a>")
+      preview.find('figure').append("<a href=\"#{data.sizes.full.url}\" class='action--preview'><img src=\"#{data.sizes.space_listing.url}\"></a>")
 
     if data.url?
-      preview.find('figure').append("<a href='#{data.url}' class='action--preview'><img src='#{data.url}'></a>")
+      preview.find('figure').append("<a href=\"#{data.url}\" class='action--preview'><img src=\"#{data.url}\"></a>")
 
     if data.dataUrl?
       a = $('<a class="action--preview"/>')
@@ -218,7 +218,7 @@ module.exports = class ImageInput
 
   createCollectionItem: (data)->
     container = $('<li data-photo-item/>')
-    container.append("<a href='#{data.sizes.full.url}' class='action--preview'><img src='#{data.sizes.space_listing.url}'></a>")
+    container.append("<a href=\"#{data.sizes.full.url}\" class='action--preview'><img src=\"#{data.sizes.space_listing.url}\"></a>")
     options = $('<div class="form-images__options">').appendTo(container)
     if data.resize_url
       options.append("<button type='button' class='action--edit' data-edit data-url='#{data.resize_url}'>Crop & Resize</button>")
