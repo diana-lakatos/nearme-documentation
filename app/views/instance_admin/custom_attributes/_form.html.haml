@@ -42,5 +42,5 @@
       .add-link.clearfix
         = link_to_add_association 'Add new validator', f, :custom_validators, partial: 'instance_admin/custom_attributes/custom_validator_fields', class: 'btn btn-primary', render_options: { locals: { show_remove: true } }
 
-    = content_for :header_buttons do
-      = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
