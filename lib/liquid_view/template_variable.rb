@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 class LiquidView
-  class VariablesExtractor
+  class TemplateVariable
     WHITELISTED_CLASSES = [String, Integer, Float,
                            Array, Hash, Set, Date, DateTime,
                            Time, ActiveSupport::TimeWithZone].freeze
 
     class << self
-      def variables(context)
+      def all(context)
         @context = context
         public_variables.tap do |pv|
           pv.select! { |variable_name| value_relevant?(variable_value(variable_name)) }

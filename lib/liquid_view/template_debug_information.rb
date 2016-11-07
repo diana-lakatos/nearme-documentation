@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class LiquidView
-  class HtmlTemplateWrapper
+  class TemplateDebugInformation
     def initialize(variables:, paths:)
       @variables = variables
       @paths = paths
