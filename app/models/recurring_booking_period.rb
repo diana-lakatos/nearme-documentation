@@ -10,7 +10,8 @@ class RecurringBookingPeriod < ActiveRecord::Base
   delegate :payment_gateway, :company, :company_id, :user, :creator, :owner, :currency,
            :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription,
            :transactable, :quantity, :cancellation_policy_hours_for_cancellation,
-           :cancellation_policy_penalty_percentage, :action, :host, :is_free_booking?, to: :order
+           :cancellation_policy_penalty_percentage, :action, :host, :is_free_booking?,
+           :minimum_lister_service_fee_cents, to: :order
 
   scope :unpaid, -> { where(paid_at: nil) }
   scope :paid, -> { where.not(paid_at: nil) }
@@ -28,7 +29,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
   def skip_payment_authorization
     false
   end
-  alias_method :skip_payment_authorization?, :skip_payment_authorization
+  alias skip_payment_authorization? skip_payment_authorization
 
   # TODO: unifiy with ReservationPeriod
   def starts_at

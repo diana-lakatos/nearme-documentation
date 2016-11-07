@@ -4,8 +4,6 @@ class RecurringBooking < Order
 
   delegate :favourable_pricing_rate, to: :action, allow_nil: true
   delegate :action, to: :transactable_pricing
-  delegate :service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents,
-    to: :first_transactable_line_item, allow_nil: true
 
   has_one :old, class_name: 'OldRecurringBooking', foreign_key: 'order_id'
 
@@ -208,4 +206,9 @@ class RecurringBooking < Order
     transactable_line_items.first
   end
 
+  [:service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents].each do |method_name|
+    define_method method_name do
+      first_transactable_line_item.try(method_name) || action.try(method_name)
+    end
+  end
 end

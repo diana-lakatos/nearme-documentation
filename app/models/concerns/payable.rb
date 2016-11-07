@@ -60,9 +60,9 @@ module Payable
           line_item_source: transactable,
           unit_price: price_calculator.price,
           line_itemable: self,
-          service_fee_guest_percent: action.service_fee_guest_percent,
-          service_fee_host_percent: action.service_fee_host_percent,
-          minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents,
+          service_fee_guest_percent: service_fee_guest_percent,
+          service_fee_host_percent: service_fee_host_percent,
+          minimum_lister_service_fee_cents: minimum_lister_service_fee_cents,
           transactable_pricing_id: try(:transactable_pricing_id)
         )
       end
