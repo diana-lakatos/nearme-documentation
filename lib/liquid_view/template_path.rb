@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 class LiquidView
-  class PathsExtractor
+  class TemplatePath
     class << self
-      def paths(view_options = {})
+      def all(view_options = {})
         return Array(view_options[:template]) if view_options[:prefixes].blank?
         view_options[:prefixes].map { |prefix| "#{prefix}/#{view_options[:template]}" }
       end

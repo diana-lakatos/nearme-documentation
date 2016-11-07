@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 class LiquidView
-  class HtmlPartialWrapper
+  class PartialDebugInformation
     def initialize(locals:, path:)
       @locals = locals
       @path = path
     end
 
     def wrap(text)
-      return '' if text.blank?
       header + text + footer
     end
 
