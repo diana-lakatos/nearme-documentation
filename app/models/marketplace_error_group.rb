@@ -3,5 +3,5 @@ class MarketplaceErrorGroup < ActiveRecord::Base
   scoped_to_platform_context
   acts_as_paranoid
 
-  has_many :marketplace_errors, inverse_of: :marketplace_error_group
+  has_many :marketplace_errors, inverse_of: :marketplace_error_group, dependent: :destroy
 end
