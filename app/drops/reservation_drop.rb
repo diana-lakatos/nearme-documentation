@@ -81,11 +81,6 @@ class ReservationDrop < OrderDrop
            :manage_booking_status_info, :manage_booking_status_info_new, :lister_confirmed_at, :enquirer_confirmed_at,
            to: :reservation
 
-  # bookable_noun
-  #   string representing the object to be booked (e.g. desk, room etc.)
-  # bookable_noun_plural
-  #   string representing the object (plural) to be booked (e.g. desks, rooms etc.)
-
   # @!method bookable_noun
   #   @return (see TransactableTypeDrop#bookable_noun)
   # @!method bookable_noun_plural
@@ -96,7 +91,7 @@ class ReservationDrop < OrderDrop
     @source = @order = @reservation = reservation.decorate
   end
 
-  # @return [Array<LineItem::Additional] array of additional charges for this reservation
+  # @return [Array<LineItem::Additional>] array of additional charges for this reservation
   def additional_charges
     @reservation.additional_line_items
   end
