@@ -18,6 +18,9 @@
         = f.input :name, input_html: { class: 'form-control' }, required: false, placeholder: t('instance_admin.settings.configuration.basic_configuration_section.placeholder_marketplace_name')
     .row
       .input-container.col-xs-6
+        = f.input :debugging_mode_for_admins, inline_label: true, hint: 'If user is logged in as Admin, inserts html comments with paths to all liquid views along with available variables'
+    .row
+      .input-container.col-xs-6
         = f.input :skip_company, inline_label: true
       .input-container.col-xs-6
         = f.input :force_accepting_tos, inline_label: true

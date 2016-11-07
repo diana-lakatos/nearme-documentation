@@ -8,9 +8,13 @@ class LiquidView
   LIQUID_ERROR = 'Liquid Error'.freeze
   PROTECTED_ASSIGNS = %w( template_root response _session template_class action_name request_origin session template
                           _response url _request _cookies variables_added _flash params _headers request cookies
-                          ignore_missing_templates flash _params logger before_filter_chain_aborted headers ).freeze
-  PROTECTED_INSTANCE_VARIABLES = %w( @_request @controller @_first_render @_memoized__pick_template @view_paths
-                                     @helpers @assigns_added @template @_render_stack @template_format @assigns ).freeze
+                          ignore_missing_templates flash _params logger before_filter_chain_aborted headers )
+  PROTECTED_INSTANCE_VARIABLES = %i( @_request @controller @_first_render @_memoized__pick_template @view_paths
+                                     @helpers @assigns_added @template @_render_stack @template_format @assigns
+                                    @_routes @_config @view_renderer @language_service @marked_for_same_origin_verification
+                                    @language_router @set_paper_trail_whodunnit_called @transactable_type @_assigns
+                                    @_controller @view_flow @output_buffer @virtual_path @show_title @haml_buffer
+                                    @platform_context_view @_main_app)
 
   Liquid::Template.register_tag('inject_content_holder_for_path', ContentHolderTagForPathTag)
   Liquid::Template.register_tag('inject_content_holder', ContentHolderTag)

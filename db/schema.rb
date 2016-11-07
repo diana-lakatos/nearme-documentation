@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161102231453) do
+ActiveRecord::Schema.define(version: 20161105120728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1279,6 +1279,7 @@ ActiveRecord::Schema.define(version: 20161102231453) do
     t.boolean  "show_currency_name",                                                                default: false,         null: false
     t.boolean  "no_cents_if_whole",                                                                 default: true,          null: false
     t.string   "encrypted_google_maps_api_key",                                                     default: "",            null: false
+    t.boolean  "debugging_mode_for_admins",                                                         default: true
   end
 
   create_table "line_items", force: :cascade do |t|
