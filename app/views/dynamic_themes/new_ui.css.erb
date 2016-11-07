@@ -1,10 +1,10 @@
 <%
   # colors
 
-  theme_blue   = @theme.hex_color(:blue).blank? ? '#239ed9' : @theme.hex_color(:blue)
-  theme_orange = @theme.hex_color(:orange).blank? ? '#e45d51' : @theme.hex_color(:orange)
-  theme_red    = @theme.hex_color(:red).blank? ? '#e45d51' : @theme.hex_color(:red)
-  theme_green  = @theme.hex_color(:green).blank? ? '#157a49' : @theme.hex_color(:green)
+  theme_blue   = @theme.hex_color(:blue).presence || '#239ed9'
+  theme_orange = @theme.hex_color(:orange).presence || '#e45d51'
+  theme_red    = @theme.hex_color(:red).presence || '#e45d51'
+  theme_green  = @theme.hex_color(:green).presence || '#157a49'
 
 %>
 a { background-color: transparent; }

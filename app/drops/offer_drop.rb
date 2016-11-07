@@ -26,10 +26,10 @@ class OfferDrop < OrderDrop
   end
 
   def offer_url
-    routes.dashboard_order_url(@offer)
+    routes.dashboard_order_path(@offer)
   end
 
   def edit_offer_url
-    routes.edit_dashboard_order_url(@offer)
+    routes.edit_dashboard_order_path(@offer)
   end
 end
