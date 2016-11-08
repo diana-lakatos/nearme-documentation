@@ -11,6 +11,8 @@ module LiquidFilters
   include ActionView::RecordIdentifier
   include ActionView::Helpers::DateHelper
 
+  # @return [String] url shortened using the Google service
+  # @param url [String] the original url to be shortened
   def shorten_url(url)
     if DesksnearMe::Application.config.googl_api_key.present?
       Googl.shorten(url, nil, DesksnearMe::Application.config.googl_api_key).short_url
@@ -30,53 +32,102 @@ module LiquidFilters
     @no_footer = true
   end
 
+  # @return [String, nil] returns class_name (by default 'active') if the first
+  #   two arguments are equal, nil otherwise
+  # @param arg1 [String] any string - will be used for comparison with the other string
+  # @param arg2 [String] any string - will be used for comparison with the other string
   def active_class(arg1, arg2, class_name = 'active')
     class_name if arg1 == arg2
   end
 
+  # @return [Boolean] whether the array includes the element given
+  # @param array [Array] array of elements where we look into
+  # @param el [Object] we will look for this element inside the array
   def is_included_in_array(array, el)
     array.include?(el)
   end
 
+  # @return [Array<Array<Object>>] the original array split into groups having the size
+  #   specified by the second parameter (an array of arrays)
+  # @param array [Array<Object>] array to be split into groups
+  # @param integer [Integer] the size of each group the array is to be split into
   def in_groups_of(array, integer)
     array.in_groups_of(integer)
   end
 
+  # @return [String] pluralized version of the input string
+  # @param string [String] string to be pluralized
   def pluralize(string)
     string.try(:pluralize)
   end
 
+  # @return [Array<Object>] array from which nil values are removed
+  # @param array [Array<Object>] array from which to remove nil values
   def compact(array)
     array.compact
   end
 
+  # @return [Array<Object>] the input array in reversed order
+  # @param array [Array<Object>] array to be reversed
   def reverse(array)
     array.reverse
   end
 
+  # @return [Array<Object>] array to which we add the item given as the second parameter
+  # @param array [Array<Object>] array to which we add a new element
+  # @param item [Object] item we add to the array
   def add_to_array(array, item)
     array ||= []
     array << item
     array
   end
 
+  # @return [Array<Object>] the input array rotated by a number of times given as the second
+  #   parameter; [1,2,3,4] rotated by 2 gives [3,4,1,2]
+  # @param array [Array<Object>] array to be rotated
+  # @param count [Integer] number of times to rotate the input array
   def rotate(array, count = 1)
     array.rotate(count)
   end
 
+  # @return [String, nil] path to the first searchable listing for the location given as
+  #   parameter; nil if no such listing can be found
+  # @param location [Location] location object whose first listing path is extracted
+  # @todo Investigate/remove unused _transactable_type parameter?
   def location_path(_transactable_type, location)
     return '' if location.blank?
     location.listings.searchable.first.try(:decorate).try(:show_path)
   end
 
+  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest price 
+  #   for the object given as parameter (without cents, with currency included); does not include additional charges and
+  #   service guest fee; for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
+  #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
+  # @param object [Location, Listing] object whose price we want to display
+  # @param lgpricing_filters [Array<String>] array of pricing type filters (e.g. ["1_day", "1_hour"])
+  #   usually passed from the search page
   def lowest_price_without_cents_with_currency(object, lgpricing_filters = [])
     get_lowest_price_with_options(object, lgpricing_filters)
   end
 
+  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest full price 
+  #   for the object given as parameter (without cents, with currency included); includes additional charges and service guest fee;
+  #   for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
+  #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
+  # @param object [Location, Listing] object whose price we want to display
+  # @param lgpricing_filters [Array<String>] array of pricing type filters (e.g. ["1_day", "1_hour"])
+  #   usually passed from the search page
   def lowest_full_price_without_cents_with_currency(object, lgpricing_filters = [])
     get_lowest_price_with_options(object, lgpricing_filters, full_price: true)
   end
 
+  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest full price 
+  #   for the object given as parameter (with cents, with currency included); includes additional charges and service guest fee;
+  #   for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
+  #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
+  # @param object [Location, Listing] object whose price we want to display
+  # @param lgpricing_filters [Array<String>] array of pricing type filters (e.g. ["1_day", "1_hour"])
+  #   usually passed from the search page
   def lowest_full_price_with_cents_with_currency(object, lgpricing_filters = [])
     get_lowest_price_with_options(object, lgpricing_filters, full_price: true, with_cents: true)
   end
@@ -101,6 +152,13 @@ module LiquidFilters
     end
   end
 
+  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest price 
+  #   for the object given as parameter (with cents, with currency included); does not include additional charges and service guest fee;
+  #   for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
+  #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
+  # @param object [Location, Listing] object whose price we want to display
+  # @param lgpricing_filters [Array<String>] array of pricing type filters (e.g. ["1_day", "1_hour"])
+  #   usually passed from the search page
   def lowest_price_with_cents_with_currency(object, lgpricing_filters = [])
     pricing = object.lowest_price(lgpricing_filters)
     if pricing
@@ -110,6 +168,15 @@ module LiquidFilters
     end
   end
 
+  # @return [Array<String>] array of connection information strings for a user and a listing; for each of the user's friends
+  #   (followed users) strings will be generated like so:
+  #   If the friend visited the listing, the string 'User.name worked here' will be added.
+  #   If the friend is the host of the listing, the string 'User.name is the host' will be added.
+  #   If the friend knows the host of the listing the string 'User.name knows the host' will be added.
+  #   If a mutual friend (followed user [2] by a user this user follows [1]) visited the listing then the string 
+  #     'User[1].name knows User[2].name who worked here'
+  # @param listing [Transactable] Transactable object used in the generation of the resulting array
+  # @param current_user [User] User object used in the generation of the resulting array
   def connections_for(listing, current_user)
     return [] if current_user.nil? || current_user.friends.count.zero?
 
@@ -133,29 +200,51 @@ module LiquidFilters
     [friends, hosts, host_friends, mutual_visitors].flatten
   end
 
+  # @return [String] string to be used as a tooltip displaying the connections {LiquidFilters#connections_for}
+  #   for a listing and a user; if there are more than 5 connections the translation
+  #   'search.list.additional_social_connections' (with the parameter count) is added to the tooltip
+  # @param connections [Array<String>] array of connections to be displayed in the tooltip
+  # @param size [Integer] the first 'size' connections will be shown in the tooltip
   def connections_tooltip(connections, size = 5)
     difference = connections.size - size
-    connections = connections.first(5)
+    connections = connections.first(size)
     connections << t('search.list.additional_social_connections', count: difference) if difference > 0
     connections.join('<br />').html_safe
   end
 
+  # @return [String] formatted price using the global price formatting rules
+  # @param amount [Numeric] amount to be formatted
+  # @param currency [String] currency to be used for formatting
   def pricify(amount, currency = 'USD')
     render_money(amount.to_f.to_money(currency))
   end
 
+  # @return [String] formatted price using the global price formatting rules; the default currency will be used
+  # @param amount [Numeric] amount to be formatted
   def price_with_cents_with_currency(money)
     render_money(money)
   end
 
+  # @return [String] formatted price using the global price formatting rules; the default currency will be used
+  # @param amount [Numeric] amount to be formatted
+  # @todo Duplicate of price_with_cents_with_currency; they should be unified into one method; requires making
+  #   sure we're not affecting marketplaces already using them
   def price_without_cents_with_currency(money)
     render_money(money)
   end
 
+  # @return [String] url to a placeholder image with the width and height given as parameters
+  # @param height [Integer] height of the placeholder image
+  # @param width [Integer] width of the placeholder image
   def space_listing_placeholder_path(height, width)
     ActionController::Base.helpers.asset_url(Placeholder.new(height: height.to_i, width: width.to_i).path)
   end
 
+  # @return [String] translated property name; if the property is a basic transactable
+  #   attribute the translation key is 'simple_form.labels.transactable.#{property_name}';
+  #   if it's a custom attribute, the translation key is 'transactable_type.#{transactable_type.name}.labels.#{property_name}'
+  # @param property [String] property name to be translated
+  # @param target_acting_as_set [TransactableType] transactable type that the property belongs to
   def translate_property(property, target_acting_as_set)
     if Transactable::DEFAULT_ATTRIBUTES.include? property
       # These are the hard coded attributes that have their own column on the transactables table
@@ -166,15 +255,25 @@ module LiquidFilters
     end
   end
 
+  # @return [String] a human readable string derived from the input; capitalizes the first word, turns
+  #   underscores into spaces, and strips a trailing '_id' if present. Meant for creating pretty output.
+  # @param key [String] input string to be transformed
   def humanize(key)
     key.try(:humanize)
   end
 
+  # @return [String] translation value taken from translations for the key given as parameter
+  # @param key [String] translation key
   def translate(key, options = {})
     I18n.t(key, options.deep_symbolize_keys)
   end
   alias t translate
 
+  # @return [String, nil] formatted representation of the passed in DateTime object
+  # @param datetime [String, DateTime] DateTime object to be formatted; can be a string and it will be converted
+  #   to a date
+  # @param format [String] the format to be used for formatting the date; default is 'long'; other values can be used:
+  #   they are taken from translations, keys are of the form 'time.formats.#{format_name}'
   def localize(datetime, format = 'long')
     if datetime
       datetime = datetime.to_date if datetime.is_a?(String)
@@ -183,10 +282,16 @@ module LiquidFilters
   end
   alias l localize
 
+  # @return [Date] input date/time to which the number_of_days days have been added; use negative values to obtain
+  #   a date in the past
+  # @param date [Date] date to which we add number_of_days
+  # @param number_of_days [Integer] number of days to add to the input date
   def add_to_date(date, number_of_days)
     date + number_of_days.days
   end
 
+  # @return [String] filtered version of the input text using the marketplace global text filters
+  # @param text [String] text to be filtered
   def filter_text(text = '')
     return '' if text.blank?
     if PlatformContext.current.instance.apply_text_filters
@@ -198,6 +303,8 @@ module LiquidFilters
     end
   end
 
+  # @return [Integer] minutes since the start of day for the date parsed from the input string
+  # @param string [String] string representing a date/time
   def parse_to_minute(string)
     time = parse_time(string)
     hour = time.strftime('%H')
@@ -205,6 +312,8 @@ module LiquidFilters
     hour.to_i * 60 + minute.to_i
   end
 
+  # @return [Date] a Date object obtained/parsed from the input object
+  # @param datetime [Date, String, Object] object from which we try to obtain/parse a date object
   def to_date(datetime)
     datetime.try(:to_date)
   end

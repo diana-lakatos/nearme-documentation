@@ -1,7 +1,8 @@
 class CustomVerifier < YARD::Verifier
   def run(obj_list)
     obj_list.reject do |obj|
-      if (obj.is_a?(YARD::CodeObjects::ClassObject) && !obj.path.match(/Drop$/)) || obj.is_a?(YARD::CodeObjects::ModuleObject)
+      if (obj.is_a?(YARD::CodeObjects::ClassObject) && !obj.path.match(/Drop$/)) || 
+        (obj.is_a?(YARD::CodeObjects::ModuleObject) && !obj.path.match(/LiquidFilters/))
         true
       else
         false

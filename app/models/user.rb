@@ -676,8 +676,7 @@ class User < ActiveRecord::Base
     self.class.find_by(id: self[:mutual_friendship_source].to_i) if self[:mutual_friendship_source]
   end
 
-  # @return [Array<User>] array containing users that are followed by this user and that also follow
-  #   him back
+  # @return [Array<User>] array containing users that are followed by the users that this user follows
   def mutual_friends
     self.class.without(self).mutual_friends_of(self)
   end
