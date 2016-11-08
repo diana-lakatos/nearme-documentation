@@ -22,7 +22,7 @@ namespace :jira do
       name: jira_wrapper.next_tag(2),
       description: 'Hotfix'
     )
-    JiraReleaser.new(issues).release(jira_wrapper.next_tag(2))
+    JiraReleaser.new.release(jira_wrapper.next_tag(2))
   end
 end
 
