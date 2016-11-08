@@ -117,7 +117,7 @@ class Offer < Order
                                 payment_method_id: payment.payment_method_id,
                                 payment_gateway_id: payment.payment_gateway_id,
                                 company_id: payment.company_id,
-                                test_mode: payment.payment_gateway_mode == 'test',
+                                test_mode: payment.payment_gateway_mode == PaymentGateway::TEST_MODE,
                                 payer_id: payment.payer_id)
   end
 

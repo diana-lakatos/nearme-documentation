@@ -3,6 +3,9 @@
     %b Error:
     %p= @webhook.error
 .row
+  %b Type:
+  %p= @webhook.webhook_type
+.row
   %b Response:
   %p= raw @webhook.show_event
 

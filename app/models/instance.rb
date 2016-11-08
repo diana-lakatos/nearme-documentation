@@ -254,7 +254,7 @@ class Instance < ActiveRecord::Base
   end
 
   def payment_gateway_mode
-    test_mode? ? 'test' : 'live'
+    test_mode? ? PaymentGateway::TEST_MODE : PaymentGateway::LIVE_MODE
   end
 
   def onboarding_verification_required
