@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This module standardize all "payable" objects
 # For now it's included in Reservation, Purchase and RecurringBookingPeriod class
 
@@ -62,7 +63,7 @@ module Payable
           line_itemable: self,
           service_fee_guest_percent: service_fee_guest_percent,
           service_fee_host_percent: service_fee_host_percent,
-          minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents,
+          minimum_lister_service_fee_cents: minimum_lister_service_fee_cents,
           transactable_pricing_id: try(:transactable_pricing_id)
         )
       end
