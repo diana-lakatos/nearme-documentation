@@ -64,7 +64,7 @@ class Webhook::StripeConnectWebhook < Webhook
 
   def merchant_account
     @merchant_account ||= super || payment_gateway.merchant_accounts.find_by!(
-      internal_payment_gateway_account_id: event.data.object.id
+      external_id: event.data.object.id
     )
   end
 
@@ -101,7 +101,7 @@ class Webhook::StripeConnectWebhook < Webhook
 
     charge_ids = transfer_charges.map(&:source).compact
 
-    payment_gateway.payments.where(external_transaction_id: charge_ids)
+    payment_gateway.payments.where(external_id: charge_ids)
   end
 
   def params_transfer
@@ -129,6 +129,6 @@ class Webhook::StripeConnectWebhook < Webhook
   def set_merchant_account
     return if params[:user_id].blank?
 
-    self.merchant_account = payment_gateway.merchant_accounts.find_by(internal_payment_gateway_account_id: params[:user_id])
+    self.merchant_account = payment_gateway.merchant_accounts.find_by(external_id: params[:user_id])
   end
 end

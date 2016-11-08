@@ -19,7 +19,6 @@
           %th= t('instance_admin.manage.webhooks.payment_gateway')
           %th= t('instance_admin.manage.webhooks.state')
           %th= t('instance_admin.manage.webhooks.mode')
-          %th= t('instance_admin.manage.webhooks.webhook_type')
           %th= t('instance_admin.manage.webhooks.created_at')
           %th= t('instance_admin.manage.webhooks.retry_count')
           %th= t('instance_admin.manage.webhooks.details')
@@ -30,12 +29,12 @@
           %td= webhook.payment_gateway.try(:name)
           %td= webhook.state.try(:capitalize)
           %td= webhook.payment_gateway_mode
-          %td= webhook.webhook_type
           %td= l(webhook.created_at, format: :long)
           %td= webhook.retry_count
           %td
             = link_to 'Details', "javascript:void(0);", data: {modal: true, href: instance_admin_manage_webhook_path(webhook) }
             - if webhook.failed?
+              %span= ' | '
               = link_to 'Retry', retry_instance_admin_manage_webhook_path(webhook), method: :post
             - if webhook.archived?
               %span= ' | '

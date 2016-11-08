@@ -69,7 +69,7 @@
           %div
             %strong
               = merchant_account.type.gsub('MerchantAccount::', '').gsub('MerchantAccount', '').underscore.humanize
-            - { id: merchant_account.internal_payment_gateway_account_id, state: merchant_account.state }.merge(merchant_account.data || {}).each do |key, value|
+            - { id: merchant_account.external_id, state: merchant_account.state }.merge(merchant_account.data || {}).each do |key, value|
               %br
               = "#{key}: #{value}"
 

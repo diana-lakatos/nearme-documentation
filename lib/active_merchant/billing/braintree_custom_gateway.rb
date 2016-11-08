@@ -37,12 +37,25 @@ module ActiveMerchant
       # Braintree::Transaction
       # https://github.com/braintree/braintree_ruby/blob/master/lib/braintree/transaction.rb
 
+      def find_payment(token, _merchant_id = nil)
+        payment = find_transaction(token)
+
+        PaymentGateway::Response::Braintree::Payment.new(
+          payment,
+          payment.refund_ids.map { |refund_id| find_refund(refund_id) }
+        )
+      end
+
+      def find_refund(token)
+        PaymentGateway::Response::Braintree::Refund.new(find_transaction(token))
+      end
+
       def find_transaction(token)
         Braintree::Transaction.find(token)
       end
 
       def payment_settled?(token)
-        find_transaction(token).try(:status) == 'settled'
+        find_payment(token).paid?
       end
 
       def client_token
