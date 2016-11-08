@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ReviewAggregator
   attr_reader :user
 
@@ -6,7 +7,7 @@ class ReviewAggregator
   end
 
   def total
-    about_seller + about_buyer + left_by_seller + left_by_buyer_about_host + left_by_buyer_about_transactable
+    about_seller + about_buyer + left_by_seller + left_by_buyer
   end
 
   private
@@ -21,6 +22,10 @@ class ReviewAggregator
 
   def left_by_seller
     Review.left_by_seller(user).count
+  end
+
+  def left_by_buyer
+    Review.left_by_buyer(user).count
   end
 
   def left_by_buyer_about_host

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class RegistrationsController < Devise::RegistrationsController
   before_action :set_role_if_blank
   before_action :configure_permitted_parameters, only: :create
@@ -110,7 +111,7 @@ class RegistrationsController < Devise::RegistrationsController
         @listings = @company.listings.searchable.includes(:location).paginate(page: params[:services_page], per_page: 8)
       end
 
-      @total_reviews_count = @user.total_reviews_count if RatingSystem.active.any?
+      @reviews_counter = ReviewAggregator.new(@user) if RatingSystem.active.any?
     end
     respond_to :html
   end

@@ -43,7 +43,7 @@
 
           - if RatingSystem.active.any?
             #reviews.tab-pane{ class: active_profile_tab_class(:reviews) }
-              - if @total_reviews_count > 0
+              - if @reviews_counter.total > 0
                 = render 'registrations/profile/tabs/reviews'
               - else
                 = render 'registrations/profile/no_content', tab: 'reviews', user: @user
