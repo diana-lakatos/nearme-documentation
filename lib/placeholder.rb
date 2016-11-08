@@ -1,20 +1,11 @@
 class Placeholder
-  IN_FILESYSTEM = %w(96x96 100x100 144x89 144x114 279x279 410x254 895x554 1280x960)
-
-  def initialize(options = {}, text = nil)
+  def initialize(options = {}, _text = nil)
     @height = options[:height]
     @width = options[:width]
-    @format = "#{@width}x#{@height}"
-    @text = text || I18n.t('placeholders.image_unavailable_or_still_processing')
   end
 
   def path
-    # if IN_FILESYSTEM.member?(@format)
-    #  "placeholders/#{@format}.gif"
-    # else
-    #  "//placehold.it/#{@format}&text=Photos+Unavailable"
-    # end
-    # Local filesystem placeholders do not work, we take all from placehold.it
-    "//placehold.it/#{@format}&text=#{CGI.escape(@text)}"
+    svg = "<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 #{@width} #{@height}' width='#{@width}' height='#{@height}'><defs><symbol id='a' viewBox='0 0 90 66' opacity='0.3'><path d='M85 5v56H5V5h80m5-5H0v66h90V0z'/><circle cx='18' cy='20' r='6'/><path d='M56 14L37 39l-8-6-17 23h67z'/></symbol></defs><rect width='100%' height='100%' fill='#ccc'/><use xlink:href='#a' width='20%' x='40%'/></svg>"
+    "data:image/svg+xml;charset=utf-8,#{URI.encode(svg)}"
   end
 end

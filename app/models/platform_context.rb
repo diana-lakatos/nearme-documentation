@@ -241,6 +241,11 @@ class PlatformContext
     @custom_theme = @platform_context_detail.custom_theme_for_instance_admins if @platform_context_detail.try(:custom_theme_for_instance_admins).present?
   end
 
+  def photo_upload_version_dimensions(version, uploader)
+    @photo_upload_versions_fetcher ||= PhotoUploadVersionFetcher.new
+    @photo_upload_versions_fetcher.dimensions(version, uploader)
+  end
+
   private
 
   def fetch_domain

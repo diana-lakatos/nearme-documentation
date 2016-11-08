@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CarrierWave
   module ImageDefaults
     extend ActiveSupport::Concern
@@ -29,7 +30,14 @@ module CarrierWave
       end
 
       def default_placeholder(version)
-        dimensions = version && self.class.dimensions.key?(version) ? self.class.dimensions[version] : { width: 100, height: 100 }
+        dimensions = if PlatformContext.current
+                       PlatformContext.current.photo_upload_version_dimensions(version, self.class)
+                     elsif version && self.class.dimensions.key?(version)
+                       self.class.dimensions[version]
+                     else
+                       { width: 100, height: 100 }
+                     end
+
         Placeholder.new(dimensions).path
       end
     end
