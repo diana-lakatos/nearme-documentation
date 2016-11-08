@@ -4,7 +4,8 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
 
   supported :immediate_payout, :credit_card_payment, :multiple_currency, :partial_refunds, :recurring_payment
 
-  delegate :parse_webhook, :retrieve_account, :onboard!, :update_onboard!, :find_transfer_transactions, to: :gateway
+  delegate :parse_webhook, :retrieve_account, :onboard!, :update_onboard!, :find_transfer_transactions,
+           :find_payment, to: :gateway
 
   validate :validate_config_hash
 

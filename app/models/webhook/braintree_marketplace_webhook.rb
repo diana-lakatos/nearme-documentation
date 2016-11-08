@@ -37,7 +37,7 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
 
   def set_merchant_account
     return if merchant_account_external_id.blank?
-    self.merchant_account = MerchantAccount.find_by!(internal_payment_gateway_account_id: merchant_account_external_id, payment_gateway: payment_gateway, test: payment_gateway.test_mode?)
+    self.merchant_account = MerchantAccount.find_by!(external_id: merchant_account_external_id, payment_gateway: payment_gateway, test: payment_gateway.test_mode?)
   end
 
   def merchant_account_approve
@@ -95,7 +95,7 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   end
 
   def event_transfers_ids
-    merchant_account.payments.where(external_transaction_id: event.disbursement.transaction_ids).uniq.pluck(:payment_transfer_id)
+    merchant_account.payments.where(external_id: event.disbursement.transaction_ids).uniq.pluck(:payment_transfer_id)
   end
 
   def webhook_type
