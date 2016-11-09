@@ -38,17 +38,19 @@ class Instance < ActiveRecord::Base
   has_many :custom_themes, as: :themeable
   has_many :companies, inverse_of: :instance
   has_many :locations, inverse_of: :instance
-  has_many :locations_impressions, through: :locations, inverse_of: :instance
+  has_many :locations_impressions, through: :locations, source: :impressions, class_name: 'Impression'
   has_many :location_types, inverse_of: :instance
   has_many :listings, class_name: 'Transactable', inverse_of: :instance
+  has_many :listings_impressions, through: :listings, source: :impressions, class_name: 'Impression'
   has_many :domains, as: :target, dependent: :destroy
   has_many :partners, inverse_of: :instance
   has_many :instance_admins, inverse_of: :instance
   has_many :instance_admin_roles, inverse_of: :instance
-  has_many :reservations, as: :platform_context_detail
+  has_many :reservations
   has_many :reservation_types, inverse_of: :instance
-  # has_many :orders, :as => :platform_context_detail
-  has_many :payments, through: :reservations, inverse_of: :instance
+  has_many :orders
+  has_many :payments
+  has_many :payment_transfers
   has_many :instance_clients, dependent: :destroy, inverse_of: :instance
   has_many :translations, dependent: :destroy, inverse_of: :instance
   has_many :instance_billing_gateways, dependent: :destroy, inverse_of: :instance

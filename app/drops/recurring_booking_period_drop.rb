@@ -1,9 +1,11 @@
+# frozen_string_literal: true
 class RecurringBookingPeriodDrop < BaseDrop
   include CurrencyHelper
   attr_reader :source
 
   delegate :id, :line_items, :created_at, :payment, :total_amount_cents, :pending?,
-           :approved?, :rejected?, :state, :order, :persisted?, :rejection_reason, to: :source
+           :approved?, :rejected?, :state, :order, :persisted?, :rejection_reason,
+           :transactable, to: :source
 
   def payment_state
     return 'paid' if @source.paid?

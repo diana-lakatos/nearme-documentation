@@ -134,6 +134,10 @@ class PaymentTransfer < ActiveRecord::Base
     payout_gateway.try(:supports_payout?) && company.merchant_accounts.where(payment_gateway: payout_gateway).count.zero?
   end
 
+  def to_liquid
+    @payment_transfer_drop ||= PaymentTransferDrop.new(self)
+  end
+
   private
 
   def assign_amounts_and_currency

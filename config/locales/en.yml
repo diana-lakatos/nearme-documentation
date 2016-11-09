@@ -390,7 +390,8 @@ en:
       are_you_sure: "Are you sure?"
 
     analytics:
-      no_revenue_yet: 'No revenue yet.'
+      revenue: "Payments"
+      no_results: 'No %{type} in last %{period}.'
       no_sales_yet: 'No sales yet.'
       no_products_yet: "You haven't created any products yet."
       no_bookings_yet: 'No bookings yet.'
@@ -1877,8 +1878,13 @@ en:
         total: 'Total'
         transferred: 'Transferred'
     analytics:
+      currency: 'Currency'
+      no_results: 'No %{type} in %{period}.'
+      period: "Period"
       title: 'Analytics'
+      expenses: 'Expenses'
       revenue: 'Revenue'
+      listings: 'Listings'
       bookings: 'Bookings'
       orders: 'Orders'
       location_views: 'Location Views'
@@ -1888,8 +1894,8 @@ en:
       no_product_views_yet: "Your products haven't been visited yet."
       no_location_visits_yet: "Your locations haven't been visited yet."
       no_payments_received_last_7_days: "You have not received any payments in the preceding 7 day period."
-      7_days_total: '7 days total'
-      30_days_total: '30 days total'
+      last_7_days: 'Last week'
+      last_30_days: 'Last month'
       columns:
         date: 'Date'
         count: 'Count'
@@ -1897,6 +1903,12 @@ en:
         orders: 'Orders'
         amount: 'Amount'
         location: 'Location'
+        listing: 'Listing'
+        state: 'State'
+        fee: 'Fee'
+        pg_fee: 'PG Fee'
+        gross: 'Gross payout'
+        net: 'Final Payout'
       total:
         visits: '%{total} visits'
         bookings: '%{total} bookings'

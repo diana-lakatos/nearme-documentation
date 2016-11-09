@@ -81,6 +81,7 @@ en:
 
       columns:
         bookings: Offers
+        transactable: Project
       total:
         bookings: '%{total} offers'
 

@@ -1,0 +1,36 @@
+<div class="box">
+  <div class="chart">
+    <figure class="chart-a">
+      <figcaption>
+        <form action="" accept-charset="UTF-8" method="get">
+          <input name="utf8" type="hidden" value="✓"><input type="hidden" name="chart_type" id="chart_type" value="{{ params.chart_type }}">
+          {% if chart.money? and currencies.size > 1 %}
+          <label for="currency">{{ 'dashboard.analytics.currency' | translate }}</label>
+          <select name="currency" id="currency" onchange="this.form.submit()">
+            {% for currency in @currencies %}
+            <option  {% if params.currency == currency %} selected="selected" {% endif %} value="{{ currency }}">{{currency}}</option>
+            {% endfor %}
+          </select>
+          {% endif %}
+
+          <label for="period">{{ 'dashboard.analytics.period' | translate }}</label>
+          <select name="period" id="period" onchange="this.form.submit()">
+            <option {% if params.period == 'last_7_days' %} selected="selected" {% endif %} value="last_7_days">{{ 'dashboard.analytics.last_7_days' | translate }}</option>
+            <option {% if params.period == 'last_30_days' %} selected="selected" {% endif %}  value="last_30_days">{{ 'dashboard.analytics.last_30_days' | translate }}</option>
+          </select>
+        </form>
+      </figcaption>
+
+      {% if chart.empty? %}
+        <p>{{ chart.no_result }} <p>
+      {% else %}
+        <canvas id="chart"></canvas>
+      {% endif %}
+    </figure>
+  </div>
+</div>
+
+{% content_for 'domready' %}
+  $(document).trigger('line:chart.nearme', ['#chart', {{ chart.values}} , {{ chart.labels }} ]);
+{% endcontent_for %}
+

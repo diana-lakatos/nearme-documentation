@@ -5,53 +5,5 @@
 
 .panel
   .panel-body
-    - if @last_week_payment_transfers.present?
-      .chart-a
-        %figcaption
-          - @chart.totals_by_currency.each do |currency, sum|
-            = "#{currency_content_tag(currency, sum, :span, { :rel => false })}".html_safe
-            |
-          = t('dashboard.transfers.seven_days_total')
-
-        %canvas#chart
-
-    - unless @company.any_payout_option_available?
-      %p.warning.text-center
-        %span.fa.fa-warning
-        = t('dashboard.transfers.cannot_transfer')
-        = link_to t('dashboard.transfers.setup'), edit_dashboard_company_payouts_path
-
-    - if @payment_transfers.present?
-      .table-responsive
-        %table.table.table-simple
-          %thead
-            %tr
-              %th= t('dashboard.transfers.columns.gross')
-              %th= t('dashboard.transfers.columns.fees')
-              %th= t('dashboard.transfers.columns.total')
-              %th= t('dashboard.transfers.columns.transferred')
-          %tbody
-            - @payment_transfers.each do |payment_transfer|
-              %tr
-                %td
-                  = render_money(payment_transfer.gross_amount)
-                %td
-                  = render_money(payment_transfer.total_service_fee + payment_transfer.payment_gateway_fee)
-                %td
-                  = render_money(payment_transfer.amount)
-                %td
-                  - if payment_transfer.transferred_at.present?
-                    = l(payment_transfer.transferred_at, format: :short)
-                  - else
-                    %i.fa.fawarning
-                    = payment_transfer.decorate.transfer_status
-    - else
-      - if @company.any_payout_option_available?
-        %p.warning.text-center
-          %span.fa.fa-warning
-          = t('dashboard.transfers.no_transfers_present')
-
-= will_paginate_dashboard @payment_transfers
-
-- content_for :domready do
-  $(document).trigger('line:chart.nearme', ['#chart', #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe}]);
+    = render partial: 'shared/chart', object: @chart
+    = render partial: 'shared/chart/list/' + @chart.chart_type

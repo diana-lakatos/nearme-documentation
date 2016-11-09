@@ -1,56 +1,9 @@
 .content-container
   .sub-header-nav
     %ul
-      %li
-        = link_to t('instance_admin.services'), instance_admin_analytics_overview_path, class: 'active'
+      - @chart_types.each do |chart_type|
+        %li
+          = link_to t('instance_admin.analytics.' + chart_type) , instance_admin_analytics_overview_path(chart_type: chart_type), class: params[:chart_type] == chart_type ? 'active' : ''
 
-  %h4
-    = t('instance_admin.revenue')
-  .row
-    .box
-      - if @last_month_revenue.inject(0) { |sum, revenue| sum += revenue.total_amount.to_f; sum }.zero?
-        %p.no_data
-          = t('instance_admin.analytics.no_revenue_yet')
-      - else
-        .chart
-          %canvas#revenue_chart{ "data-line-chart": true }
+  = render partial: 'shared/chart', object: @chart
 
-
-  %h4
-    = t('instance_admin.bookings')
-  .row
-    .box
-      - if @last_month_bookings.count.zero?
-        %p.no_data
-          = t('instance_admin.analytics.no_bookings_yet')
-      - else
-        .chart
-          %canvas#bookings_chart{ "data-line-chart": true }
-
-
-  %h4
-    = t('instance_admin.listings')
-  .row
-    .box
-      - if @last_month_listings.inject(0) { |sum, listing| sum += listing.listings_count.to_f; sum }.zero?
-        %p.no_data
-          = t('instance_admin.analytics.no_listings_visits_yet')
-      - else
-        .chart
-          %canvas#listings_chart{ "data-line-chart": true }
-
-  %h4
-    = t('instance_admin.downloads')
-  .row
-    .text-container
-      %div
-        = link_to t('instance_admin.analytics.marketplace_transactions'), instance_admin_analytics_sales_path(format: :csv)
-      %div
-        = link_to t('instance_admin.analytics.marketplace_users'), instance_admin_analytics_profiles_path(format: :csv)
-
-- content_for :domready do
-  $(document).trigger('line:chart.nearme', ['#revenue_chart', #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe}]);
-
-  $(document).trigger('line:chart.nearme', ['#bookings_chart', #{@bookings_chart.values.to_json.html_safe}, #{@bookings_chart.labels.to_json.html_safe}]);
-
-  $(document).trigger('line:chart.nearme', ['#listings_chart', #{@listings_chart.values.to_json.html_safe}, #{@listings_chart.labels.to_json.html_safe}]);
