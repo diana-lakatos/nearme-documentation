@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104004741) do
+ActiveRecord::Schema.define(version: 20161105120728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -405,9 +405,9 @@ ActiveRecord::Schema.define(version: 20161104004741) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
+    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
-    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -626,7 +626,7 @@ ActiveRecord::Schema.define(version: 20161104004741) do
     t.text     "validation_rules"
     t.text     "valid_values"
     t.datetime "deleted_at"
-    t.text     "label"
+    t.string   "label",                     limit: 255
     t.text     "input_html_options"
     t.text     "wrapper_html_options"
     t.text     "hint"
@@ -637,7 +637,6 @@ ActiveRecord::Schema.define(version: 20161104004741) do
     t.string   "target_type",               limit: 255
     t.boolean  "searchable",                            default: false
     t.boolean  "validation_only_on_update",             default: false
-    t.hstore   "properties",                            default: {},    null: false
     t.boolean  "search_in_query",                       default: false, null: false
   end
 
@@ -1255,9 +1254,9 @@ ActiveRecord::Schema.define(version: 20161104004741) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
-    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.boolean  "force_fill_in_wizard_form"
     t.boolean  "show_currency_symbol",                                                              default: true,          null: false
     t.boolean  "show_currency_name",                                                                default: false,         null: false
@@ -1554,7 +1553,6 @@ ActiveRecord::Schema.define(version: 20161104004741) do
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
     t.boolean  "is_free_booking",                                           default: false
-    t.datetime "draft_at"
     t.datetime "lister_confirmed_at"
     t.datetime "enquirer_confirmed_at"
   end
@@ -1960,11 +1958,10 @@ ActiveRecord::Schema.define(version: 20161104004741) do
     t.string   "name"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
-    t.hstore   "settings",                 default: {}
-    t.boolean  "step_checkout",            default: false
-    t.boolean  "require_merchant_account", default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.hstore   "settings",      default: {}
+    t.boolean  "step_checkout", default: false
   end
 
   add_index "reservation_types", ["instance_id"], name: "index_reservation_types_on_instance_id", using: :btree
@@ -2509,7 +2506,6 @@ ActiveRecord::Schema.define(version: 20161104004741) do
     t.datetime "deleted_at"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
-    t.datetime "rejected_by_owner_at"
   end
 
   add_index "transactable_collaborators", ["instance_id"], name: "index_transactable_collaborators_on_instance_id", using: :btree
@@ -2568,7 +2564,6 @@ ActiveRecord::Schema.define(version: 20161104004741) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "confirm_reservations",                       default: true
-    t.boolean  "allow_drafts",                               default: false, null: false
     t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
     t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
     t.integer  "minimum_lister_service_fee_cents",           default: 0
@@ -2701,7 +2696,6 @@ ActiveRecord::Schema.define(version: 20161104004741) do
     t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
     t.boolean  "require_transactable_during_onboarding",                                         default: true
     t.boolean  "access_restricted_to_invited"
-    t.boolean  "auto_seek_collaborators",                                                        default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

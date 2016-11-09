@@ -1,56 +1,58 @@
 var path = require('path');
-var customizr = require('customizr');
 var modernizr = require('modernizr');
-var modernizrConfigAll = require('modernizr/lib/config-all.json');
 var fs = require('fs');
 var gutil = require('gulp-util');
 var mkdirp = require('mkdirp');
+var uglifyJS = require('uglify-js');
+var modernizrConfig = require('../.modernizrrc.json');
 
-/* These tests are excluded solely because they affect design in an unpredictable way due to css classes conflicts */
-var excludedTests = ['hidden', 'dom/hidden', 'flash', 'css/columns', 'csscolumns'];
+function buildModernizr(output, environment, optimize) {
 
-var tests = [
-  'animation',
-  'canvas',
-  'checked',
-  'contains',
-  'cssanimations',
-  'csscalc',
-  'cssgradients',
-  'csspointerevents',
-  'csstransforms',
-  'details',
-  'filereader',
-  'flexbox',
-  'geolocation',
-  'hsla',
-  'input',
-  'opacity',
-  'placeholder',
-  'progressbar_meter',
-  'rgba',
-  'search',
-  'sizes',
-  'svg',
-  'target',
-  'template',
-  'texttrackapi_track',
-  'time',
-  'touchevents',
-  'setclasses'
-];
+  optimize = optimize || false;
 
-var options = [
-  'setClasses'
-];
+  modernizr.build(modernizrConfig, (result)=>{
+    if (optimize) {
+      result = uglifyJS.minify(result, {
+        fromString: true,
+        outSourceMap: 'modernizr.js.map',
+        output: {
+          comments: /license/i,
+        },
+        mangle: {
+          except: ['Modernizr','jQuery','$', 'exports', 'require']
+        }
+      });
+    }
 
-excludedTests.forEach((test)=>{
-  var index = modernizrConfigAll['feature-detects'].indexOf(test);
-  if (index > -1) {
-    modernizrConfigAll['feature-detects'].splice(index, 1);
-    gutil.log(gutil.colors.yellow(`Excluded modernizr test: ${test}`));
-  }
-});
+    /* Create output dir if it doesn't exist */
+    mkdirp(output, function(err){
+      if (err) {
+        gutil.log(gutil.colors.red('Error [modernizr]: ' + err));
+        return gutil.beep();
+      }
+
+      /* Write output code */
+      fs.writeFile(path.join(output, 'modernizr.js'), result.code, function(err) {
+        if (err) {
+          gutil.log(gutil.colors.red('Error [modernizr]: ' + err));
+          return gutil.beep();
+        }
+
+        /* Write sourcemap */
+        fs.writeFile(path.join(output, 'modernizr.js.map'), result.map, function(err) {
+          if (err) {
+            gutil.log(gutil.colors.red('Error [modernizr]: ' + err));
+            return gutil.beep();
+          }
+
+          gutil.log(gutil.colors.yellow('[modernizr] ' + environment + ' build created successfuly'));
+        });
+      });
+    });
+  });
+}
+
+
 
 module.exports = function(gulp, config) {
 
@@ -58,38 +60,12 @@ module.exports = function(gulp, config) {
 
   /* For dev we will attach the full modernizr package with all tests */
   gulp.task('modernizr:development', function(){
-    modernizr.build(modernizrConfigAll, (result)=>{
-      mkdirp(path.join(config.paths.output, 'vendor'), function(err){
-        if (err) {
-          gutil.log(gutil.colors.red('Error (modernizr): ' + err));
-          gutil.beep();
-        }
-        else {
-          fs.writeFile(path.join(config.paths.output, 'vendor', 'modernizr.js'), result, function(err) {
-            if (err) {
-              gutil.log(gutil.colors.red('Error (modernizr): ' + err));
-              gutil.beep();
-            }
-            else {
-              gutil.log(gutil.colors.yellow('Full development build of modernizr.js was created successfuly'));
-            }
-          });
-        }
-      });
-
-    });
+    buildModernizr(path.join(config.paths.output, 'vendor'), 'development');
   });
 
   function registerEnvironmentTasks(gulp, environment) {
     gulp.task(`modernizr:${environment}`, ['styles:dist', `webpack:${environment}`], ()=>{
-      customizr({
-        dest: path.join(config.paths.tmp, 'vendor','modernizr.js'),
-        options: options,
-        uglify: true,
-        tests: tests,
-        excludeTests: excludedTests,
-        crawl: false
-      });
+      buildModernizr(path.join(config.paths.tmp, 'vendor'), environment, true);
     });
   }
 
