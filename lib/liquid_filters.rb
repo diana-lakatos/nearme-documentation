@@ -220,13 +220,13 @@ module LiquidFilters
   end
 
   # @return [String] formatted price using the global price formatting rules; the default currency will be used
-  # @param amount [Numeric] amount to be formatted
+  # @param money [Numeric] amount to be formatted
   def price_with_cents_with_currency(money)
     render_money(money)
   end
 
   # @return [String] formatted price using the global price formatting rules; the default currency will be used
-  # @param amount [Numeric] amount to be formatted
+  # @param money [Numeric] amount to be formatted
   # @todo Duplicate of price_with_cents_with_currency; they should be unified into one method; requires making
   #   sure we're not affecting marketplaces already using them
   def price_without_cents_with_currency(money)
@@ -241,8 +241,8 @@ module LiquidFilters
   end
 
   # @return [String] translated property name; if the property is a basic transactable
-  #   attribute the translation key is 'simple_form.labels.transactable.#{property_name}';
-  #   if it's a custom attribute, the translation key is 'transactable_type.#{transactable_type.name}.labels.#{property_name}'
+  #   attribute the translation key is 'simple_form.labels.transactable.#!{property_name}';
+  #   if it's a custom attribute, the translation key is 'transactable_type.#{transactable_type.name}.labels.#!{property_name}'
   # @param property [String] property name to be translated
   # @param target_acting_as_set [TransactableType] transactable type that the property belongs to
   def translate_property(property, target_acting_as_set)
@@ -273,7 +273,7 @@ module LiquidFilters
   # @param datetime [String, DateTime] DateTime object to be formatted; can be a string and it will be converted
   #   to a date
   # @param format [String] the format to be used for formatting the date; default is 'long'; other values can be used:
-  #   they are taken from translations, keys are of the form 'time.formats.#{format_name}'
+  #   they are taken from translations, keys are of the form 'time.formats.#!{format_name}'
   def localize(datetime, format = 'long')
     if datetime
       datetime = datetime.to_date if datetime.is_a?(String)
@@ -318,6 +318,9 @@ module LiquidFilters
     datetime.try(:to_date)
   end
 
+  # @return [String] sanitized version of the input string; uses a whitelist based approach for allowed elements
+  #   and their attributes; the sanitization rules are not currently editable from the marketplace interface
+  # @param html [String] html string to be sanitized
   def custom_sanitize(html = '')
     return '' if html.blank?
 
@@ -331,18 +334,29 @@ module LiquidFilters
     end
   end
 
+  # @return [String] sanitized version of the input string; uses a strict approach which means it will
+  #   strip all HTML and leave only safe text behind
+  # @param html [String] html string to be sanitized
   def strip_tags(html = '')
     return '' if html.blank?
     @custom_sanitizer ||= CustomSanitizer.new
     @custom_sanitizer.strip_tags(html).html_safe
   end
 
+  # @return [String] replaces newlines in the input string with the <br /> html tag
+  # @param html [String] html string to be processed
   def nl2br(html = '')
     return '' if html.blank?
     html.gsub!("\r\n", '<br />')
     html
   end
 
+  # @return [String] html formatted pagination area generated for the input collection with the passed in options
+  # @param collection [Array<Object>] array of objects for which we want to generate the pagination area
+  # @param options [Hash{String => String}] hash of options for pagination; example:
+  #   !{{ listings | pagination_links: param_name: 'services_page', renderer: 'LiquidStyledLinkRenderer' }} will
+  #   render the pagination links for listings; services_page will be the name of the page parameters in the browser
+  #   and the LiquidStyledLinkRenderer renderer will be used to generate the output html
   def pagination_links(collection, options = {})
     opts = {
       controller: @context.registers[:controller],
@@ -351,31 +365,53 @@ module LiquidFilters
     will_paginate collection, opts
   end
 
+  # @return [String] sanitized input string to be used as a meta tag content; uses a strict approach which means it
+  #   will strip all HTML and leave only safe text behind; also will replace one or more spaces with a single space
+  #   and will strip beginning and ending blank characters
+  # @param content [String] string to be sanitized
   def meta_attr(content)
     Sanitize.clean(content).gsub(/\s+/, ' ').strip
   end
 
+  # @return [String] returns the value of the request attribute indicated by the parameter 'method'; e.g.
+  #   !{{ 'original_url' | request_parameter }}
+  # @param method [String] name of the request attribute to return
   def request_parameter(method)
     @context.registers[:controller].request.send(method.to_sym) if @context.registers[:controller].request.respond_to?(method)
   end
 
+  # @return [String] full url to the image given as a parameter; e.g. 'chevron.jpg' | image_url
+  # @param path_to_file [String] file name or relative path to file
   def image_url(path_to_file)
     ActionController::Base.helpers.image_url(path_to_file)
   end
 
+  # @return [String] if the given url is supported, an html formatted string containing a video player (inside an iframe)
+  #   which will play the video at the given url; otherwise an empty string is returned
+  # @param url [String] url to a video on the internet
   def videoify(url = '')
     return url if url.blank?
     VideoEmbedder.new(url).html.html_safe
   end
 
+  # @return [String] JSON formatted string containing a representation of object
+  # @param object [Object] object we want a JSON representation of
   def json(object)
     object.to_json
   end
 
+  # @return [String] SHA1 digest of the input object
+  # @param object [Object] input object whose digest we want to obtain
   def sha1(object)
     Digest::SHA1.hexdigest object
   end
 
+  # @return [String] if the tag given as a parameter is already in the URL parameter for filtering by
+  #   tags it will return a link to the tag which will remove it from the filter; otherwise, if the tag
+  #   given as a parameter is not already in the URL parameter for filtering by tags, it will return a
+  #   link to the tag which will add this tag to the tag filter
+  # @param custom_classes [Array] array of custom classes to be added to the class attribute of the 
+  #   generated link
   def tag_filter_link(tag, custom_classes = [])
     params = @context.registers[:controller].params
     current_filters = params[:tags].try(:split, ',').presence || []

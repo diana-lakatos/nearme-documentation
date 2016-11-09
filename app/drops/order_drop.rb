@@ -226,7 +226,7 @@ class OrderDrop < BaseDrop
     @order.user.transactable_line_items.where(line_item_source_id: @order.transactable.id).map(&:line_itemable)
   end
 
-  # @return [String] path to creating a new order item ({RecurringBookingPeriod}) mostly for
+  # @return [String] path to creating a new order item (RecurringBookingPeriod) mostly for
   #   tracking time
   def new_order_item_path
     routes.new_dashboard_order_order_item_path(@order)

@@ -16,7 +16,7 @@ class ShipmentDrop < BaseDrop
   #   Shipment direction (inbound / outbound)
   #   @return (see Shipment#direction)
   # @!method shipping_rule
-  #   {ShippingRule} object associated with the shipment
+  #   ShippingRule object associated with the shipment
   #   @return (see Shipment#shipping_rule)
   delegate :tracking_url_provider, :tracking_number, :label_url, :direction, :shipping_rule, to: :shipment
 

@@ -204,7 +204,7 @@ class ReservationDrop < OrderDrop
     routes.dashboard_reviews_path
   end
 
-  # @return [TransactableTypeDrop] TransactableTypeDrop object for this reservation's associated {TransactableType}
+  # @return [TransactableTypeDrop] TransactableTypeDrop object for this reservation's associated TransactableType
   def transactable_type_drop
     transactable_type.to_liquid
   end

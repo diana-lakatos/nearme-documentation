@@ -9,7 +9,7 @@ class PlatformContextDrop < BaseDrop
   #   @return (see Instance#name)
   # @!method bookable_noun
   #   @return (see Instance#bookable_noun)
-  #   @deprecated Use {TransactableType#bookable_noun} instead
+  #   @deprecated Use {TransactableTypeDrop#bookable_noun} instead
   # @!method pages
   #   CMS pages for the current theme
   #   @return (see Theme#pages)
@@ -40,13 +40,13 @@ class PlatformContextDrop < BaseDrop
   # @!method lessor
   #   Lessor name for this marketplace
   #   @return (see Instance#lessor)
-  #   @deprecated use {TransactableType#lessor} instead
+  #   @deprecated use {TransactableTypeDrop#lessor} instead
   # @!method lessors
   #   @return (see PlatformContextDecorator#lessors)
   # @!method lessee
   #   Lessee name for this marketplace
   #   @return (see Instance#lessee)
-  #   @deprecated use {TransactableType#lessee} instead
+  #   @deprecated use {TransactableTypeDrop#lessee} instead
   # @!method lessees
   #   @return (see PlatformContextDecorator#lessees)
   # @!method search_by_keyword_placeholder
@@ -83,7 +83,7 @@ class PlatformContextDrop < BaseDrop
   # @!method bookable?
   #   @return (see Instance#bookable?)
   # @!method transactable_types
-  #   {TransactableType} objects defined for this instance
+  #   TransactableType objects defined for this instance
   #   @return (see Instance#transactable_types)
   # @!method action_rfq?
   #   @return (see Instance#action_rfq?)
@@ -124,7 +124,7 @@ class PlatformContextDrop < BaseDrop
   #   @return [Boolean] whether debugging mode for admins is currently enabled
   # @todo Investigate missing platform_context
   # @todo Investigate missing search_input_name
-  # @todo Remove #projectable from drop when {ProjectType} will be finally removed
+  # @todo Remove #projectable from drop when ProjectType will be finally removed
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :facebook_url, :twitter_url, :gplus_url,
            :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
            :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number, :phone_number_noformat,

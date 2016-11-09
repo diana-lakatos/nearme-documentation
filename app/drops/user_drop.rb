@@ -48,7 +48,7 @@ class UserDrop < BaseDrop
   #   Address object representing the user's current location
   #   @return (see User#current_address)
   # @!method is_trusted?
-  #   @return [Boolean] whether the object is trusted (approved {ApprovalRequest} objects for this object, company)
+  #   @return [Boolean] whether the object is trusted (approved ApprovalRequest objects for this object, company)
   # @!method has_published_posts?
   #   @return (see User#has_published_posts?)
   # @!method seller_properties

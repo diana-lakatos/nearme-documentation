@@ -81,7 +81,7 @@ class TransactableDrop < BaseDrop
   # @!method overnight_booking?
   #   @return (see Transactable::TimeBasedBooking#overnight_booking?)
   # @!method is_trusted?
-  #   @return [Boolean] whether the object is trusted (approved {ApprovalRequest} objects for this object, creator, company)
+  #   @return [Boolean] whether the object is trusted (approved ApprovalRequest objects for this object, creator, company)
   # @!method lowest_full_price
   #   @return (see Transactable#lowest_full_price)
   # @!method slug
@@ -117,7 +117,7 @@ class TransactableDrop < BaseDrop
   #   Approved collaborating users for this transactable
   #   @return (see Transactable#collaborating_users)
   # @!method approved_transactable_collaborators
-  #   Approved {TransactableCollaborator} objects for this transactable
+  #   Approved TransactableCollaborator objects for this transactable
   #   @return (see Transactable#approved_transactable_collaborators)
   # @!method user_messages
   #   User messages for this transactable (for discussion between clients and hosts)
