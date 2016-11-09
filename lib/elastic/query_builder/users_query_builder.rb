@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Elastic
   class QueryBuilder::UsersQueryBuilder < QueryBuilder
     def initialize(query, instance_profile_type:, searchable_custom_attributes: [], query_searchable_attributes: [])
@@ -32,30 +33,41 @@ module Elastic
       if @query[:query].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
-        {
+        match_bool_condition = {
           bool: {
             should: [
-              {
-                simple_query_string: {
-                  query: @query[:query],
-                  fields: search_by_query_attributes
-                }
-              },
-              {
-                nested: {
-                  path: 'user_profiles',
-                  query: {
-                    multi_match: {
-                      query: @query[:query],
-                      fields: @query_searchable_attributes
-                    }
-                  }
-                }
-              }
+              simple_match_query
             ]
           }
         }
+
+        match_bool_condition[:bool][:should] << multi_match_query if @query_searchable_attributes.present?
+
+        match_bool_condition
       end
+    end
+
+    def simple_match_query
+      {
+        simple_query_string: {
+          query: @query[:query],
+          fields: search_by_query_attributes
+        }
+      }
+    end
+
+    def multi_match_query
+      {
+        nested: {
+          path: 'user_profiles',
+          query: {
+            multi_match: {
+              query: @query[:query],
+              fields: @query_searchable_attributes
+            }
+          }
+        }
+      }
     end
 
     def search_by_query_attributes
@@ -128,16 +140,14 @@ module Elastic
         end
      end
 
-      if @query[:lg_custom_attributes]
-        @query[:lg_custom_attributes].each do |key, value|
-          next if value.blank?
-          user_profiles_filters <<
-            {
-              match: {
-                "user_profiles.properties.#{key}.raw" => value.to_s.split(',').map(&:downcase).join(' OR ')
-              }
+      @query[:lg_custom_attributes]&.each do |key, value|
+        next if value.blank?
+        user_profiles_filters <<
+          {
+            match: {
+              "user_profiles.properties.#{key}.raw" => value.to_s.split(',').map(&:downcase).join(' OR ')
             }
-        end
+          }
       end
 
       if @instance_profile_type.search_only_enabled_profiles?
