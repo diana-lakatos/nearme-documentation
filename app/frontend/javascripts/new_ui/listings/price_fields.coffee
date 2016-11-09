@@ -43,7 +43,7 @@ module.exports = class PriceFields
       if checkbox.is(':checked')
         $(event.target).parents(".row").find('input[data-price-enabler]').prop('checked', true).trigger('change')
 
-    @priceFields.on 'click', (event) =>
+    @priceFields.on 'click touchstart', (event) =>
       $(event.target).parents(".row").find('input[data-free-booking]').prop('checked', false)
       if $(event.target).parents(".row").find('input[data-price-enabler]').length > 0
         $(event.target).parents(".row").find('input[data-price-enabler]').prop('checked', true).trigger('change')
