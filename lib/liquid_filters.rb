@@ -484,7 +484,7 @@ module LiquidFilters
 
   # @return [String] the input text marked as 'HTML safe'; this ensures that all HTML content will be output to the
   #   page; otherwise, without this filter the text would be sanitized;
-  #   e.g. {{ @some_variable_with_html_contents | make_html_safe }}
+  #   e.g. !{{ @some_variable_with_html_contents | make_html_safe }}
   # @param html [String] input string to mark as 'HTML safe'
   def make_html_safe(html = '')
     html.html_safe
