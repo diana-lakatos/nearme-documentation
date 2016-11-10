@@ -8,10 +8,9 @@ For drops:
 
 * Use "see" as much as possible (@return (see ...))
 * Use @return as much as possible and descriptions as little as possible (if no params, and no other info besides the return value is needed)
-* If the see is linking to an attribute or an AR relation, add description above see
-* If see is not linking to an attribute or AR relation, add the description to the @return of the target (after adding a @return on the target)
+* If the see is linking to an attribute, add description above see
+* If see is not linking to an attribute, add the description to the @return of the target (after adding a @return on the target)
 * If not using see (non-linkable), add the description after @return
-* Return rails types not drops
 
 ### Cheatsheet to get started
 
