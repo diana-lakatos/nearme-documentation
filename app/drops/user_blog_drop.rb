@@ -1,6 +1,6 @@
 class UserBlogDrop < BaseDrop
 
-  # @return [UserBlog]
+  # @return [UserBlogDrop]
   attr_reader :blog
 
   # @!method name

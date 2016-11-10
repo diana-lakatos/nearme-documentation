@@ -4,8 +4,7 @@ class CkeditorAssetDrop < BaseDrop
   # @!method id
   #   @return [Integer] id of the asset
   # @!method user
-  #   user owning the asset
-  #   @return (see Ckeditor::Asset#user)
+  #   @return [UserDrop] user owning the asset
   # @!method created_at
   #   @return [ActiveSupport::TimeWithZone] created at time
   delegate :id, :user, :created_at, to: :source

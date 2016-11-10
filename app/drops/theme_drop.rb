@@ -1,6 +1,6 @@
 class ThemeDrop < BaseDrop
 
-  # @return [Theme]
+  # @return [ThemeDrop]
   attr_reader :theme
 
   # @!method blog_url
@@ -28,8 +28,7 @@ class ThemeDrop < BaseDrop
   #   Name of the marketplace
   #   @return (see Theme#site_name)
   # @!method pages
-  #   Array of pages created for this marketplace by the marketplace admin
-  #   @return (see Theme#pages)
+  #   @return [Array<PageDrop>] Array of pages created for this marketplace by the marketplace admin
   delegate :blog_url, :gplus_url, :twitter_url, :facebook_url, :support_url,
            :address, :phone_number, :site_name, :pages, to: :theme
 

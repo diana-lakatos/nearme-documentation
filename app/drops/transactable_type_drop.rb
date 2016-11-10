@@ -20,7 +20,7 @@ class TransactableTypeDrop < BaseDrop
            :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
            :search_input_name, :search_field_placeholder, :skip_location?, to: :source
 
-  # name for the bookable item this transactable type represents (e.g. desk, room etc.)
+  # @return [String] name for the bookable item this transactable type represents (e.g. desk, room etc.)
   def name
     @source.translated_bookable_noun
   end
@@ -153,7 +153,7 @@ class TransactableTypeDrop < BaseDrop
     @context['transactable_type_picker'] != false && multiple_transactable_types? && PlatformContext.current.instance.tt_select_type != 'radio'
   end
 
-  # @return [Array<Category>] array of category objects for this marketplace's service types
+  # @return [Array<CategoryDrop>] array of category objects for this marketplace's service types
   def searchable_categories
     @source.categories.searchable.roots
   end
@@ -167,7 +167,7 @@ class TransactableTypeDrop < BaseDrop
     @categories
   end
 
-  # @return [Array<CustomAttributes::CustomAttribute>] array of custom attributes defined for this transactable type
+  # @return [Array<CustomAttributeDrop>] array of custom attributes defined for this transactable type
   def custom_attributes
     @source.custom_attributes
   end

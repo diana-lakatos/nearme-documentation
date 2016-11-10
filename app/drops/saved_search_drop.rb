@@ -1,6 +1,6 @@
 class SavedSearchDrop < BaseDrop
   
-  # @return [SavedSearch]
+  # @return [SavedSearchDrop]
   attr_reader :saved_search
 
   # @!method id

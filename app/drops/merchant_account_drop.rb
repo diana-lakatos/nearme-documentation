@@ -1,6 +1,6 @@
 class MerchantAccountDrop < BaseDrop
 
-  # @return [MerchantAccount]
+  # @return [MerchantAccountDrop]
   attr_reader :merchant_account
 
   # @!method id

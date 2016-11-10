@@ -13,12 +13,6 @@ For drops:
 * If not using see (non-linkable), add the description after @return
 * Return rails types not drops
 
-We return Rails types not Drops because:
-
-* Drops do not actually return drops, only inside liquid views some objects turn into drops
-* Some delegates/method results are actually used inside the drop as non-drops (for some, Drops do not even exist - like Uploaders)
-* To be able to reuse documentation with "(see ...)" for the methods in the models
-
 ### Cheatsheet to get started
 
 ```

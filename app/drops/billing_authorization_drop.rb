@@ -1,6 +1,6 @@
 class BillingAuthorizationDrop < BaseDrop
   
-  # @return [BillingAuthorization]
+  # @return [BillingAuthorizationDrop]
   attr_reader :billing_authorization
 
   # @!method id

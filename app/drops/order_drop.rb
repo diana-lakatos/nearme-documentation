@@ -2,22 +2,20 @@
 class OrderDrop < BaseDrop
   include CurrencyHelper
 
-  # @return [Order]
+  # @return [OrderDrop]
   attr_reader :order
 
   # @!method id
   #   @return [Integer] numeric identifier for the order
   # @!method user
-  #   User owner of the order
-  #   @return (see Order#user)
+  #   @return [UserDrop] User owner of the order
   # @!method company
   #   Company of the seller user
   #   @return (see Order#company)
   # @!method number
   #   @return (see Order#number)
   # @!method line_items
-  #   Line items belonging to this order
-  #   @return (see Order#line_items)
+  #   @return [Array<LineItemDrop>] Line items belonging to this order
   # @!method can_host_cancel?
   #   @return [Boolean] whether the host can cancel the order at this stage
   # @!method can_confirm?
@@ -39,8 +37,7 @@ class OrderDrop < BaseDrop
   # @!method has_to_update_credit_card?
   #   @return (see Order#has_to_update_credit_card?)
   # @!method user_messages
-  #   User messages for discussion between lister and enquirer
-  #   @return (see Order#user_messages)
+  #   @return [Array<UserMessageDrop>] User messages for discussion between lister and enquirer
   # @!method archived_at
   #   Time when the order has been transitioned to archived
   #   @return (see Order#archived_at)
@@ -56,16 +53,13 @@ class OrderDrop < BaseDrop
   #   Reason for the rejection of the order
   #   @return (see Order#rejection_reason)
   # @!method cancellation_policy_hours_for_cancellation
-  #   Hours allowed to cancel without a penalty before the booking starts
-  #   @return (see Order#cancellation_policy_hours_for_cancellation
+  #   @return [Integer] Hours allowed to cancel without a penalty before the booking starts
   # @!method cancellation_policy_penalty_hours
-  #   Used for calculating the penalty for cancelling (unit_price * cancellation_policy_penalty_hours)
-  #   @return (see Order#cancellation_policy_penalty_hours)
+  #   @return [Integer] Used for calculating the penalty for cancelling (unit_price * cancellation_policy_penalty_hours)
   # @!method created_at
   #   @return [ActiveSupport::TimeWithZone] time when the order was initiated
   # @!method payment
-  #   Payment object for this order
-  #   @return (see Order#payment)
+  #   @return [PaymentDrop] Payment object for this order
   # @!method total_units_text
   #   @return (see OrderDecorator#total_units_text)
   # @!method enquirer_cancelable
@@ -73,8 +67,7 @@ class OrderDrop < BaseDrop
   # @!method enquirer_editable
   #   @return (see Order#enquirer_editable)
   # @!method transactable
-  #   Transactable object being ordered
-  #   @return (see Order#transactable)
+  #   @return [TransactableDrop] Transactable object being ordered
   # @!method cancelled_at
   #   Time when the order was cancelled
   #   @return (see Order#cancelled_at)
@@ -82,15 +75,13 @@ class OrderDrop < BaseDrop
   #   Time when the order was confirmed
   #   @return (see Order#confirmed_at)
   # @!method recurring_booking_periods
-  #   Array of recurring booking periods for a recurring booking representing
+  #   @return [Array<RecurringBookingPeriodDrop>] Array of recurring booking periods for a recurring booking representing
   #     periods for which a transactable object is bookable/booked
-  #   @return (see RecurringBooking#recurring_booking_periods)
   # @!method creator
   #   Lister user of the item being ordered
   #   @return (see Order#creator)
   # @!method payment_subscription
-  #   Payment subscription object for this order
-  #   @return [PaymentSubscription]
+  #   @return [PaymentSubscriptionDrop] Payment subscription object for this order
   # @!method confirm_reservations?
   #   @return (see Order#confirm_reservations?)
   # @!method bookable?
@@ -189,12 +180,12 @@ class OrderDrop < BaseDrop
     I18n.t('dashboard.host_reservations.payment_methods.' + (@order.payment.try(:payment_method).try(:payment_method_type) || 'pending').to_s)
   end
 
-  # @return [Shipment] first outbound shipment for this order
+  # @return [ShipmentDrop] first outbound shipment for this order
   def outbound_shipment
     @order.deliveries.first
   end
 
-  # @return [Shipment] first inbound shipment for this order
+  # @return [ShipmentDrop] first inbound shipment for this order
   def inbound_shipment
     @order.deliveries.last
   end
@@ -209,7 +200,7 @@ class OrderDrop < BaseDrop
     @order.time_to_expiry(@order.expires_at)
   end
 
-  # @return [Attachable::PaymentDocument] payment documents for this order
+  # @return [Attachable::PaymentDocumentDrop] payment documents for this order
   def payment_documents
     @order.payment_documents.select(&:persisted?)
   end
@@ -289,12 +280,12 @@ class OrderDrop < BaseDrop
     first_line_item.additional_tax_total_rate.zero? == false
   end
 
-  # @return [Array<UserMessage>] user messages for discussing between lister and enquirer
+  # @return [Array<UserMessageDrop>] user messages for discussing between lister and enquirer
   def transactable_user_messages
     transactable.user_messages.where('author_id = :user_id OR thread_recipient_id = :user_id', user_id: @order.user_id)
   end
 
-  # @return [CustomAttributes::CollectionProxy] custom properties collection for the order
+  # @return [Hash] custom properties collection for the order
   def properties
     @order.properties
   end
@@ -329,7 +320,7 @@ class OrderDrop < BaseDrop
 
   private
 
-  # @return [LineItem, OpenStruct] returns the first line item for this order
+  # @return [LineItemDrop] returns the first line item for this order
   #   or a blank (tax items set to 0) OpenStruct if a line item can't be found
   def first_line_item
     @first_line_item ||= @order.line_items.first || OpenStruct.new(included_tax_total_rate: 0, additional_tax_total_rate: 0)

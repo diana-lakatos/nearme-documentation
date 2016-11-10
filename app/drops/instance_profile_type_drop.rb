@@ -1,5 +1,5 @@
 class InstanceProfileTypeDrop < BaseDrop
-  # @return [InstanceProfileType]
+  # @return [InstanceProfileTypeDrop]
   attr_reader :instance_profile_type
 
   # @!method id
@@ -79,7 +79,7 @@ class InstanceProfileTypeDrop < BaseDrop
     "#{class_name}-#{id}"
   end
 
-  # @return [Array<Category>] searchable categories for the instance profile type
+  # @return [Array<CategoryDrop>] searchable categories for the instance profile type
   def searchable_categories
     @instance_profile_type.categories.searchable.roots
   end

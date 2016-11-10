@@ -1,10 +1,10 @@
 class UserProfileDrop < BaseDrop
 
-  # @return [UserProfile]
+  # @return [UserProfileDrop]
   attr_accessor :source
 
   # @!method customizations
-  #   @return [Array<Customization>] array of customization objects for this user profile (allows extra customization through custom attributes)
+  #   @return [Array<CustomizationDrop>] array of customization objects for this user profile (allows extra customization through custom attributes)
   # @!method onboarded_at
   #   Date when the user has been marked as onboarded
   #   @return (see UserProfile#onboarded_at)

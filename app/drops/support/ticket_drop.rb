@@ -1,13 +1,13 @@
 class Support::TicketDrop < BaseDrop
 
-  # @return [Support::Ticket]
+  # @return [Support::TicketDrop]
   attr_reader :ticket
 
   def initialize(ticket)
     @ticket = ticket
   end
 
-  # @return [Support::TicketMessage] first message for this support ticket thread
+  # @return [Support::TicketMessageDrop] first message for this support ticket thread
   def first_message
     ticket.first_message
   end
@@ -57,7 +57,7 @@ class Support::TicketDrop < BaseDrop
     ticket.id
   end
 
-  # @return [Array<Support::TicketMessage>] the messages in this thread with the first one
+  # @return [Array<Support::TicketMessageDrop>] the messages in this thread with the first one
   #   omitted
   def messages
     if ticket.messages.length > 0

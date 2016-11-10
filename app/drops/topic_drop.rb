@@ -9,8 +9,7 @@ class TopicDrop < BaseDrop
   #   Name for this topic
   #   @return (see Topic#name)
   # @!method data_source_contents
-  #   Data source contents for this topic
-  #   @return (see Topic#data_source_contents)
+  #   @return [Array<DataSourceContentDrop>] Data source contents for this topic
   # @todo Investigate/remove projects no longer present
   delegate :id, :name, :data_source_contents, :projects, to: :topic
 

@@ -1,6 +1,6 @@
 class UserMessageDrop < BaseDrop
 
-  # @return [UserMessage]
+  # @return [UserMessageDrop]
   attr_reader :user_message
 
   # @!method id
@@ -9,8 +9,7 @@ class UserMessageDrop < BaseDrop
   #   Contents of the message
   #   @return (see UserMessage#body)
   # @!method thread_context
-  #   Conversation context: a listing, a booking, a user etc.
-  #   @return (see UserMessage#thread_context)
+  #   @return [Object] Conversation context: a listing, a booking, a user etc.
   # @!method recipient_name
   #   @return (see UserMessageDecorator#recipient_name)
   # @!method create_path

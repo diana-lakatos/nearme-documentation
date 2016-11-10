@@ -11,11 +11,12 @@ class UserDrop < BaseDrop
   #   Full name for this user
   #   @return (see User#name)
   # @!method friends
-  #   @return (see User#friends)
+  #   @return [Array<UserDrop>] array of friends for this user (followed users)
   # @!method friends_know_host_of
-  #   @return (see User#friends_know_host_of)
+  #   @return [Array<UserDrop>] array containing the users that are followed by the administrator of the listing passed as
+  #     a parameter and that are also followed by this user
   # @!method mutual_friends
-  #   @return (see User#mutual_friends)
+  #   @return [Array<UserDrop>] array containing users that are followed by the users that this user follows
   # @!method first_name
   #   User's first name
   #   @return (see User#first_name)
@@ -36,8 +37,7 @@ class UserDrop < BaseDrop
   # @!method administered_locations_pageviews_30_day_total
   #   @return (see User#administered_locations_pageviews_30_day_total)
   # @!method blog
-  #   User's blog
-  #   @return (see User#blog)
+  #   @return [UserBlogDrop] User's blog
   # @!method country_name
   #   Country name for the user
   #   @return (see User#country_name)
@@ -45,33 +45,29 @@ class UserDrop < BaseDrop
   #   Phone number for the user
   #   @return (see User#phone)
   # @!method current_address
-  #   Address object representing the user's current location
-  #   @return (see User#current_address)
+  #   @return [AddressDrop] Address object representing the user's current location
   # @!method is_trusted?
   #   @return [Boolean] whether the object is trusted (approved ApprovalRequest objects for this object, company)
   # @!method has_published_posts?
   #   @return (see User#has_published_posts?)
   # @!method seller_properties
-  #   @return [CustomAttributes::CollectionProxy] a hash of custom attributes for the seller profile
+  #   @return [Hash] a hash of custom attributes for the seller profile
   # @!method buyer_properties
-  #   @return [CustomAttributes::CollectionProxy] a hash of custom attributes for the buyer profile
+  #   @return [Hash] a hash of custom attributes for the buyer profile
   # @!method name_with_affiliation
-  #   @return (see User#name_with_affiliation)
+  #   @return (see UserDecorator#name_with_affiliation)
   # @!method external_id
-  #   ID of a user in a third party system, used mainly by bulk upload
-  #   @return (see User#external_id)
+  #   @return [String] ID of a user in a third party system, used mainly by bulk upload
   # @!method seller_average_rating
   #   @return [Integer] average rating of this user as a seller
   # @!method default_wish_list
   #   @return (see User#default_wish_list)
   # @!method buyer_profile
-  #   Buyer profile for this user if present
-  #   @return (see User#buyer_profile)
+  #   @return [UserProfileDrop] Buyer profile for this user if present
   # @!method seller_profile
-  #   Seller profile for this user if present
-  #   @return (see User#seller_profile)
+  #   @return [UserProfileDrop] Seller profile for this user if present
   # @!method tags
-  #   @return [Array<ActsAsTaggableOn::Tag>] array of tags that this user has been tagged with
+  #   @return [TagDrop] array of tags that this user has been tagged with
   # @!method has_friends
   #   @return (see UserDecorator#has_friends)
   # @!method transactables_count
@@ -80,15 +76,13 @@ class UserDrop < BaseDrop
   # @!method has_active_credit_cards?
   #   @return (see User#has_active_credit_cards?)
   # @!method communication
-  #   Communication object defining a method for this user to perform a voice call
-  #   @return (see User#communication)
+  #   @return [CommunicationDrop] Communication object defining a method for this user to perform a voice call
   # @!method created_at
   #   @return [ActiveSupport::TimeWithZone] date/time when the user signed up
   # @!method default_company
-  #   @return (see User#default_company)
+  #   @return [CompanyDrop] the default (first) company to which this user belong
   # @!method company_name
-  #   Company name for this user (basic user profile field)
-  #   @return (User#company_name)
+  #   @return [String] Company name for this user (basic user profile field)
   # @!method instance_admins_metadata
   #   @return (see User#instance_admins_metadata)
   # @!method total_reviews_count
@@ -151,7 +145,7 @@ class UserDrop < BaseDrop
     @source.decorate.social_connections_for('linkedin').present?
   end
 
-  # return [Boolean] whether the user is authenticated with twitter
+  # @return [Boolean] whether the user is authenticated with twitter
   def twitter_connections
     @source.decorate.social_connections_for('twitter').present?
   end
@@ -288,8 +282,7 @@ class UserDrop < BaseDrop
     end
   end
 
-  # Listings for the locations for the companies of this user (user's listings)
-  # @return (see User#listings)
+  # @return [Array<TransactableDrop>] Listings for the locations for the companies of this user (user's listings)
   def listings
     @source.listings
   end
@@ -306,7 +299,7 @@ class UserDrop < BaseDrop
     PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.try(:enabled?) && !hide_tab?('blog_posts')
   end
 
-  # @return [Array<UserBlogPost>] array of blog posts published by this user
+  # @return [Array<UserBlogPostDrop>] array of blog posts published by this user
   def published_posts
     @source.published_blogs.limit(5)
   end
@@ -323,7 +316,7 @@ class UserDrop < BaseDrop
   end
 
   # @return [String] path to the user's profile with authentication token (projects section)
-  # @ todo Path/url inconsistency
+  # @todo Path/url inconsistency
   def projects_profile_url_with_token
     urlify(routes.profile_path(@source.slug, token_key => @source.try(:temporary_token), anchor: :projects))
   end
@@ -384,12 +377,12 @@ class UserDrop < BaseDrop
     routes.dashboard_orders_path(token_key => @source.try(:temporary_token))
   end
 
-  # @return [Array<Transactable>] listings in and around a user's location, limited to a 100 km radius and a maximum of 3 results
+  # @return [Array<TransactableDrop>] listings in and around a user's location, limited to a 100 km radius and a maximum of 3 results
   def listings_in_near
     @source.listings_in_near(3, 100, true)
   end
 
-  # @return [CustomAttributes::CollectionProxy] the user's custom properties list
+  # @return [Hash] the user's custom properties list
   def properties
     @source.properties
   end
@@ -464,7 +457,7 @@ class UserDrop < BaseDrop
     build_categories_to_array(@source.seller_profile.categories) if @source.seller_profile
   end
 
-  # @return [Address] user's current address taken from the user object, or, if not present
+  # @return [AddressDrop] user's current address taken from the user object, or, if not present
   #   taken from the first configured location for the user
   def address
     @source.current_address.presence || @source.locations.first.try(:location_address)
@@ -480,22 +473,22 @@ class UserDrop < BaseDrop
     @source.seller_profile.instance_profile_type.custom_attributes.public_display
   end
 
-  # @return [Array<CustomAttributes::CustomAttribute>] an array of custom attributes for buyer profile
+  # @return [Array<CustomAttributeDrop>] an array of custom attributes for buyer profile
   def buyer_attributes
     @source.buyer_profile.instance_profile_type.custom_attributes.public_display
   end
 
-  # @return [Array<CustomAttributes::CustomAttribute>] an array of custom attributes for the default profile
+  # @return [Array<CustomAttributeDrop>] an array of custom attributes for the default profile
   def default_attributes
     @source.default_profile.instance_profile_type.custom_attributes.public_display
   end
 
-  # @return [Array<CustomAttributes::CustomAttribute>] an array of custom attributes for the default and seller profile
+  # @return [Array<CustomAttributeDrop>] an array of custom attributes for the default and seller profile
   def default_and_seller_attributes
     default_attributes + seller_attributes
   end
 
-  # @return [Array<CustomAttributes::CustomAttribute>] an array of custom attributes for the default and buyer profile
+  # @return [Array<CustomAttributeDrop>] an array of custom attributes for the default and buyer profile
   def default_and_buyer_attributes
     default_attributes + buyer_attributes
   end
@@ -580,7 +573,7 @@ class UserDrop < BaseDrop
     @source.created_listings.with_state(:completed).count
   end
 
-  # @return [Array<Transactable>] array of pending transactables for the currently logged in user
+  # @return [Array<TransactableDrop>] array of pending transactables for the currently logged in user
   #   (created by the currently logged in user, in the pending state)
   def pending_transactables_for_current_user
     Transactable.where(creator_id: @context['current_user'].id).with_state(:pending)
@@ -595,7 +588,7 @@ class UserDrop < BaseDrop
     pending_transactables_for_current_user.where('tc.id is NULL')
   end
 
-  # @return [Array<Transactable>] array of pending transactables for the user to which the user is a collaborator
+  # @return [Array<TransactableDrop>] array of pending transactables for the user to which the user is a collaborator
   #   (created by the currently logged in user, in the pending state, and to which this user is a collaborator)
   def pending_collaborated_transactables
     pending_transactables_for_current_user.where('tc.id is NOT NULL')
@@ -628,7 +621,7 @@ class UserDrop < BaseDrop
     count > 0 ? count : nil
   end
 
-  # @return [Array<Transactable>] transactables created by the currently logged in user to
+  # @return [Array<TransactableDrop>] transactables created by the currently logged in user to
   #   which this user object is a collaborator
   def collaborator_transactables_for_current_user
     @source.transactables_collaborated.where(creator_id: @context['current_user'].try(:id))

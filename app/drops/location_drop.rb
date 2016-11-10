@@ -5,7 +5,7 @@ class LocationDrop < BaseDrop
   include GoogleMapsHelper
   include LocationsHelper
 
-  # @return [Location]
+  # @return [LocationDrop]
   attr_reader :location
 
   # @!method id
@@ -14,10 +14,9 @@ class LocationDrop < BaseDrop
   #   User friendly identifier of the location
   #   @return (see Location#slug)
   # @!method listings
-  #   Array of listings for this location
-  #   @return (see Location#listings)
+  #   @return [Array<Transactable>] Array of listings for this location
   # @!method lowest_price
-  #   @return (see Location#lowest_price)
+  #   @return [Transactable::PricingDrop] object corresponding to the lowest available pricing for this transactable
   # @!method name
   #   Name of this location
   #   @return (see Location#name)
@@ -36,8 +35,7 @@ class LocationDrop < BaseDrop
   #   Suburb name for this location
   #   @return (see Location#suburb)
   # @!method company
-  #   Company object for this location
-  #   @return (see Location#company)
+  #   @return [CompanyDrop] Company object for this location
   # @!method address
   #   Address for this location
   #   @return (see Location#address)
@@ -48,11 +46,9 @@ class LocationDrop < BaseDrop
   #   Longitude for this location
   #   @return (see Location#longitude)
   # @!method creator
-  #   User who created this location
-  #   @return (see Location#creator)
+  #   @return [UserDrop] User who created this location
   # @!method administrator
-  #   User who administers this location
-  #   @return (see Location#administrator)
+  #   @return [UserDrop] User who administers this location
   # @!method updated_at
   #   Last time when the location was updated
   #   @return [ActiveSupport::TimeWithZone]
@@ -66,11 +62,9 @@ class LocationDrop < BaseDrop
   #   State for this location
   #   @return (see Location#state)
   # @!method lowest_full_price
-  #   @return (see Location#lowest_full_price)
+  #   @return [Transactable::PricingDrop] lowest price for this location (i.e. including service fees and mandatory additional charges)
   # @!method to_key
   #   @return [Array<Integer>] array of key attributes for the object
-  # @!method model_name
-  #   @return [ActiveModel::Name] model name object
   delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, :creator, :administrator, :updated_at, :postcode, :country, :state, :lowest_full_price, :to_key, :model_name, to: :location
 
   def initialize(location)

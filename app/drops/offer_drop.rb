@@ -1,6 +1,6 @@
 class OfferDrop < OrderDrop
 
-  # @return [Offer]
+  # @return [OfferDrop]
   attr_reader :offer
 
   def initialize(offer)

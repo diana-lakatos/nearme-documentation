@@ -1,6 +1,6 @@
 class InstanceDrop < BaseDrop
   
-  # @return [Instance]
+  # @return [InstanceDrop]
   attr_reader :instance
 
   # @!method name

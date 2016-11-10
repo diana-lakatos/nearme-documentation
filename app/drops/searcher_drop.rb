@@ -14,7 +14,7 @@ class SearcherDrop < BaseDrop
   # @!method category_ids
   #   @return [Array<String,Integer>] array of searched for categories
   # @!method categories
-  #   @return [Array<Category>] array of searched for categories
+  #   @return [Array<CategoryDrop>] array of searched for categories
   # @!method category_options
   #   @return [Array<Array<(Integer, String)>>] array of the form [[category_id, category_name_taken_from_translations], ...]
   # @!method keyword
@@ -30,15 +30,15 @@ class SearcherDrop < BaseDrop
   # @!method current_max_price
   #   @return [Boolean] whether a maximum price was requested for the query
   # @!method transactable_type
-  #   @return [TransactableTypeDecorator] transactable type object associated with the query
+  #   @return [TransactableTypeDrop] transactable type object associated with the query
   # @!method max_price
   #   @return [Float] maximum price requested for the query
   # @!method result_count
   #   @return [Integer] total number of results returned
   # @!method filterable_custom_attributes
-  #   @return [Array<CustomAttributes::CustomAttribute>] custom attributes that this query can be filtered by
+  #   @return [Array<CustomAttributeDrop>] custom attributes that this query can be filtered by
   # @!method searchable_categories
-  #   @return [Array<Category>] categories that this search can be filtered by
+  #   @return [Array<CategoryDrop>] categories that this search can be filtered by
   delegate :query, :input_value, :category_ids, :categories, :category_options,
            :keyword, :located, :offset, :min_price, :current_min_price, :current_max_price,
            :transactable_type, :max_price, :result_count, :located, :filterable_custom_attributes,
@@ -48,6 +48,8 @@ class SearcherDrop < BaseDrop
   #   @return [Integer] the number of the next page
   # @!method previous_page
   #   @return [Integer] the number of the previous page
+  # @!method total_pages
+  #   @return [Integer] total number of pages
   # @!method total_entries
   #   @return [Integer] total number of results
   # @!method offset

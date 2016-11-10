@@ -1,6 +1,6 @@
 class ReviewDrop < BaseDrop
 
-  # @return [Review]
+  # @return [ReviewDrop]
   attr_reader :review
 
   # @!method reviewable

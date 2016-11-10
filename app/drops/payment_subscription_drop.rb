@@ -1,6 +1,6 @@
 class PaymentSubscriptionDrop < BaseDrop
 
-  # @return [PaymentSubscription]
+  # @return [PaymentSubscriptionDrop]
   attr_reader :payment_subscription
 
   # @!method id

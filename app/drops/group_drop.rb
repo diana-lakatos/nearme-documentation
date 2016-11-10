@@ -1,5 +1,5 @@
 class GroupDrop < BaseDrop
-  # @return [Group]
+  # @return [GroupDrop]
   attr_reader :group
 
   # @!method name

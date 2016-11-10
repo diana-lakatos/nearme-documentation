@@ -1,7 +1,7 @@
 class LineItemDrop < BaseDrop
   include CurrencyHelper
 
-  # @return [LineItem]
+  # @return [LineItemDrop]
   attr_reader :line_item
 
   # @!method name
@@ -11,7 +11,7 @@ class LineItemDrop < BaseDrop
   #   Quantity being ordered
   #   @return (see LineItem#quantity)
   # @!method unit_price
-  #   @return [Money] unit price
+  #   @return [MoneyDrop] unit price
   # @!method created_at
   #   @return [ActiveSupport::TimeWithZone] when the line item was created
   delegate :name, :quantity, :unit_price, :created_at, to: :line_item

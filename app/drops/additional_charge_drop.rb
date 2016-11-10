@@ -1,5 +1,5 @@
 class AdditionalChargeDrop < BaseDrop
-  # @return [AdditionalCharge]
+  # @return [AdditionalChargeDrop]
   attr_reader :additional_charge
 
   # @!method name
@@ -7,7 +7,7 @@ class AdditionalChargeDrop < BaseDrop
   #   @return (see AdditionalCharge#name)
   # @!method amount
   #   amount of additional charge
-  #   @return [Money]
+  #   @return [MoneyDrop]
   # @!method additional_charge_type_id
   #   additional_charge_type_id
   #   @return [Integer]

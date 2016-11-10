@@ -1,6 +1,6 @@
 class ScheduleExceptionRuleDrop < BaseDrop
   
-  # @return [ScheduleExceptionRule]
+  # @return [ScheduleExceptionRuleDrop]
   attr_reader :schedule_exception_rule
 
   # @!method label

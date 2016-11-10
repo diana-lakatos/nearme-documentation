@@ -1,14 +1,13 @@
 class CompanyDrop < BaseDrop
   include MoneyRails::ActionViewExtension
 
-  # @return [Company]
+  # @return [CompanyDrop]
   attr_reader :company
 
   # @!method created_payment_transfers
   #   @return [Array<PaymentTransfer>] array of payment transfer objects
   # @!method creator
-  #   creator user object
-  #   @return (see Company#creator)
+  #   @return [UserDrop] creator user object
   # @!method url
   #   url address of company
   #   @return (see Company#url)
@@ -19,8 +18,7 @@ class CompanyDrop < BaseDrop
   #   company name as string
   #   @return (see Company#name)
   # @!method payments_mailing_address
-  #   the payments mailing address as an Address object
-  #   @return (see Company#payments_mailing_address)
+  #   @return [AddressDrop] the payments mailing address as an Address object
   delegate :created_payment_transfers, :creator, :url, :description, :company_address,
            :name, :payments_mailing_address, :merchant_accounts, to: :company
 

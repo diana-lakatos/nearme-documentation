@@ -1,6 +1,6 @@
 class ReservationPeriodDrop < BaseDrop
 
-  # @return [ReservationPeriod]
+  # @return [ReservationPeriodDrop]
   attr_reader :reservation_period
 
   # @!method description

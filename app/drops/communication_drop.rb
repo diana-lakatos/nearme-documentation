@@ -3,7 +3,6 @@ class CommunicationDrop < BaseDrop
   #   Whether this communication type is verified
   #   @return (see Communication#verified)
   # @!method user
-  #   Owner of this communication type
-  #   @return (see Communication#user)
+  #   @return [UserDrop] Owner of this communication type
   delegate :verified, :user, to: :source
 end

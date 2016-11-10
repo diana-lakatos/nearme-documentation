@@ -3,14 +3,11 @@ class DataSourceContentDrop < BaseDrop
   #   id of data_source_content as integer
   #   @return [Integer]
   # @!method json_content
-  #   data for the object in JSON format
-  #   @return (see DataSourceContent#json_content)
+  #   @return [String] data for the object in JSON format
   # @!method content
-  #   content for the object
-  #   @return (see DataSourceContent#content)
+  #   @return [Hash] content for the object
   # @!method external_id
-  #   external id for the object
-  #   @return (see DataSourceContent#external_id)
+  #   @return [String] external id for the object
   # @!method externally_created_at
   #   @return (see DataSourceContent#externally_created_at)
   delegate :id, :json_content, :content, :external_id, :externally_created_at, to: :source

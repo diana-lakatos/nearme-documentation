@@ -12,7 +12,7 @@ class MoneyDrop < BaseDrop
   #   @return [BigDecimal] assuming using a currency using dollars: 
   #     returns the value of the money in dollars, instead of in the fractional unit cents.
   # @!method to_money
-  #   @return [Money] conversion to self
+  #   @return [MoneyDrop] conversion to self
   # @!method to_i
   #   @return [Integer] the amount of money as an integer
   # @!method to_f

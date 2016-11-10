@@ -1,5 +1,5 @@
 class DataUploadDrop < BaseDrop
-  # @return [DataUpload]
+  # @return [DataUploadDrop]
   attr_reader :data_upload
 
   # @!method csv_file_identifier
@@ -8,8 +8,7 @@ class DataUploadDrop < BaseDrop
   #   parsing result log
   #   @return (see DataUpload#parsing_result_log)
   # @!method uploader
-  #   user uploading the file as a user object
-  #   @return (see DataUpload#uploader)
+  #   @return [UserDrop] user uploading the file as a user object
   delegate :csv_file_identifier, :parsing_result_log, :uploader, to: :data_upload
 
   # @!method bookable_noun

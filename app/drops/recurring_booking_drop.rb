@@ -1,6 +1,6 @@
 class RecurringBookingDrop < OrderDrop
 
-  # @return [RecurringBooking]
+  # @return [RecurringBookingDrop]
   attr_reader :recurring_booking
 
   # @!method quantity
@@ -12,8 +12,7 @@ class RecurringBookingDrop < OrderDrop
   #   Rejection reason for this recurring booking order if rejected
   #   @return (see Order#rejection_reason)
   # @!method owner
-  #   User owner of the order
-  #   @return (see Order#owner)
+  #   @return [UserDrop] User owner of the order
   # @!method has_service_fee?
   #   @return [Boolean] whether the order includes a service fee
   # @!method with_delivery?
@@ -34,8 +33,7 @@ class RecurringBookingDrop < OrderDrop
            to: :recurring_booking
 
   # @!method transactable_type
-  #   Transactable type to which this transactable belongs
-  #   @return (see Transactable#transactable_type)
+  #   @return [TransactableTypeDrop] Transactable type to which this transactable belongs
   # @!method action_hourly_booking?
   #   True if hourly booking is available for this transactable
   #   @return (see Transactable#action_hourly_booking)

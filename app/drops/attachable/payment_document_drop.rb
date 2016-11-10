@@ -1,5 +1,5 @@
 class Attachable::PaymentDocumentDrop < BaseDrop
-  # @return [Attachable::PaymentDocument]
+  # @return [Attachable::PaymentDocumentDrop]
   attr_reader :payment_document
 
   # @!method file

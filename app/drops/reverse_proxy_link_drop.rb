@@ -1,6 +1,6 @@
 class ReverseProxyLinkDrop < BaseDrop
 
-  # @return [ReverseProxyLink]
+  # @return [ReverseProxyLinkDrop]
   attr_reader :source
 
   # @!method id

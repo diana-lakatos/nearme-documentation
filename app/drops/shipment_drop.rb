@@ -1,6 +1,6 @@
 class ShipmentDrop < BaseDrop
   
-  # @return [Shipment]
+  # @return [ShipmentDrop]
   attr_reader :shipment
 
   # @!method tracking_url_provider
@@ -16,8 +16,7 @@ class ShipmentDrop < BaseDrop
   #   Shipment direction (inbound / outbound)
   #   @return (see Shipment#direction)
   # @!method shipping_rule
-  #   ShippingRule object associated with the shipment
-  #   @return (see Shipment#shipping_rule)
+  #   @return [ShippingRuleDrop] ShippingRule object associated with the shipment
   delegate :tracking_url_provider, :tracking_number, :label_url, :direction, :shipping_rule, to: :shipment
 
   def initialize(shipment)

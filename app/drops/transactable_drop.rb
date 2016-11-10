@@ -9,17 +9,14 @@ class TransactableDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier for this transactable
   # @!method location_id
-  #   Numeric identifier for the location associated with this transactable
-  #   @return (see Transactable#location_id)
+  #   @return [Integer] Numeric identifier for the location associated with this transactable
   # @!method name
   #   Name of the transactable
   #   @return (see Transactable#name)
   # @!method location
-  #   Location object associated with the transactable
-  #   @return (see Transactable#location)
+  #   @return [LocationDrop] Location object associated with the transactable
   # @!method transactable_type
-  #   Transactable type to which this transactable belongs
-  #   @return (see Transactable#transactable_type)
+  #   @return [TransactableTypeDrop] Transactable type to which this transactable belongs
   # @!method description
   #   Description for the transactable
   #   @return (see Transactable#description)
@@ -28,36 +25,31 @@ class TransactableDrop < BaseDrop
   #   Whether hourly booking is possible for this transactable
   #   @return (see Transactable#action_hourly_booking)
   # @!method creator
-  #   User who created the transactable
-  #   @return (see Transactable#creator)
+  #   @return [UserDrop] User who created the transactable
   # @!method creator_id
-  #   ID of the user who created the transactable
-  #   @return (see Transactable#creator_id)
+  #   @return [Integer] ID of the user who created the transactable
   # @!method administrator
-  #   Administrator user of the listing
-  #   @return (see Transactable#administrator)
+  #   @return [UserDrop] Administrator user of the listing
   # @!method last_booked_days
   #   @return (see Transactable#last_booked_days)
   # @!method lowest_price
-  #   @return (see Transactable#lowest_price)
+  #   @return [Transactable::PricingDrop] object corresponding to the lowest available pricing for this transactable
   # @!method company
-  #   Company associated with this transactable
-  #   @return (see Transactable#company)
+  #   @return [CompanyDrop] Company associated with this transactable
   # @!method properties
-  #   @return [CustomAttributes::CollectionProxy] custom properties for this transactable
+  #   @return [Hash] custom properties for this transactable
   # @!method quantity
   #   Quantity of bookable items for any given date
   #   @return (see Transactable#quantity)
   # @!method administrator_id
-  #   Numeric identifier for the administrator of this listing
-  #   @return (see Transactable#administrator_id)
+  #   @return [Integer] Numeric identifier for the administrator of this listing
   # @!method has_photos?
   #   @return (see Transactable#has_photos?)
   # @!method book_it_out_available?
-  #   @return (Transactable::Pricing#book_it_out_available?)
+  #   @return [Boolean] whether the "book it out" action is available for this listing
   # @!method action_type
   #   Action type available for this transactable
-  #   @return [Transactable::ActionType]
+  #   @return [Transactable::ActionTypeDrop]
   # @!method currency
   #   @return (see Transactable#currency)
   # @!method exclusive_price_available?
@@ -68,14 +60,12 @@ class TransactableDrop < BaseDrop
   #   Capacity for the transactable (e.g. '7 seats, 10 standing')
   #   @return (see Transactable#capacity)
   # @!method approval_requests
-  #   Approval requests for this transactable (if approval is required from the marketplace owner)
-  #   @return (see Transactable#approval_requests)
+  #   @return [Array<ApprovalRequestDrop>] Approval requests for this transactable (if approval is required from the marketplace owner)
   # @!method updated_at
   #   Last time when the transactable has been updated
   #   @return [ActiveSupport::TimeWithZone]
   # @!method attachments
-  #   Seller attachments for this transactable (documents available to purchasers/collaborators/etc.)
-  #   @return (see Transactable#attachments)
+  #   @return [Array<CkeditorAssetDrop>] Seller attachments for this transactable (documents available to purchasers/collaborators/etc.)
   # @!method express_checkout_payment?
   #   @return (see Transactable#express_checkout_payment?)
   # @!method overnight_booking?
@@ -83,7 +73,7 @@ class TransactableDrop < BaseDrop
   # @!method is_trusted?
   #   @return [Boolean] whether the object is trusted (approved ApprovalRequest objects for this object, creator, company)
   # @!method lowest_full_price
-  #   @return (see Transactable#lowest_full_price)
+  #   @return [Transactable::PricingDrop] lowest price for this location (i.e. including service fees and mandatory additional charges)
   # @!method slug
   #   URL friendly identifier for the transactable
   #   @return (see Transactable#slug)
@@ -95,14 +85,13 @@ class TransactableDrop < BaseDrop
   # @!method model_name
   #   @return [ActiveModel::Name] used for retrieving name related information
   # @!method customizations
-  #   Customizations for this transactable (allows extra customization through custom attributes)
-  #   @return (see Transactable#customizations)
+  #   @return [Array<CustomizationDrop>] Customizations for this transactable (allows extra customization through custom attributes)
   # @!method to_param
   #   @return [String] friendly id for the transactable
   # @!method hours_for_guest_to_confirm_payment
   #   @return [Integer] number of hours in which a guest can confirm payment
   # @!method availability_exceptions
-  #   @return (see Transactable::TimeBasedBooking#availability_exceptions)
+  #   @return [Array<ScheduleExceptionRuleDrop>] array of schedule exception rules for future dates
   # @!method action_free_booking?
   #   @return (see Transactable#action_free_booking?)
   # @!method average_rating
@@ -111,20 +100,15 @@ class TransactableDrop < BaseDrop
   # @!method time_based_booking?
   #   @return [Boolean] whether the time based booking action type is used for this transactable
   # @!method transactable_collaborators
-  #   Transactable collaborators list for this transactable
-  #   @return (see Transactable#transactable_collaborators)
+  #   @return [Array<TransactableCollaborator>] Transactable collaborators list for this transactable
   # @!method collaborating_users
-  #   Approved collaborating users for this transactable
-  #   @return (see Transactable#collaborating_users)
+  #   @return [Array<UserDrop>] Approved collaborating users for this transactable
   # @!method approved_transactable_collaborators
-  #   Approved TransactableCollaborator objects for this transactable
-  #   @return (see Transactable#approved_transactable_collaborators)
+  #   @return [Array<TransactableCollaboratorDrop>] Approved TransactableCollaborator objects for this transactable
   # @!method user_messages
-  #   User messages for this transactable (for discussion between clients and hosts)
-  #   @return (see Transactable#user_messages)
+  #   @return [Array<UserMessageDrop>] User messages for this transactable (for discussion between clients and hosts)
   # @!method line_item_orders
-  #   Orders containing this transactable object
-  #   @return (see Transactable#line_item_orders)
+  #   @return [Array<OrderDrop>] Orders containing this transactable object
   # @!method state
   #   State for the order (e.g. pending/completed/cancelled/in progress/etc.)
   #   @return (see Transactable#state)
@@ -135,10 +119,9 @@ class TransactableDrop < BaseDrop
   # @!method completed?
   #   @return [Boolean] whether the transactable is in the completed state
   # @!method transactable_type_id
-  #   Transactable type to which this object belongs
-  #   @return (see Transactable#transactable_type_id)
+  #   @return [Integer] Transactable type to which this object belongs
   # @!method tags
-  #   @return [Array<ActsAsTaggableOn::Tag>] array of tags that this transactable has been tagged with
+  #   @return [Array<TagDrop>] array of tags that this transactable has been tagged with
   # @todo Investigate/remove deposit_amount_cents
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :creator_id, :administrator, :last_booked_days,
            :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?, :action_type,
@@ -156,6 +139,8 @@ class TransactableDrop < BaseDrop
   #   @return [Float] the latitude of the location of this listing as a floating point number
   # @!method longitude
   #   @return [Float] the longitude of the location of this listing as a floating point number
+  # @!method address
+  #   @return [String] address as a string
   delegate :latitude, :longitude, :address, to: :location
 
   # @!method dashboard_url
@@ -485,7 +470,7 @@ class TransactableDrop < BaseDrop
     action_type.pricings.any? { |p| !p.is_free_booking? }
   end
 
-  # @return [TransactableCollaborator] transactable collaborator object initialized for this transactable
+  # @return [TransactableCollaboratorDrop] transactable collaborator object initialized for this transactable
   def new_project_collaborator
     transactable_collaborators.build
   end
@@ -527,32 +512,32 @@ class TransactableDrop < BaseDrop
     routes.new_transactable_user_message_path(@source)
   end
 
-  # @return [Array<Order>] confirmed, upcoming (not archived/expired) orders for this transactable
+  # @return [Array<OrderDrop>] confirmed, upcoming (not archived/expired) orders for this transactable
   def accepted_orders
     line_item_orders.upcoming.confirmed.uniq
   end
 
-  # @return [Order, nil] last confirmed, upcoming (not archived/expired) order for this transactable or nil if not present
+  # @return [OrderDrop, nil] last confirmed, upcoming (not archived/expired) order for this transactable or nil if not present
   def last_accepted_order
     accepted_orders.last
   end
 
-  # @return [Order, nil] first confirmed order for this transactable or nil if not present
+  # @return [OrderDrop, nil] first confirmed order for this transactable or nil if not present
   def first_accepted_order
     line_item_orders.confirmed.first
   end
 
-  # @return [Array<Order>] array of active orders (not in the inactive state) for this transactable sorted descendingly by creation date
+  # @return [Array<OrderDrop>] array of active orders (not in the inactive state) for this transactable sorted descendingly by creation date
   def orders
     line_item_orders.order(created_at: :desc).active.uniq
   end
 
-  # @return [Order, nil] first confirmed order for this transactable or nil if not present
+  # @return [OrderDrop, nil] first confirmed order for this transactable or nil if not present
   def confirmed_order
     line_item_orders.confirmed.first
   end
 
-  # @return [Array<UserMessage>] array of user messages (internal messaging system for discussion between clients and hosts)
+  # @return [Array<UserMessageDrop>] array of user messages (internal messaging system for discussion between clients and hosts)
   #   for this transactable and for which this user is a recipient or an author
   def transactable_user_messages
     return [] unless @context['current_user']

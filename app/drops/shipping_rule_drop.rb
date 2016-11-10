@@ -1,7 +1,7 @@
 # @todo Investigate for removal
 class ShippingRuleDrop < BaseDrop
 
-  # @return [ShippingRule]
+  # @return [ShippingRuleDrop]
   attr_reader :shipping_rule
 
   # @!method is_pickup
@@ -11,7 +11,7 @@ class ShippingRuleDrop < BaseDrop
   #   Name for the shipping rule
   #   @return (see ShippingRule#name)
   # @!method price
-  #   @return [Money] price for the shipping rule
+  #   @return [MoneyDrop] price for the shipping rule
   # @!method is_worldwide
   #   Whether it specifies a domestic or worldwide rule
   #   @return (see ShippingRule#is_worldwide)

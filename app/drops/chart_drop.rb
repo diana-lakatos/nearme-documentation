@@ -1,6 +1,7 @@
 class ChartDrop < BaseDrop
   # @!method totals_by_currency
-  #   @return (see ChartDecorator#totals_by_currency)
+  #   @return [Hash<String, MoneyDrop>] hash containing the currency as keys
+  #     and the sums for each currency as values
   delegate :totals_by_currency, to: :source
 
   # @return [String] string of chart values in JSON format

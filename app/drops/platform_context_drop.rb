@@ -11,8 +11,7 @@ class PlatformContextDrop < BaseDrop
   #   @return (see Instance#bookable_noun)
   #   @deprecated Use {TransactableTypeDrop#bookable_noun} instead
   # @!method pages
-  #   CMS pages for the current theme
-  #   @return (see Theme#pages)
+  #   @return [Array<PageDrop>] CMS pages for the current theme
   # @!method blog_url
   #   Blog URL for the current theme
   #   @return (see Theme#blog_url)
@@ -83,8 +82,7 @@ class PlatformContextDrop < BaseDrop
   # @!method bookable?
   #   @return (see Instance#bookable?)
   # @!method transactable_types
-  #   TransactableType objects defined for this instance
-  #   @return (see Instance#transactable_types)
+  #   @return [Array<TransactableTypeDrop>] TransactableType objects defined for this instance
   # @!method action_rfq?
   #   @return (see Instance#action_rfq?)
   # @!method bookable_nouns
@@ -94,7 +92,8 @@ class PlatformContextDrop < BaseDrop
   # @!method facebook_key
   #   @return (see PlatformContextDecorator#facebook_key)
   # @!method service_types
-  #   @return (see PlatformContextDecorator#service_types)
+  #   @return [Array<TransactableTypeDrop>] array of transactable types for this marketplace;
+  #     added for reverse compatibility
   # @!method wish_lists_icon_set
   #   What set of icons to use for wishlists
   #   @return (see Instance#wish_lists_icon_set)
@@ -103,10 +102,9 @@ class PlatformContextDrop < BaseDrop
   # @!method wish_lists_enabled?
   #   @return (see Instance#wish_lists_enabled)
   # @!method webhook_token
-  #   Webhook token as a string for this marketplace
-  #   @return (see Instance#webhook_token)
+  #   @return [String] Webhook token as a string for this marketplace
   # @!method instance
-  #   @return [Instance] instance object, the root object defining a marketplace
+  #   @return [InstanceDrop] instance object, the root object defining a marketplace
   # @!method enable_geo_localization
   #   Whether geo localization is enabled for this instance
   #   @return (see Instance#enable_geo_localization)
@@ -245,7 +243,7 @@ class PlatformContextDrop < BaseDrop
     Rails.env
   end
 
-  # @return [Array<UserBlogPost>] array of highlighted user blog posts
+  # @return [Array<UserBlogPostDrop>] array of highlighted user blog posts
   def highlighted_blog_posts
     # tmp solution until we have proper solution to fetch any data on any page
     @platform_context_decorator.instance.user_blog_posts.highlighted.by_date.limit(3)

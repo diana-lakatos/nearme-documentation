@@ -23,7 +23,7 @@ class WishListItemDrop < BaseDrop
     polymorphic_wishlistable_path(@wishlistable)
   end
 
-  # @return [Strinig] type (downcased class name) of the wishlisted object
+  # @return [String] type (downcased class name) of the wishlisted object
   def wishlistable_type
     @wishlistable.class.name.downcase
   end
@@ -53,7 +53,7 @@ class WishListItemDrop < BaseDrop
     end
   end
 
-  # @return [Location, nil] location of the wishlistable
+  # @return [LocationDrop, nil] location of the wishlistable
   def wishlistable_location
     @wishlistable.try(:location)
   end

@@ -2,7 +2,7 @@
 class ReservationDrop < OrderDrop
   include ReservationsHelper
 
-  # @return [Reservation]
+  # @return [ReservationDrop]
   attr_reader :reservation
 
   # @!method id
@@ -17,20 +17,18 @@ class ReservationDrop < OrderDrop
   # @!method total_price
   #   @return (see ReservationDecorator#total_price)
   # @!method transactable
-  #   Transactable object associated with this order
-  #   @return (see Order#transactable)
+  #   @return [TransactableDrop] Transactable object associated with this order
   # @!method state_to_string
   #   @return (see ReservationDecorator#state_to_string)
   # @!method location
-  #   @return [Location] location to which the associated transactable belongs
+  #   @return [LocationDrop] location to which the associated transactable belongs
   # @!method paid
   #   @return (see ReservationDecorator#paid)
   # @!method rejection_reason
   #   Rejection reason for this reservation if present
   #   @return (see Order#rejection_reason)
   # @!method owner
-  #   User owner of the reservation
-  #   @return (see Order#owner)
+  #   @return [UserDrop] User owner of the reservation
   # @!method action_hourly_booking?
   #   @return (see Reservation#action_hourly_booking?)
   # @!method guest_notes
@@ -42,20 +40,19 @@ class ReservationDrop < OrderDrop
   # @!method total_units_text
   #   @return (see ReservationDecorator#total_units_text)
   # @!method unit_price
-  #   @return [Money] unit price for the reservation
+  #   @return [MoneyDrop] unit price for the reservation
   # @!method has_service_fee?
   #   @return [Boolean] whether the reservation includes a service fee
   # @!method transactable_line_items
-  #   @return [Array<LineItem::Transactable>] array of line items for this order (reservation)
+  #   @return [Array<LineItemDrop>] array of line items for this order (reservation)
   # @!method properties
-  #   @return [CustomAttributes::CollectionProxy] collection of properties for this reservation
+  #   @return [Hash] collection of properties for this reservation
   # @!method long_dates
   #   @return (see ReservationDecorator#long_dates)
   # @!method address
-  #   @return [Address] address object associated with this order (reservation)
+  #   @return [AddressDrop] address object associated with this order (reservation)
   # @!method periods
-  #   Reservation periods associated with this order
-  #   @return (see Order#periods)
+  #   @return [Array<ReservationPeriod>] Reservation periods associated with this order
   # @!method comment
   #   Comment associated with this order
   #   @return (see Order#comment)
@@ -91,12 +88,12 @@ class ReservationDrop < OrderDrop
     @source = @order = @reservation = reservation.decorate
   end
 
-  # @return [Array<LineItem::Additional>] array of additional charges for this reservation
+  # @return [Array<LineItemDrop>] array of additional charges for this reservation
   def additional_charges
     @reservation.additional_line_items
   end
 
-  # @return [TransactableType] the transactable type for which this reservation has been made
+  # @return [TransactableTypeDrop] the transactable type for which this reservation has been made
   def transactable_type
     @transactable_type ||= (@reservation.transactable || Transactable.with_deleted.find(@reservation.transactable_id)).transactable_type
   end
@@ -265,7 +262,7 @@ class ReservationDrop < OrderDrop
     routes.new_reservation_user_message_path(@reservation)
   end
 
-  # @return [User] owner of the reservation (buyer) including deleted ones
+  # @return [UserDrop] owner of the reservation (buyer) including deleted ones
   def owner_including_deleted
     User.unscoped { @reservation.owner }
   end

@@ -1,17 +1,14 @@
 class TagDrop < BaseDrop
 
-  # @return [ActsAsTaggableOn::Tag]
+  # @return [TagDrop]
   attr_reader :tag
 
   # @!method name
-  #   Name of the tag
-  #   @return (see Tag#name)
+  #   @return [String] Name of the tag
   # @!method slug
-  #   URL-friendly name for the tag
-  #   @return (see Tag#slug)
+  #   @return [String] URL-friendly name for the tag
   # @!method taggings_count
-  #   Number of times this tag was tagged for this Marketplace
-  #   @return (see Tag#taggings_count)
+  #   @return [Integer] Number of times this tag was tagged for this Marketplace
   delegate :name, :slug, :taggings_count, to: :tag
 
   def initialize(tag)

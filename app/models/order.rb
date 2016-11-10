@@ -440,7 +440,7 @@ class Order < ActiveRecord::Base
     steps.join('|')
   end
 
-  # @return (see Transactable#confirm_reservations?) whether reservations need to be confirmed first
+  # @return [Boolean] whether reservations need to be confirmed first
   def confirm_reservations?
     transactable.confirm_reservations?
   end

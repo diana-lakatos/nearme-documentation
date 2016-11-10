@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 class UserBlogPostDrop < BaseDrop
 
-  # @return [UserBlogPost]
+  # @return [UserBlogPostDrop]
   attr_reader :blog_post
 
   # @!method title
   #   Post's title
   #   @return (see UserBlogPost#title)
   # @!method previous_blog_post
-  #   @return (see UserBlogPost#previous_blog_post)
+  #   @return [UserBlogPostDrop] the previously published user blog post
   # @!method next_blog_post
-  #   @return (see UserBlogPost#next_blog_post)
+  #   @return [UserBlogPostDrop] the next published user blog post
   # @!method author_biography
   #   Post author's biography
   #   @return (see UserBlogPost#author_biography)
@@ -18,8 +18,7 @@ class UserBlogPostDrop < BaseDrop
   #   Date when the post was published
   #   @return (see UserBlogPost#published_at)
   # @!method user
-  #   User author of the blog post
-  #   @return (see UserBlogPost#user)
+  #   @return [UserDrop] User author of the blog post
   delegate :title, :previous_blog_post, :next_blog_post, :author_biography, :published_at, :user, to: :blog_post
 
   def initialize(blog_post)

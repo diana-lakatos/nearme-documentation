@@ -1,15 +1,14 @@
 class CustomizationDrop < BaseDrop
-  # @return [Customization]
+  # @return [CustomizationDrop]
   attr_reader :customization
 
   # @!method id
   #   id of the customization
   #   @return [Integer]
   # @!method properties
-  #   array of properties for the customization
-  #   @return [CustomAttributes::CollectionProxy]
+  #   @return [Hash] array of properties for the customization
   # @!method custom_model_type
-  #   @return (see Customization#custom_model_type)
+  #   @return [CustomModelTypeDrop]
   delegate :id, :properties, :custom_model_type, to: :customization
 
   def initialize(customization)

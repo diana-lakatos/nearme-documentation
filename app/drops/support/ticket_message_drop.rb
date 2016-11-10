@@ -2,7 +2,7 @@ class Support::TicketMessageDrop < BaseDrop
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
 
-  # @return [Support::TicketMessage]
+  # @return [Support::TicketMessageDrop]
   attr_reader :message
 
   def initialize(message)
