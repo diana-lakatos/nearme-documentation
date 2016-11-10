@@ -3,6 +3,28 @@ require 'temporary_token_authenticatable'
 require 'payment_token_authenticatable'
 require 'devise/models/user_validatable'
 
+# Overwritten fix for using both modules: rememberable and timeoutable
+# http://stackoverflow.com/questions/5034846/devise-remember-me-and-sessions
+module Devise
+  module Models
+    module Timeoutable
+      # Checks whether the user session has expired based on configured time.
+      def timedout?(last_access)
+        return false if remember_exists_and_not_expired? || !last_access.present?
+
+        last_access <= self.class.timeout_in.ago
+      end
+
+      private
+
+      def remember_exists_and_not_expired?
+        return false unless respond_to?(:remember_expired?)
+        remember_created_at && !remember_expired?
+      end
+    end
+  end
+end
+
 Devise::TokenAuthenticatable.setup do |config|
   config.token_authentication_key = TemporaryTokenAuthenticatable::PARAMETER_NAME
 end

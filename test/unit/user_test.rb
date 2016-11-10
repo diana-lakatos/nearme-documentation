@@ -147,7 +147,7 @@ class UserTest < ActiveSupport::TestCase
     context 'when country name provided' do
       should 'have iso code from country name' do
         PlatformContext.current.instance.stubs(:skip_company?).returns(true)
-        FactoryGirl.create(:country_pl) unless Country.find_by_iso('PL')
+        FactoryGirl.create(:country_pl) unless Country.find_by(iso: 'PL')
         user = FactoryGirl.build(:user_without_country_name, country_name: 'Poland', current_address: nil)
         assert_equal 'PL', user.iso_country_code
       end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :custom_attribute, class: 'CustomAttributes::CustomAttribute' do
     sequence(:name) { |n| "Attribute #{n}" }
@@ -6,7 +7,9 @@ FactoryGirl.define do
     hint 'this is my hint'
 
     after(:create) do |attribute|
-      CustomAttributes::CustomAttribute.clear_cache(attribute.target_type, attribute.target_id) if attribute.target_type && attribute.target_id
+      if attribute.target_type && attribute.target_id
+        CustomAttributes::CustomAttribute.clear_cache(attribute.target_type, attribute.target_id)
+      end
       I18N_DNM_BACKEND.update_cache(PlatformContext.current.instance.id) if defined? I18N_DNM_BACKEND
     end
 
@@ -78,7 +81,7 @@ FactoryGirl.define do
       attribute_type 'string'
       factory :required_user_custom_attribute do
         after(:build) do |attribute|
-          attribute.custom_validators.build(required: '1', field_name: attribute.name)
+          attribute.custom_validators.build(required: '1', field_name: attribute.name, validation_only_on_update: true)
         end
       end
     end
