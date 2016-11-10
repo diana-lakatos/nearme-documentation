@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UserBlogPostDrop < BaseDrop
   attr_reader :blog_post
 
@@ -63,7 +64,7 @@ class UserBlogPostDrop < BaseDrop
 
   # full url for post page
   def post_url
-    routes.user_blog_post_show_url(user_id: @blog_post.user_id, id: @blog_post)
+    urlify(routes.user_blog_post_show_path(user_id: @blog_post.user_id, id: @blog_post))
   end
 
   # path for post page
