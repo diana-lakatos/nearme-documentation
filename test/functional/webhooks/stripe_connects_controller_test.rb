@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
@@ -7,7 +8,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
       Stripe::BalanceTransaction.stubs(:all).returns(transaction_balance)
       @company = FactoryGirl.create(:company)
       @payment_gateway = FactoryGirl.create(:stripe_connect_payment_gateway)
-      @merchant_account = FactoryGirl.create(:stripe_connect_merchant_account, payment_gateway: @payment_gateway, merchantable: @company)
+      @merchant_account = FactoryGirl.create(:stripe_connect_merchant_account, external_id: 'xyz', payment_gateway: @payment_gateway, merchantable: @company)
     end
 
     context '#webhook' do
@@ -62,7 +63,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
           Stripe::Event.stubs(:retrieve).returns(event_response(event_options))
 
           assert_difference ['@payment_gateway.payment_transfers.count', '@payment_gateway.webhooks.count'] do
-            post :webhook, id: event_response(event_options).id
+            post :webhook, id: event_response(event_options).id, user_id: @merchant_account.external_id
           end
 
           @payment_transfer = PaymentTransfer.last

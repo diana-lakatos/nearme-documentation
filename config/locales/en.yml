@@ -719,6 +719,7 @@ en:
         lessor_service_fees: "Lessor service fees"
         lessee_service_fees: "Lessee service fees"
         transfer_amount: "Transfer amount"
+        payment_gateway_fee: "PG fee"
         retry_possible: "Retry possible"
       payments:
         resource:
