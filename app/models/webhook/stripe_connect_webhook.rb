@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Webhook::StripeConnectWebhook < Webhook
   before_create :set_merchant_account
 
@@ -6,7 +7,6 @@ class Webhook::StripeConnectWebhook < Webhook
     transfer_created: ['transfer.created'],
     transfer_updated: ['transfer.paid', 'transfer.failed', 'transfer.updated']
   }.freeze
-
 
   def process!
     process_error('Webhook not found') && return if event.blank?
@@ -27,7 +27,7 @@ class Webhook::StripeConnectWebhook < Webhook
   end
 
   def event_handler
-    ALLOWED_WEBHOOKS.select {|k, v| v.include?(event.type) }.keys.first
+    ALLOWED_WEBHOOKS.select { |_k, v| v.include?(event.type) }.keys.first
   end
 
   def livemode?
@@ -65,7 +65,7 @@ class Webhook::StripeConnectWebhook < Webhook
 
   def merchant_account
     @merchant_account ||= super || payment_gateway.merchant_accounts.find_by!(
-      external_id: event.data.object.id
+      external_id: params[:user_id] || event.data.object.id
     )
   end
 
@@ -83,7 +83,8 @@ class Webhook::StripeConnectWebhook < Webhook
       company: company,
       payments: payments,
       payment_gateway_mode: payment_gateway.mode,
-      token: event.data.object.id
+      token: event.data.object.id,
+      merchant_account: merchant_account
     )
 
     update_transfer(payment_transfer, event.data.object.status)

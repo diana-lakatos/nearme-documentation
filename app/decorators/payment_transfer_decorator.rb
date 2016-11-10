@@ -1,9 +1,12 @@
+# frozen_string_literal: true
 class PaymentTransferDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
 
   def transfer_status
-    if failed?
+    if pending?
+      I18n.t('instance_admin.pending')
+    elsif failed?
       I18n.t('instance_admin.failed')
     elsif transferred?
       I18n.t('instance_admin.paid')
