@@ -92,7 +92,7 @@ module LiquidFilters
 
   # @return [String, nil] path to the first searchable listing for the location given as
   #   parameter; nil if no such listing can be found
-  # @param location [Location] location object whose first listing path is extracted
+  # @param location [LocationDrop] location object whose first listing path is extracted
   # @todo Investigate/remove unused _transactable_type parameter?
   def location_path(_transactable_type, location)
     return '' if location.blank?
@@ -103,7 +103,7 @@ module LiquidFilters
   #   for the object given as parameter (without cents, with currency included); does not include additional charges and
   #   service guest fee; for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
   #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
-  # @param object [Location, Listing] object whose price we want to display
+  # @param object [LocationDrop, TransactableDrop] object whose price we want to display
   # @param lgpricing_filters [Array<String>] array of pricing type filters (e.g. ["1_day", "1_hour"])
   #   usually passed from the search page
   def lowest_price_without_cents_with_currency(object, lgpricing_filters = [])
@@ -114,7 +114,7 @@ module LiquidFilters
   #   for the object given as parameter (without cents, with currency included); includes additional charges and service guest fee;
   #   for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
   #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
-  # @param object [Location, Listing] object whose price we want to display
+  # @param object [LocationDrop, TransactableDrop] object whose price we want to display
   # @param lgpricing_filters [Array<String>] array of pricing type filters (e.g. ["1_day", "1_hour"])
   #   usually passed from the search page
   def lowest_full_price_without_cents_with_currency(object, lgpricing_filters = [])
@@ -125,7 +125,7 @@ module LiquidFilters
   #   for the object given as parameter (with cents, with currency included); includes additional charges and service guest fee;
   #   for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
   #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
-  # @param object [Location, Listing] object whose price we want to display
+  # @param object [LocationDrop, TransactableDrop] object whose price we want to display
   # @param lgpricing_filters [Array<String>] array of pricing type filters (e.g. ["1_day", "1_hour"])
   #   usually passed from the search page
   def lowest_full_price_with_cents_with_currency(object, lgpricing_filters = [])
@@ -156,7 +156,7 @@ module LiquidFilters
   #   for the object given as parameter (with cents, with currency included); does not include additional charges and service guest fee;
   #   for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
   #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
-  # @param object [Location, Listing] object whose price we want to display
+  # @param object [LocationDrop, TransactableDrop] object whose price we want to display
   # @param lgpricing_filters [Array<String>] array of pricing type filters (e.g. ["1_day", "1_hour"])
   #   usually passed from the search page
   def lowest_price_with_cents_with_currency(object, lgpricing_filters = [])
@@ -175,8 +175,8 @@ module LiquidFilters
   #   If the friend knows the host of the listing the string 'User.name knows the host' will be added.
   #   If a mutual friend (followed user [2] by a user this user follows [1]) visited the listing then the string 
   #     'User[1].name knows User[2].name who worked here'
-  # @param listing [Transactable] Transactable object used in the generation of the resulting array
-  # @param current_user [User] User object used in the generation of the resulting array
+  # @param listing [TransactableDrop] Transactable object used in the generation of the resulting array
+  # @param current_user [UserDrop] User object used in the generation of the resulting array
   def connections_for(listing, current_user)
     return [] if current_user.nil? || current_user.friends.count.zero?
 
@@ -244,7 +244,7 @@ module LiquidFilters
   #   attribute the translation key is 'simple_form.labels.transactable.#!{property_name}';
   #   if it's a custom attribute, the translation key is 'transactable_type.#{transactable_type.name}.labels.#!{property_name}'
   # @param property [String] property name to be translated
-  # @param target_acting_as_set [TransactableType] transactable type that the property belongs to
+  # @param target_acting_as_set [TransactableTypeDrop] transactable type that the property belongs to
   def translate_property(property, target_acting_as_set)
     if Transactable::DEFAULT_ATTRIBUTES.include? property
       # These are the hard coded attributes that have their own column on the transactables table
@@ -320,7 +320,7 @@ module LiquidFilters
 
   # @return [String] sanitized version of the input string; uses a whitelist based approach for allowed elements
   #   and their attributes; the sanitization rules are not currently editable from the marketplace interface
-  # @param html [String] html string to be sanitized
+  # @param html [String] HTML string to be sanitized
   def custom_sanitize(html = '')
     return '' if html.blank?
 
@@ -336,27 +336,27 @@ module LiquidFilters
 
   # @return [String] sanitized version of the input string; uses a strict approach which means it will
   #   strip all HTML and leave only safe text behind
-  # @param html [String] html string to be sanitized
+  # @param html [String] HTML string to be sanitized
   def strip_tags(html = '')
     return '' if html.blank?
     @custom_sanitizer ||= CustomSanitizer.new
     @custom_sanitizer.strip_tags(html).html_safe
   end
 
-  # @return [String] replaces newlines in the input string with the <br /> html tag
-  # @param html [String] html string to be processed
+  # @return [String] replaces newlines in the input string with the <br /> HTML tag
+  # @param html [String] HTML string to be processed
   def nl2br(html = '')
     return '' if html.blank?
     html.gsub!("\r\n", '<br />')
     html
   end
 
-  # @return [String] html formatted pagination area generated for the input collection with the passed in options
+  # @return [String] HTML formatted pagination area generated for the input collection with the passed in options
   # @param collection [Array<Object>] array of objects for which we want to generate the pagination area
   # @param options [Hash{String => String}] hash of options for pagination; example:
   #   !{{ listings | pagination_links: param_name: 'services_page', renderer: 'LiquidStyledLinkRenderer' }} will
   #   render the pagination links for listings; services_page will be the name of the page parameters in the browser
-  #   and the LiquidStyledLinkRenderer renderer will be used to generate the output html
+  #   and the LiquidStyledLinkRenderer renderer will be used to generate the output HTML
   def pagination_links(collection, options = {})
     opts = {
       controller: @context.registers[:controller],
@@ -386,7 +386,7 @@ module LiquidFilters
     ActionController::Base.helpers.image_url(path_to_file)
   end
 
-  # @return [String] if the given url is supported, an html formatted string containing a video player (inside an iframe)
+  # @return [String] if the given url is supported, an HTML formatted string containing a video player (inside an iframe)
   #   which will play the video at the given url; otherwise an empty string is returned
   # @param url [String] url to a video on the internet
   def videoify(url = '')
@@ -433,10 +433,10 @@ module LiquidFilters
     link_to(tag.name, href, class: classes.join(' '))
   end
 
-  # Renders search_box with options
-  # tt_names - Transactable Type names separated by ','
-  # class_name - additional CSS class name
-  # inputs - what inputs should be displayed: geolocation, fulltext, categories, datepickers. Separated by ','
+  # @return [String] renders a form with search boxes for the specified transactable types and with the given options
+  # @param tt_names [String] Transactable Type names separated by ','
+  # @param class_name [String] additional CSS class name to be used for the search form
+  # @param inputs [String] what inputs should be displayed: geolocation, fulltext, categories, datepickers. Separated by ','
   def search_box_for(tt_names, class_name = '', inputs = '')
     names = tt_names.split(',').map(&:strip)
     tt = TransactableType.where(name: names) + InstanceProfileType.where(name: names)
@@ -454,9 +454,10 @@ module LiquidFilters
     end
   end
 
-  # Renders search_button with options
-  # tt_name - Transactable Type name
-  # class_name - additional CSS class name
+  # @return [String] renders a search button in a form for the given transactable type and with the given options
+  # @param tt_name [String] Transactable Type name
+  # @param class_name [String] additional CSS class name to be used for the search form containing the
+  #   search button
   def search_button_for(tt_name, class_name = '')
     if tt = TransactableType.find_by(name: tt_name.strip) || tt = InstanceProfileType.find_by(name: tt_name.strip)
       @context.registers[:action_view].render 'home/search_button_tag.html',
@@ -467,120 +468,201 @@ module LiquidFilters
     end
   end
 
-  # Returns url for url helper name and arguments
+  # @return [String] returns a url for the given url helper name and the given arguments; allows to generate
+  #   any url inside our platform; e.g. 'user_path' | generate_url: id: 1 generates /users/1
   def generate_url(url_name, *args)
     return "unknown route #{url_name}" unless BaseDrop::RoutesProxy.respond_to_missing?(url_name)
 
     BaseDrop::RoutesProxy.public_send(url_name, *args)
   end
 
-  # Changes text into datetime, for example today, 3 days ago etc.
+  # @return [Time] a time object created from parsing the string representation of time given as input
+  # @param time [String] a string representation of time for example 'today', '3 days ago' etc.
   def parse_time(time)
     Chronic.parse(time)
   end
 
-  # Make the text html_safe; mainly used for testing the
-  # sanitization in Liquid::Variable to make sure that
-  # html_safe text is not escaped
+  # @return [String] the input text marked as 'HTML safe'; this ensures that all HTML content will be output to the
+  #   page; otherwise, without this filter the text would be sanitized;
+  #   e.g. {{ @some_variable_with_html_contents | make_html_safe }}
+  # @param html [String] input string to mark as 'HTML safe'
   def make_html_safe(html = '')
     html.html_safe
   end
 
-  # Escape html; this is useful if you want to skip
-  # using the CustomSanitizer that is applied normally
+  # @return [String] input string HTML-escaped; this will return a string whose HTML tags will be visible in
+  #   the browser
+  # @param value [String] input string to be HTML-escaped
   def raw_escape_string(value)
     CGI.escapeHTML(value.to_s).html_safe
   end
 
+  # @return [Boolean] whether the user has the given object among his wishlisted items
+  # @param user [UserDrop] user object
+  # @param object [Object] any object; we look among the user's wishlisted items for this object
   def already_favorite(user, object)
     return false unless user.present?
     user.default_wish_list.items.where(wishlistable_id: object.id, wishlistable_type: object.class_name).exists?
   end
 
+  # @return [String] capitalizes all the words and replaces some characters in the string to create
+  #   a nicer looking title; it is meant for creating pretty output
+  # @param text [String] string to be processed
   def titleize(text)
     text.titleize
   end
 
+  # @return [String] a query string (e.g. "name=Dan&id=1") from a given Hash (e.g. { name: 'Dan', id: 1 })
+  # @param hash [Hash{Object => Object}] hash to be "querified"
   def querify(hash)
     hash.to_query
   end
 
+  # @return [Array<ReverseProxyLink>] array of ReverseProxyLink objects to be used on the path given as a parameter;
+  #   they define target destinations for the given path
+  # @param path [String] source path for the ReverseProxyLink objects
   def widget_links(path)
     return [] unless path.present?
     ReverseProxyLink.where(use_on_path: ::CGI.unescapeHTML(path.to_str))
   end
 
+  # @return [String] replaces special characters in a string so that it may be used as part of a 'pretty' URL;
+  #   the default separator used is '-'; e.g. 'John arrived' becomes 'john-arrived'
+  # @param text [String] input string to be 'parameterized'
+  # @param separator [String] string to be used as separator in the output string; default is '-'
   def parameterize(text, separator = '-')
     text.parameterize(separator)
   end
 
+  # @return [TransactableCollaborator] transactable collaborator object for the given transactable and user;
+  #   this object ties the collaborating user to the transactable
+  # @param user [UserDrop] collaborating User object
+  # @param transactable [TransactableDrop] Transactable object
   def find_collaborator(user, transactable)
     return false if user.try(:id).blank?
     transactable.transactable_collaborators.where(user: user.id).first
   end
 
+  # @return [Array<Integer>] array of ids of the TransactableCollaborator objects defining collaborations of the
+  #   user given as the user parameter, collaborations on Transactable objects (with the state pending, or in_progress
+  #   created by the user given as the current_user parameter
+  # @param current_user [UserDrop] user object
+  # @param user [UserDrop] user object
   def find_collaborators_for_user_projects(current_user, user)
     user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.with_state([:pending, :in_progress]).pluck(:id))
   end
 
+  # @return [Boolean] whether the given user is an approved transactable collaborator of the Transactable given as the parameter
+  # @param user [UserDrop] user object
+  # @param transactable [TransactableDrop] transactable object
   def is_approved_collaborator(user, transactable)
     return false if user.try(:id).blank?
     transactable.approved_transactable_collaborators.where(user: user.id).exists?
   end
 
-  # alternative is to create WillPaginate::CollectionDrop, however when I tried it,
-  # I could not iterate through collection. I tried adding all
-  # instance methods found in documentation but it did not work,
-  # so using this as a workaround. Probably one had to add all array's method as well
+  # @return [Integer] total number of entries for the paginated collection of items passed in
+  # @param will_paginate_collection [WillPaginate::Collection] paginated collection of items
   def total_entries(will_paginate_collection)
     will_paginate_collection.total_entries
   end
 
+  # @return [Array<Order>] array of order objects containing orders placed by the user given
+  #   as the first parameter for the transactable given as the second parameter
+  # @param user [UserDrop] transactable object
+  # @param transactable [TransactableDrop] transactable object
   def get_enquirer_orders(user, transactable)
     transactable.line_item_orders.where(user_id: user.id).order('created_at ASC').active
   end
 
+  # @return [Array<Order>] array of confirmed order objects containing orders placed by the 
+  # user given as the first parameter for the transactable given as the second parameter
+  # @param user [UserDrop] transactable object
+  # @param transactable [TransactableDrop] transactable object
   def get_enquirer_confirmed_orders(user, transactable)
     transactable.line_item_orders.where(user_id: user.id).confirmed.order('created_at ASC')
   end
 
+  # @todo: This method does not look right, all orders will have the company of the transactable;
+  #   also doesn't appear to be used
   def get_lister_orders(company, transactable)
     transactable.line_item_orders.where(company: company).order('created_at ASC')
   end
 
+  # @return [Array<DataSourceContent>] paginated array of DataSourceContent objects where the external_id
+  #   matches the one given as the parameter; the pagination is done using options passed in
+  #   as the second parameter
+  # @param external_id [Integer] we will search for DataSourceContent object matching this external_id
+  # @param options [Hash] options for paginating the results; only per_page will be employed
+  #   e.g. 12 | get_data_contents: per_page: 5
   def get_data_contents(external_id, options = {})
     data_source_contents = DataSourceContent.where('external_id like ?', external_id)
     data_source_contents.paginate(per_page: options[:per_page].presence || 10)
   end
 
+  # @return [Boolean] whether the element identified by the given key is visible according to the
+  #   rules defined by the hidden UI controls in the admin section of the marketplace
+  # @param key [String] key identifying a UI element e.g. 'dashboard/credit_cards'
   def is_visible(key)
     HiddenUiControls.find(key).visible?
   end
 
+  # @return [Boolean] whether the given string matches the given regular expression
+  # @param string [String] string we check against the regular expression
+  # @param regexp [String] string representing a regular expression pattern against which
+  #   we try to match the first parameter
   def matches(string, regexp)
     !!(string =~ Regexp.new(regexp))
   end
 
+  # @return [Integer] the ID of the PaymentGateway for which the credit card payment
+  #   method exists
   def get_payment_gateway_id(_str)
     PaymentGateway.with_credit_card.mode_scope.first.try(:id)
   end
 
+  # @return [Array<Object>] array of objects obtained from the original array of objects
+  #   (passed in as the object parameter) by calling the method 'method' on each object
+  #   in the original array
+  # @param object [Array<Object>] array of objects to be processed
+  # @param method [String] method name to be called on each of the objects in the passed
+  #   in array of objects
   def map(object, method)
     object.map(&method.to_sym)
   end
 
+  # @return [String] formatted representation of the date object; the formatted representation
+  #   will be based on what the format parameter specifies
+  # @param date [Date, Time, DateTime] date object
+  # @param format [String] string representing the desired output format
+  #   e.g. '%Y-%m-%d' will result in something like '2020-12-12'
   def strftime(date, format)
     date.strftime(format)
   end
 
+  # @return [Money] a Money object constructed with the given amount and currency
+  # @param amount [Float] currency amount
+  # @param currency [String] name of the currency
   def to_money(amount, currency)
     Money.new(amount, currency)
   end
 
+  # @return [Array<Ckeditor::Asset>] seller attachments tied to the given transactable object
+  #   and that are visible by the given user
+  # @param transactable_drop [TransactableDrop] transactable object
+  # @param user_drop [UserDrop] user object
   def attachments_visible_for(transactable_drop, user_drop)
     transactable_drop.source.attachments_visible_for(user_drop.source)
   end
 
+  # @return [Array<Ckeditor::Asset>] paginated array of Ckeditor::Asset objects matching the given access_level
+  #   and the options in the options hash
+  # @param access_level [String] can be all, purchasers, enquirers, collaborators
+  # @param options [Hash] options hash
+  #   * sort - sort by (created_at, name)
+  #   * direction - ordering direction (asc, desc)
+  #   * query - string to match against the file name or the title of the object
+  #   * per_page - number of items per page
+  #   * page - the page to display from the paginated array
   def get_ckeditor_assets(access_level, options = {})
     sort_option = %w(created_at name).detect { |valid_key| options['sort'] == valid_key } || 'created_at'
     sort_direction = %w(asc desc).detect { |valid_key| options['direction'] == valid_key } || 'desc'
