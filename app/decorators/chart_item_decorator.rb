@@ -13,8 +13,6 @@ class ChartItemDecorator < Draper::Decorator
       object.listings_count.to_i
     when Order
       1
-    when Offer
-      1
     end
   end
 

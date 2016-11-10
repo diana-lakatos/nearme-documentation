@@ -14,7 +14,7 @@
         .input-container.col-xs-4
           = category.name
         .input-container.col-xs-4
-          = category.category_linkings.map {|cl| cl.category_linkable.try(:name) }.join(', ')
+          = category.category_linkings.map {|cl| cl.category_linkable.try(:name) }.compact.join(', ')
         .input-container.col-xs-4
           .pull-right
             = link_to t('instance_admin.edit'),  edit_instance_admin_manage_category_path(category)

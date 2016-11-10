@@ -135,10 +135,6 @@ class OrderDrop < BaseDrop
     routes.confirm_dashboard_company_orders_received_path(order)
   end
 
-  def complete_path
-    routes.complete_dashboard_company_orders_received_path(order)
-  end
-
   def offer_enquirer_cancel_path
     routes.cancel_dashboard_orders_path(order)
   end
@@ -165,7 +161,7 @@ class OrderDrop < BaseDrop
   end
 
   def is_draft?
-    @order.draft_at.present? && @order.state == 'inactive'
+    @order.draft_at.present? && @order.inactive?
   end
 
   private

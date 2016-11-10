@@ -1,7 +1,7 @@
 class TransactableCollaboratorsController < ApplicationController
   layout :dashboard_or_community_layout
 
-  before_filter :find_transactable, except: [:create]
+  before_action :find_transactable, except: [:create]
   before_action :authenticate_user!
 
   def create
@@ -9,10 +9,9 @@ class TransactableCollaboratorsController < ApplicationController
     @transactable.transactable_collaborators.create(user: current_user, approved_by_user_at: Time.now)
     @collaborators_count = @transactable.reload.transactable_collaborators.approved.count
 
-    html = render_to_string('create', layout: false)
     respond_to do |format|
       format.js { render :collaborators_button }
-      format.json { render json: { html: html }, status: 200 }
+      format.json { render json: { html: render_to_string('create', layout: false) }, status: 200 }
     end
   end
 

@@ -425,7 +425,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def redirect_from_default
     return if current_user.has_default_profile?
-    redirect_to(edit_dashboard_seller_path) && return if current_user.has_seller_profile?
-    redirect_to(edit_dashboard_buyer_path) && return if current_user.has_buyer_profile?
+    return redirect_to(edit_dashboard_seller_path) if current_user.has_seller_profile?
+    return redirect_to(edit_dashboard_buyer_path) if current_user.has_buyer_profile?
   end
 end
