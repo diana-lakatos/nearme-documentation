@@ -518,7 +518,7 @@ module LiquidFilters
     hash.to_query
   end
 
-  # @return [Array<ReverseProxyLink>] array of ReverseProxyLink objects to be used on the path given as a parameter;
+  # @return [Array<ReverseProxyLinkDrop>] array of ReverseProxyLink objects to be used on the path given as a parameter;
   #   they define target destinations for the given path
   # @param path [String] source path for the ReverseProxyLink objects
   def widget_links(path)
@@ -534,7 +534,7 @@ module LiquidFilters
     text.parameterize(separator)
   end
 
-  # @return [TransactableCollaborator] transactable collaborator object for the given transactable and user;
+  # @return [TransactableCollaboratorDrop] transactable collaborator object for the given transactable and user;
   #   this object ties the collaborating user to the transactable
   # @param user [UserDrop] collaborating User object
   # @param transactable [TransactableDrop] Transactable object
@@ -566,7 +566,7 @@ module LiquidFilters
     will_paginate_collection.total_entries
   end
 
-  # @return [Array<Order>] array of order objects containing orders placed by the user given
+  # @return [Array<OrderDrop>] array of order objects containing orders placed by the user given
   #   as the first parameter for the transactable given as the second parameter
   # @param user [UserDrop] transactable object
   # @param transactable [TransactableDrop] transactable object
@@ -574,7 +574,7 @@ module LiquidFilters
     transactable.line_item_orders.where(user_id: user.id).order('created_at ASC').active
   end
 
-  # @return [Array<Order>] array of confirmed order objects containing orders placed by the 
+  # @return [Array<OrderDrop>] array of confirmed order objects containing orders placed by the 
   # user given as the first parameter for the transactable given as the second parameter
   # @param user [UserDrop] transactable object
   # @param transactable [TransactableDrop] transactable object
@@ -582,13 +582,11 @@ module LiquidFilters
     transactable.line_item_orders.where(user_id: user.id).confirmed.order('created_at ASC')
   end
 
-  # @todo: This method does not look right, all orders will have the company of the transactable;
-  #   also doesn't appear to be used
   def get_lister_orders(company, transactable)
     transactable.line_item_orders.where(company: company).order('created_at ASC')
   end
 
-  # @return [Array<DataSourceContent>] paginated array of DataSourceContent objects where the external_id
+  # @return [Array<DataSourceContentDrop>] paginated array of DataSourceContent objects where the external_id
   #   matches the one given as the parameter; the pagination is done using options passed in
   #   as the second parameter
   # @param external_id [Integer] we will search for DataSourceContent object matching this external_id
@@ -639,14 +637,14 @@ module LiquidFilters
     date.strftime(format)
   end
 
-  # @return [Money] a Money object constructed with the given amount and currency
+  # @return [MoneyDrop] a Money object constructed with the given amount and currency
   # @param amount [Float] currency amount
   # @param currency [String] name of the currency
   def to_money(amount, currency)
     Money.new(amount, currency)
   end
 
-  # @return [Array<Ckeditor::Asset>] seller attachments tied to the given transactable object
+  # @return [Array<CkeditorAssetDrop>] seller attachments tied to the given transactable object
   #   and that are visible by the given user
   # @param transactable_drop [TransactableDrop] transactable object
   # @param user_drop [UserDrop] user object
@@ -654,7 +652,7 @@ module LiquidFilters
     transactable_drop.source.attachments_visible_for(user_drop.source)
   end
 
-  # @return [Array<Ckeditor::Asset>] paginated array of Ckeditor::Asset objects matching the given access_level
+  # @return [Array<CkeditorAssetDrop>] paginated array of Ckeditor::Asset objects matching the given access_level
   #   and the options in the options hash
   # @param access_level [String] can be all, purchasers, enquirers, collaborators
   # @param options [Hash] options hash
