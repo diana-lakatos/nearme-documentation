@@ -1,15 +1,16 @@
 class Webhook::StripeConnectWebhook < Webhook
   before_create :set_merchant_account
 
-  ALLOWED_WEBHOOKS = [
-    'account.updated',
-    'transfer.updated',
-    'transfer.created'
-  ].freeze
+  ALLOWED_WEBHOOKS = {
+    account_updated: ['account.updated'],
+    transfer_created: ['transfer.created'],
+    transfer_updated: ['transfer.paid', 'transfer.failed', 'transfer.updated']
+  }.freeze
+
 
   def process!
     process_error('Webhook not found') && return if event.blank?
-    process_error("Webhook type #{event.type} not allowed") && return unless ALLOWED_WEBHOOKS.include?(event.type)
+    process_error("Webhook type #{event.type} not allowed") && return unless ALLOWED_WEBHOOKS.values.flatten.include?(event.type)
     process_error('Mode mismatch') && return  if payment_gateway_mode != payment_gateway.mode
 
     increment!(:retry_count)
@@ -26,7 +27,7 @@ class Webhook::StripeConnectWebhook < Webhook
   end
 
   def event_handler
-    event.type.parameterize.underscore
+    ALLOWED_WEBHOOKS.select {|k, v| v.include?(event.type) }.keys.first
   end
 
   def livemode?
@@ -72,14 +73,6 @@ class Webhook::StripeConnectWebhook < Webhook
     update_transfer(params_transfer, event.data.object.status)
   end
 
-  def update_transfer(transfer, transfer_state)
-    if transfer_state == 'paid'
-      transfer.payout_attempts.last.payout_successful(params)
-    elsif %w(canceled failed).include?(transfer_state)
-      transfer.payout_attempts.last.payout_failed(params)
-    end
-  end
-
   def transfer_created
     return if transfer_scope.any?
     return if (payments = find_transfer_payments).blank?
@@ -94,6 +87,14 @@ class Webhook::StripeConnectWebhook < Webhook
     )
 
     update_transfer(payment_transfer, event.data.object.status)
+  end
+
+  def update_transfer(transfer, transfer_state)
+    if transfer_state == 'paid'
+      transfer.payout_attempts.last.payout_successful(params)
+    elsif %w(canceled failed).include?(transfer_state)
+      transfer.payout_attempts.last.payout_failed(params)
+    end
   end
 
   def find_transfer_payments
