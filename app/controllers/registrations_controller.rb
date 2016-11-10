@@ -387,7 +387,7 @@ class RegistrationsController < Devise::RegistrationsController
                  else
                    []
                            end
-    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(*arguments) }
+    devise_parameter_sanitizer.permit(:sign_up, keys: [arguments])
   end
 
   def user_params
