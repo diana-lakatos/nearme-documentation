@@ -1,11 +1,12 @@
 - unless (['locations', 'products'].any? { |w| params[:controller].try(:include?, w) })
-  - s_name = defined?(site_name) ? site_name : platform_context.site_name
-  - c_url = defined?(original_url) ? original_url : request.original_url
-  - desc = defined?(description) ? description : platform_context.description
-  - s_title = defined?(site_title) ? site_title : title_tag
-  - s_image_url = defined?(site_image_url) ? site_image_url : platform_context.theme.hero_image.url
+  - s_name = content_for(:social_site_name).to_s.strip.presence || platform_context.site_name
+  - c_url =  content_for(:social_original_url).to_s.strip.presence || request.original_url
+  - desc = content_for(:social_description).to_s.strip.presence || platform_context.description
+  - s_title = content_for(:social_site_title).to_s.strip.presence || title_tag
+  - s_image_url = content_for(:social_site_image_url).to_s.strip.presence || platform_context.theme.hero_image.url
 
   - local_variables = { site_name: s_name, current_url: c_url, description: desc, site_title: s_title,  site_image_url: s_image_url }
+  - local_variables.each { |k,v| local_variables[k] = v.to_s.strip }
   - local_variables.each { |k,v| v.force_encoding("UTF-8") }
 
   = render partial: 'social/facebook', locals: local_variables rescue '' # trying to silent encoding issue...
