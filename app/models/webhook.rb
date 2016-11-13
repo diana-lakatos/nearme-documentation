@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Webhook < ActiveRecord::Base
   include Encryptable
 
@@ -25,17 +26,23 @@ class Webhook < ActiveRecord::Base
     YAML.load(response || '') || {}
   end
 
+  def show_event
+    event.to_yaml.gsub(' ', '&nbsp;&nbsp;').gsub("\n", '<br/>')
+  rescue
+    "Can't fetch this event"
+  end
+
   def set_payment_gateway_mode
-    self.payment_gateway_mode = (livemode? ? 'live' : 'test')
+    self.payment_gateway_mode = (livemode? ? PaymentGateway::LIVE_MODE : PaymentGateway::TEST_MODE)
   end
 
   def webhook_type
     nil
   end
 
-  def process_error(error_message, should_raise: true)
+  def process_error(error_message, should_raise: false)
     self.error = error_message.to_s
     mark_as_failed
-    should_raise ? raise(error_message) : return
+    should_raise ? raise(error_message) : true
   end
 end

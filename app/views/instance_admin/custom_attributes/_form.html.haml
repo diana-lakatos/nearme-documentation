@@ -43,12 +43,13 @@
       = f.input :wrapper_html_options_string, label: t('instance_admin.manage.custom_attributes.wrapper_html_options'), input_html: { value: f.object.wrapper_html_options.map { |k, v| "#{k} => #{v}"}.join(', '), class: 'form-control' }
 
 
-  %h2 Custom Validators
-  .custom-validator.nested-fields-set
-    = f.simple_fields_for :custom_validators  do |custom_validator_form|
-      = render 'instance_admin/custom_attributes/custom_validator_fields', f: custom_validator_form, show_remove: true
-    .add-link.clearfix
-      = link_to_add_association 'Add new validator', f, :custom_validators, partial: 'instance_admin/custom_attributes/custom_validator_fields', class: 'btn btn-primary', render_options: { locals: { show_remove: true } }
+  -if resource.persisted?
+    %h2 Custom Validators
+    .custom-validator.nested-fields-set
+      = f.simple_fields_for :custom_validators  do |custom_validator_form|
+        = render 'instance_admin/custom_attributes/custom_validator_fields', f: custom_validator_form, show_remove: true
+      .add-link.clearfix
+        = link_to_add_association 'Add new validator', f, :custom_validators, partial: 'instance_admin/custom_attributes/custom_validator_fields', class: 'btn btn-primary', render_options: { locals: { show_remove: true } }
 
   = content_for :header_buttons do
     = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

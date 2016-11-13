@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PaymentGateway < ActiveRecord::Base
   include Encryptable
   include Modelable
@@ -57,13 +58,15 @@ class PaymentGateway < ActiveRecord::Base
     errors.add(:payment_methods, 'At least one payment method must be selected') if active? && !supports_payout? && !payment_methods.any?(&:active?)
   end
 
-  AUTH_ERROR = 'Payment Gateway authorization error'.freeze
-  CAPTURE_ERROR = 'Payment Gateway capture error'.freeze
-  VOID_ERROR = 'Payment Gateway void error'.freeze
-  REFUND_ERROR = 'Payment Gateway refund error'.freeze
-  STORE_ERROR = 'Payment Gateway credit card store error'.freeze
-  UNSTORE_ERROR = 'Payment Gateway credit card delete error'.freeze
-  PURCHASE_ERROR = 'Payment Gateway purchase error'.freeze
+  AUTH_ERROR = 'Payment Gateway authorization error'
+  CAPTURE_ERROR = 'Payment Gateway capture error'
+  VOID_ERROR = 'Payment Gateway void error'
+  REFUND_ERROR = 'Payment Gateway refund error'
+  STORE_ERROR = 'Payment Gateway credit card store error'
+  UNSTORE_ERROR = 'Payment Gateway credit card delete error'
+  PURCHASE_ERROR = 'Payment Gateway purchase error'
+  TEST_MODE = 'test'
+  LIVE_MODE = 'live'
 
   PAYOUT_GATEWAYS = {
     'PayPal Adpative Payments (Payouts)' => 'PaymentGateway::PaypalAdaptivePaymentGateway'
@@ -266,11 +269,11 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def mode
-    test_mode? ? 'test' : 'live'
+    test_mode? ? TEST_MODE : LIVE_MODE
   end
 
   def force_mode(mode)
-    @test_mode = (mode == 'live' ? false : true)
+    @test_mode = (mode == LIVE_MODE ? false : true)
   end
 
   def create_token(credit_card, customer_id, merchant_id, mode)
@@ -311,7 +314,7 @@ class PaymentGateway < ActiveRecord::Base
     gateway.capture(amount, token, options)
   rescue => e
     MarketplaceLogger.error(CAPTURE_ERROR, e.to_s, raise: false)
-    @payment.update_column(:recurring_booking_error, e) if @payment
+    @payment&.update_column(:recurring_booking_error, e)
     OpenStruct.new(success?: false, message: e.to_s)
   end
 
@@ -369,7 +372,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def store(credit_card, instance_client)
-    force_mode(instance_client.test_mode? ? 'test' : 'live')
+    force_mode(instance_client.test_mode? ? TEST_MODE : LIVE_MODE)
     options = { email: instance_client.client.email, default_card: true, customer: instance_client.customer_id }
     gateway_store(credit_card, options)
   end
@@ -415,7 +418,7 @@ class PaymentGateway < ActiveRecord::Base
         reference: reference,
         payment_gateway_mode: mode
       )
-      process_payout(merchant_account, amount, reference)
+      response = process_payout(merchant_account, amount, reference)
       @payout
     else
       OpenStruct.new(success: false)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class MerchantAccount < ActiveRecord::Base
   include Encryptable
 
@@ -31,10 +32,10 @@ class MerchantAccount < ActiveRecord::Base
     'paypal'                => MerchantAccount::PaypalMerchantAccount,
     'paypal_adaptive'       => MerchantAccount::PaypalAdaptiveMerchantAccount,
     'paypal_express_chain'  => MerchantAccount::PaypalExpressChainMerchantAccount
-  }
+  }.freeze
 
-  validates_presence_of :merchantable_id, :merchantable_type, unless: ->(ic) { ic.merchantable.present? }
-  validates_presence_of :payment_gateway
+  validates :merchantable_id, :merchantable_type, presence: { unless: ->(ic) { ic.merchantable.present? } }
+  validates :payment_gateway, presence: true
   validate :data_correctness
 
   delegate :supported_currencies, to: :payment_gateway
@@ -44,10 +45,10 @@ class MerchantAccount < ActiveRecord::Base
   scope :verified, -> { where(state: 'verified') }
   scope :failed,   -> { where(state: 'failed') }
   scope :failed,   -> { where(state: 'voided') }
-  scope :live,   -> { where(test: false) }
-  scope :active,   -> { where(state: %w(pending verified)) }
-  scope :mode_scope, -> (test_mode = PlatformContext.current.instance.test_mode?) {  test_mode ? where(test: true) : where(test: false) }
-  scope :paypal_express_chain,   -> { where(type: 'MerchantAccount::PaypalExpressChainMerchantAccount') }
+  scope :live, -> { where(test: false) }
+  scope :active, -> { where(state: %w(pending verified)) }
+  scope :mode_scope, -> (test_mode = PlatformContext.current.instance.test_mode?) { test_mode ? where(test: true) : where(test: false) }
+  scope :paypal_express_chain, -> { where(type: 'MerchantAccount::PaypalExpressChainMerchantAccount') }
 
   attr_accessor :skip_validation, :redirect_url
 
@@ -78,7 +79,7 @@ class MerchantAccount < ActiveRecord::Base
 
   TRANSLATED_ERRORS = {
     'US ID numbers must be 9 characters long' => I18n.t('merchant_account.gateway_errors.us_social_security_format')
-  }
+  }.freeze
 
   def to_liquid
     @mechant_account_drop ||= MerchantAccountDrop.new(self)
@@ -91,7 +92,7 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def merchant_id
-    internal_payment_gateway_account_id
+    external_id
   end
 
   def void!
@@ -133,7 +134,7 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def set_possible_payout!
-    if !self.test? && merchantable && payment_gateway
+    if !test? && merchantable && payment_gateway
       transactables = merchantable.listings.where(currency: supported_currencies)
       transactables.update_all(possible_payout: true)
       ElasticBulkUpdateJob.perform Transactable, transactables.map { |listing| [listing.id, { possible_payout: true }] }
@@ -143,7 +144,7 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def unset_possible_payout!
-    if !self.test? && merchantable && payment_gateway
+    if !test? && merchantable && payment_gateway
       merchantable.listings.update_all(possible_payout: false)
       merchantable.merchant_accounts.live.verified.each(&:set_possible_payout!)
       ElasticBulkUpdateJob.perform Transactable, merchantable.listings.map { |listing| [listing.id, { possible_payout: false }] }

@@ -1,5 +1,10 @@
+# frozen_string_literal: true
 class PaymentGateway::StripePaymentGateway < PaymentGateway
+  API_VERSION = '2015-04-07'
+
   supported :multiple_currency, :recurring_payment, :credit_card_payment, :partial_refunds, :any_country
+
+  delegate :find_payment, to: :gateway
 
   def self.settings
     {

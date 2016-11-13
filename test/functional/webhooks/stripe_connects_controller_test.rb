@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
@@ -47,7 +48,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
         @payments = []
         %w(ch_19227cHEiLsRDx9fwsAV7Ahx ch_20227cHEiLsRDx9fwsAV7Ahy).each do |payment_token|
           @payments << FactoryGirl.create(:paid_payment, payment_method: @payment_gateway.payment_methods.first,
-                                                         external_transaction_id: payment_token,
+                                                         external_id: payment_token,
                                                          company: @company,
                                                          merchant_account: @merchant_account)
         end
@@ -57,7 +58,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
             type: 'transfer.created',
             id: "transfer_#{transfer_state}_xyz",
             status: transfer_state,
-            payments: @payments.map { |p| { id: p.external_transaction_id } }
+            payments: @payments.map { |p| { id: p.external_id } }
           }
           Stripe::Event.stubs(:retrieve).returns(event_response(event_options))
 

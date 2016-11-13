@@ -24,12 +24,12 @@
               <a href="/transactable_types/item/list">List your items</a>
             </li>
 
-            {% assign unconfirmed_received_orders_count = current_user.unconfirmed_received_orders_count %}
+            {% assign unconfirmed_orders_count = current_user.unconfirmed_received_orders_count %}
             <li class="dropdown">
               <a class="nav-link dropdown-toggle user-dropdown" data-toggle="dropdown" href="#">
                 <span class="text">{{ current_user.first_name }}</span>
-                {% if unconfirmed_received_orders_count > 0 %}
-                <span class="count">{{ unconfirmed_received_orders_count }}</span>
+                {% if unconfirmed_orders_count > 0 %}
+                  <span class="count">{{ unconfirmed_orders_count }}</span>
                 {% endif %}
               </a>
               <ul class="dropdown-menu">

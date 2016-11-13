@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DashboardHelper
   def in_new_listing?
     (params[:action] == 'new' || params[:action] == 'edit') && params[:controller].include?('listings') && params[:id].blank?
@@ -78,11 +79,11 @@ module DashboardHelper
   end
 
   def dashboard_menu_item(key = nil, path = nil, options = {})
-    return nil if HiddenUiControls.find(key).hidden? unless options[:not_hideable]
+    return nil unless options[:not_hideable] || !HiddenUiControls.find(key).hidden?
     controller = params[:controller].split('/').last
     key_controller = key.split('/').last
     options.reverse_merge!(link_text: t("dashboard.nav.#{key_controller}"), active: nil)
-    content_tag :li, class: (options[:active] || (controller == key_controller && options[:active].nil?)) ? 'active' : '' do
+    content_tag :li, class: options[:active] || (controller == key_controller && options[:active].nil?) ? 'active' : '' do
       link_to options[:link_text], path
     end
   end
@@ -125,14 +126,10 @@ module DashboardHelper
     toggler_id = 'dropdown-' + SecureRandom.hex(5)
 
     wrapper_class = 'dropdown'
-    if options[:wrapper_class]
-      wrapper_class = wrapper_class + ' ' + options[:wrapper_class]
-    end
+    wrapper_class = wrapper_class + ' ' + options[:wrapper_class] if options[:wrapper_class]
 
     toggler_class = 'dropdown-toggle'
-    if options[:toggler_class]
-      toggler_class = toggler_class + ' ' + options[:toggler_class]
-    end
+    toggler_class = toggler_class + ' ' + options[:toggler_class] if options[:toggler_class]
 
     wrapper_tag = options[:wrapper_tag] || :div
 
@@ -177,18 +174,14 @@ module DashboardHelper
   def dashboard_nav_user_reservations_label
     reservations_count = current_user.orders.reservations.not_archived.count
     out = t('dashboard.nav.user_reservations')
-    if reservations_count > 0
-      out = "#{out} <span>#{reservations_count}</span>".html_safe
-    end
+    out = "#{out} <span>#{reservations_count}</span>".html_safe if reservations_count > 0
     out
   end
 
   def dashboard_nav_host_reservations_label
     reservations_count = Controller::GuestList.new(current_user).filter('unconfirmed').reservations.size
     out = t('dashboard.nav.host_reservations')
-    if reservations_count > 0
-      out = "#{out} <span>#{reservations_count}</span>".html_safe
-    end
+    out = "#{out} <span>#{reservations_count}</span>".html_safe if reservations_count > 0
     out
   end
 
@@ -251,6 +244,11 @@ module DashboardHelper
   end
 
   def object_aspect_ratio(object)
+    override = PlatformContext.current.theme.photo_upload_versions.where(photo_uploader: object.class).first
+
+    # This assumes all versions have the same aspect ratio. Good enough for now
+    return override.width.to_f / override.height.to_f if override
+
     unless defined?(object.class::ASPECT_RATIO)
       return object.model.send("#{object.mounted_as}_dimensions")[:width].to_f / object.model.send("#{object.mounted_as}_dimensions")[:height].to_f
     end

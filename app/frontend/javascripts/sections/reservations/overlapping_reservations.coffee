@@ -6,6 +6,7 @@ module.exports = class OverlappingReservationsController
     @dateField = @container.find('#order_dates')
     @visibleDateField = @container.find('.jquery-datepicker')
     @validatorUrl = @container.data('validator-url')
+    @checkEnabled = @container.data('check-overlapping-dates')
 
   formAttributes: ->
     {
@@ -13,6 +14,7 @@ module.exports = class OverlappingReservationsController
     }
 
   checkNewDate: ->
+    return true if @checkEnabled == undefined
     @clearWarnings()
     $.getJSON(@validatorUrl, @formAttributes()).then @handleResponse
 

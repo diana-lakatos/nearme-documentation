@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class RegistrationsController < Devise::RegistrationsController
   before_action :set_role_if_blank
   before_action :configure_permitted_parameters, only: :create
@@ -396,7 +397,7 @@ class RegistrationsController < Devise::RegistrationsController
                  else
                    []
                            end
-    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(*arguments) }
+    devise_parameter_sanitizer.permit(:sign_up, keys: [arguments])
   end
 
   def user_params

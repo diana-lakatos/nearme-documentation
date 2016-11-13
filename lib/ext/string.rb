@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class String
   def intersection(other)
     str = dup
@@ -9,5 +10,11 @@ class String
 
   def to_yml_key
     gsub(/[\-|\/|\.]/, '_').downcase
+  end
+
+  def is_integer?
+    true if Integer(self)
+  rescue ArgumentError
+    false
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ConfigurePhotoUploaderForDevmesh < ActiveRecord::Migration
   def up
     # apply only for devmesh...
@@ -15,6 +16,9 @@ class ConfigurePhotoUploaderForDevmesh < ActiveRecord::Migration
                                  photo_uploader: 'PhotoUploader')
       PhotoUploadVersion.create!(apply_transform: 'resize_to_fill',
                                  width:  600, height: 482, version_name: 'space_listing',
+                                 photo_uploader: 'PhotoUploader')
+      PhotoUploadVersion.create!(apply_transform: 'resize_to_fill',
+                                 width:  1200, height: 800, version_name: 'golden',
                                  photo_uploader: 'PhotoUploader')
 
       PhotoUploadVersion.create!(apply_transform: 'resize_to_fill',

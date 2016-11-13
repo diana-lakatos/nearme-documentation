@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 require 'braintree'
 
 class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   supported :company_onboarding, :immediate_payout, :credit_card_payment,
             :partial_refunds, :host_subscription, :multiple_currency, :recurring_payment
 
-  delegate :verify_webhook, :parse_webhook, :find_transaction, :find_merchant, :onboard!, :update_onboard!,
+  delegate :verify_webhook, :parse_webhook, :find_payment, :find_merchant, :onboard!, :update_onboard!,
            :client_token, :payment_settled?, to: :gateway
 
   has_many :webhooks, class_name: 'Webhook::BraintreeMarketplaceWebhook', foreign_key: 'payment_gateway_id'
@@ -43,20 +44,22 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   def charge(user, amount, currency, payment, token)
     charge_record = super(user, amount, currency, payment, token)
     if charge_record.try(:success?)
-      payment_transfer = payment.company.payment_transfers.create!(payments: [payment.reload], payment_gateway_mode: mode, payment_gateway_id: id)
-      unless payment.successful_billing_authorization.immediate_payout?
-        payment_transfer.update_attribute(:transferred_at, nil)
-      end
+      payment_transfer = payment.company.payment_transfers.create!(
+        payments: [payment.reload],
+        payment_gateway_mode: mode,
+        payment_gateway_id: id
+      )
     end
+
     charge_record
   end
 
-  def payout(*_args)
-    OpenStruct.new(success: true, success?: true)
+  def process_payout(_merchant_account, _amount, _payment_transfer)
+    payout_pending('')
   end
 
   def refund_identification(charge)
-    charge.payment.payable.billing_authorization.token
+    charge.payment.authorization_token
   end
 
   def supported_currencies

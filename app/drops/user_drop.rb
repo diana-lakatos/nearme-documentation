@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UserDrop < BaseDrop
   include ActionView::Helpers::AssetUrlHelper
   include CategoriesHelper
@@ -62,6 +63,8 @@ class UserDrop < BaseDrop
   #   returns number of reservations
   # unconfirmed_received_orders_count
   #   returns number of unconfirmed orders
+  # instance_admin?
+  #   returns true if current user is an instance admin
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
            :with_mutual_friendship_source, :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
@@ -70,7 +73,7 @@ class UserDrop < BaseDrop
            :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
            :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
            :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
-           :company_name, :instance_admins_metadata, :total_reviews_count, :companies,
+           :company_name, :instance_admins_metadata, :total_reviews_count, :companies, :instance_admin?,
            to: :source
 
   def class_name
@@ -273,7 +276,7 @@ class UserDrop < BaseDrop
 
   # url for verifying (confirming) a user's email
   def bookings_dashboard_url
-    routes.dashboard_user_reservations_path
+    routes.dashboard_orders_path
   end
 
   # returns true if the email address is verified
@@ -283,19 +286,19 @@ class UserDrop < BaseDrop
 
   # url to the section in the application for managing a user's own bookings, with tracking
   def bookings_dashboard_url_with_tracking
-    routes.dashboard_user_reservations_path
+    routes.dashboard_orders_path
   end
 
   # url to the section in the application for managing a user's own bookings, with authentication
   # token
   def bookings_dashboard_url_with_token
-    routes.dashboard_user_reservations_path(token_key => @source.try(:temporary_token))
+    routes.dashboard_orders_path(token_key => @source.try(:temporary_token))
   end
 
   # url to the section in the application for managing a user's own bookings, with authentication
   # token, and tracking
   def bookings_dashboard_url_with_tracking_and_token
-    routes.dashboard_user_reservations_path(token_key => @source.try(:temporary_token))
+    routes.dashboard_orders_path(token_key => @source.try(:temporary_token))
   end
 
   # listings in and around a user's location, limited to a 100 km radius and a maximum of 3 results

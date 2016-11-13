@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SearcherDrop < BaseDrop
   attr_reader :original_results, :search, :searcher
 
@@ -35,5 +36,9 @@ class SearcherDrop < BaseDrop
 
   def meta_title
     @context.registers[:action_view].meta_title_for_search(PlatformContext.current, @searcher.search)
+  end
+
+  def filterable_custom_attributes_hash
+    filterable_custom_attributes.each_with_object({}) { |ca, hash| hash[ca.name] = ca }
   end
 end

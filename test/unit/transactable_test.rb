@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class TransactableTest < ActiveSupport::TestCase
@@ -115,11 +116,10 @@ class TransactableTest < ActiveSupport::TestCase
       should 'initialize metadata' do
         @listing.expects(:update_metadata).with(photos_metadata: [{
                                                   listing_name: @photo.listing.name,
-                                                  original: @photo.image_url(:optimized),
+                                                  original: @photo.image.url,
                                                   space_listing: @photo.image_url(:space_listing),
                                                   golden: @photo.image_url(:golden),
                                                   large: @photo.image_url(:large),
-                                                  fullscreen: @photo.image_url(:fullscreen),
                                                   caption: @photo.caption
                                                 }])
         @listing.populate_photos_metadata!
@@ -141,20 +141,18 @@ class TransactableTest < ActiveSupport::TestCase
           @listing.expects(:update_metadata).with(photos_metadata: [
                                                     {
                                                       listing_name: @photo.listing.name,
-                                                      original: @photo.image_url(:optimized),
+                                                      original: @photo.image.url,
                                                       space_listing: @photo.image_url(:space_listing),
                                                       golden: @photo.image_url(:golden),
                                                       large: @photo.image_url(:large),
-                                                      fullscreen: @photo.image_url(:fullscreen),
                                                       caption: @photo.caption
                                                     },
                                                     {
                                                       listing_name: @photo2.listing.name,
-                                                      original: @photo2.image_url(:optimized),
+                                                      original: @photo2.image.url,
                                                       space_listing: @photo2.image_url(:space_listing),
                                                       golden: @photo2.image_url(:golden),
                                                       large: @photo2.image_url(:large),
-                                                      fullscreen: @photo2.image_url(:fullscreen),
                                                       caption: @photo2.caption
                                                     }
                                                   ])

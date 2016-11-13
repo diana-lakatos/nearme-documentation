@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CarrierWave
   module SourceProcessing
     class Processor
@@ -8,13 +9,11 @@ module CarrierWave
 
       # if external url has changed, we want to remove any transformations done to previous image. %column%_versions_generated_at is used
       # to determine whether external has changed - if it is nil, we will re-download the image
-      def enqueue_processing(all = true)
-        if @model.attributes[@field.to_s]
-          VersionRegenerationJob.perform(@model.class.name, @model.id, @field, all)
-        end
+      def enqueue_processing
+        VersionRegenerationJob.perform(@model.class.name, @model.id, @field) if @model.attributes[@field.to_s]
       end
 
-      def generate_versions(all = true)
+      def generate_versions
         # return if there is no persisted AR object (e.g. photo was deleted before crop job ran)
         return unless @model.persisted? || !@model.send(@field).present?
 
@@ -23,7 +22,7 @@ module CarrierWave
         uploader.delayed_processing = true
 
         begin
-          all ? uploader.recreate_versions! : uploader.recreate_versions!(*uploader.class.delayed_versions)
+          uploader.recreate_versions!
           touch_versions_timestamp_and_callback
         rescue ::ActiveRecord::RecordNotFound
           @model.class.with_deleted.find @model.id # check for paranoid deletetion, throw if not found

@@ -1,6 +1,6 @@
 %section#login
   .login-form
-    = image_tag 'instance_admin/logo_big.png', class: 'text-center'
+    = image_tag 'instance_admin/logo.svg', class: 'text-center', width: '224',  height: '50'
     = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
       %input{type: 'hidden', name: 'return_to', value: session[:user_return_to] || instance_admin_path}
       %fieldset

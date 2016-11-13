@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CustomAttributes
   module Concerns
     module Models
@@ -22,7 +23,7 @@ module CustomAttributes
 
           ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean).freeze unless defined?(ATTRIBUTE_TYPES)
           HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list range).freeze unless defined?(HTML_TAGS)
-          MULTIPLE_ARRAY_TAGS = %w(check_box_list).freeze unless defined?(MULTIPLE_ARRAY_TAGS)
+          MULTIPLE_ARRAY_TAGS = %w(check_box_list select).freeze unless defined?(MULTIPLE_ARRAY_TAGS)
 
           scope :listable, -> { all }
           scope :not_internal, -> { where.not(internal: true) }

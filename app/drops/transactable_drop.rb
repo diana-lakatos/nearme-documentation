@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableDrop < BaseDrop
   include AvailabilityRulesHelper
   include SearchHelper
@@ -189,7 +190,11 @@ class TransactableDrop < BaseDrop
   end
 
   def in_progress_index_url
-    routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, state: 'in progress', anchor: "transactable_#{@source.id}", token_key => @source.administrator.try(:temporary_token))
+    routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, status: 'in progress', anchor: "transactable_#{@source.id}", token_key => @source.administrator.try(:temporary_token))
+  end
+
+  def in_progress_index_url_without_token
+    routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, status: 'in progress', anchor: "transactable_#{@source.id}")
   end
 
   # url to the dashboard area for managing received bookings, with tracking

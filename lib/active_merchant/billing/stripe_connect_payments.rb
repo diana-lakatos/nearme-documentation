@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'stripe'
 
 module ActiveMerchant
@@ -5,7 +6,7 @@ module ActiveMerchant
     class StripeConnectPayments < StripeGateway
       def initialize(settings)
         Stripe.api_key = settings[:login]
-        Stripe.api_version = settings[:version] = '2015-04-07'
+        Stripe.api_version = settings[:version] = PaymentGateway::StripePaymentGateway::API_VERSION
         super
       end
 
@@ -30,7 +31,7 @@ module ActiveMerchant
         else
           Stripe::Event.retrieve(id)
         end
-      rescue Stripe::InvalidRequestError => e
+      rescue => e
         raise_error(e)
       end
 
@@ -40,12 +41,20 @@ module ActiveMerchant
         else
           Stripe::BalanceTransaction.all(transfer: transfer_id)
         end
-      rescue Stripe::InvalidRequestError => e
+      rescue => e
         raise_error(e)
       end
 
+      def find_payment(id, merchant_account_id = nil)
+        PaymentGateway::Response::Stripe::Payment.new(if merchant_account_id.present?
+                                                        Stripe::Charge.retrieve({ id: id }, stripe_account: merchant_account_id)
+                                                      else
+                                                        Stripe::Charge.retrieve(id)
+        end)
+      end
+
       def raise_error(error)
-        if error.http_status == 404
+        if [404, 403].include?(error.http_status)
           raise ActiveRecord::RecordNotFound
         else
           raise error

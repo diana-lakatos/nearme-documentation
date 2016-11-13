@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTest
@@ -154,7 +155,7 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
     assert_equal 43.75.to_money(@transactable.currency), charge.amount_money
     @payment_transfer = @order.company.payment_transfers.last
     assert_equal 1, @order.company.payment_transfers.count
-    assert @payment_transfer.transferred?
+    assert @payment_transfer.pending?
     assert_equal 22.5.to_money(@transactable.currency), @payment_transfer.amount
     assert_equal 18.75.to_money(@transactable.currency), @payment_transfer.service_fee_amount_guest
     assert_equal 2.5.to_money(@transactable.currency), @payment_transfer.service_fee_amount_host

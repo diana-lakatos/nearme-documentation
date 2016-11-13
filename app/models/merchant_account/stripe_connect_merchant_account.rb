@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'stripe'
 
 class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
@@ -38,13 +39,13 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def update_onboard!
-    result = payment_gateway.update_onboard!(internal_payment_gateway_account_id, update_params)
+    result = payment_gateway.update_onboard!(external_id, update_params)
     handle_result(result)
   end
 
   def handle_result(result)
     if result.id
-      self.internal_payment_gateway_account_id = result.id
+      self.external_id = result.id
       data[:fields_needed] = result.verification.fields_needed
       upload_documents(result)
       self.response = result.to_yaml
@@ -175,9 +176,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   def custom_options
     if direct_charge?
-      { stripe_account: internal_payment_gateway_account_id }
+      { stripe_account: external_id }
     else
-      { destination: internal_payment_gateway_account_id }
+      { destination: external_id }
     end
   end
 

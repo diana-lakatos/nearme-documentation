@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 class PhotoUploader < BaseUploader
   include CarrierWave::TransformableImage
   include CarrierWave::DynamicPhotoUploads
@@ -16,7 +17,7 @@ class PhotoUploader < BaseUploader
     # project_thumbnail: { width: 200, height: 175, transform: :resize_to_fill }, -> thumb
     # project_small: { width: 250, height: 200, transform: :resize_to_fill }, -> medium
     golden: { width: SPACE_FULL_IMAGE_W, height: SPACE_FULL_IMAGE_H, transform: :resize_to_fill },
-    fullscreen: { width: 1200, height: 800, transform: :resize_to_fit },
+    # fullscreen: { width: 1200, height: 800, transform: :resize_to_fit },  -> space_listing
     # fit_to_activity_feed: { width: 600, height: 482, transform: :resize_to_fill } -> space_listing
   }
 
@@ -41,32 +42,22 @@ class PhotoUploader < BaseUploader
 
   version :thumb, from_version: :transformed, if: :delayed_processing? do
     process dynamic_version: :thumb
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :medium, from_version: :transformed do
     process dynamic_version: :medium
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :large, from_version: :transformed, if: :delayed_processing? do
     process dynamic_version: :large
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :space_listing, from_version: :transformed do
     process dynamic_version: :space_listing
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :golden, from_version: :transformed, if: :delayed_processing? do
     process dynamic_version: :golden
-    process optimize: OPTIMIZE_SETTINGS
-  end
-
-  version :fullscreen, if: :delayed_processing? do
-    process dynamic_version: :fullscreen
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   protected

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
@@ -118,6 +119,7 @@ class Order < ActiveRecord::Base
   }
 
   delegate :action, to: :transactable_pricing
+  delegate :service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents, to: :action
   delegate :photos, :confirm_reservations?, to: :transactable, allow_nil: true
 
   # You can customize order tabs (states) displauyed in dashboard

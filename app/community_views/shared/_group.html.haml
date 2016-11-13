@@ -3,7 +3,7 @@
     %figure
       = link_to group_path(group) do
         - if group.cover_image.present?
-          = image_tag group.cover_image.url(:fullscreen)
+          = image_tag group.cover_image.url(:golden)
 
           - if group.featured?
             %figcaption

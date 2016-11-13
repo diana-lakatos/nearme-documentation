@@ -4,6 +4,13 @@
 - content_for :hero do
   .container-fluid
     .row-fluid
+      #marketplace-brand.span6.offset3.text-center
+        - if PlatformContext.current.theme.hero_image.present?
+          = image_tag(PlatformContext.current.theme.hero_image.url, width: '224')
+        - else
+          = image_tag('instance_admin/logo.svg', width: '224',  height: '50')
+
+    .row-fluid
       #marketplace-password.span6.offset3
         .row-fluid
           %h1 This marketplace is currently password-protected.

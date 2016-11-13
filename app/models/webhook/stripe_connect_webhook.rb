@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Webhook::StripeConnectWebhook < Webhook
   before_create :set_merchant_account
 
@@ -8,9 +9,9 @@ class Webhook::StripeConnectWebhook < Webhook
   ].freeze
 
   def process!
-    process_error('Webhook not found', raise: false) if event.blank?
-    process_error("Webhook type #{event.type} not allowed", raise: false) unless ALLOWED_WEBHOOKS.include?(event.type)
-    process_error('Mode mismatch', raise: false) if payment_gateway_mode != payment_gateway.mode
+    process_error('Webhook not found') && return if event.blank?
+    process_error("Webhook type #{event.type} not allowed") && return unless ALLOWED_WEBHOOKS.include?(event.type)
+    process_error('Mode mismatch') && return  if payment_gateway_mode != payment_gateway.mode
 
     increment!(:retry_count)
 
@@ -18,7 +19,7 @@ class Webhook::StripeConnectWebhook < Webhook
     success ? archive : mark_as_failed
 
   rescue => e
-    process_error(e)
+    process_error(e, should_raise: true)
   end
 
   def webhook_type
@@ -64,7 +65,7 @@ class Webhook::StripeConnectWebhook < Webhook
 
   def merchant_account
     @merchant_account ||= super || payment_gateway.merchant_accounts.find_by!(
-      internal_payment_gateway_account_id: event.data.object.id
+      external_id: event.data.object.id
     )
   end
 
@@ -101,7 +102,7 @@ class Webhook::StripeConnectWebhook < Webhook
 
     charge_ids = transfer_charges.map(&:source).compact
 
-    payment_gateway.payments.where(external_transaction_id: charge_ids)
+    payment_gateway.payments.where(external_id: charge_ids)
   end
 
   def params_transfer
@@ -127,8 +128,8 @@ class Webhook::StripeConnectWebhook < Webhook
   end
 
   def set_merchant_account
-    return if event.try('[]', :user_id).blank?
+    return if params[:user_id].blank?
 
-    self.merchant_account = payment_gateway.find_by(internal_payment_gateway_account_id: parmas[:user_id])
+    self.merchant_account = payment_gateway.merchant_accounts.find_by(external_id: params[:user_id])
   end
 end

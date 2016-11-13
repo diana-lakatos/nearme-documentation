@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Photo < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
@@ -58,7 +59,7 @@ class Photo < ActiveRecord::Base
   end
 
   def original_image_url
-    image.url(:optimized) =~ /\/\/placehold\.it/ ? image.url : image.url(:optimized)
+    image.url
   end
 
   def self.xml_attributes

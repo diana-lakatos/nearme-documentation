@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 class LinkImageUploader < BaseUploader
   include CarrierWave::DynamicPhotoUploads
   include CarrierWave::ImageDefaults
@@ -10,11 +11,9 @@ class LinkImageUploader < BaseUploader
 
   version :standard do
     process dynamic_version: :standard
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :medium do
     process dynamic_version: :medium
-    process optimize: OPTIMIZE_SETTINGS
   end
 end

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
 class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   belongs_to :instance
   has_many :webhooks, class_name: 'Webhook::StripeConnectWebhook', foreign_key: 'payment_gateway_id'
 
   supported :immediate_payout, :credit_card_payment, :multiple_currency, :partial_refunds, :recurring_payment
 
-  delegate :parse_webhook, :retrieve_account, :onboard!, :update_onboard!, :find_transfer_transactions, to: :gateway
+  delegate :parse_webhook, :retrieve_account, :onboard!, :update_onboard!, :find_transfer_transactions,
+           :find_payment, to: :gateway
 
   validate :validate_config_hash
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CustomAttributes::CustomAttribute < ActiveRecord::Base
   # defined in vendor/gems/custom_attributes/lib/custom_attributes/concerns
   include CustomAttributes::Concerns::Models::CustomAttribute
@@ -22,7 +23,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   delegate :update_es_mapping, to: :target
 
   has_many :custom_validators, as: :validatable
-  accepts_nested_attributes_for :custom_validators
+  accepts_nested_attributes_for :custom_validators, allow_destroy: true
 
   before_save :update_custom_validators
   after_save :ensure_custom_validators_are_properly_setup!
@@ -56,10 +57,8 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   def ensure_custom_validators_are_properly_setup!
     if valid_values.any?
-      custom_validator = custom_validators.where(field_name: name)
-                                          .where.not(valid_values: nil)
-                                          .where.not(valid_values: [])
-                                          .first_or_initialize
+      custom_validator = custom_validators
+                         .detect { |cv| cv.field_name == name && cv.valid_values.present? } || custom_validators.build
       if custom_validator.valid_values != valid_values
         custom_validator.valid_values = valid_values
         custom_validator.save!

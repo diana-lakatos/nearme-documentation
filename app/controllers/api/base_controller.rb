@@ -1,15 +1,18 @@
+# frozen_string_literal: true
 class Api::BaseController < ActionController::Base
   force_ssl if: -> { Rails.application.config.use_only_ssl }
 
   respond_to :json
 
   around_action :set_time_zone
+
   before_action :set_i18n_locale
   before_action :set_raygun_custom_data
 
   before_action :verified_api_request?
   before_action :require_authentication # whitelist approach
   before_action :require_authorization # some actions only by MPO or token
+  before_action :set_paper_trail_whodunnit
 
   rescue_from ::DNM::Error, with: :nm_error
   rescue_from ::DNM::Unauthorized, with: :nm_unauthorized

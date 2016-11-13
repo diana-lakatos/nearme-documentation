@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'braintree'
 
 module ActiveMerchant
@@ -37,12 +38,25 @@ module ActiveMerchant
       # Braintree::Transaction
       # https://github.com/braintree/braintree_ruby/blob/master/lib/braintree/transaction.rb
 
+      def find_payment(token, _merchant_id = nil)
+        payment = find_transaction(token)
+
+        PaymentGateway::Response::Braintree::Payment.new(
+          payment,
+          payment.refund_ids.map { |refund_id| find_refund(refund_id) }
+        )
+      end
+
+      def find_refund(token)
+        PaymentGateway::Response::Braintree::Refund.new(find_transaction(token))
+      end
+
       def find_transaction(token)
         Braintree::Transaction.find(token)
       end
 
       def payment_settled?(token)
-        find_transaction(token).try(:status) == 'settled'
+        find_payment(token).paid?
       end
 
       def client_token
@@ -55,7 +69,9 @@ module ActiveMerchant
 
       def create_transaction_parameters(money, credit_card_or_vault_id, options)
         super.tap do |parameters|
-          parameters[:service_fee_amount] = options[:service_fee_amount] if options[:service_fee_amount]
+          # we use ActiveMerchant 'amount' method to parse cents integer to
+          # dollar with cents format 400 cents to '4.00' which is expected by braintree
+          parameters[:service_fee_amount] = amount(options[:service_fee_amount]).to_s if options[:service_fee_amount]
           parameters[:payment_method_nonce] = options[:payment_method_nonce] if options[:payment_method_nonce]
         end
       end

@@ -1,17 +1,15 @@
+# frozen_string_literal: true
 require 'test_helper'
+require Rails.root.join 'test/helpers/placeholder_helper'
+include PlaceholderHelper
 
 class ListingsHelperTest < ActionView::TestCase
   include ListingsHelper
+  include PlaceholderHelper
 
   context '#space_listing_placeholder_path' do
-    should 'return valid placeholder from filesystem' do
-      expected_path = '//placehold.it/410x254&text=Photos+Unavailable+or+Still+Processing'
-      assert_equal expected_path, space_listing_placeholder_path(height: 254, width: 410)
-    end
-
-    should 'return valid placeholder from placehold.it' do
-      expected_path = '//placehold.it/10x700&text=Photos+Unavailable+or+Still+Processing'
-      assert_equal expected_path, space_listing_placeholder_path(height: 700, width: 10)
+    should 'return valid placeholder' do
+      assert_equal placeholder_url(410, 254), space_listing_placeholder_path(width: 410, height: 254)
     end
   end
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CarrierWave::DelayedVersions
   extend ActiveSupport::Concern
 
@@ -27,16 +28,14 @@ module CarrierWave::DelayedVersions
       after_commit do
         processor = CarrierWave::SourceProcessing::Processor.new(self, column)
 
-        if (previous_changes[column].present? || try(:force_regenerate_versions)) && attributes[column.to_s]
+        if previous_changes["#{column}_transformation_data"].present? && attributes["#{column}_transformation_data"] != {}
+          processor.enqueue_processing
+        elsif (previous_changes[column].present? || try(:force_regenerate_versions)) && attributes[column.to_s]
           if uploader.respond_to?(:delayed_versions)
-            processor.enqueue_processing(false)
+            processor.enqueue_processing
           else
             processor.touch_versions_timestamp_and_callback
           end
-        end
-
-        if previous_changes["#{column}_transformation_data"].present? && attributes["#{column}_transformation_data"] != {}
-          processor.enqueue_processing
         end
       end
     end

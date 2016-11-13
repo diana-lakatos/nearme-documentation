@@ -44,7 +44,7 @@
     <div class="image-gallery" data-image-gallery>
       <div class="image-gallery__container">
       {% if photos_count > 0 %}
-        <div class="image-gallery__container-image" style="background-image: url('{{ photos[0].original  }}'); background-size: 100%;" data-image-gallery-full-image></div>
+        <div class="image-gallery__container-image" style="background-image: url('{{ photos[0].original }}'); background-size: contain;" data-image-gallery-full-image="{{ photos[0].original }}"></div>
       {% endif %}
       </div>
 
@@ -59,7 +59,7 @@
             <ul class="image-gallery__list">
               {% assign index = 0 %}
               {% for photo in photos %}
-                <li data-image-gallery-image><a href="#"><img src="{{ photo.space_listing }}" data-image-gallery-full-image-url="{{ photo.original }}" /></a></li>
+                <li data-image-gallery-image><a href="{{ photo.original }}"><img src="{{ photo.space_listing }}" alt="{{ listing.name | filter_text }}"></a></li>
               {% endfor %}
             </ul>
           {% endif %}
@@ -123,16 +123,16 @@
               <dt>Size:</dt> <dd>{{ listing.properties.dress_size }}</dd>
               <dt>Length:</dt> <dd>{{ listing.properties.dress_length }}</dd>
             {% elsif listing.properties.item_type == 'Bag' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_bag }}</dd>
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_bag | split: ',' | join: ', '  }}</dd>
               <dt>Length:</dt> <dd>{{ listing.properties.dress_length }}</dd>
             {% elsif listing.properties.item_type == 'Millinery' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_milinery }}</dd>
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_milinery | split: ',' | join: ', '  }}</dd>
               <dt>Size:</dt> <dd>{{ listing.properties.milinery_size }}</dd>
             {% elsif listing.properties.item_type == 'Outerwear' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_outerwear}}</dd>
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_outerwear | split: ',' | join: ', ' }}</dd>
               <dt>Size:</dt> <dd>{{ listing.properties.outerwear_size }}</dd>
             {% elsif listing.properties.item_type == 'Accessories' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_accessories }}</dd>
+              <dt>Style:</dt> <dd>{{ listing.properties.item_style_accessories | split: ',' | join: ', '  }}</dd>
             {% endif %}
             <dt>Color:</dt> <dd>{{ listing.properties.color }}</dd>
             <dt>Designer:</dt> <dd>{{ listing.properties.designer_name }}</dd>
@@ -196,11 +196,7 @@
   <div id="fullscreen-gallery-content" class="modal-body">
     <div class="listing-photos" data-photo-aspect-w="895" data-photo-aspect-h="554">
       <div class="carousel" id="photos-container-enlarged" style="height: auto;">
-          <div class="carousel-inner">
-              <div class="item active" data-modalize="true">
-                <img data-src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/images/photo/image/8852/fullscreen_b62e345f-d8da-41b3-bf49-9dbe15d5418d.jpg?1458614163" alt="Cascade Room" title="Cascade Room">
-              </div>
-          </div>
+        <div class="carousel-inner"></div>
         <button class="btn close" type="button" data-dismiss="modal"><span class="ico-close"></span></button>
       </div>
     </div>

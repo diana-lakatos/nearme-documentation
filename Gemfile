@@ -18,7 +18,7 @@ gem 'rabl'
 gem 'carrierwave'
 gem 'carrierwave-imageoptim'
 gem 'image_optim_pack'
-gem 'devise', '3.5.4'
+gem 'devise', '4.2.0'
 gem 'devise-token_authenticatable'
 gem 'rack-throttle'
 
@@ -81,7 +81,6 @@ gem 'font-awesome-rails'
 gem 'will_paginate'
 
 gem 'delayed_job_active_record'
-gem 'delayed_job_web'
 gem 'delayed_job_recurring'
 gem 'rdiscount', require: false
 gem 'attr_encrypted', '~> 1'

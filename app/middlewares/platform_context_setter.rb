@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Module responsible for setting correct PlatformContext.current based on current domain.
 # If current domain is invalid, we redirect to our landing page.
 #
@@ -33,12 +34,12 @@ class PlatformContextSetter
         path = reverse_proxy_middleware.send(:rule).send(:original_spec)
         rule = platform_context.rules.detect { |r| r.path == path }
 
-        user_id = begin "#{env['rack.session']['warden.user.user.key'].try(:first).try(:first)}"
+        user_id = begin env['rack.session']['warden.user.user.key'].try(:first).try(:first).to_s
                   rescue ''
                   end
 
         additional_headers = { 'UserId' => user_id }
-        additional_headers['UserName'] =  User.find(user_id).name if user_id.present?
+        additional_headers['UserName'] = User.find(user_id).name if user_id.present?
         reverse_proxy_middleware.custom_headers = JSON.parse(rule.headers).merge(additional_headers)
         reverse_proxy_middleware.call
       else

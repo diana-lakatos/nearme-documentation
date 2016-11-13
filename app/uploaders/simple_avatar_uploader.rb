@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SimpleAvatarUploader < BaseUploader
   include CarrierWave::DynamicPhotoUploads
   include CarrierWave::ImageDefaults
@@ -9,11 +10,9 @@ class SimpleAvatarUploader < BaseUploader
 
   version :thumb do
     process dynamic_version: :thumb
-    process optimize: OPTIMIZE_SETTINGS
   end
 
   version :medium do
     process dynamic_version: :medium
-    process optimize: OPTIMIZE_SETTINGS
   end
 end

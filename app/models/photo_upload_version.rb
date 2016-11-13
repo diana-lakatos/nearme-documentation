@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PhotoUploadVersion < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
@@ -17,7 +18,7 @@ class PhotoUploadVersion < ActiveRecord::Base
     'TopicImageUploader' => TopicImageUploader.dimensions
   }.freeze
 
-  belongs_to :theme
+  belongs_to :theme, touch: true
 
   validates :version_name, uniqueness: { scope: [:theme_id, :photo_uploader] }
   validates :apply_transform, inclusion: { in: TRANSFORM_FUNCTIONS }

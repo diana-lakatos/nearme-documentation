@@ -115,11 +115,27 @@ class LongtailRakeHelper
       %(
 {% content_for 'meta' %}
   <link rel='stylesheet' media='screen' href='https://rawgit.com/mdyd-dev/marketplaces/master/longtail/dist/app.css'>
+  <meta name='keywords' content="{{ @data_source_contents.first.json_content.data.first.attributes.name }}">
 {% endcontent_for %}
 
 {% content_for 'body_bottom' %}
   <script src='https://rawgit.com/mdyd-dev/marketplaces/master/longtail/dist/app.js'></script>
 {% endcontent_for %}
+
+{% for included_item in data_source_contents.first.json_content.included %}
+  {% if included_item.attributes.snippet != blank %}
+    {% assign first_snippet = included_item.attributes.snippet %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% assign description_content = first_snippet | replace_first: '... ', '' | prepend: '... ' | prepend: @data_source_contents.first.json_content.data.first.attributes.name %}
+{% content_for 'meta_description' %}
+  {{ description_content | truncate: 165  }}
+{% endcontent_for %}
+
+{% assign title_text = @data_source_contents.first.json_content.data.first.attributes.name | append: ' - ' | append: @data_source_contents.first.json_content.data.first.relationships.items.data.size | append: '  %}
+{% title title_text %}
 
 {% assign cache_key = data_source_last_update | append: current_path %}
 
@@ -155,18 +171,15 @@ class LongtailRakeHelper
       {% for item in dsc.data.first.relationships.items.data %}
         {% for listing in dsc.included %}
           {% if listing.id == item.id %}
-            <article class="listing {% if listing.attributes.photos.size == 0 %}listing-photos__empty{% endif %}">
+            {% assign photos_count = listing.attributes.photos | size %}
+            <article class="listing {% if photos_count == 0 %}listing-photos__empty{% endif %}">
               <div class="listing-photos">
                 <ul class="listing-photos__carousel" data-carousel>
-                  {% if listing.attributes.photos.size == 0 %}
-                    <li class="active">
-                      <a href="{{ listing.attributes.url }}"><img src="http://placekitten.com/410/254" alt="{{ listing.attributes.name }}"></a>
-                    </li>
-                  {% elsif listing.attributes.photos.size == 1 %}
+                  {% if photos_count == 1 %}
                     <li class="active">
                       <a href="{{ listing.attributes.url }}"><img src="{{ listing.attributes.photos[0] }}" alt="{{ listing.attributes.name }}"></a>
                     </li>
-                  {% else %}
+                  {% elsif photos_count > 1 %}
                     <li class="listing-photos__carousel--prev"><a href="#" data-carousel-control="prev"><i class="fa fa-chevron-left"></i></a></li>
                     {% for photo in listing.attributes.photos %}
                       <li class="{% if forloop.index == 1 %}active{% endif %}" data-carousel-item>
@@ -174,6 +187,12 @@ class LongtailRakeHelper
                       </li>
                     {% endfor %}
                     <li class="listing-photos__carousel--next"><a href="#" data-carousel-control="next"><i class="fa fa-chevron-right"></i></a></li>
+                  {% else %}
+                    <li class="active">
+                      <a href="{{ listing.attributes.url }}">
+                        <img src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/attachment_file/data/3228/placeholder.svg" alt="Photos unavailable or still processing" />
+                      </a>
+                    </li>
                   {% endif %}
                 </ul>
               </div>
@@ -209,7 +228,8 @@ class LongtailRakeHelper
                 <div class="listing-pricing">
                   <ul class="list-unstyled">
                     {% for price in listing.attributes.price %}
-                      <li>{{price[0]}}: {{ price[1] }}</li>
+                      {% assign price_key = "reservations." | append: price[0] | append: '.one' %}
+                      <li>{{ price[1] | pricify: listing.attributes.currency }} / {{price_key | t }}</li>
                     {% endfor %}
                   </ul>
                 </div>

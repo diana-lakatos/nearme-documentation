@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class HeroImageUploader < BaseUploader
   include CarrierWave::TransformableImage
   include CarrierWave::DynamicPhotoUploads
@@ -9,6 +10,5 @@ class HeroImageUploader < BaseUploader
 
   version :medium do
     process dynamic_version: :medium
-    process optimize: OPTIMIZE_SETTINGS
   end
 end

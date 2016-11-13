@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'braintree'
 
 class PaymentGateway::BraintreePaymentGateway < PaymentGateway
@@ -8,7 +9,7 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   supported :company_onboarding, :recurring_payment, :nonce_payment,
             :credit_card_payment, :partial_refunds, :multiple_currency
 
-  delegate :verify_webhook, :parse_webhook, :find_transaction, :find_merchant, :onboard!, :update_onboard!,
+  delegate :verify_webhook, :parse_webhook, :find_payment, :find_merchant, :onboard!, :update_onboard!,
            :client_token, :payment_settled?, to: :gateway
 
   def self.supported_countries

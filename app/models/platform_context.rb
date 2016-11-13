@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Class responsible for encapsulating multi-tenancy logic.
 #
 # PlatformContext for normal requests is set based on current domain. Information about current platform
@@ -19,7 +20,7 @@
 
 class PlatformContext
   DEFAULT_REDIRECT_CODE = 302
-  NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'.freeze
+  NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'
   @@instance_view_cache_key = {}
 
   attr_reader :domain, :platform_context_detail, :instance, :theme, :custom_theme, :domain,
@@ -43,6 +44,7 @@ class PlatformContext
     I18N_DNM_BACKEND.set_instance(platform_context.instance) if defined? I18N_DNM_BACKEND
     I18n.locale = platform_context.instance.primary_locale
     CacheExpiration.update_memory_cache
+    NewRelic::Agent.add_custom_attributes(instance_id: platform_context.instance.id)
     set_es_mappings
   end
 
@@ -238,6 +240,11 @@ class PlatformContext
     return false if user.nil?
     return false unless user.metadata[@instance.id.to_s].try(:keys).try(:include?, 'instance_admins_metadata') || user.admin?
     @custom_theme = @platform_context_detail.custom_theme_for_instance_admins if @platform_context_detail.try(:custom_theme_for_instance_admins).present?
+  end
+
+  def photo_upload_version_dimensions(version, uploader)
+    @photo_upload_versions_fetcher ||= PhotoUploadVersionFetcher.new
+    @photo_upload_versions_fetcher.dimensions(version, uploader)
   end
 
   private

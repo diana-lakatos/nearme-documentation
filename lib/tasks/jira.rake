@@ -113,7 +113,11 @@ class JiraReleaser
       next unless ['ready for qa'].include?(issue.status.name.downcase)
       puts "\tmoving to test"
       transition = issue.transitions.build
+      begin
       transition.save!('transition' => { 'id' => 291 })
+      rescue
+        puts "Faied to move #{issue.key}"
+      end
     end
   end
 

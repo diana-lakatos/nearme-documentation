@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161028141404) do
+ActiveRecord::Schema.define(version: 20161105120728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1165,27 +1165,10 @@ ActiveRecord::Schema.define(version: 20161028141404) do
 
   add_index "instance_views", ["instance_id", "path", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
 
-  create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.integer  "instance_type_id"
-    t.integer  "instance_id"
-    t.text     "body"
-    t.string   "path",                 limit: 255
-    t.string   "locale",               limit: 255
-    t.string   "format",               limit: 255
-    t.string   "handler",              limit: 255
-    t.boolean  "partial"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "view_type",            limit: 255
-    t.integer  "transactable_type_id"
-    t.integer  "custom_theme_id"
-  end
-
   create_table "instances", force: :cascade do |t|
     t.string   "name",                                          limit: 255
-    t.datetime "created_at",                                                                                                null: false
-    t.datetime "updated_at",                                                                                                null: false
+    t.datetime "created_at",                                                                                                                   null: false
+    t.datetime "updated_at",                                                                                                                   null: false
     t.string   "bookable_noun",                                 limit: 255,                         default: "Desk"
     t.decimal  "service_fee_guest_percent",                                 precision: 5, scale: 2, default: 0.0
     t.string   "lessor",                                        limit: 255
@@ -1234,13 +1217,13 @@ ActiveRecord::Schema.define(version: 20161028141404) do
     t.string   "support_imap_server",                           limit: 255
     t.integer  "support_imap_port"
     t.boolean  "support_imap_ssl"
-    t.hstore   "search_settings",                                                                   default: {},            null: false
+    t.hstore   "search_settings",                                                                   default: {},                               null: false
     t.string   "default_country",                               limit: 255
     t.text     "allowed_countries"
     t.string   "default_currency",                              limit: 255
     t.text     "allowed_currencies"
     t.string   "category_search_type",                          limit: 255,                         default: "AND"
-    t.string   "search_engine",                                 limit: 255,                         default: "postgresql",  null: false
+    t.string   "search_engine",                                 limit: 255,                         default: "postgresql",                     null: false
     t.integer  "search_radius"
     t.string   "search_text",                                   limit: 255
     t.integer  "last_index_job_id"
@@ -1255,30 +1238,33 @@ ActiveRecord::Schema.define(version: 20161028141404) do
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                          default: true
     t.string   "time_zone"
-    t.string   "seller_attachments_access_level",               limit: 255,                         default: "disabled",    null: false
-    t.integer  "seller_attachments_documents_num",                                                  default: 10,            null: false
-    t.boolean  "enable_language_selector",                                                          default: false,         null: false
+    t.string   "seller_attachments_access_level",               limit: 255,                         default: "disabled",                       null: false
+    t.integer  "seller_attachments_documents_num",                                                  default: 10,                               null: false
+    t.boolean  "enable_language_selector",                                                          default: false,                            null: false
     t.boolean  "click_to_call",                                                                     default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                          default: false
     t.boolean  "split_registration",                                                                default: false
-    t.boolean  "precise_search",                                                                    default: false,         null: false
+    t.boolean  "precise_search",                                                                    default: false,                            null: false
     t.boolean  "require_payout_information",                                                        default: false
     t.boolean  "enquirer_blogs_enabled",                                                            default: false
     t.boolean  "lister_blogs_enabled",                                                              default: false
     t.boolean  "tax_included_in_price",                                                             default: true
     t.boolean  "skip_meta_tags",                                                                    default: false
     t.string   "test_email"
-    t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
+    t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,                            null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
     t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
     t.boolean  "force_fill_in_wizard_form"
-    t.boolean  "show_currency_symbol",                                                              default: true,          null: false
-    t.boolean  "show_currency_name",                                                                default: false,         null: false
-    t.boolean  "no_cents_if_whole",                                                                 default: true,          null: false
-    t.string   "encrypted_google_maps_api_key",                                                     default: "",            null: false
+    t.boolean  "show_currency_symbol",                                                              default: true,                             null: false
+    t.boolean  "show_currency_name",                                                                default: false,                            null: false
+    t.boolean  "no_cents_if_whole",                                                                 default: true,                             null: false
+    t.string   "encrypted_google_maps_api_key",                                                     default: "",                               null: false
+    t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
+    t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
+    t.boolean  "debugging_mode_for_admins",                                                         default: true
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -1477,6 +1463,7 @@ ActiveRecord::Schema.define(version: 20161028141404) do
     t.string   "internal_payment_gateway_account_id", limit: 255
     t.boolean  "test",                                            default: false
     t.datetime "deleted_at"
+    t.string   "external_id"
   end
 
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
@@ -1774,6 +1761,7 @@ ActiveRecord::Schema.define(version: 20161028141404) do
     t.integer  "payer_id"
     t.integer  "total_amount_cents",                                                             default: 0
     t.boolean  "exclude_from_payout",                                                            default: false
+    t.string   "external_id"
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
@@ -1952,6 +1940,7 @@ ActiveRecord::Schema.define(version: 20161028141404) do
     t.integer  "payment_gateway_id"
     t.string   "payment_gateway_mode", limit: 4
     t.string   "receiver"
+    t.string   "external_id"
   end
 
   create_table "reservation_periods", force: :cascade do |t|
@@ -3199,38 +3188,6 @@ ActiveRecord::Schema.define(version: 20161028141404) do
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
   add_index "workflow_alerts", ["template_path", "workflow_step_id", "recipient_type", "alert_type", "deleted_at"], name: "index_workflows_alerts_on_templ_step_recipient_alert_and_del", unique: true, using: :btree
-
-  create_table "workflow_alerts_backup_20160926", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.string   "name",                      limit: 255
-    t.string   "alert_type",                limit: 255
-    t.string   "recipient_type",            limit: 255
-    t.string   "template_path",             limit: 255
-    t.integer  "workflow_step_id"
-    t.integer  "instance_id"
-    t.text     "options"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "delay"
-    t.text     "subject"
-    t.string   "layout_path",               limit: 255
-    t.text     "custom_options"
-    t.string   "from",                      limit: 255
-    t.string   "reply_to",                  limit: 255
-    t.string   "cc",                        limit: 255
-    t.string   "bcc",                       limit: 255
-    t.string   "recipient",                 limit: 255
-    t.string   "from_type",                 limit: 255
-    t.string   "reply_to_type",             limit: 255
-    t.text     "endpoint"
-    t.string   "request_type"
-    t.boolean  "use_ssl"
-    t.text     "payload_data"
-    t.text     "headers"
-    t.text     "prevent_trigger_condition"
-    t.string   "bcc_type"
-  end
 
   create_table "workflow_steps", force: :cascade do |t|
     t.string   "name",             limit: 255

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ReservationType < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
@@ -23,7 +24,7 @@ class ReservationType < ActiveRecord::Base
 
   validates :name, :transactable_types, presence: true
 
-  store_accessor :settings, :address_in_radius, :validate_on_adding_to_cart, :skip_payment_authorization
+  store_accessor :settings, :address_in_radius, :validate_on_adding_to_cart, :skip_payment_authorization, :check_overlapping_dates
 
   def translation_manager
     @translation_manager ||= InstanceProfileType::InstanceProfileTypeTranslationManager.new(self)
@@ -38,4 +39,8 @@ class ReservationType < ActiveRecord::Base
     super == 'true'
   end
   alias skip_payment_authorization? skip_payment_authorization
+
+  def check_overlapping_dates
+    super == 'true'
+  end
 end

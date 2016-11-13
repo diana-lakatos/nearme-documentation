@@ -1,4 +1,5 @@
 
+# frozen_string_literal: true
 # Payment class helps interact with Active Merchant via different Payment Gateways.
 # It's now isolated from Reservation, Order etc. All you need to do to add payment
 # to new model is to build payment object (see build_payment method in Reservation class).
@@ -129,7 +130,7 @@ class Payment < ActiveRecord::Base
     event :mark_as_paid       do transition authorized: :paid; end
     event :mark_as_voided     do transition [:authorized, :paid] => :voided; end
     event :mark_as_refuneded  do transition paid: :refunded; end
-    event :mark_as_failed     do transition any => :refunded; end
+    event :mark_as_failed     do transition any => :failed; end
   end
 
   # TODO: now as we call that on Payment object there is no need to _payment?, instead payment.manual?
@@ -163,7 +164,7 @@ class Payment < ActiveRecord::Base
 
     if charge.success?
       # this works for braintree, might not work for others - to be moved to separate class etc, and ideally somewhere else... hackish hack as a quick win
-      update_attribute(:external_transaction_id, authorization_token)
+      update_attribute(:external_id, authorization_token)
       mark_as_paid!
     else
       touch(:failed_at)
@@ -267,6 +268,12 @@ class Payment < ActiveRecord::Base
     end
   end
 
+  def fetch
+    return unless payment_gateway.gateway.respond_to?(:find_payment)
+
+    payment_gateway.find_payment(authorization_token, merchant_account.try(:external_id))
+  end
+
   def service_fee_refund_amount_cents
     # We only want to refund host service fee when guest cancel
     if cancelled_by_guest?
@@ -310,7 +317,7 @@ class Payment < ActiveRecord::Base
   end
 
   def test_mode?
-    payment_gateway_mode == 'test'
+    payment_gateway_mode == PaymentGateway::TEST_MODE
   end
 
   def settled?

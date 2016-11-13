@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Metadata
   module PhotoMetadata
     extend ActiveSupport::Concern
@@ -22,8 +23,7 @@ module Metadata
       def to_listing_metadata
         {
           listing_name: listing.name,
-          original: image.url(:optimized),
-          fullscreen: image.url(:fullscreen),
+          original: image.url,
           space_listing: image.url(:space_listing),
           golden:  image.url(:golden),
           large: image.url(:large),

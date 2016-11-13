@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SecuredParams
   def shipping_profile
     [
@@ -367,9 +368,12 @@ class SecuredParams
       :show_currency_name,
       :no_cents_if_whole,
       :google_maps_api_key,
+      :debugging_mode_for_admins,
+      :timeout_in_minutes,
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
+      password_validation_rules: [:uppercase, :lowercase, :number, :symbol, :min_password_length],
       domains_attributes: nested(domain),
       location_types_attributes: nested(location_type),
       text_filters_attributes: nested(text_filter),
@@ -1000,6 +1004,7 @@ class SecuredParams
       :step_checkout,
       :validate_on_adding_to_cart,
       :skip_payment_authorization,
+      :check_overlapping_dates,
       transactable_type_ids: []
     ]
   end

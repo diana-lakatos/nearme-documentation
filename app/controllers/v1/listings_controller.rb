@@ -1,14 +1,15 @@
+# frozen_string_literal: true
 class V1::ListingsController < V1::BaseController
-  skip_before_filter :verify_authenticity_token, only: [:create, :update, :destroy]
+  skip_before_action :verify_authenticity_token, only: [:create, :update, :destroy]
 
   # Endpoints that require authentication
-  before_filter :require_authentication,         only: [:create, :update, :destroy, :connections, :reservation, :share]
-  before_filter :find_listing,                   only: [:update, :destroy]
-  before_filter :convert_price_params,           only: [:create, :update]
-  before_filter :validate_search_params!,        only: :search
-  before_filter :validate_query_params!,         only: :query
-  before_filter :validate_reservation_params!,   only: :reservation
-  before_filter :validate_availability_params!,  only: :availability
+  before_action :require_authentication,         only: [:create, :update, :destroy, :connections, :reservation, :share]
+  before_action :find_listing,                   only: [:update, :destroy]
+  before_action :convert_price_params,           only: [:create, :update]
+  before_action :validate_search_params!,        only: :search
+  before_action :validate_query_params!,         only: :query
+  before_action :validate_reservation_params!,   only: :reservation
+  before_action :validate_availability_params!,  only: :availability
 
   # Default error handler
   rescue_from ActiveRecord::RecordNotFound, with: :listing_not_found
@@ -28,9 +29,7 @@ class V1::ListingsController < V1::BaseController
   end
 
   def update
-    if params[:listing][:photos_attributes].nil?
-      params[:listing].delete :photos_attributes
-    end
+    params[:listing].delete :photos_attributes if params[:listing][:photos_attributes].nil?
     @listing.assign_attributes(listing_params)
 
     if @listing.save
@@ -126,24 +125,23 @@ class V1::ListingsController < V1::BaseController
   def formatted_avatar(patron)
     return {} if patron.avatar.blank?
     {
-      thumb_url:  "#{patron.avatar_url(:thumb)}",
-      medium_url: "#{patron.avatar_url(:medium)}",
-      large_url:  "#{patron.avatar_url(:large)}"
+      thumb_url:  patron.avatar_url(:thumb).to_s,
+      medium_url: patron.avatar_url(:medium).to_s
     }
   end
 
   def validate_search_params!
-    fail DNM::MissingJSONData, 'boundingbox' if json_params['boundingbox'].blank?
+    raise DNM::MissingJSONData, 'boundingbox' if json_params['boundingbox'].blank?
   end
 
   def validate_query_params!
-    fail DNM::MissingJSONData, 'query' if json_params['query'].blank?
+    raise DNM::MissingJSONData, 'query' if json_params['query'].blank?
   end
 
   # Validate the JSON POST for reserving a listing
   def validate_reservation_params!
     # Dates are required
-    fail DNM::MissingJSONData, 'dates' if json_params['dates'].blank?
+    raise DNM::MissingJSONData, 'dates' if json_params['dates'].blank?
     @dates = Array(json_params['dates'])
     begin
       @dates.map! { |d| Date.parse d }.sort!
@@ -153,27 +151,27 @@ class V1::ListingsController < V1::BaseController
 
     # Dates cannot be in the past
     @dates.each do |date|
-      fail DNM::InvalidJSONDate.new('dates') if date.past?
+      raise DNM::InvalidJSONDate, 'dates' if date.past?
     end
 
     @email = json_params['email']
-    fail DNM::MissingJSONData, 'email' if @email.blank?
+    raise DNM::MissingJSONData, 'email' if @email.blank?
 
     @quantity = json_params['quantity']
     @assignees = json_params['assignees']
 
     # Default for quantity
     if @quantity.blank?
-      if @assignees.blank?
-        @quantity = 1
-      else
-        @quantity = @assignees.length
-      end
+      @quantity = if @assignees.blank?
+                    1
+                  else
+                    @assignees.length
+                  end
     end
   end
 
   def validate_availability_params!
-    fail DNM::MissingJSONData, 'dates' if json_params['dates'].blank?
+    raise DNM::MissingJSONData, 'dates' if json_params['dates'].blank?
     @dates = Array(json_params['dates'])
     @dates.map! { |d| Date.parse d }.sort!
   rescue
@@ -182,10 +180,10 @@ class V1::ListingsController < V1::BaseController
 
   def validate_share_params!
     users = json_params['to']
-    fail DNM::MissingJSONData, 'to' if users.blank?
+    raise DNM::MissingJSONData, 'to' if users.blank?
     users.each do |user|
-      fail DNM::MissingJSONData, 'name'  if user['name'].blank?
-      fail DNM::MissingJSONData, 'email' if user['email'].blank?
+      raise DNM::MissingJSONData, 'name'  if user['name'].blank?
+      raise DNM::MissingJSONData, 'email' if user['email'].blank?
     end
   end
 

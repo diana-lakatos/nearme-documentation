@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 DesksnearMe::Application.routes.draw do
   # favicon for scraping
   get '/favicon.ico', to: 'favicon#show'
@@ -512,7 +513,11 @@ DesksnearMe::Application.routes.draw do
           end
         end
         resources :partners
-        resources :payments, only: [:index, :show, :update]
+        resources :payments, only: [:index, :show, :update] do
+          member do
+            put :reload
+          end
+        end
         resources :orders, only: [:index, :show] do
           member do
             post :generate_next_period
@@ -1152,9 +1157,6 @@ DesksnearMe::Application.routes.draw do
     end
 
     get '/:slug/(:slug2)/(:slug3)(.:format)', to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
-
-    # delayed_job web gui
-    match '/delayed_job' => DelayedJobWeb, :anchor => false, via: [:get, :post]
 
     get '/w-hotels-desks-near-me', to: 'locations#w_hotels', as: :w_hotels_location
     get '/W-hotels-desks-near-me', to: 'locations#w_hotels'

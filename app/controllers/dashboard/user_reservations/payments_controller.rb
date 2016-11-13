@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 class Dashboard::UserReservations::PaymentsController < Dashboard::BaseController
-  before_filter :find_order
-  before_filter :find_payment
-  before_filter :check_if_actionable, only: [:approve, :rejection_form, :reject]
-  before_filter :check_if_editable, only: [:edit, :update]
+  before_action :find_order
+  before_action :find_payment
+  before_action :check_if_actionable, only: [:approve, :rejection_form, :reject]
+  before_action :check_if_editable, only: [:edit, :update]
 
   def edit
   end
@@ -14,7 +15,7 @@ class Dashboard::UserReservations::PaymentsController < Dashboard::BaseControlle
       else
         flash[:error] = t('flash_messages.payments.authorization_failed_anyway')
       end
-      redirect_to dashboard_user_reservations_path
+      redirect_to dashboard_orders_path
       render_redirect_url_as_json
     else
       render :edit
@@ -32,7 +33,7 @@ class Dashboard::UserReservations::PaymentsController < Dashboard::BaseControlle
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPaymentButCaptureFailed, @order.id)
       flash[:warning] = t('flash_messages.payments.failed_to_approve')
     end
-    redirect_to dashboard_user_reservations_path
+    redirect_to dashboard_orders_path
   end
 
   def rejection_form
@@ -42,13 +43,13 @@ class Dashboard::UserReservations::PaymentsController < Dashboard::BaseControlle
     attributes = {
       pending_guest_confirmation: nil
     }
-    attributes.merge!(rejection_reason: params[:delayed_reservation][:rejection_reason]) if params[:delayed_reservation]
+    attributes[:rejection_reason] = params[:delayed_reservation][:rejection_reason] if params[:delayed_reservation]
     if @order.update_attributes(attributes)
       @order.payment.void!
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerDeclinedPayment, @order.id)
       flash[:notice] = t('flash_messages.payments.successful_rejection')
     end
-    redirect_to dashboard_user_reservations_path
+    redirect_to dashboard_orders_path
   end
 
   private
@@ -64,7 +65,7 @@ class Dashboard::UserReservations::PaymentsController < Dashboard::BaseControlle
   def check_if_actionable
     unless @order.can_approve_or_decline_checkout?
       flash[:error] = t('flash_messages.payments.cannot_take_action')
-      redirect_to dashboard_user_reservations_path
+      redirect_to dashboard_orders_path
     end
   end
 
@@ -74,7 +75,7 @@ class Dashboard::UserReservations::PaymentsController < Dashboard::BaseControlle
         render text: t('flash_messages.payments.cannot_edit')
       else
         flash[:error] = t('flash_messages.payments.cannot_edit')
-        redirect_to dashboard_user_reservations_path
+        redirect_to dashboard_orders_path
       end
     end
   end

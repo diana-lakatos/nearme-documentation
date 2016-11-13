@@ -16,13 +16,13 @@
             - @first_pricing_id ||= pricing.id
             - if pricing.is_free_booking?
               = content_tag :li, data: { unit: pricing.adjusted_unit, pricing_id: pricing.id } do
-                = link_to ".#{pricing.adjusted_unit}-booking-#{@listing.id}", class: "possible", role: "tab", :'data-toggle' => "tab" do
+                = link_to ".#{pricing.adjusted_unit}-booking-#{@listing.id}", rel: 'nofollow', class: "possible", role: "tab", :'data-toggle' => "tab" do
                   %span.label
                     = t 'booking_module.free'
                     %span.period= pricing.decorate.units_translation("reservations.per_unit_price")
             - else
               = content_tag :li, data: { unit: pricing.adjusted_unit, pricing_id: pricing.id } do
-                = link_to ".#{pricing.adjusted_unit}-booking-#{@listing.id}", class: "possible", role: "tab", :'data-toggle' => "tab" do
+                = link_to ".#{pricing.adjusted_unit}-booking-#{@listing.id}", rel: 'nofollow', class: "possible", role: "tab", :'data-toggle' => "tab" do
                   %span.label
                     = @action_type.price_with_currency(pricing)
                     %span.period= pricing.decorate.units_translation("reservations.per_unit_price")

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PlatformContextDrop < BaseDrop
   attr_reader :platform_context_decorator
 
@@ -83,6 +84,8 @@ class PlatformContextDrop < BaseDrop
   #   Remove wrapper around page content
   # set_blank_theme_name
   #   Remove default theme name class from body
+  # debugging_mode_for_admins?
+  #   Whether debugging mode for admins is currently enabled
 
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :facebook_url, :twitter_url, :gplus_url,
            :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
@@ -92,7 +95,7 @@ class PlatformContextDrop < BaseDrop
            :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
            :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?,
            :active_rating_systems_present?, :webhook_token, :instance, :enable_geo_localization, :split_registration?,
-           :enquirer_blogs_enabled, :lister_blogs_enabled,
+           :enquirer_blogs_enabled, :lister_blogs_enabled, :debugging_mode_for_admins?,
            :transactable_types_ordered, :transactable_types_as_hash, to: :platform_context_decorator
 
   def initialize(platform_context_decorator)

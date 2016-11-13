@@ -18,6 +18,9 @@
         = f.input :name, input_html: { class: 'form-control' }, required: false, placeholder: t('instance_admin.settings.configuration.basic_configuration_section.placeholder_marketplace_name')
     .row
       .input-container.col-xs-6
+        = f.input :debugging_mode_for_admins, inline_label: true, hint: 'If user is logged in as Admin, inserts html comments with paths to all liquid views along with available variables'
+    .row
+      .input-container.col-xs-6
         = f.input :skip_company, inline_label: true
       .input-container.col-xs-6
         = f.input :force_accepting_tos, inline_label: true
@@ -100,7 +103,7 @@
         %h4
           = t('instance_admin.settings.configuration.text_filters')
       .col-xs-6
-        = f.link_to_add :text_filters, :data => { :target => "#text-filters" } do
+        = f.link_to_add :text_filters, :data => { :target => '#text-filters' } do
           .btn.btn-blue.pull-right
             = t('instance_admin.settings.configuration.text_filters_section.add_text_filter')
     .row
@@ -132,6 +135,22 @@
             .input-container.col-xs-1.text-center
               = f.link_to_remove confirm: (f.object.try(:name).present? ? "Are you sure you want to delete #{f.object.name}?" : false) do
                 .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
+
+  .content-container
+    %h4
+      = t('instance_admin.settings.configuration.user_options')
+    .row
+      = f.simple_fields_for :password_validation_rules, OpenStruct.new(f.object.password_validation_rules) do |validation_rules_form|
+        - validation_rules_form.object.errors = f.object.errors
+        .input-container.col-xs-4
+          = validation_rules_form.input :uppercase, as: :boolean, inline_label: true, label: t('activerecord.attributes.password_validation_rules.uppercase')
+          = validation_rules_form.input :lowercase, as: :boolean, inline_label: true, label: t('activerecord.attributes.password_validation_rules.lowercase')
+          = validation_rules_form.input :number, as: :boolean, inline_label: true, label: t('activerecord.attributes.password_validation_rules.number')
+          = validation_rules_form.input :symbol, as: :boolean, inline_label: true, label: t('activerecord.attributes.password_validation_rules.symbol')
+        .input-container.col-xs-4
+          = validation_rules_form.input :min_password_length, as: :string, input_html: { class: 'form-control' }, required: false, placeholder: Devise.password_length.first.to_s, hint: t('instance_admin.settings.configuration.password.min_length.hint', default_min_length: Devise.password_length.first)
+      .input-container.col-xs-4
+        = f.input :timeout_in_minutes, as: :string, placeholder: '0', hint: t('instance_admin.settings.configuration.timeout.hint'), input_html: { class: 'form-control' }
 
   .content-container
     %h4

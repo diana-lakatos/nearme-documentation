@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class User < ActiveRecord::Base
   include Searchable
 
@@ -29,7 +30,7 @@ class User < ActiveRecord::Base
   mount_uploader :cover_image, CoverImageUploader
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable,
-         :user_validatable, :token_authenticatable, :temporary_token_authenticatable
+         :user_validatable, :token_authenticatable, :temporary_token_authenticatable, :timeoutable
 
   skip_callback :commit, :after, :remove_avatar!
   skip_callback :commit, :after, :remove_cover_image!
@@ -249,7 +250,9 @@ class User < ActiveRecord::Base
   scope :sellers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::SELLER])) }
 
   validates_with CustomValidators
+
   validates :name, :first_name, presence: true
+
   validate :validate_name_length_from_fullname
   validate :has_verified_phone_number, if: ->(u) { u.must_have_verified_phone_number }
 
@@ -270,6 +273,12 @@ class User < ActiveRecord::Base
   validates :accept_terms_of_service, acceptance: { on: :create, allow_nil: false, if: ->(u) { PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation } }
 
   class << self
+    def timeout_in
+      return 1.year if PlatformContext.current.instance.timeout_in_minutes.zero?
+
+      PlatformContext.current.instance.timeout_in_minutes.minutes
+    end
+
     def find_for_database_authentication(warden_conditions)
       where(warden_conditions.to_h).order('external_id NULLS FIRST').first
     end
@@ -399,6 +408,8 @@ class User < ActiveRecord::Base
       get_buyer_profile
     when 'seller'
       get_seller_profile
+    else
+      get_default_profile
     end
     self.force_profile = nil
     @all_current_profiles ||= (UserProfile::PROFILE_TYPES - Array(skip_validations_for).map(&:to_s)).map do |profile_type|

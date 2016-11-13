@@ -1,9 +1,14 @@
+# frozen_string_literal: true
 require 'test_helper'
+require Rails.root.join 'test/helpers/placeholder_helper'
+include PlaceholderHelper
 
 class MountUploaderTest < ActiveSupport::TestCase
+  include PlaceholderHelper
+
   context '#url' do
     setup do
-      CarrierWave::SourceProcessing::Processor.any_instance.stubs(:enqueue_processing).with(false).returns(true)
+      CarrierWave::SourceProcessing::Processor.any_instance.stubs(:enqueue_processing).returns(true)
       @photo = FactoryGirl.create(:photo, image_versions_generated_at: nil)
     end
 
@@ -18,8 +23,8 @@ class MountUploaderTest < ActiveSupport::TestCase
     end
 
     should 'return proper url for delayed versions after generation' do
-      assert_match /\/\/placehold.it\/895x554(.+)/, @photo.image.url(:golden)
-      CarrierWave::SourceProcessing::Processor.new(@photo, :image).generate_versions(false)
+      assert_equal placeholder_url(895, 554), @photo.image.url(:golden)
+      CarrierWave::SourceProcessing::Processor.new(@photo, :image).generate_versions
       assert_match(/instances\/1\/uploads\/images\/photo\/image/, @photo.image.url(:golden))
     end
   end
@@ -27,12 +32,12 @@ class MountUploaderTest < ActiveSupport::TestCase
   context '#default_url' do
     should 'return transformed version versions dimensions if they are provided' do
       photo = FactoryGirl.create(:photo, image_versions_generated_at: nil)
-      assert_equal '895x554&text=Photos+Unavailable+or+Still+Processing', photo.image.default_url(:golden).split('/').last
+      assert_equal placeholder_url(895, 554), photo.image.default_url(:golden)
     end
 
     should 'return default 100x100 placeholder for original version' do
       page = FactoryGirl.create(:page)
-      assert_equal '100x100&text=Photos+Unavailable+or+Still+Processing', page.hero_image.default_url.split('/').last
+      assert_equal placeholder_url(100, 100), page.hero_image.default_url
     end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Instance < ActiveRecord::Base
   include Encryptable
   include DomainsCacheable
@@ -22,6 +23,7 @@ class Instance < ActiveRecord::Base
   serialize :allowed_currencies, Array
   serialize :orders_received_tabs, Array
   serialize :my_orders_tabs, Array
+  serialize :password_validation_rules, Hash
 
   SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category).freeze
   SEARCH_ENGINES = %w(postgresql elasticsearch).freeze
@@ -96,6 +98,9 @@ class Instance < ActiveRecord::Base
   validates :support_imap_username, length: { maximum: 255 }
   validates :support_imap_password, length: { maximum: 255 }
   validates :support_imap_server, length: { maximum: 255 }
+  validates :timeout_in_minutes, numericality: { only_integer: true }
+
+  validates_with PasswordRulesValidator
 
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? && params.key?(:name) }
   accepts_nested_attributes_for :theme
@@ -254,7 +259,7 @@ class Instance < ActiveRecord::Base
   end
 
   def payment_gateway_mode
-    test_mode? ? 'test' : 'live'
+    test_mode? ? PaymentGateway::TEST_MODE : PaymentGateway::LIVE_MODE
   end
 
   def onboarding_verification_required

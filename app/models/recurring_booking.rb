@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 class RecurringBooking < Order
   include Bookable
   include Categorizable
 
-  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :action, allow_nil: true
+  delegate :favourable_pricing_rate, to: :action, allow_nil: true
   delegate :action, to: :transactable_pricing
 
   has_one :old, class_name: 'OldRecurringBooking', foreign_key: 'order_id'
@@ -200,5 +201,15 @@ class RecurringBooking < Order
 
   def monthly?
     transactable_pricing.unit == 'subscription_month'
+  end
+
+  def first_transactable_line_item
+    transactable_line_items.first
+  end
+
+  [:service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents].each do |method_name|
+    define_method method_name do
+      first_transactable_line_item.try(method_name) || action.try(method_name)
+    end
   end
 end

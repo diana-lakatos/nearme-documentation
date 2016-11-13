@@ -1,4 +1,6 @@
+# frozen_string_literal: true
 require 'rack-mini-profiler'
+require 'new_relic/rack/developer_mode'
 
 DesksnearMe::Application.configure do
   # true to turn on caching
@@ -49,6 +51,8 @@ DesksnearMe::Application.configure do
   config.use_elastic_search = true
 
   Liquid.cache_classes = false
+
+  config.middleware.use NewRelic::Rack::DeveloperMode if ENV['ENABLE_PROFILER']
 
   if defined?(Bullet)
     config.after_initialize do
