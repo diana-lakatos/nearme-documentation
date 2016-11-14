@@ -1,7 +1,13 @@
-# Usage: !{% featured_items target: users, amount: 6 %}
-# or: !{% featured_items target: services, amount: 6, type: Boat %}
-#
-
+# Usage: 
+# ```
+# {% featured_items target: users, amount: 6 %}
+# ```
+# or:
+# ```
+# {% featured_items target: services, amount: 6, type: Boat %}
+# ```
+# Will render the specified target items which have been marked as featured. In the examples
+# "Boat" is the Transactable Type name, amount is the number of featured items to render.
 class FeaturedItemsTag < Liquid::Tag
   def initialize(tag_name, arguments, context)
     super

@@ -1,3 +1,13 @@
+# Usage example:
+# ```
+# {% form_tag url: '/users' %}
+# <input type="text" name="custom_field" value="" />
+# <input type="submit" value="Submit" />
+# {% endform_tag %}
+# ```
+#
+# Used to generate a generic form (not one for a passed in 'object' like form_for does).
+# The url where the form will post its values needs to be provided.
 class FormTagTag < Liquid::Block
   include AttributesParserHelper
 

@@ -14,7 +14,7 @@ class CustomVerifier < YARD::Verifier
         false
       else
         # All other objects
-        if (obj.is_a?(YARD::CodeObjects::ClassObject) && !obj.path.match(/Drop$/)) || 
+        if (obj.is_a?(YARD::CodeObjects::ClassObject) && !(obj.path.match(/Drop$/) || obj.file.match(/^app\/liquid_tags\/.+?\.rb$/))) ||
           (obj.is_a?(YARD::CodeObjects::ModuleObject) && !obj.path.match(/LiquidFilters/))
           true
         else

@@ -1,3 +1,4 @@
+# This is not currently usable.
 class SelectTag < Liquid::Tag
   include ActionView::Helpers::FormTagHelper
   include ActionView::Helpers::FormOptionsHelper

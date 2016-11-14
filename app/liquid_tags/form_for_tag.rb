@@ -1,3 +1,19 @@
+# Usage example:
+# ```
+#  {% form_for current_user, url: '/users' %}
+#    <input type="text" name="!{{ form_object.object_name }}_email" value="!{{ form_object.object.email }}">
+#
+#    {% input first_name, hint: 'this is a hint', label: 'this is a label', required: false  %}
+#    {% input last_name, required: false  %}
+#
+#    {% input avatar %}
+#    {% submit Save  %}
+#
+#  {% endform_for %}
+# ```
+#
+# Used to generate a form for an object (in the example above, a user). Inside the tag, the object
+# is available as "form_object".
 class FormForTag < Liquid::Block
   include AttributesParserHelper
 
