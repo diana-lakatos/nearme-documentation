@@ -57,7 +57,7 @@ class OrderDrop < BaseDrop
   # @!method cancellation_policy_penalty_hours
   #   @return [Integer] Used for calculating the penalty for cancelling (unit_price * cancellation_policy_penalty_hours)
   # @!method created_at
-  #   @return [ActiveSupport::TimeWithZone] time when the order was initiated
+  #   @return [DateTime] time when the order was initiated
   # @!method payment
   #   @return [PaymentDrop] Payment object for this order
   # @!method total_units_text

@@ -9,7 +9,7 @@ class WaiverAgreementTemplateDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier of the waiver agreement template
   # @!method created_at
-  #   @return [ActiveSupport::TimeWithZone] date/time when the object was created
+  #   @return [DateTime] date/time when the object was created
   delegate :name, :content, :id, :created_at, to: :source
 
 end

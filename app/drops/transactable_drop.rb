@@ -63,7 +63,7 @@ class TransactableDrop < BaseDrop
   #   @return [Array<ApprovalRequestDrop>] Approval requests for this transactable (if approval is required from the marketplace owner)
   # @!method updated_at
   #   Last time when the transactable has been updated
-  #   @return [ActiveSupport::TimeWithZone]
+  #   @return [DateTime]
   # @!method attachments
   #   @return [Array<CkeditorAssetDrop>] Seller attachments for this transactable (documents available to purchasers/collaborators/etc.)
   # @!method express_checkout_payment?
@@ -113,7 +113,7 @@ class TransactableDrop < BaseDrop
   #   State for the order (e.g. pending/completed/cancelled/in progress/etc.)
   #   @return (see Transactable#state)
   # @!method created_at
-  #   @return [ActiveSupport::TimeWithZone] time when the transactable was created
+  #   @return [DateTime] time when the transactable was created
   # @!method pending?
   #   @return [Boolean] whether the transactable is in the pending state
   # @!method completed?

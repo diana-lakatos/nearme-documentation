@@ -9,7 +9,7 @@ class RecurringBookingPeriodDrop < BaseDrop
   # @!method line_items
   #   @return [Array<LineItemDrop>] line items associated with this recurring booking period
   # @!method created_at
-  #   @return [ActiveSupport::TimeWithZone] time when the recurring booking period was created
+  #   @return [DateTime] time when the recurring booking period was created
   # @!method payment
   #   @return [PaymentDrop] payment object associated with this recurring booking period
   # @!method total_amount_cents

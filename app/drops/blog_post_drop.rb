@@ -81,7 +81,7 @@ class BlogPostDrop < BaseDrop
   end
 
   # returns date when post was published or created
-  # @return [ActiveSupport::TimeWithZone]
+  # @return [DateTime]
   def published_at
     @blog_post.published_at.presence || @blog_post.created_at
   end

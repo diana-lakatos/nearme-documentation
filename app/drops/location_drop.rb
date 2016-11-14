@@ -51,7 +51,7 @@ class LocationDrop < BaseDrop
   #   @return [UserDrop] User who administers this location
   # @!method updated_at
   #   Last time when the location was updated
-  #   @return [ActiveSupport::TimeWithZone]
+  #   @return [DateTime]
   # @!method postcode
   #   Post code for this location
   #   @return (see Location#postcode)

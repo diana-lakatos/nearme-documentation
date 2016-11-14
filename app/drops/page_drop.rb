@@ -10,7 +10,7 @@ class PageDrop < BaseDrop
   #   @return (see Page#slug)
   # @!method updated_at
   #   Last time when the page was updated
-  #   @return [ActiveSupport::TimeWithZone]
+  #   @return [DateTime]
   delegate :slug, :updated_at, :id, to: :page
 
   def initialize(page)

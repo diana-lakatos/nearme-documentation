@@ -6,7 +6,7 @@ class CkeditorAssetDrop < BaseDrop
   # @!method user
   #   @return [UserDrop] user owning the asset
   # @!method created_at
-  #   @return [ActiveSupport::TimeWithZone] created at time
+  #   @return [DateTime] created at time
   delegate :id, :user, :created_at, to: :source
 
   # @return [String] title of the attachment

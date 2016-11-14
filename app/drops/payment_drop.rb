@@ -23,7 +23,7 @@ class PaymentDrop < BaseDrop
   # @!method total_amount
   #   @return [MoneyDrop] total amount for this order
   # @!method created_at
-  #   @return [ActiveSupport::TimeWithZone] time when the payment was initiated
+  #   @return [DateTime] time when the payment was initiated
   # @!method amount
   #   @return [MoneyDrop] Alias for total_amount
   # @!method pending?

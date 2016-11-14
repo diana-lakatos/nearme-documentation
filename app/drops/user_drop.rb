@@ -78,7 +78,7 @@ class UserDrop < BaseDrop
   # @!method communication
   #   @return [CommunicationDrop] Communication object defining a method for this user to perform a voice call
   # @!method created_at
-  #   @return [ActiveSupport::TimeWithZone] date/time when the user signed up
+  #   @return [DateTime] date/time when the user signed up
   # @!method default_company
   #   @return [CompanyDrop] the default (first) company to which this user belong
   # @!method company_name

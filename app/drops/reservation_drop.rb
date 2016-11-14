@@ -34,7 +34,7 @@ class ReservationDrop < OrderDrop
   # @!method guest_notes
   #   @return (see Order#guest_notes)
   # @!method created_at
-  #   @return [ActiveSupport::TimeWithZone] time when the reservation process was initiated
+  #   @return [DateTime] time when the reservation process was initiated
   # @!method total_payable_to_host_formatted
   #   @return (see ReservationDecorator#total_payable_to_host_formatted)
   # @!method total_units_text
@@ -222,13 +222,13 @@ class ReservationDrop < OrderDrop
     end
   end
 
-  # @return [ActiveSupport::TimeWithZone] reservation date/time (first date)
+  # @return [DateTime] reservation date/time (first date)
   # @todo: QUESTION: do we need this method in that form? see next method with proper time-zone
   def start_date
     @reservation.starts_at
   end
 
-  # @return [ActiveSupport::TimeWithZone] reservation date/time (first date) in
+  # @return [DateTime] reservation date/time (first date) in
   #   the timezone of the associated transactable object
   def starts_at
     @reservation.starts_at.in_time_zone(@reservation.transactable.timezone)

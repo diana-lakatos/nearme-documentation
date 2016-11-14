@@ -109,7 +109,7 @@ class RecurringBookingDrop < OrderDrop
     routes.dashboard_company_host_recurring_bookings_path
   end
 
-  # @return [ActiveSupport::TimeWithZone] date at which the reservation was created
+  # @return [DateTime] date at which the reservation was created
   def created_at
     @recurring_booking.created_at
   end
@@ -126,7 +126,7 @@ class RecurringBookingDrop < OrderDrop
     routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, listing_id: @recurring_booking.transactable, token_key => @recurring_booking.creator.try(:temporary_token))
   end
 
-  # @return [ActiveSupport::TimeWithZone] reservation date (first date)
+  # @return [DateTime] reservation date (first date)
   def start_date
     @recurring_booking.starts_at
   end
