@@ -19,7 +19,7 @@ partial: false
     <form class="form-horizontal no-inheritance" data-search-form="filters">
       <ul>
 
-        {% cache_for searcher.filterable_custom_attributes_hash %}
+        {% cache_for searcher.filterable_custom_attributes_hash, params %}
           {% assign attributes = searcher.filterable_custom_attributes_hash %}
 
           <li {{ attributes.item_type.wrapper_html_options }}>
