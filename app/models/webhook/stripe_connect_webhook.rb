@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Webhook::StripeConnectWebhook < Webhook
   before_create :set_merchant_account
 
@@ -65,7 +66,7 @@ class Webhook::StripeConnectWebhook < Webhook
 
   def merchant_account
     @merchant_account ||= super || payment_gateway.merchant_accounts.find_by!(
-      external_id: event.data.object.id
+      external_id: params[:user_id] || event.data.object.id
     )
   end
 
@@ -83,7 +84,8 @@ class Webhook::StripeConnectWebhook < Webhook
       company: company,
       payments: payments,
       payment_gateway_mode: payment_gateway.mode,
-      token: event.data.object.id
+      token: event.data.object.id,
+      merchant_account: merchant_account
     )
 
     update_transfer(payment_transfer, event.data.object.status)

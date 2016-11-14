@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Instance < ActiveRecord::Base
   include Encryptable
   include DomainsCacheable
@@ -203,6 +204,14 @@ class Instance < ActiveRecord::Base
 
   def test_mode?
     self[:test_mode] || (!Rails.env.staging? && !Rails.env.production?)
+  end
+
+  def guest_fee_enabled?
+    action_types.where('service_fee_guest_percent != 0').any?
+  end
+
+  def host_fee_enabled?
+    action_types.where('service_fee_host_percent != 0').any?
   end
 
   def default_twilio_config
