@@ -134,7 +134,7 @@ class LongtailRakeHelper
   {{ description_content | truncate: 165  }}
 {% endcontent_for %}
 
-{% assign title_text = @data_source_contents.first.json_content.data.first.attributes.name | append: ' - ' | append: @data_source_contents.first.json_content.data.first.relationships.items.data.size | append: '  %}
+{% assign title_text = @data_source_contents.first.json_content.data.first.attributes.name | append: ' - ' | append: @data_source_contents.first.json_content.data.first.relationships.items.data.size | append: platform_context.name  %}
 {% title title_text %}
 
 {% assign cache_key = data_source_last_update | append: current_path %}
@@ -190,7 +190,7 @@ class LongtailRakeHelper
                   {% else %}
                     <li class="active">
                       <a href="{{ listing.attributes.url }}">
-                        <img src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/attachment_file/data/3228/placeholder.svg" alt="Photos unavailable or still processing" />
+                        <img src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/attachment_file/data/3233/placeholder.svg" alt="Photos unavailable or still processing" />
                       </a>
                     </li>
                   {% endif %}
