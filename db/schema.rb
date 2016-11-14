@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161105120728) do
+ActiveRecord::Schema.define(version: 20161113004739) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -626,7 +626,7 @@ ActiveRecord::Schema.define(version: 20161105120728) do
     t.text     "validation_rules"
     t.text     "valid_values"
     t.datetime "deleted_at"
-    t.string   "label",                     limit: 255
+    t.text     "label"
     t.text     "input_html_options"
     t.text     "wrapper_html_options"
     t.text     "hint"
@@ -637,6 +637,7 @@ ActiveRecord::Schema.define(version: 20161105120728) do
     t.string   "target_type",               limit: 255
     t.boolean  "searchable",                            default: false
     t.boolean  "validation_only_on_update",             default: false
+    t.hstore   "properties",                            default: {},    null: false
     t.boolean  "search_in_query",                       default: false, null: false
   end
 
@@ -1262,9 +1263,9 @@ ActiveRecord::Schema.define(version: 20161105120728) do
     t.boolean  "show_currency_name",                                                                default: false,                            null: false
     t.boolean  "no_cents_if_whole",                                                                 default: true,                             null: false
     t.string   "encrypted_google_maps_api_key",                                                     default: "",                               null: false
+    t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.boolean  "debugging_mode_for_admins",                                                         default: true
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -1719,6 +1720,7 @@ ActiveRecord::Schema.define(version: 20161105120728) do
     t.integer  "payment_gateway_id"
     t.datetime "failed_at"
     t.string   "encrypted_token"
+    t.integer  "merchant_account_id"
   end
 
   add_index "payment_transfers", ["company_id"], name: "index_payment_transfers_on_company_id", using: :btree
@@ -1762,6 +1764,7 @@ ActiveRecord::Schema.define(version: 20161105120728) do
     t.integer  "total_amount_cents",                                                             default: 0
     t.boolean  "exclude_from_payout",                                                            default: false
     t.string   "external_id"
+    t.integer  "payment_gateway_fee_cents",                                                      default: 0
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
@@ -1843,7 +1846,6 @@ ActiveRecord::Schema.define(version: 20161105120728) do
     t.boolean  "mark_to_be_bulk_update_deleted",             default: false
     t.integer  "owner_id"
     t.string   "owner_type"
-    t.string   "photo_role"
   end
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
@@ -1962,10 +1964,11 @@ ActiveRecord::Schema.define(version: 20161105120728) do
     t.string   "name"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.hstore   "settings",      default: {}
-    t.boolean  "step_checkout", default: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.hstore   "settings",                 default: {}
+    t.boolean  "step_checkout",            default: false
+    t.boolean  "require_merchant_account", default: false
   end
 
   add_index "reservation_types", ["instance_id"], name: "index_reservation_types_on_instance_id", using: :btree
@@ -2510,6 +2513,7 @@ ActiveRecord::Schema.define(version: 20161105120728) do
     t.datetime "deleted_at"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
+    t.datetime "rejected_by_owner_at"
   end
 
   add_index "transactable_collaborators", ["instance_id"], name: "index_transactable_collaborators_on_instance_id", using: :btree
@@ -2701,6 +2705,7 @@ ActiveRecord::Schema.define(version: 20161105120728) do
     t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
     t.boolean  "require_transactable_during_onboarding",                                         default: true
     t.boolean  "access_restricted_to_invited"
+    t.boolean  "auto_seek_collaborators",                                                        default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
