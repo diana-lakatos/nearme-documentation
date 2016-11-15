@@ -12,19 +12,9 @@
       <h1 class="item-name">{{ listing.name | filter_text }}</h1>
     </div>
 
-
-
-    {% capture user_name %}
-      {% if listing.creator.properties.use_alias_as_name == '1' %}
-        {{ listing.creator.properties.user_alias }}
-      {% else %}
-        {{ listing.creator.name }}
-      {% endif %}
-
-    {% endcapture %}
     <div class="user-info">
-      <img src="{{ listing.creator.avatar_url_thumb }}" alt="{{ user_name | trim }}" class="avatar">
-      <h2>by: <a href="{{ listing.creator.user_profile_url }}">{{ user_name | trim }}</a></h2>
+      <img src="{{ listing.creator.avatar_url_thumb }}" alt="{{ listing.creator.name }}" class="avatar">
+      <h2>by: <a href="{{ listing.creator.user_profile_url }}">{{ listing.creator.name }}</a></h2>
 
       <ul class="user-actions">
         <li>

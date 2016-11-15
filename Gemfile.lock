@@ -77,6 +77,14 @@ PATH
       rubyzip (~> 1.1.0)
       thor (~> 0.19.0)
 
+PATH
+  remote: vendor/gems/sendle_api
+  specs:
+    sendle_api (0.0.1)
+      faraday
+      faraday_middleware
+      unf_ext
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -1052,6 +1060,7 @@ DEPENDENCIES
   ruby-prof
   sanitize
   selenium-webdriver
+  sendle_api!
   shippo
   shoulda
   simple_form (~> 3.1)

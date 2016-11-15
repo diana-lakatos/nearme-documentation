@@ -41,19 +41,14 @@
 <div class='row'>
   <div class="col-xs-12">
     <dl>
-      {% if reservation.owner != blank %}
-        <dt>Borrower:</dt>
-        <dd>{{ reservation.owner.name }}</dd>
-      {% endif %}
-
-      <dt>{{ 'dashboard.user_reservations.address' | t }}:</dt>
-      <dd>{{ reservation.transactable.location.address }}</dd>
+      <dt>Borrower:</dt>
+      <dd>{{ reservation.owner.name }}</dd>
 
       <dt>Shipping Package:</dt>
-      <dd>-----</dd>
+      <dd>{{ reservation.shipping_package.label }}</dd>
 
       <dt>Borrower ship to address:</dt>
-      <dd>------</dd>
+      <dd>{{ reservation.enquirer_shipping_address.discreet }}</dd>
 
       {% assign requested_dates = reservation.long_dates %}
       {% assign requested_dates_size = requested_dates.size %}
@@ -62,10 +57,10 @@
       <dd>{{ reservation.transactable_pricing.number_of_units }} days</dd>
 
       <dt>Rental date:</dt>
-      <dd>{{ reservation.start_date | to_date | l: 'short' }}</dd>
+      <dd>{{ reservation.starts_at | to_date | l: 'short' }}</dd>
 
       <dt>Return date:</dt>
-      <dd>{{ reservation.start_date | to_date | add_to_date: reservation.transactable_pricing.number_of_units | l: 'short'  }} </dd>
+      <dd>{{ reservation.starts_at | to_date | add_to_date: reservation.transactable_pricing.number_of_units | l: 'short'  }} </dd>
     </dl>
   </div>
 </div>
@@ -75,21 +70,21 @@
       <div class="row">
         <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[pickup_date]">Pick Up Date:</label>
-          <input disabled="disabled" type="text" class="form-control" value="9/18/2016" name="shipping_details[pickup_date]" />
+          <input disabled="disabled" type="text" class="form-control" value="{{reservation.inbound_pickup_date}}" name="shipping_details[pickup_date]" />
         </div>
         <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[return_date]">Shipping Return Date:</label>
-          <input disabled="disabled" type="text" class="form-control" value="9/25/2016" name="shipping_details[return_date]" />
+          <input disabled="disabled" type="text" class="form-control" value="{{reservation.outbound_pickup_date}}" name="shipping_details[return_date]" />
         </div>
         <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[lender_pickup]">Lender Pick Up Address:</label>
-          <input disabled="disabled" type="text" class="form-control" value="9001 Lender Street, St. Louis MO, 63141" name="shipping_details[lender_pickup]" />
+          <input disabled="disabled" type="text" class="form-control" value="{{reservation.inbound_pickup_address_address}}" name="shipping_details[lender_pickup]" />
         </div>
         <div class="col-xs-12 col-md-6 form-group">
           <label for="shipping_details[lender_ship]">Lender Ship To Address:</label>
-          <input disabled="disabled" type="text" class="form-control" value="9001 Lender Street, St. Louis MO, 63141" name="shipping_details[lender_ship]" />
+          <input disabled="disabled" type="text" class="form-control" value="{{reservation.outbound_return_address_address}}" name="shipping_details[lender_ship]" />
         </div>
-      </div>
+       </div>
       <hr />
     </div>
   </form>
@@ -103,12 +98,22 @@
           <td>{{ reservation.transactable_pricing.price | price_with_cents_with_currency }}</td>
         </tr>
         <tr>
-          <td>Shipping</td>
-          <td>---</td>
+          <td>Service Fee</td>
+          <td>{% if reservation.state == 'unconfirmed' %}{{ reservation.service_fee_amount_host | price_with_cents_with_currency }}{% else %}{{ reservation.service_fee_amount_host_without_shipping | price_with_cents_with_currency }}{% endif %}</td>
         </tr>
         <tr>
-          <td></td>
-          <td class="item-reservation__costs-total">{{ reservation.total_price }}</td>
+          <td>Shipping Cost</td>
+          <td>
+            {{ reservation.shipping_line_items.last.unit_price | price_with_cents_with_currency }}
+          </td>
+        </tr>
+        <tr>
+          <td>You will earn</td>
+          <td class="item-reservation__costs-total">
+
+          {% if reservation.state == 'unconfirmed' %}{{ reservation.total_payable_to_host_minus_second_shipping | price_with_cents_with_currency }}{% else %}{{ reservation.total_payable_to_host | price_with_cents_with_currency }}{% endif %}
+
+          </td>
         </tr>
       </table>
     </div>

@@ -1,4 +1,5 @@
 
+# frozen_string_literal: true
 # Payment class helps interact with Active Merchant via different Payment Gateways.
 # It's now isolated from Reservation, Order etc. All you need to do to add payment
 # to new model is to build payment object (see build_payment method in Reservation class).
@@ -513,6 +514,7 @@ class Payment < ActiveRecord::Base
   end
 
   def set_merchant_account
+    return unless payment_gateway
     self.merchant_account ||= payment_gateway.merchant_account(company)
   end
 end
