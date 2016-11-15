@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ReservationDrop < OrderDrop
   include ReservationsHelper
 
@@ -53,7 +54,7 @@ class ReservationDrop < OrderDrop
   delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type_drop
 
   def initialize(reservation)
-    @order = @reservation = reservation.decorate
+    @source = @order = @reservation = reservation.decorate
   end
 
   def additional_charges
@@ -177,6 +178,7 @@ class ReservationDrop < OrderDrop
   end
 
   # reservation date (first date)
+  # QUESTION: do we need this method in that form? see next method with proper time-zone
   def start_date
     @reservation.starts_at
   end
@@ -209,5 +211,17 @@ class ReservationDrop < OrderDrop
   # owner including deleted ones
   def owner_including_deleted
     User.unscoped { @reservation.owner }
+  end
+
+  # SHIPPING
+
+  # shipping package name and description if applicable
+  def shipping_package
+    reservation.transactable.dimensions_template
+  end
+
+  # QUESTION: how to call drop method from parent drop
+  def enquirer_shipping_address
+    reservation.shipping_address.address
   end
 end

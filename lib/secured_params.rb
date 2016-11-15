@@ -7,9 +7,11 @@ class SecuredParams
     ]
   end
 
-  def instance_shipping_providers
+  def shipping_provider
     [
-      :shippo_api_token
+      :shipping_provider_name,
+      test_settings: [:api_key, :sendle_id],
+      live_settings: [:api_key, :sendle_id]
     ]
   end
 
@@ -880,7 +882,7 @@ class SecuredParams
       approval_requests_attributes: nested(approval_request),
       photo_ids: [],
       category_ids: [],
-      dimensions_template_attributes: nested(dimensions_template),
+      transactable_dimensions_template_attributes: [:dimensions_template_id],
       attachment_ids: [],
       waiver_agreement_template_ids: [],
       topic_ids: [],
@@ -1434,6 +1436,18 @@ class SecuredParams
       :booking_type,
       :delivery_type,
       :delivery_ids,
+      :inbound_pickup_date,
+      :outbound_pickup_date,
+      :inbound_pickup_address_address,
+      :outbound_return_address_address,
+      :inbound_pickup_address_latitude,
+      :inbound_pickup_address_longitude,
+      :outbound_return_address_latitude,
+      :outbound_return_address_longitude,
+      :inbound_sender_lastname,
+      :outbound_receiver_lastname,
+      :inbound_sender_firstname,
+      :outbound_receiver_firstname,
       :dates,
       :step_control,
       :total_amount_check,
@@ -1642,7 +1656,8 @@ class SecuredParams
       :state,
       :phone,
       :email,
-      :country
+      :country,
+      address_attributes: nested(address)
     ]
   end
 

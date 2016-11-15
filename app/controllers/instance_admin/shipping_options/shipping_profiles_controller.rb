@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin::ShippingOptions::BaseController
-  before_filter :set_breadcrumbs
-
-  before_filter :get_company
+  before_action :set_breadcrumbs
+  before_action :get_company
 
   def index
     @shipping_profiles = ShippingProfile.global

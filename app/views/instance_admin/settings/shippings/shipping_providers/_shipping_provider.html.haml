@@ -1,0 +1,7 @@
+%tr
+  %td= shipping_provider.shipping_provider_name
+  %td= shipping_provider.test_settings.present?
+  %td= shipping_provider.live_settings.present?
+  %td= link_to 'view', [:instance_admin, :settings, shipping_provider]
+  %td= link_to 'edit', [:edit, :instance_admin, :settings, shipping_provider]
+  %td= link_to 'delete', [:instance_admin, :settings, shipping_provider], method: :delete

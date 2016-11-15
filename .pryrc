@@ -6,6 +6,13 @@ Pry.config.exception_handler = proc do |output, exception, _pry_|
 end
 
 if defined?(Rails) && Rails.env
+
+  ActiveRecord::Base.class_eval do
+    def self.[](id)
+      find(id)
+    end
+  end
+
   def load_c(instance_id=1)
     Instance.find(instance_id).set_context!
   end

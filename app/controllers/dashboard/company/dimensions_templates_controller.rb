@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+# TODO: destroy
 class Dashboard::Company::DimensionsTemplatesController < Dashboard::Company::BaseController
-  skip_before_filter :redirect_unless_registration_completed
+  skip_before_action :redirect_unless_registration_completed
 
   def new
     @dimensions_template = current_user.dimensions_templates.build

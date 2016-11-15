@@ -1,0 +1,29 @@
+.content-container
+  %h4
+    = t('instance_admin.settings.integrations.shipping_providers')
+  .row
+    .table-responsive
+      %table.table.table-striped.sortable
+        %thead
+          %tr
+            %th= Shippings::ShippingProvider.human_attribute_name(:shipping_provider_name)
+            %th= Shippings::ShippingProvider.human_attribute_name(:test_settings)
+            %th= Shippings::ShippingProvider.human_attribute_name(:live_settings)
+        %tbody
+          = render partial: 'shipping_provider', collection: @providers
+
+.content-container
+  %h4
+    = t('instance_admin.settings.integrations.predefined_packages')
+
+  - @providers.flat_map(&:dimensions_templates).each do |template|
+    .row
+      .col-xs-12
+        - template.attributes.each do |key, value|
+          = key
+          =" : "
+          = value
+          %br
+
+= content_for :header_buttons do
+  = link_to t('.new'), new_instance_admin_settings_shippings_shipping_provider_path, class: 'pull-right btn btn-blue'

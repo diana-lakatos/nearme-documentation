@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class OrderDrop < BaseDrop
   include CurrencyHelper
 
@@ -21,10 +22,13 @@ class OrderDrop < BaseDrop
            :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
            :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
            :transactable, :cancelled_at, :confirmed_at, :recurring_booking_periods, :creator,
-           :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing, to: :order
+           :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing,
+           :outbound, :inbound, :inbound_pickup_date, :outbound_pickup_date,
+           :inbound_pickup_address_address, :outbound_return_address_address,
+           to: :order
 
   def initialize(order)
-    @order = order.decorate
+    @source = @order = order.decorate
   end
 
   def manual_payment?
@@ -39,6 +43,10 @@ class OrderDrop < BaseDrop
   # the total amount to be charged for this order
   def total_amount
     @order.total_amount.to_s
+  end
+
+  def total_amount_money
+    @order.total_amount
   end
 
   # the total amount of all order items
@@ -80,11 +88,15 @@ class OrderDrop < BaseDrop
   end
 
   def outbound_shipment
-    @order.shipments.outbound.first
+    @order.deliveries.first
   end
 
   def inbound_shipment
-    @order.shipments.inbound.first
+    @order.deliveries.last
+  end
+
+  def shipping_line_items
+    @order.shipping_line_items
   end
 
   def time_to_expiration
@@ -154,6 +166,34 @@ class OrderDrop < BaseDrop
 
   def properties
     @order.properties
+  end
+
+  def total_payable_to_host
+    @order.total_payable_to_host
+  end
+
+  def service_fee_amount_host
+    @order.service_fee_amount_host
+  end
+
+  def service_fee_amount_host_without_shipping
+    @order.service_fee_amount_host - (@order.shipping_line_items.last&.unit_price || 0)
+  end
+
+  def service_fee_amount_guest_money
+    @order.service_fee_amount_guest
+  end
+
+  def total_payable_to_host_minus_second_shipping
+    @order.total_payable_to_host - (@order.shipping_line_items.last&.unit_price || 0)
+  end
+
+  def total_amount_plus_shipping
+    @order.total_amount + (@order.shipping_line_items.first&.unit_price || 0)
+  end
+
+  def service_fee_amount_guest_money_without_shipping
+    @order.service_fee_amount_guest - (@order.shipping_line_items.first&.unit_price || 0)
   end
 
   private

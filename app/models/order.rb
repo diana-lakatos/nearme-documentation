@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
@@ -9,6 +10,8 @@ class Order < ActiveRecord::Base
   include Encryptable
   include Modelable
   include Payable
+  include ShippoLegacy::Order
+  include Shippings::Order
 
   attr_accessor :skip_checkout_validation, :delivery_ids, :checkout_update
 
@@ -29,11 +32,8 @@ class Order < ActiveRecord::Base
   belongs_to :transactable, -> { with_deleted }
   belongs_to :transactable_pricing, -> { with_deleted }, class_name: 'Transactable::Pricing'
 
-  has_one :dimensions_template, as: :entity
-
   has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   has_many :reviews, as: :reviewable
-  has_many :shipments, dependent: :destroy, inverse_of: :order
   has_many :user_messages, as: :thread_context
   has_many :periods, class_name: '::ReservationPeriod', dependent: :destroy, foreign_key: 'reservation_id', inverse_of: :reservation
   has_many :waiver_agreements, as: :target
@@ -44,14 +44,13 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :user
   accepts_nested_attributes_for :payment_documents
   accepts_nested_attributes_for :shipping_address
-  accepts_nested_attributes_for :shipments
 
   validates :user, presence: true
   validates :currency, presence: true
   validate :validate_acceptance_of_waiver_agreements, on: :update, if: -> { should_validate_field?('reservation', 'waiver_agreements') }
 
-  before_validation :copy_billing_address, :remove_empty_documents
-  before_validation :set_owner, :build_return_shipment, :skip_validation_for_custom_attributes, :set_owner_for_payment_documents
+  before_validation :remove_empty_documents
+  before_validation :set_owner, :skip_validation_for_custom_attributes, :set_owner_for_payment_documents
   after_save :try_to_activate!
 
   state_machine :state, initial: :inactive do
@@ -159,10 +158,6 @@ class Order < ActiveRecord::Base
     archived?
   end
 
-  def create_shipments!
-    CreateShippoShipmentsJob.perform(id) if shipments.any?(&:use_shippo?)
-  end
-
   def is_free?
     total_amount.to_f <= 0
   end
@@ -258,14 +253,7 @@ class Order < ActiveRecord::Base
     @completed_ids ||= self[:completed_form_component_ids].to_s.split(',')
   end
 
-  def with_delivery?
-    transactables.any?(&:shipping_profile)
-  end
-
-  # TODO: implement with shipping
-  def shipped?
-    true
-  end
+  delegate :dimensions_template, to: :transactable
 
   def remove_empty_documents
     return if PlatformContext.current.instance.documents_upload.try(:is_mandatory?)
@@ -320,18 +308,6 @@ class Order < ActiveRecord::Base
 
   def first_booking_job
     ReengagementOneBookingJob.perform_later(last_date.in_time_zone + 7.days, id) if user.orders.reservations.active.count == 1
-  end
-
-  def shipping_address
-    if use_billing && billing_address
-      billing_address.dup
-    else
-      super
-    end
-  end
-
-  def copy_billing_address
-    self.shipping_address = nil if use_billing
   end
 
   def restart_checkout!
@@ -449,57 +425,6 @@ class Order < ActiveRecord::Base
     if host_fee_line_items.any?
       host_fee_line_items.first.update_attribute(:unit_price_cents,
                                                  transactable_line_items.map { |t| t.total_price_cents * t.service_fee_host_percent.to_f / BigDecimal(100) }.sum)
-    end
-  end
-
-  def delivery_ids=(ids)
-    errors.add(:delivery_ids, :blank) if shipments.any? && ids.blank?
-    if ids.present? && shipments.any?
-      ids.split(',').each do |delivery|
-        shipments.each do |shipment|
-          shipment.shippo_rate_id = delivery.split(':')[1] if shipment.direction == delivery.split(':')[0]
-        end
-      end
-    end
-  end
-
-  def delivery_ids
-    shipments.map(&:delivery_id).join(',')
-  end
-
-  def build_return_shipment
-    if shipments.one? && shipments.first.shipping_rule.shipping_profile.shippo_return? && shipping_address.valid?
-      outbound_shipping = shipments.first
-      inbound_shipping = outbound_shipping.dup
-      inbound_shipping.direction = 'inbound'
-      shipping_address.create_shippo_address
-      shipments << inbound_shipping
-    end
-  end
-
-  def get_shipping_rates
-    return [] if shipments.none?(&:use_shippo?)
-    return @options unless @options.nil?
-    rates = []
-    begin
-      # Get rates for both ways shipping (rental shipping)
-      shipments.each do |shipment|
-        shipment.get_rates(self).map { |rate| rate[:direction] = shipment.direction; rates << rate }
-      end
-      rates = rates.flatten.group_by { |rate| rate[:servicelevel_name] }
-      @options = rates.to_a.map do |_type, rate|
-        # Skip if service is available only in one direction
-        # next if rate.one?
-        price_sum = Money.new(rate.sum { |r| r[:amount_cents].to_f }, rate[0][:currency])
-        # Format options for simple_form radio
-        [
-          [price_sum.format, "#{rate[0][:provider]} #{rate[0][:servicelevel_name]}", rate[0][:duration_terms]].join(' - '),
-          rate.map { |r| "#{r[:direction]}:#{r[:object_id]}" }.join(','),
-          { data: { price_formatted: price_sum.format, price: price_sum.to_f } }
-        ]
-      end.compact
-    rescue Shippo::APIError
-      []
     end
   end
 

@@ -150,7 +150,7 @@ module Payable
 
     monetize :total_amount_cents, with_model_currency: :currency
     def total_amount_cents
-      subtotal_amount_cents + service_additional_charges_cents + host_additional_charges_cents + service_fee_amount_guest_cents + shipping_total_cents + total_tax_amount_cents
+      subtotal_amount_cents + service_additional_charges_cents + host_additional_charges_cents + service_fee_amount_guest_cents + total_tax_amount_cents
     end
 
     # Not really needed I think
@@ -166,7 +166,7 @@ module Payable
 
     monetize :shipping_total_cents, with_model_currency: :currency
     def shipping_total_cents
-      shipping_line_items.reload.map(&:total_price_cents).sum
+      shipping_line_items.map(&:total_price_cents).sum
     end
 
     monetize :total_tax_amount_cents, with_model_currency: :currency
@@ -196,7 +196,7 @@ module Payable
 
     monetize :total_payable_to_host_cents, with_model_currency: :currency
     def total_payable_to_host_cents
-      subtotal_amount_cents + host_additional_charges_cents + shipping_total_cents + total_tax_amount_cents - service_fee_amount_host_cents
+      subtotal_amount_cents + host_additional_charges_cents + total_tax_amount_cents - service_fee_amount_host_cents
     end
   end
 end

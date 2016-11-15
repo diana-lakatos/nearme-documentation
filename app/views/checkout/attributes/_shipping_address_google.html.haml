@@ -1,25 +1,8 @@
 %div{data: {shipping_address: 'true'}}
   #shipping-address
-    = f.simple_fields_for :shipping_address, f.object.shipping_address || current_user.shipping_addresses.first.dup do |s|
+    = f.simple_fields_for :shipping_address do |s|
       = s.input :firstname, placeholder: t('buy_sell_market.checkout.placeholders.first_name')
       = s.input :lastname, placeholder: t('buy_sell_market.checkout.placeholders.last_name')
-      = s.input :phone
-      = s.input :email
-      = s.input :street1, as: :hidden
-      = s.input :street2, as: :hidden
-      = s.input :city, as: :hidden
-      = s.input :zip, as: :hidden
-      = s.input :country, as: :hidden
-      = s.input :state, as: :hidden
-
-      =# f.hidden_field :local_geocoding, 'data-local-geocoding' => true
-      =# f.hidden_field :latitude, 'data-latitude' => true
-      =# f.hidden_field :longitude, 'data-longitude' => true
-      =# f.hidden_field :formatted_address, 'data-formatted-address' => true
-      =# f.hidden_field :street, 'data-street' => true
-      =# f.hidden_field :suburb, 'data-suburb' => true
-      =# f.hidden_field :city, 'data-city' => true
-      =# f.hidden_field :state, 'data-state' => true
-      =# f.hidden_field :country, 'data-country' => true
-      =# f.hidden_field :postcode, 'data-postcode' => true
-      = s.input :user_id, as: :hidden, input_html: { value: current_user.id }
+      = s.input :phone, as: :string
+      = s.input :email, as: :string
+      = render 'checkout/attributes/address_details', form: s, field_label: t('.shipping_address')

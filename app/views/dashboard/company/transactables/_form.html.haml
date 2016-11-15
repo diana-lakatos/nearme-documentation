@@ -5,6 +5,7 @@
 = f.simple_fields_for :properties, f.object.properties do |properties_form|
   - unless @form_components.map(&:form_fields).map{|ff| ff.map(&:values).flatten }.flatten.include? 'price'
     = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: {}, model: 'transactable'
+
   - @form_components.each_with_index do |form_component, index|
     - component_class = 'listing-form-component panel-tab-container'
     - component_class = "#{component_class} active" if index == 0
@@ -79,9 +80,14 @@
               = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), properties_form)
             -elsif f.object.attributes.include?(field) && !f.object.action_types.first.attributes.include?(field)
               = f.input field, {required: f.object.required?(field)}.merge(cke_attrs(model, field))
+
+      -# DISCUSS: is this OK enough?
+      - if Shippings.enabled?(@transactable_type)
+        = render 'listings/package_details', f: f
+
+
 .hidden
   - Money::Currency.table.values.each do |c|
     %span{:id => "currency_#{c[:iso_code]}"}
       = c[:symbol]
   %span{:id => "default_currency"}= @transactable_type.default_currency
-

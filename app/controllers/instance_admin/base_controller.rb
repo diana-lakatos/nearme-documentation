@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::BaseController < ApplicationController
   layout 'instance_admin'
 
@@ -60,6 +61,7 @@ class InstanceAdmin::BaseController < ApplicationController
   SETTINGS_CONTROLLERS = {
     'configuration'        => { default_action: 'show', controller_class: 'InstanceAdmin::Settings::ConfigurationController' },
     'payments'             => { default_action: 'index' },
+    'shipping_providers'   => { default_action: 'index', title: 'Shipping providers', controller: '/instance_admin/settings/shippings/shipping_providers' },
     'domains'              => { default_action: 'index' },
     'ssl_certificates'     => { default_action: 'index', title: 'SSL Certificates', controller: '/instance_admin/settings/aws_certificates' },
     'api_keys'             => { default_action: 'index' },
