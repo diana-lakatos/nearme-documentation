@@ -56,3 +56,6 @@
 - if only_inputs.empty? || only_inputs.include?(:minimum_booking_minutes)
   = f.input :minimum_booking_minutes, required: f.object.required?(:minimum_booking_minutes)
 
+
+- if only_inputs.empty? || only_inputs.include?(:package_details)
+  = render 'listings/package_details', f: f

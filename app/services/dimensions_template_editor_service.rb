@@ -1,3 +1,4 @@
+# TODO: delete
 class DimensionsTemplateEditorService
   def initialize(dimensions_template)
     @dimensions_template = dimensions_template

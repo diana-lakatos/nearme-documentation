@@ -52,7 +52,7 @@ class Purchase < Order
 
     if errors.empty? && valid?
       if unconfirmed? && (paid? || payment.capture!)
-        create_shipments!
+        process_deliveries!
         confirm!
         transactable_line_items.each(&:reduce_transactable_quantity!)
       # We need to touch transactable so it's reindexed by ElasticSearch

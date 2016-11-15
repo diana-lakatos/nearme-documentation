@@ -268,7 +268,7 @@ partial: false
             <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}"></div>
 
             <a href="{{ listing.creator.user_profile_url }}" class="lender-link">
-              <img src="{{ listing.creator.avatar_url_thumb }}" alt="{% if listing.creator.properties.use_alias_as_name == '1' %}{{ listing.creator.properties.user_alias }}{% else %}{{ listing.creator.name }}{% endif %}">
+              <img src="{{ listing.creator.avatar_url_thumb }}" alt="{{ listing.creator.name }}">
             </a>
           </article>
         {% endfor %}

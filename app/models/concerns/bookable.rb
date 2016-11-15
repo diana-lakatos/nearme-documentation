@@ -67,7 +67,7 @@ module Bookable
       elsif transactable.try(:location).try(:assigned_waiver_agreement_templates).try(:any?)
         transactable.location.assigned_waiver_agreement_templates.includes(:waiver_agreement_template).map(&:waiver_agreement_template)
       else (templates = PlatformContext.current.instance.waiver_agreement_templates).any?
-           templates
+        templates
       end
     end
 
@@ -112,13 +112,9 @@ module Bookable
     end
 
     def copy_dimensions_template
-      if transactable.dimensions_template.present?
-        copied_dimensions_template = transactable.dimensions_template.dup
-        copied_dimensions_template.entity = self
-        copied_dimensions_template.save!
-      end
+      return unless transactable.dimensions_template.present?
 
-      true
+      Commands::CopyDimensionsTemplate.new(self, transactable.dimensions_template)
     end
 
     def schedule_expiry
@@ -126,6 +122,23 @@ module Bookable
       expires_at = Time.current + hours_to_expiration
       update_column(:expires_at, expires_at)
       OrderExpiryJob.perform_later(expires_at, id) if hours_to_expiration > 0
+    end
+  end
+
+  module Commands
+    class CopyDimensionsTemplate
+      def initialize(parent, template)
+        @parent = parent
+        @template = template
+      end
+
+      def perform
+        @parent.update_attributes! dimensions_template: copy
+      end
+
+      def copy
+        @template.dup
+      end
     end
   end
 end

@@ -1,0 +1,31 @@
+= form.simple_fields_for :address, form.object.address || form.object.build_address do |address_form|
+  %div{'data-address-field' => true, class: "control-group #{"error" if address_form.object.errors.any?}"}
+    = address_form.label :address, required: true, label_html: { class: 'control-label'}
+
+    .controls
+      = address_form.text_field :address, :'data-behavior' => 'address-autocomplete', placeholder: t('simple_form.placeholders.company.company_address.address'), 'data-address-input' => true, class: 'form-control'
+
+    .map
+      .map-container
+
+    = address_form.hidden_field :local_geocoding, 'data-local-geocoding' => true
+    = address_form.hidden_field :latitude, 'data-latitude' => true
+    = address_form.hidden_field :longitude, 'data-longitude' => true
+    = address_form.hidden_field :formatted_address, 'data-formatted-address' => true
+    = address_form.hidden_field :street, 'data-street' => true
+    = address_form.hidden_field :suburb, 'data-suburb' => true
+    = address_form.hidden_field :city, 'data-city' => true
+    = address_form.hidden_field :state, 'data-state' => true
+    = address_form.hidden_field :country, 'data-country' => true
+    = address_form.hidden_field :postcode, 'data-postcode' => true
+
+    .address-component-wrapper.hidden
+      .address-component-template
+        - # we need this input to avoid hardcoding 'name' parameter for dynamically inserted inputs for address_components
+        - # i.e. in dashboard we use location[address_component], but in list your space it is user[company_attribues]... etc
+        - # must be disabled, otherwise update action could overwrite existing information with empty strings!
+        = address_form.input :address_components, as: :string, :input_html => { 'data-address-components-input' => true }, disabled: true
+      - if address_form.object.address_components.try(:any?)
+        - address_form.object.address_components.each do |index, address_component|
+          - address_component.each do |key, value|
+            %input{name: "#{address_form.object_name}[address_components][#{index}][#{key}]", value: value, class: 'address_components_input'}

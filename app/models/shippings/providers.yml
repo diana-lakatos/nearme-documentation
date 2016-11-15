@@ -1,0 +1,18 @@
+-
+  name: 'shippo'
+  countries:
+    - USA
+    - UK
+    - Germany
+    - France
+    - Canada
+  fields:
+    - api_key
+
+-
+  name: 'sendle'
+  countries:
+    - Australia
+  fields:
+    - api_key
+    - sendle_id

@@ -40,9 +40,6 @@
       - # must be disabled, otherwise update action could overwrite existing information with empty strings!
       = f.input :address_components, as: :string, :input_html => { 'data-address-components-input' => true }, disabled: true
     - if f.object.address_components.try(:any?)
-      - f.object.address_components.each do |arr|
-        - index = arr[0]
-        - address_component = arr[1]
+      - f.object.address_components.each do |index, address_component|
         - address_component.each do |key, value|
           %input{name: "#{f.object_name}[address_components][#{index}][#{key}]", value: value, class: 'address_components_input'}
-

@@ -24,4 +24,12 @@ class AddressDrop < BaseDrop
   def initialize(address_object)
     @address_object = address_object
   end
+
+  def discreet
+    format('%s, %s %s', city, suburb, state)
+  end
+
+  def full
+    address
+  end
 end

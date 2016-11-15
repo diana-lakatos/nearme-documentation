@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'yaml'
 require 'benchmark'
 
@@ -35,6 +36,7 @@ namespace :volte do
 
       setup.create_workflow_alerts
       setup.expire_cache
+      setup.add_package_to_transactables
     end
 
     puts "\nDone in #{time.round(2)}s\n\n"
@@ -97,8 +99,8 @@ namespace :volte do
         {'reservation' => 'start_date'},
         {'reservation' => 'price'},
         {'reservation' => 'waiver_agreements'},
-        {'reservation' => 'payments'}
-        # {'reservation' => 'shipping_address_google'},
+        {'reservation' => 'payments'},
+        {'reservation' => 'shipping_address_google'}
       ]
       fc.save
     end
@@ -169,7 +171,7 @@ namespace :volte do
         public: true,
         valid_values: ['Bridesmaid', 'Formal', 'Races', 'Wedding', 'Guest', 'Cocktail',
           'Work Function', 'Daytime', 'Mother of the Bride', 'Evening', 'Ball',
-          'Maternity', 'Bridal', 'Black Tie'
+          'Maternity', 'Bridal', 'Black Tie', 'Jumpsuit', 'Playsuit'
         ],
         searchable: true,
         wrapper_html_options: { 'data-visibility-dependent' => 'dress' }
@@ -309,20 +311,14 @@ namespace :volte do
       #   searchable: false
       # })
 
-      create_custom_attribute(@default_profile_type,         name: 'user_alias',
-                                                             label: 'Alias',
+      create_custom_attribute(@default_profile_type,         name: 'contact_person_name',
+                                                             label: 'Contact Person Name',
+                                                             hint: 'If you provided company name in the field above, please let us know your real name here',
                                                              attribute_type: 'string',
                                                              html_tag: 'input',
                                                              required: '0',
                                                              public: true,
                                                              searchable: false)
-
-      create_custom_attribute(@default_profile_type,         name: 'use_alias_as_name',
-                                                             label: 'Use instead of Full Name',
-                                                             attribute_type: 'boolean',
-                                                             html_tag: 'check_box',
-                                                             required: '0',
-                                                             public: true)
 
       create_custom_attribute(@default_profile_type,         name: 'facebook_url',
                                                              label: 'Facebook URL',
@@ -370,8 +366,7 @@ namespace :volte do
       component.name = 'Fill out the information below'
       component.form_fields = [
         { 'user' => 'name' },
-        { 'user' => 'user_alias' },
-        { 'user' => 'use_alias_as_name' },
+        { 'user' => 'contact_person_name ' },
         { 'location' => 'address' },
         { 'user' => 'mobile_phone' },
         { 'transactable' => 'name' },
@@ -393,7 +388,7 @@ namespace :volte do
         { 'transactable' => 'retail_value' },
         { 'transactable' => 'bond_value' },
         { 'transactable' => 'dry_cleaning' },
-        { 'transactable' => 'shipping_profile' },
+        { 'transactable' => 'package_details' },
         { 'transactable' => 'tags' }
       ]
       component.save!
@@ -421,7 +416,7 @@ namespace :volte do
         { 'transactable' => 'bond_value' },
         { 'transactable' => 'unavailable_periods' },
         { 'transactable' => 'dry_cleaning' },
-        { 'transactable' => 'shipping_profile' },
+        { 'transactable' => 'package_details' },
         { 'transactable' => 'tags' }
       ]
       component.save!
@@ -429,8 +424,7 @@ namespace :volte do
       component = @default_profile_type.form_components.where(form_type: 'instance_profile_types').first_or_initialize
       component.form_fields = [
         { 'user' => 'name' },
-        { 'user' => 'user_alias' },
-        { 'user' => 'use_alias_as_name' },
+        { 'user' => 'contact_person_name' },
         { 'user' => 'password' },
         { 'user' => 'email' },
         { 'user' => 'mobile_phone' },
@@ -460,6 +454,22 @@ namespace :volte do
 
     def create_workflow_alerts
       Utils::DefaultAlertsCreator::ReservationCreator.new.notify_enquirer_of_lister_confirmed_with_double_confirmation!
+    end
+
+    def add_package_to_transactables
+      default_package = DimensionsTemplate.find_by(name:'Briefcase')
+      with_no_package = Transactable
+                          .joins('left join transactable_dimensions_templates tdt on tdt.transactable_id = transactables.id')
+                          .where('tdt.id is null')
+
+      with_no_package.each do |item|
+        item.dimensions_template = default_package
+        item.save!
+      end
+    end
+
+    def update_delivery_instace_id
+      Delivery.where(instance_id: nil).update_all(instance_id: 194)
     end
 
     def set_theme_options

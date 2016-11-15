@@ -2,6 +2,10 @@ en:
   activerecord:
     errors:
       models:
+        delivery:
+          attributes:
+            pickup_date:
+              pick_up_only_on_business_days: PickUp available only on business days
         aws_certificate:
           attributes:
             arn:
