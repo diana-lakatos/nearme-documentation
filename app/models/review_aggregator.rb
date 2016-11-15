@@ -6,11 +6,13 @@ class ReviewAggregator
     @user = user
   end
 
+  def to_liquid
+    @review_aggregator_drop ||= ReviewAggregatorDrop.new(self)
+  end
+
   def total
     about_seller + about_buyer + left_by_seller + left_by_buyer
   end
-
-  private
 
   def about_seller
     Review.about_seller(user).count
