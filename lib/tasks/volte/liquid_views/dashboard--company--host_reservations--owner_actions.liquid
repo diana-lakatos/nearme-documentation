@@ -33,11 +33,9 @@
     <div class='cc-error'>{{ 'dashboard.host_reservations.must_change_credit_card' | t | upcase }}</div>
   {% endif %}
   {% if reservation.inbound != blank %}
-    <a class="btn btn-primary" href="{{ reservation.inbound.label_url }}">{{ 'dashboard.host_reservations.shipping_label' | t }}</a>
     <a class="btn btn-primary" href="{{ reservation.inbound.tracking_url }}">{{ 'dashboard.host_reservations.track_package' | t }}</a>
   {% endif %}
   {% if reservation.outbound != blank %}
-    <a class="btn btn-default" href="{{ reservation.outbound.label_url }}">{{ 'dashboard.host_reservations.return_label' | t }}</a>
     <a class="btn gray full" href="{{ reservation.outbound.tracking_url }}">{{ 'dashboard.host_reservations.return_track_package' | t }}</a>
   {% endif %}
 {% endif %}
