@@ -4,6 +4,22 @@
   {{ blog_post.title }}
 {% endcontent_for %}
 
+{% content_for 'social_site_name' %}
+  {{ blog_post.user.blog.name }}
+{% endcontent_for %}
+
+{% content_for 'social_description' %}
+  {{ blog_post.excerpt }}
+{% endcontent_for %}
+
+{% content_for 'social_site_title' %}
+  {{ blog_post.title }}
+{% endcontent_for %}
+
+{% content_for 'social_site_image_url' %}
+  {{ blog_post.hero_image_url }}
+{% endcontent_for %}
+
 <div class='blog-container'>
   <div class='blog-post-detail'>
     <div class='hero-image'>
