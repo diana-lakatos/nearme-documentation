@@ -38,23 +38,31 @@
 
     - if merchant_account.needs?('legal_entity.business_tax_id')
       .form-group.string.optional
-        = f.label :business_tax_id, t("dashboard.merchant_account.business_tax_id.#{merchant_account.location}"), class: 'string optional control-label'
-        = f.text_field :business_tax_id, class: 'string optional form-control'
+        = f.label :business_tax_id, class: 'string optional control-label' do
+          = t("dashboard.merchant_account.business_tax_id.#{merchant_account.location}")
+          = translated_hint_button "dashboard.merchant_account.hints.business_tax_id.#{merchant_account.location}"
+        = f.text_field :business_tax_id, class: 'string optional form-control', placeholder: t("dashboard.merchant_account.placeholders.business_tax_id.#{merchant_account.location}", default: '')
 
     - if merchant_account.needs?('legal_entity.business_vat_id')
       .string.form-group.optional
-        = f.label :business_vat_id, t('dashboard.merchant_account.business_vat_id'), class: 'string optional control-label'
-        = f.text_field :business_vat_id, class: 'string optional form-control'
+        = f.label :business_vat_id, class: 'string optional control-label' do
+          = t('dashboard.merchant_account.business_vat_id')
+          = translated_hint_button "dashboard.merchant_account.hints.business_vat_id"
+        = f.text_field :business_vat_id, class: 'string optional form-control', placeholder: t('dashboard.merchant_account.placeholders.business_vat_id', default: '')
 
     - if merchant_account.needs?('legal_entity.ssn_last_4')
       .form-group.string.optional
-        = f.label :ssn_last_4, t('dashboard.merchant_account.ssn_last_4'), class: 'string optional control-label'
-        = f.text_field :ssn_last_4, class: 'string optional form-control'
+        = f.label :ssn_last_4, class: 'string optional control-label' do
+          = t('dashboard.merchant_account.ssn_last_4')
+          = translated_hint_button "dashboard.merchant_account.hints.ssn_last_4"
+        = f.text_field :ssn_last_4, class: 'string optional form-control', placeholder: t("dashboard.merchant_account.placeholders.ssn_last_4", default: '')
 
     - if merchant_account.needs?('legal_entity.personal_id_number')
       .form-group.string.optional
-        = f.label :personal_id_number, t("dashboard.merchant_account.personal_id_number.#{merchant_account.location}"), class: 'string optional control-label'
-        = f.text_field :personal_id_number, class: 'string optional form-control'
+        = f.label :personal_id_number, class: 'string optional control-label' do
+          = t("dashboard.merchant_account.personal_id_number.#{merchant_account.location}")
+          = translated_hint_button "dashboard.merchant_account.hints.personal_id_number.#{merchant_account.location}"
+        = f.text_field :personal_id_number, class: 'string optional form-control', placeholder: t("dashboard.merchant_account.placeholders.personal_id_number.#{merchant_account.location}", default: '')
     - if merchant_account.needs?('legal_entity.address.postal_code')
       .form-group.string.optional
         = f.simple_fields_for :current_address, f.object.current_address || Address.new do |address_form|
@@ -66,7 +74,9 @@
         .form-group.string.optional{class: maof.error(:document) ? 'has-error' : ''}
           .row
             .col-md-12
-              = maof.label :document, t('dashboard.merchant_account.document'), class: 'string required control-label'
+              = maof.label :document, class: 'string required control-label' do
+                = t('dashboard.merchant_account.document')
+                = translated_hint_button "dashboard.merchant_account.hints.document"
             .col-md-12.input-container
         = maof.file_field :document
         %span.help-block= maof.error :document
@@ -82,12 +92,15 @@
         - if f.object.class.validators_on(:account_type).any?
           %abbr{title: "required"} *
         =t('dashboard.merchant_account.account_type')
+        = translated_hint_button "dashboard.merchant_account.hints.account_type"
       = f.select :account_type, options_for_select([[t('dashboard.merchant_account.select_account_type'), '']] + MerchantAccount::StripeConnectMerchantAccount::ACCOUNT_TYPES.map { |at| [t("dashboard.merchant_account.#{at}"), at] }, f.object.account_type), {}, class: 'form-control optional', data: {'account-type' => true}
       %span.help-block= f.error :account_type
 
     - if MerchantAccount::StripeConnectMerchantAccount::SUPPORTED_CURRENCIES[merchant_account.location.upcase].size > 1
       .form-group.string.optional
-        = f.label :currency, t('dashboard.merchant_account.currency'), class: 'string optional control-label'
+        = f.label :currency, class: 'string optional control-label' do
+          = t('dashboard.merchant_account.currency')
+          = translated_hint_button "dashboard.merchant_account.hints.currency"
         = f.select :currency, options_for_select([[t('dashboard.merchant_account.select_currency'), '']] + MerchantAccount::StripeConnectMerchantAccount::SUPPORTED_CURRENCIES[merchant_account.location.upcase], f.object.currency), {}, class: 'optional form-control'
 
     - [:bank_routing_number, :bank_account_number, :first_name, :last_name].each do |field_name|
@@ -96,9 +109,14 @@
           %abbr{title: "required"} *
           - if [:first_name, :last_name].include?(field_name)
             = t("dashboard.merchant_account.#{field_name}")
+            = translated_hint_button "dashboard.merchant_account.hints.#{field_name}"
           - else
             = t("dashboard.merchant_account.#{field_name}.#{merchant_account.location}")
-        = f.text_field field_name, class: 'string optional form-control'
+            = translated_hint_button "dashboard.merchant_account.hints.#{field_name}.#{merchant_account.location}"
+        - if [:first_name, :last_name].include?(field_name)
+          = f.text_field field_name, class: 'string optional form-control', placeholder: t("dashboard.merchant_account.placeholders.#{field_name}", default: '')
+        - else
+          = f.text_field field_name, class: 'string optional form-control', placeholder: t("dashboard.merchant_account.placeholders.#{field_name}.#{merchant_account.location}", default: '')
         %span.help-block= f.error field_name
 
     - if merchant_account.iso_country_code == 'US'
@@ -106,14 +124,16 @@
         = f.label :personal_id_number, class: 'string optional control-label' do
           %abbr{title: "required"} *
           = t("dashboard.merchant_account.personal_id_number.us")
-        = f.text_field :personal_id_number, class: 'string optional form-control'
+          = translated_hint_button "dashboard.merchant_account.hints.personal_id_number.us"
+        = f.text_field :personal_id_number, class: 'string optional form-control', placeholder: t("dashboard.merchant_account.placeholders.personal_id_number.us", default: '')
         %span.help-block= f.error :personal_id_number
 
       .form-group.string.optional{"data-account-type" => "company", class: f.error(:business_tax_id) ? 'has-error' : ''}
         = f.label :business_tax_id, class: 'string optional control-label' do
           %abbr{title: "required"} *
           = t("dashboard.merchant_account.business_tax_id.#{merchant_account.location}")
-        = f.text_field :business_tax_id, class: 'string optional form-control'
+          = translated_hint_button "dashboard.merchant_account.hints.business_tax_id.#{merchant_account.location}"
+        = f.text_field :business_tax_id, class: 'string optional form-control', placeholder: t("dashboard.merchant_account.placeholders.business_tax_id.#{merchant_account.location}", default: '')
         %span.help-block= f.error :business_tax_id
 
 
