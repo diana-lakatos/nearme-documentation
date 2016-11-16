@@ -10,10 +10,11 @@ function loadButtons(url, data, callback) {
   data = data || {};
   callback = callback || function(){};
 
+  /* we use post for bulk show as we were hitting URL string limit with get requests */
   $.ajax({
     url: url,
     data: data,
-    method: 'get',
+    method: 'post',
     dataType: 'json'
   }).done(function(items){
 
