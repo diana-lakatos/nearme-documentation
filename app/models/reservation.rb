@@ -247,6 +247,7 @@ class Reservation < Order
     "Reservation of #{transactable.try(:name)}, user: #{owner.try(:name)}, #{dates_description}"
   end
 
+  # @return [Boolean] whether hourly booking is available for this reservation
   def action_hourly_booking?
     !transactable_pricing.is_free_booking? && transactable_pricing.hour_booking?
   end

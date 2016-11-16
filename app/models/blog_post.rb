@@ -19,6 +19,7 @@ class BlogPost < ActiveRecord::Base
   scope :by_date, -> { order('COALESCE(published_at, created_at) DESC') }
   scope :published, -> { where('published_at < ? OR published_at IS NULL', Time.zone.now) }
 
+  # @return [BlogPost] object representing a post published before current post
   def previous_blog_post
     @previous_blog_post ||= blog_instance.blog_posts
                             .published
@@ -27,6 +28,7 @@ class BlogPost < ActiveRecord::Base
                             .first
   end
 
+  # @return [BlogPost] object representing a post published after current post
   def next_blog_post
     @next_blog_post ||= blog_instance.blog_posts
                         .published

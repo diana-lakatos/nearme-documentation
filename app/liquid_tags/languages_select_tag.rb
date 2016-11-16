@@ -1,3 +1,12 @@
+# Usage example:
+# 
+# ```
+# {% languages_select %}
+# ```
+#
+# Generates a select with the languages defined in the marketplace's admin section.
+# Choosing a language will change the language used when displaying the current
+# page and subsequent visited pages.
 class LanguagesSelectTag < SelectTag
   def name
     'locales[languages_select]'

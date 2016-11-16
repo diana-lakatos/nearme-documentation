@@ -2,6 +2,16 @@
 
 All documentation is set out on the [GitHub Wiki](https://github.com/mdyd-dev/desksnearme/wiki).
 
+### Code documentation guidelines
+
+For drops:
+
+* Use "see" as much as possible (@return (see ...))
+* Use @return as much as possible and descriptions as little as possible (if no params, and no other info besides the return value is needed)
+* If the see is linking to an attribute, add description above see
+* If see is not linking to an attribute, add the description to the @return of the target (after adding a @return on the target)
+* If not using see (non-linkable), add the description after @return
+
 ### Cheatsheet to get started
 
 ```

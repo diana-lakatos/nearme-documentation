@@ -1,0 +1,4 @@
+--plugin yard-activerecord
+--markup markdown
+'app/**/*.rb'
+'db/schema.rb'

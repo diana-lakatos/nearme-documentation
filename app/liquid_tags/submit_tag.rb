@@ -1,3 +1,12 @@
+# Usage example:
+# ```
+#   {% form_for current_user %}
+#      <input type="text" name="custom_field" value="" />
+#      {% submit Save  %}
+#   {% endform_for %}
+# ```
+#
+# Generates a submit button inside a form_for tag.
 class SubmitTag < Liquid::Tag
   include AttributesParserHelper
 

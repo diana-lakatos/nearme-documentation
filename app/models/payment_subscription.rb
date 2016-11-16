@@ -34,6 +34,7 @@ class PaymentSubscription < ActiveRecord::Base
     true
   end
 
+  # @return [Boolean] whether the payment subscription has expired
   def expired?
     !expired_at.nil?
   end

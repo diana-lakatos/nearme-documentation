@@ -1,3 +1,14 @@
+# Usage example:
+# ```
+#   {% will_paginate collection: @users %}
+# ```
+# or
+# ```
+#   {% will_paginate collection: @users, renderer: dashboard %}
+# ```
+#
+# Displays the pagination links for a paginated collection. The second example
+# uses the 'dashboard' style renderer.
 class WillPaginateTag < Liquid::Tag
   include AttributesParserHelper
 

@@ -134,6 +134,9 @@ gem 'acts-as-taggable-on', '~> 3.4'
 gem 'validate_url'
 gem 'ansi', require: false
 
+gem 'yard', '~> 0.9.5'
+gem 'yard-activerecord'
+
 group :profiling, :development do
   gem 'rack-mini-profiler', require: false
   gem 'flamegraph', require: false

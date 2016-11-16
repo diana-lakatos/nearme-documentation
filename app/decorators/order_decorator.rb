@@ -5,7 +5,8 @@ class OrderDecorator < Draper::Decorator
 
   delegate_all
 
-  delegate :current_page, :per_page, :offset, :total_entries, :total_pages, :shipping_address
+  # @todo Investigate for removal, these do not appear valid
+  delegate :current_page, :per_page, :offset, :total_entries, :total_pages, :shipping_address, to: :source
 
   def purchase?
     object.class == Purchase
@@ -120,6 +121,9 @@ class OrderDecorator < Draper::Decorator
     render_money(object.total_amount)
   end
 
+  # @return [String] total units as a text (e.g. "2 nights")
+  #   the name is taken from the translations 'reservations.item.one' (for singular)
+  #   and 'reservations.item.other' (for plural)
   def total_units_text
     unit = 'reservations.item'
     quantity = object.transactable_line_items.sum(:quantity)

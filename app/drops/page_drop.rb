@@ -1,30 +1,40 @@
 class PageDrop < BaseDrop
+
+  # @return [PageDrop]
   attr_reader :page
 
+  # @!method id
+  #   @return [Integer] numeric identifier for the page
+  # @!method slug
+  #   User & SEO friendly short text used in the URL
+  #   @return (see Page#slug)
+  # @!method updated_at
+  #   Last time when the page was updated
+  #   @return [DateTime]
   delegate :slug, :updated_at, :id, to: :page
 
   def initialize(page)
     @page = page
   end
 
-  # title of the page
+  # @return [String] title of the page
   def title
     @page.path
   end
 
-  # url of the page
+  # @return [String] url of the page
   def page_url
     @page.redirect? ? @page.redirect_url : routes.pages_path(@page)
   end
 
-  # returns "_blank" if the page is a redirect and is supposed to be opened in a new window
-  # otherwise returns an empty string
+  # @return [String] "_blank" if the page is a redirect and is supposed to be opened in a new window
+  #   otherwise returns an empty string
   def open_in_target
     (@page.redirect? && @page.open_in_new_window?) ? '_blank' : ''
   end
 
-  # returns "nofollow" if the page is a redirect and is not a redirect to any of the
-  # domains associated with the page; otherwise returns an empty string
+  # @return [String] "nofollow" if the page is a redirect and is not a redirect to any of the
+  #   domains associated with the page; otherwise returns an empty string
   def link_rel
     @page.redirect? && !@page.redirect_url_in_known_domain? ? 'nofollow' : ''
   end

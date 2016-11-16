@@ -21,11 +21,11 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   #       @order.touch(:archived_at)
   #       @order.save!
 
-  #       @order.shipments.each { |shipment| shipment.ready! }
+  #       @order.shipments.each !{ |shipment| shipment.ready! }
   #     else
   #       payment.capture!
   #       @order.touch(:archived_at)
-  #       flash[payment.paid? ? :notice : :error] = t("flash_messages.payments.capture_#{payment.paid? ? 'success' : 'failed'}")
+  #       flash[payment.paid? ? :notice : :error] = t("flash_messages.payments.capture_#!{payment.paid? ? 'success' : 'failed'}")
   #     end
   #   else
   #     flash[:error] = t('flash_messages.payments.paid')

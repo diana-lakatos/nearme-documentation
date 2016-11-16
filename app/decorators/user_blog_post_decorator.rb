@@ -11,6 +11,8 @@ class UserBlogPostDecorator < UserBlogDecorator
     user_blog_post_show_path(object.user.id, object)
   end
 
+  # @return [String] post author's name; taken from the user object if not present
+  #   for the user blog post object
   def author_name
     object.author_name.empty? ? object.user.name : object.author_name
   end
@@ -19,6 +21,7 @@ class UserBlogPostDecorator < UserBlogDecorator
     "#{link_to author_name, '#'} wrote this on #{published_at}".html_safe
   end
 
+  # @return [String] formatted representation of the date when the user blog post was published
   def published_at
     l object.published_at.to_date, format: :long if object.published_at
   end

@@ -4,6 +4,7 @@ class UserMessageDecorator < Draper::Decorator
   include ApplicationHelper
   delegate_all
 
+  # @return [String] first name of the recipient of the message
   def recipient_name
     recipient.first_name
   end
@@ -25,6 +26,7 @@ class UserMessageDecorator < Draper::Decorator
     thread_context.present? && thread_owner.present? && thread_recipient.present?
   end
 
+  # @return [String] path to creating a new message in the thread of this message
   def create_path(um = nil)
     um ||= object
     if Transactable === thread_context

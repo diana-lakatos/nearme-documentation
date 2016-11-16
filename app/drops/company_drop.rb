@@ -1,20 +1,24 @@
 class CompanyDrop < BaseDrop
   include MoneyRails::ActionViewExtension
 
+  # @return [CompanyDrop]
   attr_reader :company
 
-  # created_payment_transfers
-  #   array of payment transfer objects
-  # creator
-  #   creator user object
-  # url
+  # @!method created_payment_transfers
+  #   @return [Array<PaymentTransfer>] array of payment transfer objects
+  # @!method creator
+  #   @return [UserDrop] creator user object
+  # @!method url
   #   url address of company
-  # description
+  #   @return (see Company#url)
+  # @!method description
   #   company description as string
-  # name
+  #   @return (see Company#description)
+  # @!method name
   #   company name as string
-  # payments_mailing_address
-  #   the payments mailing address as an Address drop
+  #   @return (see Company#name)
+  # @!method payments_mailing_address
+  #   @return [AddressDrop] the payments mailing address as an Address object
   delegate :created_payment_transfers, :creator, :url, :description, :company_address,
            :name, :payments_mailing_address, :merchant_accounts, to: :company
 
@@ -22,27 +26,27 @@ class CompanyDrop < BaseDrop
     @company = company
   end
 
-  # Url to the section for adding user's paypal account where he will get paid. Includes tracking and authentication token.
+  # @return [String] Url to the section for adding user's paypal account where he will get paid. Includes tracking and authentication token.
   def add_paypal_url_with_tracking_and_token
     routes.edit_dashboard_company_payouts_path(token_key => @company.creator.temporary_token)
   end
 
-  # returns list of created payment transfer as a string (list of currency amounts)
+  # @return [String] list of created payment transfer as a string (list of currency amounts)
   def payment_transfers_as_string
     created_payment_transfers.map { |payment_transfer| "#{payment_transfer.amount}#{payment_transfer.amount.currency.symbol}" }.join(', ')
   end
 
-  # Url to the section for adding user's paypal account where he will get paid. Without tracking, includes authentication token.
+  # @return [String] Url to the section for adding user's paypal account where he will get paid. Without tracking, includes authentication token.
   def add_paypal_path_with_token
     routes.edit_dashboard_company_payouts_path(anchor: 'company_paypal_email', token_key => @company.creator.temporary_token)
   end
 
-  # Url to the section for adding/updating user's payout information.
+  # @return [String] Url to the section for adding/updating user's payout information.
   def payout_path
     routes.edit_dashboard_company_payouts_path
   end
 
-  # returns the path to editing the company
+  # @return [String] the path to editing the company
   def edit_path
     routes.edit_dashboard_company_path(@company)
   end

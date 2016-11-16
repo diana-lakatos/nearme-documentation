@@ -49,10 +49,12 @@ class TransactableCollaborator < ActiveRecord::Base
     touch(:approved_by_user_at)
   end
 
+  # @return [Boolean] whether the colllaboration has been approved by the collaborating user
   def approved_by_user?
     approved_by_user_at.present?
   end
 
+  # @return [Boolean] whether the collaboration has been approved by the transactable creator
   def approved_by_owner?
     approved_by_owner_at.present?
   end

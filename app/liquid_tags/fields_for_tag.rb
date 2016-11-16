@@ -1,3 +1,19 @@
+# Usage example:
+# ```
+#  {% form_for current_user, url: '/users' %}
+#    {% fields_for default_profile %}
+#      {% fields_for properties, form: default_profile  %}
+#        {% input drivers_licence_number, form: properties %}
+#      {% endfields_for %}
+#    {% endfields_for %}
+#    {% input avatar %}
+#    {% submit Save  %}
+#  {% endform_for %}
+# ```
+#
+# Used to generate a nested form; in the example above we generate a
+# drivers_licence_number input which is a field in "properties" which in turn
+# is a field of the User's "default_profile".
 class FieldsForTag < Liquid::Block
   include AttributesParserHelper
 

@@ -64,6 +64,7 @@ class Theme < ActiveRecord::Base
     self[:phone_number] || DEFAULT_PHONE_NUMBER
   end
 
+  # @return [String] phone number with all non-digit characters stripped
   def phone_number_noformat
     phone_number.gsub(/[^0-9+]/, '')
   end
@@ -72,6 +73,7 @@ class Theme < ActiveRecord::Base
     @theme_drop ||= ThemeDrop.new(self)
   end
 
+  # @return [Boolean] whether the owner object of the theme is a {Company} object
   def is_company_theme?
     owner_type == 'Company'
   end
