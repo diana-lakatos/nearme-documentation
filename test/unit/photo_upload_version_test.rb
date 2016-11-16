@@ -15,6 +15,7 @@ class PhotoUploadVersionTest < ActiveSupport::TestCase
       puv.photo_uploader = 'PhotoUploader'
       puv.version_name = 'space_listing'
       puv.save!
+      PlatformContext.current.instance_variable_set(:'@photo_upload_versions_fetcher', nil)
 
       RegenerateUploaderVersionsJob.perform('PhotoUploader')
 
