@@ -1,8 +1,8 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :reservation_without_payment, class: Reservation do
     association :user
     association :transactable
-    owner { user }
     company { transactable.try(:company) || FactoryGirl.build(:company) }
     creator { transactable.creator }
     date { Time.zone.now.next_week.to_date }
@@ -156,9 +156,7 @@ FactoryGirl.define do
         end
 
         factory :future_confirmed_reservation do
-          after(:create) do |reservation|
-            reservation.confirm!
-          end
+          after(:create, &:confirm!)
         end
       end
     end

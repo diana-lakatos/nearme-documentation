@@ -165,7 +165,7 @@ class UserTest < ActiveSupport::TestCase
       context 'when wrong phone numbers provided' do
         setup do
           @user = FactoryGirl.build(:user)
-          @user.build_profile
+          @user.get_default_profile
         end
 
         should 'be invalid with wrong phone' do
@@ -267,36 +267,32 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context 'reservations' do
+    setup do
+      @user = FactoryGirl.create(:user)
+    end
+
     should 'find rejected reservations' do
-      @user = FactoryGirl.create(:user, orders: [
-                                   FactoryGirl.create(:reservation, state: 'unconfirmed'),
-                                   FactoryGirl.create(:reservation, state: 'rejected')
-                                 ])
+      FactoryGirl.create(:reservation, user: @user, state: 'unconfirmed')
+      FactoryGirl.create(:reservation, user: @user, state: 'rejected')
       assert_equal 1, @user.rejected_reservations.count
     end
 
     should 'find confirmed reservations' do
-      @user = FactoryGirl.create(:user, orders: [
-                                   FactoryGirl.create(:reservation, state: 'unconfirmed'),
-                                   FactoryGirl.create(:reservation, state: 'confirmed')
-                                 ])
+      FactoryGirl.create(:reservation, user: @user, state: 'unconfirmed')
+      FactoryGirl.create(:reservation, user: @user, state: 'confirmed')
       assert_equal 1, @user.confirmed_reservations.count
     end
 
     should 'find expired reservations' do
-      @user = FactoryGirl.create(:user, orders: [
-                                   FactoryGirl.create(:reservation, state: 'unconfirmed'),
-                                   FactoryGirl.create(:reservation, state: 'expired')
-                                 ])
+      FactoryGirl.create(:reservation, user: @user, state: 'unconfirmed')
+      FactoryGirl.create(:reservation, user: @user, state: 'expired')
       assert_equal 1, @user.expired_reservations.count
     end
 
     should 'find cancelled reservations' do
-      @user = FactoryGirl.create(:user, orders: [
-                                   FactoryGirl.create(:reservation, state: 'unconfirmed'),
-                                   FactoryGirl.create(:reservation, state: 'cancelled_by_guest'),
-                                   FactoryGirl.create(:reservation, state: 'cancelled_by_host')
-                                 ])
+      FactoryGirl.create(:reservation, user: @user, state: 'unconfirmed')
+      FactoryGirl.create(:reservation, user: @user, state: 'cancelled_by_guest')
+      FactoryGirl.create(:reservation, user: @user, state: 'cancelled_by_host')
       assert_equal 2, @user.cancelled_reservations.count
     end
   end

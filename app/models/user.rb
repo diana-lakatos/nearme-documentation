@@ -151,7 +151,7 @@ class User < ActiveRecord::Base
   after_destroy :perform_cleanup!
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
-  before_create :build_profile
+  before_create :get_default_profile
 
   before_create do
     self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: instance_id).try(:first).try(:id)
@@ -386,7 +386,6 @@ class User < ActiveRecord::Base
   def get_default_profile
     default_profile || build_default_profile(instance_profile_type: current_instance.try('default_profile_type'))
   end
-  alias build_profile get_default_profile
 
   def has_default_profile?
     default_profile.present? && current_instance.default_profile_enabled? && default_profile.has_fields?(FormComponent::INSTANCE_PROFILE_TYPES)
