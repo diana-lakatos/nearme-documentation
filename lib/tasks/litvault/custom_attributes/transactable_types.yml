@@ -66,7 +66,10 @@
 
   date_engagement_agreement_signed:
     label: 'Date Engagement Signed'
-    attribute_type: date
+    attribute_type: string
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
+
 
   engagement_agreement_fee_percentage:
     label: 'What is the attorneys’ fee percentage contained in the Engagement Agreement?'
@@ -86,12 +89,17 @@
 
   client_dob:
     label: 'Client’s Date of Birth'
-    attribute_type: date
     required: true
+    attribute_type: string
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
   date_of_incident:
     label: 'Date of injury or accident'
-    attribute_type: date
+    attribute_type: string
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
+
     required: true
 
   city_of_incident:
@@ -152,7 +160,10 @@
 
   date_of_earliest_deadline:
     label: 'Please provide the date for the earliest deadline to file the lawsuit'
-    attribute_type: date
+    attribute_type: string
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
+
     required: true
 
   states:
