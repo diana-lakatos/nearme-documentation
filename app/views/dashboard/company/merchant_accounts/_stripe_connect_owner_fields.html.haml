@@ -10,22 +10,27 @@
     .string.optional
       .row
         .col-md-3
-          = f.label :first_name, t('dashboard.merchant_account.first_name'), class: 'string optional control-label'
+          = f.label :first_name, class: 'string optional control-label' do
+            = t('dashboard.merchant_account.first_name')
+            = translated_hint_button 'dashboard.merchant_account.hints.first_name'
         .col-md-9.input-container
-          = f.text_field :first_name, class: 'string optional'
+          = f.text_field :first_name, class: 'string optional', placeholder: t('dashboard.merchant_account.placeholders.first_name', default: '')
 
     .string.optional
       .row
         .col-md-3
-          = f.label :last_name, t('dashboard.merchant_account.last_name'), class: 'string optional control-label'
+          = f.label :last_name, class: 'string optional control-label' do
+            = t('dashboard.merchant_account.last_name')
+            = translated_hint_button 'dashboard.merchant_account.hints.last_name'
         .col-md-9.input-container
-          = f.text_field :last_name, class: 'string optional'
+          = f.text_field :last_name, class: 'string optional', placeholder: t('dashboard.merchant_account.placeholders.last_name', default: '')
 
 
   .form-group.string.optional{class: f.error(:dob) ? 'has-error' : ''}
     = f.label :dob, class: 'string optional control-label' do
       %abbr{title: "required"} *
       =  t('dashboard.merchant_account.dob')
+      = translated_hint_button 'dashboard.merchant_account.hints.dob'
     = f.text_field :dob_formated, placeholder: f.object.date_format_readable, class: 'string optional form-control'
     %span.help-block= f.error :dob
 
@@ -33,7 +38,9 @@
     .form-group.string.optional{class: f.error(:document) ? 'has-error' : ''}
       .row
         .col-md-12
-          = f.label :document, t('dashboard.merchant_account.document'), class: 'string required control-label'
+          = f.label :document, class: 'string required control-label' do
+            = t('dashboard.merchant_account.document')
+            = translated_hint_button 'dashboard.merchant_account.hints.document'
         .col-md-12.input-container
           = f.file_field :document
       %span.help-block= f.error :document
@@ -43,9 +50,11 @@
       .string.optional
         .row
           .col-md-3
-            = f.label address_attr, t("dashboard.merchant_account.#{address_attr}"), class: 'string optional control-label'
+            = f.label address_attr, class: 'string optional control-label' do
+              = t("dashboard.merchant_account.#{address_attr}")
+              = translated_hint_button "dashboard.merchant_account.hints.#{address_attr}"
           .col-md-9.input-container
-            = f.text_field address_attr, class: 'string optional'
+            = f.text_field address_attr, class: 'string optional', placeholder: t("dashboard.merchant_account.placeholders.#{address_attr}", default: '')
 
     = link_to_remove_association t('dashboard.merchant_account.remove_owner'), f
 
