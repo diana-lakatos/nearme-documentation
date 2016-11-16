@@ -13,6 +13,7 @@ class MerchantAccount < ActiveRecord::Base
 
   has_many :webhooks, as: :webhookable, dependent: :destroy
   has_many :payments
+  has_many :payment_transfers
   has_one :payment_subscription, dependent: :destroy, as: :subscriber
 
   # Relates with Company

@@ -1,0 +1,14 @@
+source 'https://rubygems.org'
+
+ruby '2.2.5'
+
+gemspec
+
+group :test, :developement do
+  gem 'rake'
+  gem 'minitest'
+  gem 'minitest-reporters'
+  gem 'vcr'
+  gem 'minitest-vcr'
+  gem 'webmock'
+end

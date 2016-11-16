@@ -2,6 +2,10 @@ en:
   activerecord:
     errors:
       models:
+        delivery:
+          attributes:
+            pickup_date:
+              pick_up_only_on_business_days: PickUp available only on business days
         aws_certificate:
           attributes:
             arn:
@@ -719,6 +723,7 @@ en:
         lessor_service_fees: "Lessor service fees"
         lessee_service_fees: "Lessee service fees"
         transfer_amount: "Transfer amount"
+        payment_gateway_fee: "PG fee"
         retry_possible: "Retry possible"
       payments:
         resource:

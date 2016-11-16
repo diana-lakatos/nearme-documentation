@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableDecorator < Draper::Decorator
   include Draper::LazyHelpers
   include CurrencyHelper
@@ -65,7 +66,7 @@ class TransactableDecorator < Draper::Decorator
   protected
 
   def build_link(suffix = 'path', options = {})
-    options[:language] = I18n.locale if PlatformContext.current.try(:instance).try(:available_locales).try(:many?)
+    options[:language] = I18n.locale if PlatformContext.current.multiple_languages?
     if transactable_type.show_path_format
       case transactable_type.show_path_format
       when '/:transactable_type_id/:id'

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableTypes::SpaceWizardController < ApplicationController
   layout :dashboard
 
@@ -39,6 +40,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       params[:user][:companies_attributes]['0'][:name] ||= current_user.first_name
       @user.company_name ||= params[:user][:companies_attributes]['0'][:name]
     end
+
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.get_seller_profile
     @user.skip_validations_for = [:buyer]
@@ -91,6 +93,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       @attachments = @user.first_listing ? @user.first_listing.attachments : nil
       @global_errors = filter_error_messages(@user.errors.full_messages +
                                              @user.properties.errors.full_messages)
+
       render :list
     end
   end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PaymentTransfer < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
@@ -7,12 +8,13 @@ class PaymentTransfer < ActiveRecord::Base
   attr_encrypted :token, key: DesksnearMe::Application.config.secret_token
 
   FREQUENCIES = %w(monthly fortnightly weekly semiweekly daily manually).freeze
-  DEFAULT_FREQUENCY = 'fortnightly'.freeze
+  DEFAULT_FREQUENCY = 'fortnightly'
 
   belongs_to :company
   belongs_to :instance
   belongs_to :partner
   belongs_to :payment_gateway
+  belongs_to :merchant_account
 
   has_many :payments, dependent: :nullify
 
@@ -47,17 +49,24 @@ class PaymentTransfer < ActiveRecord::Base
   # to the end user. The service fee is our cut of the revenue.
 
   monetize :amount_cents, with_model_currency: :currency
+  monetize :payment_gateway_fee_cents, with_model_currency: :currency
   monetize :service_fee_amount_guest_cents, with_model_currency: :currency
   monetize :service_fee_amount_host_cents, with_model_currency: :currency
 
-  # This is the gross amount of revenue received from the charges included in
-  # this payout - including the service fees recieved.
   def gross_amount_cents
-    amount_cents + service_fee_amount_guest_cents + service_fee_amount_host_cents
+    amount_cents + service_fee_amount_host_cents + payment_gateway_fee_cents
   end
 
   def gross_amount
     Money.new(gross_amount_cents, currency)
+  end
+
+  def total_service_fee_cents
+    service_fee_amount_host_cents + service_fee_amount_guest_cents
+  end
+
+  def total_service_fee
+    Money.new(total_service_fee_cents, currency)
   end
 
   # Whether or not we have executed the transfer to the hosts bank account.
@@ -125,20 +134,13 @@ class PaymentTransfer < ActiveRecord::Base
     payout_gateway.try(:supports_payout?) && company.merchant_accounts.where(payment_gateway: payout_gateway).count.zero?
   end
 
-  def total_service_fee_cents
-    service_fee_amount_host_cents + service_fee_amount_guest_cents
-  end
-
-  def total_service_fee
-    Money.new(total_service_fee_cents, currency)
-  end
-
   private
 
   def assign_amounts_and_currency
     self.currency = payments.first.try(:currency)
+    self.payment_gateway_fee_cents = payments.inject(0) { |sum, rc| sum += rc.payment_gateway_fee_cents }
     self.service_fee_amount_host_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_host_cents }
-    self.amount_cents = payments.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - service_fee_amount_host_cents
+    self.amount_cents = payments.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - service_fee_amount_host_cents - payment_gateway_fee_cents
     self.service_fee_amount_guest_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_guest_cents }
     save!
   end

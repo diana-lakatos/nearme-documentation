@@ -31,10 +31,17 @@ class Dashboard::OrdersController < Dashboard::BaseController
     if @order.unconfirmed?
       @order.update_attribute(:pending_guest_confirmation, nil)
       @order.touch(:enquirer_confirmed_at)
+
       @order.invoke_confirmation! do
+        if @order.shipping_line_items.count > 0
+          @order.recalculate_fees!
+          @order.reload
+          @order.update_payment_attributes
+        end
         @order.payment.authorize unless @order.payment.authorized?
         @order.payment.capture!
       end
+
       if @order.confirmed? && @order.payment.paid?
         flash[:notice] = t('flash_messages.payments.successful_approval')
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPayment, @order.id)

@@ -1,21 +1,24 @@
-%b= address.full_name
+- if address.nil?
+  = :missing_address
+- else
+  %b= address.full_name
 
-- if address.company.present?
+  - if address.company.present?
+    %br/
+    = address.company
+
   %br/
-  = address.company
 
-%br/
+  = address.street1
+  - if address.street2.present?
+    %br/
+    = address.street2
 
-= address.street1
-- if address.street2.present?
   %br/
-  = address.street2
 
-%br/
+  = [address.city.presence, address.state.try(:abbr).presence].compact.join(',')
+  = address.zip
 
-= [address.city.presence, address.state.try(:abbr).presence].compact.join(',')
-= address.zip
+  %br/
 
-%br/
-
-= address.country.try(:name)
+  = address.country.try(:name)

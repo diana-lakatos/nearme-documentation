@@ -34,17 +34,17 @@
             - @payment_transfers.each do |payment_transfer|
               %tr
                 %td
-                  = currency_content_tag(payment_transfer.currency, payment_transfer.gross_amount - payment_transfer.service_fee_amount_guest, :span)
+                  = render_money(payment_transfer.gross_amount)
                 %td
-                  = currency_content_tag(payment_transfer.currency, payment_transfer.service_fee_amount_host, :span)
+                  = render_money(payment_transfer.total_service_fee + payment_transfer.payment_gateway_fee)
                 %td
-                  = currency_content_tag(payment_transfer.currency, payment_transfer.amount, :span)
+                  = render_money(payment_transfer.amount)
                 %td
                   - if payment_transfer.transferred_at.present?
                     = l(payment_transfer.transferred_at, format: :short)
                   - else
                     %i.fa.fawarning
-                    = t('dashboard.transfers.not_transferred')
+                    = payment_transfer.decorate.transfer_status
     - else
       - if @company.any_payout_option_available?
         %p.warning.text-center

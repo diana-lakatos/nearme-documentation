@@ -119,7 +119,9 @@ class User < ActiveRecord::Base
   has_many :user_bans
   has_many :user_status_updates, class_name: 'UserStatusUpdate'
   has_many :wish_lists, dependent: :destroy
-  has_many :dimensions_templates, as: :entity
+
+  # QUESTION: why we need this?
+  # has_many :dimensions_templates, as: :entity
   has_many :user_profiles
   has_many :inappropriate_reports, dependent: :destroy
   has_many :outgoing_phone_calls, foreign_key: :caller_id, class_name: 'PhoneCall'
@@ -591,10 +593,7 @@ class User < ActiveRecord::Base
   end
 
   def generate_random_password!
-    chars = ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a
-    random_pass = ''
-    1.upto(8) { |_i| random_pass << chars[rand(chars.size - 1)] }
-    self.password = random_pass
+    self.password = SecureRandom.hex(8)
   end
 
   def linked_to?(provider)

@@ -2,6 +2,8 @@
 class Instance < ActiveRecord::Base
   include Encryptable
   include DomainsCacheable
+  include ShippoLegacy::Instance
+  include Shippings::Instance
 
   SELLER_ATTACHMENTS_ACCESS_LEVELS = (Ckeditor::Asset::ACCESS_LEVELS + ['sellers_preference']).freeze
 
@@ -11,7 +13,7 @@ class Instance < ActiveRecord::Base
 
   attr_encrypted :marketplace_password, :olark_api_key,
                  :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
-                 :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password, :shippo_api_token,
+                 :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string,
                  :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret, :support_imap_password, :webhook_token,
                  :google_consumer_key, :google_consumer_secret, :github_consumer_key, :github_consumer_secret, :google_maps_api_key
 
@@ -127,18 +129,16 @@ class Instance < ActiveRecord::Base
     send(:"#{provider.downcase}_consumer_key").present? && send(:"#{provider.downcase}_consumer_secret").present?
   end
 
-  def allowed_countries_list
+  def allowed_country_list
     Country.where(name: allowed_countries)
   end
 
   def allowed_currencies=(currencies)
-    currencies.reject!(&:blank?)
-    self[:allowed_currencies] = currencies
+    self[:allowed_currencies] = currencies.select(&:present?)
   end
 
   def allowed_countries=(countries)
-    countries.reject!(&:blank?)
-    self[:allowed_countries] = countries
+    self[:allowed_countries] = countries.select(&:present?)
   end
 
   def check_lock
@@ -204,6 +204,14 @@ class Instance < ActiveRecord::Base
 
   def test_mode?
     self[:test_mode] || (!Rails.env.staging? && !Rails.env.production?)
+  end
+
+  def guest_fee_enabled?
+    action_types.where('service_fee_guest_percent != 0').any?
+  end
+
+  def host_fee_enabled?
+    action_types.where('service_fee_host_percent != 0').any?
   end
 
   def default_twilio_config
@@ -310,14 +318,6 @@ class Instance < ActiveRecord::Base
 
   def set_context!
     PlatformContext.current = PlatformContext.new(self)
-  end
-
-  def shippo_enabled?
-    shippo_api_token.present?
-  end
-
-  def shippo_api
-    @api ||= ShippoApi::ShippoApi.new(shippo_api_token)
   end
 
   def signature

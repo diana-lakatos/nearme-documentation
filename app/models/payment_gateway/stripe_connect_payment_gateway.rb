@@ -6,7 +6,7 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   supported :immediate_payout, :credit_card_payment, :multiple_currency, :partial_refunds, :recurring_payment
 
   delegate :parse_webhook, :retrieve_account, :onboard!, :update_onboard!, :find_transfer_transactions,
-           :find_payment, to: :gateway
+           :find_payment, :find_balance, to: :gateway
 
   validate :validate_config_hash
 
@@ -65,15 +65,25 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
 
   def charge(user, amount, currency, payment, token)
     charge_record = super(user, amount.to_i, currency, payment, token)
-    if charge_record.try(:success?) && !direct_charge?
-      payment_transfer = payment.company.payment_transfers.create!(
-        payments: [payment.reload],
-        payment_gateway_mode: mode,
-        payment_gateway_id: id,
-        token: charge_record.response.params['transfer']
-      )
+    if charge_record.try(:success?)
+      response = charge_record.response
+      if direct_charge?
+        balance_response = find_balance(response.params['balance_transaction'], payment.merchant_account.try(:external_id))
+        payment.payment_gateway_fee_cents = balance_response.payment_gateway_fee_cents
+      else
+        create_payment_transfer(payment, response)
+      end
     end
     charge_record
+  end
+
+  def create_payment_transfer(payment, response)
+    payment.company.payment_transfers.create!(
+      payments: [payment.reload],
+      payment_gateway_mode: mode,
+      payment_gateway_id: id,
+      token: response.params['transfer']
+    )
   end
 
   def custom_options

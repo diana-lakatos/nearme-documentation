@@ -1,0 +1,68 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://sandbox.sendle.com/api/orders
+    body:
+      encoding: UTF-8
+      string: '{"sender":{}}'
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Authorization:
+      - Basic ZGFyZWtfbmVhcl9tZV9jb206QkJYbWRnVkt3eHk0WXZ6NXlDUnJKalNY
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 422
+      message: Unprocessable Entity
+    headers:
+      Server:
+      - Cowboy
+      Date:
+      - Mon, 10 Oct 2016 08:38:04 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Content-Type:
+      - application/json; charset=utf-8
+      Cache-Control:
+      - no-cache
+      Set-Cookie:
+      - request_method=POST; path=/; secure
+      X-Request-Id:
+      - 57cd4b1c-88f4-4b6f-8756-a4339dffaeeb
+      X-Runtime:
+      - '0.036157'
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: ASCII-8BIT
+      string: '{"messages":{"description":["can''t be blank"],"sender":[{"contact":[{"name":["can''t
+        be blank"]}],"address":[{"address_line1":["can''t be blank"],"suburb":["can''t
+        be blank"],"postcode":["can''t be blank"],"state_code":["can''t be blank"],"state_name":["can''t
+        be blank"]}]}],"receiver":[{"contact":[{"name":["can''t be blank"],"email":["Either
+        email or Sendle ID must be present"]}],"address":[{"address_line1":["can''t
+        be blank"],"suburb":["can''t be blank"],"postcode":["can''t be blank"],"state_code":["can''t
+        be blank"],"state_name":["can''t be blank"]}],"instructions":["can''t be blank"]}]},"error":"unprocessable_entity","error_description":"The
+        data you supplied is invalid. Error messages are in the messages section.
+        Please fix those fields and try again."}'
+    http_version: 
+  recorded_at: Mon, 10 Oct 2016 08:38:06 GMT
+recorded_with: VCR 3.0.3

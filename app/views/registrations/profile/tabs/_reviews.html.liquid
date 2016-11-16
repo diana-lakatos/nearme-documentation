@@ -10,29 +10,27 @@
         </a>
         <div class='clearfix'></div>
         <ul class='dropdown-menu'>
-          {% if @reviews_count > 0 %}
+          {% if @reviews_counter.about_seller > 0 %}
             <li data-option='reviews_about_seller'>
-              {{ 'user_reviews.reviews_about_this_seller' | translate: first_name: @user.first_name}} ({{@reviews_count}})
+              {{ 'user_reviews.reviews_about_this_seller' | translate: first_name: @user.first_name }} ({{ @reviews_counter.about_seller }})
             </li>
           {% endif %}
-          {% if @reviews_left_by_seller_count > 0 %}
+
+          {% if @reviews_counter.left_by_seller > 0 %}
             <li data-option='reviews_left_by_seller'>
-              {{ 'user_reviews.reviews_left_by_this_seller' | translate: first_name: @user.first_name}} ({{@reviews_left_by_seller_count}})
+              {{ 'user_reviews.reviews_left_by_this_seller' | translate: first_name: @user.first_name }} ({{ @reviews_counter.left_by_seller }})
             </li>
           {% endif %}
-          {% if @reviews_about_buyer_count > 0 %}
+
+          {% if @reviews_counter.about_buyer > 0 %}
             <li data-option='reviews_about_buyer'>
-              {{ 'user_reviews.reviews_about_this_buyer' | translate: first_name: @user.first_name}} ({{@reviews_about_buyer_count}})
+              {{ 'user_reviews.reviews_about_this_buyer' | translate: first_name: @user.first_name}} ({{ @reviews_counter.about_buyer }})
             </li>
           {% endif %}
-          {% if @reviews_left_by_buyer_count > 0 %}
+
+          {% if @reviews_counter.left_by_buyer > 0 %}
             <li data-option='reviews_left_by_buyer'>
-              {{ 'user_reviews.reviews_left_by_this_buyer' | translate: first_name: @user.first_name}} ({{@reviews_left_by_buyer_count}})
-            </li>
-          {% endif %}
-          {% if @reviews_left_about_product_count > 0 %}
-            <li data-option='reviews_left_about_product'>
-              {{ 'user_reviews.reviews_about_product' | translate: first_name: @user.first_name}} ({{@reviews_left_about_product_count}})
+              {{ 'user_reviews.reviews_left_by_this_buyer' | translate: first_name: @user.first_name}} ({{ @reviews_counter.left_by_buyer }})
             </li>
           {% endif %}
         </ul>

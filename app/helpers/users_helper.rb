@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 module UsersHelper
   def user_is_admin?
     current_user && current_user.admin?
   end
 
   def user_country_name_options
-    if (allowed_countries = current_instance.allowed_countries_list).present?
+    if (allowed_countries = current_instance.allowed_country_list).present?
       allowed_countries.map { |c| [c.name, c.name, { 'data-calling-code': c.calling_code }] }.sort_by(&:first)
     else
       Country.all.map { |c| [c.name, c.name, { 'data-calling-code': c.calling_code }] }.sort_by(&:first)
@@ -12,7 +13,7 @@ module UsersHelper
   end
 
   def user_country_default(country)
-    Country.find_by_name(country) ? country : current_instance.default_country
+    Country.find_by(name: country) ? country : current_instance.default_country
   end
 
   def admin_as_user?

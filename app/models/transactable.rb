@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Transactable < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
@@ -13,6 +14,8 @@ class Transactable < ActiveRecord::Base
   include Categorizable
   include Approvable
   include Taggable
+  include ShippoLegacy::Transactable
+  include Shippings::Transactable
 
   DEFAULT_ATTRIBUTES = %w(name description capacity).freeze
 
@@ -72,7 +75,6 @@ class Transactable < ActiveRecord::Base
                   column_names: { ['transactables.draft IS NULL AND transactables.deleted_at IS NULL'] => 'transactables_count' }
 
   belongs_to :administrator, -> { with_deleted }, class_name: 'User', inverse_of: :administered_listings
-  has_one :dimensions_template, as: :entity
 
   has_one :location_address, through: :location
   has_one :upload_obligation, as: :item, dependent: :destroy
@@ -82,7 +84,6 @@ class Transactable < ActiveRecord::Base
   belongs_to :no_action_booking, foreign_key: :action_type_id
   belongs_to :purchase_action, foreign_key: :action_type_id
   belongs_to :action_type
-  belongs_to :shipping_profile
 
   has_many :activity_feed_events, as: :followed, dependent: :destroy
   has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
@@ -109,7 +110,6 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :additional_charge_types, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :attachments, allow_destroy: true
-  accepts_nested_attributes_for :dimensions_template, allow_destroy: true
   accepts_nested_attributes_for :document_requirements, allow_destroy: true, reject_if: :document_requirement_hidden?
   accepts_nested_attributes_for :photos, allow_destroy: true
   accepts_nested_attributes_for :upload_obligation
@@ -124,8 +124,7 @@ class Transactable < ActiveRecord::Base
   before_destroy :decline_reservations
   before_save :set_currency
   before_save :set_is_trusted, :set_available_actions
-  before_validation :set_activated_at, :set_enabled, :set_confirm_reservations,
-                    :set_possible_payout, :set_action_type
+  before_validation :set_activated_at, :set_enabled, :set_confirm_reservations, :set_possible_payout, :set_action_type
   after_create :set_external_id
   after_save do
     update_column(:opened_on_days, availability.days_open.sort) if availability.try(:days_open).present?
@@ -243,7 +242,6 @@ class Transactable < ActiveRecord::Base
   validates :quantity, presence: true, numericality: { greater_than: 0 }, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
 
   validates :topics, length: { minimum: 1 }, if: -> (record) { record.topics_required && !record.draft.present? }
-  validates :dimensions_template, presence: { if: ->(record) { record.shipping_profile.try(:shippo?) } }
 
   validates_associated :approval_requests, :action_type
   validates :name, length: { maximum: 255 }, allow_blank: true
@@ -553,11 +551,6 @@ class Transactable < ActiveRecord::Base
 
   def express_checkout_payment?
     instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout_payment?)
-  end
-
-  # TODO: rental shipping
-  def possible_delivery?
-    shipping_profile.present?
   end
 
   # TODO: to be deleted once we get rid of instance views

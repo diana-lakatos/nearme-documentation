@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Reservation < Order
   include Bookable
   include Categorizable
@@ -115,9 +116,9 @@ class Reservation < Order
   def invoke_confirmation!(&_block)
     errors.clear
     action.try(:validate_all_dates_available, self) unless skip_payment_authorization?
-    if errors.empty? && valid? && check_double_cofirmation
+    if errors.empty? && valid? && check_double_confirmation
       if block_given? ? yield : true
-        create_shipments!
+        process_deliveries!
         confirm!
         # We need to touch transactable so it's reindexed by ElasticSearch
         transactable.touch
@@ -125,7 +126,7 @@ class Reservation < Order
     end
   end
 
-  def check_double_cofirmation
+  def check_double_confirmation
     !action.both_side_confirmation || (lister_confirmed_at.present? && enquirer_confirmed_at.present?)
   end
 

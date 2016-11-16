@@ -45,12 +45,26 @@ module ActiveMerchant
         raise_error(e)
       end
 
+      def find_balance(balance_id, merchant_account_id)
+        PaymentGateway::Response::Stripe::Balance.new(
+          if merchant_account_id.present?
+            Stripe::BalanceTransaction.retrieve({ id: balance_id }, stripe_account: merchant_account_id)
+          else
+            Stripe::BalanceTransaction.retrieve(balance_id)
+          end
+        )
+      rescue => e
+        raise_error(e)
+      end
+
       def find_payment(id, merchant_account_id = nil)
-        PaymentGateway::Response::Stripe::Payment.new(if merchant_account_id.present?
-                                                        Stripe::Charge.retrieve({ id: id }, stripe_account: merchant_account_id)
-                                                      else
-                                                        Stripe::Charge.retrieve(id)
-        end)
+        PaymentGateway::Response::Stripe::Payment.new(
+          if merchant_account_id.present?
+            Stripe::Charge.retrieve({ id: id }, stripe_account: merchant_account_id)
+          else
+            Stripe::Charge.retrieve(id)
+          end
+        )
       end
 
       def raise_error(error)

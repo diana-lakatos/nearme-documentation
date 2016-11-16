@@ -217,3 +217,10 @@ en:
   transactable_collaborator:
     collaboration_cancelled: User has been removed from project.
     collaborator_cancelled: "You have declined collaboration in this project."
+
+  instance_admin:
+    manage:
+      transfers:
+        lessee_service_fees: MP Fees
+
+

@@ -225,7 +225,8 @@ DesksnearMe::Application.routes.draw do
 
     delete 'wish_list/:id/:wishlistable_type', to: 'wish_lists#destroy'
     get 'wish_list/:id/:wishlistable_type', to: 'wish_lists#show', as: 'wish_list'
-    get 'wish_lists/bulk_show', to: 'wish_lists#bulk_show', as: 'bulk_show_wish_lists'
+    # we use post for bulk show as we were hitting URL string limit with get requests
+    post 'wish_lists/bulk_show', to: 'wish_lists#bulk_show', as: 'bulk_show_wish_lists'
     post 'wish_lists', to: 'wish_lists#create', as: 'wish_lists'
 
     namespace :instance_admin do
@@ -297,6 +298,11 @@ DesksnearMe::Application.routes.draw do
         resources :location_types, only: [:index, :create, :update, :destroy_modal, :destroy] do
           get 'destroy_modal', on: :member
         end
+
+        namespace :shippings do
+          resources :shipping_providers
+        end
+
         resources :payments
         resources :payment_gateways, controller: 'payments/payment_gateways', except: [:show]
         resources :tax_regions do

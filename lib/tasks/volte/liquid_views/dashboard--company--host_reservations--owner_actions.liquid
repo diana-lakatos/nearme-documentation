@@ -1,7 +1,3 @@
----
-partial: true
----
-
 {% if reservation.can_confirm? and reservation.lister_confirmed_at == blank %}
   {% if platform_context.instance.enable_reply_button_on_host_reservations? %}
     {% if reservation.user_messages.size == 0 %}
@@ -36,12 +32,10 @@ partial: true
   {% if reservation.has_to_update_credit_card? %}
     <div class='cc-error'>{{ 'dashboard.host_reservations.must_change_credit_card' | t | upcase }}</div>
   {% endif %}
-  {% if reservation.outbound_shipment != blank %}
-    <a class="button button-default" href="{{ reservation.outbound_shipment.label_url }}">{{ 'dashboard.host_reservations.shipping_label' | t | upcase }}</a>
-    <a class="button button-default" href="{{ reservation.outbound_shipment.tracking_url_provider }}">{{ 'dashboard.host_reservations.track_package' | t | upcase }}</a>
+  {% if reservation.inbound != blank %}
+    <a class="btn btn-primary" href="{{ reservation.inbound.tracking_url }}">{{ 'dashboard.host_reservations.track_package' | t }}</a>
   {% endif %}
-  {% if reservation.inbound_shipment != blank %}
-    <a class="button button-default" href="{{ reservation.inbound_shipment.label_url }}">{{ 'dashboard.host_reservations.return_label' | t | upcase }}</a>
-    <a class="button gray full" href="{{ reservation.inbound_shipment.tracking_url_provider }}">{{ 'dashboard.host_reservations.return_track_package' | t | upcase }}</a>
+  {% if reservation.outbound != blank %}
+    <a class="btn gray full" href="{{ reservation.outbound.tracking_url }}">{{ 'dashboard.host_reservations.return_track_package' | t }}</a>
   {% endif %}
 {% endif %}

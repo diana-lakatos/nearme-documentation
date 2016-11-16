@@ -514,6 +514,7 @@ class Payment < ActiveRecord::Base
   end
 
   def set_merchant_account
+    return unless payment_gateway
     self.merchant_account ||= payment_gateway.merchant_account(company)
   end
 end

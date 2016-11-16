@@ -6,11 +6,11 @@ namespace :longtail do
 
   task desksnearme: :environment do
     Instance.find(1).set_context!
-    page = Page.where(slug: 'workspace', theme_id: PlatformContext.current.theme.id).first_or_create!(path: 'Workplace')
-    page.redirect_url = nil
-    page.content = LongtailRakeHelper.generic_page_content
-    page.css_content = ''
-    page.save!
+    page = Page.where(slug: 'workspace', theme_id: PlatformContext.current.theme.id).first_or_create!(path: 'Workplace') do |p|
+      p.redirect_url = nil
+      p.content = LongtailRakeHelper.generic_page_content
+      p.css_content = ''
+    end
     LongtailRakeHelper.parse_keywords!(page, 'c3ac011214f481a580dae3fa3a3e8cf9')
   end
 
@@ -134,7 +134,7 @@ class LongtailRakeHelper
   {{ description_content | truncate: 165  }}
 {% endcontent_for %}
 
-{% assign title_text = @data_source_contents.first.json_content.data.first.attributes.name | append: ' - ' | append: @data_source_contents.first.json_content.data.first.relationships.items.data.size | append: '  %}
+{% assign title_text = @data_source_contents.first.json_content.data.first.attributes.name | append: ' - ' | append: @data_source_contents.first.json_content.data.first.relationships.items.data.size | append: platform_context.name  %}
 {% title title_text %}
 
 {% assign cache_key = data_source_last_update | append: current_path %}
@@ -190,7 +190,7 @@ class LongtailRakeHelper
                   {% else %}
                     <li class="active">
                       <a href="{{ listing.attributes.url }}">
-                        <img src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/attachment_file/data/3228/placeholder.svg" alt="Photos unavailable or still processing" />
+                        <img src="https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/attachment_file/data/3233/placeholder.svg" alt="Photos unavailable or still processing" />
                       </a>
                     </li>
                   {% endif %}

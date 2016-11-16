@@ -58,3 +58,5 @@
 - if only_inputs.empty? || only_inputs.include?(:seller_attachments)
   = render "dashboard/company/transactables/form_fields/seller_attachments", f: f
 
+- if only_inputs.empty? || only_inputs.include?(:package_details)
+  = render 'listings/package_details', f: f

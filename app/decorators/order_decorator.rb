@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 class OrderDecorator < Draper::Decorator
   include MoneyRails::ActionViewExtension
   include Draper::LazyHelpers
 
   delegate_all
 
-  delegate :current_page, :per_page, :offset, :total_entries, :total_pages
+  delegate :current_page, :per_page, :offset, :total_entries, :total_pages, :shipping_address
 
   def purchase?
     object.class == Purchase
@@ -23,8 +24,6 @@ class OrderDecorator < Draper::Decorator
   def user_message_recipient(current_user)
     current_user == owner ? creator : owner
   end
-
-  #===============================
 
   def payment_decorator
     (payment || build_payment(shared_payment_attributes)).decorate
@@ -80,10 +79,6 @@ class OrderDecorator < Draper::Decorator
     content_tag :strong, object.company.try(:name)
   end
 
-  def shipping_address
-    object.shipping_address.nil? ? fill_address_from_user(OrderAddress.new, false) : object.shipping_address
-  end
-
   def payment_documents
     if object.payment_documents.blank?
       transactables.each do |transactable|
@@ -103,10 +98,10 @@ class OrderDecorator < Draper::Decorator
   end
 
   def shipments
-    if object.transactable && object.transactable.possible_delivery?
-      object.shipments.blank? ? object.shipments.build : object.shipments
-    end
-    object.shipments
+    # if object.transactable && object.transactable.possible_delivery?
+    #   object.shipments.blank? ? object.shipments.build : object.shipments
+    # end
+    object.deliveries
   end
 
   def payment_state
@@ -121,9 +116,6 @@ class OrderDecorator < Draper::Decorator
     object.billing_address.nil? ? fill_address_from_user(OrderAddress.new, true) : object.billing_address
   end
 
-  def save_billing_address
-  end
-
   def display_total
     render_money(object.total_amount)
   end
@@ -132,14 +124,6 @@ class OrderDecorator < Draper::Decorator
     unit = 'reservations.item'
     quantity = object.transactable_line_items.sum(:quantity)
     [quantity.to_i, I18n.t(unit, count: quantity)].join(' ')
-  end
-
-  def display_shipping_address
-    return '' if object.shipping_address.blank?
-    shipping_address = []
-    shipping_address << "#{object.shipping_address.street1}, #{object.shipping_address.city}"
-    shipping_address << "#{object.shipping_address.state.name}, #{object.shipping_address.country.try(:iso).presence || object.shipping_address.country.try(:name)}, #{object.shipping_address.zip}"
-    shipping_address.join('<br/>').html_safe
   end
 
   def reviewable?(current_user)
@@ -156,6 +140,7 @@ class OrderDecorator < Draper::Decorator
     end
   end
 
+  # REFACTOR: use builder dp
   def fill_address_from_user(address, billing_address = true)
     address_info = billing_address ? user.billing_addresses.last : user.shipping_addresses.last
 

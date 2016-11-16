@@ -8,11 +8,27 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
       Stripe::BalanceTransaction.stubs(:all).returns(transaction_balance)
       @company = FactoryGirl.create(:company)
       @payment_gateway = FactoryGirl.create(:stripe_connect_payment_gateway)
-      @merchant_account = FactoryGirl.create(:stripe_connect_merchant_account, payment_gateway: @payment_gateway, merchantable: @company)
+      @merchant_account = FactoryGirl.create(:stripe_connect_merchant_account, external_id: 'xyz', payment_gateway: @payment_gateway, merchantable: @company)
     end
 
     context '#webhook' do
       should 'mark payment_transfer as transferred on transfer.paid webhook' do
+        payment_transfer = FactoryGirl.create(:payment_transfer_unpaid, payment_gateway: @payment_gateway)
+        event_options = { type: 'transfer.paid', id: payment_transfer.token, status: 'paid' }
+
+        Stripe::Event.stubs(:retrieve).returns(event_response(event_options))
+
+        assert_difference 'Webhook.count' do
+          post :webhook, id: event_response(event_options).id
+        end
+
+        payment_transfer.reload
+        assert :success
+        assert payment_transfer.transferred?
+        assert payment_transfer.payout_attempts.first.success?
+      end
+
+      should 'mark payment_transfer as transferred on transfer.updated webhook' do
         payment_transfer = FactoryGirl.create(:payment_transfer_unpaid, payment_gateway: @payment_gateway)
         event_options = { type: 'transfer.updated', id: payment_transfer.token, status: 'paid' }
 
@@ -28,7 +44,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
         assert payment_transfer.payout_attempts.first.success?
       end
 
-      should 'mark payment_transfer as failed on transfer.failed webhook' do
+      should 'mark payment_transfer as failed on transfer.updated webhook' do
         payment_transfer = FactoryGirl.create(:payment_transfer_unpaid, payment_gateway: @payment_gateway)
         event_options = { type: 'transfer.updated', id: payment_transfer.token, status: 'failed' }
 
@@ -36,6 +52,22 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
 
         assert_difference 'Webhook.count' do
           post :webhook, params: { id: event_response(event_options).id }
+        end
+
+        payment_transfer.reload
+        assert :success
+        refute payment_transfer.transferred?
+        refute payment_transfer.payout_attempts.first.success?
+      end
+
+      should 'mark payment_transfer as failed on transfer.failed webhook' do
+        payment_transfer = FactoryGirl.create(:payment_transfer_unpaid, payment_gateway: @payment_gateway)
+        event_options = { type: 'transfer.failed', id: payment_transfer.token, status: 'failed' }
+
+        Stripe::Event.stubs(:retrieve).returns(event_response(event_options))
+
+        assert_difference 'Webhook.count' do
+          post :webhook, id: event_response(event_options).id
         end
 
         payment_transfer.reload
@@ -63,7 +95,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
           Stripe::Event.stubs(:retrieve).returns(event_response(event_options))
 
           assert_difference ['@payment_gateway.payment_transfers.count', '@payment_gateway.webhooks.count'] do
-            post :webhook, params: { id: event_response(event_options).id }
+            post :webhook, id: event_response(event_options).id, user_id: @merchant_account.external_id
           end
 
           @payment_transfer = PaymentTransfer.last

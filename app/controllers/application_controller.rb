@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'user_agent'
 require 'addressable/uri'
 
@@ -45,6 +46,10 @@ class ApplicationController < ActionController::Base
     @platform_context = PlatformContext.current
   end
 
+  def url_options
+    { language: language_url_option }.merge(super)
+  end
+
   protected
 
   def validate_request_parameters
@@ -90,6 +95,10 @@ class ApplicationController < ActionController::Base
       current_instance.try(:primary_locale),
       I18n.default_locale
     ]
+  end
+
+  def language_url_option
+    PlatformContext.current&.url_locale
   end
 
   def set_time_zone(&block)

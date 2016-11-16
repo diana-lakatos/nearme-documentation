@@ -19,10 +19,10 @@ namespace :jira do
   task :release_minor do
     jira_wrapper = JiraWrapper.new
     jira_wrapper.ensure_version_present!(
-      name: @jira_wrapper.next_tag(2),
+      name: jira_wrapper.next_tag(2),
       description: 'Hotfix'
     )
-    JiraReleaser.new(issues).release(jira_wrapper.next_tag(2))
+    JiraReleaser.new.release(jira_wrapper.next_tag(2))
   end
 end
 

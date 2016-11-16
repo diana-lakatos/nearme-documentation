@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161113004739) do
+ActiveRecord::Schema.define(version: 20161114182624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -820,6 +820,23 @@ ActiveRecord::Schema.define(version: 20161113004739) do
   add_index "delayed_jobs", ["platform_context_detail_id", "platform_context_detail_type"], name: "index_delayed_jobs_on_platform_context_detail", using: :btree
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
+  create_table "deliveries", force: :cascade do |t|
+    t.integer  "order_id",            null: false
+    t.date     "pickup_date",         null: false
+    t.integer  "sender_address_id",   null: false
+    t.integer  "receiver_address_id", null: false
+    t.string   "courier"
+    t.string   "status"
+    t.string   "notes"
+    t.string   "order_reference"
+    t.string   "tracking_url"
+    t.string   "tracking_reference"
+    t.datetime "deleted_at"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.integer  "instance_id"
+  end
+
   create_table "deposits", force: :cascade do |t|
     t.integer  "instance_id"
     t.string   "target_type"
@@ -836,26 +853,17 @@ ActiveRecord::Schema.define(version: 20161113004739) do
   add_index "deposits", ["instance_id"], name: "index_deposits_on_instance_id", using: :btree
 
   create_table "dimensions_templates", force: :cascade do |t|
-    t.string   "name",            limit: 255
-    t.integer  "creator_id"
+    t.string   "name",                 limit: 255
     t.integer  "instance_id"
-    t.decimal  "weight",                      precision: 8, scale: 2
-    t.decimal  "height",                      precision: 8, scale: 2
-    t.decimal  "width",                       precision: 8, scale: 2
-    t.decimal  "depth",                       precision: 8, scale: 2
-    t.string   "unit_of_measure", limit: 255,                         default: "imperial"
-    t.string   "weight_unit",     limit: 255,                         default: "oz"
-    t.string   "height_unit",     limit: 255,                         default: "in"
-    t.string   "width_unit",      limit: 255,                         default: "in"
-    t.string   "depth_unit",      limit: 255,                         default: "in"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "details"
+    t.decimal  "weight",                           precision: 8, scale: 2
+    t.decimal  "height",                           precision: 8, scale: 2
+    t.decimal  "width",                            precision: 8, scale: 2
+    t.decimal  "depth",                            precision: 8, scale: 2
     t.datetime "deleted_at"
-    t.boolean  "use_as_default",                                      default: false
     t.integer  "entity_id"
-    t.string   "entity_type",     limit: 255
-    t.string   "shippo_id"
+    t.string   "entity_type",          limit: 255
+    t.string   "description"
+    t.integer  "shipping_provider_id"
   end
 
   create_table "document_requirements", force: :cascade do |t|
@@ -1165,6 +1173,23 @@ ActiveRecord::Schema.define(version: 20161113004739) do
   end
 
   add_index "instance_views", ["instance_id", "path", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
+
+  create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "instance_type_id"
+    t.integer  "instance_id"
+    t.text     "body"
+    t.string   "path",                 limit: 255
+    t.string   "locale",               limit: 255
+    t.string   "format",               limit: 255
+    t.string   "handler",              limit: 255
+    t.boolean  "partial"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "view_type",            limit: 255
+    t.integer  "transactable_type_id"
+    t.integer  "custom_theme_id"
+  end
 
   create_table "instances", force: :cascade do |t|
     t.string   "name",                                          limit: 255
@@ -1501,6 +1526,11 @@ ActiveRecord::Schema.define(version: 20161113004739) do
     t.datetime "deleted_at"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.string   "address"
+    t.string   "local_geocoding"
+    t.string   "latitude"
+    t.string   "longitude"
+    t.string   "formatted_address"
   end
 
   add_index "order_addresses", ["country_id"], name: "index_order_addresses_on_country_id", using: :btree
@@ -1720,6 +1750,7 @@ ActiveRecord::Schema.define(version: 20161113004739) do
     t.integer  "payment_gateway_id"
     t.datetime "failed_at"
     t.string   "encrypted_token"
+    t.integer  "payment_gateway_fee_cents",                                          default: 0
     t.integer  "merchant_account_id"
   end
 
@@ -2194,6 +2225,15 @@ ActiveRecord::Schema.define(version: 20161113004739) do
   add_index "shipping_rules", ["instance_id"], name: "index_shipping_rules_on_instance_id", using: :btree
   add_index "shipping_rules", ["shipping_profile_id"], name: "index_shipping_rules_on_shipping_profile_id", using: :btree
 
+  create_table "shippings_shipping_providers", force: :cascade do |t|
+    t.integer  "instance_id",             null: false
+    t.string   "shipping_provider_name",  null: false
+    t.string   "encrypted_live_settings"
+    t.string   "encrypted_test_settings"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
   create_table "spam_reports", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "spamable_id"
@@ -2519,6 +2559,11 @@ ActiveRecord::Schema.define(version: 20161113004739) do
   add_index "transactable_collaborators", ["instance_id"], name: "index_transactable_collaborators_on_instance_id", using: :btree
   add_index "transactable_collaborators", ["transactable_id"], name: "index_transactable_collaborators_on_transactable_id", using: :btree
   add_index "transactable_collaborators", ["user_id"], name: "index_transactable_collaborators_on_user_id", using: :btree
+
+  create_table "transactable_dimensions_templates", force: :cascade do |t|
+    t.integer "transactable_id",        null: false
+    t.integer "dimensions_template_id", null: false
+  end
 
   create_table "transactable_pricings", force: :cascade do |t|
     t.integer  "instance_id"
@@ -3193,6 +3238,38 @@ ActiveRecord::Schema.define(version: 20161113004739) do
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
   add_index "workflow_alerts", ["template_path", "workflow_step_id", "recipient_type", "alert_type", "deleted_at"], name: "index_workflows_alerts_on_templ_step_recipient_alert_and_del", unique: true, using: :btree
+
+  create_table "workflow_alerts_backup_20160926", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.string   "name",                      limit: 255
+    t.string   "alert_type",                limit: 255
+    t.string   "recipient_type",            limit: 255
+    t.string   "template_path",             limit: 255
+    t.integer  "workflow_step_id"
+    t.integer  "instance_id"
+    t.text     "options"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "delay"
+    t.text     "subject"
+    t.string   "layout_path",               limit: 255
+    t.text     "custom_options"
+    t.string   "from",                      limit: 255
+    t.string   "reply_to",                  limit: 255
+    t.string   "cc",                        limit: 255
+    t.string   "bcc",                       limit: 255
+    t.string   "recipient",                 limit: 255
+    t.string   "from_type",                 limit: 255
+    t.string   "reply_to_type",             limit: 255
+    t.text     "endpoint"
+    t.string   "request_type"
+    t.boolean  "use_ssl"
+    t.text     "payload_data"
+    t.text     "headers"
+    t.text     "prevent_trigger_condition"
+    t.string   "bcc_type"
+  end
 
   create_table "workflow_steps", force: :cascade do |t|
     t.string   "name",             limit: 255

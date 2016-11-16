@@ -247,6 +247,15 @@ class PlatformContext
     @photo_upload_versions_fetcher.dimensions(version, uploader)
   end
 
+  def multiple_languages?
+    return false if instance.nil?
+    @multiple_language ||= instance.available_locales.many?
+  end
+
+  def url_locale
+    multiple_languages? ? I18n.locale : nil
+  end
+
   private
 
   def fetch_domain
