@@ -29,7 +29,7 @@ module Shippings
 
           # TODO: handle error properly
           # TODO: wrap response into response#delivery object
-          raise shipping_order.body.inspect unless shipping_order.success? date
+          raise shipping_order.body.inspect unless shipping_order.success?
 
           delivery.update_attributes(
             tracking_url: shipping_order.body['tracking_url'],
