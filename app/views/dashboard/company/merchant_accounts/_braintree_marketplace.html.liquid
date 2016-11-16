@@ -23,9 +23,13 @@
     <div class="form-group string optional merchant_account_bank_routing_number">
       <label class="string optional control-label" for="merchant_account_bank_routing_number">
         {{ 'simple_form.labels.company.braintree_marketplace_merchant_account_attributes.bank_routing_number' | translate }}
+        {% assign hint = 'simple_form.hints.company.braintree_marketplace_merchant_account_attributes.bank_routing_number' | translate: default: '' %}
+        {% if hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ hint }}">Toggle hint</button>
+        {% endif %}
       </label>
 
-      <input class="form-control string optional" id="merchant_account_bank_routing_number" name="merchant_account[bank_routing_number]" placeholder="" type="text" value="{{ merchant_account.data.bank_routing_number}}">
+      <input class="form-control string optional" id="merchant_account_bank_routing_number" name="merchant_account[bank_routing_number]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.bank_routing_number' | translate: default: '' }}" type="text" value="{{ merchant_account.data.bank_routing_number}}">
     </div>
   </div>
 
@@ -33,8 +37,12 @@
     <div class="form-group string optional merchant_account_bank_account_number">
       <label class="string optional control-label" for="merchant_account_bank_account_number">
         {{ 'simple_form.labels.company.braintree_marketplace_merchant_account_attributes.bank_account_number' | translate }}
+        {% assign hint = 'simple_form.hints.company.braintree_marketplace_merchant_account_attributes.bank_account_number' | translate: default: '' %}
+        {% if hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ hint }}">Toggle hint</button>
+        {% endif %}
       </label>
-      <input class="form-control string optional" id="merchant_account_bank_account_number" name="merchant_account[bank_account_number]" placeholder="" type="text" value="{{ merchant_account.data.bank_account_number}}">
+      <input class="form-control string optional" id="merchant_account_bank_account_number" name="merchant_account[bank_account_number]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.bank_account_number' | translate: default: '' }}" type="text" value="{{ merchant_account.data.bank_account_number}}">
     </div>
   </div>
 </div>
@@ -44,9 +52,13 @@
     <div class="form-group string optional merchant_account_first_name">
       <label class="string optional control-label" for="merchant_account_first_name">
         {{ 'simple_form.labels.company.braintree_marketplace_merchant_account_attributes.first_name' | translate }}
+        {% assign hint = 'simple_form.hints.company.braintree_marketplace_merchant_account_attributes.first_name' | translate: default: '' %}
+        {% if hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ hint }}">Toggle hint</button>
+        {% endif %}
       </label>
 
-      <input class="form-control string optional" id="merchant_account_first_name" name="merchant_account[first_name]" placeholder="" type="text" value="{{ merchant_account.data.first_name}}">
+      <input class="form-control string optional" id="merchant_account_first_name" name="merchant_account[first_name]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.first_name' | translate: default: '' }}" type="text" value="{{ merchant_account.data.first_name}}">
 
     </div>
 
@@ -55,9 +67,13 @@
     <div class="form-group string optional merchant_account_last_name">
       <label class="string optional control-label" for="merchant_account_last_name">
         {{ 'simple_form.labels.company.braintree_marketplace_merchant_account_attributes.last_name' | translate }}
+        {% assign hint = 'simple_form.hints.company.braintree_marketplace_merchant_account_attributes.last_name' | translate: default: '' %}
+        {% if hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ hint }}">Toggle hint</button>
+        {% endif %}
       </label>
 
-      <input class="form-control string optional" id="merchant_account_last_name" name="merchant_account[last_name]" placeholder="" type="text" value="{{ merchant_account.data.last_name}}">
+      <input class="form-control string optional" id="merchant_account_last_name" name="merchant_account[last_name]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.last_name' | translate: default: '' }}" type="text" value="{{ merchant_account.data.last_name}}">
 
     </div>
   </div>
@@ -66,9 +82,13 @@
     <div class="form-group string optional merchant_account_date_of_birth">
       <label class="string optional control-label" for="merchant_account_date_of_birth">
         {{ 'simple_form.labels.company.braintree_marketplace_merchant_account_attributes.date_of_birth' | translate }}
+        {% assign hint = 'simple_form.hints.company.braintree_marketplace_merchant_account_attributes.date_of_birth' | translate: default: '' %}
+        {% if hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ hint }}">Toggle hint</button>
+        {% endif %}
       </label>
 
-      <input class="form-control string optional" id="merchant_account_date_of_birth" name="merchant_account[date_of_birth]" placeholder="YYYY-MM-DD" type="text" value="{{ merchant_account.data.date_of_birth}}">
+      <input class="form-control string optional" id="merchant_account_date_of_birth" name="merchant_account[date_of_birth]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.date_of_birth' | translate: default: 'YYYY-MM-DD' }}" type="text" value="{{ merchant_account.data.date_of_birth}}">
     </div>
   </div>
 </div>
@@ -77,8 +97,12 @@
 <div class="form-group string optional merchant_account_email">
   <label class="string optional control-label" for="merchant_account_email">
     {{ 'simple_form.labels.company.braintree_marketplace_merchant_account_attributes.email' | translate }}
+    {% assign hint = 'simple_form.hints.company.braintree_marketplace_merchant_account_attributes.email' | translate: default: '' %}
+    {% if hint != blank %}
+      <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ hint }}">Toggle hint</button>
+    {% endif %}
   </label>
-  <input class="form-control string optional" id="merchant_account_email" name="merchant_account[email]" placeholder="" type="email" value="{{ merchant_account.data.email}}">
+  <input class="form-control string optional" id="merchant_account_email" name="merchant_account[email]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.email' | translate: default: '' }}" type="email" value="{{ merchant_account.data.email}}">
 </div>
 
 <div class="row">
@@ -86,8 +110,12 @@
     <div class="form-group string optional merchant_account_street_address">
       <label class="string optional control-label" for="merchant_account_street_address">
         {{ 'simple_form.labels.company.braintree_marketplace_merchant_account_attributes.street_address' | translate }}
+        {% assign hint = 'simple_form.hints.company.braintree_marketplace_merchant_account_attributes.street_address' | translate: default: '' %}
+        {% if hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ hint }}">Toggle hint</button>
+        {% endif %}
       </label>
-      <input class="form-control string optional" id="merchant_account_street_address" name="merchant_account[street_address]" placeholder="" type="text" value="{{ merchant_account.data.street_address}}">
+      <input class="form-control string optional" id="merchant_account_street_address" name="merchant_account[street_address]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.street_address' | translate: default: '' }}" type="text" value="{{ merchant_account.data.street_address}}">
     </div>
   </div>
 
@@ -95,8 +123,12 @@
     <div class="form-group string optional merchant_account_locality">
       <label class="string optional control-label" for="merchant_account_locality">
         {{ 'simple_form.labels.company.braintree_marketplace_merchant_account_attributes.city' | translate }}
+        {% assign hint = 'simple_form.hints.company.braintree_marketplace_merchant_account_attributes.city' | translate: default: '' %}
+        {% if hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ hint }}">Toggle hint</button>
+        {% endif %}
       </label>
-      <input class="form-control string optional" id="merchant_account_locality" name="merchant_account[locality]" placeholder="" type="text" value="{{ merchant_account.data.locality}}">
+      <input class="form-control string optional" id="merchant_account_locality" name="merchant_account[locality]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.city' | translate: default: '' }}" type="text" value="{{ merchant_account.data.locality}}">
     </div>
   </div>
 
@@ -104,8 +136,12 @@
     <div class="form-group string optional merchant_account_region">
       <label class="string optional control-label" for="merchant_account_region">
         {{ 'simple_form.labels.company.braintree_marketplace_merchant_account_attributes.state' | translate }}
+        {% assign hint = 'simple_form.hints.company.braintree_marketplace_merchant_account_attributes.state' | translate: default: '' %}
+        {% if hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ hint }}">Toggle hint</button>
+        {% endif %}
       </label>
-      <input class="form-control string optional" id="merchant_account_region" name="merchant_account[region]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.region' | translate }}" type="text" value="{{ merchant_account.data.region}}">
+      <input class="form-control string optional" id="merchant_account_region" name="merchant_account[region]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.region' | translate: default: '' }}" type="text" value="{{ merchant_account.data.region}}">
     </div>
   </div>
 
@@ -113,8 +149,12 @@
     <div class="form-group string optional merchant_account_postal_code">
       <label class="string optional control-label" for="merchant_account_postal_code">
         {{ 'simple_form.labels.company.braintree_marketplace_merchant_account_attributes.postal_code' | translate }}
+        {% assign hint = 'simple_form.hints.company.braintree_marketplace_merchant_account_attributes.postal_code' | translate: default: '' %}
+        {% if hint != blank %}
+          <button type="button" class="hint-toggler" data-toggle="tooltip" data-placement="right" title="" data-original-title="{{ hint }}">Toggle hint</button>
+        {% endif %}
       </label>
-      <input class="form-control string optional" id="merchant_account_postal_code" name="merchant_account[postal_code]" placeholder="" type="text" value="{{ merchant_account.data.postal_code}}">
+      <input class="form-control string optional" id="merchant_account_postal_code" name="merchant_account[postal_code]" placeholder="{{ 'simple_form.placeholders.company.braintree_marketplace_merchant_account_attributes.postal_code' | translate: default: '' }}" type="text" value="{{ merchant_account.data.postal_code}}">
     </div>
   </div>
 

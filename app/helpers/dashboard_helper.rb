@@ -122,6 +122,12 @@ module DashboardHelper
     end
   end
 
+  def translated_hint_button(hint_translation_path, placement: 'right')
+    if is_i18n_set?(hint_translation_path)
+      hint_button(t(hint_translation_path), placement: placement)
+    end
+  end
+
   def dropdown_menu(label, options = nil, &block)
     toggler_id = 'dropdown-' + SecureRandom.hex(5)
 
