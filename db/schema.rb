@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161113004739) do
+ActiveRecord::Schema.define(version: 20161114182624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1187,8 +1187,8 @@ ActiveRecord::Schema.define(version: 20161113004739) do
 
   create_table "instances", force: :cascade do |t|
     t.string   "name",                                          limit: 255
-    t.datetime "created_at",                                                                                                null: false
-    t.datetime "updated_at",                                                                                                null: false
+    t.datetime "created_at",                                                                                                                   null: false
+    t.datetime "updated_at",                                                                                                                   null: false
     t.string   "bookable_noun",                                 limit: 255,                         default: "Desk"
     t.decimal  "service_fee_guest_percent",                                 precision: 5, scale: 2, default: 0.0
     t.string   "lessor",                                        limit: 255
@@ -1237,13 +1237,13 @@ ActiveRecord::Schema.define(version: 20161113004739) do
     t.string   "support_imap_server",                           limit: 255
     t.integer  "support_imap_port"
     t.boolean  "support_imap_ssl"
-    t.hstore   "search_settings",                                                                   default: {},            null: false
+    t.hstore   "search_settings",                                                                   default: {},                               null: false
     t.string   "default_country",                               limit: 255
     t.text     "allowed_countries"
     t.string   "default_currency",                              limit: 255
     t.text     "allowed_currencies"
     t.string   "category_search_type",                          limit: 255,                         default: "AND"
-    t.string   "search_engine",                                 limit: 255,                         default: "postgresql",  null: false
+    t.string   "search_engine",                                 limit: 255,                         default: "postgresql",                     null: false
     t.integer  "search_radius"
     t.string   "search_text",                                   limit: 255
     t.integer  "last_index_job_id"
@@ -1258,20 +1258,20 @@ ActiveRecord::Schema.define(version: 20161113004739) do
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                          default: true
     t.string   "time_zone"
-    t.string   "seller_attachments_access_level",               limit: 255,                         default: "disabled",    null: false
-    t.integer  "seller_attachments_documents_num",                                                  default: 10,            null: false
-    t.boolean  "enable_language_selector",                                                          default: false,         null: false
+    t.string   "seller_attachments_access_level",               limit: 255,                         default: "disabled",                       null: false
+    t.integer  "seller_attachments_documents_num",                                                  default: 10,                               null: false
+    t.boolean  "enable_language_selector",                                                          default: false,                            null: false
     t.boolean  "click_to_call",                                                                     default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                          default: false
     t.boolean  "split_registration",                                                                default: false
-    t.boolean  "precise_search",                                                                    default: false,         null: false
+    t.boolean  "precise_search",                                                                    default: false,                            null: false
     t.boolean  "require_payout_information",                                                        default: false
     t.boolean  "enquirer_blogs_enabled",                                                            default: false
     t.boolean  "lister_blogs_enabled",                                                              default: false
     t.boolean  "tax_included_in_price",                                                             default: true
     t.boolean  "skip_meta_tags",                                                                    default: false
     t.string   "test_email"
-    t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
+    t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,                            null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
     t.boolean  "enable_geo_localization",                                                           default: true

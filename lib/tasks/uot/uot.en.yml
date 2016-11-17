@@ -222,6 +222,6 @@ en:
   instance_admin:
     manage:
       transfers:
-        lessee_service_fees: MP Fees
+        total_fee: MP Fees
 
 

@@ -119,7 +119,7 @@ class ChartDecorator < Draper::CollectionDecorator
 
   def chart_data
     @scope.select(
-      "#{collection_table}.created_at::DATE AS chart_date, #{agregate_with} as chart_points"
+      "(#{collection_table}.created_at::timestamp at time zone \'#{Time.zone}\')::DATE AS chart_date, #{agregate_with} as chart_points"
     ).group('chart_date').order('chart_date ASC')
   end
 

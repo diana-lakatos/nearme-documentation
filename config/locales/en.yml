@@ -669,6 +669,7 @@ en:
         instances: 'Manage Instance'
 
       transfers:
+        external_id: External ID
         pending: "Pending"
         payment_transfer: "Payment Transfer"
         payout_has_been_marked_as_transferred: "This payout has been marked as transferred to the Company."
@@ -1882,6 +1883,7 @@ en:
       no_results: 'No %{type} in %{period}.'
       period: "Period"
       title: 'Analytics'
+      transfers: 'Transfers'
       expenses: 'Expenses'
       revenue: 'Revenue'
       listings: 'Listings'

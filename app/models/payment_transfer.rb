@@ -54,7 +54,7 @@ class PaymentTransfer < ActiveRecord::Base
   monetize :service_fee_amount_host_cents, with_model_currency: :currency
 
   def gross_amount_cents
-    amount_cents + service_fee_amount_host_cents + payment_gateway_fee_cents
+    amount_cents + total_service_fee_cents + payment_gateway_fee_cents
   end
 
   def gross_amount
