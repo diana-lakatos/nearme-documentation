@@ -1,10 +1,14 @@
+# frozen_string_literal: true
 class WishListItem < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  PERMITTED_CLASSES = %w(Location Transactable User)
+  PERMITTED_CLASSES = %w(Location Transactable User).freeze
 
   class NotPermitted < StandardError
+  end
+
+  class Disabled < StandardError
   end
 
   belongs_to :wishlistable, polymorphic: true, touch: true
@@ -24,14 +28,10 @@ class WishListItem < ActiveRecord::Base
   private
 
   def increment_counters
-    if wishlistable
-      wishlistable.class.increment_counter 'wish_list_items_count', wishlistable_id
-    end
+    wishlistable.class.increment_counter 'wish_list_items_count', wishlistable_id if wishlistable
   end
 
   def decrement_counters
-    if wishlistable
-      wishlistable.class.decrement_counter 'wish_list_items_count', wishlistable_id
-    end
+    wishlistable.class.decrement_counter 'wish_list_items_count', wishlistable_id if wishlistable
   end
 end

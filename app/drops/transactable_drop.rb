@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableDrop < BaseDrop
   include AvailabilityRulesHelper
   include SearchHelper
@@ -208,11 +209,7 @@ class TransactableDrop < BaseDrop
 
   # url to display favorite button
   def wish_list_path
-    routes.wish_list_path(id: @source.id, wishlistable_type: 'Transactable')
-  end
-
-  def wish_list_bulk_path
-    routes.bulk_show_wish_lists_path
+    routes.api_wish_list_path(id: @source.id, wishlistable_type: 'Transactable')
   end
 
   # has inappropriate report for user
