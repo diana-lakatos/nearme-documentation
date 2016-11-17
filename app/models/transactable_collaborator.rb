@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableCollaborator < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
@@ -56,7 +57,11 @@ class TransactableCollaborator < ActiveRecord::Base
 
   # @return [Boolean] whether the collaboration has been approved by the transactable creator
   def approved_by_owner?
-    approved_by_owner_at.present?
+    approved_by_owner_at.present? && rejected_by_owner_at.nil?
+  end
+
+  def rejected_by_owner?
+    rejected_by_owner_at.present?
   end
 
   def jsonapi_serializer_class_name
@@ -81,8 +86,12 @@ class TransactableCollaborator < ActiveRecord::Base
   end
 
   def trigger_workflow_alert_on_update!
-    if approved_by_owner_at_changed?
-      WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorApproved, id)
+    if approved_by_owner_at_changed? || rejected_by_owner_at_changed?
+      if approved_by_owner?
+        WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorApproved, id)
+      else
+        WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, transactable_id, user_id)
+      end
     end
   end
 

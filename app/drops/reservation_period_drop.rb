@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class ReservationPeriodDrop < BaseDrop
-
   # @return [ReservationPeriodDrop]
   attr_reader :reservation_period
 
@@ -12,5 +12,4 @@ class ReservationPeriodDrop < BaseDrop
   def initialize(reservation_period)
     @reservation_period = reservation_period
   end
-
 end

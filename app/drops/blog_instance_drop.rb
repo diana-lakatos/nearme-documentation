@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class BlogInstanceDrop < BaseDrop
   # @return [BlogInstance]
   attr_reader :blog
@@ -30,9 +31,7 @@ class BlogInstanceDrop < BaseDrop
 
   # is the header present
   # @return [Boolean]
-  def header_present?
-    header.present?
-  end
+  delegate :present?, to: :header, prefix: true
 
   # check if header icon is present
   # @return [Boolean]
@@ -78,7 +77,5 @@ class BlogInstanceDrop < BaseDrop
 
   # url for blog
   # @return [String]
-  def blog_posts_path
-    routes.blog_posts_path
-  end
+  delegate :blog_posts_path, to: :routes
 end

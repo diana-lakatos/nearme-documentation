@@ -1,0 +1,104 @@
+---
+# default profile
+578:
+  bar_id:
+    label: 'BAR ID'
+  company_phone:
+    label: 'Law Firm Phone Number'
+  company_website_address:
+    label: 'Law Firm Website Address'
+  company_about:
+    label: 'About Law Firm'
+    html_tag: 'textarea'
+  linkedin_url:
+    label: "LinkedIn URL"
+    placeholder: 'http://'
+    custom_validators_attributes:
+      "[0]":
+        regex_expression: '^https?\:\/\/.*'
+        regex_validation: true
+  googleplus_url:
+    label: "Google Plus URL"
+    placeholder: 'http://'
+    custom_validators_attributes:
+      "[0]":
+        regex_expression: '^https?\:\/\/.*'
+        regex_validation: true
+  twitter_url:
+    label: "Twitter URL"
+    placeholder: 'http://'
+    custom_validators_attributes:
+      "[0]":
+        regex_expression: '^https?\:\/\/.*'
+        regex_validation: true
+  bio:
+    label: "Bio"
+    html_tag: textarea
+  states:
+    label: Select state(s) in which you are licensed to handle cases
+    attribute_type: array
+    html_tag: check_box_list
+    valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
+    required: true
+    validation_only_on_update: true
+    searchable: true
+    wrapper_html_options_string: 'class=>form-group check_boxes required checkbox-columns'
+  honors_awards:
+    label: 'Honors / Awards'
+    attribute_type: array
+    html_tag: 'select'
+    valid_values: ['Award 1', 'Award 2', 'Award 3']
+    input_html_options_string: 'multiple=>multiple'
+  number_of_cases_referred_in_the_past:
+    label: 'Number of cases referred in the past'
+    html_tag: 'textarea'
+  professional_liability_insurance:
+    label: 'I acknowledge and confirm that professional liability insurance is in place.'
+    attribute_type: boolean
+    html_tag: check_box
+    required: true
+    validation_only_on_update: true
+  liability_occurence_limits_information:
+    label: Liability Occurence / Limits Information
+    attribute_type: boolean
+    html_tag: check_box
+    required: true
+    validation_only_on_update: true
+  no_limitations_agreement:
+    label: 'I acknowledge and confirm all of the following: that I am in good standing within the states where I practice law, have no past or pending grievances and attorney discipline, have no past or pending legal Malpractice Claims.'
+    attribute_type: boolean
+    html_tag: check_box
+    required: true
+    validation_only_on_update: true
+
+# seller profile
+579: ~
+
+# buyer profile
+580:
+  board_certification:
+    label: 'Board Certification'
+    html_tag: radio_buttons
+    valid_values:
+      - "Yes"
+      - "No"
+    wrapper_html_options_string: 'class=>form-group radio_buttons always-inline'
+
+  number_of_jury_trials:
+    label: 'Number of Jury Trials (in general and for specific case types)'
+    html_tag: 'textarea'
+
+  total_settlements:
+    label: 'Total Settlements (in general and for specific case types)'
+    html_tag: 'textarea'
+
+  average_settlements:
+    label: 'Average Settlements (in general and for specific case types)'
+    html_tag: 'textarea'
+
+  experience_for_tier_1_case_sub_classification:
+    label: 'Experience for Tier 1 Case Sub Classification'
+    html_tag: 'textarea'
+
+
+

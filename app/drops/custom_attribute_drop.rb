@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CustomAttributeDrop < BaseDrop
   # @return [CustomAttributeDrop]
   attr_reader :custom_attribute

@@ -1,0 +1,40 @@
+{% assign categories = searcher.searchable_categories | rotate %}
+
+{% if categories.size > 0 %}
+<div class="search-results-filter" data-search-filters-container>
+    <h2>Filter by types:</h2>
+
+    {% for root_category in categories %}
+        <ul>
+            {% for category in root_category.children %}
+                <li>
+                    <input type="checkbox" name="category_ids[]" id="category-{{ category.id }}" value='{{category.id}}' {% if searcher.category_ids contains category.id %}checked{% endif %}>
+                    <label for="category-{{ category.id }}">{{ category.name }}</label>
+
+                    {% if category.children.size > 0 %}
+                        <ul>
+                            {% for subcat in category.children %}
+                                <li>
+                                    <input type="checkbox" name="category_ids[]" id="category-{{ subcat.id }}" value='{{subcat.id}}' {% if searcher.category_ids contains subcat.id %}checked{% endif %}>
+                                    <label for="category-{{ subcat.id }}">{{ subcat.name }}</label>
+
+                                {% if subcat.children.size > 0 %}
+                                    <ul>
+                                    {% for subcat2 in subcat.children %}
+                                        <li>
+                                            <input type="checkbox" name="category_ids[]" id="category-{{ subcat2.id }}" value='{{subcat2.id}}' {% if searcher.category_ids contains subcat2.id %}checked{% endif %}>
+                                            <label for="category-{{ subcat2.id }}">{{ subcat2.name }}</label>
+                                        </li>
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</div>
+{% endif %}

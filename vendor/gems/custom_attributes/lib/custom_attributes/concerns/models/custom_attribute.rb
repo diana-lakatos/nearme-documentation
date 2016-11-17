@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CustomAttributes
   module Concerns
     module Models
@@ -14,13 +15,14 @@ module CustomAttributes
           ATTRIBUTE_TYPE = 1 unless defined?(ATTRIBUTE_TYPE)
           VALUE = 2 unless defined?(VALUE)
           PUBLIC = 3 unless defined?(PUBLIC)
+
           VALID_VALUES = 4 unless defined?(VALID_VALUES)
           HTML_TAG = 5 unless defined?(HTML_TAG)
           SEARCHABLE = 6 unless defined?(SEARCHABLE)
           SEARCH_IN_QUERY = 7 unless defined?(SEARCH_IN_QUERY)
 
           ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean).freeze unless defined?(ATTRIBUTE_TYPES)
-          HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list).freeze unless defined?(HTML_TAGS)
+          HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list range).freeze unless defined?(HTML_TAGS)
           MULTIPLE_ARRAY_TAGS = %w(check_box_list select).freeze unless defined?(MULTIPLE_ARRAY_TAGS)
 
           scope :listable, -> { all }
@@ -72,11 +74,9 @@ module CustomAttributes
           end
 
           def transform_hash_string_to_hash(hash_string)
-            hash_string.split(',').each_with_object({}) do |key_value_string, hash|
-              key_value_arr = key_value_string.split('=>')
-              hash[key_value_arr[0].strip] = key_value_arr[1].strip if key_value_arr.length == 2
-              hash
-            end
+            hash = {}
+            hash_string.scan(/([^, ]+) ?=> ?('[^']+'|"[^"]+"|[^,]+)/) { |key, value| hash[key.strip] = value.strip }
+            hash
           end
 
           def self.cashed_attribute_names

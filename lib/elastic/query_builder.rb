@@ -103,6 +103,7 @@ module Elastic
       searchable_transactable_type_ids = @query[:transactable_type_id].to_i
       [
         initial_instance_filter,
+        initial_state_filter,
         {
           term: {
             transactable_type_id: searchable_transactable_type_ids
@@ -115,6 +116,14 @@ module Elastic
       {
         term: {
           instance_id: @query[:instance_id]
+        }
+      }
+    end
+
+    def initial_state_filter
+      {
+        term: {
+          state: 'pending'
         }
       }
     end
@@ -361,6 +370,8 @@ module Elastic
       if @query[:lg_custom_attributes]
         @query[:lg_custom_attributes].each do |key, value|
           value = value.is_a?(Array) ? value : value.to_s.split(',')
+          value.reject!(&:empty?) if value.instance_of?(Array)
+
           next if value.blank? || value.empty? || value.none?(&:present?)
           @filters << {
             terms: {

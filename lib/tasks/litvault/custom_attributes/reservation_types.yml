@@ -1,0 +1,462 @@
+"Individual Case checkout":
+  name_of_client_or_clients:
+    label: 'Name(s) of Client(s): If multiple names, enter "," in between Names'
+    input_html_options_string: 'class=>string optional form-control'
+
+  #
+  # Fees
+  #
+
+  attorney_fee_split:
+    label: 'The Firms agree to split attorneys’ fees as follows:'
+    attribute_type: 'integer'
+    html_tag: 'range'
+    min_value: 0
+    max_value: 100
+    step: 5
+
+  fee_split_shall_not_affect_fee_paid:
+    label: 'The above fee split shall not affect the amount of fees to be paid by Client(s) as set forth in the Engagement Agreement.'
+    html_tag: 'check_box'
+
+  engage_other_counsel:
+    label: 'Is it possible that local counsel, other than Handling Firm, will need to be engaged?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    default_value: 'No'
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_attorney_additional_firm_fee_split"],"hide":[]},"no":{"show":[],"hide":[".order_properties_attorney_additional_firm_fee_split"]},"default":{"show":[],"hide":[".order_properties_attorney_additional_firm_fee_split"]}}'
+
+  attorney_additional_firm_fee_split:
+    label: 'The Firms agree that any local counsel fees will be split as follows:'
+    attribute_type: 'integer'
+    html_tag: 'range'
+    min_value: 0
+    max_value: 100
+    step: 5
+
+  handling_firm_has_sole_discretion_for_terms:
+    label: 'Handling Firm will have sole discretion to associate local counsel on whatever terms deemed appropriate.'
+    html_tag: 'check_box'
+
+  claims_will_be_subject_to_assessments:
+    label: 'Is it possible that the Claims will be the subject of Multi-District Litigation or the potential for common benefit fee or expense assessments imposed against the Firms?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    default_value: 'No'
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_claims_will_be_subject_to_assessments_percentage"],"hide":[]},"no":{"show":[],"hide":[".order_properties_claims_will_be_subject_to_assessments_percentage"]},"default":{"show":[],"hide":[".order_properties_claims_will_be_subject_to_assessments_percentage"]}}'
+
+  claims_will_be_subject_to_assessments_percentage:
+    label: 'The Firms agree that any Multi-District Litigation or common benefit assessments, whether as fees, expenses or otherwise, imposed on the Firms will be split as follows:'
+    attribute_type: 'integer'
+    html_tag: 'range'
+    min_value: 0
+    max_value: 100
+    step: 5
+
+  additional_language_to_be_included:
+    label: 'Do you have any additional language you wish to include in this Agreement pertaining to fees?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    default_value: 'No'
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_language_that_needs_to_be_included"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_language_that_needs_to_be_included"]},"default":{"show":[],"hide":[".order_properties_additional_language_that_needs_to_be_included"]}}'
+
+  additional_language_that_needs_to_be_included:
+    label: 'Please add any additional language or provisions you wish to include regarding fees.'
+    html_tag: 'textarea'
+    max_length: 2500
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
+
+  #
+  # Expenses
+  #
+
+  attorneys_to_pay_litigation_expenses:
+    label: 'Does the Engagement Agreement require attorneys to pay or advance litigation expenses related to the Claims?'
+    html_tag: 'radio_buttons'
+    default_value: 'No'
+    valid_values: ['Yes', 'No']
+
+  engagement_agreement_contain_sufficient_definition_of_expenses:
+    label: 'Does the Engagement Agreement contain a definition of expenses with sufficient specificity that you do not need another definition of expenses?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    default_value: 'No'
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_expenses_per_engagement_agreement_split"],"hide":[".order_properties_firm_agrees_to_this_litigation_expense_split"]},"no":{"show":[".order_properties_firm_agrees_to_this_litigation_expense_split"],"hide":[".order_properties_expenses_per_engagement_agreement_split", ".order_properties_firm_agrees_to_this_litigation_expense_split"]},"default":{"show":[],"hide":[".order_properties_expenses_per_engagement_agreement_split",".order_properties_firm_agrees_to_this_litigation_expense_split"]}}'
+
+  expenses_per_engagement_agreement_split:
+    label: 'The Firms agree that any expenses defined or set forth in the Engagement Agreement will be split as follows:'
+    attribute_type: 'integer'
+    html_tag: 'range'
+    min_value: 0
+    max_value: 100
+    step: 5
+
+  firm_agrees_to_this_litigation_expense_split:
+    label: 'The Firms agree that any litigation expenses will be split as follows:'
+    attribute_type: 'integer'
+    html_tag: 'range'
+    min_value: 0
+    max_value: 100
+    step: 5
+
+  each_firm_responsible_to_pay_own_inhouse_expenses:
+    label: 'Notwithstanding the above, each Firm is responsible to pay its own in-house firm expenses and overhead.'
+    html_tag: 'check_box'
+
+  additional_language_for_expenses:
+    label: 'Do you have any additional language you wish to include in this Agreement pertaining to expenses?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    default_value: 'No'
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_expenses"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_expenses"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_expenses"]}}'
+
+  additional_comments_for_expenses:
+    label: 'Please add any additional language or provisions you wish to include regarding expenses.'
+    html_tag: 'textarea'
+    max_length: 2500
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
+
+  #
+  # Case Responsibilities
+  #
+
+  handling_firm_will_take_responsibility_for_litigation:
+    label: 'Handling Firm will take principal responsibility for litigation strategy and handling the litigation, for negotiating a settlement, for receiving and disbursing any recoveries.'
+    html_tag: 'check_box'
+
+  both_firms_agree_to_maintain_join_responsibility:
+    label: 'Both Firms agree to maintain joint responsibility for the Client on the Claims and will maintain adequate staffing to comply with their responsibilities.'
+    html_tag: 'check_box'
+
+  both_firms_agree_to_maintain_malpractice_insurance:
+    label: 'Both Firms separately agree to maintain malpractice or professional liability insurance coverage at least $1 million per occurrence.'
+    html_tag: 'check_box'
+
+  any_additional_language_to_be_included_case_responsibilities:
+    label: 'Do you have any additional language you wish to include in this Agreement pertaining to case responsibilities?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    default_value: 'No'
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_responsibilities"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_responsibilities"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_responsibilities"]}}'
+
+  additional_comments_for_responsibilities:
+    label: 'Please add any additional language or provisions you wish to include regarding responsibilities.'
+    html_tag: 'textarea'
+    max_length: 2500
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
+
+  #
+  # Additional Terms
+  #
+
+  handling_firm_received_copy_of_signed_engagement_agreement:
+    label: 'Handling Firm has received a copy of the signed Engagement Agreement between Referring Firm and Client pertaining to the Claims.'
+    html_tag: 'check_box'
+
+  client_written_consent_to_agreement_required:
+    label: 'Is the Client’s written consent to this Agreement and the association of Handling Firm required?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+
+  refering_firm_responsible_for_written_consent:
+    label: 'Do you wish for Referring Firm to be responsible for obtaining necessary written consent from Client relating to this Agreement and the association of Handling Firm on the Claims?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    default_value: 'Yes'
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]},"no":{"show":[".order_properties_agreement_is_not_effective_until_client_signs_consent"],"hide":[]},"default":{"show":[],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]}}'
+
+  agreement_is_not_effective_until_client_signs_consent:
+    label: 'Would you prefer the Agreement to state: “This Agreement is not effective until Client signs a written consent to the association of the Firms on the Claims.”'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+
+  nothing_in_this_agreement_will_change:
+    label: 'Nothing in this Agreement will change or alter Client’s duties, responsibilities or rights under the terms of the Engagement Agreement.'
+    html_tag: 'check_box'
+
+  sole_agreement_of_the_firms:
+    label: 'This is the sole agreement of the Firms on this subject matter and may only be modified or amended in writing signed by both Firms.'
+    html_tag: 'check_box'
+
+  undersigned_has_authority_to_enter_this_agreement:
+    label: 'By signing below, the undersigned represents that he or she has authority to enter this agreement on behalf of the Firm on whose behalf the signature is made.'
+    html_tag: 'check_box'
+
+  agreement_will_be_constructed_state_law:
+    label: 'This Agreement will be construed in accordance with law of the State without regard to conflicts of law principals.'
+    html_tag: 'check_box'
+
+  disputes_with_referring_firm_by_arbitration_aaa_aaarules:
+    label: 'Do you wish to have disputes with Referring Firm resolved by binding arbitration with the American Arbitration Association (“AAA”) applying the AAA’s Commercial Arbitration Rules?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    default_value: 'Yes'
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[],"hide":[".order_properties_any_additional_language_dispute_resolution", ".order_properties_additional_comments_for_dispute_resolution"]},"no":{"show":[".order_properties_any_additional_language_dispute_resolution"],"hide":[".order_properties_additional_comments_for_dispute_resolution"]},"default":{"show":[],"hide":[".order_properties_any_additional_language_dispute_resolution", ".order_properties_additional_comments_for_dispute_resolution"]}}'
+
+  any_additional_language_dispute_resolution:
+    label: 'Do you have any additional language you wish to include in this Agreement pertaining to dispute resolution?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    default_value: 'No'
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_dispute_resolution"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_dispute_resolution"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_dispute_resolution"]}}'
+
+  additional_comments_for_dispute_resolution:
+    label: 'Please add any additional language or provisions you wish to include regarding dispute resolution.'
+    html_tag: 'textarea'
+    max_length: 2500
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
+
+  no_partnership_created:
+    label: 'This Agreement is not intended to create a partnership or joint venture between the Firms.'
+    html_tag: 'check_box'
+
+  any_additional_language_to_any_other_matter:
+    label: 'Do you have any additional language you wish to include in this Agreement pertaining to any other matter?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    default_value: 'No'
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_any_other_matter"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_any_other_matter"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_any_other_matter"]}}'
+
+  additional_comments_for_any_other_matter:
+    label: 'Please add any additional language or provisions you wish to include.'
+    html_tag: 'textarea'
+    max_length: 2500
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
+
+"Group Case checkout":
+  name_of_client_or_clients:
+    label: 'Name(s) of Client(s): If multiple names, enter "," in between Names'
+    input_html_options_string: 'class=>string optional form-control'
+
+  #
+  # Fees
+  #
+
+  attorney_fee_split:
+    label: 'The Firms agree to split attorneys’ fees as follows:'
+    attribute_type: 'integer'
+    html_tag: 'range'
+    min_value: 0
+    max_value: 100
+    step: 5
+
+  fee_split_shall_not_affect_fee_paid:
+    label: 'The above fee split shall not affect the amount of fees to be paid by Client(s) as set forth in the Engagement Agreement.'
+    html_tag: 'check_box'
+
+  engage_other_counsel:
+    label: 'Is it possible that local counsel, other than Handling Firm, will need to be engaged?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_attorney_additional_firm_fee_split"],"hide":[]},"no":{"show":[],"hide":[".order_properties_attorney_additional_firm_fee_split"]},"default":{"show":[],"hide":[".order_properties_attorney_additional_firm_fee_split"]}}'
+
+  attorney_additional_firm_fee_split:
+    label: 'The Firms agree that any local counsel fees will be split as follows:'
+    attribute_type: 'integer'
+    html_tag: 'range'
+    min_value: 0
+    max_value: 100
+    step: 5
+
+  handling_firm_has_sole_discretion_for_terms:
+    label: 'Handling Firm will have sole discretion to associate local counsel on whatever terms deemed appropriate.'
+    html_tag: 'check_box'
+
+  claims_will_be_subject_to_assessments:
+    label: 'Is it possible that the Claims will be the subject of Multi-District Litigation or the potential for common benefit fee or expense assessments imposed against the Firms?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_claims_will_be_subject_to_assessments_percentage"],"hide":[]},"no":{"show":[],"hide":[".order_properties_claims_will_be_subject_to_assessments_percentage"]},"default":{"show":[],"hide":[".order_properties_claims_will_be_subject_to_assessments_percentage"]}}'
+
+  claims_will_be_subject_to_assessments_percentage:
+    label: 'The Firms agree that any Multi-District Litigation or common benefit assessments, whether as fees, expenses or otherwise, imposed on the Firms will be split as follows:'
+    attribute_type: 'integer'
+    html_tag: 'range'
+    min_value: 0
+    max_value: 100
+    step: 5
+
+  fees_recovered_shall_be_divided_on_join_responsibility:
+    label: 'Notwithstanding the division of responsibilities above, attorneys’ fees recovered from the Claims shall be divided on the basis of joint responsibility.'
+    html_tag: 'check_box'
+    wrapper_html_options_string: data-condition-field => '{"1":{"show":[".order_properties_additional_language_to_be_included"],"hide":[".order_properties_additional_language_that_needs_to_be_included"]},"":{"show":[],"hide":[".order_properties_additional_language_to_be_included", ".order_properties_additional_language_that_needs_to_be_included"]},"default":{"show":[],"hide":[".order_properties_additional_language_to_be_included", ".order_properties_additional_language_that_needs_to_be_included"]}}'
+
+  additional_language_to_be_included:
+    label: 'Do you have any additional language you wish to include in this Agreement pertaining to fees?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_language_that_needs_to_be_included"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_language_that_needs_to_be_included"]},"default":{"show":[],"hide":[".order_properties_additional_language_that_needs_to_be_included"]}}'
+
+  additional_language_that_needs_to_be_included:
+    label: 'Please add any additional language or provisions you wish to include regarding fees.'
+    html_tag: 'textarea'
+    max_length: 2500
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
+
+  #
+  # Expenses
+  #
+
+  attorneys_to_pay_litigation_expenses:
+    label: 'Will attorneys be required to pay or advance litigation expenses related to the Claims?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_engagement_agreement_contain_sufficient_definition_of_expenses"],"hide":[".order_properties_expenses_per_engagement_agreement_split", ".order_properties_firm_agrees_to_this_litigation_expense_split"]},"no":{"show":[],"hide":[".order_properties_engagement_agreement_contain_sufficient_definition_of_expenses",".order_properties_expenses_per_engagement_agreement_split",".order_properties_firm_agrees_to_this_litigation_expense_split"]},"default":{"show":[],"hide":[".order_properties_engagement_agreement_contain_sufficient_definition_of_expenses", ".order_properties_expenses_per_engagement_agreement_split", ".order_properties_firm_agrees_to_this_litigation_expense_split"]}}'
+
+  engagement_agreement_contain_sufficient_definition_of_expenses:
+    label: 'Does the Engagement Agreement contain a definition of expenses with sufficient specificity that you do not need another definition of expenses?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_expenses_per_engagement_agreement_split"],"hide":[".order_properties_firm_agrees_to_this_litigation_expense_split"]},"no":{"show":[".order_properties_firm_agrees_to_this_litigation_expense_split"],"hide":[".order_properties_expenses_per_engagement_agreement_split"]},"default":{"show":[],"hide":[".order_properties_firm_agrees_to_this_litigation_expense_split",".order_properties_firm_agrees_to_this_litigation_expense_split"]}}'
+
+  expenses_per_engagement_agreement_split:
+    label: 'The Firms agree that any expenses defined or set forth in the Engagement Agreement will be split as follows:'
+    attribute_type: 'integer'
+    html_tag: 'range'
+    min_value: 0
+    max_value: 100
+    step: 5
+
+  firm_agrees_to_this_litigation_expense_split:
+    label: 'The Firms agree that any litigation expenses will be split as follows:'
+    attribute_type: 'integer'
+    html_tag: 'range'
+    min_value: 0
+    max_value: 100
+    step: 5
+
+  each_firm_responsible_to_pay_own_inhouse_expenses:
+    label: 'Notwithstanding the above, each Firm is responsible to pay its own in-house firm expenses and overhead.'
+    html_tag: 'check_box'
+
+  additional_language_for_expenses:
+    label: 'Do you have any additional language you wish to include in this Agreement pertaining to expenses?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_expenses"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_expenses"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_expenses"]}}'
+
+  additional_comments_for_expenses:
+    label: 'Please add any additional language or provisions you wish to include regarding expenses.'
+    html_tag: 'textarea'
+    max_length: 2500
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
+
+  #
+  # Case Responsibilities
+  #
+
+  handling_firm_will_take_responsibility_for_litigation:
+    label: 'Handling Firm will take principal responsibility for litigation strategy and handling the litigation, for negotiating a settlement, for receiving and disbursing any recoveries.'
+    html_tag: 'check_box'
+
+  both_firms_agree_to_maintain_join_responsibility:
+    label: 'Both Firms agree to maintain joint responsibility for the Client on the Claims and will maintain adequate staffing to comply with their responsibilities.'
+    html_tag: 'check_box'
+
+  both_firms_agree_to_maintain_malpractice_insurance:
+    label: 'Both Firms separately agree to maintain malpractice or professional liability insurance coverage at least $1 million per occurrence.'
+    html_tag: 'check_box'
+
+  any_additional_language_to_be_included_case_responsibilities:
+    label: 'Do you have any additional language you wish to include in this Agreement pertaining to case responsibilities?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_responsibilities"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_responsibilities"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_responsibilities"]}}'
+
+  additional_comments_for_responsibilities:
+    label: 'Please add any additional language or provisions you wish to include regarding responsibilities.'
+    html_tag: 'textarea'
+    max_length: 2500
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
+
+  #
+  # Additional Terms
+  #
+
+  handling_firm_received_copy_of_signed_engagement_agreement:
+    label: 'Referring Firm has uploaded a copy of the form Engagement Agreement used by Referring Firm pertaining to the Claims and Handling Firm has reviewed same.'
+    html_tag: 'check_box'
+
+  handling_firm_approves_engagement_agreement:
+    label: 'Handling Firm approves the form Engagement Agreement used by Referring Firm pertaining to the Claims.'
+    html_tag: 'check_box'
+
+  client_written_consent_to_agreement_required:
+    label: 'Are Clients’ written consent to this Agreement and the association of Handling Firm required?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_refering_firm_responsible_for_written_consent"],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]},"no":{"show":[],"hide":[".order_properties_refering_firm_responsible_for_written_consent",".order_properties_agreement_is_not_effective_until_client_signs_consent"]},"default":{"show":[],"hide":[".order_properties_refering_firm_responsible_for_written_consent",".order_properties_agreement_is_not_effective_until_client_signs_consent"]}}'
+
+  refering_firm_responsible_for_written_consent:
+    label: 'Do you wish for Referring Firm to be responsible for obtaining necessary written consent from Client relating to this Agreement and the association of Handling Firm on the Claims?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_agreement_is_not_effective_until_client_signs_consent"],"hide":[]},"no":{"show":[],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]},"default":{"show":[],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]}}'
+
+  agreement_is_not_effective_until_client_signs_consent:
+    label: 'Would you prefer the Agreement to state: “This Agreement is not effective until Client signs a written consent to the association of the Firms on the Claims.”'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+
+  nothing_in_this_agreement_will_change:
+    label: 'Nothing in this Agreement will change or alter Client’s duties, responsibilities or rights under the terms of the Engagement Agreement.'
+    html_tag: 'check_box'
+
+  sole_agreement_of_the_firms:
+    label: 'This is the sole agreement of the Firms on this subject matter and may only be modified or amended in writing signed by both Firms.'
+    html_tag: 'check_box'
+
+  undersigned_has_authority_to_enter_this_agreement:
+    label: 'By signing below, the undersigned represents that he or she has authority to enter this agreement on behalf of the Firm on whose behalf the signature is made.'
+    html_tag: 'check_box'
+
+  agreement_will_be_constructed_state_law:
+    label: 'This Agreement will be construed in accordance with law of the State without regard to conflicts of law principals.'
+    html_tag: 'check_box'
+
+  disputes_with_referring_firm_by_arbitration_aaa_aaarules:
+    label: 'Do you wish to have disputes with Referring Firm resolved by binding arbitration with the American Arbitration Association (“AAA”) applying the AAA’s Commercial Arbitration Rules?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[],"hide":[".order_properties_any_additional_language_dispute_resolution", ".order_properties_additional_comments_for_dispute_resolution"]},"no":{"show":[".order_properties_any_additional_language_dispute_resolution"],"hide":[".order_properties_additional_comments_for_dispute_resolution"]},"default":{"show":[],"hide":[".order_properties_any_additional_language_dispute_resolution", ".order_properties_additional_comments_for_dispute_resolution"]}}'
+
+  any_additional_language_dispute_resolution:
+    label: 'do you have any additional language you wish to include in this Agreement pertaining to dispute resolution?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_dispute_resolution"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_dispute_resolution"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_dispute_resolution"]}}'
+
+  additional_comments_for_dispute_resolution:
+    label: 'Please add any additional language or provisions you wish to include regarding dispute resolution.'
+    html_tag: 'textarea'
+    max_length: 2500
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'
+
+  handling_firm_shall_have_the_sole_discretion_to_terminate:
+    label: 'Handling Firm shall have sole discretion to terminate representation with respect to any Client or Case for any reason, including but not limited to Handling Firm determination that a case is not be economically viable. In the event Handling Firm terminates representation for any Client or Case, (Autofill name of Handling Firm) shall also terminate representation on behalf of Referring Firm by communication in writing to the Client and carbon copy to Referring Firm.'
+    html_tag: 'check_box'
+
+  no_partnership_created:
+    label: 'This Agreement is not intended to create a partnership or joint venture between the Firms.'
+    html_tag: 'check_box'
+
+  any_additional_language_to_any_other_matter:
+    label: 'Do you have any additional language you wish to include in this Agreement pertaining to any other matter?'
+    html_tag: 'radio_buttons'
+    valid_values: ['Yes', 'No']
+    wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_any_other_matter"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_any_other_matter"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_any_other_matter"]}}'
+
+  additional_comments_for_any_other_matter:
+    label: 'Please add any additional language or provisions you wish to include.'
+    html_tag: 'textarea'
+    max_length: 2500
+    required: false
+    input_html_options_string: 'class=>text optional form-control, data-counter-limit=>2500'

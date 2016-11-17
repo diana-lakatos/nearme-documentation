@@ -60,8 +60,8 @@
       .content-wrapper
         .dnm-page{class: dnm_page_class}
           = yield(:top_sub_navigation)
-          .container-fluid
-            = render 'layouts/navbar' unless no_navbar?
+
+          = render 'layouts/navbar' unless no_navbar?
 
           %section#content{class: section_class(@section_name)}
             = render 'layouts/hero'

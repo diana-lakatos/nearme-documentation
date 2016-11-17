@@ -238,8 +238,8 @@ DNM.registerInitializer(function(){
 DNM.registerInitializer(function(){
   /* This is to fix the wrong state of white-label-fields (shown or not shown) due to white_label_enabled checkbox keeping the same state on page refresh even though it's not persisted in the DB */
   var
-    el = $('#company_white_label_enabled'),
-    fields = $('#white-label-fields');
+  el = $('#company_white_label_enabled'),
+  fields = $('#white-label-fields');
 
   if (el.length === 0 || fields.length === 0) {
     return;
@@ -529,10 +529,17 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-  var datepickers = require('./new_ui/forms/datepickers');
   function run(){
-    $('.unavailability').on('cocoon:after-insert', function(e, insertedItem) {
-      datepickers(insertedItem);
+    var els = $('.unavailability');
+    if (els.length === 0) {
+      return;
+    }
+
+    require.ensure('./new_ui/forms/datepickers', function(require){
+      var datepickers = require('./new_ui/forms/datepickers');
+      els.on('cocoon:after-insert', function(e, insertedItem) {
+        datepickers(insertedItem);
+      });
     });
   }
   $(document).on('init:unavailability.nearme', run);
@@ -615,16 +622,44 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-    var form = $('#edit_user');
-    if (form.length === 0) {
-        return;
-    }
+  var conditionFields = document.querySelectorAll('[data-condition-field]');
+  if (conditionFields.length < 0) {
+    return;
+  }
 
-    require.ensure('./sections/registrations/edit', function(require){
-        var EditUserForm = require('./sections/registrations/edit');
-        new EditUserForm(form);
+  require.ensure('form_components/condition_field', (require)=>{
+    var ConditionField = require('form_components/condition_field');
+    Array.prototype.forEach.call(conditionFields, (wrapper) => {
+      new ConditionField(wrapper);
     });
+  });
 });
+
+DNM.registerInitializer(function(){
+  var form = $('#edit_user');
+  if (form.length === 0) {
+    return;
+  }
+
+  require.ensure('./sections/registrations/edit', function(require){
+    var EditUserForm = require('./sections/registrations/edit');
+    new EditUserForm(form);
+  });
+});
+
+DNM.registerInitializer(function(){
+  var els = $('#checkout-form, #list-space-flow-form');
+  if (els.length === 0) {
+    return;
+  }
+  require.ensure('./sections/draft_validation_controller', function(require){
+    var DraftValidationController = require('./sections/draft_validation_controller');
+    els.each(function(){
+      return new DraftValidationController(this);
+    });
+  });
+});
+
 
 // New shared libraries
 let sharedInitializers = require('shared-initializers');

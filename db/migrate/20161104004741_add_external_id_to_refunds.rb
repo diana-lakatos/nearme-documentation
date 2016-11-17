@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddExternalIdToRefunds < ActiveRecord::Migration
   def change
     add_column :refunds, :external_id, :string

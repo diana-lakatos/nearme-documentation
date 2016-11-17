@@ -2,10 +2,21 @@
 
   - tabs = []
 
+<<<<<<< HEAD
+  - if current_user.has_default_profile?
+    - tabs.push({ name: t('dashboard.user_profile.sections.default'), url: dashboard_profile_path, active: ![:seller, :buyer].include?(active) })
+
+  - if current_user.has_seller_profile?
+    - tabs.push({ name: t('dashboard.user_profile.sections.seller'), url: edit_dashboard_seller_path, active: active == :seller })
+
+  - if current_user.has_buyer_profile?
+  
+=======
   - if current_user.seller_profile.present? && current_user.seller_profile.persisted? && current_instance.seller_profile_enabled? && current_user.seller_profile.has_fields?(FormComponent::SELLER_PROFILE_TYPES)
     - tabs.push({ name: t('dashboard.user_profile.sections.seller'), url: edit_dashboard_seller_path, active: active == :seller })
 
   - if current_user.buyer_profile.present? && current_user.buyer_profile.persisted? && current_instance.buyer_profile_enabled?
+>>>>>>> origin/staging
     - tabs.push({ name: t('dashboard.user_profile.sections.buyer'), url: edit_dashboard_buyer_path, active: active == :buyer })
 
   = dashboard_panel_multi_tabs(tabs)

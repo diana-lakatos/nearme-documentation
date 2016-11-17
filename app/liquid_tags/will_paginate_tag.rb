@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Usage example:
 # ```
 #   {% will_paginate collection: @users %}
@@ -33,7 +34,7 @@ class WillPaginateTag < Liquid::Tag
     when 'dashboard'
       BuySellMarket::WillPaginateDashboardLinkRenderer::LinkRenderer
     else
-      fail NotImplementedError.new("Valid renderer options are: 'dashboard', but #{@attributes['renderer']} was given. Typo?")
+      raise NotImplementedError, "Valid renderer options are: 'dashboard', but #{@attributes['renderer']} was given. Typo?"
     end
   end
 end

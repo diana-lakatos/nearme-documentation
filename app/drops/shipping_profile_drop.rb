@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class ShippingProfileDrop < BaseDrop
-
   # @return [ShippingProfileDrop]
   attr_reader :shipping_profile
 
@@ -13,5 +13,4 @@ class ShippingProfileDrop < BaseDrop
   def initialize(shipping_profile)
     @shipping_profile = shipping_profile
   end
-
 end

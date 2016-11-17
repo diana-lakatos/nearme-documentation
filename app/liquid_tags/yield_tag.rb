@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Usage example:
 #
 # Use this in a liquid view first:

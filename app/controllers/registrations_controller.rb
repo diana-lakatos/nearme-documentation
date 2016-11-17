@@ -8,6 +8,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :nm_force_ssl, only: [:new]
   before_action :find_company, only: [:social_accounts, :edit]
   before_action :set_form_components, only: [:edit, :update]
+  before_action :redirect_from_default, only: [:edit, :update]
 
   # NB: Devise calls User.new_with_session when building the new User resource.
   # We use this to apply any Provider based authentications to the user record.
@@ -22,6 +23,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :find_supported_providers, only: [:social_accounts, :update]
   after_action :render_or_redirect_after_create, only: [:create]
   before_action :redirect_to_edit_profile_if_password_set, only: [:set_password]
+  before_action :set_user_profiles, only: [:edit]
 
   skip_before_action :redirect_if_marketplace_password_protected, only: [:store_geolocated_location, :update_password, :set_password]
 
@@ -80,8 +82,6 @@ class RegistrationsController < Devise::RegistrationsController
   def edit
     @country = current_user.country_name
     build_approval_request_for_object(current_user) unless current_user.is_trusted?
-    @buyer_profile = resource.get_buyer_profile
-    @seller_profile = resource.get_seller_profile
     render :edit, layout: dashboard_or_community_layout
   end
 
@@ -141,7 +141,6 @@ class RegistrationsController < Devise::RegistrationsController
     if resource.update_with_password(all_params.except(:approval_requests_attributes))
       I18n.locale = @user.try(:language).try(:to_sym) || :en if @user.try(:language).try(:to_sym) != I18n.locale
       onboarded = @user.buyer_profile.try(:mark_as_onboarded!) || @user.seller_profile.try(:mark_as_onboarded!)
-
       set_flash_message :success, :updated
       sign_in(resource, bypass: true)
       redirect_to dashboard_profile_path(onboarded: onboarded)
@@ -346,6 +345,16 @@ class RegistrationsController < Devise::RegistrationsController
 
   private
 
+  def set_user_profiles
+    if resource.buyer_profile.nil? && resource.seller_profile.nil?
+      resource.get_buyer_profile
+      resource.get_seller_profile
+    end
+
+    @buyer_profile = resource.buyer_profile
+    @seller_profile = resource.seller_profile
+  end
+
   def find_company
     @company = current_user.try(:companies).try(:first)
   end
@@ -413,5 +422,11 @@ class RegistrationsController < Devise::RegistrationsController
     @role = %w(seller buyer).detect { |r| r == params[:role] }
     @role ||= 'default'
     @form_component = FormComponent.find_by(form_type: "FormComponent::#{@role.upcase}_REGISTRATION".constantize)
+  end
+
+  def redirect_from_default
+    return if current_user.has_default_profile?
+    return redirect_to(edit_dashboard_seller_path) if current_user.has_seller_profile?
+    return redirect_to(edit_dashboard_buyer_path) if current_user.has_buyer_profile?
   end
 end

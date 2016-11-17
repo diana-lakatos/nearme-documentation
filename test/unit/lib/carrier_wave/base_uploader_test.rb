@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require Rails.root.join 'test/helpers/placeholder_helper'
 include PlaceholderHelper

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # LiquidView is a action view extension class. You can register it with rails
 # and use liquid as an template system for .liquid files
 #
@@ -5,16 +6,16 @@
 #
 #   ActionView::Base::register_template_handler :liquid, LiquidView
 class LiquidView
-  LIQUID_ERROR = 'Liquid Error'.freeze
+  LIQUID_ERROR = 'Liquid Error'
   PROTECTED_ASSIGNS = %w( template_root response _session template_class action_name request_origin session template
                           _response url _request _cookies variables_added _flash params _headers request cookies
-                          ignore_missing_templates flash _params logger before_filter_chain_aborted headers )
+                          ignore_missing_templates flash _params logger before_filter_chain_aborted headers ).freeze
   PROTECTED_INSTANCE_VARIABLES = %i( @_request @controller @_first_render @_memoized__pick_template @view_paths
                                      @helpers @assigns_added @template @_render_stack @template_format @assigns
-                                    @_routes @_config @view_renderer @language_service @marked_for_same_origin_verification
-                                    @language_router @set_paper_trail_whodunnit_called @transactable_type @_assigns
-                                    @_controller @view_flow @output_buffer @virtual_path @show_title @haml_buffer
-                                    @platform_context_view @_main_app)
+                                     @_routes @_config @view_renderer @language_service @marked_for_same_origin_verification
+                                     @language_router @set_paper_trail_whodunnit_called @transactable_type @_assigns
+                                     @_controller @view_flow @output_buffer @virtual_path @show_title @haml_buffer
+                                     @platform_context_view @_main_app).freeze
 
   Liquid::Template.register_tag('inject_content_holder_for_path', ContentHolderTagForPathTag)
   Liquid::Template.register_tag('inject_content_holder', ContentHolderTag)
@@ -57,6 +58,7 @@ class LiquidView
     assigns['build_new_user'] = User.new.to_liquid
     assigns['flash'] = @view.try(:flash).try(:to_hash) if ApplicationController === @view.try(:controller)
     assigns['form_authenticity_token'] = @view.try(:controller).try(:form_authenticity_token)
+
     # this will need to be cached for performance reason
     if PlatformContext.current.custom_theme.present?
       assigns['asset_url'] = PlatformContext.current.custom_theme.custom_theme_assets.each_with_object({}) do |custom_theme_asset, hash|

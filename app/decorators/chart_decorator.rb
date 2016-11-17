@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ChartDecorator < Draper::CollectionDecorator
   def initialize(collection, show_period = :last_7_days, options = {})
     @options = options.reverse_merge(labels_max_count: 10)
@@ -17,12 +18,12 @@ class ChartDecorator < Draper::CollectionDecorator
 
   def dates
     @dates ||= case @show_period
-    when :last_7_days
-      6.downto(0).map { |i| I18n.l((Time.zone.now - i.day).to_date, format: :day_and_month) }
-    when :last_30_days
-      30.downto(0).map { |i| I18n.l((Time.zone.now - i.day).to_date, format: :day_and_month) }
-    else
-      grouped_by_date.keys.sort
+               when :last_7_days
+                 6.downto(0).map { |i| I18n.l((Time.zone.now - i.day).to_date, format: :day_and_month) }
+               when :last_30_days
+                 30.downto(0).map { |i| I18n.l((Time.zone.now - i.day).to_date, format: :day_and_month) }
+               else
+                 grouped_by_date.keys.sort
     end
   end
 

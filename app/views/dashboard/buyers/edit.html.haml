@@ -5,6 +5,7 @@
 
   = render 'registrations/edit_options'
 
+
 = render 'dashboard/shared/profile_nav', active: :buyer
 
 = dashboard_simple_form_for [:dashboard, current_user], url: dashboard_buyer_path, method: :put, html: { class: "form-expandable" } do |f|

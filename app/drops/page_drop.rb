@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class PageDrop < BaseDrop
-
   # @return [PageDrop]
   attr_reader :page
 
@@ -30,7 +30,7 @@ class PageDrop < BaseDrop
   # @return [String] "_blank" if the page is a redirect and is supposed to be opened in a new window
   #   otherwise returns an empty string
   def open_in_target
-    (@page.redirect? && @page.open_in_new_window?) ? '_blank' : ''
+    @page.redirect? && @page.open_in_new_window? ? '_blank' : ''
   end
 
   # @return [String] "nofollow" if the page is a redirect and is not a redirect to any of the

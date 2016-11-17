@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class ShipmentDrop < BaseDrop
-  
   # @return [ShipmentDrop]
   attr_reader :shipment
 

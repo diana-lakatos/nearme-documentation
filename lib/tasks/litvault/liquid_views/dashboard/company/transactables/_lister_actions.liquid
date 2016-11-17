@@ -1,0 +1,16 @@
+<ul class="actions-a">
+  {% if current_status != 'archived' %}
+    <li><a href='{{ transactable.edit_path }}' class="btn btn-primary">Edit Case</a></li>
+    <li><a href="{{ transactable.show_path }}" class="btn btn-default">View Case Details</a></li>
+  {% endif %}
+
+  {% if current_status == 'in progress' %}
+    <li>
+      {% assign form_url = order.order_complete_url %}
+
+      {% form_for order, url: @form_url, method: 'post' %}
+        <input type='submit' class="btn btn-warning" value='Complete Case' data-confirm="Are you sure that you want to complete this offer?">
+      {% endform_for %}
+    </li>
+  {% endif %}
+</ul>

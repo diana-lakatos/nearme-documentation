@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class ScheduleExceptionRuleDrop < BaseDrop
-  
   # @return [ScheduleExceptionRuleDrop]
   attr_reader :schedule_exception_rule
 

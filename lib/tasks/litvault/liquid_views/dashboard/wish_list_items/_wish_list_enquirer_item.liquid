@@ -1,0 +1,73 @@
+{% assign wish_list_item = wish_list_enquirer_item %}
+{% assign case = wish_list_item.wishlistable %}
+
+{% if wish_list_item.wishlistable_present? %}
+
+  <article class="case-a search-result" id="case-{{ case.id }}">
+    <header class="search-result-header">
+      <div class="h">
+        {% assign collaborator = current_user | find_collaborator: case %}
+        {% if collaborator.approved_by_owner? or current_user.id == case.creator_id %}
+          <h3><a href="{{ case.url }}">{{ case.name }}</a></h3>
+        {% else %}
+          <h3><a href="#case-permission-request-{{ case.id }}" data-case-invite-trigger>{{ case.name }}</a></h3>
+        {% endif %}
+        <div class='favorite-actions'>
+          <a href='{{ wish_list_item.dashboard_wish_list_item_path }}' rel='nofollow' data-method='delete' class='btn btn-danger btn-xs'>Unfavorite</a>
+        </div>
+      </div>
+
+      <div class="search-result-meta-action">
+        {% if collaborator.approved_by_owner? %}
+          <a class="button-a inverted"  href="{{ case.url }}" >Make an Offer</a>
+        {% elsif  current_user.id != case.creator_id %}
+          <a href="#case-permission-request-{{ case.id }}" class="button-a inverted" data-case-invite-trigger>Request Access</a>
+        {% endif %}
+
+        <div class="meta">
+          <span class="publish-date">posted {{ case.created_at | timeago }}</span>
+        </div>
+      </div>
+    </header>
+
+    <ul class="search-result-properties">
+      {% include 'search/case_properties', case: case %}
+    </ul>
+
+    {% if case.properties.case_short_description != blank %}
+      <div class="search-result-description">
+        {% if case.properties.case_short_description.size > 350 %}
+          <div data-shorten-description>
+            <p data-description>{{ case.properties.case_short_description | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+            <div style='display: none;'  class="rest_of_text">{{ case.properties.case_short_description | slice: 350, case.properties.case_short_description.size | nl2br }}</div>
+          </div>
+        {% else %}
+        <p>{{ case.properties.case_short_description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <p>Posted by <a href="{{ case.company.url }}" target="_blank" rel="nofollow">{{ case.creator.company_name }}</a></p>
+
+    {% if case.tags.size > 0 %}
+    <div class="tags-a tags-short-list">
+      <h4>Tags</h4>
+      <ul>
+        {% for tag in case.tags %}
+        <li><a href="?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </article>
+
+  {% content_for 'body_bottom' %}
+  <div class="case-invite" id="case-permission-request-{{ case.id }}" data-collaborations-url="{{ case.url }}"></div>
+  {% endcontent_for %}
+
+  <script>
+    $(function(){
+      $(document).trigger('itemLoaded.litvault', 'case-{{case.id}}');
+    });
+  </script>
+{% endif %}

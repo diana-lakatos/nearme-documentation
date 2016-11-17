@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class HeroImageUploader < BaseUploader
   include CarrierWave::TransformableImage
   include CarrierWave::DynamicPhotoUploads

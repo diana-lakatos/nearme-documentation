@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class BlogPost < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :history, :finders]
@@ -11,7 +12,7 @@ class BlogPost < ActiveRecord::Base
 
   before_validation :sanitize_content
   validates :title, :slug, length: { maximum: 255 }
-  validates_presence_of :blog_instance, :user, :title, :content, :published_at
+  validates :blog_instance, :user, :title, :content, :published_at, presence: true
 
   mount_uploader :header, HeroImageUploader
   mount_uploader :author_avatar, SimpleAvatarUploader
@@ -22,19 +23,19 @@ class BlogPost < ActiveRecord::Base
   # @return [BlogPost] object representing a post published before current post
   def previous_blog_post
     @previous_blog_post ||= blog_instance.blog_posts
-                            .published
-                            .order('published_at DESC')
-                            .where('published_at < ?', published_at)
-                            .first
+                                         .published
+                                         .order('published_at DESC')
+                                         .where('published_at < ?', published_at)
+                                         .first
   end
 
   # @return [BlogPost] object representing a post published after current post
   def next_blog_post
     @next_blog_post ||= blog_instance.blog_posts
-                        .published
-                        .order('published_at DESC')
-                        .where('published_at > ?', published_at)
-                        .last
+                                     .published
+                                     .order('published_at DESC')
+                                     .where('published_at > ?', published_at)
+                                     .last
   end
 
   def slug_changed?

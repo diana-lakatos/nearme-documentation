@@ -1,0 +1,40 @@
+<div class="case-invite-content">
+  <header>
+    <h2>Bulk Invite to Case</h2>
+    <button type="button" data-close>Cancel</button>
+  </header>
+
+  {% if collaborators.size > 0 %}
+    <p>All of the handling lawyers selected will be invited to your case.</p>
+    <p>Please select the case from the list below:</p>
+
+    <form method="post" action="{{ 'create_bulk_dashboard_company_transactable_collaborators_path' | generate_url }}">
+      <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+
+      {% for collaborator in collaborators %}
+        <input type="hidden" name="transactable_collaborator[user_ids][]" value="{{ collaborator.id }}">
+      {% endfor %}
+
+      <div class="control-group">
+        <label for="cases-list" class="control-label">My cases</label>
+        <span class="select-a">
+          <select id="cases-list" name="transactable_collaborator[transactable_id]" class="unstyled-select">
+            {% for case in current_user.pending_transactables %}
+              <option value="{{ case.id }}">{{ case.name }}</option>
+            {% endfor %}
+          </select>
+        </span>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="button-a">Invite</button>
+      </div>
+    </form>
+  {% else %}
+    <p>Please select at least one handling lawyer.</p>
+
+    <div class="actions">
+      <button type="submit" class="button-a" data-close>Cancel</button>
+    </div>
+  {% endif %}
+</div>

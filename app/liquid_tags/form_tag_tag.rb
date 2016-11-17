@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Usage example:
 # ```
 # {% form_tag url: '/users' %}
@@ -18,16 +19,16 @@ class FormTagTag < Liquid::Block
     if markup =~ Syntax
       @attributes = create_initial_hash_from_liquid_tag_markup(markup)
     else
-      fail SyntaxError.new('Invalid syntax for Form Tag tag - must pass url')
+      raise SyntaxError, 'Invalid syntax for Form Tag tag - must pass url'
     end
   end
 
   def render(context)
     @attributes = normalize_liquid_tag_attributes(@attributes, context)
-    fail SyntaxError.new('Invalid syntax for Form Tag tag - must pass url') if @attributes[:url].blank?
+    raise SyntaxError, 'Invalid syntax for Form Tag tag - must pass url' if @attributes[:url].blank?
     context.stack do
       context.registers[:action_view].form_tag(@attributes[:url], @attributes) do |f|
-        context['form_tag_object'.freeze] = f
+        context['form_tag_object'] = f
         render_all(@nodelist, context).html_safe
       end
     end

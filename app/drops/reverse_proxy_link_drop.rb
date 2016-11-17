@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class ReverseProxyLinkDrop < BaseDrop
-
   # @return [ReverseProxyLinkDrop]
   attr_reader :source
 
@@ -19,5 +19,4 @@ class ReverseProxyLinkDrop < BaseDrop
   def initialize(source)
     @source = source
   end
-
 end

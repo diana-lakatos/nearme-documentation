@@ -13,7 +13,9 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def edit
-    # Not used for now
+    @order = current_user.listing_orders.find(params[:id])
+
+    render template: 'checkout/show', locals: { disabled: true }
   end
 
   def update

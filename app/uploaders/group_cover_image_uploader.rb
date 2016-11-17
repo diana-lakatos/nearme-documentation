@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class GroupCoverImageUploader < BaseUploader
   include CarrierWave::TransformableImage
   include CarrierWave::ImageDefaults

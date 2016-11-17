@@ -1,0 +1,49 @@
+<form action="/search" class="home-search no_inheritance" method="get">
+    <div class="form-fields">
+        <input type="hidden" name="transactable_type_class" value="TransactableType">
+        <div class="form-field form-field-query">
+            <label for="form-field-query">Search for</label>
+            <input id="form-field-query" class="query" name="query" placeholder="Enter keywords..." type="text">
+        </div>
+
+        <div class="form-field form-field-state">
+            <label for="form-field-state">By State</label>
+
+
+            <span class="select-a">
+                <select name='lg_custom_attributes[state][]' id="form-field-state" class="unstyled-select">
+                    <option value="">By State</option>
+                    {% assign ca = platform_context.transactable_types.first.custom_attributes_as_hash %}
+                    {% for value in ca['states'].valid_values %}
+                    <option value='{{ value }}'>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </span>
+        </div>
+
+
+        <fieldset>
+            <legend>Case Type</legend>
+
+            <ul>
+                {% for transactable_type in platform_context.transactable_types %}
+
+                    {% if not_first_item == blank %}
+                        {% assign not_first_item = true %}
+                        {% assign checked = ' checked ' %}
+                    {% else %}
+                        {% assign checked = '' %}
+                    {% endif %}
+
+                    <li class="radio-a">
+                        <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" id="transactable-type-{{ transactable_type.id }}"{{ checked }}>
+                        <label for="transactable-type-{{ transactable_type.id }}">{{ transactable_type.name }}</label>
+                    </li>
+                {% endfor %}
+            </ul>
+        </fieldset>
+    </div>
+    <div class="form-action">
+        <button type="submit" class="button-a">Search</button>
+    </div>
+</form>

@@ -1,6 +1,6 @@
+# frozen_string_literal: true
 # @todo Investigate for removal
 class ShippingRuleDrop < BaseDrop
-
   # @return [ShippingRuleDrop]
   attr_reader :shipping_rule
 
@@ -23,5 +23,4 @@ class ShippingRuleDrop < BaseDrop
   def initialize(shipping_rule)
     @shipping_rule = shipping_rule
   end
-
 end

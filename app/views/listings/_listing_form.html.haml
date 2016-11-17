@@ -40,7 +40,6 @@
 - if only_inputs.empty? || @transactable_type.categories.roots.map { |c| "Category - #{c.name}".to_sym }.include?(only_inputs.first)
   = render 'dashboard/company/transactables/form_fields/category', f: f, field: only_inputs.first.to_s
 
-
 - if only_inputs.empty? || only_inputs.include?(:currency)
   = render 'dashboard/company/transactables/form_fields/currency', f: f
 
@@ -56,6 +55,8 @@
 - if only_inputs.empty? || only_inputs.include?(:minimum_booking_minutes)
   = f.input :minimum_booking_minutes, required: f.object.required?(:minimum_booking_minutes)
 
+- if only_inputs.empty? || only_inputs.include?(:seller_attachments)
+  = render "dashboard/company/transactables/form_fields/seller_attachments", f: f
 
 - if only_inputs.empty? || only_inputs.include?(:package_details)
   = render 'listings/package_details', f: f

@@ -1,0 +1,146 @@
+{% for transactable in transactables %}
+  {% assign collaborator = current_user  | find_collaborator: transactable %}
+  {% assign accepted_order = transactable.first_accepted_order %}
+  <article class="listing-b" id="transactable_{{transactable.id}}">
+
+    {% if transactable.state == 'completed' %}
+      <span class="label label-success">Completed</span>
+    {% elsif transactable.state == 'cancelled' %}
+      <span class="label label-warning">Cancelled</span>
+    {% endif %}
+
+    <h2>{{ transactable.name }}</h2>
+
+    <div class="row">
+      <div class="col-md-9">
+        {% include 'dashboard/user_reservations/reservation_details', reservation: reservation %}
+      </div>
+      <div class="col-md-3">
+        {% include 'dashboard/company/transactables/lister_actions.html', order: accepted_order %}
+      </div>
+    </div>
+    {% if current_status == 'pending' %}
+
+      {% assign transactable_collaborators = transactable.transactable_collaborators %}
+
+      {% if transactable_collaborators != empty %}
+        <h3>Request To View Case Details:</h3>
+        <div class="table-responsive">
+          <table class="table table-transactable-details">
+            <thead>
+              <tr>
+                <th>Handling Lawyer</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th class="actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for transactable_collaborator in transactable_collaborators %}
+                <tr>
+                  <td>{{ transactable_collaborator.user.name }}</td>
+                  <td>{{ transactable_collaborator.created_at | to_date | l: 'short' }}</td>
+                  <td>{{ transactable_collaborator.status }}</td>
+                  <td class="actions">
+                    {% if transactable_collaborator.transactable_user_messages.size > 0 %}
+                      <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: transactable_collaborator.transactable_user_messages.first.id, skip: true }}">Reply</a>
+                    {% else %}
+                      <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id ,user_id: transactable_collaborator.user.id, skip: true }}">Message</a>
+                    {% endif %}
+
+                    {{ transactable_collaborator.user.click_to_call_button }}
+
+                    {% if transactable_collaborator.status != 'Approved' %}
+                        {% form_for transactable_collaborator, url: @transactable_collaborator.update_path, method: 'put', remote: true %}
+                          <input type='hidden' name='transactable_collaborator[approved_by_owner_at]' value='{{ "now" | parse_time }}'>
+                          <input type='hidden' name='transactable_collaborator[rejected_by_owner_at]' value=''>
+                          <input type='submit' class="btn btn-danger" data-confirm="Are you sure?" value='Accept'>
+                        {% endform_for %}
+                    {% endif %}
+
+                    {% if transactable_collaborator.status != 'Rejected' %}
+                      {% form_for transactable_collaborator, url: @transactable_collaborator.update_path, method: 'put', remote: true %}
+                        <input type='hidden' name='transactable_collaborator[approved_by_owner_at]' value=''>
+                        <input type='hidden' name='transactable_collaborator[rejected_by_owner_at]' value='{{ "now" | parse_time }}'>
+                        <input type='submit' class="btn btn-danger" data-confirm="Are you sure?" value='Reject'>
+                      {% endform_for %}
+                    {% endif %}
+
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    {% endif %}
+
+    {% if current_status == 'pending' %}
+
+      {% assign orders = current_user | get_lister_orders: transactable %}
+
+      {% if orders != empty  %}
+        <h3>Offers ({{ orders.size }})</h3>
+        <div class="table-responsive">
+          <table class="table table-transactable-details">
+            <thead>
+              <tr>
+                <th>Handling Lawyer</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th class="actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+                <tr>
+                  <td>{{ order.user.name }}</td>
+                  <td>{{ order.created_at | to_date | l: 'short' }}</td>
+                  <td>{{ 'reservations.states.' | append: order.state | t }}</td>
+                  <td class="actions">
+                    {% if order.unconfirmed? %}
+                      <a href="{{  'edit_dashboard_company_orders_received_path' | generate_url: order.id  }}" class="btn btn-info">Review</a>
+                      <a href="{{ order.rejection_form_path }}" data-modal="true" class="btn btn-danger">Reject</a>
+                      <a href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: orders_received_id: order.id, redirect_to: current_path | append: '?status=in+progress'  }}" class="btn btn-success" data-modal="true">Accept</a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    {% elsif current_status == "in progress" or current_status == "archived" and accepted_order != blank %}
+      <h3>Offer Accepted</h3>
+      <div class="table-responsive">
+        <table class="table table-transactable-details">
+          <thead>
+            <tr>
+              <th>Handling Lawyer</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Accepted Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ accepted_order.user.name }}</td>
+              <td>{{ accepted_order.created_at | to_date | l: 'short' }}</td>
+              <td>Accepted</td>
+              <td>{{ accepted_order.confirmed_at | to_date | l: 'short' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+
+  </article>
+{% endfor %}
+
+<script>
+  $(document).ready(function() {
+    $("form.edit_transactable_collaborator").on("ajax:success", function(e, data, status, xhr) {
+      location.reload();
+    });
+  });
+</script>

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PasswordValidator < ActiveModel::Validator
   def validate(record)
     validate_uppercase(record) if password_validation_rules['uppercase'] == '1'

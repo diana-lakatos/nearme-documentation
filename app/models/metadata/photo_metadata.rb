@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Metadata
   module PhotoMetadata
     extend ActiveSupport::Concern

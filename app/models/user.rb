@@ -108,7 +108,6 @@ class User < ActiveRecord::Base
   has_many :transactable_collaborators
   has_many :approved_transactable_collaborations, -> { approved }, class_name: 'TransactableCollaborator'
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
-  has_many :orders, foreign_key: 'owner_id'
   has_many :recurring_bookings, foreign_key: 'owner_id'
   has_many :relationships, class_name: 'UserRelationship', foreign_key: 'follower_id', dependent: :destroy
   has_many :reverse_relationships, class_name: 'UserRelationship', foreign_key: 'followed_id', dependent: :destroy
@@ -152,7 +151,7 @@ class User < ActiveRecord::Base
   after_destroy :perform_cleanup!
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
-  before_create :build_profile
+  before_create :get_default_profile
 
   before_create do
     self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.default.first.try(:id) : InstanceProfileType.default.where(instance_id: instance_id).try(:first).try(:id)
@@ -249,6 +248,9 @@ class User < ActiveRecord::Base
   }
   scope :searchable, -> {}
 
+  scope :buyers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::BUYER])) }
+  scope :sellers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::SELLER])) }
+
   validates_with CustomValidators
 
   validates :name, :first_name, presence: true
@@ -300,7 +302,7 @@ class User < ActiveRecord::Base
     # This needs to be checked, why did he remove it?
     def filtered_by_role(values)
       if values.present? && 'Other'.in?(values)
-        role_attribute = PlatformContext.current.instance.default_profile_type.custom_attributes.find_by(name: 'role')
+        role_attribute = current_instance.default_profile_type.custom_attributes.find_by(name: 'role')
         values += role_attribute.valid_values.reject { |val| val =~ /Featured|Innovator|Black Belt/i }
       end
 
@@ -356,12 +358,16 @@ class User < ActiveRecord::Base
         parsed_order = order.match(/custom_attributes.([a-zA-Z\.\_\-]*)_(asc|desc)/)
         order(ActiveRecord::Base.send(:sanitize_sql_array, ["cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}", { field_name: parsed_order[1] }]))
       else
-        if PlatformContext.current.instance.is_community?
+        if current_instance.is_community?
           order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')
         else
           all
         end
       end
+    end
+
+    def current_instance
+      PlatformContext.current.instance
     end
   end
 
@@ -370,17 +376,28 @@ class User < ActiveRecord::Base
   end
 
   def get_seller_profile
-    seller_profile || build_seller_profile(instance_profile_type: PlatformContext.current.instance.try('seller_profile_type'))
+    seller_profile || build_seller_profile(instance_profile_type: current_instance.try('seller_profile_type'))
   end
 
   def get_buyer_profile
-    buyer_profile || build_buyer_profile(instance_profile_type: PlatformContext.current.instance.try('buyer_profile_type'))
+    buyer_profile || build_buyer_profile(instance_profile_type: current_instance.try('buyer_profile_type'))
   end
 
   def get_default_profile
-    default_profile || build_default_profile(instance_profile_type: PlatformContext.current.instance.try('default_profile_type'))
+    default_profile || build_default_profile(instance_profile_type: current_instance.try('default_profile_type'))
   end
-  alias build_profile get_default_profile
+
+  def has_default_profile?
+    default_profile.present? && current_instance.default_profile_enabled? && default_profile.has_fields?(FormComponent::INSTANCE_PROFILE_TYPES)
+  end
+
+  def has_seller_profile?
+    seller_profile.present? && seller_profile.persisted? && current_instance.seller_profile_enabled? && seller_profile.has_fields?(FormComponent::SELLER_PROFILE_TYPES)
+  end
+
+  def has_buyer_profile?
+    buyer_profile.present? && buyer_profile.persisted? && current_instance.buyer_profile_enabled? && buyer_profile.has_fields?(FormComponent::BUYER_PROFILE_TYPES)
+  end
 
   def custom_validators
     @custom_validators ||= all_current_profiles.map(&:custom_validators).flatten.compact
@@ -416,7 +433,7 @@ class User < ActiveRecord::Base
     omniauth_coercions = OmniAuthCoercionService.new(omniauth)
     self.name = omniauth_coercions.name if name.blank?
     self.email = omniauth_coercions.email if email.blank?
-    self.external_id ||= omniauth_coercions.external_id if PlatformContext.current.instance.is_community?
+    self.external_id ||= omniauth_coercions.external_id if current_instance.is_community?
 
     authentications.build(
       provider: omniauth['provider'],
@@ -450,13 +467,13 @@ class User < ActiveRecord::Base
   end
 
   def iso_country_code
-    iso_country_code = if PlatformContext.current.instance.skip_company?
+    iso_country_code = if current_instance.skip_company?
                          current_address.try(:iso_country_code) || country.try(:iso)
                        else
                          default_company.try(:iso_country_code)
                        end
 
-    iso_country_code.presence || PlatformContext.current.instance.default_country_code
+    iso_country_code.presence || current_instance.default_country_code
   end
 
   def all_transactables_count
@@ -1155,5 +1172,9 @@ class User < ActiveRecord::Base
     errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGTH) if get_middle_name_from_name.length > MAX_NAME_LENGTH
 
     errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH) if get_last_name_from_name.length > MAX_NAME_LENGTH
+  end
+
+  def current_instance
+    PlatformContext.current.instance
   end
 end

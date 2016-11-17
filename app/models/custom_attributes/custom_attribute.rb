@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CustomAttributes::CustomAttribute < ActiveRecord::Base
   # defined in vendor/gems/custom_attributes/lib/custom_attributes/concerns
   include CustomAttributes::Concerns::Models::CustomAttribute
@@ -8,6 +9,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  store_accessor :properties, :min_value, :max_value, :step
   after_save :create_translations, :add_to_csv
   after_create :update_es_mapping, if: ->(ca) { %w(TransactableType InstanceProfileType).include?(ca.target_type) }
 
@@ -16,6 +18,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   scope :required, -> { joins(:custom_validators).merge(CustomValidator.required) }
 
   validates :valid_values, presence: { if: :searchable }
+  validates :min_value, :max_value, :step, presence: true, if: -> { html_tag.eql?('range') }
 
   delegate :update_es_mapping, to: :target
 

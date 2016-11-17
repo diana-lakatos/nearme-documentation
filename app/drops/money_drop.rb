@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class MoneyDrop < BaseDrop
-
   # @!method currency
   #   @return [Money::Currency] currency for the money instance
   # @!method fractional
@@ -9,7 +9,7 @@ class MoneyDrop < BaseDrop
   # @!method cents
   #   @return (see MoneyDrop#fractional)
   # @!method dollars
-  #   @return [BigDecimal] assuming using a currency using dollars: 
+  #   @return [BigDecimal] assuming using a currency using dollars:
   #     returns the value of the money in dollars, instead of in the fractional unit cents.
   # @!method to_money
   #   @return [MoneyDrop] conversion to self

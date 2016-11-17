@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class PaymentDrop < BaseDrop
-
   # @return [PaymentDrop]
   attr_reader :payment
 
@@ -39,5 +39,4 @@ class PaymentDrop < BaseDrop
   def initialize(payment)
     @payment = payment
   end
-
 end

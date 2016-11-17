@@ -1,0 +1,35 @@
+<div class='case-invite'>
+  <div class='case-invite-content'>
+    {% if collaborator %}
+      <header>
+        <h2>Request Case Details</h2>
+        <button type="button" data-close>Cancel</button>
+      </header>
+
+      <p>Your request is pending approval.</p>
+    {% else %}
+
+      <header>
+        <h2>Request Case Details</h2>
+        <button type="button" data-close>Cancel</button>
+      </header>
+
+      <p>I would like to send a request to have access to Case Details for the following Case:</p>
+      <h3>{{ listing.name }}</h3>
+      <ul class="search-result-case-properties">
+        {% include 'search/case_properties', case: case %}
+        <li>by {{ listing.creator.company_name }}</li>
+      </ul>
+
+      <form method="post" action="{{ 'listing_transactable_collaborators_path' | generate_url: listing }}">
+        <input type="hidden" name="transactable_id" value="{{ listing.id }}">
+        <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+
+        <div class="actions">
+          <button type="submit" class="button-a">Submit Request</button>
+          <button type="button" class="button-b" data-close>Cancel</button>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+</div>

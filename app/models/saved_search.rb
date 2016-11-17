@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SavedSearch < ActiveRecord::Base
   ALERTS_FREQUENCIES = %w(daily weekly).freeze
 

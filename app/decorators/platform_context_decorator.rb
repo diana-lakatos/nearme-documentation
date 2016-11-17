@@ -27,6 +27,14 @@ class PlatformContextDecorator
     @platform_context.transactable_types
   end
 
+  def transactable_types_ordered
+    transactable_types.order('name ASC')
+  end
+
+  def transactable_types_as_hash
+    Hash[@source.transactable_types.map { |ta| [ta.name.downcase, ta] }]
+  end
+
   def to_liquid
     @platform_context_drop ||= PlatformContextDrop.new(self)
   end

@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class Transactable::PricingDrop < BaseDrop
-
   # @return [Transactable::PricingDrop]
   attr_reader :pricing
 
@@ -13,5 +13,4 @@ class Transactable::PricingDrop < BaseDrop
   def initialize(pricing)
     @pricing = pricing
   end
-
 end

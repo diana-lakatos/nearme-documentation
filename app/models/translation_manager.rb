@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TranslationManager
   def initialize(object)
     @object = object
@@ -75,7 +76,10 @@ class TranslationManager
 
   def underscore(string)
     # FIXME: (rescue) is the ugly hotfix to make CI green. Need to go deeper with the translation issues
-    string.underscore.tr(' ', '_') rescue ''
+
+    string.underscore.tr(' ', '_')
+  rescue
+    ''
   end
 
   # @return [String] translation namespace that is a prefix for translation keys specific to this transactable type

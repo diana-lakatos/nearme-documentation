@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UserBlogPost < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :history, :finders]
@@ -57,7 +58,7 @@ class UserBlogPost < ActiveRecord::Base
 
   def published_at_str=(value)
     value = Date.strptime(value, I18n.t('datepicker.dformat'))
-    write_attribute(:published_at, value)
+    self[:published_at] = value
   end
 
   private

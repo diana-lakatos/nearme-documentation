@@ -15,7 +15,7 @@ class PagesController < ApplicationController
       redirect_to @page.redirect_url, status: @page.redirect_code
     elsif params[:simple]
       render :simple, platform_context: [platform_context.decorate]
-    elsif @page.layout_name.blank?
+    elsif @page.layout_name.blank? || params[:nolayout]
       assigns = {}
       assigns['params'] = params.except(*Rails.application.config.filter_parameters)
       assigns['current_user'] = current_user

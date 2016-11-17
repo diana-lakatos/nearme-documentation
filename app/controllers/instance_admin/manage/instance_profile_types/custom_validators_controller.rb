@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::Manage::InstanceProfileTypes::CustomValidatorsController < InstanceAdmin::CustomValidatorsController
   protected
 

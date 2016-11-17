@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceProfileTypeDrop < BaseDrop
   # @return [InstanceProfileTypeDrop]
   attr_reader :instance_profile_type
@@ -34,7 +35,7 @@ class InstanceProfileTypeDrop < BaseDrop
     @context['custom_search_inputs']
   end
 
-  # @return [Array<(String, Integer)>] the container class and input size to be used for the 
+  # @return [Array<(String, Integer)>] the container class and input size to be used for the
   #   search area of the marketplace's homepage
   def calculate_elements
     sum = 2 # search button

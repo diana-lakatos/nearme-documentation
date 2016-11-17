@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class InstanceDrop < BaseDrop
-  
   # @return [InstanceDrop]
   attr_reader :instance
 

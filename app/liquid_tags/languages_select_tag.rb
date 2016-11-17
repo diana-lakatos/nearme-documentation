@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 # Usage example:
-# 
+#
 # ```
 # {% languages_select %}
 # ```

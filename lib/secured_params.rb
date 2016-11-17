@@ -509,6 +509,7 @@ class SecuredParams
       :allow_action_rfq,
       :allow_no_action,
       :allow_custom_pricings,
+      :allow_drafts,
       :type,
       :confirm_reservations,
       :send_alert_hours_before_expiry,
@@ -1013,6 +1014,8 @@ class SecuredParams
   def transactable_collaborator
     [
       :approved,
+      :approved_by_owner_at,
+      :rejected_by_owner_at,
       :transactable_id,
       :user_id,
       :email

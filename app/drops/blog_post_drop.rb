@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class BlogPostDrop < BaseDrop
   # @return [BlogPostDrop]
   attr_reader :blog_post

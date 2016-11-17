@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class PaymentSubscriptionDrop < BaseDrop
-
   # @return [PaymentSubscriptionDrop]
   attr_reader :payment_subscription
 

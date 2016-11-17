@@ -1,0 +1,28 @@
+<div class="properties">
+  <dl>
+    <dt>Injury or Accident Date:</dt>
+    <dd>{{ transactable.properties.date_of_incident }}</dd>
+
+    <dt>Days of Hospitalization:</dt>
+    <dd>{{ transactable.properties.days_of_hospitalization }}</dd>
+
+    <dt>Location of Injury or Accident:</dt>
+    <dd>{{ transactable.properties.city_of_incident }}, {{ transactable.properties.state_of_incident }}</dd>
+
+    <dt>Death Case:</dt>
+    <dd>{{ transactable.properties.involve_wrongful_death }}</dd>
+  </dl>
+</div>
+
+{% if transactable.properties.case_short_description != blank %}
+    <hr>
+    <h4>Description:</h4>
+    {% if transactable.properties.case_short_description.size > 350 %}
+       <div data-shorten-description>
+        <p data-description>{{ transactable.properties.case_short_description | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+        <div style='display: none;'  class="rest_of_text">{{ transactable.properties.case_short_description | slice: 350, transactable.properties.case_short_description.size | nl2br }}</div>
+      </div>
+    {% else %}
+      <p>{{ transactable.properties.case_short_description | nl2br }}</p>
+    {% endif %}
+{% endif %}

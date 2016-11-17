@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class TagDrop < BaseDrop
-
   # @return [TagDrop]
   attr_reader :tag
 
@@ -19,5 +19,4 @@ class TagDrop < BaseDrop
   def to_s
     @tag.name
   end
-
 end

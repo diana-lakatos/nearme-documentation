@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ApprovalRequestDrop < BaseDrop
   # @return [ApprovalRequest]
   attr_reader :approval_request

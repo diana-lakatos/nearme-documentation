@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class RecurringBookingPeriodDrop < BaseDrop
   include CurrencyHelper
 

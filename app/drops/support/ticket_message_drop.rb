@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Support::TicketMessageDrop < BaseDrop
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
@@ -10,9 +11,7 @@ class Support::TicketMessageDrop < BaseDrop
   end
 
   # @todo Investigate no longer working / should be removed?
-  def date
-    message.date
-  end
+  delegate :date, to: :message
 
   # @return [String] date/time when this message was created
   def created_at
@@ -20,9 +19,7 @@ class Support::TicketMessageDrop < BaseDrop
   end
 
   # @return [String] the full name of the support recipient
-  def full_name
-    message.full_name
-  end
+  delegate :full_name, to: :message
 
   # @return [String] reservations dates tied to this message thread as an html formatted string
   def dates

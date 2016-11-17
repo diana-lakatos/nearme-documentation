@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This is not currently usable.
 class SelectTag < Liquid::Tag
   include ActionView::Helpers::FormTagHelper
@@ -12,11 +13,11 @@ class SelectTag < Liquid::Tag
   end
 
   def name
-    fail NameNotDefinedError.new("#name wasn't defined for this select")
+    raise NameNotDefinedError, "#name wasn't defined for this select"
   end
 
   def collection
-    fail CollectionNotDefinedError.new("#collection wasn't defined for this select")
+    raise CollectionNotDefinedError, "#collection wasn't defined for this select"
   end
 
   def classes

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Attachable::PaymentDocumentDrop < BaseDrop
   # @return [Attachable::PaymentDocumentDrop]
   attr_reader :payment_document

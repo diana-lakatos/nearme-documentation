@@ -1,6 +1,6 @@
 Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
-  lister = User.find_by_name(lister)
-  reserver = User.find_by_name(reserver)
+  lister = User.find_by(name: lister)
+  reserver = User.find_by(name: reserver)
   @listing = FactoryGirl.create(:transactable)
   @listing.company.update_attribute(:creator_id, lister.id)
   @listing.company.add_creator_to_company_users
@@ -55,8 +55,8 @@ Given /^Extra fields are prepared for booking$/ do
   rt = FactoryGirl.create(:reservation_type)
   rt.transactable_types << TransactableType.all
   rt.form_components.last.update_attribute(:form_fields, [
-    { 'user' => 'phone' }, { 'user' => 'first_name' }, { 'user' => 'last_name' }, { 'reservation' => 'payments' }
-  ])
+                                             { 'user' => 'phone' }, { 'user' => 'first_name' }, { 'user' => 'last_name' }, { 'reservation' => 'payments' }
+                                           ])
 end
 
 When /^I book space for:$/ do |table|
@@ -168,20 +168,18 @@ When /^I book space as new user for:$/ do |table|
 end
 
 When /^(.*) books a space for that listing$/ do |person|
-  listing.reload.reserve!(User.find_by_name(person), [next_regularly_available_day], 1)
+  listing.reload.reserve!(User.find_by(name: person), [next_regularly_available_day], 1)
 end
 
 When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user, action|
   if user == 'visitor'
-    login User.find_by_name('Keith Contractor')
+    login User.find_by(name: 'Keith Contractor')
     visit dashboard_user_reservations_path
   else
-    login User.find_by_name('Bo Jeanes')
+    login User.find_by(name: 'Bo Jeanes')
     visit dashboard_company_host_reservations_path
   end
-  if action == 'cancel' && user == 'owner'
-    within('main') { click_on 'Confirmed' }
-  end
+  within('main') { click_on 'Confirmed' } if action == 'cancel' && user == 'owner'
   if action == 'decline'
     step 'I reject reservation with reason'
   else
@@ -191,10 +189,10 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
 end
 
 When /^the reservation expires/ do
-  login User.find_by_name('Keith Contractor')
+  login User.find_by(name: 'Keith Contractor')
   visit dashboard_user_reservations_path
 
-  reservation = User.find_by_name('Keith Contractor').orders.first
+  reservation = User.find_by(name: 'Keith Contractor').orders.first
   reservation.perform_expiry!
 
   visit dashboard_user_reservations_path
@@ -298,7 +296,7 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
     assert page.has_content?(date), "Expected to see: #{date}"
   else
     # Daily booking
-    assert page.has_content?("#{reservation[:listing].name}")
+    assert page.has_content?(reservation[:listing].name.to_s)
   end
 end
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::BaseStep
   attr_reader :lister, :enquirer, :transactable
 
@@ -7,9 +8,7 @@ class WorkflowStep::BaseStep
 
   def invoke!
     alerts.each do |alert|
-      if invokable_alert?(alert)
-        WorkflowAlert::InvokerFactory.get_invoker(alert).invoke!(self)
-      end
+      WorkflowAlert::InvokerFactory.get_invoker(alert).invoke!(self) if invokable_alert?(alert)
     end
   end
 
@@ -52,7 +51,7 @@ class WorkflowStep::BaseStep
   end
 
   def workflow_type
-    fail NotImplementedError.new("#{self.class.name} must implemented workflow_type method")
+    raise NotImplementedError, "#{self.class.name} must implemented workflow_type method"
   end
 
   def data

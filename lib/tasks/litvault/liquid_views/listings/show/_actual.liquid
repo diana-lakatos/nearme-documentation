@@ -1,0 +1,195 @@
+{% assign collaborator = current_user | find_collaborator: listing %}
+{% assign title = platform_context.name | append: ' - ' | append: listing.name %}
+{% title title %}
+
+{% assign orders = current_user | get_enquirer_orders: listing %}
+{% assign can_make_offer = false %}
+{% if orders == empty %}
+  {% assign can_make_offer = true %}
+{% else %}
+  {% assign can_make_offer = true %}
+  {% for order in orders %}
+    {% if order.state == 'unconfirmed' or order.state == 'confirmed' %}
+      {% assign can_make_offer = false %}
+    {% endif %}
+  {% endfor %}
+{% endif  %}
+
+<main id="main">
+  <div class="container-fluid">
+    <div class="listing-a">
+      <article class="listing-details">
+        {% assign search_result = request_referer | matches: 'search' %}
+        {% if search_result %}
+          <div class="back-to-results">
+            <a href="/search">Back to Case Results</a>
+          </div>
+        {% endif %}
+        <div class="summary">
+          <h1>{{ listing.name }}</h1>
+          <div class="meta">
+            <span class="publish-date">posted {{ listing.created_at | timeago }}</span>
+          </div>
+
+          <div class="representatives">
+            <div class="company">
+              <h2>Referring Lawyer or Law Firm</h2>
+              <p>{{ listing.creator.name }} at {{ listing.creator.company_name }}</p>
+            </div>
+
+            <div class="principal-office">
+              <h2>Principal Office</h2>
+              <p>{{ listing.properties.principal_office }}</p>
+            </div>
+          </div>
+
+          <div class="properties">
+            <dl>
+              <dt>Client Signed Written Engagement:</dt>
+              <dd>{{ listing.properties.engagement_agreement_exists }}</dd>
+
+              {% if listing.properties.engagement_agreement_exists == 'Yes' %}
+              <dt>Date Engagement Signed: </dt>
+              <dd>{{ listing.properties.date_engagement_agreement_signed }}</dd>
+              {% endif %}
+
+              <dt>Contingent Fee Percentage:</dt>
+              <dd>{{ listing.properties.engagement_agreement_fee_percentage }}%</dd>
+
+              <dt>Treatment of Litigation Expenses:</dt>
+              <dd>
+                {% if listing.properties.engagement_agreement_expenses_advancement == 'Yes' %}
+                Obligation
+                {% else %}
+                Choice
+                {% endif %}
+              </dd>
+
+              <dt>Injury or Accident Date:</dt>
+              <dd>{{ listing.properties.date_of_incident }}</dd>
+
+              <dt>Location of Injury or Accident:</dt>
+              <dd>{{ listing.properties.city_of_incident }}, {{ listing.properties.state_of_incident }}</dd>
+            </dl>
+
+            <dl>
+              <dt>Days of Hospitalization: </dt>
+              <dd>{{ listing.properties.days_of_hospitalization }}</dd>
+
+              <dt>Death Case:</dt>
+              <dd>{{ listing.properties.involve_wrongful_death }}</dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="description">
+          {{ listing.properties.case_full_description | nl2br }}
+        </div>
+
+        {% if listing.attachments.size > 0 %}
+        <div class="listing-section documents">
+          <h2>Case Documents</h2>
+          <ul>
+            {% for attachment in listing.attachments %}
+            <li><a href="{{ attachment.attachment_url }}" download>{{ attachment.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if listing.orders.size > 0 %}
+          <div class="listing-section offers-made">
+            <h2>Offers Made</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Handling Lawyer</th>
+                  <th scope="col">Offer Date</th>
+                </tr>
+                {% for order in listing.orders %}
+                  <tr>
+                    <td>
+                      {{ order.user.name }}
+                    </td>
+                    <td>
+                      {{ order.created_at | to_date | l: 'short' }}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </thead>
+            </table>
+          </div>
+        {% endif %}
+
+
+        {% if can_make_offer == true %}
+          <div class="make-an-offer">
+            <a class="button-a inverted" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: listing.id }}">Make an Offer</a>
+          </div>
+        {% endif %}
+
+      </article>
+
+      <aside class="sidebar">
+        <div class="listing-actions">
+          <ul>
+            {% if can_make_offer == true %}
+              <li>
+                <a class="button-a inverted" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: listing.id }}">Make an Offer</a>
+              </li>
+            {% endif %}
+            {% if current_user.has_buyer_profile? %}
+              <li>
+                {% include 'shared/components/wish_list_button_injection.html', object: listing %}
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="about">
+          <h3>About {{ listing.creator.company_name }}</h3>
+          <p>{{ listing.company.description | nl2br }}</p>
+        </div>
+
+        <hr>
+
+        {% if listing.tags.size > 0 %}
+        <div class="tags-a tags-short-list">
+          <h4>Tags</h4>
+          <ul>
+            {% for tag in listing.tags %}
+            <li><a href="?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <hr>
+
+        {% endif %}
+
+        <div class="more-details">
+          <h3>More Details</h3>
+          <ul class="company-properties">
+            <li><b>{{ listing.creator.transactables_count }}</b> Cases Posted</li>
+            <li><b>{{ listing.creator.pending_transactables_count }}</b> Open Cases</li>
+            <li class="member-since">Member Since {{ listing.creator.created_at | to_date | l: 'short' }}</li>
+          </ul>
+        </div>
+
+        <hr>
+
+        {% if listing.creator.has_active_credit_cards? %}
+          <p class="payment-verified">
+            <strong>Payment Method Verified</strong>
+          </p>
+        {% endif %}
+
+        <p class="flag-inappropriate">
+          <a data-href="{{ listing.inappropriate_report_path }}" data-modal="true">Flag Case Listing</a>
+        </p>
+      </aside>
+    </div>
+  </div>
+</main>

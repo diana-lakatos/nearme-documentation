@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CustomizationDrop < BaseDrop
   # @return [CustomizationDrop]
   attr_reader :customization
@@ -24,7 +25,7 @@ class CustomizationDrop < BaseDrop
   #   hash of the form:
   #   { "url_link" => { :label => "URL", :value => "https://vimeo.com/some_video" } }
   def properties_with_labels
-    @customization.custom_model_type.custom_attributes.inject({}) do |result, attribute|
+    @customization.custom_model_type.custom_attributes.each_with_object({}) do |attribute, result|
       result[attribute.name] = {
         label: I18n.t(attribute.label_key, default: attribute.label),
         value: @customization.properties[attribute.name]

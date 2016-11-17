@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class ReviewDrop < BaseDrop
-
   # @return [ReviewDrop]
   attr_reader :review
 
@@ -10,5 +10,4 @@ class ReviewDrop < BaseDrop
   def initialize(review)
     @review = review.decorate
   end
-
 end

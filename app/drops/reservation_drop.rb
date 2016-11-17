@@ -99,7 +99,7 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [String] unit price for the reservation formatted using the global currency
-  #   formatting rules 
+  #   formatting rules
   def formatted_unit_price
     render_money(unit_price)
   end

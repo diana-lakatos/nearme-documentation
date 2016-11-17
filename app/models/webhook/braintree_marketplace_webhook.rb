@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Webhook::BraintreeMarketplaceWebhook < Webhook
   before_create :set_merchant_account
 

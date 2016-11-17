@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Usage:
 # ```
 #  {% dropdown_menu { label: transactable_type.bookable_noun_plural, wrapper_class: 'links' } %}

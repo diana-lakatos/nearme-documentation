@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ChartDrop < BaseDrop
   # @!method totals_by_currency
   #   @return [Hash<String, MoneyDrop>] hash containing the currency as keys

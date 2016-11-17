@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CommunicationDrop < BaseDrop
   # @!method verified
   #   Whether this communication type is verified

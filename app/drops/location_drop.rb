@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class LocationDrop < BaseDrop
   include AvailabilityRulesHelper
   include ReservationsHelper
@@ -92,7 +93,7 @@ class LocationDrop < BaseDrop
     urlify(url)
   end
 
-  # @return [Array<Hash<String, String>>] array of photo items; each photo item is a hash 
+  # @return [Array<Hash<String, String>>] array of photo items; each photo item is a hash
   #   with the keys being:
   #     listing_name - listing name for the photo
   #     caption - caption of the photo
@@ -178,5 +179,4 @@ class LocationDrop < BaseDrop
   def location_type_name
     @location.location_type.try(:name)
   end
-
 end

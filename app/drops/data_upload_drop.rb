@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class DataUploadDrop < BaseDrop
   # @return [DataUploadDrop]
   attr_reader :data_upload
@@ -62,7 +63,7 @@ class DataUploadDrop < BaseDrop
     when TransactableType
       routes.new_dashboard_company_transactable_type_transactable_path(@data_upload.importable)
     else
-      fail TypeError
+      raise TypeError
     end
   end
 

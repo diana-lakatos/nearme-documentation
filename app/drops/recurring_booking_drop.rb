@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class RecurringBookingDrop < OrderDrop
-
   # @return [RecurringBookingDrop]
   attr_reader :recurring_booking
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class GroupDrop < BaseDrop
   # @return [GroupDrop]
   attr_reader :group

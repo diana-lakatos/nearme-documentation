@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 class PlatformContextDrop < BaseDrop
-
   # @return [PlatformContextDecorator]
   attr_reader :platform_context_decorator
 
@@ -123,6 +122,7 @@ class PlatformContextDrop < BaseDrop
   # @todo Investigate missing platform_context
   # @todo Investigate missing search_input_name
   # @todo Remove #projectable from drop when ProjectType will be finally removed
+
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :facebook_url, :twitter_url, :gplus_url,
            :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
            :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number, :phone_number_noformat,
@@ -130,8 +130,9 @@ class PlatformContextDrop < BaseDrop
            :is_company_theme?, :call_to_action, :projectable?, :bookable?, :transactable_types, :action_rfq?,
            :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
            :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?,
-           :webhook_token, :instance, :enable_geo_localization, :split_registration?,
-           :enquirer_blogs_enabled, :lister_blogs_enabled, :debugging_mode_for_admins?, to: :platform_context_decorator
+           :active_rating_systems_present?, :webhook_token, :instance, :enable_geo_localization, :split_registration?,
+           :enquirer_blogs_enabled, :lister_blogs_enabled, :debugging_mode_for_admins?,
+           :transactable_types_ordered, :transactable_types_as_hash, to: :platform_context_decorator
 
   def initialize(platform_context_decorator)
     @platform_context_decorator = platform_context_decorator
@@ -236,6 +237,16 @@ class PlatformContextDrop < BaseDrop
   #   allowing separate profiles for buyers and sellers
   def split_registration?
     @instance.split_registration?
+  end
+
+  def set_render_content_outside_container
+    @context.registers[:action_view].instance_variable_set('@render_content_outside_container', true)
+    '' # return empty string so nothing is displayed
+  end
+
+  def set_blank_theme_name
+    @context.registers[:action_view].instance_variable_set('@theme_name', '')
+    '' # return empty string so nothing is displayed
   end
 
   # @return [String] current Rails environment (development/staging/production)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Api::BaseController < ActionController::Base
   force_ssl if: -> { Rails.application.config.use_only_ssl }
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Setup our custom expiring URL token authentication strategy
 require 'temporary_token_authenticatable'
 require 'payment_token_authenticatable'

@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 class Theme < ActiveRecord::Base
   include DomainsCacheable
   has_paper_trail ignore: [:updated_at]
   auto_set_platform_context
   acts_as_paranoid
-  DEFAULT_EMAIL = 'support@desksnear.me'.freeze
-  DEFAULT_PHONE_NUMBER = '1.888.998.3375'.freeze
+  DEFAULT_EMAIL = 'support@desksnear.me'
+  DEFAULT_PHONE_NUMBER = '1.888.998.3375'
   COLORS = %w(blue red orange green gray black white).freeze
   COLORS_DEFAULT_VALUES = %w(41bf8b e83d33 FF8D00 6651af 394449 1e2222 fafafa).freeze
 

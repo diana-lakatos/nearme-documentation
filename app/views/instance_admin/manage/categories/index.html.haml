@@ -2,10 +2,21 @@
   = render 'form'
 
   .content-container
+    .row
+      .col-xs-4
+        %h5 Category Group Name
+      .col-xs-4
+        %h5 Associated to
+      .col-xs-4
+        %h5 Actions
     - @categories.each do |category|
-      .input-container.col-xs-12
-        .row
-          %span.category-name= category.name
+      .row
+        .input-container.col-xs-4
+          = category.name
+        .input-container.col-xs-4
+          = category.category_linkings.map {|cl| cl.category_linkable.try(:name) }.compact.join(', ')
+        .input-container.col-xs-4
           .pull-right
             = link_to t('instance_admin.edit'),  edit_instance_admin_manage_category_path(category)
             = link_to t('instance_admin.delete'),  instance_admin_manage_category_path(category), method: :delete, data: { confirm: t('instance_admin.are_you_sure') }
+        %hr

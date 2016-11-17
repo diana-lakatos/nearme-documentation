@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Used in UserBlogPost only
 class AuthorAvatarUploader < BaseUploader
   include CarrierWave::TransformableImage

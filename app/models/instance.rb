@@ -407,6 +407,10 @@ class Instance < ActiveRecord::Base
     buyer_profile_type.form_components.where(form_type: 'buyer_profile_types').any?
   end
 
+  def default_profile_enabled?
+    default_profile_type.form_components.where(form_type: 'default_profile_types').any?
+  end
+
   def new_ui?
     Rails.logger.error("ERROR! new_ui? method should be deprecated, called from: #{caller[0]}")
     true

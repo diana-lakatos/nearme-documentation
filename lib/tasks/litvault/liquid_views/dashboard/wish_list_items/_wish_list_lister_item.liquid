@@ -1,0 +1,36 @@
+{% assign wish_list_item = wish_list_lister_item %}
+{% assign user = wish_list_item.wishlistable %}
+
+{% if wish_list_item.wishlistable_present? %}
+  <article class='favorite-item'>
+    <figure>
+      <a href="{{ wish_list_item.wishlistable_path }}" rel='external' class='link'>
+        <img src="{{ wish_list_item.image_url }}" alt="{{ {{ wish_list_item.wishlistable_name }}">
+      </a>
+    </figure>
+    <div class="desc">
+      <a href="{{ wish_list_item.wishlistable_path }}" rel='external'>
+        <h4>{{ wish_list_item.wishlistable_name }}</h4>
+      </a>
+      {% if user.company_name != blank %}
+        <p class="company">{{ user.company_name }}</p>
+      {% endif %}
+      <div class="options">
+        <span class="checkbox">
+          <input type='checkbox' name='user[collaborator_ids]' id="bulk-invite-{{ user.id }}" value='{{ user.id }}' class='bulk-invite-collabolator-id'>
+          <label for="bulk-invite-{{ user.id }}">Select</label>
+        </span>
+
+        <a href='{{ wish_list_item.dashboard_wish_list_item_path }}' rel='nofollow' data-method='delete' class="btn btn-danger btn-sm">Unfavorite</a>
+      </div>
+    </div>
+
+    <div class="case-invite-trigger">
+      <a href="#case-invite-{{ user.id }}" class="btn btn-primary" data-case-invite-trigger>Invite to case</a>
+    </div>
+
+    {% content_for 'body_bottom' %}
+    <div class="case-invite" id="case-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
+    {% endcontent_for %}
+  </article>
+{% endif %}

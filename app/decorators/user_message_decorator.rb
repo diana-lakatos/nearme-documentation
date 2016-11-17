@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UserMessageDecorator < Draper::Decorator
   include Rails.application.routes.url_helpers
   include ActionDispatch::Routing::PolymorphicRoutes
@@ -13,11 +14,11 @@ class UserMessageDecorator < Draper::Decorator
     classes = []
     classes << (read_for?(user) ? 'read' : 'unread')
     if user
-      if author == user
-        classes << 'my-message striped'
-      else
-        classes << 'foreign-message'
-      end
+      classes << if author == user
+                   'my-message striped'
+                 else
+                   'foreign-message'
+                 end
     end
     classes.join(' ')
   end
@@ -37,7 +38,7 @@ class UserMessageDecorator < Draper::Decorator
   end
 
   def show_path(options = {})
-    thread_context_with_deleted = thread_context_type.constantize.respond_to?(:with_deleted) ? thread_context_type.constantize.with_deleted.find_by_id(thread_context_id) : thread_context
+    thread_context_with_deleted = thread_context_type.constantize.respond_to?(:with_deleted) ? thread_context_type.constantize.with_deleted.find_by(id: thread_context_id) : thread_context
     # Edge case, will only happen if an admin has its admin permissions revoked and thus is no longer findable
     return '#' if thread_context_with_deleted.blank?
 

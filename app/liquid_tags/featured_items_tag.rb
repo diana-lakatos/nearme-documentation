@@ -1,4 +1,5 @@
-# Usage: 
+# frozen_string_literal: true
+# Usage:
 # ```
 # {% featured_items target: users, amount: 6 %}
 # ```
@@ -15,7 +16,7 @@ class FeaturedItemsTag < Liquid::Tag
     if arguments =~ /(#{::Liquid::QuotedFragment}+)/
       @arguments = arguments
     else
-      fail SyntaxError.new('Syntax Error - Valid syntax: {% featured_items [arguments] %}')
+      raise SyntaxError, 'Syntax Error - Valid syntax: {% featured_items [arguments] %}'
     end
   end
 
@@ -33,7 +34,7 @@ class FeaturedItemsTag < Liquid::Tag
     routes = Rails.application.routes.url_helpers
 
     params = { target: @attributes[:target], amount: @attributes[:amount] }
-    params.merge!(type: @attributes[:type]) if @attributes[:type].present?
+    params[:type] = @attributes[:type] if @attributes[:type].present?
     route = routes.featured_items_path(params)
 
     uuid = SecureRandom.uuid

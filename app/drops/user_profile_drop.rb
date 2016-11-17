@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class UserProfileDrop < BaseDrop
-
   # @return [UserProfileDrop]
   attr_accessor :source
 

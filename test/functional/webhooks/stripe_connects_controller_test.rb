@@ -35,7 +35,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
         Stripe::Event.stubs(:retrieve).returns(event_response(event_options))
 
         assert_difference 'Webhook.count' do
-          post :webhook, id: event_response(event_options).id
+          post :webhook, params: { id: event_response(event_options).id }
         end
 
         payment_transfer.reload
@@ -51,7 +51,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
         Stripe::Event.stubs(:retrieve).returns(event_response(event_options))
 
         assert_difference 'Webhook.count' do
-          post :webhook, id: event_response(event_options).id
+          post :webhook, params: { id: event_response(event_options).id }
         end
 
         payment_transfer.reload
@@ -104,7 +104,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
           assert @payment_transfer.send("#{transfer_state}?")
 
           assert_no_difference '@payment_gateway.payment_transfers.count' do
-            post :webhook, id: event_response(event_options).id
+            post :webhook, params: { id: event_response(event_options).id }
           end
         end
       end

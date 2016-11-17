@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Usage example:
 # ```
 #  {% form_for current_user, url: '/users' %}
@@ -25,7 +26,7 @@ class FieldsForTag < Liquid::Block
       @association_name = Regexp.last_match(1)
       @attributes = create_initial_hash_from_liquid_tag_markup(markup)
     else
-      fail SyntaxError.new('Invalid syntax for Fields For tag - must pass association name')
+      raise SyntaxError, 'Invalid syntax for Fields For tag - must pass association name'
     end
   end
 
@@ -34,10 +35,10 @@ class FieldsForTag < Liquid::Block
     # drop for form_builder defined in form_builder_to_liquid_monkeypatch.rb
 
     form_name = @attributes.delete(:form)
-    @form =  (context["form_object_#{form_name}"] || context['form_object']).source
+    @form = (context["form_object_#{form_name}"] || context['form_object']).source
     context.stack do
       @form.simple_fields_for(@association_name) do |f|
-        context["form_object_#{@association_name}".freeze] = f
+        context["form_object_#{@association_name}"] = f
         render_all(@nodelist, context).html_safe
       end
     end

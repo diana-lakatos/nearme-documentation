@@ -102,11 +102,11 @@ class UserMessage < ActiveRecord::Base
 
   def thread_context_with_deleted
     return nil if thread_context_type.nil?
-    @thread_context_with_deleted ||= thread_context_type.constantize.with_deleted.find_by_id(thread_context_id)
+    @thread_context_with_deleted ||= thread_context_type.constantize.with_deleted.find_by(id: thread_context_id)
   end
 
   def author_with_deleted
-    author.presence || User.with_deleted.find_by_id(author_id)
+    author.presence || User.with_deleted.find_by(id: author_id)
   end
 
   def thread_owner_with_deleted

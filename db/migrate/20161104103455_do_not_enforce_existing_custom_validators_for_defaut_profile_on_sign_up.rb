@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class DoNotEnforceExistingCustomValidatorsForDefautProfileOnSignUp < ActiveRecord::Migration
   def change
     Instance.find_each do |i|

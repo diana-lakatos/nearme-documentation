@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class LineItemDrop < BaseDrop
   include CurrencyHelper
 

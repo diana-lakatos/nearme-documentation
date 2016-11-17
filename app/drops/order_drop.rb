@@ -94,7 +94,7 @@ class OrderDrop < BaseDrop
   # @todo Investigate missing adjustment
   delegate :id, :user, :company, :number, :line_items, :line_item_adjustments,
            :shipping_profile, :adjustment, :can_host_cancel?, :can_confirm?, :can_reject?,
-           :paid?, :unconfirmed?, :confirmed?, :manual_payment?, :can_complete_checkout?,
+           :paid?, :unconfirmed?, :confirmed?, :inactive?, :manual_payment?, :can_complete_checkout?,
            :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
            :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :rejection_reason,
            :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
@@ -141,7 +141,7 @@ class OrderDrop < BaseDrop
     render_money(@order.total_amount)
   end
 
-  # @return [Boolean] whether or not the order has products with 
+  # @return [Boolean] whether or not the order has products with
   #   seller attachments
   def has_seller_attachments?
     @order.transactable_line_items.each do |line_item|
@@ -235,13 +235,17 @@ class OrderDrop < BaseDrop
     routes.cancel_dashboard_company_orders_received_path(order)
   end
 
+  def order_complete_url
+    routes.complete_dashboard_company_orders_received_path(order)
+  end
+
   # @return [String] path in the application to the rejection form
   #   for an order
   def rejection_form_path
     routes.rejection_form_dashboard_company_orders_received_path(order)
   end
 
-  # @return [String] path in the application to creating a new 
+  # @return [String] path in the application to creating a new
   #   payment/payment subscription
   def confirmation_form_path
     if @order.is_free_booking?
@@ -288,6 +292,14 @@ class OrderDrop < BaseDrop
   # @return [Hash] custom properties collection for the order
   def properties
     @order.properties
+  end
+
+  def allows_draft?
+    @order.is_a?(Offer) && @order.try(:transactable).try(:action_type).try(:transactable_type_action_type).try(:allow_drafts) && @order.state == 'inactive'
+  end
+
+  def is_draft?
+    @order.draft_at.present? && @order.inactive?
   end
 
   def total_payable_to_host

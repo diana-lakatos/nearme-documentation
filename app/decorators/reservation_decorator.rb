@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ReservationDecorator < OrderDecorator
   include CurrencyHelper
   include TooltipHelper

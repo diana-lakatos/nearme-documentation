@@ -1,4 +1,5 @@
-# Usage: 
+# frozen_string_literal: true
+# Usage:
 # ```
 # {% inject_content_holder name_of_holder %}
 # ```

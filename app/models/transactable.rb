@@ -119,6 +119,8 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :links, allow_destroy: true
 
   # == Callbacks
+
+  before_create :set_seek_collaborators, if: -> { auto_seek_collaborators? }
   before_destroy :decline_reservations
   before_save :set_currency
   before_save :set_is_trusted, :set_available_actions
@@ -149,6 +151,7 @@ class Transactable < ActiveRecord::Base
   end
 
   # == Scopes
+  scope :with_orders, -> { joins(:transactable_line_items).distinct('transactables.id') }
   scope :purchasable, -> { joins(:action_type).where("transactable_action_types.enabled = true AND transactable_action_types.type = 'Transactable::PurchaseAction'") }
   scope :featured, -> { where(featured: true) }
   scope :draft, -> { where('transactables.draft IS NOT NULL') }
@@ -251,7 +254,8 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
-           :custom_validators, :show_company_name, :display_additional_charges?, :auto_accept_invitation_as_collaborator?, to: :transactable_type
+           :custom_validators, :show_company_name, :display_additional_charges?, :auto_accept_invitation_as_collaborator?,
+           :auto_seek_collaborators?, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
@@ -701,6 +705,10 @@ class Transactable < ActiveRecord::Base
   end
 
   private
+
+  def set_seek_collaborators
+    self.seek_collaborators = true
+  end
 
   def check_expenses
     unless line_item_orders.with_state(:confirmed).all?(&:all_paid?)

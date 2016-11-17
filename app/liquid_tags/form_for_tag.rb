@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Usage example:
 # ```
 #  {% form_for current_user, url: '/users' %}
@@ -25,7 +26,7 @@ class FormForTag < Liquid::Block
       @model_name = Regexp.last_match(1)
       @attributes = create_initial_hash_from_liquid_tag_markup(markup)
     else
-      fail SyntaxError.new('Invalid syntax for Form For tag - must pass object')
+      raise SyntaxError, 'Invalid syntax for Form For tag - must pass object'
     end
   end
 
@@ -35,10 +36,10 @@ class FormForTag < Liquid::Block
     @attributes.merge!(form_options) if @attributes[:form_for_type].present?
     namespace = @model.try(:source) || @model_name.to_sym
 
-    fail 'Object passed to form_for tag cannot be nil' if namespace.blank?
+    raise 'Object passed to form_for tag cannot be nil' if namespace.blank?
     context.stack do
       context.registers[:action_view].simple_form_for(namespace, @attributes) do |f|
-        context['form_object'.freeze] = f
+        context['form_object'] = f
         render_all(@nodelist, context).html_safe
       end
     end
@@ -51,7 +52,7 @@ class FormForTag < Liquid::Block
     when 'dashboard'
       dashboard_form_options
     else
-      fail NotImplementedError.new("Valid form_for_type options are: 'dashboard', but #{@attributes[:form_for_type]} was given. Typo?")
+      raise NotImplementedError, "Valid form_for_type options are: 'dashboard', but #{@attributes[:form_for_type]} was given. Typo?"
     end
   end
 

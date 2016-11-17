@@ -789,7 +789,7 @@ DesksnearMe::Application.routes.draw do
 
         # TODO: move orders_received scoep to company/orders scope
         # plese add new controllers in orders scope
-        resources :orders_received, except: [:edit] do
+        resources :orders_received do
           member do
             post :accept
             post :confirm
@@ -872,9 +872,24 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
-        resources :transactable_collaborators
+        resources :transactable_collaborators do
+          post :create_bulk, on: :collection
+        end
+
+        get 'offers', controller: 'transactables', action: :orders, with_orders: true
+
+        resources :transactables do
+          member do
+            get :enable
+            get :disable
+            get :cancel
+          end
+
+          resources :transactable_collaborators
+        end
+
         resources :transactable_types do
-          resources :transactables do
+          resources :transactables, controller: 'transactable_types/transactables' do
             member do
               get :enable
               get :disable
@@ -897,6 +912,8 @@ DesksnearMe::Application.routes.draw do
           member do
             get :collaborations_for_current_user
           end
+
+          get :bulk_collaborations_for_current_user, on: :collection
         end
         resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
 

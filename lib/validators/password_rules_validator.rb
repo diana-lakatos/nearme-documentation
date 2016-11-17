@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PasswordRulesValidator < ActiveModel::Validator
   attr_reader :min_password_length
 

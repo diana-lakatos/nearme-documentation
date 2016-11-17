@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class BillingAuthorizationDrop < BaseDrop
-  
   # @return [BillingAuthorizationDrop]
   attr_reader :billing_authorization
 

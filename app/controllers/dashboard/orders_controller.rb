@@ -2,6 +2,7 @@
 class Dashboard::OrdersController < Dashboard::BaseController
   before_action :find_order, except: [:index, :new]
   before_action :find_transactable, only: :new
+  before_action :find_reservation_type, only: :new
   before_action :redirect_to_index_if_not_editable, only: [:edit, :update]
   before_action :ensure_merchant_account_exists, only: [:new, :create]
 
@@ -60,11 +61,15 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def new
-    @order = @transactable_pricing.order_class.new(user: current_user)
-    @order.add_line_item!(params)
-    build_payment_documents
-    @update_path = dashboard_order_path(@order)
-    render template: 'checkout/show'
+    @order = @transactable_pricing.order_class.where(user: current_user, transactable_id: @transactable.id, state: 'pending').first_or_initialize
+    if @order.persisted?
+      redirect_to(action: 'edit', id: @order)
+    else
+      @order.add_line_item!(params)
+      build_payment_documents
+      @update_path = dashboard_order_path(@order)
+      render template: 'checkout/show'
+    end
   end
 
   def edit
@@ -74,7 +79,19 @@ class Dashboard::OrdersController < Dashboard::BaseController
 
   def update
     @order.checkout_update = true
-    if @order.update_attributes(order_params)
+    @order.save_draft = true if params[:save_draft]
+    @order.cancel_draft = true if params[:cancel_draft]
+    @order.attributes = order_params
+    if @order.inactive? && @order.save_draft && @order.save(validate: false)
+      @update_path = dashboard_order_path(@order)
+      respond_to do |format|
+        format.json { render json: nil, status: :ok }
+        format.html do
+          flash[:notice] = t('flash_messages.orders.draft_saved')
+          render template: 'checkout/show'
+        end
+      end
+    elsif @order.save
       if @order.payment && @order.payment.express_checkout_payment? && @order.payment.express_checkout_redirect_url
         redirect_to @order.payment.express_checkout_redirect_url
         return
@@ -100,6 +117,8 @@ class Dashboard::OrdersController < Dashboard::BaseController
   private
 
   def ensure_merchant_account_exists
+    return unless @reservation_type.require_merchant_account?
+
     unless @company.merchant_accounts.any?(&:verified?)
       flash[:notice] = t('flash_messages.dashboard.order.valid_merchant_account_required')
       redirect_to edit_dashboard_company_payouts_path(redirect_url: new_dashboard_order_path(transactable_id: @transactable.id))
@@ -147,11 +166,15 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def order_scope
-    @order_scope ||= current_user.orders.active
+    @order_scope ||= current_user.orders.active_or_drafts
   end
 
   def find_order
     @order = current_user.orders.find(params[:id])
+  end
+
+  def find_reservation_type
+    @reservation_type = @transactable.transactable_type.reservation_type
   end
 
   def reviews_service
@@ -163,6 +186,6 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def order_params
-    params.require(:order).permit(secured_params.order(@order.transactable.transactable_type.reservation_type))
+    params.require(:order).permit(secured_params.order(@reservation_type || @order.reservation_type))
   end
 end

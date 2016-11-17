@@ -1,0 +1,117 @@
+"Individual Case checkout":
+  RESERVATION_ATTRIBUTES:
+    -
+      name: 'Review'
+      fields:
+        - reservation: name_of_client_or_clients
+
+    -
+      name: 'Fees'
+      fields:
+        - reservation: attorney_fee_split
+        - reservation: fee_split_shall_not_affect_fee_paid
+        - reservation: engage_other_counsel
+        - reservation: attorney_additional_firm_fee_split
+        - reservation: handling_firm_has_sole_discretion_for_terms
+        - reservation: claims_will_be_subject_to_assessments
+        - reservation: claims_will_be_subject_to_assessments_percentage
+        - reservation: additional_language_to_be_included
+        - reservation: additional_language_that_needs_to_be_included
+    -
+      name: 'Expenses'
+      fields:
+        - reservation: attorneys_to_pay_litigation_expenses
+        - reservation: engagement_agreement_contain_sufficient_definition_of_expenses
+        - reservation: expenses_per_engagement_agreement_split
+        - reservation: firm_agrees_to_this_litigation_expense_split
+        - reservation: each_firm_responsible_to_pay_own_inhouse_expenses
+        - reservation: additional_language_for_expenses
+        - reservation: additional_comments_for_expenses
+    -
+      name: 'Case Responsibilities'
+      fields:
+        - reservation: handling_firm_will_take_responsibility_for_litigation
+        - reservation: both_firms_agree_to_maintain_join_responsibility
+        - reservation: both_firms_agree_to_maintain_malpractice_insurance
+        - reservation: any_additional_language_to_be_included_case_responsibilities
+        - reservation: additional_comments_for_responsibilities
+
+    -
+      name: 'Additional Terms'
+      fields:
+        - reservation: handling_firm_received_copy_of_signed_engagement_agreement
+        - reservation: client_written_consent_to_agreement_required
+        - reservation: refering_firm_responsible_for_written_consent
+        - reservation: agreement_is_not_effective_until_client_signs_consent
+        - reservation: nothing_in_this_agreement_will_change
+        - reservation: sole_agreement_of_the_firms
+        - reservation: undersigned_has_authority_to_enter_this_agreement
+        - reservation: agreement_will_be_constructed_state_law
+        - reservation: disputes_with_referring_firm_by_arbitration_aaa_aaarules
+        - reservation: any_additional_language_dispute_resolution
+        - reservation: additional_comments_for_dispute_resolution
+        - reservation: no_partnership_created
+        - reservation: any_additional_language_to_any_other_matter
+        - reservation: additional_comments_for_any_other_matter
+
+        - reservation: fees_recovered_shall_be_divided_on_join_responsibility
+        - reservation: handling_firm_shall_have_the_sole_discretion_to_terminate
+
+"Group Case checkout":
+  RESERVATION_ATTRIBUTES:
+    -
+      name: 'Review'
+      fields:
+        - reservation: name_of_client_or_clients
+
+    -
+      name: 'Fees'
+      fields:
+        - reservation: attorney_fee_split
+        - reservation: fee_split_shall_not_affect_fee_paid
+        - reservation: engage_other_counsel
+        - reservation: attorney_additional_firm_fee_split
+        - reservation: handling_firm_has_sole_discretion_for_terms
+        - reservation: claims_will_be_subject_to_assessments
+        - reservation: claims_will_be_subject_to_assessments_percentage
+        - reservation: fees_recovered_shall_be_divided_on_join_responsibility
+        - reservation: additional_language_to_be_included
+        - reservation: additional_language_that_needs_to_be_included
+    -
+      name: 'Expenses'
+      fields:
+        - reservation: attorneys_to_pay_litigation_expenses
+        - reservation: engagement_agreement_contain_sufficient_definition_of_expenses
+        - reservation: expenses_per_engagement_agreement_split
+        - reservation: firm_agrees_to_this_litigation_expense_split
+        - reservation: each_firm_responsible_to_pay_own_inhouse_expenses
+        - reservation: additional_language_for_expenses
+        - reservation: additional_comments_for_expenses
+    -
+      name: 'Case Responsibilities'
+      fields:
+        - reservation: handling_firm_will_take_responsibility_for_litigation
+        - reservation: both_firms_agree_to_maintain_join_responsibility
+        - reservation: both_firms_agree_to_maintain_malpractice_insurance
+        - reservation: any_additional_language_to_be_included_case_responsibilities
+        - reservation: additional_comments_for_responsibilities
+
+    -
+      name: 'Additional Terms'
+      fields:
+        - reservation: handling_firm_received_copy_of_signed_engagement_agreement
+        - reservation: handling_firm_approves_engagement_agreement
+        - reservation: client_written_consent_to_agreement_required
+        - reservation: refering_firm_responsible_for_written_consent
+        - reservation: agreement_is_not_effective_until_client_signs_consent
+        - reservation: nothing_in_this_agreement_will_change
+        - reservation: sole_agreement_of_the_firms
+        - reservation: undersigned_has_authority_to_enter_this_agreement
+        - reservation: agreement_will_be_constructed_state_law
+        - reservation: disputes_with_referring_firm_by_arbitration_aaa_aaarules
+        - reservation: any_additional_language_dispute_resolution
+        - reservation: additional_comments_for_dispute_resolution
+        - reservation: handling_firm_shall_have_the_sole_discretion_to_terminate
+        - reservation: no_partnership_created
+        - reservation: any_additional_language_to_any_other_matter
+        - reservation: additional_comments_for_any_other_matter

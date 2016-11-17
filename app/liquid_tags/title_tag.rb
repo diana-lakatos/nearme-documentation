@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Usage example:
 # ```
 #   {% assign variable_name = 'Some Title' %}

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'nearest_time_zone'
 
 class Location < ActiveRecord::Base

@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class UserMessageDrop < BaseDrop
-
   # @return [UserMessageDrop]
   attr_reader :user_message
 

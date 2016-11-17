@@ -65,10 +65,10 @@ class Company < ActiveRecord::Base
   before_validation :add_default_url_scheme
   before_save :set_creator_address
 
-  validates_presence_of :name
-  validates_length_of :description, maximum: 250
-  validates_length_of :url, maximum: 250
-  validates_length_of :name, maximum: 50
+  validates :name, presence: true
+  validates :description, length: { maximum: 250 }
+  validates :url, length: { maximum: 250 }
+  validates :name, length: { maximum: 50 }
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
 
@@ -135,9 +135,7 @@ class Company < ActiveRecord::Base
   end
 
   def payout_payment_gateway
-    if @payment_gateway.nil?
-      @payment_gateway = instance.payout_gateway(iso_country_code, currency)
-    end
+    @payment_gateway = instance.payout_gateway(iso_country_code, currency) if @payment_gateway.nil?
     @payment_gateway
   end
 
@@ -209,7 +207,7 @@ class Company < ActiveRecord::Base
     if payments_mailing_address.present?
       payments_mailing_address.address
     else
-      read_attribute(:mailing_address)
+      self[:mailing_address]
     end
   end
 
@@ -230,7 +228,7 @@ class Company < ActiveRecord::Base
     if latitude && longitude
       ActiveSupport::TimeZone::MAPPING.select { |_k, v| v == NearestTimeZone.to(latitude, longitude) }.keys.first || 'UTC'
     else
-      creator.time_zone
+      creator.try(:time_zone)
     end
   end
 

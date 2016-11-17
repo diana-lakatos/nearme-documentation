@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 class Transactable::ActionTypeDrop < BaseDrop
-
   # @return [Transactable::ActionTypeDrop]
   attr_reader :action_type
 
@@ -30,5 +29,4 @@ class Transactable::ActionTypeDrop < BaseDrop
   def pricings_hash
     @pricings_hash ||= pricings.each_with_object({}) { |pricing, hash| hash[pricing.unit] = pricing.price }
   end
-
 end

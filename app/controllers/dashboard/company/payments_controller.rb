@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class Dashboard::Company::PaymentsController < Dashboard::Company::BaseController
-  before_filter :find_order
-  before_filter :find_payment, except: [:new, :create]
+  before_action :find_order
+  before_action :find_payment, except: [:new, :create]
 
   def mark_as_paid
     if @order.manual_payment? && !@order.paid?

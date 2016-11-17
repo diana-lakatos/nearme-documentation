@@ -97,10 +97,11 @@ class UserDrop < BaseDrop
            :country_name, :phone, :current_address, :is_trusted?,
            :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
            :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
-           :tags, :has_friends, :transactables_count, :has_active_credit_cards?,
-           :communication, :created_at, :default_company, :instance_admin?,
-           :company_name, :instance_admins_metadata, :total_reviews_count,
-           to: :source
+
+           :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
+           :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
+           :company_name, :instance_admins_metadata, :total_reviews_count, :companies, :instance_admin?,
+           :instance_admin?, to: :source
 
   # @return [String] class name, i.e. 'User'
   def class_name

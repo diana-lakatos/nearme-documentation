@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module InstanceType::Searcher
   attr_reader :results
 
@@ -31,10 +32,6 @@ module InstanceType::Searcher
   # @return [Array<Array<(Integer, String)>>] array of the form [[category_id, category_name_taken_from_translations], ...]
   def category_options(category)
     category.children.inject([]) { |options, c| options << [c.id, c.translated_name] }
-  end
-
-  def should_log_conducted_search?
-    @params[:loc].present? || @params[:query].present?
   end
 
   def to_event_params

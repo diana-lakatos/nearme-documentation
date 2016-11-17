@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class ThemeDrop < BaseDrop
-
   # @return [ThemeDrop]
   attr_reader :theme
 
@@ -35,5 +35,4 @@ class ThemeDrop < BaseDrop
   def initialize(theme)
     @theme = theme
   end
-
 end

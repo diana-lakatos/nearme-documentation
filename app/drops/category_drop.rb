@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 class CategoryDrop < BaseDrop
   # @return [CategoryDrop]
   attr_reader :category
 
   # @!method id
   #   id of category as integer
-  #   @return [Integer] 
+  #   @return [Integer]
   # @!method name
   #   the name of the category
   #   @return (see Category#name)

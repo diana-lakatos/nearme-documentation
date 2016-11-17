@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Usage example:
 # ```
 #  {% form_for current_user, url: '/users' %}
@@ -24,7 +25,7 @@ class InputTag < Liquid::Tag
       @field_name = Regexp.last_match(1)
       @attributes = create_initial_hash_from_liquid_tag_markup(markup)
     else
-      fail SyntaxError.new('Invalid syntax for Input tag - must pass field name')
+      raise SyntaxError, 'Invalid syntax for Input tag - must pass field name'
     end
   end
 

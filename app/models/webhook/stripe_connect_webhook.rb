@@ -8,7 +8,6 @@ class Webhook::StripeConnectWebhook < Webhook
     transfer_updated: ['transfer.paid', 'transfer.failed', 'transfer.updated']
   }.freeze
 
-
   def process!
     process_error('Webhook not found') && return if event.blank?
     process_error("Webhook type #{event.type} not allowed") && return unless ALLOWED_WEBHOOKS.values.flatten.include?(event.type)
@@ -28,7 +27,7 @@ class Webhook::StripeConnectWebhook < Webhook
   end
 
   def event_handler
-    ALLOWED_WEBHOOKS.select {|k, v| v.include?(event.type) }.keys.first
+    ALLOWED_WEBHOOKS.select { |_k, v| v.include?(event.type) }.keys.first
   end
 
   def livemode?

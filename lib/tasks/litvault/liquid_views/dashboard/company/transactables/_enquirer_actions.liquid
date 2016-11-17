@@ -1,0 +1,38 @@
+<ul class="actions-a">
+
+  <li>
+  {% if transactable_collaborator.approved_by_owner? %}
+    <a href="{{ transactable.show_path }}" class="btn btn-default">View Case Details</a>
+  {% else %}
+    <a href="{{ transactable_collaborator.enquirerer_destroy_path }}" data-method="delete" data-confirm="Are you sure?" class="btn btn-default">Cancel Request</a>
+  {% endif %}
+  </li>
+
+
+  {% if order != blank and transactable.completed? == true %}
+    <li><a href="{{ 'dashboard_order_order_items_path' | generate_url: order_id: order.id, transactable_id: transactable.id }}" class="btn btn-default">View Time &amp; Expenses</a></li>
+  {% endif %}
+
+  {% if can_make_offer == true %}
+    <li>
+      {% if current_user.has_verified_merchant_account == true %}
+        <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Make an Offer</a>
+      {% else %}
+        <a class="btn btn-info" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Make an Offer</a>
+      {% endif %}
+
+    </li>
+  {% endif %}
+
+  <li>
+    {% if order != blank and order.transactable_user_messages.size > 0 %}
+      <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: order.transactable_user_messages.first.id }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+    {% else %}
+      <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+    {% endif %}
+  </li>
+
+  <li>
+    {{ transactable.creator.click_to_call_button }}
+  </li>
+</ul>

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class DataSourceContentDrop < BaseDrop
   # @!method id
   #   id of data_source_content as integer

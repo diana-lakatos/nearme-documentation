@@ -467,6 +467,7 @@ en:
         name: 'Full name'
         email: 'Email'
         password: 'Password'
+        company_name: 'Company Name'
         we_can_contact_you: 'So we can contact you'
 
       session:

@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class SavedSearchDrop < BaseDrop
-  
   # @return [SavedSearchDrop]
   attr_reader :saved_search
 

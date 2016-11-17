@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Transactable::TimeBasedBooking < Transactable::ActionType
   include AvailabilityRule::TargetHelper
 
@@ -8,7 +9,7 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
 
   accepts_nested_attributes_for :availability_template
 
-  validates_numericality_of :minimum_booking_minutes, greater_than_or_equal_to: 15, allow_blank: true
+  validates :minimum_booking_minutes, numericality: { greater_than_or_equal_to: 15, allow_blank: true }
   validate :booking_availability, if: :night_booking?
   validates :pricings, presence: true, if: :enabled?
   validates_associated :pricings, if: :enabled?
@@ -51,9 +52,7 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
 
     closed_at = availability.close_minute_for(date)
 
-    if closed_at && (closed_at < (time.hour * 60 + time.min + minimum_booking_minutes))
-      date += 1.day
-    end
+    date += 1.day if closed_at && (closed_at < (time.hour * 60 + time.min + minimum_booking_minutes))
     date += 1.day until availability_for(date) > 0 || date == max_date
     date
   end
@@ -69,23 +68,21 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
   # Returns a hash of booking block sizes to prices for that block size.
   def prices_by_days
     Hash[day_pricings.map(&:units_and_price)
-      .sort { |a, b| a[1][:price] <=> b[1][:price] }]
+                     .sort { |a, b| a[1][:price] <=> b[1][:price] }]
   end
 
   def prices_by_nights
     Hash[night_pricings.map(&:units_and_price)
-      .sort { |a, b| a[1][:price] <=> b[1][:price] }]
+                       .sort { |a, b| a[1][:price] <=> b[1][:price] }]
   end
 
   def prices_by_hours
     Hash[hour_pricings.map(&:units_and_price)
-      .sort { |a, b| a[1][:price] <=> b[1][:price] }]
+                      .sort { |a, b| a[1][:price] <=> b[1][:price] }]
   end
 
   def price_for_lowest_no_of_day
-    if day_booking?
-      pricings.select(&:day_booking?).sort_by(&:number_of_units).first.price
-    end
+    pricings.select(&:day_booking?).sort_by(&:number_of_units).first.price if day_booking?
   end
 
   def prices_by_hours_cents
@@ -151,8 +148,8 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
       if template_attributes['id'].present?
         availability_template.assign_attributes template_attributes
       else
-        template_attributes.merge!(name: 'Custom transactable availability',
-                                   parent: self)
+        template_attributes[:name] = 'Custom transactable availability'
+        template_attributes[:parent] = self
         self.availability_template = AvailabilityTemplate.new(template_attributes)
       end
     end

@@ -41,7 +41,7 @@ module QuerySearchable
       scope = all
       if params.present? && params[:properties].present? && custom_attributes_definition.present?
         params[:properties].each do |name, value|
-          definition = custom_attributes_definition.detect { |d| d[CustomAttributes::CustomAttribute::NAME] == name }
+          definition = custom_attributes_definition.detect { |d| (d.instance_of?(Hash) ? (d[CustomAttributes::CustomAttribute::NAME] == name) : false) }
           next if definition.nil? || value.blank?
           case definition[CustomAttributes::CustomAttribute::ATTRIBUTE_TYPE]
           when 'string'

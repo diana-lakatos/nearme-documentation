@@ -99,7 +99,7 @@ module LiquidFilters
     location.listings.searchable.first.try(:decorate).try(:show_path)
   end
 
-  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest price 
+  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest price
   #   for the object given as parameter (without cents, with currency included); does not include additional charges and
   #   service guest fee; for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
   #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
@@ -110,7 +110,7 @@ module LiquidFilters
     get_lowest_price_with_options(object, lgpricing_filters)
   end
 
-  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest full price 
+  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest full price
   #   for the object given as parameter (without cents, with currency included); includes additional charges and service guest fee;
   #   for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
   #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
@@ -121,7 +121,7 @@ module LiquidFilters
     get_lowest_price_with_options(object, lgpricing_filters, full_price: true)
   end
 
-  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest full price 
+  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest full price
   #   for the object given as parameter (with cents, with currency included); includes additional charges and service guest fee;
   #   for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
   #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
@@ -152,7 +152,7 @@ module LiquidFilters
     end
   end
 
-  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest price 
+  # @return [Hash{String => String}] hash of the form !{ 'price' => '$20', 'period' => 'day' } price is a formatted lowest price
   #   for the object given as parameter (with cents, with currency included); does not include additional charges and service guest fee;
   #   for the period, the translation key 'search.per_unit_price' is used with the 'unit' being "search.#{pricing.unit}"
   #   pricing.unit is the actual unit of the pricing (e.g. day, hour, etc.)
@@ -173,7 +173,7 @@ module LiquidFilters
   #   If the friend visited the listing, the string 'User.name worked here' will be added.
   #   If the friend is the host of the listing, the string 'User.name is the host' will be added.
   #   If the friend knows the host of the listing the string 'User.name knows the host' will be added.
-  #   If a mutual friend (followed user [2] by a user this user follows [1]) visited the listing then the string 
+  #   If a mutual friend (followed user [2] by a user this user follows [1]) visited the listing then the string
   #     'User[1].name knows User[2].name who worked here'
   # @param listing [TransactableDrop] Transactable object used in the generation of the resulting array
   # @param current_user [UserDrop] User object used in the generation of the resulting array
@@ -410,7 +410,7 @@ module LiquidFilters
   #   tags it will return a link to the tag which will remove it from the filter; otherwise, if the tag
   #   given as a parameter is not already in the URL parameter for filtering by tags, it will return a
   #   link to the tag which will add this tag to the tag filter
-  # @param custom_classes [Array] array of custom classes to be added to the class attribute of the 
+  # @param custom_classes [Array] array of custom classes to be added to the class attribute of the
   #   generated link
   def tag_filter_link(tag, custom_classes = [])
     params = @context.registers[:controller].params
@@ -548,7 +548,7 @@ module LiquidFilters
   #   created by the user given as the current_user parameter
   # @param current_user [UserDrop] user object
   # @param user [UserDrop] user object
-  def find_collaborators_for_user_projects(current_user, user)
+  def find_collaborators_for_user_transactables(current_user, user)
     user.source.transactable_collaborators.where(transactable_id: current_user.source.created_listings.with_state([:pending, :in_progress]).pluck(:id))
   end
 
@@ -566,24 +566,28 @@ module LiquidFilters
     will_paginate_collection.total_entries
   end
 
+  def get_enquirer_draft_orders(user, transactable)
+    transactable.line_item_orders.where(user_id: user.id).order('created_at ASC')
+  end
+
   # @return [Array<OrderDrop>] array of order objects containing orders placed by the user given
   #   as the first parameter for the transactable given as the second parameter
   # @param user [UserDrop] transactable object
   # @param transactable [TransactableDrop] transactable object
   def get_enquirer_orders(user, transactable)
-    transactable.line_item_orders.where(user_id: user.id).order('created_at ASC').active
+    get_enquirer_draft_orders(user, transactable).active
   end
 
-  # @return [Array<OrderDrop>] array of confirmed order objects containing orders placed by the 
+  # @return [Array<OrderDrop>] array of confirmed order objects containing orders placed by the
   # user given as the first parameter for the transactable given as the second parameter
   # @param user [UserDrop] transactable object
   # @param transactable [TransactableDrop] transactable object
   def get_enquirer_confirmed_orders(user, transactable)
-    transactable.line_item_orders.where(user_id: user.id).confirmed.order('created_at ASC')
+    get_enquirer_draft_orders(user, transactable).confirmed
   end
 
-  def get_lister_orders(company, transactable)
-    transactable.line_item_orders.where(company: company).order('created_at ASC')
+  def get_lister_orders(user, transactable)
+    transactable.line_item_orders.where(company: user.companies).active.order('created_at ASC')
   end
 
   # @return [Array<DataSourceContentDrop>] paginated array of DataSourceContent objects where the external_id
@@ -642,6 +646,10 @@ module LiquidFilters
   # @param currency [String] name of the currency
   def to_money(amount, currency)
     Money.new(amount, currency)
+  end
+
+  def timeago(time)
+    "<abbr class='timeago' title='#{time.to_time.iso8601}'>#{l(time, 'short')}</abbr>".html_safe
   end
 
   # @return [Array<CkeditorAssetDrop>] seller attachments tied to the given transactable object

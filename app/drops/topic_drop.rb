@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class TopicDrop < BaseDrop
-
   # @return [Topic]
   attr_reader :topic
 

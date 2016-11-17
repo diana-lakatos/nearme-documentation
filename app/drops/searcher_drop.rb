@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class SearcherDrop < BaseDrop
-
   # @return [Array<Object>] results for the search
   attr_reader :original_results
   # @return [Listing::Search::Params::Web, Object] representation of the search
@@ -102,6 +102,14 @@ class SearcherDrop < BaseDrop
   # @return [Integer] minimum between total_entries and total results up and including the current page
   def number_of_results
     [total_entries, (per_page * current_page)].min
+  end
+
+  def meta_description
+    @context.registers[:action_view].meta_description_for_search(PlatformContext.current, @searcher.search)
+  end
+
+  def meta_title
+    @context.registers[:action_view].meta_title_for_search(PlatformContext.current, @searcher.search)
   end
 
   def filterable_custom_attributes_hash

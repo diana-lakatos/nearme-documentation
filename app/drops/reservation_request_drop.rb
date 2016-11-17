@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ReservationRequestDrop < BaseDrop
   # @todo Class no longer present, should probably be removed
   attr_reader :reservation_request

@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class TransactableDrop < BaseDrop
-
   include AvailabilityRulesHelper
   include SearchHelper
   include MoneyRails::ActionViewExtension

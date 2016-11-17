@@ -123,9 +123,7 @@ module DashboardHelper
   end
 
   def translated_hint_button(hint_translation_path, placement: 'right')
-    if is_i18n_set?(hint_translation_path)
-      hint_button(t(hint_translation_path), placement: placement)
-    end
+    hint_button(t(hint_translation_path), placement: placement) if is_i18n_set?(hint_translation_path)
   end
 
   def dropdown_menu(label, options = nil, &block)
@@ -139,7 +137,7 @@ module DashboardHelper
 
     wrapper_tag = options[:wrapper_tag] || :div
 
-    toggler_label = label + ' ' + content_tag(:span, nil, class: 'caret')
+    toggler_label = label.to_s + ' ' + content_tag(:span, nil, class: 'caret')
 
     content_tag wrapper_tag, class: wrapper_class do
       output = content_tag :a, toggler_label.html_safe, href: '#', id: toggler_id, type: 'button', class: toggler_class, data: { toggle: 'dropdown' }, aria: { haspopup: 'true', expanded: 'false' }

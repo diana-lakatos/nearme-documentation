@@ -1,4 +1,4 @@
-= dashboard_simple_form_for @payment, url: dashboard_company_orders_received_payments_path, data: {"redirect-to" => dashboard_company_transactable_type_transactables_path(@payment.payable.transactable.transactable_type, status: 'in progress') } do |f|
+= dashboard_simple_form_for @payment, url: dashboard_company_orders_received_payments_path, data: {"redirect-to" => params[:redirect_to] || dashboard_company_transactable_type_transactables_path(@payment.payable.transactable.transactable_type, status: 'in progress') } do |f|
 
   .dialog__body#payment-modal-box
     = render 'shared/single_payment', f: f

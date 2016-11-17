@@ -61,6 +61,7 @@ module TransactablesIndex
         indexes :average_rating, type: 'float'
         indexes :possible_payout, type: 'boolean'
         indexes :tags, type: 'string'
+        indexes :state, type: 'string'
       end
     end
 
@@ -100,7 +101,8 @@ module TransactablesIndex
         open_hours_during_week: availability.try(:open_hours_during_week),
         completed_reservations: orders.reservations.reviewable.count,
         seller_average_rating: creator.try(:seller_average_rating),
-        tags: tags_as_comma_string
+        tags: tags_as_comma_string,
+        state: state
       )
     end
 

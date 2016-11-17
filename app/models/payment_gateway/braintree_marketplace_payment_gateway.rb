@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'braintree'
 
 class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
@@ -56,7 +57,6 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   def process_payout(_merchant_account, _amount, _payment_transfer)
     payout_pending('')
   end
-
 
   def refund_identification(charge)
     charge.payment.authorization_token

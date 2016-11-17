@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class MerchantAccountDrop < BaseDrop
-
   # @return [MerchantAccountDrop]
   attr_reader :merchant_account
 
@@ -32,7 +32,7 @@ class MerchantAccountDrop < BaseDrop
   #   @return [Boolean] whether the transfer interval is weekly or monthly
   delegate :id, :state, :merchantable, :persisted?, :payment_gateway, :permissions_granted,
            :chain_payments?, :chain_payment_set?, :pending?, :next_transfer_date,
-           :weekly_or_monthly_transfers?,  to: :merchant_account
+           :weekly_or_monthly_transfers?, to: :merchant_account
 
   def initialize(merchant_account)
     @merchant_account = merchant_account
@@ -40,11 +40,7 @@ class MerchantAccountDrop < BaseDrop
 
   # @return [String, nil] errors for the merchant account in HTML format or nil if none
   def errors
-    if merchant_account.errors.any?
-      '<li>' + merchant_account.errors.full_messages.join('</ li><li>') + '</li>'
-    else
-      nil
-    end
+    '<li>' + merchant_account.errors.full_messages.join('</ li><li>') + '</li>' if merchant_account.errors.any?
   end
 
   # @return [String] current state for the merchant account using translations

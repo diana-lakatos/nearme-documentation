@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WishListItemDrop < BaseDrop
   include CurrencyHelper
 
@@ -7,6 +8,8 @@ class WishListItemDrop < BaseDrop
   # dangerous
   include ActionView::Helpers::NumberHelper
   include ActionView::Helpers::TagHelper
+
+  attr_reader :wishlistable
 
   def initialize(wish_list_item)
     @wish_list_item = wish_list_item
