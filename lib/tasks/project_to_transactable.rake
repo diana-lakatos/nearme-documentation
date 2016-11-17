@@ -165,7 +165,7 @@ namespace :project_to_transactable do
           unless self.project_collaborators.for_user(user).exists?
             pc = self.project_collaborators.build(user: user, email: collaborator_email, approved_by_owner_at: Time.zone.now)
             pc.save!
-            WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorAddedByProjectOwner, pc.id)
+            # WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorAddedByProjectOwner, pc.id)
           end
         end
       end
@@ -349,6 +349,8 @@ namespace :project_to_transactable do
       # We delete stray TransactableType object
       stray_tt = TransactableType.find_by_id(444)
       stray_tt.delete if stray_tt.present?
+
+      WorkflowStep.where('associated_class like ?', 'WorkflowStep::CollaboratorWorkflow%').destroy_all
 
       ActivityFeedEvent.where("event like '%project%'").find_each do |activity_feed_event|
         event = activity_feed_event.event
@@ -543,7 +545,7 @@ namespace :project_to_transactable do
           workflow_step.associated_class = workflow_step.associated_class.gsub(/ProjectWorkflow/, 'CollaboratorWorkflow')
           workflow_step.associated_class = workflow_step.associated_class.gsub(/Project/, 'Transactable')
           workflow_step.name = workflow_step.associated_class.demodulize.gsub(/(?<=[a-z])(?=[A-Z])/, ' ')
-          workflow_step.save!
+          workflow_step.save
 
           workflow_step.workflow_alerts.find_each do |workflow_alert|
             workflow_alert.subject = workflow_alert.subject.gsub(/project/, 'transactable')
@@ -551,7 +553,7 @@ namespace :project_to_transactable do
             workflow_alert.template_path = workflow_alert.template_path.gsub(/project/, 'transactable')
             workflow_alert.name = workflow_alert.name.gsub(/project/, 'transactable')
             workflow_alert.name = workflow_alert.name.gsub(/Project/, 'Transactable')
-            workflow_alert.save!
+            workflow_alert.save
           end
         end
       end
