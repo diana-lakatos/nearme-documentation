@@ -262,8 +262,6 @@ class Order < ActiveRecord::Base
     @completed_ids ||= self[:completed_form_component_ids].to_s.split(',')
   end
 
-  delegate :dimensions_template, to: :transactable
-
   def remove_empty_documents
     return if PlatformContext.current.instance.documents_upload.try(:is_mandatory?)
 

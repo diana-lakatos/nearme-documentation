@@ -301,10 +301,9 @@ class ReservationDrop < OrderDrop
 
   # shipping package name and description if applicable
   def shipping_package
-    reservation.dimensions_templates.last
+    reservation.dimensions_templates.last || reservation.transactable.dimensions_template
   end
 
-  # QUESTION: how to call drop method from parent drop
   def enquirer_shipping_address
     reservation.shipping_address.address
   end

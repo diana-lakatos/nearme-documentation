@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Shippings
   class DeliveryFactory
+    DEFAULT_MESSAGE = 'no notes'
+
     def self.build(order:)
       [
         InboundDeliveryFactory.new(order: order).build,
@@ -14,7 +16,13 @@ module Shippings
       end
 
       def build
-        @order.deliveries.build attributes
+        @order.deliveries.build(attributes).tap do |delivery|
+          delivery.add_validator delivery_validator
+        end
+      end
+
+      def delivery_validator
+        Deliveries::Validations::Delivery.new
       end
 
       def delivery_estimate
@@ -28,8 +36,18 @@ module Shippings
           pickup_date: pickup_date,
           order: @order,
           order_id: @order.id,
-          dimensions_template_id: dimensions_template_id
+          dimensions_template_id: dimensions_template.id,
+          courier: @order.provider.shipping_provider_name,
+          notes: notes
         }
+      end
+
+      # TODO: need a better approach
+      # sendle requires notes for every package but A4
+      def notes
+        return if dimensions_template.name == 'Satchel'
+
+        DEFAULT_MESSAGE
       end
 
       def lister_address
@@ -58,8 +76,8 @@ module Shippings
         @order.ends_at.in_time_zone(@order.time_zone)
       end
 
-      def dimensions_template_id
-        @order.transactable.dimensions_template.id
+      def dimensions_template
+        @order.transactable.dimensions_template
       end
 
       class OrderListerAddress
