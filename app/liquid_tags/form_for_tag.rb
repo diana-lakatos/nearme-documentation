@@ -1,3 +1,20 @@
+# frozen_string_literal: true
+# Usage example:
+# ```
+#  {% form_for current_user, url: '/users' %}
+#    <input type="text" name="!{{ form_object.object_name }}_email" value="!{{ form_object.object.email }}">
+#
+#    {% input first_name, hint: 'this is a hint', label: 'this is a label', required: false  %}
+#    {% input last_name, required: false  %}
+#
+#    {% input avatar %}
+#    {% submit Save  %}
+#
+#  {% endform_for %}
+# ```
+#
+# Used to generate a form for an object (in the example above, a user). Inside the tag, the object
+# is available as "form_object".
 class FormForTag < Liquid::Block
   include AttributesParserHelper
 
@@ -9,7 +26,7 @@ class FormForTag < Liquid::Block
       @model_name = Regexp.last_match(1)
       @attributes = create_initial_hash_from_liquid_tag_markup(markup)
     else
-      fail SyntaxError.new('Invalid syntax for Form For tag - must pass object')
+      raise SyntaxError, 'Invalid syntax for Form For tag - must pass object'
     end
   end
 
@@ -19,10 +36,10 @@ class FormForTag < Liquid::Block
     @attributes.merge!(form_options) if @attributes[:form_for_type].present?
     namespace = @model.try(:source) || @model_name.to_sym
 
-    fail 'Object passed to form_for tag cannot be nil' if namespace.blank?
+    raise 'Object passed to form_for tag cannot be nil' if namespace.blank?
     context.stack do
       context.registers[:action_view].simple_form_for(namespace, @attributes) do |f|
-        context['form_object'.freeze] = f
+        context['form_object'] = f
         render_all(@nodelist, context).html_safe
       end
     end
@@ -35,7 +52,7 @@ class FormForTag < Liquid::Block
     when 'dashboard'
       dashboard_form_options
     else
-      fail NotImplementedError.new("Valid form_for_type options are: 'dashboard', but #{@attributes[:form_for_type]} was given. Typo?")
+      raise NotImplementedError, "Valid form_for_type options are: 'dashboard', but #{@attributes[:form_for_type]} was given. Typo?"
     end
   end
 

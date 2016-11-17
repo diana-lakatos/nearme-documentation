@@ -1,3 +1,13 @@
+# frozen_string_literal: true
+# Usage example:
+# ```
+#   {% form_for current_user %}
+#      <input type="text" name="custom_field" value="" />
+#      {% submit Save  %}
+#   {% endform_for %}
+# ```
+#
+# Generates a submit button inside a form_for tag.
 class SubmitTag < Liquid::Tag
   include AttributesParserHelper
 
@@ -9,7 +19,7 @@ class SubmitTag < Liquid::Tag
       @value = Regexp.last_match(1).sub(/^["']/, '').sub(/["']$/, '')
       @attributes = create_initial_hash_from_liquid_tag_markup(markup)
     else
-      fail SyntaxError.new('Invalid syntax for Input tag - must pass field name')
+      raise SyntaxError, 'Invalid syntax for Input tag - must pass field name'
     end
   end
 

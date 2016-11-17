@@ -1,3 +1,12 @@
+# frozen_string_literal: true
+# Usage example:
+# ```
+#   {% assign variable_name = 'Some Title' %}
+#   {% title variable_name %}
+# ```
+#
+# Used to set the title of the page to the text contained in the variable
+# given as the parameter.
 class TitleTag < Liquid::Tag
   include AttributesParserHelper
 

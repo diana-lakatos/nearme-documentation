@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UserBlogPost < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :history, :finders]
@@ -31,11 +32,13 @@ class UserBlogPost < ActiveRecord::Base
     end
   end
 
+  # @return [UserBlogPost] the previously published user blog post
   def previous_blog_post
     @previous_blog_post ||= user.blog_posts.published.order('published_at DESC').where('published_at < ?',
                                                                                        published_at).first
   end
 
+  # @return [UserBlogPost] the next published user blog post
   def next_blog_post
     @next_blog_post ||= user.blog_posts.published.order('published_at DESC').where('published_at > ?',
                                                                                    published_at).last
@@ -55,7 +58,7 @@ class UserBlogPost < ActiveRecord::Base
 
   def published_at_str=(value)
     value = Date.strptime(value, I18n.t('datepicker.dformat'))
-    write_attribute(:published_at, value)
+    self[:published_at] = value
   end
 
   private

@@ -1,3 +1,10 @@
+# frozen_string_literal: true
+# Usage:
+# ```
+# {% inject_content_holder_for_path %}
+# ```
+# Will render all content holders (defined in the admin section of the marketplace) at their specified location,
+# and for the current path. Usually placed in the layout(s).
 class ContentHolderTagForPathTag < Liquid::Tag
   include ContentHoldersHelper
 

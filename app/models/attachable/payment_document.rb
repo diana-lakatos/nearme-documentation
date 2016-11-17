@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 class Attachable::PaymentDocument < Attachable::Attachment
+  # @!method file
+  #   @return [PaymentDocumentUploader]
   mount_uploader :file, ::PaymentDocumentUploader
 
   has_one :payment_document_info, class_name: 'Attachable::PaymentDocumentInfo', foreign_key: 'attachment_id', dependent: :destroy
@@ -7,7 +10,7 @@ class Attachable::PaymentDocument < Attachable::Attachment
 
   accepts_nested_attributes_for :payment_document_info
 
-  validates_presence_of :file
+  validates :file, presence: true
 
   self.per_page = 20
 

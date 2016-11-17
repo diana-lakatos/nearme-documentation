@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This class is a connector between subscriber (guest, seller, recurring_booking)
 # and payment method. Currently recurring booking is only supported with credit card
 # but probably other recurring payment methods will come and PaymentSubscription
@@ -34,6 +35,7 @@ class PaymentSubscription < ActiveRecord::Base
     true
   end
 
+  # @return [Boolean] whether the payment subscription has expired
   def expired?
     !expired_at.nil?
   end

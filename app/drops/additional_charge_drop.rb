@@ -1,20 +1,26 @@
+# frozen_string_literal: true
 class AdditionalChargeDrop < BaseDrop
+  # @return [AdditionalChargeDrop]
   attr_reader :additional_charge
 
-  # name
+  # @!method name
   #   name of additional charge
-  # amount
+  #   @return (see AdditionalCharge#name)
+  # @!method amount
   #   amount of additional charge
-  # additional_charge_type_id
+  #   @return [MoneyDrop]
+  # @!method additional_charge_type_id
   #   additional_charge_type_id
-  # amount_with_currency
-  #   returns amount with currency and cents
+  #   @return [Integer]
+  # @!method amount_with_currency
+  #   @return (see AdditionalChargeDecorator#amount_with_currency)
   delegate :name, :amount, :additional_charge_type_id, :amount_with_currency, to: :additional_charge
 
   def initialize(additional_charge)
     @additional_charge = additional_charge.decorate
   end
 
+  # @return [String] the formatted amount depending on global settings for currency formatting
   def formatted_amount
     render_money(amount)
   end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableCollaborator < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
@@ -49,10 +50,12 @@ class TransactableCollaborator < ActiveRecord::Base
     touch(:approved_by_user_at)
   end
 
+  # @return [Boolean] whether the colllaboration has been approved by the collaborating user
   def approved_by_user?
     approved_by_user_at.present?
   end
 
+  # @return [Boolean] whether the collaboration has been approved by the transactable creator
   def approved_by_owner?
     approved_by_owner_at.present? && rejected_by_owner_at.nil?
   end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class RecurringBookingDecorator < OrderDecorator
   include Draper::LazyHelpers
 
@@ -12,6 +13,7 @@ class RecurringBookingDecorator < OrderDecorator
     true
   end
 
+  # @return [String] empty string
   def total_units_text
     ''
   end
@@ -42,6 +44,8 @@ class RecurringBookingDecorator < OrderDecorator
     end
   end
 
+  # @return [String] total amount payable to host formatted using the global
+  #   currency formatting rules
   def total_payable_to_host_formatted
     render_money(total_payable_to_host)
   end
@@ -70,6 +74,8 @@ class RecurringBookingDecorator < OrderDecorator
     end
   end
 
+  # @return [String] total price for this recurring booking order rendered according to
+  #   the global currency rendering rules, or 'Free!' if free
   def total_price(_current_user = nil)
     if total_amount.to_f.zero?
       'Free!'
@@ -78,6 +84,8 @@ class RecurringBookingDecorator < OrderDecorator
     end
   end
 
+  # @return [String] last unpaid amount for this recurring booking rendered according
+  #   to the global currency rendering rules
   def last_unpaid_amount
     render_money(recurring_booking_periods.unpaid.last.try(:total_amount))
   end
@@ -176,10 +184,13 @@ class RecurringBookingDecorator < OrderDecorator
     raw("Pending confirmation from host. Booking will expire in <strong>#{time_to_expiry(expires_at)}</strong>.")
   end
 
+  # @return [String] formatted string instructing the user to confirm their booking before expiration if unconfirmed, otherwise
+  #   renders an icon with the status information
   def manage_booking_status_info
     status_info("You must confirm this booking within #{time_to_expiry(expires_at)} or it will expire.")
   end
 
+  # @return [String] formatted string instructing the user to confirm their booking before expiration
   def manage_booking_status_info_new
     raw("You must confirm this booking within <strong>#{time_to_expiry(expires_at)}</strong> or it will expire.")
   end
@@ -220,16 +231,6 @@ class RecurringBookingDecorator < OrderDecorator
     minute_of_day_to_time(end_minute.to_i)
   end
 
-  private
-
-  def status_info(text)
-    if state == 'unconfirmed'
-      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, { class: status_icon }, nil)
-    else
-      "<i class='#{status_icon}'></i>".html_safe
-    end
-  end
-
   def time_to_expiry(time_of_event)
     current_time = Time.zone.now
     total_seconds = time_of_event - current_time
@@ -243,6 +244,16 @@ class RecurringBookingDecorator < OrderDecorator
       else
         '%d hours, %d minutes' % [hours, minutes]
       end
+    end
+  end
+
+  private
+
+  def status_info(text)
+    if state == 'unconfirmed'
+      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, { class: status_icon }, nil)
+    else
+      "<i class='#{status_icon}'></i>".html_safe
     end
   end
 

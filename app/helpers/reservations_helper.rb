@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'money-rails'
 
 module ReservationsHelper
@@ -8,11 +9,11 @@ module ReservationsHelper
   end
 
   def reservation_navigation_link(action)
-    (link_to(content_tag(:span, action.titleize), send("#{action}_reservations_path"), class: "upcoming-reservations btn btn-medium btn-gray#{action == params[:action] ? ' active' : '-darker'}")).html_safe
+    link_to(content_tag(:span, action.titleize), send("#{action}_reservations_path"), class: "upcoming-reservations btn btn-medium btn-gray#{action == params[:action] ? ' active' : '-darker'}").html_safe
   end
 
   def recurring_booking_reservations_navigation_link(recurring_booking, action)
-    (link_to(content_tag(:span, action.titleize), send("#{action}_recurring_booking_path", recurring_booking), class: "upcoming-reservations btn btn-medium btn-gray#{action == params[:action] ? ' active' : '-darker'}")).html_safe
+    link_to(content_tag(:span, action.titleize), send("#{action}_recurring_booking_path", recurring_booking), class: "upcoming-reservations btn btn-medium btn-gray#{action == params[:action] ? ' active' : '-darker'}").html_safe
   end
 
   def upcoming_reservation_count
@@ -24,9 +25,7 @@ module ReservationsHelper
   end
 
   def secure_listing_url(listing, options = {})
-    if Rails.env.production?
-      options = options.reverse_merge(protocol: 'https://')
-    end
+    options = options.reverse_merge(protocol: 'https://') if Rails.env.production?
 
     listing_reservations_url(listing, options)
   end
@@ -40,13 +39,15 @@ module ReservationsHelper
   end
 
   def get_disabled_categories(listing)
-    if listing.categories.any?
-      (listing.categories.first.root.children - listing.categories).map(&:name)
-    end
+    (listing.categories.first.root.children - listing.categories).map(&:name) if listing.categories.any?
   end
 
   def last_search
-    @last_search ||= JSON.parse(cookies[:last_search], symbolize_names: true) rescue {}
+    @last_search ||= begin
+                       JSON.parse(cookies[:last_search], symbolize_names: true)
+                     rescue
+                       {}
+                     end
   end
 
   def get_categories_from_search
@@ -57,6 +58,8 @@ module ReservationsHelper
     end
   end
 
+  # @return [Integer] total orders for this user (received - not in the 'inactive' state, unconfirmed;
+  #   and placed - unconfirmed and not archived)
   def reservations_count_for_user(user)
     open_host = user.default_company.blank? ? 0 : user.default_company.orders.active.unconfirmed.count
     not_archived = user.orders.unconfirmed.not_archived.count

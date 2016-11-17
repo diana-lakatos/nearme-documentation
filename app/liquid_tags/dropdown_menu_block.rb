@@ -1,3 +1,14 @@
+# frozen_string_literal: true
+# Usage:
+# ```
+#  {% dropdown_menu { label: transactable_type.bookable_noun_plural, wrapper_class: 'links' } %}
+#    <li>First element</li>
+#    <li>Second element</li>
+#  {% enddropdown_menu %}
+# ```
+#
+# Generates an HTML unordered list wrapped in a container. If the items in the list don't fit
+# the screen a dropdown menu is provided to choose an item.
 class DropdownMenuBlock < Liquid::Block
   include AttributesParserHelper
 

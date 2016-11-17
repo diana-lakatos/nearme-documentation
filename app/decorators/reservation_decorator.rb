@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ReservationDecorator < OrderDecorator
   include CurrencyHelper
   include TooltipHelper
@@ -41,6 +42,8 @@ class ReservationDecorator < OrderDecorator
     render_money(unit_price)
   end
 
+  # @return [String] subtotal price formatted using the global currency formatting rules
+  #   or 'Free!' if free
   def subtotal_price
     if subtotal_amount.to_f.zero?
       'Free!'
@@ -49,6 +52,8 @@ class ReservationDecorator < OrderDecorator
     end
   end
 
+  # @return [String] service fee (guest part) formatted using the global currency formatting
+  #   rules or 'Free!' if free
   def service_fee_guest
     if service_fee_amount_guest.to_f.zero?
       'Free!'
@@ -57,10 +62,14 @@ class ReservationDecorator < OrderDecorator
     end
   end
 
+  # @return [String] total tax amount for this reservation formatted using the global
+  #   currency formatting rules
   def tax_price
     render_money(total_tax_amount) if total_tax_amount && total_tax_amount > 0
   end
 
+  # @return [String] total price formatted using the global currency formatting rules
+  #   or 'Free!' if free
   def total_price
     if total_amount.to_f.zero?
       'Free!'
@@ -69,10 +78,14 @@ class ReservationDecorator < OrderDecorator
     end
   end
 
+  # @return [String] total amount payable to host formatted using the global currency
+  #   formatting rules
   def total_payable_to_host_formatted
     render_money(total_payable_to_host)
   end
 
+  # @return [String] amount paid for this reservation formatted using the global currency
+  #   formatting rules or the current state of the payment if not yet paid
   def paid
     if is_free?
       render_money(0.0)
@@ -127,10 +140,12 @@ class ReservationDecorator < OrderDecorator
     first == last ? first : "#{first} - #{last}"
   end
 
+  # @return [String] summary of selected dates for this reservation
   def long_dates
     date_presenter.selected_dates_summary_no_html(:short)
   end
 
+  # @return [String] total units text (e.g. "1 day", "3 nights")
   def total_units_text
     unit = transactable_pricing.try(:night_booking?) ? 'general.night' : 'general.day'
     [total_units, I18n.t(unit, count: reservation.total_units)].join(' ')
@@ -156,10 +171,14 @@ class ReservationDecorator < OrderDecorator
     status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expires_at)}.")
   end
 
+  # @return [String] formatted string instructing the user to confirm their booking before expiration if unconfirmed, otherwise
+  #   renders an icon with the status information
   def manage_booking_status_info
     status_info("You must confirm this booking within #{time_to_expiry(expires_at)} or it will expire.")
   end
 
+  # @return [String] formatted string instructing the user to confirm their booking before expiration
+  #   using the translation key 'dashboard.host_reservations.pending_confirmation'
   def manage_booking_status_info_new
     I18n.t('dashboard.host_reservations.pending_confirmation', time_to_expiry: time_to_expiry(expires_at)).html_safe
   end
@@ -176,6 +195,7 @@ class ReservationDecorator < OrderDecorator
     end
   end
 
+  # @return [String] state of the reservation in a human readable format
   def state_to_string
     return 'declined' if rejected?
     state.split('_').first

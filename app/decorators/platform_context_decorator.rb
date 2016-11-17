@@ -21,7 +21,8 @@ class PlatformContextDecorator
     transactable_types.count == 1
   end
 
-  # reverse compatibility
+  # @return [Array<TransactableType>] array of transactable types for this marketplace;
+  #   added for reverse compatibility
   def service_types
     @platform_context.transactable_types
   end
@@ -38,10 +39,14 @@ class PlatformContextDecorator
     @platform_context_drop ||= PlatformContextDrop.new(self)
   end
 
+  # @return [String] plural of {Instance#lessor}
+  # @deprecated use {TransactableType#lessor} instead
   def lessors
     lessor.pluralize
   end
 
+  # @return [String] plural of {Instance#lessee}
+  # @deprecated use {TransactableType#lessee} instead
   def lessees
     lessee.pluralize
   end
@@ -64,6 +69,7 @@ class PlatformContextDecorator
     @platform_context.theme.contact_email_with_fallback
   end
 
+  # @return [String] placeholder for the search box on the homepage
   def search_by_keyword_placeholder
     I18n.t('homepage.search_field_placeholder.full_text')
   end
@@ -76,14 +82,17 @@ class PlatformContextDecorator
     timestamp.try(:utc).try(:to_s, :number)
   end
 
+  # @return [String] sentence containing all the bookable nouns available on this platform
   def bookable_nouns
     @bookable_nouns ||= transactable_types.map(&:translated_bookable_noun).to_sentence(last_word_connector: I18n.t('general.or_spaced'))
   end
 
+  # @return [String] sentence containing all the bookable nouns (pluralized) available on this platform
   def bookable_nouns_plural
     @bookable_nouns_plural ||= transactable_types.map { |tt| tt.translated_bookable_noun(10) }.to_sentence(last_word_connector: I18n.t('general.or_spaced'))
   end
 
+  # @return [String] Facebook consumer key for this instance
   def facebook_key
     Rails.env.development? || Rails.env.test? ? DesksnearMe::Application.config.facebook_key : instance.facebook_consumer_key
   end

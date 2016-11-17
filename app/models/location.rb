@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'nearest_time_zone'
 
 class Location < ActiveRecord::Base
@@ -173,10 +174,13 @@ class Location < ActiveRecord::Base
     csv_fields.keys
   end
 
+  # @return [Transactable::Pricing] lowest price from among the listings for this location
   def lowest_price(available_price_types = [])
     (listings.loaded? ? listings : listings.searchable).map { |l| l.lowest_price_with_type(available_price_types) }.compact.sort_by(&:price).first
   end
 
+  # @return [Transactable::Pricing] lowest price from amont the listings for this location
+  #   including service fees and additional charge types
   def lowest_full_price(available_price_types = [])
     (listings.loaded? ? listings : listings.searchable).map { |l| l.lowest_full_price(available_price_types) }.compact.sort_by(&:price).first
   end

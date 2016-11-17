@@ -1,7 +1,14 @@
-# Usage: {% featured_items target: users, amount: 6 %}
-# or: {% featured_items target: services, amount: 6, type: Boat %}
-#
-
+# frozen_string_literal: true
+# Usage:
+# ```
+# {% featured_items target: users, amount: 6 %}
+# ```
+# or:
+# ```
+# {% featured_items target: services, amount: 6, type: Boat %}
+# ```
+# Will render the specified target items which have been marked as featured. In the examples
+# "Boat" is the Transactable Type name, amount is the number of featured items to render.
 class FeaturedItemsTag < Liquid::Tag
   def initialize(tag_name, arguments, context)
     super
@@ -9,7 +16,7 @@ class FeaturedItemsTag < Liquid::Tag
     if arguments =~ /(#{::Liquid::QuotedFragment}+)/
       @arguments = arguments
     else
-      fail SyntaxError.new('Syntax Error - Valid syntax: {% featured_items [arguments] %}')
+      raise SyntaxError, 'Syntax Error - Valid syntax: {% featured_items [arguments] %}'
     end
   end
 
@@ -27,7 +34,7 @@ class FeaturedItemsTag < Liquid::Tag
     routes = Rails.application.routes.url_helpers
 
     params = { target: @attributes[:target], amount: @attributes[:amount] }
-    params.merge!(type: @attributes[:type]) if @attributes[:type].present?
+    params[:type] = @attributes[:type] if @attributes[:type].present?
     route = routes.featured_items_path(params)
 
     uuid = SecureRandom.uuid

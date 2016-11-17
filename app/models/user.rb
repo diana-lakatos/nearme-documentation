@@ -392,11 +392,11 @@ class User < ActiveRecord::Base
   end
 
   def has_seller_profile?
-    seller_profile.present? && current_instance.seller_profile_enabled? && seller_profile.has_fields?(FormComponent::SELLER_PROFILE_TYPES)
+    seller_profile.present? && seller_profile.persisted? && current_instance.seller_profile_enabled? && seller_profile.has_fields?(FormComponent::SELLER_PROFILE_TYPES)
   end
 
   def has_buyer_profile?
-    buyer_profile.present? && current_instance.buyer_profile_enabled? && buyer_profile.has_fields?(FormComponent::BUYER_PROFILE_TYPES)
+    buyer_profile.present? && buyer_profile.persisted? && current_instance.buyer_profile_enabled? && buyer_profile.has_fields?(FormComponent::BUYER_PROFILE_TYPES)
   end
 
   def custom_validators
@@ -575,6 +575,7 @@ class User < ActiveRecord::Base
     !password.blank? || (new_record? && authentications.empty?)
   end
 
+  # @return [Boolean] whether the user has any active credit cards
   def has_active_credit_cards?
     instance_clients.mode_scope.any? do |i|
       i.payment_gateway.active_in_current_mode?
@@ -662,6 +663,7 @@ class User < ActiveRecord::Base
 
   alias add_friends add_friend
 
+  # @return [Array<User>] array of friends for this user (followed users)
   def friends
     followed_users.without(self)
   end
@@ -676,6 +678,8 @@ class User < ActiveRecord::Base
     end.flatten.compact
   end
 
+  # @return [Array<User>] array containing the users that are followed by the administrator of the listing passed as
+  #   a parameter and that are also followed by this user
   def friends_know_host_of(listing)
     # TODO: Rails 4 - merge
     friends && User.know_host_of(listing)
@@ -689,6 +693,7 @@ class User < ActiveRecord::Base
     self.class.find_by(id: self[:mutual_friendship_source].to_i) if self[:mutual_friendship_source]
   end
 
+  # @return [Array<User>] array containing users that are followed by the users that this user follows
   def mutual_friends
     self.class.without(self).mutual_friends_of(self)
   end
@@ -701,7 +706,7 @@ class User < ActiveRecord::Base
     Country.find_by(name: country_name) if country_name.present?
   end
 
-  # Returns the mobile number with the full international calling prefix
+  # @return [String, nil] the mobile number with the full international calling prefix
   def full_mobile_number
     return unless mobile_number.present?
 
@@ -722,6 +727,7 @@ class User < ActiveRecord::Base
     false
   end
 
+  # @return [Company] the default (first) company to which this user belong
   def default_company
     companies.first
   end
@@ -851,6 +857,7 @@ class User < ActiveRecord::Base
     @is_instance_admin ||= InstanceAdminAuthorizer.new(self).instance_admin?
   end
 
+  # @return [Integer] total number of pageviews for this user's administered locations during the last 30 days
   def administered_locations_pageviews_30_day_total
     scoped_locations = !companies.count.zero? && self == companies.first.creator ? companies.first.locations : administered_locations
     scoped_locations = scoped_locations.with_searchable_listings
@@ -924,6 +931,7 @@ class User < ActiveRecord::Base
     blog_posts.recent
   end
 
+  # @return [Boolean] whether the user has any published blog posts
   def has_published_posts?
     blog_posts.published.any?
   end
@@ -944,6 +952,8 @@ class User < ActiveRecord::Base
     get_instance_metadata('companies_metadata')
   end
 
+  # @return [String] instance_admins_metadata metadata stored for this user; used for storing
+  #   the first permission this user has access to
   def instance_admins_metadata
     return 'analytics' if admin?
     get_instance_metadata('instance_admins_metadata')
@@ -966,6 +976,7 @@ class User < ActiveRecord::Base
     CartService.new(self)
   end
 
+  # @return [WishList] default wish list for the user, creates it if not present
   def default_wish_list
     wish_lists.create default: true, name: I18n.t('wish_lists.name') unless wish_lists.any?
 
@@ -1134,6 +1145,8 @@ class User < ActiveRecord::Base
     self
   end
 
+  # @return [Integer, nil] total number of reviews for this user; includes reviews about the user as buyer, as seller,
+  #   left by the user as seller, left by the user as buyer, left by the user about transactables
   def total_reviews_count
     ReviewAggregator.new(self).total if RatingSystem.active.any?
   end
