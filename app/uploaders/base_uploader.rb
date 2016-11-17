@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class BaseUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
 
@@ -64,16 +65,15 @@ class BaseUploader < CarrierWave::Uploader::Base
     model["#{mounted_as}_versions_generated_at"].present?
   end
 
-  def url(*args)
-    super_url = super
+  def url(version = nil)
+    super_url = super(version)
     if versions_generated? && super_url !~ /\?v=\d+$/
       # We use v=number to trigger CloudFront cache invalidation
       # We add 10 minutes because versions_generated_at is slightly in the past as to
       # our requirements
       "#{super_url}?v=#{model["#{mounted_as}_versions_generated_at"].to_i + 10.minutes.to_i}"
-    elsif !versions_generated? && respond_to?(:default_url) && self.class.respond_to?(:delayed_versions) && self.class.delayed_versions.include?(args.first)
-      # Versions not generated, we have a default url and the version requested is a delayed version, so we use the default_url
-      default_url(*args)
+    elsif super_url.blank? || pending_processing?(version)
+      default_url(version)
     else
       super_url
     end
@@ -91,22 +91,11 @@ class BaseUploader < CarrierWave::Uploader::Base
     !!@delayed_processing
   end
 
-  def get_default_image_and_version(*args)
-    version = args.shift || version_name.try(:to_sym)
-    [theme_default_image(version), version]
-  end
-
-  private
-
-  def theme_default_image(version)
-    return unless platform_context
-
-    platform_context
-      .theme.reload
-      .default_images.where(
-        photo_uploader: self.class.to_s,
-        photo_uploader_version: version
-      )
-      .first
+  def pending_processing?(version)
+    # Versions not generated, we have a default url and the version requested is a delayed version, so we use the default_url
+    !versions_generated? &&
+      respond_to?(:default_url) &&
+      self.class.respond_to?(:delayed_versions) &&
+      self.class.delayed_versions.include?(version)
   end
 end

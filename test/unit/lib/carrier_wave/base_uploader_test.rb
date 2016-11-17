@@ -33,10 +33,5 @@ class MountUploaderTest < ActiveSupport::TestCase
       photo = FactoryGirl.create(:photo, image_versions_generated_at: nil)
       assert_equal placeholder_url(895, 554), photo.image.default_url(:golden)
     end
-
-    should 'return default 100x100 placeholder for original version' do
-      page = FactoryGirl.create(:page)
-      assert_equal placeholder_url(100, 100), page.hero_image.default_url
-    end
   end
 end

@@ -103,6 +103,7 @@ class RegenerateUploaderVersionsJob < Job
   def with_exception_handling
     yield
   rescue => e
+    raise e if Rails.env.test?
     Rails.logger.debug "Encountered an issue: #{e} #{caller[0]}" if Rails.env.development?
   end
 

@@ -10,10 +10,6 @@ class CleanupDbMigration < ActiveRecord::Migration
     drop_table :listing_types
     drop_table :offers
     drop_table :old_recurring_booking_periods
-    drop_table :project_collaborators
-    drop_table :project_topics
-    drop_table :projects
-    drop_table :projects_user_status_updates
     drop_table :recurring_bookings
     drop_table :reservations
     drop_table :reservation_seats
@@ -104,7 +100,6 @@ class CleanupDbMigration < ActiveRecord::Migration
     remove_column :users, :unlock_token
     remove_column :users, :spree_api_key
     remove_column :users, :paypal_merchant_id
-    remove_column :users, :projects_count
     remove_column :users, :twitter_url
     remove_column :users, :linkedin_url
     remove_column :users, :facebook_url

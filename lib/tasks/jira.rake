@@ -104,6 +104,7 @@ class JiraReleaser
       puts "#{index + 1}/#{total}" if ((index + 1) % 10).zero?
       @issues << jira_wrapper.find_issue(number)
     end
+    @issues.compact!
   end
 
   def prepare
