@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require 'reservations_helper'
 require Rails.root.join('lib', 'dnm.rb')
@@ -441,7 +442,7 @@ class ReservationTest < ActiveSupport::TestCase
 
         @transactable = FactoryGirl.build(:transactable, quantity: 10)
         @user = FactoryGirl.build(:user)
-        @reservation = FactoryGirl.build(:reservation, user: @user, transactable: @transactable, transactable_pricing: @transactable.action_type.pricings.first)
+        @reservation = FactoryGirl.build(:reservation, user: @user, owner: @user, transactable: @transactable, transactable_pricing: @transactable.action_type.pricings.first)
       end
 
       should 'set total, subtotal and service fee cost after creating a new reservation' do
