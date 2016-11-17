@@ -1,8 +1,0 @@
-(function(){
-  var el = document.getElementById('favorite-<%= dom_id(@item) %>');
-  el.querySelector('[data-favorite-icon]').classList.add('selected');
-  el.querySelector('[data-text]').innerHTML = '<%= t('wish_lists.buttons.selected_state') %>';
-  var link = el.querySelector('[data-action-link]');
-  link.href = '<%= wish_list_path(id: @item.id, wishlistable_type: @item.class.name).html_safe %>';
-  link.setAttribute('data-method', 'delete');
-}());

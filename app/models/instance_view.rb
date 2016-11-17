@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceView < ActiveRecord::Base
   include Cacheable
 
@@ -8,11 +9,11 @@ class InstanceView < ActiveRecord::Base
   has_many :locale_instance_views, dependent: :destroy
   has_many :locales, through: :locale_instance_views
 
-  VIEW_VIEW = 'view'.freeze
-  CUSTOM_VIEW = 'custom_view'.freeze
-  EMAIL_VIEW = 'email'.freeze
-  SMS_VIEW = 'sms'.freeze
-  EMAIL_LAYOUT_VIEW = 'mail_layout'.freeze
+  VIEW_VIEW = 'view'
+  CUSTOM_VIEW = 'custom_view'
+  EMAIL_VIEW = 'email'
+  SMS_VIEW = 'sms'
+  EMAIL_LAYOUT_VIEW = 'mail_layout'
   VIEW_TYPES = [SMS_VIEW, EMAIL_VIEW, EMAIL_LAYOUT_VIEW, VIEW_VIEW, CUSTOM_VIEW].freeze
 
   DEFAULT_EMAIL_TEMPLATES_PATHS = [
@@ -446,8 +447,6 @@ class InstanceView < ActiveRecord::Base
     'home/search_box_inputs' => {
     },
     'home/homepage_content' => {
-    },
-    'shared/components/wish_list_button' => {
     },
     'layouts/theme_footer' => {
     },

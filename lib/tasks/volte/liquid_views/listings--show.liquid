@@ -6,9 +6,7 @@
   <div class="item-content">
 
     <div class="item-header">
-      <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
-        <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
-      </div>
+      {% include 'shared/components/wish_list_button_injection', object: listing %}
       <h1 class="item-name">{{ listing.name | filter_text }}</h1>
     </div>
 

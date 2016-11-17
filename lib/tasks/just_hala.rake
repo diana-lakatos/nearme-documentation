@@ -576,7 +576,7 @@ namespace :just_hala do
           </form>
         </div>
 
-        {% include 'shared/components/wish_list_button_injection.html', object: listing, link_to_classes: 'btn btn-white btn-large ask' %}
+        {% include 'shared/components/wish_list_button_injection.html', object: listing %}
 
         <div class="missions-count">
           <span>Missions:</span> {{ listing.creator.completed_host_reservations_count }}
@@ -1796,7 +1796,7 @@ namespace :just_hala do
       </a>
     </div>
 
-    {% include 'shared/components/wish_list_button_injection.html', object: listing, link_to_classes: 'btn btn-white btn-large ask' %}
+    {% include 'shared/components/wish_list_button_injection.html', object: listing %}
   </header>
 
   <div class='content'>
