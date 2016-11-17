@@ -4,7 +4,9 @@ class BaseDrop < Liquid::Drop
     class << self
       def method_missing(method_sym, *arguments, &block)
         if url_helpers.respond_to?(method_sym)
-          arguments << { language: language } if language
+          options = arguments.last.is_a?(Hash) ? arguments.pop : {}
+          options[:language] = language if language
+          arguments << options
           url_helpers.public_send(method_sym, *arguments)
         else
           super

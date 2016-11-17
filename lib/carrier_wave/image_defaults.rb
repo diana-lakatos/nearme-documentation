@@ -6,6 +6,15 @@ module CarrierWave
     included do
       include CarrierWave::MiniMagick
       include CarrierWave::Optimizable
+
+      class << self
+        def default_placeholder(version)
+          Placeholder.new(
+            PhotoUploadVersionFetcher.dimensions(version: version, uploader_klass: self)
+          ).path
+        end
+      end
+
       cattr_reader :delayed_versions
       process :auto_orient
 
@@ -21,24 +30,9 @@ module CarrierWave
 
       # Offers a placeholder while image is not uploaded yet
       def default_url(*args)
-        default_image, version = get_default_image_and_version(*args)
-        if default_image.blank? || self.class == DefaultImageUploader
-          default_placeholder(version)
-        else
-          default_image.photo_uploader_image.url(:transformed)
-        end
-      end
-
-      def default_placeholder(version)
-        dimensions = if PlatformContext.current
-                       PlatformContext.current.photo_upload_version_dimensions(version, self.class)
-                     elsif version && self.class.dimensions.key?(version)
-                       self.class.dimensions[version]
-                     else
-                       { width: 100, height: 100 }
-                     end
-
-        Placeholder.new(dimensions).path
+        version = args.first
+        return '' if version.blank?
+        DefaultPhoto.url(version: version, uploader_klass: self.class)
       end
     end
   end
