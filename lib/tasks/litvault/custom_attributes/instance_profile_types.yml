@@ -39,10 +39,12 @@
     attribute_type: array
     html_tag: check_box_list
     valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
-    required: true
     validation_only_on_update: true
     searchable: true
     wrapper_html_options_string: 'class=>form-group check_boxes required checkbox-columns'
+    custom_validators_attributes:
+      "[0]":
+        required: true
   honors_awards:
     label: 'Honors / Awards'
     attribute_type: array
@@ -56,20 +58,26 @@
     label: 'I acknowledge and confirm that professional liability insurance is in place.'
     attribute_type: boolean
     html_tag: check_box
-    required: true
     validation_only_on_update: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
   liability_occurence_limits_information:
     label: Liability Occurence / Limits Information
     attribute_type: boolean
     html_tag: check_box
-    required: true
     validation_only_on_update: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
   no_limitations_agreement:
     label: 'I acknowledge and confirm all of the following: that I am in good standing within the states where I practice law, have no past or pending grievances and attorney discipline, have no past or pending legal Malpractice Claims.'
     attribute_type: boolean
     html_tag: check_box
-    required: true
     validation_only_on_update: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
 
 # seller profile
 579: ~

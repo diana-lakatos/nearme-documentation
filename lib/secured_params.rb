@@ -32,27 +32,31 @@ class SecuredParams
   end
 
   def custom_attribute
-    [:name,
-     :attribute_type,
-     :html_tag,
-     :prompt,
-     :required,
-     :min_length,
-     :max_length,
-     :default_value,
-     :public,
-     :label,
-     :placeholder,
-     :hint,
-     :searchable,
-     :search_in_query,
-     :input_html_options,
-     :wrapper_html_options,
-     :input_html_options_string,
-     :wrapper_html_options_string,
-     :validation_only_on_update,
-     custom_validators_attributes: nested(custom_validator),
-     valid_values: []]
+    [
+      :name,
+      :attribute_type,
+      :html_tag,
+      :prompt,
+      :required,
+      :min_length,
+      :max_length,
+      :min_value,
+      :max_value,
+      :step,
+      :default_value,
+      :public,
+      :label,
+      :placeholder,
+      :hint,
+      :searchable,
+      :search_in_query,
+      :input_html_options,
+      :wrapper_html_options,
+      :input_html_options_string,
+      :wrapper_html_options_string,
+      :validation_only_on_update,
+      custom_validators_attributes: nested(custom_validator),
+      valid_values: []]
   end
 
   def custom_validator
