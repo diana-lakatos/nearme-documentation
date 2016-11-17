@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableTypeDrop < BaseDrop
   include CategoriesHelper
 
@@ -161,9 +162,7 @@ class TransactableTypeDrop < BaseDrop
   # @return [Hash{String => Hash{String => String, Array}}] returns hash of categories of the form
   #   !{ "name" => { "name" => 'translated_name', "children" => [collection of chosen values] } }
   def categories
-    if @categories.nil?
-      @categories = build_categories_hash(@source.categories.roots)
-    end
+    @categories = build_categories_hash(@source.categories.roots) if @categories.nil?
     @categories
   end
 
@@ -172,14 +171,11 @@ class TransactableTypeDrop < BaseDrop
     @source.custom_attributes
   end
 
-<<<<<<< HEAD
   def custom_attributes_as_hash
     Hash[@source.custom_attributes.map { |ca| [ca.name, ca] }]
   end
 
-=======
   # @return [String] class name for this TransactableType object (e.g. 'TransactableType')
->>>>>>> origin/staging
   def class_name
     @source.class.name
   end
@@ -212,14 +208,11 @@ class TransactableTypeDrop < BaseDrop
     routes.dashboard_company_transactable_type_transactables_path(@source)
   end
 
-<<<<<<< HEAD
   def space_wizard_path
     routes.transactable_type_space_wizard_list_path(@source)
   end
 
-=======
   # @return [String] path to a new bulk upload for this transactable type
->>>>>>> origin/staging
   def new_data_upload_path
     routes.new_dashboard_company_transactable_type_data_upload_path(@source)
   end
