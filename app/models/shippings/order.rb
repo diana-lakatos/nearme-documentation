@@ -40,7 +40,7 @@ module Shippings
       end
 
       def client
-        Deliveries.courier name: provider.shipping_provider_name, settings: provider.test_settings
+        Deliveries.courier name: provider.shipping_provider_name, settings: provider.settings
       end
 
       def provider

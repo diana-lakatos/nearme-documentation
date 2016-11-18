@@ -8,6 +8,7 @@
     - Canada
   fields:
     - api_key
+    - environment
 
 -
   name: 'sendle'
@@ -16,3 +17,4 @@
   fields:
     - api_key
     - sendle_id
+    - environment
