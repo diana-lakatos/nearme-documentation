@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Instance < ActiveRecord::Base
   include Encryptable
   include DomainsCacheable
@@ -37,17 +38,19 @@ class Instance < ActiveRecord::Base
   has_many :custom_themes, as: :themeable
   has_many :companies, inverse_of: :instance
   has_many :locations, inverse_of: :instance
-  has_many :locations_impressions, through: :locations, inverse_of: :instance
+  has_many :locations_impressions, through: :locations, source: :impressions, class_name: 'Impression'
   has_many :location_types, inverse_of: :instance
   has_many :listings, class_name: 'Transactable', inverse_of: :instance
+  has_many :listings_impressions, through: :listings, source: :impressions, class_name: 'Impression'
   has_many :domains, as: :target, dependent: :destroy
   has_many :partners, inverse_of: :instance
   has_many :instance_admins, inverse_of: :instance
   has_many :instance_admin_roles, inverse_of: :instance
-  has_many :reservations, as: :platform_context_detail
+  has_many :reservations
   has_many :reservation_types, inverse_of: :instance
-  # has_many :orders, :as => :platform_context_detail
-  has_many :payments, through: :reservations, inverse_of: :instance
+  has_many :orders
+  has_many :payments
+  has_many :payment_transfers
   has_many :instance_clients, dependent: :destroy, inverse_of: :instance
   has_many :translations, dependent: :destroy, inverse_of: :instance
   has_many :instance_billing_gateways, dependent: :destroy, inverse_of: :instance
@@ -199,6 +202,14 @@ class Instance < ActiveRecord::Base
 
   def test_mode?
     self[:test_mode] || (!Rails.env.staging? && !Rails.env.production?)
+  end
+
+  def guest_fee_enabled?
+    action_types.where('service_fee_guest_percent != 0').any?
+  end
+
+  def host_fee_enabled?
+    action_types.where('service_fee_host_percent != 0').any?
   end
 
   def default_twilio_config

@@ -405,9 +405,9 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
-    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
+    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -626,7 +626,7 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.text     "validation_rules"
     t.text     "valid_values"
     t.datetime "deleted_at"
-    t.string   "label",                     limit: 255
+    t.text     "label"
     t.text     "input_html_options"
     t.text     "wrapper_html_options"
     t.text     "hint"
@@ -637,6 +637,7 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.string   "target_type",               limit: 255
     t.boolean  "searchable",                            default: false
     t.boolean  "validation_only_on_update",             default: false
+    t.hstore   "properties",                            default: {},    null: false
     t.boolean  "search_in_query",                       default: false, null: false
   end
 
@@ -853,14 +854,25 @@ ActiveRecord::Schema.define(version: 20161114182624) do
 
   create_table "dimensions_templates", force: :cascade do |t|
     t.string   "name",                 limit: 255
+    t.integer  "creator_id"
     t.integer  "instance_id"
     t.decimal  "weight",                           precision: 8, scale: 2
     t.decimal  "height",                           precision: 8, scale: 2
     t.decimal  "width",                            precision: 8, scale: 2
     t.decimal  "depth",                            precision: 8, scale: 2
+    t.string   "unit_of_measure",      limit: 255,                         default: "imperial"
+    t.string   "weight_unit",          limit: 255,                         default: "oz"
+    t.string   "height_unit",          limit: 255,                         default: "in"
+    t.string   "width_unit",           limit: 255,                         default: "in"
+    t.string   "depth_unit",           limit: 255,                         default: "in"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "details"
     t.datetime "deleted_at"
+    t.boolean  "use_as_default",                                           default: false
     t.integer  "entity_id"
     t.string   "entity_type",          limit: 255
+    t.string   "shippo_id"
     t.string   "description"
     t.integer  "shipping_provider_id"
   end
@@ -1173,27 +1185,10 @@ ActiveRecord::Schema.define(version: 20161114182624) do
 
   add_index "instance_views", ["instance_id", "path", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
 
-  create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.integer  "instance_type_id"
-    t.integer  "instance_id"
-    t.text     "body"
-    t.string   "path",                 limit: 255
-    t.string   "locale",               limit: 255
-    t.string   "format",               limit: 255
-    t.string   "handler",              limit: 255
-    t.boolean  "partial"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "view_type",            limit: 255
-    t.integer  "transactable_type_id"
-    t.integer  "custom_theme_id"
-  end
-
   create_table "instances", force: :cascade do |t|
     t.string   "name",                                          limit: 255
-    t.datetime "created_at",                                                                                                null: false
-    t.datetime "updated_at",                                                                                                null: false
+    t.datetime "created_at",                                                                                                                   null: false
+    t.datetime "updated_at",                                                                                                                   null: false
     t.string   "bookable_noun",                                 limit: 255,                         default: "Desk"
     t.decimal  "service_fee_guest_percent",                                 precision: 5, scale: 2, default: 0.0
     t.string   "lessor",                                        limit: 255
@@ -1242,13 +1237,13 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.string   "support_imap_server",                           limit: 255
     t.integer  "support_imap_port"
     t.boolean  "support_imap_ssl"
-    t.hstore   "search_settings",                                                                   default: {},            null: false
+    t.hstore   "search_settings",                                                                   default: {},                               null: false
     t.string   "default_country",                               limit: 255
     t.text     "allowed_countries"
     t.string   "default_currency",                              limit: 255
     t.text     "allowed_currencies"
     t.string   "category_search_type",                          limit: 255,                         default: "AND"
-    t.string   "search_engine",                                 limit: 255,                         default: "postgresql",  null: false
+    t.string   "search_engine",                                 limit: 255,                         default: "postgresql",                     null: false
     t.integer  "search_radius"
     t.string   "search_text",                                   limit: 255
     t.integer  "last_index_job_id"
@@ -1263,31 +1258,33 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                          default: true
     t.string   "time_zone"
-    t.string   "seller_attachments_access_level",               limit: 255,                         default: "disabled",    null: false
-    t.integer  "seller_attachments_documents_num",                                                  default: 10,            null: false
-    t.boolean  "enable_language_selector",                                                          default: false,         null: false
+    t.string   "seller_attachments_access_level",               limit: 255,                         default: "disabled",                       null: false
+    t.integer  "seller_attachments_documents_num",                                                  default: 10,                               null: false
+    t.boolean  "enable_language_selector",                                                          default: false,                            null: false
     t.boolean  "click_to_call",                                                                     default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                          default: false
     t.boolean  "split_registration",                                                                default: false
-    t.boolean  "precise_search",                                                                    default: false,         null: false
+    t.boolean  "precise_search",                                                                    default: false,                            null: false
     t.boolean  "require_payout_information",                                                        default: false
     t.boolean  "enquirer_blogs_enabled",                                                            default: false
     t.boolean  "lister_blogs_enabled",                                                              default: false
     t.boolean  "tax_included_in_price",                                                             default: true
     t.boolean  "skip_meta_tags",                                                                    default: false
     t.string   "test_email"
-    t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,         null: false
+    t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,                            null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
-    t.boolean  "enable_geo_localization",                                                           default: true
     t.boolean  "force_fill_in_wizard_form"
-    t.boolean  "show_currency_symbol",                                                              default: true,          null: false
-    t.boolean  "show_currency_name",                                                                default: false,         null: false
-    t.boolean  "no_cents_if_whole",                                                                 default: true,          null: false
-    t.string   "encrypted_google_maps_api_key",                                                     default: "",            null: false
+    t.boolean  "show_currency_symbol",                                                              default: true,                             null: false
+    t.boolean  "show_currency_name",                                                                default: false,                            null: false
+    t.boolean  "no_cents_if_whole",                                                                 default: true,                             null: false
+    t.string   "encrypted_google_maps_api_key",                                                     default: "",                               null: false
     t.boolean  "debugging_mode_for_admins",                                                         default: true
+    t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
+    t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -1583,6 +1580,7 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
     t.boolean  "is_free_booking",                                           default: false
+    t.datetime "draft_at"
     t.datetime "lister_confirmed_at"
     t.datetime "enquirer_confirmed_at"
   end
@@ -1746,6 +1744,8 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.integer  "payment_gateway_id"
     t.datetime "failed_at"
     t.string   "encrypted_token"
+    t.integer  "merchant_account_id"
+    t.integer  "payment_gateway_fee_cents",                                          default: 0
   end
 
   add_index "payment_transfers", ["company_id"], name: "index_payment_transfers_on_company_id", using: :btree
@@ -1789,6 +1789,7 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.integer  "total_amount_cents",                                                             default: 0
     t.boolean  "exclude_from_payout",                                                            default: false
     t.string   "external_id"
+    t.integer  "payment_gateway_fee_cents",                                                      default: 0
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
@@ -1870,7 +1871,6 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.boolean  "mark_to_be_bulk_update_deleted",             default: false
     t.integer  "owner_id"
     t.string   "owner_type"
-    t.string   "photo_role"
   end
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
@@ -1989,10 +1989,11 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.string   "name"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.hstore   "settings",      default: {}
-    t.boolean  "step_checkout", default: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.hstore   "settings",                 default: {}
+    t.boolean  "step_checkout",            default: false
+    t.boolean  "require_merchant_account", default: false
   end
 
   add_index "reservation_types", ["instance_id"], name: "index_reservation_types_on_instance_id", using: :btree
@@ -2546,6 +2547,7 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.datetime "deleted_at"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
+    t.datetime "rejected_by_owner_at"
   end
 
   add_index "transactable_collaborators", ["instance_id"], name: "index_transactable_collaborators_on_instance_id", using: :btree
@@ -2609,6 +2611,7 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "confirm_reservations",                       default: true
+    t.boolean  "allow_drafts",                               default: false, null: false
     t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
     t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
     t.integer  "minimum_lister_service_fee_cents",           default: 0
@@ -2741,6 +2744,7 @@ ActiveRecord::Schema.define(version: 20161114182624) do
     t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
     t.boolean  "require_transactable_during_onboarding",                                         default: true
     t.boolean  "access_restricted_to_invited"
+    t.boolean  "auto_seek_collaborators",                                                        default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3228,38 +3232,6 @@ ActiveRecord::Schema.define(version: 20161114182624) do
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
   add_index "workflow_alerts", ["template_path", "workflow_step_id", "recipient_type", "alert_type", "deleted_at"], name: "index_workflows_alerts_on_templ_step_recipient_alert_and_del", unique: true, using: :btree
-
-  create_table "workflow_alerts_backup_20160926", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.string   "name",                      limit: 255
-    t.string   "alert_type",                limit: 255
-    t.string   "recipient_type",            limit: 255
-    t.string   "template_path",             limit: 255
-    t.integer  "workflow_step_id"
-    t.integer  "instance_id"
-    t.text     "options"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "delay"
-    t.text     "subject"
-    t.string   "layout_path",               limit: 255
-    t.text     "custom_options"
-    t.string   "from",                      limit: 255
-    t.string   "reply_to",                  limit: 255
-    t.string   "cc",                        limit: 255
-    t.string   "bcc",                       limit: 255
-    t.string   "recipient",                 limit: 255
-    t.string   "from_type",                 limit: 255
-    t.string   "reply_to_type",             limit: 255
-    t.text     "endpoint"
-    t.string   "request_type"
-    t.boolean  "use_ssl"
-    t.text     "payload_data"
-    t.text     "headers"
-    t.text     "prevent_trigger_condition"
-    t.string   "bcc_type"
-  end
 
   create_table "workflow_steps", force: :cascade do |t|
     t.string   "name",             limit: 255

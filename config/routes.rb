@@ -768,9 +768,11 @@ DesksnearMe::Application.routes.draw do
       resources :payment_gateways, only: [] do
         resources :credit_cards, only: [:new, :create, :index, :destroy], controller: 'payment_gateways/credit_cards'
       end
-
       namespace :company do
-        resource :analytics
+        resource :analytics do
+          get ':chart_type', to: :show
+        end
+
         resources :order_items
 
         # TODO: move orders_received scope to company/orders scope

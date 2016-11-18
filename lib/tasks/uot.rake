@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 namespace :uot do
   desc 'Setup UoT'
   task setup: :environment do
@@ -28,9 +29,9 @@ namespace :uot do
       twilio_consumer_key: 'AC107ea702c0d8255b0afc2baff62c345c',
       twilio_consumer_secret: 'df396dbe315d3e3d233ac76e49a1fabd',
       twilio_from_number: '+1 703-898-8300'
-    # TODO: reenable for production
-    # linkedin_consumer_key: '78uvu99t7fxfcz',
-    # linkedin_consumer_secret: 'NGaQfcPmglHuaLOX'
+      # TODO: reenable for production
+      # linkedin_consumer_key: '78uvu99t7fxfcz',
+      # linkedin_consumer_secret: 'NGaQfcPmglHuaLOX'
     )
     @instance.create_documents_upload(
       enabled: true,
@@ -681,14 +682,13 @@ namespace :uot do
           transformation_hash.keys.each do |word|
             new_value = new_value.gsub(word, transformation_hash[word])
           end
-          if value != new_value
-            t = Translation.find_or_initialize_by(locale: 'en', key: key, instance_id: @instance.id)
-            t.value = new_value
-            t.skip_expire_cache = true
-            t.save!
-            print '.'
-            $stdout.flush
-          end
+          next unless value != new_value
+          t = Translation.find_or_initialize_by(locale: 'en', key: key, instance_id: @instance.id)
+          t.value = new_value
+          t.skip_expire_cache = true
+          t.save!
+          print '.'
+          $stdout.flush
         end
       end
 
@@ -762,7 +762,7 @@ namespace :uot do
 
     def create_my_cases!
       load_template('dashboard/offers/offer')
-      load_template('dashboard/order_items/project_info')
+      # load_template('dashboard/order_items/project_info')
       load_template('dashboard/company/offers/offer')
       load_template('dashboard/company/transactables/index', false)
       load_template('dashboard/company/transactables/listing')
@@ -797,6 +797,7 @@ namespace :uot do
 
     def create_analytics!
       load_template('dashboard/company/analytics/show', false)
+      load_template('dashboard/company/transfers/show', false)
     end
 
     def create_workflow_alerts
@@ -878,7 +879,7 @@ namespace :uot do
     def destroy_page!(name)
       slug = name.parameterize
       page = @instance.theme.pages.where(slug: slug).first
-      page.destroy if page
+      page&.destroy
     end
 
     def load_template(path, partial = true)
@@ -887,7 +888,7 @@ namespace :uot do
         path: path
       ).first_or_initialize
       iv.update!(transactable_types: TransactableType.all,
-                 body: read_template("#{path.gsub('/', '_')}.liquid"),
+                 body: read_template("#{path.tr('/', '_')}.liquid"),
                  format: 'html',
                  handler: 'liquid',
                  partial: partial,
@@ -897,9 +898,11 @@ namespace :uot do
 
     def create_custom_attribute(object, hash)
       hash = hash.with_indifferent_access
-      attr = object.custom_attributes.where(name: hash.delete(:name)).first_or_initialize
-      attr.assign_attributes(hash)
-      attr.set_validation_rules!
+      custom_attribute = object.custom_attributes.where(name: hash.delete(:name)).first_or_initialize
+      custom_attribute.custom_validators.destroy_all
+      custom_attribute.assign_attributes(hash)
+      custom_attribute.save!
+      custom_attribute.custom_validators.each(&:save!)
     end
 
     def read_template(name)

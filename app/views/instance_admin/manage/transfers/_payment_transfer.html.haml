@@ -16,10 +16,10 @@
         = t('instance_admin.manage.transfers.retry_possible')
       - else
         = t('instance_admin.not_available_na')
-  %td
-    = resource.transfer_status
-  %td= resource.total_service_fee.format with_currency: true
-  %td= resource.service_fee_amount_guest.format with_currency: true
-  %td= resource.service_fee_amount_host.format with_currency: true
-  %td= resource.amount.format with_currency: true
+  - if current_instance.guest_fee_enabled? &&  current_instance.host_fee_enabled?
+    %td= render_money(resource.service_fee_amount_guest)
+    %td= render_money(resource.service_fee_amount_host)
+  %td= render_money(resource.total_service_fee)
+  %td= render_money(resource.payment_gateway_fee)
+  %td= render_money(resource.amount)
   %td= link_to t('instance_admin.details'), instance_admin_manage_transfer_path(resource)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require 'helpers/reservation_test_support'
 
@@ -108,15 +109,13 @@ class PaymentTransferTest < ActiveSupport::TestCase
                                                                   subtotal_amount_cents: 1000,
                                                                   service_fee_amount_guest_cents: 150,
                                                                   service_fee_amount_host_cents: 100,
-                                                                  cancellation_policy_penalty_percentage: 60
-                                                  )
+                                                                  cancellation_policy_penalty_percentage: 60)
       @payments << @payment_2 = FactoryGirl.create(:paid_payment, company: @company,
                                                                   total_amount_cents: 1200,
                                                                   subtotal_amount_cents: 1000,
                                                                   service_fee_amount_guest_cents: 200,
                                                                   service_fee_amount_host_cents: 150,
-                                                                  cancellation_policy_penalty_percentage: 50
-                                                  )
+                                                                  cancellation_policy_penalty_percentage: 50)
 
       @payment_transfer = @company.payment_transfers.build
     end
@@ -158,7 +157,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
     should 'be the sum of the charge subtotals and the service fees' do
       pt = PaymentTransfer.new
       pt.amount_cents = 50_00
-      pt.service_fee_amount_guest_cents = 10_00
+      pt.payment_gateway_fee_cents = 10_00
       pt.service_fee_amount_host_cents = 15_00
       assert_equal 75_00, pt.gross_amount_cents
     end
@@ -185,7 +184,8 @@ class PaymentTransferTest < ActiveSupport::TestCase
         payment_gateway: @payout_gateway,
         merchantable: @payment_transfer.company,
         state: 'verified',
-        email: 'tomek@near-me.com')
+        email: 'tomek@near-me.com'
+      )
     end
 
     should 'be not paid if attempt to payout failed' do

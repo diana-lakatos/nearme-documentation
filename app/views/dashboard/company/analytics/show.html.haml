@@ -5,15 +5,11 @@
 
 - tabs = []
 - analytics_options.each do |tab|
-  - tabs.push({ name: tab[0], url: url_for(:analytics_mode => tab[1]), active: tab[1] == @analytics_mode })
+  - tabs.push({ name: tab[0], url: url_for(:analytics_mode => tab[1]), active: tab[1] == params[:chart_type]})
 
 = dashboard_panel_multi_tabs(tabs)
 
 .panel
   .panel-body
-    = render :partial => "analytics_#{@analytics_mode}"
-
-= yield :analytics_pagination
-
-- content_for :domready do
-  $(document).trigger('line:chart.nearme', ['#chart', #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe}]);
+    = render partial: 'shared/chart', object: @chart
+    = render partial: 'shared/chart/list/' + @chart.chart_type
