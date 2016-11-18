@@ -122,4 +122,8 @@ class SearcherDrop < BaseDrop
   def filterable_custom_attributes_hash
     filterable_custom_attributes.each_with_object({}) { |ca, hash| hash[ca.name] = ca }
   end
+
+  def options_for_select
+    Elastic::Aggregations::OptionsForSelect.build(@searcher.fetcher.aggregations)
+  end
 end

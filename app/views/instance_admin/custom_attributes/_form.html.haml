@@ -33,6 +33,7 @@
   .row
     .input-container.col-xs-6
       = f.input :searchable, as: :boolean, inline_label: true
+      = f.input :aggregate_in_search, as: :boolean, inline_label: true
       = f.input :search_in_query, as: :boolean, inline_label: true
     .input-container.col-xs-6
       = f.input :valid_values, label: t('instance_admin.manage.custom_attributes.valid_values_separate_with_comma'), wrapper_html_options: { class: 'for-select-tag' }, input_html: { value: f.object.valid_values.join(', '), style: "width: 100%;" }

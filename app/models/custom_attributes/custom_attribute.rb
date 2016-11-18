@@ -28,6 +28,11 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   before_save :update_custom_validators
   after_save :ensure_custom_validators_are_properly_setup!
 
+  attr_accessor :aggregate_in_search
+  def aggregate_in_search
+    true
+  end
+
   def create_translations
     ::CustomAttributes::CustomAttribute::TranslationCreator.new(self).create_translations!
     expire_cache_key(cache_type: 'Translation')
