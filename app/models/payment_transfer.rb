@@ -40,6 +40,12 @@ class PaymentTransfer < ActiveRecord::Base
   }
   scope :with_token, -> (not_encrypted_token) { where(encrypted_token: PaymentTransfer.encrypt_token(not_encrypted_token, key: DesksnearMe::Application.config.secret_token)) }
 
+  scope :with_created_date, ->(date) { where(created_at: date) }
+
+  scope :with_transferred_date, ->(date) { where(transferred_at: date) }
+
+  scope :with_company_name, ->(name) { joins(:company).where('companies.name like ?', "%#{name}%") }
+
   validate :validate_all_charges_in_currency
 
   # Amount is the amount we're transferring to the Host from payments we've
