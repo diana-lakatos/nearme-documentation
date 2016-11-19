@@ -1,4 +1,34 @@
+# frozen_string_literal: true
 class BaseDrop < Liquid::Drop
+  class RoutesProxy
+    class << self
+      def method_missing(method_sym, *arguments, &block)
+        if url_helpers.respond_to?(method_sym)
+          options = arguments.last.is_a?(Hash) ? arguments.pop : {}
+          options[:language] = language if language
+          arguments << options
+          url_helpers.public_send(method_sym, *arguments)
+        else
+          super
+        end
+      end
+
+      def respond_to_missing?(method_name, include_private = false)
+        url_helpers.respond_to?(method_name, include_private)
+      end
+
+      private
+
+      def url_helpers
+        Rails.application.routes.url_helpers
+      end
+
+      def language
+        PlatformContext.current&.url_locale
+      end
+    end
+  end
+
   include MoneyRails::ActionViewExtension
 
   attr_reader :source
@@ -27,7 +57,7 @@ class BaseDrop < Liquid::Drop
   end
 
   def routes
-    Rails.application.routes.url_helpers
+    RoutesProxy
   end
 
   def asset_url(source)
@@ -38,7 +68,7 @@ class BaseDrop < Liquid::Drop
     end
   end
 
-  alias_method :image_url, :asset_url
+  alias image_url asset_url
 
   def urlify(path)
     'https://' + platform_context_decorator.host + path

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateTransactableDimensionsTemplates < ActiveRecord::Migration
   def change
     create_table :transactable_dimensions_templates do |t|

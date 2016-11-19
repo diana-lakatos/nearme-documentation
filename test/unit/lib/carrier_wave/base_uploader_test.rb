@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require Rails.root.join 'test/helpers/placeholder_helper'
 include PlaceholderHelper
@@ -32,11 +33,6 @@ class MountUploaderTest < ActiveSupport::TestCase
     should 'return transformed version versions dimensions if they are provided' do
       photo = FactoryGirl.create(:photo, image_versions_generated_at: nil)
       assert_equal placeholder_url(895, 554), photo.image.default_url(:golden)
-    end
-
-    should 'return default 100x100 placeholder for original version' do
-      page = FactoryGirl.create(:page)
-      assert_equal placeholder_url(100, 100), page.hero_image.default_url
     end
   end
 end

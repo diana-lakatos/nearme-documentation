@@ -1,11 +1,12 @@
+# frozen_string_literal: true
 # just proof of concept
 # it's not implemented/integrated anywhere
 module SendleApi
   module Validations
     def self.sender(contact:, address:, instructions:)
       {
-        contact: Validations::contact(contact),
-        address: Validations::address(address),
+        contact: Validations.contact(contact),
+        address: Validations.address(address),
         instructions: instructions
       }
     end
@@ -29,9 +30,9 @@ module SendleApi
 
     ORDER_FIELDS = [:pickup_date, :description, :kilogram_weight,
                     :cubic_metre_volume, :customer_reference, :metadata,
-                    :sender, :receiver]
+                    :sender, :receiver].freeze
 
-    # FIXME validate nested
+    # FIXME: validate nested
     def self.order(**args)
       missing = ORDER_FIELDS & args.keys
 

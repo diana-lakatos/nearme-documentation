@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class OrderDecorator < Draper::Decorator
   include MoneyRails::ActionViewExtension
   include Draper::LazyHelpers
@@ -147,9 +148,7 @@ class OrderDecorator < Draper::Decorator
     address.firstname ||= user.first_name
     address.lastname ||= user.last_name
     address.phone ||= user.phone.to_s
-    if user.country && !address.phone.include?('+')
-      address.phone ||= "+#{user.country.calling_code} #{address.phone}"
-    end
+    address.phone ||= "+#{user.country.calling_code} #{address.phone}" if user.country && !address.phone.include?('+')
 
     address
   end

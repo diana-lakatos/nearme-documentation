@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddAddressToOrderAddress < ActiveRecord::Migration
   def change
     add_column :order_addresses, :address, :string

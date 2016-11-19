@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'jira-ruby'
 require 'chronic'
 
@@ -44,6 +45,8 @@ class JiraWrapper
 
   def find_issue(number)
     @issues.try(:detect) { |i| i.key == number } || @client.Issue.find(number)
+  rescue
+    nil
   end
 
   def epic_hash
@@ -62,6 +65,7 @@ class JiraWrapper
   end
 
   def issue_hash(issue)
+    return nil if issue.nil?
     {
       name: issue.key + ' ' + issue.summary,
       fixVersions: issue.fixVersions.map(&:name).join(', '),

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module UsersHelper
   def user_is_admin?
     current_user && current_user.admin?
@@ -12,7 +13,7 @@ module UsersHelper
   end
 
   def user_country_default(country)
-    Country.find_by_name(country) ? country : current_instance.default_country
+    Country.find_by(name: country) ? country : current_instance.default_country
   end
 
   def admin_as_user?

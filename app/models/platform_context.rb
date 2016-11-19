@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Class responsible for encapsulating multi-tenancy logic.
 #
 # PlatformContext for normal requests is set based on current domain. Information about current platform
@@ -19,7 +20,7 @@
 
 class PlatformContext
   DEFAULT_REDIRECT_CODE = 302
-  NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'.freeze
+  NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'
   @@instance_view_cache_key = {}
 
   attr_reader :domain, :platform_context_detail, :instance, :theme, :custom_theme, :domain,
@@ -241,9 +242,29 @@ class PlatformContext
     @custom_theme = @platform_context_detail.custom_theme_for_instance_admins if @platform_context_detail.try(:custom_theme_for_instance_admins).present?
   end
 
-  def photo_upload_version_dimensions(version, uploader)
+  def photo_upload_version_dimensions(version:, uploader_klass:)
+    photo_upload_versions_fetcher.dimensions(version: version, uploader_klass: uploader_klass)
+  end
+
+  def photo_upload_versions_fetcher
     @photo_upload_versions_fetcher ||= PhotoUploadVersionFetcher.new
-    @photo_upload_versions_fetcher.dimensions(version, uploader)
+  end
+
+  def default_photo_url(version:, uploader_klass:)
+    default_photo.url(version: version, uploader_klass: uploader_klass)
+  end
+
+  def default_photo
+    @default_photo ||= DefaultPhoto.new
+  end
+
+  def multiple_languages?
+    return false if instance.nil?
+    @multiple_language ||= instance.available_locales.many?
+  end
+
+  def url_locale
+    multiple_languages? ? I18n.locale : nil
   end
 
   private

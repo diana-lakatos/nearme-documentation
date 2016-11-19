@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SendleApi
   class Response
     SUCCESS_CODE = 200..207
@@ -11,9 +12,7 @@ module SendleApi
       SUCCESS_CODE.include? response.status
     end
 
-    def body
-      response.body
-    end
+    delegate :body, to: :response
 
     def inspect
       [success?, body]

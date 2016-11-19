@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Purchase < Order
   validate :check_quantities, if: :skip_checkout_validation
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # TODO: before removing migrate data to new format
 class CleanupDimensionTemplates < ActiveRecord::Migration
   def change

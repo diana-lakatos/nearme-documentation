@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Shippings
   class Provider < OpenStruct
     def self.find(name)

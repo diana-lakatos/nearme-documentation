@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 DesksnearMe::Application.routes.draw do
   # favicon for scraping
   get '/favicon.ico', to: 'favicon#show'
@@ -224,7 +225,8 @@ DesksnearMe::Application.routes.draw do
 
     delete 'wish_list/:id/:wishlistable_type', to: 'wish_lists#destroy'
     get 'wish_list/:id/:wishlistable_type', to: 'wish_lists#show', as: 'wish_list'
-    get 'wish_lists/bulk_show', to: 'wish_lists#bulk_show', as: 'bulk_show_wish_lists'
+    # we use post for bulk show as we were hitting URL string limit with get requests
+    post 'wish_lists/bulk_show', to: 'wish_lists#bulk_show', as: 'bulk_show_wish_lists'
     post 'wish_lists', to: 'wish_lists#create', as: 'wish_lists'
 
     namespace :instance_admin do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
   before_action :find_instance
   before_action :find_instance_translations

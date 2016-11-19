@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'English'
 require 'json'
 require 'faraday'
@@ -39,7 +40,7 @@ module SendleApi
 
     private
 
-    SANDBOX_URL = 'https://sandbox.sendle.com/api/'.freeze
+    SANDBOX_URL = 'https://sandbox.sendle.com/api/'
 
     def api
       SendleApi::HttpClient.new user: @sendle_id, password: @api_key, url: SANDBOX_URL

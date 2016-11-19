@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Deliveries
   # sendle API client NM adapter
   class Sendle < Base

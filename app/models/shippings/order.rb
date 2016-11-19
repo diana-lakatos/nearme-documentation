@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 module Shippings
-
   # TODO: mostly all functions from the module below should be extracted from ORDER
   # and moved to either VIEW-OBJECT or FORM-OBJECT like model
   module Order
@@ -13,8 +12,8 @@ module Shippings
       # TODO: fix it - move to better place
       after_validation do
         if Shippings.enabled?(self) && inbound.present? && outbound.present?
-          inbound.errors.each { |k,v| errors.add("inbound_#{k}", v)}
-          outbound.errors.each { |k,v| errors.add("outbound_#{k}", v)}
+          inbound.errors.each { |k, v| errors.add("inbound_#{k}", v) }
+          outbound.errors.each { |k, v| errors.add("outbound_#{k}", v) }
 
           inbound_sender.errors.each { |k, v| errors.add("inbound_sender_#{k}", v) }
           outbound_receiver.errors.each { |k, v| errors.add("outbound_receiver_#{k}", v) }

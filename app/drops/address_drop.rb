@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddressDrop < BaseDrop
   attr_reader :address_object
 

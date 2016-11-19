@@ -1,6 +1,6 @@
+# frozen_string_literal: true
 module Shippings
   class << self
-
     def table_name_prefix
       'shippings_'
     end
@@ -36,7 +36,7 @@ module Shippings
     # TODO: move configuration to file
     def profiles(_type = TransactableType::TimeBasedBooking)
       {
-        TransactableType::TimeBasedBooking => ['one_way', 'return', 'reversed_one_way', 'reversed_return']
+        TransactableType::TimeBasedBooking => %w(one_way return reversed_one_way reversed_return)
       }
     end
 

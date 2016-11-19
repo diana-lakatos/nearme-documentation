@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'googl'
 require 'sanitize'
 
@@ -323,7 +324,9 @@ module LiquidFilters
 
   # Returns url for url helper name and arguments
   def generate_url(url_name, *args)
-    Rails.application.routes.url_helpers.try(url_name, *args)
+    return "unknown route #{url_name}" unless BaseDrop::RoutesProxy.respond_to_missing?(url_name)
+
+    BaseDrop::RoutesProxy.public_send(url_name, *args)
   end
 
   # Changes text into datetime, for example today, 3 days ago etc.

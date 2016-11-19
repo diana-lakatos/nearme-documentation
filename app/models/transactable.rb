@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Transactable < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid

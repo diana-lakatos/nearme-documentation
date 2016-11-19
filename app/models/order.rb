@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Order < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
 
@@ -252,9 +253,7 @@ class Order < ActiveRecord::Base
     @completed_ids ||= self[:completed_form_component_ids].to_s.split(',')
   end
 
-  def dimensions_template
-    transactable.dimensions_template
-  end
+  delegate :dimensions_template, to: :transactable
 
   def remove_empty_documents
     return if PlatformContext.current.instance.documents_upload.try(:is_mandatory?)

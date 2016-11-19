@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ShippoLegacy
   module Order
     extend ActiveSupport::Concern
@@ -86,5 +87,4 @@ module ShippoLegacy
       self.shipping_address = nil if use_billing
     end
   end
-
 end

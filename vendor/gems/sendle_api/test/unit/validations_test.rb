@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require './lib/sendle_api'
 require './lib/sendle_api/validations'

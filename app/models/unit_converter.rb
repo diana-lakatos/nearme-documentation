@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module UnitConverter
   UNITS_OF_MEASURE = {
     'imperial' => {
@@ -46,5 +47,4 @@ module UnitConverter
       end
     end
   end
-
 end

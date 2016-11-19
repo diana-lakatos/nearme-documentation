@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateShippingsShippingProviders < ActiveRecord::Migration
   def change
     create_table :shippings_shipping_providers do |t|

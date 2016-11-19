@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableTypeDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
@@ -49,10 +50,5 @@ class TransactableTypeDecorator < Draper::Decorator
 
   def search_field_placeholder
     searcher_type == 'fulltext' ? I18n.t('homepage.search_field_placeholder.full_text') : I18n.t('homepage.search_field_placeholder.location')
-  end
-
-  # TODO: to refactor
-  def manage_transactables_path
-    [:dashboard, :company, object.becomes(TransactableType), object.becomes(TransactableType).class.name.demodulize.tableize.split('_').first.pluralize]
   end
 end

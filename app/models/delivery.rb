@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # TODO: duplicates shipping model
 class Delivery < ActiveRecord::Base
   has_paper_trail

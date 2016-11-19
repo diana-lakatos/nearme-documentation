@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Transactable::ActionTypeDrop < BaseDrop
   attr_reader :action_type
 
@@ -13,5 +14,9 @@ class Transactable::ActionTypeDrop < BaseDrop
 
   def sorted_pricings
     pricings.sort_by(&:number_of_units)
+  end
+
+  def pricings_hash
+    @pricings_hash ||= pricings.each_with_object({}) { |pricing, hash| hash[pricing.unit] = pricing.price }
   end
 end

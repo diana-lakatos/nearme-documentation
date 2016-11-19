@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ShippoLegacy
   module Transactable
     extend ActiveSupport::Concern
@@ -72,9 +73,7 @@ module ShippoLegacy
                    else
                      create_shippo_address.validate
                    end
-      if validation.object_state == 'INVALID'
-        errors.add(:base, validation.messages.map { |m| m[:text] }.join(' '))
-      end
+      errors.add(:base, validation.messages.map { |m| m[:text] }.join(' ')) if validation.object_state == 'INVALID'
     end
 
     def get_shippo_id

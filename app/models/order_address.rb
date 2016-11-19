@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 class OrderAddress < ActiveRecord::Base
   include ShippoLegacy::OrderAddress
   include Carmen
 
-  # TODO import validation from shipping-provider either
+  # TODO: import validation from shipping-provider either
   # to this class or to the delivery class
   # or use external validator ...
 
@@ -24,7 +25,7 @@ class OrderAddress < ActiveRecord::Base
 
   validates :firstname, :lastname, :phone, :email, presence: true
 
-    # TODO: clean up DB table
+  # TODO: clean up DB table
   # validates :street1, :city, :state, :zip, :country
   # validate :country_and_state
   # def country_and_state

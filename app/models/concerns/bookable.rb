@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Bookable
   extend ActiveSupport::Concern
 
@@ -67,7 +68,7 @@ module Bookable
       elsif transactable.try(:location).try(:assigned_waiver_agreement_templates).try(:any?)
         transactable.location.assigned_waiver_agreement_templates.includes(:waiver_agreement_template).map(&:waiver_agreement_template)
       else (templates = PlatformContext.current.instance.waiver_agreement_templates).any?
-        templates
+           templates
       end
     end
 

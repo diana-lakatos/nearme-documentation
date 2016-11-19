@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # encoding: utf-8
 class AvatarUploader < BaseUploader
   include CarrierWave::TransformableImage
@@ -11,6 +12,12 @@ class AvatarUploader < BaseUploader
     big: { width: 279, height: 279, transform: :resize_to_fill },
     bigger: { width: 460, height: 460, transform: :resize_to_fill }
   }
+
+  class << self
+    def default_placeholder(*_args)
+      ActionController::Base.helpers.image_url('default-user-avatar.svg')
+    end
+  end
 
   ASPECT_RATIO = 1
 
@@ -28,9 +35,5 @@ class AvatarUploader < BaseUploader
 
   version :bigger, from_version: :transformed, if: :delayed_processing? do
     process dynamic_version: :bigger
-  end
-
-  def default_placeholder(*_args)
-    ActionController::Base.helpers.image_url('default-user-avatar.svg')
   end
 end

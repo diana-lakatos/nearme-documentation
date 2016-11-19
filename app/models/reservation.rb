@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Reservation < Order
   include Bookable
   include Categorizable

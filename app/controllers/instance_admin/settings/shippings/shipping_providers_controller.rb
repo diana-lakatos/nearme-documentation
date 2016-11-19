@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::Settings::Shippings::ShippingProvidersController < InstanceAdmin::Settings::BaseController
   respond_to :html
 

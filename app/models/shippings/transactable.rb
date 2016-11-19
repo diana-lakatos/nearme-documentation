@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Shippings
   module Transactable
     extend ActiveSupport::Concern

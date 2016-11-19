@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Shippings::ShippingProvider < ActiveRecord::Base
   include Encryptable
 

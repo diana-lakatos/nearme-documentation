@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 # TODO: delete
 class InstanceAdmin::ShippingOptions::DimensionsTemplatesController < InstanceAdmin::ShippingOptions::BaseController
-  before_filter :set_breadcrumbs
+  before_action :set_breadcrumbs
 
   def index
     @dimensions_templates = current_instance.dimensions_templates

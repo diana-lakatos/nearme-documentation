@@ -18,7 +18,7 @@ gem 'rabl'
 gem 'carrierwave'
 gem 'carrierwave-imageoptim'
 gem 'image_optim_pack'
-gem 'devise', '3.5.4'
+gem 'devise', '4.2.0'
 gem 'devise-token_authenticatable'
 gem 'rack-throttle'
 

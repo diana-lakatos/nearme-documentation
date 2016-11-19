@@ -20,6 +20,11 @@ en:
         additional_charge_type_target: "Product/Service Type"
       instance:
         time_zone: "Default Time Zone"
+      password_validation_rules:
+        uppercase: 'At least one Uppercase letter'
+        lowercase: 'At least one Lowercase letter'
+        number: 'At least one Number'
+        symbol: 'At least one Non-alphanumeric letter'
       payment_method/payment_method_type:
         credit_card: "Credit Card"
         nonce: "PayPal"
@@ -452,6 +457,12 @@ en:
           regexp: Regexp
           replacement_text: "Replacement Text"
           ignore_case: "Ignore case"
+        user_options: 'Login timeout and password strength rules.'
+        timeout:
+          hint: "Use 0 for no timeout on user's session"
+        password:
+          min_length:
+            hint: "Default and minimum value is %{default_min_length}"
         support: "Support"
         currency_options: "Currency Options"
       payments:

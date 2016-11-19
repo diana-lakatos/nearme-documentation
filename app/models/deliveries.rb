@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'sendle_api'
 
 # TODO: rename module name

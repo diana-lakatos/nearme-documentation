@@ -223,5 +223,6 @@ en:
     manage:
       transfers:
         total_fee: MP Fees
+        lessee_service_fees: MP Fees
 
 

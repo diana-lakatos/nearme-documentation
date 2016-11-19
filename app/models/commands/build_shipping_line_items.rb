@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Commands
   class BuildShippingLineItems
     def initialize(order:)

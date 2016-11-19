@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # NOTE: order should have only at most 2 active order-addresses
 class CreateDeliveries < ActiveRecord::Migration
   def change

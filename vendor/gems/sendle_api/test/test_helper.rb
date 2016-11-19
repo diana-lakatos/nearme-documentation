@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'minitest/reporters'
 require 'minitest-vcr'
 Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new)

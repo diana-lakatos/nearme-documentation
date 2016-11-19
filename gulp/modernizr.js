@@ -12,9 +12,8 @@ function buildModernizr(output, environment, optimize) {
 
   modernizr.build(modernizrConfig, (result)=>{
     if (optimize) {
-      result = uglifyJS.minify(result, {
+      var optimized = uglifyJS.minify(result, {
         fromString: true,
-        outSourceMap: 'modernizr.js.map',
         output: {
           comments: /license/i,
         },
@@ -22,6 +21,8 @@ function buildModernizr(output, environment, optimize) {
           except: ['Modernizr','jQuery','$', 'exports', 'require']
         }
       });
+
+      result = optimized.code;
     }
 
     /* Create output dir if it doesn't exist */
@@ -32,21 +33,13 @@ function buildModernizr(output, environment, optimize) {
       }
 
       /* Write output code */
-      fs.writeFile(path.join(output, 'modernizr.js'), result.code, function(err) {
+      fs.writeFile(path.join(output, 'modernizr.js'), result, function(err) {
         if (err) {
           gutil.log(gutil.colors.red('Error [modernizr]: ' + err));
           return gutil.beep();
         }
 
-        /* Write sourcemap */
-        fs.writeFile(path.join(output, 'modernizr.js.map'), result.map, function(err) {
-          if (err) {
-            gutil.log(gutil.colors.red('Error [modernizr]: ' + err));
-            return gutil.beep();
-          }
-
-          gutil.log(gutil.colors.yellow('[modernizr] ' + environment + ' build created successfuly'));
-        });
+        gutil.log(gutil.colors.yellow('[modernizr] ' + environment + ' build created successfuly'));
       });
     });
   });
