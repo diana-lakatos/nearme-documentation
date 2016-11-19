@@ -17,11 +17,9 @@
       - else
         = t('instance_admin.not_available_na')
   - if current_instance.guest_fee_enabled? &&  current_instance.host_fee_enabled?
-    %td= render_money(resource.total_service_fee)
-  - if current_instance.guest_fee_enabled?
     %td= render_money(resource.service_fee_amount_guest)
-  - if current_instance.host_fee_enabled?
     %td= render_money(resource.service_fee_amount_host)
+  %td= render_money(resource.total_service_fee)
   %td= render_money(resource.payment_gateway_fee)
   %td= render_money(resource.amount)
   %td= link_to t('instance_admin.details'), instance_admin_manage_transfer_path(resource)

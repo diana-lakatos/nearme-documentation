@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 class ChartDrop < BaseDrop
-  # @!method totals_by_currency
-  #   @return [Hash<String, MoneyDrop>] hash containing the currency as keys
-  #     and the sums for each currency as values
-  delegate :totals_by_currency, to: :source
+  delegate :total, :money?, :collection, :chart_type, :empty?, :period, to: :source
 
   # @return [String] string of chart values in JSON format
   #   of the form "[[1,6,7,10]]"
@@ -15,5 +12,11 @@ class ChartDrop < BaseDrop
   #   of the form "['Oct 12', 'Oct 13', 'Oct 14', 'Oct 15']"
   def labels
     @source.labels.to_json.html_safe
+  end
+
+  def no_result
+    I18n.t('dashboard.analytics.no_results',
+           type: I18n.t('dashboard.analytics.' + chart_type).downcase,
+           period: I18n.t('dashboard.analytics.' + period))
   end
 end

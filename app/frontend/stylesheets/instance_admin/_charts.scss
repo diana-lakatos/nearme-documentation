@@ -1,0 +1,13 @@
+.chart-a {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid $chart-border;
+
+  figcaption {
+    text-align: right;
+    margin-bottom: 10px;
+    form *{
+      display: inline-block;
+    }
+  }
+}

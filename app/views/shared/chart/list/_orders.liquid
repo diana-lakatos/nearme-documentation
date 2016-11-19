@@ -1,0 +1,31 @@
+<div class="table-responsive">
+  <table class="table table-simple">
+    <thead>
+      <tr>
+        <th>{{ 'dashboard.analytics.columns.count') | t }}</th>
+        <th>{{ 'dashboard.analytics.columns.listing') | t }}</th>
+        <th>{{ 'dashboard.analytics.columns.amount') | t }}</th>
+        <th>{{ 'dashboard.analytics.columns.date' | t }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for list_item in chart.collection %}
+      <tr>
+        <td>{{ list_item.quantity }}</td>
+        <td>{{ list_item.transactable.name }}</td>
+        <td>{{ list_item.total_amount | render_money }}</td>
+        <td>{{ list_item.created_at | l: 'long' }}</td>
+      </tr>
+      {% endfor %}
+      <tr class="total-row">
+       <td>
+        {{ chart.total }}
+      </td>
+      <td>{{ 'dashboard.analytics.total.all_time' | t }}</td>
+      <td></td>
+    </tr>
+  </table>
+</div>
+
+{% assign collection = chart.collection %}
+{% will_paginate collection: collection %}

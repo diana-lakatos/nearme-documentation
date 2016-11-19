@@ -103,7 +103,7 @@ class OrderDrop < BaseDrop
            :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing,
            :outbound, :inbound, :inbound_pickup_date, :outbound_pickup_date,
            :inbound_pickup_address_address, :outbound_return_address_address,
-           to: :order
+           :quantity, to: :order
 
   def initialize(order)
     @source = @order = order.decorate

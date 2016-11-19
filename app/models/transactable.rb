@@ -164,6 +164,7 @@ class Transactable < ActiveRecord::Base
   scope :for_transactable_type_id, -> (transactable_type_id) { where(transactable_type_id: transactable_type_id) }
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((transactables.properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
+  scope :last_x_days, ->(days_in_past) { where('DATE(transactables.created_at) >= ? ', days_in_past.days.ago) }
 
   scope :not_booked_relative, lambda { |start_date, end_date|
     joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (

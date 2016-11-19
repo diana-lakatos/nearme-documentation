@@ -1,5 +1,7 @@
+# frozen_string_literal: true
 class CustomTheme < ActiveRecord::Base
   include DomainsCacheable
+  scoped_to_platform_context
   auto_set_platform_context
   acts_as_paranoid
 
@@ -11,7 +13,7 @@ class CustomTheme < ActiveRecord::Base
 
   attr_accessor :copy_from_template, :overwrite_existing
 
-  validates_presence_of :name
+  validates :name, presence: true
 
   before_create { self.overwrite_existing = '1' }
 
