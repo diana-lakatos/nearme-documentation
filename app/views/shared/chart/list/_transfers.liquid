@@ -2,29 +2,39 @@
   <table class="table table-simple">
     <thead>
       <tr>
-        <th>{{ 'dashboard.analytics.columns.amount') | t }}</th>
+        <th>{{ 'dashboard.analytics.columns.gross') | t }}</th>
         <th>{{ 'dashboard.analytics.columns.fee' | t }}</th>
+        <th>{{ 'dashboard.analytics.columns.pg_fee' | t }}</th>
+        <th>{{ 'dashboard.analytics.columns.net') | t }}</th>
         <th>{{ 'dashboard.analytics.columns.state' | t }}</th>
         <th>{{ 'dashboard.analytics.columns.date' | t }}</th>
+        <th>Included Payments</th>
       </tr>
     </thead>
     <tbody>
-      {% for list_item in chart.collection %}
+      {% for list_item in analytics.list %}
         <tr>
-          <td>{{ list_item.amount | render_money }}</td>
+          <td>{{ list_item.gross_amount | render_money }}</td>
           <td>{{ list_item.total_service_fee | render_money }}</td>
+          <td>{{ list_item.payment_gateway_fee | render_money }}</td>
+          <td>{{ list_item.amount | render_money }}</td>
           <td>{{ list_item.transfer_status }}</td>
           <td>{{ list_item.created_at | l: 'long' }}</td>
+          <td><a href='/dashboard/company/analytics/revenue?payment_transfer_id={{list_item.id}}'>Payments</a></td>
         </tr>
       {% endfor %}
       <tr class="total-row">
-        <td>{{ chart.total | render_money }}</td>
         <td>{{ 'dashboard.analytics.total.all_time' | t }}</td>
         <td></td>
         <td></td>
+        <td>{{ analytics.total | render_money }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
       </tr>
+    </tbody>
   </table>
 </div>
 
-{% assign collection = chart.collection %}
+{% assign collection = analytics.list %}
 {% will_paginate collection: collection, renderer: dashboard %}

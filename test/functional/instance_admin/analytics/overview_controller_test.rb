@@ -17,7 +17,7 @@ class InstanceAdmin::Analytics::OverviewControllerTest < ActionController::TestC
       assert_response :success
       assert_equal(
         '[[0,0,0,0,0,0,1]]',
-        assigns(:chart).values
+        assigns(:analytics).to_liquid.values
       )
     end
   end

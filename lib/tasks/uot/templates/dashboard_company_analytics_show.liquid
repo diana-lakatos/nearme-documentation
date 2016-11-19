@@ -13,7 +13,7 @@
           <figcaption>
             <form action="" accept-charset="UTF-8" method="get">
               <input name="utf8" type="hidden" value="✓"><input type="hidden" name="chart_type" id="chart_type" value="{{ params.chart_type }}">
-              {% if chart.money? and currencies.size > 1 %}
+              {% if analytics.money? and currencies.size > 1 %}
                 <label for="currency">{{ 'dashboard.analytics.currency' | translate }}</label>
                 <select name="currency" id="currency" onchange="this.form.submit()">
                   {% for currency in @currencies %}
@@ -30,8 +30,8 @@
             </form>
           </figcaption>
 
-          {% if chart.empty? %}
-            <p>{{ chart.no_result }} <p>
+          {% if analytics.empty? %}
+            <p>{{ analytics.no_result }} <p>
           {% else %}
             <canvas id="chart"></canvas>
           {% endif %}
@@ -50,7 +50,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for list_item in chart.collection %}
+          {% for list_item in analytics.list %}
           <tr>
             <td>{{ list_item.amount | render_money }}</td>
             <td>{{ list_item.created_at | l: 'long' }}</td>
@@ -62,7 +62,7 @@
           </tr>
           {% endfor %}
           <tr class="total-row">
-            <td>{{ chart.total | render_money }}</td>
+            <td>{{ analytics.total | render_money }}</td>
             <td>{{ 'dashboard.analytics.total.all_time' | t }}</td>
             <td></td>
           </tr>
@@ -72,9 +72,9 @@
   </div>
 </div>
 
-{% assign collection = chart.collection %}
+{% assign collection = analytics.list %}
 {% will_paginate collection: collection, renderer: dashboard %}
 
 {% content_for 'domready' %}
-  $(document).trigger('line:chart.nearme', ['#chart', {{ chart.values}} , {{ chart.labels }} ]);
+  $(document).trigger('line:chart.nearme', ['#chart', {{ analytics.values}} , {{ analytics.labels }} ]);
 {% endcontent_for %}

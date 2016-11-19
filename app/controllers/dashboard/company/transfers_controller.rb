@@ -4,7 +4,7 @@ class Dashboard::Company::TransfersController < Dashboard::Company::BaseControll
   before_action :prepare_params
 
   def show
-    @chart = ChartDecorator.new(@company, params.merge(chart_type: 'transfers')).to_liquid
+    @analytics = AnalyticsFacade::AnalyticsBase.build(@company, params.merge(chart_type: 'transfers'))
   end
 
   def fetch_currencies

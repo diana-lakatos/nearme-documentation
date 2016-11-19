@@ -7,18 +7,18 @@
       </tr>
     </thead>
     <tbody>
-      {% for list_item in chart.collection %}
+      {% for list_item in analytics.list %}
         <tr>
           <td>{{ list_item.amount | render_money }}</td>
           <td>{{ list_item.created_at | l: 'long' }}</td>
         </tr>
       {% endfor %}
       <tr class="total-row">
-        <td>{{ chart.total | render_money }}</td>
+        <td>{{ analytics.total | render_money }}</td>
         <td>{{ 'dashboard.analytics.total.all_time' | t }}</td>
       </tr>
   </table>
 </div>
 
-{% assign collection = chart.collection %}
+{% assign collection = analytics.list %}
 {% will_paginate collection: collection, renderer: dashboard %}
