@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::PhotosController < Dashboard::AssetsController
   before_action :get_image, only: :create
 
@@ -19,8 +20,8 @@ class Dashboard::PhotosController < Dashboard::AssetsController
       render text: {
         id: @photo.id,
         transactable_id: @photo.owner_id,
-        thumbnail_dimensions: ['Group'].include?(@owner_type) ? { width: 200, height: 175, transform: :resize_to_fill } : @photo.image.thumbnail_dimensions[:medium],
-        url: ['Group'].include?(@owner_type) ? @photo.image.url(:thumb) : @photo.image.url(:medium),
+        thumbnail_dimensions: @photo.image.thumbnail_dimensions[:medium],
+        url: @photo.image.url(:medium),
         destroy_url: destroy_space_wizard_photo_path(@photo),
         resize_url: edit_dashboard_photo_path(@photo),
         sizes: sizes
