@@ -109,7 +109,7 @@ class PlatformContextDrop < BaseDrop
 
   # url to the hero image
   def hero_url
-    @platform_context_decorator.hero_image.url || image_url('intel/hero-a-bg-a.jpg').to_s
+    @platform_context_decorator.hero_image.url.presence || image_url('intel/hero-a-bg-a.jpg').to_s
   end
 
   # url to the "checked badge" image
