@@ -327,7 +327,7 @@ class UserDrop < BaseDrop
 
   # url to a user's public profile
   def profile_path
-    routes.profile_path(@source)
+    routes.profile_path(@source.slug)
   end
 
   # url to the section in the application for sending a message to this user using the
@@ -337,7 +337,7 @@ class UserDrop < BaseDrop
   end
 
   def user_blog_posts_list_path
-    routes.user_blog_posts_list_path(@source)
+    routes.user_blog_posts_list_path(@source.slug)
   end
 
   def has_active_blog?
