@@ -3,17 +3,18 @@
     = t('instance_admin.settings.integrations.shipping_providers')
     = ':'
     = @view.resource.shipping_provider_name.humanize
+
   .row
     .input-container.col-xs-12
       = simple_form_for [:instance_admin, :settings, @view.resource] do |form|
 
-        %h3 test_settings
-        = form.fields_for :test_settings, OpenStruct.new(@view.resource.test_settings) do |settings_form|
-          - @view.provider.fields.each do |field|
-            = settings_form.input field, as: :string, input_html: { class: 'form-control', required: false}
+        %h3 settings
+        - if @view.resource.errors.any?
+          .error.alert.col-xs-12
+            - @view.resource.errors.full_messages.each do |error|
+              = error
 
-        %h3 live_settings
-        = form.fields_for :live_settings, OpenStruct.new(@view.resource.live_settings) do |settings_form|
+        = form.fields_for :settings, OpenStruct.new(@view.resource.settings) do |settings_form|
           - @view.provider.fields.each do |field|
             = settings_form.input field, as: :string, input_html: { class: 'form-control', required: false}
 

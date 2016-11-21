@@ -17,10 +17,7 @@ class InstanceAdmin::Settings::Shippings::ShippingProvidersController < Instance
   end
 
   def edit
-    @view = OpenStruct.new(
-      provider: Shippings::Provider.find(resource.shipping_provider_name),
-      resource: resource
-    )
+    prepare_view_object
     respond_with @view
   end
 
@@ -54,11 +51,19 @@ class InstanceAdmin::Settings::Shippings::ShippingProvidersController < Instance
   end
 
   def update_resource
+    prepare_view_object
     resource.update_attributes provider_params
   end
 
   def collection
     @providers = @instance.shipping_providers
+  end
+
+  def prepare_view_object
+    @view = OpenStruct.new(
+      provider: Shippings::Provider.find(resource.shipping_provider_name),
+      resource: resource
+    )
   end
 
   def provider_params
@@ -72,15 +77,17 @@ class InstanceAdmin::Settings::Shippings::ShippingProvidersController < Instance
   end
 
   class CreateDefaultParcels
-    def self.perform(resource)
-      new(resource).perform
+    def self.perform(provider)
+      new(provider).perform
     end
 
-    def initialize(resource)
-      @resource = resource
+    def initialize(provider)
+      @provider = provider
     end
 
     def perform
+      return if already_imported?
+
       client.predefined_packages.each do |package|
         import package.attributes
       end
@@ -88,15 +95,19 @@ class InstanceAdmin::Settings::Shippings::ShippingProvidersController < Instance
 
     private
 
+    def already_imported?
+      @provider.dimensions_templates.any?
+    end
+
     def import(attributes)
-      @resource.dimensions_templates.create! attributes
+      @provider.dimensions_templates.create! attributes
     end
 
     # TODO: load settings based on env
     # TODO: make it injectable [DI/IoC]
     def client
-      Deliveries.courier name: @resource.shipping_provider_name,
-                         settings: @resource.test_settings
+      Deliveries.courier name: @provider.shipping_provider_name,
+                         settings: @provider.settings
     end
   end
 end

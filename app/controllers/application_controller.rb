@@ -3,6 +3,11 @@ require 'user_agent'
 require 'addressable/uri'
 
 class ApplicationController < ActionController::Base
+  before_action do
+    NewRelic::Agent.set_transaction_name(
+      "#{PlatformContext.current.instance.id} - #{NewRelic::Agent.get_transaction_name}"
+    )
+  end
   before_action :validate_request_parameters, if: -> { request.get? }
   before_action :prepend_view_paths
 

@@ -16,7 +16,7 @@
   - photo = @group.cover_photo
   - if photo.present?
     .photo-item{:id => "photo-" + photo.id.to_s}
-      = image_tag photo.image_url(:thumb)
+      = image_tag photo.image_url(:medium)
       .media-actions
         %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_dashboard_photo_path(photo), :'ajax-options' => { id: photo.id }}, :title => t('forms.photos.collection.rotate_and_crop')}
           %span.intelicon-edit

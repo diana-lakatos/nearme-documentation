@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+require 'new_relic/agent/method_tracer'
 class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
+  include ::NewRelic::Agent::MethodTracer
   attr_accessor :instance_id, :default_locale
 
   def initialize(cache, subtrees = true)
@@ -51,16 +54,14 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
           value = old_value.deep_symbolize_keys.deep_merge!(value) if old_value.is_a?(Hash)
         end
       when Proc
-        fail 'Key-value stores cannot handle procs'
+        raise 'Key-value stores cannot handle procs'
       end
       @store[_instance_key][key] = ActiveSupport::JSON.encode(value) unless value.is_a?(Symbol)
     end
   end
 
   def available_locales
-    locales = @store[instance_key(nil)].keys.map { |k| k =~ /\./; $` }
-    locales.uniq!
-    locales.compact!
+    locales = @store[instance_key(nil)].each_with_object(Set.new) { |el, loc| loc << el[0][0, el[0].index('.')] }
     locales.map!(&:to_sym)
     locales
   rescue
@@ -131,6 +132,9 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   end
 
   def instance_key(instance_id)
-    instance_id.present? ? "#{instance_id}".to_sym : :default
+    instance_id.present? ? instance_id.to_s.to_sym : :default
   end
+
+  add_method_tracer :store_translations, 'Translations/store_translations'
+  add_method_tracer :populate, 'Translations/populate'
 end

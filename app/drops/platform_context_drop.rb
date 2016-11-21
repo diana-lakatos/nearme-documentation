@@ -153,7 +153,7 @@ class PlatformContextDrop < BaseDrop
   # @return [String] url to the hero image as set in the current theme or a default image
   #   if not set
   def hero_url
-    @platform_context_decorator.hero_image.url || image_url('intel/hero-a-bg-a.jpg').to_s
+    @platform_context_decorator.hero_image.url.presence || image_url('intel/hero-a-bg-a.jpg').to_s
   end
 
   # @return [String] url to the "checked badge" image (a predefined image)
