@@ -15,6 +15,7 @@ gem 'liquid', '3.0.6'
 gem 'active_model_serializers', '~> 0.8.1'
 gem 'jsonapi-serializers', github: 'mdyd-dev/jsonapi-serializers', branch: 'feature/namespace'
 gem 'rabl'
+gem 'graphql'
 gem 'carrierwave'
 gem 'carrierwave-imageoptim'
 gem 'image_optim_pack'
@@ -178,6 +179,7 @@ group :development do
   gem 'yardstick', require: false
   gem 'fasterer', require: false # Fasterer will suggest some speed improvements
   gem 'rubocop', require: false
+  gem 'graphiql-rails'
 end
 
 group :test do

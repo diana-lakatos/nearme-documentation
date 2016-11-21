@@ -36,6 +36,21 @@ module LiquidFilters
     @no_footer = true
   end
 
+  # @return [Hash] returns data
+  # @param query_string [String] graphql query
+  # @param variables [Hash, nil] variables used in query
+  # @param current_user [User]
+  def query(query_string, params = {}, current_user = nil)
+    response = ::Graph::Schema.execute(
+      query_string,
+      variables: params,
+      context: {
+        current_user: current_user
+      }
+    )
+    response.key?('data') ? response.fetch('data') : response
+  end
+
   # @return [String, nil] returns class_name (by default 'active') if the first
   #   two arguments are equal, nil otherwise
   # @param arg1 [String] any string - will be used for comparison with the other string

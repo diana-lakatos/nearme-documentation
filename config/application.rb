@@ -25,6 +25,7 @@ module DesksnearMe
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    config.autoload_paths += Dir["#{config.root}/app/graph/"]
 
     config.to_prepare do
       Dir.glob(File.join(File.dirname(__FILE__), '../app/models/line_item/**.rb')) do |c|
