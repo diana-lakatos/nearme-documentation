@@ -81,7 +81,7 @@ class UserDrop < BaseDrop
   end
 
   def wish_list_path
-    routes.api_wish_list_path(id: @source.id, wishlistable_type: 'User')
+    routes.api_wish_list_items_path(id: @source.id, wishlistable_type: 'User')
   end
 
   # string containing the location of the user making use of the various fields
