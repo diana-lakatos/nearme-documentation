@@ -51,7 +51,6 @@ class PlatformContext
       CacheExpiration.update_memory_cache
     end
     NewRelic::Agent.add_custom_attributes(instance_id: platform_context.instance.id)
-    NewRelic::Agent.set_transaction_name("#{platform_context.instance.id} - #{NewRelic::Agent.get_transaction_name}")
     self.class.trace_execution_scoped(['PlatformContext/after_setting_current_callback/set_es_mapping']) do
       set_es_mappings
     end
