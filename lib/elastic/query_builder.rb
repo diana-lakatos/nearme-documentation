@@ -1,18 +1,19 @@
+# frozen_string_literal: true
 module Elastic
   class QueryBuilder
     QUERY_BOOST = 1.0
     ENABLE_FUZZY = false
     ENABLE_PARTIAL = false
     FUZZYNESS = 2
-    ANALYZER = 'snowball'.freeze
-    GEO_DISTANCE = 'plane'.freeze
-    GEO_UNIT = 'km'.freeze
-    GEO_ORDER = 'asc'.freeze
+    ANALYZER = 'snowball'
+    GEO_DISTANCE = 'plane'
+    GEO_UNIT = 'km'
+    GEO_ORDER = 'asc'
     MAX_RESULTS = 1000
     PER_PAGE = 20
     PAGE = 1
 
-    def initialize(query, searchable_custom_attributes = nil, transactable_type)
+    def initialize(query, searchable_custom_attributes, transactable_type)
       @transactable_type = transactable_type
       @query = query
       @bounding_box = query[:bounding_box]
@@ -85,17 +86,19 @@ module Elastic
           }
         }
       }.merge(aggregations)
-      query[:query][:filtered].merge(
-        filter: {
-          not: {
-            filter: {
-              bool: {
-                must: @not_filters
+      if @not_filters.present?
+        query[:query][:filtered].merge(
+          filter: {
+            not: {
+              filter: {
+                bool: {
+                  must: @not_filters
+                }
               }
             }
           }
-        }
-      ) if @not_filters.present?
+        )
+      end
       query
     end
 
@@ -162,8 +165,11 @@ module Elastic
       if @query[:sort].present?
         sorting_fields = @query[:sort].split(',').compact.map do |sort_option|
           next unless sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
-          if sort[1].eql? 'name'
-            { 'name.raw' => { order: sort[2] } }
+          case sort[1]
+          when 'name'
+            then { 'name.raw' => { order: sort[2] } }
+          when 'all_prices'
+            then { 'all_prices' => { order: sort[2], mode: 'min' } }
           else
             { sort[1] => { order: sort[2] } }
           end
@@ -357,16 +363,16 @@ module Elastic
         }
       end
 
-      if @query[:lg_custom_attributes]
-        @query[:lg_custom_attributes].each do |key, value|
-          value = value.is_a?(Array) ? value : value.to_s.split(',')
-          next if value.blank? || value.empty? || value.none?(&:present?)
-          @filters << {
-            terms: {
-              "custom_attributes.#{key}" => value.map(&:downcase)
-            }
+      @query[:lg_custom_attributes]&.each do |key, value|
+        value = value.is_a?(Array) ? value : value.to_s.split(',')
+        value.reject!(&:empty?) if value.instance_of?(Array)
+
+        next if value.blank? || value.empty? || value.none?(&:present?)
+        @filters << {
+          terms: {
+            "custom_attributes.#{key}" => value.map(&:downcase)
           }
-        end
+        }
       end
 
       category_search_type = @transactable_type.category_search_type
