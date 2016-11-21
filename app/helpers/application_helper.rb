@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'sanitize'
 
 module ApplicationHelper
@@ -399,6 +400,14 @@ module ApplicationHelper
       'pascha-offset' => I18n.t('schedule.pascha_offset'),
       'event-occured-less' => I18n.t('schedule.event_occured_less')
     }
+  end
+
+  def html_element_classes
+    klasses = []
+    klasses << "env-#{Rails.env}"
+    klasses << 'no-js'
+    klasses << 'signed-in' if current_user
+    klasses.join(' ')
   end
 
   def body_classes

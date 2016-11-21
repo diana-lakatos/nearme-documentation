@@ -1,6 +1,5 @@
-- html_class = "env-#{Rails.env} no-js"
 !!!
-%html{ class: html_class }
+%html{ class: html_element_classes }
   %head
     %meta{name: 'app-server', content: ENV['HOSTNAME']}
     = render 'layouts/content_holder_injector'

@@ -15,6 +15,13 @@ class WishListButtonLoader {
       return;
     }
 
+    /* For signed out user just redirect to login form */
+    if (this._checkUserSignin() === false) {
+      const signinUrl = elements[0].getAttribute('data-path-signin');
+      Array.prototype.forEach.call(elements, (el) => el.querySelector('a').setAttribute('href', signinUrl));
+      return;
+    }
+
     let url = elements[0].getAttribute('data-path-load');
 
     Array.prototype.forEach.call(elements, (el)=>{
@@ -29,6 +36,10 @@ class WishListButtonLoader {
         button.setLoaded();
       }
     });
+  }
+
+  _checkUserSignin() {
+    return document.querySelector('html').classList.contains('signed-in');
   }
 
   _enableFavoritedButtons(url, callback){
