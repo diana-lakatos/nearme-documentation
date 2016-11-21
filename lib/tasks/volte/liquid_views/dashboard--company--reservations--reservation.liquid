@@ -132,6 +132,6 @@
   {% include 'dashboard/company/host_reservations/owner_actions', reservation: reservation %}
 
   {% unless current_user.has_verified_merchant_account %}
-    <p>Before approving rental, you need to set up your <a href="{{ company.payout_path }}">Merchant Account</a>.</p>
+    <p>Before approving rental, you need to set up your <a href="{{ company.payout_path }}">Banking details</a>.</p>
   {% endunless %}
 </div>
