@@ -21,6 +21,7 @@
 require 'new_relic/agent/method_tracer'
 class PlatformContext
   extend ::NewRelic::Agent::MethodTracer
+  include ::NewRelic::Agent::MethodTracer
   DEFAULT_REDIRECT_CODE = 302
   NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'
   @@instance_view_cache_key = {}
@@ -286,4 +287,8 @@ class PlatformContext
   def remove_port_from_hostname(hostname)
     hostname.split(':').first
   end
+  add_method_tracer :initialize
+  add_method_tracer :initialize_with_request_host
+  add_method_tracer :initialize_with_domain
+  add_method_tracer :initialize_with_instance
 end
