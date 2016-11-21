@@ -134,9 +134,6 @@ gem 'acts-as-taggable-on', '~> 3.4'
 gem 'validate_url'
 gem 'ansi', require: false
 
-gem 'yard', '~> 0.9.5'
-gem 'yard-activerecord'
-
 group :profiling, :development do
   gem 'rack-mini-profiler', require: false
   gem 'flamegraph', require: false
@@ -174,8 +171,13 @@ group :development do
   gem 'parallel_tests'
   gem 'mailcatcher'
   gem 'active_record_query_trace'
-  gem 'rubocop', require: false
+
+  gem 'yard', '~> 0.9.5', require: false
+  gem 'yard-activerecord', require: false
   gem 'overcommit', require: false
+  gem 'yardstick', require: false
+  gem 'fasterer', require: false # Fasterer will suggest some speed improvements
+  gem 'rubocop', require: false
 end
 
 group :test do
