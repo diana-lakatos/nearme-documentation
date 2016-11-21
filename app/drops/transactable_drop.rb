@@ -447,4 +447,8 @@ class TransactableDrop < BaseDrop
   def unavailable_periods
     (unavailable_range_periods + rented_range_periods).uniq.to_json
   end
+
+  def cover_photo_url
+    @source.cover_photo&.image&.url(:golden)
+  end
 end

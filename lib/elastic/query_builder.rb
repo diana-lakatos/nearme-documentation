@@ -236,8 +236,7 @@ module Elastic
       multi_match = {
         query: query_string,
         fields: custom_attributes,
-        default_operator: @query[:logic_operator].presence || 'OR',
-        analyzer: :snowball
+        default_operator: @query[:logic_operator].presence || 'OR'
       }
 
       # You should enable fuzzy search manually. Not included in the current release

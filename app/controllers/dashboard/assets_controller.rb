@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 class Dashboard::AssetsController < Dashboard::BaseController
-  before_filter :get_proper_hash, only: :create
+  before_action :get_proper_hash, only: :create
 
   protected
 
@@ -16,8 +17,9 @@ class Dashboard::AssetsController < Dashboard::BaseController
       @listing = current_user.offers.find(params[:offer][:id]) if params[:offer][:id].present?
     elsif params[:transactable]
       @listing_params = params[:transactable]
-      @listing = current_user.listings.find_by_id(params[:transactable][:id]) if params[:transactable][:id].present?
-      @listing = current_user.created_listings.find(params[:transactable][:id]) if @listing.blank? && params[:transactable][:id].present?
+      @listing = current_user.listings.find_by(id: params[:transactable][:id]) if params[:transactable][:id].present?
+      @listing ||= current_user.approved_transactables_collaborated.find_by(id: params[:transactable][:id])
+      @listing ||= current_user.created_listings.find(params[:transactable][:id]) if params[:transactable][:id].present?
       @owner = @listing
       @owner_type = 'Transactable'
     elsif params[:group]

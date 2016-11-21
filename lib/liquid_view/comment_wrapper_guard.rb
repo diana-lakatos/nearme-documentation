@@ -14,7 +14,8 @@ class LiquidView
     def authorized?
       debugging_enabled? &&
         user_is_instance_admin? &&
-        html_request_and_response?
+        html_request_and_response? &&
+        response_success?
     end
 
     protected
@@ -30,6 +31,10 @@ class LiquidView
     def html_request_and_response?
       (@context.request&.format&.to_s&. =~ %r{text\/html}).present? &&
         @context.response&.headers&.fetch('Content-Type', '').include?('text/html')
+    end
+
+    def response_success?
+      @context.response&.status == 200
     end
   end
 end
