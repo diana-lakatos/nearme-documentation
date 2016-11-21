@@ -27,7 +27,9 @@ module ContentHoldersHelper
   end
 
   def inject_content_holder(name)
-    raw holder if holder = get_content_holder(name)
+    if holder = get_content_holder(name)
+        raw holder
+    end
   end
 
   def get_content_holders_for_path(path)
