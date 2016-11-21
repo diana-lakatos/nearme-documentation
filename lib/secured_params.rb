@@ -10,8 +10,7 @@ class SecuredParams
   def shipping_provider
     [
       :shipping_provider_name,
-      test_settings: [:api_key, :sendle_id],
-      live_settings: [:api_key, :sendle_id]
+      settings: [:api_key, :sendle_id, :environment]
     ]
   end
 
