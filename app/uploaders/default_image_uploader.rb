@@ -5,8 +5,8 @@ class DefaultImageUploader < BaseUploader
     process transformed_version: :transformed
   end
 
-  def transformed_version(_version)
-    dimensions = PhotoUploadVersionFetcher.dimensions(uploader_version, @model.photo_uploader&.constantize)
+  def transformed_version(version)
+    dimensions = PhotoUploadVersionFetcher.dimensions(version: version, uploader_klass: @model.photo_uploader&.constantize)
     send(dimensions[:transform], dimensions[:width], dimensions[:height])
   end
 end
