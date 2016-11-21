@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ContentHoldersHelper
   INJECT_PAGES = {
     'listings/reservations#review' => 'checkout',
@@ -5,7 +6,7 @@ module ContentHoldersHelper
     'dashboard/orders#success' => 'checkout_success',
     'listings#show' => 'service/product_page',
     'search#index' => 'search_results'
-  }
+  }.freeze
 
   def platform_context
     @platform_context_view ||= PlatformContext.current.decorate
@@ -26,20 +27,18 @@ module ContentHoldersHelper
   end
 
   def inject_content_holder(name)
-    if holder = get_content_holder(name)
-      raw holder
-    end
+    raw holder if holder = get_content_holder(name)
   end
 
   def get_content_holders_for_path(path)
-    Rails.cache.fetch content_holder_for_path_cache_key(path), expires_in: 12.hours do
-      platform_context.content_holders.enabled.by_inject_pages(path)
-    end
+    @get_content_holders_for_path_hash ||= {}
+    @get_content_holders_for_path_hash[path] ||= platform_context.content_holders.enabled.by_inject_pages(path)
+    @get_content_holders_for_path_hash[path]
   end
 
   def get_content_holder(name)
     Rails.cache.fetch content_holder_cache_key(name), expires_in: 12.hours do
-      if content_holder = platform_context.content_holders.enabled.no_inject_pages.no_position(%w(meta head_bottom)).find_by_name(name)
+      if content_holder = platform_context.content_holders.enabled.no_inject_pages.no_position(%w(meta head_bottom)).find_by(name: name)
         content_holder.content
       end
     end

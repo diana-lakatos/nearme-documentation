@@ -76,6 +76,18 @@ class Job
     end
   end
 
+  def self.remove_from_queue(run_at, details = {})
+    if run_in_background?
+      handler_query = details.map { |k, v| "handler ilike '%#{k}: %''#{v}''%'" }.join(' AND ')
+      Delayed::Job.where(
+        run_at: run_at,
+        platform_context_detail: PlatformContext.current.try(:platform_context_detail)
+      )
+                  .where("handler ilike '%ruby/object:#{name}%'")
+                  .where(handler_query).destroy_all
+    end
+  end
+
   def self.perform_async(*args)
     enqueue(*args, run_at: nil)
   end
@@ -93,14 +105,14 @@ class Job
     performing_time = case when_perform
                       when ActiveSupport::Duration
                         Time.zone.now + when_perform
-                      when Fixnum
+                      when Integer
                         Time.zone.now + when_perform
                       when ActiveSupport::TimeWithZone
                         when_perform
                       when Time
-                        fail 'Job.perform_later: use TimeWithZone (i.e. Time.zone.now instead of Time.now etc)'
+                        raise 'Job.perform_later: use TimeWithZone (i.e. Time.zone.now instead of Time.now etc)'
                       else
-                        fail "Job.perform_later: Unknown first argument, must be number of seconds or time with zone - was #{when_perform} (#{when_perform.class})"
+                        raise "Job.perform_later: Unknown first argument, must be number of seconds or time with zone - was #{when_perform} (#{when_perform.class})"
                       end
     performing_time
   end
@@ -119,15 +131,15 @@ class Job
       platform_context_detail: PlatformContext.current.try(:platform_context_detail),
       i18n_locale: I18n.locale
     }
-    params.merge!(run_at: run_at) if run_at.present?
+    params[:run_at] = run_at if run_at.present?
     Delayed::Job.enqueue(build_new(*args), params)
   end
 
   def self.get_priority
-    self.respond_to?(:priority) ? priority : 20
+    respond_to?(:priority) ? priority : 20
   end
 
   def self.get_queue
-    self.respond_to?(:queue) ? queue : 'default'
+    respond_to?(:queue) ? queue : 'default'
   end
 end

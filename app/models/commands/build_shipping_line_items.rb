@@ -22,7 +22,7 @@ module Commands
 
     def client
       Deliveries.courier name: provider.shipping_provider_name,
-                         settings: provider.test_settings
+                         settings: provider.settings
     end
 
     # TODO: this should be determined from order itself

@@ -18,7 +18,10 @@
 # keys to platform_context models [ like instance, partner, company ] are properly set. The second one ensures we retreive from db
 # only records that belong to current platform context. See these classes at app/models/platform_context/ for more information.
 
+require 'new_relic/agent/method_tracer'
 class PlatformContext
+  extend ::NewRelic::Agent::MethodTracer
+  include ::NewRelic::Agent::MethodTracer
   DEFAULT_REDIRECT_CODE = 302
   NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'
   @@instance_view_cache_key = {}
@@ -41,11 +44,17 @@ class PlatformContext
   def self.after_setting_current_callback(platform_context)
     return unless platform_context.instance
     ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.instance.db_connection_string.present?
-    I18N_DNM_BACKEND.set_instance(platform_context.instance) if defined? I18N_DNM_BACKEND
+    self.class.trace_execution_scoped(['PlatformContext/after_setting_current_callback/translations']) do
+      I18N_DNM_BACKEND.set_instance(platform_context.instance) if defined? I18N_DNM_BACKEND
+    end
     I18n.locale = platform_context.instance.primary_locale
-    CacheExpiration.update_memory_cache
+    self.class.trace_execution_scoped(['PlatformContext/after_setting_current_callback/updating_memory_cache']) do
+      CacheExpiration.update_memory_cache
+    end
     NewRelic::Agent.add_custom_attributes(instance_id: platform_context.instance.id)
-    set_es_mappings
+    self.class.trace_execution_scoped(['PlatformContext/after_setting_current_callback/set_es_mapping']) do
+      set_es_mappings
+    end
   end
 
   def self.set_es_mappings
@@ -223,7 +232,7 @@ class PlatformContext
   def to_h
     { request_host: @request_host }.merge(
       Hash[instance_variables
-           .reject { |iv| iv.to_s == '@request_host' || iv.to_s == '@decorator' }
+          .reject { |iv| %i(@request_host @decorator @multiple_language).include?(iv) }
            .map { |iv| iv.to_s.delete('@') }
            .map { |iv| ["#{iv}_id", send(iv).try(:id)] }]
     )
@@ -278,4 +287,8 @@ class PlatformContext
   def remove_port_from_hostname(hostname)
     hostname.split(':').first
   end
+  add_method_tracer :initialize
+  add_method_tracer :initialize_with_request_host
+  add_method_tracer :initialize_with_domain
+  add_method_tracer :initialize_with_instance
 end
