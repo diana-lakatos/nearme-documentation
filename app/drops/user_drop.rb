@@ -110,12 +110,7 @@ class UserDrop < BaseDrop
 
   # @return [String] path to the wishlisting this user
   def wish_list_path
-    routes.wish_list_path(id: @source.id, wishlistable_type: 'User')
-  end
-
-  # @return [String] path to generating a 'bulk' JSON-formatted list of wish list buttons (for a list of items)
-  def wish_list_bulk_path
-    routes.bulk_show_wish_lists_path
+    routes.api_wish_list_path(id: @source.id, wishlistable_type: 'User')
   end
 
   # @return (see UserDecorator#display_location)

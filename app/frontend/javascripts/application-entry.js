@@ -64,15 +64,15 @@ DNM.registerInitializer(function(){
 });
 
 DNM.registerInitializer(function(){
-  var loadWishlistButtons = require('./components/load_wishlist_buttons');
-  loadWishlistButtons();
+  var loader = require('./components/wish_list_buttons/wish_list_button_loader');
+  loader.load();
 
   $(document).on('load:searchResults.nearme', function(){
-    loadWishlistButtons();
+    loader.load();
   });
 
   $(document).on('rendered-search:ias.nearme', function(){
-    loadWishlistButtons();
+    loader.load();
   });
 });
 
