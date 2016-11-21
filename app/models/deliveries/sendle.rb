@@ -42,7 +42,8 @@ module Deliveries
     def client
       @client = SendleApi::Client.new(
         sendle_id: @settings['sendle_id'],
-        sendle_api_key: @settings['api_key']
+        sendle_api_key: @settings['api_key'],
+        environment: @settings['environment']
       )
     end
   end
