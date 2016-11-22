@@ -68,52 +68,52 @@ module CarrierWave
         end
         super
       end
+
+      def delayed_processing?(_image = nil)
+        !!@delayed_processing
+      end
+
+      def pending_processing?(version)
+        # Versions not generated, we have a default url and the version requested is a delayed version, so we use the default_url
+        !versions_generated? &&
+          respond_to?(:default_url) &&
+          self.class.respond_to?(:delayed_versions) &&
+          self.class.delayed_versions.include?(version)
+      end
+
+      # Override the directory where uploaded files will be stored.
+      # This is a sensible default for uploaders that are meant to be mounted:
+      def store_dir
+        "#{instance_prefix}/uploads/images/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+      end
+
+      def image
+        # if MiniMagick opens file then CW does not clear the tmp dir, so identify call
+        `identify -format "%[fx:w]x%[fx:h]" #{Rails.root.join('public', file.path)}`.split('x')
+      rescue
+        nil
+      end
+
+      def dimensions
+        self.class.dimensions
+      end
+
+      def thumbnail_dimensions
+        dimensions
+      end
+
+      def original_dimensions
+        if model["#{mounted_as}_original_width"] && model["#{mounted_as}_original_height"]
+          [model["#{mounted_as}_original_width"], model["#{mounted_as}_original_height"]]
+        else
+          read_original_dimensions
+        end
+      end
+
+      def read_original_dimensions
+        img = image
+        img.nil? ? [] : [img[0], img[1]]
+      end
     end
-  end
-
-  def delayed_processing?(_image = nil)
-    !!@delayed_processing
-  end
-
-  def pending_processing?(version)
-    # Versions not generated, we have a default url and the version requested is a delayed version, so we use the default_url
-    !versions_generated? &&
-      respond_to?(:default_url) &&
-      self.class.respond_to?(:delayed_versions) &&
-      self.class.delayed_versions.include?(version)
-  end
-
-  # Override the directory where uploaded files will be stored.
-  # This is a sensible default for uploaders that are meant to be mounted:
-  def store_dir
-    "#{instance_prefix}/uploads/images/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
-  end
-
-  def image
-    # if MiniMagick opens file then CW does not clear the tmp dir, so identify call
-    `identify -format "%[fx:w]x%[fx:h]" #{Rails.root.join('public', file.path)}`.split('x')
-  rescue
-    nil
-  end
-
-  def dimensions
-    self.class.dimensions
-  end
-
-  def thumbnail_dimensions
-    dimensions
-  end
-
-  def original_dimensions
-    if model["#{mounted_as}_original_width"] && model["#{mounted_as}_original_height"]
-      [model["#{mounted_as}_original_width"], model["#{mounted_as}_original_height"]]
-    else
-      read_original_dimensions
-    end
-  end
-
-  def read_original_dimensions
-    img = image
-    img.nil? ? [] : [img[0], img[1]]
   end
 end
