@@ -17,11 +17,13 @@
       "[0]":
         regex_expression: '^https?\:\/\/.*'
         regex_validation: true
+        field_name: 'linkedin_url'
   googleplus_url:
     label: "Google Plus URL"
     placeholder: 'http://'
     custom_validators_attributes:
       "[0]":
+        field_name: 'googleplus_url'
         regex_expression: '^https?\:\/\/.*'
         regex_validation: true
   twitter_url:
@@ -29,6 +31,7 @@
     placeholder: 'http://'
     custom_validators_attributes:
       "[0]":
+        field_name: 'twitter_url'
         regex_expression: '^https?\:\/\/.*'
         regex_validation: true
   bio:

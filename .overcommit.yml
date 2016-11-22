@@ -73,12 +73,12 @@ CommitMsg:
 PreCommit:
   RuboCop:
     enabled: true
-    include: ['**/*.rb']
+    include: ['./**/*.rb']
     requires_files: true
     problem_on_unmodified_line: ignore
   Fasterer:
     enabled: true
-    include: ['**/*.rb']
+    include: ['./**/*.rb']
     requires_files: true
     problem_on_unmodified_line: ignore
   EnsureFrontendDocsUpdate:

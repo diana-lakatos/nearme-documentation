@@ -127,7 +127,12 @@ class Transactable < ActiveRecord::Base
   before_validation :set_activated_at, :set_enabled, :set_confirm_reservations, :set_possible_payout, :set_action_type
   after_create :set_external_id
   after_save do
-    update_column(:opened_on_days, availability.days_open.sort) if availability.try(:days_open).present?
+    if availability.try(:days_open).present?
+      update_column(:opened_on_days, availability.days_open.sort)
+    else
+      update_column(:opened_on_days, []) if opened_on_days.any?
+    end
+
     true
   end
   after_destroy :close_request_for_quotes
