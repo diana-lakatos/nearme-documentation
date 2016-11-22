@@ -9,41 +9,43 @@ module.exports = function(gulp, config) {
 
   gulp.task('watch:scss', function() {
 
-        /* APPLICATION */
+    /* APPLICATION */
     gulp.watch([
       '**/*.scss',
-      '!new_ui/**/*.scss',
-      '!intel/**/*.scss',
+      '!dashboard/**/*.scss',
+      '!dashboard.scss',
+      '!community/**/*.scss',
       '!community.scss',
       '!admin/**/*.scss',
       '!admin.scss',
       '!shared/**/*.scss'
     ], { cwd: config.paths.stylesheets }, ['styles:application', 'styles:instance_admin','styles:other']);
 
-        /* NEW UI */
+    /* Dashboard */
 
-        /* Watch all updates to vendor libraries */
-    gulp.watch('new_ui/vendor/**/*.scss', { cwd: config.paths.stylesheets }, ['styles:newui:vendor']);
+    /* Watch all updates to vendor libraries */
+    gulp.watch('dashboard/vendor/**/*.scss', { cwd: config.paths.stylesheets }, ['styles:dashboard:vendor']);
 
-        /* watch updates to our code */
+    /* watch updates to our code */
     gulp.watch([
-      'new_ui/**/*.scss',
-      '!new_ui/vendor/**/*.scss',
-      '!new_ui/common/**/*.scss'
-    ], { cwd: config.paths.stylesheets } ['styles:newui:app']);
+      'dashboard.scss',
+      'dashboard/**/*.scss',
+      '!dashboard/vendor/**/*.scss',
+      '!dashboard/common/**/*.scss'
+    ], { cwd: config.paths.stylesheets } ['styles:dashboard:app']);
 
-        /* update all when updating config and mixins */
-    gulp.watch('new_ui/common/**/*.scss', { cwd: config.paths.stylesheets }, ['styles:newui']);
+    /* update all when updating config and mixins */
+    gulp.watch('dashboard/common/**/*.scss', { cwd: config.paths.stylesheets }, ['styles:dashboard']);
 
-        /* INTEL - community.scss */
+    /* Community */
     gulp.watch([
-      'intel/**/*.scss',
+      'community/**/*.scss',
       'community.scss'
-    ], { cwd: config.paths.stylesheets }, ['styles:intel']);
+    ], { cwd: config.paths.stylesheets }, ['styles:community']);
 
     gulp.watch([
       'shared/**/*.scss'
-    ], { cwd: config.paths.stylesheets }, ['styles:application', 'styles:newui']);
+    ], { cwd: config.paths.stylesheets }, ['styles:application', 'styles:dashboard']);
   });
 
   gulp.task('watch', ['watch:scss', 'watch:images', 'watch:fonts', 'watch:webpack', 'watch:lint'], function(){

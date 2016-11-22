@@ -1,0 +1,165 @@
+.dialog, .dialog__overlay, .dialog__container {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+
+  .no-csspointerevents & {
+    display: none;
+  }
+
+  .dialog--visible & {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .no-csspointerevents .dialog--visible & {
+    display: block;
+  }
+}
+
+.dialog {
+  position: relative;
+  z-index: 1090;
+}
+
+.dialog__overlay {
+  position: fixed;
+  z-index: 1100;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: $modal-overlay-background;
+}
+
+.dialog__container {
+  background: $modal-content-background;
+  position: fixed;
+  z-index: 1110;
+  left: 10px;
+  top: 10px;
+  right: 10px;
+  bottom: 10px;
+  padding: 20px;
+  overflow: auto;
+  transition: transform .2s ease;
+
+  &:after {
+    position: absolute;
+    z-index: 20;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    content: "";
+    width: 28px;
+    height: 28px;
+    background: url("/assets/dashboard/loader.gif") 50% 50% no-repeat;
+    opacity: 1;
+    transition: opacity .2s ease;
+  }
+
+  @media (min-width: $screen-sm) {
+    left: 50%;
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    min-height: 200px;
+    width: $screen-sm;
+    max-height: 98vh;
+    transform: translate(-50%, -100%);
+
+    .dialog--visible & {
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.dialog__close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 0;
+  background: none;
+  border: none;
+  width: 30px;
+  height: 30px;
+
+  &:before {
+    text-align: center;
+    color: $brand-primary;
+
+    @include fa-icon;
+
+    content: $fa-var-close;
+    font-size: 15px;
+    line-height: 30px;
+  }
+}
+
+.dialog__content {
+  display: none;
+}
+
+.dialog.dialog--loaded {
+  .dialog__container:after {
+    opacity: 0;
+  }
+
+  .dialog__content {
+    display: block;
+  }
+}
+
+.dialog__header {
+  margin-bottom: 30px;
+
+  h2 {
+    @extend .h3;
+  }
+}
+
+.dialog__content {
+  .panel {
+    margin-bottom: 0;
+    box-shadow: none;
+  }
+
+  .panel-body {
+    padding: 10px;
+  }
+
+  .alert {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.dialog__actions {
+  margin-top: 30px;
+  text-align: right;
+
+  a, [type=button], [type=submit] {
+    @extend .btn;
+
+    @extend .btn-primary;
+  }
+}
+
+.pac-container {
+  z-index: 1200;
+}
+
+.dialog.ctc-dialog .dialog__container {
+  .dialog__header {
+    text-align: center;
+  }
+
+  @media (min-width: $screen-sm) {
+    width: 280px;
+    min-height: auto;
+  }
+
+  .dialog__actions {
+    text-align: center;
+  }
+}

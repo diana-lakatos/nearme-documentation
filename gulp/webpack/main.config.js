@@ -14,12 +14,10 @@ var config = {
 };
 
 config.entry = {
-  newui: 'newui-entry.js',
   application: 'application-entry.js',
   instanceadmin: 'instanceadmin-entry.js',
   instancewizard: 'instancewizard-entry.js',
   blog: 'blog-entry.js',
-  blogadmin: 'blogadmin-entry.js',
   dashboard: 'dashboard-entry.js',
   admin: 'admin-entry.js',
   community: 'community-entry.js'
@@ -63,7 +61,7 @@ config.plugins = [
 
 config.module = {
   loaders: [
-        { test: /\.coffee$/, loader: 'coffee-loader' },
+    { test: /\.coffee$/, loader: 'coffee-loader' },
     {
       test: /\.js$/,
       exclude: /(node_modules|vendor)/,
@@ -72,7 +70,7 @@ config.module = {
         cacheDirectory: true
       }
     },
-        { test: /\.css$/, loader: 'style-loader!css-loader' }
+    { test: /\.css$/, loader: 'style-loader!css-loader' }
   ]
 };
 

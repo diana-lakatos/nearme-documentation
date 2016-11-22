@@ -4,7 +4,7 @@
   = simple_form_for :activity_feed, url: root_url do |f|
 
     %figure
-      = image_tag "intel/tutorial/chloe.png", width: 80, height: 80
+      = image_tag "community/tutorial/chloe.png", width: 80, height: 80
 
     = f.input :content, as: :text, label: false, input_html: { cols: 40, rows: 3 }
 
@@ -18,14 +18,14 @@
 / status update
 %article.status-a
 
-  = render 'shared/activity_status_header', status_action: :created_project, user: { name: 'Mike M.', url: root_url, image_file: 'intel/tutorial/mike-a.png' }, project: { url: root_url }, publish_date: '10/20/15'
+  = render 'shared/activity_status_header', status_action: :created_project, user: { name: 'Mike M.', url: root_url, image_file: 'community/tutorial/mike-a.png' }, project: { url: root_url }, publish_date: '10/20/15'
 
   %section
     %article.status-a
       %header
         %figure
           = link_to root_url do
-            = image_tag 'intel/tutorial/dual-screen.png', width: 80, height: 80
+            = image_tag 'community/tutorial/dual-screen.png', width: 80, height: 80
       %section
         %h3.hx
           = link_to 'Dual Screen Project', root_url
@@ -36,14 +36,14 @@
 / status update
 %article.status-a
 
-  = render 'shared/activity_status_header', status_action: :shared_article, user: { name: 'IDZ Connect', url: root_url, image_file: 'intel/tutorial/intel.png'}, page: { name: 'Android Page', url: root_url }, publish_date: '10/20/15'
+  = render 'shared/activity_status_header', status_action: :shared_article, user: { name: 'IDZ Connect', url: root_url, image_file: 'community/tutorial/intel.png'}, page: { name: 'Android Page', url: root_url }, publish_date: '10/20/15'
 
   %section
     %article.status-a
       %header
         %figure
           = link_to root_url do
-            = image_tag 'intel/tutorial/mesh-central.png', width: 80, height: 80
+            = image_tag 'community/tutorial/mesh-central.png', width: 80, height: 80
       %section
         %h3.hx
           = link_to 'Meshcentral - now with text messaging', root_url
@@ -54,13 +54,13 @@
 / status update
 %article.status-a
 
-  = render 'shared/activity_status_header', status_action: :updated_message, user: { name: 'Jane R.', gender: :female, url: root_url, image_file: 'intel/tutorial/jane.png' }, publish_date: '10/20/15'
+  = render 'shared/activity_status_header', status_action: :updated_message, user: { name: 'Jane R.', gender: :female, url: root_url, image_file: 'community/tutorial/jane.png' }, publish_date: '10/20/15'
 
   %section
     %article.status-a
       %header
         %figure
-          = image_tag 'intel/status-a-chat-a.png', alt: ""
+          = image_tag 'community/status-a-chat-a.png', alt: ""
       %section
         %p What do you think about the Internet of Things? Do you have any comments?
 
@@ -82,7 +82,7 @@
           / comment
           .comment-a
             %figure
-              = image_tag 'intel/tutorial/mike-b.png', width: 50, height: 50
+              = image_tag 'community/tutorial/mike-b.png', width: 50, height: 50
             %p.author
               = t(:user_said, user_link: link_to('Mike M.', root_url)).html_safe
             %blockquote
@@ -95,7 +95,7 @@
           / comment
           .comment-a
             %figure
-              = image_tag 'intel/tutorial/marissa.png', width: 50, height: 50
+              = image_tag 'community/tutorial/marissa.png', width: 50, height: 50
             %p.author
               = t(:user_said, user_link: link_to('Marissa H.', root_url)).html_safe
             %blockquote
@@ -109,13 +109,13 @@
 / status update
 %article.status-a
 
-  = render 'shared/activity_status_header', status_action: :updated_message, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'intel/tutorial/jane.png' }, publish_date: '11/07/15'
+  = render 'shared/activity_status_header', status_action: :updated_message, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'community/tutorial/jane.png' }, publish_date: '11/07/15'
 
   %section
     %article.status-a
       %header
         %figure
-          = image_tag 'intel/status-a-chat-a.png', alt: ""
+          = image_tag 'community/status-a-chat-a.png', alt: ""
       %section
         %p I’ve just created an interesting project for mobile analytics. Come join me!
 
@@ -136,7 +136,7 @@
           / comment
           .comment-a
             %figure
-              = image_tag 'intel/tutorial/mike-b.png', width: 50, height: 50
+              = image_tag 'community/tutorial/mike-b.png', width: 50, height: 50
             %p.author
               = t(:user_said, user_link: link_to('Mike M.', root_url)).html_safe
             %blockquote
@@ -150,14 +150,14 @@
 / status update
 %article.status-a
 
-  = render 'shared/activity_status_header', status_action: :added_photo, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'intel/tutorial/chloe.png' }, project: { name: 'Mobile Analytics', url: root_url }, publish_date: '13/07/15'
+  = render 'shared/activity_status_header', status_action: :added_photo, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'community/tutorial/chloe.png' }, project: { name: 'Mobile Analytics', url: root_url }, publish_date: '13/07/15'
 
   %section
     %article.status-a
       %header
         %figure
           = link_to root_url do
-            = image_tag 'intel/tutorial/infographic-a.png', width: 80, height: 80
+            = image_tag 'community/tutorial/infographic-a.png', width: 80, height: 80
       %section
         %p
           = link_to 'Analytics Infographic.png', root_url
@@ -165,14 +165,14 @@
 / status update
 %article.status-a
 
-  = render 'shared/activity_status_header', status_action: :added_comment_discussion, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'intel/tutorial/chloe.png' }, discussion: { name: 'Discussions', url: root_url }, publish_date: '10/20/15'
+  = render 'shared/activity_status_header', status_action: :added_comment_discussion, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'community/tutorial/chloe.png' }, discussion: { name: 'Discussions', url: root_url }, publish_date: '10/20/15'
 
   %section
     %article.status-a
       %header
         %figure
           = link_to root_url do
-            = image_tag 'intel/status-a-chat-a.png', alt: ""
+            = image_tag 'community/status-a-chat-a.png', alt: ""
       %section
         %p I would like to get 10 collaborators for the project. Can you please share with your contacts? Thanks!
 
@@ -181,14 +181,14 @@
 / status update
 %article.status-a
 
-  = render 'shared/activity_status_header', status_action: :added_comment_discussion, user: { name: 'Stefano B.', gender: :female, url: root_url, image_file: 'intel/tutorial/stefano.png' }, discussion: { name: 'Discussions', url: root_url }, publish_date: '10/20/15'
+  = render 'shared/activity_status_header', status_action: :added_comment_discussion, user: { name: 'Stefano B.', gender: :female, url: root_url, image_file: 'community/tutorial/stefano.png' }, discussion: { name: 'Discussions', url: root_url }, publish_date: '10/20/15'
 
   %section
     %article.status-a
       %header
         %figure
           = link_to root_url do
-            = image_tag 'intel/status-a-chat-a.png', alt: ""
+            = image_tag 'community/status-a-chat-a.png', alt: ""
       %section
         %p I would like to get 10 collaborators for the project. Can you please share with your contacts? Thanks!
 
@@ -198,14 +198,14 @@
 / status update
 %article.status-a
 
-  = render 'shared/activity_status_header', status_action: :added_collaborator, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'intel/tutorial/chloe.png' }, project: { name: 'Mobile Analytics', url: root_url }, publish_date: '10/20/15'
+  = render 'shared/activity_status_header', status_action: :added_collaborator, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'community/tutorial/chloe.png' }, project: { name: 'Mobile Analytics', url: root_url }, publish_date: '10/20/15'
 
   %section
     %article.status-a
       %header
         %figure
           = link_to root_url do
-            = image_tag 'intel/tutorial/craig.png', width: 80, height: 80
+            = image_tag 'community/tutorial/craig.png', width: 80, height: 80
       %section
         %h3.hx
           = link_to 'Craig T.', root_url
@@ -215,14 +215,14 @@
 / status update
 %article.status-a
 
-  = render 'shared/activity_status_header', status_action: :added_photo, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'intel/tutorial/chloe.png' }, project: { name: 'Mobile Analytics', url: root_url }, publish_date: '13/07/15'
+  = render 'shared/activity_status_header', status_action: :added_photo, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'community/tutorial/chloe.png' }, project: { name: 'Mobile Analytics', url: root_url }, publish_date: '13/07/15'
 
   %section
     %article.status-a
       %header
         %figure
           = link_to root_url do
-            = image_tag 'intel/tutorial/infographic-b.png', width: 80, height: 80
+            = image_tag 'community/tutorial/infographic-b.png', width: 80, height: 80
       %section
         %p
           = link_to 'Analytics Infographic.png', root_url

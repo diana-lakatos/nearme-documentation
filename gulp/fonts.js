@@ -8,9 +8,9 @@ module.exports = function(gulp, config){
   gulp.task('fonts:prepare', function(){
     del(path.join(config.paths.fonts, 'font-awesome', '*'));
 
-        // Copy newest version of font-awesome
+    /* Copy newest version of font-awesome */
     return gulp.src(path.join(config.paths.node_modules, 'font-awesome', 'fonts', '*.{eot,svg,ttf,woff,woff2}' ))
-        .pipe(gulp.dest(path.join(config.paths.fonts, 'font-awesome')));
+    .pipe(gulp.dest(path.join(config.paths.fonts, 'font-awesome')));
   });
 
   gulp.task('fonts', function(){

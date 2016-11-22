@@ -1,0 +1,479 @@
+.form-images__options {
+    [class^="action--"] {
+        display: inline-block;
+        margin-left: 5px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        text-align: center;
+        font-size: 0;
+        border: none;
+        color: #fff;
+
+        &:before {
+            @include fa-icon();
+            font-size: 20px;
+            line-height: 40px;
+        }
+    }
+
+    .action--edit {
+        background: $brand-primary;
+
+        &:before {
+            content: $fa-var-pencil;
+        }
+    }
+
+    .action--delete {
+        background: $brand-warning;
+        &:before {
+            content: $fa-var-times-circle;
+        }
+    }
+}
+
+
+.form-images {
+    .file-progress {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: $form-photos-add-background;
+        text-align: center;
+        z-index: 200;
+
+        .bar {
+            @include progressbar($brand-primary, absolute);
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+        .text {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            font-size: 20px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(#000,0.2);
+        }
+    }
+
+    .progress--active .file-progress {
+        display: block;
+    }
+
+    .drop-zone {
+        display: none;
+        position: absolute;
+        z-index: 30;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: $form-photos-add-background;
+        text-align: center;
+
+        .text {
+            position: absolute;
+            z-index: 10;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+            z-index: 20;
+            font-size: 20px;
+            text-transform: uppercase;
+            color: $form-photos-drag-color;
+        }
+
+        &:before {
+            position: absolute;
+            left: 5px;
+            right: 5px;
+            top: 5px;
+            bottom: 2px;
+            content: "";
+            border: 2px dotted $form-photos-image-border;
+        }
+    }
+
+    .drag-active .drop-zone {
+        display: block;
+    }
+
+    .input-preview {
+        position: relative;
+        z-index: 1;
+        margin: 0 0 20px;
+        background: $form-photos-add-background;
+        border: 1px solid $form-photos-image-border;
+
+        @media (min-width: 600px) {
+            display: flex;
+            height: 120px;
+
+            .no-flexbox {
+                display: block;
+            }
+        }
+    }
+
+    .preview {
+        position: relative;
+        overflow: hidden;
+
+        figure {
+            overflow: hidden;
+            display: table;
+            width: 100%;
+            background: #fff url('/assets/dashboard/checkers.png');
+            height: 120px;
+
+            a {
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
+            }
+
+            img {
+                display: block;
+                max-width: 100%;
+                margin: 0 auto;
+            }
+        }
+
+        @media (min-width: 600px) {
+            width: 250px;
+            margin-right: 20px;
+            height: 118px;
+
+            figure {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+            }
+        }
+
+        small {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            padding: 5px;
+            &:before {
+                @include fa-icon();
+                content: $fa-var-warning;
+                margin-right: 5px;
+            }
+        }
+
+        .form-images__options {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+
+        }
+    }
+
+    .file-upload {
+        display: flex;
+        position: relative;
+        margin: 0;
+
+        font-size: 16px;
+        font-weight: normal;
+        color: $form-photos-add-color;
+        padding: 20px;
+        flex-grow: 1;
+        flex-direction: column;
+        justify-content: center;
+        cursor: pointer;
+        overflow: hidden;
+        text-align: center;
+
+        &:before {
+            @include fa-icon();
+            content: $fa-var-arrow-circle-o-up;
+
+            color: $form-photos-add-color;
+            display: block;
+            font-size: 25px;
+        }
+
+        .add-label {
+            margin: 0;
+            display: block;
+        }
+
+        .drag-label {
+            color: $form-photos-drag-color;
+            font-size: 12px;
+            display: none;
+
+
+        }
+
+        input {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            font-size: 10em;
+            opacity: 0;
+            z-index: 20;
+            cursor: pointer;
+
+            &:hover, &:focus, &:active {
+                outline: none;
+            }
+        }
+    }
+
+    .draggable-enabled .drag-label {
+        display: block;
+    }
+
+    .no-flexbox & {
+        .file-upload {
+            width: 100%;
+            text-align: center;
+        }
+        .preview {
+            @media (min-width: 600px) {
+                float: left;
+                width: 250px;
+                margin-right: 20px;
+                height: 120px;
+
+                figure {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                }
+
+                + .file-upload {
+                    float: left;
+                    width: calc(100% - 270px);
+                    height: 120px;
+                }
+            }
+        }
+    }
+}
+
+.form-images__gallery {
+    position: relative;
+    padding: 5px 0;
+    list-style: none;
+    overflow: auto;
+
+    li {
+        position: relative;
+        margin: 0 0 20px;
+        max-width: 500px;
+
+
+        img {
+            display: block;
+            width: 100%;
+            border: 1px solid $form-photos-image-border;
+        }
+    }
+
+    .photo-placeholder {
+        overflow: hidden;
+        &:after {
+            content: "";
+            display: block;
+            width: 100%;
+            padding-bottom: (252/410)*100%;
+            border: 1px dotted #ccc;
+            background: $form-photos-add-background;
+        }
+    }
+
+    .form-images__options {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+    }
+
+    .caption {
+        position: absolute;
+        right: 10px;
+        left: 10px;
+        bottom: 10px;
+
+        input {
+            width: 100%;
+            padding: 5px;
+        }
+    }
+
+    .sort-handle {
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        color: #fff;
+        font-size: 30px;
+        line-height: 1;
+
+        &:before {
+            @include fa-icon();
+            content: $fa-var-arrows;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+    }
+
+    .no-touchevents & {
+
+        .form-images__options, .sort-handle, .caption {
+            display: none;
+        }
+
+        li:hover {
+            .form-images__options, .sort-handle, .caption {
+                display: block;
+            }
+        }
+    }
+
+
+    @media (min-width: 500px) {
+        width: 102%;
+        margin-left: -2%;
+        font-size: 0; /* this reduces spacing between li elements */
+
+
+        li {
+            vertical-align: top;
+            display: inline-block;
+            margin: 0 0 2% 2%;
+            font-size: $font-size-base;
+        }
+    }
+
+    @media (min-width: 500px) and (max-width: 799px) {
+        li {
+            width: 48%;
+        }
+    }
+
+    @media (min-width: 800px) and (max-width: 1199px) {
+        li {
+            width: 31.33333333%;
+        }
+    }
+
+    @media (min-width: 1200px){
+        li {
+            width: 23%;
+        }
+    }
+
+    @media (min-width: 1600px){
+        li {
+            width: 23%;
+        }
+    }
+
+    @media (min-width: 2000px){
+        li {
+            width: 18%;
+        }
+    }
+}
+
+.form-images__preview {
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+    cursor: pointer;
+
+    &.preview--active {
+        pointer-events: auto;
+        opacity: 1;
+    }
+
+    .no-csspointervents & {
+        display: none;
+
+        &.preview--active {
+            display: block;
+        }
+    }
+
+    // overlay
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 1;
+        background: rgba(#000, 0.9);
+    }
+
+    img {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        display: block;
+        z-index: 2;
+        max-width: 98vw;
+        max-height: 98vh;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.form-images__preview__close {
+    position: absolute;
+    z-index: 3;
+    right: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 0;
+
+    &:before {
+        @include fa-icon();
+        content: $fa-var-times;
+        font-size: 30px;
+        line-height: 40px;
+        color: #fff;
+    }
+}
+
+
+.resize-container {
+    max-height: 70vh;
+    > img {
+        overflow: hidden;
+    }
+}
+
+

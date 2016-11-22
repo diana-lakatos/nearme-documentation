@@ -1,6 +1,5 @@
 !!!
 %html{:lang => "en"}
-
   %head
     = render 'layouts/content_holder_injector'
     = inject_content_holder('HEAD')
@@ -24,7 +23,6 @@
     = csrf_meta_tags
     = yield(:head_bottom)
 
-
   %body{class: body_classes}
     = yield(:body_top)
     .root-a
@@ -34,7 +32,7 @@
             .contain
               %h1.logo
                 = link_to root_url, accesskey: 'h' do
-                  = image_tag "intel/logo-white.png", width: 59, height: 39, alt: current_instance.name
+                  = image_tag "community/logo-white.png", width: 59, height: 39, alt: current_instance.name
                   %span.text
                     = t :developer_mesh
 

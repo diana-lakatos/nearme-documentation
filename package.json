@@ -88,6 +88,7 @@
     "jquery.payment": "1.0.2",
     "jstimezonedetect": "^1.0.6",
     "jstree": "^3.2.1",
+    "minivents": "^2.0.2",
     "modernizr": "^3.3.1",
     "nouislider": "^7.0.10",
     "raty-js": "^2.7.0",

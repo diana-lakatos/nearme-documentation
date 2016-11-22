@@ -44,8 +44,8 @@ module.exports = function(gulp, config) {
     });
 
     gulp.task('webpack-manifest:' + environment, ['manifest:' + environment], function(){
-            // at this point we have webpack-asset-manifest and webpack-common-manifest
-            // as revisioned files as well, so we need to remove digests from these files
+      /* at this point we have webpack-asset-manifest and webpack-common-manifest
+      as revisioned files as well, so we need to remove digests from these files */
       return gulp.src(path.join(config.paths.output,'webpack-*-manifest-*.json'))
         .pipe(vinylPaths(del))  // clean up old revisioned files
         .pipe(rename(function(path){
@@ -59,6 +59,6 @@ module.exports = function(gulp, config) {
   registerEnvironmentTasks(gulp, 'staging');
   registerEnvironmentTasks(gulp, 'production');
 
-    // Aliases
+  /* Aliases */
   gulp.task('dist', ['build:production']);
 };

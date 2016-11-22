@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class DynamicThemesControllerTest < ActionController::TestCase
@@ -7,11 +8,6 @@ class DynamicThemesControllerTest < ActionController::TestCase
 
   should 'GET application.css' do
     get :show, theme_id: @theme, updated_at: @theme.updated_at.to_formatted_s(:number), stylesheet: 'application', format: :css
-    assert :success
-  end
-
-  should 'GET new_ui.css' do
-    get :show, theme_id: @theme, updated_at: @theme.updated_at.to_formatted_s(:number), stylesheet: 'new_ui', format: :css
     assert :success
   end
 

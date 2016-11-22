@@ -1,7 +1,0 @@
-%tr
-  %td= link_to blog_post.title, edit_admin_blog_blog_post_path(blog_post)
-  %td= l blog_post.created_at.to_date, format: :long
-  %td= l(blog_post.published_at.to_date, format: :long) if blog_post.published_at
-  %td
-    = link_to "Delete", admin_blog_blog_post_path(blog_post), method: :delete, data: { confirm: 'Are you sure you want to delete this?' }, class: "btn btn-default btn-danger pull-right"
-    = link_to 'Edit', edit_admin_blog_blog_post_path(blog_post), class: 'btn btn-default pull-right'

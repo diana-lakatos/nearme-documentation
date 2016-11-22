@@ -1,7 +1,7 @@
 - if [:user_commented_on_project, :user_commented, :user_commented_on_user_activity].include?(event.event.to_sym)
   - followed = event.event_source.commentable
   - body = event.event_source.body
-  - header_image = "intel/status-a-chat-a.png"
+  - header_image = "community/status-a-chat-a.png"
 - elsif [:user_added_photos_to_project, :user_added_photos_to_group].include?(event.event.to_sym) && event.event_source.is_a?(Photo)
   - followed = event.followed
   - big_image = event.event_source.image.url(:space_listing)
