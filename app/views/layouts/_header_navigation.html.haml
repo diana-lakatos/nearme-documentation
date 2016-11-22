@@ -47,7 +47,7 @@
                 - title = t("top_navbar.manage_bookable.#{transactable_type.name}")
               - else
                 - title = t('top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10))
-              = link_to main_app.dashboard_company_transactable_type_transactables_path(transactable_type_id: transactable_type.name.downcase), class: 'nav-link dropdown-toggle' do
+              = link_to main_app.dashboard_company_transactable_type_transactables_path(transactable_type_id: transactable_type.name.parameterize), class: 'nav-link dropdown-toggle' do
                 %div.truncate= title
 
         - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present? && HiddenUiControls.find('dashboard/host_reservations').visible?
