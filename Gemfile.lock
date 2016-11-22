@@ -204,6 +204,7 @@ GEM
     codeclimate-test-reporter (0.4.4)
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.1)
+    colorize (0.8.1)
     counter_culture (0.1.28)
       after_commit_action (~> 0.1.3)
     crack (0.4.2)
@@ -300,6 +301,9 @@ GEM
     fast_stack (0.1.0)
       rake
       rake-compiler
+    fasterer (0.3.2)
+      colorize (~> 0.7)
+      ruby_parser (~> 3.7)
     ffaker (1.32.1)
     ffi (1.9.14)
     figaro (1.0.0)
@@ -582,7 +586,7 @@ GEM
       require_all
     nested_form (0.3.2)
     netrc (0.10.3)
-    newrelic_rpm (3.17.0.325)
+    newrelic_rpm (3.17.1.326)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
     nokogumbo (1.2.0)
@@ -783,7 +787,7 @@ GEM
     rspec-expectations (2.14.5)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.6)
-    rubocop (0.44.1)
+    rubocop (0.45.0)
       parser (>= 2.3.1.1, < 3.0)
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
@@ -793,6 +797,8 @@ GEM
     ruby-progressbar (1.8.1)
     ruby-saml (1.4.1)
       nokogiri (>= 1.5.10)
+    ruby_parser (3.8.3)
+      sexp_processor (~> 4.1)
     rubyzip (1.1.6)
     safe_yaml (1.0.4)
     sanitize (3.1.0)
@@ -804,6 +810,7 @@ GEM
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
+    sexp_processor (4.7.0)
     shippo (1.0.3)
       json (~> 1.8.1)
       mime-types (>= 1.25, < 3.0)
@@ -926,6 +933,8 @@ GEM
     yard (0.9.5)
     yard-activerecord (0.0.16)
       yard (>= 0.8.3)
+    yardstick (0.9.9)
+      yard (~> 0.8, >= 0.8.7.2)
 
 PLATFORMS
   ruby
@@ -974,6 +983,7 @@ DEPENDENCIES
   elasticsearch-rails
   email_spec
   factory_girl_rails (~> 4.5.0)
+  fasterer
   ffaker (~> 1.16)
   figaro
   flamegraph
@@ -1093,6 +1103,7 @@ DEPENDENCIES
   will_paginate
   yard (~> 0.9.5)
   yard-activerecord
+  yardstick
 
 RUBY VERSION
    ruby 2.3.1p112

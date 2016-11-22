@@ -104,6 +104,16 @@
           %th
             = t('instance_admin.manage.transfers.host_fee')
           %td= render_money(resource.service_fee_amount_host)
+        - unless resource.payment_gateway_fee.zero?
+          %tr
+            %th
+              = t('instance_admin.manage.transfers.payment_gateway_fee')
+            %td= render_money(resource.payment_gateway_fee)
+        - if resource.token
+          %tr
+            %th
+              = t('instance_admin.manage.transfers.external_id')
+            %td= resource.token
 
 
 .content-container

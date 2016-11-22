@@ -38,7 +38,7 @@
               %tr
                 %td.col-picture
                   = link_to transactable.decorate.show_path do
-                    = image_tag transactable.cover_photo.image.url(:thumb)
+                    = image_tag transactable.cover_photo.image.url(:medium)
                 %td.col-name
                   = link_to transactable.name, transactable.decorate.show_path
                 %td.col-summary

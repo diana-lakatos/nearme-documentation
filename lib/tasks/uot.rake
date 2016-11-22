@@ -797,6 +797,7 @@ namespace :uot do
 
     def create_analytics!
       load_template('dashboard/company/analytics/show', false)
+      load_template('dashboard/company/transfers/show', false)
     end
 
     def create_workflow_alerts

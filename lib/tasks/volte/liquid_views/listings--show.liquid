@@ -6,9 +6,7 @@
   <div class="item-content">
 
     <div class="item-header">
-      <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}">
-        <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
-      </div>
+      {% include 'shared/components/wish_list_button_injection', object: listing %}
       <h1 class="item-name">{{ listing.name | filter_text }}</h1>
     </div>
 
@@ -109,20 +107,30 @@
           <dl>
             <dt>Item:</dt> <dd>{{ listing.properties.item_type }}</dd>
             {% if listing.properties.item_type == 'Dress' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_dress }}</dd>
+              {% if listing.properties.item_style_dress != blank %}
+                <dt>Style:</dt> <dd>{{ listing.properties.item_style_dress }}</dd>
+              {% endif %}
               <dt>Size:</dt> <dd>{{ listing.properties.dress_size }}</dd>
               <dt>Length:</dt> <dd>{{ listing.properties.dress_length }}</dd>
             {% elsif listing.properties.item_type == 'Bag' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_bag | split: ',' | join: ', '  }}</dd>
+              {% if listing.properties.item_style_bag != blank %}
+                <dt>Style:</dt> <dd>{{ listing.properties.item_style_bag | split: ',' | join: ', '  }}</dd>
+              {% endif %}
               <dt>Length:</dt> <dd>{{ listing.properties.dress_length }}</dd>
             {% elsif listing.properties.item_type == 'Millinery' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_milinery | split: ',' | join: ', '  }}</dd>
+              {% if listing.properties.item_style_milinery != blank %}
+                <dt>Style:</dt> <dd>{{ listing.properties.item_style_milinery | split: ',' | join: ', '  }}</dd>
+              {% endif %}
               <dt>Size:</dt> <dd>{{ listing.properties.milinery_size }}</dd>
             {% elsif listing.properties.item_type == 'Outerwear' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_outerwear | split: ',' | join: ', ' }}</dd>
+              {% if listing.properties.item_style_outerwear != blank %}
+                <dt>Style:</dt> <dd>{{ listing.properties.item_style_outerwear | split: ',' | join: ', ' }}</dd>
+              {% endif %}
               <dt>Size:</dt> <dd>{{ listing.properties.outerwear_size }}</dd>
             {% elsif listing.properties.item_type == 'Accessories' %}
-              <dt>Style:</dt> <dd>{{ listing.properties.item_style_accessories | split: ',' | join: ', '  }}</dd>
+              {% if listing.properties.item_style_accessories != blank %}
+                <dt>Style:</dt> <dd>{{ listing.properties.item_style_accessories | split: ',' | join: ', '  }}</dd>
+              {% endif %}
             {% endif %}
             <dt>Color:</dt> <dd>{{ listing.properties.color }}</dd>
             <dt>Designer:</dt> <dd>{{ listing.properties.designer_name }}</dd>

@@ -1,0 +1,22 @@
+#!/bin/sh
+DROPS='./app/drops/*.rb'
+TAGS='./app/liquid_tags/*.rb'
+FILTERS='./lib/liquid_filters.rb'
+
+STAGED_RUBY_FILES=`git diff-index HEAD --name-only --cached | grep -E '.*.rb'` # Get staged ruby files
+
+if [ -n "$STAGED_RUBY_FILES" ]; then
+  DOCS_FILES=`ls $DROPS $TAGS $FILTERS | grep -E "$STAGED_RUBY_FILES"`
+else
+  exit 0
+fi
+
+if [ -n "$DOCS_FILES" ]; then
+  if [ `bundle exec yardstick $DOCS_FILES | tail -1 | grep 'Failed: 0' | wc -m` -eq 0 ]; then
+    echo "You forgot to document your code for FEDs."
+    echo "bundle exec yardstick $DOCS_FILES # to find what you are missing."
+    exit 1
+  fi
+fi
+
+exit 0

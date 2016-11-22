@@ -1,13 +1,15 @@
+# frozen_string_literal: true
 class InstanceAdmin::Analytics::OverviewController < InstanceAdmin::Analytics::BaseController
+  before_action :fetch_currencies
+
   def show
-    @last_month_listings = Transactable.select('COUNT(transactables.*) AS listings_count, DATE(transactables.created_at) AS listing_date, transactable_type_id').where('DATE(transactables.created_at) >= ?', Date.current - 30.days).order('listing_date ASC').group('transactable_type_id, listing_date')
-    @listings_chart = ChartDecorator.decorate(@last_month_listings, :last_30_days, labels_max_count: 31)
+    @chart_types = ChartDecorator::ADMIN_CHARTS
+    params[:chart_type] ||= @chart_types.first
+    @chart = ChartDecorator.new(current_instance, params).to_liquid
+  end
 
-    @last_month_revenue = Payment.where(payable_type: 'Reservation').paid.last_x_days(30)
-                                 .order('created_at ASC')
-    @revenue_chart = ChartDecorator.decorate(@last_month_revenue, :last_30_days, labels_max_count: 31)
-
-    @last_month_bookings = Order.last_x_days(30).where('state != ?', 'inactive').order('created_at ASC')
-    @bookings_chart = ChartDecorator.decorate(@last_month_bookings, :last_30_days, labels_max_count: 31)
+  def fetch_currencies
+    @currencies = current_instance.payments.group(:currency).select(:currency).map(&:currency)
+    params[:currency] ||= @currencies.first
   end
 end

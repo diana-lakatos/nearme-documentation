@@ -81,6 +81,7 @@ en:
 
       columns:
         bookings: Offers
+        transactable: Project
       total:
         bookings: '%{total} offers'
 
@@ -221,6 +222,7 @@ en:
   instance_admin:
     manage:
       transfers:
+        total_fee: MP Fees
         lessee_service_fees: MP Fees
 
 

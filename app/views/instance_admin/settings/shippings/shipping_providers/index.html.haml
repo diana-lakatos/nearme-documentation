@@ -7,8 +7,7 @@
         %thead
           %tr
             %th= Shippings::ShippingProvider.human_attribute_name(:shipping_provider_name)
-            %th= Shippings::ShippingProvider.human_attribute_name(:test_settings)
-            %th= Shippings::ShippingProvider.human_attribute_name(:live_settings)
+            %th= Shippings::ShippingProvider.human_attribute_name(:settings)
         %tbody
           = render partial: 'shipping_provider', collection: @providers
 

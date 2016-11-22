@@ -143,7 +143,7 @@
         {% assign transfers_path = 'dashboard_company_transfers_path' | generate_url %}
         {% assign transfers_selected = current_path | matches: transfers_path %}
         {% assign analytics_show = 'dashboard/analytics' | is_visible %}
-        {% assign analytics_path = 'dashboard_company_analytics_path' | generate_url %}
+        {% assign analytics_path = '/dashboard/company/analytics/expenses' %}
         {% assign analytics_selected = current_path | matches: analytics_path %}
 
         <li id="dashboard-nav-admin" class="{% if companies_selected or payouts_selected or transfers_selected or analytics_selected or users_selected or waiver_agreement_templates_selected or white_labels_selected or tickets_selected or sent_to_me_selected %}selected{% endif %}">
@@ -162,7 +162,7 @@
               </li>
             {% endif %}
 
-            {% if analytics_show %}
+            {% if analytics_show and current_user.has_seller_profile? %}
               <li id="dashboard-nav-analytics" class="{% if analytics_selected %}selected{% endif %}">
                 <a href="{{ analytics_path }}">{{ 'dashboard.nav.analytics' | t }}</a>
               </li>

@@ -1,16 +1,17 @@
+# frozen_string_literal: true
 class Dashboard::Company::TransfersController < Dashboard::Company::BaseController
+  before_action :fetch_currencies
+  before_action :prepare_params
+
   def show
-    # All transferred PaymentTransfers paginated
-    @payment_transfers = @company.payment_transfers.order('transferred_at DESC')
-    @payment_transfers = @payment_transfers.paginate(page: params[:page], per_page: 20)
+    @chart = ChartDecorator.new(@company, params.merge(chart_type: 'transfers')).to_liquid
+  end
 
-    # PaymentTransfers specifically from the last 7 days
-    @last_week_payment_transfers = @company
-                                   .payment_transfers
-                                   .transferred
-                                   .last_x_days(6)
-                                   .order('created_at ASC')
+  def fetch_currencies
+    @currencies = @company.payment_transfers.group(:currency).select(:currency).map(&:currency)
+  end
 
-    @chart = ChartDecorator.decorate(@last_week_payment_transfers)
+  def prepare_params
+    params[:currency] ||= @currencies.first
   end
 end

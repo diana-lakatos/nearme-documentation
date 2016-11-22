@@ -10,9 +10,9 @@ module DashboardHelper
 
   def analytics_options
     if TransactableType.exists?(skip_location: false)
-      [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'orders']]
+      [[t('dashboard.analytics.expenses'), 'expenses'], [t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'orders']]
     else
-      [[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'orders'], [t('dashboard.analytics.location_views'), 'location_views']]
+      [[t('dashboard.analytics.expenses'), 'expenses'], [t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'orders'], [t('dashboard.analytics.location_views'), 'location_views']]
     end
   end
 

@@ -110,12 +110,7 @@ class UserDrop < BaseDrop
 
   # @return [String] path to the wishlisting this user
   def wish_list_path
-    routes.wish_list_path(id: @source.id, wishlistable_type: 'User')
-  end
-
-  # @return [String] path to generating a 'bulk' JSON-formatted list of wish list buttons (for a list of items)
-  def wish_list_bulk_path
-    routes.bulk_show_wish_lists_path
+    routes.api_wish_list_items_path(id: @source.id, wishlistable_type: 'User')
   end
 
   # @return (see UserDecorator#display_location)
@@ -405,7 +400,7 @@ class UserDrop < BaseDrop
 
   # @return [String] path to a user's public profile
   def profile_path
-    routes.profile_path(@source)
+    routes.profile_path(@source.slug)
   end
 
   # @return [String] path to the section in the application for sending a message to this user using the
@@ -416,7 +411,7 @@ class UserDrop < BaseDrop
 
   # @return [String] path to the user's blog
   def user_blog_posts_list_path
-    routes.user_blog_posts_list_path(@source)
+    routes.user_blog_posts_list_path(@source.slug)
   end
 
   # @return [Boolean] whether the marketplace has blogging enabled and the user has a blog enabled for his account

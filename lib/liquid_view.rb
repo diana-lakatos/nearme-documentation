@@ -88,7 +88,7 @@ class LiquidView
 
     filters = filters_from_controller(controller) + [LiquidFilters]
 
-    render_method = ::Rails.env.development? || ::Rails.env.test? ? :render! : :render
+    render_method = ::Rails.env.production? ? :render : :render!
     liquid.send(render_method, assigns, filters: filters, registers: { action_view: @view, controller: @view.controller }).html_safe
   end
 

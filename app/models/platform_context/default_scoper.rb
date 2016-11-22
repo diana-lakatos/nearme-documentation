@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Module responsible for scoping based on current PlatformContext.
 #
 # This module adds default_scope to models that invoke scoped_to_platform_context method. There are three main scenarios:
@@ -155,7 +156,7 @@ module PlatformContext::DefaultScoper
     end
 
     def enforce_listings_public_to_be_true
-      "scope = scope.where(:'#{@klass.table_name}.listings_public' => true )" if @klass.column_names.include?('listings_public')
+      "scope = scope.where(:'#{@klass.table_name}.listings_public' => true )" if @klass.column_names.include?('listings_public') && false # tmp
     end
 
     def close_end_for_company_scope_if_needed

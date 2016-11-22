@@ -265,7 +265,7 @@ partial: false
               </figure>
             </a>
 
-            <div data-add-favorite-button="true" data-path="{{ listing.wish_list_path }}" data-wishlistable-type="{{ listing.class_name }}" data-link-to-classes="" data-path-bulk="{{ listing.wish_list_bulk_path }}" data-object-id="{{ listing.id }}" id="favorite-button-{{ listing.class_name }}-{{ listing.id }}"></div>
+            {% include 'shared/components/wish_list_button_injection', object: listing %}
 
             <a href="{{ listing.creator.user_profile_url }}" class="lender-link">
               <img src="{{ listing.creator.avatar_url_thumb }}" alt="{{ listing.creator.name }}">
