@@ -10,7 +10,7 @@ module Bookable
 
     has_one :address, class_name: 'Address', as: :entity
 
-    delegate :location, :transactable_type, to: :transactable
+    delegate :location, :show_company_name, :transactable_type_id, :transactable_type, to: :transactable
     delegate :action, to: :transactable_pricing
 
     accepts_nested_attributes_for :address

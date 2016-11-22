@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ReviewDecorator < Draper::Decorator
   include Draper::LazyHelpers
   include FeedbackDecoratorHelper
@@ -46,7 +47,13 @@ class ReviewDecorator < Draper::Decorator
     if reservation?
       h.link_to t('dashboard.reviews.feedback.view_guest_profile'), user_path(reviewable.owner)
     else
-      h.link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(reviewable.order.user)
+      if reviewable.order
+        h.link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(reviewable.order.user)
+      elsif reviewable.line_itemable && reviewable.line_itemable.order
+        h.link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(reviewable.line_itemable.order.user)
+      else
+        ''
+      end
     end
   end
 

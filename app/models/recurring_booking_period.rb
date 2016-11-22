@@ -12,7 +12,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
            :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription,
            :transactable, :quantity, :cancellation_policy_hours_for_cancellation,
            :cancellation_policy_penalty_percentage, :action, :host, :is_free_booking?,
-           :minimum_lister_service_fee_cents, to: :order
+           :minimum_lister_service_fee_cents, :archived_at, :owner_id, to: :order
 
   scope :unpaid, -> { where(paid_at: nil) }
   scope :paid, -> { where.not(paid_at: nil) }
