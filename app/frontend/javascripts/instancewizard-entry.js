@@ -1,19 +1,12 @@
 'use strict';
 
-var DNM = require('./app');
+import NM from 'nm';
 
-DNM.registerInitializer(function(){
-  var els = $('[data-instance-wizard-form]');
-  if (els.length === 0) {
-    return;
-  }
+require('expose?jQuery|expose?$!jquery');
+require('jquery-ujs/src/rails');
+require('../vendor/bootstrap');
+require('../vendor/bootstrap-modal-fullscreen');
 
-  require.ensure('./instance_wizard/instance_wizard_form', function(require){
-    var InstanceWizardForm = require('./instance_wizard/instance_wizard_form');
-    els.each(function(){
-      return new InstanceWizardForm(this);
-    });
-  });
+NM.on('ready', ()=>{
+  require('initializers/instance_wizard/instance_wizard_form.initializer');
 });
-
-DNM.run();

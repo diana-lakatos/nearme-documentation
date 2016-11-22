@@ -1,0 +1,46 @@
+.click-to-call-preferences {
+  .js & {
+    .save-preferences {
+      display: none;
+    }
+  }
+
+  .connection-details {
+    display: none;
+  }
+
+  .connection-details.active {
+    display: block;
+  }
+
+  .twilio-connect-form:after {
+    display: inline-block;
+    content: "";
+    margin-left: 10px;
+    width: 28px;
+    height: 28px;
+    background: url(/assets/dashboard/loader.gif) 50% 50% no-repeat;
+    vertical-align: middle;
+    opacity: 0;
+    transition: opacity .5s ease;
+  }
+
+  .twilio-connect-form.in-progress:after {
+    opacity: 1;
+  }
+
+  .validation-code-info {
+    text-align: center;
+    margin: 40px auto;
+    font-size: 1.5em;
+
+    b {
+      display: block;
+      font-size: 2em;
+    }
+  }
+}
+
+.connection-details + .alert {
+  margin-top: 20px;
+}

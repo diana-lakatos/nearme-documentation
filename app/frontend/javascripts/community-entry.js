@@ -1,195 +1,38 @@
 'use strict';
 
-var DNM = require('./app');
+import NM from 'nm';
 
-require('./intel/vendor/css_browser_selector.min');
-require('./intel/vendor/placeholders.min');
-require('./intel/vendor/foreach.polyfill');
-require('./intel/vendor/hrefid.jquery');
-require('./intel/vendor/selectize.mod');
-require('./intel/vendor/trueresize');
-require('./intel/vendor/geocomplete');
-require('./intel/vendor/bootstrap-tab');
-require('./intel/vendor/jquery-ui');
-require('./vendor/jQueryRotate');
+require('expose?jQuery|expose?$!jquery');
+require('jquery-ujs/src/rails');
+
+require('community/vendor/css_browser_selector.min');
+require('community/vendor/placeholders.min');
+require('community/vendor/foreach.polyfill');
+require('community/vendor/hrefid.jquery');
+require('community/vendor/selectize.mod');
+require('community/vendor/trueresize');
+require('community/vendor/geocomplete');
+require('community/vendor/bootstrap-tab');
+require('community/vendor/jquery-ui');
+require('vendor/jQueryRotate');
 require('../vendor/cocoon');
 
-DNM.registerInitializer(function(){
-  var
-    Utils = require('./intel/utils'),
-    UI = require('./intel/ui'),
-    Onboarding = require('./intel/onboarding'),
-    Forms = require('./intel/forms'),
-    Fixes = require('./intel/fixes');
 
-  Utils.initialize();
-  UI.initialize();
-  Onboarding.initialize();
-  Forms.initialize();
-  Fixes.initialize();
+NM.on('ready', ()=>{
+  require('initializers/shared/ckeditor.initializer');
+
+  require('initializers/community/activity_feed.initializer');
+  require('initializers/community/fileupload.initializer');
+  require('initializers/community/flash_message.initializer');
+  require('initializers/community/general.initializer');
+  require('initializers/community/group_form.initializer');
+  require('initializers/community/intro_video.initializer');
+  require('initializers/community/modal.initializer');
+  require('initializers/community/photo_manipulator.initializer');
+  require('initializers/community/project_form.initializer');
+  require('initializers/community/project_links.initializer');
+  require('initializers/community/search.initializer');
+  require('initializers/community/see_more.initializer');
+  require('initializers/community/tabs.initializer');
+  require('initializers/community/tutorial.initializer');
 });
-
-DNM.registerInitializer(function(){
-  var els = $('.tutorial-a');
-  if (els.length === 0) {
-    return;
-  }
-
-  require.ensure(['./intel/tutorial'], function(require){
-    var Tutorial = require('./intel/tutorial');
-    els.each(function(){
-      return new Tutorial(this);
-    });
-  });
-});
-
-DNM.registerInitializer(function(){
-  var SeeMore = require('./intel/see_more');
-  return new SeeMore();
-});
-
-DNM.registerInitializer(function(){
-  var els = $('div[data-fileupload-wrapper]');
-  if (els.length === 0) {
-    return;
-  }
-
-  require.ensure(['./intel/fileupload'], function(require){
-    var Fileupload = require('./intel/fileupload');
-    els.each(function(){
-      return new Fileupload(this);
-    });
-  });
-});
-
-DNM.registerInitializer(function(){
-  var els = $('.project-links-listing');
-  if (els.length === 0) {
-    return;
-  }
-
-  require.ensure(['./intel/project_links'], function(require){
-    var ProjectLinks = require('./intel/project_links');
-    return new ProjectLinks(els);
-  });
-});
-
-DNM.registerInitializer(function(){
-  var els = $('[data-flash-message]');
-  if (els.length === 0) {
-    return;
-  }
-
-  require.ensure(['./intel/flash_message'], function(require){
-    var FlashMessage = require('./intel/flash_message');
-    els.each(function(){
-      return new FlashMessage(this);
-    });
-  });
-});
-
-DNM.registerInitializer(function(){
-  var els = $('.project-form-controller');
-  if (els.length === 0) {
-    return;
-  }
-
-  require.ensure(['./intel/sections/project_form'], function(require){
-    var ProjectForm = require('./intel/sections/project_form');
-    return new ProjectForm(els);
-  });
-});
-
-DNM.registerInitializer(function(){
-  var $container = $('.group-a');
-
-  if ($container.length === 0) {
-    return;
-  }
-
-  var $tabList = $('ul.nav.nav-tabs li'),
-    tabId, index;
-
-  $('[data-force-toggle-tab]').on('click', function(event) {
-    event.preventDefault();
-    tabId = $(this).data('force-toggle-tab');
-    index = $tabList.find('a').index($('[href="' + tabId + '"]'));
-
-    $tabList.removeClass('active').eq(index).addClass('active');
-    $(this).tab('show');
-  });
-});
-
-DNM.registerInitializer(function(){
-  var els = $('.group-form-controller');
-  if (els.length === 0) {
-    return;
-  }
-
-  require.ensure(['./intel/sections/group_form'], function(require){
-    var GroupForm = require('./intel/sections/group_form');
-    return new GroupForm(els);
-  });
-});
-
-DNM.registerInitializer(function(){
-  var els = $('#search_filter');
-  if (els.length === 0) {
-    return;
-  }
-
-  require.ensure(['./intel/search/search'], function(require){
-    var Search = require('./intel/search/search');
-    return new Search(els);
-  });
-});
-
-DNM.registerInitializer(function(){
-  var Modal = require('./intel/modal');
-  Modal.listen();
-});
-
-DNM.registerInitializer(function(){
-  $(document).on('init:photomanipulator.nearme', function(event, container, options){
-    options = options || {};
-    require.ensure('./intel/photo/manipulator', function(require){
-      var PhotoManipulator = require('./intel/photo/manipulator');
-      return new PhotoManipulator($(container), options);
-    });
-  });
-});
-
-DNM.registerInitializer(function(){
-  var els = $('div.ckeditor');
-  if (els.length === 0) {
-    return;
-  }
-
-  require.ensure('./ckeditor/init', function(require){
-    require('./ckeditor/init');
-  });
-});
-
-DNM.registerInitializer(function(){
-  var el = $('#intro-video');
-  if (el.length === 0) {
-    return;
-  }
-
-  var IntroVideo = require('./intel/intro_video');
-  return new IntroVideo(el);
-});
-
-DNM.registerInitializer(function(){
-  var el = $('.content-container[data-activity-feed]');
-  if (el.length === 0) {
-    return;
-  }
-
-  var ActivityFeedController = require('./intel/sections/activity_feed_controller');
-  return new ActivityFeedController(el);
-});
-
-
-
-DNM.run();

@@ -14,7 +14,6 @@ module.exports = function(gulp){
     'app/frontend/javascripts/**/*.js',
     '!node_modules/**',
     '!**/vendor/**',
-    '!**/sessioncam.js',
     '!app/frontend/javascripts/instance_admin/data_tables/*',
     '!public/**/*.js'
   ];
@@ -31,26 +30,26 @@ module.exports = function(gulp){
 
 
   gulp.task('lint:javascript:cached', function() {
-        // Read all js files
+    /* Read all js files */
     return gulp.src(files)
-        .pipe(cache('eslint'))
-            // Only uncached and changed files past this point
-            .pipe(eslint())
-            .pipe(eslint.format())
-            .pipe(eslint.result(function(result) {
-              if (result.warningCount > 0 || result.errorCount > 0) {
-                    // If a file has errors/warnings remove uncache it
-                delete cache.caches.eslint[path.resolve(result.filePath)];
-              }
-            }));
+    .pipe(cache('eslint'))
+    /* Only uncached and changed files past this point */
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.result(function(result) {
+      if (result.warningCount > 0 || result.errorCount > 0) {
+        /* If a file has errors/warnings remove uncache it */
+        delete cache.caches.eslint[path.resolve(result.filePath)];
+      }
+    }));
   });
 
-    // Run the "lint:javascript:cached" task initially...
+  /* Run the "lint:javascript:cached" task initially... */
   gulp.task('watch:lint:javascript', ['lint:javascript:cached'], function() {
-        // ...and whenever a watched file changes
+    /* ...and whenever a watched file changes */
     return gulp.watch(files, ['lint:javascript:cached'], function(event) {
       if (event.type === 'deleted' && cache.caches.eslint) {
-                // remove deleted files from cache
+        /* remove deleted files from cache */
         delete cache.caches.eslint[event.path];
       }
     });
@@ -58,5 +57,4 @@ module.exports = function(gulp){
 
 
   gulp.task('watch:lint', ['watch:lint:javascript']);
-
 };

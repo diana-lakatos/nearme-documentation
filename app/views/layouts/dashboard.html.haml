@@ -10,11 +10,11 @@
     %meta{:content => meta_description_content, :name => "description"}/
 
     / Styles
-    = stylesheet_link_tag 'new_ui_vendor'
-    = stylesheet_link_tag 'new_ui'
+    = stylesheet_link_tag 'dashboard_vendor'
+    = stylesheet_link_tag 'dashboard'
     = render 'shared/head/fonts'
 
-    = stylesheet_link_tag dynamic_theme_path_for_current_theme(:new_ui)
+    = stylesheet_link_tag dynamic_theme_path_for_current_theme(:dashboard)
 
     / Prefetch
     = render 'layouts/content_holder_injector'
@@ -77,5 +77,5 @@
 
     = yield(:body_bottom)
 
-    = render 'shared/javascripts/footer', entry: 'newui', googlemaps: true, analytics: true
+    = render 'shared/javascripts/footer', entry: 'dashboard', googlemaps: true, analytics: true
     = render 'shared/javascripts/debug_info'

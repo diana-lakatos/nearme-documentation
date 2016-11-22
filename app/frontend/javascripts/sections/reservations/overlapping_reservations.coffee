@@ -1,5 +1,5 @@
 Modal = require('../../components/modal')
-Dialog = require('../../new_ui/modules/dialog')
+Dialog = require('../../dashboard/modules/dialog')
 
 module.exports = class OverlappingReservationsController
   constructor: (@container, @review_options = {}) ->
