@@ -12,7 +12,7 @@ namespace :longtail do
       p.content = LongtailRakeHelper.generic_page_content
       p.css_content = ''
     end
-    LongtailRakeHelper.parse_keywords!(page, 'c3ac011214f481a580dae3fa3a3e8cf9')
+    LongtailRakeHelper.parse_keywords!(page, '341413f7e17c0a48eb605e08bdbce7d2')
   end
 
   task spacer: :environment do
