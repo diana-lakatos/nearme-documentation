@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class RequestParametersValidator
   SINGLE_PARAMETERS_TO_BE_CHECKED = %i(id page transactable_type_id group_type_id follower_id follower_type).freeze
   ARRAY_PARAMETERS_TO_BE_CHECKED = %i(topic_ids).freeze
@@ -7,7 +8,7 @@ class RequestParametersValidator
   end
 
   def validate!
-    fail InvalidParameterError unless valid_parameters?
+    raise InvalidParameterError unless valid_parameters?
   end
 
   protected
@@ -25,11 +26,16 @@ class RequestParametersValidator
   end
 
   def array_contains_valid_values?(array)
-    array.blank? || array.try(:all?) { |value| valid_value?(value) }
+    array.blank? || array.try(:all?) { |value| valid_integer?(value) }
   end
 
   def valid_value?(value)
     value.respond_to?(:to_i)
+  end
+
+  def valid_integer?(value)
+    return true if value.blank?
+    value.to_i.to_s == value
   end
 
   class InvalidParameterError < StandardError; end
