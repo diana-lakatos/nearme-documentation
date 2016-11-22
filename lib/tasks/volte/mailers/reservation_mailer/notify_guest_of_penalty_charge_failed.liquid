@@ -1,0 +1,11 @@
+<h2>Hello, {{ enquirer.first_name }}?</h2>
+
+<p>We have noticed you have just canceled your reservation.</p>
+
+<p>The cancelation policy you agreed to is that you can cancel without fee up to {{ reservation.cancellation_policy_hours_for_cancellation }} hours before reservation starts. You have canceled it after this period, hence we tried to charged you for {{ reservation.cancellation_policy_penalty_hours }} hours plus service fee.</p>
+
+<p>The total cancelation fee is {{ reservation.formatted_total_amount }}. Since we were not able to capture the payment, please update your payment information in your dashboard, otherwise your account might be blocked.</p>
+
+<a class="btn" href="{{ reservation.guest_show_url }}">Update payment information</a>
+
+<p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>

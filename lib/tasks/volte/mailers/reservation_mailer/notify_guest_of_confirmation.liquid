@@ -1,0 +1,61 @@
+<h2>You got it, {{ enquirer.first_name }}!</h2>
+
+<p>Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' has been confirmed! Here it is:</p>
+
+<div class="booking-details">
+
+  <div class="row">
+    <strong style='display: inline-block;'>{{listing.lessor | capitalize}}</strong>
+    <span style="float: right;"><a href="{{ platform_context.host | append:listing.administrator.user_profile_url }}">{{ listing.administrator.first_name }}</a></span>
+  </div>
+
+  <div class="row">
+    <strong style='display: inline-block;'>What</strong>
+    <span style="float: right;"><a href="{{ listing.listing_url }}">{{ listing.name }}</a> x {{ reservation.quantity }}</span>
+  </div>
+
+  {% if reservation.guest_notes != blank %}
+    <div class="row">
+      <strong style='display: inline-block;'>Exclusive booking instructions from guest:</strong>
+      <span style="float: right;">{{ reservation.guest_notes }}</span>
+    </div>
+  {% endif %}
+
+  <div class="row">
+    <table width="100%">
+      <tr>
+        <td valign="top"><strong style='display: inline-block;'>When</strong></td>
+        <td style="text-align: right;">
+          {% if reservation.action_hourly_booking? %}
+            {{ reservation.hourly_summary }}
+          {% else %}
+            {{ reservation.dates_summary }}
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="row">
+    <strong style='display: inline-block;'>Total</strong>
+    <span style="float: right; clear: right;">{{ reservation.total_price }}</span>
+  </div>
+
+  {% if listing.has_seller_attachments? %}
+    <div class="row">
+      <p>{{ 'seller_attachments.associated_with_order' | translate }}:</p>
+      {% for attachment in listing.attachments %}
+        <p>
+          <a href="{{ attachment.attachment_url }}">{{ attachment.title }}</a>
+        </p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+</div>
+
+<p>You can manage your booking here:</p>
+
+<a class="btn" href="{{ platform_context.host | append:enquirer.bookings_dashboard_url_with_tracking_and_token | append:signature_for_tracking  }}">My Bookings</a>
+
+<p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>

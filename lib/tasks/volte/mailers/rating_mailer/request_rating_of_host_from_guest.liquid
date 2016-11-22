@@ -1,0 +1,9 @@
+<h2>How was it, {{ reservation.owner.first_name }}?</h2>
+
+<p>We can't wait to hear about your experience with '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'.</p>
+
+<p>Your opinion is very important and it will help other {{ listing.lessees }} to find great {{ platform_context.bookable_noun_plural }}. Take a moment and give us your feedback!</p>
+
+<a class="btn" href="{{ platform_context.host | append:reservation.reviews_reservation_url }}">Write a Review</a>
+
+<p>If you'd prefer to talk to us directly, please send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>

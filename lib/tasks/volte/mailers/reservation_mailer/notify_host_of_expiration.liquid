@@ -1,0 +1,13 @@
+<h2>Can we help, {{ lister.first_name }}?</h2>
+
+<p>We noticed that you didn't confirm {{ reservation.owner.first_name.pluralize }} booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' within the required 24 hour period.</p>
+
+<p>That's one missed opportunity but we're here to help so you don’t miss any other bookings!</p>
+
+<p>Please, let us know if your {{ reservation.bookable_noun }} is still available. Also don't forget to update your contact information in your personal account so {{ listing.lessees }} can reach you easily.</p>
+
+<a class="btn" href="{{ platform_context.host | append:lister.edit_user_registration_url_with_token_and_tracking | append:signature_for_tracking }}">Go to My Account</a>
+
+<p>If you prefer, you can talk with us directly; just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
+
+<p>We'll be glad to help you!</p>

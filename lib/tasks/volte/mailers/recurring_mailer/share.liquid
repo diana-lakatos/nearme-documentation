@@ -1,0 +1,9 @@
+<h2>Spread the word, {{ user.first_name }}!</h2>
+
+<p>Your listing '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' hasn't been booked in {{ listing.last_booked_days }} days.</p>
+
+<p>Listings shared online are getting booked faster than ones that aren't! Share your listing on Facebook, Twitter, and LinkedIn, and start seeing {{ listing.lessees }} book your {{ listing.bookable_noun }}.</p>
+
+{% include 'reservation_mailer/social_links.html' %}
+
+<p>Need help? Send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
