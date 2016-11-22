@@ -47,18 +47,9 @@ module CarrierWave
         model["#{mounted_as}_versions_generated_at"].present?
       end
 
-      def url(version = nil)
-        super_url = begin
-                      super(version)
-                    rescue e
-                      # this seem to be bug in fog-aws - for now very quick and extremely dirty hack
-                      # error triggered for example on https://upside-of-talent.staging.near-me.com/instance_admin/theme/file_uploads
-                      if e.message.include?('undefined method `merge')
-                        raise e
-                      else
-                        super
-                      end
-                    end
+      def url(*args)
+        version = args.first
+        super_url = super(*args)
         if versions_generated? && super_url !~ /\?v=\d+$/
           # We use v=number to trigger CloudFront cache invalidation
           # We add 10 minutes because versions_generated_at is slightly in the past as to
