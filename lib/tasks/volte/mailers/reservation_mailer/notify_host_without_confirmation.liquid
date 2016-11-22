@@ -1,0 +1,52 @@
+<h2>Good news, {{ lister.first_name }}!</h2>
+
+<p>
+Your listing, '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>', was just booked!
+</p>
+
+<div class="booking-details">
+
+  <div class="row">
+    <strong style='display: inline-block;'>Who</strong>
+    <span style="float: right;"><a href="{{ platform_context.host | append:reservation.owner.user_profile_url }}">{{ reservation.owner.first_name }}</a></span>
+  </div>
+
+  <div class="row">
+    <strong style='display: inline-block;'>What</strong>
+    <span style="float: right;"><a href="{{ listing.listing_url }}">{{ listing.name }}</a> x {{ reservation.quantity }}</span>
+  </div>
+
+  {% if reservation.guest_notes != blank %}
+    <div class="row">
+      <strong style='display: inline-block;'>Exclusive booking instructions from guest:</strong>
+      <span style="float: right;">{{ reservation.guest_notes }}</span>
+    </div>
+  {% endif %}
+
+  <div class="row">
+    <table width="100%">
+      <tr>
+        <td valign="top"><strong style='display: inline-block;'>When</strong></td>
+        <td style="text-align: right;">
+          {% if reservation.action_hourly_booking? %}
+            {{ reservation.hourly_summary }}
+          {% else %}
+            {{ reservation.dates_summary }}
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="row">
+    <strong style='display: inline-block;'>Total</strong>
+    <span style="float: right;">{{ reservation.total_payable_to_host_formatted }}</span>
+  </div>
+
+</div>
+
+<p>Exciting, right? You can manage this booking from the Dashboard.</p>
+
+<a class="btn" href="{{ platform_context.host | append:listing.manage_guests_dashboard_url_with_tracking | append:signature_for_tracking }}">Manage {{ listing.lessees | capitalize }}</a>
+
+<p>If you need help, send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>

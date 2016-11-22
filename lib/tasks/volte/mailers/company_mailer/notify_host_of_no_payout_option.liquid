@@ -1,0 +1,9 @@
+<h2>Your funds transfer is ready!</h2>
+
+<p>You earned {{ company.payment_transfers_as_string }}, and we're ready to make a payment transfer.</p>
+
+<p>But first, we need you to add your payout information so we can make the payment.</p>
+
+<a class='btn' href="{{ platform_context.host | append:company.add_paypal_url_with_tracking_and_token | append:signature_for_tracking }}">Add payout information</a>
+
+<p>We're glad to help! If you have any questions, please contact us at {{ platform_context.support_email }}.</p>

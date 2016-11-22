@@ -1,0 +1,7 @@
+<h2>Heads up, {{ user.first_name }}!</h2>
+
+<p>There are people looking for {{ listing.bookable_noun_plural }} in your area. Finish your listing and get it booked; it won't take long, we promise!</p>
+
+<a class="btn" href="{{ platform_context.host | append:listing.space_wizard_list_url_with_tracking | append:signature_for_tracking }}">Finish Listing Your {{ listing.bookable_noun}}</a>
+
+<p>We are here to help! If you have any questions, or need inspiration to complete your listing, please send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>

@@ -1,0 +1,11 @@
+<h2>What happened, {{ enquirer.first_name }}?</h2>
+
+<p>We noticed that you just cancelled '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'.</p>
+
+<p>Plans change, we get it. Just let us know the reasons by clicking the big button below. That will help us to provide a better service for you in the future.</p>
+
+<a class="btn" href="mailto:{{ platform_context.support_email }}">Send Feedback</a>
+
+<p>If you prefer, you can talk with us directly; just send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
+
+<p>We'll be glad to help you!</p>

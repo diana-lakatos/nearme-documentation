@@ -1,0 +1,12 @@
+<h2> We are sorry, {{ merchantable.creator.first_name }}!</h2>
+
+<p>Unfortunately we were not able to deliver you automated payout, which was triggered on {{ disbursement.disbursement_date | localize }} due to the following reason: {{ disbursement.exception_message  | humanize }}</p>
+
+{% if disbursement.follow_up_action == 'update_funding_information' %}
+<p>The issue will not be resolved without your action. Once you update your payout information, we will automatically re-try the payout.</p>
+<a class='btn' href="{{ platform_context.host | append:merchantable.payout_path }}">Update payout information</a>
+{% else %}
+  <p>Suggested follow up action: {{ disbursement.follow_up_action | humanize }}</p>
+{% endif %}
+
+<p>We're glad to help! If you have any questions, please contact us at {{ platform_context.support_email }}.</p>
