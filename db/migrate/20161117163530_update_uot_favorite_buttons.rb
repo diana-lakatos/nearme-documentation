@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 class UpdateUotFavoriteButtons < ActiveRecord::Migration
   def up
-    i = Instance.find(195)
+    i = Instance.find_by(id: 195)
+    return true if i.nil?
     i.set_context!
     search_list_from = "                                <div data-add-favorite-button=\"true\" data-path=\"{{ user.wish_list_path }}\" data-wishlistable-type=\"{{ user.class_name }}\" data-link-to-classes=\"{{ link_to_classes }}\" data-path-bulk=\"{{ user.wish_list_bulk_path }}\" data-object-id=\"{{ user.id }}\" id=\"favorite-button-{{ user.class_name }}-{{ user.id }}\">\n                                  <div class=\"text-center\"><img src=\"{{ 'components/modal/loader.gif' | image_url }}\" /></div>\n                                </div>"
     search_list_to   = "                                {% include 'shared/components/wish_list_button_injection', object: user, link_to_classes: 'button-b action-favorite' %}"
