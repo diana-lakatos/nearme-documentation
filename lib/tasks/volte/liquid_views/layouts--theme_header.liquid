@@ -49,16 +49,16 @@
                 </li>
 
                 <li>
-                  <a href="{{ 'dashboard_company_orders_received_index_path' | generate_url }}">
+                  <a href="{{ 'dashboard_company_orders_received_index_path' | generate_url }}" class="nav-link">
                     {{ 'dashboard.nav.orders_received' | t }}
-                    {% if unconfirmed_received_orders_count > 0 %}
-                      <span class="count">{{ unconfirmed_received_orders_count }}</span>
+                    {% if unconfirmed_orders_count > 0 %}
+                      <span class="count">{{ unconfirmed_orders_count }}</span>
                     {% endif %}
                   </a>
                 </li>
 
                 <li>
-                  <a href="{{ 'dashboard_orders_path' | generate_url }}">
+                  <a href="{{ 'dashboard_orders_path' | generate_url }}" class="nav-link">
                     {{ 'dashboard.nav.orders' | t }}
                   </a>
                 </li>

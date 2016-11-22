@@ -108,14 +108,11 @@
           {% assign orders_received_show = current_user.registration_completed? and orders_received_visible %}
           {% assign orders_received_path = 'dashboard_company_orders_received_index_path' | generate_url %}
           {% assign orders_received_selected = current_path | matches: orders_received_path %}
+          {% assign unconfirmed_orders_count = current_user.unconfirmed_received_orders_count %}
 
           {% if orders_visible and orders_enabled or orders_received_show %}
             <li id="dashboard-nav-orders_header" class="{% if orders_selected or orders_received_selected %}selected{% endif %}">
-              <span>{{ 'dashboard.nav.orders_header' | t }}
-                {% if current_user.reservations_count.present? %}
-                  <span class="count">{{ current_user.reservations_count }}</span>
-                {% endif %}
-              </span>
+              <span>{{ 'dashboard.nav.orders_header' | t }} </span>
 
               <ul>
                 {% if orders_visible and orders_enabled %}
@@ -126,7 +123,12 @@
 
                 {% if orders_received_show %}
                   <li id="dashboard-nav-orders" class="{% if orders_received_selected %}selected{% endif %}">
-                    <a href="{{ orders_received_path }}">{{ 'dashboard.nav.orders_received' | t }}</a>
+                    <a href="{{ orders_received_path }}">
+                      {{ 'dashboard.nav.orders_received' | t }}
+                      {% if unconfirmed_orders_count > 0 %}
+                        <span class="count">{{ unconfirmed_orders_count }}</span>
+                      {% endif %}
+                    </a>
                   </li>
                 {% endif %}
               </ul>
