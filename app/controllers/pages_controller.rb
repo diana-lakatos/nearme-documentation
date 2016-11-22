@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class PagesController < ApplicationController
   layout :resolve_layout
+  respond_to :html
 
   def show
     @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs([params[:slug], params[:slug2], params[:slug3]].compact.join('/'), params[:format]))
@@ -15,8 +16,9 @@ class PagesController < ApplicationController
     if @page.redirect?
       redirect_to @page.redirect_url, status: @page.redirect_code
     elsif params[:simple]
-      respond_to :html
-      render :simple, platform_context: [platform_context.decorate]
+      respond_to do |format|
+        format.html { render :simple, platform_context: [platform_context.decorate] }
+      end
     elsif @page.layout_name.blank?
       assigns = {}
       assigns['params'] = params.except(*Rails.application.config.filter_parameters)
@@ -25,8 +27,9 @@ class PagesController < ApplicationController
       assigns['data_source_contents'] = @data_source_contents
       render text: Liquid::Template.parse(@page.content).render(assigns, registers: { action_view: self }, filters: [LiquidFilters])
     else
-      respond_to :html
-      render :show, layout: @page.layout_name
+      respond_to do |format|
+        format.html { render :show, layout: @page.layout_name }
+      end
     end
   end
 
