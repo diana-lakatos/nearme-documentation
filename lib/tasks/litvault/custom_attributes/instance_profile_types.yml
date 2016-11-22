@@ -47,6 +47,7 @@
     wrapper_html_options_string: 'class=>form-group check_boxes required checkbox-columns'
     custom_validators_attributes:
       "[0]":
+        field_name: 'states'
         required: true
   honors_awards:
     label: 'Honors / Awards'
@@ -64,6 +65,7 @@
     validation_only_on_update: true
     custom_validators_attributes:
       "[0]":
+        field_name: 'professional_liability_insurance'
         required: true
   liability_occurence_limits_information:
     label: Liability Occurence / Limits Information
@@ -72,6 +74,7 @@
     validation_only_on_update: true
     custom_validators_attributes:
       "[0]":
+        field_name: 'liability_occurence_limits_information'
         required: true
   no_limitations_agreement:
     label: 'I acknowledge and confirm all of the following: that I am in good standing within the states where I practice law, have no past or pending grievances and attorney discipline, have no past or pending legal Malpractice Claims.'
@@ -80,6 +83,7 @@
     validation_only_on_update: true
     custom_validators_attributes:
       "[0]":
+        field_name: 'no_limitations_agreement'
         required: true
 
 # seller profile
