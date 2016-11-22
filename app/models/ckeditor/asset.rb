@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Ckeditor::Asset < ActiveRecord::Base
   include Ckeditor::Orm::ActiveRecord::AssetBase
   auto_set_platform_context
@@ -12,6 +13,7 @@ class Ckeditor::Asset < ActiveRecord::Base
   validates :data, presence: true
 
   belongs_to :instance
+  belongs_to :user
 
   class << self
     def user_friendly_global_asset_access_levels

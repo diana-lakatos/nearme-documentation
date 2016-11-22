@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class RemoveAmenitiesFromCacheInLiquidViews < ActiveRecord::Migration
   def change
     InstanceView.all.select { |lv| lv.body.include?('cache_for location, location.company, location.amenities') }.each do |iv|

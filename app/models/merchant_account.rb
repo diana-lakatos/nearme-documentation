@@ -114,6 +114,7 @@ class MerchantAccount < ActiveRecord::Base
     merchantable
   end
 
+  # @return [Boolean] whether it supports paypal chain payments
   def chain_payments?
     payment_gateway.supports_paypal_chain_payments?
   end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class V1::ListingsController < V1::BaseController
   skip_before_action :verify_authenticity_token, only: [:create, :update, :destroy]
 

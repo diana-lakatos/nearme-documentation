@@ -1369,6 +1369,7 @@ en:
         archived: "Archived"
         not_archived: "Active"
         overdued: "Overdue"
+        draft: "Draft"
       columns:
         listing: "Listing"
         total: "Total"
@@ -2691,8 +2692,10 @@ en:
     delivery_hint: 'Prices include return delivery'
     select_dates: 'Select the date and time'
     buttons:
+      draft: "Save as draft"
       request: 'Request Booking'
       continue: 'Continue'
+      cancel_draft: "Cancel draft"
 
     disabled_buttons:
       request: 'Booking...'

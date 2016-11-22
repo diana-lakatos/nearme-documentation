@@ -1,0 +1,37 @@
+<div class="blog-post">
+  <div class="clearfix">
+    <div class="row-fluid">
+      <div class="span10">
+        <h2>
+          <a href='{{ blog_post.post_path }}'> {{ blog_post.title }} </a>
+        </h2>
+      </div>
+      <div class="span2 date">
+        {{ blog_post.published_at | to_date | localize: 'day_and_month' }}
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12 content">
+        <p>
+          {{ blog_post.excerpt }}
+        </p>
+      </div>
+    </div>
+  </div>
+  {% if blog_post.show_author? %}
+    <div class="clearfix avatar">
+      <div class="row-fluid">
+        {% if blog_post.show_author_avatar? %}
+          <div class="span1">
+            <a {% if blog_post.user.has_buyer_profile? %} href='{{ blog_post.user_path  }}' {% endif %}>
+              <div class="avatar-container" style="background-image: url({{ blog_post.author_avatar_url }});"></div>
+            </a>
+          </div>
+        {% endif %}
+        <div class="span11 {% if blog_post.show_author_avatar? %} with-avatar {% endif %}">
+          <a {% if blog_post.user.has_buyer_profile? %} href='{{ blog_post.user_path  }}' {% endif %} class='author-name'>{{ blog_post.author_name }}</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>

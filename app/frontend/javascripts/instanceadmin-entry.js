@@ -227,10 +227,17 @@ DNM.registerInitializer(function(){
   }
 
   if (main.hasClass('projects') || main.hasClass('advanced_projects')) {
-    require.ensure('./instance_admin/sections/projects', function(require){
-      var InstanceAdminProjectsController = require('./instance_admin/sections/projects');
-      new InstanceAdminProjectsController(main);
-    });
+      require.ensure('./instance_admin/sections/projects', function(require){
+          var InstanceAdminProjectsController = require('./instance_admin/sections/projects');
+          new InstanceAdminProjectsController(main);
+      });
+  }
+
+  if (main.hasClass('custom_attributes')) {
+      require.ensure('./instance_admin/sections/custom_attributes', function(require){
+          var InstanceAdminCustomAttributesController = require('./instance_admin/sections/custom_attributes');
+          new InstanceAdminCustomAttributesController(main);
+      });
   }
 });
 

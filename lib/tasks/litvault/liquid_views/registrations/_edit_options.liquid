@@ -1,0 +1,6 @@
+  <div class="options">
+    <button type="button" class="btn btn-default" data-submit-form="form.simple_form">Save</button>
+    {% if current_user.has_buyer_profile? %}
+      <a target="_blank" href="{{ current_user.user_profile_url }}">{{ 'dashboard.user_profile.view_profile_html' | t }}</a>
+    {% endif %}
+  </div>

@@ -61,6 +61,7 @@ class Instance < ActiveRecord::Base
   has_many :tickets, -> { where(target_type: 'Instance').order('created_at DESC') }, class_name: 'Support::Ticket'
   has_many :transactable_types
   has_many :action_types, class_name: 'TransactableType::ActionType'
+  # @todo Remove project_types when {ProjectType} will be finally removed
   has_many :project_types, class_name: 'ProjectType'
   has_many :all_payment_gateways, class_name: 'PaymentGateway'
   has_many :users, inverse_of: :instance
@@ -252,6 +253,7 @@ class Instance < ActiveRecord::Base
     payout_gateways(country, currency).first
   end
 
+  # @return [Boolean] whether bookable/purchaseable {TransactableType} objects have been defined for this instance
   def bookable?
     @bookable ||= action_types.bookable.enabled.joins(:transactable_type).where(transactable_types: { deleted_at: nil }).any?
   end
@@ -264,6 +266,7 @@ class Instance < ActiveRecord::Base
     TransactableType::AVAILABLE_TYPES[0]
   end
 
+  # @return [Boolean] whether the payment transfers frequency is set to manual
   def manual_transfers?
     payment_transfers_frequency == 'manually'
   end
@@ -283,6 +286,7 @@ class Instance < ActiveRecord::Base
     domains.order('use_as_default desc').try(:first)
   end
 
+  # @return [Boolean] whether documents upload is enabled
   def documents_upload_enabled?
     documents_upload.present? && documents_upload.enabled?
   end
@@ -291,6 +295,7 @@ class Instance < ActiveRecord::Base
     "#{id} - #{name}"
   end
 
+  # @return [Boolean] whether any of the action types have request for quotation enabled
   def action_rfq?
     action_types.enabled.where(allow_action_rfq: true).any?
   end
@@ -352,6 +357,7 @@ class Instance < ActiveRecord::Base
     self.webhook_token = SecureRandom.uuid.delete('-')
   end
 
+  # @return [Boolean] whether seller attachments are enabled for this marketplace
   def seller_attachments_enabled
     seller_attachments_access_level != 'disabled'
   end
@@ -401,6 +407,10 @@ class Instance < ActiveRecord::Base
 
   def buyer_profile_enabled?
     buyer_profile_type.form_components.where(form_type: 'buyer_profile_types').any?
+  end
+
+  def default_profile_enabled?
+    default_profile_type.form_components.where(form_type: 'default_profile_types').any?
   end
 
   def new_ui?

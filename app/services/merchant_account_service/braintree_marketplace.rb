@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class MerchantAccountService::BraintreeMarketplace
   def initialize(merchant_account)
     @merchant_account = merchant_account

@@ -1,12 +1,14 @@
+# frozen_string_literal: true
 class Offer < Order
-  # validates :host_line_items, presence: true
-  delegate :action, to: :transactable_pricing
-
   has_many :host_line_items, as: :line_itemable
   has_many :recurring_booking_periods, dependent: :destroy, foreign_key: :order_id
 
+  delegate :action, to: :transactable_pricing
+  before_update :set_draft_at
+
   def try_to_activate!
     return true unless inactive? && valid? && checkout_completed?
+    return true if draft_at?
 
     activate!
   end
@@ -157,6 +159,10 @@ class Offer < Order
     true
   end
 
+  def schedule_refund
+    true
+  end
+
   def can_reject?
     state == 'unconfirmed'
   end
@@ -173,5 +179,11 @@ class Offer < Order
 
   def to_liquid
     @offer_drop ||= OfferDrop.new(self)
+  end
+
+  def set_draft_at
+    self.draft_at = (Time.current if save_draft)
+
+    true
   end
 end

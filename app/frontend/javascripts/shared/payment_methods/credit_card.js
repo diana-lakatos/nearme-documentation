@@ -1,3 +1,5 @@
+/* global Stripe */
+
 class PaymentMethodCreditCard {
 
   constructor(container) {
@@ -5,7 +7,7 @@ class PaymentMethodCreditCard {
     this._ui = {};
     this._ui.container = container;
 
-    this._publishableToken = this.form.find('.nm-credit-card-fields').data('publishable')
+    this._publishableToken = this.form.find('.nm-credit-card-fields').data('publishable');
 
     if (this._ui.container.dataset.initialised) {
       return;
@@ -16,8 +18,9 @@ class PaymentMethodCreditCard {
     this._ui.newCreditCard = container.querySelector('.nm-new-credit-card-form');
     this._ui.creditCardSwitcher = container.querySelector('.nm-credit-card-option-select');
 
+    var that = this;
+
     if (!window.Stripe) {
-      var that = this;
       let s = document.createElement('script');
       s.src = 'https://js.stripe.com/v2/';
       s.addEventListener('load', function() {
@@ -44,10 +47,10 @@ class PaymentMethodCreditCard {
     if (value === 'custom') {
       this._ui.newCreditCard.classList.remove('hidden');
       this._submitFormHandler();
-      return
+      return;
     }
     this._ui.newCreditCard.classList.add('hidden');
-    $(this.form).unbind('submit')
+    $(this.form).unbind('submit');
   }
 
   _init(){
@@ -90,9 +93,9 @@ class PaymentMethodCreditCard {
 
     $.each(['exp_month', 'exp_year', 'last_name', 'first_name'],  function(index, field){
       valid = that._validateField(form.find('[data-stripe="' + field + '"]'), that._presenceValidator) && valid;
-    })
+    });
 
-    return valid
+    return valid;
   }
 
   _validateField(field, validator) {
@@ -100,35 +103,35 @@ class PaymentMethodCreditCard {
       field.parents('.control-group').addClass('error');
       field.parents('.controls').next('.error-block').remove();
       field.parents('.controls').after('<p class="error-block">' + this._validationMessage(validator) +'</p>');
-      return false
+      return false;
     } else {
       field.parents('.control-group').removeClass('error');
       if (field.parents('.controls').next().attr('class') == 'error-block') {
         field.parents('.controls').next('.error-block').remove();
       }
-      return true
+      return true;
     }
   }
 
   _bindFieldValidation() {
     var $form = $(this.form), that = this, valid = true;
     $form.find('[data-stripe]').change(function(event){
-      valid = that._validateField($(event.target), that._presenceValidator)
+      valid = that._validateField($(event.target), that._presenceValidator);
       if ( $(event.target).data('stripe') == 'number') {
         valid && that._validateField($form.find('[data-stripe="number"]'), $.payment.validateCardNumber);
       }
-    })
+    });
   }
 
   _presenceValidator(value) {
-    return value.length > 0
+    return value.length > 0;
   }
 
   _validationMessage(validator) {
     if (validator !== this._presenceValidator) {
-      return 'is incorrect'
+      return 'is incorrect';
     } else {
-      return 'is required'
+      return 'is required';
     }
   }
 

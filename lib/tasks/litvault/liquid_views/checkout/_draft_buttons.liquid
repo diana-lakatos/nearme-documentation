@@ -1,0 +1,5 @@
+{% if order.allows_draft? %}
+  <button class="btn blue next" data-autosave-draft='true' data-disable-with="{{ 'general.processing' | translate }}" name="save_draft">
+    {{ 'reservations_review.buttons.draft' | translate }}
+  </button>
+{% endif %}

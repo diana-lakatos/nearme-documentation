@@ -1,3 +1,19 @@
+# frozen_string_literal: true
+# Usage example:
+# ```
+#  {% form_for current_user, url: '/users' %}
+#
+#    {% input first_name, hint: 'this is a hint', label: 'this is a label', required: false  %}
+#    {% input last_name, required: false  %}
+#
+#    {% input avatar %}
+#    {% submit Save  %}
+#
+#  {% endform_for %}
+# ```
+#
+# Used to generate an input tag inside a form. Generates the entire HTML structure for an input, its
+# label, hint, required mark and their associated containers.
 class InputTag < Liquid::Tag
   include AttributesParserHelper
 
@@ -9,7 +25,7 @@ class InputTag < Liquid::Tag
       @field_name = Regexp.last_match(1)
       @attributes = create_initial_hash_from_liquid_tag_markup(markup)
     else
-      fail SyntaxError.new('Invalid syntax for Input tag - must pass field name')
+      raise SyntaxError, 'Invalid syntax for Input tag - must pass field name'
     end
   end
 

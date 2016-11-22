@@ -1,3 +1,15 @@
+# frozen_string_literal: true
+# Usage example:
+# ```
+#   {% will_paginate collection: @users %}
+# ```
+# or
+# ```
+#   {% will_paginate collection: @users, renderer: dashboard %}
+# ```
+#
+# Displays the pagination links for a paginated collection. The second example
+# uses the 'dashboard' style renderer.
 class WillPaginateTag < Liquid::Tag
   include AttributesParserHelper
 
@@ -22,7 +34,7 @@ class WillPaginateTag < Liquid::Tag
     when 'dashboard'
       BuySellMarket::WillPaginateDashboardLinkRenderer::LinkRenderer
     else
-      fail NotImplementedError.new("Valid renderer options are: 'dashboard', but #{@attributes['renderer']} was given. Typo?")
+      raise NotImplementedError, "Valid renderer options are: 'dashboard', but #{@attributes['renderer']} was given. Typo?"
     end
   end
 end

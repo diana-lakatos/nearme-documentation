@@ -4,7 +4,7 @@
     <button type="button" data-close>Close</button>
   </header>
 
-  {% assign collaborators = current_user | find_collaborators_for_user_projects: user %}
+  {% assign collaborators = current_user | find_collaborators_for_user_transactables: user %}
 
   {% if collaborators.size > 0 %}
     <div class="existing-projects" data-delete-url="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">

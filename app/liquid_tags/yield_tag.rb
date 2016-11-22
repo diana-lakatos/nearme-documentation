@@ -1,7 +1,16 @@
-# corresponding class is lib/liquid_content_for which defines
-# {% content_for '<content_for_name>' %}Hello world{% endcontent_for %}
-# functionality, thanks to which you can use this tag to just call
-# {{ yield '<content_for_name>' }}
+# frozen_string_literal: true
+# Usage example:
+#
+# Use this in a liquid view first:
+# ```
+#   {% content_for 'content_for_name' %}Hello world{% endcontent_for %}
+# ```
+#
+# Then you can use yield inside the layout (for example) or another subsequently
+# rendered view, like below:
+# ```
+#   {{ yield 'content_for_name' }}
+# ```
 class YieldTag < Liquid::Tag
   def initialize(tag_name, content_for_symbol, tokens)
     super

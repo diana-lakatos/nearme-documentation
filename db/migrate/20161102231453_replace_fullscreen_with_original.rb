@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ReplaceFullscreenWithOriginal < ActiveRecord::Migration
   def change
     InstanceView.find_each do |iv|

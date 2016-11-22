@@ -1,11 +1,8 @@
+# frozen_string_literal: true
 class Transactable::Pricing < ActiveRecord::Base
   include OrderValidations
+  include Modelable
 
-  acts_as_paranoid
-  auto_set_platform_context
-  scoped_to_platform_context
-
-  belongs_to :instance
   belongs_to :action, -> { with_deleted }, polymorphic: true, inverse_of: :pricings, touch: true
   belongs_to :transactable_type_pricing, class_name: '::TransactableType::Pricing'
 
@@ -34,9 +31,9 @@ class Transactable::Pricing < ActiveRecord::Base
   validates :unit, :number_of_units, :price_cents, presence: true
   validates :number_of_units, numericality: { greater_than: 0 }
   validates :book_it_out_discount, numericality: { in: 1..100 }, if: :has_book_it_out_discount
-  validates_numericality_of :book_it_out_minimum_qty, greater_than: 0, if: :has_book_it_out_discount
-  validates_numericality_of :book_it_out_minimum_qty, less_than: :transactable_quantity,
-                                                      message: I18n.t('activerecord.errors.models.transactable.attributes.book_it_out_minimum_qty'), if: :has_book_it_out_discount
+  validates :book_it_out_minimum_qty, numericality: { greater_than: 0, if: :has_book_it_out_discount }
+  validates :book_it_out_minimum_qty, numericality: { less_than: :transactable_quantity,
+                                                      message: I18n.t('activerecord.errors.models.transactable.attributes.book_it_out_minimum_qty'), if: :has_book_it_out_discount }
   validate :check_pricing_uniqueness, :check_pricing_definition, unless: :transactable_type_pricing
 
   scope :by_price, -> { order('price_cents ASC') }
@@ -93,17 +90,20 @@ class Transactable::Pricing < ActiveRecord::Base
   end
 
   def price_per_measurable_unit?
-    unit.in? %w( ar hectare )
+    unit.in? %w(ar hectare)
   end
 
+  # @return [Boolean] whether the "book it out" action is available for this listing
   def book_it_out_available?
     (transactable_type_pricing.nil? || transactable_type_pricing.allow_book_it_out_discount?) && has_book_it_out_discount?
   end
 
+  # @return [Boolean] whether an exclusive price has been defined for this listing
   def exclusive_price_available?
     (transactable_type_pricing.nil? || transactable_type_pricing.allow_exclusive_price?) && has_exclusive_price?
   end
 
+  # @return [Boolean] whether the exclusive price defined for this listing is the only price defined for this listing
   def only_exclusive_price_available?
     exclusive_price_available? && price.to_f.zero?
   end

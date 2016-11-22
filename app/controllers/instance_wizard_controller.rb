@@ -2,8 +2,8 @@ class InstanceWizardController < ActionController::Base
   protect_from_forgery
   layout 'instance_wizard'
 
-  before_filter :check_whitelist, only: [:new, :create]
-  before_filter :find_or_build_user, only: [:new, :create]
+  before_action :check_whitelist, only: [:new, :create]
+  before_action :find_or_build_user, only: [:new, :create]
 
   def secured_params
     @secured_params ||= SecuredParams.new
@@ -126,7 +126,7 @@ class InstanceWizardController < ActionController::Base
   private
 
   def check_whitelist
-    @instance_creator = InstanceCreator.find_by_email(params[:instance_creator] && params[:instance_creator][:email])
+    @instance_creator = InstanceCreator.find_by(email: params[:instance_creator] && params[:instance_creator][:email])
     if @instance_creator && @instance_creator.created_instance?
       flash[:error] = 'Sorry, that email has already been used. Please <a href="/contact">contact us</a>.'.html_safe
       redirect_to(action: :index) && return
@@ -137,7 +137,7 @@ class InstanceWizardController < ActionController::Base
   end
 
   def find_or_build_user
-    @user = User.find_by_email(@instance_creator.email) || User.new(email: @instance_creator.email)
+    @user = User.find_by(email: @instance_creator.email) || User.new(email: @instance_creator.email)
   end
 
   def instance_params

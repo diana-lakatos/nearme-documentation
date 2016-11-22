@@ -23,6 +23,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
       @search_results_count = fetcher.results.total
       order_ids = listing_ids
     end
+
     listings_scope = listings_scope.where(id: listing_ids)
 
     @results = listings_scope.includes(:location, :location_address, :company, :photos, :transactable_type)

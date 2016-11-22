@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PaymentGateway::Response::Stripe::Refund
   delegate :id, to: :@response
 

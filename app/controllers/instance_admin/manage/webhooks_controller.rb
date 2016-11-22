@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::Manage::WebhooksController < InstanceAdmin::Manage::BaseController
   before_action :find_webhook, except: :index
 

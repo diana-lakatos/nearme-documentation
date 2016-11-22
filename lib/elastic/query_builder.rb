@@ -106,6 +106,7 @@ module Elastic
       searchable_transactable_type_ids = @query[:transactable_type_id].to_i
       [
         initial_instance_filter,
+        initial_state_filter,
         {
           term: {
             transactable_type_id: searchable_transactable_type_ids
@@ -118,6 +119,14 @@ module Elastic
       {
         term: {
           instance_id: @query[:instance_id]
+        }
+      }
+    end
+
+    def initial_state_filter
+      {
+        term: {
+          state: 'pending'
         }
       }
     end

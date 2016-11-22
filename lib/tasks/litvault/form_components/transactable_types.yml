@@ -1,0 +1,186 @@
+"Group Case":
+  SPACE_WIZARD:
+    -
+      name: "Tell us a little about your firm"
+      fields:
+        - user: company_name
+        - company: address
+        - company: phone
+        - company: url
+
+    -
+      name: "Case representative and general details"
+      fields:
+        - transactable: name
+        - transactable: enabled
+        - transactable: law_firm
+        - transactable: principal_office
+        - transactable: "Category - Group Case Categories"
+        - transactable: tags
+
+    -
+      name: "Describe the case"
+      fields:
+        - transactable: types_of_injuries_included
+        - transactable: engagement_agreement_fee_percentage
+        - transactable: engagement_agreement_expenses_advancement
+        - transactable: seller_attachments
+        - transactable: matters_to_include
+        - transactable: case_short_description
+        - transactable: case_full_description
+
+    - name: "Disclaimers"
+      fields:
+        - user: states
+        - user: professional_liability_insurance
+        - user: liability_occurence_limits_information
+        - user: no_limitations_agreement
+
+
+  TRANSACTABLE_ATTRIBUTES:
+    -
+      name: "General"
+      fields:
+        - transactable: name
+        - transactable: enabled
+        - transactable: law_firm
+        - transactable: principal_office
+        - transactable: "Category - Group Case Categories"
+        - transactable: tags
+
+    - name: "Case Details"
+      fields:
+        - transactable: types_of_injuries_included
+        - transactable: engagement_agreement_fee_percentage
+        - transactable: engagement_agreement_expenses_advancement
+        - transactable: seller_attachments
+        - transactable: matters_to_include
+        - transactable: case_short_description
+        - transactable: case_full_description
+
+
+"Individual Case":
+  SPACE_WIZARD:
+    -
+      name: "Tell us a little about your firm"
+      fields:
+        - user: company_name
+        - company: address
+        - company: phone
+        - company: url
+
+    -
+      name: "Case representative and general details"
+      fields:
+        - transactable: name
+        - transactable: enabled
+        - transactable: law_firm
+        - transactable: principal_office
+        - transactable: "Category - Individual Case Categories"
+        - transactable: tags
+
+    -
+      name: "Engagement Agreement"
+      fields:
+        - transactable: engagement_agreement_exists
+        - transactable: date_engagement_agreement_signed
+        - transactable: engagement_agreement_fee_percentage
+        - transactable: engagement_agreement_expenses_advancement
+        - transactable: seller_attachments
+
+    -
+      name: "Your client details"
+      fields:
+        - transactable: client_name
+        - transactable: client_dob
+
+    -
+      name: "Describe the incident"
+      fields:
+        - transactable: date_of_incident
+        - transactable: city_of_incident
+        - transactable: state_of_incident
+        - transactable: description_of_incident
+        - transactable: description_of_medical_diagnoses
+        - transactable: description_of_medical_care
+        - transactable: days_of_hospitalization
+
+    -
+      name: "Case details"
+      fields:
+        - transactable: case_short_description
+        - transactable: case_full_description
+        - transactable: list_defendants
+        - transactable: potential_cause_of_action
+        - transactable: earliest_deadline_to_file
+        - transactable: date_of_earliest_deadline
+        - transactable: states
+        - transactable: city_in_which_law_firm_must_be_located
+        - transactable: involve_wrongful_death
+        - transactable: name_of_decedent
+        - transactable: refer_only_clients_listed
+        - transactable: has_probate_estate_been_opened
+        - transactable: available_records
+        - transactable: description_of_records
+        - transactable: underlying_records_documents
+        - transactable: other_matters
+
+    - name: "Disclaimers"
+      fields:
+        - user: states
+        - user: professional_liability_insurance
+        - user: liability_occurence_limits_information
+        - user: no_limitations_agreement
+
+  TRANSACTABLE_ATTRIBUTES:
+    -
+      name: "General"
+      fields:
+        - transactable: name
+        - transactable: enabled
+        - transactable: law_firm
+        - transactable: principal_office
+        - transactable: client_name
+        - transactable: client_dob
+        - transactable: "Category - Individual Case Categories"
+        - transactable: tags
+
+    -
+      name: "Engagement Agreement"
+      fields:
+        - transactable: engagement_agreement_exists
+        - transactable: date_engagement_agreement_signed
+        - transactable: engagement_agreement_fee_percentage
+        - transactable: engagement_agreement_expenses_advancement
+        - transactable: seller_attachments
+    -
+      name: "Incident"
+      fields:
+        - transactable: date_of_incident
+        - transactable: city_of_incident
+        - transactable: state_of_incident
+        - transactable: description_of_incident
+        - transactable: description_of_medical_diagnoses
+        - transactable: description_of_medical_care
+        - transactable: days_of_hospitalization
+
+    -
+      name: "Details"
+      fields:
+        - transactable: case_short_description
+        - transactable: case_full_description
+        - transactable: list_defendants
+        - transactable: potential_cause_of_action
+        - transactable: earliest_deadline_to_file
+        - transactable: date_of_earliest_deadline
+        - transactable: states
+        - transactable: city_in_which_law_firm_must_be_located
+        - transactable: involve_wrongful_death
+        - transactable: name_of_decedent
+        - transactable: refer_only_clients_listed
+        - transactable: has_probate_estate_been_opened
+        - transactable: available_records
+        - transactable: description_of_records
+        - transactable: underlying_records_documents
+        - transactable: other_matters
+

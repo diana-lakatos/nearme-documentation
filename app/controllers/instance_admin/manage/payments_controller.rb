@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::Manage::PaymentsController < InstanceAdmin::Manage::BaseController
   skip_before_action :check_if_locked
   before_action :find_payment, except: :index

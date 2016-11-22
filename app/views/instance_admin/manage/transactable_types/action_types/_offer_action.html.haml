@@ -1,4 +1,7 @@
 %h4= t('instance_admin.manage.transactable_types.booking_settings')
+.row
+  .input-container.col-xs-12
+    = f.input :allow_drafts, as: :boolean, :inline_label => true
 = f.simple_fields_for :pricings do |pricing|
   .nested-container
     .row.nested-fields

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::Manage::MerchantAccountsController < InstanceAdmin::Manage::BaseController
   skip_before_action :check_if_locked
   before_action :find_merchant_account, except: :index

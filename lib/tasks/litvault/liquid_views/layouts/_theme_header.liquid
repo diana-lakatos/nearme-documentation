@@ -1,0 +1,109 @@
+<header class="masthead">
+    <div class="topnav">
+        <div class="container-fluid">
+            <div class="brand-a">
+                <a href="{{ platform_context.root_path }}">
+                    <img src="https://d2rw3as29v290b.cloudfront.net/instances/198/uploads/ckeditor/attachment_file/data/2814/logo-large.svg" alt="Litvault">
+                </a>
+            </div>
+
+            <div class="navs">
+
+                <div class="social-a">
+                    <h2 class="struct-label">Follow Us</h2>
+                    <ul>
+                        {% if platform_context.facebook_url != blank %}<li><a href="{{ platform_context.facebook_url }}" class="facebook">Facebook</a></li>{% endif %}
+                        {% if platform_context.twitter_url != blank %}<li><a href="{{ platform_context.twitter_url }}" class="twitter">Twitter</a></li>{% endif %}
+                        {% if platform_context.linkedin_url != blank %}<li><a href="{{ platform_context.linkedin_url }}" class="linkedin">LinkedIn</a></li>{% endif %}
+                        {% if platform_context.gplus_url != blank %}<li><a href="{{ platform_context.gplus_url }}" class="googleplus">Google+</a></li>{% endif %}
+                        {% if platform_context.blog_url != blank %}<li><a href="{{ platform_context.blog_url }}" class="feed">News feed</a></li>{% endif %}
+                    </ul>
+                </div>
+
+                <nav class="nav-main">
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/#how-it-works" data-call-to-action>How it Works</a></li>
+
+                        {% if current_user == blank %}
+                        <li><a href="/sign-up">Sign Up</a></li>
+                        <li><a href="/users/sign_in" data-href="/users/sign_in" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/"}'>Log In</a></li>
+                        {% else %}
+
+                        {% assign pending_transactables_count = current_user.pending_transactables_count %}
+                        <li>
+                            <button class="dropdown-toggler">
+                                {{ current_user.first_name }}
+                                {% if pending_transactables_count > 0 %}
+                                <span class="count">{{ pending_transactables_count }}</span>
+                                {% endif %}
+                            </button>
+
+                            <ul>
+                                {% if current_user.instance_admins_metadata %}
+                                <li><a href="{{ current_user.user_menu_instance_admin_path}}" rel="external">{{ 'top_navbar.marketplace_admin' | t }}</a></li>
+                                {% endif %}
+
+                                {% if current_user.has_seller_profile? and current_user.transactables_count == 0 %}
+                                <li>
+                                    <a href="/create-a-new-case">
+                                        Create a New Case
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a href="{{ 'dashboard_company_transactables_path' | generate_url }}">
+                                        My Cases
+                                        {% if pending_transactables_count > 0 %}
+                                        <span class="count">{{ pending_transactables_count }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {% if platform_context.wish_lists_enabled? %}
+                                {% comment %} Favorites menu {% endcomment %}
+                                {% assign show = 'dashboard/wish_list_items' | is_visible %}
+                                {% if show %}
+                                {% assign path = 'dashboard_wish_list_items_path' | generate_url %}
+                                {% assign selected = current_path | matches: path %}
+                                <li>
+                                    <a href="{{ path }}">{{ 'wish_lists.name' | t }}</a>
+                                </li>
+                                {% endif %}
+                                {% endif %}
+
+                                {% assign blog_menu_show = 'dashboard/blog' | is_visible %}
+                                {% if blog_menu_show %}
+                                <li><a href="{{ 'dashboard_blog_path' | generate_url }}">Manage Blog</a></li>
+                                {% endif %}
+
+                                <li><a href="{{ 'dashboard_profile_path' | generate_url }}">Edit Profile</a></li>
+
+                                {% if current_user.has_buyer_profile? %}
+                                <li><a href="{{ 'user_path' | generate_url: current_user.id }}">View Profile</a></li>
+                                {% endif %}
+
+                                <li><a data-user="{{ current_user.first_name }}" rel="nofollow" data-method="delete" href="{{ 'destroy_user_session_path' | generate_url }}">Log Out</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{{ 'dashboard_user_messages_path' | generate_url }}">
+                                Messages
+                                {% assign unread_messages_count = current_user.unread_messages_count %}
+                                {% if unread_messages_count > 0 %}
+                                <span class="count">{{ unread_messages_count }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+
+                        {% endif %}
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+    </div>
+
+    {% yield 'litvault-hero' %}
+</header>

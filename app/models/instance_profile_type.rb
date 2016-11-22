@@ -54,6 +54,10 @@ class InstanceProfileType < ActiveRecord::Base
     'fulltext'
   end
 
+  def show_price_slider
+    false
+  end
+
   ['show_date_pickers?', 'display_location_type_filter?'].each do |method|
     define_method(method) { false }
   end

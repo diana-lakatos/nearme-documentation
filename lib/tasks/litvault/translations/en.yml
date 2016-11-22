@@ -1,134 +1,195 @@
 en:
-    activemodel:
-        errors:
-            models:
-                reservation_request:
-                    attributes:
-                        base:
-                            total_amount_changed: "Bid on Case"
-    buy_sell_market:
-        products:
-            labels:
-                summary: "Overall Rating:"
+  activemodel:
+    errors:
+      models:
+        reservation_request:
+          attributes:
+            base:
+              total_amount_changed: "Bid on Case"
+  buy_sell_market:
+    products:
+      labels:
+        summary: "Overall Rating:"
 
+  transactable_collaborator:
+    collaboration_cancelled: Case details request cancelled
+
+  dashboard:
+    user_profile:
+      sections:
+        default: 'Profile'
+        seller: 'Referring Lawyer Details'
+        buyer: 'Handling Lawyer Details'
+    orders:
+      state:
+        unconfirmed: "Cases Open"
+        confirmed: "Cases Accepted"
+        completed: "Cases Closed"
+        archived: "Cases Closed"
+    analytics:
+      bookings: 'Offers'
+      columns:
+        bookings: 'Offers'
+      no_reservations_yet: "You currently do not have any offers."
+      total:
+        bookings: "%{total} offers"
+    host_reservations:
+      archived: "Offers Closed"
+      confirmed: "Offers Open"
+      no_archived_reservations: "You have no archived offers."
+      no_confirmed_reservations: "You have no confirmed offers."
+      no_overdue_reservations: "You have no overdue offers."
+      no_reservations_promote_reservations: "You currently have no offers."
+      no_unconfirmed_reservations: "You have no unconfirmed offers."
+      pending_confirmation: "You must confirm this offer within <strong>%{time_to_expiry}</strong> or it will expire."
+      unconfirmed: "Offers Pending"
+
+    items:
+      delete_listing: "Delete Case"
+      new_listing_full: "Add new Case"
+
+    manage_listings:
+      tab: "My Cases"
+
+    nav:
+      edit: 'Account'
+      host_reservations: 'My Offers'
+      reviews: 'Ratings'
+      transactables: 'My Cases'
+      user_reservations: 'My Offers'
+      user_reservations_count_html: "My Offers <span>%{count}</span>"
+
+    transactables:
+      title:
+        listings: "My Cases"
+      view_html: "View Case"
+
+    user_reservations:
+      archived: "Offers Closed"
+      reservation_placed_html: 'Offer created: <span>%{date}</span>'
+      title_count: "Offers (%{count})"
+      upcoming: "Offers Open"
+
+  flash_messages:
+    manage:
+      listings:
+        listing_cancelled: 'Your Case is now archived.'
+      order:
+        canceled: 'Your Case is now archived.'
+        approved: 'Your Case has been moved to archive.'
     dashboard:
-        analytics:
-            bookings: 'Offers'
-            columns:
-                bookings: 'Offers'
-            no_reservations_yet: "You currently do not have any offers."
-            total:
-                bookings: "%{total} offers"
-        host_reservations:
-            archived: "Offers Closed"
-            confirmed: "Offers Open"
-            no_archived_reservations: "You have no archived offers."
-            no_confirmed_reservations: "You have no confirmed offers."
-            no_overdue_reservations: "You have no overdue offers."
-            no_reservations_promote_reservations: "You currently have no offers."
-            no_unconfirmed_reservations: "You have no unconfirmed offers."
-            pending_confirmation: "You must confirm this offer within <strong>%{time_to_expiry}</strong> or it will expire."
-            unconfirmed: "Offers Pending"
+      order:
+        canceled: 'Your Case is now archived.'
+        approved: 'Your Case has been moved to archive'
+      add_your_company: "Please complete your Case first."
+      locations:
+        add_your_company: "Please complete your Case first."
+    space_wizard:
+      space_listed: "Your Case has been submitted to the marketplace!"
 
-        items:
-            delete_listing: "Delete Case"
-            new_listing_full: "Add new Case"
+  general:
+    generic_lessee_term: "client"
 
-        manage_listings:
-            tab: "My Cases"
+  homepage:
+    search_field_placeholder:
+      full_text: 'General search...'
 
-        nav:
-            edit: 'Account'
-            host_reservations: 'My Offers'
-            reviews: 'Ratings'
-            transactables: 'My Cases'
-            user_reservations: 'My Offers'
-            user_reservations_count_html: "My Offers <span>%{count}</span>"
+  onboarding_wizard:
+    list_your: 'Complete Your Case'
 
-        transactables:
-            title:
-                listings: "My Cases"
-            view_html: "View Profile"
+  registrations:
+    accept_terms_of_service: 'Yes, I understand and agree to <a href="/terms-of-use" target="_blank">Terms of Service</a> including the <a href="/user-agreement" target="_blank">User Agreement</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>'
 
-        user_reservations:
-            archived: "Offers Closed"
-            reservation_placed_html: 'Offer created: <span>%{date}</span>'
-            title_count: "Offers (%{count})"
-            upcoming: "Offers Open"
+  reservations:
+    states:
+      archived: "Closed"
+      cancelled_by_guest: "Cancelled by Handling Lawyer"
+      cancelled_by_host: "Cancelled by Referring Lawyer"
+      confirmed: "Open"
+      unconfirmed: "Pending"
+      inactive: "Draft"
 
-    flash_messages:
-        dashboard:
-            add_your_company: "Please complete your Case first."
-            locations:
-                add_your_company: "Please complete your Case first."
-        space_wizard:
-            space_listed: "Your Case has been submitted to the marketplace!"
+  reservations_review:
+    disabled_buttons:
+      request: "Bidding..."
+    errors:
+      whoops: "Whoops! We couldn't make that offer."
+    heading: "Bid on Case"
 
-    general:
-        generic_lessee_term: "client"
+  sign_up_form:
+    buyer_sign_up_to: 'Sign Up for LitVault'
+    link_to_buyer: "Become a member here"
+    link_to_seller: "Become a Referring Lawyer here"
+    seller_sign_up_to: 'Create a Referring Lawyer Account'
 
-    homepage:
-        search_field_placeholder:
-            full_text: 'General search...'
 
-    onboarding_wizard:
-        list_your: 'Complete Your Case'
+  simple_form:
+    labels:
+      transactable:
+        confirm_reservations: "Manually confirm offers"
+      seller:
+        company_name: 'Law Firm'
+      buyer:
+        company_name: 'Law Firm'
+      user:
+        company_name: 'Law Firm'
+      registration:
+        company_name: 'Law Firm'
+      company:
+        name: 'Law Firm'
+        company_address: 'Law Firm Address'
+        url: 'Law Firm Website URL'
+      companies:
+        name: 'Law Firm'
+        company_address: 'Law Firm Address'
+        url: 'Law Firm Website URL'
 
-    registrations:
-        accept_terms_of_service: 'Yes, I understand and agree to <a href="/terms-of-use" target="_blank">Terms of Service</a> including the <a href="/user-agreement" target="_blank">User Agreement</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>'
+  time:
+    formats:
+      short: "%l:%M %p"
 
-    reservations:
-        states:
-            archived: "Closed"
-            cancelled_by_guest: "Cancelled by Handling Lawyer"
-            cancelled_by_host: "Cancelled by Referring Lawyer"
-            confirmed: "Open"
-            unconfirmed: "Pending"
+  top_navbar:
+    bookings_received: "My Offers"
+    manage_bookable: "My Cases"
+    my_bookings: 'My Offers'
 
-    reservations_review:
-        disabled_buttons:
-            request: "Bidding..."
-        errors:
-            whoops: "Whoops! We couldn't make that offer."
-        heading: "Bid on Case"
+  transactable_type:
+    group_case:
+      labels:
+        name: 'Case Name'
+        all_states.: 'All States'
+        by_state.: 'By State'
+        search: 'Group Cases (Mass Torts)'
+      hints:
+        name: 'Case Name will be used as a heading in case listings. It should allow to easily identify case among others'
+    individual_case:
+      labels:
+        name: 'Case Name'
+        all_states: 'All States'
+        by_state: 'By State'
+        search: 'Individual Cases'
+      hints:
+        name: 'Case Name will be used as a heading in case listings. It should allow to easily identify case among others'
 
-    sign_up_form:
-        buyer_sign_up_to: 'Sign Up for LitVault'
-        link_to_buyer: "Become a member here"
-        link_to_seller: "Become a Referring Lawyer here"
-        seller_sign_up_to: 'Create a Referring Lawyer Account'
+  ui:
+    header:
+      list_your_thing: 'Become a Referring Lawyer'
 
-    simple_form:
-        labels:
-            transactable:
-                confirm_reservations: "Manually confirm offers"
+  wish_lists:
+    buttons:
+      selected_state: "Unfavorite"
+      unselected_state: "Favorite"
+      invite_to_case: "Invite to Case"
+      bulk_invite_to_case: "Bulk Invite To Case"
+    sort:
+      label: "Sort By"
+      options:
+        newest: 'Newest'
+        oldest: 'Oldest'
+        alphabetical: 'Alphabetical'
+        individual_cases: 'Individual Cases'
+        group_cases: 'Group Cases'
 
-    time:
-        formats:
-            short: "%l:%M %p"
-
-    top_navbar:
-        bookings_received: "My Offers"
-        manage_bookable: "My Cases"
-        my_bookings: 'My Offers'
-
-    transactable_types:
-        group_case:
-            labels:
-                all_states.: 'All States'
-                by_state.: 'By State'
-                search: 'Group Cases (Mass Torts)'
-        individual_case:
-            labels:
-                all_states: 'All States'
-                by_state: 'By State'
-                search: 'Individual Cases'
-
-    ui:
-        header:
-            list_your_thing: 'Become a Referring Lawyer'
-
-    wish_lists:
-        buttons:
-            selected_state: "Favorite"
-            unselected_state: "Favorite"
+    placeholders:
+      registration:
+        company_name: 'Law Firm'

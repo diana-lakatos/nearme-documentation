@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ConfigurePhotoUploaderForDevmesh < ActiveRecord::Migration
   def up
     # apply only for devmesh...

@@ -17,7 +17,7 @@ class PagesController < ApplicationController
     elsif params[:simple]
       respond_to :html
       render :simple, platform_context: [platform_context.decorate]
-    elsif @page.layout_name.blank?
+    elsif @page.layout_name.blank? || params[:nolayout]
       assigns = {}
       assigns['params'] = params.except(*Rails.application.config.filter_parameters)
       assigns['current_user'] = current_user

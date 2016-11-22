@@ -72,6 +72,7 @@
                     - if !disabled
                       .span3.pull-right
                         - if @order.reservation_type.try(:step_checkout?)
+                          = render 'checkout/draft_buttons', order: @order
                           - if f.object.all_form_components.one?
                             %button.btn.blue.next{ data: { disable_with: t('general.processing') }}
                               = t('reservations_review.buttons.request')
@@ -79,6 +80,7 @@
                             %button.btn.blue.next{ data: { disable_with: t('general.processing') }}
                               = t('buy_sell_market.checkout.buttons.continue')
                         - elsif f.object.all_form_components.size == index + 1
+                          = render 'checkout/draft_buttons', order: @order
                           %button.btn.blue.next{ data: { disable_with: t('general.processing') }}
                             = t('reservations_review.buttons.request')
 
@@ -89,3 +91,8 @@
       $(document).trigger('init:phonenumberfieldsform.nearme', 'form#checkout-form');
       $(document).trigger('init:tooltips.nearme', '.reservation-summary, .checkout');
     });
+
+- if disabled
+  - content_for :script do
+    :javascript
+      $('form#checkout-form :input').prop("disabled", true);

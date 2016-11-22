@@ -13,7 +13,7 @@
   {% endif %}
 
   {% if current_status == 'in progress' %}
-    <li><a href="{{ accepted_order.complete_path }}" data-method="post" class="btn btn-success" data-confirm="Are you sure you want to mark this project as completed?">Mark Project as Completed</a></li>
+    <li><a href="{{ accepted_order.order_complete_url }}" data-method="post" class="btn btn-success" data-confirm="Are you sure you want to mark this project as completed?">Mark Project as Completed</a></li>
   {% endif %}
 
   {% if current_status != 'archived' %}

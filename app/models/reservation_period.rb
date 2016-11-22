@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ReservationPeriod < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
@@ -12,17 +13,16 @@ class ReservationPeriod < ActiveRecord::Base
 
   delegate :transactable, :time_zone, to: :reservation, allow_nil: true
 
-  # Returns the number of hours reserved on this date.
-  # If no hourly time specified, it is assumed that the reservation is for all open
-  # hours of that booking.
+  # @return [Float] the number of hours reserved on this date; if no hourly time specified,
+  #   it is assumed that the reservation is for all open hours of that booking.
   def hours
     minutes / 60.0
   end
 
   def hours=(number)
-    if read_attribute(:start_minute).nil? || hours != number.to_f
-      self.start_minute = 0 if read_attribute(:start_minute).blank?
-      self.end_minute = read_attribute(:start_minute).to_i + number.to_f * 60
+    if self[:start_minute].nil? || hours != number.to_f
+      self.start_minute = 0 if self[:start_minute].blank?
+      self.end_minute = self[:start_minute].to_i + number.to_f * 60
     end
   end
 
@@ -73,8 +73,6 @@ class ReservationPeriod < ActiveRecord::Base
     end_minute = self[:end_minute]
     return unless start_minute || end_minute
 
-    unless start_minute && end_minute && start_minute <= end_minute
-      errors.add(:base, 'Booking start and end times are invalid')
-    end
+    errors.add(:base, 'Booking start and end times are invalid') unless start_minute && end_minute && start_minute <= end_minute
   end
 end

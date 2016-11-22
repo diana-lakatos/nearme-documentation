@@ -1,0 +1,81 @@
+---
+# default profile
+# 5399:
+
+# registration buyer profile
+5404:
+  - user: name
+  - user: email
+  - user: password
+  - user: company_name
+
+# registration seller profile
+5402:
+  - user: name
+  - user: email
+  - user: password
+  - user: company_name
+
+# buyer profile
+5403:
+  - user: name
+  - user: email
+  - user: password
+  - user: avatar
+
+  - user: bar_id
+  - user: company_name
+  - user: job_title
+  - user: company_phone
+  - user: company_website_address
+  - user: company_about
+  - user: states
+
+  - user: honors_awards
+  - user: number_of_cases_referred_in_the_past
+  - user: bio
+
+  - user: linkedin_url
+  - user: twitter_url
+  - user: googleplus_url
+
+  - buyer: enabled
+  - buyer: board_certification
+  - buyer: number_of_jury_trials
+  - buyer: total_settlements
+  - buyer: average_settlements
+  - buyer: experience_for_tier_1_case_sub_classification
+  - buyer: Category - Group Case Categories
+  - buyer: Category - Individual Case Categories
+  - user: tags
+
+  - user: professional_liability_insurance
+  - user: liability_occurence_limits_information
+  - user: no_limitations_agreement
+
+# seller profile
+5401:
+  - user: name
+  - user: email
+  - user: password
+  - user: avatar
+
+  - user: bar_id
+  - user: company_name
+  - user: job_title
+  - user: company_phone
+  - user: company_website_address
+  - user: company_about
+  - user: states
+
+  - user: honors_awards
+  - user: number_of_cases_referred_in_the_past
+  - user: bio
+
+  - user: linkedin_url
+  - user: twitter_url
+  - user: googleplus_url
+
+  - user: professional_liability_insurance
+  - user: liability_occurence_limits_information
+  - user: no_limitations_agreement

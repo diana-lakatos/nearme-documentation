@@ -1,0 +1,19 @@
+ {% for category in case.categories %}
+   <li>{{ category.name }}</li>
+ {% endfor %}
+
+ {% if case.properties.date_of_incident != blank %}
+ <li>Injury or Accident Date: <b>{{ case.properties.date_of_incident }}</b></li>
+ {% endif %}
+
+ {% if case.properties.city_of_incident != blank %}
+ <li>Location of Injury or Accident: <b>{{ case.properties.city_of_incident }}</b></li>
+ {% endif %}
+
+ {% if case.properties.days_of_hospitalization != blank %}
+ <li>Days of Hospitalization: <b>{{ case.properties.days_of_hospitalization }}</b></li>
+ {% endif %}
+
+{% if case.properties.involve_wrongful_death != blank %}
+ <li>Death Case: <b>{{ case.properties.involve_wrongful_death }}</b></li>
+{% endif %}

@@ -1,3 +1,11 @@
+# frozen_string_literal: true
+# Usage example:
+# ```
+#   {% transactable_type_select %}
+# ```
+#
+# Generates a select containing the services (Transactable Types) defined in the marketplace admin.
+# The names in the select options are the Transactable Type names while the values are their IDs.
 class TransactableTypeSelectTag < SelectTag
   def name
     'transactable_type_id'

@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class Dashboard::Company::PaymentsController < Dashboard::Company::BaseController
-  before_filter :find_order
-  before_filter :find_payment, except: [:new, :create]
+  before_action :find_order
+  before_action :find_payment, except: [:new, :create]
 
   def mark_as_paid
     if @order.manual_payment? && !@order.paid?
@@ -21,11 +22,11 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
   #       @order.touch(:archived_at)
   #       @order.save!
 
-  #       @order.shipments.each { |shipment| shipment.ready! }
+  #       @order.shipments.each !{ |shipment| shipment.ready! }
   #     else
   #       payment.capture!
   #       @order.touch(:archived_at)
-  #       flash[payment.paid? ? :notice : :error] = t("flash_messages.payments.capture_#{payment.paid? ? 'success' : 'failed'}")
+  #       flash[payment.paid? ? :notice : :error] = t("flash_messages.payments.capture_#!{payment.paid? ? 'success' : 'failed'}")
   #     end
   #   else
   #     flash[:error] = t('flash_messages.payments.paid')

@@ -1,15 +1,17 @@
 class TransactableCollaboratorsController < ApplicationController
   layout :dashboard_or_community_layout
 
-  before_filter :find_transactable, except: [:create]
+  before_action :find_transactable, except: [:create]
   before_action :authenticate_user!
 
   def create
     @transactable = Transactable.seek_collaborators.find(params[:transactable_id] || params[:listing_id])
     @transactable.transactable_collaborators.create(user: current_user, approved_by_user_at: Time.now)
     @collaborators_count = @transactable.reload.transactable_collaborators.approved.count
+
     respond_to do |format|
       format.js { render :collaborators_button }
+      format.json { render json: { html: render_to_string('create', layout: false) }, status: 200 }
     end
   end
 
@@ -18,7 +20,7 @@ class TransactableCollaboratorsController < ApplicationController
     @collaborators_count = @transactable.reload.transactable_collaborators.approved.count
     respond_to do |format|
       format.js { render :collaborators_button }
-      format.html { redirect_to profile_path(current_user, anchor: :transactables), notice: t('collaboration_cancelled') }
+      format.html { redirect_to profile_path(current_user, anchor: :transactables), notice: t('transactable_collaborator.collaboration_cancelled') }
     end
   end
 

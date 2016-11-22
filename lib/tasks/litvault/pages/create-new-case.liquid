@@ -1,0 +1,19 @@
+---
+name: Create a New Case
+---
+
+<div class="new-case-selection">
+  <h1>What kind of case do you want to create?</h1>
+
+  <p>
+    {% for transactable_type in platform_context.transactable_types %}
+    {% if current_user.registration_completed? %}
+    {% assign new_form_path = transactable_type.new_transactable_path %}
+    {% else %}
+    {% assign new_form_path = transactable_type.space_wizard_path %}
+    {% endif %}
+
+    <a href="{{ new_form_path }}" class="button-a">New {{ transactable_type.bookable_noun }}</a>
+    {% endfor %}
+  </p>
+</div>

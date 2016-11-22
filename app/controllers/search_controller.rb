@@ -8,8 +8,10 @@ class SearchController < ApplicationController
   before_action :assign_transactable_type_id_to_lookup_context
   before_action :store_search
 
-  before_action :parse_uot_search_params, if: -> { PlatformContext.current.instance.id.eql? 195 }
-  before_action :parse_community_search_params, if: -> { PlatformContext.current.instance.is_community? }
+  before_action :parse_uot_search_params, if:
+    -> { PlatformContext.current.instance.id.eql?(195) || params[:search_type] == 'people' }
+  before_action :parse_community_search_params, if:
+    -> { PlatformContext.current.instance.is_community? }
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
@@ -18,6 +20,7 @@ class SearchController < ApplicationController
     @searcher = InstanceType::SearcherFactory.new(@transactable_type, search_params, result_view, current_user).get_searcher
     @searcher.paginate_results([(params[:page].presence || 1).to_i, 1].max, per_page)
     remember_search_query
+
     render "search/#{result_view}", formats: [:html]
   end
 
@@ -52,11 +55,6 @@ class SearchController < ApplicationController
   end
 
   private
-
-  def should_log_conducted_search?
-    first_result_page? && ignore_search_event_flag_false? && searcher.should_log_conducted_search? && !repeated_search?
-  end
-
   def remember_search_query
     cookies[:last_search_query] = {
       value: searcher.search_query_values,

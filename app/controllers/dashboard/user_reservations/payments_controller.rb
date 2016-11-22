@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::UserReservations::PaymentsController < Dashboard::BaseController
   before_action :find_order
   before_action :find_payment

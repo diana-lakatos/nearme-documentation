@@ -1,0 +1,62 @@
+{% assign i18n_title = 'dashboard.analytics.title' | translate %}
+{% title i18n_title %}
+
+{% content_for 'page_header' %}
+  <h1>{{ i18n_title }}</h1></h1>
+{% endcontent_for %}
+
+<div class="panel">
+  <div class="panel-body">
+    {% if payments == empty %}
+      <p class="empty-resultset">{{ 'dashboard.analytics.no_payments_received_last_7_days' | t }}</p>
+    {% else %}
+      <figure class="chart-a">
+        <figcaption>
+          {% for total_by_currency in @chart.totals_by_currency %}
+            {{ total_by_currency[0] | currency_content_tag: total_by_currency[1], 'span' }}
+            |
+            {{ 'dashboard.analytics.7_days_total' | t }}
+          {% endfor %}
+        </figcaption>
+        <canvas id="chart"></canvas>
+      </figure>
+
+      <div class="table-responsive">
+        <table class="table table-simple">
+          <thead>
+            <tr>
+              <th>{{ 'dashboard.analytics.columns.amount') | t }}</th>
+              <th>Case</th>
+              <th>{{ 'dashboard.analytics.columns.date' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for payment in payments %}
+              <tr>
+                <td>{{ payment.currency | currency_content_tag:  payment.total_amount, 'span' }}</td>
+                <td>{{ payment.payable.order.transactable.name }}</td>
+                <td>{{ payment.created_at | l: 'long' }}</td>
+              </tr>
+            {% endfor %}
+            {% for total in all_time_totals %}
+              <tr class="total-row">
+                {% assign total_money = total.sum | to_money: total.currency %}
+                <td>{{ total.currency | currency_content_tag: total_money, 'span' }}</td>
+                <td>{{ 'dashboard.analytics.total.all_time' | t }}</td>
+                <td></td>
+              </tr>
+            {% endfor %}
+        </table>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% content_for 'analytics_pagination' %}
+  {% will_paginate collection: payments, inner_window: 1, outer_window: 0, class: '', renderer: dashboard %}
+{% endcontent_for %}
+
+{% content_for 'domready' %}
+  $(document).trigger('line:chart.nearme', ['#chart', {{ @chart.values}} , {{ @chart.labels }} ]);
+{% endcontent_for %}

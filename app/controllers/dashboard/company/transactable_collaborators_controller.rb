@@ -1,13 +1,21 @@
 class Dashboard::Company::TransactableCollaboratorsController < Dashboard::BaseController
-  before_filter :find_transactable
-  before_filter :find_transactable_type
-  before_filter :find_transactable_collaborator, except: [:create]
+  before_action :find_transactable
+  before_action :find_transactable_type
+  before_action :find_transactable_collaborator, except: [:create, :create_bulk]
 
   def create
     @transactable_collaborator = @transactable.transactable_collaborators.create(transactable_collaborator_params) do |tc|
       tc.approved_by_owner_at = Time.zone.now
     end
     render_transactable_collaborator
+  end
+
+  def create_bulk
+    @users = User.where(id: params[:transactable_collaborator][:user_ids])
+    users_attrs = @users.map { |u| { user_id: u.id, approved_by_owner_at: Time.zone.now } }
+    @transactable_collaborators = @transactable.transactable_collaborators.create!(users_attrs)
+
+    render json: { html: render_to_string(partial: 'create_bulk') }, status: 200
   end
 
   def update

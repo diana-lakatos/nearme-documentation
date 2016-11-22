@@ -13,7 +13,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'show related guests and appropriate units' do
-      @reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user, transactable: @related_listing)
+      @reservation = FactoryGirl.create(:unconfirmed_reservation, user: @user, transactable: @related_listing)
       @reservation.send(:schedule_expiry)
 
       get :index
@@ -27,7 +27,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'show related listings when no related guests' do
-      @reservation = FactoryGirl.create(:future_unconfirmed_reservation, owner: @user, transactable: @unrelated_listing)
+      @reservation = FactoryGirl.create(:future_unconfirmed_reservation, user: @user, transactable: @unrelated_listing)
       @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
       get :index
       assert_response :success
@@ -36,7 +36,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'not show unrelated guests' do
-      @reservation = FactoryGirl.create(:future_unconfirmed_reservation, owner: @user, transactable: @unrelated_listing)
+      @reservation = FactoryGirl.create(:future_unconfirmed_reservation, user: @user, transactable: @unrelated_listing)
       @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
       get :index
       assert_response :success
@@ -47,7 +47,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       @user.update_attribute(:time_zone, 'Hawaii')
       Time.use_zone 'Hawaii' do
         Reservation.destroy_all
-        reservation = FactoryGirl.create(:unconfirmed_reservation, owner: @user, transactable: @related_listing)
+        reservation = FactoryGirl.create(:unconfirmed_reservation, user: @user, transactable: @related_listing)
         ReservationPeriod.destroy_all
         reservation.reload
         reservation.add_period(Time.zone.tomorrow, 600, 720) # Tommorow form 10:00 - 12:00 AM

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CarrierWave
   module Optimizable
     extend ActiveSupport::Concern

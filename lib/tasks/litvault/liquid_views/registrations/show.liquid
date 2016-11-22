@@ -1,0 +1,162 @@
+{{ platform_context.set_render_content_outside_container }}
+{{ platform_context.set_blank_theme_name }}
+
+{% assign title = platform_context.name | append: ' - ' | append: user.name %}
+{% title title %}
+
+{% for customization in user.buyer_profile.customizations %}
+  {% if customization.custom_model_type.name == 'Recommendations' %}
+  {% assign recommendations  = recommendations | add_to_array: customization %}
+  {% elsif customization.custom_model_type.name == 'Links' %}
+  {% assign links = links | add_to_array: customization %}
+  {% endif %}
+{% endfor%}
+
+<main id="main">
+  <div class="container-fluid">
+    <div class="listing-a">
+      <article class="listing-details">
+        {% assign search_result = 'referer'  | request_parameter | matches: 'search' %}
+        {% if search_result %}
+          <div class="back-to-results">
+            <a data-back-to-search-results-link href="/search/people">Back to lawyer search</a>
+          </div>
+        {% endif %}
+        <div class="summary">
+          <div class="listing-user-header">
+            <div class="meta">
+              <span class="publish-date">joined {{ user.created_at | timeago }}</span>
+            </div>
+            <img src="{{ user.avatar_url_big }}" alt="{{ user.name }}">
+
+            <h1>{{ user.name }}</h1>
+            <h2>{{ user.company_name }}</h2>
+
+            <ul class="social-c">
+              {% if user.properties.linkedin_url != blank %}
+                <li class="linkedin"><a href="{{ user.properties.linkedin_url }}" target="_blank">LinkedIn</a></li>
+              {% endif %}
+
+              {% if user.properties.googleplus_url != blank %}
+                <li class="googleplus"><a href="{{ user.properties.googleplus_url }}" target="_blank">Google+</a></li>
+              {% endif %}
+
+              {% if user.properties.twitter_url != blank %}
+                <li class="twitter"><a href="{{ user.properties.twitter_url }}" target="_blank">Twitter</a></li>
+              {% endif %}
+
+              <li class="message"><a data-href='{{ user.user_message_path }}' data-modal='true'>Send Message</a>
+
+              {% capture ctc %}{{ user.click_to_call_button }}{% endcapture %}
+              {% if ctc != blank %}
+                <li class="call">{{ ctc }}</li>
+              {% endif %}
+            </ul>
+          </div>
+
+          <div class="user-properties">
+            <dl>
+              <dt>States Licensed to Practice Law:</dt>
+              <dd>{{ user.properties.states | split: ',' | compact | join: ', ' }}</dd>
+
+              {% if user.buyer_properties.number_of_jury_trials != blank %}
+              <dt>Number of Jury Trials:</dt>
+              <dd>{{ user.buyer_properties.number_of_jury_trials | nl2br  }}</dd>
+              {% endif %}
+
+              {% if user.buyer_properties.total_settlements != blank %}
+              <dt>Total Settlements:</dt>
+              <dd>{{ user.buyer_properties.total_settlements | nl2br  }}</dd>
+              {% endif %}
+
+              {% if user.buyer_properties.average_settlements != blank %}
+              <dt>Average Settlements:</dt>
+              <dd>{{ user.buyer_properties.average_settlements | nl2br  }}</dd>
+              {% endif %}
+
+              {% if user.buyer_properties.total_settlements != blank %}
+              <dt>Total Settlements:</dt>
+              <dd>{{ user.buyer_properties.total_settlements | nl2br  }}</dd>
+              {% endif %}
+
+              {% if user.buyer_properties.experience_for_tier_1_case_sub_classification != blank %}
+              <dt>Experience for Tier 1 Case Sub Classification</dt>
+              <dd>{{ user.buyer_properties.experience_for_tier_1_case_sub_classification | nl2br }}</dd>
+              {% endif %}
+
+              {% if user.buyer_properties.honors_awards.size > 0 %}
+                <dt>Honors &amp; Awards:</dt>
+                <dd>
+                  <ul>
+                    {% for award in user.buyer_properties.honors_awards %}
+                    <li>{{ award }}</li>
+                    {% endfor %}
+                  </ul>
+              {% endif %}
+            </dl>
+          </div>
+        </div>
+        {% if user.properties.bio != blank or user.properties.number_of_cases_referred_in_the_past != blank %}
+        <div class="description">
+          {% if user.properties.bio != blank %}
+            <h3>Biography</h3>
+            <p>{{ user.properties.bio | nl2br  }}</p>
+            {% endif %}
+          {% if user.properties.bio != blank and user.properties.number_of_cases_referred_in_the_past != blank %}
+            <h3>Number and Types of Cases Referred in the Past</h3>
+            <p>{{ user.properties.number_of_cases_referred_in_the_past | nl2br }}</p>
+          {% endif %}
+        </div>
+        {% endif %}
+      </article>
+
+      <aside class="sidebar">
+        {% if current_user.has_seller_profile?  %}
+          <div class="listing-actions">
+            <ul>
+              {% if current_user != blank and current_user.has_seller_profile? %}
+                <li><a href="#case-invite-{{ user.id }}" class="button-a" data-case-invite-trigger>Invite to case</a></li>
+              {% endif %}
+
+              {% if current_user.has_seller_profile? %}
+                <li>
+                  {% include 'shared/components/wish_list_button_injection.html', object: user %}
+                </li>
+              {% endif %}
+
+              {% if user.has_active_blog? %}
+                <li><a href="{{ user.user_blog_posts_list_path }}" class="button-a">View Blog</a></li>
+              {% endif %}
+            </ul>
+          </div>
+          <hr>
+        {% endif %}
+
+        {% if user.properties.company_about %}
+        <h3>About Law Firm:</h3>
+        <p>{{ user.properties.company_about | nl2br}}</p>
+        <hr>
+        {% endif %}
+
+        {% if user.tags.size > 0 %}
+          <div class="tags-a show-all-tags">
+            <h4>Tags</h4>
+            <ul>
+              {% for tag in user.tags %}
+                <li><a href="/search?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          <hr>
+        {% endif %}
+
+        <p class="flag-inappropriate">
+          <a data-href="{{ user.inappropriate_report_path }}" data-modal="true">Flag as inappropriate</a>
+        </p>
+
+      </aside>
+    </div>
+  </div>
+
+  <div class="case-invite" id="case-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
+</main>

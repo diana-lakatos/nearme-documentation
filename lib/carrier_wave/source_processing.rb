@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CarrierWave
   module SourceProcessing
     class Processor

@@ -316,6 +316,8 @@ class Payment < ActiveRecord::Base
     end
   end
 
+  # @return [Boolean] whether the payment has been made with the payment gateway
+  #   in test mode
   def test_mode?
     payment_gateway_mode == PaymentGateway::TEST_MODE
   end
@@ -381,6 +383,8 @@ class Payment < ActiveRecord::Base
     self[:total_amount_cents] || 0
   end
 
+  # Alias for total_amount
+  # @return [Money]
   def amount
     total_amount
   end
@@ -431,6 +435,7 @@ class Payment < ActiveRecord::Base
     !!failed_at
   end
 
+  # @return [Boolean] whether the payment method is capturable
   def active_merchant_payment?
     payment_method.try(:capturable?)
   end

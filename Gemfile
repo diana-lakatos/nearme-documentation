@@ -171,8 +171,13 @@ group :development do
   gem 'parallel_tests'
   gem 'mailcatcher'
   gem 'active_record_query_trace'
-  gem 'rubocop', require: false
+
+  gem 'yard', '~> 0.9.5', require: false
+  gem 'yard-activerecord', require: false
   gem 'overcommit', require: false
+  gem 'yardstick', require: false
+  gem 'fasterer', require: false # Fasterer will suggest some speed improvements
+  gem 'rubocop', require: false
 end
 
 group :test do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Image delayed versions generated
 class VersionRegenerationJob < Job
   include Job::HighPriority

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
 class ReviewDrop < BaseDrop
+  # @return [ReviewDrop]
   attr_reader :review
 
-  # reviewable
-  #   polymorphic object
+  # @!method reviewable
+  #   @return [Object] polymorphic object (can be of multiple types)
   delegate :reviewable, to: :review
 
   def initialize(review)

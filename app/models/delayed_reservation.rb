@@ -102,6 +102,7 @@ class DelayedReservation < Reservation
           return false
         end
         errors.add(:dates_fake, I18n.t('reservations_review.errors.invalid_date')) if date.past? && !date.today?
+
         if transactable_pricing.day_booking? && periods.count != transactable_pricing.number_of_units
           @dates = Array.new(transactable_pricing.number_of_units) do |unit|
             (date + unit.day).to_date.to_s

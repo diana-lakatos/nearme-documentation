@@ -22,7 +22,7 @@ Feature: A user can subscribe to a service
         |Unconfirmed                                                                     |
 
   Scenario: Host subscription flow walk through
-    Given a recurring_booking exists with owner: the user, transactable: subscription_transactable
+    Given a recurring_booking exists with user: the user, transactable: subscription_transactable
       And I am logged in as the user
      When I go to unconfirmed subscriptions page
      Then I should see all text:
@@ -49,7 +49,7 @@ Feature: A user can subscribe to a service
         |Paid until       |
 
   Scenario: Guest unconfiremd subscription cancel
-    Given a recurring_booking exists with owner: the user, transactable: subscription_transactable
+    Given a recurring_booking exists with user: the user, transactable: subscription_transactable
       And I am logged in as the user
      When I go to my unconfirmed subscriptions page
       And I cancel the subscription
@@ -61,7 +61,7 @@ Feature: A user can subscribe to a service
        |Cancelled by guest|
 
   Scenario: Guest confirmed subscription cancel
-    Given a confirmed_recurring_booking exists with owner: the user, transactable: subscription_transactable
+    Given a confirmed_recurring_booking exists with user: the user, transactable: subscription_transactable
       And I am logged in as the user
      When I go to my subscriptions page
       And I cancel the subscription

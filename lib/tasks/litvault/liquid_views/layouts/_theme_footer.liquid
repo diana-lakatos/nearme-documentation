@@ -1,0 +1,62 @@
+<footer class="mastfoot">
+    <div class="about-nav"  itemscope itemtype="http://schema.org/Organization">
+        <div class="container-fluid">
+            <div class="about-a">
+                <h2 class="struct-label" itemprop="name"><a href="{{ platform_context.root_path }}" itemprop="url">LitVault</a></h2>
+
+                <img src="https://d2rw3as29v290b.cloudfront.net/instances/198/uploads/ckeditor/attachment_file/data/2813/logo-small.svg" width="60" height="60" alt="LitVault logo" itemprop="logo">
+                <p itemprop="description">LitVault is an online marketplace for the legal industry. We connect Referring and Handling Lawyers in order to collaborate on contingent fee plaintiffs' cases.</p>
+            </div>
+
+            <nav class="nav-secondary">
+                <h2 class="struct-label">Secondary Navigation</h2>
+                <div class="col">
+                    <h3>General</h3>
+                    <ul>
+                      <li><a href='/'>Home</a></li>
+                      <li><a href='/about'>About</a></li>
+                      <li><a href='/how-it-works'>How it Works</a></li>
+                      <li><a href='/faq'>FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h3>More</h3>
+                    <ul>
+                      <li><a href='/terms-of-use'>Terms of Use</a></li>
+                      <li><a href='/privacy-policy'>Privacy Policy</a></li>
+                      <li><a href='/search'>Search results</a></li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Connect</h3>
+                    <ul class="social-b">
+                          {% if platform_context.facebook_url != blank %}<li><a href="{{ platform_context.facebook_url }}" class="facebook" itemprop="sameAs">Facebook</a></li>{% endif %}
+                          {% if platform_context.twitter_url != blank %}<li><a href="{{ platform_context.twitter_url }}" class="twitter" itemprop="sameAs">Twitter</a></li>{% endif %}
+                          {% if platform_context.linkedin_url != blank %}<li><a href="{{ platform_context.linkedin_url }}" class="linkedin" itemprop="sameAs">LinkedIn</a></li>{% endif %}
+                          {% if platform_context.gplus_url != blank %}<li><a href="{{ platform_context.gplus_url }}" class="googleplus" itemprop="sameAs">Google+</a></li>{% endif %}
+                          {% if platform_context.blog_url != blank %}<li><a href="{{ platform_context.blog_url }}" class="feed">Blog</a></li>{% endif %}
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Contact</h3>
+                    <p class="contact-option">
+                        <span class="contact-label">Telephone</span>
+                        <a href="tel:{{ platform_context.phone_number_noformat }}" itemprop="telephone">{{ platform_context.phone_number }}</a>
+                    </p>
+                    <p class="contact-option">
+                        <span class="contact-label">Support</span>
+                        <a href="mailto:{{ platform_context.support_email.downcase }}" itemprop="email">{{ platform_context.support_email }}</a>
+                    </p>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="contentinfo" role="contentinfo">
+        <div class="container-fluid">
+            <p class="copyright" itemprop="copyrightHolder">© 2016 LitVault. All rights reserved.</p>
+        </div>
+    </div>
+</footer>

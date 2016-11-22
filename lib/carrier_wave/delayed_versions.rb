@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CarrierWave::DelayedVersions
   extend ActiveSupport::Concern
 

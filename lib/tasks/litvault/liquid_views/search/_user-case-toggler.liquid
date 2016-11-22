@@ -1,0 +1,22 @@
+{% capture label %}
+  {% if search_type == 'case' %}
+    Case Search
+  {% else %}
+    Lawyer Search
+  {% endif %}
+{% endcapture %}
+<div class="search-form-type-toggle">
+  <h2>
+    <span class="struct-label">Current search type:</span>
+    <span class="current-type" tabindex="0">{{ label | trim }}</span>
+  </h2>
+  <h3 class="struct-label">Change search type to:</h3>
+  <ul>
+    <li{% if search_type == 'case' %} class="selected"{% endif %}>
+      <a href="/search?transactable_type_id={{ platform_context.transactable_types.first.id }}&amp;transactable_type_class=TransactableType">Case Search</a>
+    </li>
+    <li{% if search_type == 'user' %} class="selected"{% endif %}>
+      <a href="/search/people?profile_type=buyer">Lawyer Search</a>
+    </li>
+  </ul>
+</div>

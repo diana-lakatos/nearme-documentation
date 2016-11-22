@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class LocaleService
   attr_reader :redirect_url
   attr_reader :locale
@@ -8,8 +9,8 @@ class LocaleService
     @requested_path = requested_path
 
     @primary_locale = instance.primary_locale
-    @params_locale_exists = instance.locales.find_by_code(@params_locale.to_s)
-    @user_locale_exists = instance.locales.find_by_code(@user_locale.to_s)
+    @params_locale_exists = instance.locales.find_by(code: @params_locale.to_s)
+    @user_locale_exists = instance.locales.find_by(code: @user_locale.to_s)
 
     @redirect_url = nil
     @locale = nil
@@ -23,8 +24,8 @@ class LocaleService
 
   private
 
-  # @params_locale => locale taken from URL itself
-  # @user_locale => locale taken from User.language
+  # \@params_locale => locale taken from URL itself
+  # \@user_locale => locale taken from User.language
   #
   # 1) Redirect if @user_locale is different than @primary_locale and no @params_locale is given
   # 2) Not redirect if @params_locale == @user_locale

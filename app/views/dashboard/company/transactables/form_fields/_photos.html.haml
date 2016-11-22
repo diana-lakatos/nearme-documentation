@@ -4,6 +4,6 @@
   = t('dashboard.photos.title')
 
 - if f.object.transactable_type.enable_photo_required?
-  %p{ class: (f.object.errors[:photos].any? ? "generic-help-block" : "") }= t('dashboard.photos.requirement')
+  %p{ class: (f.object.errors[:photos].any? ? "generic-help-block" : "") }= t('dashboard.photos.requirement').html_safe
 
 = f.input :photo, as: :image, label: false, multiple: true, upload_url: dashboard_photos_path, upload_attr_name: "#{f.object_name}[photos_attributes][0][image]", collection: dashboard_transactable_photos_to_image_input_collection(@photos), sortable: true, has_captions: true

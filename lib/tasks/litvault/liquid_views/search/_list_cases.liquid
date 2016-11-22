@@ -1,0 +1,171 @@
+{% capture is_lister %}{% if current_user.buyer_profile == blank %}true{% else %}false{% endif %}{% endcapture %}
+{% if is_lister == 'true' %}
+  {% assign role = 'lister' %}
+{% else %}
+  {% assign role = 'enquirer' %}
+{% endif %}
+
+<section class="search-form-wrapper" id="listing_search">
+  <div class="container-fluid">
+    <div class="search-form-inner">
+
+      {% include 'search/user-case-toggler', search_type: 'case' %}
+
+      <form action="/search" method="get" class="search-form">
+        <div class="fields">
+          <input type="hidden" name="transactable_type_class" value="TransactableType">
+          <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
+          <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
+          <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
+          <input type="hidden" name="query_fields" value="tags">
+          <input type="hidden" name="sort">
+
+          <div class="query-field">
+            <label for="field-q" class="struct-label">Search keyword</label>
+            <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params.query }}">
+          </div>
+
+          <div class="state-filter" data-search-filters-container>
+            <label for="field-state" class="struct-label">Filter by state</label>
+            <span class="select-a">
+              <select name="lg_custom_attributes[state][]" id="field-state" class="unstyled-select">
+                <option value="">By State</option>
+                {% assign ca = platform_context.transactable_types.first.custom_attributes_as_hash %}
+                {% for value in ca['states'].valid_values %}
+                  <option value='{{ value }}' {% if value == searcher.lg_custom_attributes_hash['state'].first %} selected {% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </span>
+          </div>
+
+          <fieldset class="type-filter" data-search-filters-container>
+            <legend class="struct-label">Case type</legend>
+
+            <ul>
+              {% assign tts = platform_context.transactable_types_ordered | reverse %}
+              {% for transactable_type in tts %}
+                {% assign zero = params.transactable_type_id | minus: transactable_type.id %}
+                <li>
+                  <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" id="transactable-type-{{ transactable_type.id }}" {% if zero == 0 %} checked {% endif %}>
+                  <label for="transactable-type-{{ transactable_type.id }}">{{ transactable_type.name }}</label>
+                </li>
+              {% endfor %}
+            </ul>
+          </fieldset>
+        </div>
+
+        <div class="form-action">
+          <button type="submit" class="button-a">Search</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>
+
+<div class="search-results-wrapper">
+  <div class="container-fluid">
+    <section class="search-results" id="results">
+      <div class="search-results-query-info">
+        <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
+        {% if searcher.result_count > 0 %}
+        <div class="search-sort-form" data-search-filters-container>
+          <div>
+            <label for="search-order">Sort by:</label>
+            <span class="select-a">
+              <select id="search-order" name="sort" class="unstyled-select">
+                <option {% if params['sort'] == 'created_at desc'  %}selected{% endif %} value='created_at desc'>Newest</option>
+                <option {% if params['sort'] == 'created_at asc' %}selected{% endif %} value='created_at asc'>Oldest</option>
+              </select>
+            </span>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="search-results-items">
+        {% for case in searcher.results %}
+
+        <article class="case-a search-result" id="case-{{ case.id }}">
+
+          <header class="search-result-header">
+            <div class="h">
+              {% assign collaborator = current_user | find_collaborator: case %}
+              {% if collaborator.approved_by_owner? or current_user.id == case.creator_id %}
+                <h3><a href="{{ case.url }}">{{ case.name }}</a></h3>
+              {% else %}
+                <h3><a href="#case-permission-request-{{ case.id }}" data-case-invite-trigger>{{ case.name }}</a></h3>
+              {% endif %}
+            </div>
+
+            <div class="search-result-meta-action">
+              {% if role == 'enquirer'  %}
+                {% if collaborator.approved_by_owner? %}
+                  <a class="button-a inverted"  href="{{ case.url }}" >Make an Offer</a>
+                {% elsif  current_user.id != case.creator_id %}
+                  <a href="#case-permission-request-{{ case.id }}" class="button-a inverted" data-case-invite-trigger>Request Access</a>
+                {% endif %}
+              {% endif %}
+
+              <div class="meta">
+                <span class="publish-date">posted {{ case.created_at | timeago }}</span>
+                {% if current_user.has_buyer_profile? %}
+                |
+                {% include 'shared/components/wish_list_button_injection.html', object: case %}
+                {% endif %}
+              </div>
+            </div>
+          </header>
+
+          <ul class="search-result-properties">
+            {% include 'search/case_properties', case: case %}
+          </ul>
+
+          {% if case.properties.case_short_description != blank %}
+            <div class="search-result-description">
+              {% if case.properties.case_short_description.size > 350 %}
+                <div data-shorten-description>
+                  <p data-description>{{ case.properties.case_short_description | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+                  <div style='display: none;'  class="rest_of_text">{{ case.properties.case_short_description | slice: 350, case.properties.case_short_description.size | nl2br }}</div>
+                </div>
+              {% else %}
+              <p>{{ case.properties.case_short_description }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <p>Posted by <a href="{{ case.company.url }}" target="_blank" rel="nofollow">{{ case.creator.company_name }}</a></p>
+
+          {% if case.tags.size > 0 %}
+          <div class="tags-a tags-short-list">
+            <h4>Tags</h4>
+            <ul>
+              {% for tag in case.tags %}
+              <li><a href="?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        </article>
+
+        {% if role == 'enquirer'  %}
+          <div class="case-invite" id="case-permission-request-{{ case.id }}" data-collaborations-url="{{ case.url }}"></div>
+        {% endif %}
+
+        <script>
+          $(function(){
+            $(document).trigger('itemLoaded.litvault', 'case-{{case.id}}');
+          });
+        </script>
+        {% endfor %}
+      </div>
+
+      {% if searcher.next_page %}
+        <p class="search-results-more-trigger">
+          <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
+        </p>
+      {% endif %}
+    </section>
+    {% include 'search/filter_categories' %}
+  </div>
+</div>

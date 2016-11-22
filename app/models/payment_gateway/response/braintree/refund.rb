@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PaymentGateway::Response::Braintree::Refund
   delegate :id, :amount, to: :@response
 
@@ -9,11 +10,9 @@ class PaymentGateway::Response::Braintree::Refund
     @response.amount.to_money
   end
 
-  def amount_cents
-    amount.cents
-  end
+  delegate :cents, to: :amount, prefix: true
 
   def success?
-    ['submitted_for_settlement', 'settled'].include? @response.status
+    %w(submitted_for_settlement settled).include? @response.status
   end
 end

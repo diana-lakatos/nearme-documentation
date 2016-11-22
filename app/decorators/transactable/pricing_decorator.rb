@@ -18,11 +18,11 @@ class Transactable::PricingDecorator < Draper::Decorator
 
   def price_with_currency(price_name_or_object)
     actual_price = nil
-    if price_name_or_object.respond_to?(:fractional)
-      actual_price = price_name_or_object
-    else
-      actual_price = send(price_name_or_object)
-    end
+    actual_price = if price_name_or_object.respond_to?(:fractional)
+                     price_name_or_object
+                   else
+                     send(price_name_or_object)
+                   end
 
     render_money(Money.new(actual_price.try(:fractional), currency.blank? ? PlatformContext.current.instance.default_currency : currency))
   end

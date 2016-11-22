@@ -119,6 +119,8 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :links, allow_destroy: true
 
   # == Callbacks
+
+  before_create :set_seek_collaborators, if: -> { auto_seek_collaborators? }
   before_destroy :decline_reservations
   before_save :set_currency
   before_save :set_is_trusted, :set_available_actions
@@ -154,6 +156,7 @@ class Transactable < ActiveRecord::Base
   end
 
   # == Scopes
+  scope :with_orders, -> { joins(:transactable_line_items).distinct('transactables.id') }
   scope :purchasable, -> { joins(:action_type).where("transactable_action_types.enabled = true AND transactable_action_types.type = 'Transactable::PurchaseAction'") }
   scope :featured, -> { where(featured: true) }
   scope :draft, -> { where('transactables.draft IS NOT NULL') }
@@ -257,7 +260,8 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
-           :custom_validators, :show_company_name, :display_additional_charges?, :auto_accept_invitation_as_collaborator?, to: :transactable_type
+           :custom_validators, :show_company_name, :display_additional_charges?, :auto_accept_invitation_as_collaborator?,
+           :auto_seek_collaborators?, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
@@ -373,11 +377,13 @@ class Transactable < ActiveRecord::Base
     action_type.pricings_for_types(price_types).sort_by(&:price).first
   end
 
-  # TODO: remove lowest_price_with_type or ideally move this to decorator
+  # @return [Transactable::Pricing] object corresponding to the lowest available pricing for this transactable
+  # @todo Remove lowest_price_with_type or ideally move this to decorator
   def lowest_price(available_price_types = [])
     lowest_price_with_type(available_price_types)
   end
 
+  # @return [Transactable::Pricing] lowest price for this location (i.e. including service fees and mandatory additional charges)
   def lowest_full_price(available_price_types = [])
     lowest_price = lowest_price_with_type(available_price_types)
 
@@ -397,6 +403,7 @@ class Transactable < ActiveRecord::Base
     user && user.admin? || user == creator
   end
 
+  # @return [Boolean] whether there are any photos for this listing
   def has_photos?
     photos_metadata.try(:count).to_i > 0
   end
@@ -463,6 +470,7 @@ class Transactable < ActiveRecord::Base
     }
   end
 
+  # @return [Integer, nil] days since the last order for the transactable or nil if no orders
   def last_booked_days
     last_reservation = orders.order('created_at DESC').first
     last_reservation ? ((Time.current.to_f - last_reservation.created_at.to_f) / 1.day.to_f).round : nil
@@ -551,6 +559,8 @@ class Transactable < ActiveRecord::Base
     super && transactable_type.action_rfq?
   end
 
+  # @return [Boolean] whether PayPal Express Checkout is the marketplace's payment method
+  # @todo Investigate whether this is still used/should be removed
   def express_checkout_payment?
     instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout_payment?)
   end
@@ -560,6 +570,7 @@ class Transactable < ActiveRecord::Base
     action_rfq?
   end
 
+  # @return [String] currency used for this transactable's pricings
   def currency
     self[:currency].presence || transactable_type.try(:default_currency)
   end
@@ -605,6 +616,7 @@ class Transactable < ActiveRecord::Base
     msgs
   end
 
+  # @return [Boolean] whether free booking is possible for the transactable
   def action_free_booking?
     action_type.is_free_booking?
   end
@@ -699,6 +711,10 @@ class Transactable < ActiveRecord::Base
   end
 
   private
+
+  def set_seek_collaborators
+    self.seek_collaborators = true
+  end
 
   def check_expenses
     unless line_item_orders.with_state(:confirmed).all?(&:all_paid?)

@@ -1,0 +1,48 @@
+"Group Case":
+  "Group Case Categories":
+    mandatory: true
+    assign_to_buyer_profile: true
+    children:
+      - name: 'Pharmaceutical'
+        children:
+          - { name: 'Invokana® / Invokamet®', children:  ['Diabetic Ketoacidosis', 'Acute Kindney Failure', 'Coma', 'Death', 'Amputation', 'Other (describe)'] }
+          - 'Risperdal®'
+          - 'Talc / Talcum Powder'
+          - 'Onglyza'
+          - 'Xarelto®'
+          - 'Pradaxa®'
+          - 'Eliquis®'
+      - name: 'Medical Device'
+        children:
+          - 'IVC Filter'
+          - 'Hip Implant'
+          - 'Knee Implant'
+
+"Individual Case":
+  "Individual Case Categories":
+    mandatory: true
+    assign_to_buyer_profile: true
+    children:
+      - name: 'Individual Injury'
+        children:
+          - { name: 'Vehicle Accident', children: ['Car', 'Truck', 'Boat', 'Motorcycle', 'Aviation', 'Other'] }
+          - { name: 'Fall Accident', children: ['Retail Store', 'Other'] }
+          - { name: 'Medical Malpractice', children: ['Birth Injury', 'Misdiagnosis', 'Surgery Error', 'Medication Error', 'Anesthesia Error', 'Other'] }
+          - { name: 'Animal Bite', children: ['Dog', 'Other'] }
+          - { name: 'Maritime', children: ['Seaman', 'Longshore', 'Worker', 'Passenger', 'Bystander', 'Other'] }
+          - { name: 'Railroad', children: ['Worker', 'Passenger', 'Bystander', 'Other'] }
+          - { name: 'Pharmaceutical', children: ['Invokana® / Invokamet®', 'Risperdal®', 'Talc / Talcum Powder', 'Onglyza', 'Xarelto®', 'Xarelto®', 'Eliquis®', 'Other'] }
+          - { name: 'Medical Device', children: ['IVC Filter', 'Hip Implant', 'Knee Implant', 'Other'] }
+          - { name: 'Nursing Home', children: ['Bedsores', 'Other'] }
+          - 'Construction Accident'
+          - { name: 'Asbestos and Toxic Tort', children: ['Mesothelioma or Lung Cancer', 'Other Cancer', 'Non-Cancer Injuries'] }
+          - 'Other Personal Injury'
+          - 'Construction Accident'
+
+      - name: 'Individual Non-Injury'
+        children:
+          - { name: 'Employment', children: ['Descrimination', 'Overtime', 'Harassment', 'Other (please describe)'] }
+          - { name: 'Insurance and Property', children: ['Wind', 'Fire', 'Hail', 'Other (please describe)'] }
+          - { name: 'Business and Commercial', children: ['Breach of Contract', 'Partnership Dispute', 'Other (please describe)'] }
+          - { name: 'Intellectual Property', children: ['Patent', 'Copywright', 'Trade Secret', 'Other (please describe)'] }
+          - 'Other Contingent Fee Matters'

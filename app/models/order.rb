@@ -13,7 +13,7 @@ class Order < ActiveRecord::Base
   include ShippoLegacy::Order
   include Shippings::Order
 
-  attr_accessor :skip_checkout_validation, :delivery_ids, :checkout_update
+  attr_accessor :skip_checkout_validation, :delivery_ids, :checkout_update, :save_draft, :cancel_draft
 
   store_accessor :settings, :validate_on_adding_to_cart, :skip_payment_authorization
 
@@ -74,12 +74,13 @@ class Order < ActiveRecord::Base
   scope :cart, -> { with_state(:inactive) }
   scope :complete, -> { without_state(:inactive) }
   scope :active, -> { without_state(:inactive) }
+  scope :active_or_drafts, -> { where('state != ? OR draft_at IS NOT NULL', 'inactive') }
   # TODO: we should switch to use completed state instead of archived_at for Reservation
   # and fully switch to state machine
 
   # scope :archived, -> { active.where('archived_at IS NOT NULL') }
   # scope :not_archived, -> { active.where(archived_at: nil) }
-  scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND orders.state != 'inactive' AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND orders.state NOT IN ('inactive', 'cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired'))") }
+  scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND (orders.state != 'inactive' OR orders.draft_at IS NOT NULL) AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND (orders.state NOT IN ('inactive', 'cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired') OR (orders.state = 'inactive' AND orders.draft_at IS NOT NULL)))") }
   scope :archived, -> { where("(orders.type != 'RecurringBooking' AND orders.archived_at IS NOT NULL) OR (orders.type = 'RecurringBooking' AND orders.state IN ('rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'))") }
   # we probably want new state - completed
   scope :reviewable, -> { where.not(archived_at: nil).confirmed }
@@ -149,6 +150,7 @@ class Order < ActiveRecord::Base
     touch(:archived_at)
   end
 
+  # @return [Boolean] whether the order has been moved to the archived state
   def archived?
     archived_at.present?
   end
@@ -162,6 +164,7 @@ class Order < ActiveRecord::Base
     total_amount.to_f <= 0
   end
 
+  # @return [Boolean] whether the order has been paid for
   def paid?
     payment.try(:paid?)
   end
@@ -178,6 +181,7 @@ class Order < ActiveRecord::Base
     order_items.any?
   end
 
+  # @return [Boolean] whether the object is bookable (i.e. its type is different from 'Purchase')
   def bookable?
     type != 'Purchase'
   end
@@ -190,6 +194,8 @@ class Order < ActiveRecord::Base
     touch(:enquirer_confirmed_at)
   end
 
+  # @return [String] identifer of the order containing the class name (type of order)
+  #   and the numeric identifer of the order
   def number
     sprintf "#{self.class.name[0]}%08d", id
   end
@@ -206,6 +212,7 @@ class Order < ActiveRecord::Base
 
   def checkout_completed?
     return false if completed_form_component_ids.blank?
+    return true unless reservation_type.step_checkout?
     return false if reservation_type.form_components.where.not(id: completed_form_component_ids).any?
     true
   end
@@ -435,6 +442,9 @@ class Order < ActiveRecord::Base
     steps.join('|')
   end
 
+  # @return [Boolean] whether reservations need to be confirmed first
+  delegate :confirm_reservations?, to: :transactable
+
   def transactable_pricing
     super || transactable_line_items.first.transactable_pricing
   end
@@ -450,6 +460,43 @@ class Order < ActiveRecord::Base
 
   def custom_attributes_custom_validators
     @custom_attributes_custom_validators ||= { properties: reservation_type.custom_attributes_custom_validators }
+  end
+
+  # @return [Boolean] whether checkout can be completed for this Order object
+  def can_complete_checkout?
+    raise NotImplementedError
+  end
+
+  # @return [Boolean] whether checkout can be approved or declined for this Order object
+  def can_approve_or_decline_checkout?
+    raise NotImplementedError
+  end
+
+  # @return [Boolean] whether the user needs to update their credit card
+  def has_to_update_credit_card?
+    raise NotImplementedError
+  end
+
+  # @return [Boolean] whether the order can be cancelled
+  def cancelable?
+    raise NotImplementedError
+  end
+
+  # @return [Boolean] whether the penalty charge applies to this order
+  def penalty_charge_apply?
+    raise NotImplementedError
+  end
+
+  # @return [Boolean] whether the order is in a state where it can be
+  #   cancelled by the enquirer
+  def enquirer_cancelable
+    raise NotImplementedError
+  end
+
+  # @return [Boolean] whether the order is in a state where it can be edited
+  #   by the enquirer
+  def enquirer_editable
+    raise NotImplementedError
   end
 
   private

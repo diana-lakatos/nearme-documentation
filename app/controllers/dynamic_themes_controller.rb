@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Class is skipping ApplicationController in inheritance tree to avoid unsetting all of the filters
 class DynamicThemesController < ActionController::Base
   layout false

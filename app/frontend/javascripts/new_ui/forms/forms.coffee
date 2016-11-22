@@ -73,9 +73,18 @@ module.exports = class Forms
       timepickers = require('./timepickers')
       timepickers(context)
 
+  ranges: (context = 'body')->
+    els = $(context).find('.custom_range');
+    return unless els.length > 0
+
+    require.ensure './ranges', (require)->
+      ranges = require('./ranges')
+      ranges(els)
+
   initialize: (context = 'body')->
     @hints(context)
     @tooltips(context)
     @datepickers(context)
     @selects(context)
     @timepickers(context)
+    @ranges(context)

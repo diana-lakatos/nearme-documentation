@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rack-mini-profiler'
 require 'new_relic/rack/developer_mode'
 

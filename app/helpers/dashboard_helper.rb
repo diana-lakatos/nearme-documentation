@@ -137,7 +137,7 @@ module DashboardHelper
 
     wrapper_tag = options[:wrapper_tag] || :div
 
-    toggler_label = label + ' ' + content_tag(:span, nil, class: 'caret')
+    toggler_label = label.to_s + ' ' + content_tag(:span, nil, class: 'caret')
 
     content_tag wrapper_tag, class: wrapper_class do
       output = content_tag :a, toggler_label.html_safe, href: '#', id: toggler_id, type: 'button', class: toggler_class, data: { toggle: 'dropdown' }, aria: { haspopup: 'true', expanded: 'false' }
