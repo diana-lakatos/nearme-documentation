@@ -22,8 +22,8 @@ class RequestParametersValidatorTest < ActiveSupport::TestCase
   test 'not raising error when valid values are passed' do
     assert_nothing_raised do
       RequestParametersValidator.new(
-        example_array_attribute_key => [1, nil, '', 'valid'],
-        example_single_attribute_key => 1,
+        example_array_attribute_key => ['1', nil, ''],
+        example_single_attribute_key => '1',
         example_single_attribute_key(1) => nil,
         example_single_attribute_key(2) => 'valid',
         example_single_attribute_key(3) => ''
