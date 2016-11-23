@@ -108,6 +108,7 @@ class ReservationDrop < OrderDrop
 
   # @return [String] unit price for the reservation formatted using the global currency
   #   formatting rules
+  # @todo -- investigate if unit filter can be used
   def formatted_unit_price
     render_money(unit_price)
   end
@@ -123,11 +124,13 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [String] reservation dates separated with <hr>
+  # @todo -- depracate per DIY
   def dates_summary_with_hr
     @reservation.selected_dates_summary(separator: "<hr class='thin' />")
   end
 
   # @return [Float] total amount of reservation
+  # @todo -- investigate if unit filter can be used and/or rename
   def total_amount_float
     @reservation.total_amount.to_f
   end
@@ -138,17 +141,21 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [Boolean] whether there is a rejection reason for this reservation
+  # @todo -- again, we shouldnt provide such specific methods in DIY
   def has_rejection_reason
     !rejection_reason.to_s.empty?
   end
 
   # @return [String] the search query URL for the same type of service as this reservation and for this location
+  # @todo -- depracate in favor of filter
+
   def search_url
     routes.search_path(q: location_query_string(@reservation.transactable.location), transactable_type_id: @reservation.transactable_type.id)
   end
 
   # @return [String] url to the dashboard area for managing received reservations; leads to the section in the
   #   dashboard where this reservation can be found (i.e. archived/confirmed/unconfirmed/etc. section)
+  # @todo -- depracate in favor of filter
   def host_show_url
     state = if @reservation.archived_at.present?
               'archived'
@@ -162,6 +169,7 @@ class ReservationDrop < OrderDrop
 
   # @return [String] url to the dashboard area for managing placed reservations; leads to the section in the
   #   dashboard where this reservation can be found (i.e. archived/upcoming/etc. section)
+  # @todo -- depracate in favor of filter
   def guest_show_url
     path = if @reservation.archived_at.present?
              'archived_dashboard_user_reservations_url'
@@ -172,49 +180,55 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [String] url to the dashboard area for managing own reservations
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def bookings_dashboard_url
     routes.dashboard_user_reservations_path(reservation_id: @reservation, token_key => @reservation.owner.temporary_token)
   end
 
   # @return [String] url to the dashboard area for managing received bookings
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def manage_guests_dashboard_url
     routes.dashboard_company_host_reservations_path
   end
 
   # @return [String] url to export the reservation to an ical file
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def export_to_ical_url
     routes.export_reservation_path(@reservation, format: :ics, token_key => @reservation.owner.try(:temporary_token))
   end
 
   # @return [String] url where the user can repeat the payment process if payment is missing for the reservation
+  # @todo -- depracate in favor of filter
   def remote_payment_url
     routes.remote_payment_dashboard_user_reservation_path(@reservation, token_key => @reservation.owner.try(:temporary_token))
   end
 
   # @return [String] url for confirming the reservation
+  # @todo -- depracate in favor of filter
   def reservation_confirm_url
     routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.transactable.administrator.try(:temporary_token))
   end
 
   # @return [String] url for confirming the reservation with tracking
+  # @todo -- depracate in favor of filter
   def reservation_confirm_url_with_tracking
     routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.transactable.administrator.try(:temporary_token))
   end
 
   # @return [String] url to the reviews section in the user's dashboard
+  # @todo -- depracate in favor of filter
   def reviews_reservation_url
     routes.dashboard_reviews_path
   end
 
   # @return [TransactableTypeDrop] TransactableTypeDrop object for this reservation's associated TransactableType
+  # @todo -- investigate if this is necessary
   def transactable_type_drop
     transactable_type.to_liquid
   end
 
   # @return [String] reservation's currency
+  # @todo -- investigate if currency
   def currency
     @reservation.total_amount.currency.symbol
   end
@@ -238,6 +252,7 @@ class ReservationDrop < OrderDrop
 
   # @return [DateTime] reservation date/time (first date) in
   #   the timezone of the associated transactable object
+  # @todo -- again, maybe some general class of pulling out dates
   def starts_at
     @reservation.starts_at.in_time_zone(@reservation.transactable.timezone)
   end
@@ -245,6 +260,7 @@ class ReservationDrop < OrderDrop
   # @return [String] if the payment is pending and the user doesn't need to
   #   update his credit card, the translated string 'dashboard.user_reservations.total_amount_to_be_determined'
   #   will be returned, otherwise, the HTML-formatted total price will be returned
+  # @todo -- we should not provide html in DIY approach at all. Also translations would be nice
   def total_amount_if_payment_at_least_authorized
     if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
       I18n.t('dashboard.user_reservations.total_amount_to_be_determined')
@@ -257,6 +273,7 @@ class ReservationDrop < OrderDrop
   #   his credit card, the translated string 'dashboard.user_reservations.total_amount_to_be_determined'
   #   will be returned, otherwise, the HTML-formatted total amount payable to host
   #   is returned
+  # @todo -- we should not provide html in DIY approach at all. Also translations would be nice
   def total_amount_for_host_if_payment_at_least_authorized
     if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
       I18n.t('dashboard.user_reservations.total_amount_to_be_determined')
@@ -266,11 +283,14 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [String] new user message path (for discussion between lister and enquirer)
+  # @todo -- depracate in favor of filter
   def user_message_path
     routes.new_reservation_user_message_path(@reservation)
   end
 
   # @return [UserDrop] owner of the reservation (buyer) including deleted ones
+  # @todo -- change the behavior to always return all and add filter to filter out those that user doesnt want
+  # in DIY of course user will pull only what he/she needs so it wont be needed at all
   def owner_including_deleted
     User.unscoped { @reservation.owner }
   end
