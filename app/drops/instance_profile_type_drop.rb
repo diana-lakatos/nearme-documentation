@@ -26,6 +26,7 @@ class InstanceProfileTypeDrop < BaseDrop
   end
 
   # @return [Array<String>] ['fulltext']
+  # @todo -- investigate if this is necessary - easy to hardcode in DIY
   def search_inputs
     ['fulltext']
   end
@@ -37,6 +38,8 @@ class InstanceProfileTypeDrop < BaseDrop
 
   # @return [Array<(String, Integer)>] the container class and input size to be used for the
   #   search area of the marketplace's homepage
+  # @todo -- depracate whole or some parts -- old bootstrap classes, hardcoded strings
+  # IMO some of this functionality can be done using css
   def calculate_elements
     sum = 2 # search button
     sum += 4 if search_inputs.include? 'datepickers'
@@ -50,32 +53,38 @@ class InstanceProfileTypeDrop < BaseDrop
 
   # @return [String] the container class to be used for the search area
   #   of the marketplace's homepage
+  # @todo -- depracate
   def calculate_container
     calculate_elements[0]
   end
 
   # @return [Integer] the input size to be used for the search area of the
   #   marketplace's homepage
+  # @todo -- depracate
   def calculate_input_size
     "span#{calculate_elements[1]}"
   end
 
   # @return [Boolean] whether this marketplace has multiple service types defined
+  # @todo -- depracate (can be done easily by DIY using instance.tt.searchable.size > 0)
   def multiple_transactable_types?
     PlatformContext.current.instance.transactable_types.searchable.many?
   end
 
   # @return [Boolean] whether transactable type picker should be shown
+  # @todo -- depracate
   def show_transactable_type_picker?
     @context['transactable_type_picker'] != false && multiple_transactable_types? && PlatformContext.current.instance.tt_select_type != 'radio'
   end
 
   # @return [String] instance profile type class name
+  # @todo -- depracate?
   def class_name
     @instance_profile_type.class.name
   end
 
   # @return [String] id to be used for a corresponding form element
+  # @todo -- depracate?
   def select_id
     "#{class_name}-#{id}"
   end
