@@ -22,7 +22,7 @@ class AnalyticsFacade::AnalyticsBase
   end
 
   def self.build(scope, options)
-    @options = options.compact.reverse_merge(DEFAULT_OPTIONS)
+    @options = options.delete_if { |_k, v| v.blank? }.reverse_merge(DEFAULT_OPTIONS)
     raise NotImplementedError unless CHART_TYPES.include?(@options[:chart_type])
 
     "AnalyticsFacade::#{@options[:chart_type].classify}Analytics".constantize.new(scope, @options)
