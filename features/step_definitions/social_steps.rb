@@ -1,7 +1,4 @@
-Before do
-  disable_remote_http
-end
-
+# frozen_string_literal: true
 Given /^the (.*) OAuth request is successful$/ do |social|
   mock_successful_authentication_with_provider(social)
 end
@@ -11,7 +8,7 @@ Given /^the (.*) OAuth request is unsuccessful$/ do |social|
 end
 
 Given /^Existing user with (.*) email$/ do |social|
-  pre_existing_user({:email => "#{social.downcase}@example.com"})
+  pre_existing_user(email: "#{social.downcase}@example.com")
 end
 
 When /I sign up with (.*)$/ do |social|
@@ -23,10 +20,10 @@ When /I sign in with Twitter$/ do
   sign_in_with_provider('Twitter')
 end
 
-When /I sign up as (.*) in the modal/ do |model|
+When /I sign up as (.*) in the modal/ do |_model|
   work_in_modal do
     within '.sign-up-modal' do
-      fill_in_user_sign_up_details()
+      fill_in_user_sign_up_details
       click_on 'Sign up'
     end
   end
@@ -39,7 +36,7 @@ Given /I signed up with (.*) without password$/ do |social|
 end
 
 Given /I signed up with (.*) with password$/ do |social|
-  sign_up_manually({:email => "#{social.downcase}@example.com"})
+  sign_up_manually(email: "#{social.downcase}@example.com")
   mock_successful_authentication_with_provider(social)
   toggle_connection_with(social)
 end
@@ -66,7 +63,7 @@ end
 
 Then /I cannot disconnect (.*)$/ do |social|
   toggle_connection_with(social)
-  assert_not_nil Authentication.find_by_provider(social.downcase)
+  assert_not_nil Authentication.find_by(provider: social.downcase)
 end
 
 When /I try to sign up with (.*)$/ do |social|
@@ -74,7 +71,7 @@ When /I try to sign up with (.*)$/ do |social|
 end
 
 When /I type in my password in edit page/ do
-  update_current_user_information({:password => 'my_password', :country_name => 'United States'})
+  update_current_user_information(password: 'my_password', country_name: 'United States')
 end
 
 Then /I should have password/ do
@@ -82,14 +79,14 @@ Then /I should have password/ do
 end
 
 When /I manually sign up with valid credentials$/ do
-  sign_up_manually({:name => 'I am User'})
+  sign_up_manually(name: 'I am User')
 end
 
 When /I navigate away via Log In link and sign in$/ do
   click_link 'Log In'
   work_in_modal do
     fill_credentials
-    click_button "Log In"
+    click_button 'Log In'
   end
 end
 
@@ -101,7 +98,7 @@ When /I sign in with invalid credentials/ do
   click_link 'Log In'
   work_in_modal do
     fill_credentials('invalid@example.com')
-    click_button "Log In"
+    click_button 'Log In'
   end
 end
 
@@ -117,7 +114,7 @@ end
 
 Then /an account should be created for that (.*) user$/ do |social|
   social = social.downcase
-  user = Authentication.find_by_provider(social).user
+  user = Authentication.find_by(provider: social).user
   assert_equal "#{social}@example.com", user.email
   assert_equal 1, user.authentications.count
   assert_equal social, user.authentications.first.provider
@@ -125,18 +122,18 @@ end
 
 Then /account of valid user should be connected with (.*)$/ do |social|
   social = social.downcase
-  user = Authentication.find_by_provider(social).user
-  assert_equal "valid@example.com", user.email
+  user = Authentication.find_by(provider: social).user
+  assert_equal 'valid@example.com', user.email
   assert_equal 1, user.authentications.count
   assert_equal social, user.authentications.first.provider
 end
 
 Then /there should be no (.*) account$/ do |social|
-  assert_nil Authentication.find_by_provider(social.downcase)
+  assert_nil Authentication.find_by(provider: social.downcase)
 end
 
 Then /I am correctly signed in/ do
-  user = User.find_by_email('valid@example.com')
+  user = User.find_by(email: 'valid@example.com')
   assert_equal 'I am User', user.name
 end
 
@@ -149,15 +146,14 @@ Then /^I do (not )?have avatar$/ do |without_avatar|
   end
 end
 
-Then  /^I should not be relogged as other user$/ do
+Then /^I should not be relogged as other user$/ do
   current_path = URI.parse(current_url).path
   assert_equal social_accounts_path, current_path
 end
 
 Given /^the (.*) OAuth request with email is successful$/ do |social|
-  mock_successful_authentication_with_provider(social, {info: {email: "#{social.downcase}@example.com"}})
+  mock_successful_authentication_with_provider(social, info: { email: "#{social.downcase}@example.com" })
 end
 
 Given /There is no user with my email/ do
 end
-

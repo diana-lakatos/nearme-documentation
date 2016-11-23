@@ -637,6 +637,7 @@ namespace :uot do
 
     def create_views
       create_home_index!
+      create_admin_templates!
       create_theme_header!
       create_listing_show!
       create_theme_footer!
@@ -724,6 +725,11 @@ namespace :uot do
 
     def create_home_index!
       load_template('home/index', false)
+    end
+
+    def create_admin_templates!
+      load_template('instance_admin/manage/orders/index', false)
+      load_template('instance_admin/manage/orders/show', false)
     end
 
     def create_theme_header!

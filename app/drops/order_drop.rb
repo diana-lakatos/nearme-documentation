@@ -110,6 +110,8 @@ class OrderDrop < BaseDrop
   #     buyer to the seller)
   # @!method quantity
   #   @return [Integer] quantity for this order
+  # @!method is_free_booking
+  #   @return [Boolean] if order is free
   delegate :id, :user, :company, :number, :line_items,
            :can_host_cancel?, :can_confirm?, :can_reject?,
            :paid?, :unconfirmed?, :confirmed?, :inactive?, :manual_payment?, :can_complete_checkout?,
@@ -121,7 +123,7 @@ class OrderDrop < BaseDrop
            :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing,
            :outbound, :inbound, :inbound_pickup_date, :outbound_pickup_date,
            :inbound_pickup_address_address, :outbound_return_address_address,
-           :quantity, to: :order
+           :quantity, :is_free_booking, to: :order
 
   def initialize(order)
     @source = @order = order.decorate

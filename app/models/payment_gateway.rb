@@ -30,8 +30,8 @@ class PaymentGateway < ActiveRecord::Base
 
   belongs_to :payment_gateway
 
-  has_many :active_payment_methods, -> (_object) { active.except_free }, class_name: 'PaymentMethod'
-  has_many :active_free_payment_methods, -> (_object) { active.free }, class_name: 'PaymentMethod'
+  has_many :active_payment_methods, ->(_object) { active.except_free }, class_name: 'PaymentMethod'
+  has_many :active_free_payment_methods, ->(_object) { active.free }, class_name: 'PaymentMethod'
   has_many :billing_authorizations
   has_many :credit_cards
   has_many :charges
@@ -126,6 +126,10 @@ class PaymentGateway < ActiveRecord::Base
     nil
   end
 
+  def payment_url(_payment)
+    nil
+  end
+
   def active?
     live_active? || test_active?
   end
@@ -177,21 +181,23 @@ class PaymentGateway < ActiveRecord::Base
 
   def self.validate_settings(payment_gateway, attribute, value)
     if payment_gateway.send(attribute.to_s.gsub('settings', 'active?'))
-      value.each do |key, value|
-        next if payment_gateway.class.settings[key.to_sym].blank? ||
-                payment_gateway.class.settings[key.to_sym][:validate].blank?
+      if value.present?
+        value.each do |key, value|
+          next if payment_gateway.class.settings[key.to_sym].blank? ||
+                  payment_gateway.class.settings[key.to_sym][:validate].blank?
 
-        payment_gateway.class.settings[key.to_sym][:validate].each do |validation|
-          case validation
-          when :presence
-            payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank!") if value.blank?
-          when :presence_if_direct
-            if value.blank? && payment_gateway.direct_charge?
-              payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank when direct charge enabled!")
+          payment_gateway.class.settings[key.to_sym][:validate].each do |validation|
+            case validation
+            when :presence
+              payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank!") if value.blank?
+            when :presence_if_direct
+              if value.blank? && payment_gateway.direct_charge?
+                payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank when direct charge enabled!")
+              end
             end
           end
         end
-      end if value.present?
+      end
     end
   end
 
@@ -445,12 +451,8 @@ class PaymentGateway < ActiveRecord::Base
     options
   end
 
-  def underscored_name
-    self.class.name.gsub('PaymentGateway::', '').underscore.gsub('_payment_gateway', '')
-  end
-
   def merchant_account_type
-    MerchantAccount::MERCHANT_ACCOUNTS[underscored_name]
+    self.class.name.gsub('PaymentGateway', 'MerchantAccount')
   end
 
   def build_payment_methods(active = false)

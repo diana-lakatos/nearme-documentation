@@ -1,0 +1,111 @@
+{
+   "id":"acct_19OUMLEuGsjBQPxa",
+   "object":"account",
+   "business_logo":null,
+   "business_name":"Company 1",
+   "business_url":null,
+   "charges_enabled":true,
+   "country":"US",
+   "debit_negative_balances":false,
+   "decline_charge_on":{
+      "avs_failure":false,
+      "cvc_failure":true
+   },
+   "default_currency":"usd",
+   "details_submitted":true,
+   "display_name":null,
+   "email":"user_1_1@example.com",
+   "external_accounts":{
+      "object":"list",
+      "data":[
+         {
+            "id":"ba_19OUMLEuGsjBQPxaaXYGiVqq",
+            "object":"bank_account",
+            "account":"acct_19OUMLEuGsjBQPxa",
+            "account_holder_name":null,
+            "account_holder_type":null,
+            "bank_name":"STRIPE TEST BANK",
+            "country":"US",
+            "currency":"usd",
+            "default_for_currency":true,
+            "fingerprint":"H3lO3ut4UMnE37Mn",
+            "last4":"6789",
+            "metadata":{
+
+            },
+            "routing_number":"110000000",
+            "status":"new"
+         }
+      ],
+      "has_more":false,
+      "total_count":1,
+      "url":"/v1/accounts/acct_19OUMLEuGsjBQPxa/external_accounts"
+   },
+   "keys":{
+      "secret":"sk_test_FzkmuNtriPaGEWkXRSJxe4N9",
+      "publishable":"pk_test_2T4R07AAi46uVjLeSyGhMSAV"
+   },
+   "legal_entity":{
+      "address":{
+         "city":"Mountain View",
+         "country":"US",
+         "line1":"1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA",
+         "line2":null,
+         "postal_code":"94043",
+         "state":"CA"
+      },
+      "business_name":"Company 1",
+      "business_tax_id_provided":false,
+      "dob":{
+         "day":22,
+         "month":1,
+         "year":1990
+      },
+      "first_name":"Tomasz",
+      "last_name":"Lemkowski",
+      "personal_address":{
+         "city":"Mountain View",
+         "country":"US",
+         "line1":"1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA",
+         "line2":null,
+         "postal_code":"94043",
+         "state":"CA"
+      },
+      "personal_id_number_provided":true,
+      "ssn_last_4_provided":true,
+      "type":"individual",
+      "verification":{
+         "details":null,
+         "details_code":null,
+         "document":null,
+         "status":"unverified"
+      }
+   },
+   "managed":true,
+   "metadata":{
+
+   },
+   "product_description":null,
+   "statement_descriptor":null,
+   "support_email":null,
+   "support_phone":null,
+   "timezone":"Etc/UTC",
+   "tos_acceptance":{
+      "date":1481212964,
+      "ip":"127.0.0.1",
+      "user_agent":null
+   },
+   "transfer_schedule":{
+      "delay_days":2,
+      "interval":"daily"
+   },
+   "transfer_statement_descriptor":null,
+   "transfers_enabled":true,
+   "verification":{
+      "disabled_reason":null,
+      "due_by":null,
+      "fields_needed":[
+         "legal_entity.verification.document"
+      ]
+   }
+}

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :payment_gateway do
     test_settings { { api_key: 'present' } }
@@ -8,11 +9,11 @@ FactoryGirl.define do
     end
 
     before(:create) do |payment_gateway|
-      payment_gateway.payment_countries << (Country.find_by_iso('US') || FactoryGirl.create(:country_us))
+      payment_gateway.payment_countries << (Country.find_by(iso: 'US') || FactoryGirl.create(:country_us))
     end
 
     before(:create) do |payment_gateway|
-      payment_gateway.payment_currencies << (Currency.find_by_iso_code('USD') || FactoryGirl.create(:currency_us))
+      payment_gateway.payment_currencies << (Currency.find_by(iso_code: 'USD') || FactoryGirl.create(:currency_us))
     end
 
     after :create do |payment_gateway|
@@ -21,7 +22,7 @@ FactoryGirl.define do
 
     factory :paypal_payment_gateway, class: PaymentGateway::PaypalPaymentGateway do
       before(:create) do |payment_gateway|
-        payment_gateway.payment_currencies << (Currency.find_by_iso_code('JPY') || FactoryGirl.create(:currency_jpy))
+        payment_gateway.payment_currencies << (Currency.find_by(iso_code: 'JPY') || FactoryGirl.create(:currency_jpy))
       end
 
       test_settings do
@@ -118,11 +119,11 @@ FactoryGirl.define do
 
     factory :fetch_payment_gateway, class: PaymentGateway::FetchPaymentGateway do
       before(:create) do |payment_gateway|
-        payment_gateway.payment_countries = [Country.find_by_iso('NZ') || FactoryGirl.create(:country_nz)]
+        payment_gateway.payment_countries = [Country.find_by(iso: 'NZ') || FactoryGirl.create(:country_nz)]
       end
 
       before(:create) do |payment_gateway|
-        payment_gateway.payment_currencies = [Currency.find_by_iso_code('NZD') || FactoryGirl.create(:currency_nzd)]
+        payment_gateway.payment_currencies = [Currency.find_by(iso_code: 'NZD') || FactoryGirl.create(:currency_nzd)]
       end
 
       test_settings { { account_id: '123456789', secret_key: '987654321' } }
@@ -140,7 +141,7 @@ FactoryGirl.define do
     end
 
     factory :stripe_connect_payment_gateway, class: PaymentGateway::StripeConnectPaymentGateway do
-      test_settings { { login: '123456789' } }
+      test_settings { { login: 'sk_test_DoIom7ZOL848ziY39cC75lI0' } }
       live_settings { { login: '123456789' } }
     end
 

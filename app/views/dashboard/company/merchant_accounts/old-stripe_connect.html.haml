@@ -1,0 +1,106 @@
+= hidden_field_tag :edit_mode, params[:edit_mode]
+- if merchant_account.persisted?
+  = f.hidden_field :id
+
+- if merchant_account.errors.present?
+  .errors-global
+    %ul
+      - merchant_account.errors.full_messages.each do |err|
+        %li= err
+
+- if merchant_account.verified? && params[:edit_mode] == nil
+  %h3= t("dashboard.merchant_account.#{merchant_account.state}")
+
+  = link_to "Edit", edit_dashboard_company_payouts_path(edit_mode: true), class: 'btn btn-blue pull-right'
+
+  %table.table.table-simple
+    %thead
+      %tr
+        %td= t('dashboard.merchant_account.account_type')
+        %td= merchant_account.account_type.capitalize
+      %tr
+        %td= t('dashboard.merchant_account.first_name')
+        %td= merchant_account.first_name
+      %tr
+        %td= t('dashboard.merchant_account.last_name')
+        %td= merchant_account.last_name
+      %tr
+        %td= t('dashboard.merchant_account.bank_account_number_last_4')
+        %td= merchant_account.bank_account_number
+      %tr
+        %td= t('dashboard.merchant_account.dob')
+        %td= l(merchant_account.owners.first.dob_date, format: :short)
+
+- else
+  - if merchant_account.fields_needed.any?
+    %h3= t('dashboard.merchant_account.you_almost_there')
+    %p= t('dashboard.merchant_account.stripe_needed_fields_1')
+    %p= t('dashboard.merchant_account.stripe_needed_fields_2')
+
+    %br
+    - [:business_tax_id, :business_vat_id, :ssn_last_4, :personal_id_number].each do |field_name|
+      - if merchant_account.needs?('legal_entity.' + field_name)
+        = f.input field_name, required: true
+
+    - if merchant_account.needs?('legal_entity.address.postal_code')
+      .form-group.string.optional
+        = f.simple_fields_for :current_address, f.object.current_address || Address.new do |address_form|
+          .fields.location
+            = render 'dashboard/shared/fields/address', f: address_form, field_label: t('simple_form.labels.merchant_account.current_address')
+
+    - if merchant_account.needs?('legal_entity.verification.document')
+      = f.fields_for :owners do |maof|
+        .form-group.string.optional{class: maof.error(:document) ? 'has-error' : ''}
+          .row
+            .col-md-12
+              = maof.label :document, class: 'string required control-label' do
+                = t('dashboard.merchant_account.document')
+                = translated_hint_button "dashboard.merchant_account.hints.document"
+            .col-md-12.input-container
+        = maof.file_field :document
+        %span.help-block= maof.error :document
+
+  - else
+    %h2= t('dashboard.merchant_account.header')
+
+    - if merchant_account.persisted?
+      %h3= t("dashboard.merchant_account.#{merchant_account.state}")
+
+    = f.input :account_type, collection: MerchantAccount::StripeConnectMerchantAccount::ACCOUNT_TYPES.map { |at| [t("dashboard.merchant_account.#{at}"), at] }, prompt: :translate, required: true, input_html: {data: {'account-type': true}}
+
+    - if MerchantAccount::StripeConnectMerchantAccount::SUPPORTED_CURRENCIES[merchant_account.location.upcase].size > 1
+      = f.input :currency, collection: merchant_account.supported_currencies, prompt: :translate
+
+    - [:bank_routing_number, :bank_account_number, :first_name, :last_name].each do |field_name|
+      = f.input field_name, required: true
+
+
+    - if ['US', 'CA'].include?(merchant_account.iso_country_code)
+      = f.input :personal_id_number, required: true
+      = f.input :business_tax_id, required: true, wrapper_html: {"data-account-type": "company"}
+
+
+    = f.fields_for :owners do |maof|
+      = render 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', f: maof, merchant_account: merchant_account
+
+    - unless merchant_account.has_valid_address?
+      .form-group.string.optional
+        = f.simple_fields_for :current_address, f.object.address do |address_form|
+          .fields.location
+            = render 'dashboard/shared/fields/address', f: address_form, field_label: t('simple_form.labels.merchant_account.current_address')
+
+    - if merchant_account.data[:fields_needed] && merchant_account.data[:fields_needed].join.index('additional_owners')
+      #owners
+        .links
+          = link_to_add_association t('dashboard.merchant_account.add_owner'), f, :owners,
+            partial: 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', render_options: {locals: {merchant_account: merchant_account}}
+          %br
+    %div{class: f.error(:tos) ? 'has-error' : ''}
+      %label
+        = f.check_box :tos
+        Payment processing services for #{platform_context.lessee} on #{platform_context.name} are provided by Stripe and are subject to the <a href="https://stripe.com/connect/account-terms" target="_blank">Stripe Connected Account Agreement</a>, which includes the <a href="https://stripe.com/us/terms" target="_blank">Stripe Terms of Service</a> (collectively, the “Stripe Services Agreement”). By agreeing to [this agreement / these terms / etc.] or continuing to operate as a #{platform_context.lessee} on #{platform_context.name}, you agree to be bound by the Stripe Services Agreement, as the same may be modified by Stripe from time to time. As a condition of #{platform_context.name} enabling payment processing services through Stripe, you agree to provide #{platform_context.name} accurate and complete information about you and your business, and you authorize #{platform_context.name} to share it and transaction information related to your use of the payment processing services provided by Stripe.
+      %span.help-block= f.error :tos
+
+  .panel.form-actions
+    .panel-body
+      = f.submit t('payouts.buttons.save')

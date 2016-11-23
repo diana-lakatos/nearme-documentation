@@ -38,6 +38,7 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
   end
 
   def dob_date
+    return unless dob
     Date.strptime(dob, default_date_format)
   end
 

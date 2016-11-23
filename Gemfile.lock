@@ -258,7 +258,7 @@ GEM
       representable (>= 2.4.0, <= 3.1.0)
       uber
     docile (1.1.5)
-    domain_name (0.5.24)
+    domain_name (0.5.20161129)
       unf (>= 0.0.5, < 1.0.0)
     domainatrix (0.0.11)
       addressable
@@ -474,7 +474,7 @@ GEM
     htmlentities (4.3.4)
     http (0.5.1)
       http_parser.rb
-    http-cookie (1.0.2)
+    http-cookie (1.0.3)
       domain_name (~> 0.5)
     http_parser.rb (0.6.0)
     httparty (0.13.7)
@@ -585,7 +585,7 @@ GEM
       kdtree
       require_all
     nested_form (0.3.2)
-    netrc (0.10.3)
+    netrc (0.11.0)
     newrelic_rpm (3.17.1.326)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
@@ -725,7 +725,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.1.0)
     raindrops (0.13.0)
-    rake (11.3.0)
+    rake (12.0.0)
     rake-compiler (0.9.5)
       rake
     ranked-model (0.4.0)
@@ -863,9 +863,8 @@ GEM
       activerecord (~> 4.1)
       state_machines-activemodel (>= 0.3.0)
     stringex (2.5.2)
-    stripe (1.22.0)
-      json (~> 1.8.1)
-      rest-client (~> 1.4)
+    stripe (1.57.0)
+      rest-client (>= 1.4, < 4.0)
     test_after_commit (0.4.1)
       activerecord (>= 3.2)
     thin (1.5.1)
@@ -898,7 +897,7 @@ GEM
     uber (0.0.15)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.6)
+    unf_ext (0.0.7.2)
     unicode-display_width (1.1.1)
     unicorn (4.8.3)
       kgio (~> 2.6)
@@ -1087,7 +1086,7 @@ DEPENDENCIES
   state_machines-activerecord
   store_base_sti_class!
   stringex
-  stripe
+  stripe (= 1.57.0)
   test_after_commit
   thin
   twilio-ruby

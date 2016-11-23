@@ -2,6 +2,25 @@ en:
   activerecord:
     errors:
       models:
+        merchant_account:
+          error_codes:
+            rejected_fraud: 'This account is rejected due to suspected fraud or illegal activity.'
+            rejected_terms_of_service: 'This account is rejected due to suspected terms of service violations.'
+            rejected_listed: 'This account is rejected due to a match on a third party prohibited persons or companies list (such as financial services provider or government).'
+            rejected_other: 'This account is rejected for some other reason.'
+            fields_needed: 'additional verification information is required in order to enable transfer or charge capabilities on this account.'
+            listed: 'This account might be a match on a prohibited persons or companies list. Stripe will investigate and either reject or reinstate the account appropriately.'
+            other: 'This account is not rejected but disabled for other reasons.'
+            scan_corrupt: 'The ID image uploaded is corrupt.'
+            scan_not_readable: 'The image supplied was not readable. It may have been too blurry or not well lit.'
+            scan_failed_greyscale: 'The image supplied was not readable because it was grayscale. Please upload a color copy instead.'
+            scan_not_uploaded: 'No ID scan was uploaded.'
+            scan_id_type_not_supported: 'The ID type submitted is not supported.'
+            scan_id_country_not_supported: 'The ID country is not supported.'
+            scan_name_mismatch: 'The name on the ID does not match the name on the account.'
+            scan_failed_other: 'Scan failed for other reason.'
+            failed_keyed_identity: 'The provided identity information could not be verified.'
+            failed_other: 'Verification failed for other reason.'
         address:
           attributes:
             address:
@@ -92,6 +111,10 @@ en:
         address: Shipping address
       instance_profile_type:
         admin_approval: 'Requires admin approval'
+      merchant_account:
+        business_tax_id: 'Employer Identification Number'
+        personal_id_number: 'Social Security Number'
+        bank_routing_number: 'Routing Number'
   connections:
     facebook:
       count:
@@ -669,6 +692,14 @@ en:
       search: "Search"
     manage:
       orders:
+        number: Number
+        listing: Listing
+        user: User
+        payment: Payment
+        state: State
+        created_at: Created At
+        order_amount: Amount
+        details: Details
         no_details: "This order has no details to display at this time."
       instance_profile_types:
         instance_profile_types: 'User Profiles'
@@ -1758,11 +1789,7 @@ en:
         ca: 'Routing Number'
         au: 'BSB number'
         euuk: 'Routing Number'
-      bank_account_number:
-        us: 'Bank Account Number'
-        ca: 'Bank Account Number'
-        au: 'Bank Account Number'
-        euuk: 'Bank Account Number'
+      bank_account_number: 'Bank Account Number'
       bank_account_number_last_4: "Bank account last four digits"
       dob: 'Date of Birth'
       correct_dob: "Correct format is: %{dob_format}"
@@ -1781,7 +1808,8 @@ en:
         us: 'Social Security Number'
         ca: 'Social Insurance Number'
       document: 'Government ID or Passport'
-      add_owner: 'Add owner'
+      add_owner: 'Add another owner'
+      main_owner_detail: 'Main Account Details'
       remove_owner: 'Remove owner'
       first_name: 'First Name'
       first_name: 'First Name'
@@ -1793,6 +1821,7 @@ en:
       address_line1: 'Address line 1 (Street address/PO Box/Company name)'
       address_line2: 'Address line 2 (Apartment/Suite/Building)'
       additional_owners: 'Additional owners'
+      additional_owner: 'Additional owner'
     reservations:
       purchase_was_successful: "Your purchase was successful!"
     products:
