@@ -147,22 +147,26 @@ class PlatformContextDrop < BaseDrop
 
   # @return [String] name of the bookable item for this marketplace (plural) as a string
   # @deprecated use {TransactableTypeDrop#bookable_noun_plural}
+  # @ todo -- remove per depracation
   def bookable_noun_plural
     @platform_context_decorator.bookable_noun.pluralize
   end
 
   # @return [String] url to the logo image as set in the current theme
+  # @todo depracate per DIY
   def logo_url
     @platform_context_decorator.logo_image.url
   end
 
   # @return [String] url to the hero image as set in the current theme or a default image
   #   if not set
+  # @todo depracate per DIY
   def hero_url
     @platform_context_decorator.hero_image.url.presence || image_url('community/hero-a-bg-a.jpg').to_s
   end
 
   # @return [String] url to the "checked badge" image (a predefined image)
+  # @todo depracate per DIY
   def checked_badge_url
     image_url('themes/buy_sell/check.png')
   end
@@ -182,11 +186,13 @@ class PlatformContextDrop < BaseDrop
   end
 
   # @return [String] hex value (as string) for the color black as set for this marketplace, or the default
+  # @todo -- depracate per DIY
   def color_black
     theme_color('black')
   end
 
   # @return [String] hex value (as string) for the color blue as set for this marketplace, or the default
+  # @todo -- depracate per DIY
   def color_blue
     theme_color('blue')
   end
@@ -197,50 +203,56 @@ class PlatformContextDrop < BaseDrop
   end
 
   # @return [String] url for editing the notification preferences
+  # @todo depracate per DIY
   def unsubscribe_url
     urlify(routes.edit_dashboard_notification_preferences_path)
   end
 
   # @return [String] the type of select for this marketplace to be used when
   #   multiple service types are defined (e.g. radio, dropdown etc.)
+  # @todo depracate per DIY
   def tt_select_type
     @instance.tt_select_type
   end
 
   # @return [Boolean] whether to enable the languages selector in the footer for
   #   this marketplace
+  # @todo depracate per DIY
   def is_footer_languages_select?
     @instance.enable_language_selector?
   end
 
   # @return [String] URL to the project wizard path
-  # @todo Remove when project types are removed
   # @deprecated Should be removed when project types are removed
+  # @todo Remove when project types are removed -- arent they removed already? (23.11.2016)
+  # @todo -- depracate on favor of filter
   def project_space_wizard_path
     @project_type ||= ProjectType.first
     routes.new_project_type_project_wizard_path(@project_type) if @project_type
   end
 
   # @return [String] url to the spam reports area in admin for this marketplace
-  # @todo Path/url inconsistency
+  # @todo -- depracate on favor of filter
   def spam_reports_path
     urlify(routes.instance_admin_projects_spam_reports_path)
   end
 
   # @return [String] returns the path to the admin area for this marketplace
-  # @todo Path/url inconsistency
+  # @todo -- depracate on favor of filter
   def instance_admin_path
     urlify(routes.instance_admin_path)
   end
 
   # @return [Boolean] whether there are active rating systems (enabled) for this
   #   marketplace
+  # @todo -- investigate if its the best place for it - i assume rating system will grow so maybe separate drop would be appropriate
   def active_rating_systems_present?
     RatingSystem.active.any?
   end
 
   # @return [Boolean] whether split registration is enabled for this marketplace
   #   allowing separate profiles for buyers and sellers
+  # @todo -- depracate per DIY
   def split_registration?
     @instance.split_registration?
   end
@@ -248,6 +260,7 @@ class PlatformContextDrop < BaseDrop
   # The method sets the variable @render_content_outside_container to true to affect subsequent rendering
   # (render the contents of the page outside the main container)
   # @return [String] blank string
+  # @todo -- depracate per DIY
   def set_render_content_outside_container
     @context.registers[:action_view].instance_variable_set('@render_content_outside_container', true)
     '' # return empty string so nothing is displayed
@@ -256,6 +269,7 @@ class PlatformContextDrop < BaseDrop
   # The method sets the variable @theme_name to a blank string affecting subsequent rendering
   # (theme name is used as a class for the body element)
   # @return [String] blank string
+  # @todo -- depracate per DIY
   def set_blank_theme_name
     @context.registers[:action_view].instance_variable_set('@theme_name', '')
     '' # return empty string so nothing is displayed
@@ -267,6 +281,8 @@ class PlatformContextDrop < BaseDrop
   end
 
   # @return [Array<UserBlogPostDrop>] array of highlighted user blog posts
+  # @todo -- investigate if needed. if yes, transform to filter to allow variable limit
+  # @todo -- also it probably should be in BlogDrop or somewhere around that
   def highlighted_blog_posts
     # tmp solution until we have proper solution to fetch any data on any page
     @platform_context_decorator.instance.user_blog_posts.highlighted.by_date.limit(3)
@@ -277,6 +293,7 @@ class PlatformContextDrop < BaseDrop
   # Helper method
   # @return [String] hex value for the color received as parameter as set in the current
   #   theme, or the default value for this color
+  # @todo -- depracate per DIY
   def theme_color(color)
     @platform_context_decorator.theme.hex_color(color).presence || Theme.hexify(Theme.default_value_for_color(color))
   end
