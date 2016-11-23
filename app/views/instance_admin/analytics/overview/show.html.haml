@@ -1,9 +1,9 @@
 .content-container
   .sub-header-nav
     %ul
-      - @chart_types.each do |chart_type|
+      - AnalyticsFacade::AnalyticsBase::ADMIN_CHARTS.each do |chart_type|
         %li
-          = link_to t('instance_admin.analytics.' + chart_type) , instance_admin_analytics_overview_path(chart_type: chart_type), class: params[:chart_type] == chart_type ? 'active' : ''
+          = link_to t('instance_admin.analytics.' + chart_type) , instance_admin_analytics_overview_path(chart_type: chart_type), class: (params[:chart_type] || 'revenue') == chart_type ? 'active' : ''
 
   = render partial: 'shared/chart', object: @chart
 

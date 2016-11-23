@@ -1,6 +1,7 @@
 # frozen_string_literal: true
-class ChartDrop < BaseDrop
-  delegate :total, :money?, :collection, :chart_type, :empty?, :period, to: :source
+class AnalyticsFacadeDrop < BaseDrop
+  delegate :total, :money?, :list, :chart_type, :empty?, :period,
+           :currencies, :currency, to: :source
 
   def values
     @source.values.to_json.html_safe
