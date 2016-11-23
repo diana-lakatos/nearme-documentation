@@ -1,6 +1,36 @@
-# Migrate rake task to help with all kind of data migration
-
+# frozen_string_literal: true
 namespace :migrate do
+  task longtail: :environment do
+    Instance.first.set_context!
+    ThirdPartyIntegration::LongtailIntegration.create! do |longtail_integration|
+      longtail_integration.environment = 'production'
+      longtail_integration.settings = {
+        token: '341413f7e17c0a48eb605e08bdbce7d2',
+        page_slug: 'workspace'
+      }
+    end
+
+    Instance.find(130).set_context!
+    ThirdPartyIntegration::LongtailIntegration.create! do |longtail_integration|
+      longtail_integration.environment = 'production'
+      longtail_integration.settings = {
+        token: '07eacc2262eec5d0216561b4f6c8725c',
+        page_slug: 'storage'
+      }
+    end
+
+=begin
+    Instance.first.set_context!
+    ThirdPartyIntegration::LongtailIntegration.create! do |longtail_integration|
+      longtail_integration.environment = 'development'
+      longtail_integration.settings = {
+        token: 'c3ac011214f481a580dae3fa3a3e8cf9',
+        page_slug: 'workspace'
+      }
+    end
+=end
+  end
+
   task user_avatars: :environment do
     arr = []
     scope = User.with_deleted.where.not(avatar: nil).where('id > ?', 32_336)
