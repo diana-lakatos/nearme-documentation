@@ -36,6 +36,7 @@ class RecurringBookingPeriodDrop < BaseDrop
            :transactable, to: :source
 
   # @return [String] payment state for this period
+  # @todo - just a code smell :)
   def payment_state
     return 'paid' if @source.paid?
     @source.pending? ? @source.state : (@source.payment.try(:state) || 'unpaid')
@@ -43,17 +44,19 @@ class RecurringBookingPeriodDrop < BaseDrop
 
   # @return [String] total amount for this period formatted using the global currency
   #   formatting rules
+  # @todo -- use money/unit filter?
   def formatted_total_amount
     render_money(@source.total_amount)
   end
 
   # @return [String] path to the rejection form for this period
+  # @todo deprecate for filter url
   def rejection_form_path
     routes.rejection_form_dashboard_company_order_order_item_path(@source.order, @source)
   end
 
   # @return [String] url to managing recurring booking periods
-  # @todo Path/url inconsistency
+  # @todo deprecate hardcoded url
   def show_url
     '/dashboard/order_items'
     # urlify(routes.dashboard_company_order_items_path)
