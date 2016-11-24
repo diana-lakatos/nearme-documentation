@@ -202,6 +202,7 @@ class TransactableDrop < BaseDrop
   # @return [Array<Array<(String, Array<Array<(Integer, Integer, String)>>)>>] availability by days
   #   for each day, there's a corresponding array of the form [open_hour, close_hour, formatted_availability_string]
   # @todo investigate if this place is appropriate for this logic -- maybe decorator is more suitable
+  # or at least refactor for some readability, "there has to be a better way"
   def availability_by_days
     days = {}
 
@@ -234,6 +235,7 @@ class TransactableDrop < BaseDrop
 
   # @return [Array<Array<String, Boolean>>] available days; array of the form [[day_name, is_available], ...]
   # @todo investigate if this place is appropriate for this logic -- maybe decorator is more suitable
+  # or at least refactor for some readability, "there has to be a better way"
   def available_days
     days = {}
     (0..6).each { |day| days[day] = false }
