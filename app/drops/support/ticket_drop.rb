@@ -12,11 +12,13 @@ class Support::TicketDrop < BaseDrop
   delegate :first_message, to: :ticket
 
   # @return [String] date/time when this ticket was created
+  # @todo -- remove, DIY
   def created_at
     ticket.created_at.to_s
   end
 
   # @return [String] url to this user's requests for quotes
+  # @todo -- depracate, url filter
   def url
     routes.dashboard_user_requests_for_quote_path(ticket) if @ticket.user && !@ticket.target.is_a?(Instance)
   end
@@ -37,6 +39,7 @@ class Support::TicketDrop < BaseDrop
 
   # @return [String] url to the admin section in the marketplace for this support ticket
   #   thread; this is the section where the admin can answer and resolve requests
+  # @todo -- depracate, url filter
   def admin_url
     case ticket.target
     when Transactable

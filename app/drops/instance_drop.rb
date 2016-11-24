@@ -23,6 +23,7 @@ class InstanceDrop < BaseDrop
   end
 
   # @return [String] url to the MPO administration area
+  # @todo -- deprecate - url filter
   def instance_admin_url
     routes.instance_admin_path(token_key => @instance.instance_admins.last.user.try(:temporary_token))
   end

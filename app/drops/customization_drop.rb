@@ -17,6 +17,7 @@ class CustomizationDrop < BaseDrop
   end
 
   # @return [String] translation key for the customization
+  # @todo -- move to translations?
   def name
     @customization.custom_model_type.translated_bookable_noun(2)
   end
@@ -24,6 +25,7 @@ class CustomizationDrop < BaseDrop
   # @return [Hash{String=>Hash{Symbol=>String}}] properties for the customization with labels
   #   hash of the form:
   #   { "url_link" => { :label => "URL", :value => "https://vimeo.com/some_video" } }
+  # @todo -- I dont know if this logic belongs to decorator or not, but it doesnt belongs here :)
   def properties_with_labels
     @customization.custom_model_type.custom_attributes.each_with_object({}) do |attribute, result|
       result[attribute.name] = {
