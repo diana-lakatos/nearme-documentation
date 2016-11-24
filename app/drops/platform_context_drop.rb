@@ -245,7 +245,8 @@ class PlatformContextDrop < BaseDrop
 
   # @return [Boolean] whether there are active rating systems (enabled) for this
   #   marketplace
-  # @todo -- investigate if its the best place for it - i assume rating system will grow so maybe separate drop would be appropriate
+  # @todo -- investigate if its the best place for it
+  # i assume rating system will grow so maybe separate drop would be appropriate
   def active_rating_systems_present?
     RatingSystem.active.any?
   end

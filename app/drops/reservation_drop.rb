@@ -102,6 +102,7 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [TransactableTypeDrop] the transactable type for which this reservation has been made
+  # @todo - just a code smell
   def transactable_type
     @transactable_type ||= (@reservation.transactable || Transactable.with_deleted.find(@reservation.transactable_id)).transactable_type
   end
@@ -114,11 +115,13 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [String] hourly summary as string for the first booked period
+    # @todo -- depracate per DIY -- lets not return strings - also, underlying methods are smelly
   def hourly_summary
     @reservation.hourly_summary_for_first_period
   end
 
   # @return [String] summary as a string for the selected (booked) dates
+  # @todo -- depracate per DIY -- lets not return strings (wrapped in html) - also, underlying methods are smelly
   def dates_summary
     @reservation.selected_dates_summary(wrapper: :span)
   end
@@ -148,7 +151,6 @@ class ReservationDrop < OrderDrop
 
   # @return [String] the search query URL for the same type of service as this reservation and for this location
   # @todo -- depracate in favor of filter
-
   def search_url
     routes.search_path(q: location_query_string(@reservation.transactable.location), transactable_type_id: @reservation.transactable_type.id)
   end

@@ -11,7 +11,7 @@ class Support::TicketMessageDrop < BaseDrop
   end
 
   # @return [String] date/time when this message was created
-  # @todo -- extract formatting
+  # @todo -- depracate DIY
   def created_at
     I18n.l(message.created_at, format: :short)
   end
