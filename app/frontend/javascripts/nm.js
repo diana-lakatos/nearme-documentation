@@ -6,9 +6,16 @@ class NM {
   constructor() {
     new Events(this);
 
-    document.addEventListener('DOMContentLoaded', ()=> {
-      this.emit('ready');
-    });
+    if (window.$) {
+      window.$(()=> {
+        this.emit('ready');
+      });
+    }
+    else {
+      document.addEventListener('DOMContentLoaded', ()=>{
+        this.emit('ready');
+      });
+    }
 
     document.addEventListener('load', ()=> {
       this.emit('load');
