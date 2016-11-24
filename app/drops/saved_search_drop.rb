@@ -6,10 +6,9 @@ class SavedSearchDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier for the object
   # @!method title
-  #   Title of this saved search
-  #   @return (see SavedSearch#title)
+  #   @return [String] title of this saved search
   # @!method path
-  #   @return (see SavedSearch#path)
+  #   @return [String] the full path of the query
   # @!method new_results
   #   Number of new results in the app for this saved query
   #   @return (see SavedSearch#new_results)

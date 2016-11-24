@@ -10,11 +10,11 @@ class InstanceDrop < BaseDrop
   #   whether to enable reply button on reservations for hosts
   #   @return (see Instance#enable_reply_button_on_host_reservations)
   # @!method documents_upload_enabled?
-  #   @return (see Instance#documents_upload_enabled?)
+  #   @return [Boolean] whether documents upload is enabled
   # @!method action_rfq?
-  #   @return (see Instance#action_rfq?)
+  #   @return [Boolean] whether any of the action types have request for quotation enabled
   # @!method manual_transfers?
-  #   @return (see Instance#manual_transfers?)
+  #   @return [Boolean] whether the payment transfers frequency is set to manual
   delegate :name, :enable_reply_button_on_host_reservations?, :documents_upload_enabled?, :action_rfq?,
            :manual_transfers?, to: :instance
 

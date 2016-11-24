@@ -13,7 +13,8 @@ class OrderDrop < BaseDrop
   #   Company of the seller user
   #   @return (see Order#company)
   # @!method number
-  #   @return (see Order#number)
+  #   @return [String] identifer of the order containing the class name (type of order)
+  #     and the numeric identifer of the order
   # @!method line_items
   #   @return [Array<LineItemDrop>] Line items belonging to this order
   # @!method can_host_cancel?
@@ -23,7 +24,7 @@ class OrderDrop < BaseDrop
   # @!method can_reject?
   #   @return [Boolean] whether the order can be rejected at this stage
   # @!method paid?
-  #   @return (see Order#paid?)
+  #   @return [Boolean] whether the order has been paid for
   # @!method unconfirmed?
   #   @return [Boolean] whether the order is in the unconfirmed state
   # @!method confirmed?
@@ -31,11 +32,11 @@ class OrderDrop < BaseDrop
   # @!method manual_payment?
   #   @return [Boolean] whether the payment for the order is manual
   # @!method can_complete_checkout?
-  #   @return (see Order#can_complete_checkout?)
+  #   @return [Boolean] whether checkout can be completed for this Order object
   # @!method can_approve_or_decline_checkout?
-  #   @return (see Order#can_approve_or_decline_checkout?)
+  #   @return [Boolean] whether checkout can be approved or declined for this Order object
   # @!method has_to_update_credit_card?
-  #   @return (see Order#has_to_update_credit_card?)
+  #   @return [Boolean] whether the user needs to update their credit card
   # @!method user_messages
   #   @return [Array<UserMessageDrop>] User messages for discussion between lister and enquirer
   # @!method archived_at
@@ -44,11 +45,11 @@ class OrderDrop < BaseDrop
   # @!method state
   #   @return [String] state of the current order
   # @!method cancelable?
-  #   @return (see Order#cancelable?)
+  #   @return [Boolean] whether the order can be cancelled
   # @!method archived?
-  #   @return (see Order#archived?)
+  #   @return [Boolean] whether the order has been moved to the archived state
   # @!method penalty_charge_apply?
-  #   @return (see Order#penalty_charge_apply?)
+  #   @return [Boolean] whether the penalty charge applies to this order
   # @!method rejection_reason
   #   Reason for the rejection of the order
   #   @return (see Order#rejection_reason)
@@ -61,11 +62,15 @@ class OrderDrop < BaseDrop
   # @!method payment
   #   @return [PaymentDrop] Payment object for this order
   # @!method total_units_text
-  #   @return (see OrderDecorator#total_units_text)
+  #   @return [String] total units as a text (e.g. "2 nights")
+  #     the name is taken from the translations 'reservations.item.one' (for singular)
+  #     and 'reservations.item.other' (for plural)
   # @!method enquirer_cancelable
-  #   @return (see Order#enquirer_cancelable)
+  #   @return [Boolean] whether the order is in a state where it can be
+  #     cancelled by the enquirer
   # @!method enquirer_editable
-  #   @return (see Order#enquirer_editable)
+  #   @return [Boolean] whether the order is in a state where it can be edited
+  #     by the enquirer
   # @!method transactable
   #   @return [TransactableDrop] Transactable object being ordered
   # @!method cancelled_at
@@ -83,9 +88,9 @@ class OrderDrop < BaseDrop
   # @!method payment_subscription
   #   @return [PaymentSubscriptionDrop] Payment subscription object for this order
   # @!method confirm_reservations?
-  #   @return (see Order#confirm_reservations?)
+  #   @return [Boolean] whether reservations need to be confirmed first
   # @!method bookable?
-  #   @return (see Order#bookable?)
+  #   @return [Boolean] whether the object is bookable (i.e. its type is different from 'Purchase')
   # @!method transactable_pricing
   #   Transactable pricing object for the order
   #   @return (see Order#transactable_pricing)
@@ -190,6 +195,7 @@ class OrderDrop < BaseDrop
     @order.deliveries.last
   end
 
+  # @return [Array<LineItemDrop>] array of line items for the order representing shipping charges
   def shipping_line_items
     @order.shipping_line_items
   end
@@ -235,6 +241,8 @@ class OrderDrop < BaseDrop
     routes.cancel_dashboard_company_orders_received_path(order)
   end
 
+  # @return [String] url to marking the order as completed
+  # @todo Path/url inconsistency
   def order_complete_url
     routes.complete_dashboard_company_orders_received_path(order)
   end
@@ -294,38 +302,48 @@ class OrderDrop < BaseDrop
     @order.properties
   end
 
+  # @return [Boolean] whether the order allows drafts; more specifically the order must be an offer and "allow drafts" must
+  #   be enabled for the action type in the marketplace admin, and the order must be in the "inactive" (original) status
   def allows_draft?
     @order.is_a?(Offer) && @order.try(:transactable).try(:action_type).try(:transactable_type_action_type).try(:allow_drafts) && @order.state == 'inactive'
   end
 
+  # @return [Boolean] whether the order is in the draft state (draft_at present and the actual state is 'inactive')
   def is_draft?
     @order.draft_at.present? && @order.inactive?
   end
 
+  # @return [MoneyDrop] total amount payable to host (subtotal_amount + host_additional_charges + total_tax_amount - service_fee_amount_host)
   def total_payable_to_host
     @order.total_payable_to_host
   end
 
+  # @return [MoneyDrop] amount deducted from the sum that is payable to host (subtotal_amount + host_additional_charges + total_tax_amount)
   def service_fee_amount_host
     @order.service_fee_amount_host
   end
 
+  # @return [MoneyDrop] service_fee_amount_host from which shipping charges have been deducted
   def service_fee_amount_host_without_shipping
     @order.service_fee_amount_host - (@order.shipping_line_items.last&.unit_price || 0)
   end
 
+  # @return [MoneyDrop] the service fee that is added to the base price to yield the final price to be paid
   def service_fee_amount_guest_money
     @order.service_fee_amount_guest
   end
 
+  # @return [MoneyDrop] total_payable_to_host from which shipping charges have been deducted
   def total_payable_to_host_minus_second_shipping
     @order.total_payable_to_host - (@order.shipping_line_items.last&.unit_price || 0)
   end
 
+  # @return [MoneyDrop] total amount for the order plus shipping charges
   def total_amount_plus_shipping
     @order.total_amount + (@order.shipping_line_items.first&.unit_price || 0)
   end
 
+  # @return [MoneyDrop] service_fee_amount_guest minus shipping charges
   def service_fee_amount_guest_money_without_shipping
     @order.service_fee_amount_guest - (@order.shipping_line_items.first&.unit_price || 0)
   end

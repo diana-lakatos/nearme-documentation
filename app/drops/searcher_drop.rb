@@ -104,14 +104,18 @@ class SearcherDrop < BaseDrop
     [total_entries, (per_page * current_page)].min
   end
 
+  # @return [String] meta description for the current search page
   def meta_description
     @context.registers[:action_view].meta_description_for_search(PlatformContext.current, @searcher.search)
   end
 
+  # @return [String] meta title for the current search page
   def meta_title
     @context.registers[:action_view].meta_title_for_search(PlatformContext.current, @searcher.search)
   end
 
+  # @return [Hash<String => CustomAttributeDrop>] hash of attributes that this search can be filtered by of the
+  #   form !{ custom_attribute_name => CustomAttributeDrop }
   def filterable_custom_attributes_hash
     filterable_custom_attributes.each_with_object({}) { |ca, hash| hash[ca.name] = ca }
   end

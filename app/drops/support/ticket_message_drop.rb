@@ -18,7 +18,8 @@ class Support::TicketMessageDrop < BaseDrop
     I18n.l(message.created_at, format: :short)
   end
 
-  # @return [String] the full name of the support recipient
+  # @!method full_name
+  #   @return [String] the full name of the support recipient
   delegate :full_name, to: :message
 
   # @return [String] reservations dates tied to this message thread as an html formatted string

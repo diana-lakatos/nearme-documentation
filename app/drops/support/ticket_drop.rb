@@ -7,7 +7,8 @@ class Support::TicketDrop < BaseDrop
     @ticket = ticket
   end
 
-  # @return [Support::TicketMessageDrop] first message for this support ticket thread
+  # @!method first_message
+  #   @return [Support::TicketMessageDrop] first message for this support ticket thread
   delegate :first_message, to: :ticket
 
   # @return [String] date/time when this ticket was created
@@ -30,7 +31,8 @@ class Support::TicketDrop < BaseDrop
     end
   end
 
-  # @return [Integer] the number of messages in this support ticket thread
+  # @!method messages_count
+  #   @return [Integer] the number of messages in this support ticket thread
   delegate :count, to: :messages, prefix: true
 
   # @return [String] url to the admin section in the marketplace for this support ticket
@@ -46,7 +48,8 @@ class Support::TicketDrop < BaseDrop
     end
   end
 
-  # @return [Integer] numeric identifier for this ticket
+  # @!method id
+  #   @return [Integer] numeric identifier for this ticket
   delegate :id, to: :ticket
 
   # @return [Array<Support::TicketMessageDrop>] the messages in this thread with the first one

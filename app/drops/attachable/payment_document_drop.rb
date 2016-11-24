@@ -6,7 +6,7 @@ class Attachable::PaymentDocumentDrop < BaseDrop
   # @!method file
   #   @return [PaymentDocumentUploader] file uploader object
   # @!method created_at
-  #   @return [DateTime]
+  #   @return [DateTime] when the object was created
   delegate :file, :created_at, to: :payment_document
 
   def initialize(payment_document)
