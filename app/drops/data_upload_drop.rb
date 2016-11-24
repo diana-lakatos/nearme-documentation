@@ -22,15 +22,18 @@ class DataUploadDrop < BaseDrop
   end
 
   # @return [String] date and time at which the upload started as string
+  # @todo -- depracate -- refactor to solution i mentioned before
   def import_started_at
     @data_upload.imported_at.present? ? I18n.l(@data_upload.imported_at, format: :long) : ''
   end
 
   # @return [String] date and time at which the upload finished as string
+  # @todo -- depracate -- refactor to solution i mentioned before
   def import_finished_at
     I18n.l(@data_upload.updated_at, format: :long)
   end
 
+  # @todo -- move to filter / remove altogether because of DIY
   # @return [String] the parsing result log as an HTML string
   def parsing_result_log_html
     parsing_result_log.try(:gsub, "\n", '<br />')
@@ -38,26 +41,31 @@ class DataUploadDrop < BaseDrop
 
   # @return [String, nil] the parsing result log containing the result of the parsing as a string
   #   can be nil
+  # @todo -- move to filter / remove altogether because of DIY
   def parsing_result_log
     @data_upload.parsing_result_log.blank? ? nil : @data_upload.parsing_result_log.strip
   end
 
   # @return [String] parse summary as a string showing how many objects from each category have been created
+  # @todo -- move to filter / remove altogether because of DIY
   def new_parse_summary
     @data_upload.parse_summary[:new].map { |k, v| "#{k.to_s.humanize}: #{v}" }.join(', ')
   end
 
   # @return [String] parse summary as a string showing how many objects from each category have been updated
+  # @todo -- move to filter / remove altogether because of DIY
   def updated_parse_summary
     @data_upload.parse_summary[:updated].map { |k, v| "#{k.to_s.humanize}: #{v}" }.join(', ')
   end
 
   # @return [String] parse summary as a string showing how many objects from each category have been deleted
+  # @todo -- move to filter / remove altogether because of DIY
   def deleted_parse_summary
     @data_upload.parse_summary[:deleted].present? ? @data_upload.parse_summary[:deleted].map { |k, v| "#{k.to_s.humanize}: #{v}" }.join(', ') : nil
   end
 
   # @return [String] url to create a new object of the type just imported
+  # @todo -- deprecate in favor of url filter
   def new_importable_url
     case @data_upload.importable
     when TransactableType
@@ -68,6 +76,7 @@ class DataUploadDrop < BaseDrop
   end
 
   # @return [String] encountered error (if present) for the upload
+  # @todo -- all errors should be handler in one place, preferably errors drop or something like that
   def sanitized_encountered_error
     encountered_error = @data_upload.encountered_error.to_s
     parts = encountered_error.split(/\n/)
