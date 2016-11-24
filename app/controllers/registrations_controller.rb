@@ -394,6 +394,8 @@ class RegistrationsController < Devise::RegistrationsController
                    secured_params.user
                  when 'seller'
                    secured_params.user
+                 when 'default'
+                   secured_params.user
                  else
                    []
                            end
