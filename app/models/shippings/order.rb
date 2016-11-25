@@ -7,6 +7,8 @@ module Shippings
 
     included do
       has_many :deliveries, inverse_of: :order
+      has_many :dimensions_templates, through: :deliveries
+
       accepts_nested_attributes_for :deliveries
 
       # TODO: fix it - move to better place
@@ -37,10 +39,6 @@ module Shippings
             status: shipping_order.body['state']
           )
         end
-      end
-
-      def client
-        Deliveries.courier name: provider.shipping_provider_name, settings: provider.settings
       end
 
       def provider
@@ -104,6 +102,12 @@ module Shippings
       delegate :firstname=, :firstname, :lastname, :lastname=, to: :outbound_receiver, prefix: true
       def outbound_receiver
         outbound.receiver_address
+      end
+
+      private
+
+      def client
+        Deliveries.courier name: provider.shipping_provider_name, settings: provider.settings
       end
     end
   end

@@ -27,7 +27,8 @@ module Shippings
           receiver_address: receiver_address,
           pickup_date: pickup_date,
           order: @order,
-          order_id: @order.id
+          order_id: @order.id,
+          dimensions_template_id: dimensions_template_id
         }
       end
 
@@ -55,6 +56,10 @@ module Shippings
 
       def ends_at
         @order.ends_at.in_time_zone(@order.time_zone)
+      end
+
+      def dimensions_template_id
+        @order.transactable.dimensions_template.id
       end
 
       class OrderListerAddress
