@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161118093833) do
+ActiveRecord::Schema.define(version: 20161121120932) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -405,9 +405,9 @@ ActiveRecord::Schema.define(version: 20161118093833) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
-    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
+    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -637,8 +637,8 @@ ActiveRecord::Schema.define(version: 20161118093833) do
     t.string   "target_type",               limit: 255
     t.boolean  "searchable",                            default: false
     t.boolean  "validation_only_on_update",             default: false
-    t.boolean  "search_in_query",                       default: false, null: false
     t.hstore   "properties",                            default: {},    null: false
+    t.boolean  "search_in_query",                       default: false, null: false
   end
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
@@ -1014,15 +1014,6 @@ ActiveRecord::Schema.define(version: 20161118093833) do
 
   add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
 
-  create_table "help_contents", force: :cascade do |t|
-    t.string   "slug",       null: false
-    t.text     "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "help_contents", ["slug"], name: "index_help_contents_on_slug", unique: true, using: :btree
-
   create_table "host_fee_line_items", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "line_item_source_id"
@@ -1064,10 +1055,8 @@ ActiveRecord::Schema.define(version: 20161118093833) do
     t.integer  "instance_id"
   end
 
-  add_index "impressions", ["company_id"], name: "index_impressions_on_company_id", using: :btree
-  add_index "impressions", ["impressionable_type", "impressionable_id"], name: "index_impressions_on_impressionable_type_and_impressionable_id", using: :btree
-  add_index "impressions", ["instance_id"], name: "index_impressions_on_instance_id", using: :btree
-  add_index "impressions", ["partner_id"], name: "index_impressions_on_partner_id", using: :btree
+  add_index "impressions", ["created_at"], name: "index_impressions_on_created_at", using: :btree
+  add_index "impressions", ["instance_id", "impressionable_id", "impressionable_type"], name: "index_impressions_scope", using: :btree
 
   create_table "inappropriate_reports", force: :cascade do |t|
     t.integer  "user_id"
@@ -1283,9 +1272,9 @@ ActiveRecord::Schema.define(version: 20161118093833) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,                            null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
-    t.boolean  "enable_geo_localization",                                                           default: true
     t.boolean  "force_fill_in_wizard_form"
     t.boolean  "show_currency_symbol",                                                              default: true,                             null: false
     t.boolean  "show_currency_name",                                                                default: false,                            null: false
@@ -1589,9 +1578,9 @@ ActiveRecord::Schema.define(version: 20161118093833) do
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
     t.boolean  "is_free_booking",                                           default: false
+    t.datetime "draft_at"
     t.datetime "lister_confirmed_at"
     t.datetime "enquirer_confirmed_at"
-    t.datetime "draft_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -1753,8 +1742,8 @@ ActiveRecord::Schema.define(version: 20161118093833) do
     t.integer  "payment_gateway_id"
     t.datetime "failed_at"
     t.string   "encrypted_token"
-    t.integer  "payment_gateway_fee_cents",                                          default: 0
     t.integer  "merchant_account_id"
+    t.integer  "payment_gateway_fee_cents",                                          default: 0
   end
 
   add_index "payment_transfers", ["company_id"], name: "index_payment_transfers_on_company_id", using: :btree
@@ -1880,7 +1869,6 @@ ActiveRecord::Schema.define(version: 20161118093833) do
     t.boolean  "mark_to_be_bulk_update_deleted",             default: false
     t.integer  "owner_id"
     t.string   "owner_type"
-    t.string   "photo_role"
   end
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
@@ -2620,11 +2608,11 @@ ActiveRecord::Schema.define(version: 20161118093833) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "confirm_reservations",                       default: true
+    t.boolean  "allow_drafts",                               default: false, null: false
     t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
     t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
     t.integer  "minimum_lister_service_fee_cents",           default: 0
     t.boolean  "both_side_confirmation",                     default: false
-    t.boolean  "allow_drafts",                               default: false, null: false
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree
@@ -3071,7 +3059,6 @@ ActiveRecord::Schema.define(version: 20161118093833) do
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
     t.integer  "wish_list_items_count",                              default: 0
     t.float    "product_average_rating",                             default: 0.0
-    t.text     "ui_settings",                                        default: "{}"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

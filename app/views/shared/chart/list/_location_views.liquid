@@ -4,7 +4,6 @@
       <tr>
         <th>{{ 'dashboard.analytics.columns.count') | t }}</th>
         <th>{{ 'dashboard.analytics.columns.listing') | t }}</th>
-        <th>{{ 'dashboard.analytics.columns.amount') | t }}</th>
         <th>{{ 'dashboard.analytics.columns.date' | t }}</th>
       </tr>
     </thead>
@@ -12,8 +11,7 @@
       {% for list_item in analytics.list %}
       <tr>
         <td>{{ list_item.quantity }}</td>
-        <td>{{ list_item.transactable.name }}</td>
-        <td>{{ list_item.total_amount | render_money }}</td>
+        <td>{{ list_item.impressionable.name }}</td>
         <td>{{ list_item.created_at | l: 'long' }}</td>
       </tr>
       {% endfor %}

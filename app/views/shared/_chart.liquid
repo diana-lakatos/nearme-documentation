@@ -4,11 +4,11 @@
       <figcaption>
         <form action="" accept-charset="UTF-8" method="get">
           <input name="utf8" type="hidden" value="✓"><input type="hidden" name="chart_type" id="chart_type" value="{{ params.chart_type }}">
-          {% if chart.money? and currencies.size > 1 %}
+          {% if analytics.money? and analytics.currencies.size > 1 %}
           <label for="currency">{{ 'dashboard.analytics.currency' | translate }}</label>
           <select name="currency" id="currency" onchange="this.form.submit()">
-            {% for currency in @currencies %}
-            <option  {% if params.currency == currency %} selected="selected" {% endif %} value="{{ currency }}">{{currency}}</option>
+            {% for currency in analytics.currencies %}
+            <option  {% if analytics.currency == currency %} selected="selected" {% endif %} value="{{ currency }}">{{currency}}</option>
             {% endfor %}
           </select>
           {% endif %}
@@ -21,8 +21,11 @@
         </form>
       </figcaption>
 
-      {% if chart.empty? %}
-        <p>{{ chart.no_result }} <p>
+      {% if analytics.empty? %}
+        {% assign chart_name = 'dashboard.analytics.' | append: analytics.chart_type | translate | downcase %}
+        {% assign period = 'dashboard.analytics.' | append: analytics.period | translate | downcase %}
+        <p>{{ 'dashboard.analytics.no_results' | translate: type: chart_name,
+           period: period }} <p>
       {% else %}
         <canvas id="chart"></canvas>
       {% endif %}
@@ -31,6 +34,6 @@
 </div>
 
 {% content_for 'domready' %}
-  $(document).trigger('line:chart.nearme', ['#chart', {{ chart.values}} , {{ chart.labels }} ]);
+  $(document).trigger('line:chart.nearme', ['#chart', {{ analytics.values}} , {{ analytics.labels }} ]);
 {% endcontent_for %}
 

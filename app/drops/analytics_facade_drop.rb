@@ -1,6 +1,7 @@
 # frozen_string_literal: true
-class ChartDrop < BaseDrop
-  delegate :total, :money?, :collection, :chart_type, :empty?, :period, to: :source
+class AnalyticsFacadeDrop < BaseDrop
+  delegate :total, :money?, :list, :chart_type, :empty?, :period,
+           :currencies, :currency, to: :source
 
   # @return [String] string of chart values in JSON format
   #   of the form "[[1,6,7,10]]"

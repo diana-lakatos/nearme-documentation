@@ -12,19 +12,19 @@ namespace :longtail do
       p.content = LongtailRakeHelper.generic_page_content
       p.css_content = ''
     end
-    LongtailRakeHelper.parse_keywords!(page, 'c3ac011214f481a580dae3fa3a3e8cf9')
+    LongtailRakeHelper.parse_keywords!(page, '341413f7e17c0a48eb605e08bdbce7d2')
   end
 
   task spacer: :environment do
     Instance.find(130).set_context!
     page = Page.where(slug: 'storage', theme_id: PlatformContext.current.theme.id).first_or_create!(path: 'Storage')
-    LongtailRakeHelper.parse_keywords!(page, 'bd6502da3bc87081bb32be0b7187534c')
+    LongtailRakeHelper.parse_keywords!(page, '07eacc2262eec5d0216561b4f6c8725c')
   end
 end
 
 class LongtailRakeHelper
   class << self
-    def parse_keywords!(page, token, url = 'http://api-staging.longtailux.com/keywords/seo?page_limit=10000')
+    def parse_keywords!(page, token, url = 'http://api.longtailux.com/keywords/seo?page_limit=10000')
       url = URI.parse(url)
       http = Net::HTTP.new(url.host, url.port)
       req = Net::HTTP::Get.new(url)
@@ -37,7 +37,7 @@ class LongtailRakeHelper
       keywords['data'].each do |keyword|
         ensure_100_requests_per_minute!
 
-        host = "http://api-staging.longtailux.com/search/seo/#{keyword['attributes']['slug']}"
+        host = "http://api.longtailux.com/search/seo/#{keyword['attributes']['slug']}"
         url = URI.parse(host)
         http = Net::HTTP.new(url.host, url.port)
         req = Net::HTTP::Get.new(url)
