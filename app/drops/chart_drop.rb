@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 class ChartDrop < BaseDrop
+
+  # @!method total
+  #   @return [Float] total amount for the entire period
+  # @!method money?
+  #   @return [Boolean] is it a money chart (e.g. revenue, expenses, transfers)
+  # @!method collection
+  #   @return [Array<Object>] the underlying collection of charted data ordered by the time of creation
+  #     (descending) and paginated (10 per page)
+  # @!method empty?
+  #   @return [Boolean] whether there's no underlying data (no objects) for the selected period
+  # @!method period
+  #   @return [String] period for which we're charting (e.g. last_30_days)
+  # @!method chart_type
+  #   @return [String] for what type of data we're charting (e.g. transfers, expenses, revenue)
   delegate :total, :money?, :collection, :chart_type, :empty?, :period, to: :source
 
   # @return [String] string of chart values in JSON format
@@ -14,7 +28,11 @@ class ChartDrop < BaseDrop
     @source.labels.to_json.html_safe
   end
 
+  # @return [String] no results text in the format (taken from the translation string 'dashboard.analytics.no_results')
+  #   'No %{type} in last %{period}.' where type is 'dashboard.analytics.%{chart_type}' (chart_type e.g. transfers, expenses, revenue)
+  #   and period is 'dashboard.analytics.%{period}' (period e.g. last_7_days, last_30_days)
   def no_result
+    byebug
     I18n.t('dashboard.analytics.no_results',
            type: I18n.t('dashboard.analytics.' + chart_type).downcase,
            period: I18n.t('dashboard.analytics.' + period))

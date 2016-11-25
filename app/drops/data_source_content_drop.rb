@@ -10,6 +10,6 @@ class DataSourceContentDrop < BaseDrop
   # @!method external_id
   #   @return [String] external id for the object
   # @!method externally_created_at
-  #   @return (see DataSourceContent#externally_created_at)
+  #   @return [DateTime] date when the object data was originally published at its source
   delegate :id, :json_content, :content, :external_id, :externally_created_at, to: :source
 end

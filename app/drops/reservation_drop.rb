@@ -11,34 +11,39 @@ class ReservationDrop < OrderDrop
   #   Number of reserved items
   #   @return (see Order#quantity)
   # @!method subtotal_price
-  #   @return (see ReservationDecorator#subtotal_price)
+  #   @return [String] subtotal price formatted using the global currency formatting rules
+  #     or 'Free!' if free
   # @!method service_fee_guest
-  #   @return (see ReservationDecorator#service_fee_guest)
+  #   @return [String] service fee (guest part) formatted using the global currency formatting
+  #     rules or 'Free!' if free
   # @!method total_price
-  #   @return (see ReservationDecorator#total_price)
+  #   @return [String] total price formatted using the global currency formatting rules
+  #     or 'Free!' if free
   # @!method transactable
   #   @return [TransactableDrop] Transactable object associated with this order
   # @!method state_to_string
-  #   @return (see ReservationDecorator#state_to_string)
+  #   @return [String] state of the reservation in a human readable format
   # @!method location
   #   @return [LocationDrop] location to which the associated transactable belongs
   # @!method paid
-  #   @return (see ReservationDecorator#paid)
+  #   @return [String] amount paid for this reservation formatted using the global currency
+  #     formatting rules or the current state of the payment if not yet paid
   # @!method rejection_reason
   #   Rejection reason for this reservation if present
   #   @return (see Order#rejection_reason)
   # @!method owner
   #   @return [UserDrop] User owner of the reservation
   # @!method action_hourly_booking?
-  #   @return (see Reservation#action_hourly_booking?)
+  #   @return [Boolean] whether hourly booking is available for this reservation
   # @!method guest_notes
-  #   @return (see Order#guest_notes)
+  #   @return [String] guest notes left for the order
   # @!method created_at
   #   @return [DateTime] time when the reservation process was initiated
   # @!method total_payable_to_host_formatted
-  #   @return (see ReservationDecorator#total_payable_to_host_formatted)
+  #   @return [String] total amount payable to host formatted using the global currency
+  #     formatting rules
   # @!method total_units_text
-  #   @return (see ReservationDecorator#total_units_text)
+  #   @return [String] total units text (e.g. "1 day", "3 nights")
   # @!method unit_price
   #   @return [MoneyDrop] unit price for the reservation
   # @!method has_service_fee?
@@ -48,7 +53,7 @@ class ReservationDrop < OrderDrop
   # @!method properties
   #   @return [Hash] collection of properties for this reservation
   # @!method long_dates
-  #   @return (see ReservationDecorator#long_dates)
+  #   @return [String] summary of selected dates for this reservation
   # @!method address
   #   @return [AddressDrop] address object associated with this order (reservation)
   # @!method periods
@@ -60,11 +65,14 @@ class ReservationDrop < OrderDrop
   #   Used for calculating the penalty for cancelling (unit_price * cancellation_policy_penalty_hours)
   #   @return (see Order#cancellation_policy_penalty_hours)
   # @!method tax_price
-  #   @return (see ReservationDecorator#tax_price)
+  #   @return [String] total tax amount for this reservation formatted using the global
+  #     currency formatting rules
   # @!method manage_booking_status_info
-  #   @return (see ReservationDecorator#manage_booking_status_info)
+  #   @return [String] formatted string instructing the user to confirm their booking before expiration if unconfirmed, otherwise
+  #     renders an icon with the status information
   # @!method manage_booking_status_info_new
-  #   @return (see ReservationDecorator#manage_booking_status_info_new)
+  #   @return [String] formatted string instructing the user to confirm their booking before expiration
+  #     using the translation key 'dashboard.host_reservations.pending_confirmation'
   # @!method lister_confirmed_at
   #   Time when the lister confirmed the reservation
   #   @return (see Order#lister_confirmed_at)

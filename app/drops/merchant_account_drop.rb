@@ -21,7 +21,7 @@ class MerchantAccountDrop < BaseDrop
   #   Indicates whether API permissions were successfully granted from the merchant’s account to yours.
   #   @return [Boolean]
   # @!method chain_payments?
-  #   @return (see MerchantAccount#chain_payments?)
+  #   @return [Boolean] whether it supports paypal chain payments
   # @!method chain_payment_set?
   #   @return [Boolean] whether the billing agreement is present
   # @!method pending?
