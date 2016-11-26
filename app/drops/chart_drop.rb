@@ -32,7 +32,6 @@ class ChartDrop < BaseDrop
   #   'No %{type} in last %{period}.' where type is 'dashboard.analytics.%{chart_type}' (chart_type e.g. transfers, expenses, revenue)
   #   and period is 'dashboard.analytics.%{period}' (period e.g. last_7_days, last_30_days)
   def no_result
-    byebug
     I18n.t('dashboard.analytics.no_results',
            type: I18n.t('dashboard.analytics.' + chart_type).downcase,
            period: I18n.t('dashboard.analytics.' + period))
