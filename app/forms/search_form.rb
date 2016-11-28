@@ -1,7 +1,8 @@
 require 'reform'
 
 class SearchForm < Reform::Form
-  def date_from_params
+  def date_from_params(param_name = 'date')
+    date = public_send(param_name)
     case date
     when 'today' then date_range Time.zone.today
     when 'yesterday' then date_range(Time.zone.today.yesterday, Time.zone.today.yesterday)

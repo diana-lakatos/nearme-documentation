@@ -512,6 +512,7 @@ DesksnearMe::Application.routes.draw do
             post :generate
           end
         end
+
         resources :partners
         resources :payments, only: [:index, :show, :update] do
           member do

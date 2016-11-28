@@ -1,6 +1,30 @@
-.content-container
+.content-container.reports
   %h4
     = t("instance_admin.manage.transfers.resource.plural.#{resource_class.name.underscore}")
+
+  .row
+    .text-container
+      = form_tag [:instance_admin, :manage, :transfers], method: :get, enforce_utf8: :false do
+        .filters
+          .filter.transactable
+            .dropdown.item-type-dropdown
+          .filter.period
+            = t('instance_admin.manage.transfers.created_at')
+            %div{ style: "position: relative;" }
+              = render :partial => 'instance_admin/shared/admin_searchable_dates', locals: { param_name: 'created_at_date' }
+          .filter.period
+            = t('instance_admin.manage.transfers.transferred_at')
+            %div{ style: "position: relative;" }
+              = render :partial => 'instance_admin/shared/admin_searchable_dates', locals: { param_name: 'transferred_at_date' }
+          .filter.search
+            = t('instance_admin.manage.transfers.company_name')
+            %div{ style: "position: relative;" }
+              %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
+              %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}
+              =fa_icon "search", class: 'fa-action-icon-submit'
+
+          .filter.download-export
+            = link_to t('instance_admin.reports.download_report_as_csv'), '', data: { 'download-report' => 1, 'report-url' => polymorphic_path([:instance_admin, :manage, :transfers], format: 'csv') }
 
   .row
     - if current_instance.manual_transfers?

@@ -699,6 +699,7 @@ en:
         bank_account: "Bank account:"
         mailing_address: "Mailing address:"
         company: "Company"
+        company_name: "Company name"
         transferred_at: "Transferred at"
         amount_transferred: 'Amount transferred'
         guest_fee: "Guest fee"
@@ -727,6 +728,7 @@ en:
         transfer_amount: "Transfer amount"
         payment_gateway_fee: "PG fee"
         retry_possible: "Retry possible"
+        total_fee: "Total fee"
       payments:
         resource:
           plural:

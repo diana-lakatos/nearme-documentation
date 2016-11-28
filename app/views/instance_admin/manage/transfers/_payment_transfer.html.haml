@@ -1,25 +1,6 @@
 %tr{class: resource.css_row_class }
+  - resource.column_values_for_report.each do |column_value|
+    %td
+      = column_value
   %td
-    - if resource.company.present?
-      = resource.company.name
-    - else
-      = "#{resource.company_including_deleted.name} (#{t('instance_admin.deleted')})"
-  %td= resource.payments.count
-  %td= l(resource.created_at, format: :long)
-  %td
-    - if resource.transferred_at.present?
-      = l(resource.transferred_at, format: :long)
-    - else
-      - if resource.pending?
-        = t('instance_admin.manage.transfers.pending')
-      - elsif resource.payout_processor.present? && !resource.payout_processor.supports_immediate_payout?
-        = t('instance_admin.manage.transfers.retry_possible')
-      - else
-        = t('instance_admin.not_available_na')
-  - if current_instance.guest_fee_enabled? &&  current_instance.host_fee_enabled?
-    %td= render_money(resource.service_fee_amount_guest)
-    %td= render_money(resource.service_fee_amount_host)
-  %td= render_money(resource.total_service_fee)
-  %td= render_money(resource.payment_gateway_fee)
-  %td= render_money(resource.amount)
-  %td= link_to t('instance_admin.details'), instance_admin_manage_transfer_path(resource)
+    = link_to t('instance_admin.details'), instance_admin_manage_transfer_path(resource)
