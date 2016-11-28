@@ -49,35 +49,35 @@
       <div class="col-xs-12">
         <div class="row">
           <div class="col-xs-12 col-md-6">
-            {% input inbound_sender_firstname, label: 'Sender first name' %}
+            {% input inbound_sender_firstname, label: 'Sender first name', required: true %}
           </div>
           <div class="col-xs-12 col-md-6">
-            {% input outbound_receiver_firstname, label: 'Receiver first name' %}
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12 col-md-6">
-            {% input inbound_sender_lastname, label: 'Sender Last name' %}
-          </div>
-          <div class="col-xs-12 col-md-6">
-            {% input outbound_receiver_lastname, label: 'Receiver Last name' %}
+            {% input outbound_receiver_firstname, label: 'Receiver first name', required: true %}
           </div>
         </div>
 
         <div class="row">
           <div class="col-xs-12 col-md-6">
-            {% input inbound_pickup_date, label: 'Pick Up Date', wrapper_html-class: 'datetimepicker', input_html-data-datetimepicker: "true" %}
+            {% input inbound_sender_lastname, label: 'Sender Last name', required: true %}
           </div>
           <div class="col-xs-12 col-md-6">
-            {% input outbound_pickup_date, label: 'Shipping Return Date', wrapper_html-class: 'datetimepicker', input_html-data-datetimepicker: "true" %}
+            {% input outbound_receiver_lastname, label: 'Receiver Last name', required: true %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            {% input inbound_pickup_date, label: 'Pick Up Date', wrapper_html-class: 'datetimepicker', input_html-data-datetimepicker: "true", required: true %}
+          </div>
+          <div class="col-xs-12 col-md-6">
+            {% input outbound_pickup_date, label: 'Shipping Return Date', wrapper_html-class: 'datetimepicker', input_html-data-datetimepicker: "true", required: true %}
           </div>
         </div>
 
         <div class="row">
           <div class="col-xs-12 col-md-6">
             <div data-address-field="true">
-              {% input inbound_pickup_address_address, label: 'Lender Pick Up Address', input_html-data-address-input: 'true', input_html-data-behavior: 'address-autocomplete' %}
+              {% input inbound_pickup_address_address, label: 'Lender Pick Up Address', input_html-data-address-input: 'true', input_html-data-behavior: 'address-autocomplete', required: true %}
               {% input inbound_pickup_address_latitude, as: 'hidden', label: 'Lender Pick Up Address', input_html-data-latitude: 'true'  %}
               {% input inbound_pickup_address_longitude, as: 'hidden', label: 'Lender Pick Up Address', input_html-data-longitude: 'true'  %}
 
@@ -89,7 +89,7 @@
           </div>
           <div class="col-xs-12 col-md-6">
             <div data-address-field="true">
-              {% input outbound_return_address_address, label: 'Lender Pick Up Address', input_html-data-address-input: 'true', input_html-data-behavior: 'address-autocomplete' %}
+              {% input outbound_return_address_address, label: 'Lender Pick Up Address', input_html-data-address-input: 'true', input_html-data-behavior: 'address-autocomplete', required: true %}
               {% input outbound_return_address_latitude, as: 'hidden', label: 'Lender Pick Up Address', input_html-data-latitude: 'true'  %}
               {% input outbound_return_address_longitude, as: 'hidden', label: 'Lender Pick Up Address', input_html-data-longitude: 'true'  %}
 

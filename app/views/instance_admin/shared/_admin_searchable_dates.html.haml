@@ -1,12 +1,12 @@
 .dropdown.date-dropdown
   %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
-    - if params[:date].present?
-      %span.current= selected_date_value(params[:date])
+    - if params[param_name].present?
+      %span.current= selected_date_value(params[param_name])
     - else
       %span.current
         = t('instance_admin.manage.admin_searchable.title_all')
     %span.caret
-    = hidden_field_tag 'date', date_param_value
+    = hidden_field_tag param_name, params[param_name]
   %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
     %li
       %a{data: {date: ''}}

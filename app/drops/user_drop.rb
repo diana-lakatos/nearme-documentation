@@ -33,9 +33,9 @@ class UserDrop < BaseDrop
   #   Email address of the user
   #   @return (see User#email)
   # @!method full_mobile_number
-  #   @return (see User#full_mobile_number)
+  #   @return [String, nil] the mobile number with the full international calling prefix
   # @!method administered_locations_pageviews_30_day_total
-  #   @return (see User#administered_locations_pageviews_30_day_total)
+  #   @return [Integer] total number of pageviews for this user's administered locations during the last 30 days
   # @!method blog
   #   @return [UserBlogDrop] User's blog
   # @!method country_name
@@ -49,19 +49,20 @@ class UserDrop < BaseDrop
   # @!method is_trusted?
   #   @return [Boolean] whether the object is trusted (approved ApprovalRequest objects for this object, company)
   # @!method has_published_posts?
-  #   @return (see User#has_published_posts?)
+  #   @return [Boolean] whether the user has any published blog posts
   # @!method seller_properties
   #   @return [Hash] a hash of custom attributes for the seller profile
   # @!method buyer_properties
   #   @return [Hash] a hash of custom attributes for the buyer profile
   # @!method name_with_affiliation
-  #   @return (see UserDecorator#name_with_affiliation)
+  #   @return [String] formatted string containing the name and user's affiliation;
+  #     only applies to the Intel marketplace
   # @!method external_id
   #   @return [String] ID of a user in a third party system, used mainly by bulk upload
   # @!method seller_average_rating
   #   @return [Integer] average rating of this user as a seller
   # @!method default_wish_list
-  #   @return (see User#default_wish_list)
+  #   @return [WishList] default wish list for the user, creates it if not present
   # @!method buyer_profile
   #   @return [UserProfileDrop] Buyer profile for this user if present
   # @!method seller_profile
@@ -69,12 +70,12 @@ class UserDrop < BaseDrop
   # @!method tags
   #   @return [TagDrop] array of tags that this user has been tagged with
   # @!method has_friends
-  #   @return (see UserDecorator#has_friends)
+  #   @return [Boolean] whether the user has any friends (followed users)
   # @!method transactables_count
   #   Number of transactables created by this user
   #   @return (see User#transactables_count)
   # @!method has_active_credit_cards?
-  #   @return (see User#has_active_credit_cards?)
+  #   @return [Boolean] whether the user has any active credit cards
   # @!method communication
   #   @return [CommunicationDrop] Communication object defining a method for this user to perform a voice call
   # @!method created_at
@@ -84,9 +85,11 @@ class UserDrop < BaseDrop
   # @!method company_name
   #   @return [String] Company name for this user (basic user profile field)
   # @!method instance_admins_metadata
-  #   @return (see User#instance_admins_metadata)
+  #   @return [String] instance_admins_metadata metadata stored for this user; used for storing
+  #     the first permission this user has access to
   # @!method total_reviews_count
-  #   @return (see User#total_reviews_count)
+  #   @return [Integer, nil] total number of reviews for this user; includes reviews about the user as buyer, as seller,
+  #     left by the user as seller, left by the user as buyer, left by the user about transactables
   # @!method instance_admin?
   #   @return [Boolean] whether the user is an instance admin
   # @todo Investigate/remove know_host_of
@@ -113,7 +116,8 @@ class UserDrop < BaseDrop
     routes.api_wish_list_items_path(id: @source.id, wishlistable_type: 'User')
   end
 
-  # @return (see UserDecorator#display_location)
+  # @return [String] location of the user taken from its associated current_address {Address} object or, if not present,
+  #   from the country_name basic user profile field
   def display_location
     @source.decorate.display_location
   end

@@ -13,12 +13,9 @@ class UserBlogPostDrop < BaseDrop
   # @!method author_biography
   #   Post author's biography
   #   @return (see UserBlogPost#author_biography)
-  # @!method published_at
-  #   Date when the post was published
-  #   @return (see UserBlogPost#published_at)
   # @!method user
   #   @return [UserDrop] User author of the blog post
-  delegate :title, :previous_blog_post, :next_blog_post, :author_biography, :published_at, :user, to: :blog_post
+  delegate :title, :previous_blog_post, :next_blog_post, :author_biography, :user, to: :blog_post
 
   def initialize(blog_post)
     @blog_post = blog_post
@@ -34,7 +31,8 @@ class UserBlogPostDrop < BaseDrop
     @blog_post.excerpt.to_s.html_safe
   end
 
-  # @return (see UserBlogPostDecorator#author_name)
+  # @return [String] post author's name; taken from the user object if not present
+  #   for the user blog post object
   def author_name
     @blog_post.decorate.author_name
   end
@@ -94,7 +92,7 @@ class UserBlogPostDrop < BaseDrop
     @blog_post.author_avatar.url(style)
   end
 
-  # @return (see UserBlogPostDecorator#published_at)
+  # @return [String] formatted representation of the date when the user blog post was published
   def published_at
     @blog_post.decorate.published_at
   end

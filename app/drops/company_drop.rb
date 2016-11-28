@@ -19,7 +19,11 @@ class CompanyDrop < BaseDrop
   #   company name as string
   #   @return (see Company#name)
   # @!method payments_mailing_address
-  #   @return [AddressDrop] the payments mailing address as an Address object
+  #   @return [AddressDrop] the payments mailing address as an AddressDrop object
+  # @!method company_address
+  #   @return [AddressDrop] the address of the company as an AddressDrop object
+  # @!method merchant_accounts
+  #   @return [Array<MerchantAccountDrop>] array of merchant accounts configured for the company
   delegate :created_payment_transfers, :creator, :url, :description, :company_address,
            :name, :payments_mailing_address, :merchant_accounts, to: :company
 

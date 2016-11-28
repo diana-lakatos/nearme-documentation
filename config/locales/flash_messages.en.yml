@@ -338,7 +338,7 @@ en:
       saved_searches:
         deleted: 'Search has been deleted'
     wish_list_items:
-      item_deleted: 'Item has ben successfully deleted.'
+      item_deleted: 'Item has been successfully deselected.'
       all_items_deleted: 'All items have been successfully deleted.'
       setting_saved: 'Wish lists settings have been saved.'
     search:

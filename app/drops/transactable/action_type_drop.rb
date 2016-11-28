@@ -4,7 +4,7 @@ class Transactable::ActionTypeDrop < BaseDrop
   attr_reader :action_type
 
   # @!method id
-  #   @return [Integer]
+  #   @return [Integer] numeric identifier for the transactable action type
   # @!method pricings
   #   array of pricings
   #   @return (see Array<Transactable::PricingDrop>)

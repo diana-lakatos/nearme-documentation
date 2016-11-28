@@ -12,9 +12,10 @@ class PaymentDrop < BaseDrop
   # @!method successful_charge
   #   @return [Charge] successful charge object for this payment
   # @!method test_mode?
-  #   @return (see Payment#test_mode?)
+  #   @return [Boolean] whether the payment has been made with the payment gateway
+  #     in test mode
   # @!method active_merchant_payment?
-  #   @return (see Payment#active_merchant_payment?)
+  #   @return [Boolean] whether the payment method is capturable
   # @!method payable
   #   @return [OrderDrop, Object] the associated object for this payment (mostly order objects)
   # @!method currency

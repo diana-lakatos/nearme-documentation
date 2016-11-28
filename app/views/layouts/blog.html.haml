@@ -1,5 +1,5 @@
 !!!
-%html{ class: html_element_classes }
+%html{ class: html_element_classes, lang: I18n.locale }
   %head
     %meta{name: 'app-server', content: ENV['HOSTNAME']}
     = render 'layouts/content_holder_injector'

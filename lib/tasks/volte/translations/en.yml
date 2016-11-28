@@ -26,3 +26,15 @@ en:
 
   top_navbar:
     bookings_received: My Orders
+
+  attributes:
+    price_cents: The price
+
+  activerecord:
+    errors:
+      models:
+        transactable/pricing:
+          attributes:
+            price_cents:
+              greater_than_or_equal_to: "Lenders can list items has to be greater then or equal to $%{unit}"
+              less_than_or_equal_to: "Lenders can list items has to be less then or equal to $%{unit}"

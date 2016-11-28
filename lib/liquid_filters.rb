@@ -28,6 +28,8 @@ module LiquidFilters
     end
   end
 
+  # Sets the @no_footer variable to true to affect further rendering (i.e. the footer
+  #   will not be rendered)
   def no_footer!
     @no_footer = true
   end
@@ -566,6 +568,10 @@ module LiquidFilters
     will_paginate_collection.total_entries
   end
 
+  # @return [Array<OrderDrop>] array of orders for transactable, belonging to user, ordered
+  #   descending by the creation date
+  # @param user [UserDrop] user whose orders we want to show
+  # @param transactable [TransactableDrop] orders are for this transactable
   def get_enquirer_draft_orders(user, transactable)
     transactable.line_item_orders.where(user_id: user.id).order('created_at ASC')
   end
@@ -586,6 +592,9 @@ module LiquidFilters
     get_enquirer_draft_orders(user, transactable).confirmed
   end
 
+  # @return [Array<OrderDrop>] array of order objects
+  # @param user [UserDrop] orders returned are for items belonging to this user's companies
+  # @param transactable [TransactableDrop] orders returned are for this transactable
   def get_lister_orders(user, transactable)
     transactable.line_item_orders.where(company: user.companies).active.order('created_at ASC')
   end
@@ -648,6 +657,9 @@ module LiquidFilters
     Money.new(amount, currency)
   end
 
+  # @return [String] formatted HTML snippet containing the translated time (using the 'short' format)
+  #   e.g. <abbr class='timeago' title='2020-11-26T03:36:07+12:00'>3:35</abbr>
+  # @param time [Time] time object
   def timeago(time)
     "<abbr class='timeago' title='#{time.to_time.iso8601}'>#{l(time, 'short')}</abbr>".html_safe
   end

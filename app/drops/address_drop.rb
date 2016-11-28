@@ -39,10 +39,12 @@ class AddressDrop < BaseDrop
     @address_object = address_object
   end
 
+  # @return [String] string containing the address in the format "city, suburb state"
   def discreet
     format('%s, %s %s', city, suburb, state)
   end
 
+  # @return [String] full address as a string
   def full
     address
   end

@@ -12,4 +12,3 @@
     = draw_attribute_for_form(attribute, properties_form) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 - elsif f.object.user.respond_to?(only_inputs.first)
   = render :partial => 'registrations/new_attributes', :locals => { f: user_form, only_inputs: only_inputs }
-

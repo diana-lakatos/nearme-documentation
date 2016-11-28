@@ -7,7 +7,8 @@ class RecurringBookingDrop < OrderDrop
   #   Ordered quantity
   #   @return (see Order#quantity)
   # @!method total_price
-  #   @return (see RecurringBookingDecorator#total_price)
+  #   @return [String] total price for this recurring booking order rendered according to
+  #     the global currency rendering rules, or 'Free!' if free
   # @!method rejection_reason
   #   Rejection reason for this recurring booking order if rejected
   #   @return (see Order#rejection_reason)
@@ -16,17 +17,20 @@ class RecurringBookingDrop < OrderDrop
   # @!method has_service_fee?
   #   @return [Boolean] whether the order includes a service fee
   # @!method with_delivery?
-  #   @return (see RecurringBooking#with_delivery?)
+  #   @return [Boolean] false
   # @!method last_unpaid_amount
-  #   @return (see RecurringBookingDecorator#last_unpaid_amount)
+  #   @return [String] last unpaid amount for this recurring booking rendered according
+  #     to the global currency rendering rules
   # @!method total_payable_to_host_formatted
-  #   @return (see RecurringBookingDecorator#total_payable_to_host_formatted)
+  #   @return [String] total amount payable to host formatted using the global
+  #     currency formatting rules
   # @!method total_units_text
-  #   @return (see RecurringBookingDecorator#total_units_text)
+  #   @return [String] empty string
   # @!method manage_booking_status_info
-  #   @return (see RecurringBookingDecorator#manage_booking_status_info)
+  #   @return [String] formatted string instructing the user to confirm their booking before expiration if unconfirmed, otherwise
+  #     renders an icon with the status information
   # @!method manage_booking_status_info_new
-  #   @return (see RecurringBookingDecorator#manage_booking_status_info_new)
+  #   @return [String] formatted string instructing the user to confirm their booking before expiration
   delegate :quantity, :total_price, :rejection_reason, :owner, :has_service_fee?,
            :with_delivery?, :last_unpaid_amount, :total_payable_to_host_formatted, :total_units_text,
            :manage_booking_status_info, :manage_booking_status_info_new,
@@ -43,7 +47,8 @@ class RecurringBookingDrop < OrderDrop
   #   Represents the item to be booked (e.g. desk, room etc.)
   #   @return (see TransactableType#bookable_noun)
   # @!method translated_bookable_noun
-  #   @return (see TranslationManager#translated_bookable_noun)
+  #   @return [String] represents the item to be booked (e.g. desk, room etc.)
+  #     taken from translations (e.g. translation key of the form 'transactable_type.desk.name')
   delegate :bookable_noun, :translated_bookable_noun, to: :transactable_type
 
   def initialize(recurring_booking)
