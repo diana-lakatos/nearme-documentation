@@ -7,6 +7,6 @@ class Dashboard::Company::AnalyticsController < Dashboard::Company::BaseControll
   end
 
   def prepare_params
-    params[:chart_type] = params[:analytics_mode]
+    params[:chart_type] ||= params[:analytics_mode]
   end
 end
