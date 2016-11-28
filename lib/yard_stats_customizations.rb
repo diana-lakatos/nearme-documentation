@@ -55,7 +55,7 @@ class YARD::CLI::Stats
 
     # Reject those with documentation
     objects = objects.select do |object|
-      if (object.docstring.to_s.blank? || object.docstring.to_s.match(/^Alias for/)) && (object.tags.blank? || is_empty_return?(object))
+      if (object.docstring.to_s.blank? && (object.tags.blank? || is_empty_return?(object))) || object.docstring.to_s.match(/^Alias for/)
         true
       else
         false
