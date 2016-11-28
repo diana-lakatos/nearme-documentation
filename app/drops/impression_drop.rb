@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 class ImpressionDrop < BaseDrop
-  # @return [Address]
+  # @return [Object]
   attr_reader :impression_object
 
-  # @!method street
-  #   returns the street as a string
-  #   @return (see Address#street)
-
+  # @!method impressionable
+  #   @return [Object] object for which this impression has been recorded
+  #     (e.g. Location, Transactable etc.)
   delegate :impressionable, to: :impression_object
 
   def initialize(impression_object)

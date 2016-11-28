@@ -121,16 +121,20 @@ class PlatformContextDrop < BaseDrop
   #   @return (see Instance#lister_blogs_enabled)
   # @!method debugging_mode_for_admins?
   #   @return [Boolean] whether debugging mode for admins is currently enabled
-  # @todo Investigate missing platform_context
-  # @todo Investigate missing search_input_name
+  # @!method projectable?
+  #   @return [Boolean] whether there are Projects created for this marketplace
+  # @!method transactable_types_ordered
+  #   @return [Array<TransactableTypeDrop>] array of TransactableTypeDrop for this marketplace ordered by their names
+  # @!method transactable_types_as_hash
+  #   @return [Hash{String => TransactableTypeDrop}] hash where the keys are the TransactableType names
+  #     and the values are TransactableTypeDrop objects for this marketplace
   # @todo Remove #projectable from drop when ProjectType will be finally removed
-
-  delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :facebook_url, :twitter_url, :gplus_url,
+  delegate :name, :bookable_noun, :pages, :blog_url, :facebook_url, :twitter_url, :gplus_url,
            :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
            :lessee, :lessees, :search_by_keyword_placeholder, :address, :phone_number, :phone_number_noformat,
            :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline,
            :is_company_theme?, :call_to_action, :projectable?, :bookable?, :transactable_types, :action_rfq?,
-           :bookable_nouns, :bookable_nouns_plural, :search_input_name, :facebook_key, :service_types,
+           :bookable_nouns, :bookable_nouns_plural, :facebook_key, :service_types,
            :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?,
            :active_rating_systems_present?, :webhook_token, :instance, :enable_geo_localization, :split_registration?,
            :enquirer_blogs_enabled, :lister_blogs_enabled, :debugging_mode_for_admins?,

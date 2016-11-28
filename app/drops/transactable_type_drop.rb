@@ -18,6 +18,17 @@ class TransactableTypeDrop < BaseDrop
   #   @return [String] translation key suffix that is added to translations specific to this transactable type
   # @!method translation_namespace
   #   @return [String] translation namespace that is a prefix for translation keys specific to this transactable type
+  # @!method show_date_pickers
+  #   @return [Boolean] whether the date pickers (date range) should be shown on search pages
+  # @!method searcher_type
+  #   @return [String] searcher to be used when searching for transactables of this type; the setting is changeable
+  #     from the instance admin / transactable types / search section.
+  # @!method slug
+  #   @return [String] slug (URL-friendly name) to be used in URLs relating to this TransactableType
+  # @!method search_input_name
+  #   @return [String] name that will be used (HTML attribute) for the search input on search pages
+  # @!method skip_location?
+  #   @return [Boolean] whether specifying a location can be skipped for this TransactableType
   delegate :id, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun,
            :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
            :search_input_name, :search_field_placeholder, :skip_location?, to: :source

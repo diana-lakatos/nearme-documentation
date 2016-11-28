@@ -29,6 +29,8 @@ class RecurringBookingPeriodDrop < BaseDrop
   #   @return [Boolean] whether the object is saved in the database
   # @!method rejection_reason
   #   @return [String] rejection reason for this period object if present
+  # @!method transactable
+  #   @return [TransactableDrop] transactable associated with this order
   delegate :id, :line_items, :created_at, :payment, :total_amount_cents, :pending?,
            :approved?, :rejected?, :state, :order, :persisted?, :rejection_reason,
            :transactable, to: :source
