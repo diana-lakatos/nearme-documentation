@@ -223,7 +223,7 @@ class TransactableType < ActiveRecord::Base
 
   def update_es_mapping
     Transactable.set_es_mapping
-    Transactable.update_mapping!
+    Transactable.indexer_helper.update_mapping!
   rescue StandardError => e
     MarketplaceLogger.error('ES Update Mapping Error', e.to_s, raise: false)
   end

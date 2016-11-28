@@ -88,6 +88,7 @@ module Elastic
           {
             sort_column => {
               order: sort[2],
+              nested_path: 'user_profiles',
               nested_filter: {
                 term: {
                   'user_profiles.instance_profile_type_id': @instance_profile_type.id
@@ -151,7 +152,7 @@ module Elastic
       end
 
       if @instance_profile_type.search_only_enabled_profiles?
-        initial_instance_filter + [
+        [
           {
             nested: {
               path: 'user_profiles',
@@ -164,22 +165,14 @@ module Elastic
           }
         ]
       else
-        initial_instance_filter << {
-          term: {
-            instance_profile_type_ids: @instance_profile_type.id
+        [
+          {
+            term: {
+              instance_profile_type_ids: @instance_profile_type.id
+            }
           }
-        }
+        ]
       end
-    end
-
-    def initial_instance_filter
-      [
-        {
-          term: {
-            instance_id: @query[:instance_id]
-          }
-        }
-      ]
     end
   end
 end

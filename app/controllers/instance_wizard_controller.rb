@@ -50,6 +50,7 @@ class InstanceWizardController < ActionController::Base
 
     @instance_creator.update_attribute(:created_instance, true)
     @instance.set_context!
+    @instance.create_es_indices
 
     Utils::FormComponentsCreator.new(@instance).create!
 

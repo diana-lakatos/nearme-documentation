@@ -6,6 +6,9 @@ module UsersIndex
 
     settings(index: { number_of_shards: 1 })
 
+    # When changing mappings please remember to write migration to invoke
+    # rebuilding/refreshing index. For ex. for each Instance perform:
+    # ElasticInstanceIndexerJob.perform(update_type: 'refresh', only_classes: ['User'])
     def self.set_es_mapping(instance = PlatformContext.current.try(:instance))
       mapping do
         indexes :first_name, type: 'string'

@@ -224,11 +224,11 @@ class V1::ListingsControllerTest < ActionController::TestCase
   def valid_search_params
     {
       'boundingbox' => {
-        'start' => {
+        'end' => {
           'lat' => 37.0,
           'lon' => 128.0
         },
-        'end' => {
+        'start' => {
           'lat' => 38.0,
           'lon' => 129.0
         }

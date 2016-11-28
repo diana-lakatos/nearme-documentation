@@ -24,6 +24,9 @@ class PlatformContext
   include ::NewRelic::Agent::MethodTracer
   DEFAULT_REDIRECT_CODE = 302
   NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'
+
+  class MissingContextError < StandardError; end
+
   @@instance_view_cache_key = {}
 
   attr_reader :domain, :platform_context_detail, :instance, :theme, :custom_theme, :domain,

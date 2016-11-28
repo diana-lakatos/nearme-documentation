@@ -31,6 +31,7 @@ class Instance < ActiveRecord::Base
   SEARCH_ENGINES = %w(postgresql elasticsearch).freeze
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }.freeze
   SEARCHABLE_CLASSES = %w(TransactableType InstanceProfileType).freeze
+  CLASSES_WITH_ES_INDEX = [Transactable, User].freeze
 
   has_one :theme, as: :owner
   has_one :custom_theme, -> { where(in_use: true) }, as: :themeable
@@ -416,5 +417,12 @@ class Instance < ActiveRecord::Base
   def new_ui?
     Rails.logger.error("ERROR! new_ui? method should be deprecated, called from: #{caller[0]}")
     true
+  end
+
+  def create_es_indices
+    CLASSES_WITH_ES_INDEX.each do |klass|
+      idx_name = klass.indexer_helper.create_new_index
+      klass.indexer_helper.create_alias(idx_name)
+    end
   end
 end

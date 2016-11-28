@@ -99,6 +99,7 @@ class InstanceFactory
     end
     instance.set_context!
     instance.build_availability_templates
+    instance.create_es_indices
     instance.save!
 
     Utils::FormComponentsCreator.new(instance).create!

@@ -70,15 +70,6 @@ Before '~@photo' do
   PhotoUploader.enable_processing = false
 end
 
-Around('@elasticsearch') do |_scenario, block|
-  Rails.application.config.use_elastic_search = true
-  Transactable.__elasticsearch__.create_index!(force: true)
-  Transactable.searchable.import
-  block.call
-  Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
-  Rails.application.config.use_elastic_search = false
-end
-
 World(CarrierWave::Test::Matchers)
 
 def last_json

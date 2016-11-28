@@ -72,7 +72,7 @@ class InstanceProfileType < ActiveRecord::Base
 
   def update_es_mapping
     User.set_es_mapping
-    User.update_mapping!
+    User.indexer_helper.update_mapping!
   rescue StandardError => e
     MarketplaceLogger.error('ES Update Mapping Error', e.to_s, raise: false)
   end
