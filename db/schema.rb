@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161123110807) do
+ActiveRecord::Schema.define(version: 20161128100959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -405,9 +405,9 @@ ActiveRecord::Schema.define(version: 20161123110807) do
     t.integer  "charge_type_target_id"
     t.string   "charge_type_target_type"
     t.integer  "percent"
+    t.datetime "deleted_at"
     t.string   "type"
     t.string   "charge_event"
-    t.string   "deleted_at"
   end
 
   add_index "charge_types", ["charge_type_target_id", "charge_type_target_type"], name: "act_target", using: :btree
@@ -637,8 +637,8 @@ ActiveRecord::Schema.define(version: 20161123110807) do
     t.string   "target_type",               limit: 255
     t.boolean  "searchable",                            default: false
     t.boolean  "validation_only_on_update",             default: false
-    t.hstore   "properties",                            default: {},    null: false
     t.boolean  "search_in_query",                       default: false, null: false
+    t.hstore   "properties",                            default: {},    null: false
   end
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
@@ -821,10 +821,10 @@ ActiveRecord::Schema.define(version: 20161123110807) do
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "deliveries", force: :cascade do |t|
-    t.integer  "order_id",            null: false
-    t.date     "pickup_date",         null: false
-    t.integer  "sender_address_id",   null: false
-    t.integer  "receiver_address_id", null: false
+    t.integer  "order_id",               null: false
+    t.date     "pickup_date",            null: false
+    t.integer  "sender_address_id",      null: false
+    t.integer  "receiver_address_id",    null: false
     t.string   "courier"
     t.string   "status"
     t.string   "notes"
@@ -832,10 +832,14 @@ ActiveRecord::Schema.define(version: 20161123110807) do
     t.string   "tracking_url"
     t.string   "tracking_reference"
     t.datetime "deleted_at"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.integer  "instance_id"
+    t.integer  "dimensions_template_id"
   end
+
+  add_index "deliveries", ["dimensions_template_id"], name: "index_deliveries_on_dimensions_template_id", using: :btree
+  add_index "deliveries", ["instance_id"], name: "index_deliveries_on_instance_id", using: :btree
 
   create_table "deposits", force: :cascade do |t|
     t.integer  "instance_id"
@@ -854,14 +858,25 @@ ActiveRecord::Schema.define(version: 20161123110807) do
 
   create_table "dimensions_templates", force: :cascade do |t|
     t.string   "name",                 limit: 255
+    t.integer  "creator_id"
     t.integer  "instance_id"
     t.decimal  "weight",                           precision: 8, scale: 2
     t.decimal  "height",                           precision: 8, scale: 2
     t.decimal  "width",                            precision: 8, scale: 2
     t.decimal  "depth",                            precision: 8, scale: 2
+    t.string   "unit_of_measure",      limit: 255,                         default: "imperial"
+    t.string   "weight_unit",          limit: 255,                         default: "oz"
+    t.string   "height_unit",          limit: 255,                         default: "in"
+    t.string   "width_unit",           limit: 255,                         default: "in"
+    t.string   "depth_unit",           limit: 255,                         default: "in"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "details"
     t.datetime "deleted_at"
+    t.boolean  "use_as_default",                                           default: false
     t.integer  "entity_id"
     t.string   "entity_type",          limit: 255
+    t.string   "shippo_id"
     t.string   "description"
     t.integer  "shipping_provider_id"
   end
@@ -1278,9 +1293,9 @@ ActiveRecord::Schema.define(version: 20161123110807) do
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,                            null: false
     t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
-    t.boolean  "enable_geo_localization",                                                           default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
+    t.boolean  "enable_geo_localization",                                                           default: true
     t.boolean  "force_fill_in_wizard_form"
     t.boolean  "show_currency_symbol",                                                              default: true,                             null: false
     t.boolean  "show_currency_name",                                                                default: false,                            null: false
@@ -1584,9 +1599,9 @@ ActiveRecord::Schema.define(version: 20161123110807) do
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
     t.boolean  "is_free_booking",                                           default: false
-    t.datetime "draft_at"
     t.datetime "lister_confirmed_at"
     t.datetime "enquirer_confirmed_at"
+    t.datetime "draft_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -1748,8 +1763,8 @@ ActiveRecord::Schema.define(version: 20161123110807) do
     t.integer  "payment_gateway_id"
     t.datetime "failed_at"
     t.string   "encrypted_token"
-    t.integer  "merchant_account_id"
     t.integer  "payment_gateway_fee_cents",                                          default: 0
+    t.integer  "merchant_account_id"
   end
 
   add_index "payment_transfers", ["company_id"], name: "index_payment_transfers_on_company_id", using: :btree
@@ -1875,6 +1890,7 @@ ActiveRecord::Schema.define(version: 20161123110807) do
     t.boolean  "mark_to_be_bulk_update_deleted",             default: false
     t.integer  "owner_id"
     t.string   "owner_type"
+    t.string   "photo_role"
   end
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
@@ -2567,8 +2583,10 @@ ActiveRecord::Schema.define(version: 20161123110807) do
   add_index "transactable_collaborators", ["user_id"], name: "index_transactable_collaborators_on_user_id", using: :btree
 
   create_table "transactable_dimensions_templates", force: :cascade do |t|
-    t.integer "transactable_id",        null: false
-    t.integer "dimensions_template_id", null: false
+    t.integer  "transactable_id",        null: false
+    t.integer  "dimensions_template_id", null: false
+    t.datetime "deleted_at"
+    t.integer  "instance_id"
   end
 
   create_table "transactable_pricings", force: :cascade do |t|
@@ -2623,11 +2641,11 @@ ActiveRecord::Schema.define(version: 20161123110807) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "confirm_reservations",                       default: true
-    t.boolean  "allow_drafts",                               default: false, null: false
     t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
     t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
     t.integer  "minimum_lister_service_fee_cents",           default: 0
     t.boolean  "both_side_confirmation",                     default: false
+    t.boolean  "allow_drafts",                               default: false, null: false
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree

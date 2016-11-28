@@ -9,14 +9,15 @@ class Delivery < ActiveRecord::Base
   belongs_to :sender_address, class_name: OrderAddress
   belongs_to :receiver_address, class_name: OrderAddress
   belongs_to :order, inverse_of: :deliveries
+  belongs_to :dimensions_template
 
   accepts_nested_attributes_for :sender_address, :receiver_address
 
   delegate :city, :postcode, to: :sender_address, prefix: true
   delegate :city, :postcode, to: :receiver_address, prefix: true
 
-  validates :notes, presence: true
   validates :sender_address, :receiver_address, presence: true
+  validates :dimensions_template, presence: true
   validates_with Deliveries.validator
 
   # validate delivery number
@@ -27,7 +28,7 @@ class Delivery < ActiveRecord::Base
   end
 
   def weight
-    order.transactable.dimensions_template.weight
+    dimensions_template.weight
   end
 
   def to_liquid
