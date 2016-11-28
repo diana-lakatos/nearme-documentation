@@ -83,13 +83,13 @@ class Order < ActiveRecord::Base
   scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND (orders.state != 'inactive' OR orders.draft_at IS NOT NULL) AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND (orders.state NOT IN ('inactive', 'cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired') OR (orders.state = 'inactive' AND orders.draft_at IS NOT NULL)))") }
   scope :archived, -> { where("(orders.type != 'RecurringBooking' AND orders.archived_at IS NOT NULL) OR (orders.type = 'RecurringBooking' AND orders.state IN ('rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'))") }
   # we probably want new state - completed
-  scope :reviewable, -> { where.not(archived_at: nil).confirmed }
+  scope :reviewable, -> { where.not(archived_at: nil).where("orders.state ='confirmed' OR orders.type='RecurringBooking'") }
   scope :cancelled, -> { with_state(:cancelled_by_guest, :cancelled_by_host) }
   scope :confirmed, -> { with_state(:confirmed) }
   scope :confirmed_or_unconfirmed, -> { with_state(:confirmed, :unconfirmed) }
   scope :expired, -> { with_state(:expired) }
-  scope :for_listing, -> (listing) { where(transactable_id: listing.id) }
-  scope :last_x_days, -> (days_in_past) { where('DATE(orders.created_at) >= ? ', days_in_past.days.ago) }
+  scope :for_listing, ->(listing) { where(transactable_id: listing.id) }
+  scope :last_x_days, ->(days_in_past) { where('DATE(orders.created_at) >= ? ', days_in_past.days.ago) }
   scope :not_rejected_or_cancelled, -> { without_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :inactive) }
   scope :past, -> { where('ends_at < ?', Time.current) }
   scope :rejected, -> { with_state(:rejected) }
@@ -99,7 +99,7 @@ class Order < ActiveRecord::Base
   scope :with_listing, -> { where.not(transactable_id: nil) }
   scope :reservations, -> { where(type: %w(Reservation DelayedReservation)) }
   scope :offers, -> { where(type: %w(Offer)) }
-  scope :for_lister_or_enquirer, -> (company, user) { where('orders.company_id = ? OR orders.user_id = ?', company.id, user.id) }
+  scope :for_lister_or_enquirer, ->(company, user) { where('orders.company_id = ? OR orders.user_id = ?', company.id, user.id) }
 
   scope :on, lambda { |date|
     joins(:periods)

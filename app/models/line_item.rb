@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class LineItem < ActiveRecord::Base
   include Modelable
 
@@ -30,26 +31,26 @@ class LineItem < ActiveRecord::Base
   scope :host, -> { where(receiver: 'host') }
 
   scope :join_orders, lambda {
-    joins("INNER JOIN orders ON orders.id = line_items.line_itemable_id
-    AND line_items.line_itemable_type IN (\'#{Order::ORDER_TYPES.join('\', \'')}\')")
+    joins("INNER JOIN orders ON (orders.id = line_items.line_itemable_id
+      AND line_items.line_itemable_type IN (\'#{Order::ORDER_TYPES.join('\', \'')}\')) OR
+      (orders.id = (SELECT recurring_booking_periods.order_id FROM recurring_booking_periods WHERE recurring_booking_periods.id = line_items.line_itemable_id AND
+      line_items.line_itemable_type = 'RecurringBookingPeriod'))")
   }
   scope :join_transactables, -> { joins('INNER JOIN transactables ON transactables.id = line_items.line_item_source_id') }
 
-  scope :by_period, lambda  { |start_date, end_date = Time.zone.today.end_of_day|
+  scope :by_period, lambda { |start_date, end_date = Time.zone.today.end_of_day|
     where(created_at: start_date..end_date)
   }
-  scope :by_archived_at, lambda  { |start_date, end_date = Time.zone.today.end_of_day|
+  scope :by_archived_at, lambda { |start_date, end_date = Time.zone.today.end_of_day|
     join_orders.where(['orders.archived_at BETWEEN ? AND ?', start_date, end_date])
   }
 
   # TODO: make sure that for all type of orders line_items.user_id == trasnactables.creator_id
   # and switch to user_id
-  scope :of_lister, -> (lister) { where('transactables.creator_id = ?', lister.id) }
-  scope :of_order_owner, -> (owner) { join_orders.where('orders.user_id = ?', owner.id) }
+  scope :of_lister, ->(lister) { where('transactables.creator_id = ?', lister.id) }
+  scope :of_order_owner, ->(owner) { join_orders.where('orders.user_id = ?', owner.id) }
 
-  def archived_at
-    line_itemable.archived_at
-  end
+  delegate :archived_at, to: :line_itemable
 
   def cart_position
     10
