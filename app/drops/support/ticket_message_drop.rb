@@ -10,9 +10,6 @@ class Support::TicketMessageDrop < BaseDrop
     @message = message.decorate
   end
 
-  # @todo Investigate no longer working / should be removed?
-  delegate :date, to: :message
-
   # @return [String] date/time when this message was created
   def created_at
     I18n.l(message.created_at, format: :short)

@@ -20,6 +20,14 @@ class TransactableCollaboratorDrop < BaseDrop
   #   @return [Integer] Numeric identifier of the transactable being collaborated on
   # @!method user_id
   #   @return [Integer] Numeric identifier of the collaborating user
+  # @!method created_at
+  #   @return [DateTime] when the collaboration was originally initiated (either by the transactable owner
+  #     or the requester)
+  # @!method rejected_by_owner?
+  #   @return [Boolean] whether the collaboration was rejected by the transactable owner
+  # @!method rejected_by_owner_at
+  #   @return [DateTime, nil] when the transactable collaboration was rejected by the transactable
+  #     owner (if that is the case)
   delegate :id, :user, :transactable, :approved_by_owner?, :approved_by_user?,
            :approved_by_user_at, :approved_by_owner_at, :transactable_id, :user_id, :created_at,
            :rejected_by_owner_at, :rejected_by_owner?, to: :source

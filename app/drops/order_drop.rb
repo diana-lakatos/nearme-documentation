@@ -94,11 +94,31 @@ class OrderDrop < BaseDrop
   # @!method transactable_pricing
   #   Transactable pricing object for the order
   #   @return (see Order#transactable_pricing)
-  # @todo Investigate missing line_item_adjustments
-  # @todo Investigate missing shipping_profile
-  # @todo Investigate missing adjustment
-  delegate :id, :user, :company, :number, :line_items, :line_item_adjustments,
-           :shipping_profile, :adjustment, :can_host_cancel?, :can_confirm?, :can_reject?,
+  # @!method inactive?
+  #   @return [Boolean] whether the order is inactive (i.e. the initial state when the user just
+  #     pressed on 'book'/'buy' without actually completing the order)
+  # @!method outbound
+  #   @return [DeliveryDrop] outbound delivery for this order (contains information about the
+  #     outbound delivery of the items - from the buyer to the seller)
+  # @!method inbound
+  #   @return [DeliveryDrop] inbound delivery for this order (contains information about the
+  #     inbound delivery of the items - from the seller to the buyer)
+  # @!method inbound_pickup_date
+  #   @return [String] inbound pickup date as a string (date of pickup for the inbound delivery - from
+  #     the seller to the buyer)
+  # @!method outbound_pickup_date
+  #   @return [String] outbound pickup date as a string (date of pickup for the outbound delivery - from
+  #     the buyer to the seller)
+  # @!method inbound_pickup_address_address
+  #   @return [String] inbound pickup address as a string (pickup address for the inbound delivery - from
+  #     the seller to the buyer)
+  # @!method outbound_return_address_address
+  #   @return [String] outbound return address (return address for the outbound delivery - from the
+  #     buyer to the seller)
+  # @!method quantity
+  #   @return [Integer] quantity for this order
+  delegate :id, :user, :company, :number, :line_items,
+           :can_host_cancel?, :can_confirm?, :can_reject?,
            :paid?, :unconfirmed?, :confirmed?, :inactive?, :manual_payment?, :can_complete_checkout?,
            :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
            :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :rejection_reason,

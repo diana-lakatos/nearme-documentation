@@ -122,12 +122,11 @@ class TransactableDrop < BaseDrop
   #   @return [Integer] Transactable type to which this object belongs
   # @!method tags
   #   @return [Array<TagDrop>] array of tags that this transactable has been tagged with
-  # @todo Investigate/remove deposit_amount_cents
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :creator_id, :administrator, :last_booked_days,
            :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?, :action_type,
            :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
            :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
-           :to_key, :model_name, :deposit_amount_cents, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
+           :to_key, :model_name, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
            :action_free_booking?, :average_rating, :time_based_booking?, :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators,
            :user_messages, :line_item_orders, :state, :created_at, :pending?, :completed?, :transactable_type_id, :tags, to: :source
 

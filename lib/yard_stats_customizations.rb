@@ -3,7 +3,8 @@ class YARD::CLI::Stats
   METHODS_SKIP_FOR_PATHS = [
                              /^ActionTypeDrop/,
                              /LocationDrop#model_name/,
-                             /^LiquidFilters#get_lowest_price_with_options/
+                             /^LiquidFilters#get_lowest_price_with_options/,
+                             /^ReservationRequestDrop/
                            ]
 
   CLASSES_SKIP_FOR_PATHS = [
@@ -80,6 +81,10 @@ class YARD::CLI::Stats
       end
       puts object.path
       last_file = object.file
+    end
+
+    if Dir.exists?('.yardoc')
+      FileUtils.remove_dir('.yardoc', true)
     end
 
     if objects.count == 0
