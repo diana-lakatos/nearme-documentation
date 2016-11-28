@@ -68,6 +68,7 @@ class Order < ActiveRecord::Base
     event :user_cancel              do transition [:inactive, :unconfirmed, :confirmed] => :cancelled_by_guest, if: ->(reservation) { reservation.archived_at.nil? }; end
     event :expire                   do transition unconfirmed: :expired; end
     event :completed                do transition confirmed: :completed; end
+    event :archive                  do transition [:confirmed, :completed] => :archived; end
   end
 
   scope :searchable, -> { without_state(:inactive) }
@@ -86,6 +87,7 @@ class Order < ActiveRecord::Base
   scope :reviewable, -> { where.not(archived_at: nil).where("orders.state ='confirmed' OR orders.type='RecurringBooking'") }
   scope :cancelled, -> { with_state(:cancelled_by_guest, :cancelled_by_host) }
   scope :confirmed, -> { with_state(:confirmed) }
+  scope :confirmed_or_archived, -> { with_state(:confirmed, :archived) }
   scope :confirmed_or_unconfirmed, -> { with_state(:confirmed, :unconfirmed) }
   scope :expired, -> { with_state(:expired) }
   scope :for_listing, ->(listing) { where(transactable_id: listing.id) }

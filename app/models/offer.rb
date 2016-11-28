@@ -15,6 +15,8 @@ class Offer < Order
 
   def complete!
     if can_complete?
+      self.archive!
+
       touch(:archived_at)
     else
       false
