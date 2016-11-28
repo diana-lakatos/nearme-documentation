@@ -42,7 +42,7 @@ class Dashboard::Company::TransactableTypes::TransactablesController < Dashboard
       end
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
-      @global_errors = filter_error_messages(@transactable.errors.full_messages)
+      @global_errors = filter_error_messages(ErrorFilter.new(@transactable.errors).filter.full_messages)
       @photos = @transactable.photos
       @attachments = @transactable.attachments
       render :new

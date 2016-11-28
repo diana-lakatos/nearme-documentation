@@ -9,7 +9,7 @@ class CustomizationDrop < BaseDrop
   # @!method properties
   #   @return [Hash] array of properties for the customization
   # @!method custom_model_type
-  #   @return [CustomModelTypeDrop]
+  #   @return [CustomModelTypeDrop] custom model type to which the customization belongs
   delegate :id, :properties, :custom_model_type, to: :customization
 
   def initialize(customization)

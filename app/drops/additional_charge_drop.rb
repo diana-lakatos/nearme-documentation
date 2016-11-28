@@ -13,7 +13,7 @@ class AdditionalChargeDrop < BaseDrop
   #   additional_charge_type_id
   #   @return [Integer]
   # @!method amount_with_currency
-  #   @return (see AdditionalChargeDecorator#amount_with_currency)
+  #   @return [String] amount with currency and cents (depending on global settings)
   delegate :name, :amount, :additional_charge_type_id, :amount_with_currency, to: :additional_charge
 
   def initialize(additional_charge)

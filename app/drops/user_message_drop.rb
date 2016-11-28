@@ -11,9 +11,9 @@ class UserMessageDrop < BaseDrop
   # @!method thread_context
   #   @return [Object] Conversation context: a listing, a booking, a user etc.
   # @!method recipient_name
-  #   @return (see UserMessageDecorator#recipient_name)
+  #   @return [String] first name of the recipient of the message
   # @!method create_path
-  #   @return (see UserMessageDecorator#create_path)
+  #   @return [String] path to creating a new message in the thread of this message
   delegate :id, :body, :thread_context, :recipient_name, :create_path, to: :user_message
 
   def initialize(user_message)

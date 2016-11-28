@@ -12,11 +12,12 @@ class TransactableTypeDrop < BaseDrop
   #     will have a page separate from the location's
   #   @return (see TransactableType#show_page_enabled)
   # @!method translated_bookable_noun
-  #   @return (see TranslationManager#translated_bookable_noun)
+  #   @return [String] represents the item to be booked (e.g. desk, room etc.)
+  #     taken from translations (e.g. translation key of the form 'transactable_type.desk.name')
   # @!method translation_key_suffix
-  #   @return (see TranslationManager#translation_key_suffix)
+  #   @return [String] translation key suffix that is added to translations specific to this transactable type
   # @!method translation_namespace
-  #   @return (see TranslationManager#translation_namespace)
+  #   @return [String] translation namespace that is a prefix for translation keys specific to this transactable type
   delegate :id, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun,
            :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
            :search_input_name, :search_field_placeholder, :skip_location?, to: :source
@@ -171,6 +172,7 @@ class TransactableTypeDrop < BaseDrop
     @source.custom_attributes
   end
 
+  # @return [Hash{String => CustomAttributeDrop}] custom attributes as a hash
   def custom_attributes_as_hash
     Hash[@source.custom_attributes.map { |ca| [ca.name, ca] }]
   end
@@ -208,6 +210,7 @@ class TransactableTypeDrop < BaseDrop
     routes.dashboard_company_transactable_type_transactables_path(@source)
   end
 
+  # @return [String] path to the space wizard for listing an initial item of this type
   def space_wizard_path
     routes.transactable_type_space_wizard_list_path(@source)
   end

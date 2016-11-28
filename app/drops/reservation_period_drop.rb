@@ -4,9 +4,10 @@ class ReservationPeriodDrop < BaseDrop
   attr_reader :reservation_period
 
   # @!method description
-  #   @return (see ReservationPeriod#description)
+  #   @return [String] description for the reservation period
   # @!method hours
-  #   @return (see ReservationPeriod#hours)
+  #   @return [Float] the number of hours reserved on this date; if no hourly time specified,
+  #     it is assumed that the reservation is for all open hours of that booking.
   delegate :description, :hours, to: :reservation_period
 
   def initialize(reservation_period)

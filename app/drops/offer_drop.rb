@@ -12,6 +12,7 @@ class OfferDrop < OrderDrop
     ''
   end
 
+  # @return [Boolean] whether the offer is unconfirmed or draft (inactive status)
   def unconfirmed_or_draft?
     @offer.unconfirmed? || @offer.inactive?
   end
@@ -34,10 +35,12 @@ class OfferDrop < OrderDrop
     render_money(@order.recurring_booking_periods.paid.map(&:total_amount).sum)
   end
 
+  # @return [String] url to the offer in the user's dashboard
   def offer_url
     routes.dashboard_order_path(@offer)
   end
 
+  # @return [String] url to edit the offer in the user's dashboard
   def edit_offer_url
     routes.edit_dashboard_order_path(@offer)
   end

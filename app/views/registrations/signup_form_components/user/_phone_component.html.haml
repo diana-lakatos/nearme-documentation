@@ -1,0 +1,11 @@
+%div{'data-phone-fields-container' => true}
+  = form.input :country_name, as: :hidden, input_html: { value: user_country_default(@country) }
+  - calling_code = '&nbsp;'
+  - calling_code = "+#{Country.find_by(name: user_country_default(@country)).calling_code}" if user_country_default(@country)
+  .mobile-holder.input-icon-holder
+    .country-calling-code
+
+      = calling_code
+    = form.input :mobile_number, placeholder: t('simple_form.labels.user.mobile_number', default: 'Mobile number'),
+      label: false, input_html: { tabindex: tab_index }
+    %span.ico-phone

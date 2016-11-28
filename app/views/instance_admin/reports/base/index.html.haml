@@ -22,7 +22,7 @@
                     %a{data: { 'item-type-id' => transactable_type.id}}
                       = transactable_type.translated_bookable_noun
           .filter.period
-            = render :partial => 'instance_admin/shared/admin_searchable_dates'
+            = render :partial => 'instance_admin/shared/admin_searchable_dates', locals: { param_name: 'date' }
 
           .filter.search
             %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}

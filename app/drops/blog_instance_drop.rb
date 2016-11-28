@@ -29,8 +29,8 @@ class BlogInstanceDrop < BaseDrop
     header.present? ? header.url : nil
   end
 
-  # is the header present
-  # @return [Boolean]
+  # @!method header_present?
+  #   @return [Boolean] whether the header is present
   delegate :present?, to: :header, prefix: true
 
   # check if header icon is present
@@ -75,7 +75,7 @@ class BlogInstanceDrop < BaseDrop
     @blog.facebook_app_id
   end
 
-  # url for blog
-  # @return [String]
+  # @!method blog_posts_path
+  #   @return [String] url for blog
   delegate :blog_posts_path, to: :routes
 end

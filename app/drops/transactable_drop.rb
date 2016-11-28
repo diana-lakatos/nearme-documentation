@@ -31,7 +31,7 @@ class TransactableDrop < BaseDrop
   # @!method administrator
   #   @return [UserDrop] Administrator user of the listing
   # @!method last_booked_days
-  #   @return (see Transactable#last_booked_days)
+  #   @return [Integer, nil] days since the last order for the transactable or nil if no orders
   # @!method lowest_price
   #   @return [Transactable::PricingDrop] object corresponding to the lowest available pricing for this transactable
   # @!method company
@@ -44,18 +44,18 @@ class TransactableDrop < BaseDrop
   # @!method administrator_id
   #   @return [Integer] Numeric identifier for the administrator of this listing
   # @!method has_photos?
-  #   @return (see Transactable#has_photos?)
+  #   @return [Boolean] whether there are any photos for this listing
   # @!method book_it_out_available?
   #   @return [Boolean] whether the "book it out" action is available for this listing
   # @!method action_type
   #   Action type available for this transactable
   #   @return [Transactable::ActionTypeDrop]
   # @!method currency
-  #   @return (see Transactable#currency)
+  #   @return [String] currency used for this transactable's pricings
   # @!method exclusive_price_available?
-  #   @return (see Transactable::Pricing#exclusive_price_available?)
+  #   @return [Boolean] whether an exclusive price has been defined for this listing
   # @!method only_exclusive_price_available?
-  #   @return (see Transactable::Pricing#only_exclusive_price_available?)
+  #   @return [Boolean] whether the exclusive price defined for this listing is the only price defined for this listing
   # @!method capacity
   #   Capacity for the transactable (e.g. '7 seats, 10 standing')
   #   @return (see Transactable#capacity)
@@ -67,9 +67,9 @@ class TransactableDrop < BaseDrop
   # @!method attachments
   #   @return [Array<CkeditorAssetDrop>] Seller attachments for this transactable (documents available to purchasers/collaborators/etc.)
   # @!method express_checkout_payment?
-  #   @return (see Transactable#express_checkout_payment?)
+  #   @return [Boolean] whether PayPal Express Checkout is the marketplace's payment method
   # @!method overnight_booking?
-  #   @return (see Transactable::TimeBasedBooking#overnight_booking?)
+  #   @return [Boolean] whether overnight booking is enabled for this action type
   # @!method is_trusted?
   #   @return [Boolean] whether the object is trusted (approved ApprovalRequest objects for this object, creator, company)
   # @!method lowest_full_price
@@ -93,7 +93,7 @@ class TransactableDrop < BaseDrop
   # @!method availability_exceptions
   #   @return [Array<ScheduleExceptionRuleDrop>] array of schedule exception rules for future dates
   # @!method action_free_booking?
-  #   @return (see Transactable#action_free_booking?)
+  #   @return [Boolean] whether free booking is possible for the transactable
   # @!method average_rating
   #   Average rating from users for this transactable
   #   @return (see Transactable#average_rating)
@@ -269,6 +269,8 @@ class TransactableDrop < BaseDrop
     routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, status: 'in progress', anchor: "transactable_#{@source.id}", token_key => @source.administrator.try(:temporary_token))
   end
 
+  # @return [String] path to the dashboard area for managing listings, "in progress" tab selected; without authentication token
+  # @todo Path/url inconsistency
   def in_progress_index_url_without_token
     routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, status: 'in progress', anchor: "transactable_#{@source.id}")
   end
@@ -560,6 +562,7 @@ class TransactableDrop < BaseDrop
     (unavailable_range_periods + rented_range_periods).uniq.to_json
   end
 
+  # @return [String] cover photo url for the transactable
   def cover_photo_url
     @source.cover_photo&.image&.url(:golden)
   end

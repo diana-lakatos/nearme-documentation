@@ -10,17 +10,15 @@ class Transactable::Pricing < ActiveRecord::Base
 
   inherits_columns_from_association([:unit, :number_of_units], :transactable_type_pricing, :before_validation)
 
-  monetize :price_cents, with_model_currency: :currency, allow_nil: true, subunit_numericality: {
-    greater_than_or_equal_to: :min_price,
-    less_than_or_equal_to: :max_price,
-    if: :monetize_price_cents?
-  }
+  monetize :price_cents, with_model_currency: :currency, allow_nil: true
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true,
                                    subunit_numericality: {
                                      greater_than_or_equal_to: :min_price,
                                      less_than: :max_price,
                                      if: :has_exclusive_price
                                    }
+
+  validates_with MinMaxPriceValidator
 
   delegate :allow_book_it_out_discount, :allow_exclusive_price, :allow_nil_price_cents, to: :transactable_type_pricing, allow_nil: true
   delegate :transactable, to: :action, allow_nil: true

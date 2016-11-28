@@ -3,8 +3,13 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
   defaults resource_class: PaymentTransfer, collection_name: 'transfers', instance_name: 'transfer'
 
   def index
-    transfers_scope = PaymentTransfer.includes(:payout_attempts).order('created_at DESC')
-    @payment_transfers = PaymentTransferDecorator.decorate_collection(transfers_scope.paginate(page: params[:page]))
+    respond_to do |format|
+      format.html do
+        @payment_transfers = PaymentTransferDecorator.decorate_collection(get_transfers_from_params.paginate(page: params[:page]))
+      end
+
+      format.csv { send_data generate_csv(PaymentTransferDecorator.decorate_collection(get_transfers_from_params)) }
+    end
   end
 
   def not_failed
@@ -55,6 +60,14 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
 
   protected
 
+  def get_transfers_from_params
+    transfers_scope = PaymentTransfer.includes(:payout_attempts).order('created_at DESC')
+    scope_search_form = InstanceAdmin::PaymentTransferSearchForm.new
+    scope_search_form.validate(params)
+
+    SearchService.new(transfers_scope).search(scope_search_form.to_search_params)
+  end
+
   def collection_allowed_scopes
     %w(pending transferred)
   end
@@ -62,4 +75,17 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
   def collection
     @transfers ||= end_of_association_chain.order('created_at DESC').paginate(page: params[:page])
   end
+
+  private
+
+  def generate_csv(transfers)
+    CSV.generate do |csv|
+      csv << PaymentTransferDecorator.column_headings_for_report
+
+      transfers.each do |resource|
+        csv << resource.column_values_for_report
+      end
+    end
+  end
+
 end

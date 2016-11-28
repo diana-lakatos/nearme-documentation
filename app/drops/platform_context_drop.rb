@@ -40,15 +40,17 @@ class PlatformContextDrop < BaseDrop
   #   @return (see Instance#lessor)
   #   @deprecated use {TransactableTypeDrop#lessor} instead
   # @!method lessors
-  #   @return (see PlatformContextDecorator#lessors)
+  #   @return [String] plural of {Instance#lessor}
+  #   @deprecated use {TransactableTypeDrop#lessor} instead
   # @!method lessee
   #   Lessee name for this marketplace
   #   @return (see Instance#lessee)
   #   @deprecated use {TransactableTypeDrop#lessee} instead
   # @!method lessees
-  #   @return (see PlatformContextDecorator#lessees)
+  #   @return [String] plural of {Instance#lessee}
+  #   @deprecated use {TransactableTypeDrop#lessee} instead
   # @!method search_by_keyword_placeholder
-  #   @return (see PlatformContextDecorator#search_by_keyword_placeholder)
+  #   @return [String] placeholder for the search box on the homepage
   # @!method address
   #   Address as set for the current theme
   #   @return (see Theme#address)
@@ -56,7 +58,7 @@ class PlatformContextDrop < BaseDrop
   #   Phone number as set for the current theme
   #   @return (see Theme#phone_number)
   # @!method phone_number_noformat
-  #   @return (see Theme#phone_number_noformat)
+  #   @return [String] phone number with all non-digit characters stripped
   # @!method site_name
   #   Site name as set for the current theme
   #   @return (see Theme#site_name)
@@ -74,22 +76,22 @@ class PlatformContextDrop < BaseDrop
   #   Tagline as set in the current theme
   #   @return (see Theme#tagline)
   # @!method is_company_theme?
-  #   @return (see Theme#is_company_theme?)
+  #   @return [Boolean] whether the owner object of the theme is a {CompanyDrop} object
   # @!method call_to_action
   #   Call to action text as set for the current theme
   #   @return (see Theme#call_to_action)
   # @!method bookable?
-  #   @return (see Instance#bookable?)
+  #   @return [Boolean] whether bookable/purchaseable {TransactableTypeDrop} objects have been defined for this instance
   # @!method transactable_types
   #   @return [Array<TransactableTypeDrop>] TransactableType objects defined for this instance
   # @!method action_rfq?
-  #   @return (see Instance#action_rfq?)
+  #   @return [Boolean] whether any of the action types have request for quotation enabled
   # @!method bookable_nouns
-  #   @return (see PlatformContextDecorator#bookable_nouns)
+  #   @return [String] sentence containing all the bookable nouns available on this platform
   # @!method bookable_nouns_plural
-  #   @return (see PlatformContextDecorator#bookable_nouns_plural)
+  #   @return [String] sentence containing all the bookable nouns (pluralized) available on this platform
   # @!method facebook_key
-  #   @return (see PlatformContextDecorator#facebook_key)
+  #   @return [String] Facebook consumer key for this instance
   # @!method service_types
   #   @return [Array<TransactableTypeDrop>] array of transactable types for this marketplace;
   #     added for reverse compatibility
@@ -97,9 +99,9 @@ class PlatformContextDrop < BaseDrop
   #   What set of icons to use for wishlists
   #   @return (see Instance#wish_lists_icon_set)
   # @!method seller_attachments_enabled?
-  #   @return (see Instance#seller_attachments_enabled)
+  #   @return [Boolean] whether seller attachments are enabled for this marketplace
   # @!method wish_lists_enabled?
-  #   @return (see Instance#wish_lists_enabled)
+  #   @return [Boolean] whether wish lists have been enabled for the marketplace
   # @!method webhook_token
   #   @return [String] Webhook token as a string for this marketplace
   # @!method instance
@@ -239,11 +241,17 @@ class PlatformContextDrop < BaseDrop
     @instance.split_registration?
   end
 
+  # The method sets the variable @render_content_outside_container to true to affect subsequent rendering
+  # (render the contents of the page outside the main container)
+  # @return [String] blank string
   def set_render_content_outside_container
     @context.registers[:action_view].instance_variable_set('@render_content_outside_container', true)
     '' # return empty string so nothing is displayed
   end
 
+  # The method sets the variable @theme_name to a blank string affecting subsequent rendering
+  # (theme name is used as a class for the body element)
+  # @return [String] blank string
   def set_blank_theme_name
     @context.registers[:action_view].instance_variable_set('@theme_name', '')
     '' # return empty string so nothing is displayed
