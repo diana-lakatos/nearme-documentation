@@ -36,6 +36,7 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
   def create
     @custom_attribute = @target.custom_attributes.build(custom_attributes_params)
     if @custom_attribute.save
+      FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).go!
       flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.created'
       redirect_to redirection_path
     else
@@ -48,6 +49,7 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
     @custom_attribute = @target.custom_attributes.find(params[:id])
     @custom_attribute.attributes = custom_attributes_params
     if @custom_attribute.save
+      FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).go!
       flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.updated'
       redirect_to redirection_path
     else

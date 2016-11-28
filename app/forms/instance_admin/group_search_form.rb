@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::GroupSearchForm < SearchForm
   property :q, virtual: true
   property :date, virtual: true

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # AWS Route 53 Hosted Zone Resource Record
 class ResourceRecordForm < Form
   attr_accessor :type, :name, :hosted_zone_name, :hosted_zone_id, :value, :ttl, :balancer
@@ -46,7 +47,7 @@ class ResourceRecordForm < Form
   end
 
   def hosted_zone
-    HostedZoneRepository.find_by_name(hosted_zone_name)
+    HostedZoneRepository.find_by(name: hosted_zone_name)
   end
 
   def add_record

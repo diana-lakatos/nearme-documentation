@@ -8,7 +8,6 @@ class InstanceAdmin::Manage::AdminsController < InstanceAdmin::Manage::BaseContr
 
   def create
     @user = User.new(user_params)
-    @user.skip_password = true
     if @user.save
       InstanceAdmin.create(user_id: @user.id)
       WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedByAdmin, @user.id, current_user.id)

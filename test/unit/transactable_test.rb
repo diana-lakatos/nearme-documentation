@@ -32,13 +32,6 @@ class TransactableTest < ActiveSupport::TestCase
     @manual_payment_method = FactoryGirl.create(:manual_payment_gateway).payment_methods.first
   end
 
-  context 'validation' do
-    should 'not be valid if quantity is 0' do
-      @listing.quantity = 0
-      refute @listing.valid?
-    end
-  end
-
   context 'is trusted' do
     setup do
       @transactable = FactoryGirl.create(:transactable)

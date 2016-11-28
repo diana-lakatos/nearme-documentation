@@ -6,7 +6,7 @@ module Constraints
     end
 
     def matches?(req)
-      @default || (req.headers['Accept'].present? && req.headers['Accept'].include?("application/vnd.nearme.v#{@version}+json"))
+      @default || req.headers['Accept']&.include?("application/vnd.nearme.v#{@version}+json")
     end
   end
 end

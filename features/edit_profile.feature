@@ -11,6 +11,7 @@ Feature: A user can edit their settings
   Scenario: A user can successfully edit his settings
     Given a user_custom_attribute exists with name: "job_title", attribute_type: "string", html_tag: "input", label: "Job title"
     Given a user_custom_attribute exists with name: "biography", attribute_type: "string", html_tag: "textarea", label: "Biography"
+    Given a form configuration with custom attributes is set
     Given I go to the account settings page
     And I fill in "First name" with "Keith"
     And I fill in "Job title" with "My job"

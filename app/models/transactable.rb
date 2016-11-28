@@ -2,6 +2,9 @@ require_dependency 'line_item/transactable'
 
 # frozen_string_literal: true
 class Transactable < ActiveRecord::Base
+  include CustomImagesOwnerable
+  include CustomizationsOwnerable
+  include CategoriesOwnerable
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -34,8 +37,6 @@ class Transactable < ActiveRecord::Base
 
   include CreationFilter
 
-  has_many :customizations, as: :customizable
-  has_many :custom_images, through: :customizations
   has_many :additional_charge_types, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
@@ -244,14 +245,14 @@ class Transactable < ActiveRecord::Base
   validates_with CustomValidators
 
   validates :currency, presence: true, allow_nil: false, currency: true
-  validates :transactable_type, :action_type, presence: true
+  #validates :transactable_type, :action_type, presence: true
   validates :location, presence: true, unless: ->(record) { record.location_not_required }
-  validates :photos, length: { minimum: 1 }, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
-  validates :quantity, presence: true, numericality: { greater_than: 0 }, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
+  # validates :photos, length: { minimum: 1 }, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
+  # validates :quantity, presence: true, numericality: { greater_than: 0 }, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
 
-  validates :topics, length: { minimum: 1 }, if: ->(record) { record.topics_required && !record.draft.present? }
+  # validates :topics, length: { minimum: 1 }, if: ->(record) { record.topics_required && !record.draft.present? }
 
-  validates_associated :approval_requests, :action_type
+  # validates_associated :approval_requests, :action_type
   validates :name, length: { maximum: 255 }, allow_blank: true
 
   after_save :trigger_workflow_alert_for_added_collaborators, unless: ->(record) { record.draft? }

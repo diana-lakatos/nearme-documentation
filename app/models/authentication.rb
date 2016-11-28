@@ -56,7 +56,7 @@ class Authentication < ActiveRecord::Base
 
   def can_be_deleted?
     # we can delete authentication if user has other option to log in, i.e. has set password or other authentications
-    user.has_password? || user.authentications.size > 1
+    user.encrypted_password.present? || user.authentications.size > 1
   end
 
   def expire_token!

@@ -39,7 +39,7 @@ class Listings::Support::TicketsController < ApplicationController
   private
 
   def force_log_in
-    redirect_to new_user_registration_path(return_to: @listing.try(:decorate).try(:show_path, quote_request: @listing.id)) unless current_user.present?
+    redirect_to new_api_user_path(return_to: @listing.try(:decorate).try(:show_path, quote_request: @listing.id)) unless current_user.present?
   end
 
   def find_listing

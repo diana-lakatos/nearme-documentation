@@ -14,7 +14,6 @@ module Api
       @user.custom_validation = true
 
       if @user.save
-        ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role
         when 'default'
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)

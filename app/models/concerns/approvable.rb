@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # contains common methods for objects that use Approval Requests
 module Approvable
   extend ActiveSupport::Concern

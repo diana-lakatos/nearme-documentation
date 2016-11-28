@@ -13,7 +13,7 @@
     .row-fluid
       %h2 When you list with DesksNear.Me you are connecting with thousands of trusted legal professionals looking for your space.
       - if !user_signed_in?
-        = link_to '#', :class => 'btn btn-large btn-red', :title => 'List your desk', :data => { modal: true, href: new_user_registration_url(:return_to => new_space_wizard_url), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
+        = link_to '#', :class => 'btn btn-large btn-red', :title => 'List your desk', :data => { modal: true, href: new_api_user_url(:return_to => new_space_wizard_url), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
           List your desk
       - else
         = link_to new_space_wizard_url, :class => 'btn btn-large btn-red', :title => 'List your desk' do

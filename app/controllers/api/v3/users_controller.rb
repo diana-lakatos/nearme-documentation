@@ -15,7 +15,6 @@ module Api
 
       if @user.save
         sign_in(@user)
-        ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role
         when 'default'
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)

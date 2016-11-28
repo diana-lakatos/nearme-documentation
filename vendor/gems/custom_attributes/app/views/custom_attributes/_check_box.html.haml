@@ -1,1 +1,1 @@
-= f.input :"#{attribute.name}", attribute.options.merge(as: :boolean, input_html: { value: f.object[attribute.name] })
+= f.input :"#{attribute.name}", attribute.options.merge(as: :boolean, input_html: { value: f.object.try(:[], attribute.name) || f.object.send(attribute.name) })

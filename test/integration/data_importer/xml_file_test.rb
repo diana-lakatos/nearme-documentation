@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require 'helpers/gmaps_fake'
 
@@ -33,7 +34,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
       should 'should have the right amount of companies' do
         assert_equal ['1'], User.find_by(email: 'user1@example.com').companies.pluck(:external_id).sort
-        assert_equal %w(1 2), User.find_by(email: 'user2@example.com').companies.pluck(:external_id).sort
+        assert_equal %w(2), User.find_by(email: 'user2@example.com').companies.pluck(:external_id).sort
       end
 
       context '#companies' do

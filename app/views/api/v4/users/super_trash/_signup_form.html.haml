@@ -1,0 +1,30 @@
+.signup-no-provider{:style => ('display: none' if user_auth_provider)}
+
+  = render 'authentications/services'
+
+  = render 'api/v4/users/super_trash/signup_form_components', resource: @user_signup, form_classes: "", hide_password: false
+
+- if !user_auth_provider
+  .text-center.already-a-user= link_to(t('sign_up_form.buttons.already_user'), '#', data: { modal: true, href: new_user_session_url(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } )
+
+- if user_auth_provider
+  .signup-provider
+    .inner-box.connected-provider
+      - if request.xhr?
+        = link_to t('sign_up_form.buttons.close'), clear_authentications_url, :method => :post, :remote => true, :class => "close-button"
+      .avatar
+        = image_tag user_auth_provider.avatar_url
+      %h3= user_auth_provider.name
+      %p= user_auth_provider.connection_description
+
+    %p.intro
+      = t 'sign_up_form.more_details'
+
+    = render 'api/v4/users/super_trash/signup_form_components', resource: @user_signup, form_classes: "", hide_password: true
+
+- if request.xhr?
+  :javascript
+    $(function() {
+      $(document).trigger('init:signupform.nearme');
+      $(document).trigger('init:custominputs.nearme');
+    });

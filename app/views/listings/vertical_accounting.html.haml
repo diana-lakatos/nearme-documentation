@@ -13,7 +13,7 @@
     .row-fluid
       %h2 Connect with thousands of trusted accounting professionals looking for your space.
       - if !user_signed_in?
-        = link_to '#', :class => 'btn btn-large btn-orange', :title => 'List your desk', :data => { modal: true, href: new_user_registration_url(:return_to => new_space_wizard_url), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
+        = link_to '#', :class => 'btn btn-large btn-orange', :title => 'List your desk', :data => { modal: true, href: new_api_user_url(:return_to => new_space_wizard_url), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
           List your desk
       - else
         = link_to new_space_wizard_url, :class => 'btn btn-large btn-orange', :title => 'List your desk' do

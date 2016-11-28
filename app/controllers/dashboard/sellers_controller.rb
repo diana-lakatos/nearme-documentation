@@ -2,23 +2,26 @@ class Dashboard::SellersController < Dashboard::BaseController
   before_filter :set_seller_profile
   before_filter :set_form_components, only: [:edit, :update]
   skip_before_filter :force_fill_in_wizard_form
+  before_action :build_user_update_profile_form, only: [:edit, :update]
 
   def edit
+    @user_update_profile_form.prepopulate!
   end
 
   def update
-    current_user.assign_attributes(user_params)
-    if current_user.save
+    if @user_update_profile_form.validate(params[:user] || params[:form] || {})
+      @user_update_profile_form.save
+      current_user.reload.seller_profile.mark_as_onboarded!
       flash.now[:success] = t('flash_messages.dashboard.seller.updated')
       if session[:after_onboarding_path].present?
         redirect_to session[:after_onboarding_path]
         session[:after_onboarding_path] = nil
       else
-        render :edit
+        redirect_to edit_dashboard_seller_path
       end
     else
-      flash.now[:error] = current_user.errors.full_messages.join("\n")
-      render :edit
+      flash.now[:error] = @user_update_profile_form.pretty_errors_string
+      render :edit, layout: dashboard_or_community_layout
     end
   end
 
@@ -35,5 +38,10 @@ class Dashboard::SellersController < Dashboard::BaseController
 
   def user_params
     params.require(:user).permit(secured_params.user)
+  end
+
+  def build_user_update_profile_form
+    @form_configuration = FormConfiguration.find_by(id: params[:form_configuration_id])
+    @user_update_profile_form = @form_configuration&.build(current_user) || FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'Enquirer Update').first.build(current_user)
   end
 end

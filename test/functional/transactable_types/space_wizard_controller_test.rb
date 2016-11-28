@@ -192,7 +192,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     should 'redirect to registration path if not logged in' do
       sign_out @user
       get :new, { transactable_type_id: @transactable_type.id }
-      assert_redirected_to new_user_registration_url(wizard: 'space', return_to: transactable_type_space_wizard_list_url(@transactable_type))
+      assert_redirected_to new_api_user_url(return_to: transactable_type_space_wizard_list_url(@transactable_type))
     end
   end
 

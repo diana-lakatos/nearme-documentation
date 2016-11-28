@@ -23,6 +23,7 @@ gem 'image_optim_pack'
 gem 'devise', '4.2.0'
 gem 'devise-token_authenticatable'
 gem 'rack-throttle'
+gem 'responders'
 
 gem 'rack-reverse-proxy', require: 'rack/reverse_proxy', git: 'git@github.com:mdyd-dev/rack-reverse-proxy.git'
 
@@ -49,7 +50,8 @@ gem 'instagram', require: false
 gem 'github_api', require: false
 gem 'google_plus', require: false
 
-gem 'reform', '~> 2.1.0', require: false
+gem 'reform'
+gem 'reform-rails'
 
 gem 'fog'
 gem 'geocoder'

@@ -1,0 +1,17 @@
+
+
+%h4.control-label
+  = t(:title, scope: [:pricing, :unavailability])
+
+%p
+  = t(:info, scope: [:pricing, :unavailability])
+
+= f.input :unavailable_period_enabled, as: :switch if f.object.respond_to?(:unavailable_period_enabled)
+
+%div.schedule-exception-rules-container
+  = f.simple_fields_for :schedule_exception_rules do |schedule_exception_rule_form|
+    - Time.use_zone((f.object.try(:parent) || f.object.try(:scheduable).try(:transactable)).try(:timezone) || current_instance.time_zone) do
+      = render 'schedules/schedule_exception_rule_fields', f: schedule_exception_rule_form
+  .add-link
+    = link_to_add_association f, :schedule_exception_rules, force_non_association_create: true, partial: 'schedules/schedule_exception_rule_fields', class: 'btn btn-primary btn-sm', data: { association_insertion_method: :before } do
+      = t(:add_another, scope: [:pricing, :unavailability])

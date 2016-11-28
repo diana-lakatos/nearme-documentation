@@ -20,7 +20,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     if current_user
       redirect_to transactable_type_space_wizard_list_path(@transactable_type)
     else
-      redirect_to new_user_registration_url(wizard: 'space', return_to: transactable_type_space_wizard_list_url(@transactable_type))
+      redirect_to new_api_user_path(return_to: transactable_type_space_wizard_list_url(@transactable_type))
     end
   end
 

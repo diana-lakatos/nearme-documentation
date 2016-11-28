@@ -1,4 +1,4 @@
-- if only_inputs.empty? || f.object.default_profile.try(:instance_profile_type).try(:custom_model_types).try(:find_by, name: only_inputs.first.to_s.split(" - ")[1])
+- if only_inputs.empty? || f.object.try(:default_profile).try(:instance_profile_type).try(:custom_model_types).try(:find_by, name: only_inputs.first.to_s.split(" - ")[1])
   - custom_model = f.object.default_profile.instance_profile_type.custom_model_types.find_by(name: only_inputs.first.to_s.split(" - ")[1])
   = f.simple_fields_for :default_profile do |profile_form|
     = render 'registrations/attributes/custom_model_fields', custom_model: custom_model, f: profile_form

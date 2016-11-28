@@ -36,9 +36,31 @@ Given /^UoT instance is loaded$/ do
   setup.set_theme_options
   setup.create_content_holders
   setup.create_views
+
   # setup.create_translations
   # setup.create_workflow_alerts
+  FormComponentToFormConfiguration.new(Instance.where(id: @instance.id)).go!
+  enquirer = FactoryGirl.create(:enquirer)
+  store_model('enquirer', 'enquirer', enquirer)
   setup.expire_cache
+end
+
+Given /^someone created unconfirmed_offer for registered_lister$/ do
+  enquirer = model!('enquirer')
+  enquirer.buyer_profile.category_ids = [Category.find_by(name: 'Industry').children.first.id,
+                                         Category.find_by(name: 'Area Of Expertise').children.first.id]
+  enquirer.save!
+  FactoryGirl.create(:company, creator: enquirer)
+  offer = FactoryGirl.create(:unconfirmed_offer, user: @instance.buyer_profile_type.users.first)
+  lister = offer.transactable.creator
+  company = lister.companies.build(name: "Test Company", completed_at: Time.current)
+  lister.get_seller_profile
+  lister.seller_profile.mark_as_onboarded!
+  lister.save!
+  location = FactoryGirl.create(:location, company: company)
+  offer.transactable.update_attributes(location: location, company: company)
+  offer.update_attribute(:company, location.company)
+  store_model('registered_lister', 'registered_lister', offer.transactable.creator)
 end
 
 When /^I fill all required buyer profile information$/ do

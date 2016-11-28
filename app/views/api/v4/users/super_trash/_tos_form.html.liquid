@@ -1,0 +1,11 @@
+<p class="notice legal controlgroup {% if error != blank %}error{% endif %}">
+  <label class="checkbox control" for="form_accept_terms_of_service">
+    <input type="checkbox" name="form[accept_terms_of_service]" id="form_accept_terms_of_service" value="1" class="input-block-level" tabindex="4" {%if checked %}checked="checked"{%endif%}>
+    {{ 'registrations.accept_terms_of_service' | translate }}
+  </label>
+</p>
+{% if error != blank %}
+  <p class="error-block">
+    {{ error }}
+  </p>
+{% endif %}

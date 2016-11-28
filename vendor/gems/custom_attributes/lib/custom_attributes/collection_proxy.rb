@@ -50,6 +50,10 @@ module CustomAttributes
       false
     end
 
+    def save
+      true
+    end
+
     def update_hash(hash)
       @hash = hash
     end

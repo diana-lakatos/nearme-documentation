@@ -182,6 +182,7 @@ class InstanceFactory
     instance.locales.create! code: instance.primary_locale, primary: true
 
     WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, instance.id, user.id, @password)
+    FormComponentToFormConfiguration.new(Instance.where(id: instance.id)).go!
     instance
   end
 end

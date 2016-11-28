@@ -30,7 +30,7 @@ class CustomImage < ActiveRecord::Base
                   when 'CustomModelType'
                     uploader_id_from_owner(owner.customizable, owner.customizable_type)
                   else
-                    raise NotImplmplementedError
+                    raise NotImplementedError
                   end)
   end
 
@@ -41,7 +41,7 @@ class CustomImage < ActiveRecord::Base
     when 'TransactableType', 'Transactable'
       object.creator_id
     else
-      raise NotImplmplementedError
+      raise NotImplementedError, "Unknown owner: #{owner.class.name}"
     end
   end
 end

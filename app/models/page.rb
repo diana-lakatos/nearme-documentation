@@ -33,6 +33,8 @@ class Page < ActiveRecord::Base
 
   has_many :data_sources, as: :data_sourcable
   has_many :page_data_source_contents, dependent: :destroy
+  has_many :page_forms
+  has_many :form_configurations, through: :page_forms
 
   def to_liquid
     @page_drop ||= PageDrop.new(self)
@@ -67,6 +69,12 @@ class Page < ActiveRecord::Base
 
   def should_generate_new_friendly_id?
     !slug.present?
+  end
+
+  def forms_hash
+    @forms_hash ||= form_configurations.each_with_object({}) do |form, hash|
+      hash[form.name] = form
+    end
   end
 
   def slug_candidates

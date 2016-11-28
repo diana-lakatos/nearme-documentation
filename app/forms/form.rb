@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Form
   extend ActiveModel::Naming
   include ActiveModel::Conversion
@@ -9,7 +10,7 @@ class Form
   end
 
   def process
-    fail 'Implement in the subclass'
+    raise 'Implement in the subclass'
   end
 
   def store_attributes(attribs)

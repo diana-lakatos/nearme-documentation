@@ -3,7 +3,7 @@ module TagListHelper
     {
       "tags": {
         url: user_tags_url(current_user),
-        prepopulate: object.tags.as_json
+        prepopulate: object.respond_to?(:model) ? object.model.tags.as_json : object.tags.as_json
       }
     }
   end

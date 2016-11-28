@@ -157,7 +157,7 @@ class Listings::ReservationsController < ApplicationController
   def require_login_for_reservation
     unless user_signed_in?
       store_reservation_request
-      redirect_to new_user_registration_path(return_to: @listing.try(:decorate).try(:show_path, restore_reservations: @listing.id))
+      redirect_to new_api_user_path(return_to: @listing.try(:decorate).try(:show_path, restore_reservations: @listing.id))
     end
   end
 

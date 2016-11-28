@@ -109,7 +109,7 @@ module ApplicationHelper
     options[:rel] = nil if secure_links
     constraint.merge!(secured_constraint) if secure_links
     options[:data] ||= {}
-    options[:data][:href] = new_user_registration_url(constraint)
+    options[:data][:href] = new_api_user_path(constraint)
     link_to('#', options, &block)
   end
 

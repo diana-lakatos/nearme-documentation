@@ -151,7 +151,7 @@ class AuthenticationsController < ApplicationController
 
   def failed_to_create_new_user
     session[:omniauth] = @omniauth.try(:except, 'extra')
-    redirect_to new_user_registration_url(wizard: wizard_id, role: @role)
+    redirect_to new_api_user_path(wizard: wizard_id, role: @role)
   end
 
   private

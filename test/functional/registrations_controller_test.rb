@@ -13,25 +13,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       end
     end
 
-    context 'force accepting ToS' do
-      setup do
-        PlatformContext.current.instance.update_attribute(:force_accepting_tos, true)
-      end
-
-      should 'not sign up without accepting terms if required' do
-        assert_no_difference('User.count') do
-          post :create, { user: user_attributes }
-        end
-        assert_select 'p.error-block', 'must be accepted'
-      end
-
-      should 'sign up after accepting ToS' do
-        assert_difference('User.count') do
-          post :create, { user: user_attributes.merge(accept_terms_of_service: '1') }
-        end
-      end
-    end
-
     should 'show profile' do
       sign_in @user
 
@@ -93,7 +74,7 @@ class RegistrationsControllerTest < ActionController::TestCase
 
   context 'verify' do
     should 'verify user if token and id are correct' do
-      get :verify, { id: @user.id, token: @user.email_verification_token }
+      get :verify, { id: @user.id, token: UserVerificationForm.new(@user).email_verification_token }
       @user.reload
       @controller.current_user.id == @user.id
       assert @user.verified_at
@@ -103,19 +84,19 @@ class RegistrationsControllerTest < ActionController::TestCase
       @company = FactoryGirl.create(:company, creator: @user)
       @location = FactoryGirl.create(:location, company: @company)
       FactoryGirl.create(:transactable, location: @location)
-      get :verify, { id: @user.id, token: @user.email_verification_token }
+      get :verify, { id: @user.id, token: UserVerificationForm.new(@user).email_verification_token }
       assert_redirected_to dashboard_path
     end
 
     should 'redirect verified user without listing to settings' do
-      get :verify, { id: @user.id, token: @user.email_verification_token }
+      get :verify, { id: @user.id, token: UserVerificationForm.new(@user).email_verification_token }
       assert_redirected_to edit_user_registration_path
     end
 
     should 'handle situation when user is verified' do
       @user.verified_at = Time.zone.now
       @user.save!
-      get :verify, { id: @user.id, token: @user.email_verification_token }
+      get :verify, { id: @user.id, token: UserVerificationForm.new(@user).email_verification_token }
       @user.reload
       assert_nil @controller.current_user
       assert @user.verified_at
@@ -123,12 +104,12 @@ class RegistrationsControllerTest < ActionController::TestCase
 
     should 'not verify user if id is incorrect' do
       assert_raise ActiveRecord::RecordNotFound do
-        get :verify, { id: (@user.id + 1), token: @user.email_verification_token }
+        get :verify, { id: (@user.id + 1), token: UserVerificationForm.new(@user).email_verification_token }
       end
     end
 
     should 'not verify user if token is incorrect' do
-      get :verify, { id: @user.id, token: @user.email_verification_token + 'incorrect' }
+      get :verify, { id: @user.id, token: UserVerificationForm.new(@user).email_verification_token + 'incorrect' }
       @user.reload
       assert_nil @controller.current_user
       assert !@user.verified_at
@@ -214,20 +195,6 @@ class RegistrationsControllerTest < ActionController::TestCase
         assert_nil @user.avatar_versions_generated_at
         assert !@user.avatar.file.present?
       end
-
-      should 'assign avatar and save user if user is in invalid state too' do
-        sign_in @user
-        @user.update_column :email, ''
-        assert !@user.valid?
-        assert_nil @user['avatar']
-        avatar_file = ActionDispatch::Http::UploadedFile.new(
-          tempfile: File.open(Rails.root.join('test/fixtures/listing.jpg')),
-          filename: 'avatar.jpg'
-        )
-        post :avatar, { avatar: avatar_file }
-        assert_response :success
-        assert_not_nil @user.reload['avatar']
-      end
     end
   end
 
@@ -236,15 +203,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "User", "create").count') do
         with_versioning do
           post :create, { user: user_attributes }
-        end
-      end
-    end
-
-    should 'track version change on update' do
-      sign_in @user
-      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "User", "update").count') do
-        with_versioning do
-          put :update, { id: @user, user: { name: 'Updated Name' } }
         end
       end
     end
@@ -276,6 +234,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       @user.sms_notifications_enabled = false
       @user.sms_preferences = Hash[%w(user_message reservation_state_changed new_reservation).map { |sp| [sp, '1'] }]
       @user.save!
+      FactoryGirl.create(:form_configuration_default_update_minimum)
     end
 
     should 'save sms_notifications_enabled and sms_preferences' do
@@ -284,13 +243,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       @user.reload
       refute @user.sms_notifications_enabled
       assert_equal @user.sms_preferences, 'new_reservation' => '1'
-    end
-
-    should 'not overwrite sms preferences on profile update' do
-      sign_in @user
-      assert_equal @user.sms_preferences, 'user_message' => '1', 'reservation_state_changed' => '1', 'new_reservation' => '1'
-      put :update, { id: @user, user: { name: 'Dave' } }
-      assert_equal @user.reload.sms_preferences, 'user_message' => '1', 'reservation_state_changed' => '1', 'new_reservation' => '1'
     end
   end
 

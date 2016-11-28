@@ -25,7 +25,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :find_supported_providers, only: [:social_accounts, :update]
   after_action :render_or_redirect_after_create, only: [:create]
   before_action :redirect_to_edit_profile_if_password_set, only: [:set_password]
-  before_action :set_user_profiles, only: [:edit]
+  before_action :build_user_update_profile_form, only: [:edit, :update]
 
   skip_before_action :redirect_if_marketplace_password_protected, only: [:store_geolocated_location, :update_password, :set_password]
 
@@ -53,7 +53,6 @@ class RegistrationsController < Devise::RegistrationsController
                                             source: cookies.signed[:source],
                                             campaign: cookies.signed[:campaign],
                                             language: I18n.locale)
-        ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role
         when 'default'
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)
@@ -83,7 +82,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit
     @country = current_user.country_name
-    build_approval_request_for_object(current_user) unless current_user.is_trusted?
+    @user_update_profile_form.prepopulate!
     render :edit, layout: dashboard_or_community_layout
   end
 
@@ -114,39 +113,15 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update
-    # next line is there to prevent unwanted UI changes [i.e. the name in the navbar] (it's a bug in devise, resource === current_user)
-    @user = User.find(resource.id) # maybe a little bit hackish way, but 'dup' or 'clone' doesn't work
-
-    resource.must_have_verified_phone_number = true if resource.requires_mobile_number_verifications?
-    resource.custom_validation = true
-    resource.assign_attributes(user_params)
-
-    # For the community we only ask for the full name so we ensure the components
-    # are set to nil, otherwise we'll get the name from components and it will appear
-    # like the name hasn't updated
-    resource.first_name = resource.middle_name = resource.last_name = nil if PlatformContext.current.instance.is_community?
-
-    build_approval_request_for_object(resource) unless resource.is_trusted?
-    all_params = user_params
-    all_params[:default_profile_attributes].try(:delete, :customizations_attributes)
-    all_params[:buyer_profile_attributes].try(:delete, :customizations_attributes)
-    all_params[:seller_profile_attributes].try(:delete, :customizations_attributes)
-
-    # We remove approval_requests_attributes from the params used to update the user
-    # to avoid duplication, as the approval request is already set by assign_attributes
-    # and build_approval_request_for_object
-    if resource.update_with_password(all_params.except(:approval_requests_attributes))
-      I18n.locale = @user.try(:language).try(:to_sym) || :en if @user.try(:language).try(:to_sym) != I18n.locale
-      onboarded = @user.buyer_profile.try(:mark_as_onboarded!) || @user.seller_profile.try(:mark_as_onboarded!)
+    if @user_update_profile_form.validate(params[:user] || {})
+      @user_update_profile_form.save
+      I18n.locale = current_user.reload.language&.to_sym || :en
+      onboarded = current_user.buyer_profile.try(:mark_as_onboarded!) || current_user.seller_profile.try(:mark_as_onboarded!)
       set_flash_message :success, :updated
       sign_in(resource, bypass: true)
       redirect_to dashboard_profile_path(onboarded: onboarded)
     else
-      @buyer_profile = resource.get_buyer_profile
-      @seller_profile = resource.get_seller_profile
-      flash.now[:error] = @user.errors.full_messages.join(', ')
-      @company = current_user.companies.first
-      @country = resource.country_name
+      flash.now[:error] = @user_update_profile_form.pretty_errors_string
       render :edit, layout: dashboard_or_community_layout
     end
   end
@@ -234,9 +209,6 @@ class RegistrationsController < Devise::RegistrationsController
   def update_password
     @user = current_user
     @user.password = params[:user][:password]
-    @user.skip_password = false
-    @user.custom_validation = false
-    @user.skip_custom_attribute_validation = true
     if @user.save
       flash[:success] = t('flash_messages.registrations.password_set')
       redirect_to edit_user_registration_path(token: @user.authentication_token)
@@ -248,7 +220,9 @@ class RegistrationsController < Devise::RegistrationsController
 
   def verify
     @user = User.find(params[:id])
-    if @user.verify_email_with_token(params[:token])
+    @verification_form = UserVerificationForm.new(@user, verified_at: @user.verified_at)
+    if @verification_form.validate(params)
+      @verification_form.save
       sign_in(@user)
       flash[:success] = t('flash_messages.registrations.address_verified')
       redirect_to @user.listings.count > 0 ? dashboard_path : edit_user_registration_path
@@ -342,16 +316,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   private
 
-  def set_user_profiles
-    if resource.buyer_profile.nil? && resource.seller_profile.nil?
-      resource.get_buyer_profile
-      resource.get_seller_profile
-    end
-
-    @buyer_profile = resource.buyer_profile
-    @seller_profile = resource.seller_profile
-  end
-
   def find_company
     @company = current_user.try(:companies).try(:first)
   end
@@ -439,5 +403,10 @@ class RegistrationsController < Devise::RegistrationsController
     if @user.id.to_s == params[:id] && @user.slug.present? && @user.slug != @user.id.to_s
       redirect_to profile_url(@user.slug), status: 301
     end
+  end
+
+  def build_user_update_profile_form
+    @form_configuration = FormConfiguration.find_by(id: params[:form_configuration_id])
+    @user_update_profile_form = @form_configuration&.build(current_user) || FormConfiguration.where(base_form: 'UserUpdateProfileForm').first.build(current_user)
   end
 end

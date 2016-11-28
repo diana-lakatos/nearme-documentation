@@ -40,13 +40,13 @@
         - if @action_type.bookable?
           - rfq_class = nil
           - rfq_label = nil
-          - registration_url = new_user_registration_path(return_to: @listing.show_path(restore_reservations: @listing.id))
+          - registration_url = new_api_user_path(return_to: @listing.show_path(restore_reservations: @listing.id))
           - book_hash = { id: "book-#{@listing.id}", class: "btn btn-green btn-large ", rel: "tooltip",
             :'data-original-title' => t('booking_module.notices.days_first'),
             :'data-behavior' => 'reviewBooking', :'data-listing-id' => @listing.id,
             :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_order_listing_orders_url(@listing),
             :'data-user-signed-in' => user_signed_in?, :'data-secured' => (not secure_links?), :'data-force-modal' => false}
-          - form_options = { :url => listing_orders_path(@listing), data: { :'recurring-booking-form' => true, :'registration-url' => current_user ? nil :   new_user_registration_path(return_to: @listing.show_path) }, html: { class: 'triggers-show-modal' } }
+          - form_options = { :url => listing_orders_path(@listing), data: { :'recurring-booking-form' => true, :'registration-url' => current_user ? nil :   new_api_user_path(return_to: @listing.show_path) }, html: { class: 'triggers-show-modal' } }
           - if @action_type.action_rfq?
             - book_hash[:class] += (@action_type.is_free_booking? ? 'hidden' : 'span6')
             - rfq_class = (@action_type.is_free_booking? ? 'btn btn-green btn-large' :  'btn btn-gray-light btn-large offer-button span6' )

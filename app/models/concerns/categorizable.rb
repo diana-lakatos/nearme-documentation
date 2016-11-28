@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Categorizable
   extend ActiveSupport::Concern
 
@@ -19,6 +20,7 @@ module Categorizable
     end
 
     def category_ids=(ids)
+      return super(ids) unless ids.all? { |id| id.respond_to?(:gsub) }
       super(ids.map { |e| e.gsub(/\[|\]/, '').split(',') }.flatten.compact.map(&:to_i))
     end
 

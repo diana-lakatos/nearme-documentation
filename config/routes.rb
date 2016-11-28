@@ -1191,8 +1191,7 @@ DesksnearMe::Application.routes.draw do
           resources :assets, as: 'custom_theme_assets', controller: 'custom_themes/custom_theme_assets', concerns: :versionable
         end
       end
-
-      scope module: :v3, constraints: Constraints::ApiConstraints.new(version: 3, default: true) do
+      scope module: :v3, constraints: Constraints::ApiConstraints.new(version: 3, default: false) do
         resources :sessions, only: [:create]
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
@@ -1215,6 +1214,14 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resources :graph, via: [:post, :options]
+      scope module: :v4, constraints: Constraints::ApiConstraints.new(version: 4, default: true) do
+        resources :forms, only: [:create]
+        resources :users, only: [:new, :create] do
+          member do
+            get :verify
+          end
+        end
+      end
     end
 
     resources :users do

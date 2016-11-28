@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   include CreationFilter
   include QuerySearchable
   include UserNameUtility
+  include TransactablesOwnerable
 
   SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects].freeze
   SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation).freeze
@@ -47,7 +48,7 @@ class User < ActiveRecord::Base
   mount_uploader :cover_image, CoverImageUploader
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable,
-         :user_validatable, :token_authenticatable, :temporary_token_authenticatable, :timeoutable
+         :token_authenticatable, :temporary_token_authenticatable, :timeoutable
 
   skip_callback :commit, :after, :remove_avatar!
   skip_callback :commit, :after, :remove_cover_image!
@@ -55,15 +56,24 @@ class User < ActiveRecord::Base
   attr_readonly :following_count, :followers_count
   attr_accessor :custom_validation
   attr_accessor :must_have_verified_phone_number
-  attr_accessor :accept_terms_of_service
   attr_accessor :verify_associated
-  attr_accessor :skip_password, :verify_identity, :custom_validation, :accept_terms_of_service, :verify_associated,
+  attr_accessor :skip_password, :verify_identity, :custom_validation, :verify_associated,
                 :skip_validations_for
   attr_accessor :force_profile
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
   serialize :avatar_transformation_data, Hash
+
+  validate :no_admin_with_such_email_exists, if: :email_changed?
+  def no_admin_with_such_email_exists
+    errors.add(:email, :taken) if User.admin.where(email: email).exists?
+    errors.add(:email, :taken) if User.where(email: email).exists? if external_id.blank?
+  end
+  validates :email, email: true,
+                    uniqueness: { scope: [:instance_id, :external_id] },
+                    if: :email_changed?
+  validates_presence_of :email
 
   # strange bug, serialize stops to work if Taggable is included before it
   include Taggable
@@ -94,9 +104,8 @@ class User < ActiveRecord::Base
   has_many :categories_categorizable, as: :categorizable, through: :user_profiles
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
-  has_many :companies, through: :company_users
+  has_many :companies, foreign_key: 'creator_id', inverse_of: :creator
   has_many :comments, inverse_of: :creator
-  has_many :created_companies, class_name: 'Company', foreign_key: 'creator_id', inverse_of: :creator
   has_many :custom_images, foreign_key: 'uploader_id', inverse_of: :uploader
   has_many :feed_followers, through: :activity_feed_subscriptions_as_followed, source: :follower
   has_many :feed_followed_transactables, through: :activity_feed_subscriptions, source: :followed, source_type: 'Transactable'
@@ -290,7 +299,6 @@ class User < ActiveRecord::Base
   validates :saved_searches_alerts_frequency, inclusion: { in: SavedSearch::ALERTS_FREQUENCIES }
 
   validates_associated :companies, if: :verify_associated
-  validates :accept_terms_of_service, acceptance: { on: :create, allow_nil: false, if: ->(u) { PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation } }
 
   class << self
     def timeout_in
@@ -309,7 +317,10 @@ class User < ActiveRecord::Base
     # authentication.
     def new_with_session(attrs, session)
       user = super
-      user.apply_omniauth(session[:omniauth]) if session[:omniauth]
+      if session[:omniauth]
+        user.apply_omniauth(session[:omniauth])
+        user.password ||= SecureRandom.hex(16)
+      end
       user
     end
 
@@ -746,12 +757,6 @@ class User < ActiveRecord::Base
     update_attribute(:sso_log_out, false)
   end
 
-  def email_verification_token
-    Digest::SHA1.hexdigest(
-      "--dnm-token-#{id}-#{created_at.utc.strftime('%Y-%m-%d %H:%M:%S')}"
-    )
-  end
-
   def generate_payment_token
     new_token = SecureRandom.hex(32)
     update_attribute(:payment_token, new_token)
@@ -763,16 +768,6 @@ class User < ActiveRecord::Base
     current_token = payment_token
     update_attribute(:payment_token, nil)
     current_token == token
-  end
-
-  def verify_email_with_token(token)
-    if token.present? && email_verification_token == token && !verified_at
-      self.verified_at = Time.zone.now
-      save(validate: false)
-      true
-    else
-      false
-    end
   end
 
   def to_liquid
@@ -871,13 +866,13 @@ class User < ActiveRecord::Base
   def perform_cleanup!
     # Record was soft deleted
     if self.persisted?
-      created_companies.destroy_all
+      companies.destroy_all
       orders.unconfirmed.find_each(&:user_cancel!)
       created_listings_orders.unconfirmed.find_each(&:reject!)
     else
       # Record is hard deleted
       transactables.each { |t| t.really_destroy! }
-      created_companies.each { |c| c.really_destroy! }
+      companies.each { |c| c.really_destroy! }
       orders.each { |o| o.really_destroy! }
       created_listings_orders.each { |o| o.really_destroy! }
       # Slugs need to be hard deleted otherwise friendly_id
@@ -888,7 +883,7 @@ class User < ActiveRecord::Base
   end
 
   def recover_companies
-    created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [deleted_at, banned_at].compact.first, [deleted_at, banned_at].compact.first + 30.seconds).find_each do |company|
+    companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [deleted_at, banned_at].compact.first, [deleted_at, banned_at].compact.first + 30.seconds).find_each do |company|
       begin
         company.restore(recursive: true)
       rescue
@@ -1182,7 +1177,7 @@ class User < ActiveRecord::Base
   end
 
   def time_zone
-    super || instance.time_zone.presence || 'Pacific Time (US & Canada)'
+    super || instance&.time_zone.presence || 'Pacific Time (US & Canada)'
   end
 
   private

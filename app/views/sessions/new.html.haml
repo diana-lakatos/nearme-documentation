@@ -29,7 +29,7 @@
           .actions
             = f.submit t('sign_up_form.buttons.log_in'), :tabindex => '3', class: 'btn btn-green'
 
-        .text-center.already-a-user= link_to(t('sign_up_form.buttons.new_user'), '#', data: { modal: true, href: new_user_registration_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' })
+        .text-center.already-a-user= link_to(t('sign_up_form.buttons.new_user'), '#', data: { modal: true, href: new_api_user_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' })
 
 - if request.xhr?
   :javascript

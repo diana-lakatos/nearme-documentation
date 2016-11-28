@@ -6,7 +6,7 @@ require 'simplecov'
 # newer version of cucumber-rails. Consider adding your own code to a new file
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
-CodeClimate::TestReporter.start
+SimpleCov.start
 
 require 'json_spec/cucumber'
 require 'cucumber/rails'

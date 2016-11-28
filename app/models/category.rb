@@ -49,6 +49,11 @@ class Category < ActiveRecord::Base
     display_options == 'autocomplete'
   end
 
+  def to_s
+    # hack needed for form to work ;-)
+    id
+  end
+
   def child_index=(idx)
     unless self.new_record?
       if parent

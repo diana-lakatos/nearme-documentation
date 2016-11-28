@@ -62,7 +62,7 @@ class ImageInput < SimpleForm::Inputs::FileInput
 
     out = ActiveSupport::SafeBuffer.new
 
-    return out unless image_attribute.present?
+    return out unless image_attribute.present? && !image_attribute.is_a?(ActionDispatch::Http::UploadedFile)
 
     template.content_tag(:div, class: 'preview') do
       out << template.content_tag(:figure) do

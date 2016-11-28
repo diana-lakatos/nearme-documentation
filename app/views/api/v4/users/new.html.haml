@@ -1,0 +1,25 @@
+- title t('sign_up_form.sign_up_to', marketplace_name: platform_context.instance.name)
+
+#signup.signup-form
+  .row-fluid
+    .span8.offset2
+      .box
+        %header
+          - @role = %w(default seller buyer).detect { |r| r == params[:role] } || 'default'
+          - link_to_other = nil
+          - if @role == "buyer"
+            - options = { role: :seller }
+            - link_to_other = link_to_registration(get_return_to_url(platform_context.instance.transactable_types.first.wizard_path, options), platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' }) { I18n.t("sign_up_form.link_to_seller") }
+          - else
+            - options = { role: :buyer }
+            - link_to_other = link_to_registration(get_return_to_url(dashboard_orders_path, options), platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' }) { I18n.t("sign_up_form.link_to_buyer") }
+
+          = render "registrations/#{@role}_header", link_to_other: link_to_other
+
+        = render 'api/v4/users/super_trash/signup_form'
+
+        = render "registrations/#{@role}_footer", link_to_other: link_to_other
+
+- if request.xhr?
+  :javascript
+    $(document).trigger('setclass:modal.nearme', ['sign-up-modal']);

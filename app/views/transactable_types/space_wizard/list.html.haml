@@ -33,7 +33,7 @@
                         - if model == 'user'
                           = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
                         - if model == 'seller'
-                          = render 'sellers/seller_form', f: seller_profile_form, properties_form: seller_properties_form, only_inputs: [ field.to_sym ]
+                          = render 'user_profiles/form', f: seller_profile_form, user_form: f, only_inputs: [field.to_sym]
                         - elsif model == 'company'
                           = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ field.to_sym ] }
                         - elsif model == 'location'

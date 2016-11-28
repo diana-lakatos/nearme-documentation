@@ -1,6 +1,9 @@
 class UserProfile < ActiveRecord::Base
   include Categorizable
   include AvailabilityHelpers
+  include CustomImagesOwnerable
+  include CustomizationsOwnerable
+  include CategoriesOwnerable
 
   has_paper_trail
   acts_as_paranoid
@@ -11,13 +14,9 @@ class UserProfile < ActiveRecord::Base
   belongs_to :instance_profile_type
   belongs_to :availability_template
 
-  has_many :customizations, as: :customizable
   has_many :availability_templates, as: :parent
-  has_many :custom_images, as: :owner
-  accepts_nested_attributes_for :custom_images, allow_destroy: true
 
   accepts_nested_attributes_for :availability_template
-  accepts_nested_attributes_for :customizations, allow_destroy: true
 
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
@@ -26,7 +25,6 @@ class UserProfile < ActiveRecord::Base
 
   delegate :time_zone, to: :user
   alias timezone time_zone
-
 
   after_create :create_company_if_needed
 

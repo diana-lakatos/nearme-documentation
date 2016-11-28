@@ -48,6 +48,11 @@ Before do
 
   I18N_DNM_BACKEND.update_cache(instance.id) if defined? I18N_DNM_BACKEND
   InstanceViewResolver.instance.clear_cache
+
+  %w(default lister enquirer).each do |role|
+    FactoryGirl.create(:"form_configuration_#{role}_signup")
+  end
+  FactoryGirl.create(:"form_configuration_default_update_minimum")
 end
 
 After do

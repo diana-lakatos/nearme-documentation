@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module UserHelper
   def try_to_sign_up_with_provider(provider)
-    visit new_user_registration_path
+    visit new_api_user_path
     click_link provider.downcase
   end
 
@@ -12,8 +12,8 @@ module UserHelper
   def sign_up_with_provider(provider, email = nil)
     email ||= "#{provider.downcase}@example.com"
     try_to_sign_up_with_provider(provider)
-    fill_in 'user[email]', with: email.to_s
-    click_button 'Sign up'
+    fill_in 'form_email', with: email.to_s
+    click_button "Sign up"
   end
 
   def toggle_connection_with(provider)
@@ -22,15 +22,15 @@ module UserHelper
   end
 
   def try_to_sign_up_manually(options = {})
-    visit new_user_registration_path
+    visit new_api_user_path
     fill_in_user_sign_up_details(options)
   end
 
   def fill_in_user_sign_up_details(options = {})
     options = options.reverse_merge(default_options)
-    fill_in 'user[name]', with: options[:name]
-    fill_in 'user[email]', with: options[:email]
-    fill_in 'user[password]', with: options[:password]
+    fill_in 'form_name', with: options[:name]
+    fill_in 'form_email', with: options[:email]
+    fill_in 'form_password', with: options[:password]
   end
 
   def update_current_user_information(options = {})
