@@ -13,42 +13,22 @@
 
         - model = form_field.keys.first
         - field = form_field[model]
-        - if model == 'user'
-          - if field == "name"
-            .name-holder.input-icon-holder
-              = f.input :name, label: false, placeholder: t('simple_form.placeholders.registration.name'), input_html: { tabindex: tab_index }
-              %span.ico-user
-          - elsif field == "email"
-            .email-holder.input-icon-holder
-              = f.input :email, label: false, placeholder:  t('simple_form.placeholders.registration.email'), input_html: { tabindex: tab_index }
-              %span.ico-mail
-          - elsif field == "password" && !hide_password
-            .password-holder.input-icon-holder
-              = f.input :password, label: false, placeholder: t('simple_form.placeholders.registration.password'), input_html: { tabindex: tab_index, autocomplete: 'new-password' }
-              %span.ico-lock
-          - elsif field == "phone"
-            %div{'data-phone-fields-container' => true}
-              = f.input :country_name, as: :hidden, input_html: { value: user_country_default(@country) }
-              - calling_code = '&nbsp;'
-              - calling_code = "+#{Country.find_by(name: user_country_default(@country)).calling_code}" if user_country_default(@country)
-              .mobile-holder.input-icon-holder
-                .country-calling-code
-                  = calling_code
-                = f.input :mobile_number, placeholder: t('simple_form.labels.user.mobile_number', default: 'Mobile number'), label: false, input_html: { tabindex: tab_index }
-                %span.ico-phone
-          - elsif field == "company_name"
-            .company-name-holder.input-icon-holder
-              = f.input :company_name, as: :string, label: false, placeholder:  t('simple_form.placeholders.registration.company_name'), input_html: { tabindex: tab_index }
-              %span.fa.fa-briefcase
-        - elsif model == @role
-          - (profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
-            = draw_attribute_for_form(attribute, properties_form, nil, { label: false, placeholder: attribute.label, input_html: { tabindex: tab_index } }) if field == attribute.name
 
+        - if model == 'user'
+          - if lookup_context.template_exists?("#{field}_component.html.haml", "registrations/signup_form_components/#{model}", true)
+            = render partial: "registrations/signup_form_components/#{model}/#{field}_component",
+              locals: { form: f, tab_index: tab_index, hide_password: hide_password, profile_form: profile_form, properties_form: properties_form }
+
+        - (profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+          = draw_attribute_for_form(attribute, properties_form, nil, { label: false, placeholder: attribute.label,
+            input_html: { tabindex: tab_index } }) if field == attribute.name
 
       - if platform_context.instance.force_accepting_tos
-        = render 'registrations/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '), checked: !f.object.errors[:accept_terms_of_service].present?
+        = render 'registrations/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '),
+          checked: !f.object.errors[:accept_terms_of_service].present?
       - else
         - if @legal_page_present
-          %p.notice.text-center.legal #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
+          %p.notice.text-center.legal
+            #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
       .actions
         = f.submit t('sign_up_form.buttons.sign_up'), class: 'desksnearme submit btn btn-green', data: { disable_with: t('sign_up_form.disabled_buttons.sign_up') }, tabindex: tab_index+1
