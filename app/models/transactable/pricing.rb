@@ -18,7 +18,7 @@ class Transactable::Pricing < ActiveRecord::Base
                                      if: :has_exclusive_price
                                    }
 
-  validates_with MinMaxPriceValidator
+  validates_with MinMaxPriceValidator, if: :monetize_price_cents?
 
   delegate :allow_book_it_out_discount, :allow_exclusive_price, :allow_nil_price_cents, to: :transactable_type_pricing, allow_nil: true
   delegate :transactable, to: :action, allow_nil: true
