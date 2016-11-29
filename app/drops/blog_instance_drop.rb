@@ -25,6 +25,7 @@ class BlogInstanceDrop < BaseDrop
 
   # url for header image
   # @return [String]
+  # @todo -- deprecate -- DIY
   def header_url
     header.present? ? header.url : nil
   end
@@ -35,42 +36,49 @@ class BlogInstanceDrop < BaseDrop
 
   # check if header icon is present
   # @return [Boolean]
+  # @todo -- deprecate -- DIY
   def header_icon_present?
     @blog.header_icon.present?
   end
 
   # check if header logo is present
   # @return [Boolean]
+  # @todo -- deprecate -- DIY
   def header_logo_present?
     @blog.header_logo.present?
   end
 
   # check if header_text is present
   # @return [Boolean]
+  # @todo -- deprecate -- DIY
   def header_text_present?
     @blog.header_text.present?
   end
 
   # check if header_motto is present
   # @return [Boolean]
+  # @todo -- deprecate -- DIY
   def header_motto_present?
     @blog.header_motto.present?
   end
 
   # url for header icon image
   # @return [String]
+  # @todo -- deprecate -- DIY
   def header_icon_url
     @blog.header_icon.url
   end
 
   # url for header logo image
   # @return [String]
+  # @todo -- deprecate -- DIY
   def header_logo_url
     @blog.header_logo.url
   end
 
   # check if facebook_app_id is present
   # @return [Boolean]
+  # @todo -- deprecate -- DIY
   def facebook_app_id_present?
     @blog.facebook_app_id
   end

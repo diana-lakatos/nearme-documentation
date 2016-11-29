@@ -50,16 +50,19 @@ class TransactableTypeDrop < BaseDrop
   end
 
   # @return [String] search field placeholder as a string
+  # @todo - remove in favor of DIY
   def search_field_placeholder
     @source.decorate.search_field_placeholder
   end
 
   # @return [String] search geolocation field placeholder as a string
+  # @todo - remove in favor of DIY
   def geolocation_placeholder
     @source.decorate.geolocation_placeholder
   end
 
   # @return [String] search full text field placeholder as a string
+  # @todo - remove in favor of DIY
   def fulltext_placeholder
     @source.decorate.fulltext_placeholder
   end
@@ -82,6 +85,7 @@ class TransactableTypeDrop < BaseDrop
 
   # @return [String] JSON formatted representation of the object of
   #   the form !{ id: id_of_object, name: name_of_object }
+  # @todo -- this could be a good idea for many other objects -- maybe think about extraction up in the inheritance tree
   def to_json
     {
       id: @source.id,
@@ -91,24 +95,28 @@ class TransactableTypeDrop < BaseDrop
 
   # @return [String] lessor name (e.g. 'host') taken from the translations;
   #   key of the form e.g. 'transactable_type.desk.lessor.one'
+  # @todo - remove in favor of translations?
   def lessor
     @source.translated_lessor
   end
 
   # @return [String] lessee name (e.g. 'guest') taken from the translations;
   #   key of the form e.g. 'transactable_type.desk.lessee.one'
+  # @todo - remove in favor of translations?
   def lessee
     @source.translated_lessee
   end
 
   # @return [String] pluralized lessor name taken from the translations;
   #   key of the form e.g. 'transactable_type.desk.lessor.other'
+  # @todo - remove in favor of translations?
   def lessors
     @source.translated_lessor(10)
   end
 
   # @return [String] pluralized lessee name taken from the translations;
   #   key of the form e.g. 'transactable_type.desk.lessee.other'
+  # @todo - remove in favor of translations?
   def lessees
     @source.translated_lessee(10)
   end
@@ -127,12 +135,14 @@ class TransactableTypeDrop < BaseDrop
 
   # @return [Array<String>] search input types available for this marketplace;
   #   taken from the current context (i.e. set from a liquid filter method like search_box_for)
+  # @todo -- deja vu... instance_profile_type_drop.rb:35  :thumbsup:
   def custom_search_inputs
     @context['custom_search_inputs']
   end
 
   # @return [Array<(String, Integer)>] the container class and input size to be used for the search area
   # of the marketplace's homepage
+  # @todo -- deja vu... instance_profile_type_drop.rb:43  :thumbsup:
   def calculate_elements
     sum = 2 # search button
     sum += 4 if search_inputs.include? 'datepickers'
@@ -146,6 +156,10 @@ class TransactableTypeDrop < BaseDrop
 
   # @return [String] the container class to be used for the search area
   #   of the marketplace's homepage
+  # @todo -- deja vu... instance_profile_type_drop.rb:57  :thumbsup: -- Hardcore copy paste.
+  # I dont know which one was first, but we probably dont need those methods in neither places
+  # Probably some more are repeating, im leaving this ifle as it is.
+  # Look into instance_profile_type_drop for comments to methods that are repeating.
   def calculate_container
     calculate_elements[0]
   end
@@ -201,32 +215,38 @@ class TransactableTypeDrop < BaseDrop
 
   # @return [Boolean] whether the bulk upload link should be shown according to the
   #   'hidden ui controls' options
+  # @todo -- deprecate - DIY
   def show_bulk_upload_link?
     hidden_ui_by_key('dashboard/transactables/bulk_upload').visible?
   end
 
   # @return [Boolean] whether the search tab should be hidden for the current controller/action (location in the app)
   #   according to the global 'hidden ui controls' rules
+  # @todo -- deprecate - DIY
   def show_search_form?
     !hide_tab?('search')
   end
 
   # @return [String] path to creating a new transactable of this type
+  # @todo -- deprecate - url filter
   def new_transactable_path
     routes.new_dashboard_company_transactable_type_transactable_path(@source)
   end
 
   # @return [String] path to viewing a list of transactables of this type
+  # @todo -- deprecate - url filter
   def transactable_types_path
     routes.dashboard_company_transactable_type_transactables_path(@source)
   end
 
   # @return [String] path to the space wizard for listing an initial item of this type
+  # @todo -- deprecate - url filter
   def space_wizard_path
     routes.transactable_type_space_wizard_list_path(@source)
   end
 
   # @return [String] path to a new bulk upload for this transactable type
+  # @todo -- deprecate - url filter
   def new_data_upload_path
     routes.new_dashboard_company_transactable_type_data_upload_path(@source)
   end

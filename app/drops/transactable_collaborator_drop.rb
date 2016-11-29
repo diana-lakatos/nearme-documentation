@@ -32,14 +32,15 @@ class TransactableCollaboratorDrop < BaseDrop
            :approved_by_user_at, :approved_by_owner_at, :transactable_id, :user_id, :created_at,
            :rejected_by_owner_at, :rejected_by_owner?, to: :source
 
-
   # @return [String] url for the enquirer to cancel its collaboration request
   #   (must be used with the delete HTTP method)
+  # @todo -- deprecate - url filter
   def enquirerer_destroy_path
     routes.listing_transactable_collaborator_path(transactable, @source)
   end
 
   # @return [String] path to the app location for removing the collaboration
+  # @todo -- deprecate - url filter
   def destroy_path
     routes.dashboard_company_transactable_type_transactable_transactable_collaborator_path(transactable.transactable_type, transactable, @source)
   end
@@ -53,12 +54,14 @@ class TransactableCollaboratorDrop < BaseDrop
   #    {% endform_for %}
   #
   #   ```
+  # @todo -- deprecate - url filter
   def update_path
     routes.dashboard_company_transactable_type_transactable_transactable_collaborator_path(transactable.transactable_type, transactable, @source)
   end
 
   # @return [Array<UserMessageDrop>] array of user messages associated with the transactable collaborated on; used
   #   for discussion between clients and hosts
+  # @todo - well, this stinks.
   def transactable_user_messages
     @source.transactable.user_messages.where('author_id = :user_id OR thread_recipient_id = :user_id', user_id: @source.user_id)
   end
@@ -67,9 +70,9 @@ class TransactableCollaboratorDrop < BaseDrop
   #   * Pending if not approved nor rejected by owner
   #   * Rejected if rejected by owner
   #   * Approved if approved by owner
+  # @todo -- move to...
   def status
     return 'Pending' if approved_by_owner_at.nil? && rejected_by_owner_at.nil?
-
     return 'Rejected' if rejected_by_owner_at.present?
     return 'Approved' if approved_by_owner_at.present?
   end

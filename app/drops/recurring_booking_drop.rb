@@ -57,29 +57,34 @@ class RecurringBookingDrop < OrderDrop
 
   # @return [TransactableDrop] TransactableDrop object from the transactable
   #   associated with this recurring booking
+  # @todo -- investigate if we need to couple this so tightly -- i dont know, just signalizing possibility of complicated code
+  # if we decide to keep it i vote for much more explanation of how to use those kinds of inherited drops
   def transactable
     @transactable_drop ||= @recurring_booking.transactable.to_liquid
   end
 
   # @return [LocationDrop] LocationDrop object from the location associated with
   #   this recurring booking
+  # @todo -- investigate if we need to couple this so tightly -- i dont know, just signalizing possibility of complicated code
+  # if we decide to keep it i vote for much more explanation of how to use those kinds of inherited drops
   def location
     @location_drop ||= @recurring_booking.location.to_liquid
   end
 
   # @return [Boolean] whether there is a rejection reason for this recurring_booking
+  # @todo -- depracate per DIY approach -- .rejection_reason != blank in liquid should be enough
   def has_rejection_reason
     !rejection_reason.to_s.empty?
   end
 
   # @return [String] the search query URL for the same type of service as this recurring_booking and for this location
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def search_url
     routes.search_path(q: location_query_string(@recurring_booking.transactable.location), transactable_type_id: @recurring_booking.transactable.transactable_type.id)
   end
 
   # @return [String] url to the dashboard area for managing own recurring_bookings
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def bookings_dashboard_url
     routes.dashboard_user_recurring_bookings_path(token_key => @recurring_booking.owner.temporary_token)
   end
@@ -87,6 +92,7 @@ class RecurringBookingDrop < OrderDrop
   # @return [String] url to the dashboard area showing a list of recurring bookings to be managed including this one;
   #   it takes the user to the correct area in the dashboard according to the state of the order (confirmed, unconfirmed,
   #   overdued, archived etc.)
+  # @todo -- depracate in favor of filter
   def guest_show_url
     path = case @recurring_booking.state
            when 'confirmed', 'unconfirmed', 'overdued'
@@ -98,35 +104,38 @@ class RecurringBookingDrop < OrderDrop
   end
 
   # @return [String] url to the dashboard area for managing own reservations with tracking
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def bookings_dashboard_url_with_tracking
     routes.dashboard_user_recurring_bookings_path(token_key => @recurring_booking.owner.temporary_token)
   end
 
   # @return [String] reservation starting date formatted information
+  # @todo -- date could be manager somewhere else + translation used in filter
   def dates_summary_with_hr
     "#{I18n.t('recurring_reservations_review.starts_from')} #{I18n.l(@recurring_booking.starts_at.to_date, format: :short)}"
   end
 
   # @return [String] url to the dashboard area for managing received bookings
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def manage_guests_dashboard_url
     routes.dashboard_company_host_recurring_bookings_path
   end
 
   # @return [DateTime] date at which the reservation was created
+  # @todo -- investigate if it would be a good idea to have a filter that would pull out any date (created, updated, start, etc)
+  # based on object and keyword passed (ie. recurring_booking | date: 'created_at' | format 'DD-MM-YYYY')
   def created_at
     @recurring_booking.created_at
   end
 
   # @return [String] url for confirming the recurring booking
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def reservation_confirm_url
     routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, listing_id: @recurring_booking.transactable, token_key => @recurring_booking.creator.try(:temporary_token))
   end
 
   # @return [String] url for confirming the recurring booking with tracking
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def reservation_confirm_url_with_tracking
     routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, listing_id: @recurring_booking.transactable, token_key => @recurring_booking.creator.try(:temporary_token))
   end
@@ -138,17 +147,20 @@ class RecurringBookingDrop < OrderDrop
 
   # @return [String] string representing the plural of the item to be booked (e.g. desks, rooms etc.),
   #   pluralized, and taken from the translations (e.g. translation key of the form 'transactable_type.desk.name')
+  # @todo -- depracate in favor of usual translation
   def bookable_noun_plural
     transactable_type.translated_bookable_noun(4)
   end
 
   # @return [String] current state of the object (e.g. unconfirmed etc.) as a human readable string
+  # @todo -- rename? "state" should be enough
   def state_to_string
     @recurring_booking.state.to_s.humanize
   end
 
   # @return [String] translated number of units and unit for booking using the translation key
   #   'dashboard.user_recurring_bookings.every_unit_price' (e.g. 'Every month price')
+  # @todo -- investigate if we can manage units in filter and get allow more DIY approach here
   def booking_units
     @recurring_booking.transactable_pricing.decorate.units_translation('dashboard.user_recurring_bookings.every_unit_price')
   end

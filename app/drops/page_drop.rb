@@ -29,12 +29,14 @@ class PageDrop < BaseDrop
 
   # @return [String] "_blank" if the page is a redirect and is supposed to be opened in a new window
   #   otherwise returns an empty string
+  # @todo -- is there any reason why this is in page drop?
   def open_in_target
     @page.redirect? && @page.open_in_new_window? ? '_blank' : ''
   end
 
   # @return [String] "nofollow" if the page is a redirect and is not a redirect to any of the
   #   domains associated with the page; otherwise returns an empty string
+  # @todo -- is there any reason why this is in page drop?
   def link_rel
     @page.redirect? && !@page.redirect_url_in_known_domain? ? 'nofollow' : ''
   end

@@ -18,6 +18,7 @@ class CategoryDrop < BaseDrop
   end
 
   # @return [Array<CategoryDrop>] array of descendants sorted by name
+  # @todo -- move to filter "sort_by"
   def sorted_descendants
     @category.descendants.sort { |a, b| a.name.downcase <=> b.name.downcase }
   end

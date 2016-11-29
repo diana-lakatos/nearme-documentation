@@ -32,26 +32,32 @@ class CompanyDrop < BaseDrop
   end
 
   # @return [String] Url to the section for adding user's paypal account where he will get paid. Includes tracking and authentication token.
+  # @todo -- deprecate - url filter
   def add_paypal_url_with_tracking_and_token
     routes.edit_dashboard_company_payouts_path(token_key => @company.creator.temporary_token)
   end
 
   # @return [String] list of created payment transfer as a string (list of currency amounts)
+  # @todo -- investigate if this is the right place to do such things and if this should be needed
+  # especially with formatting, since some currencies are before the amount and some are after
   def payment_transfers_as_string
     created_payment_transfers.map { |payment_transfer| "#{payment_transfer.amount}#{payment_transfer.amount.currency.symbol}" }.join(', ')
   end
 
   # @return [String] Url to the section for adding user's paypal account where he will get paid. Without tracking, includes authentication token.
+  # @todo -- deprecate - url filter
   def add_paypal_path_with_token
     routes.edit_dashboard_company_payouts_path(anchor: 'company_paypal_email', token_key => @company.creator.temporary_token)
   end
 
   # @return [String] Url to the section for adding/updating user's payout information.
+  # @todo -- deprecate - url filter
   def payout_path
     routes.edit_dashboard_company_payouts_path
   end
 
   # @return [String] the path to editing the company
+  # @todo -- deprecate - url filter
   def edit_path
     routes.edit_dashboard_company_path(@company)
   end

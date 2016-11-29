@@ -18,7 +18,7 @@ class MerchantAccountDrop < BaseDrop
   #   Payment gateway for this merchant account
   #   @return (see MerchantAccount#payment_gateway)
   # @!method permissions_granted
-  #   Indicates whether API permissions were successfully granted from the merchant’s account to yours.
+  #   Indicates whether API permissions were successfully granted from the merchant's account to yours.
   #   @return [Boolean]
   # @!method chain_payments?
   #   @return [Boolean] whether it supports paypal chain payments
@@ -39,12 +39,14 @@ class MerchantAccountDrop < BaseDrop
   end
 
   # @return [String, nil] errors for the merchant account in HTML format or nil if none
+  # @todo -- errorsdrop?
   def errors
     '<li>' + merchant_account.errors.full_messages.join('</ li><li>') + '</li>' if merchant_account.errors.any?
   end
 
   # @return [String] current state for the merchant account using translations
   #   the translation key is dashboard.merchant_account.[current_state]
+  # @todo -- deprecate -- DIY
   def state_info
     I18n.t('dashboard.merchant_account.' + merchant_account.state)
   end

@@ -14,11 +14,13 @@ class Attachable::PaymentDocumentDrop < BaseDrop
   end
 
   # @return [String] file url
+  # @todo - remove in favor url filter
   def file_url
     @payment_document.file.url
   end
 
   # @return [String] file name
+  # @todo - depracate - DIY
   def file_name
     @payment_document[:file]
   end

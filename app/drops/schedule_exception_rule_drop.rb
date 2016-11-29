@@ -19,6 +19,7 @@ class ScheduleExceptionRuleDrop < BaseDrop
   end
 
   # @return [String] formatted representation of the duration range
+  # @todo -- deprecate - user formatting
   def period
     "#{I18n.l(duration_range_start.to_date, format: :short)} - #{I18n.l(duration_range_end.to_date, format: :short)}"
   end
