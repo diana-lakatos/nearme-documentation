@@ -15,11 +15,13 @@ class Transactable::ActionTypeDrop < BaseDrop
   end
 
   # @return [Transactable::PricingDrop] returns the first pricing
+  # @todo - remove, DIY
   def first_pricing
     pricings.first
   end
 
   # @return [Array<Transactable::PricingDrop>] sorted (by number of units) pricing objects for this action type
+  # @todo - move sorting to filter
   def sorted_pricings
     pricings.sort_by(&:number_of_units)
   end

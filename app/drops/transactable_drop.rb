@@ -158,42 +158,51 @@ class TransactableDrop < BaseDrop
   end
 
   # @return [String] name representing the bookable object transactable on the marketplace as a string (e.g. desk, room etc.)
+  # @todo depracate in favor of translation?
   def bookable_noun
     transactable_type.to_liquid.bookable_noun
   end
 
   # @return [String] name representing the bookable object (plural) transactable on the marketplace as a string (e.g. desks, rooms etc.)
+  # @todo depracate in favor of translation?
   def bookable_noun_plural
     transactable_type.to_liquid.bookable_noun_plural
   end
 
   # @return [String] the name of the type of entity selling the products (e.g. seller, renter etc.)
+  # @todo depracate in favor of translation?
   def lessor
     transactable_type.to_liquid.lessor
   end
 
   # @return [String] the name of the type of entity buying the products (e.g. buyer, client etc.)
+  # @todo depracate in favor of translation?
   def lessee
     transactable_type.to_liquid.lessee
   end
 
   # @return [String] pluralized version of lessor
+  # @todo depracate in favor of translation?
   def lessors
     transactable_type.to_liquid.lessors
   end
 
   # @return [String] pluralized version of lessee
+  # @todo depracate in favor of translation?
   def lessees
     transactable_type.to_liquid.lessees
   end
 
   # @return [String] availability for this listing as a string in a human-readable format
+  # @todo depracate in favor of DIY / DIY + translation?
   def availability
     pretty_availability_sentence(@source.availability).to_s
   end
 
   # @return [Array<Array<(String, Array<Array<(Integer, Integer, String)>>)>>] availability by days
   #   for each day, there's a corresponding array of the form [open_hour, close_hour, formatted_availability_string]
+  # @todo investigate if this place is appropriate for this logic -- maybe decorator is more suitable
+  # or at least refactor for some readability, "there has to be a better way"
   def availability_by_days
     days = {}
 
@@ -225,6 +234,8 @@ class TransactableDrop < BaseDrop
   end
 
   # @return [Array<Array<String, Boolean>>] available days; array of the form [[day_name, is_available], ...]
+  # @todo investigate if this place is appropriate for this logic -- maybe decorator is more suitable
+  # or at least refactor for some readability, "there has to be a better way"
   def available_days
     days = {}
     (0..6).each { |day| days[day] = false }
@@ -251,64 +262,69 @@ class TransactableDrop < BaseDrop
   end
 
   # @return [String] path to the dashboard area for managing received bookings
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def manage_guests_dashboard_url
     routes.dashboard_company_host_reservations_path(token_key => @source.administrator.try(:temporary_token))
   end
 
   # @return [String] path to the dashboard area for managing listings
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def index_url
     routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, anchor: "transactable_#{@source.id}", token_key => @source.administrator.try(:temporary_token))
   end
 
   # @return [String] path to the dashboard area for managing listings, "in progress" tab selected
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def in_progress_index_url
     routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, status: 'in progress', anchor: "transactable_#{@source.id}", token_key => @source.administrator.try(:temporary_token))
   end
 
   # @return [String] path to the dashboard area for managing listings, "in progress" tab selected; without authentication token
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def in_progress_index_url_without_token
     routes.dashboard_company_transactable_type_transactables_path(@source.transactable_type, status: 'in progress', anchor: "transactable_#{@source.id}")
   end
 
   # @return [String] path to the dashboard area for managing received bookings
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def manage_guests_dashboard_url_with_tracking
     routes.dashboard_company_host_reservations_path(token_key => @source.administrator.try(:temporary_token))
   end
 
   # @return [String] path to the search section of the marketplace, with tracking
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def search_url_with_tracking
     routes.search_path
   end
 
   # @return [String] path for the 'add as favorite' button
+  # @todo -- depracate in favor of filter
   def wish_list_path
     routes.api_wish_list_items_path(id: @source.id, wishlistable_type: 'Transactable')
   end
 
   # @return [String] path for generating an inappropriate report for this transactable
+  # @todo  -- depracate in favor of filter
   def inappropriate_report_path
     routes.inappropriate_report_path(id: @source.id, reportable_type: 'Transactable')
   end
 
   # @return [String] url to the main page for this listing
+  # @todo  -- depracate in favor of filter
   def url
     @source.show_url
   end
   alias listing_url url
 
   # @return [String] path to the main page for this listing
+  # @todo  -- depracate in favor of filter
   def show_path
     @source.show_path
   end
 
   # @return [String] url to the listing page for this listing - location prefixed
   # @deprecated pointing to url
+  # @todo  -- depracate in favor of filter
   def location_prefixed_path
     url
   end
@@ -319,27 +335,31 @@ class TransactableDrop < BaseDrop
   end
 
   # @return [String] the url to the first image for this listing, or, if missing, the url to a placeholder image
+  # @todo  -- depracate in favor of filter
   def photo_url
     photos.try(:first).try(:[], :space_listing) || image_url(Placeholder.new(width: 410, height: 254).path).to_s
   end
 
   # @return [String, nil] the url to the first 'medium'-sized image for this listing, nil if not present
+  # @todo  -- depracate in favor of filter
   def photo_medium_url
     @source.photos.first.try(:image_url, :medium)
   end
 
   # @return [String] returns a string of the type "From $currency_amount / period"
+  # @todo depracate in favor of DIY / DIY + translation?
   def from_money_period
     price_information(@source)
   end
 
   # @return [String] url to a placeholder image sized 895x554
+  # @todo  -- depracate in favor of filter
   def space_placeholder
     image_url(Placeholder.new(width: 895, height: 554).path).to_s
   end
 
   # @return [String] url to the section in the app for managing this listing, with tracking
-  # @todo Path/url inconsistency
+  # @todo  -- depracate in favor of filter (it will also depracate community condition which is nice)
   def manage_listing_url_with_tracking
     if PlatformContext.current.instance.is_community?
       urlify(routes.edit_dashboard_project_type_project_path(@source.transactable_type, @source, token_key => @source.creator.try(:temporary_token), anchor: :collaborators))
@@ -349,18 +369,20 @@ class TransactableDrop < BaseDrop
   end
 
   # @return [String] path to the application wizard for publishing a new listing
+  # @todo  -- depracate in favor of filter
   def space_wizard_list_path
     routes.new_user_session_path(return_to: routes.transactable_type_space_wizard_list_path(transactable_type))
   end
 
   # @return [String] path to the application wizard for publishing a new listing, with tracking
-  # @todo Path/url inconsistency
+  # @todo  -- depracate in favor of filter
   def space_wizard_list_url_with_tracking
     routes.transactable_type_space_wizard_list_path(transactable_type, token_key => @user.try(:temporary_token))
   end
 
   # @return [String] path to the section of the app for sending a message to the administrator
   #   of this listing using the internal messaging platform
+  # @todo  -- depracate in favor of filter
   def new_user_message_path
     routes.new_listing_user_message_path(@source)
   end
@@ -383,12 +405,13 @@ class TransactableDrop < BaseDrop
   end
 
   # @return [String] path to the section in the app for opening a new support ticket
-  # @todo Path/url inconsistency
+  # @todo  -- depracate in favor of filter
   def new_ticket_url
     routes.new_listing_ticket_path(@source)
   end
 
   # @return [Integer] the total number of reviews for this listing
+  # @todo -- depracate (transactable.reviews.count? / | count)
   def reviews_count
     @source.reviews.count
   end
@@ -412,24 +435,25 @@ class TransactableDrop < BaseDrop
   end
 
   # @return [String] path for sharing this location on Facebook
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def facebook_social_share_url
     routes.new_listing_social_share_path(@source, provider: 'facebook')
   end
 
   # @return [String] path for sharing this location on Twitter
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def twitter_social_share_url
     routes.new_listing_social_share_path(@source, provider: 'twitter')
   end
 
   # @return [String] path for sharing this location on LinkedIn
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def linkedin_social_share_url
     routes.new_listing_social_share_path(@source, provider: 'linkedin')
   end
 
   # @return [String] path for rendering the booking module for this transactable
+  # @todo -- depracate in favor of filter
   def booking_module_path
     routes.booking_module_listing_path(@source)
   end
@@ -472,26 +496,31 @@ class TransactableDrop < BaseDrop
   end
 
   # @return [String] path to editing this transactable in the user's dashboard
+  # @todo -- depracate in favor of filter
   def edit_path
     routes.edit_dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
   end
 
   # @return [String] path to deleting this transactable in the user's dashboard
+  # @todo -- depracate in favor of filter
   def destroy_path
     routes.dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
   end
 
   # @return [String] path to cancelling this transactable (object will be moved to cancelled state)
-  def cancel_path
+  # @todo -- depracate in favor of filter
+ def cancel_path
     routes.cancel_dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
   end
 
   # @return [String] formatted date when the transactable was created
+  # @todo -- depracate in favor of filter
   def listing_date
     @source.listing_date
   end
 
   # @return [String, nil] name for this location's transactable
+  # @todo -- investigate if this can be replaced with more general method (ie. name in transactable.location object)
   def location_name
     @source.location.try(:name)
   end
@@ -509,26 +538,31 @@ class TransactableDrop < BaseDrop
   end
 
   # @return [Array<OrderDrop>] confirmed, upcoming (not archived/expired) orders for this transactable
+  # @todo -- depracate (transactable.orders.accepted ?)
   def accepted_orders
     line_item_orders.upcoming.confirmed.uniq
   end
 
   # @return [OrderDrop, nil] last confirmed, upcoming (not archived/expired) order for this transactable or nil if not present
+  # @todo -- depracate in favor of filter (transactables.orders.accepted | last? Or allow usage of .last)
   def last_accepted_order
     accepted_orders.last
   end
 
   # @return [OrderDrop, nil] first confirmed order for this transactable or nil if not present
+  # @todo -- depracate in favor of filter (transactables.orders.accepted | first? Or allow usage of .first)
   def first_accepted_order
     line_item_orders.confirmed.first
   end
 
   # @return [Array<OrderDrop>] array of active orders (not in the inactive state) for this transactable sorted descendingly by creation date
+  # @todo investigate if orders should be tied to transactable? probably, but maybe ... :)
   def orders
     line_item_orders.order(created_at: :desc).active.uniq
   end
 
   # @return [OrderDrop, nil] first confirmed order for this transactable or nil if not present
+  # @todo -- depracate in favor of filter (transactables.orders.confirmed | first? Or allow usage of .first)
   def confirmed_order
     line_item_orders.confirmed.first
   end
@@ -562,6 +596,7 @@ class TransactableDrop < BaseDrop
   end
 
   # @return [String] cover photo url for the transactable
+  # @todo -- depracate in favor of filter
   def cover_photo_url
     @source.cover_photo&.image&.url(:golden)
   end

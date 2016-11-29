@@ -11,6 +11,7 @@ class Support::TicketMessageDrop < BaseDrop
   end
 
   # @return [String] date/time when this message was created
+  # @todo -- depracate DIY
   def created_at
     I18n.l(message.created_at, format: :short)
   end
@@ -20,6 +21,7 @@ class Support::TicketMessageDrop < BaseDrop
   delegate :full_name, to: :message
 
   # @return [String] reservations dates tied to this message thread as an html formatted string
+  # @todo -- we shouldnt return html
   def dates
     @date_presenter = DatePresenter.new(@message.ticket.reservation_dates)
     if !@message.ticket.reservation_details['start_minute'].present? && !@message.ticket.reservation_details['end_minute'].present?
@@ -40,6 +42,7 @@ class Support::TicketMessageDrop < BaseDrop
   end
 
   # @return [String] the contents of this message as an html-formatted string
+  # @todo -- we shouldnt return html
   def message_html
     simple_format(message.message)
   end

@@ -21,6 +21,8 @@ class UserBlogPostDrop < BaseDrop
     @blog_post = blog_post
   end
 
+  # @todo -- heavy copy paste warning -- my comments are in blog_post_drop.rb. Dont want to repeat myself
+
   # @return [String] post's content
   def content
     @blog_post.content.to_s.html_safe

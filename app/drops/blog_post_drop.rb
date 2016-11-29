@@ -23,66 +23,77 @@ class BlogPostDrop < BaseDrop
 
   # post's content
   # @return [String]
+  # @todo -- depracate -- DIY
   def content
     @blog_post.content.to_s.html_safe
   end
 
   # post's excerpt
   # @return [String]
+  # @todo -- depracate -- DIY
   def excerpt
     @blog_post.decorate.blog_post_excerpt
   end
 
   # post author's name
   # @return [String]
+  # @todo -- depracate -- DIY
   def author_name
     @blog_post.author_name
   end
 
   # chceck if author's name is present
   # @return [Boolean]
+  # @todo -- depracate -- DIY
   def author_name_present?
     @blog_post.author_name.present?
   end
 
   # check if author has an avatar or name to display
   # @return [Boolean]
+  # @todo -- depracate -- DIY
   def show_author?
     @blog_post.author_avatar.present? || @blog_post.author_name.present?
   end
 
   # check if author's avatar can be displayed
   # @return [Boolean]
+  # @todo -- depracate -- DIY
   def show_author_avatar?
     @blog_post.author_avatar.present? || @blog_post.author_name.present?
   end
 
   # check if author avatar is present
   # @return [Boolean]
+  # @todo -- depracate -- DIY
   def author_avatar_present?
     @blog_post.author_avatar.present?
   end
 
   # url for user's profile path
   # @return [String]
+  # @todo -- depracate -- url filter
   def user_path
     routes.user_path(@blog_post.user)
   end
 
   # full url for post page
   # @return [String]
+  # @todo -- depracate -- url filter
   def post_url
     routes.blog_post_url(@blog_post, host: platform_context_decorator.instance.default_domain.name)
   end
 
   # path for post page
   # @return [String]
+  # @todo -- depracate -- url filter
   def post_path
     routes.blog_post_path(@blog_post)
   end
 
   # returns date when post was published or created
   # @return [DateTime]
+  # @todo -- think about the DateObject i mentioned before
   def published_at
     @blog_post.published_at.presence || @blog_post.created_at
   end
@@ -101,30 +112,35 @@ class BlogPostDrop < BaseDrop
 
   # url for author's avatar thumb image
   # @return [String]
+  # @todo -- depracate -- url filter/images
   def author_avatar_thumb_url
     @blog_post.author_avatar.url(:medium)
   end
 
   # url for author's avatar medium image
   # @return [String]
+  # @todo -- depracate -- url filter/images
   def author_avatar_medium_url
     @blog_post.author_avatar.url(:medium)
   end
 
   # check if header image is present
   # @return [Boolean]
+  # @todo -- depracate -- DIY
   def header_present?
     @blog_post.header.present?
   end
 
   # url for header image
   # @return [String]
+  # @todo -- depracate -- DIY
   def header_url
     @blog_post.header.present? ? @blog_post.header.url : nil
   end
 
   # path to the user if the user is an enquirer (has a buyer profile)
   # @return [String]
+  # @todo -- investigate if theres no better way of achieving this
   def link_for_enquirer
     @blog_post.user.seller_profile ? '' : routes.user_path(@blog_post.user)
   end

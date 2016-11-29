@@ -112,6 +112,7 @@ class UserDrop < BaseDrop
   end
 
   # @return [String] path to the wishlisting this user
+  # @todo -- depracate to url filter
   def wish_list_path
     routes.api_wish_list_items_path(id: @source.id, wishlistable_type: 'User')
   end
@@ -124,10 +125,12 @@ class UserDrop < BaseDrop
 
   # @!method name_pluralize
   #   @return [String] plural of the user's name
+  # @todo -- convert to filter
   delegate :pluralize, to: :name, prefix: true
 
   # @!method first_name_pluralize
   #   @return [String] plural of the user's first name
+  # @todo -- convert to filter
   delegate :pluralize, to: :first_name, prefix: true
 
   # @return [Boolean] whether the profile of the user has been marked as public
@@ -136,28 +139,31 @@ class UserDrop < BaseDrop
   end
 
   # @return [Boolean] whether the user is authenticated with facebook
+  # @todo -- rethink the naming. It doesnt suggest bool at all. Maybe add '?''
   def facebook_connections
     @source.decorate.social_connections_for('facebook').present?
   end
 
   # @return [Boolean] whether the user is authenticated with linkedin
+  # @todo -- rethink the naming. It doesnt suggest bool at all. Maybe add '?''
   def linkedin_connections
     @source.decorate.social_connections_for('linkedin').present?
   end
 
   # @return [Boolean] whether the user is authenticated with twitter
+  # @todo -- rethink the naming. It doesnt suggest bool at all. Maybe add '?''
   def twitter_connections
     @source.decorate.social_connections_for('twitter').present?
   end
 
   # @return [String] path to the search section in the application
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def search_url
     routes.search_path
   end
 
   # @return [String] path to the search section in the application
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   # @todo Investigate for removal
   def search_url_with_tracking
     routes.search_path
@@ -192,26 +198,26 @@ class UserDrop < BaseDrop
   end
 
   # @return [String] path to the app wizard for adding a new listing to the system
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def space_wizard_list_url_with_tracking
     routes.space_wizard_list_path(token_key => @source.try(:temporary_token))
   end
 
   # @return [String] path to the dashboard location for managing all transactables
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def manage_locations_url
     routes.dashboard_company_transactable_types_path
   end
 
   # @return [String] path to the dashboard location for managing all transactables
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   # @todo Investigate for removal
   def manage_locations_url_with_tracking
     routes.dashboard_company_transactable_types_path
   end
 
   # @return [String] path to the dashboard location for managing all transactables
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def manage_locations_url_with_tracking_and_token
     routes.dashboard_company_transactable_types_path(token_key => @source.try(:temporary_token))
   end
@@ -222,19 +228,19 @@ class UserDrop < BaseDrop
   end
 
   # @return [String] path to the section in the app for editing a user's profile
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def edit_user_registration_url(_with_token = false)
     routes.edit_user_registration_path(token_key => @source.try(:temporary_token))
   end
 
   # @return [String] path to the section in the app for editing a user's profile, with authentication token
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def edit_user_registration_url_with_token
     routes.edit_user_registration_path(token_key => @source.try(:temporary_token))
   end
 
   # @return [String] path to the section in the app for editing a user's profile, with authentication token
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   # @todo Investigate for removal
   def edit_user_registration_url_with_token_and_tracking
     routes.edit_user_registration_path(token_key => @source.try(:temporary_token))
@@ -246,31 +252,31 @@ class UserDrop < BaseDrop
   end
 
   # @return [String] path to a user's public profile
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def user_profile_url
     routes.profile_path(@source.slug)
   end
 
   # @return [String] path to reviews in user's public profile
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def reviews_user_profile_url
     routes.profile_path(@source.slug, tab: 'reviews')
   end
 
   # @return [String] path to services in user's public profile
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def services_user_profile_url
     routes.profile_path(@source.slug, tab: 'services')
   end
 
   # @return [String] path to blog posts in user's public profile
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def blog_posts_user_profile_url
     routes.profile_path(@source.slug, tab: 'blog_posts')
   end
 
   # @return [String] path to seller/buyer/default user profile
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def profile_url_for_search
     case @context['transactable_type'].profile_type
     when UserProfile::SELLER
@@ -289,66 +295,70 @@ class UserDrop < BaseDrop
 
   # @return [Boolean] whether to show the services tab containing listings created
   #   by the user (used mostly on the buyer/seller profile pages)
+  # @todo -- remove per DIY
   def show_services_tab?
     !hide_tab?('services') && @context['listings']
   end
 
   # @return [Boolean] whether to show the blog tab containing published posts
   #   (used mostly on the buyer/seller profile pages)
+  # @todo -- remove per DIY
   def show_blog_tab?
     PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.try(:enabled?) && !hide_tab?('blog_posts')
   end
 
   # @return [Array<UserBlogPostDrop>] array of blog posts published by this user
+  # @todo -- allow user to set limit by filter
   def published_posts
     @source.published_blogs.limit(5)
   end
 
   # @return [String] path to viewing reviews left by the user or about the user
+  # @todo -- depracate url for filter
   def reviews_collection_path
     routes.reviews_collections_path(@source)
   end
 
   # @return [String] path to the user's profile
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def profile_url
     urlify(routes.profile_path(@source.slug))
   end
 
   # @return [String] path to the user's profile with authentication token (projects section)
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def projects_profile_url_with_token
     urlify(routes.profile_path(@source.slug, token_key => @source.try(:temporary_token), anchor: :projects))
   end
 
   # @return [String] path to the user's profile with authentication token (groups section)
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def groups_profile_url_with_token
     urlify(routes.profile_path(@source.slug, token_key => @source.try(:temporary_token), anchor: :groups))
   end
 
   # @return [String] path to the section in the application where a user can change his password
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def set_password_url_with_token
     routes.set_password_path(token_key => @source.try(:temporary_token))
   end
 
   # @return [String] url to the section in the application where a user can change his password
   #   with authentication token
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   # @todo Investigate for removal
   def set_password_url_with_token_and_tracking
     routes.set_password_path(token_key => @source.try(:temporary_token))
   end
 
   # @return [String] path for verifying (confirming) a user's email
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def verify_user_url
     routes.verify_user_path(@source.id, @source.email_verification_token)
   end
 
   # @return [String] path to the dashboard location for the user reservations
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def bookings_dashboard_url
     routes.dashboard_orders_path
   end
@@ -365,19 +375,20 @@ class UserDrop < BaseDrop
   end
 
   # @return [String] path to the section in the application for managing a user's own bookings, with authentication token
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   def bookings_dashboard_url_with_token
     routes.dashboard_orders_path(token_key => @source.try(:temporary_token))
   end
 
   # @return [String] path to the section in the application for managing a user's own bookings, with authentication token
-  # @todo Path/url inconsistency
+  # @todo -- depracate url for filter
   # @todo Investigate for removal
   def bookings_dashboard_url_with_tracking_and_token
     routes.dashboard_orders_path(token_key => @source.try(:temporary_token))
   end
 
   # @return [Array<TransactableDrop>] listings in and around a user's location, limited to a 100 km radius and a maximum of 3 results
+  # @todo -- allow customization via filter
   def listings_in_near
     @source.listings_in_near(3, 100, true)
   end
@@ -388,43 +399,51 @@ class UserDrop < BaseDrop
   end
 
   # @return [String] url to the "big" version of a user's avatar image
+  # @todo -- depracate url for filter
   def avatar_url_big
     ActionController::Base.helpers.asset_url(@source.avatar_url(:big))
   end
 
   # @return [String] url to the "thumb" version of a user's avatar image
+  # @todo -- depracate url for filter
   def avatar_url_thumb
     ActionController::Base.helpers.asset_url(@source.avatar_url(:thumb))
   end
 
   # @return [String] url to the "bigger" version of a user's avatar image
+  # @todo -- depracate url for filter
   def avatar_url_bigger
     ActionController::Base.helpers.asset_url(@source.avatar_url(:bigger))
   end
 
   # @return [String] path to a user's public profile
+  # @todo -- depracate url for filter
   def profile_path
     routes.profile_path(@source.slug)
   end
 
   # @return [String] path to the section in the application for sending a message to this user using the
   #   marketplace's internal messaging system
+  # @todo -- depracate url for filter
   def user_message_path
     routes.new_user_user_message_path(user_id: @source.slug)
   end
 
   # @return [String] path to the user's blog
+  # @todo -- depracate url for filter
   def user_blog_posts_list_path
     routes.user_blog_posts_list_path(@source.slug)
   end
 
   # @return [Boolean] whether the marketplace has blogging enabled and the user has a blog enabled for his account
+  # @todo -- investigate if needed. If yes, some refactoring would be nice, maybe extraction
   def has_active_blog?
     PlatformContext.current.instance.blogging_enabled?(@source) && @source.blog.try(:enabled?)
   end
 
   # @return [Hash{String => Hash{String => String, Array}}] returns hash of categories !{ "name" => { "name" => 'translated_name', "children" => [collection of chosen values] } }
   #   for this user object
+  # @todo -- this is kind of verbose, am i right?
   def categories
     @categories = build_categories_hash_for_object(@source, Category.users.roots.includes(:children)) if @categories.nil?
     @categories
@@ -432,6 +451,7 @@ class UserDrop < BaseDrop
 
   # @return [Hash{String => Hash{String => String, Array}}] returns hash of categories !{ "name" => { "name" => 'translated_name', "children" => [collection of chosen values] } }
   #   for this user's buyer profile
+  # @todo -- this is too, in a different way :)
   def buyer_categories
     if @categories.nil?
       @categories = build_categories_hash_for_object(@source.buyer_profile, Category.buyers.roots.includes(:children))
@@ -441,18 +461,21 @@ class UserDrop < BaseDrop
 
   # @return [Hash{String => Hash{String => String}}] returns hash of categories !{ "name" => { "name" => 'translated_name', "children" => 'comma separated children' } }
   #   for this user object
+  # @todo -- investigate if its possible to leave formatting for users (DIY)
   def formatted_categories
     build_formatted_categories(@source.categories)
   end
 
   # @return [Hash{String => Hash{String => String, Array}}] returns hash of categories !{ "name" => { "name" => 'translated_name', "children" => [array with children] } }
   #   for this user's buyer profile
+  # @todo -- investigate if its possible to leave formatting for users (DIY)
   def formatted_buyer_categories
     build_categories_to_array(@source.buyer_profile.categories) if @source.buyer_profile
   end
 
   # @return [Hash{String => Hash{String => String, Array}}] returns hash of categories !{ "name" => { "name" => 'translated_name', "children" => [array with children] } }
   #   for this user's seller profile
+  # @todo -- investigate if its possible to leave formatting for users (DIY)
   def formatted_seller_categories
     build_categories_to_array(@source.seller_profile.categories) if @source.seller_profile
   end
@@ -464,6 +487,7 @@ class UserDrop < BaseDrop
   end
 
   # @return [Boolean] whether the currently logged user is this user
+  # @todo -- investigate if this can be done differently
   def is_current_user?
     @source.id == @context['current_user'].try(:id)
   end
@@ -484,11 +508,13 @@ class UserDrop < BaseDrop
   end
 
   # @return [Array<CustomAttributeDrop>] an array of custom attributes for the default and seller profile
+  # @todo -- depracate -- in DIY context
   def default_and_seller_attributes
     default_attributes + seller_attributes
   end
 
   # @return [Array<CustomAttributeDrop>] an array of custom attributes for the default and buyer profile
+  # @todo -- depracate -- in DIY context
   def default_and_buyer_attributes
     default_attributes + buyer_attributes
   end
@@ -499,21 +525,34 @@ class UserDrop < BaseDrop
   end
 
   # @return [Boolean] whether the user is "twitter connected" to the site
+  # @todo -- rethink name -- maybe use rails convention: *_connected?
+  # also ive seen already in couple places things that are connected to social networks,
+  # maybe a separate drop/filter would be nice
+  # or maybe it is just unnecessary and can be removed
   def is_twitter_connected
     social_connections.where(provider: 'twitter').exists?
   end
 
   # @return [Boolean] whether the user is "facebook connected" to the site
+  # @todo -- rethink name -- maybe use rails convention: *_connected?
+  # also ive seen already in couple places things that are connected to social networks,
+  # maybe a separate drop/filter would be nice
+  # or maybe it is just unnecessary and can be removed
   def is_facebook_connected
     social_connections.where(provider: 'facebook').exists?
   end
 
   # @return [Boolean] whether the user is "linkedin connected" to the site
+  # @todo -- rethink name -- maybe use rails convention: *_connected?
+  # also ive seen already in couple places things that are connected to social networks,
+  # maybe a separate drop/filter would be nice
+  # or maybe it is just unnecessary and can be removed
   def is_linkedin_connected
     social_connections.where(provider: 'linkedin').exists?
   end
 
   # @return [String] formatted string representation of when the user signed up
+  # @todo -- extract formatting to filter
   def member_since
     I18n.l(@source.created_at.to_date, format: :short)
   end
@@ -525,56 +564,66 @@ class UserDrop < BaseDrop
 
   # @return [String, nil] click to call button for this user if enabled for this
   #   marketplace
+  # @todo -- depracate in favor of DIY - especially looking at logic in this helper, this will be very hard to document at all
   def click_to_call_button
     build_click_to_call_button_for_user(@source)
   end
 
   # @return [String, nil] click to call button for this user if enabled for this
   #   marketplace; just the first name is shown
+  # @todo -- depracate in favor of DIY - especially looking at logic in this helper, this will be very hard to document at all
   def click_to_call_button_first_name
     build_click_to_call_button_for_user(@source, first_name: true)
   end
 
   # @return [Boolean] whether or not the user has a buyer profile set up
+  # @todo -- depracate - or at least rename to rails convention
   def has_buyer_profile?
     @source.buyer_profile.present? && @source.buyer_profile.persisted?
   end
 
   # @return [Boolean] whether or not the user has a seller profile set up
+  # @todo -- depracate - or at least rename to rails convention
   def has_seller_profile?
     @source.seller_profile.present? && @source.seller_profile.persisted?
   end
 
   # @return [Boolean] whether the user only has a buyer profile implemented to make things easier as Liquid does not
   #   have a not operator
+  # @todo -- depracate - or at least rename to rails convention
   def only_buyer_profile?
     has_buyer_profile? && !has_seller_profile?
   end
 
   # @return [Boolean] whether the user only has a seller profile implemented to make things easier as Liquid does not
   #   have a not operator
+  # @todo -- depracate - or at least rename to rails convention
   def only_seller_profile?
     !has_buyer_profile? && has_seller_profile?
   end
 
   # @return [Boolean] whether the user has any verified merchant account (attached to his first company)
+  # @todo -- verify logic -- it smells a lot. If correct, i recommend renaming with rails conv. in mind
   def has_verified_merchant_account
     @source.companies.first.try(:merchant_accounts).try(:any?, &:verified?)
   end
 
   # @return [Boolean] whether the user has pending transactables
   #   (created by the currently logged in user, in the pending state, and to which this user is not a collaborator)
+  # @todo -- depracate - user can check it in liquid
   def has_pending_transactables?
     pending_transactables.any?
   end
 
   # @return [Integer] numer of created listings (in the 'completed') state
+  # @todo -- depracate -- maybe allow filtering listings by state using filter .created_listings | filter: 'completed' | size
   def completed_transactables_count
     @source.created_listings.with_state(:completed).count
   end
 
   # @return [Array<TransactableDrop>] array of pending transactables for the currently logged in user
   #   (created by the currently logged in user, in the pending state)
+  # @todo -- SQL query in drop -- .try(:hard).smell(self) ;-) Additionally, it should be in transactable drop
   def pending_transactables_for_current_user
     Transactable.where(creator_id: @context['current_user'].id).with_state(:pending)
                 .joins("LEFT Outer JOIN transactable_collaborators tc on
@@ -584,38 +633,45 @@ class UserDrop < BaseDrop
 
   # @return [Array<Transactable>] array of pending transactables for the user
   #   (created by the currently logged in user, in the pending state, and to which this user is not a collaborator)
+  # @todo -- same as above
   def pending_transactables
     pending_transactables_for_current_user.where('tc.id is NULL')
   end
 
   # @return [Array<TransactableDrop>] array of pending transactables for the user to which the user is a collaborator
   #   (created by the currently logged in user, in the pending state, and to which this user is a collaborator)
+  # @todo -- same as above
   def pending_collaborated_transactables
     pending_transactables_for_current_user.where('tc.id is NOT NULL')
   end
 
   # @todo Investigate for removal; the method doesn't appear to do what its name says
+  # @todo -- move to orders drop?
   def unconfirmed_received_orders_count
     @unconfirmed_received_orders_count ||= @source.listing_orders.unconfirmed.count
   end
 
   # @return [Boolean] whether the user has any companies created
+  # @todo -- deprecate -- current_user.companies.size > 0
   def has_company?
     @source.companies.present?
   end
 
   # @return [Integer, Boolean] ID of the user's first company, false if not present
+  # @todo -- deprecate, DIY
   def company_id
     has_company? && @source.companies.first.id
   end
 
   # @return [Boolean] whether the user completed the registration process
+  # @todo -- explain what does it mean to have completed registration process. Logic in model smells
   def registration_completed?
     !!@source.registration_completed?
   end
 
   # @return [Integer, nil] total orders for this user (received - not in the 'inactive' state, unconfirmed;
   #   and placed - unconfirmed and not archived); nil if the total count is 0
+  # @todo -- move to reservations drop?
   def reservations_count
     count = reservations_count_for_user(@source)
     count > 0 ? count : nil
@@ -628,22 +684,26 @@ class UserDrop < BaseDrop
   end
 
   # @return [String] path for generating an inappropriate report for this user
+  # @todo -- deprecate in favor of filter
   def inappropriate_report_path
     routes.inappropriate_report_path(id: @source.id, reportable_type: 'User')
   end
 
   # @return [Integer] total count of unread messages in user inbox
+  # @todo - deprecate -- DIY
   def unread_messages_count
     @source.unread_user_message_threads_count_for(PlatformContext.current.instance)
   end
 
   # @return [Integer] total count of seller_pending_transactables_count and buyer_pending_transactables_count
+  # @todo - deprecate -- DIY and/or move to transactable drop
   def pending_transactables_count
     seller_pending_transactables_count || buyer_pending_transactables_count
   end
 
   # @return [Integer, nil] count of created transactables in the 'pending' state if the user has a seller profile, nil
   #   otherwise
+  # @todo - deprecate -- DIY and/or move to transactable drop
   def seller_pending_transactables_count
     @source.transactables.with_state(:pending).count if has_seller_profile?
   end
@@ -658,6 +718,7 @@ class UserDrop < BaseDrop
 
   # @return [String] path to the place in admin indicated by the instance_admins_metadata
   #   stored for the user (usually the first permission the user has access to)
+  # @todo -- deprecate in favor of filter
   def user_menu_instance_admin_path
     users_instance_admin = '_manage_blog' if @source.instance_admins_metadata == 'blog'
     users_instance_admin = '_support_root' if @source.instance_admins_metadata == 'support'
@@ -666,6 +727,7 @@ class UserDrop < BaseDrop
 
   # @return [Boolean] whether to show the blog menu (used in liquid views rendering navigation items)
   #   true if the blogging functionality is allowed for the type of user that this user has
+  # @todo -- deprecate -- DIY
   def show_blog_menu?
     (!platform_context_decorator.instance.split_registration? && platform_context_decorator.instance.user_blogs_enabled) ||
       (has_seller_profile? && @source.instance.lister_blogs_enabled || has_buyer_profile? && @source.instance.enquirer_blogs_enabled)

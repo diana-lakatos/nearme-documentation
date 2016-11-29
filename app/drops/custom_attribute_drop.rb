@@ -19,6 +19,7 @@ class CustomAttributeDrop < BaseDrop
 
   # @return [String] string containing a space-separated list of attributes set for the input
   #   (input html options) in the form e.g. "class=selectpicker name=somevalue"
+  # @todo -- document usage with examples
   def input_html_options
     @custom_attribute.input_html_options.map do |k, v|
       "#{k}=#{v}"
@@ -27,6 +28,7 @@ class CustomAttributeDrop < BaseDrop
 
   # @return [String] string containing a space-separated list of attributes set for the input
   #   (wrapper html options) in the form e.g. "class=selectpicker name=somevalue"
+  # @todo -- document usage with examples
   def wrapper_html_options
     @custom_attribute.wrapper_html_options.map do |k, v|
       "#{k}=#{v}"

@@ -21,6 +21,7 @@ class AdditionalChargeDrop < BaseDrop
   end
 
   # @return [String] the formatted amount depending on global settings for currency formatting
+  # @todo - move to MoneyDrop and/or use unit formatter filter
   def formatted_amount
     render_money(amount)
   end
