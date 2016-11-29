@@ -2,39 +2,22 @@
 name: Signup form
 ---
 {% content_for 'head_bottom' %}
-<!-- <link rel="stylesheet" href="https://rawgit.com/mdyd-dev/marketplaces/master/spacer/signup.v02/dist/signup_form.min.css"> -->
+<!-- <link rel="stylesheet" href="https://rawgit.com/mdyd-dev/marketplaces/master/spacer/signup.v02/dist/signup_form.css"> -->
 <link href="http://localhost:4000/css/signup_form.css" rel="stylesheet">
 {% endcontent_for %}
 
 {% content_for 'body_bottom' %}
-<!-- <script src="https://rawgit.com/mdyd-dev/marketplaces/master/spacer/signup.v02/dist/signup_form.min.js" async></script> -->
-<script src="http://localhost:4000/js/signup_form.js" async></script>
+<!-- <script src="https://rawgit.com/mdyd-dev/marketplaces/master/spacer/signup.v02/dist/signup-bundle.js" async></script> -->
+<script src="http://localhost:4000/js/signup-bundle.js" async></script>
 {% endcontent_for %}
 
 
-
-<section class="multistep-signup">
+<section class="multistep-signup" data-multistep-signup>
 
   <h2>Let’s list your space and start<br>making you some extra money</h2>
 
-  <div class="multistep-signup-progress">
-    <div class="wrap">
-      <header><span class="progress-label">Step</span> <span class="sr-only">1 of 4</span></header>
-      <ul aria-hidden="true">
-        <li>1</li>
-        <li>2</li>
-        <li class="current">3</li>
-        <li>4</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="multistep-signup-estimate">
-    <p>Based on your space features you could earn <span class="price">$350</span> per month</p>
-  </div>
-
   <form action="./" method="post" class="no_inheritance">
-    <div class="step" id="step-1">
+    <div class="step" data-step="0">
       <h3>Evaluate rent income from your space</h3>
       <fieldset>
         <legend>What type of space do you have? <abbr title="required field">*</abbr></legend>
@@ -135,14 +118,9 @@ name: Signup form
           </li>
         </ul>
       </fieldset>
-
-      <div class="multistep-signup-navigation">
-        <button type="button" class="previous">Previous</button>
-        <button type="button" class="next">Next</button>
-      </div>
     </div><!-- .step -->
 
-    <div class="step" data-step="2">
+    <div class="step" data-step="1">
       <h3>A few more details</h3>
       <fieldset>
         <legend>What security does the space have? <abbr title="required field">*</abbr></legend>
@@ -328,14 +306,9 @@ name: Signup form
           <li><input type="checkbox" name="features[]" id="storage-feature-shopping-centre" value="shopping-centre"> <label for="storage-feature-shopping-centre">Close to shopping centre</label></li>
         </ul>
       </fieldset>
-
-      <div class="multistep-signup-navigation">
-        <button type="button" class="previous">Previous</button>
-        <button type="button" class="next">Next</button>
-      </div>
     </div><!-- step -->
 
-    <div class="step" data-step="3">
+    <div class="step" data-step="2">
       <h3>Upload photos and set your rules</h3>
 
       <fieldset>
@@ -378,14 +351,9 @@ name: Signup form
           <li><input type="radio" name="deposit" value="200" id="deposit-200"> <label for="deposit-200">$200 Deposit</label></li>
         </ul>
       </fieldset>
-
-      <div class="multistep-signup-navigation">
-        <button type="button" class="previous">Previous</button>
-        <button type="button" class="next">Next</button>
-      </div>
     </div><!-- step -->
 
-    <div class="step" data-step="4">
+    <div class="step" data-step="3">
       <h3>Confirm &amp; Submit your listing</h3>
 
       <div class="form-field">
@@ -410,7 +378,6 @@ name: Signup form
       </div>
 
       <div class="multistep-signup-navigation">
-        <button type="button" class="previous">Previous</button>
         <button type="submit" class="next submit">List your space</button>
       </div>
     </div>
