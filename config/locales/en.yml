@@ -2,6 +2,12 @@ en:
   activerecord:
     errors:
       models:
+        payment:
+          attributes:
+            payment_gateway:
+              blank: 'must be set'
+            payment_method:
+              blank: 'must be entered'
         delivery:
           attributes:
             pickup_date:
@@ -14,6 +20,9 @@ en:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
     attributes:
+      payment:
+        payment_gateway: 'Payment gateway'
+        payment_method: 'Payment method'
       attachable/attachment:
         file: 'Attachment'
       additional_charge_type:
