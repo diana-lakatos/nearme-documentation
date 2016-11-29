@@ -49,7 +49,7 @@ class LongtailApi
     response = call_api("#{@host}/search/seo/#{keyword['attributes']['slug']}")
     while response == TOO_MANY_ATTEMPTS_ERROR
       sleep(5)
-      response = http.request(req)
+      response = call_api("#{@host}/search/seo/#{keyword['attributes']['slug']}")
     end
     parse_response(response)
   end
