@@ -23,7 +23,8 @@ class LongtailApi
     return false if parsed_body.nil?
     parsed_body = LongtailApi::ParsedBodyDecorator.decorate(parsed_body)
     @page.page_data_source_contents.where(data_source_content: create_data_source_content_for_keyword(keyword: keyword,
-                                                                                                      parsed_body: parsed_body),
+                                                                                                      parsed_body: parsed_body)
+                                                                                                      .id,
                                           slug: keyword['attributes']['url'][1..-1]).first_or_create!
   end
 
@@ -33,6 +34,7 @@ class LongtailApi
     data_source_content.externally_created_at = nil
     data_source_content.json_content = parsed_body
     data_source_content.save!
+    data_source_content
   end
 
   def main_data_source
