@@ -80,7 +80,7 @@ class DelayedReservation < Reservation
         minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents,
         transactable_pricing_id: try(:transactable_pricing_id)
       )
-      update_payment_attributes
+      update_payment_attributes if payment.present?
     end
   end
 
