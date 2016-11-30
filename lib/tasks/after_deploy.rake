@@ -27,6 +27,7 @@ namespace :after_deploy do
     ScheduleChargeSubscriptions.schedule! if Rails.env.production?
     ScheduleCommunityAggregatesCreation.schedule!
     ScheduleSitemapsRefresh.schedule!
+    ScheduleLongtailApiParse.schedule!
 
     puts 'Creating default locales'
     Utils::EnLocalesSeeder.new.go!
