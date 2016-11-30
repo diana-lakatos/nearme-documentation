@@ -15,7 +15,7 @@ class LongtailApi
     keywords['data'].each do |keyword|
       parse_keyword(keyword)
     end
-    parse_keywords!(page, token, keywords['links']['next']) if keywords['links']['next'].present?
+    parse_keywords!(keywords['links']['next']) if keywords['links']['next'].present?
   end
 
   def parse_keyword(keyword)
