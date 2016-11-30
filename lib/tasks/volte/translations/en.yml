@@ -12,6 +12,12 @@ en:
     price_unit:
       person: '/ item'
       person_unit: '/ item / %{unit}'
+
+  flash_messages:
+    manage:
+      reservations:
+        reservation_not_confirmed: 'Please confirm the below information to complete the order'
+
   simple_form:
     labels:
       transactable:
