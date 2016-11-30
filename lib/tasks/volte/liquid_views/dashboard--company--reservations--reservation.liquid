@@ -61,6 +61,9 @@
 
       <dt>Return date:</dt>
       <dd>{{ reservation.starts_at | to_date | add_to_date: reservation.transactable_pricing.number_of_units | l: 'short'  }} </dd>
+
+      <dt>{{ 'reservations_review.notice.header' | t }}</dt>
+      <dd>{{ 'reservations_review.notice.content' | t }}</dd>
     </dl>
   </div>
 </div>
