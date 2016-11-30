@@ -7,11 +7,15 @@
     {% endif %}
   {% endif %}
   <a class="button button-default" data-modal="true" href="{{ 'confirmation_form_dashboard_company_orders_received_path' | generate_url: reservation.id, listing_id: reservation.transactable }}">Confirm</a>
+  {% if reservation.can_reject? %}
+    <a class="button button-default" data-modal="true" href="{{ 'rejection_form_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id: reservation.transactable }}">{{ 'dashboard.host_reservations.actions.decline' | t | upcase }}</a>
+  {% endif %}
+{% else %}
+  {% if reservation.can_reject? %}
+    <a class="button button-default" data-modal="true" href="{{ 'rejection_form_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id: reservation.transactable }}">{{ 'dashboard.host_reservations.actions.cancel' | t | upcase }}</a>
+  {% endif %}
 {% endif %}
 
-{% if reservation.can_reject? %}
-  <a class="button button-default" data-modal="true" href="{{ 'rejection_form_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id: reservation.transactable }}">{{ 'dashboard.host_reservations.actions.decline' | t | upcase }}</a>
-{% endif %}
 {% if reservation.paid? == false and (reservation.unconfirmed? or reservation.confirmed?) %}
   {% if reservation.remote_payment? %}
     <a class="button button-default" data-modal="true" href="{{ 'request_payment_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id:reservation.transactable }}" data-confirm="{{ 'dashboard.host_reservations.confirmations.request_payment' | t }}">{{ 'dashboard.host_reservations.actions.request_payment' | t | upcase }}</a>
