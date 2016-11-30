@@ -101,7 +101,9 @@
             <div class="search-result-meta-action">
               {% if role == 'enquirer'  %}
                 {% if collaborator.approved_by_owner? %}
-                  <a class="button-a inverted"  href="{{ case.url }}" >Make an Offer</a>
+                  <a class="button-a inverted" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: case.id }}">Make an Offer</a>
+                {% elsif  collaborator %}
+                  <a href="#case-permission-request-{{ case.id }}" class="button-a" data-case-invite-trigger>Pending Request</a>
                 {% elsif  current_user.id != case.creator_id %}
                   <a href="#case-permission-request-{{ case.id }}" class="button-a inverted" data-case-invite-trigger>Request Access</a>
                 {% endif %}

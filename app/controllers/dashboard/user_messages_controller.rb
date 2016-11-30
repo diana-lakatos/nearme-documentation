@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::UserMessagesController < Dashboard::BaseController
   before_action :redirect_to_login, only: [:new]
   skip_before_action :authenticate_user!, only: [:new]
@@ -26,7 +27,9 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
     @user_message.author = current_user
     @user_message.set_message_context_from_request_params(params, current_user)
 
-    if @user_message.save
+    # if recipient is not valid, @user_message.save will fail, despite all is fine
+    # hence current_user.save!
+    if @user_message.valid? && current_user.save!
       @user_message.send_notification
 
       if request.xhr?

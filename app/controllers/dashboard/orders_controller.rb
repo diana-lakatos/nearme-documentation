@@ -61,7 +61,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def new
-    @order = @transactable_pricing.order_class.where(user: current_user, transactable_id: @transactable.id, state: 'pending').first_or_initialize
+    @order = @transactable_pricing.order_class.where(user: current_user, transactable_id: @transactable.id, state: 'inactive').first_or_initialize
     if @order.persisted?
       redirect_to(action: 'edit', id: @order)
     else
@@ -182,7 +182,8 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def redirect_to_index_if_not_editable
-    redirect_to request.referer.presence || dashboard_orders_path unless @order.enquirer_editable?
+    return if @order.enquirer_editable?
+    redirect_to (request.referer.presence || dashboard_orders_path)
   end
 
   def order_params

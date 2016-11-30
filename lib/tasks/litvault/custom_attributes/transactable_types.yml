@@ -1,39 +1,51 @@
 "Group Case":
   law_firm:
     label: Law Firm
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
 
   principal_office:
     label: Principal Office
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
 
   types_of_injuries_included:
     label: 'Describe any other types of injuries included'
     html_tag: textarea
-    required: true
-    max_length: 3000
     input_html_options_string: "data-counter-limit=>3000"
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        max_length: 3000
 
   matters_to_include:
     label: 'Other matters you wish to include'
     html_tag: textarea
-    max_length: 3000
     input_html_options_string: "data-counter-limit=>3000"
+    custom_validators_attributes:
+      "[0]":
+        max_length: 3000
 
   case_short_description:
     label: 'Case Short Description'
     html_tag: textarea
-    required: true
-    max_length: 1500
     input_html_options_string: "data-counter-limit=>1500"
     hint: IMPORTANT - Do Not Post Any Confidential Information
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        max_length: 1500
 
   case_full_description:
     label: 'Case Full Description'
     html_tag: textarea
-    required: true
-    max_length: 30000
     input_html_options_string: "data-counter-limit=>30000"
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        max_length: 30000
 
   engagement_agreement_fee_percentage:
     label: 'What is the attorneys’ fee percentage contained in the Engagement Agreement?'
@@ -42,27 +54,35 @@
   engagement_agreement_expenses_advancement:
     label: 'Are attorneys obligated to advance all litigation expenses per the standard Engagement Agreement?'
     html_tag: radio_buttons
-    valid_values:
-      - "Yes"
-      - "No"
+    custom_validators_attributes:
+      "[0]":
+        valid_values:
+          - "Yes"
+          - "No"
     wrapper_html_options_string: 'class=>form-group radio_buttons always-inline'
 
 "Individual Case":
   law_firm:
     label: Law Firm
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
 
   principal_office:
     label: Principal Office
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
 
   engagement_agreement_exists:
     label: 'Does a signed, written contingent fee agreement (the "Engagement Agreement") exist between Client and Referring Law Firm?'
     html_tag: radio_buttons
-    valid_values:
-      - "Yes"
-      - "No"
     wrapper_html_options_string: 'class=>form-group radio_buttons always-inline'
+    custom_validators_attributes:
+      "[0]":
+        valid_values:
+          - "Yes"
+          - "No"
 
   date_engagement_agreement_signed:
     label: 'Date Engagement Signed'
@@ -78,18 +98,24 @@
   engagement_agreement_expenses_advancement:
     label: 'Are attorneys obligated to advance all litigation expenses per the Client Engagement?'
     html_tag: radio_buttons
-    valid_values:
-      - "Yes"
-      - "No"
     wrapper_html_options_string: 'class=>form-group radio_buttons always-inline'
+    custom_validators_attributes:
+      "[0]":
+        valid_values:
+          - "Yes"
+          - "No"
 
   client_name:
     label: 'Enter Client First Name and Last Name'
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
 
   client_dob:
     label: 'Client’s Date of Birth'
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
     attribute_type: string
     input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
@@ -100,63 +126,83 @@
     input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
 
   city_of_incident:
     label: 'City of Injury or Accident'
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
 
   state_of_incident:
     label: 'State of Injury or Accident'
     html_tag: select
-    required: true
-    valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
 
   description_of_incident:
     label: 'Description of injury or accident'
     html_tag: textarea
-    required: true
-    max_length: 3000
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        max_length: 3000
     input_html_options_string: "data-counter-limit=>3000"
 
   description_of_medical_diagnoses:
     label: 'Description of medical diagnoses following injury or accident'
     html_tag: textarea
-    required: true
-    max_length: 3000
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        max_length: 3000
     input_html_options_string: "data-counter-limit=>3000"
 
   description_of_medical_care:
     label: 'Description of medical care and treatment following injury or accident'
     html_tag: textarea
-    required: true
-    max_length: 3000
     input_html_options_string: "data-counter-limit=>3000"
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        max_length: 3000
 
   days_of_hospitalization:
     label: 'Days of Hospitalization'
     html_tag: select
-    valid_values: ['0 Days', '1-3 Days', '4-7 Days', 'Over 7 Days']
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        valid_values: ['0 Days', '1-3 Days', '4-7 Days', 'Over 7 Days']
+        required: true
 
   list_defendants:
     label: 'List potential defendants'
     html_tag: textarea
-    max_length: 3000
+    custom_validators_attributes:
+      "[0]":
+        max_length: 3000
     input_html_options_string: "data-counter-limit=>3000"
 
   potential_cause_of_action:
     label: 'Describe potential causes of action against defendants'
     html_tag: textarea
-    max_length: 3000
+    custom_validators_attributes:
+      "[0]":
+        max_length: 3000
     input_html_options_string: "data-counter-limit=>3000"
 
   earliest_deadline_to_file:
     label: 'Have you calculated the earliest deadline to file the lawsuit, whether statute of limitations, prescription period and/or statute of repose?'
     html_tag: 'radio_buttons'
-    valid_values: ['Yes', 'No']
-    required: true
     wrapper_html_options_string: 'class=>form-group radio_buttons always-inline'
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        valid_values: ['Yes', 'No']
 
   date_of_earliest_deadline:
     label: 'Please provide the date for the earliest deadline to file the lawsuit'
@@ -164,29 +210,37 @@
     input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        required: true
 
   states:
     label: Select state(s) in which lawyer(s) at Handling Law Firm must be licensed to handle case
     attribute_type: array
     html_tag: check_box_list
-    valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
-    required: true
     searchable: true
     wrapper_html_options_string: 'class=>form-group check_boxes required checkbox-columns'
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
 
   city_in_which_law_firm_must_be_located:
     label: 'State the city or cities in which lawyer(s) at Handling Law Firm should be located in to handle case'
     html_tag: textarea
-    max_length: 3000
     input_html_options_string: "data-counter-limit=>3000"
+    custom_validators_attributes:
+      "[0]":
+        max_length: 3000
 
   involve_wrongful_death:
     label: 'Does claim involve a wrongful death or survival claim?'
     html_tag: radio_buttons
-    valid_values: ['Yes', 'No']
-    required: true
     wrapper_html_options_string: 'class=>form-group radio_buttons always-inline'
+    custom_validators_attributes:
+      "[0]":
+        valid_values: ['Yes', 'No']
+        required: true
 
   name_of_decedent:
     label: 'First and Last Name of Decedent'
@@ -194,54 +248,70 @@
   refer_only_clients_listed:
     label: 'Is Referring Law Firm seeking to refer only the Client(s) listed in the Engagement or would proposed referral cover all statutory beneficiaries of the Decedent that end up being represented by Handling Firm?'
     html_tag: 'select'
-    valid_values: ['Clients Only', 'All Statutory Beneficiaries']
-    required: true
+    custom_validators_attributes:
+      "[0]":
+        valid_values: ['Clients Only', 'All Statutory Beneficiaries']
+        required: true
 
   has_probate_estate_been_opened:
     label: 'Has a probate estate been opened in Decedent’s home state?'
     html_tag: radio_buttons
-    valid_values: ['Yes', 'No', 'I don’t know']
-    required: true
     wrapper_html_options_string: 'class=>form-group radio_buttons always-inline'
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        valid_values: ['Yes', 'No', 'I don’t know']
 
   available_records:
     label: Available Records
     attribute_type: array
     html_tag: check_box_list
-    valid_values: ['Accident Report', 'Medical Records']
+    custom_validators_attributes:
+      "[0]":
+        valid_values: ['Accident Report', 'Medical Records']
 
   description_of_records:
     label: 'Description of records obtained by referring lawyer'
     html_tag: textarea
-    required: true
-    max_length: 3000
     input_html_options_string: "data-counter-limit=>3000"
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        max_length: 3000
 
   underlying_records_documents:
     label: 'Identify any underlying records and /or documents you have obtained and reviewed'
     html_tag: check_box_list
     attribute_type: array
-    valid_values: ['Accident Report', 'Incedent Report', 'Medical Records', 'Pharmacy Records', 'Employtment Records', 'Death Certificate']
+    custom_validators_attributes:
+      "[0]":
+        valid_values: ['Accident Report', 'Incedent Report', 'Medical Records', 'Pharmacy Records', 'Employtment Records', 'Death Certificate']
 
   other_matters:
     label: 'Other matters you wish to include'
     html_tag: textarea
-    max_length: 3000
     input_html_options_string: "data-counter-limit=>3000"
+    custom_validators_attributes:
+      "[0]":
+        max_length: 3000
 
   case_short_description:
     label: Case Short Description
     html_tag: textarea
-    required: true
-    max_length: 1500
     input_html_options_string: "data-counter-limit=>1500"
     hint: IMPORTANT - Do Not Post Any Confidential Information
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        max_length: 1500
 
   case_full_description:
     label: 'Case Full Description'
     html_tag: textarea
-    required: true
-    max_length: 30000
     input_html_options_string: "data-counter-limit=>30000"
+    custom_validators_attributes:
+      "[0]":
+        required: true
+        max_length: 30000
 
 

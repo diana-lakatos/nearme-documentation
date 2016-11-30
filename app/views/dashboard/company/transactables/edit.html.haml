@@ -3,7 +3,7 @@
     %h1= t("dashboard.nav.transactables")
   - else
     %h1
-      = link_to t("dashboard.transactables.manage"), dashboard_company_transactable_type_transactables_path(@transactable_type), class: 'hidden-xs hidden-sm'
+      = link_to t("dashboard.transactables.manage"), url_for(@controller_scope), class: 'hidden-xs hidden-sm'
       %span.hidden-xs.hidden-sm >
       = t("dashboard.transactables.edit")
 
@@ -13,7 +13,7 @@
       = link_to t('dashboard.transactables.view_html'), @transactable.decorate.show_path, rel: :external
 
 
-= dashboard_simple_form_for @transactable, :url => dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable), :html => { :multipart => true,  method: :put, id: 'listing-form' } do |f|
+= dashboard_simple_form_for @controller_scope + [@transactable], :html => { :multipart => true,  method: :put, id: 'listing-form' } do |f|
 
   = render "dashboard/company/transactables/errors", f: f
 

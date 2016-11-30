@@ -8,9 +8,10 @@ name: Create a New Case
   <p>
     {% for transactable_type in platform_context.transactable_types %}
     {% if current_user.registration_completed? %}
-    {% assign new_form_path = transactable_type.new_transactable_path %}
+    {% assign new_form_path = "new_dashboard_company_transactable_path" | generate_url: transactable_type_id: transactable_type.id %}
     {% else %}
-    {% assign new_form_path = transactable_type.space_wizard_path %}
+    {% assign return_to = "dashboard_company_transactables_path" | generate_url %}
+    {% assign new_form_path = "transactable_type_space_wizard_list_path" | generate_url: transactable_type, return_to: @return_to %}
     {% endif %}
 
     <a href="{{ new_form_path }}" class="button-a">New {{ transactable_type.bookable_noun }}</a>
