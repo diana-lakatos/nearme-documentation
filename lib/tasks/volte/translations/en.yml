@@ -35,6 +35,10 @@ en:
       ready_for_rent: 'Awaiting final confirmation from Borrower'
 
   reservations_review:
+    notice:
+      header: 'IMPORTANT:'
+      content: 'Remember that the rental date and the return date do not include shipping times. You will need to check the relevant courier times for the Borrowers location and adjust the ship to date if necessary when you confirm the order.'
+
     errors:
       invalid_date: 'is not valid. Please see our Courier tips for more details on delivery times.'
 
