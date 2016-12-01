@@ -141,7 +141,7 @@ namespace :volte do
       create_custom_attribute(@transactable_type, {
         name: 'item_style_milinery',
         label: 'Item Style',
-        attribute_type: 'string',
+        attribute_type: 'array',
         html_tag: 'select',
         required: "0",
         public: true,
@@ -165,7 +165,7 @@ namespace :volte do
       create_custom_attribute(@transactable_type, {
         name: 'item_style_dress',
         label: 'Item Style',
-        attribute_type: 'string',
+        attribute_type: 'array',
         html_tag: 'select',
         required: "0",
         public: true,
