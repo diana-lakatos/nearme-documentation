@@ -549,10 +549,10 @@ class TransactableDrop < BaseDrop
     accepted_orders.last
   end
 
-  # @return [OrderDrop, nil] first confirmed order for this transactable or nil if not present
+  # @return [OrderDrop, nil] first confirmed or archived order for this transactable or nil if not present
   # @todo -- depracate in favor of filter (transactables.orders.accepted | first? Or allow usage of .first)
   def first_accepted_order
-    line_item_orders.confirmed.first
+    line_item_orders.confirmed_or_archived.first
   end
 
   # @return [Array<OrderDrop>] array of active orders (not in the inactive state) for this transactable sorted descendingly by creation date
