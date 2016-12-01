@@ -26,7 +26,7 @@
           </span>
         {% elsif reservation.lister_confirmed_at and reservation.enquirer_confirmed_at == blank%}
           <span class='ready_for_rent'>
-            Item Ready for Renting
+            {{ 'reservations.states.ready_for_rent' | t }}
           </span>
         {% else %}
           <span class='{{ reservation.state }}'>

@@ -30,6 +30,10 @@ en:
   attributes:
     price_cents: The price
 
+  reservations:
+    states:
+      ready_for_rent: 'Awaiting final confirmation from Borrower'
+
   reservations_review:
     notice:
       header: 'IMPORTANT:'
