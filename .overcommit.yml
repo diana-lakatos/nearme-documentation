@@ -85,7 +85,7 @@ PreCommit:
     quiet: true
     enabled: true
     include:
-      - 'app/drops/*.rb'
+      - 'app/drops/**/*.rb'
       - 'app/liquid_tags/*.rb'
       - 'lib/liquid_filters.rb'
     requires_files: true

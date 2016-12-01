@@ -1,20 +1,26 @@
 #!/bin/sh
 DROPS='./app/drops/*.rb'
+NESTED_DROPS='./app/drops/**/*.rb'
 TAGS='./app/liquid_tags/*.rb'
 FILTERS='./lib/liquid_filters.rb'
 
 STAGED_RUBY_FILES=`git diff-index HEAD --name-only --cached | grep -E '.*.rb'` # Get staged ruby files
 
 if [ -n "$STAGED_RUBY_FILES" ]; then
-  DOCS_FILES=`ls $DROPS $TAGS $FILTERS | grep -E "$STAGED_RUBY_FILES"`
+  DOCS_FILES=`ls $DROPS $NESTED_DROPS $TAGS $FILTERS | grep -E "$STAGED_RUBY_FILES" | tr '\n' ' '`
 else
   exit 0
 fi
 
 if [ -n "$DOCS_FILES" ]; then
-  if [ `bundle exec yardstick $DOCS_FILES | tail -1 | grep 'Failed: 0' | wc -m` -eq 0 ]; then
-    echo "You forgot to document your code for FEDs."
-    echo "bundle exec yardstick $DOCS_FILES # to find what you are missing."
+  COMMAND="bundle exec yard stats -e lib/yard_stats_customizations.rb --list-undoc --plugin yard-activerecord $DOCS_FILES"
+  UNDOCUMENTED_FILES=`$COMMAND`
+
+  if [ -n "$UNDOCUMENTED_FILES" ]; then
+    echo "You forgot to document your code for frontend developers."
+    echo "$UNDOCUMENTED_FILES"
+    echo ""
+    echo "You can also run the command manually to find out what you are missing: $COMMAND"
     exit 1
   fi
 fi
