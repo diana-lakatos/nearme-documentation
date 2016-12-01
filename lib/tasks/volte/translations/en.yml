@@ -30,6 +30,10 @@ en:
   attributes:
     price_cents: The price
 
+  reservations:
+    states:
+      ready_for_rent: 'Awaiting final confirmation from Borrower'
+
   reservations_review:
     errors:
       invalid_date: 'is not valid. Please see our Courier tips for more details on delivery times.'
