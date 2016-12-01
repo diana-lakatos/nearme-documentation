@@ -83,7 +83,7 @@ PreCommit:
     problem_on_unmodified_line: ignore
   EnsureFrontendDocsUpdate:
     quiet: true
-    enabled: false
+    enabled: true
     include:
       - 'app/drops/**/*.rb'
       - 'app/liquid_tags/*.rb'
