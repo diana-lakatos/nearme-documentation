@@ -10,6 +10,7 @@ module LiquidFilters
   include ActionView::Helpers::UrlHelper
   include ActionView::RecordIdentifier
   include ActionView::Helpers::DateHelper
+  include LiquidFormHelpers
 
   # @return [String] url shortened using the Google service
   # @param url [String] the original url to be shortened

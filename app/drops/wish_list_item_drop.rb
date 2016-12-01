@@ -17,11 +17,13 @@ class WishListItemDrop < BaseDrop
   end
 
   # @return [Boolean] whether the associated object (wishlisted) is present
+  # @todo -- remove, DIY
   def wishlistable_present?
     @wish_list_item.wishlistable.present?
   end
 
   # @return [String] path to the associated object (wishlisted object)
+  # @todo -- remove, url filter
   def wishlistable_path
     polymorphic_wishlistable_path(@wishlistable)
   end
@@ -32,11 +34,13 @@ class WishListItemDrop < BaseDrop
   end
 
   # @return [Integer] numeric identifier of the wishlisted object
+  # @todo -- remove, DIY
   def wishlistable_id
     @wishlistable.id
   end
 
   # @return [String] name of the associated object (wishlisted object)
+  # @todo -- remove, DIY
   def wishlistable_name
     @wishlistable.name
   end
@@ -48,6 +52,8 @@ class WishListItemDrop < BaseDrop
 
   # @return [String, nil] price of the associated wishlisted item, if present, otherwise the address
   #   of the associated wishlisted item
+  # @todo - lets give users control over formatting.
+  # also... method *price* returning price or address?
   def price
     if @wishlistable.try(:price)
       number_to_currency_symbol @wishlistable.currency, @wishlistable.price
@@ -57,16 +63,21 @@ class WishListItemDrop < BaseDrop
   end
 
   # @return [LocationDrop, nil] location of the wishlistable
+  # @todo -- remove, DIY
   def wishlistable_location
     @wishlistable.try(:location)
   end
 
   # @return [String] path to the wish list item in the dashboard
+  # @todo - remove for url filter
   def dashboard_wish_list_item_path
     routes.dashboard_wish_list_item_path(@wish_list_item)
   end
 
   # @return [String] URL to the image of the wishlisted item, or a placeholders if not present
+  # @todo - DIY - lets use something smarter.
+  # code smell. from hardcoding things to everything else.
+  # Also... wish_list_item_decorator seems to have a lot of logic in there which is not consistent with this
   def image_url
     if @wishlistable.try(:avatar_url)
       @wishlistable.avatar_url(:big)
@@ -78,6 +89,7 @@ class WishListItemDrop < BaseDrop
   end
 
   # @return [String] path to the wishlisted item
+  # @todo - check if  wish_list_item_decorator method under the same name could be used or not
   def polymorphic_wishlistable_path(_wishlistable)
     if @wishlistable.is_a?(Transactable)
       @wishlistable.decorate.show_path
@@ -89,6 +101,7 @@ class WishListItemDrop < BaseDrop
   end
 
   # @return [String] URL to the default (placeholder) wishlisted item image
+  # @todo - this shouldnt be hardcoded as its already outdated
   def no_image
     asset_url 'placeholders/895x554.gif'
   end

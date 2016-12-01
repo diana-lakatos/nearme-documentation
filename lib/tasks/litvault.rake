@@ -40,7 +40,7 @@ namespace :litvault do
         show_categories: true,
         category_search_type: 'AND',
         searchable: true,
-        search_only_enabled_profiles: false,
+        search_only_enabled_profiles: true,
         search_engine: 'postgresql'
       })
 

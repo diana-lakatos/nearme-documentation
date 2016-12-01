@@ -39,7 +39,7 @@
       - if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible? && (!current_instance.split_registration || current_user.buyer_profile.present?)
         %li
           = link_to main_app.dashboard_orders_path do
-            = t('top_navbar.my_bookings')
+            = t('top_navbar.my_orders')
             = current_user_orders_count_formatted
 
       - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present? && HiddenUiControls.find('dashboard/host_reservations').visible?

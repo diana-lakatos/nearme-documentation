@@ -22,13 +22,9 @@ class LineItemDrop < BaseDrop
   end
 
   # @return [String] formatted unit price rendered according to the global currency rendering rules
+  # @todo -- lets put formatting in users hands by using filters
   def formatted_unit_price
     render_money(@line_item.unit_price)
-  end
-
-  # @return [String] formatted total price rendered according to the global currency rendering rules
-  def formatted_total_price
-    render_money(@line_item.total_price)
   end
 
   # @return [String] net price as a string
@@ -37,6 +33,7 @@ class LineItemDrop < BaseDrop
   end
 
   # @return [String] formatted net price rendered according to the global currency rendering rules
+  # @todo -- lets put formatting in users hands by using filters
   def formatted_net_price
     render_money(@line_item.net_price)
   end
@@ -47,6 +44,7 @@ class LineItemDrop < BaseDrop
   end
 
   # @return [String] formatted gross price rendered according to the global currency rendering rules
+  # @todo -- lets put formatting in users hands by using filters
   def formatted_gross_price
     render_money(@line_item.gross_price)
   end
@@ -57,6 +55,7 @@ class LineItemDrop < BaseDrop
   end
 
   # @return [String] formatted total price rendered according to the global currency rendering rules
+  # @todo -- lets put formatting in users hands by using filters
   def formatted_total_price
     render_money(@line_item.total_price)
   end
@@ -67,6 +66,7 @@ class LineItemDrop < BaseDrop
   end
 
   # @return [Boolean] whether this line item represents a service fee
+  # @todo -- rename to rails convention
   def is_service_fee?
     @line_item.is_service_fee?
   end

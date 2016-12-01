@@ -89,6 +89,7 @@ class LocationDrop < BaseDrop
   end
 
   # @return [String] url to the first listing in the location
+  # @todo -- remove
   def full_url
     urlify(url)
   end
@@ -107,36 +108,43 @@ class LocationDrop < BaseDrop
   end
 
   # @return [String] url to this location in Google Maps
+  # @todo -- depracate in favor of DIY url
   def google_map_url
     "http://maps.google.com/?daddr=#{@location.address}"
   end
 
   # @return [String] nearby eateries for this location from Yelp
+  # @todo -- depracate in favor of DIY url
   def nearby_eateries_url
     "http://www.yelp.com/search?find_desc=eateries&find_loc=#{@location.address}&ns=1"
   end
 
   # @return [String] url to the weather information for this location at Weather Underground
+  # @todo -- depracate in favor of DIY url
   def weather_url
     "http://www.wunderground.com/cgi-bin/findweather/getForecast?bannertypeclick=htmlSticker&query=#{@location.address}&GO=GO"
   end
 
   # @return [String] HTML-formatted address for this location
+  # @todo -- lets put this into the address formatter filter or something
   def formatted_address
     location_format_address(location.address)
   end
 
   # @return [Boolean] whether the address has multiple parts
+  # @todo -- :) Dont we have any other (more robust) way of parsing the address?
   def display_parts_of_address?
     address.split(',').length > 1
   end
 
   # @return [String] the first part of the address
+  # @todo -- lets put this into the address formatter filter or something
   def address_formatted
     address.split(',')[0]
   end
 
   # @return [String] the additional parts of the address (after the first part)
+  # @todo -- lets put this into the address formatter filter or something
   def address_formatted_additional
     parts = address.split(',')
     ", #{parts[1, parts.length].join(', ')}"
@@ -148,6 +156,7 @@ class LocationDrop < BaseDrop
   end
 
   # @return [Boolean] whether the location has special notes added to it
+  # @todo -- deprecate -- DIY
   def special_notes?
     !@location.special_notes.to_s.strip.empty?
   end
@@ -158,6 +167,7 @@ class LocationDrop < BaseDrop
   end
 
   # @return [Boolean] whether the location has a phone number added
+  # @todo -- deprecate -- DIY
   def phone?
     phone.present?
   end
@@ -176,6 +186,7 @@ class LocationDrop < BaseDrop
   end
 
   # @return [String] the location type, e.g. 'Business' etc.
+  # @todo -- since we are in location drop, rename => type_name? Or maybe type?
   def location_type_name
     @location.location_type.try(:name)
   end

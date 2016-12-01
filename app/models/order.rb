@@ -75,7 +75,7 @@ class Order < ActiveRecord::Base
   scope :cart, -> { with_state(:inactive) }
   scope :complete, -> { without_state(:inactive) }
   scope :active, -> { without_state(:inactive) }
-  scope :active_or_drafts, -> { where('state != ? OR draft_at IS NOT NULL', 'inactive') }
+  scope :active_or_drafts, -> { where('orders.state != ? OR orders.draft_at IS NOT NULL', 'inactive') }
   # TODO: we should switch to use completed state instead of archived_at for Reservation
   # and fully switch to state machine
 

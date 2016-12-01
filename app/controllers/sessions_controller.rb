@@ -44,6 +44,10 @@ class SessionsController < Devise::SessionsController
   private
 
   def omniauth_login
+    if request.referer && !request.referer.include?('instance_admin')
+      session[:user_return_to] = nil
+    end
+
     provider = PlatformContext.current.instance.default_oauth_signin_provider
     if provider.present? && !login_from_instance_admin?
       path = "/auth/#{provider}"

@@ -19,6 +19,7 @@ class SavedSearchDrop < BaseDrop
   end
 
   # @return [String] url to the saved searches section in the user's dashboard
+  # @todo -- deprecate -- url filter
   def dashboard_saved_searches_url
     routes.dashboard_saved_searches_path
   end

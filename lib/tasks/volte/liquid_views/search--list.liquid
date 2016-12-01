@@ -1,9 +1,8 @@
 ---
 partial: false
 ---
-{% assign xhr = params['is_xhr'] == 'true' %}
-{% unless xhr %}
-<div class="wrapper-a search-list">
+
+<div class="wrapper-a search-list" data-search-form="results">
   <div class="search-box">
     <form class="search-form" action="/search" method="GET" data-search-form="filters" data-search-form-container>
       <input type="hidden" name="per_page" value="{{ searcher.per_page }}" id="input-per-page">
@@ -12,6 +11,7 @@ partial: false
       <button class="button button-default" data-search-form="submit">SEARCH</button>
     </form>
   </div>
+
 
   <aside class="search-sidebar">
     <button data-toggle-search-filters class="button button-default search-sidebar__filter-search-button">Filter search</button>
@@ -27,9 +27,7 @@ partial: false
               <legend>{{ attributes.item_type.label }}</legend>
               <select {{ attributes.item_type.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_type.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.item_type.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['item_type'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.item_type | options_for_select: params['lg_custom_attributes']['item_type'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -39,9 +37,7 @@ partial: false
               <legend>{{ attributes.item_style_bag.label }}</legend>
               <select {{ attributes.item_style_bag.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_bag.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.item_style_bag.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['item_style_bag'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.item_style_bag | options_for_select: params['lg_custom_attributes']['item_style_bag'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -51,9 +47,7 @@ partial: false
               <legend>{{ attributes.item_style_milinery.label }}</legend>
               <select {{ attributes.item_style_milinery.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_milinery.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.item_style_milinery.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['item_style_milinery'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.item_style_milinery | options_for_select: params['lg_custom_attributes']['item_style_milinery'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -63,9 +57,7 @@ partial: false
               <legend>{{ attributes.milinery_size.label }}</legend>
               <select {{ attributes.milinery_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.milinery_size.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.milinery_size.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['milinery_size'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.milinery_size | options_for_select: params['lg_custom_attributes']['milinery_size'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -75,9 +67,7 @@ partial: false
               <legend>{{ attributes.dress_size.label }}</legend>
               <select {{ attributes.dress_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.dress_size.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.dress_size.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['dress_size'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.dress_size | options_for_select: params['lg_custom_attributes']['dress_size'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -87,9 +77,7 @@ partial: false
               <legend>{{ attributes.designer_name.label }}</legend>
               <select {{ attributes.designer_name.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.designer_name.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.designer_name.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['designer_name'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.designer_name | options_for_select: params['lg_custom_attributes']['designer_name'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -99,9 +87,7 @@ partial: false
               <legend>{{ attributes.color.label }}</legend>
               <select {{ attributes.color.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.color.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.color.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['color'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.color | options_for_select: params['lg_custom_attributes']['color'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -111,9 +97,7 @@ partial: false
               <legend>{{ attributes.dress_length.label }}</legend>
               <select {{ attributes.dress_length.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.dress_length.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.dress_length.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['dress_length'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.dress_length | options_for_select: params['lg_custom_attributes']['dress_length'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -123,21 +107,7 @@ partial: false
               <legend>{{ attributes.outerwear_size.label }}</legend>
               <select {{ attributes.outerwear_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.outerwear_size.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.outerwear_size.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['outerwear_size'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
-              </select>
-            </fieldset>
-          </li>
-
-          <li {{ attributes.item_style_accessories.wrapper_html_options }}>
-            <fieldset>
-              <legend>{{ attributes.item_style_accessories.label }}</legend>
-              <select {{ attributes.item_style_accessories.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_accessories.name }}][]" id="">
-                <option value="">Please select</option>
-                {% for opt in attributes.item_style_accessories.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['item_style_accessories'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.outerwear_size | options_for_select: params['lg_custom_attributes']['outerwear_size'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -147,9 +117,7 @@ partial: false
               <legend>{{ attributes.item_style_dress.label }}</legend>
               <select {{ attributes.item_style_dress.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_dress.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.item_style_dress.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['item_style_dress'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.item_style_dress | options_for_select: params['lg_custom_attributes']['item_style_dress'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -159,9 +127,7 @@ partial: false
               <legend>{{ attributes.item_style_outerwear.label }}</legend>
               <select {{ attributes.item_style_outerwear.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_outerwear.name }}][]" id="">
                 <option value="">Please select</option>
-                {% for opt in attributes.item_style_outerwear.valid_values %}
-                  <option value="{{ opt }}" {% if params['lg_custom_attributes']['item_style_outerwear'][0] == opt %}selected{% endif %}>{{ opt }}</option>
-                {% endfor %}
+                {{ searcher.options_for_select.item_style_outerwear | options_for_select: params['lg_custom_attributes']['item_style_outerwear'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -181,16 +147,16 @@ partial: false
                 <label class="availability-filter datetimepicker">
                   <i class="fa fa-calendar"></i>
                   From:
-                  <input type="text" name="availability_exceptions[from]-datetimepicker" class="form-control" data-availability-filter="from" />
-                  <input type="hidden" name="availability_exceptions[from]" />
+                  <input type="text" name="availability_exceptions[fromDatetimepicker]" class="form-control" data-availability-filter="from" value="{{ params['availability_exceptions']['fromDatetimepicker'] }}" />
+                  <input type="hidden" name="availability_exceptions[from]" value="{{ params['availability_exceptions']['from'] }}" />
                 </label>
               </li>
               <li>
                 <label class="availability-filter datetimepicker">
                   <i class="fa fa-calendar"></i>
                   To:
-                  <input type="text" name="availability_exceptions[to]-datetimepicker" class="form-control" data-availability-filter="to" />
-                  <input type="hidden" name="availability_exceptions[to]" />
+                  <input type="text" name="availability_exceptions[toDatetimepicker]" class="form-control" data-availability-filter="to" value="{{ params['availability_exceptions']['toDatetimepicker'] }}" />
+                  <input type="hidden" name="availability_exceptions[to]" value="{{ params['availability_exceptions']['to'] }}" />
                 </label>
               </li>
             </ul>
@@ -215,9 +181,8 @@ partial: false
       </ul>
     </form>
   </aside>
-{% endunless %}
 
-  <main class="search-results" data-search-form="results">
+  <main class="search-results">
     {% if searcher.results.size == 0 %}
       <p class="empty-resultset">
         There are no results to show.
@@ -281,7 +246,4 @@ partial: false
       {% endif %}
     {% endif %}
   </main>
-{% unless xhr %}
 </div>
-{% endunless %}
-

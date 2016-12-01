@@ -168,6 +168,7 @@ class OrderDrop < BaseDrop
 
   # @return [Boolean] whether or not the order has products with
   #   seller attachments
+  # @todo -- depracate DIY @order.line_items.size > 0 ?
   def has_seller_attachments?
     @order.transactable_line_items.each do |line_item|
       return true if line_item.line_item_source.attachments.exists?
@@ -183,17 +184,20 @@ class OrderDrop < BaseDrop
 
   # @return [Boolean] whether the current user (host) has not verified their phone number in the context
   #   of an otherwise placeable call with the client
+  # @todo -- rething oneliners, extract?
   def show_not_verified_host_alert?
     PlatformContext.current.instance.click_to_call? && @order.transactable.present? && @order.user.communication.try(:verified) && !@context['current_user'].try(:communication).try(:verified)
   end
 
   # @return [Boolean] whether the current user (client) has not verified their phone number in the
   #   context of an otherwise placeable call with the host
+  # @todo -- rething oneliners, extract?
   def show_not_verified_user_alert?
     PlatformContext.current.instance.click_to_call? && @order.transactable && @order.transactable.administrator.communication.try(:verified) && !@context['current_user'].communication.try(:verified)
   end
 
   # @return [String] the payment state in a humanized format
+  # @todo -- try harder :) -- depracate in favor of .state and filter chaining | humanize | capitalize.
   def payment_state
     @order.payment.try(:state).try(:humanize).try(:capitalize)
   end
@@ -201,16 +205,19 @@ class OrderDrop < BaseDrop
   # @return [String] the name of the payment method taken from the translations
   #   the translation key is: 'dashboard.host_reservations.payment_methods.[type]'
   #   where type can be: [credit_card nonce express_checkout manual remote free pending]
+  # @todo -- This looks like code smell to me
   def translated_payment_method
     I18n.t('dashboard.host_reservations.payment_methods.' + (@order.payment.try(:payment_method).try(:payment_method_type) || 'pending').to_s)
   end
 
   # @return [ShipmentDrop] first outbound shipment for this order
+  # @todo -- depracate in favor of filters
   def outbound_shipment
     @order.deliveries.first
   end
 
   # @return [ShipmentDrop] first inbound shipment for this order
+  # @todo -- depracate in favor of filters
   def inbound_shipment
     @order.deliveries.last
   end
@@ -222,6 +229,7 @@ class OrderDrop < BaseDrop
 
   # @return [String] time to expiration in a human readable format
   #   e.g. '15 minutes'
+  # @todo -- this method is formatting time in a specific way -- we shouldnt do that in DIY -- depracate in favor of DateTimeDrop.format or filter with format
   def time_to_expiration
     @order.time_to_expiry(@order.expires_at)
   end
@@ -245,36 +253,39 @@ class OrderDrop < BaseDrop
 
   # @return [String] path to creating a new order item (RecurringBookingPeriod) mostly for
   #   tracking time
+  # @todo -- depracate in favor of filter
   def new_order_item_path
     routes.new_dashboard_order_order_item_path(@order)
   end
 
   # @return [String] url to creating a new payment for this order
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def new_payment_url
     routes.new_dashboard_company_orders_received_payment_path(order)
   end
 
   # @return [String] url to cancelling an offer
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def offer_cancel_url
     routes.cancel_dashboard_company_orders_received_path(order)
   end
 
   # @return [String] url to marking the order as completed
-  # @todo Path/url inconsistency
+  # @todo -- depracate in favor of filter
   def order_complete_url
     routes.complete_dashboard_company_orders_received_path(order)
   end
 
   # @return [String] path in the application to the rejection form
   #   for an order
+  # @todo -- depracate in favor of filter
   def rejection_form_path
     routes.rejection_form_dashboard_company_orders_received_path(order)
   end
 
   # @return [String] path in the application to creating a new
   #   payment/payment subscription
+  # @todo -- depracate in favor of filter
   def confirmation_form_path
     if @order.is_free_booking?
       routes.new_dashboard_company_orders_received_payment_path(order)
@@ -284,17 +295,20 @@ class OrderDrop < BaseDrop
   end
 
   # @return [String] path in the application to confirming this order
+  # @todo -- depracate in favor of filter
   def confirm_path
     routes.confirm_dashboard_company_orders_received_path(order)
   end
 
   # @return [String] path in the application to completing this order
   #   (if it succeeds the order will be moved to the completed state)
+  # @todo -- depracate in favor of filter
   def complete_path
     routes.complete_dashboard_company_orders_received_path(order)
   end
 
   # @return [String] path in the application to cancelling this order
+  # @todo -- depracate in favor of filter
   def offer_enquirer_cancel_path
     routes.cancel_dashboard_orders_path(order)
   end
@@ -313,6 +327,7 @@ class OrderDrop < BaseDrop
   end
 
   # @return [Array<UserMessageDrop>] user messages for discussing between lister and enquirer
+  # @todo - investigate if this can be moved to transactable drop since it is
   def transactable_user_messages
     transactable.user_messages.where('author_id = :user_id OR thread_recipient_id = :user_id', user_id: @order.user_id)
   end
@@ -324,6 +339,7 @@ class OrderDrop < BaseDrop
 
   # @return [Boolean] whether the order allows drafts; more specifically the order must be an offer and "allow drafts" must
   #   be enabled for the action type in the marketplace admin, and the order must be in the "inactive" (original) status
+  # @todo .try much harder ;)
   def allows_draft?
     @order.is_a?(Offer) && @order.try(:transactable).try(:action_type).try(:transactable_type_action_type).try(:allow_drafts) && @order.state == 'inactive'
   end
@@ -372,6 +388,7 @@ class OrderDrop < BaseDrop
 
   # @return [LineItemDrop] returns the first line item for this order
   #   or a blank (tax items set to 0) OpenStruct if a line item can't be found
+  # @todo -- depracate in favor of DIY @order.line_items.first ? or | first (also returning object when there is no line_item seems weird)
   def first_line_item
     @first_line_item ||= @order.line_items.first || OpenStruct.new(included_tax_total_rate: 0, additional_tax_total_rate: 0)
     @first_line_item

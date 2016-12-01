@@ -15,6 +15,7 @@ class LongtailApi
           next if @transactable.nil?
           new(transactable: @transactable, hash: parsed_body['included'][index]['attributes']).decorate
         end
+        parsed_body
       end
     end
 

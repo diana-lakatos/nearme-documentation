@@ -15,7 +15,7 @@ class LongtailApi
     keywords['data'].each do |keyword|
       parse_keyword(keyword)
     end
-    parse_keywords!(page, token, keywords['links']['next']) if keywords['links']['next'].present?
+    parse_keywords!(keywords['links']['next']) if keywords['links']['next'].present?
   end
 
   def parse_keyword(keyword)
@@ -23,7 +23,8 @@ class LongtailApi
     return false if parsed_body.nil?
     parsed_body = LongtailApi::ParsedBodyDecorator.decorate(parsed_body)
     @page.page_data_source_contents.where(data_source_content: create_data_source_content_for_keyword(keyword: keyword,
-                                                                                                      parsed_body: parsed_body),
+                                                                                                      parsed_body: parsed_body)
+                                                                                                      .id,
                                           slug: keyword['attributes']['url'][1..-1]).first_or_create!
   end
 
@@ -33,6 +34,7 @@ class LongtailApi
     data_source_content.externally_created_at = nil
     data_source_content.json_content = parsed_body
     data_source_content.save!
+    data_source_content
   end
 
   def main_data_source
@@ -47,7 +49,7 @@ class LongtailApi
     response = call_api("#{@host}/search/seo/#{keyword['attributes']['slug']}")
     while response == TOO_MANY_ATTEMPTS_ERROR
       sleep(5)
-      response = http.request(req)
+      response = call_api("#{@host}/search/seo/#{keyword['attributes']['slug']}")
     end
     parse_response(response)
   end

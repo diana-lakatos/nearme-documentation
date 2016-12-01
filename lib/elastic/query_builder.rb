@@ -204,34 +204,13 @@ module Elastic
     end
 
     def aggregations
-      {
-        aggs: {
-          filtered_aggregations: {
-            filter: {
-              bool: {
-                must: @filters
-              }
-            },
-            aggs: {
-              distinct_locations: {
-                cardinality: {
-                  field: 'location_id'
-                }
-              },
-              maximum_price: {
-                max: {
-                  field: 'all_prices'
-                }
-              },
-              minimum_price: {
-                min: {
-                  field: 'all_prices'
-                }
-              }
-            }
-          }
-        }
-      }
+      @global_aggs = @transactable_type
+                      .custom_attributes
+                      .select(&:searchable)
+                      .select(&:aggregate_in_search)
+                      .map { |attr| {label: attr.name, field: "custom_attributes.#{attr.name}"}}
+
+      Aggregations.build(filters: @filters, fields: @global_aggs)
     end
 
     def match_query

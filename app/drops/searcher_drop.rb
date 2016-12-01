@@ -105,18 +105,25 @@ class SearcherDrop < BaseDrop
   end
 
   # @return [String] meta description for the current search page
+  # @todo - document with example
   def meta_description
     @context.registers[:action_view].meta_description_for_search(PlatformContext.current, @searcher.search)
   end
 
   # @return [String] meta title for the current search page
+  # @todo - document with example
   def meta_title
     @context.registers[:action_view].meta_title_for_search(PlatformContext.current, @searcher.search)
   end
 
   # @return [Hash<String => CustomAttributeDrop>] hash of attributes that this search can be filtered by of the
   #   form !{ custom_attribute_name => CustomAttributeDrop }
+  # @todo - document with example. Rename?
   def filterable_custom_attributes_hash
     filterable_custom_attributes.each_with_object({}) { |ca, hash| hash[ca.name] = ca }
+  end
+
+  def options_for_select
+    Elastic::Aggregations::OptionsForSelect.build(@searcher.fetcher.aggregations)
   end
 end
