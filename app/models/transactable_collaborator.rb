@@ -26,6 +26,8 @@ class TransactableCollaborator < ActiveRecord::Base
   after_update :trigger_workflow_alert_on_update!
   before_destroy :trigger_workflow_alert_on_destroy!
 
+  after_destroy :reject_related_offers
+
   def name
     @name ||= user.try(:name)
   end
@@ -109,5 +111,13 @@ class TransactableCollaborator < ActiveRecord::Base
 
   def user_message_recipient(current_user)
     current_user == user ? transactable.creator : user
+  end
+
+  def reject_related_offers
+    transactable.orders.where(user_id: self.user_id).each do |order|
+      if order.user_id == actor.id && order.enquirer_cancelable?
+        order.user_cancel
+      end
+    end
   end
 end
