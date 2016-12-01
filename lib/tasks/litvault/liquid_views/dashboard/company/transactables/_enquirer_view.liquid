@@ -82,6 +82,8 @@
                   </td>
                 {% elsif order.confirmed? %}
                   <td class="actions">Confirmed at {{ order.confirmed_at | l: 'long' }}</td>
+                {% elsif order.archived? %}
+                  <td class="actions">Archived at {{ order.archived_at | l: 'long' }}</td>
                 {% else %}
                   <td class="actions">Cancelled at {{ order.archived_at  | l: 'long'  }}</td>
                 {% endif %}
