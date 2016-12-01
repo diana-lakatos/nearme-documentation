@@ -7,7 +7,8 @@ class Listing::Search::Params::WebTest < ActiveSupport::TestCase
   context '#bounding_box' do
     should 'use nx,ny,sx,sy parameters instead of defaults' do
       params = build_params(options_with_bounding_box(nx: 0, ny: 0.5, sx: -0.5, sy: 1))
-      assert_equal [[-0.5, 1], [0, 0.5]], params.bounding_box
+      expected_box = { bottom_left: { lat: -0.5, lon: 1 }, top_right: { lat: 0, lon: 0.5 }}
+      assert_equal expected_box, params.bounding_box
     end
   end
 

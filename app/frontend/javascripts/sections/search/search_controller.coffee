@@ -236,10 +236,10 @@ module.exports = class SearchSearchController extends SearchController
   triggerSearchWithBounds: ->
     bounds = @map.getBoundsArray()
     @assignFormParams(
-      nx: @formatCoordinate(bounds[2]),
-      ny: @formatCoordinate(bounds[3]),
-      sx: @formatCoordinate(bounds[0]),
-      sy: @formatCoordinate(bounds[1]),
+      nx: @formatCoordinate(bounds[0]),
+      ny: @formatCoordinate(bounds[1]),
+      sx: @formatCoordinate(bounds[2]),
+      sy: @formatCoordinate(bounds[3]),
       ignore_search_event: 1
     )
 

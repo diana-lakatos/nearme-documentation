@@ -59,7 +59,7 @@ class Listing::Search::ParamsTest < ActiveSupport::TestCase
       setup do
         options = options_with_bounding_box
         box = options[:boundingbox]
-        @expected_bounding_box = [[box[:start][:lat], box[:end][:lon]], [box[:end][:lat], box[:start][:lon]]]
+        @expected_bounding_box = { top_right: { lat: 18, lon: 18}, bottom_left: { lat: 10, lon: -10 }}
         @params = build_params(options_with_bounding_box)
       end
 
