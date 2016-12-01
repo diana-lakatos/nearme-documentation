@@ -98,5 +98,6 @@ class SearchController < ApplicationController
   def parse_community_search_params
     params[:search_type] = 'projects' unless %w(people projects topics groups).include?(params[:search_type])
     @search_type = params[:search_type]
+    @transactable_type = InstanceProfileType.default.first
   end
 end
