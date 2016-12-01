@@ -753,6 +753,7 @@ namespace :uot do
       load_template('registrations/blog/show', false)
       load_template('dashboard/company/users/collaborations_for_current_user', false)
       load_template('dashboard/company/transactable_collaborators/transactable_collaborator')
+      load_template('registrations/blog/social_buttons', true)
     end
 
     def create_wish_list_views!
