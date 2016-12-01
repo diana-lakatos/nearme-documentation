@@ -41,10 +41,11 @@
       <dd>{{ reservation.creator.name }}</dd>
 
       <dt>{{ 'dashboard.user_reservations.address' | t }}:</dt>
-      <dd>{{ reservation.transactable.location.address }}</dd>
+      {% assign lender_location = reservation.transactable.location %}
+      <dd>{{ lender_location.city }}, {{ lender_location.suburb }} {{ lender_location.state }}</dd>
 
       <dt>Shipping Package:</dt>
-      <dd>{{ reservation.shipping_package.label }}</dd>
+      <dd>{{ reservation.shipping_package.label | default: '----' }}</dd>
 
       <dt>Your Shipping Address:</dt>
       <dd>{{ reservation.enquirer_shipping_address.full }}</dd>
