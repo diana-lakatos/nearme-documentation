@@ -48,7 +48,7 @@ class Listing::Search::Params
   def radius
     @radius ||= begin
       if bounding_box.present?
-        ::Geocoder::Calculations.distance_between(*bounding_box) / 2
+        ::Geocoder::Calculations.distance_between(bounding_box[:top_right].values, bounding_box[:bottom_left].values) / 2
       else
         Listing::Search::Params::DEFAULT_SEARCH_RADIUS
       end
@@ -63,6 +63,8 @@ class Listing::Search::Params
         [@options[:location][:lat], @options[:location][:lon]]
       elsif is_numeric?(@options[:lat]) && is_numeric?(@options[:lng])
         [@options[:lat], @options[:lng]]
+      elsif bounding_box && bounding_box[:top_right][:lat] == bounding_box[:bottom_left][:lat]
+        bounding_box[:top_right].values
       end
     end
   end
@@ -77,7 +79,10 @@ class Listing::Search::Params
     @bounding_box ||= begin
       if @options[:boundingbox].present?
         box = @options[:boundingbox]
-        [[box[:start][:lat], box[:end][:lon]], [box[:end][:lat], box[:start][:lon]]]
+        {
+          top_right: box[:end],
+          bottom_left: box[:start]
+        }
       end
     end
   end

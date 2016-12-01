@@ -6,14 +6,32 @@ class Listing::Search::Geocoder
     center = [geo['location']['lat'], geo['location']['lng']]
 
     bounds = if b = geo['viewport'] || geo['bounds']
-               [b['northeast'].values, b['southwest'].values]
+                {
+                  top_right: {
+                    lat: b['northeast']['lat'],
+                    lon: b['northeast']['lng']
+                  },
+                  bottom_left: {
+                    lat: b['southwest']['lat'],
+                    lon: b['southwest']['lng']
+                  }
+                }
              else
                radius = geo['location_type'] == 'ROOFTOP' ? Listing::Search::Params::MIN_SEARCH_RADIUS : Listing::Search::Params::DEFAULT_SEARCH_RADIUS
                box = ::Geocoder::Calculations.bounding_box([center.lat, center.long], radius)
-               [box[0..1], box[2..3]]
+               {
+                  top_right: {
+                    lat: box[0],
+                    lon: box[1]
+                  },
+                  bottom_left: {
+                    lat: box[2],
+                    lon: box[3]
+                  }
+                }
     end
 
-    radius ||= ::Geocoder::Calculations.distance_between(*bounds)
+    radius ||= ::Geocoder::Calculations.distance_between(bounds[:top_right].values, bounds[:bottom_left].values)
 
     Listing::Search::Area.new(center, bounds, radius, address_components(geocoded))
   end

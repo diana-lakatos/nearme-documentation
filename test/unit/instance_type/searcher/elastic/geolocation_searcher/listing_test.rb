@@ -118,7 +118,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < Active
       @searcher.search.instance_variable_set(:@options, lat: 123, lng: 123)
       @searcher.stubs(:service_radius_enabled?).returns(true)
       @search_web_params.stubs(:precise_address?).returns(false)
-      @search_web_params.stubs(:bounding_box).returns([[123, 123], [123, 123]])
+      @search_web_params.stubs(:bounding_box).returns({ top_right: { lat: 123, lon: 123}, bottom_left: { lat: 123, lon: 123 }})
 
       @searcher.fetcher
 

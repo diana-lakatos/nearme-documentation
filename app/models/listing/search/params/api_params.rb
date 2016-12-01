@@ -15,7 +15,7 @@ class Listing::Search::Params::ApiParams < Listing::Search::Params
       if @options[:location].present?
         [@options[:location][:lat], @options[:location][:lon]]
       elsif bounding_box.present?
-        ::Geocoder::Calculations.geographic_center(bounding_box)
+        ::Geocoder::Calculations.geographic_center([bounds[:top_right].values, bounds[:bottom_left].values])
       end
     end
   end

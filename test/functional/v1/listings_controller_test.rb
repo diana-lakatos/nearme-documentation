@@ -80,8 +80,12 @@ class V1::ListingsControllerTest < ActionController::TestCase
       assert_response :success
     end
 
+    should 'should search with wrong bounding box with equal corner coords' do
+      raw_post :search, {}, invalid_search_bounding_box_params.to_json
+      assert_response :success
+    end
+
     should 'should query' do
-      WebMock.disable_net_connect!(allow: /localhost:9200/)
       GmapsFake.stub_requests
       raw_post :query, {}, valid_query_params.to_json
       assert_response :success
@@ -226,6 +230,21 @@ class V1::ListingsControllerTest < ActionController::TestCase
         },
         'end' => {
           'lat' => 38.0,
+          'lon' => 129.0
+        }
+      }
+    }.merge valid_additional_params
+  end
+
+  def invalid_search_bounding_box_params
+    {
+      'boundingbox' => {
+        'start' => {
+          'lat' => 37.0,
+          'lon' => 128.0
+        },
+        'end' => {
+          'lat' => 37.0,
           'lon' => 129.0
         }
       }

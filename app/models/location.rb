@@ -84,7 +84,7 @@ class Location < ActiveRecord::Base
   scope :filtered_by_location_types_ids, ->(location_types_ids) { where(location_type_id: location_types_ids) }
   scope :no_id, -> { where id: nil }
   scope :near, ->(*args) { all.merge(Address.near(*args).select('locations.*')) }
-  scope :bounding_box, ->(box, _midpoint) { all.merge(Address.within_bounding_box(Address.sanitize_bounding_box(box.reverse)).select('locations.*')) }
+  scope :bounding_box, ->(box, _midpoint) { all.merge(Address.within_bounding_box(Address.sanitize_bounding_box(box)).select('locations.*')) }
   scope :with_searchable_listings, -> { where(%{ (select count(*) from "transactables" where location_id = locations.id and transactables.draft IS NULL and enabled = 't' and transactables.deleted_at is null) > 0 }) }
 
   scope :order_by_array_of_ids, lambda  { |location_ids|

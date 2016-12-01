@@ -25,7 +25,16 @@ class Listing::Search::Params::Web < Listing::Search::Params
 
   def bounding_box
     if is_numeric?(@options[:nx]) && is_numeric?(@options[:sx]) && is_numeric?(@options[:ny]) && is_numeric?(@options[:sy])
-      @bounding_box ||= [[@options[:sx], @options[:sy]], [@options[:nx], @options[:ny]]]
+      @bounding_box ||= {
+                          top_right: {
+                            lat: @options[:nx].to_f,
+                            lon: @options[:ny].to_f
+                          },
+                          bottom_left: {
+                            lat: @options[:sx].to_f,
+                            lon: @options[:sy].to_f
+                          }
+                        }
     end
     super
   end

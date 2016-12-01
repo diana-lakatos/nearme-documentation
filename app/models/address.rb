@@ -24,8 +24,8 @@ class Address < ActiveRecord::Base
   before_validation :clear_fields, if: ->(l) { l.raw_address? }
 
   scope :bounding_box, lambda  { |box|
-    where('addresses.latitude > ? AND addresses.latitude < ?', box.last.first, box.first.first)
-      .where('addresses.longitude > ? AND addresses.longitude < ?', box.last.last, box.first.last)
+    where('addresses.latitude > ? AND addresses.latitude < ?', box[:bottom_left][:lat], box[:top_right][:lat])
+      .where('addresses.longitude > ? AND addresses.longitude < ?', box[:bottom_left][:lon], box[:top_right][:lon])
   }
 
   after_save do
@@ -192,13 +192,7 @@ class Address < ActiveRecord::Base
   end
 
   def self.sanitize_bounding_box(bounding_box)
-    bounding_box.collect do |element|
-      if element.is_a?(Array)
-        sanitize_bounding_box(element)
-      else
-        element.to_f
-      end
-    end
+    [bounding_box[:bottom_left].values, bounding_box[:top_right].values]
   end
 
   def jsonapi_serializer_class_name
