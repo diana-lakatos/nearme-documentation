@@ -140,7 +140,7 @@ class UserMessage < ActiveRecord::Base
     actual_count = user.reload.decorate.unread_user_message_threads_for(instance).fetch.size
     user.instance_unread_messages_threads_count ||= {}
     user.instance_unread_messages_threads_count[instance_id] = actual_count
-    user.save!
+    user.save(validate: false)
   end
 
   def the_other_user(current_user)
