@@ -87,12 +87,12 @@ class TransactableTypes::SpaceWizardController < ApplicationController
         flash[:warning] = t('flash_messages.manage.listings.want_to_see_profile', path: path, name: user.first_name)
         session[:user_to_be_invited] = nil
       end
-      redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
+      redirect_to params[:return_to] || dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
       @attachments = @user.first_listing ? @user.first_listing.attachments : nil
-      @global_errors = filter_error_messages(ErrorFilter.new(@user.errors).filter.full_messages +
-                                               ErrorFilter.new(@user.properties.errors).filter.full_messages)
+
+      @global_errors = filter_error_messages(ErrorFilter.new(@user.errors).filter.full_messages)
 
       render :list
     end

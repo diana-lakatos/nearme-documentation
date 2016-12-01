@@ -1,0 +1,28 @@
+<div class="summary" style="overflow: hidden;">
+  <h1>{{ listing.name }}</h1>
+  <div class="meta">
+    <span class="publish-date">posted {{ listing.created_at | timeago }}</span>
+  </div>
+</div>
+<div class="description">
+  {% if collaborator %}
+    <p>Your request is pending approval.</p>
+  {% else %}
+    <p>To be able to view all details, please request access first.</p>
+    <a href="#case-permission-request-{{ listing.id }}" class="button-a inverted" data-case-invite-trigger>Request Access</a>
+  {% endif %}
+</div>
+
+{% content_for 'domready' %}
+    $(document).trigger('init:list:searchresults.nearme');
+{% endcontent_for %}
+
+{% content_for 'body_bottom' %}
+  <div class="case-invite" id="case-permission-request-{{ listing.id }}" data-collaborations-url="{{ listing.url }}"></div>
+{% endcontent_for %}
+
+<script>
+  $(function(){
+    $(document).trigger('itemLoaded.litvault', 'case-{{listing.id}}');
+  });
+</script>

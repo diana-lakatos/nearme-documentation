@@ -6,6 +6,7 @@
 
 #space-wizad
   = dashboard_simple_form_for @user, url: transactable_type_space_wizard_list_url(@transactable_type), html: { class: "new_company", multipart: true, id: 'list-space-flow-form', :"data-includes-address-field" => true }, method: :post do |f|
+    = hidden_field_tag :return_to, params[:return_to]
 
     = render "errors", f: f
     = render "draft_button" if @transactable_type.require_transactable_during_onboarding?

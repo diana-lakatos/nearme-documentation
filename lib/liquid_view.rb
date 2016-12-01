@@ -51,6 +51,7 @@ class LiquidView
     params = @view.try(:controller).try(:params) || {}
     assigns['params'] = params.except(*Rails.application.config.filter_parameters)
     assigns['current_url'] = @view.try(:controller).try(:request).try(:original_url)
+    assigns['is_xhr_request'] = @view.try(:controller).try(:request).try(:xhr?)
     assigns['current_path'] = @view.try(:controller).try(:request).try(:path)
     assigns['request_referer'] = @view.try(:controller).try(:request).try(:referer)
     assigns['current_full_path'] = @view.try(:controller).try(:request).try(:original_fullpath)

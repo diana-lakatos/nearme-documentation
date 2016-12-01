@@ -30,7 +30,7 @@
   {% endif %}
 {% endcontent_for %}
 
-{% assign form_url = transactable_type.transactable_types_path %}
+{% assign form_url = 'dashboard_company_transactables_path' | generate_url %}
 
 {% if is_lister == "true" %}
   <div class="sort-filter-search-wrapper">

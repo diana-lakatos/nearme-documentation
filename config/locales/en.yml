@@ -82,6 +82,8 @@ en:
         processing_time: 'Procesing time (in days)'
       user_blog_post:
         published_at_str: "Published at"
+      user:
+        default_properties: ""
   connections:
     facebook:
       count:

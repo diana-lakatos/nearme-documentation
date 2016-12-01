@@ -655,6 +655,7 @@ namespace :litvault do
 
       def create_custom_attribute(object, name, hash)
           hash = hash.with_indifferent_access
+          hash["custom_validators_attributes"]["[0]"]["field_name"] = name if hash["custom_validators_attributes"]
           custom_attribute = object.custom_attributes.where({
             name: name
           }).first_or_initialize

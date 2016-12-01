@@ -1,0 +1,61 @@
+<aside class="sidebar">
+  {% if can_make_offer or current_user.has_buyer_profile? %}
+    <div class="listing-actions">
+      <ul>
+        {% if can_make_offer %}
+          <li>
+            <a class="button-a inverted" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: listing.id }}">Make an Offer</a>
+          </li>
+        {% endif %}
+        {% if current_user.has_buyer_profile? %}
+          <li>
+            {% include 'shared/components/wish_list_button_injection.html', object: listing %}
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <hr>
+  {% endif %}
+
+  <div class="about">
+    <h3>About {{ listing.creator.company_name }}</h3>
+    <p>{{ listing.company.description | nl2br }}</p>
+  </div>
+
+  <hr>
+
+  {% if listing.tags.size > 0 %}
+    <div class="tags-a tags-short-list">
+      <h4>Tags</h4>
+      <ul>
+        {% for tag in listing.tags %}
+        <li><a href="?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <hr>
+  {% endif %}
+
+  <div class="more-details">
+    <h3>More Details</h3>
+    <ul class="company-properties">
+      <li><b>{{ listing.creator.transactables_count }}</b> Cases Posted</li>
+      <li><b>{{ listing.creator.pending_transactables_count }}</b> Open Cases</li>
+      <li class="member-since">Member Since {{ listing.creator.created_at | to_date | l: 'short' }}</li>
+    </ul>
+  </div>
+
+  <hr>
+
+  {% if listing.creator.has_active_credit_cards? %}
+    <p class="payment-verified">
+      <strong>Payment Method Verified</strong>
+    </p>
+  {% endif %}
+
+  <p class="flag-inappropriate">
+    <a data-href="{{ listing.inappropriate_report_path }}" data-modal="true">Flag Case Listing</a>
+  </p>
+</aside>

@@ -18,7 +18,7 @@
       <div class="col-md-3">
         {% include 'dashboard/company/transactables/lister_actions.html', order: accepted_order %}
       </div>
-    </div>
+  </div>
     {% if current_status == 'pending' %}
 
       {% assign transactable_collaborators = transactable.transactable_collaborators %}
@@ -54,7 +54,7 @@
                         {% form_for transactable_collaborator, url: @transactable_collaborator.update_path, method: 'put', remote: true %}
                           <input type='hidden' name='transactable_collaborator[approved_by_owner_at]' value='{{ "now" | parse_time }}'>
                           <input type='hidden' name='transactable_collaborator[rejected_by_owner_at]' value=''>
-                          <input type='submit' class="btn btn-danger" data-confirm="Are you sure?" value='Accept'>
+                          <input type='submit' class="btn btn-success" data-confirm="Are you sure?" value='Accept'>
                         {% endform_for %}
                     {% endif %}
 
@@ -120,6 +120,7 @@
               <th>Date</th>
               <th>Status</th>
               <th>Accepted Date</th>
+              <th>Details</th>
             </tr>
           </thead>
           <tbody>
@@ -128,6 +129,7 @@
               <td>{{ accepted_order.created_at | to_date | l: 'short' }}</td>
               <td>Accepted</td>
               <td>{{ accepted_order.confirmed_at | to_date | l: 'short' }}</td>
+              <td><a href="{{ 'edit_dashboard_company_orders_received_path' | generate_url: accepted_order.id  }}" class="btn btn-info">Review</a></td>
             </tr>
           </tbody>
         </table>

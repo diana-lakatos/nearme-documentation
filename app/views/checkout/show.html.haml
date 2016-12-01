@@ -13,7 +13,7 @@
     %section.checkout-form
       = render 'checkout/summary', order: @order
 
-    - if @order.inactive? || @order.unconfirmed?
+    - if @order.inactive? || @order.unconfirmed? || (@order.confirmed? && disabled)
 
       = render 'checkout/form', disabled: disabled
 

@@ -509,7 +509,7 @@ class TransactableDrop < BaseDrop
 
   # @return [String] path to cancelling this transactable (object will be moved to cancelled state)
   # @todo -- depracate in favor of filter
- def cancel_path
+  def cancel_path
     routes.cancel_dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
   end
 

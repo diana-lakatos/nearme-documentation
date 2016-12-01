@@ -7,7 +7,8 @@
       %span.hidden-xs.hidden-sm >
       = t("dashboard.transactables.list_new_item")
 
-= dashboard_simple_form_for [:dashboard, :company, @transactable_type, @transactable], :html => { :multipart => true, id: 'listing-form' } do |f|
+= dashboard_simple_form_for @controller_scope + [@transactable], :html => { :multipart => true, id: 'listing-form' } do |f|
+  = hidden_field_tag :transactable_type_id, params[:transactable_type_id]
 
   = render "dashboard/company/transactables/errors", f: f
 

@@ -173,7 +173,7 @@ class Offer < Order
   alias enquirer_cancelable? enquirer_cancelable
 
   def enquirer_editable
-    state.in? %w(unconfirmed inactive)
+    state.in? %w(inactive) || draft_at?
   end
   alias enquirer_editable? enquirer_editable
 

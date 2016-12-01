@@ -1,0 +1,9 @@
+<div class="summary" style="overflow: hidden;">
+  <h1>{{ listing.name }}</h1>
+  <div class="meta">
+    <span class="publish-date">posted {{ listing.created_at | timeago }}</span>
+  </div>
+</div>
+<div class="description">
+  <p>To be able to view all details, please <a data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" data-href="/users/sign_up?return_to={{ current_path }}&amp;role=buyer" href="#"><span>Sign Up</span></a> first</p>
+</div>

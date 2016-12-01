@@ -1,16 +1,24 @@
 <div class="properties">
   <dl>
-    <dt>Injury or Accident Date:</dt>
-    <dd>{{ transactable.properties.date_of_incident }}</dd>
+    {% if transactable.properties.date_of_incident != blank %}
+      <dt>Injury or Accident Date:</dt>
+      <dd>{{ transactable.properties.date_of_incident }}</dd>
+    {% endif %}
 
-    <dt>Days of Hospitalization:</dt>
-    <dd>{{ transactable.properties.days_of_hospitalization }}</dd>
+    {% if transactable.properties.days_of_hospitalization != blank %}
+      <dt>Days of Hospitalization:</dt>
+      <dd>{{ transactable.properties.days_of_hospitalization }}</dd>
+    {% endif %}
 
-    <dt>Location of Injury or Accident:</dt>
-    <dd>{{ transactable.properties.city_of_incident }}, {{ transactable.properties.state_of_incident }}</dd>
+    {% if transactable.properties.city_of_incident != blank %}
+      <dt>Location of Injury or Accident:</dt>
+      <dd>{{ transactable.properties.city_of_incident }}, {{ transactable.properties.state_of_incident }}</dd>
+    {% endif %}
 
-    <dt>Death Case:</dt>
-    <dd>{{ transactable.properties.involve_wrongful_death }}</dd>
+    {% if transactable.properties.involve_wrongful_death != blank %}
+      <dt>Death Case:</dt>
+      <dd>{{ transactable.properties.involve_wrongful_death }}</dd>
+    {% endif %}
   </dl>
 </div>
 
