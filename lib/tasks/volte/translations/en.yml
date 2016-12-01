@@ -54,3 +54,8 @@ en:
             price_cents:
               greater_than_or_equal_to: "Lenders can list items has to be greater then or equal to $%{unit}"
               less_than_or_equal_to: "Lenders can list items has to be less then or equal to $%{unit}"
+
+  dashboard:
+    host_reservations:
+      actions:
+        cancel: 'Cancel order'
