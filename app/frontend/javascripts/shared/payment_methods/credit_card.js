@@ -68,13 +68,17 @@ class PaymentMethodCreditCard {
       event.stopPropagation();
       event.preventDefault();
 
-      if (that._validateForm($form) ) {
-        if (that._publishableToken.length > 0) {
-          Stripe.setPublishableKey(that._publishableToken);
-          Stripe.card.createToken($form, that._stripeResponseHandler);
-        } else {
-          $form.get(0).submit();
+      if ($form.find('.collapse.in .nm-new-credit-card-form').length > 0) {
+        if (that._validateForm($form)) {
+          if (that._publishableToken.length > 0) {
+            Stripe.setPublishableKey(that._publishableToken);
+            Stripe.card.createToken($form, that._stripeResponseHandler);
+          } else {
+            $form.get(0).submit();
+          }
         }
+      } else {
+        $form.get(0).submit();
       }
 
       // Prevent the form from being submitted:
