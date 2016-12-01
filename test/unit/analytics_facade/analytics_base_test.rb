@@ -15,7 +15,7 @@ module AnalyticsFacade
         assert_equal AnalyticsFacadeDrop, @analytics.to_liquid.class
         assert_equal @payment, @analytics.list.first
         assert_equal 'USD', @analytics.currency
-        assert_equal %w(CAD USD), @analytics.currencies
+        assert_equal %w(CAD USD).sort, @analytics.currencies.sort
         assert_equal [[0, 0, 0, 0, 0, 0, @payment.total_amount.dollars.to_i]], @analytics.values
       end
 
@@ -25,7 +25,7 @@ module AnalyticsFacade
         assert_equal AnalyticsFacadeDrop, @analytics.to_liquid.class
         assert_equal @payment_cad, @analytics.list.first
         assert_equal [[0, 0, 0, 0, 0, 0, @payment_cad.total_amount.dollars.to_i]], @analytics.values
-        assert_equal %w(CAD USD), @analytics.currencies.sort
+        assert_equal %w(CAD USD).sort, @analytics.currencies.sort
       end
 
       should 'correctly display chart' do
