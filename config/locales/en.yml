@@ -2,6 +2,10 @@ en:
   activerecord:
     errors:
       models:
+        address:
+          attributes:
+            address:
+              invalid_pickup_location: is not valid for pickup
         payment:
           attributes:
             payment_gateway:
@@ -84,6 +88,8 @@ en:
         published_at_str: "Published at"
       user:
         default_properties: ""
+      "order/shipping_address/address":
+        address: Shipping address
   connections:
     facebook:
       count:

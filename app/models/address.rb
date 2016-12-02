@@ -1,4 +1,5 @@
 class Address < ActiveRecord::Base
+  include Validatable
   has_paper_trail
   acts_as_paranoid
   scoped_to_platform_context
