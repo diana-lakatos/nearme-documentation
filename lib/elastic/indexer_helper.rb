@@ -21,6 +21,12 @@ module Elastic
       end
     end
 
+    def delete_alias(index_name = @klass.base_index_name, alias_name = @klass.alias_index_name)
+      if @es_indices.exists_alias name: alias_name
+        @es_indices.delete_alias index: index_name, name: alias_name
+      end
+    end
+
     def create_new_index
       @new_index_name = "#{@klass.base_index_name}-#{Time.now.to_i}"
       @es_indices.create index: @new_index_name, body: { settings: @klass.settings, mappings: @klass.mappings }

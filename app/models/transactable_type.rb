@@ -1,4 +1,6 @@
 class TransactableType < ActiveRecord::Base
+  include SearchableType
+
   self.inheritance_column = :type
   default_scope { where("transactable_types.type !='Spree::ProductType' or transactable_types.type is NULL") }
   has_paper_trail
@@ -7,6 +9,7 @@ class TransactableType < ActiveRecord::Base
   scoped_to_platform_context
   acts_as_custom_attributes_set
 
+  DEPENDENT_CLASS = Transactable
   AVAILABLE_TYPES = ['Listing'].freeze
   AVAILABLE_ACTION_TYPES = [NoActionBooking, SubscriptionBooking, EventBooking, TimeBasedBooking, PurchaseAction, OfferAction].freeze
   SEARCH_VIEWS = %w(mixed list listing_mixed).freeze
@@ -219,13 +222,6 @@ class TransactableType < ActiveRecord::Base
 
   def required_custom_attributes_for_csv(import_model = 'transactable')
     required_custom_attributes.map { |required_attribute| { import_model => required_attribute.name } }
-  end
-
-  def update_es_mapping
-    Transactable.set_es_mapping
-    Transactable.indexer_helper.update_mapping!
-  rescue StandardError => e
-    MarketplaceLogger.error('ES Update Mapping Error', e.to_s, raise: false)
   end
 
   private

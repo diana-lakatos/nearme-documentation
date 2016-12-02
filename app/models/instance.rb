@@ -123,7 +123,7 @@ class Instance < ActiveRecord::Base
 
   scope :with_deleted, -> { all }
 
-  store_accessor :search_settings, :tt_select_type, :use_individual_index
+  store_accessor :search_settings, :tt_select_type
 
   before_create :generate_webhook_token
   before_update :check_lock
@@ -419,10 +419,11 @@ class Instance < ActiveRecord::Base
     true
   end
 
-  def create_es_indices
-    CLASSES_WITH_ES_INDEX.each do |klass|
-      idx_name = klass.indexer_helper.create_new_index
-      klass.indexer_helper.create_alias(idx_name)
-    end
+  def searchable_classes
+    SEARCHABLE_CLASSES.map do |searchable_class|
+      _klass =searchable_class.constantize
+      _klass::DEPENDENT_CLASS if _klass.searchable.any?
+    end.compact
   end
+
 end

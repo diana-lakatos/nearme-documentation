@@ -16,7 +16,7 @@ class ElasticInstanceIndexerJob < Job
   end
 
   def perform
-    klasses = @only_classes.presence || Instance::CLASSES_WITH_ES_INDEX
+    klasses = @only_classes.presence || PlatformContext.current.instance.searchable_classes
     klasses.each do |klass|
       klass.indexer_helper.with_alias do |new_index_name, old_index_name|
         case @update_type
