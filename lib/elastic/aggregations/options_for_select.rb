@@ -30,7 +30,7 @@ module Elastic
         def options
           @buckets
             .map { |bucket| [label(bucket), bucket['key']] }
-            .select { |label, _value| label.present? }
+            .select { |_label, value| value.present? }
         end
 
         def label(bucket)
