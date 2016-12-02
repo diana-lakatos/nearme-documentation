@@ -1,10 +1,6 @@
 <h2>Hello, {{ enquirer.first_name }}</h2>
 
-<p>Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' has been accepted. Please complete the final confirmation here:</p>
-
-<a class="btn" href="{{ platform_context.host | append:enquirer.bookings_dashboard_url_with_tracking_and_token | append:signature_for_tracking  }}">My Bookings</a>
-
-<p>(the item will still be in your 'Unconfirmed Orders')</p>
+<p>Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' has been confirmed! Here it is:</p>
 
 <div class="booking-details">
 
@@ -42,7 +38,13 @@
 
   <div class="row">
     <strong style='display: inline-block;'>Total</strong>
-    <span style="float: right; clear: right;">{{ reservation.total_price }}</span>
+    <span style="float: right; clear: right;">
+      {% if reservation.state == 'unconfirmed' %}
+        {{ reservation.total_amount_plus_shipping | price_with_cents_with_currency }}
+      {% else %}
+        {{ reservation.total_amount_money | price_with_cents_with_currency }}
+      {% endif %}
+    </span>
   </div>
 
   {% if listing.has_seller_attachments? %}
@@ -57,5 +59,9 @@
   {% endif %}
 
 </div>
+
+<p>You can accept your booking here:</p>
+
+<a class="btn" href="{{ platform_context.host | append:enquirer.bookings_dashboard_url_with_tracking_and_token | append:signature_for_tracking  }}">My Bookings</a>
 
 <p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
