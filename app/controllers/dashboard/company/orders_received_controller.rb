@@ -2,6 +2,11 @@
 class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseController
   before_action :find_order, except: :index
 
+  rescue_from Shippings::Quote::UnprocessableEntity do
+    Raygun.track_exception($!)
+    render partial: 'unprocessable_entity', layout: false
+  end
+
   def index
     @order_search_service = OrderSearchService.new(order_scope, params)
     render 'dashboard/orders/index'

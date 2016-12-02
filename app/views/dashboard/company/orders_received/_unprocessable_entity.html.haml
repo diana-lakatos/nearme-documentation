@@ -1,0 +1,9 @@
+.error
+  %h3 Shipping provider has not accepted your request due to the following errors:
+  - $!.message['messages'].each do |key, value|
+    %li
+      = key.humanize
+      = value.first.humanize
+  %h3
+    Please check the location settings for your listing:
+    =link_to @order.transactable, edit_dashboard_company_transactable_type_transactable_path(@order.transactable.transactable_type, @order.transactable)
