@@ -41,6 +41,7 @@ module Shippings
         end
       end
 
+      # FIX: bad approach
       def provider
         instance.shipping_providers.first
       end

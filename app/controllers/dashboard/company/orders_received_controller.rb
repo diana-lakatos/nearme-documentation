@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseController
   before_action :find_order, except: :index
+  before_action :prepare_order_for_shipping, only: [:show, :confirm, :confirmation_form]
 
   def index
     @order_search_service = OrderSearchService.new(order_scope, params)
@@ -8,7 +9,6 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def show
-    prepare_order_for_shipping
     @order = @order.decorate
   end
 
@@ -58,8 +58,6 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   # TODO: this is only used for Purchase but should confirm Reservation and ReservationRequest correctly
   # The idea is to move all host action for all Order types here
   def confirm
-    prepare_order_for_shipping
-
     if params[:order] && order_params.present?
       render(action: :confirmation_form) && return unless @order.update(order_params)
     end
@@ -107,10 +105,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     render layout: false
   end
 
-  # TODO: this should be more conditional? not every order has shippings
   def confirmation_form
-    prepare_order_for_shipping
-
     render layout: false
   end
 
@@ -154,7 +149,9 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   # TODO: REFACTOR: perhaps this better to be factory
   def prepare_order_for_shipping
     return if @order.confirmed?
+    return unless Shippings.enabled?(@order)
+
     Shippings::DeliveryFactory.build(order: @order)
-    Commands::BuildShippingLineItems.new(order: @order).prepare
+    Commands::BuildShippingLineItems.build(order: @order)
   end
 end

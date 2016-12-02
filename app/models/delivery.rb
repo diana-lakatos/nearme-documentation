@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 # TODO: duplicates shipping model
 class Delivery < ActiveRecord::Base
+  include Validatable
+
   has_paper_trail
   acts_as_paranoid
   scoped_to_platform_context
@@ -16,16 +18,7 @@ class Delivery < ActiveRecord::Base
   delegate :city, :postcode, to: :sender_address, prefix: true
   delegate :city, :postcode, to: :receiver_address, prefix: true
 
-  validates :sender_address, :receiver_address, presence: true
   validates :dimensions_template, presence: true
-  validates_with Deliveries.validator
-
-  # validate delivery number
-  # validates :order_id, uniqueness: {scope: [:pickup_date]}
-
-  def notes
-    'no notes'
-  end
 
   def weight
     dimensions_template.weight
