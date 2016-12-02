@@ -40,7 +40,7 @@ class APISearchOptions
 
     case options[:bounding_box].downcase.gsub(' ', '_').to_sym
     when :new_zealand
-      { "boundingbox" => {"start" => {"lat" => -32.24997,"lon" => 162.94921 }, "end" => {"lat" => -47.04018,"lon" => 180.00000 } } }
+      { "boundingbox" => {"end" => {"lat" => -32.31997,"lon" => -176.66016 }, "start" => {"lat" => -48.45,"lon" => 163.125 } } }
     else
       { "boundingbox" => {"start" => {"lat" => -180.0,"lon" => -180.0}, "end" => {"lat" => 180.0,"lon" => 180.0 } } }
     end
