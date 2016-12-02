@@ -6,6 +6,7 @@ class BaseDrop < Liquid::Drop
         if url_helpers.respond_to?(method_sym)
           options = arguments.last.is_a?(Hash) ? arguments.pop : {}
           options[:language] = language if language
+          options[:host] = PlatformContext.current.decorate.host
           arguments << options
           url_helpers.public_send(method_sym, *arguments)
         else

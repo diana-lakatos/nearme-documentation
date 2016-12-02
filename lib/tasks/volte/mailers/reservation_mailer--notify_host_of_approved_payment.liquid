@@ -1,0 +1,7 @@
+<h2>Hello, {{ lister.first_name }}!</h2>
+
+<p>The payment has been approved by {{ reservation.owner.name }}.</p>
+
+<p><a class="btn" href="{{ 'dashboard_company_orders_received_index_url' | generate_url: state: 'confirmed' }}">Summary</a></p>
+
+<p>Have a great day!</p>
