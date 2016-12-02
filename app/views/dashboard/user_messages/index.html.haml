@@ -24,7 +24,7 @@
         = form_tag(request.path, method: 'get', form_for_type: 'dashboard', class: 'search user-message-search') do
           .col-md-6
             = label_tag :transactable_id, t('user_messages.search.filter_by_transactable'), class: 'control-label'
-            = select_tag :transactable_id, options_for_select(current_user.transactables_with_message.sort { |a, b| a.name <=> b.name }.map { |t| [t.name, t.id] }, params[:transactable_id]), include_blank: true, class: 'selectize form-control'
+            = select_tag :transactable_id, options_for_select(current_user.transactables_with_message.sort { |a, b| a.name.to_s <=> b.name.to_s }.map { |t| [t.name.presence || t.slug, t.id] }, params[:transactable_id]), include_blank: true, class: 'selectize form-control'
           .col-md-6
             = label_tag :order_way, t('user_messages.search.order_by'), class: 'control-label'
             = select_tag :order_way, options_for_select([['Date', 'updated_at DESC'], ['Name', 'author_name']], params[:order_way]), class: 'selectize form-control'
