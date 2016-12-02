@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Elastic
   module Aggregations
     class OptionsForSelect
@@ -18,7 +19,7 @@ module Elastic
 
       def aggregations
         @aggregations[@key]
-          .reject {|key, _value| key == 'doc_count' }
+          .reject { |key, _value| key == 'doc_count' }
       end
 
       class Buckets
@@ -27,12 +28,9 @@ module Elastic
         end
 
         def options
-          @buckets.map do |bucket|
-            [
-              label(bucket),
-              bucket['key']
-            ]
-          end
+          @buckets
+            .map { |bucket| [label(bucket), bucket['key']] }
+            .select { |label, _value| label.present? }
         end
 
         def label(bucket)
