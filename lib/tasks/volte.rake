@@ -464,7 +464,7 @@ namespace :volte do
 
       with_no_package.each do |item|
         item.dimensions_template = default_package
-        item.save!
+        item.save
       end
     end
 
