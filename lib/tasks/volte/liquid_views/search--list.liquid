@@ -168,13 +168,13 @@ partial: false
             <input type="hidden" name="price[min]" value="0" data-price-min-input />
             <select class="form-control custom-select" name="price[max]" id="price" data-price-select>
               <option value="">Please select</option>
-              <option value="50">Under $50</option>
-              <option value="100">Under $100</option>
-              <option value="200">Under $200</option>
-              <option value="300">Under $300</option>
-              <option value="400">Under $400</option>
-              <option value="500">Under $500</option>
-              <option value="1000000" data-price-min="500">$500+</option>
+              <option value="50" {% if params.price.max == '50' %}selected{% endif %}>Under $50</option>
+              <option value="100" {% if params.price.max == '100' %}selected{% endif %}>Under $100</option>
+              <option value="200" {% if params.price.max == '200' %}selected{% endif %}>Under $200</option>
+              <option value="300" {% if params.price.max == '300' %}selected{% endif %}>Under $300</option>
+              <option value="400" {% if params.price.max == '400' %}selected{% endif %}>Under $400</option>
+              <option value="500" {% if params.price.max == '500' %}selected{% endif %}>Under $500</option>
+              <option value="1000000" data-price-min="500" {% if params.price.max == '1000000' %}selected{% endif %}>$500+</option>
             </select>
           </fieldset>
         </li>
