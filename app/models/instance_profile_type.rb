@@ -38,6 +38,7 @@ class InstanceProfileType < ActiveRecord::Base
   scope :by_position, -> { order('position ASC') }
 
   after_create :create_translations!
+  after_save :es_users_reindex
 
   accepts_nested_attributes_for :custom_attributes, update_only: true
 
@@ -73,4 +74,13 @@ class InstanceProfileType < ActiveRecord::Base
     form_components.where(form_type: profile_type).any? { |f| f.form_fields.present? }
   end
 
+  private
+
+  def es_users_reindex
+    if admin_approval_changed? && Rails.application.config.use_elastic_search
+      User.find_each do |user|
+        ElasticIndexerJob.perform(:update, 'User', user.id)
+      end
+    end
+  end
 end

@@ -31,7 +31,6 @@ class Transactable < ActiveRecord::Base
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
   include CreationFilter
-  include QuerySearchable
 
   has_many :customizations, as: :customizable
   has_many :additional_charge_types, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id

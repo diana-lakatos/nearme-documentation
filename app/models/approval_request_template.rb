@@ -1,9 +1,12 @@
 class ApprovalRequestTemplate < ActiveRecord::Base
+
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  ApprovalRequestTemplate::OWNER_TYPES = %w(User Company Transactable Offer)
+
+  OWNER_TYPES = %w(User Company Transactable Offer)
+
   belongs_to :instance
   has_many :approval_request_attachment_templates, inverse_of: :approval_request_template
 
@@ -12,5 +15,7 @@ class ApprovalRequestTemplate < ActiveRecord::Base
 
   validates_inclusion_of :owner_type, in: ApprovalRequestTemplate::OWNER_TYPES
 
-  accepts_nested_attributes_for :approval_request_attachment_templates, allow_destroy: true, reject_if: ->(params) { params.blank? || params[:label].blank? }
+  accepts_nested_attributes_for :approval_request_attachment_templates, allow_destroy: true,
+                                reject_if: ->(params) { params.blank? || params[:label].blank? }
+
 end
