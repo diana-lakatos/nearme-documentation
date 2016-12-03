@@ -5,8 +5,8 @@ module Elastic
       @es_indices = @klass.__elasticsearch__.client.indices
     end
 
-    def create_base_index
-      unless @es_indices.exists index: @klass.base_index_name
+    def create_base_index(check_alias: false)
+      if !@es_indices.exists(index: @klass.base_index_name) && (!check_alias || !@es_indices.exists_alias(name: @klass.alias_index_name))
         @es_indices.create index: @klass.base_index_name, body: { settings: @klass.settings, mappings: @klass.mappings }
       end
     end
@@ -25,6 +25,10 @@ module Elastic
       if @es_indices.exists_alias name: alias_name
         @es_indices.delete_alias index: index_name, name: alias_name
       end
+    end
+
+    def get_current_index_name
+      @es_indices.get_alias(name: @klass.alias_index_name).keys.first
     end
 
     def create_new_index

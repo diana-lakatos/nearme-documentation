@@ -7,7 +7,7 @@ namespace :elastic do
     desc 'Create aliases for all indices'
     task create_all: [:environment] do
       es_indices = Transactable.__elasticsearch__.client.indices
-      indices = es_indices.stats["indices"]
+      indices = es_indices.stats(store: true)["indices"]
       indices.each_key do |index|
         unless es_indices.exists_alias index: index, name: "#{index}-alias"
           Transactable.__elasticsearch__.client.indices.put_alias index: index, name: "#{index}-alias"
@@ -32,13 +32,13 @@ namespace :elastic do
 
   namespace :indices do
 
-    desc 'Create indexes for all instances'
-    task create_all: [:environment] do
+    desc 'Create indexes for all instances. Parameter check_alias (true/false) - do not create index if alias already exists.'
+    task :create_all, [:check_alias] => :environment do |_t, args|
       Instance.find_each do |instance|
         instance.set_context!
         instance.searchable_classes.each do |klass|
           puts "For instance --===#{instance.name} - #{instance.id}===-- Creating index #{klass.base_index_name}"
-          klass.indexer_helper.create_base_index
+          klass.indexer_helper.create_base_index(check_alias: args[:check_alias] == 'true')
         end
       end
     end
@@ -46,8 +46,30 @@ namespace :elastic do
     desc 'WARNING Deletes ALL indices in elastic'
     task delete_all: [:environment] do
       es_indices = Transactable.__elasticsearch__.client.indices
-      indices = es_indices.stats["indices"]
+      indices = es_indices.stats(store: true)["indices"]
       indices.each_key do |index|
+        es_indices.delete index: index
+        puts "Deleted index #{index}"
+      end
+    end
+
+    desc 'Removes unused indexes'
+    task remove_unused: [:environment] do
+      es_indices = Transactable.__elasticsearch__.client.indices
+      indices = es_indices.stats(store: true)["indices"]
+      indices_in_use = []
+      Instance.find_each do |instance|
+        instance.set_context!
+        indices_in_use << instance.searchable_classes.map do |_klass|
+          _klass.indexer_helper.get_current_index_name
+        end
+      end
+      indices_in_use.flatten!
+      indices.each_key do |index|
+        if indices_in_use.include?(index)
+          puts "Skipping index #{index} as it is in use"
+          next
+        end
         es_indices.delete index: index
         puts "Deleted index #{index}"
       end
