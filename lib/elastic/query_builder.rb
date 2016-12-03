@@ -105,7 +105,6 @@ module Elastic
     def initial_service_filters
       searchable_transactable_type_ids = @query[:transactable_type_id].to_i
       [
-        initial_instance_filter,
         initial_state_filter,
         {
           term: {
@@ -113,14 +112,6 @@ module Elastic
           }
         }
       ]
-    end
-
-    def initial_instance_filter
-      {
-        term: {
-          instance_id: @query[:instance_id]
-        }
-      }
     end
 
     def initial_state_filter
@@ -144,8 +135,25 @@ module Elastic
       else
         [
           {
-            script: {
-              script: "doc['service_radius'].empty || doc['geo_location'].distanceInMiles(#{@query[:lat]},#{@query[:lon]}) <= doc['service_radius'].value"
+            bool: {
+              should: [
+                {
+                  missing: {
+                    field: 'geo_service_shape'
+                  }
+                },
+                {
+                  geo_shape: {
+                    geo_service_shape: {
+                      shape: {
+                        type: 'Point',
+                        coordinates: [@query[:lon], @query[:lat]]
+                      },
+                      relation: 'contains'
+                    }
+                  }
+                }
+              ]
             }
           },
           {
@@ -404,10 +412,10 @@ module Elastic
           }
         else
           date_range[:or] << { bool: {} }
-          date_range[:or].last[:bool][:must] = @query[:date_range].map(&:wday).uniq.map do |day|
+          date_range[:or].last[:bool][:must] = @query[:date_range].map(&:wday).uniq.map do |wday|
             {
               term: {
-                opened_on_days: day
+                opened_on_days: wday
               }
             }
           end

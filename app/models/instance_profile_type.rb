@@ -1,9 +1,12 @@
 class InstanceProfileType < ActiveRecord::Base
+  include SearchableType
+
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
   SEARCH_VIEWS = %w(list).freeze
+  DEPENDENT_CLASS = User
 
   acts_as_custom_attributes_set
   has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
@@ -70,10 +73,4 @@ class InstanceProfileType < ActiveRecord::Base
     form_components.where(form_type: profile_type).any? { |f| f.form_fields.present? }
   end
 
-  def update_es_mapping
-    User.set_es_mapping
-    User.update_mapping!
-  rescue StandardError => e
-    MarketplaceLogger.error('ES Update Mapping Error', e.to_s, raise: false)
-  end
 end

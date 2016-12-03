@@ -16,6 +16,11 @@ class ElasticIndexerJob < Job
   def perform
     return unless Rails.application.config.use_elastic_search
     client = Elasticsearch::Model.client
+    settings = client.indices.get_settings index: @klass.constantize.index_name
+    if self.class.run_in_background? && settings.values.first['settings']['index']['blocks'].try(:[], 'write') == 'true'
+      self.class.perform_later(1.minute.from_now, @operation, @klass, @record_id, @options)
+      return
+    end
     begin
       case @operation.to_s
       when /index|update/

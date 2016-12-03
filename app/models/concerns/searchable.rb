@@ -20,15 +20,20 @@ module Searchable
     index_name -> { define_index_name }
 
     def self.define_index_name
-      if PlatformContext.current.try(:instance) && PlatformContext.current.instance.search_settings['use_individual_index'] == 'true'
-        "#{to_s.demodulize.pluralize.downcase}-#{Rails.env}-#{PlatformContext.current.try(:instance).try(:id)}"
-      else
-        to_s.demodulize.pluralize.downcase.to_s
-      end
+      raise PlatformContext::MissingContextError if PlatformContext.current.nil?
+      alias_index_name
     end
 
-    def self.update_mapping!
-      __elasticsearch__.client.indices.put_mapping index: index_name, type: to_s.demodulize.downcase.to_s, body: mappings
+    def self.base_index_name
+      "#{to_s.demodulize.pluralize.downcase}-#{Rails.application.config.stack_name}-#{Rails.env}-#{PlatformContext.current.try(:instance).try(:id)}"
+    end
+
+    def self.alias_index_name
+      "#{base_index_name}-alias"
+    end
+
+    def self.indexer_helper
+      @elastic_indexer ||= Elastic::IndexerHelper.new(self)
     end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module TransactablesIndex
   extend ActiveSupport::Concern
 
@@ -6,6 +7,9 @@ module TransactablesIndex
 
     settings(index: { number_of_shards: 1 })
 
+    # When changing mappings please remember to write migration to invoke
+    # rebuilding/refreshing index For ex. for each Instance perform:
+    # ElasticInstanceIndexerJob.perform(update_type: 'refresh', only_classes: ['Transactable'])
     def self.set_es_mapping(instance = PlatformContext.current.try(:instance))
       mapping do
         indexes :custom_attributes, type: 'object' do
@@ -47,6 +51,7 @@ module TransactablesIndex
         indexes :location_state, type: 'string'
 
         indexes :geo_location, type: 'geo_point'
+        indexes :geo_service_shape, type: 'geo_shape'
         indexes :service_radius, type: 'integer'
         indexes :open_hours, type: 'integer'
         indexes :open_hours_during_week, type: 'integer'
@@ -87,6 +92,7 @@ module TransactablesIndex
 
       as_json(only: allowed_keys).merge(
         geo_location: geo_location,
+        geo_service_shape: geo_service_shape,
         custom_attributes: custom_attrs,
         location_type_id: location.try(:location_type_id),
         location_city: location.try(:city).try(:downcase).try(:gsub, ' ', '_'),
@@ -104,6 +110,16 @@ module TransactablesIndex
         tags: tags_as_comma_string,
         state: state
       )
+    end
+
+    def geo_service_shape
+      if properties.respond_to?(:service_radius)
+        {
+          type: 'circle',
+          coordinates: [location.longitude.to_f, location.latitude.to_f],
+          radius: "#{properties.service_radius}mi"
+        }
+      end
     end
 
     def self.esearch(query)
