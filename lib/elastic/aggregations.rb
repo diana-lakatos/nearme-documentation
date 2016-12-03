@@ -3,7 +3,11 @@ module Elastic
     def self.build(**options)
       builder = Elastic::Aggregations::Builder.new
       builder.add_default(name: :filtered_aggregations, filters: options[:filters])
-      builder.add(name: :custom_attributes, filters: options[:filters], fields: options[:fields])
+
+      # FIX: remove aggs only for the-volte
+      if PlatformContext.current.instance.id == 194
+        builder.add(name: :custom_attributes, filters: options[:filters], fields: options[:fields])
+      end
 
       { aggregations: builder.body }
     end
