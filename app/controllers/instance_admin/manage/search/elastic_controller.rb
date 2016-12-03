@@ -1,10 +1,10 @@
 class InstanceAdmin::Manage::Search::ElasticController < InstanceAdmin::Manage::BaseController
-  before_filter :find_instance
-  before_filter :find_previous_job, only: :update
+  before_action :find_instance
+  before_action :find_previous_job, only: :update
 
-  COMPLETED = 'COMPLETED'
-  RUNNING = 'RUNNING'
-  ERROR = 'ERROR'
+  COMPLETED = 'COMPLETED'.freeze
+  RUNNING = 'RUNNING'.freeze
+  ERROR = 'ERROR'.freeze
 
   def show
     job = Delayed::Job.where(id: @instance.last_index_job_id).last
@@ -16,7 +16,7 @@ class InstanceAdmin::Manage::Search::ElasticController < InstanceAdmin::Manage::
       flash[:success] = t('flash_messages.search.setting_saved')
       redirect_to instance_admin_manage_search_elastic_path
     else
-      @instance.last_index_job_id = ElasticInstanceIndexerJob.perform.id
+      @instance.last_index_job_id = ElasticInstanceIndexerJob.perform(update_type: 'rebuild').id
       if @instance.save
         flash[:success] = t('flash_messages.search.setting_saved')
         redirect_to instance_admin_manage_search_elastic_path
@@ -30,7 +30,7 @@ class InstanceAdmin::Manage::Search::ElasticController < InstanceAdmin::Manage::
   private
 
   def find_previous_job
-    @last_index_job = Delayed::Job.find_by_id(@instance.last_index_job_id)
+    @last_index_job = Delayed::Job.find_by(id: @instance.last_index_job_id)
   end
 
   def permitting_controller_class
