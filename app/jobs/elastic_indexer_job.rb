@@ -13,8 +13,13 @@ class ElasticIndexerJob < Job
     5
   end
 
+  def should_update_index?
+    Rails.application.config.use_elastic_search &&
+      (@klass != 'User' || InstanceProfileType.searchable.any?)
+  end
+
   def perform
-    return unless Rails.application.config.use_elastic_search
+    return unless should_update_index?
     client = Elasticsearch::Model.client
     settings = client.indices.get_settings index: @klass.constantize.index_name
     if self.class.run_in_background? && settings.values.first['settings']['index']['blocks'].try(:[], 'write') == 'true'
