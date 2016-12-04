@@ -15,7 +15,7 @@ end
 
 Before do
   DatabaseCleaner.clean
-  WebMock.disable_net_connect!
+  WebMock.disable_net_connect!(:allow_localhost => true)
   GmapsFake.stub_requests
   stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
   stub_request(:get, 'https://www.filepicker.io/api/file/-nBq2onTSemLBxlcBWn1').to_return(:status => 200,:body => File.read(Rails.root.join("test", "assets", "foobear.jpeg")), :headers => {'Content-Type' => 'image/jpeg'})
@@ -67,6 +67,23 @@ After do
   ::CustomAttributes::CustomAttribute::CacheDataHolder.clear_all_cache!
 end
 
+Before('@elasticsearch') do
+  Rails.application.config.use_elastic_search = true
+  Transactable.indexer_helper.create_base_index
+  User.indexer_helper.create_base_index
+  Transactable.indexer_helper.create_alias
+  User.indexer_helper.create_alias
+  Transactable.searchable.import
+end
+
+After('@elasticsearch') do
+  Transactable.__elasticsearch__.client.indices.delete_alias name: Transactable.alias_index_name, index: Transactable.base_index_name
+  User.__elasticsearch__.client.indices.delete_alias name: User.alias_index_name, index: User.base_index_name
+  Transactable.__elasticsearch__.client.indices.delete index: Transactable.base_index_name
+  User.__elasticsearch__.client.indices.delete index: User.base_index_name
+  Rails.application.config.use_elastic_search = false
+end
+
 After do |scenario, block|
   travel_back
 end
@@ -80,5 +97,4 @@ World(Rack::Test::Methods)
 
 require 'webmock/rspec'
 World(WebMock::API, WebMock::Matchers)
-WebMock.disable_net_connect!(:allow_localhost => true)
 OmniAuth.config.test_mode = true

@@ -256,12 +256,19 @@ end
 
 def enable_elasticsearch!(&_block)
   Rails.application.config.use_elastic_search = true
-  Transactable.__elasticsearch__.create_index!(force: true)
+  Transactable.indexer_helper.create_base_index
+  User.indexer_helper.create_base_index
+  Transactable.indexer_helper.create_alias
+  User.indexer_helper.create_alias
   yield if block_given?
   Transactable.__elasticsearch__.refresh_index!
 end
 
 def disable_elasticsearch!
-  Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
+  Instance.last.set_context! unless PlatformContext.current
+  Transactable.__elasticsearch__.client.indices.delete_alias name: Transactable.alias_index_name, index: Transactable.base_index_name
+  Transactable.__elasticsearch__.client.indices.delete index: Transactable.base_index_name
+  User.__elasticsearch__.client.indices.delete_alias name: User.alias_index_name, index: User.base_index_name
+  User.__elasticsearch__.client.indices.delete index: User.base_index_name
   Rails.application.config.use_elastic_search = false
 end

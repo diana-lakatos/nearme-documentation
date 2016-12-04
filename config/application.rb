@@ -75,6 +75,7 @@ module DesksnearMe
     config.assets.initialize_on_precompile = true
 
     config.use_elastic_search = ENV['USE_ELASTIC_SEARCH'].presence
+    config.stack_name = ENV['STACK_NAME']
 
     config.assets.prefix = ENV['ASSETS_PREFIX'].presence || config.assets.prefix
 
