@@ -120,7 +120,10 @@
               <th>Date</th>
               <th>Status</th>
               <th>Accepted Date</th>
-              <th>Details</th>
+              {% if current_status != "archived" %}
+                <th>Details</th>
+              {% endif %}
+
             </tr>
           </thead>
           <tbody>
@@ -129,7 +132,9 @@
               <td>{{ accepted_order.created_at | to_date | l: 'short' }}</td>
               <td>Accepted</td>
               <td>{{ accepted_order.confirmed_at | to_date | l: 'short' }}</td>
-              <td><a href="{{ 'edit_dashboard_company_orders_received_path' | generate_url: accepted_order.id  }}" class="btn btn-info">Review</a></td>
+              {% if current_status != "archived" %}
+                <td><a href="{{ 'edit_dashboard_company_orders_received_path' | generate_url: accepted_order.id  }}" class="btn btn-info">Review</a></td>
+              {% endif %}
             </tr>
           </tbody>
         </table>
