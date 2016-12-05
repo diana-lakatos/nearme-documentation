@@ -4,8 +4,7 @@ class ShippingProfileDrop < BaseDrop
   attr_reader :shipping_profile
 
   # @!method name
-  #   Name for the shipping profile (e.g. user name)
-  #   @return (see ShippingProfile#name)
+  #   @return [String] Name for the shipping profile (e.g. user name)
   # @!method shipping_rules
   #   @return [Array<ShippingRuleDrop>] Shipping rules associated with this profile
   delegate :name, :shipping_rules, to: :shipping_profile

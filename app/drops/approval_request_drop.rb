@@ -4,11 +4,9 @@ class ApprovalRequestDrop < BaseDrop
   attr_reader :approval_request
 
   # @!method notes
-  #   returns the notes written by Administrator
-  #   @return (see ApprovalRequest#notes)
+  #   @return [String] returns the notes written by Administrator
   # @!method message
-  #   returns the message written by Creator
-  #   @return (see ApprovalRequest#message)
+  #   @return [String] returns the message written by Creator
   delegate :notes, :message, to: :approval_request
 
   def initialize(approval_request)

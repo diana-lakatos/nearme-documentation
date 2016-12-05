@@ -6,8 +6,7 @@ class MerchantAccountDrop < BaseDrop
   # @!method id
   #   @return [Integer] id of the merchant account
   # @!method state
-  #   State name for the merchant account
-  #   @return (see MerchantAccount#state)
+  #   @return [String] State name for the merchant account
   # @!method merchantable
   #   Merchantable object tied to this merchant account
   #   @return [Object]
@@ -15,8 +14,7 @@ class MerchantAccountDrop < BaseDrop
   #   Whether the object is saved in the database
   #   @return [Boolean]
   # @!method payment_gateway
-  #   Payment gateway for this merchant account
-  #   @return (see MerchantAccount#payment_gateway)
+  #   @return [PaymentGateway] Payment gateway for this merchant account
   # @!method permissions_granted
   #   Indicates whether API permissions were successfully granted from the merchant's account to yours.
   #   @return [Boolean]

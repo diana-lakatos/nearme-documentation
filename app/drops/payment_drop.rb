@@ -19,8 +19,7 @@ class PaymentDrop < BaseDrop
   # @!method payable
   #   @return [OrderDrop, Object] the associated object for this payment (mostly order objects)
   # @!method currency
-  #   Currency for this payment
-  #   @return (see Payment#currency)
+  #   @return [String] Currency for this payment
   # @!method total_amount
   #   @return [MoneyDrop] total amount for this order
   # @!method created_at

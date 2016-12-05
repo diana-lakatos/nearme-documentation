@@ -10,8 +10,7 @@ class OrderDrop < BaseDrop
   # @!method user
   #   @return [UserDrop] User owner of the order
   # @!method company
-  #   Company of the seller user
-  #   @return (see Order#company)
+  #   @return [CompanyDrop] Company of the seller user
   # @!method number
   #   @return [String] identifer of the order containing the class name (type of order)
   #     and the numeric identifer of the order
@@ -40,8 +39,7 @@ class OrderDrop < BaseDrop
   # @!method user_messages
   #   @return [Array<UserMessageDrop>] User messages for discussion between lister and enquirer
   # @!method archived_at
-  #   Time when the order has been transitioned to archived
-  #   @return (see Order#archived_at)
+  #   @return [DateTime] Time when the order has been transitioned to archived
   # @!method state
   #   @return [String] state of the current order
   # @!method cancelable?
@@ -51,8 +49,7 @@ class OrderDrop < BaseDrop
   # @!method penalty_charge_apply?
   #   @return [Boolean] whether the penalty charge applies to this order
   # @!method rejection_reason
-  #   Reason for the rejection of the order
-  #   @return (see Order#rejection_reason)
+  #   @return [String] Reason for the rejection of the order
   # @!method cancellation_policy_hours_for_cancellation
   #   @return [Integer] Hours allowed to cancel without a penalty before the booking starts
   # @!method cancellation_policy_penalty_hours
@@ -74,17 +71,14 @@ class OrderDrop < BaseDrop
   # @!method transactable
   #   @return [TransactableDrop] Transactable object being ordered
   # @!method cancelled_at
-  #   Time when the order was cancelled
-  #   @return (see Order#cancelled_at)
+  #   @return [DateTime] Time when the order was cancelled
   # @!method confirmed_at
-  #   Time when the order was confirmed
-  #   @return (see Order#confirmed_at)
+  #   @return [DateTime] Time when the order was confirmed
   # @!method recurring_booking_periods
   #   @return [Array<RecurringBookingPeriodDrop>] Array of recurring booking periods for a recurring booking representing
   #     periods for which a transactable object is bookable/booked
   # @!method creator
-  #   Lister user of the item being ordered
-  #   @return (see Order#creator)
+  #   @return [UserDrop] Lister user of the item being ordered
   # @!method payment_subscription
   #   @return [PaymentSubscriptionDrop] Payment subscription object for this order
   # @!method confirm_reservations?
@@ -92,8 +86,7 @@ class OrderDrop < BaseDrop
   # @!method bookable?
   #   @return [Boolean] whether the object is bookable (i.e. its type is different from 'Purchase')
   # @!method transactable_pricing
-  #   Transactable pricing object for the order
-  #   @return (see Order#transactable_pricing)
+  #   @return [Transactable::PricingDrop] Transactable pricing object for the order
   # @!method inactive?
   #   @return [Boolean] whether the order is inactive (i.e. the initial state when the user just
   #     pressed on 'book'/'buy' without actually completing the order)

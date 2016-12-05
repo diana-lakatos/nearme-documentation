@@ -6,8 +6,7 @@ class PageDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier for the page
   # @!method slug
-  #   User & SEO friendly short text used in the URL
-  #   @return (see Page#slug)
+  #   @return [String] User & SEO friendly short text used in the URL
   # @!method updated_at
   #   Last time when the page was updated
   #   @return [DateTime]

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class DeliveryDrop < BaseDrop
+  # @return [DeliveryDrop]
   attr_reader :delivery
 
   # @!method courier

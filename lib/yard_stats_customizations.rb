@@ -22,12 +22,14 @@ class YARD::CLI::Stats
     result
   end
 
-  def is_empty_return?(object)
-    # We check to see whether it might be an empty return (automatically added for method? methods); it must not be an
-    # attr_reader or attr_writer
-    if object.tags.count == 1 && object.tags.first.tag_name == 'return' && object.tags.first.text == '' && !object.attr_info
-      return true
+  def has_return_tag?(object)
+    has_docstring = object.docstring.to_s != ''
+    object.tags.each do |tag|
+      if tag.tag_name == 'return' && (tag.text != '' || object.attr_info || has_docstring)
+        return true
+      end
     end
+
     false
   end
 
@@ -56,7 +58,13 @@ class YARD::CLI::Stats
 
     # Reject those with documentation
     objects = objects.select do |object|
-      if (object.docstring.to_s.blank? && (object.tags.blank? || is_empty_return?(object))) || object.docstring.to_s.match(/^Alias for/)
+      if object.is_a?(YARD::CodeObjects::ClassObject)
+        if object.docstring.to_s.blank?
+          true
+        else
+          false
+        end
+      elsif !has_return_tag?(object) || object.docstring.to_s.match(/^Alias for/)
         true
       else
         false
@@ -70,6 +78,8 @@ class YARD::CLI::Stats
         objects << object
       end
     end
+
+    objects.uniq!
 
     objects = objects.sort_by {|o| o.file.to_s }
 
