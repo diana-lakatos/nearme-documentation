@@ -3,6 +3,9 @@ module.exports = class ActivityFeedController
     @currentUser = @container.data('current-user-id')
     @commentsSpamReports = @container.data('comments-spam-reports')
     @eventsSpamReports = @container.data('events-spam-reports')
+
+    return unless @currentUser
+
     @initialize()
     @container.on 'next-page', =>
       @initialize()
