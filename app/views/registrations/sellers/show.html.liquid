@@ -11,7 +11,7 @@
         {% endif %}
         {% if platform_context.active_rating_systems_present? %}
           <li>
-            <a class='reviews-tab' data-toggle='tab' href='#reviews'>{{ 'user_profile.labels.tabs.reviews' | translate: count: total_reviews_count}}</a>
+            <a class='reviews-tab' data-toggle='tab' href='#reviews'>{{ 'user_profile.labels.tabs.reviews' | translate: count: user.total_reviews_count }}</a>
           </li>
         {% endif %}
         {% if user.show_blog_tab? %}

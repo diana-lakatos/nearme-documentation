@@ -23,7 +23,7 @@
 
             - if RatingSystem.active.any?
               %li{ class: active_profile_tab_class(:reviews) }
-                %a{href: '#reviews', 'data-toggle' => 'tab', class: 'reviews-tab'}= t 'user_profile.labels.tabs.reviews', count: @total_reviews_count
+                %a{href: '#reviews', 'data-toggle' => 'tab', class: 'reviews-tab'}= t 'user_profile.labels.tabs.reviews', count: @user.total_reviews_count
 
             - if platform_context.instance.blogging_enabled?(@user) && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
               %li{ class: active_profile_tab_class(:blog_posts) }

@@ -74,6 +74,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
 
   def edit
     @update_path = dashboard_order_path(@order)
+    build_payment_documents
     render template: 'checkout/show'
   end
 
