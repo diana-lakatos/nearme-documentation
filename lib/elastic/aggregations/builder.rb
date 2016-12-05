@@ -17,6 +17,10 @@ module Elastic
         add_node DefaultAggregator.new(name: name, filters: filters)
       end
 
+      def add_global(name: :global, fields:) #
+        add_node GlobalAggregator.new(name: name, fields: fields)
+      end
+
       private
 
       def add_node(aggregator)

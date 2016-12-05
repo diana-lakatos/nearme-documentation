@@ -28,8 +28,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.item_type.label }}</legend>
               <select {{ attributes.item_type.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_type.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.item_type | options_for_select: item_type }}
+                {{ searcher.options_for_select.item_type | options_from_collection_for_select: item_type }}
               </select>
             </fieldset>
           </li>
@@ -38,8 +37,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.item_style_bag.label }}</legend>
               <select {{ attributes.item_style_bag.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_bag.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.item_style_bag | options_for_select: params['lg_custom_attributes']['item_style_bag'][0]  }}
+                {{ searcher.options_for_select.item_style_bag | options_from_collection_for_select: params['lg_custom_attributes']['item_style_bag'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -48,8 +46,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.item_style_milinery.label }}</legend>
               <select {{ attributes.item_style_milinery.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_milinery.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.item_style_milinery | options_for_select: params['lg_custom_attributes']['item_style_milinery'][0]  }}
+                {{ searcher.options_for_select.item_style_milinery | options_from_collection_for_select: params['lg_custom_attributes']['item_style_milinery'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -58,8 +55,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.milinery_size.label }}</legend>
               <select {{ attributes.milinery_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.milinery_size.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.milinery_size | options_for_select: params['lg_custom_attributes']['milinery_size'][0]  }}
+                {{ searcher.options_for_select.milinery_size | options_from_collection_for_select: params['lg_custom_attributes']['milinery_size'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -68,8 +64,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.dress_size.label }}</legend>
               <select {{ attributes.dress_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.dress_size.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.dress_size | options_for_select: params['lg_custom_attributes']['dress_size'][0]  }}
+                {{ searcher.options_for_select.dress_size | options_from_collection_for_select: params['lg_custom_attributes']['dress_size'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -78,8 +73,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.designer_name.label }}</legend>
               <select {{ attributes.designer_name.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.designer_name.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.designer_name | options_for_select: params['lg_custom_attributes']['designer_name'][0]  }}
+                {{ searcher.options_for_select.designer_name | options_from_collection_for_select: params['lg_custom_attributes']['designer_name'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -88,8 +82,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.color.label }}</legend>
               <select {{ attributes.color.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.color.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.color | options_for_select: params['lg_custom_attributes']['color'][0]  }}
+                {{ searcher.options_for_select.color | options_from_collection_for_select: params['lg_custom_attributes']['color'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -98,8 +91,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.dress_length.label }}</legend>
               <select {{ attributes.dress_length.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.dress_length.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.dress_length | options_for_select: params['lg_custom_attributes']['dress_length'][0]  }}
+                {{ searcher.options_for_select.dress_length | options_from_collection_for_select: params['lg_custom_attributes']['dress_length'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -108,8 +100,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.outerwear_size.label }}</legend>
               <select {{ attributes.outerwear_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.outerwear_size.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.outerwear_size | options_for_select: params['lg_custom_attributes']['outerwear_size'][0]  }}
+                {{ searcher.options_for_select.outerwear_size | options_from_collection_for_select: params['lg_custom_attributes']['outerwear_size'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -118,8 +109,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.item_style_dress.label }}</legend>
               <select {{ attributes.item_style_dress.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_dress.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.item_style_dress | options_for_select: params['lg_custom_attributes']['item_style_dress'][0]  }}
+                {{ searcher.options_for_select.item_style_dress | options_from_collection_for_select: params['lg_custom_attributes']['item_style_dress'][0]  }}
               </select>
             </fieldset>
           </li>
@@ -128,8 +118,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.item_style_outerwear.label }}</legend>
               <select {{ attributes.item_style_outerwear.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_outerwear.name }}][]" id="">
-                <option value="">Please select</option>
-                {{ searcher.options_for_select.item_style_outerwear | options_for_select: params['lg_custom_attributes']['item_style_outerwear'][0]  }}
+                {{ searcher.options_for_select.item_style_outerwear | options_from_collection_for_select: params['lg_custom_attributes']['item_style_outerwear'][0]  }}
               </select>
             </fieldset>
           </li>
