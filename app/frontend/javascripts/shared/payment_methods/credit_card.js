@@ -3,12 +3,11 @@
 class PaymentMethodCreditCard {
 
   constructor(container) {
-    this.form = $('#checkout-form');
+    this.form = $('#checkout-form, #new_payment');
     this._ui = {};
     this._ui.container = container;
 
     this._publishableToken = this.form.find('.nm-credit-card-fields').data('publishable');
-
     if (this._ui.container.dataset.initialised) {
       return;
     }
@@ -38,7 +37,6 @@ class PaymentMethodCreditCard {
     Array.prototype.forEach.call(this._ui.creditCardSwitcher.querySelectorAll('input[type=radio]'), (el)=>{
       el.addEventListener('change', (event) => this._toggleByValue(event.target.value));
     });
-
     this._submitFormHandler();
     this._bindFieldValidation();
   }
@@ -61,24 +59,33 @@ class PaymentMethodCreditCard {
   }
 
   _submitFormHandler(){
-    var $form = $(this.form);
-    var that = this;
+
+    var $form = $(this.form), that = this;
 
     $form.submit(function(event) {
       event.stopPropagation();
       event.preventDefault();
 
-      if ($form.find('.collapse.in .nm-new-credit-card-form').length > 0) {
+      if ($form.find('.nm-new-credit-card-form:visible').length > 0) {
         if (that._validateForm($form)) {
+          that._showLoader();
           if (that._publishableToken.length > 0) {
-            Stripe.setPublishableKey(that._publishableToken);
-            Stripe.card.createToken($form, that._stripeResponseHandler);
+            try {
+              Stripe.setPublishableKey(that._publishableToken);
+              Stripe.card.createToken($form, that._stripeResponseHandler.bind(that));
+            }
+            catch(err) {
+              if (err) {
+                that._hideLoader();
+              }
+            }
           } else {
-            $form.get(0).submit();
+            that._submitCreditCardForm().call(that);
           }
         }
       } else {
         $form.get(0).submit();
+        $form.find('[data-disable-with]').prop('disabled', true);
       }
 
       // Prevent the form from being submitted:
@@ -87,6 +94,7 @@ class PaymentMethodCreditCard {
   }
 
   _validateForm(form) {
+
     var valid =  true, that = this;
 
     $(this.form).find('.errors').html('');
@@ -104,15 +112,14 @@ class PaymentMethodCreditCard {
 
   _validateField(field, validator) {
     if (!validator(field.val())) {
-      field.parents('.control-group').addClass('error');
-      field.parents('.controls').next('.error-block').remove();
-      field.parents('.controls').after('<p class="error-block">' + this._validationMessage(validator) +'</p>');
+      field.parents('.control-group, .form-group').addClass('error has-error');
+      field.parents('.control-group, .form-group').find('.error-block').remove();
+      field.parents('.control-group, .form-group').append('<p class="error-block">' + this._validationMessage(validator) +'</p>');
       return false;
     } else {
-      field.parents('.control-group').removeClass('error');
-      if (field.parents('.controls').next().attr('class') == 'error-block') {
-        field.parents('.controls').next('.error-block').remove();
-      }
+      field.parents('.control-group, .form-group').removeClass('error has-error');
+      field.parents('.control-group, .form-group').find('.error-block').remove();
+
       return true;
     }
   }
@@ -139,14 +146,55 @@ class PaymentMethodCreditCard {
     }
   }
 
-  _stripeResponseHandler(status, response) {
 
+  _successResponse(response) {
+    var $form = $('#checkout-form, #new_payment');
+    if (response.saved) {
+      if ($form.attr('data-redirect-to')) {
+        window.location.replace($form.attr('data-redirect-to'));
+      } else {
+        window.location.reload();
+      }
+    } else {
+      $('.dialog__content').html(response.html);
+    }
+    this._hideLoader();
+  }
+
+  _showLoader(){
+    $('.spinner-overlay').show();
+  }
+
+  _hideLoader(){
+    $('.spinner-overlay').hide();
+  }
+
+  _submitCreditCardForm() {
+    var $form = $('#checkout-form, #new_payment'), that = this;
+
+    if ($form.parents('.dialog__content').length > 0) {
+      $.ajax({
+        url: $form.attr('action'),
+        method: 'POST',
+        dataType: 'json',
+        data: $form.serialize()
+      }).done(that._successResponse);
+
+    } else {
+      // Submit the form:
+      $form.get(0).submit();
+    }
+  }
+
+  _stripeResponseHandler(status, response) {
     // Grab the form:
-    var $form = $('#checkout-form');
+    var $form = $('#checkout-form, #new_payment');
 
     if (response.error) { // Problem!
         // Show the errors on the form:
-      $form.find('.errors').html('<p class="error-block">' + response.error.message + '</p>');
+      $form.find('.errors').eq(0).html('<p class="error-block">' + response.error.message + '</p>');
+      this._hideLoader();
+
 
     } else { // Token was created!
 
@@ -162,8 +210,8 @@ class PaymentMethodCreditCard {
       // Insert the token ID into the form so it gets submitted to the server:
       $form.append($('<input type="hidden" name="order[payment_attributes][credit_card_attributes][credit_card_token]">').val(token));
 
-      // Submit the form:
-      $form.get(0).submit();
+      this._submitCreditCardForm.call(this);
+
     }
   }
 }
