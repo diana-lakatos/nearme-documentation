@@ -66,7 +66,7 @@ class FormAttributes
       :waiver_agreement_templates, :documents_upload, :quantity, :book_it_out,
       :exclusive_price, :action_rfq, :capacity, :seller_attachments,
       :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info,
-      :collaborators, :pro_bono, :unavailable_periods, :package_details
+      :collaborators, :pro_bono, :unavailable_periods, :package_details, :availability_rules
     ] +
       Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
       extra_attributes(transactable_type.categories.roots, 'Category') +
