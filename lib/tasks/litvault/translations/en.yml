@@ -155,6 +155,7 @@ en:
 
   transactable_type:
     group_case:
+      name: 'Group Case'
       labels:
         name: 'Case Name'
         all_states.: 'All States'
@@ -163,6 +164,7 @@ en:
       hints:
         name: 'Case Name will be used as a heading in case listings. It should allow to easily identify case among others'
     individual_case:
+      name: 'Individual Case'
       labels:
         name: 'Case Name'
         all_states: 'All States'

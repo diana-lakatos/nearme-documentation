@@ -17,7 +17,6 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   scope :public_display, -> { where(public: true) }
   scope :required, -> { joins(:custom_validators).merge(CustomValidator.required) }
 
-  validates :valid_values, presence: { if: :searchable }
   validates :min_value, :max_value, :step, presence: true, if: -> { html_tag.eql?('range') }
 
   delegate :update_es_mapping, to: :target
