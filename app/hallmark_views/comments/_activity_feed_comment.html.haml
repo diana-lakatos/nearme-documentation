@@ -1,0 +1,23 @@
+- hide_comment_options = local_assigns[:hide_comment_options].presence || false
+- target = local_assigns[:target].presence || "_self"
+
+.comment-a{ class: ('commented-own-thread' if commented_own_thread?(comment)), data: { comment_id: comment.id, creator_id: comment.creator_id, commentable_creator_id: comment.commentable.try(:creator_id) } }
+  %figure
+    = image_tag comment.creator.avatar.url(:thumb)
+  %p.author
+    = link_to comment.creator.decorate.secret_name, profile_path(comment.creator), target: target
+  %p= videoify_and_parse_with_markdown(comment.body, { iframe_width: 400, iframe_height: 225 })
+  %p.meta
+    %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :long)
+
+    - unless hide_comment_options
+      - if comment.can_be_reported?
+        %span &bull;
+        - if user_signed_in?
+          = link_to t(:report_as_spam), url_to_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :post, 'data-report-spam': true
+          = link_to t(:cancel_spam_report), url_to_cancel_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :delete, 'data-cancel-report': true, style: "display: none"
+        - else
+          = link_to t(:report_as_spam), new_user_session_path(return_to: request.path)
+      %span.remove-link{ 'data-remove-comment': true, style: comment.can_remove?(current_user) ? '' : 'display: none' }
+        %span &bull;
+        = link_to t(:remove_comment), url_to_comment(comment.commentable, comment), remote: true, method: :delete

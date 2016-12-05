@@ -1,0 +1,28 @@
+/ content wrapper
+.wrap-a.reduce-top
+  .contain
+    / layout
+    .page-a
+      .primary
+        / white box
+        .box-a
+          %h1.h2
+            = t('activity_feed.title')
+
+          = render 'shared/activity_feed', object: object, feed: feed
+      .secondary
+        / white box
+        .box-a
+          %h2
+            = t :about
+          = videoify_and_parse_with_markdown(@user.properties.try(:about_me).to_s, { iframe_width: 350, iframe_height: 276 })
+
+        - video_embed_code = user_video_embed_html(@user)
+        - if video_embed_code.present?
+          / white box
+          .box-a
+            %h2
+              = t :video
+            = video_embed_code
+
+        = render 'shared/featured_projects', projects: Transactable.featured.where.not(id: current_user.try(:feed_followed_transactables) || []).take(10)

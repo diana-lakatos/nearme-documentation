@@ -1,0 +1,19 @@
+= simple_form_for '', url: search_url, html: { id: 'search_filter' } do |f|
+  .filters-a
+    .box
+      %h3.hx
+        = t :filter_by
+
+      = f.input :topic_ids, as: :select, multiple: true, input_html: { class: 'selectize', multiple: true }, collection: Topic.all, value_method: :id, label_method: :name, selected: @searcher.selected_topic_ids, wrapper_html: { class: 'drop role' }, required: false, placeholder: t('simple_form.placeholders.defaults.topic_ids')
+
+      = f.input :seek_collaborators, as: :boolean, input_html: { class: 'tick-a',  checked: params[:seek_collaborators] == '1' }, wrapper_html: { class: 'tick' }, wrapper: :inline_checkbox
+      = f.input :query, as: :hidden, input_html: { value: params[:query] }
+      = f.input :page, as: :hidden, input_html: { value: params[:page] }
+      = f.input :search_type, as: :hidden, input_html: { value: 'projects' }
+
+    .results
+      %p.count
+        %span= @searcher.result_count
+        = t :results_count
+
+      = f.input :sort, as: :select, collection: Transactable::SORT_OPTIONS, prompt: t(:sort, scope: [:simple_form, :placeholders, :search_filter]), input_html: { class: 'selectize' }, wrapper_html: { class: 'sort' }, selected: params[:sort]

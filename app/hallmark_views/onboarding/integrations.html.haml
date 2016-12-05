@@ -1,0 +1,16 @@
+= render 'shared/onboarding_heading', active_step: 2
+
+/ content wrapper
+.wrap-a.white
+  .contain
+    = simple_form_for :onboarding, url: next_wizard_path, html: { class: 'form-a', method: :get } do |f|
+      .connect-a
+        %ul
+          - @supported_providers.each do |provider|
+            %li{class: provider.downcase}
+              %span
+                = t :connect_with_service, service: provider
+              = build_link_for(provider, "button-a white").html_safe
+      %p.action
+        %button.button-a{type: "submit"}
+          = t :continue

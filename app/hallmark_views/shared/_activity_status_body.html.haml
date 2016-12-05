@@ -1,0 +1,34 @@
+- if [:user_commented_on_project, :user_commented, :user_commented_on_user_activity].include?(event.event.to_sym)
+  - followed = event.event_source.commentable
+  - body = event.event_source.body
+  - header_image = "community/status-a-chat-a.png"
+- elsif [:user_added_photos_to_project, :user_added_photos_to_group].include?(event.event.to_sym) && event.event_source.is_a?(Photo)
+  - followed = event.followed
+  - big_image = event.event_source.image.url(:space_listing)
+- else
+  - followed = event.followed
+  - body = event.description
+  - header_image = header_image_for_event(event)
+  - title = link_to_activity_feed_object event.name, followed, target: target
+
+%section
+  %article.status-a{ class: ('status-update' if status_update?(event.event)) }
+    - if big_image.present?
+      = followed_link(followed, target) do
+        = image_tag big_image
+
+      = render 'shared/activity_status_footer', event: event, footer_class: 'no-spacing'
+    - else
+      %header
+        %figure
+          = followed_link(followed, target) do
+            = header_image.present? ? image_tag(header_image) : image_tag(space_listing_placeholder_path(width: 80, height: 80))
+      %section
+        %h3.hx= title if title.present?
+        - if body.present?
+          - if event.is_text_update? || event.event.to_sym == :user_created_transactable
+            = videoify_and_parse_with_markdown(body)
+          - else
+            = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' })
+
+      = render 'shared/activity_status_footer', event: event

@@ -1,0 +1,10 @@
+.wrap-a.reduce-top
+  .contain
+
+    %h1.h2
+      = link_to t(:my_projects), dashboard_project_type_projects_path(@transactable_type)
+      >
+      = t :add_project
+    / white box
+    .box-a
+      = render 'form'

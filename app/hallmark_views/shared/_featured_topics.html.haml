@@ -1,0 +1,10 @@
+.box-a
+  / header with button
+  .header-a
+    %h2.hx
+      = t :featured_topics
+    %p.action
+      = link_to t(:view_all), search_path(search_type: :topics, sort: :featured), class: 'button-a small white'
+  .featured
+    - topics.each do |topic|
+      = render 'shared/featured_topic', topic: topic

@@ -1,0 +1,111 @@
+= simple_form_for @transactable, url: form_url_to_project(@transactable_type, @transactable), html: { class: 'form-a project-form-controller' } do |f|
+  -# needed for photo uploader to work correctly
+  = f.input :id, as: :hidden
+  .fields
+    - if current_user.id == f.object.creator_id
+      = f.input :name, required: true, input_html: { maxlength: 140 }
+
+      = f.simple_fields_for :properties, f.object.properties do |properties_form|
+        = properties_form.input :summary, required: true, as: :text, input_html: { maxlength: 140 }
+
+    = f.input :description, as: :text, required: true, input_html: { maxlength: 5000, cols: 40, rows: 8 }
+
+    = f.association :topics, as: :select, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }, required: true
+    = f.association :groups, as: :select, collection: [@transactable.groups, current_user.group_collaborated].flatten, input_html: { multiple: true, class: 'selectize', data: { placeholder: t('simple_form.placeholders.defaults.group_ids') } }
+
+    %fieldset.media-group.sep
+      %legend
+        %abbr{:title => t('general.required')} *
+        = t :images
+
+      .loading{:style => "display: none"}
+        = image_tag "spinner.gif"
+        %br/
+        .span
+          = t('manage.listings.photos.waiting_for_photo_processing')
+
+      = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
+                                      dashboard_photos_path,
+                                      { width: 200, height: 175, transform: :resize_to_fill },
+                                      t('simple_form.labels.listing.add_photo'),
+                                      :required => true,
+                                      :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
+        - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
+        .thumbnail-processing{:hidden => true}
+          .loading-icon
+
+        = hidden_field_tag "#{f.object_name}", nil, placeholder: t('ui.photo_uploader.caption'), id: 'photo-item-input-template', disabled: true, 'data-number' => 0, 'data-no-caption' => true
+        - unless @photos.nil?
+          - @photos.each_with_index do |photo|
+            - next unless photo.persisted?
+
+            .photo-item{:id => "photo-" + photo.id.to_s}
+              = image_tag photo.image_url(:medium)
+              .media-actions
+                %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_dashboard_photo_path(photo), :'ajax-options' => { id: photo.id }}, :title => t('forms.photos.collection.rotate_and_crop')}
+                  %span.intelicon-edit
+
+                %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_space_wizard_photo_path(:id => photo.id) }, :title => t('forms.photos.collection.delete') }
+                  %span.intelicon-trash-outlined
+
+              = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
+              = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
+              = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+
+      - if is_i18n_set?('simple_form.hints.project.photos')
+        %p.photo-uploader-hint
+          = t('simple_form.hints.project.photos')
+
+    %fieldset.media-group.sep
+      %legend
+        = t :links
+
+      .project-links-listing
+        = f.simple_fields_for :links do |link_form|
+          = render 'dashboard/projects/link_fields', f: link_form
+        .fieldset-actions
+          = link_to_add_association t(:add_link), f, :links, class: 'button-a small'
+    %anchor#collaborators
+    - if current_user.id == f.object.creator_id
+      = f.input :seek_collaborators, as: :switch, wrapper_html: { class: 'sep' }
+
+    - if (current_user.id == f.object.creator_id ? @transactable.transactable_collaborators : current_user.transactable_collaborators.where(transactable: f.object)).count > 0
+      %table.collaborators-listing-a
+        %thead
+          %tr
+            %th
+              = t :name
+            %th.col-status
+              = t :status
+            %th
+              = t :actions
+        %tbody
+          = render partial: 'dashboard/company/transactable_collaborators/transactable_collaborator', collection: (current_user.id == f.object.creator_id ? @transactable.transactable_collaborators : current_user.transactable_collaborators.find_by(transactable: f.object))
+
+    - if current_user.id == f.object.creator_id
+      #new_collaborators
+        = f.simple_fields_for :new_collaborators do |new_collaborator_form|
+          = render 'dashboard/projects/new_collaborator_fields', f: new_collaborator_form
+        .links
+          = link_to_add_association t(:add_collaborator), f, :new_collaborators, class: 'button-a small'
+
+    - if f.object.properties.respond_to?(:video_url)
+      = f.simple_fields_for :properties, f.object.properties do |properties_form|
+        = properties_form.input :video_url
+
+  %p.action
+
+    - if f.object.new_record? || f.object.draft?
+      = f.submit t(:save_for_later), name: 'save_for_later', class: 'button-a white'
+
+      = f.submit t(:publish_project), name: 'submit', class: 'button-a'
+
+    - else
+      = f.submit t(:save_changes), class: 'button-a'
+
+      - if current_user.id == f.object.creator_id && f.object.persisted?
+        = link_to t(:delete_project), dashboard_project_type_project_path(@transactable_type, f.object), method: :delete, class: 'action--delete-project', data: { confirm: 'Are you sure?' }
+
+  %p.required-info
+    %em *
+    Required

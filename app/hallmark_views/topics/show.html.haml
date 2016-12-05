@@ -1,0 +1,40 @@
+.topic-a
+  / add background image with inline css, ex: <div class="wrap" style="background-image: url(path/to/image.jpg);">
+  .wrap
+    .contain
+      %h1.hx= @topic.name
+      %p= @topic.description
+  .contain
+    %nav.navbar-a
+      %ul.nav.nav-tabs{role: "tablist"}
+        %li.active
+          = link_to '#activity', role: "tab", :'data-toggle' => "tab" do
+            = t(:activity)
+        %li
+          = link_to '#followers', role: "tab", :'data-toggle' => "tab" do
+            = t :followers
+            %small= "(#{@topic.feed_followers.count})"
+        %li
+          = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
+            = t :projects
+            %small= "(#{@topic.transactables.active.count})"
+      %p{:'data-follow-button' => true}
+        = render partial: 'shared/follow_button', locals: { object: @topic }
+        - if current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
+          %p= link_to t(:edit), edit_instance_admin_manage_topic_path(@topic), class: 'button-a small', rel: "modal"
+
+
+.tab-content
+  #activity.tab-pane.fade.active{:role => "tabpanel"}
+    = render 'show_activity', object: @topic, feed: @feed
+  #followers.tab-pane.fade{:role => "tabpanel"}
+    .wrap-a.reduce-top
+      .contain
+        .box-a= render 'shared/show_followers', container: '#followers', see_more_route: see_more_followers_path(id: @topic.id, type: 'Topic', container: '#followers'), collection: @followers
+  #projects.tab-pane.fade{:role => "tabpanel"}
+    / content wrapper
+    .wrap-a.reduce-top
+      .contain
+        / white box
+        .box-a
+          = render 'shared/show_transactables', transactables: @all_transactables, container: '#projects', see_more_route: see_more_transactables_path(id: @topic.id, type: @topic.class.name, container: '#projects')

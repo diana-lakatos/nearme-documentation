@@ -1,0 +1,38 @@
+.link.nested-fields{data: { :'link-wrapper' => true }}
+  - if f.object.url.present?
+    .link-preview
+      - if f.object.image.present?
+        %figure
+          = image_tag f.object.image_url(:standard), width: LinkImageUploader.dimensions[:standard][:width], height: LinkImageUploader.dimensions[:standard][:height]
+      %p
+        URL:
+        - if f.object.valid_attribute?(:url)
+          = link_to f.object.url, f.object.url
+        - else
+          = f.object.url
+      - if f.object.text
+        %p
+          Label:
+          = f.object.text
+
+
+  %div.media-group_link-form
+    = f.input :url
+    .label-photo
+      = f.input :text
+      %span.or
+        = t :or
+      = f.input :image, as: :file, input_html: { accept: "image/*", capture: "capture" }
+
+  .fieldset-actions
+    - if f.object.url.present?
+      %button.button-a.small{:"data-link-edit" => true, type: 'button' }
+        %span.intelicon-edit
+        = t('edit', default: 'Edit')
+
+    = link_to_remove_association f, class: 'button-a small red' do
+      %span.intelicon-trash-outlined
+      = t('remove', default: 'Remove')
+
+
+

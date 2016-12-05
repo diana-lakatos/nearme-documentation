@@ -441,7 +441,7 @@ class ApplicationController < ActionController::Base
   helper_method :ckeditor_toolbar_creator, :enable_ckeditor_for_field?
 
   def prepend_view_paths
-    prepend_view_path('app/community_views') if PlatformContext.current.instance.is_community?
+    prepend_view_path("app/#{PlatformContext.current.instance.prepend_view_path}_views") if PlatformContext.current.instance.prepend_view_path.present?
     prepend_view_path InstanceViewResolver.instance
   end
 

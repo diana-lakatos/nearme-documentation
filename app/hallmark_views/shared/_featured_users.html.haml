@@ -1,0 +1,11 @@
+.box-a
+  / header with button
+  .header-a
+    %h2.hx
+      = t :featured_users
+    %p.action
+      = link_to t(:view_all), search_path(search_type: :people, sort: "featured"), class: 'button-a small white'
+
+  .featured
+    - users.each do |user|
+      = render 'shared/featured_user', user: user

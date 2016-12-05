@@ -81,7 +81,7 @@
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/manage_blog/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{controller_name.titleize}"
 
-    - if @authorizer.authorized?('Projects') && current_instance.is_community?
+    - if @authorizer.authorized?('Projects')
       %li#projects
         %a{"data-parent" => "#projects", "data-toggle" => "collapse", :href => "#projects-sub"}
           %i.fa.fa-pencil
@@ -92,7 +92,7 @@
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/projects/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= "#{settings[:title] || controller_name.titleize}"
 
-    - if @authorizer.authorized?('Groups') && current_instance.is_community?
+    - if @authorizer.authorized?('Groups')
       %li#groups
         %a{"data-parent" => "#groups", "data-toggle" => "collapse", :href => "#groups-sub"}
           %i.fa.fa-pencil

@@ -1,0 +1,55 @@
+/ status update
+%article.status-a
+  %header
+    %figure
+      = image_tag space_listing_placeholder_path(width: 80, height: 80)
+    %p.desc
+      / toggle user_possesive flag to false to use 'her' possessive pronoun
+      = t(:user_updated_status, user_link: link_to('Mike M.', root_url), possessive: t(true ? :male : :female, scope: [:user_possessive])).html_safe
+
+    %p.meta
+      %time 10/20/15
+  %section
+    %p “I’ve created a super interesting project, join me!”
+  %footer
+    %p.actions
+      = link_to t(:comment), '#', data: { comment: '' }
+
+      %span &bull;
+      = link_to t(:report_as_spam), root_url
+
+    = simple_form_for :comment, url: root_url, class: 'comment' do |f|
+      = f.input :comment, as: :text, input_html: { cols: 40, rows: 4 }, label: false
+
+      %p.action
+        = f.button :submit, class: 'button-a tiny'
+
+    .comments
+      / comment
+      .comment-a
+        %figure
+          = image_tag space_listing_placeholder_path(width: 50, height: 50)
+        %p.author
+          = link_to 'Richard M.', root_url
+          said:
+        %blockquote
+          %p I’m a software engineer and I’m currently the head of Google’s Payments team.
+        %p.meta
+          %time
+            = t :hours, count: 3
+          %span &bull;
+          = link_to t(:report_as_spam), root_url
+      / comment
+      .comment-a
+        %figure
+          = image_tag space_listing_placeholder_path(width: 50, height: 50)
+        %p.author
+          = link_to 'Susie Q.', root_url
+          said:
+        %blockquote
+          %p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate sunt veniam, dolorem similique dolore veritatis, id consequatur aliquam rerum sint nostrum labore magni maiores exercitationem quo dolores dicta delectus nihil!
+        %p.meta
+          %time
+            = t :hours, count: 3
+          %span &bull;
+          = link_to t(:report_as_spam), root_url

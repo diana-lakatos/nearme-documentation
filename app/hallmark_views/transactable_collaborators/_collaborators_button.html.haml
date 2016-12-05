@@ -1,0 +1,8 @@
+- transactable_collaborator = @transactable.transactable_collaborators.for_user(current_user).first
+
+- if current_user.try(:id) == @transactable.creator_id
+  - # do nothing
+- elsif transactable_collaborator
+  = link_to t(:leave_project), listing_transactable_collaborator_path(@transactable, transactable_collaborator), method: :delete , class: 'button-a small red', remote: true
+- elsif @transactable.seek_collaborators
+  = link_to t(:join_project), listing_transactable_collaborators_path(@transactable), method: :post , class: 'button-a small', remote: true

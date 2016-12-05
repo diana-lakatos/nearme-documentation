@@ -1,0 +1,74 @@
+.user-a
+  - if @user.cover_image.present?
+    .bg{style: "background-image: url(#{@user.cover_image_url})"}
+  - else
+    .bg
+  .contain
+    .header
+      %figure
+        = image_tag @user.avatar.url(:big), size: "180x180", alt: @user.decorate.name_with_affiliation(true)
+      %h2.hx= @user.decorate.name_with_affiliation
+      = @user.decorate.display_address
+      - if @user.featured?
+        %p.label.featured
+          = t :featured_user
+    %nav.navbar-a
+      %ul.nav.nav-tabs{role: "tablist"}
+        %li
+          = link_to '#activity', role: "tab", :'data-toggle' => "tab" do
+            = t(:activity)
+        %li
+          = link_to '#transactables', role: "tab", :'data-toggle' => "tab" do
+            = t :projects
+            %small= "(#{@all_transactables.total_count})"
+        %li
+          = link_to '#groups', role: "tab", :'data-toggle' => "tab" do
+            = t :groups
+            %small= "(#{@groups.total_count})"
+        %li
+          = link_to '#following', role: "tab", :'data-toggle' => "tab" do
+            = t :following
+            %small= "(#{@user.following_count})"
+        %li
+          = link_to '#followers', role: "tab", :'data-toggle' => "tab" do
+            = t :followers
+            %small= "(#{@user.followers_count})"
+      %p
+        - if current_user.try(:id) == resource.id
+          = link_to t(:edit), dashboard_profile_path, class: 'button-a small'
+        - elsif current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
+          = link_to t(:edit), edit_instance_admin_manage_user_path, class: 'button-a small', rel: "modal"
+        - if current_user.try(:id) != resource.id
+          %span{:'data-follow-button' => true}
+            = render partial: 'shared/follow_button', locals: { object: @user }
+
+- if current_user.try(:admin?)
+  .contain
+    .admin-profile-notice
+      %p= t 'user_profile.labels.admin_profile'
+
+.tab-content
+  #activity.tab-pane.fade{:role => "tabpanel"}
+    = render 'show_activity', object: @user, feed: @feed
+
+  #transactables.tab-pane.fade{:role => "tabpanel"}
+    / content wrapper
+    .wrap-a.reduce-top
+      .contain
+        / white box
+        .box-a
+          = render 'shared/show_transactables', transactables: @all_transactables, container: '#transactables', see_more_route: see_more_transactables_path(id: @user.id, type: @user.class.name, container: '#transactables'), sort_options: Transactable::SORT_OPTIONS + ['Pending approvals']
+
+  #groups.tab-pane.fade{:role => "tabpanel"}
+    .wrap-a.reduce-top
+      .contain
+        .box-a
+          = render 'shared/show_groups', groups: @groups, container: '#groups', see_more_route: see_more_groups_path(id: @user.id, type: @user.class.name, container: '#groups')
+
+  #following.tab-pane.fade{:role => "tabpanel"}
+    = render 'show_following', object: @user
+
+  #followers.tab-pane.fade{:role => "tabpanel"}
+    .wrap-a.reduce-top
+      .contain
+        .box-a= render 'shared/show_followers', container: '#followers', see_more_route: see_more_followers_path(id: @user.id, type: 'User', container: '#followers'), collection: @followers

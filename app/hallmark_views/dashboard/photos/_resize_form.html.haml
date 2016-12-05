@@ -1,0 +1,16 @@
+.modal-header
+  .modal-title= t('manage.photos.crop_and_rotate')
+= form_tag form_url, :method => :put, :id => 'crop-form', 'data-id' => object.model.id do
+  .modal-body
+    -if @user.try(:errors).try(:any?)
+      .error-block Unable to save image
+    %p
+      %button.button-a.small.orange{:type => "button", :data => {:"rotate-photo" => true}} Rotate
+
+    = image_tag object_url, 'data-image' => true, data: { rotate: object.transformation_rotate, crop: object.transformation_crop, original_dimensions: object.original_dimensions}
+
+  .modal-footer
+    = submit_tag "Process", class: "button-a"
+
+  :javascript
+    $(document).trigger('init:photomanipulator.nearme', ['#crop-form', { aspectRatio: #{defined?(object.class::ASPECT_RATIO) ? (object.model.try(:owner_type) == 'Project' ? object.class::ASPECT_RATIO_PROJECT : object.class::ASPECT_RATIO) : object.model.send("#{object.mounted_as}_dimensions")[:width].to_f/object.model.send("#{object.mounted_as}_dimensions")[:height].to_f} }]);

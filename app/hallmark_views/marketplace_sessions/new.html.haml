@@ -1,0 +1,12 @@
+.box-a
+  .container-fluid
+    .row-fluid
+      #marketplace-password.span6.offset3
+        .row-fluid
+          %h1 This marketplace is currently password-protected.
+        = form_tag url_for(controller: 'marketplace_sessions', action: 'create'), {method: 'POST'} do |f|
+          .row-fluid
+            .span7.offset1
+              = password_field_tag :password, '', class: 'password', placeholder: 'Password'
+            .span3
+              = submit_tag 'Submit', class: 'btn btn-blue'

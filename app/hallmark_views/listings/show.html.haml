@@ -1,0 +1,66 @@
+- title raw(@transactable.name)
+- canonical_url @transactable.show_path
+- meta_description "#{mask_phone_and_email_if_necessary(@transactable.properties.summary).try(:truncate, 130)}"
+- meta_og_image @transactable.cover_photo.image.url if @transactable.cover_photo.id.present?
+
+.wrap-a.white.reduce
+  .contain
+    .project-a
+      %figure
+        = image_tag @transactable.cover_photo.image_url(:golden), alt: @transactable.name
+        - if @transactable.featured?
+          %figcaption
+            = t :featured
+      .wrap
+        %h1= @transactable.name
+        .user
+          %figure
+            = link_to user_path(@transactable.creator) do
+              = image_tag @transactable.creator.avatar.url(:thumb), width: 40, height: 40, alt: @transactable.creator.decorate.name_with_affiliation(true)
+          %h3.hx
+            = link_to @transactable.creator.decorate.name_with_affiliation, user_path(@transactable.creator)
+          %p.location= "#{@transactable.creator.current_address.try(:city)}, #{@transactable.creator.current_address.try(:state)}"
+        %p.tx-a= nl2br(@transactable.properties.summary)
+        %p.topics
+          = @transactable.topics.map { |t| link_to(t.name, topic_path(t)) }.join(', ').html_safe
+      .bignums-a
+        %ul
+          %li
+            %span
+              %strong{:'data-collaborators-count' => true}= @transactable.transactable_collaborators.approved.count
+              = t :collaborators
+            %p{:'data-collaborators-button' => true}
+              = render partial: 'shared/collaborators_button', locals: { transactable: @transactable }
+          %li
+            %span
+              %strong{:'data-followers-count' => true}= @followers.total_entries
+              = t :followers
+            %p{:'data-follow-button' => true}
+              = render partial: 'shared/follow_button', locals: { object: @transactable }
+
+/ content wrapper
+.wrap-a.reduce-top
+  .contain
+    / tabs
+    %nav.tabs-a.trio
+      %ul.nav.nav-tabs{role: "tablist"}
+        %li.active= link_to t(:about), '#about', role: "tab", :'data-toggle' => "tab"
+        %li= link_to t(:activity), '#activity', role: "tab", :'data-toggle' => "tab"
+        %li= link_to t(:comments), '#comments', role: "tab", :'data-toggle' => "tab"
+        %li= link_to t(:collaborators), '#collaborators', role: "tab", :'data-toggle' => "tab"
+        %li= link_to t(:followers), '#followers', role: "tab", :'data-toggle' => "tab"
+
+    / white box
+    .box-a
+      .tab-content
+        #about.tab-pane.fade.active{:role => "tabpanel"}
+          = render 'show_about'
+        #activity.tab-pane.fade{:role => "tabpanel"}
+          = render 'shared/activity_feed', object: @transactable, feed: @feed
+        #comments.tab-pane.fade{:role => "tabpanel"}
+          = render 'comments/comments', comment: @comment
+        #collaborators.tab-pane.fade{:role => "tabpanel"}
+          = render 'shared/show_followers', see_more_route: see_more_collaborators_path(id: @transactable.id, type: 'Transactable', container: '#collaborators'), collection: @collaborators, container: '#collaborators'
+        #followers.tab-pane.fade{:role => "tabpanel"}
+          = render 'shared/show_followers', see_more_route: see_more_followers_path(id: @transactable.id, type: 'Transactable', container: '#followers'), container: '#followers', collection: @followers
+

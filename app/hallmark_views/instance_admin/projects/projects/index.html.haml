@@ -1,0 +1,60 @@
+.content-container
+  %h4 Projects
+
+  .row
+    .text-container
+      = form_tag instance_admin_projects_projects_path, method: :get, enforce_utf8: :false do
+        .filters
+          .filter.period
+            .dropdown.date-dropdown
+              %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
+                - if params[:date].present?
+                  %span.current= selected_date_value(params[:date])
+                - else
+                  %span.current
+                    = t('instance_admin.manage.admin_searchable.title_all')
+                %span.caret
+                = hidden_field_tag 'date', date_param_value
+              %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
+                %li
+                  %a{data: {date: ''}}
+                    = t('instance_admin.manage.admin_searchable.title_all')
+                - Review::DATE_VALUES.each do |value|
+                  %li
+                    %a{data: {date: value}}
+                      = selected_date_value(value)
+                %li.divider
+                %li.date-range
+                  .date-range-header
+                    = t('instance_admin.manage.admin_searchable.date_range')
+                  .from
+                    = t('instance_admin.manage.admin_searchable.from')
+                  %input#from{type: 'text'}
+                  .to
+                    = t('instance_admin.manage.admin_searchable.to')
+                  %input#to{type: 'text'}
+                  %button.apply-filter.btn.btn-blue
+                    = t('instance_admin.manage.admin_searchable.apply_filter')
+
+          .filter.search
+            %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
+            %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}
+            =fa_icon "search", class: 'fa-action-icon-submit'
+
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %tr
+          %th
+            = t('instance_admin.manage.users.name')
+          %th Featured
+          %th Created at
+          %th
+          %th
+        - collection.each do |resource|
+          = render 'index_row', :resource => resource
+
+.row
+  .text-container
+    .pull-right
+      = will_paginate collection
