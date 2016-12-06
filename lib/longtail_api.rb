@@ -1,73 +1,43 @@
 # frozen_string_literal: true
 class LongtailApi
-  TOO_MANY_ATTEMPTS_ERROR = 'Too Many Attempts.'
-  def initialize(token:, host:, page_slug:)
+  def initialize(endpoint:, page_slug:)
     @page = Page.where(slug: page_slug,
                        theme_id: PlatformContext.current.theme.id)
-                .first_or_create!(path: page_slug.humanize)
-    @token = token
-    @host = host
+                .first_or_create!(path: page_slug.humanize, content: generic_page_content)
+    @endpoint = endpoint
+    @keyword_list = LongtailApi::KeywordListIterator.new(@endpoint)
   end
 
-  def parse_keywords!(url = nil)
-    url ||= "#{@host}/keywords/seo"
-    keywords = list_of_keywords(url)
-    keywords['data'].each do |keyword|
-      parse_keyword(keyword)
+  def parse!
+    with_cleanup do
+      while (keyword_data = @keyword_list.next).present?
+        persist(LongtailApi::Keyword.new(endpoint: @endpoint, data: keyword_data))
+      end
     end
-    parse_keywords!(keywords['links']['next']) if keywords['links']['next'].present?
   end
 
-  def parse_keyword(keyword)
-    parsed_body = data_for_keyword(keyword)
-    return false if parsed_body.nil?
-    parsed_body = LongtailApi::ParsedBodyDecorator.decorate(parsed_body)
-    @page.page_data_source_contents.where(data_source_content: create_data_source_content_for_keyword(keyword: keyword,
-                                                                                                      parsed_body: parsed_body)
-                                                                                                      .id,
-                                          slug: keyword['attributes']['url'][1..-1]).first_or_create!
-  end
-
-  def create_data_source_content_for_keyword(keyword:, parsed_body:)
-    data_source_content = main_data_source.data_source_contents.where(external_id: keyword['id']).first_or_create!
-    data_source_content.external_id = keyword['id']
+  def persist(keyword)
+    puts "Persisting keyword: #{keyword.slug}"
+    data_source_content = main_data_source.data_source_contents.where(external_id: keyword.id).first_or_create!
     data_source_content.externally_created_at = nil
-    data_source_content.json_content = parsed_body
+    data_source_content.json_content = LongtailApi::KeywordBodyDecorator.decorate(keyword.body)
+    data_source_content.mark_for_deletion = false
     data_source_content.save!
-    data_source_content
+    @page.page_data_source_contents.where(data_source_content: data_source_content,
+                                          slug: keyword.path).first_or_create!
   end
 
   def main_data_source
     @main_data_source ||= @page.data_sources.where(type: 'DataSource::CustomSource', label: @page.slug).first_or_create!
   end
 
-  def list_of_keywords(url)
-    JSON.parse(call_api(url))
-  end
-
-  def data_for_keyword(keyword)
-    response = call_api("#{@host}/search/seo/#{keyword['attributes']['slug']}")
-    while response == TOO_MANY_ATTEMPTS_ERROR
-      sleep(5)
-      response = call_api("#{@host}/search/seo/#{keyword['attributes']['slug']}")
-    end
-    parse_response(response)
-  end
-
-  def call_api(host)
-    url = URI.parse(host)
-    http = Net::HTTP.new(url.host, url.port)
-    req = Net::HTTP::Get.new(url)
-    req.add_field('Authorization', "Bearer #{@token}")
-    response = http.request(req)
-    response.body
-  end
-
-  def parse_response(response)
-    JSON.parse(response) if response =~ /^{"data"/
-  end
-
   def generic_page_content
     File.read(Rails.root.join('lib', 'longtail_api', 'generic_template.html.liquid'))
+  end
+
+  def with_cleanup
+    puts "Marking #{main_data_source.data_source_contents.update_all(mark_for_deletion: true)} for destruction"
+    yield
+    puts "Removing non parsed #{main_data_source.data_source_contents.where(mark_for_deletion: true).destroy_all} keywords"
   end
 end

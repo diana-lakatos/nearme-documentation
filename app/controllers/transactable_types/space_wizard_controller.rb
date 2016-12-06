@@ -191,13 +191,15 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def set_listing_draft_timestamp(timestamp)
-    params[:user][:companies_attributes]['0'][:id] ||= @user.companies.first.id
-    params[:user][:companies_attributes]['0'][:company_address_attributes][:id] ||= @user.companies.first.company_address.try(:id)
-    params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:id] ||= @user.companies.first.locations.first.id
     params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:draft] = timestamp
     params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:enabled] = true
-    params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:id] ||= @user.companies.first.locations.first.listings.first.id
-    params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:action_types_attributes][0][:id] ||= @user.companies.first.locations.first.listings.first.action_types_attributes.first.id
+    if @user.companies.first
+      params[:user][:companies_attributes]['0'][:id] ||= @user.companies.first.id
+      params[:user][:companies_attributes]['0'][:company_address_attributes][:id] ||= @user.companies.first.company_address.try(:id)
+      params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:id] ||= @user.companies.first.locations.first.try(:id)
+      params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:id] ||= @user.companies.first.locations.first.listings.first.id
+      params[:user][:companies_attributes]['0'][:locations_attributes]['0'][:listings_attributes]['0'][:action_types_attributes][0][:id] ||= @user.companies.first.locations.first.listings.first.action_types_attributes.first.id
+    end
   rescue
     nil
   end

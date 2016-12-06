@@ -1,0 +1,15 @@
+<dl class="group-properties">
+  <dt>Attorneys’ fee percentage contained in the Engagement Agreement:</dt>
+  <dd>{{ listing.properties.engagement_agreement_fee_percentage }}%</dd>
+
+  <dt>Are attorneys obligated to advance all litigation expenses per the standard Engagement Agreement?</dt>
+  <dd>{{ listing.properties.engagement_agreement_expenses_advancement }}</dd>
+</dl>
+
+<h2>Describe any types of injuries included</h2>
+<p>{{ listing.properties.types_of_injuries_included | nl2br }}%</p>
+
+{% if listing.properties.matters_to_include != blank %}
+<h2>Other</h2>
+<p>{{ listing.properties.matters_to_include | nl2br }}</p>
+{% endif %}

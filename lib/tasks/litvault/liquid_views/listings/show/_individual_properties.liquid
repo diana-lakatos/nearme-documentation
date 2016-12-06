@@ -1,0 +1,35 @@
+ <dl>
+  <dt>Client Signed Written Engagement:</dt>
+  <dd>{{ listing.properties.engagement_agreement_exists }}</dd>
+
+  {% if listing.properties.engagement_agreement_exists == 'Yes' %}
+  <dt>Date Engagement Signed: </dt>
+  <dd>{{ listing.properties.date_engagement_agreement_signed }}</dd>
+  {% endif %}
+
+  <dt>Contingent Fee Percentage:</dt>
+  <dd>{{ listing.properties.engagement_agreement_fee_percentage }}%</dd>
+
+  <dt>Treatment of Litigation Expenses:</dt>
+  <dd>
+    {% if listing.properties.engagement_agreement_expenses_advancement == 'Yes' %}
+    Obligation
+    {% else %}
+    Choice
+    {% endif %}
+  </dd>
+
+  <dt>Injury or Accident Date:</dt>
+  <dd>{{ listing.properties.date_of_incident }}</dd>
+
+  <dt>Location of Injury or Accident:</dt>
+  <dd>{{ listing.properties.city_of_incident }}, {{ listing.properties.state_of_incident }}</dd>
+</dl>
+
+<dl>
+  <dt>Days of Hospitalization: </dt>
+  <dd>{{ listing.properties.days_of_hospitalization }}</dd>
+
+  <dt>Death Case:</dt>
+  <dd>{{ listing.properties.involve_wrongful_death }}</dd>
+</dl>
