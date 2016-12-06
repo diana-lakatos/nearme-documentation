@@ -6,8 +6,7 @@ class UserMessageDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier for the object
   # @!method body
-  #   Contents of the message
-  #   @return (see UserMessage#body)
+  #   @return [String] Contents of the message
   # @!method thread_context
   #   @return [Object] Conversation context: a listing, a booking, a user etc.
   # @!method recipient_name

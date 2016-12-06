@@ -6,8 +6,7 @@ class UserProfileDrop < BaseDrop
   # @!method customizations
   #   @return [Array<CustomizationDrop>] array of customization objects for this user profile (allows extra customization through custom attributes)
   # @!method onboarded_at
-  #   Date when the user has been marked as onboarded
-  #   @return (see UserProfile#onboarded_at)
+  #   @return [DateTime] Date when the user has been marked as onboarded
   delegate :customizations, :onboarded_at, to: :source
 
   def initialize(profile)

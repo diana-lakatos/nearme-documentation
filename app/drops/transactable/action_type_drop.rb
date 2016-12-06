@@ -6,8 +6,7 @@ class Transactable::ActionTypeDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier for the transactable action type
   # @!method pricings
-  #   array of pricings
-  #   @return (see Array<Transactable::PricingDrop>)
+  #   @return [Array<Transactable::PricingDrop>] array of pricings
   delegate :id, :pricings, to: :action_type
 
   def initialize(action_type)

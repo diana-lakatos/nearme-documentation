@@ -6,8 +6,7 @@ class TopicDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier for this topic
   # @!method name
-  #   Name for this topic
-  #   @return (see Topic#name)
+  #   @return [String] Name for this topic
   # @!method data_source_contents
   #   @return [Array<DataSourceContentDrop>] Data source contents for this topic
   delegate :id, :name, :data_source_contents, to: :topic

@@ -8,8 +8,7 @@ class UserDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier of the user object
   # @!method name
-  #   Full name for this user
-  #   @return (see User#name)
+  #   @return [String] Full name for this user
   # @!method friends
   #   @return [Array<UserDrop>] array of friends for this user (followed users)
   # @!method friends_know_host_of
@@ -18,20 +17,16 @@ class UserDrop < BaseDrop
   # @!method mutual_friends
   #   @return [Array<UserDrop>] array containing users that are followed by the users that this user follows
   # @!method first_name
-  #   User's first name
-  #   @return (see User#first_name)
+  #   @return [String] User's first name
   # @!method middle_name
-  #   User's middle name
-  #   @return (see User#middle_name)
+  #   @return [String] User's middle name
   # @!method last_name
-  #   User's last name
-  #   @return (see User#last_name)
+  #   @return [String] User's last name
   # @!method reservations_count
   #   Number of reservations placed by this user
   #   @return (see User#reservations_count)
   # @!method email
-  #   Email address of the user
-  #   @return (see User#email)
+  #   @return [String] Email address of the user
   # @!method full_mobile_number
   #   @return [String, nil] the mobile number with the full international calling prefix
   # @!method administered_locations_pageviews_30_day_total
@@ -39,11 +34,9 @@ class UserDrop < BaseDrop
   # @!method blog
   #   @return [UserBlogDrop] User's blog
   # @!method country_name
-  #   Country name for the user
-  #   @return (see User#country_name)
+  #   @return [String] Country name for the user
   # @!method phone
-  #   Phone number for the user
-  #   @return (see User#phone)
+  #   @return [String] Phone number for the user
   # @!method current_address
   #   @return [AddressDrop] Address object representing the user's current location
   # @!method is_trusted?
@@ -72,8 +65,7 @@ class UserDrop < BaseDrop
   # @!method has_friends
   #   @return [Boolean] whether the user has any friends (followed users)
   # @!method transactables_count
-  #   Number of transactables created by this user
-  #   @return (see User#transactables_count)
+  #   @return [Integer] Number of transactables created by this user
   # @!method has_active_credit_cards?
   #   @return [Boolean] whether the user has any active credit cards
   # @!method communication
@@ -94,6 +86,8 @@ class UserDrop < BaseDrop
   #   @return [Boolean] whether the user is an instance admin
   # @!method companies
   #   @return [Array<CompanyDrop>] array of companies belonging to this user
+  # @!method user_messages_received
+  #   @return [Array<UserMessageDrop>] array of received user messages
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends,
            :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
@@ -104,7 +98,7 @@ class UserDrop < BaseDrop
            :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
            :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
            :company_name, :instance_admins_metadata, :total_reviews_count, :companies, :instance_admin?,
-           :instance_admin?, to: :source
+           :instance_admin?, :user_messages_received, to: :source
 
   # @return [String] class name, i.e. 'User'
   def class_name
@@ -645,6 +639,7 @@ class UserDrop < BaseDrop
     pending_transactables_for_current_user.where('tc.id is NOT NULL')
   end
 
+  # @return [Integer] number of unconfirmed received orders
   # @todo Investigate for removal; the method doesn't appear to do what its name says
   # @todo -- move to orders drop?
   def unconfirmed_received_orders_count

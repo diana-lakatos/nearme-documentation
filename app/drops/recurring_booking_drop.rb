@@ -4,14 +4,12 @@ class RecurringBookingDrop < OrderDrop
   attr_reader :recurring_booking
 
   # @!method quantity
-  #   Ordered quantity
-  #   @return (see Order#quantity)
+  #   @return [Integer] Ordered quantity
   # @!method total_price
   #   @return [String] total price for this recurring booking order rendered according to
   #     the global currency rendering rules, or 'Free!' if free
   # @!method rejection_reason
-  #   Rejection reason for this recurring booking order if rejected
-  #   @return (see Order#rejection_reason)
+  #   @return [String] Rejection reason for this recurring booking order if rejected
   # @!method owner
   #   @return [UserDrop] User owner of the order
   # @!method has_service_fee?
@@ -39,13 +37,11 @@ class RecurringBookingDrop < OrderDrop
   # @!method transactable_type
   #   @return [TransactableTypeDrop] Transactable type to which this transactable belongs
   # @!method action_hourly_booking?
-  #   True if hourly booking is available for this transactable
-  #   @return (see Transactable#action_hourly_booking)
+  #   @return [Boolean] True if hourly booking is available for this transactable
   delegate :transactable_type, :action_hourly_booking?, to: :transactable
 
   # @!method bookable_noun
-  #   Represents the item to be booked (e.g. desk, room etc.)
-  #   @return (see TransactableType#bookable_noun)
+  #   @return [String] Represents the item to be booked (e.g. desk, room etc.)
   # @!method translated_bookable_noun
   #   @return [String] represents the item to be booked (e.g. desk, room etc.)
   #     taken from translations (e.g. translation key of the form 'transactable_type.desk.name')

@@ -13,8 +13,7 @@ class DataUploadDrop < BaseDrop
   delegate :csv_file_identifier, :parsing_result_log, :uploader, to: :data_upload
 
   # @!method bookable_noun
-  #   noun describing the entity that can be booked as a string
-  #   @return (see TransactableType#bookable_noun)
+  #   @return [String] noun describing the entity that can be booked as a string
   delegate :bookable_noun, to: :transactable_type
 
   def initialize(data_upload)

@@ -7,8 +7,7 @@ class CategoryDrop < BaseDrop
   #   id of category as integer
   #   @return [Integer]
   # @!method name
-  #   the name of the category
-  #   @return (see Category#name)
+  #   @return [String] the name of the category
   # @!method children
   #   @return [Array<CategoryDrop>] collection of subcategories
   delegate :id, :name, :children, to: :category

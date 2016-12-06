@@ -31,6 +31,7 @@ module LiquidFilters
 
   # Sets the @no_footer variable to true to affect further rendering (i.e. the footer
   #   will not be rendered)
+  # @return [nil]
   def no_footer!
     @no_footer = true
   end

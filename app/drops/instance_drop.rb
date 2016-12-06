@@ -4,11 +4,9 @@ class InstanceDrop < BaseDrop
   attr_reader :instance
 
   # @!method name
-  #   name of the instance
-  #   @return (see Instance#name)
+  #   @return [String] name of the instance
   # @!method enable_reply_button_on_host_reservations?
-  #   whether to enable reply button on reservations for hosts
-  #   @return (see Instance#enable_reply_button_on_host_reservations)
+  #   @return [Boolean] whether to enable reply button on reservations for hosts
   # @!method documents_upload_enabled?
   #   @return [Boolean] whether documents upload is enabled
   # @!method action_rfq?

@@ -4,35 +4,25 @@ class AddressDrop < BaseDrop
   attr_reader :address_object
 
   # @!method street
-  #   returns the street as a string
-  #   @return (see Address#street)
+  #   @return [String] returns the street as a string
   # @!method address
-  #   returns the address as a string
-  #   @return (see Address#address)
+  #   @return [String] returns the address as a string
   # @!method city
-  #   returns the city as a string
-  #   @return (see Address#city)
+  #   @return [String] returns the city as a string
   # @!method suburb
-  #   returns the suburb as a string
-  #   @return (see Address#suburb)
+  #   @return [String] returns the suburb as a string
   # @!method iso_country_code
-  #   returns the iso_country_code
-  #   @return (see Address#iso_country_code)
+  #   @return [String] returns the iso_country_code
   # @!method country
-  #   returns the country as a string
-  #   @return (see Address#country)
+  #   @return [String] returns the country as a string
   # @!method state
-  #   returns the state as a string
-  #   @return (see Address#state)
+  #   @return [String] returns the state as a string
   # @!method postcode
-  #   returns the postcode as a string
-  #   @return (see Address#postcode)
+  #   @return [String] returns the postcode as a string
   # @!method latitude
-  #   returns the latitude for this address
-  #   @return (see Address#latitude)
+  #   @return [Float] returns the latitude for this address
   # @!method longitude
-  #   returns the longitude for this address
-  #   @return (see Address#longitude)
+  #   @return [Float] returns the longitude for this address 
   delegate :street, :address, :city, :suburb, :iso_country_code, :country, :state, :postcode, :latitude, :longitude, to: :address_object
 
   def initialize(address_object)

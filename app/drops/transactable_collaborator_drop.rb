@@ -11,11 +11,9 @@ class TransactableCollaboratorDrop < BaseDrop
   # @!method approved_by_user?
   #   @return [Boolean] whether the colllaboration has been approved by the collaborating user
   # @!method approved_by_user_at
-  #   Time when the collaborating user has approved the collaboration (if approved, otherwise nil)
-  #   @return (see TransactableCollaborator#approved_by_user_at)
+  #   @return [DateTime] Time when the collaborating user has approved the collaboration (if approved, otherwise nil)
   # @!method approved_by_owner_at
-  #   Time when the transactable creator has approved the collaboration (if approved, otherwise nil)
-  #   @return (see TransactableCollaborator#approved_by_owner_at)
+  #   @return [DateTime] Time when the transactable creator has approved the collaboration (if approved, otherwise nil)
   # @!method transactable_id
   #   @return [Integer] Numeric identifier of the transactable being collaborated on
   # @!method user_id

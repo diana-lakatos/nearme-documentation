@@ -6,14 +6,11 @@ class ReverseProxyLinkDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier for the object
   # @!method name
-  #   Name for the reverse proxy link
-  #   @return (see ReverseProxyLink#name)
+  #   @return [String] Name for the reverse proxy link 
   # @!method destination_path
-  #   Destination path for the reverse proxy link
-  #   @return (see ReverseProxyLink#destination_path)
+  #   @return [String] Destination path for the reverse proxy link
   # @!method use_on_path
-  #   Path to be used on
-  #   @return (see ReverseProxyLink#use_on_path)
+  #   @return [String] Path to be used on
   delegate :id, :name, :destination_path, :use_on_path, to: :source
 
   def initialize(source)

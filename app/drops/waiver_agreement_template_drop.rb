@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 class WaiverAgreementTemplateDrop < BaseDrop
   # @!method name
-  #   Name of the waiver agreement template
-  #   @return (see WaiverAgreementTemplate#name)
+  #   @return [String] Name of the waiver agreement template
   # @!method content
-  #   Waiver agreement template body text (e.g. list of terms and conditions text etc.)
-  #   @return (see WaiverAgreementTemplate#content)
+  #   @return [String] Waiver agreement template body text (e.g. list of terms and conditions text etc.)
   # @!method id
   #   @return [Integer] numeric identifier of the waiver agreement template
   # @!method created_at

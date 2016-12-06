@@ -822,6 +822,10 @@ class User < ActiveRecord::Base
     UserMessage.for_user(self)
   end
 
+  def user_messages_received
+    UserMessage.where(thread_recipient: self)
+  end
+
   def unread_user_message_threads_count_for(instance)
     instance_unread_messages_threads_count.fetch(instance.id, 0)
   end
