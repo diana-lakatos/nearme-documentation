@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class LongtailApi
-  class ParsedBodyDecorator
+  class KeywordBodyDecorator
     SIMPLE_KEY_VALUE_EXTENSIONS = {
       'address' => 'formatted_address',
       'latitude' => 'latitude',
@@ -10,6 +10,7 @@ class LongtailApi
 
     class << self
       def decorate(parsed_body)
+        return parsed_body if parsed_body.blank?
         parsed_body['included'].each_with_index do |item, index|
           @transactable = Transactable.with_deleted.find_by(id: item['attributes']['guid'])
           next if @transactable.nil?

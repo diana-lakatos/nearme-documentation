@@ -1,0 +1,781 @@
+{
+    "data":[
+        {
+            "type":"keyword","id":"1","attributes":{
+                "name":"sublet office space new york","slug":"sublet-office-space-new-york","url":"\/workspace\/sublet-office-space-new-york","category":"New York","category_url":"\/search?loc=New+York,United+States","section":"keyword"
+            },
+            "relationships":{
+                "popular_searches":{
+                    "data":[
+                        {
+                            "type":"links","id":"6"
+                        },
+                        {
+                            "type":"links","id":"7"
+                        },
+                        {
+                            "type":"links","id":"18"
+                        },
+                        {
+                            "type":"links","id":"23"
+                        },
+                        {
+                            "type":"links","id":"49"
+                        }
+                    ]
+                },
+                "similar_searches":{
+                    "data":[
+                        {
+                            "type":"links","id":"28"
+                        },
+                        {
+                            "type":"links","id":"68"
+                        }
+                    ]
+                },
+                "items":{
+                    "data":[
+                        {
+                            "type":"items","id":"1279"
+                        },
+                        {
+                            "type":"items","id":"1282"
+                        },
+                        {
+                            "type":"items","id":"1278"
+                        },
+                        {
+                            "type":"items","id":"1280"
+                        },
+                        {
+                            "type":"items","id":"1281"
+                        },
+                        {
+                            "type":"items","id":"1277"
+                        },
+                        {
+                            "type":"items","id":"713"
+                        },
+                        {
+                            "type":"items","id":"1325"
+                        },
+                        {
+                            "type":"items","id":"1045"
+                        },
+                        {
+                            "type":"items","id":"1324"
+                        },
+                        {
+                            "type":"items","id":"1010"
+                        },
+                        {
+                            "type":"items","id":"1480"
+                        },
+                        {
+                            "type":"items","id":"2231"
+                        },
+                        {
+                            "type":"items","id":"717"
+                        },
+                        {
+                            "type":"items","id":"734"
+                        },
+                        {
+                            "type":"items","id":"1479"
+                        },
+                        {
+                            "type":"items","id":"605"
+                        },
+                        {
+                            "type":"items","id":"1095"
+                        },
+                        {
+                            "type":"items","id":"1233"
+                        },
+                        {
+                            "type":"items","id":"1427"
+                        },
+                        {
+                            "type":"items","id":"1903"
+                        },
+                        {
+                            "type":"items","id":"191"
+                        },
+                        {
+                            "type":"items","id":"600"
+                        },
+                        {
+                            "type":"items","id":"1276"
+                        },
+                        {
+                            "type":"items","id":"2176"
+                        },
+                        {
+                            "type":"items","id":"204"
+                        },
+                        {
+                            "type":"items","id":"206"
+                        },
+                        {
+                            "type":"items","id":"207"
+                        },
+                        {
+                            "type":"items","id":"599"
+                        },
+                        {
+                            "type":"items","id":"723"
+                        },
+                        {
+                            "type":"items","id":"1123"
+                        },
+                        {
+                            "type":"items","id":"1341"
+                        },
+                        {
+                            "type":"items","id":"1342"
+                        },
+                        {
+                            "type":"items","id":"1343"
+                        },
+                        {
+                            "type":"items","id":"1354"
+                        },
+                        {
+                            "type":"items","id":"1554"
+                        },
+                        {
+                            "type":"items","id":"1975"
+                        },
+                        {
+                            "type":"items","id":"1976"
+                        },
+                        {
+                            "type":"items","id":"2185"
+                        },
+                        {
+                            "type":"items","id":"2788"
+                        },
+                        {
+                            "type":"items","id":"203"
+                        },
+                        {
+                            "type":"items","id":"606"
+                        },
+                        {
+                            "type":"items","id":"661"
+                        },
+                        {
+                            "type":"items","id":"1377"
+                        },
+                        {
+                            "type":"items","id":"1475"
+                        },
+                        {
+                            "type":"items","id":"1478"
+                        },
+                        {
+                            "type":"items","id":"205"
+                        },
+                        {
+                            "type":"items","id":"320"
+                        },
+                        {
+                            "type":"items","id":"1005"
+                        },
+                        {
+                            "type":"items","id":"1152"
+                        },
+                        {
+                            "type":"items","id":"1271"
+                        },
+                        {
+                            "type":"items","id":"497"
+                        },
+                        {
+                            "type":"items","id":"498"
+                        },
+                        {
+                            "type":"items","id":"499"
+                        },
+                        {
+                            "type":"items","id":"1555"
+                        },
+                        {
+                            "type":"items","id":"4105"
+                        },
+                        {
+                            "type":"items","id":"328"
+                        },
+                        {
+                            "type":"items","id":"329"
+                        },
+                        {
+                            "type":"items","id":"330"
+                        },
+                        {
+                            "type":"items","id":"598"
+                        },
+                        {
+                            "type":"items","id":"1375"
+                        },
+                        {
+                            "type":"items","id":"1376"
+                        },
+                        {
+                            "type":"items","id":"1509"
+                        },
+                        {
+                            "type":"items","id":"4139"
+                        },
+                        {
+                            "type":"items","id":"659"
+                        },
+                        {
+                            "type":"items","id":"1656"
+                        },
+                        {
+                            "type":"items","id":"1657"
+                        },
+                        {
+                            "type":"items","id":"2086"
+                        },
+                        {
+                            "type":"items","id":"2455"
+                        },
+                        {
+                            "type":"items","id":"607"
+                        },
+                        {
+                            "type":"items","id":"1655"
+                        },
+                        {
+                            "type":"items","id":"2143"
+                        },
+                        {
+                            "type":"items","id":"2597"
+                        },
+                        {
+                            "type":"items","id":"609"
+                        },
+                        {
+                            "type":"items","id":"1960"
+                        },
+                        {
+                            "type":"items","id":"2276"
+                        },
+                        {
+                            "type":"items","id":"126"
+                        },
+                        {
+                            "type":"items","id":"478"
+                        },
+                        {
+                            "type":"items","id":"608"
+                        },
+                        {
+                            "type":"items","id":"1823"
+                        },
+                        {
+                            "type":"items","id":"2105"
+                        },
+                        {
+                            "type":"items","id":"2146"
+                        },
+                        {
+                            "type":"items","id":"2147"
+                        },
+                        {
+                            "type":"items","id":"4129"
+                        },
+                        {
+                            "type":"items","id":"125"
+                        },
+                        {
+                            "type":"items","id":"2142"
+                        },
+                        {
+                            "type":"items","id":"2148"
+                        },
+                        {
+                            "type":"items","id":"2149"
+                        },
+                        {
+                            "type":"items","id":"2151"
+                        },
+                        {
+                            "type":"items","id":"2152"
+                        },
+                        {
+                            "type":"items","id":"2153"
+                        },
+                        {
+                            "type":"items","id":"120"
+                        },
+                        {
+                            "type":"items","id":"129"
+                        },
+                        {
+                            "type":"items","id":"176"
+                        },
+                        {
+                            "type":"items","id":"1227"
+                        },
+                        {
+                            "type":"items","id":"1228"
+                        },
+                        {
+                            "type":"items","id":"1670"
+                        },
+                        {
+                            "type":"items","id":"1675"
+                        },
+                        {
+                            "type":"items","id":"2113"
+                        },
+                        {
+                            "type":"items","id":"2144"
+                        }
+                    ]
+                }
+            }
+        }
+    ],"included":[
+    {
+        "type":"links","id":"6","attributes":{
+            "name":"daily office rental in new york","slug":"daily-office-rental-in-new-york","url":"\/workspace\/daily-office-rental-in-new-york","order":"6","highlighted":"daily <b>office<\/b> rental in <b>new<\/b> <b>york<\/b>","section":"popular"
+        }
+    },
+    {
+        "type":"links","id":"7","attributes":{
+            "name":"new york desk space for lease near me","slug":"new-york-desk-space-for-lease-near-me","url":"\/workspace\/new-york-desk-space-for-lease-near-me","order":"7","highlighted":"<b>new<\/b> <b>york<\/b> desk <b>space<\/b> for lease near me","section":"popular"
+        }
+    },
+    {
+        "type":"links","id":"18","attributes":{
+            "name":"rent workspace new york","slug":"rent-workspace-new-york","url":"\/workspace\/rent-workspace-new-york","order":"8","highlighted":"rent workspace <b>new<\/b> <b>york<\/b>","section":"popular"
+        }
+    },
+    {
+        "type":"links","id":"23","attributes":{
+            "name":"daily workspace new york","slug":"daily-workspace-new-york","url":"\/workspace\/daily-workspace-new-york","order":"9","highlighted":"daily workspace <b>new<\/b> <b>york<\/b>","section":"popular"
+        }
+    },
+    {
+        "type":"links","id":"49","attributes":{
+            "name":"new york lease an office for a day","slug":"new-york-lease-an-office-for-a-day","url":"\/workspace\/new-york-lease-an-office-for-a-day","order":"10","highlighted":"<b>new<\/b> <b>york<\/b> lease an <b>office<\/b> for a day","section":"popular"
+        }
+    },
+    {
+        "type":"links","id":"28","attributes":{
+            "name":"sublet salon space new york","slug":"sublet-salon-space-new-york","url":"\/workspace\/sublet-salon-space-new-york","order":"34","highlighted":"<b>sublet<\/b> salon <b>space<\/b> <b>new<\/b> <b>york<\/b>","section":"similar"
+        }
+    },
+    {
+        "type":"links","id":"68","attributes":{
+            "name":"sublet desk space new york","slug":"sublet-desk-space-new-york","url":"\/workspace\/sublet-desk-space-new-york","order":"74","highlighted":"<b>sublet<\/b> desk <b>space<\/b> <b>new<\/b> <b>york<\/b>","section":"similar"
+        }
+    },
+    {
+        "type":"items","id":"1279","attributes":{
+            "name":"123instantoffices @ New York","highlighted":"123instantoffices @ <b>New<\/b> <b>York<\/b>","url":"\/locations\/123instantoffices-new+york\/work-stations","snippet":"Dedicated workstations when you do not need the expense of a full time office. Economical way to workNew <b>York<\/b>, NY, USA","guid":"730","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1282","attributes":{
+            "name":"123instantoffices @ New York","highlighted":"123instantoffices @ <b>New<\/b> <b>York<\/b>","url":"\/locations\/123instantoffices-new+york\/let-your-presence-be-known","snippet":"Pick your company prestigious address & receptionist to answer your phone. With today's movement who need an <b>office<\/b> some just needs a presenceNew <b>York<\/b>, NY, USA","guid":"733","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1278","attributes":{
+            "name":"123instantoffices @ New York","highlighted":"123instantoffices @ <b>New<\/b> <b>York<\/b>","url":"\/locations\/123instantoffices-new+york\/meeting-rooms","snippet":"Book your next meeting with us, anywhere across the globe, for any size any time <b>New<\/b> <b>York<\/b>, NY, USA","guid":"729","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1280","attributes":{
+            "name":"123instantoffices @ New York","highlighted":"123instantoffices @ <b>New<\/b> <b>York<\/b>","url":"\/locations\/123instantoffices-new+york\/cubbies","snippet":"Cubicles great environment within business centers but affordableNew <b>York<\/b>, NY, USA","guid":"731","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1281","attributes":{
+            "name":"123instantoffices @ New York","highlighted":"123instantoffices @ <b>New<\/b> <b>York<\/b>","url":"\/locations\/123instantoffices-new+york\/team-rooms","snippet":"Bring your team, 2-xxxxx, custom fit outs within executive suites, tour today, move in tomorrowNew <b>York<\/b>, NY, USA","guid":"732","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1277","attributes":{
+            "name":"123instantoffices @ New York","highlighted":"123instantoffices @ <b>New<\/b> <b>York<\/b>","url":"\/locations\/123instantoffices-new+york\/co-working-spaces","snippet":"Come network in a collaborating environment and introduce your business <b>New<\/b> <b>York<\/b>, NY, USA","guid":"728","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"713","attributes":{
+            "name":"hiliary lymas @ 16 Pauw Street","highlighted":"hiliary lymas @ 16 Pauw Street","url":"\/locations\/hiliary+lymas-new+york\/executive-business-office","snippet":"3500 sq feet Executive <b>Office<\/b> <b>Space<\/b> fully furnished for rent\/lease. A ... sitting room including desk, <b>office<\/b> chairs in <b>offices<\/b> and waiting room, cabled ... television, air conditioner in each <b>office<\/b> carpet and polished wood floor. ... ","guid":"1289","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1325","attributes":{
+            "name":"kvny @ Sullivan Street","highlighted":"kvny @ Sullivan Street","url":"\/locations\/kvny-new+york\/10-desks-for-rent","snippet":"a separate section for rent 15 desk with conference room, printers internet included. 189 Sullivan St, <b>New<\/b> <b>York<\/b>, NY 10012, USA","guid":"802","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1045","attributes":{
+            "name":"Quick Suites @ Madison Avenue","highlighted":"Quick Suites @ Madison Avenue","url":"\/locations\/quick+suites-new+york\/executive-suites-cubicles-private-offices-conference-rooms-co-working-space-desk-space","snippet":"At the moment we have several different spaces available from cubicles, co-working areas, private <b>office<\/b> suites, as well conference rooms for events\/ meetings.79 Madison Avenue, <b>New<\/b> <b>York<\/b>, NY 10016, USA","guid":"1663","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1324","attributes":{
+            "name":"kvny @ Sullivan Street","highlighted":"kvny @ Sullivan Street","url":"\/locations\/kvny-new+york\/desk-for-rent-flex-lease-terms","snippet":"multiple desks available, you could even section off a <b>space<\/b> 189 Sullivan St, <b>New<\/b> <b>York<\/b>, NY 10012, USA","guid":"801","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1010","attributes":{
+            "name":"Turn Two Media, LLC @ 33 East 33rd Street","highlighted":"Turn Two Media, LLC @ 33 East 33rd Street","url":"\/locations\/turn+two+media+llc-new+york\/shared-desks-private-offices-conference-room-space-will-suit-any-and-all-needs","snippet":"Cool, Fun upbeat working environment, full service building 24\/7 access, brand <b>new<\/b> furnishings etc..33 East 33rd Street, <b>New<\/b> <b>York<\/b>, NY 10016, USA","guid":"1617","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1480","attributes":{
+            "name":"Pillar Investors @ Jamaica Avenue","highlighted":"Pillar Investors @ Jamaica Avenue","url":"\/locations\/pillar+investors-new+york--3\/commercial-building-for-rent","snippet":"The subject property is located centrally in the Hub of the Bronx, close to the 2 & 5 train lines. High traffic. Owner willing to divide. 75-14 Jamaica Avenue, Queens, NY 11421, USA","guid":"1004","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2231","attributes":{
+            "name":"TKO Suites at Grand Central","highlighted":"TKO Suites at Grand Central","url":"\/locations\/tko-suites-211-e-43rd-st\/brand-new-offices-1-8-people","snippet":"Brand <b>new<\/b> <b>offices<\/b>, interior and exterior for 1-8 ... tour! 211 E 43rd St, <b>New<\/b> <b>York<\/b>, NY 10017, USA","guid":"22259","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"717","attributes":{
+            "name":"W New York - Downtown @ 123 Washington Street","highlighted":"W <b>New<\/b> <b>York<\/b> - Downtown @ 123 Washington Street","url":"\/locations\/w+new+york+-+downtown-new+york\/private-office-747b4d05-a6fc-4ef4-aaab-231b0c4afc43","snippet":"Power wheel and deal with a private <b>office<\/b> featuring an L shaped desk, seating, high speed internet access, plus hotel amenities at your fingertips.123 Washington Street, <b>New<\/b> <b>York<\/b>, NY 10006, USA","guid":"1293","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"734","attributes":{
+            "name":"d6u @ New York","highlighted":"d6u @ <b>New<\/b> <b>York<\/b>","url":"\/locations\/d6u-\/shared-desks-oct-27-2015","snippet":"kler aer aeras e5tw4t w5yt <b>New<\/b> <b>York<\/b>, NY 10019, USA","guid":"1316","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1479","attributes":{
+            "name":"Pillar Investors @ Jamaica Avenue","highlighted":"Pillar Investors @ Jamaica Avenue","url":"\/locations\/pillar+investors-new+york--3\/brand-new-office-space","snippet":"3rd Avenue 168 street near the hub. Entrance on 3rd Avenue ground floor. Located near the BX55 and BX21 bus. Parking available.75-14 Jamaica Avenue, Queens, NY 11421, USA","guid":"1003","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"605","attributes":{
+            "name":"TKO Suites @ West 48th Street","highlighted":"TKO Suites @ West 48th Street","url":"\/locations\/tko-suites-new-york\/day-office-36fd8a8f-bf61-4040-9d22-66b1068757ae","snippet":" ... for confere353 West 48th Street, <b>New<\/b> <b>York<\/b>, NY 10036, USA","guid":"2919","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1095","attributes":{
+            "name":"Turn Two Media, LLC @ Broadway","highlighted":"Turn Two Media, LLC @ Broadway","url":"\/locations\/turn-two-media-llc-new-york\/luxury-private-offices-and-showroom-space","snippet":"Beautiful location with 3 floors of showroom and <b>office<\/b> <b>space<\/b> in the heart of the Garment district. Top to bottom <b>new<\/b> finishes, shared conference rooms, break and meeting rooms wi-fi access throughout. 1369 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"1738","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1233","attributes":{
+            "name":"New Work City  @ Broadway","highlighted":"<b>New<\/b> Work City  @ Broadway","url":"\/locations\/new+work+city-new+york\/new-work-city","snippet":" ... private <b>office<\/b> rentals, dedicated desks, 24x7, or conference room rentals. Our <b>space<\/b> ... our community :-)412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10013, USA","guid":"72","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1427","attributes":{
+            "name":"Select Office Suites @ West 23rd Street","highlighted":"Select <b>Office<\/b> Suites @ West 23rd Street","url":"\/locations\/select+office+suites-new+york\/select-day-office","snippet":"Turnkey, Flexible, Managed <b>Office<\/b> <b>Space<\/b> overlooking the lovely Madison Square ... is included with an <b>office<\/b> at Select <b>Office<\/b> Suites including and not ... us! 116 West 23rd Street, <b>New<\/b> <b>York<\/b>, NY 10010, USA","guid":"937","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1903","attributes":{
+            "name":"Joynture @ Wall Street","highlighted":"Joynture @ Wall Street","url":"\/locations\/joynture-new-york\/joy-nture","snippet":"Coworking <b>space<\/b> in <b>New<\/b> <b>York<\/b> City & Philadelphia for startups, entrepreneurs & small businesses. 48 Wall St, <b>New<\/b> <b>York<\/b>, NY 10005, USA","guid":"20289","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"191","attributes":{
+            "name":"Mandalah @ Lafayette Street","highlighted":"Mandalah @ Lafayette Street","url":"\/locations\/mandalah-new+york\/fixed-desk","snippet":"Our <b>office<\/b> is a beautiful Soho Loft Style <b>Office<\/b>, with between 10 - 15 people in the office. Great amenities like storage <b>space<\/b>, beverages, wifi, printer and location to collect mail & packages.187 Lafayette Street, <b>New<\/b> <b>York<\/b>, NY 10013, USA","guid":"1946","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"600","attributes":{
+            "name":"Amazing Building in the Financial District","highlighted":"Amazing Building in the Financial District","url":"\/locations\/banter-public-relations-new-york\/corner-conference-room","snippet":" ... well as access to the <b>office's<\/b> WiFi, kitchen, AV capabilities, and ... other amenities!40 Fulton Street, <b>New<\/b> <b>York<\/b>, NY 10038, USA","guid":"2874","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1276","attributes":{
+            "name":"866WeJunkIt  @ 5th Avenue","highlighted":"866WeJunkIt  @ 5th Avenue","url":"\/locations\/866wejunkit-new+york\/myspace","snippet":"This is the best space.14 5th Ave, <b>New<\/b> <b>York<\/b>, NY 10011, USA","guid":"727","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2176","attributes":{
+            "name":"Sunny Penthouse Office","highlighted":"Sunny Penthouse <b>Office<\/b>","url":"\/locations\/josh-wood-productions-new-york\/sunny-penthouse-office","snippet":" ... rent in our amazing, sunny <b>office<\/b> penthouse on 29th street between ... for some someone looking for <b>office<\/b> <b>space<\/b> and desks ready to go ... and you bring your own.New <b>York<\/b>, NY 10001, USA","guid":"21660","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"204","attributes":{
+            "name":"Red Rising Marketing @ 8th Avenue","highlighted":"Red Rising Marketing @ 8th Avenue","url":"\/locations\/red+rising+marketing-new+york\/corner-desk-unit","snippet":"Length: 27 inches Width: 67 Inches 3 drawers 3 overhead cabinets with shared side bookcase 555 8th Avenue #905, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"1964","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"206","attributes":{
+            "name":"Red Rising Marketing @ 8th Avenue","highlighted":"Red Rising Marketing @ 8th Avenue","url":"\/locations\/red+rising+marketing-new+york\/desk-unit-with-ample-overhead-storage","snippet":"Length: 27 inches Width: 60 inches 3 drawers 4 overhead cabinets with shared side bookcase 555 8th Avenue #905, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"1966","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"207","attributes":{
+            "name":"Red Rising Marketing @ 8th Avenue","highlighted":"Red Rising Marketing @ 8th Avenue","url":"\/locations\/red+rising+marketing-new+york\/corner-desk-unit-with-ample-overhead-storage","snippet":"Length: 27 inches Width: 60 inches 3 drawers 4 overhead cabinets with shared side bookcase 555 8th Avenue #905, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"1967","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"599","attributes":{
+            "name":"Amazing Building in the Financial District","highlighted":"Amazing Building in the Financial District","url":"\/locations\/banter-public-relations-new-york\/large-conference-room-8d1a8a70-577e-4233-988e-c1d89d3bd9d2","snippet":" ... full-amenties included!40 Fulton Street, <b>New<\/b> <b>York<\/b>, NY 10038, USA","guid":"2873","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"723","attributes":{
+            "name":"Third Watch Digital @ 27 Cliff Street","highlighted":"Third Watch Digital @ 27 Cliff Street","url":"\/locations\/third+watch+digital-new+york\/third-watch-digital","snippet":"Amazing <b>office<\/b> <b>space<\/b> near South Street Sea Port. ... fixtures in a lofty 4000sqft <b>space<\/b> with 12' ceilings. Near all ... and amazing restaurants.27 Cliff Street, <b>New<\/b> <b>York<\/b>, NY 10038, USA","guid":"1299","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1123","attributes":{
+            "name":"Blondis Salon @ Amsterdam Avenue","highlighted":"Blondis Salon @ Amsterdam Avenue","url":"\/locations\/blondis+salon-new+york\/rent-station","snippet":"hair station447 Amsterdam Avenue, <b>New<\/b> <b>York<\/b>, NY 10024, USA","guid":"1777","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1341","attributes":{
+            "name":"Jay Suites  @ Lexington Avenue","highlighted":"Jay Suites  @ Lexington Avenue","url":"\/locations\/jay+suites-new+york--2\/conference-room-2nd-floor","snippet":"Conference room has an HD Flat screen for computer display, Conference phone & surround sound. 369 Lexington Avenue, <b>New<\/b> <b>York<\/b>, NY 10017, USA","guid":"821","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1342","attributes":{
+            "name":"Jay Suites  @ Lexington Avenue","highlighted":"Jay Suites  @ Lexington Avenue","url":"\/locations\/jay+suites-new+york--2\/conference-room-2nd-floor-oct-27-2015","snippet":"Conference room has a digital whiteboard, projector, Conference phone & surround sound.369 Lexington Avenue, <b>New<\/b> <b>York<\/b>, NY 10017, USA","guid":"822","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1343","attributes":{
+            "name":"Jay Suites  @ Lexington Avenue","highlighted":"Jay Suites  @ Lexington Avenue","url":"\/locations\/jay+suites-new+york--2\/conference-room-3rd-floor","snippet":" ... upon request. 369 Lexington Avenue, <b>New<\/b> <b>York<\/b>, NY 10017, USA","guid":"823","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1354","attributes":{
+            "name":"TKO Suites @ West 48th Street","highlighted":"TKO Suites @ West 48th Street","url":"\/locations\/tko-suites-new-york\/conference-room-6752a99f-1030-4831-a7f9-3c6664f63830","snippet":" ... more!353 West 48th Street, <b>New<\/b> <b>York<\/b>, NY 10036, USA","guid":"835","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1554","attributes":{
+            "name":"3rd Ward @ Morgan Avenue","highlighted":"3rd Ward @ Morgan Avenue","url":"\/locations\/3rd+ward-new+york\/private-dedicated-desks-3rd-ward","snippet":" ... mind. Possibilities are endless, but <b>space<\/b> is limited. Join today! 195 ... ","guid":"1102","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1975","attributes":{
+            "name":"Jay Suites Penn Station Room A","highlighted":"Jay Suites Penn Station Room A","url":"\/locations\/jay-suites-new-york-broadway\/jay-suites-penn-station-room-a","snippet":" ... table. *Ergonomic executive chairs.1370 Broadway, <b>New<\/b> <b>York<\/b>, NY 10003, USA","guid":"20568","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1976","attributes":{
+            "name":"Jay Suites Penn Station Room B","highlighted":"Jay Suites Penn Station Room B","url":"\/locations\/jay-suites-new-york-1370-broadway-new-york-ny-10003-usa\/jay-suites-penn-station-room-b","snippet":" ... *Ergonomic executive chairs. 1370 Broadway, <b>New<\/b> <b>York<\/b>, NY 10003, USA","guid":"20569","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2185","attributes":{
+            "name":"Joynture @ Wall Street","highlighted":"Joynture @ Wall Street","url":"\/locations\/joynture-new-york\/day-pass-21727","snippet":"Use of our communal working <b>space<\/b> for the day. Conference room time can be purchased additionally at a per hour rate. 48 Wall St, <b>New<\/b> <b>York<\/b>, NY 10005, USA","guid":"21738","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2788","attributes":{
+            "name":"New York, NY (Midtown)","highlighted":"<b>New<\/b> <b>York<\/b>, NY (Midtown)","url":"\/locations\/bl-nyc-new-york\/dedicated-desks-in-start-up-office-space","snippet":" ... plan. You'll be sharing the <b>space<\/b> with our team (we're a ... can stand or sit), modern <b>office<\/b> chairs and a energetic but ... advance notice.10 E 38th St, <b>New<\/b> <b>York<\/b>, NY 10016, USA","guid":"22592","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"203","attributes":{
+            "name":"Red Rising Marketing @ 8th Avenue","highlighted":"Red Rising Marketing @ 8th Avenue","url":"\/locations\/red+rising+marketing-new+york\/office-space-c2ff9b1c-e637-4565-89ea-7a1fa09a44a9","snippet":"Private <b>Office<\/b> (12 ft x 12 ft) has French doors and a sliding window that makes for easy communication. Currently houses a desk that is 38 inches from front to back and 71 inches from side to side. 555 8th Avenue #905, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"1963","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"606","attributes":{
+            "name":"TKO Suites @ West 48th Street","highlighted":"TKO Suites @ West 48th Street","url":"\/locations\/tko-suites-new-york\/office-space-de80aed0-fc31-40b4-ba51-29f4e81e9013","snippet":" ... our tenants.353 West 48th Street, <b>New<\/b> <b>York<\/b>, NY 10036, USA","guid":"2920","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"661","attributes":{
+            "name":"Gold Star Properties of NY @ 112 West 34th Street","highlighted":"Gold Star Properties of NY @ 112 West 34th Street","url":"\/locations\/gold+star+properties+of+ny-new+york\/turnkey-office-space-available","snippet":" ... doorman access! Elevator commercial building. <b>Office<\/b> <b>space<\/b> comes with receptionist who knows ... being one112 West 34th Street, <b>New<\/b> <b>York<\/b>, NY 10120, USA","guid":"1229","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1377","attributes":{
+            "name":"City Wide Office Group, Inc. @ 80th Street","highlighted":"City Wide <b>Office<\/b> Group, Inc. @ 80th Street","url":"\/locations\/city+wide+office+group+inc-new+york\/executive-private-office-oct-27-2015","snippet":"$1,000 monthly 11'x13' rooms include. all utilities for the <b>office<\/b>, furniture, high speed internet, conference room and heat A\/C.94-02 80th Street, Ozone Park, NY 11416, USA","guid":"881","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1475","attributes":{
+            "name":"Vintage Copper 1886 @ West 38th Street","highlighted":"Vintage Copper 1886 @ West 38th Street","url":"\/locations\/vintage+copper+1886-new+york\/office-for-share-showroom-ready-perfect-for-meeting","snippet":"Fully furnished fashion showroom <b>space<\/b> that we use for our contemporary line. We're looking for 2-3 brands or similar \"cool\" companies to share the <b>space<\/b> with. 262 West 38th Street, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"997","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1478","attributes":{
+            "name":"Pillar Investors @ Jamaica Avenue","highlighted":"Pillar Investors @ Jamaica Avenue","url":"\/locations\/pillar+investors-new+york--3\/small-shared-office-space-for-rent","snippet":"<b>Office<\/b> <b>space<\/b> for rent at 231-10 Hillside Avenue. Perfect location for shared space. Includes wifi, maintenance, heating, and electrical.75-14 Jamaica Avenue, Queens, NY 11421, USA","guid":"1002","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"205","attributes":{
+            "name":"Red Rising Marketing @ 8th Avenue","highlighted":"Red Rising Marketing @ 8th Avenue","url":"\/locations\/red+rising+marketing-new+york\/traditional-desk-with-drawer-space","snippet":"Traditional Desk Length: 27 inches Width: 59 \u00bd inches 3 drawers 555 8th Avenue #905, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"1965","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"320","attributes":{
+            "name":"In the heart of the Lower East Side","highlighted":"In the heart of the Lower East Side","url":"\/locations\/con+artist+collective-new+york\/connected-creative-innovative-relaxed","snippet":" ... tour, http:\/\/conartistnyc.com\/pages\/join119 Ludlow Street, <b>New<\/b> <b>York<\/b>, NY 10002, USA","guid":"2156","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1005","attributes":{
+            "name":"Merchantry, Inc @ Lexington Avenue","highlighted":"Merchantry, Inc @ Lexington Avenue","url":"\/locations\/merchantry+inc-new+york\/large-individual-desks-meeting-rooms-possible-private-office","snippet":"Cluster of up to 8 desks, along with access to conference rooms, common area, and kitchen. Cheerful and friendly.355 Lexington Avenue, <b>New<\/b> <b>York<\/b>, NY 10017, USA","guid":"1610","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1152","attributes":{
+            "name":"Magnify.net @ West 29th Street","highlighted":"Magnify.net @ West 29th Street","url":"\/locations\/magnify+net-new+york\/shared-desks-ef4ab7a6-aeba-4182-8ab6-97eb7e743f6d","snippet":"Various spaces, some long desks, other individual. 135 West 29th Street, <b>New<\/b> <b>York<\/b>, NY 10001, USA","guid":"1823","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1271","attributes":{
+            "name":"Look Media USA @ West 38th Street","highlighted":"Look Media USA @ West 38th Street","url":"\/locations\/look+media+usa-new+york--2\/look-media-usa","snippet":"Corner <b>office<\/b> with large windows, a sunny view of the city and a quiet, friendly atmosphere. Conference room, kitchenette, internet & printer included. Five minutes from Times Square, Port Authority or Penn Station.330 W 38th St, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"722","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"497","attributes":{
+            "name":"New York","highlighted":"<b>New<\/b> <b>York<\/b>","url":"\/locations\/your-office-suites-manhattan\/trading-desk","snippet":"Trading desk platform perfect for those that need a place to quickly and easily turn up and get to work. Just steps away from public access and all the plaza district has to offer.551 Madison Avenue, <b>New<\/b> <b>York<\/b>, NY 10022, USA","guid":"2578","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"498","attributes":{
+            "name":"New York","highlighted":"<b>New<\/b> <b>York<\/b>","url":"\/locations\/your-office-suites-manhattan\/windowed-office-overlooking-madison-avenue","snippet":"Sunny Glass windowed <b>office<\/b> overlooking the Sony building and Madison Avenue. Accommodates 4. 551 Madison Avenue, <b>New<\/b> <b>York<\/b>, NY 10022, USA","guid":"2579","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"499","attributes":{
+            "name":"New York","highlighted":"<b>New<\/b> <b>York<\/b>","url":"\/locations\/your-office-suites-manhattan\/10-person-wired-conference-room","snippet":"Conference room right in the heart of the city for your meetings. Impress your clients with a Madison Avenue <b>office<\/b> and bring in a meeting as large as 10 people.551 Madison Avenue, <b>New<\/b> <b>York<\/b>, NY 10022, USA","guid":"2580","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1555","attributes":{
+            "name":"3rd Ward @ Morgan Avenue","highlighted":"3rd Ward @ Morgan Avenue","url":"\/locations\/3rd+ward-new+york\/coworking-3rd-ward","snippet":"What We've got: stimulating creative work environment unlimited conference room bookings super fast wifi free document printing and scanning fully-loaded imac design workstations (3.06ghz Core 2 Duo, 4GB DDR3 RAM) Friendly front desk reception195 Morgan ... ","guid":"1103","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"4105","attributes":{
+            "name":"W Hotels @ Park Avenue South","highlighted":"W Hotels @ Park Avenue South","url":"\/locations\/w+hotels-new+york\/1862","snippet":"Power wheel and deal with a private <b>office<\/b> featuring an L shaped desk, seating, high speed internet access, plus hotel amenities at your fingertips.201 Park Avenue South, <b>New<\/b> <b>York<\/b>, NY 10003, USA","guid":"1862","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"328","attributes":{
+            "name":"Ensemble - affordable, casual and collaborative","highlighted":"Ensemble - affordable, casual and collaborative","url":"\/locations\/ensemble-new+york\/dedicated-desk-a5fe796a-0166-4ba5-a99d-3d7722abc51f","snippet":" ... coffee\/tea\/water.1150 Avenue of the Americas, <b>New<\/b> <b>York<\/b>, NY 10036, USA","guid":"2166","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"329","attributes":{
+            "name":"Ensemble - affordable, casual and collaborative","highlighted":"Ensemble - affordable, casual and collaborative","url":"\/locations\/ensemble-new+york\/weekly-desk-pass","snippet":"Only have a short-term need? Our 5 day pass allows you to stay with us for 5 times during a calendar month.1150 Avenue of the Americas, <b>New<\/b> <b>York<\/b>, NY 10036, USA","guid":"2168","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"330","attributes":{
+            "name":"Ensemble - affordable, casual and collaborative","highlighted":"Ensemble - affordable, casual and collaborative","url":"\/locations\/ensemble-new+york\/10-day-desk-pass","snippet":"When you don't need a full month and a week isn't enough - choose the 10 day option and save some bucks!1150 Avenue of the Americas, <b>New<\/b> <b>York<\/b>, NY 10036, USA","guid":"2169","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"598","attributes":{
+            "name":"Amazing Building in the Financial District","highlighted":"Amazing Building in the Financial District","url":"\/locations\/banter-public-relations-new-york\/private-cubes","snippet":"This spacious workstation comes with WiFi, drawers, a comfortable chair, LOTS of privacy, as well as access to the many amenities of working in our sunny, modern, professional <b>office<\/b>!40 Fulton Street, <b>New<\/b> <b>York<\/b>, NY 10038, USA","guid":"2872","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1375","attributes":{
+            "name":"City Wide Office Group, Inc. @ 80th Street","highlighted":"City Wide <b>Office<\/b> Group, Inc. @ 80th Street","url":"\/locations\/city+wide+office+group+inc-new+york\/executive-private-office","snippet":"$1,000 monthly 11'x13' rooms include. all utilities for the <b>office<\/b>, furniture, high speed internet, conference room and heat A\/C.94-02 80th Street, Ozone Park, NY 11416, USA","guid":"879","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1376","attributes":{
+            "name":"City Wide Office Group, Inc. @ 80th Street","highlighted":"City Wide <b>Office<\/b> Group, Inc. @ 80th Street","url":"\/locations\/city+wide+office+group+inc-new+york\/desk-space-or-cubical","snippet":"$500 monthly 8'x7' rooms include. all utilities for the <b>office<\/b>, furniture, high speed internet, conference room and heat A\/C.94-02 80th Street, Ozone Park, NY 11416, USA","guid":"880","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1509","attributes":{
+            "name":"Jackie Marketing @ Jamaica Avenue","highlighted":"Jackie Marketing @ Jamaica Avenue","url":"\/locations\/jackie+marketing-new+york--2\/office-space-for-rent","snippet":"Fully furnished <b>office<\/b> <b>space<\/b>(Private) including 2 desks, 2 ... ","guid":"1047","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"4139","attributes":{
+            "name":"FiDi\/Lower Manhattan","highlighted":"FiDi\/Lower Manhattan","url":"\/locations\/lawline-furthered-new-york\/private-glass-walled-office","snippet":" ... 3-camera TV studio. This innovative <b>space<\/b> will not only impress your ... AVAILABILITY - (1) Spacious Corner <b>Office<\/b> available on 2\/1\/17 & - ... Workstations available on 3\/1\/17.61 Broadway, <b>New<\/b> <b>York<\/b>, NY 10006, USA","guid":"23492","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"659","attributes":{
+            "name":"ONE STOP MULTISERVICE @ 41-39 54th Street","highlighted":"ONE STOP MULTISERVICE @ 41-39 54th Street","url":"\/locations\/one-stop-multiservice-new-york\/desk-space-in-woodside-1-block-from-the-7-train","snippet":"THIS <b>SPACE<\/b> FEATURES A FREINDLY ENVIROMENT IT FEATURES A DESK WITH COMPUTER INTERNET USE OF FAX AND COPY MACHINE AND SCANNER ,ONLY STEPS AWAY FROM THE 7 TRAIN 52 ST INWOODSIDE QUEENS ON A VERY BUSY AREA 41-39 54th Street, Queens, NY 11377, USA","guid":"1227","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1656","attributes":{
+            "name":"Penn Spaces","highlighted":"Penn Spaces","url":"\/locations\/penn-spaces\/second-space-small-room","snippet":"Room to Rent- small room- $800\/month *Month to Month Payment *No Lease *No Credit Card Check *24\/7 Access to it. *Board Room Availability *Coffee and Tea Availability *Cyber Respirator115 West 31st Street, <b>New<\/b> <b>York<\/b>, NY 10001, USA","guid":"3167","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1657","attributes":{
+            "name":"Penn Spaces","highlighted":"Penn Spaces","url":"\/locations\/penn-spaces\/third-space-medium-size-room","snippet":"Room to rent- Medium size room-$1,200\/month *Month to Month Payment *No Lease *No Credit Card Check *24\/7 Access to it. *Board Room Availability *Coffee and Tea Availability *Cyber Respirator115 West 31st Street, <b>New<\/b> <b>York<\/b>, NY 10001, USA","guid":"3168","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2086","attributes":{
+            "name":"Office Space @ 7th Avenue","highlighted":"<b>Office<\/b> <b>Space<\/b> @ 7th Avenue","url":"\/locations\/cm-media-new-york\/20998","snippet":"Located in the heart of the Fashion District, we offer a friendly and professional environment for clients to work or hold meetings. We look after our clients with an added personal touch. 345 7th Ave, <b>New<\/b> <b>York<\/b>, NY 10001, USA","guid":"21015","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2455","attributes":{
+            "name":"The Loft","highlighted":"The Loft","url":"\/locations\/awesome-manhattan\/dedicated-desk-march-22-2016","snippet":"The Loft is <b>New<\/b> <b>York's<\/b> first designer exclusive co-working and event <b>space<\/b> by awesome. ... We love to welcome <b>new<\/b> members to our <b>space<\/b>, which was crafted ... The Loft: http:\/\/www.theloftsoho.com\/425 Broadway, <b>New<\/b> <b>York<\/b>, NY 10013, USA","guid":"17200","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"607","attributes":{
+            "name":"Financial District","highlighted":"Financial District","url":"\/locations\/tko-suites\/day-office-da6366f3-5941-418f-b1b0-ad2badcee548","snippet":" ... screen television for confere42 Broadway, <b>New<\/b> <b>York<\/b>, NY 10004, USA","guid":"2921","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1655","attributes":{
+            "name":"Penn Spaces","highlighted":"Penn Spaces","url":"\/locations\/penn-spaces\/first-space-big-room","snippet":"Room to Rent- First space-$2,000\/month *Month to Month Payment *No Lease *No Credit Card Check *24\/7 Access to it. *Board Room Availability *Coffee and Tea Availability *Cyber Respirators115 West 31st Street, <b>New<\/b> <b>York<\/b>, NY 10001, USA","guid":"3166","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2143","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/group-private-offices-for-12","snippet":"Team <b>Offices<\/b> (2 total) for 6 people ... Perfect for tech, start-ups, swing <b>space<\/b>, and satellite offices. Location is ... booths, conference rooms. 1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21443","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2597","attributes":{
+            "name":"FiDi\/Lower Manhattan","highlighted":"FiDi\/Lower Manhattan","url":"\/locations\/lawline-furthered-new-york\/lawline","snippet":"Within the <b>office<\/b> are three privacy couches, two ... 3-camera TV studio. This innovative <b>space<\/b> will not only impress your ... (1) Spacious Corner <b>Office<\/b> available on 2\/1\/17 61 Broadway, <b>New<\/b> <b>York<\/b>, NY 10006 ... ","guid":"22436","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"609","attributes":{
+            "name":"Financial District","highlighted":"Financial District","url":"\/locations\/tko-suites\/conference-room-41a3057c-a56a-4c9c-a998-a2d24226aaa5","snippet":" ... screen television for confere42 Broadway, <b>New<\/b> <b>York<\/b>, NY 10004, USA","guid":"2923","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1960","attributes":{
+            "name":"Jay Suites 315 Madison Avenue, 3rd Floor","highlighted":"Jay Suites 315 Madison Avenue, 3rd Floor","url":"\/locations\/jay-suites-manhattan-madison-avenue\/jay-suites-madison-avenue","snippet":" ... Markers *Catering Available315 Madison Ave, <b>New<\/b> <b>York<\/b>, NY 10017, USA","guid":"20502","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2276","attributes":{
+            "name":"Madison Avenue \/ 33rd.Street","highlighted":"Madison Avenue \/ 33rd.Street","url":"\/locations\/mcneill\/20792","snippet":"Quiet professional <b>office<\/b> , doorman elevator building, share with 2 professional males, wifi included .167 Madison Ave, <b>New<\/b> <b>York<\/b>, NY 10016, USA","guid":"20803","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"126","attributes":{
+            "name":"Catfish Entertainment @ West 25th Street","highlighted":"Catfish Entertainment @ West 25th Street","url":"\/locations\/catfish-entertainment-133-west-25th-street-suite-7e-new-york\/private-office-ec912b43-5e0e-471b-9408-7ad837bf67fc","snippet":"Private team <b>office<\/b> is ideal for small teams ... in Chelsea, Manhattan and our <b>office<\/b> is home to friendly coworkers ... production and corporate functions in <b>New<\/b> <b>York<\/b> City and beyond.133 West 25th ... ","guid":"8152","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"478","attributes":{
+            "name":"Theater District NYC","highlighted":"Theater District NYC","url":"\/locations\/red-rising-marketing-manhattan\/corner-desk-unit-with-ample-overhead-storage-oct-27-2015","snippet":"Left Hand Side Length: 27 Inches Right Hand Side Length: 47 Inches Depth: 44 Inches 3 drawers 3 overhead cabinets with additional cubby <b>space<\/b> Monthly Rent of $500 plus 2 months Security Deposit 555 8th Avenue, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"2540","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"608","attributes":{
+            "name":"Financial District","highlighted":"Financial District","url":"\/locations\/tko-suites\/office-space-9539a2dd-5055-4932-baa0-69e4fc1752f8","snippet":" ... screen television for confere42 Broadway, <b>New<\/b> <b>York<\/b>, NY 10004, USA","guid":"2922","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1823","attributes":{
+            "name":"South Street Seaport","highlighted":"South Street Seaport","url":"\/locations\/kinetic-studios\/office-space-available-in-truly-unique-manhattan-creative-studio","snippet":" ... have 500-square feet of exclusive <b>space<\/b> available, but also an abundance ... website at KineticStudiosNYC.com207 Front St, <b>New<\/b> <b>York<\/b>, NY 10038, USA","guid":"19609","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2105","attributes":{
+            "name":"SoHo","highlighted":"SoHo","url":"\/locations\/the-farm-soho-447-broadway\/the-farm-soho","snippet":"The Farm is co-working <b>space<\/b> in the heart of SoHo NYC that will make you fall in love with work again through its warm interior, supportive community and excellent location.447 Broadway, <b>New<\/b> <b>York<\/b>, NY 10013, USA","guid":"21190","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2146","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/dedicated-desk-in-private-office","snippet":"Interior Private <b>Offices<\/b> with available dedicated seats. Move-in ... Perfect for tech, start-ups, swing <b>space<\/b>, and satellite offices. Midtown coworking. ... booths, conference rooms. 1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21446","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2147","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/private-office-with-dedicated-desks","snippet":"Interior Private <b>Offices<\/b> with 5 available dedicated seats. ... Perfect for tech, start-ups, swing <b>space<\/b>, and satellite offices. Midtown coworking. ... booths, conference rooms. 1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21447","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"4129","attributes":{
+            "name":"East Village","highlighted":"East Village","url":"\/locations\/david-dorfman-dance\/ashley-richard","snippet":" ... Dorfman Dance has a SHARED <b>OFFICE<\/b> <b>SPACE<\/b> AVAILABLE IN OUR CHARMING EAST ... AND ONE OTHER FREELANCER. THIS <b>OFFICE<\/b> BUILDING CONSISTS OF MAINLY ARTS ... IS PROVIDED. 140 2nd Ave, <b>New<\/b> <b>York<\/b>, NY 10003, USA","guid":"23321","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"125","attributes":{
+            "name":"Catfish Entertainment @ West 25th Street","highlighted":"Catfish Entertainment @ West 25th Street","url":"\/locations\/catfish-entertainment-133-west-25th-street-suite-7e-new-york\/dedicated-desk-cd946acf-47eb-49ae-a893-815ce06afbe4","snippet":" ... 133 West 25th Street #7e, <b>New<\/b> <b>York<\/b>, NY 10001, USA","guid":"8151","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2142","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/private-office-for-2","snippet":"2 person private <b>office<\/b> at WorkVille is move-in ready. ... , and conference rooms. 1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21442","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2148","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/open-desk-day-pass","snippet":" ... networking, tech, start-ups, swing <b>space<\/b>, satellite <b>offices<\/b>, and small companies! Desks equipped ... , and conference rooms. 1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21448","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2149","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/team-open-desk-for-2","snippet":" ... networking, tech, start-ups, swing <b>space<\/b>, satellite <b>offices<\/b>, and small companies! Desks equipped ... , and conference rooms. 1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21449","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2151","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/open-team-desks","snippet":" ... networking, tech, start-ups, swing <b>space<\/b>, satellite <b>offices<\/b>, and small companies! Desks equipped ... , and conference rooms. 1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21451","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2152","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/open-desks-teams-of-1-15","snippet":" ... networking, tech, start-ups, swing <b>space<\/b>, satellite <b>offices<\/b>, and small companies! Desks equipped ... , and conference rooms. 1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21452","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2153","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/team-open-desk-day-pass","snippet":" ... networking, tech, start-ups, swing <b>space<\/b>, satellite <b>offices<\/b>, and small companies! Desks equipped ... , and conference rooms. 1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21453","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"120","attributes":{
+            "name":"Desks for rent in Union Square","highlighted":"Desks for rent in Union Square","url":"\/locations\/little-pim\/oct-27-2015-7a95f686-bb94-49ee-9ac9-3800aa3a444d","snippet":" ... are available in an open <b>office<\/b> conveniently located in prime Union ... chair.41 Union Square East #725, <b>New<\/b> <b>York<\/b>, NY 10003, USA","guid":"8040","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"129","attributes":{
+            "name":"Catfish Entertainment @ West 25th Street","highlighted":"Catfish Entertainment @ West 25th Street","url":"\/locations\/catfish-entertainment-133-west-25th-street-suite-7e-new-york\/small-studio-in-chelsea","snippet":"Perfect for Individual Musicians 133 West 25th Street #7e, <b>New<\/b> <b>York<\/b>, NY 10001, USA","guid":"8157","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"176","attributes":{
+            "name":"Madison Ave & 51st Street","highlighted":"Madison Ave & 51st Street","url":"\/locations\/tim-higgins\/private-office-8a954184-2292-4dd3-8bcc-eabb686d8658","snippet":"This listing is for a private 110 square foot <b>office<\/b> in a Madison Ave Midtown East <b>office<\/b> building.Madison Avenue & East 51st Street, <b>New<\/b> <b>York<\/b>, NY 10022, USA","guid":"6127","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1227","attributes":{
+            "name":"Jordan Parnass Digital Architecture @ Jay Street","highlighted":"Jordan Parnass Digital Architecture @ Jay Street","url":"\/locations\/jordan+parnass+digital+architecture-new+york\/fixed-desks","snippet":"Each desk is an L-shaped workstation.68 Jay Street, Brooklyn, NY 11201, USA","guid":"1935","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1228","attributes":{
+            "name":"Doctor V's Professional Grade Nutrition @ 3rd Avenue","highlighted":"Doctor V's Professional Grade Nutrition @ 3rd Avenue","url":"\/locations\/doctor+v+s+professional+grade+nutrition-new+york\/shared-desk-d3a68ebe-0167-4592-ad33-c256462ca162","snippet":"Co-shared desk ideal for someone who wants to rent <b>space<\/b> 2-3 days a week. 9726 3rd Avenue, Brooklyn, NY 11209, USA","guid":"1936","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1670","attributes":{
+            "name":"Affordable desk in a real office for freelancers","highlighted":"Affordable desk in a real <b>office<\/b> for freelancers","url":"\/locations\/lambda\/affordable-desk-in-a-real-office-for-freelancers","snippet":" ... of the financial district.222 Broadway, <b>New<\/b> <b>York<\/b>, NY 10038, USA","guid":"3258","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"1675","attributes":{
+            "name":"Great desks available in the heart of Manhattan ","highlighted":"Great desks available in the heart of Manhattan ","url":"\/locations\/nnp-solutions\/great-hot-desks-in-midtown","snippet":" ... in <b>new<\/b> <b>york<\/b> city - midtown. Desks are in a shared <b>office<\/b> and ... hours & printing.149 Madison Avenue, <b>New<\/b> <b>York<\/b>, NY 10016, USA","guid":"3295","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2113","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/21285","snippet":" ... names prior to arrival.1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21296","section":"items","related":false}
+    },
+    {
+        "type":"items","id":"2144","attributes":{
+            "name":"Workville NYC ","highlighted":"Workville NYC ","url":"\/locations\/workville-nyc-manhattan\/team-private-office-for-6","snippet":" ... <b>Office<\/b> for 6 people. Move-in ready. Perfect for tech, start-ups, swing <b>space<\/b> ... , satellite <b>office<\/b>,and small companies. Midtown coworking. ... booths, conference rooms. 1412 Broadway, <b>New<\/b> <b>York<\/b>, NY 10018, USA","guid":"21444","section":"items","related":false}
+    }
+    ],"meta":{
+        "total-results":100,"total-related":0}
+}

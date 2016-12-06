@@ -1,0 +1,250 @@
+{
+  "links": {
+    "first": "http:\/\/api-staging.longtailux.com\/keywords\/seo?page%5Blimit%5D=20",
+    "next": "http:\/\/api-staging.longtailux.com\/keywords\/seo?page%5Blimit%5D=20&page%5Boffset%5D=20",
+    "last": "http:\/\/api-staging.longtailux.com\/keywords\/seo?page%5Blimit%5D=20&page%5Boffset%5D=1100"
+  },
+  "data": [{
+    "type": "links",
+    "id": "1",
+    "attributes": {
+      "name": "sublet office space new york",
+      "slug": "sublet-office-space-new-york",
+      "url": "\/workspace\/sublet-office-space-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":1,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "2",
+    "attributes": {
+      "name": "new york warehouse studio for rent near me",
+      "slug": "new-york-warehouse-studio-for-rent-near-me",
+      "url": "\/workspace\/new-york-warehouse-studio-for-rent-near-me",
+      "type": "SEO",
+      "category": "New York",
+      "order":2,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "3",
+    "attributes": {
+      "name": "daily office new york",
+      "slug": "daily-office-new-york",
+      "url": "\/workspace\/daily-office-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":3,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "4",
+    "attributes": {
+      "name": "new york lease an workspace for a day",
+      "slug": "new-york-lease-an-workspace-for-a-day",
+      "url": "\/workspace\/new-york-lease-an-workspace-for-a-day",
+      "type": "SEO",
+      "category": "New York",
+      "order":4,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "5",
+    "attributes": {
+      "name": "sublet meeting room new york",
+      "slug": "sublet-meeting-room-new-york",
+      "url": "\/workspace\/sublet-meeting-room-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":5,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "6",
+    "attributes": {
+      "name": "daily office rental in new york",
+      "slug": "daily-office-rental-in-new-york",
+      "url": "\/workspace\/daily-office-rental-in-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":6,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "7",
+    "attributes": {
+      "name": "new york desk space for lease near me",
+      "slug": "new-york-desk-space-for-lease-near-me",
+      "url": "\/workspace\/new-york-desk-space-for-lease-near-me",
+      "type": "SEO",
+      "category": "New York",
+      "order":7,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "8",
+    "attributes": {
+      "name": "new york rent an desk space for a day",
+      "slug": "new-york-rent-an-desk-space-for-a-day",
+      "url": "\/workspace\/new-york-rent-an-desk-space-for-a-day",
+      "type": "SEO",
+      "category": "New York",
+      "order":13,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "9",
+    "attributes": {
+      "name": "find salon space new york",
+      "slug": "find-salon-space-new-york",
+      "url": "\/workspace\/find-salon-space-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":14,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "10",
+    "attributes": {
+      "name": "available warehouse studio near me new york",
+      "slug": "available-warehouse-studio-near-me-new-york",
+      "url": "\/workspace\/available-warehouse-studio-near-me-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":15,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "11",
+    "attributes": {
+      "name": "new york lease an office space for a day",
+      "slug": "new-york-lease-an-office-space-for-a-day",
+      "url": "\/workspace\/new-york-lease-an-office-space-for-a-day",
+      "type": "SEO",
+      "category": "New York",
+      "order":16,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "12",
+    "attributes": {
+      "name": "daily meeting room new york",
+      "slug": "daily-meeting-room-new-york",
+      "url": "\/workspace\/daily-meeting-room-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":17,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "13",
+    "attributes": {
+      "name": "lease office space new york",
+      "slug": "lease-office-space-new-york",
+      "url": "\/workspace\/lease-office-space-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":18,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "14",
+    "attributes": {
+      "name": "available meeting room near me new york",
+      "slug": "available-meeting-room-near-me-new-york",
+      "url": "\/workspace\/available-meeting-room-near-me-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":19,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "15",
+    "attributes": {
+      "name": "find warehouse studio new york",
+      "slug": "find-warehouse-studio-new-york",
+      "url": "\/workspace\/find-warehouse-studio-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":20,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "16",
+    "attributes": {
+      "name": "shared desk space new york",
+      "slug": "shared-desk-space-new-york",
+      "url": "\/workspace\/shared-desk-space-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":21,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "17",
+    "attributes": {
+      "name": "shared workspace new york",
+      "slug": "shared-workspace-new-york",
+      "url": "\/workspace\/shared-workspace-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":22,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "18",
+    "attributes": {
+      "name": "rent workspace new york",
+      "slug": "rent-workspace-new-york",
+      "url": "\/workspace\/rent-workspace-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":8,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "19",
+    "attributes": {
+      "name": "new york office for rent near me",
+      "slug": "new-york-office-for-rent-near-me",
+      "url": "\/workspace\/new-york-office-for-rent-near-me",
+      "type": "SEO",
+      "category": "New York",
+      "order":26,
+      "section": "keyword"}
+  },
+  {
+    "type": "links",
+    "id": "20",
+    "attributes": {
+      "name": "rent salon space new york",
+      "slug": "rent-salon-space-new-york",
+      "url": "\/workspace\/rent-salon-space-new-york",
+      "type": "SEO",
+      "category": "New York",
+      "order":27,
+      "section": "keyword"}
+  }],
+  "meta": {
+    "total":21
+  }
+}
