@@ -14,7 +14,7 @@ module Commands
         quote = get_quote(delivery)
 
         build_shipping_line_item line_item_source: delivery,
-                                 name: delivery.to_s,
+                                 name: delivery.class.to_s,
                                  quantity: 1,
                                  unit_price_cents: quote.gross,
                                  included_tax_total_rate: quote.tax,
