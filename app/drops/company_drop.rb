@@ -10,14 +10,11 @@ class CompanyDrop < BaseDrop
   # @!method creator
   #   @return [UserDrop] creator user object
   # @!method url
-  #   url address of company
-  #   @return (see Company#url)
+  #   @return [String] url address of company
   # @!method description
-  #   company description as string
-  #   @return (see Company#description)
+  #   @return [String] company description as string
   # @!method name
-  #   company name as string
-  #   @return (see Company#name)
+  #   @return [String] company name as string
   # @!method payments_mailing_address
   #   @return [AddressDrop] the payments mailing address as an AddressDrop object
   # @!method company_address

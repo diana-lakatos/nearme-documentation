@@ -5,12 +5,10 @@ class TransactableTypeDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier for this transactable type
   # @!method action_price_per_unit
-  #   Whether price per unit is available for this transactable type
-  #   @return (see TransactableType#action_price_per_unit)
+  #   @return [Boolean] Whether price per unit is available for this transactable type
   # @!method show_page_enabled?
-  #   Whether the "show" page has been enabled for this listing if enabled the listing
+  #   @return [Boolean] Whether the "show" page has been enabled for this listing; if enabled the listing
   #     will have a page separate from the location's
-  #   @return (see TransactableType#show_page_enabled)
   # @!method translated_bookable_noun
   #   @return [String] represents the item to be booked (e.g. desk, room etc.)
   #     taken from translations (e.g. translation key of the form 'transactable_type.desk.name')
@@ -29,6 +27,8 @@ class TransactableTypeDrop < BaseDrop
   #   @return [String] name that will be used (HTML attribute) for the search input on search pages
   # @!method skip_location?
   #   @return [Boolean] whether specifying a location can be skipped for this TransactableType
+  # @!method to_param
+  #   @return [String] string that will be used in the URLs referring to items of this type
   delegate :id, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun,
            :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
            :search_input_name, :search_field_placeholder, :skip_location?, :to_param, to: :source

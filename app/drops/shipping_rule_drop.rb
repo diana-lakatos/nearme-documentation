@@ -5,19 +5,15 @@ class ShippingRuleDrop < BaseDrop
   attr_reader :shipping_rule
 
   # @!method is_pickup
-  #   Whether pickup is enabled for this rule
-  #   @return (see ShippingRule#is_pickup)
+  #   @return [Boolean] Whether pickup is enabled for this rule
   # @!method name
-  #   Name for the shipping rule
-  #   @return (see ShippingRule#name)
+  #   @return [String] Name for the shipping rule
   # @!method price
   #   @return [MoneyDrop] price for the shipping rule
   # @!method is_worldwide
-  #   Whether it specifies a domestic or worldwide rule
-  #   @return (see ShippingRule#is_worldwide)
+  #   @return [Boolean] Whether it specifies a domestic or worldwide rule
   # @!method use_shippo_for_price
-  #   Whether the Shippo service is used for pricing
-  #   @return (see ShippingRule#use_shippo_for_price)
+  #   @return [Boolean] Whether the Shippo service is used for pricing
   delegate :is_pickup, :name, :price, :is_worldwide, :use_shippo_for_price, to: :shipping_rule
 
   def initialize(shipping_rule)

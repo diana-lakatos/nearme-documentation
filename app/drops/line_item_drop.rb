@@ -6,11 +6,9 @@ class LineItemDrop < BaseDrop
   attr_reader :line_item
 
   # @!method name
-  #   Name for the line item / product
-  #   @return (see LineItem#name)
+  #   @return [String] Name for the line item / product
   # @!method quantity
-  #   Quantity being ordered
-  #   @return (see LineItem#quantity)
+  #   @return [Float] Quantity being ordered
   # @!method unit_price
   #   @return [MoneyDrop] unit price
   # @!method created_at
