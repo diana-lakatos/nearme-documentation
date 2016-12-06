@@ -222,7 +222,7 @@
 
   states:
     label: Select state(s) in which lawyer(s) at Handling Law Firm must be licensed to handle case
-    attribute_type: string
+    attribute_type: array
     html_tag: check_box_list
     searchable: true
     wrapper_html_options_string: 'class=>form-group check_boxes required checkbox-columns'
