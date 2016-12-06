@@ -1,0 +1,21 @@
+{
+  "links": {
+    "first": "http:\/\/api-staging.longtailux.com\/keywords\/seo?page%5Blimit%5D=20",
+    "last": "http:\/\/api-staging.longtailux.com\/keywords\/seo?page%5Blimit%5D=20&page%5Boffset%5D=1100"
+  },
+  "data": [{
+    "type": "links",
+    "id": "1",
+    "attributes": {
+      "name": "last keyword",
+      "slug": "last-keyword",
+      "url": "\/workspace\/last-keyword",
+      "type": "SEO",
+      "category": "New York",
+      "order":1,
+      "section": "keyword"}
+  }],
+  "meta": {
+    "total":21
+  }
+}
