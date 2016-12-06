@@ -2,7 +2,7 @@ ruby '2.3.1'
 
 source 'http://rubygems.org'
 
-gem 'rails', '4.2.4'
+gem 'rails', '4.2.7.1'
 gem 'pg'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'

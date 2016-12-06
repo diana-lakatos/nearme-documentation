@@ -4,14 +4,11 @@ class BlogInstanceDrop < BaseDrop
   attr_reader :blog
 
   # @!method name
-  #   the name of the blog instance
-  #   @return (see BlogInstance#name)
+  #   @return [String] the name of the blog instance
   # @!method header_text
-  #   the header text
-  #   @return (see BlogInstance#header_text)
+  #   @return [String] the header text
   # @!method header_motto
-  #   the header motto
-  #   @return (see BlogInstance#header_motto)
+  #   @return [String] the header motto
   # @!method facebook_app_id
   #   the Facebook App ID
   #   @return [String] blog's facebook_app_id

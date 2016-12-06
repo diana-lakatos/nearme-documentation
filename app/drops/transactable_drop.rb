@@ -11,19 +11,16 @@ class TransactableDrop < BaseDrop
   # @!method location_id
   #   @return [Integer] Numeric identifier for the location associated with this transactable
   # @!method name
-  #   Name of the transactable
-  #   @return (see Transactable#name)
+  #   @return [String] Name of the transactable
   # @!method location
   #   @return [LocationDrop] Location object associated with the transactable
   # @!method transactable_type
   #   @return [TransactableTypeDrop] Transactable type to which this transactable belongs
   # @!method description
-  #   Description for the transactable
-  #   @return (see Transactable#description)
+  #   @return [String] Description for the transactable
   # @!method action_hourly_booking?
   #   @todo Investigate whether this is still used/should be removed
-  #   Whether hourly booking is possible for this transactable
-  #   @return (see Transactable#action_hourly_booking)
+  #   @return [Boolean] Whether hourly booking is possible for this transactable
   # @!method creator
   #   @return [UserDrop] User who created the transactable
   # @!method creator_id
@@ -39,8 +36,7 @@ class TransactableDrop < BaseDrop
   # @!method properties
   #   @return [Hash] custom properties for this transactable
   # @!method quantity
-  #   Quantity of bookable items for any given date
-  #   @return (see Transactable#quantity)
+  #   @return [Integer] Quantity of bookable items for any given date
   # @!method administrator_id
   #   @return [Integer] Numeric identifier for the administrator of this listing
   # @!method has_photos?
@@ -57,8 +53,7 @@ class TransactableDrop < BaseDrop
   # @!method only_exclusive_price_available?
   #   @return [Boolean] whether the exclusive price defined for this listing is the only price defined for this listing
   # @!method capacity
-  #   Capacity for the transactable (e.g. '7 seats, 10 standing')
-  #   @return (see Transactable#capacity)
+  #   @return [String] Capacity for the transactable (e.g. '7 seats, 10 standing')
   # @!method approval_requests
   #   @return [Array<ApprovalRequestDrop>] Approval requests for this transactable (if approval is required from the marketplace owner)
   # @!method updated_at
@@ -75,11 +70,9 @@ class TransactableDrop < BaseDrop
   # @!method lowest_full_price
   #   @return [Transactable::PricingDrop] lowest price for this location (i.e. including service fees and mandatory additional charges)
   # @!method slug
-  #   URL friendly identifier for the transactable
-  #   @return (see Transactable#slug)
+  #   @return [String] URL friendly identifier for the transactable
   # @!method confirm_reservations
-  #   Whether reservations/purchases need to be confirmed for this transactable
-  #   @return (see Transactable#confirm_reservations)
+  #   @return [Boolean] Whether reservations/purchases need to be confirmed for this transactable
   # @!method to_key
   #   @return [Array<Integer>] array wrapping the identifer for this object
   # @!method model_name
@@ -95,8 +88,7 @@ class TransactableDrop < BaseDrop
   # @!method action_free_booking?
   #   @return [Boolean] whether free booking is possible for the transactable
   # @!method average_rating
-  #   Average rating from users for this transactable
-  #   @return (see Transactable#average_rating)
+  #   @return [Float] Average rating from users for this transactable
   # @!method time_based_booking?
   #   @return [Boolean] whether the time based booking action type is used for this transactable
   # @!method transactable_collaborators
@@ -110,8 +102,7 @@ class TransactableDrop < BaseDrop
   # @!method line_item_orders
   #   @return [Array<OrderDrop>] Orders containing this transactable object
   # @!method state
-  #   State for the order (e.g. pending/completed/cancelled/in progress/etc.)
-  #   @return (see Transactable#state)
+  #   @return [String] State for the order (e.g. pending/completed/cancelled/in progress/etc.)
   # @!method created_at
   #   @return [DateTime] time when the transactable was created
   # @!method pending?

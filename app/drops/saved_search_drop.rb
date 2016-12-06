@@ -10,8 +10,7 @@ class SavedSearchDrop < BaseDrop
   # @!method path
   #   @return [String] the full path of the query
   # @!method new_results
-  #   Number of new results in the app for this saved query
-  #   @return (see SavedSearch#new_results)
+  #   @return [Integer] Number of new results in the app for this saved query
   delegate :id, :title, :path, :new_results, to: :saved_search
 
   def initialize(saved_search)

@@ -12,40 +12,31 @@ class LocationDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier of the location
   # @!method slug
-  #   User friendly identifier of the location
-  #   @return (see Location#slug)
+  #   @return [String] User friendly identifier of the location
   # @!method listings
   #   @return [Array<Transactable>] Array of listings for this location
   # @!method lowest_price
   #   @return [Transactable::PricingDrop] object corresponding to the lowest available pricing for this transactable
   # @!method name
-  #   Name of this location
-  #   @return (see Location#name)
+  #   @return [String] Name of this location
   # @!method description
-  #   Description of this location
-  #   @return (see Location#description)
+  #   @return [String] Description of this location
   # @!method phone
   #   @return [String] phone number for this location
   # @!method street
-  #   Street name for this location
-  #   @return (see Location#street)
+  #   @return [String] Street name for this location
   # @!method city
-  #   City name for this location
-  #   @return (see Location#city)
+  #   @return [String] City name for this location
   # @!method suburb
-  #   Suburb name for this location
-  #   @return (see Location#suburb)
+  #   @return [String] Suburb name for this location
   # @!method company
   #   @return [CompanyDrop] Company object for this location
   # @!method address
-  #   Address for this location
-  #   @return (see Location#address)
+  #   @return [String] Address for this location
   # @!method latitude
-  #   Latitude for this location
-  #   @return (see Location#latitude)
+  #   @return [Float] Latitude for this location
   # @!method longitude
-  #   Longitude for this location
-  #   @return (see Location#longitude)
+  #   @return [Float] Longitude for this location
   # @!method creator
   #   @return [UserDrop] User who created this location
   # @!method administrator
@@ -54,14 +45,11 @@ class LocationDrop < BaseDrop
   #   Last time when the location was updated
   #   @return [DateTime]
   # @!method postcode
-  #   Post code for this location
-  #   @return (see Location#postcode)
+  #   @return [String] Post code for this location
   # @!method country
-  #   Country for this location
-  #   @return (see Location#country)
+  #   @return [String] Country name for this location
   # @!method state
-  #   State for this location
-  #   @return (see Location#state)
+  #   @return [String] State name for this location
   # @!method lowest_full_price
   #   @return [Transactable::PricingDrop] lowest price for this location (i.e. including service fees and mandatory additional charges)
   # @!method to_key

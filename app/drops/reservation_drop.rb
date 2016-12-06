@@ -8,8 +8,7 @@ class ReservationDrop < OrderDrop
   # @!method id
   #   @return [Integer] numeric identifier for the reservation
   # @!method quantity
-  #   Number of reserved items
-  #   @return (see Order#quantity)
+  #   @return [Integer] Number of reserved items
   # @!method subtotal_price
   #   @return [String] subtotal price formatted using the global currency formatting rules
   #     or 'Free!' if free
@@ -29,8 +28,7 @@ class ReservationDrop < OrderDrop
   #   @return [String] amount paid for this reservation formatted using the global currency
   #     formatting rules or the current state of the payment if not yet paid
   # @!method rejection_reason
-  #   Rejection reason for this reservation if present
-  #   @return (see Order#rejection_reason)
+  #   @return [String] Rejection reason for this reservation if present
   # @!method owner
   #   @return [UserDrop] User owner of the reservation
   # @!method action_hourly_booking?
@@ -59,11 +57,9 @@ class ReservationDrop < OrderDrop
   # @!method periods
   #   @return [Array<ReservationPeriod>] Reservation periods associated with this order
   # @!method comment
-  #   Comment associated with this order
-  #   @return (see Order#comment)
+  #   @return [String] Comment associated with this order
   # @!method cancellation_policy_penalty_hours
-  #   Used for calculating the penalty for cancelling (unit_price * cancellation_policy_penalty_hours)
-  #   @return (see Order#cancellation_policy_penalty_hours)
+  #   @return [Integer] Used for calculating the penalty for cancelling (unit_price * cancellation_policy_penalty_hours)
   # @!method tax_price
   #   @return [String] total tax amount for this reservation formatted using the global
   #     currency formatting rules
@@ -74,11 +70,9 @@ class ReservationDrop < OrderDrop
   #   @return [String] formatted string instructing the user to confirm their booking before expiration
   #     using the translation key 'dashboard.host_reservations.pending_confirmation'
   # @!method lister_confirmed_at
-  #   Time when the lister confirmed the reservation
-  #   @return (see Order#lister_confirmed_at)
+  #   @return [DateTime] Time when the lister confirmed the reservation
   # @!method enquirer_confirmed_at
-  #   Time when the enquirer (buyer) confirmed the reservation
-  #   @return (see Order#enquirer_confirmed_at)
+  #   @return [DateTime] Time when the enquirer (buyer) confirmed the reservation
   delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :transactable, :state_to_string,
            :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
            :total_payable_to_host_formatted, :total_units_text, :unit_price, :has_service_fee?, :transactable_line_items,
@@ -115,7 +109,7 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [String] hourly summary as string for the first booked period
-    # @todo -- depracate per DIY -- lets not return strings - also, underlying methods are smelly
+  # @todo -- depracate per DIY -- lets not return strings - also, underlying methods are smelly
   def hourly_summary
     @reservation.hourly_summary_for_first_period
   end
@@ -136,11 +130,6 @@ class ReservationDrop < OrderDrop
   # @todo -- investigate if unit filter can be used and/or rename
   def total_amount_float
     @reservation.total_amount.to_f
-  end
-
-  # @todo Not working - investigate and remove
-  def balance
-    @reservation.formatted_balance
   end
 
   # @return [Boolean] whether there is a rejection reason for this reservation
@@ -299,11 +288,12 @@ class ReservationDrop < OrderDrop
 
   # SHIPPING
 
-  # shipping package name and description if applicable
+  # @return [DimensionsTemplateDrop] shipping package name and description if applicable
   def shipping_package
     reservation.dimensions_templates.last || reservation.transactable.dimensions_template
   end
 
+  # @return [String] shipping address for the enquirer (buyer)
   def enquirer_shipping_address
     reservation.shipping_address.address
   end

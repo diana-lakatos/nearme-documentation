@@ -4,15 +4,13 @@ class BlogPostDrop < BaseDrop
   attr_reader :blog_post
 
   # @!method title
-  #   the title of the blog post
-  #   @return (see BlogPost#title)
+  #   @return [String] the title of the blog post
   # @!method previous_blog_post
   #   @return [BlogPostDrop] object representing a post published before current post
   # @!method next_blog_post
   #   @return [BlogPostDrop] object representing a post published after current post
   # @!method author_biography
-  #   the author biography
-  #   @return (see BlogPost#author_biography)
+  #   @return [String] the author biography
   # @!method user
   #   @return [UserDrop] creator of the blog post
   delegate :title, :previous_blog_post, :next_blog_post, :author_biography, :user, to: :blog_post

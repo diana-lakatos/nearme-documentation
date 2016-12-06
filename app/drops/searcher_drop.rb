@@ -123,6 +123,7 @@ class SearcherDrop < BaseDrop
     filterable_custom_attributes.each_with_object({}) { |ca, hash| hash[ca.name] = ca }
   end
 
+  # @return [Hash{String => Array<Array<String, String>>}] hash of the form !{ field_name => [[bucket_label, bucket_key], [bucket_label, bucket_key]]
   def options_for_select
     Elastic::Aggregations::OptionsForSelect.build(@searcher.fetcher.aggregations)
   end

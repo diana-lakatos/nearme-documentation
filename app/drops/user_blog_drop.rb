@@ -4,8 +4,7 @@ class UserBlogDrop < BaseDrop
   attr_reader :blog
 
   # @!method name
-  #   Blog's name
-  #   @return (see UserBlog#name)
+  #   @return [String] Blog's name
   delegate :name, to: :blog
 
   def initialize(blog)

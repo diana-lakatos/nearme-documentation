@@ -1,0 +1,84 @@
+<h2>Great job, {{ user.first_name }}!</h2>
+
+<p>Your new listing rocks!</p>
+
+<div class="booking-details" style="position: relative;">
+  <div class="column-left">
+    <a href="{{ listing.listing_url }}"><img src="{{ listing.photo_url }}" alt="{{ listing.name }}" border="0" width="250" /></a>
+  </div>
+  <div class="column-right">
+    <h3><a href="{{ listing.listing_url }}">{{ listing.name }}</a></h3>
+    <p>{{ listing.description }}</p>
+
+    <table>
+      <tr>
+        <td>Item:</td> <td>{{ listing.properties.item_type }}</td>
+      </tr>
+      {% if listing.properties.item_type == 'Dress' %}
+        {% if listing.properties.item_style_dress != blank %}
+          <tr>
+            <td>Style:</td> <td>{{ listing.properties.item_style_dress }}</td>
+          </tr>
+        {% endif %}
+        <tr>
+          <td>Size:</td> <td>{{ listing.properties.dress_size }}</td>
+        </tr>
+        <tr>
+          <td>Length:</td> <td>{{ listing.properties.dress_length }}</td>
+        </tr>
+      {% elsif listing.properties.item_type == 'Bag' %}
+        {% if listing.properties.item_style_bag != blank %}
+          <tr>
+            <td>Style:</td> <td>{{ listing.properties.item_style_bag | split: ',' | join: ', '  }}</td>
+          </tr>
+        {% endif %}
+        <tr>
+          <td>Length:</td> <td>{{ listing.properties.dress_length }}</td>
+        </tr>
+      {% elsif listing.properties.item_type == 'Millinery' %}
+        {% if listing.properties.item_style_milinery != blank %}
+          <tr>
+            <td>Style:</td> <td>{{ listing.properties.item_style_milinery | split: ',' | join: ', '  }}</td>
+          </tr>
+        {% endif %}
+        <tr>
+          <td>Size:</td> <td>{{ listing.properties.milinery_size }}</td>
+        </tr>
+      {% elsif listing.properties.item_type == 'Outerwear' %}
+        {% if listing.properties.item_style_outerwear != blank %}
+          <tr>
+            <td>Style:</td> <td>{{ listing.properties.item_style_outerwear | split: ',' | join: ', ' }}</td>
+          </tr>
+        {% endif %}
+        <tr>
+          <td>Size:</td> <td>{{ listing.properties.outerwear_size }}</td>
+        </tr>
+      {% elsif listing.properties.item_type == 'Accessories' %}
+        {% if listing.properties.item_style_accessories != blank %}
+          <tr>
+            <td>Style:</td> <td>{{ listing.properties.item_style_accessories | split: ',' | join: ', '  }}</td>
+          </tr>
+        {% endif %}
+      {% endif %}
+      <tr>
+        <td>Color:</td> <td>{{ listing.properties.color }}</td>
+      </tr>
+      <tr>
+        <td>Designer:</td> <td>{{ listing.properties.designer_name }}</td>
+      </tr>
+      <tr>
+        <td>Location:</td> <td>{{ listing.location.city }}, {{ listing.location.state }}</td>
+      </tr>
+      <tr>
+        <td>Dry Cleaning:</td>  <td>{{ listing.properties.dry_cleaning }}</td>
+      </tr>
+    </table>
+
+    <p class="no-padding"><a class="btn" href="{{ listing.listing_url }}">See full listing</a></p>
+  </div>
+  <div style="clear: both;"></div>
+</div>
+
+<p>Spread the word and get your first {{ listing.lessees }}!</p>
+
+{% include 'reservation_mailer/social_links.html' %}

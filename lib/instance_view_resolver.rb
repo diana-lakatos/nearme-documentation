@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 require 'singleton'
 
 class InstanceViewResolver < DbViewResolver
   include Singleton
 
-  def find_templates(name, prefix, partial, details)
+  def find_templates(name, prefix, partial, details, _outside_app_allowed = false)
     views = _find_templates name, prefix, partial, details
 
     # Fallback to primary

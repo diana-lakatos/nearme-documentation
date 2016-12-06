@@ -4,14 +4,11 @@ class ScheduleExceptionRuleDrop < BaseDrop
   attr_reader :schedule_exception_rule
 
   # @!method label
-  #   Label for the exception rule
-  #   @return (see ScheduleExceptionRule#label)
+  #   @return [String] Label for the exception rule
   # @!method duration_range_start
-  #   Start time of the duration
-  #   @return (see ScheduleExceptionRule#duration_range_start)
+  #   @return [DateTime] Start time of the duration
   # @!method duration_range_end
-  #   End time of the duration
-  #   @return (see ScheduleExceptionRule#duration_range_end)
+  #   @return [DateTime] End time of the duration
   delegate :label, :duration_range_start, :duration_range_end, to: :schedule_exception_rule
 
   def initialize(schedule_exception_rule)

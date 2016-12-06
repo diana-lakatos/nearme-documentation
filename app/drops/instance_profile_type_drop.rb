@@ -6,8 +6,7 @@ class InstanceProfileTypeDrop < BaseDrop
   # @!method id
   #   @return [Integer] numeric identifier for this instance profile type
   # @!method profile_type
-  #   Type of instance profile
-  #   @return (see InstanceProfileType#profile_type)
+  #   @return [String] Type of instance profile (seller, buyer, default)
   delegate :id, :profile_type, to: :instance_profile_type
 
   def initialize(instance_profile_type)
@@ -31,6 +30,7 @@ class InstanceProfileTypeDrop < BaseDrop
     ['fulltext']
   end
 
+  # @return [String] custom_search_inputs value in the current context
   # @todo Investigate and remove invalid method
   def custom_search_inputs
     @context['custom_search_inputs']

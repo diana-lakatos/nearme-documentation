@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class DbViewResolver < ActionView::Resolver
-  def find_templates(_name, _prefix, _partial, _details)
-    fail NotImplementedError.new('You must implement find_templates method!')
+  def find_templates(_name, _prefix, _partial, _details, _outside_app_allowed = false)
+    raise NotImplementedError, 'You must implement find_templates method!'
   end
 
   protected

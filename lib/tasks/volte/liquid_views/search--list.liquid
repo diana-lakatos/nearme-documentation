@@ -22,12 +22,14 @@ partial: false
         {% cache_for searcher.filterable_custom_attributes_hash, params %}
           {% assign attributes = searcher.filterable_custom_attributes_hash %}
 
+          {% assign item_type = params['lg_custom_attributes']['item_type'][0] | downcase %}
+
           <li {{ attributes.item_type.wrapper_html_options }}>
             <fieldset>
               <legend>{{ attributes.item_type.label }}</legend>
               <select {{ attributes.item_type.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_type.name }}][]" id="">
                 <option value="">Please select</option>
-                {{ searcher.options_for_select.item_type | options_for_select: params['lg_custom_attributes']['item_type'][0]  }}
+                {{ searcher.options_for_select.item_type | options_for_select: item_type }}
               </select>
             </fieldset>
           </li>
@@ -239,10 +241,10 @@ partial: false
         {% endfor %}
       </section>
 
-      {% if searcher.next_page %}
-      <p class="search-results-more-trigger">
-        <button type="button" class="button button-default" data-page='{{ searcher.next_page }}'>More Results</button>
-      </p>
+      {% if searcher.total_pages >= searcher.next_page %}
+        <p class="search-results-more-trigger">
+          <button type="button" class="button button-default">More Results</button>
+        </p>
       {% endif %}
     {% endif %}
   </main>

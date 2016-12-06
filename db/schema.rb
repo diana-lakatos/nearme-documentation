@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161203020721) do
+ActiveRecord::Schema.define(version: 20161206141220) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -735,7 +735,8 @@ ActiveRecord::Schema.define(version: 20161203020721) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.json     "json_content",          default: {}
-    t.text     "fields",                default: [], array: true
+    t.text     "fields",                default: [],    array: true
+    t.boolean  "mark_for_deletion",     default: false
   end
 
   add_index "data_source_contents", ["instance_id", "data_source_id"], name: "index_data_source_contents_on_instance_id_and_data_source_id", using: :btree
@@ -857,25 +858,14 @@ ActiveRecord::Schema.define(version: 20161203020721) do
 
   create_table "dimensions_templates", force: :cascade do |t|
     t.string   "name",                 limit: 255
-    t.integer  "creator_id"
     t.integer  "instance_id"
     t.decimal  "weight",                           precision: 8, scale: 2
     t.decimal  "height",                           precision: 8, scale: 2
     t.decimal  "width",                            precision: 8, scale: 2
     t.decimal  "depth",                            precision: 8, scale: 2
-    t.string   "unit_of_measure",      limit: 255,                         default: "imperial"
-    t.string   "weight_unit",          limit: 255,                         default: "oz"
-    t.string   "height_unit",          limit: 255,                         default: "in"
-    t.string   "width_unit",           limit: 255,                         default: "in"
-    t.string   "depth_unit",           limit: 255,                         default: "in"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "details"
     t.datetime "deleted_at"
-    t.boolean  "use_as_default",                                           default: false
     t.integer  "entity_id"
     t.string   "entity_type",          limit: 255
-    t.string   "shippo_id"
     t.string   "description"
     t.integer  "shipping_provider_id"
   end

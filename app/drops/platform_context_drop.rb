@@ -4,47 +4,36 @@ class PlatformContextDrop < BaseDrop
   attr_reader :platform_context_decorator
 
   # @!method name
-  #   Name of the marketplace
-  #   @return (see Instance#name)
+  #   @return [String] Name of the marketplace
   # @!method bookable_noun
-  #   @return (see Instance#bookable_noun)
+  #   @return [String] name of the bookable/purchasable item for this marketplace
   #   @deprecated Use {TransactableTypeDrop#bookable_noun} instead
   # @!method pages
   #   @return [Array<PageDrop>] CMS pages for the current theme
   # @!method blog_url
-  #   Blog URL for the current theme
-  #   @return (see Theme#blog_url)
+  #   @return [String] Blog URL for the current theme
   # @!method facebook_url
-  #   Facebook URL for the current theme
-  #   @return (see Theme#facebook_url)
+  #   @return [String] Facebook URL for the current theme
   # @!method twitter_url
-  #   Twitter URL for the current theme
-  #   @return (see Theme#twitter_url)
+  #   @return [String] Twitter URL for the current theme
   # @!method gplus_url
-  #   Google Plus URL for the current theme
-  #   @return (see Theme#gplus_url)
+  #   @return [String] Google Plus URL for the current theme
   # @!method instagram_url
-  #   Instagram URL for the current theme
-  #   @return (see Theme#instagram_url)
+  #   @return [String] Instagram URL for the current theme
   # @!method youtube_url
-  #   Youtube URL for the current theme
-  #   @return (see Theme#youtube_url)
+  #   @return [String] Youtube URL for the current theme
   # @!method rss_url
-  #   RSS URL for the current theme
-  #   @return (see Theme#rss_url)
+  #   @return [String] RSS URL for the current theme
   # @!method linkedin_url
-  #   LinkedIn URL for the current theme
-  #   @return (see Theme#linkedin_url)
+  #   @return [String] LinkedIn URL for the current theme
   # @!method lessor
-  #   Lessor name for this marketplace
-  #   @return (see Instance#lessor)
+  #   @return [String] Lessor name for this marketplace
   #   @deprecated use {TransactableTypeDrop#lessor} instead
   # @!method lessors
   #   @return [String] plural of {Instance#lessor}
   #   @deprecated use {TransactableTypeDrop#lessor} instead
   # @!method lessee
-  #   Lessee name for this marketplace
-  #   @return (see Instance#lessee)
+  #   @return [String] Lessee name for this marketplace
   #   @deprecated use {TransactableTypeDrop#lessee} instead
   # @!method lessees
   #   @return [String] plural of {Instance#lessee}
@@ -52,34 +41,27 @@ class PlatformContextDrop < BaseDrop
   # @!method search_by_keyword_placeholder
   #   @return [String] placeholder for the search box on the homepage
   # @!method address
-  #   Address as set for the current theme
-  #   @return (see Theme#address)
+  #   @return [String] Address as set for the current theme
   # @!method phone_number
-  #   Phone number as set for the current theme
-  #   @return (see Theme#phone_number)
+  #   @return [String] Phone number as set for the current theme
   # @!method phone_number_noformat
   #   @return [String] phone number with all non-digit characters stripped
   # @!method site_name
-  #   Site name as set for the current theme
-  #   @return (see Theme#site_name)
+  #   @return [String] Site name as set for the current theme
   # @!method support_url
-  #   Support URL as set for the current theme
-  #   @return (see Theme#support_url)
+  #   @return [String] Support URL as set for the current theme
   # @!method support_email
-  #   Support email as set for the current theme
-  #   @return (see Theme#support_email)
+  #   @return [String] Support email as set for the current theme
   # @!method logo_image
   #   @return [ThemeImageUploader] uploader object for the logo image
   # @!method hero_image
   #   @return [ThemeImageUploader] uploader object for the hero image
   # @!method tagline
-  #   Tagline as set in the current theme
-  #   @return (see Theme#tagline)
+  #   @return [String] Tagline as set in the current theme
   # @!method is_company_theme?
   #   @return [Boolean] whether the owner object of the theme is a {CompanyDrop} object
   # @!method call_to_action
-  #   Call to action text as set for the current theme
-  #   @return (see Theme#call_to_action)
+  #   @return [String] Call to action text as set for the current theme
   # @!method bookable?
   #   @return [Boolean] whether bookable/purchaseable {TransactableTypeDrop} objects have been defined for this instance
   # @!method transactable_types
@@ -96,8 +78,7 @@ class PlatformContextDrop < BaseDrop
   #   @return [Array<TransactableTypeDrop>] array of transactable types for this marketplace;
   #     added for reverse compatibility
   # @!method wish_lists_icon_set
-  #   What set of icons to use for wishlists
-  #   @return (see Instance#wish_lists_icon_set)
+  #   @return [String] What set of icons to use for wishlists (e.g. heart)
   # @!method seller_attachments_enabled?
   #   @return [Boolean] whether seller attachments are enabled for this marketplace
   # @!method wish_lists_enabled?
@@ -107,18 +88,15 @@ class PlatformContextDrop < BaseDrop
   # @!method instance
   #   @return [InstanceDrop] instance object, the root object defining a marketplace
   # @!method enable_geo_localization
-  #   Whether geo localization is enabled for this instance
-  #   @return (see Instance#enable_geo_localization)
+  #   @return [Boolean] Whether geo localization is enabled for this instance
   # @!method split_registration?
   #   Whether split registration is enabled for this instance allowing separate
   #     profiles for buyers/sellers
   #   @return (see Instance#split_registration)
   # @!method enquirer_blogs_enabled
-  #   Whether blogs for enquirers (buyers) are enabled for this instance
-  #   @return (see Instance#enquirer_blogs_enabled)
+  #   @return [Boolean] Whether blogs for enquirers (buyers) are enabled for this instance
   # @!method lister_blogs_enabled
-  #   Whether blogs for listers (sellers) are enabled for this instance
-  #   @return (see Instance#lister_blogs_enabled)
+  #   @return [Boolean] Whether blogs for listers (sellers) are enabled for this instance
   # @!method debugging_mode_for_admins?
   #   @return [Boolean] whether debugging mode for admins is currently enabled
   # @!method projectable?
