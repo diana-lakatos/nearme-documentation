@@ -239,10 +239,10 @@ partial: false
         {% endfor %}
       </section>
 
-      {% if searcher.next_page %}
-      <p class="search-results-more-trigger">
-        <button type="button" class="button button-default" data-page='{{ searcher.next_page }}'>More Results</button>
-      </p>
+      {% if searcher.total_pages >= searcher.next_page %}
+        <p class="search-results-more-trigger">
+          <button type="button" class="button button-default">More Results</button>
+        </p>
       {% endif %}
     {% endif %}
   </main>
