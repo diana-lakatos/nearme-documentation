@@ -52,6 +52,8 @@ en:
     attributes:
       order:
         dates_fake: 'Delivery date'
+      transactable_dimensions_template:
+        dimensions_template_id: "Dimensions template (The below dimensions are the maximum weight and capacity. For more information see our <a href='/courier' target='_blank'>Courier Tips </a>.)"
 
     errors:
       models:
