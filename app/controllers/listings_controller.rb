@@ -173,6 +173,9 @@ class ListingsController < ApplicationController
 
   def find_project
     @transactable = Transactable.find(params[:id]).decorate
+  rescue ActiveRecord::RecordNotFound
+    @transactable = Transactable.find(Project.find(params[:id]).transactable_id).decorate
+    redirect_to @transactable.show_path, status: 301
   end
 
   def redirect_if_draft
