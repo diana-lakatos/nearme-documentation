@@ -327,6 +327,7 @@ class User < ActiveRecord::Base
 
       recoverable = find_or_initialize_with_error_by(:reset_password_token, reset_password_token)
       recoverable.skip_custom_attribute_validation = true
+      recoverable.skip_validations_for = %w(default seller buyer)
 
       if recoverable.persisted?
         if recoverable.reset_password_period_valid?
