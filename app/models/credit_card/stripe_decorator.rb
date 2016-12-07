@@ -6,6 +6,7 @@ class CreditCard::StripeDecorator
   end
 
   def active?
+    return false unless response.respond_to?(:success?)
     response.success?
   end
 

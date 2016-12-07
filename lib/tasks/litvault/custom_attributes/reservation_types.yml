@@ -22,9 +22,7 @@
   engage_other_counsel:
     label: 'Is it possible that local counsel, other than Handling Firm, will need to be engaged?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_attorney_additional_firm_fee_split"],"hide":[]},"no":{"show":[],"hide":[".order_properties_attorney_additional_firm_fee_split"]},"default":{"show":[],"hide":[".order_properties_attorney_additional_firm_fee_split"]}}'
 
@@ -43,9 +41,7 @@
   claims_will_be_subject_to_assessments:
     label: 'Is it possible that the Claims will be the subject of Multi-District Litigation or the potential for common benefit fee or expense assessments imposed against the Firms?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_claims_will_be_subject_to_assessments_percentage"],"hide":[]},"no":{"show":[],"hide":[".order_properties_claims_will_be_subject_to_assessments_percentage"]},"default":{"show":[],"hide":[".order_properties_claims_will_be_subject_to_assessments_percentage"]}}'
 
@@ -60,9 +56,7 @@
   additional_language_to_be_included:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to fees?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_language_that_needs_to_be_included"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_language_that_needs_to_be_included"]},"default":{"show":[],"hide":[".order_properties_additional_language_that_needs_to_be_included"]}}'
 
@@ -82,16 +76,12 @@
     label: 'Does the Engagement Agreement require attorneys to pay or advance litigation expenses related to the Claims?'
     html_tag: 'radio_buttons'
     default_value: 'No'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
 
   engagement_agreement_contain_sufficient_definition_of_expenses:
     label: 'Does the Engagement Agreement contain a definition of expenses with sufficient specificity that you do not need another definition of expenses?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_expenses_per_engagement_agreement_split"],"hide":[".order_properties_firm_agrees_to_this_litigation_expense_split"]},"no":{"show":[".order_properties_firm_agrees_to_this_litigation_expense_split"],"hide":[".order_properties_expenses_per_engagement_agreement_split", ".order_properties_firm_agrees_to_this_litigation_expense_split"]},"default":{"show":[],"hide":[".order_properties_expenses_per_engagement_agreement_split",".order_properties_firm_agrees_to_this_litigation_expense_split"]}}'
 
@@ -118,9 +108,7 @@
   additional_language_for_expenses:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to expenses?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_expenses"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_expenses"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_expenses"]}}'
 
@@ -152,9 +140,7 @@
   any_additional_language_to_be_included_case_responsibilities:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to case responsibilities?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_responsibilities"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_responsibilities"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_responsibilities"]}}'
 
@@ -178,25 +164,19 @@
   client_written_consent_to_agreement_required:
     label: 'Is the Client’s written consent to this Agreement and the association of Handling Firm required?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
 
   refering_firm_responsible_for_written_consent:
     label: 'Do you wish for Referring Firm to be responsible for obtaining necessary written consent from Client relating to this Agreement and the association of Handling Firm on the Claims?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     default_value: 'Yes'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]},"no":{"show":[".order_properties_agreement_is_not_effective_until_client_signs_consent"],"hide":[]},"default":{"show":[],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]}}'
 
   agreement_is_not_effective_until_client_signs_consent:
     label: 'Would you prefer the Agreement to state: “This Agreement is not effective until Client signs a written consent to the association of the Firms on the Claims.”'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
 
   nothing_in_this_agreement_will_change:
     label: 'Nothing in this Agreement will change or alter Client’s duties, responsibilities or rights under the terms of the Engagement Agreement.'
@@ -217,18 +197,14 @@
   disputes_with_referring_firm_by_arbitration_aaa_aaarules:
     label: 'Do you wish to have disputes with Referring Firm resolved by binding arbitration with the American Arbitration Association (“AAA”) applying the AAA’s Commercial Arbitration Rules?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     default_value: 'Yes'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[],"hide":[".order_properties_any_additional_language_dispute_resolution", ".order_properties_additional_comments_for_dispute_resolution"]},"no":{"show":[".order_properties_any_additional_language_dispute_resolution"],"hide":[".order_properties_additional_comments_for_dispute_resolution"]},"default":{"show":[],"hide":[".order_properties_any_additional_language_dispute_resolution", ".order_properties_additional_comments_for_dispute_resolution"]}}'
 
   any_additional_language_dispute_resolution:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to dispute resolution?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_dispute_resolution"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_dispute_resolution"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_dispute_resolution"]}}'
 
@@ -248,9 +224,7 @@
   any_additional_language_to_any_other_matter:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to any other matter?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     default_value: 'No'
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_any_other_matter"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_any_other_matter"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_any_other_matter"]}}'
 
@@ -287,9 +261,7 @@
   engage_other_counsel:
     label: 'Is it possible that local counsel, other than Handling Firm, will need to be engaged?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_attorney_additional_firm_fee_split"],"hide":[]},"no":{"show":[],"hide":[".order_properties_attorney_additional_firm_fee_split"]},"default":{"show":[],"hide":[".order_properties_attorney_additional_firm_fee_split"]}}'
 
   attorney_additional_firm_fee_split:
@@ -307,9 +279,7 @@
   claims_will_be_subject_to_assessments:
     label: 'Is it possible that the Claims will be the subject of Multi-District Litigation or the potential for common benefit fee or expense assessments imposed against the Firms?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_claims_will_be_subject_to_assessments_percentage"],"hide":[]},"no":{"show":[],"hide":[".order_properties_claims_will_be_subject_to_assessments_percentage"]},"default":{"show":[],"hide":[".order_properties_claims_will_be_subject_to_assessments_percentage"]}}'
 
   claims_will_be_subject_to_assessments_percentage:
@@ -328,9 +298,7 @@
   additional_language_to_be_included:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to fees?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_language_that_needs_to_be_included"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_language_that_needs_to_be_included"]},"default":{"show":[],"hide":[".order_properties_additional_language_that_needs_to_be_included"]}}'
 
   additional_language_that_needs_to_be_included:
@@ -349,17 +317,13 @@
   attorneys_to_pay_litigation_expenses:
     label: 'Will attorneys be required to pay or advance litigation expenses related to the Claims?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_engagement_agreement_contain_sufficient_definition_of_expenses"],"hide":[".order_properties_expenses_per_engagement_agreement_split", ".order_properties_firm_agrees_to_this_litigation_expense_split"]},"no":{"show":[],"hide":[".order_properties_engagement_agreement_contain_sufficient_definition_of_expenses",".order_properties_expenses_per_engagement_agreement_split",".order_properties_firm_agrees_to_this_litigation_expense_split"]},"default":{"show":[],"hide":[".order_properties_engagement_agreement_contain_sufficient_definition_of_expenses", ".order_properties_expenses_per_engagement_agreement_split", ".order_properties_firm_agrees_to_this_litigation_expense_split"]}}'
 
   engagement_agreement_contain_sufficient_definition_of_expenses:
     label: 'Does the Engagement Agreement contain a definition of expenses with sufficient specificity that you do not need another definition of expenses?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_expenses_per_engagement_agreement_split"],"hide":[".order_properties_firm_agrees_to_this_litigation_expense_split"]},"no":{"show":[".order_properties_firm_agrees_to_this_litigation_expense_split"],"hide":[".order_properties_expenses_per_engagement_agreement_split"]},"default":{"show":[],"hide":[".order_properties_firm_agrees_to_this_litigation_expense_split",".order_properties_firm_agrees_to_this_litigation_expense_split"]}}'
 
   expenses_per_engagement_agreement_split:
@@ -385,9 +349,7 @@
   additional_language_for_expenses:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to expenses?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_expenses"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_expenses"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_expenses"]}}'
 
   additional_comments_for_expenses:
@@ -418,9 +380,7 @@
   any_additional_language_to_be_included_case_responsibilities:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to case responsibilities?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_responsibilities"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_responsibilities"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_responsibilities"]}}'
 
   additional_comments_for_responsibilities:
@@ -447,25 +407,19 @@
   client_written_consent_to_agreement_required:
     label: 'Are Clients’ written consent to this Agreement and the association of Handling Firm required?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_refering_firm_responsible_for_written_consent"],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]},"no":{"show":[],"hide":[".order_properties_refering_firm_responsible_for_written_consent",".order_properties_agreement_is_not_effective_until_client_signs_consent"]},"default":{"show":[],"hide":[".order_properties_refering_firm_responsible_for_written_consent",".order_properties_agreement_is_not_effective_until_client_signs_consent"]}}'
 
   refering_firm_responsible_for_written_consent:
     label: 'Do you wish for Referring Firm to be responsible for obtaining necessary written consent from Client relating to this Agreement and the association of Handling Firm on the Claims?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_agreement_is_not_effective_until_client_signs_consent"],"hide":[]},"no":{"show":[],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]},"default":{"show":[],"hide":[".order_properties_agreement_is_not_effective_until_client_signs_consent"]}}'
 
   agreement_is_not_effective_until_client_signs_consent:
     label: 'Would you prefer the Agreement to state: “This Agreement is not effective until Client signs a written consent to the association of the Firms on the Claims.”'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
 
   nothing_in_this_agreement_will_change:
     label: 'Nothing in this Agreement will change or alter Client’s duties, responsibilities or rights under the terms of the Engagement Agreement.'
@@ -486,17 +440,13 @@
   disputes_with_referring_firm_by_arbitration_aaa_aaarules:
     label: 'Do you wish to have disputes with Referring Firm resolved by binding arbitration with the American Arbitration Association (“AAA”) applying the AAA’s Commercial Arbitration Rules?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[],"hide":[".order_properties_any_additional_language_dispute_resolution", ".order_properties_additional_comments_for_dispute_resolution"]},"no":{"show":[".order_properties_any_additional_language_dispute_resolution"],"hide":[".order_properties_additional_comments_for_dispute_resolution"]},"default":{"show":[],"hide":[".order_properties_any_additional_language_dispute_resolution", ".order_properties_additional_comments_for_dispute_resolution"]}}'
 
   any_additional_language_dispute_resolution:
     label: 'do you have any additional language you wish to include in this Agreement pertaining to dispute resolution?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_dispute_resolution"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_dispute_resolution"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_dispute_resolution"]}}'
 
   additional_comments_for_dispute_resolution:
@@ -519,9 +469,7 @@
   any_additional_language_to_any_other_matter:
     label: 'Do you have any additional language you wish to include in this Agreement pertaining to any other matter?'
     html_tag: 'radio_buttons'
-    custom_validators_attributes:
-      "[0]":
-        valid_values: ['Yes', 'No']
+    valid_values: ['Yes', 'No']
     wrapper_html_options_string: data-condition-field => '{"yes":{"show":[".order_properties_additional_comments_for_any_other_matter"],"hide":[]},"no":{"show":[],"hide":[".order_properties_additional_comments_for_any_other_matter"]},"default":{"show":[],"hide":[".order_properties_additional_comments_for_any_other_matter"]}}'
 
   additional_comments_for_any_other_matter:

@@ -5,10 +5,15 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
 
   def initialize(transactable_id, approval_request_id = nil)
     @transactable = Transactable.find_by_id(transactable_id)
-    @approval_request = @transactable.approval_requests.find(approval_request_id) if approval_request_id
 
-    @enquirer = @transactable.creator
-    @lister = @transactable.creator
+    # Silencing errors if for example the transactable is deleted before the email is sent out;
+    # the email will not be sent as should_be_processed? will return false
+    if @transactable.present?
+      @approval_request = @transactable.approval_requests.find(approval_request_id) if approval_request_id
+
+      @enquirer = @transactable.creator
+      @lister = @transactable.creator
+    end
   end
 
   def workflow_type
