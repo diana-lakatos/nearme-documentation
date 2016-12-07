@@ -2,9 +2,8 @@
 class User < ActiveRecord::Base
   include Searchable
 
-  include CreationFilter
-  include QuerySearchable
   include Approvable
+  include CreationFilter
   include CommunityValidators
 
   SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects].freeze

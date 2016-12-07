@@ -1,4 +1,5 @@
 class ApprovalRequestTemplateCreation
+
   attr_accessor :approval_request_template
 
   def initialize(approval_request_template)
