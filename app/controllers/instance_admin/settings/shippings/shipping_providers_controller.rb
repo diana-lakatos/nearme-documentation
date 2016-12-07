@@ -110,4 +110,10 @@ class InstanceAdmin::Settings::Shippings::ShippingProvidersController < Instance
                          settings: @provider.settings
     end
   end
+
+  protected
+
+  def permitting_controller_class
+    'Settings'
+  end
 end
