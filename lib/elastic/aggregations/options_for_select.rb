@@ -6,6 +6,25 @@ module Elastic
         new(aggregations, key: key).build
       end
 
+      def self.prepare(aggregations)
+        global = build(aggregations, key: :global)
+        custom = build(aggregations)
+
+        global.each_with_object({}) do |(key, values), agg|
+          agg[key] = merge(values, custom[key])
+        end
+      end
+
+      def self.merge(global, custom)
+        global.map do |b|
+          custom.find(-> { if_missing(b) }) { |a| a.key == b.key }
+        end
+      end
+
+      def self.if_missing(copy)
+        Elastic::Aggregations::OptionsForSelect::Buckets::Bucket.new(copy.key, 0)
+      end
+
       def initialize(aggregations, key:)
         @aggregations = aggregations
         @key = key
@@ -29,12 +48,34 @@ module Elastic
 
         def options
           @buckets
-            .map { |bucket| [label(bucket), bucket['key']] }
-            .select { |_label, value| value.present? }
+            .map { |bucket| Bucket.new(bucket['key'], bucket['doc_count']) }
+            .select(&:display?)
         end
 
-        def label(bucket)
-          format('%s (%s)', bucket['key'], bucket['doc_count']).strip
+        class Bucket
+          attr_accessor :key, :value
+
+          def initialize(key, value)
+            @key = key
+            @value = value
+          end
+
+          def label
+            key
+          end
+
+          def label_with_value
+            return key if value.zero?
+            format('%s (%s)', key, value).strip
+          end
+
+          def display?
+            key.present?
+          end
+
+          def disabled
+            value.zero?
+          end
         end
       end
     end
