@@ -1,0 +1,149 @@
+/* filters */
+
+.filters-a {
+    margin: 0 0 25px;
+
+    > .box {
+        margin: 0 0 25px;
+        padding: 20px 25px;
+        border-radius: 4px;
+        background: #f5f6f8;
+
+        &:after {
+            display: table;
+            clear: both;
+            content: '';
+        }
+
+
+        > .hx {
+            float: left;
+            margin: 0;
+            color: inherit;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 40px;
+            margin-top: 29px;
+        }
+
+        > div {
+            float: left;
+            margin: 0 0 0 50px;
+        }
+
+        > .drop {
+            position: relative;
+            width: 472px;
+        }
+
+        > .drop + .drop {
+            margin-left: 20px;
+        }
+
+        > .drop label {
+            display: inline-block;
+            margin: 0 0 5px;
+            font-size: 16px;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        > .tick {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 40px;
+            margin-top: 29px;
+        }
+
+        > .tick label:before {
+            margin-top: -1px;
+        }
+    }
+
+    > .results {
+        line-height: 40px;
+
+        &:after {
+            display: table;
+            clear: both;
+            content: '';
+        }
+
+        > .count {
+            float: left;
+            margin: 0;
+        }
+
+        > .sort {
+            float: right;
+            margin: 0;
+        }
+
+        > .sort label {
+            display: none;
+            margin: 0 10px 0 0;
+        }
+
+        > .sort select {
+            width: 200px;
+        }
+
+        &:first-child {
+            margin-top: -10px;
+        }
+    }
+
+    @include bp($screen-tablet) {
+
+        > .box {
+
+            > .hx {
+                float: none;
+                margin: 0 0 20px;
+                line-height: 1.2;
+            }
+
+            > .hx + .control-group {
+                margin-left: 0;
+            }
+
+            > .drop {
+                width: 290px;
+            }
+
+            > .tick {
+                float: none;
+                clear: both;
+                width: 100%;
+                margin-left: 0;
+                padding-top: 5px;
+            }
+        }
+    }
+
+    @include bp($screen-tablet-vertical) {
+
+        > .box {
+            padding: 20px;
+
+            .control-group {
+                float: none;
+                width: 100% !important;
+                margin: 0 0 15px;
+                margin-left: 0 !important;
+            }
+
+            > .tick {
+                margin-top: -7px;
+                padding-top: 0;
+            }
+        }
+    }
+
+    @include bp($screen-xs) {
+
+        > .results > .sort select {
+            width: 140px;
+        }
+    }
+}

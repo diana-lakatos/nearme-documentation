@@ -1,0 +1,168 @@
+/* card teaster */
+
+.card-a {
+    margin: 0 0 40px;
+    padding: 20px;
+    border-radius: 3px;
+    background: #fff;
+
+
+    .white & .box-a & {
+        background-color: #f5f6f8;
+    }
+
+    figure:first-child {
+        margin: -20px -20px 20px;
+    }
+
+    figure {
+        position: relative;
+        overflow: hidden;
+    }
+
+    figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    figure figcaption {
+        position: absolute;
+        left: 35px;
+        top: 35px;
+        width: 150px;
+        margin: -15px 0 0 -75px;
+        padding: 2px 15px 0;
+        background: #fff;
+        background: rgba(255, 255, 255, 0.9);
+        color: #2071B9;
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 24px;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    figure figcaption {
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+    }
+
+    .no-csstranforms & figure figcaption {
+        left: 0;
+        top: 10px;
+        width: auto;
+        margin: 0;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .numbers {
+        position: relative;
+        height: 50px;
+        margin: -70px -20px 20px;
+        padding: 0;
+        background: #231F20;
+        background: rgba(35, 31, 32, 0.55);
+        color: #fff;
+        font-size: 0;
+        letter-spacing: -1em;
+        line-height: 50px;
+        text-align: center;
+    }
+
+    .numbers li {
+        display: inline-block;
+        width: 49.999%;
+        font-size: 14px;
+        line-height: inherit;
+        letter-spacing: 0;
+        vertical-align: top;
+    }
+
+    .numbers li ~ li {
+        border-left: 1px solid #fff;
+    }
+
+    .numbers li span {
+        padding-left: 5px;
+    }
+
+    .numbers li a {
+        display: block;
+        color: inherit;
+    }
+
+    .numbers li:before {
+        display: none;
+    }
+
+    .action {
+        float: right;
+        margin: -3px 0 5px 10px;
+    }
+
+    .hx {
+        margin-bottom: 20px;
+        color: #0071c5;
+        font-size: 18px;
+        line-height: 1.3;
+        font-weight: bold;
+        overflow: hidden;
+    }
+
+    .hx a {}
+
+    .user {
+        margin-bottom: 20px;
+        font-size: 16px;
+        line-height: 30px;
+    }
+
+    p {
+        margin-bottom: 15px;
+        overflow: hidden;
+    }
+
+    .user img {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        margin: 0 5px 0 0;
+        vertical-align: top;
+    }
+
+    .hx + .user {
+        margin-top: -10px;
+    }
+
+    .location {}
+
+
+    .location:before {
+        display: inline-block;
+        content: '\e607';
+        margin: 0 5px 0 0;
+        font: 14px/1 $font-icons;
+        line-height: inherit;
+        vertical-align: top;
+    }
+
+
+    @include bp($screen-lg) {
+
+        .numbers li {
+            font-size: 14px;
+        }
+    }
+
+
+    @include bp($screen-mobile) {
+
+        .numbers {
+            height: 40px;
+            margin-top: -60px;
+            line-height: 40px;
+        }
+    }
+}

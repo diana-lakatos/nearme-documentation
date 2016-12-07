@@ -20,7 +20,8 @@ config.entry = {
   blog: 'blog-entry.js',
   dashboard: 'dashboard-entry.js',
   admin: 'admin-entry.js',
-  community: 'community-entry.js'
+  community: 'community-entry.js',
+  hallmark: 'hallmark-entry.js'
 };
 
 var assetHost = gutil.env.asset_host || '';

@@ -1,0 +1,92 @@
+/*!
+ * Layout
+/* ---------------------------------------- */
+
+html, body {
+    height: 100%;
+}
+
+.root-a, .footer-a {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-width: 320px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+
+    > .wrap {
+        margin: 0;
+    }
+
+    .contain {
+        max-width: 1280px;
+        margin-left: auto;
+        margin-right: auto;
+        border-left: 40px solid transparent;
+        border-right: 40px solid transparent;
+
+        @include bp($screen-tablet) {
+            border-left-width: 30px;
+            border-right-width: 30px;
+        }
+
+        @include bp($screen-mobile) {
+            border-left-width: 20px;
+            border-right-width: 20px;
+        }
+    }
+}
+
+// Sticky footer
+$footer-height: 455px;
+.root-a {
+    min-height: 100%;
+    margin-bottom: -$footer-height;
+
+    &:after {
+        content: "";
+        display: block;
+        height: $footer-height;
+    }
+}
+.footer-a {
+    min-height: $footer-height;
+}
+
+
+.wrap-a {
+    margin: 0;
+    padding: 100px 0;
+
+    &.reduce {
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    &.reduce-top {
+        padding-top: 60px;
+    }
+
+    &.white {
+        background: #fff;
+    }
+
+
+    @include bp($screen-tablet) {
+        padding: 60px 0;
+    }
+}
+
+@include bp($screen-mobile) {
+    .wrap-a,
+    .wrap-a.reduce,
+    .wrap-a.reduce-top {
+        margin: 0;
+        padding: 40px 0;
+    }
+}

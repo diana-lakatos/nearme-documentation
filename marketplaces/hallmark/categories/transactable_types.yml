@@ -1,0 +1,10 @@
+~
+# TRANSACTABLE_TYPE NAME:
+#   "CATEGORY NAME"
+#     mandatory: true
+#     assign_to_buyer_profile: true
+#     children:
+#       - name: 'Category A'
+#         children:
+#           - "Category B"
+#           - { name: "Category C", children: ['Category D', 'Category E'] }

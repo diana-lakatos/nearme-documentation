@@ -1,0 +1,131 @@
+/* grid */
+
+[class*="grid-a"] {
+    overflow: hidden;
+
+    > .wrap {
+        margin: -50px -25px 0;
+        font-size: 0;
+        letter-spacing: -1em;
+    }
+
+    > .wrap > .cell {
+        display: inline-block;
+        width: 33.333%;
+        margin: 0;
+        border: 1px solid transparent;
+        border-width: 50px 25px 0;
+        font-size: 14px;
+        letter-spacing: 0;
+        vertical-align: top;
+    }
+}
+
+
+/* grid modifiers */
+
+.grid-a-people-a {
+
+    > .wrap {
+        text-align: left;
+    }
+
+    > .wrap > .cell {
+        width: 24.999%;
+    }
+}
+
+.grid-a-projects-a {
+
+    > .wrap {
+        margin: -60px -30px 0;
+        text-align: left;
+    }
+
+    > .wrap > .cell {
+        border-width: 60px 30px 0;
+    }
+}
+
+.grid-a-follow-a {
+    margin: 30px -5px 80px;
+
+    > .wrap {
+        margin: -30px -40px 0;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    > .wrap > .cell {
+        width: 49.999%;
+        border-width: 30px 40px 0;
+        padding: 5px;
+        text-align: left;
+        display: inline-flex;
+        flex-direction: column;
+
+        .card-b {
+            flex-grow: 1;
+        }
+    }
+}
+
+@include bp($screen-lg) {
+
+    [class*="grid-a"] {
+
+        > .wrap {
+            margin: -40px -20px 0;
+        }
+
+        > .wrap > .cell {
+            border-width: 40px 20px 0;
+        }
+    }
+
+    .grid-a-people-a > .wrap > .cell {
+        width: 33.333%;
+    }
+}
+
+@include bp($screen-tablet) {
+
+    .grid-a-projects-a > .wrap > .cell {
+        width: 49.999%;
+    }
+
+    .grid-a-people-a > .wrap > .cell {
+        width: 49.999%;
+    }
+
+    .grid-a-search-a > .wrap > .cell {
+        width: 49.999%;
+    }
+
+    .grid-a-follow-a > .wrap > .cell {
+        display: block;
+        width: 100%;
+    }
+}
+
+@include bp($screen-tablet-vertical) {
+
+    [class*="grid-a"] {
+
+        > .wrap {
+            margin: -20px -10px 0;
+        }
+
+        > .wrap > .cell {
+            border-width: 20px 10px 0;
+        }
+    }
+}
+
+@include bp($screen-mobile) {
+
+    [class*="grid-a"] > .wrap > .cell {
+        display: block;
+        width: 100%;
+    }
+}

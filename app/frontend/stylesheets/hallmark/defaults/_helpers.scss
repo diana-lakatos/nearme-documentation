@@ -1,0 +1,98 @@
+/*!
+ * Helpers
+/* ---------------------------------------- */
+
+.offset {
+    position: absolute !important;
+    left: -10001px !important;
+    overflow: hidden !important;
+}
+
+.alignright {
+    float: right;
+    margin: 0 0 20px 20px;
+}
+
+.alignleft {
+    float: left;
+    margin: 0 20px 20px 0;
+}
+
+.alignright img,
+.alignleft img {
+    display: block;
+    max-width: none;
+}
+
+.aligncenter {
+    display: block;
+    text-align: center;
+    margin: 0 auto 20px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.hide-initially {
+    display: none;
+}
+
+.tal {
+    text-align: left !important;
+}
+
+.tac {
+    text-align: center !important;
+}
+
+.tar {
+    text-align: right !important;
+}
+
+.ie8 .hide-desktop {
+    display: none !important;
+}
+
+@media screen and (min-width: 1px) {
+    .hide {
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: $screen-tablet) {
+    .show-desktop {
+        display: block !important;
+    }
+    .hide-desktop {
+        display: none !important;
+    }
+}
+
+@include bp($screen-tablet) {
+    .show-tablet {
+        display: block !important;
+    }
+    .hide-tablet {
+        display: none !important;
+    }
+}
+
+@include bp($screen-mobile) {
+    .show-mobile {
+        display: block !important;
+    }
+    .hide-mobile {
+        display: none !important;
+    }
+}
+
+
+.translation_missing {
+    background: red !important;
+    font-size: 4em !important;
+    font-weight: bold !important;
+    display: inline-block !important;
+    padding: 5px 10px !important;
+    color: #fff !important;
+}

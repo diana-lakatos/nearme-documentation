@@ -1,0 +1,182 @@
+.form-a .media-group_link-form {
+    .control-label {
+        display: block;
+        position: relative;
+        float: none;
+        width: auto;
+        font-size: 16px;
+        margin: 0;
+    }
+    .label-photo {
+        @include clear;
+        margin-bottom: 0;
+
+        .control-group {
+            float: left;
+            width: 60%;
+        }
+
+        .or {
+            float: left;
+            line-height: 40px;
+            font-weight: bold;
+            margin-top: 22px;
+            width: 10%;
+            text-align: center;
+        }
+
+        .or + .control-group {
+            width: 30%;
+            text-align: right;
+            margin-top: 22px;
+        }
+
+        .control-group.file {
+            position: relative;
+            height: 40px;
+
+            label {
+                height: 40px;
+                width: 100%;
+                line-height: 40px;
+                text-align: center;
+                font-weight: bold;
+                color: #fff;
+                border: 1px solid #00aeef;
+                border-radius: 3px;
+                border-color: #cdcccc;
+                background-color: #fff;
+                color: #0071c5;
+                font-weight: normal;
+                padding-left: 10px;
+                padding-right: 10px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+
+            input {
+                display: none;
+            }
+        }
+
+        @include bp($screen-tablet) {
+            .control-group {
+                float: none;
+                width: 100%;
+            }
+
+            .or {
+                float: none;
+                width: 100%;
+                line-height: 1em;
+                margin-bottom: 1em;
+                display: block;
+            }
+
+            .or + .control-group {
+                float: none;
+                width: 100%;
+                text-align: left;
+            }
+        }
+    }
+}
+
+
+.project-links-listing {
+    counter-reset: link;
+    .link {
+        counter-increment: link;
+        position: relative;
+        padding-left: 40px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 30px;
+
+        &:before {
+            position: absolute;
+            margin-left: -40px;
+            content: counter(link);
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            border: 1px solid;
+            border-radius: 100%;
+            font-size: 10px;
+            font-weight: bold;
+        }
+    }
+
+    .link-preview {
+        @include clear;
+        margin: 0 0 20px;
+
+        figure {
+            padding: 2px;
+            border: 1px solid #ccc;
+            float: left;
+            margin: 0;
+
+            img {
+                display: block;
+            }
+        }
+
+        figure ~ * {
+            margin-left: 260px;
+        }
+
+        p {
+            margin-bottom: 5px;
+        }
+
+        @include bp($screen-tablet) {
+            figure {
+                float: none;
+                margin: 0 0 20px;
+                display: inline-block;
+            }
+
+            figure ~ * {
+                margin-left: 0;
+            }
+        }
+    }
+
+    .link-preview + .media-group_link-form {
+        display: none;
+
+        &.active {
+            display: block;
+        }
+    }
+
+    .actions {
+        float: right;
+        width: 120px;
+
+        .button-a {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.intel-affiliate-badge {
+    background: #2071B9;
+    color: #fff;
+    font-size: .5em;
+    padding: .2em .5em;
+    border-radius: .3em;
+    position: relative;
+    top: -.2em;
+    margin-left: 0.3em;
+    transition: border 0.25s, background 0.25s, color 0.25s, box-shadow 0.25s, opacity 0.25s;
+}
+
+a:hover .intel-affiliate-badge {
+    background: #00aeef;
+}
