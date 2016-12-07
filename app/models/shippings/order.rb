@@ -42,7 +42,7 @@ module Shippings
       end
 
       # FIX: bad approach
-      def provider
+      def shipping_provider
         instance.shipping_providers.first
       end
 
