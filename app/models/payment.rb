@@ -159,6 +159,7 @@ class Payment < ActiveRecord::Base
   def capture!
     return true if manual_payment? || total_amount_cents.zero?
     return false unless active_merchant_payment?
+    return false unless valid?
 
     charge = payment_gateway.charge(payable.owner, total_amount.cents, currency, self, authorization_token)
 
