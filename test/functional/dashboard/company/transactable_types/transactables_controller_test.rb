@@ -79,6 +79,7 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
     context 'CRUD' do
       setup do
         @related_instance = FactoryGirl.create(:instance)
+        FactoryGirl.create(:domain, target_id: @related_instance.id)
         PlatformContext.current = PlatformContext.new(@related_instance)
         @user = FactoryGirl.create(:user)
         sign_in @user
