@@ -16,7 +16,7 @@ class LongtailApiKeywordListIteratorTest < ActiveSupport::TestCase
   end
 
   setup do
-    @keyword_list = LongtailApi::KeywordList.new(StubbedEndpoint.new)
+    @keyword_list = LongtailApi::KeywordListIterator.new(StubbedEndpoint.new)
   end
 
   should 'be able to iterate through keywords' do
