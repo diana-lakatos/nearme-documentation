@@ -7,7 +7,7 @@ require 'ostruct'
 
 class Elastic::AggregationsTest < ActiveSupport::TestCase
 
-  test 'prepare required default aggregations' do
+  test 'require default aggregations' do
     fixtures = AggregationsFixtures.load
 
     assert_equal fixtures.keys, ['global','filtered_aggregations', 'custom_attributes']
