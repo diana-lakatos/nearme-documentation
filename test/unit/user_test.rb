@@ -257,12 +257,12 @@ class UserTest < ActiveSupport::TestCase
       @user = FactoryGirl.create(:user, name: 'jimmy falcon')
     end
 
-    should 'have capitalized name' do
-      assert_equal 'Jimmy Falcon', @user.name
+    should 'not have capitalized name' do
+      assert_equal 'jimmy falcon', @user.name
     end
 
-    should 'have capitalized first name' do
-      assert_equal 'Jimmy', @user.first_name
+    should 'not have capitalized first name' do
+      assert_equal 'jimmy', @user.first_name
     end
   end
 
