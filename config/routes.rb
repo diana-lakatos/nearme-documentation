@@ -492,6 +492,11 @@ DesksnearMe::Application.routes.draw do
           post :restore, on: :member
           post :restore_session, on: :collection
           resources :user_bans, only: [:create, :index, :destroy], controller: 'users/user_bans'
+          resources :user_profiles, only: [] do
+            member do
+              post :approve
+            end
+          end
         end
 
         resources :merchant_accounts do

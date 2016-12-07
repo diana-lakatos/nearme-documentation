@@ -396,6 +396,7 @@ class SecuredParams
       :category_search_type,
       :position,
       :search_only_enabled_profiles,
+      :admin_approval,
       custom_attributes_attributes: [:searchable, :id]
     ]
   end

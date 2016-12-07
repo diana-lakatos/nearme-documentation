@@ -151,7 +151,7 @@ module Elastic
           }
       end
 
-      if @instance_profile_type.search_only_enabled_profiles?
+      if @instance_profile_type.search_only_enabled_profiles? || @instance_profile_type.admin_approval?
         [
           {
             nested: {
