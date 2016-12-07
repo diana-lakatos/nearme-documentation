@@ -37,7 +37,7 @@ module Shippings
           order: @order,
           order_id: @order.id,
           dimensions_template_id: dimensions_template.id,
-          courier: @order.provider.shipping_provider_name,
+          courier: @order.shipping_provider.shipping_provider_name,
           notes: notes
         }
       end
