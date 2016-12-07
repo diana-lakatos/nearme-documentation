@@ -1,0 +1,57 @@
+%table.table.table-bordered
+  %tr
+    %th.well{colspan:2, width: '20%'}
+      = format('[%d]', delivery.id)
+      = delivery.order.transactable.name
+      = ' :: '
+      = delivery.pickup_date
+      = ' | '
+      = delivery.sender_address.address
+      = ' => '
+      = delivery.receiver_address.address
+
+      -# - if delivery.order.confirmed?
+      -#   = link_to :cancel, instance_admin_settings_shippings_delivery_path(delivery), method: :delete, class: 'pull-right btn btn-small btn-danger', data: { confirm: 'are you sure to cancel the order?' }
+
+  %tr
+    %th= 'delivery.order.transactable.name'
+    %td= delivery.order.transactable.name
+  %tr
+    %th= 'delivery.order.owner.name'
+    %td= delivery.order.owner.name
+  %tr
+    %th= 'delivery.order.creator.name'
+    %td= delivery.order.creator.name
+
+  %tr
+    %th delivery.order.state
+    %td= delivery.order.state
+
+  %tr
+    %th= 'delivery.details'
+    %td
+      = l delivery.created_at
+      = '/'
+      = delivery.dimensions_template.description
+
+  %tr
+    %th delivery.order_reference
+    %td= delivery.order_reference
+  %tr
+    %th delivery.tracking_url
+    %td= delivery.tracking_url
+  %tr
+    %th delivery.tracking_reference
+    %td= delivery.tracking_reference
+  %tr
+    %th= 'delivery.sender_address.address'
+    %td
+      = delivery.sender_address.full_name
+      = ' @ '
+      = delivery.sender_address.address
+  %tr
+    %th= 'delivery.receiver_address.address'
+    %td
+      = delivery.receiver_address.full_name
+      = ' @ '
+      = delivery.receiver_address.address

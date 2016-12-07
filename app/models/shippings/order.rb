@@ -19,6 +19,9 @@ module Shippings
 
           inbound_sender.errors.each { |k, v| errors.add("inbound_sender_#{k}", v) }
           outbound_receiver.errors.each { |k, v| errors.add("outbound_receiver_#{k}", v) }
+
+          inbound_sender.address.errors.each { |k, v| errors.add("inbound_pickup_address#{k}", v) }
+          outbound_receiver.address.errors.each { |k, v| errors.add("outbound_return_address_#{k}", v) }
         end
         true
       end
@@ -47,11 +50,11 @@ module Shippings
       end
 
       def inbound
-        deliveries.first
+        deliveries.last(2).first
       end
 
       def outbound
-        deliveries.last
+        deliveries.last(2).last
       end
 
       def inbound_pickup_date=(date_string)
@@ -76,8 +79,12 @@ module Shippings
         DateTimeHandler.new
       end
 
-      delegate :address, :address=, :longitude, :longitude=, :latitude, :latitude=, to: :outbound_return_address, prefix: true
-      delegate :address, :address=, :longitude, :longitude=, :latitude, :latitude=, to: :inbound_pickup_address, prefix: true
+      delegate :address, :address=, :postcode, :postcode=, to: :outbound_return_address, prefix: true
+      delegate :address, :address=, :postcode, :postcode=, to: :inbound_pickup_address, prefix: true
+      delegate :country, :country=, :city, :city=, to: :outbound_return_address, prefix: true
+      delegate :country, :country=, :city, :city=, to: :inbound_pickup_address, prefix: true
+      delegate :state, :state=, to: :outbound_return_address, prefix: true
+      delegate :state, :state=, to: :inbound_pickup_address, prefix: true
 
       def inbound_pickup_address_address=(address)
         inbound_pickup_address.formatted_address = address
@@ -108,7 +115,9 @@ module Shippings
       private
 
       def client
-        Deliveries.courier name: provider.shipping_provider_name, settings: provider.settings
+        Deliveries.courier name: shipping_provider.shipping_provider_name,
+                           settings: shipping_provider.settings,
+                           logger: Deliveries::RequestLogger.new(context: self)
       end
     end
   end

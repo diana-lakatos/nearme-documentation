@@ -9,10 +9,11 @@ require 'sendle_api/html_client'
 
 module SendleApi
   class Client
-    def initialize(sendle_api_key: nil, sendle_id: nil, environment: 'test')
+    def initialize(sendle_api_key: nil, sendle_id: nil, environment: 'test', logger: nil)
       @api_key = sendle_api_key || ENV['SENDLE_API_KEY']
       @sendle_id = sendle_id || ENV['SENDLE_ID']
       @environment = environment || 'test'
+      @logger = logger
     end
 
     def ping
@@ -45,7 +46,10 @@ module SendleApi
     SENDLE_PRODUCTION_URL = 'https://www.sendle.com/api/'.freeze
 
     def api
-      SendleApi::HttpClient.new user: @sendle_id, password: @api_key, url: sendle_api_url
+      SendleApi::HttpClient.new user: @sendle_id,
+                                password: @api_key,
+                                url: sendle_api_url,
+                                logger: @logger
     end
 
     def sendle_api_url

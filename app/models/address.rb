@@ -22,7 +22,9 @@ class Address < ActiveRecord::Base
 
   before_validation :update_address, if: ->(l) { !l.raw_address? }
   before_validation :parse_address_components, if: ->(l) { !l.raw_address? }
-  before_validation :clear_fields, if: ->(l) { l.raw_address? }
+
+  # not sure if this is buggy
+  # before_validation :clear_fields, if: ->(l) { l.raw_address? }
 
   scope :bounding_box, lambda  { |box|
     where('addresses.latitude > ? AND addresses.latitude < ?', box[:bottom_left][:lat], box[:top_right][:lat])
@@ -92,7 +94,7 @@ class Address < ActiveRecord::Base
   end
 
   def address
-    read_attribute(:formatted_address).presence || read_attribute(:address)
+    self[:formatted_address].presence || self[:address]
   end
 
   def state_code

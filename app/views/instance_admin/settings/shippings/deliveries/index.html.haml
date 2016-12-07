@@ -1,0 +1,8 @@
+.content-container
+  %h4
+    = t(:delivery_list)
+  .row
+    .table-container.col-xs-12
+      = will_paginate(collection)
+      = render collection
+      = will_paginate(collection)

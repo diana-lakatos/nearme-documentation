@@ -55,13 +55,15 @@ module Shippings
                          lastname: lister.last_name,
                          email: lister.email,
                          phone: lister.full_mobile_number,
-                         address: user_address
+                         address: lister_detailed_address
       end
 
-      def user_address
+      def lister_detailed_address
         address = OrderListerAddress.new(@order.host).find
-        address.fetch_address!
-        address.dup
+        address.raw_address = true
+        address.dup.tap do |add|
+          add.add_validator Deliveries::Sendle::Validations::Address.new
+        end
       end
 
       def lister
