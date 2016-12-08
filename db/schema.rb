@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161206141220) do
+ActiveRecord::Schema.define(version: 20161208003635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -858,14 +858,25 @@ ActiveRecord::Schema.define(version: 20161206141220) do
 
   create_table "dimensions_templates", force: :cascade do |t|
     t.string   "name",                 limit: 255
+    t.integer  "creator_id"
     t.integer  "instance_id"
     t.decimal  "weight",                           precision: 8, scale: 2
     t.decimal  "height",                           precision: 8, scale: 2
     t.decimal  "width",                            precision: 8, scale: 2
     t.decimal  "depth",                            precision: 8, scale: 2
+    t.string   "unit_of_measure",      limit: 255,                         default: "imperial"
+    t.string   "weight_unit",          limit: 255,                         default: "oz"
+    t.string   "height_unit",          limit: 255,                         default: "in"
+    t.string   "width_unit",           limit: 255,                         default: "in"
+    t.string   "depth_unit",           limit: 255,                         default: "in"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "details"
     t.datetime "deleted_at"
+    t.boolean  "use_as_default",                                           default: false
     t.integer  "entity_id"
     t.string   "entity_type",          limit: 255
+    t.string   "shippo_id"
     t.string   "description"
     t.integer  "shipping_provider_id"
   end
@@ -1154,7 +1165,6 @@ ActiveRecord::Schema.define(version: 20161206141220) do
     t.boolean  "create_company_on_sign_up",                   default: false
     t.boolean  "search_only_enabled_profiles"
     t.string   "search_engine",                   limit: 255, default: "postgresql", null: false
-    t.boolean  "admin_approval",                              default: false,        null: false
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
@@ -2765,6 +2775,7 @@ ActiveRecord::Schema.define(version: 20161206141220) do
     t.boolean  "require_transactable_during_onboarding",                                         default: true
     t.boolean  "access_restricted_to_invited"
     t.boolean  "auto_seek_collaborators",                                                        default: false
+    t.string   "default_sort_by"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2945,7 +2956,6 @@ ActiveRecord::Schema.define(version: 20161206141220) do
     t.datetime "updated_at"
     t.boolean  "enabled",                  default: false
     t.datetime "onboarded_at"
-    t.boolean  "approved",                 default: false, null: false
   end
 
   add_index "user_profiles", ["instance_id", "user_id", "profile_type"], name: "index_user_profiles_on_instance_id_and_user_id_and_profile_type", unique: true, using: :btree
