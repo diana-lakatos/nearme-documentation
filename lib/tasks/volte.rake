@@ -367,6 +367,7 @@ namespace :volte do
       component.name = 'Fill out the information below'
       component.form_fields = [
         { 'user' => 'name' },
+        { 'user' => 'user_birthday' },
         { 'user' => 'contact_person_name ' },
         { 'location' => 'address' },
         { 'user' => 'mobile_phone' },
