@@ -19,6 +19,9 @@ partial: false
     <div class="home-search">
       <form class="home_search search-form" action="/search" method="get">
         <input id="filter" name="filter" type="hidden" />
+        <input type="hidden" name="sort" value="created_at_desc" />
+        <input type="hidden" name="lg_custom_attributes[item_type][]" value="" />
+
         <ul class="search-filters">
           <li data-filter="Dress" data-category-link>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="-9.021 -11.284 101 126.097"><g stroke-miterlimit="10"><path d="M42.009 106.085c-18.472 0-35.347-3.759-45.141-10.059a1.432 1.432 0 0 1 1.548-2.409c9.21 5.922 25.913 9.604 43.592 9.604 17.57 0 33.689-3.479 43.118-9.304a1.433 1.433 0 0 1 1.969.465 1.43 1.43 0 0 1-.466 1.971c-9.858 6.092-26.54 9.732-44.62 9.732z"/><path d="M41.773 114.312c-21.336 0-40.824-3.762-49.649-9.583a1.43 1.43 0 0 1-.546-1.715l.104-.273.049-.11 34.977-71.463-3.977-25.457a1.435 1.435 0 0 1 .475-1.304c.146-.127 3.66-3.149 8.159-3.149 2.548 0 6.098 1.005 9.232 5.493 3.135-4.487 6.685-5.493 9.233-5.493 4.5 0 8.013 3.021 8.161 3.149.352.309.532.77.481 1.235L55.73 31.131l35.495 71.493c.065.126.107.264.13.404l.104.643a1.432 1.432 0 0 1-.662 1.454c-9.2 5.668-27.986 9.187-49.024 9.187zm-47.021-11.329c8.842 5.162 27.034 8.459 47.021 8.459 19.502 0 37.545-3.197 46.556-8.198L52.974 32.031a1.42 1.42 0 0 1-.143-.792l2.703-25.101c-.998-.701-3.199-2.009-5.703-2.009-3.043 0-5.685 1.958-7.852 5.822a1.439 1.439 0 0 1-1.252.734h-.259c-.52 0-.998-.281-1.251-.734-2.167-3.863-4.809-5.821-7.852-5.821-2.472 0-4.649 1.276-5.667 1.984l3.913 25.058c.045.29 0 .587-.129.851l-34.73 70.96z"/><path d="M29.969 3.473a1.436 1.436 0 0 1-1.435-1.436V-9.35a1.435 1.435 0 0 1 2.87 0V2.038a1.433 1.433 0 0 1-1.435 1.435zM51.1 3.473a1.437 1.437 0 0 1-1.435-1.436V-9.35a1.435 1.435 0 0 1 2.87 0V2.038A1.435 1.435 0 0 1 51.1 3.473zM41.506 35.333c-6.967 0-12.635-2.464-13.006-2.629a1.437 1.437 0 0 1-.727-1.896 1.432 1.432 0 0 1 1.894-.728c.129.056 13.097 5.669 23.064-.659a1.436 1.436 0 0 1 1.538 2.423c-4.164 2.646-8.687 3.489-12.763 3.489z"/><path d="M47.557 82.68a1.436 1.436 0 0 1-1.423-1.26l-5.821-47.194a1.436 1.436 0 0 1 1.248-1.602 1.444 1.444 0 0 1 1.602 1.25l5.82 47.194a1.435 1.435 0 0 1-1.426 1.612z"/><path d="M35.791 59.652a1.435 1.435 0 0 1-1.399-1.762l5.694-24.294a1.437 1.437 0 0 1 2.796.654l-5.695 24.295a1.436 1.436 0 0 1-1.396 1.107z"/></g></svg>
@@ -48,9 +51,19 @@ partial: false
               <li data-filter="Accessories">Accessories</li>
             </ul>
           </div>
-          <input type="hidden" name="sort" value="created_at_desc"/>
-          <input type="hidden" name="lg_custom_attributes[item_type][]" value=""/>
-          <input class="search-input" name="query" placeholder="Search" type="text" />
+
+          <ul class="AvailabilityFilters">
+            <li class="datetimepicker">
+              <input type="text" name="availability_exceptions[fromDatetimepicker]" data-availability-filter="from" value="{{ params['availability_exceptions']['fromDatetimepicker'] }}" placeholder="&#xf073; From" />
+              <input type="hidden" name="availability_exceptions[from]" value="{{ params['availability_exceptions']['from'] }}" />
+            </li>
+
+            <li class="datetimepicker">
+              <input type="text" name="availability_exceptions[toDatetimepicker]" data-availability-filter="to" value="{{ params['availability_exceptions']['toDatetimepicker'] }}" placeholder="&#xf073; To" />
+              <input type="hidden" name="availability_exceptions[to]" value="{{ params['availability_exceptions']['to'] }}" />
+            </li>
+          </ul>
+
           <button>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 447.54001 447.62668"><path d="M270.413 261.831l-4.138 4.518-4.517 4.148c-24.753 22.637-56.907 35.112-90.552 35.112-35.882 0-69.608-13.974-94.977-39.343-25.328-25.328-39.27-59.064-39.27-94.986 0-35.923 13.942-69.65 39.27-94.977 25.37-25.368 59.095-39.342 94.977-39.342 35.872 0 69.608 13.974 94.977 39.342 25.368 25.369 39.342 59.106 39.342 94.977 0 33.644-12.475 65.8-35.112 90.551m169.687 142.4L308.963 273.094c21.726-29.332 33.521-64.874 33.521-101.813 0-45.75-17.811-88.766-50.162-121.117C259.972 17.814 216.954.001 171.206.001c-45.746 0-88.765 17.814-121.115 50.163C17.78 82.474 0 125.49 0 171.281c0 45.8 17.781 88.817 50.09 121.116 32.351 32.35 75.368 50.173 121.116 50.173 36.94 0 72.483-11.807 101.804-33.52l131.136 131.132a25.299 25.299 0 0 1 17.977 7.445c6.787 0 13.173-2.65 17.977-7.444 9.918-9.917 9.918-26.047 0-35.953"/></svg>
           </button>
