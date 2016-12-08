@@ -6,6 +6,7 @@ class CheckoutController < ApplicationController
   before_action :build_shipping_address, only: [:show, :update]
   before_action :build_payment_documents, only: [:show, :back]
   before_action :set_countries_states, only: [:show, :update, :back]
+  before_action :blank_pricing_if_price_present_in_checkout, only: [:show]
 
   def show
     @order.try(:last_search_json=, cookies[:last_search])
@@ -119,4 +120,19 @@ class CheckoutController < ApplicationController
 
     @order.shipping_address = Shippings::ShippingAddressBuilder.build(@order, @order.user)
   end
+
+  # We want the price by default to be nil if the pricing select is in the form
+  def blank_pricing_if_price_present_in_checkout
+    @order.reservation_type.form_components.each do |form_component|
+      form_component.form_fields.each do |field|
+        if field == { 'reservation' => 'price' }
+          @order.transactable_pricing_id = nil
+          return true
+        end
+      end
+    end
+
+    true
+  end
+
 end
