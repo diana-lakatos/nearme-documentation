@@ -1,6 +1,7 @@
 - if Shippings.enabled?(f.object.transactable_type)
   = f.simple_fields_for :transactable_dimensions_template, f.object.transactable_dimensions_template || f.object.build_transactable_dimensions_template do |tdt_form|
-    = tdt_form.input :dimensions_template_id, required: true, as: :radio_buttons, collection: Shippings.package_list(@transactable), input_html: { class: 'checkout-select' }
+    = tdt_form.input :dimensions_template_id, required: true, as: :radio_buttons, collection: Shippings.package_list(@transactable),
+      input_html: { class: 'checkout-select' }, label: t('activerecord.attributes.transactable_dimensions_template.dimensions_template_id', default: 'Dimensions template').html_safe
     - if f.error(:transactable_dimensions_template).present?
       .has-error.form-group
         %span.help-block

@@ -5,7 +5,7 @@ en:
         address:
           attributes:
             address:
-              invalid_pickup_location: is not valid for pickup
+              invalid_pickup_location: 'is not valid for pickup'
         payment:
           attributes:
             payment_gateway:
