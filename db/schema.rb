@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161208003635) do
+ActiveRecord::Schema.define(version: 20161208131608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1165,6 +1165,8 @@ ActiveRecord::Schema.define(version: 20161208003635) do
     t.boolean  "create_company_on_sign_up",                   default: false
     t.boolean  "search_only_enabled_profiles"
     t.string   "search_engine",                   limit: 255, default: "postgresql", null: false
+    t.boolean  "admin_approval",                              default: false,        null: false
+    t.string   "default_sort_by"
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
@@ -2956,6 +2958,7 @@ ActiveRecord::Schema.define(version: 20161208003635) do
     t.datetime "updated_at"
     t.boolean  "enabled",                  default: false
     t.datetime "onboarded_at"
+    t.boolean  "approved",                 default: false, null: false
   end
 
   add_index "user_profiles", ["instance_id", "user_id", "profile_type"], name: "index_user_profiles_on_instance_id_and_user_id_and_profile_type", unique: true, using: :btree
