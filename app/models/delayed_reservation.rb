@@ -51,7 +51,7 @@ class DelayedReservation < Reservation
   end
 
   def start_time_present
-    if transactable_pricing.hour_booking?
+    if transactable_pricing && transactable_pricing.hour_booking?
       errors.add(:start_time, :blank) unless start_time.present? && start_time.split(':').count == 2
     end
   end
@@ -87,6 +87,8 @@ class DelayedReservation < Reservation
   def update_reservation_period
     @dates = dates_fake
     return if @dates.blank?
+    return if transactable_pricing.blank?
+
     if transactable_pricing.hour_booking? || transactable_pricing.day_booking?
       set_start_minute
       @start_minute = start_minute.try(:to_i)

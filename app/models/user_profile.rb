@@ -6,7 +6,7 @@ class UserProfile < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  belongs_to :user
+  belongs_to :user, touch: true
   belongs_to :instance_profile_type
   has_many :customizations, as: :customizable
 
@@ -33,6 +33,14 @@ class UserProfile < ActiveRecord::Base
   scope :by_search_query, lambda { |query|
     joins(:user).merge(User.by_search_query(query))
   }
+
+  def enabled
+    check_approved && super
+  end
+
+  def check_approved
+    instance_profile_type&.admin_approval? ? approved : true
+  end
 
   def custom_validators
     instance_profile_type.try(:custom_validators)

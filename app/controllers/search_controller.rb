@@ -16,7 +16,7 @@ class SearchController < ApplicationController
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
   def index
-    search_params = params.merge(per_page: per_page)
+    search_params = params.merge(per_page: per_page).reverse_merge(sort: @transactable_type.default_sort_by)
     @searcher = InstanceType::SearcherFactory.new(@transactable_type, search_params, result_view, current_user).get_searcher
     @searcher.paginate_results([(params[:page].presence || 1).to_i, 1].max, per_page)
     remember_search_query

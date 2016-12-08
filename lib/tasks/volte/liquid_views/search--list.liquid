@@ -193,7 +193,7 @@ partial: false
                 <option value="name_desc" {% if searcher.sort == 'name_desc' %}selected{% endif %}>Item name descending</option>
                 <option value="all_prices_asc" {% if searcher.sort == 'all_prices_asc' %}selected{% endif %}>Price ascending</option>
                 <option value="all_prices_desc" {% if searcher.sort == 'all_prices_desc' %}selected{% endif %}>Price descending</option>
-                <option value="created_at_desc" {% if searcher.sort == 'created_at_desc' or searcher.sort == 'relevance' %}selected{% endif %}>Newest</option>
+                <option value="created_at_desc" {% if searcher.sort == 'created_at_desc' %}selected{% endif %}>Newest</option>
                 <option value="popularity" {% if searcher.sort == 'popularity' %}selected{% endif %}>Popularity</option>
               </select>
             </label>

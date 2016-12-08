@@ -90,6 +90,8 @@ en:
         default_properties: ""
       "order/shipping_address/address":
         address: Shipping address
+      instance_profile_type:
+        admin_approval: 'Requires admin approval'
   connections:
     facebook:
       count:
@@ -350,6 +352,9 @@ en:
         new_key: 'Add key'
         show_default: "Show Default"
         date_time: 'Date / Time'
+        approve:
+          on_true: 'Disapprove'
+          on_false: 'Approve'
 
       confirmations:
         delete: 'Are you sure?'
@@ -1549,6 +1554,7 @@ en:
       booking_successful: 'Your booking was requested successfully!'
 
     user_profile:
+      requires_approval: 'Your profile has to be first approved to be visible.'
       view_profile: 'View Profile'
       view_profile_html: 'View <span class="hidden-xs">Profile</span>'
       submit: 'Save'

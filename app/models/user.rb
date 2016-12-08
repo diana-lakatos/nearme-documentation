@@ -2,13 +2,14 @@
 class User < ActiveRecord::Base
   include Searchable
 
+  include Approvable
+  include CreationFilter
+  include CommunityValidators
   include CreationFilter
   include QuerySearchable
-  include Approvable
-  include CommunityValidators
+  include UserNameUtility
 
   SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects].freeze
-  MAX_NAME_LENGTH = 30
   SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation).freeze
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
@@ -23,8 +24,10 @@ class User < ActiveRecord::Base
   acts_as_tagger
 
   extend FriendlyId
-  has_metadata accessors: [:support_metadata]
+
   friendly_id :name, use: [:slugged, :finders]
+
+  has_metadata accessors: [:support_metadata]
 
   mount_uploader :avatar, AvatarUploader
   mount_uploader :cover_image, CoverImageUploader
@@ -50,8 +53,6 @@ class User < ActiveRecord::Base
 
   # strange bug, serialize stops to work if Taggable is included before it
   include Taggable
-
-  delegate :to_s, to: :name
 
   belongs_to :domain
   belongs_to :instance
@@ -253,9 +254,6 @@ class User < ActiveRecord::Base
 
   validates_with CustomValidators
 
-  validates :name, :first_name, presence: true
-
-  validate :validate_name_length_from_fullname
   validate :has_verified_phone_number, if: ->(u) { u.must_have_verified_phone_number }
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
@@ -327,6 +325,7 @@ class User < ActiveRecord::Base
 
       recoverable = find_or_initialize_with_error_by(:reset_password_token, reset_password_token)
       recoverable.skip_custom_attribute_validation = true
+      recoverable.skip_validations_for = %w(default seller buyer)
 
       if recoverable.persisted?
         if recoverable.reset_password_period_valid?
@@ -526,44 +525,6 @@ class User < ActiveRecord::Base
 
   def confirmed_reservations
     orders.reservations.confirmed
-  end
-
-  def name(avoid_stack_too_deep = nil)
-    avoid_stack_too_deep = false if avoid_stack_too_deep.nil?
-    name_from_components(avoid_stack_too_deep).presence || self[:name].to_s.split.collect { |w| w[0] = w[0].capitalize; w }.join(' ')
-  end
-
-  def name_from_components(avoid_stack_too_deep)
-    return '' if avoid_stack_too_deep
-    [first_name, middle_name, last_name].select(&:present?).join(' ')
-  end
-
-  def first_name
-    self[:first_name] || get_first_name_from_name
-  end
-
-  def middle_name
-    self[:middle_name] || get_middle_name_from_name
-  end
-
-  def last_name
-    self[:last_name] || get_last_name_from_name
-  end
-
-  def name_with_state
-    name + (deleted? ? ' (Deleted)' : (banned? ? ' (Banned)' : ''))
-  end
-
-  def secret_name
-    secret_name = last_name.present? ? last_name[0] : middle_name.try(:[], 0)
-    secret_name = secret_name.present? ? "#{first_name} #{secret_name[0]}." : first_name
-
-    if properties.try(:is_intel) == true
-      secret_name += ' (Intel)'
-      secret_name.html_safe
-    else
-      secret_name
-    end
   end
 
   # Whether to validate the presence of a password
@@ -1156,27 +1117,6 @@ class User < ActiveRecord::Base
   end
 
   private
-
-  def get_first_name_from_name
-    name(true).split[0...1].join(' ')
-  end
-
-  def get_middle_name_from_name
-    name(true).split.length > 2 ? name(true).split[1] : ''
-  end
-
-  def get_last_name_from_name
-    name(true).split.length > 1 ? name(true).split.last : ''
-  end
-
-  # This validation is necessary due to the inconsistency of the name inputs in the app
-  def validate_name_length_from_fullname
-    errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGTH) if get_first_name_from_name.length > MAX_NAME_LENGTH
-
-    errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGTH) if get_middle_name_from_name.length > MAX_NAME_LENGTH
-
-    errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH) if get_last_name_from_name.length > MAX_NAME_LENGTH
-  end
 
   def current_instance
     PlatformContext.current.instance

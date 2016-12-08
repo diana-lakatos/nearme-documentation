@@ -71,7 +71,8 @@ namespace :volte do
         lessor: 'Lender',
         lessee: 'Borrower',
         enable_reviews: true,
-        require_transactable_during_onboarding: true
+        require_transactable_during_onboarding: true,
+        default_sort_by: 'created_at_desc'
       }
       transactable_type.default_availability_template = @instance.availability_templates.where(name: '24/7').first
 

@@ -137,7 +137,7 @@ end
 
 Then /I am correctly signed in/ do
   user = User.find_by_email('valid@example.com')
-  assert_equal "I Am User", user.name
+  assert_equal 'I am User', user.name
 end
 
 Then /^I do (not )?have avatar$/ do |without_avatar|
