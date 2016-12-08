@@ -82,7 +82,7 @@ Then /I should have password/ do
 end
 
 When /I manually sign up with valid credentials$/ do
-  sign_up_manually({:name => 'I am user'})
+  sign_up_manually({:name => 'I am User'})
 end
 
 When /I navigate away via Log In link and sign in$/ do
