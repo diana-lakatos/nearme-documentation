@@ -34,6 +34,7 @@ class LiquidView
   Liquid::Template.register_tag('link_to_add_association', LinkToAddAssociationTag)
   Liquid::Template.register_tag('link_to_remove_association', LinkToRemoveAssociationTag)
   Liquid::Template.register_tag('title', TitleTag)
+  Liquid::Template.register_tag('query_graph', QueryGraphTag)
 
   def self.call(template)
     "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"

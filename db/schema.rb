@@ -975,6 +975,16 @@ ActiveRecord::Schema.define(version: 20161213135545) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
+  create_table "graph_queries", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "name"
+    t.text     "query_string"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "graph_queries", ["instance_id"], name: "index_graph_queries_on_instance_id", using: :btree
+
   create_table "group_members", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "user_id"
@@ -3287,4 +3297,5 @@ ActiveRecord::Schema.define(version: 20161213135545) do
     t.string   "workflow_type",   limit: 255
   end
 
+  add_foreign_key "graph_queries", "instances"
 end

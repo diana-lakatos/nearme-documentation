@@ -1,18 +1,4 @@
-{% assign g = '
-  query LocationQuery($location_id: ID!){
-    location(id: $location_id) {
-      name
-      description
-      availability
-      name_and_desc
-      company{
-        url
-        id
-        description
-      }
-    }
-  }' | query: location_id: location.id
-%}
+{% query_graph 'location', result_name: g, location_id: location.id %}
 
 {% cache_for location, location.company, location.availability, description %}
   <h2>{{ 'location.the_location' || translate }}</h2>
