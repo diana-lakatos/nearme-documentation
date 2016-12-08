@@ -16,7 +16,7 @@
 
           <div class="query-field">
             <label for="field-q" class="struct-label">Search keyword</label>
-            <input type="text" name="q" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
+            <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
           </div>
           <div class="state-filter" data-search-filters-container>
             <label for="field-state" class="struct-label">Filter by state</label>
@@ -52,90 +52,44 @@
         {% for user in searcher.results %}
           <article class="search-result user-a listing" id="user-{{ user.id }}">
 
-            <header class="search-result-header">
-              <div class="h">
+            <div class="user-description">
+              <div class="portrait-social">
+                <figure><img src="{{user.avatar_url_big}}" alt="{{ user.name }}"></figure>
+              </div>
+              
+              <div class="name-info">
                 <h3><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h3>
                 <h4>{{ user.company_name }}</h4>
               </div>
-
-              <div class="search-result-meta-action">
+              
+              <div class="search-result-meta-action user-search">
                 {% if current_user != blank and current_user.has_seller_profile? %}
                   <a href="#case-invite-{{ user.id }}" class="button-a inverted" data-case-invite-trigger>Invite to Case</a>
                 {% endif %}
 
                 <div class="meta">
-                  <span class="publish-date">joined {{ user.created_at | timeago }}</span>
                   {% if current_user.has_seller_profile? %}
-                  |
-                  {% include 'shared/components/wish_list_button_injection.html', object: user %}
+                    {% include 'shared/components/wish_list_button_injection.html', object: user %}
+                  {% endif %}
+                  
+                  {% if user.has_active_blog? %}
+                    <div class="blog"><a href="{{ user.user_blog_posts_list_path }}">View Blog</a></div>
                   {% endif %}
                 </div>
               </div>
-            </header>
-
-            <div class="user-description">
-              <div class="portrait-social">
-                <figure><img src="{{user.avatar_url_big}}" alt="{{ user.name }}"></figure>
-
-                <ul class="social-c">
-                  {% if user.has_active_blog? %}
-                    <li class="blog"><a href="{{ user.user_blog_posts_list_path }}">View Blog</a></li>
-                  {% endif %}
-
-                  {% if user.buyer_properties['linkedin_url'] != blank %}
-                    <li class="linkedin"><a href="{{ user.buyer_properties['linkedin_url'] }}" target="_blank">LinkedIn</a></li>
-                  {% endif %}
-
-                  {% if user.buyer_properties['googleplus_url'] != blank %}
-                    <li class="googleplus"><a href="{{ user.buyer_properties['googleplus_url'] }}" target="_blank">Google+</a></li>
-                  {% endif %}
-
-                  {% if user.buyer_properties['twitter_url'] != blank %}
-                    <li class="twitter"><a href="{{ user.buyer_properties['twitter_url'] }}" target="_blank">Twitter</a></li>
-                  {% endif %}
-
-                  <li class="message"><a data-href='{{ user.user_message_path }}' data-modal='true'>Send Message</a>
-
-                  {% capture ctc %}{{ user.click_to_call_button }}{% endcapture %}
-                  {% if ctc != blank %}
-                    <li class="call">{{ ctc }}</li>
-                  {% endif %}
-                </ul>
-              </div>
-              <div class="description">
-                {% assign group_category = user.formatted_buyer_categories["Group Case Categories"] %}
-                {% assign individual_category = user.formatted_buyer_categories['Individual Case Categories'] %}
-
-                {% if group_category.children.size > 0 %}
-                  <h3>Group Cases</h3>
-                  <ul class="short-list">
-                    {% for cat in group_category.children %}
-                    <li>{{ cat[-1] }}</li>
-                    {% endfor %}
-                  </ul>
+            </div>
+            
+            <div class="user-description-text">
+              {% if user.properties.bio != blank %}
+                {% if user.properties.bio.size > 350 %}
+                   <div data-shorten-description>
+                  <p data-description>{{ user.properties.bio | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+                  <div style='display: none;'  class="rest_of_text">{{ user.properties.bio | slice: 350, user.properties.bio.size | nl2br }}</div>
+                  </div>
+                {% else %}
+                  <p>{{ user.properties.bio | nl2br }}</p>
                 {% endif %}
-
-                {% if individual_category.children.size > 0 %}
-                  <h3>Individual Cases</h3>
-                  <ul class="short-list">
-                    {% for cat in individual_category.children %}
-                    <li>{{ cat[-1] }}</li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
-
-                {% if user.buyer_properties.bio != blank %}
-                  <h3>Bio</h3>
-                  {% if user.buyer_properties.bio.size > 350 %}
-                     <div data-shorten-description>
-                    <p data-description>{{ user.buyer_properties.bio | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
-                    <div style='display: none;'  class="rest_of_text">{{ user.buyer_properties.bio | slice: 350, user.buyer_properties.bio.size | nl2br }}</div>
-                    </div>
-                  {% else %}
-                    <p>{{ user.buyer_properties.bio | nl2br }}</p>
-                  {% endif %}
-                {% endif %}
-              </div>
+              {% endif %}
             </div>
 
             {% if user.tags.size > 0 %}

@@ -3,20 +3,22 @@
     mandatory: true
     assign_to_buyer_profile: true
     children:
-      - name: 'Pharmaceutical'
+      - name: 'Group (Mass Torts)'
         children:
-          - { name: 'Invokana® / Invokamet®', children:  ['Diabetic Ketoacidosis', 'Acute Kindney Failure', 'Coma', 'Death', 'Amputation', 'Other (describe)'] }
-          - 'Risperdal®'
-          - 'Talc / Talcum Powder'
-          - 'Onglyza'
-          - 'Xarelto®'
-          - 'Pradaxa®'
-          - 'Eliquis®'
-      - name: 'Medical Device'
-        children:
-          - 'IVC Filter'
-          - 'Hip Implant'
-          - 'Knee Implant'
+          - name: 'Pharmaceutical'
+            children:
+              - { name: 'Invokana® / Invokamet®', children:  ['Diabetic Ketoacidosis', 'Acute Kindney Failure', 'Coma', 'Death', 'Amputation', 'Other (describe)'] }
+              - 'Risperdal®'
+              - 'Talc / Talcum Powder'
+              - 'Onglyza'
+              - 'Xarelto®'
+              - 'Pradaxa®'
+              - 'Eliquis®'
+          - name: 'Medical Device'
+            children:
+              - 'IVC Filter'
+              - 'Hip Implant'
+              - 'Knee Implant'
 
 "Individual Case":
   "Individual Case Categories":
@@ -41,7 +43,7 @@
 
       - name: 'Individual Non-Injury'
         children:
-          - { name: 'Employment', children: ['Descrimination', 'Overtime', 'Harassment', 'Other (please describe)'] }
+          - { name: 'Employment', children: ['Discrimination', 'Overtime', 'Harassment', 'Other (please describe)'] }
           - { name: 'Insurance and Property', children: ['Wind', 'Fire', 'Hail', 'Other (please describe)'] }
           - { name: 'Business and Commercial', children: ['Breach of Contract', 'Partnership Dispute', 'Other (please describe)'] }
           - { name: 'Intellectual Property', children: ['Patent', 'Copywright', 'Trade Secret', 'Other (please describe)'] }
