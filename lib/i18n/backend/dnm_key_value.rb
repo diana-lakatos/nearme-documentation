@@ -4,26 +4,36 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   include ::NewRelic::Agent::MethodTracer
   attr_accessor :instance_id, :default_locale
 
-  def initialize(cache, subtrees = true)
-    @cache = cache
+  def initialize(subtrees = true)
     @subtrees = subtrees
     @store = {}
     @timestamps = {}
   end
 
   def rebuild!
-    populate(nil)
+    Rails.cache.delete_matched "translations-for-*"
+    @store = {}
+    @timestamps = {}
+    update_defaults
   end
 
   def set_instance(instance)
     self.instance_id = instance.id
     self.default_locale = instance.primary_locale
     _instance_key = instance_key(instance_id)
-    populate(_instance_key) if @store[_instance_key].blank?
+    if @store[_instance_key].blank?
+      @store[_instance_key] = Rails.cache.fetch "translations-for-#{_instance_key}" do
+        populate(_instance_key)
+      end
+    end
   end
 
-  def update_cache(_instance_id)
-    populate(_instance_id)
+  def update_cache(_instance_id, with_defaults = false)
+    Rails.cache.write "translations-for-#{instance_key(_instance_id)}", populate(_instance_id)
+    update_defaults if with_defaults
+  end
+
+  def update_defaults
     populate(nil)
   end
 
@@ -36,6 +46,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
       store_translation(translation)
     end
     @timestamps[_instance_id] = Time.zone.now
+    @store[_instance_key]
   end
 
   def store_translation(translation)
@@ -71,6 +82,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   protected
 
   def lookup(locale, key, scope = [], options = {})
+    return if @store.values.none?(&:present?)
     key = normalize_flat_keys(locale, key, scope, options[:separator])
 
     value = lookup_for_instance_key locale, key
