@@ -30,7 +30,8 @@ namespace :litvault do
          'dashboard/payouts': 1,
          'dashboard/transfers': 1,
         },
-        skip_company: true
+        skip_company: true,
+        force_accepting_tos: true
       )
       @instance.set_context!
 
