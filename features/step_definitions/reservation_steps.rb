@@ -71,10 +71,10 @@ When /^I book space for with extra fields:$/ do |table|
   step 'I click to review the booking'
   step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
-  page.should have_css('input#order_user_attributes_last_name')
+  # page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
   fill_in 'order_user_attributes_mobile_number', with: '123123412345'
-  fill_in 'order_user_attributes_last_name', with: 'Aaa'
+  # fill_in 'order_user_attributes_last_name', with: 'Aaa'
   fill_in 'order_user_attributes_phone', with: '12312341'
   step 'I click to confirm the booking'
 end
@@ -98,7 +98,7 @@ When /^I fail to book space for without extra fields:$/ do |table|
 
   step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
-  page.should have_css('input#order_user_attributes_last_name')
+  # page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
   step 'I click and fail to confirm the booking'
 end
