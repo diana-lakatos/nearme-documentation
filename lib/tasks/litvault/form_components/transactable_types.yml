@@ -3,10 +3,25 @@
     -
       name: "Tell us a little about your firm"
       fields:
+        - user: name
         - user: company_name
         - company: address
-        - company: phone
+        - user: time_zone
+        - user: phone
+        - user: fax
         - company: url
+        - user: title_at_law_firm
+        - user: states
+        - user: bar_id
+        - user: bio
+        - user: honors_awards
+        - user: linkedin_url
+        - user: twitter_url
+        - user: googleplus_url
+        - user: number_of_cases_referred_in_the_past
+        - user: professional_liability_insurance
+        - user: liability_occurence_limits_information
+        - user: no_limitations_agreement
 
     -
       name: "Case representative and general details"
@@ -28,14 +43,6 @@
         - transactable: matters_to_include
         - transactable: case_short_description
         - transactable: case_full_description
-
-    - name: "Disclaimers"
-      fields:
-        - user: states
-        - user: professional_liability_insurance
-        - user: liability_occurence_limits_information
-        - user: no_limitations_agreement
-
 
   TRANSACTABLE_ATTRIBUTES:
     -
@@ -64,10 +71,26 @@
     -
       name: "Tell us a little about your firm"
       fields:
+        - user: name
         - user: company_name
         - company: address
-        - company: phone
+        - user: time_zone
+        - user: phone
+        - user: fax
         - company: url
+        - user: title_at_law_firm
+        - user: states
+        - user: bar_id
+        - user: bio
+        - user: honors_awards
+        - user: linkedin_url
+        - user: twitter_url
+        - user: googleplus_url
+        - user: number_of_cases_referred_in_the_past
+        - user: professional_liability_insurance
+        - user: liability_occurence_limits_information
+        - user: no_limitations_agreement
+
 
     -
       name: "Case representative and general details"
@@ -124,13 +147,6 @@
         - transactable: description_of_records
         - transactable: underlying_records_documents
         - transactable: other_matters
-
-    - name: "Disclaimers"
-      fields:
-        - user: states
-        - user: professional_liability_insurance
-        - user: liability_occurence_limits_information
-        - user: no_limitations_agreement
 
   TRANSACTABLE_ATTRIBUTES:
     -
