@@ -14,9 +14,10 @@ module LiquidFormHelpers
     collection.map do |item|
       label = item.label
       is_selected = Array(selected).include?(item.key)
-      is_disabled = item.disabled
+      css_class = 'filter-no-results' if item.disabled
+      data = { 'results-number' => item.value }
 
-      content_tag :option, label, selected: is_selected, value: item.key, disabled: is_disabled
+      content_tag :option, label, selected: is_selected, value: item.key, class: css_class, data: data
     end
   end
 
