@@ -934,6 +934,17 @@ ActiveRecord::Schema.define(version: 20161208131608) do
   add_index "domains", ["name"], name: "index_domains_on_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "domains", ["target_id", "target_type"], name: "index_domains_on_target_id_and_target_type", using: :btree
 
+  create_table "external_api_requests", force: :cascade do |t|
+    t.integer  "context_id"
+    t.string   "context_type"
+    t.text     "body"
+    t.integer  "instance_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "external_api_requests", ["instance_id"], name: "index_external_api_requests_on_instance_id", using: :btree
+
   create_table "form_components", force: :cascade do |t|
     t.string   "name",                          limit: 255
     t.string   "form_type",                     limit: 255
@@ -2999,7 +3010,6 @@ ActiveRecord::Schema.define(version: 20161208131608) do
     t.datetime "updated_at"
     t.boolean  "enabled",                  default: false
     t.datetime "onboarded_at"
-    t.boolean  "approved",                 default: false, null: false
   end
 
   add_index "user_profiles", ["instance_id", "user_id", "profile_type"], name: "index_user_profiles_on_instance_id_and_user_id_and_profile_type", unique: true, using: :btree

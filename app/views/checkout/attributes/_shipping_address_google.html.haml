@@ -5,4 +5,13 @@
       = s.input :lastname, placeholder: t('buy_sell_market.checkout.placeholders.last_name')
       = s.input :phone, as: :string
       = s.input :email, as: :string
-      = render 'checkout/attributes/address_details', form: s, field_label: t('.shipping_address')
+
+      = s.simple_fields_for :address, s.object.address || s.object.build_address do |address_form|
+        %div{class: "control-group #{"error" if address_form.object.errors.any?}"}
+
+          = address_form.hidden_field :raw_address, value: true
+          = address_form.input :address, required: true, label_html: { class: 'control-label'}
+          = address_form.input :city, required: true, label_html: { class: 'control-label'}
+          = address_form.input :postcode, required: true, label_html: { class: 'control-label'}
+          = address_form.input :state, required: true, label_html: { class: 'control-label'}
+          = address_form.input :country, required: true, label_html: { class: 'control-label'}

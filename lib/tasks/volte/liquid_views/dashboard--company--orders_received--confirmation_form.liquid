@@ -77,26 +77,20 @@
         <div class="row">
           <div class="col-xs-12 col-md-6">
             <div data-address-field="true">
-              {% input inbound_pickup_address_address, label: 'Lender Pick Up Address', input_html-data-address-input: 'true', input_html-data-behavior: 'address-autocomplete', required: true %}
-              {% input inbound_pickup_address_latitude, as: 'hidden', label: 'Lender Pick Up Address', input_html-data-latitude: 'true'  %}
-              {% input inbound_pickup_address_longitude, as: 'hidden', label: 'Lender Pick Up Address', input_html-data-longitude: 'true'  %}
-
-              <div class="map">
-                <div class="map-container">
-                </div>
-              </div>
+              {% input inbound_pickup_address_address, label: "AddressLine" %}
+              {% input inbound_pickup_address_city, label: "City" %}
+              {% input inbound_pickup_address_state, label: "State" %}
+              {% input inbound_pickup_address_postcode, label: "Postcode" %}
+              {% input inbound_pickup_address_country, label: "Country" %}
             </div>
           </div>
           <div class="col-xs-12 col-md-6">
             <div data-address-field="true">
-              {% input outbound_return_address_address, label: 'Lender Pick Up Address', input_html-data-address-input: 'true', input_html-data-behavior: 'address-autocomplete', required: true %}
-              {% input outbound_return_address_latitude, as: 'hidden', label: 'Lender Pick Up Address', input_html-data-latitude: 'true'  %}
-              {% input outbound_return_address_longitude, as: 'hidden', label: 'Lender Pick Up Address', input_html-data-longitude: 'true'  %}
-
-              <div class="map">
-                <div class="map-container">
-                </div>
-              </div>
+              {% input outbound_return_address_address, label: "AddressLine" %}
+              {% input outbound_return_address_city, label: "City" %}
+              {% input outbound_return_address_state, label: "State" %}
+              {% input outbound_return_address_postcode, label: "Postcode" %}
+              {% input outbound_return_address_country, label: "Country" %}
             </div>
           </div>
         </div>

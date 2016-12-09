@@ -13,7 +13,7 @@ module Deliveries
 
         def validator_list
           [
-            presence_validator(attributes: [:city, :postcode, :country, :address]),
+            presence_validator(attributes: [:city, :postcode, :country, :address, :state]),
             pickup_location_validator
           ]
         end

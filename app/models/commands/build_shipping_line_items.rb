@@ -40,7 +40,9 @@ module Commands
 
     def client
       Deliveries.courier name: provider.shipping_provider_name,
-                         settings: provider.settings
+                         settings: provider.settings,
+                         logger: Deliveries::RequestLogger.new(context: @order)
+
     end
 
     # TODO: this should be determined from order itself

@@ -2,8 +2,11 @@
 module Deliveries
   # sendle API client NM adapter
   class Sendle < Base
-    def initialize(settings)
+    def initialize(settings:, logger: nil)
+      raise ArgumentError, 'could not find valid settings for sendle shipping' if settings.nil?
+
       @settings = settings
+      @logger = logger
     end
 
     delegate :ping, to: :client
@@ -41,9 +44,10 @@ module Deliveries
 
     def client
       @client = SendleApi::Client.new(
-        sendle_id: @settings['sendle_id'],
-        sendle_api_key: @settings['api_key'],
-        environment: @settings['environment']
+        sendle_id: @settings.fetch('sendle_id'),
+        sendle_api_key: @settings.fetch('api_key'),
+        environment: @settings.fetch('environment'),
+        logger: @logger
       )
     end
   end

@@ -295,6 +295,7 @@ DesksnearMe::Application.routes.draw do
 
         namespace :shippings do
           resources :shipping_providers
+          resources :deliveries
         end
 
         resources :payments

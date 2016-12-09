@@ -22,7 +22,7 @@ class AddressDrop < BaseDrop
   # @!method latitude
   #   @return [Float] returns the latitude for this address
   # @!method longitude
-  #   @return [Float] returns the longitude for this address 
+  #   @return [Float] returns the longitude for this address
   delegate :street, :address, :city, :suburb, :iso_country_code, :country, :state, :postcode, :latitude, :longitude, to: :address_object
 
   def initialize(address_object)
@@ -32,12 +32,12 @@ class AddressDrop < BaseDrop
   # @return [String] string containing the address in the format "city, suburb state"
   # @todo -- leave formatting for the user
   def discreet
-    format('%s, %s %s', city, suburb, state)
+    format('%s %s', city, postcode)
   end
 
   # @return [String] full address as a string
   # @todo -- leave formatting for the user
   def full
-    address
+    format('%s, %s %s', address, city, postcode)
   end
 end
