@@ -354,6 +354,7 @@ class SecuredParams
       :twilio_consumer_key,
       :twilio_consumer_secret,
       :twilio_from_number,
+      :twilio_ring_tone,
       :twitter_consumer_key,
       :twitter_consumer_secret,
       :use_cart,
