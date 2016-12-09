@@ -15,9 +15,7 @@ module LiquidFormHelpers
       label = item.label
       is_selected = Array(selected).include?(item.key)
       title = item.value.zero? && '' || item.value
-      css_class = ''
-      css_class << 'filter-no-results' if item.disabled
-      css_class << 'filter-results-present' unless title.blank?
+      css_class = 'filter-results-present' unless title.blank?
 
       content_tag :option, label, selected: is_selected, value: item.key, class: css_class, title: title
     end
