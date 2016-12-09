@@ -287,12 +287,44 @@ namespace :litvault do
       puts "\nCreating categories:"
       categories = YAML.load_file(File.join(@theme_path, 'categories', 'transactable_types.yml'))
 
-      remove_unused_categories(categories)
+      top_level_categories = []
+      categories.each do |label, categories|
+        top_level_categories << { 'name' => categories.keys.first, 'children' => categories[categories.keys.first]['children'] }
+      end
+
+      remove_unused_categories(Category.where(parent_id: nil), top_level_categories)
 
       categories.keys.each do |tt_name|
         puts "\n\t#{tt_name}:"
         object = @instance.transactable_types.where(name: tt_name).first
         update_categories_for_object(object, categories[tt_name])
+      end
+    end
+
+    def remove_unused_categories(children_objects, children_in_file)
+      children_objects.each do |child_object|
+        found = nil
+        children_in_file.each do |cif|
+          if cif.is_a?(Hash)
+            if cif['name'] == child_object.name
+              found = cif
+              break
+            end
+          else
+            if cif == child_object.name
+              found = cif
+              break
+            end
+          end
+        end
+
+        if found.blank?
+          child_object.destroy
+        else
+          found = [] if found.is_a?(String)
+          found = found['children'] if found.is_a?(Hash)
+          remove_unused_categories(child_object.children, found)
+        end
       end
     end
 
@@ -666,23 +698,6 @@ namespace :litvault do
           custom_attribute.custom_validators.each {|cv| cv.save! }
       end
 
-      def remove_unused_categories(categories)
-        used_categories = []
-        categories.each do |tt, cats|
-          used_categories.concat(cats.keys)
-        end
-        used_categories.uniq!
-
-        unused_categories = Category.where("name NOT IN (?) AND parent_id IS NULL", used_categories)
-        if unused_categories.size > 0
-          puts "\tRemoving unused categories:"
-          unused_categories.each do |category|
-            puts "\t  - #{category.name}"
-            category.destroy!
-          end
-        end
-      end
-
       def update_categories_for_object(tt, categories)
         puts "\t  Updating / creating categories:"
         categories.each do |name, hash|
@@ -690,7 +705,8 @@ namespace :litvault do
           children = hash.delete(:children) || []
           category = Category.where(name: name).first_or_create!
           category.transactable_types = category.transactable_types.push(tt) if !category.transactable_types.include?(tt)
-          category.instance_profile_types = category.instance_profile_types.push(InstanceProfileType.buyer.first) if hash.delete('assign_to_buyer_profile') && !category.instance_profile_types.include?(InstanceProfileType.buyer.first)
+          category.instance_profile_types = category.instance_profile_types.push(InstanceProfileType.buyer.first) if hash.delete(:assign_to_buyer_profile) && !category.instance_profile_types.include?(InstanceProfileType.buyer.first)
+          category.search_options = 'include'
           category.save!
 
           puts "\t    - #{name}"
