@@ -55,11 +55,52 @@
             <div class="user-description">
               <div class="portrait-social">
                 <figure><img src="{{user.avatar_url_big}}" alt="{{ user.name }}"></figure>
+                <ul class="social-c">
+                  {% if user.properties['linkedin_url'] != blank %}
+                    <li class="linkedin"><a href="{{ user.properties['linkedin_url'] }}" target="_blank">LinkedIn</a></li>
+                  {% endif %}
+
+                  {% if user.properties['googleplus_url'] != blank %}
+                    <li class="googleplus"><a href="{{ user.properties['googleplus_url'] }}" target="_blank">Google+</a></li>
+                  {% endif %}
+
+                  {% if user.properties['twitter_url'] != blank %}
+                    <li class="twitter"><a href="{{ user.properties['twitter_url'] }}" target="_blank">Twitter</a></li>
+                  {% endif %}
+
+                  <li class="message"><a data-href='{{ user.user_message_path }}' data-modal='true'>Send Message</a>
+
+                  {% capture ctc %}{{ user.click_to_call_button }}{% endcapture %}
+                  {% if ctc != blank %}
+                    <li class="call">{{ ctc }}</li>
+                  {% endif %}
+                </ul>
               </div>
               
               <div class="name-info">
                 <h3><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h3>
                 <h4>{{ user.company_name }}</h4>
+                
+                {% assign group_category = user.formatted_buyer_categories["Group Case Categories"] %}
+                {% assign individual_category = user.formatted_buyer_categories['Individual Case Categories'] %}
+
+                {% if group_category.children.size > 0 %}
+                  <h3>Group Cases</h3>
+                  <ul class="short-list">
+                    {% for cat in group_category.children %}
+                    <li>{{ cat[-1] }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+
+                {% if individual_category.children.size > 0 %}
+                  <h3>Individual Cases</h3>
+                  <ul class="short-list">
+                    {% for cat in individual_category.children %}
+                    <li>{{ cat[-1] }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
               </div>
               
               <div class="search-result-meta-action user-search">
@@ -124,3 +165,4 @@
     {% include 'search/filter_categories' %}
   </div>
 </div>
+
