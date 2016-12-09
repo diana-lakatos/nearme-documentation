@@ -130,7 +130,7 @@ class ListingsController < ApplicationController
   end
 
   def redirect_if_no_access_granted
-    unless current_user && (current_user.can_manage_listing?(@listing) || @listing.is_collaborator?(current_user))
+    unless current_user && (current_user.can_manage_listing?(@listing) || @listing.transactable_collaborators.where(user: current_user).where.not(approved_by_owner_at: nil).exists?)
       flash[:warning] = t('flash_messages.listings.no_longer_have_access')
       redirect_to root_path
     end
