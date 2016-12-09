@@ -35,6 +35,7 @@ class InstanceWizardController < ActionController::Base
 
     begin
       Instance.transaction do
+        @instance.build_availability_templates
         @instance.save!
         @instance.domains.first.update_column(:state, 'elb_secured')
         @instance.domains.first.update_column(:secured, true)
