@@ -15,6 +15,10 @@
   {% endfor %}
 {% endif  %}
 
+{% if current_user.has_seller_profile? %}
+  {% assign can_make_offer = false %}
+{% endif %}
+
 <div class="summary">
   <h1>{{ listing.name }}</h1>
   <div class="meta">

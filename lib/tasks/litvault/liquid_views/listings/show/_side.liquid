@@ -1,3 +1,6 @@
+{% if current_user.has_seller_profile? %}
+  {% assign can_make_offer = false %}
+{% endif %}
 <aside class="sidebar">
   {% if can_make_offer or current_user.has_buyer_profile? %}
     <div class="listing-actions">
