@@ -11,13 +11,18 @@
     = render 'dashboard/shared/fields/address', :f => address_form, field_label: t('simple_form.labels.companies.company_address.address')
 
 - if (only_inputs.empty? || only_inputs.include?(:url) || only_inputs.include?(:email))
-  .row
-    - if (only_inputs.empty? || only_inputs.include?(:url))
-      .col-md-8
-        = f.input :url
-    - if (only_inputs.empty? || only_inputs.include?(:email))
-      .col-md-4
-        = f.input :email
+  - if (only_inputs.empty? || (only_inputs.include?(:url) && only_inputs.include?(:email)))
+    .row
+      - if (only_inputs.empty? || only_inputs.include?(:url))
+        .col-md-8
+          = f.input :url
+      - if (only_inputs.empty? || only_inputs.include?(:email))
+        .col-md-4
+          = f.input :email
+  - elsif only_inputs.include?(:url)
+    = f.input :url
+  - elsif only_inputs.include?(:email)
+    = f.input :email
 
 - if (only_inputs.empty? || only_inputs.include?(:description))
   = f.input :description, :as => :limited_text, :limit => 250

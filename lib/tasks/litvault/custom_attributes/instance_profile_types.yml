@@ -85,6 +85,10 @@
       "[0]":
         field_name: 'no_limitations_agreement'
         required: true
+  fax:
+    label: 'Fax'
+  title_at_law_firm:
+    label: 'Title at law firm'
 
 # seller profile
 579: ~
