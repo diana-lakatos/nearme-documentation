@@ -49,7 +49,7 @@ module NearMe
     # This maps the default host (ec2 instance) we want the scripts to run on for a stack
     def stack_to_host_mapping
       {
-        'nm-production' => 'utility1',
+        'nm-production' => 'california-utility1',
         'nm-oregon' => 'oregon-rails-app1',
         'nm-staging' => 'rails-app-1',
         'nm-qa-1' => 'rails-app1',
@@ -101,6 +101,7 @@ module NearMe
     def capture!
       puts 'Creating remote db dump...'
       remote_command = "sudo -H -u deploy bash -c 'cd /srv/www/nearme/current && AWS_ACCESS_KEY_ID=#{ENV['AWS_ACCESS_KEY_ID']} AWS_SECRET_ACCESS_KEY=#{ENV['AWS_SECRET_ACCESS_KEY']} RAILS_ENV=#{@environment} bundle exec rake backup:capture'"
+      puts remote_command
       run_remote_command(remote_command)
     end
 
