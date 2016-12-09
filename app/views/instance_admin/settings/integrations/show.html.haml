@@ -64,6 +64,9 @@
         = f.input :"twilio_from_number", label: "Twilio 'From' Number", required: false, input_html: { class: 'form-control' }
       .input-container.col-xs-6
         = f.input :"test_twilio_from_number", label: "Twilio Test 'From' Number", required: false, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        = f.input :"twilio_ring_tone", label: "Twilio Ring Tone", placeholder: 'default: howdy-tng.mp3', required: false, input_html: { class: 'form-control' }
 
     = content_for :header_buttons do
       = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form.edit_instance' }
