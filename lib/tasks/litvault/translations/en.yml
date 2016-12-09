@@ -141,7 +141,8 @@ en:
         url: 'Law Firm Website URL'
       companies:
         name: 'Law Firm'
-        company_address: 'Law Firm Address'
+        company_address:
+          address: 'Law Firm Address'
         url: 'Law Firm Website URL'
 
   time:

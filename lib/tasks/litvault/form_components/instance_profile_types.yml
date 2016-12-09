@@ -25,8 +25,9 @@
 
   - user: bar_id
   - user: company_name
-  - user: job_title
+  - user: title_at_law_firm
   - user: company_phone
+  - user: fax
   - user: company_website_address
   - user: company_about
   - user: states
@@ -62,8 +63,9 @@
 
   - user: bar_id
   - user: company_name
-  - user: job_title
+  - user: title_at_law_firm
   - user: company_phone
+  - user: fax
   - user: company_website_address
   - user: company_about
   - user: states
