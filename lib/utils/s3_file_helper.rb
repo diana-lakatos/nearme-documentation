@@ -15,7 +15,7 @@ module Utils
     end
 
     def upload_file!
-      client.put_object bucket: @bucket_name, key: @key, body: @pathname.read, acl: 'authenticated-read'
+      client.put_object bucket: @bucket_name, key: @key, body: @pathname.read, acl: 'private'
     end
 
     def download_file!
