@@ -115,6 +115,8 @@ en:
         business_tax_id: 'Employer Identification Number'
         personal_id_number: 'Social Security Number'
         bank_routing_number: 'Routing Number'
+      merchant_account_owner:
+        dob_formated: 'Date of birth'
   connections:
     facebook:
       count:
