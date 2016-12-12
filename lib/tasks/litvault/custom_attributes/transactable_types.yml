@@ -85,7 +85,7 @@
   date_engagement_agreement_signed:
     label: 'Date Engagement Signed'
     attribute_type: string
-    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => MM/DD/YYYY'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
 
@@ -113,13 +113,13 @@
       "[0]":
         required: true
     attribute_type: string
-    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => MM/DD/YYYY'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
   date_of_incident:
     label: 'Date of injury or accident'
     attribute_type: string
-    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => MM/DD/YYYY'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
     custom_validators_attributes:
@@ -203,7 +203,7 @@
   date_of_earliest_deadline:
     label: 'Please provide the date for the earliest deadline to file the lawsuit'
     attribute_type: string
-    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => MM/DD/YYYY'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
     custom_validators_attributes:
