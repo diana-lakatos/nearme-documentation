@@ -1,0 +1,13 @@
+<h2>Change of plans, {{ lister.first_name }}!</h2>
+
+<p>The booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' has been cancelled by the {{ listing.lessee }}.</p>
+
+<p>No worries! We are working hard to send more {{ listing.lessees }} your way.</p>
+
+<p>As a reminder, listings shared online are receiving more visibility than the ones who don't!</p>
+
+<p>Let the world know about your listing!</p>
+
+{% include 'reservation_mailer/social_links.html' %}
+
+<p>We're always happy to help! Just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>

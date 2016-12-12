@@ -1,0 +1,11 @@
+<h2>Sorry, {{ enquirer.first_name }}</h2>
+
+<p>Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' has expired because the {{ listing.lessor }} didn't confirm within 24 hours.</p>
+
+<p>But we got you covered! Here are some other {{ reservation.bookable_noun_plural }} you may be interested in:</p>
+
+{% include 'reservation_mailer/listings_in_near.html' %}
+
+<a class="btn" href="{{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking }}">Search More {{ reservation.bookable_noun_plural }}</a>
+
+<p>We're always happy to help! Just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
