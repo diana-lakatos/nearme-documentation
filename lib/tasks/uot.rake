@@ -1,6 +1,28 @@
 # frozen_string_literal: true
 namespace :uot do
   desc 'Setup UoT'
+
+  task update: :environment do 
+    @instance = Instance.find(195)
+    @instance.set_context!
+
+    setup = UotSetup.new(@instance)
+
+    setup.load_template('instance_admin/manage/orders/index', false)
+    setup.load_template('dashboard/company/transactables/sme_listing')
+
+    uot_locales = YAML.load_file(Rails.root.join('lib', 'tasks', 'uot', 'uot.en.yml'))
+    uot_locales_hash = convert_hash_to_dot_notation(uot_locales['en'])
+
+    uot_locales_hash.each_pair do |key, value|
+      next unless key.include?('instance_admin')
+      setup.create_translation!(key, value)
+      print '.'
+      $stdout.flush
+    end
+    puts ''
+  end
+
   task setup: :environment do
     @instance = Instance.find(195)
     @instance.update_attributes(
@@ -729,7 +751,6 @@ namespace :uot do
 
     def create_admin_templates!
       load_template('instance_admin/manage/orders/index', false)
-      load_template('instance_admin/manage/orders/show', false)
     end
 
     def create_theme_header!
@@ -866,6 +887,20 @@ namespace :uot do
       destroy_page!('How It Works')
     end
 
+    def load_template(path, partial = true)
+      iv = InstanceView.where(
+        instance_id: @instance.id,
+        path: path
+      ).first_or_initialize
+      iv.update!(transactable_types: TransactableType.all,
+                 body: read_template("#{path.tr('/', '_')}.liquid"),
+                 format: 'html',
+                 handler: 'liquid',
+                 partial: partial,
+                 view_type: 'view',
+                 locales: Locale.all)
+    end
+
     private
 
     def create_custom_attribute(object, hash)
@@ -887,20 +922,6 @@ namespace :uot do
       slug = name.parameterize
       page = @instance.theme.pages.where(slug: slug).first
       page&.destroy
-    end
-
-    def load_template(path, partial = true)
-      iv = InstanceView.where(
-        instance_id: @instance.id,
-        path: path
-      ).first_or_initialize
-      iv.update!(transactable_types: TransactableType.all,
-                 body: read_template("#{path.tr('/', '_')}.liquid"),
-                 format: 'html',
-                 handler: 'liquid',
-                 partial: partial,
-                 view_type: 'view',
-                 locales: Locale.all)
     end
 
     def create_custom_attribute(object, hash)
