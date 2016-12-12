@@ -2,7 +2,7 @@
 module Graph
   class QueryResolver
     def self.find_query(name)
-      (GraphQuery.find_by_name(name) || from_file(name)).query_string
+      (GraphQuery.find_by(name: name) || from_file(name)).query_string
     end
 
     def self.from_file(name)

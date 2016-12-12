@@ -8,7 +8,6 @@ class InstanceView < ActiveRecord::Base
   has_many :transactable_types, through: :transactable_type_instance_views
   has_many :locale_instance_views, dependent: :destroy
   has_many :locales, through: :locale_instance_views
-  has_many :graph_queries
 
   VIEW_VIEW = 'view'
   CUSTOM_VIEW = 'custom_view'

@@ -2,7 +2,6 @@ query LocationQuery($location_id: ID!){
   location: location(id: $location_id) {
     name
     description
-    description
     availability
     name_and_desc
     company{
