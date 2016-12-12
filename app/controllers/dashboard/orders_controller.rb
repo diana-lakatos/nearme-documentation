@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 class Dashboard::OrdersController < Dashboard::BaseController
   before_action :find_order, except: [:index, :new]
-  before_action :find_transactable, only: :new
-  before_action :find_reservation_type, only: :new
+  before_action :find_transactable, only: [:edit, :update, :new]
+  before_action :find_reservation_type, only: [:edit, :update, :new]
   before_action :redirect_to_index_if_not_editable, only: [:edit, :update]
-  before_action :ensure_merchant_account_exists, only: [:new, :create]
+  before_action :ensure_merchant_account_exists, only: [:new, :create, :edit, :update]
 
   def index
     @rating_systems = reviews_service.get_rating_systems

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::Company::MerchantAccountsController < Dashboard::Company::BaseController
   before_action :find_merchant_account, except: [:create]
 
@@ -12,8 +13,8 @@ class Dashboard::Company::MerchantAccountsController < Dashboard::Company::BaseC
 
   def create
     @payment_gateway = all_payout_gateways.find(params[:merchant_account][:payment_gateway_id])
-    merchant_account_class = MerchantAccount::MERCHANT_ACCOUNTS[@payment_gateway.type_name]
-    @merchant_account = merchant_account_class.new(merchantable: @company.object)
+
+    @merchant_account = MerchantAccount.new(merchantable: @company.object, type: @payment_gateway.merchant_account_type)
     @merchant_account.attributes = merchant_account_params
     @merchant_account.payment_gateway = @payment_gateway
 

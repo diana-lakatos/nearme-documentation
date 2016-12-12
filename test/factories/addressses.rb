@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :address do
     address '42 Wallaby Way, North Highlands, California'
@@ -10,7 +11,8 @@ FactoryGirl.define do
         '0' => {
           'long_name' => 'United States',
           'short_name' => 'US',
-          'types' => %w(country political) }
+          'types' => %w(country political)
+        }
       }
     end
 
@@ -24,9 +26,23 @@ FactoryGirl.define do
           '0' => {
             'long_name' => 'New Zealand',
             'short_name' => 'NZ',
-            'types' => %w(country political) }
+            'types' => %w(country political)
+          }
         }
       end
+    end
+
+    factory :full_address_in_sf do
+      address '125 Ellis St, San Francisco, CA 94102'
+      latitude '37.819959'
+      longitude '-122.478696'
+      state 'California'
+      city 'San Francisco'
+      suburb 'San Francisco'
+      street 'Ellis St'
+      country 'United States'
+      iso_country_code 'US'
+      postcode '94102'
     end
 
     factory :address_in_adelaide do
@@ -153,11 +169,13 @@ FactoryGirl.define do
           '1' => {
             'long_name' => 'San Francisco',
             'short_name' => 'San Francisco',
-            'types' => %w(administrative_area_level_2 political) },
+            'types' => %w(administrative_area_level_2 political)
+          },
           '2' => {
             'long_name' => 'California',
             'short_name' => 'CA',
-            'types' => %w(administrative_area_level_1 political) },
+            'types' => %w(administrative_area_level_1 political)
+          },
           '3' => {
             'long_name' => 'United States',
             'short_name' => 'US',
@@ -174,31 +192,38 @@ FactoryGirl.define do
           '0' => {
             'long_name' => 'Major MacKenzie Drive',
             'short_name' => 'Major MacKenzie Dr',
-            'types' => ['route'] },
+            'types' => ['route']
+          },
           '1' => {
             'long_name' => 'Maple',
             'short_name' => 'Maple',
-            'types' => %w(neighborhood political) },
+            'types' => %w(neighborhood political)
+          },
           '2' => {
             'long_name' => 'Vaughan',
             'short_name' => 'Vaughan',
-            'types' => %w(administrative_area_level_3 political) },
+            'types' => %w(administrative_area_level_3 political)
+          },
           '3' => {
             'long_name' => 'York Regional Municipality',
             'short_name' => 'York Regional Municipality',
-            'types' => %w(administrative_area_level_2 political) },
+            'types' => %w(administrative_area_level_2 political)
+          },
           '4' => {
             'long_name' => 'Ontario',
             'short_name' => 'ON',
-            'types' => %w(administrative_area_level_1 political) },
+            'types' => %w(administrative_area_level_1 political)
+          },
           '5' => {
             'long_name' => 'Canada',
             'short_name' => 'CA',
-            'types' => %w(country political) },
+            'types' => %w(country political)
+          },
           '6' => {
             'long_name' => 'L6A',
             'short_name' => 'L6A',
-            'types' => ['postal_code'] }
+            'types' => ['postal_code']
+          }
         }
       end
     end

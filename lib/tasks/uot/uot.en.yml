@@ -224,5 +224,11 @@ en:
       transfers:
         total_fee: MP Fees
         lessee_service_fees: MP Fees
+      orders:
+        order_amount: "Total paid"
+        listing: "Listing"
+        user: "SME"
+        lister: "Client"
+        pro_bono: "ProBono"
 
 

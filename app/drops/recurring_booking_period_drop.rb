@@ -33,7 +33,7 @@ class RecurringBookingPeriodDrop < BaseDrop
   #   @return [TransactableDrop] transactable associated with this order
   delegate :id, :line_items, :created_at, :payment, :total_amount_cents, :pending?,
            :approved?, :rejected?, :state, :order, :persisted?, :rejection_reason,
-           :transactable, to: :source
+           :transactable, :user, to: :source
 
   # @return [String] payment state for this period
   # @todo - just a code smell :)

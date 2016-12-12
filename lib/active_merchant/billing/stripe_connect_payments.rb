@@ -79,6 +79,10 @@ module ActiveMerchant
         Stripe::Account.retrieve(id)
       end
 
+      def country_spec(id = 'US')
+        Stripe::CountrySpec.retrieve(id)
+      end
+
       def update_onboard!(stripe_account_id, update_params)
         account = Stripe::Account.retrieve(stripe_account_id)
         if update_params[:bank_account].present? && update_params[:bank_account][:account_number].length > 4

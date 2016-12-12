@@ -35,6 +35,16 @@ FactoryGirl.define do
       last_name 'Rambo'
       business_tax_id '440-94-3290'
       personal_id_number '440-94-3290'
+
+      factory :failed_stripe_connect_merchant_account do
+        data { {
+          disabled_reason: 'This account is rejected for some other reason.',
+          verification_details: 'Please update your document',
+          verification_message: 'Scan failed for other reason.'
+        } }
+        state 'failed'
+      end
     end
+
   end
 end

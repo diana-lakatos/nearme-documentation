@@ -46,13 +46,20 @@
               {% if order.payment_subscription.expired? %}
                 <a class="btn btn-success btn-sm" data-modal="true" href="{{ 'edit_dashboard_company_order_payment_subscription_path' | generate_url: order.id, order.payment_subscription  }}">{{ 'general.update_credit_card' | t}}</a>
               {% endif %}
-              <form class="edit_reservation" action="{{ 'approve_dashboard_company_order_order_item_path' | generate_url: order.id, item.id }}" accept-charset="UTF-8" method="post">
-                <input name="utf8" type="hidden" value="&#x2713;" />
-                <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
-                <input type="hidden" name="total" value="{{ item.total_amount_cents }}" />
-                <input type="submit" name="commit" value="{{ 'general.approve' | t }}" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success btn-sm" />
-              </form>
+              {% if item.user.has_verified_merchant_account %}
+                <form class="edit_reservation" action="{{ 'approve_dashboard_company_order_order_item_path' | generate_url: order.id, item.id }}" accept-charset="UTF-8" method="post">
+                  <input name="utf8" type="hidden" value="&#x2713;" />
+                  <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+                  <input type="hidden" name="total" value="{{ item.total_amount_cents }}" />
+                  <input type="submit" name="commit" value="{{ 'general.approve' | t }}" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-success btn-sm" />
+                </form>
+              {% else %}
+                <input type="submit" disabled="disabled" value="{{ 'general.approve' | t }}" class="btn btn-success btn-sm" />
+              {% endif %}
+
               <a href="{{ item.rejection_form_path }}" data-modal="true" class="btn btn-danger btn-sm">Reject</a>
+
+
               {% if order.user_messages.size == 0 %}
                 <a class="btn btn-info btn-sm" data-modal="true" href="{{ 'new_reservation_user_message_path' | generate_url: order.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
               {% else %}
@@ -63,6 +70,13 @@
           <th scope="row" class="subtotal">Subtotal</th>
           <td>{{ item.formatted_total_amount }}</td>
         </tr>
+        {% if item.pending? and item.user.has_verified_merchant_account != true%}
+          <tr>
+          <td colspan="6">
+            <div class="alert alert-danger">We are processing SME's bank account details, you will be able to approve this expenses shortly.</div>
+          </td>
+          </tr>
+        {% endif %}
       </tbody>
     </table>
   </div>

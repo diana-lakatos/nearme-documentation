@@ -37,8 +37,35 @@
     = content_for :header_buttons do
       = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => '#edit-payment-form' }
       = link_to "Update payment", reload_instance_admin_manage_payment_path(@payment),  class: 'btn btn-danger pull-right', data: { confirm: "Are you sure?"}, method: 'put'
+      - if @payment.payment_gateway.class.name.include?("Stripe") && @payment.payment_gateway_url
+        = link_to "View in Stripe", @payment.payment_gateway_url, class: 'btn btn-info pull-right', target: '_blank'
+      - if @payment.payment_transfer
+        = link_to "Transfer", instance_admin_manage_transfer_path(@payment.payment_transfer), class: 'btn btn-info pull-right'
 
 
+  %h4 Authorizations:
+
+  - @payment.billing_authorizations.each do |charge|
+    .content-container
+
+      .row
+        .text-container{class: charge.success? ? 'text-success' : 'text-danger' }
+          %p
+            Success:
+            = charge.success
+          %p
+            Created at:
+            = l charge.created_at, format: :long
+          - if charge.payment_gateway.present?
+            %p
+              Payment Gateway:
+              = link_to charge.payment_gateway.try(:name), edit_instance_admin_settings_payment_gateway_path(charge.payment_gateway)
+          %p
+            Mode:
+            = charge.payment_gateway_mode
+          %p
+            Response:
+            = charge.response.to_yaml
 
 
   %h4 Charge attempts:

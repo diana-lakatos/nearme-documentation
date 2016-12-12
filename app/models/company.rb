@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'nearest_time_zone'
 require 'addressable/uri'
 
@@ -41,21 +42,6 @@ class Company < ActiveRecord::Base
   has_one :company_address, class_name: 'Address', as: :entity
   has_one :domain, as: :target, foreign_key: 'target_id', dependent: :destroy
   has_one :theme, as: :owner, foreign_key: 'owner_id', dependent: :destroy
-
-  # Note
-  # This association might not be accurate when having mutiple PG of the same class
-  # working in the same mode within one Marketplace. It's not case for now so
-  # let's comeback to it if we ever need to.
-  MerchantAccount::MERCHANT_ACCOUNTS.each do |name, klass|
-    # also include owners if association exist
-    has_one :"#{name}_merchant_account",
-            ->(record) do
-              assoc = klass.reflections.keys.include?(:owners) ? includes(:owners) : self
-              pg = "PaymentGateway::#{name.classify}PaymentGateway".constantize.find_by(instance_id: (PlatformContext.current.try(:instance).try(:id) || record.instance_id))
-              pg ? assoc.where(test: pg.test_mode?) : assoc
-            end,
-            class_name: klass.to_s, as: :merchantable, dependent: :destroy
-  end
 
   belongs_to :creator, -> { with_deleted }, class_name: 'User', inverse_of: :created_companies
   belongs_to :instance
@@ -123,7 +109,7 @@ class Company < ActiveRecord::Base
       charges_without_payment_transfer.group_by(&:currency).each do |currency, all_charges|
         all_charges.group_by(&:payment_gateway_mode).each do |mode, charges|
           payment_transfer = payment_transfers.create!(payments: charges, payment_gateway_mode: mode)
-          created_payment_transfers << payment_transfer if possible_payout_not_configured?(instance.payout_gateway(iso_country_code, currency))
+          created_payment_transfers << payment_transfer if possible_payout_not_configured?(payout_payment_gateway)
         end
       end
     end
@@ -135,8 +121,7 @@ class Company < ActiveRecord::Base
   end
 
   def payout_payment_gateway
-    @payment_gateway = instance.payout_gateway(iso_country_code, currency) if @payment_gateway.nil?
-    @payment_gateway
+    @payment_gateway ||= instance.payout_gateway(iso_country_code, currency)
   end
 
   def payout_payment_gateways
@@ -158,7 +143,16 @@ class Company < ActiveRecord::Base
   end
 
   def possible_payout_not_configured?(payment_gateway)
-    payment_gateway.try(:supports_payout?) && merchant_accounts.verified_on_payment_gateway(payment_gateway.id).count.zero?
+    payment_gateway.try(:supports_payout?) && has_verified_merchant_account?(payment_gateway)
+  end
+
+  def has_verified_merchant_account?(payment_gateway)
+    merchant_accounts.verified_on_payment_gateway(payment_gateway.id).count.zero?
+  end
+
+  def possible_payout?
+    return false unless payout_payment_gateway
+    has_verified_merchant_account?(payout_payment_gateway)
   end
 
   def to_liquid

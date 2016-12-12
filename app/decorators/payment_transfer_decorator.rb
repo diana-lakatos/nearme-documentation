@@ -63,4 +63,7 @@ class PaymentTransferDecorator < Draper::Decorator
     values
   end
 
+  def payment_gateway_url
+    payment_gateway.transfer_url(self)
+  end
 end
