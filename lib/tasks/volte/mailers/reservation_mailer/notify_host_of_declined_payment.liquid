@@ -1,0 +1,12 @@
+<h2>Hello, {{ lister.first_name }}!</h2>
+
+<p>
+The payment has been declined by {{ reservation.owner.name }}. {% if reservation.has_rejection_reason %} They said:
+{{ reservation.rejection_reason }}{% endif %}
+</p>
+
+<p><a class="btn" href="{{ reservation.host_show_url }}">Update Payment Information</a></p>
+
+<p>
+We're always happy to help! If you have any questions about your booking, please send an email to {{ platform_context.support_email }}.
+</p>

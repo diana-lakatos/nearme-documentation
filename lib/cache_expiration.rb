@@ -6,28 +6,30 @@
 class CacheExpiration
   class << self
     def update_memory_cache
-      last_update = RedisCache.client.get("last_cache_update_#{current_worker_id}").to_f
-      RedisCache.client.zrangebyscore('cache_expiration', "(#{last_update}", '+inf', with_scores: true).each do |value, score|
-        handle_cache_expiration(value)
-        RedisCache.client.set("last_cache_update_#{current_worker_id}", score)
+      return unless RedisCache.client.exists('cache_expiration')
+      unique_commands = get_unique_commands
+      unique_commands[:commands].each do |command|
+        handle_cache_expiration(command)
       end
+      RedisCache.client.set("last_cache_update_#{current_worker_id}", unique_commands[:last_score]) if unique_commands[:last_score]
+    end
+
+    def get_unique_commands
+      unique_commands = []
+      last_update = RedisCache.client.get("last_cache_update_#{current_worker_id}").to_f
+      all_commands = RedisCache.client.zrangebyscore('cache_expiration', "(#{last_update}", '+inf', with_scores: true)
+      all_commands.each do |value, score|
+        data = JSON.parse(value).with_indifferent_access
+        data.delete(:timestamp)
+        unless unique_commands.include?(data)
+          unique_commands << data
+        end
+      end
+      { commands: unique_commands, last_score: all_commands.last.try(:last) }
     end
 
     def rebuild_cache_for_new_worker
-      if RedisCache.client.exists('cache_expiration')
-        last_update = RedisCache.client.get("last_cache_update_#{current_worker_id}").to_f
-        processed_instances = []
-        messages = RedisCache.client.zrangebyscore('cache_expiration', "(#{last_update}", '+inf', with_scores: true)
-        messages.each do |value, _score|
-          data = JSON.parse(value).with_indifferent_access
-          data.delete(:timestamp)
-          unless processed_instances.include?(data)
-            handle_cache_expiration(data)
-            processed_instances << data
-          end
-        end
-        RedisCache.client.set("last_cache_update_#{current_worker_id}", messages.last[1]) if messages.last
-      end
+      update_memory_cache
     end
 
     def current_worker_id
@@ -57,7 +59,7 @@ class CacheExpiration
     end
 
     def expire_cache_for_translations
-      I18N_DNM_BACKEND.update_cache(@data[:instance_id]) if defined? I18N_DNM_BACKEND
+      I18N_DNM_BACKEND.update_cache(@data[:instance_id], @data[:with_defaults]) if defined? I18N_DNM_BACKEND
     end
 
     def expire_cache_for_custom_attributes

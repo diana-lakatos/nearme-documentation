@@ -3,7 +3,8 @@
 - if only_inputs.empty? || only_inputs.include?(:enabled)
   = f.input :enabled, as: :switch
   - if f.object.instance_profile_type.admin_approval? && !f.object.approved?
-    = t('dashboard.user_profile.requires_approval')
+    .alert.alert-warning
+      = t('dashboard.user_profile.requires_approval')
 - elsif only_inputs.empty? || (category = f.object.instance_profile_type.try(:categories).try(:roots).try(:detect) { |c| "Category - #{c.name}".to_sym == only_inputs.first}).present?
   = render partial: 'dashboard/shared/fields/category', locals: { category: category, f: f, categorizable: f.object.instance_profile_type }
 - elsif only_inputs.empty? || f.object.instance_profile_type.custom_model_types.map { |c| "Custom Model - #{c.name}".to_sym }.include?(only_inputs.first)

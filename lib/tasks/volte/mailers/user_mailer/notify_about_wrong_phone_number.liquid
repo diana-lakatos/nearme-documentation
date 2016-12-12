@@ -1,0 +1,13 @@
+<h2>Hello there!</h2>
+
+<p>We tried to send you a text message, but it looks like your mobile number isn’t valid.</p>
+
+<p>Having the correct contact information is vital so you can receive our text messages about your listing!</p>
+
+<p>Please update your contact information in your personal account.</p>
+
+<a class="btn" href="{{ platform_context.host | append:user.edit_user_registration_url_with_token_and_tracking | append:signature_for_tracking }}">Go to My account</a>
+
+<p>If you prefer, you can talk with us directly; just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
+
+<p>We'll be glad to help you!</p>

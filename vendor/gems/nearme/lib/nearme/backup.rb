@@ -8,6 +8,7 @@ module NearMe
       @stack_name = options[:stack]
       @host_name = options[:host] || stack_to_host_mapping[@stack_name]
       @environment = options[:environment] || stack_to_env_mapping[@stack_name]
+      @jump_stack_name = stack_name_to_jump_stack_name(@stack_name)
 
       if ENV['AWS_USER'].nil?
         puts 'You must set the AWS_USER enviroment variable for AWS.'
@@ -51,11 +52,19 @@ module NearMe
       {
         'nm-production' => 'california-utility1',
         'nm-oregon' => 'oregon-rails-app1',
-        'nm-staging' => 'rails-app-1',
+        'nm-staging' => 'rails-app1',
         'nm-qa-1' => 'rails-app1',
-        'nm-qa-2' => 'rails-qa-2',
-        'nm-qa-3' => 'rails-qa-3'
+        'nm-qa-2' => 'rails-qa2',
+        'nm-qa-3' => 'rails-qa3'
       }
+    end
+
+    def stack_name_to_jump_stack_name(stack_name)
+      case stack_name
+      when 'nm-oregon' then 'nm-jump-oregon'
+      else
+        'nm-jump'
+      end
     end
 
     # This maps the default rails env we want the scripts to run in for a stack
@@ -94,6 +103,11 @@ module NearMe
       @instance ||= instances.find(-> { {} }) { |instance| instance.hostname == @host_name }
     end
 
+    def jump_server_dns
+      jump_stack_id = opsworks_client.describe_stacks.data.stacks.find(-> { {} }) { |stack| stack.name == @jump_stack_name }.stack_id
+      opsworks_client.describe_instances(stack_id: jump_stack_id).data.instances.first.public_dns
+    end
+
     def public_dns
       @public_dns ||= instance.public_dns
     end
@@ -123,7 +137,7 @@ module NearMe
     private
 
     def run_remote_command(remote_command)
-      unless Kernel.system("ssh #{ENV['AWS_USER']}@#{public_dns} \"#{remote_command}\"")
+      unless Kernel.system("ssh -t -o ProxyCommand='ssh #{ENV['AWS_USER']}@#{jump_server_dns} -W %h:%p' #{ENV['AWS_USER']}@#{public_dns} \"#{remote_command}\"")
         puts 'Remote command failed.'
         exit 1
       end

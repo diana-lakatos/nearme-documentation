@@ -10,6 +10,7 @@
     custom_validators_attributes:
       "[0]":
         required: true
+    hint: 'If your Law Firm has multiple locations, please provide the name of the principal office'
 
   types_of_injuries_included:
     label: 'Describe any other types of injuries included'
@@ -71,6 +72,7 @@
     custom_validators_attributes:
       "[0]":
         required: true
+    hint: 'If your Law Firm has multiple locations, please provide the name of the principal office'
 
   engagement_agreement_exists:
     label: 'Does a signed, written contingent fee agreement (the "Engagement Agreement") exist between Client and Referring Law Firm?'
