@@ -8,17 +8,19 @@
           - name: 'Pharmaceutical'
             children:
               - { name: 'Invokana® / Invokamet®', children:  ['Diabetic Ketoacidosis', 'Acute Kindney Failure', 'Coma', 'Death', 'Amputation', 'Other (describe)'] }
-              - 'Risperdal®'
-              - 'Talc / Talcum Powder'
-              - 'Onglyza'
-              - 'Xarelto®'
-              - 'Pradaxa®'
-              - 'Eliquis®'
+              - { name: 'Risperdal®', children: ['Gynecomastia', 'Pseudogynecomastia', 'Breast Tissue Growth in Males', 'Fat Development Around Nipple Area in Males', 'Other (describe)'] }
+              - { name: 'Talc / Talcum Powder', children: ['Ovarian Cancer', 'Other (describe)'] }
+              - { name: 'Onglyza', children: ['Hospitalized for Heart Failure', 'Pancreatic Cancer', 'Other (describe)'] }
+              - { name: 'Xarelto®', children: ['Hospitalized for Bleeding Event or Hemorrhagic Stroke', 'Death Caused by Bleeding Event or Hemorrhagic Stroke', 'Other (describe)'] }
+              - { name: 'Pradaxa®', children: ['Hospitalized for Bleeding Event or Hemorrhagic Stroke', 'Death Caused by Bleeding Event or Hemorrhagic Stroke', 'Other (describe)'] }
+              - { name: 'Eliquis®', children: ['Hospitalized for Bleeding Event or Hemorrhagic Stroke', 'Death Caused by Bleeding Event or Hemorrhagic Stroke', 'Other (describe)'] }
+              - name: 'Other'
           - name: 'Medical Device'
             children:
-              - 'IVC Filter'
-              - 'Hip Implant'
-              - 'Knee Implant'
+              - { name: 'IVC Filter', children: ['Hemorrhage', 'Pulmonary Embolism', 'Stroke', 'Death', 'Other (describe)'] }
+              - { name: 'Hip Implant', children: ['Device Remains in Body', 'Surgery to Remove Device', 'Other (describe)'] }
+              - { name: 'Knee Implant', children: ['Device Remains in Body', 'Surgery to Remove Device', 'Other (describe)'] }
+              - name: 'Other'
 
 "Individual Case":
   "Individual Case Categories":
@@ -33,18 +35,41 @@
           - { name: 'Animal Bite', children: ['Dog', 'Other'] }
           - { name: 'Maritime', children: ['Seaman', 'Longshore', 'Worker', 'Passenger', 'Bystander', 'Other'] }
           - { name: 'Railroad', children: ['Worker', 'Passenger', 'Bystander', 'Other'] }
-          - { name: 'Pharmaceutical', children: ['Invokana® / Invokamet®', 'Risperdal®', 'Talc / Talcum Powder', 'Onglyza', 'Xarelto®', 'Xarelto®', 'Eliquis®', 'Other'] }
-          - { name: 'Medical Device', children: ['IVC Filter', 'Hip Implant', 'Knee Implant', 'Other'] }
+          - name: 'Pharmaceutical'
+            children: 
+              - name: 'Invokana® / Invokamet®'
+                children: ['Diabetic Ketoacidosis', 'Acute Kidney Failure', 'Coma', 'Death', 'Amputation', 'Other (describe)']
+              - name: 'Risperdal®'
+                children: ['Gynecomastia', 'Pseudogynecomastia', 'Breast Tissue Growth in Males', 'Fat Development Around Nipple Area in Males', 'Other (describe)']
+              - name: 'Talc / Talcum Powder'
+                children: ['Ovarian Cancer', 'Other (describe)']
+              - name: 'Onglyza'
+                children: ['Hospitalized for Heart Failure', 'Pancreatic Cancer', 'Other (describe)']
+              - name: 'Xarelto®'
+                children: ['Hospitalized for Bleeding Event or Hemorrhagic Stroke', 'Death Caused by Bleeding Event or Hemorrhagic Stroke', 'Other (describe)']
+              - name: 'Pradaxa®'
+                children: ['Hospitalized for Bleeding Event or Hemorrhagic Stroke', 'Death Caused by Bleeding Event or Hemorrhagic Stroke', 'Other (describe)']
+              - name: 'Eliquis®'
+                children: ['Hospitalized for Bleeding Event or Hemorrhagic Stroke', 'Death Caused by Bleeding Event or Hemorrhagic Stroke', 'Other (describe)']
+              - name: 'Other'
+          - name: 'Medical Device'
+            children:
+              - name: 'IVC Filter'
+                children: ['Hemorrhage', 'Pulmonary Embolism', 'Stroke', 'Death', 'Other (describe)']
+              - name: 'Hip Implant'
+                children: ['Device Remains in Body', 'Surgery to Remove Device', 'Other (describe)']
+              - name: 'Knee Implant'
+                children: ['Device Remains in Body', 'Surgery to Remove Device', 'Other (describe)']
+              - name: 'Other'
           - { name: 'Nursing Home', children: ['Bedsores', 'Other'] }
           - 'Construction Accident'
           - { name: 'Asbestos and Toxic Tort', children: ['Mesothelioma or Lung Cancer', 'Other Cancer', 'Non-Cancer Injuries'] }
           - 'Other Personal Injury'
-          - 'Construction Accident'
 
       - name: 'Individual Non-Injury'
         children:
           - { name: 'Employment', children: ['Discrimination', 'Overtime', 'Harassment', 'Other (please describe)'] }
           - { name: 'Insurance and Property', children: ['Wind', 'Fire', 'Hail', 'Other (please describe)'] }
           - { name: 'Business and Commercial', children: ['Breach of Contract', 'Partnership Dispute', 'Other (please describe)'] }
-          - { name: 'Intellectual Property', children: ['Patent', 'Copywright', 'Trade Secret', 'Other (please describe)'] }
+          - { name: 'Intellectual Property', children: ['Patent', 'Copyright', 'Trade Secret', 'Other (please describe)'] }
           - 'Other Contingent Fee Matters'
