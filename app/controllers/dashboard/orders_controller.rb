@@ -118,7 +118,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
   private
 
   def ensure_merchant_account_exists
-    return unless @order.reservation_type.require_merchant_account?
+    return unless (@reservation_type || @order.reservation_type).require_merchant_account?
 
     unless @company.merchant_accounts.any?(&:verified?)
       flash[:notice] = t('flash_messages.dashboard.order.valid_merchant_account_required')
