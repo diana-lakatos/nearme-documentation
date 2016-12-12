@@ -1,15 +1,13 @@
 class SitemapsRefreshJob < Job
-  def after_initialize
+  include Job::LongRunning
+  def after_initialize(domain_id)
+    @domain_id = domain_id
   end
 
   def perform
-    Instance.find_each do |instance|
-      instance.set_context!
-
-      instance.domains.find_each do |domain|
-        domain.remove_generated_sitemap!
-        domain.save
-      end
-    end
+    @domain = Domain.find(@domain_id)
+    @domain.remove_generated_sitemap = true
+    @domain.save(validate: false)
+    SitemapService.send(:save_changes!, @domain, SitemapService::Generator.for_domain(@domain).to_s.squish)
   end
 end
