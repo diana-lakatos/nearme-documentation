@@ -4,7 +4,7 @@
     %h2.hx
       = t :featured_users
     %p.action
-      = link_to t(:view_all), search_path(search_type: :people, sort: "featured"), class: 'button-a small white'
+      = link_to t(:view_all), search_path(search_type: :people, sort: "featured"), class: 'button-a small light'
 
   .featured
     - users.each do |user|

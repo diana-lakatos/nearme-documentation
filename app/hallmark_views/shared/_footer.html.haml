@@ -1,34 +1,31 @@
 %footer#footer.footer-a
   .contain
     .wrap
-      %h2.hx
-        = link_to 'https://software.intel.com' do
-          = image_tag "community/logo-blue.png", width: 59, height: 39, alt: 'Intel'
-          = t :developer_zone
+      .copyright
+        = link_to 'https://hallmark.com' do
+          = image_tag "hallmark/logo-white.png", width: 109, height: 60, alt: 'Hallmark Keepsake Ornament Club'
+        %p
+          = t(:copyright_html, year: Time.now.year)
       %ul.nav
         - platform_context.pages.each do |page|
           %li
-            = link_to page.path, page.redirect_url.present? ? page.redirect_url : pages_path(page)
+            = link_to page.path, pages_path(page)
     .socials-a
       %p
         = t :join_us_on
       %ul
-        - if current_instance.theme.facebook_url.present?
-          %li.facebook
-            = link_to current_instance.theme.facebook_url, rel: 'external' do
-              %span Facebook
-        - if current_instance.theme.twitter_url.present?
-          %li.twitter
-            = link_to current_instance.theme.twitter_url, rel: 'external' do
-              %span Twitter
-        - if current_instance.theme.instagram_url.present?
-          %li.instagram
-            = link_to current_instance.theme.instagram_url, rel: 'external' do
-              %span Instagram
-        - if current_instance.theme.gplus_url.present?
-          %li.google
-            = link_to current_instance.theme.gplus_url, rel: 'external' do
-              %span Google+
+        %li.facebook
+          = link_to '#', rel: 'external' do
+            %span Facebook
+        %li.twitter
+          = link_to '#', rel: 'external' do
+            %span Twitter
+        %li.pinterest
+          = link_to '#', rel: 'external' do
+            %span Pinterest
+        %li.instagram
+          = link_to '#', rel: 'external' do
+            %span Instagram
         %li.youtube
-          = link_to 'https://www.youtube.com/user/intelswnetwork', rel: 'external' do
+          = link_to '#', rel: 'external' do
             %span YouTube

@@ -26,7 +26,7 @@ NM.on('ready', ()=>{
   require('hallmark/initializers/flash_message.initializer');
   require('hallmark/initializers/general.initializer');
   require('hallmark/initializers/group_form.initializer');
-  require('hallmark/initializers/intro_video.initializer');
+  // require('hallmark/initializers/intro_video.initializer');
   require('hallmark/initializers/modal.initializer');
   require('hallmark/initializers/photo_manipulator.initializer');
   require('hallmark/initializers/project_form.initializer');

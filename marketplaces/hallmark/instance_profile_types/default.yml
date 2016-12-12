@@ -1,0 +1,42 @@
+# default profile
+name: Default
+profile_type: default
+
+custom_attributes:
+  - name: role
+    public: false
+    valid_values: [ 'Superfan', 'Fan', 'Artist', 'Community Friend', 'Charter Member' ]
+    html_tag: select
+    label: Role
+    searchable: true
+
+  - name: about_me
+    html_tag: textarea
+    attribute_type: string
+    input_html_options: { cols: 40, rows: 8 }
+    label: About me
+    search_in_query: true
+
+  - name: short_bio
+    html_tag: textarea
+    attribute_type: text
+    input_html_options: { cols: 40, rows: 8 }
+    label: Short bio
+    search_in_query: true
+
+  - name: is_hallmark
+    html_tag: check_box
+    attribute_type: boolean
+    label: Hallmark Affiliate?
+    public: false
+
+custom_validators:
+  - field_name: role
+    required: true
+    valid_values: ['Black Belt', 'Innovator', 'Featured', 'Other']
+
+  - field_name: about_me
+    max_length: 5000
+
+  - field_name: short_bio
+    max_length: 140

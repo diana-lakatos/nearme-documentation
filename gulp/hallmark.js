@@ -1,7 +1,4 @@
-var
-  path = require('path'),
-  StyleProcessor = require('./utils/style_processor');
-
+const StyleProcessor = require('./utils/style_processor');
 
 module.exports = function(gulp, browserSync, config) {
 

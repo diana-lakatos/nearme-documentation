@@ -24,10 +24,10 @@ module MarketplaceBuilder
       private
 
       def load_dir(dir)
-        files = Dir.entries(dir).select { |path| File.file?(path) && /\.keep$/.match(path).nil? }
+        files = Dir.entries(dir).select { |filename| File.file?(File.join(dir, filename)) && /\.keep$/.match(filename).nil? }
         out = {}
         files.each do |filename|
-          out[File.basname(filename, '.yml')] = load_file(File.join(dir, filename))
+          out[File.basename(filename, '.yml')] = load_file(File.join(dir, filename))
         end
         out
       end

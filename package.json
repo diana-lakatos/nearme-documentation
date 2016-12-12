@@ -59,7 +59,8 @@
     "style-loader": "^0.13.1",
     "uglify-js": "^2.7.4",
     "vinyl-paths": "^2.1.0",
-    "webpack": "^1.13.2"
+    "webpack": "^1.13.2",
+    "yargs": "^6.5.0"
   },
   "dependencies": {
     "animate.css": "^3.5.0",

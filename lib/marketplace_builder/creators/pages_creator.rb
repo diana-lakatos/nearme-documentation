@@ -16,8 +16,15 @@ module MarketplaceBuilder
         slug = template.name.parameterize
         page = @instance.theme.pages.where(slug: slug).first_or_initialize
         page.path = template.name
-        page.content = template.body
-        page.save
+        page.content = template.body if template.body.present?
+        page.redirect_url = template.redirect_url if template.redirect_url.present?
+        page.redirect_code = template.redirect_code if template.redirect_code.present?
+        page.save!
+      end
+
+      def success_message(template)
+        msg = template.redirect_url.present? ? "#{template.name} (redirect)" : template.name
+        MarketplaceBuilder::Logger.log "\t- #{msg}"
       end
     end
   end

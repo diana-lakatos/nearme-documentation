@@ -55,6 +55,10 @@ module.exports = function(gulp, config) {
     gulp.watch([
       'shared/**/*.scss'
     ], { cwd: config.paths.stylesheets }, ['styles:application', 'styles:dashboard']);
+
+    gulp.watch([
+      'images/**'
+    ], { cwd: config.paths.images }, ['images']);
   });
 
   gulp.task('watch', ['watch:scss', 'watch:images', 'watch:fonts', 'watch:webpack', 'watch:lint'], function(){

@@ -26,7 +26,7 @@ namespace :mpbuilder do
     config = JSON.parse(File.read(config_file))
 
     instance_id = config["instance_id"]
-    mode = config["mode"] || MarketplaceBuilder::Builder::MODE_APPEND
+    mode = config["mode"] || MarketplaceBuilder::MODE_APPEND
 
     builder = MarketplaceBuilder::Builder.new(instance_id, source, mode)
     builder.execute!

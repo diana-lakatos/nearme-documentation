@@ -22,7 +22,7 @@ var
 require('./gulp/styles')(gulp, browserSync, config);
 require('./gulp/scripts')(gulp, config);
 require('./gulp/fonts')(gulp, config);
-require('./gulp/images')(gulp, config);
+require('./gulp/images')(gulp, config, browserSync);
 require('./gulp/vendor')(gulp, config);
 require('./gulp/lint')(gulp, config);
 require('./gulp/serve')(gulp, browserSync, config);

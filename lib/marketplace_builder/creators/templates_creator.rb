@@ -3,6 +3,8 @@ module MarketplaceBuilder
   module Creators
     class TemplatesCreator < Creator
       def execute!
+        cleanup! if @mode == MarketplaceBuilder::MODE_REPLACE
+
         templates = get_templates_from_dir(File.join(@theme_path, folder_name))
         return if templates.empty?
 
@@ -10,13 +12,15 @@ module MarketplaceBuilder
 
         templates.each do |template|
           create!(template)
-          MarketplaceBuilder::Logger.log "\t- #{template.liquid_path}"
+          success_message(template)
         end
-
-        cleanup! if @mode == MarketplaceBuilder::Builder::MODE_REPLACE
       end
 
       protected
+
+      def success_message(template)
+        MarketplaceBuilder::Logger.log "\t- #{template.liquid_path}"
+      end
 
       def object_name
         raise NotImplementedError
@@ -43,8 +47,9 @@ module MarketplaceBuilder
       def get_templates_from_dir(template_folder)
         template_files = Dir.glob("#{template_folder}/**/*").select { |path| File.file?(path) && /\.keep$/.match(path).nil? }
         template_files.map! do |filename|
-          default_template_options[:partial] = !/^_/.match(File.basename(filename)).nil?
-          load_file_with_yaml_front_matter(filename, template_folder, default_template_options)
+          options = default_template_options
+          options[:partial] = !/^_/.match(File.basename(filename)).nil?
+          load_file_with_yaml_front_matter(filename, template_folder, options)
         end
       end
 

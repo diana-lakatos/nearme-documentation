@@ -20,25 +20,25 @@
 
   %nav#nav.nav
     %ul
-      %li.people
+      %li.members
         = link_to search_url(search_type: :people), accesskey: 1 do
           %span.text
-            = "#{t(:people)} <em>1</em>".html_safe
-
-      %li.projects
-        = link_to search_url(search_type: :projects), accesskey: 2 do
-          %span.text
-            = "#{t(:projects)} <em>2</em>".html_safe
+            = "#{t(:members)} <em>1</em>".html_safe
 
       %li.topics
-        = link_to search_url(search_type: :topics), accesskey: 3 do
+        = link_to search_url(search_type: :topics), accesskey: 2 do
           %span.text
-            = "#{t(:topics)} <em>3</em>".html_safe
+            = "#{t(:topics)} <em>2</em>".html_safe
 
       %li.groups
-        = link_to search_url(search_type: :groups), accesskey: 4 do
+        = link_to search_url(search_type: :groups), accesskey: 3 do
           %span.text
-            = "#{t(:groups)} <em>4</em>".html_safe
+            = "#{t(:groups_and_clubs)} <em>3</em>".html_safe
+
+      %li.extras
+        = link_to search_url(search_type: :extras), accesskey: 4 do
+          %span.text
+            = "#{t(:extras)} <em>4</em>".html_safe
 
   .corner
     - if current_user
@@ -63,10 +63,4 @@
             = link_to t(:log_out), destroy_user_session_path, method: :delete
     - else
       %p.actions
-        = link_to t(:log_in), new_user_session_path(wizard: :onboarding), class: 'button-a small orange'
-
-    %p.actions
-      - if (project_type = TransactableType.find_by_name('Project')).present?
-        = link_to t(:add_project), new_dashboard_project_type_project_path(project_type), class: 'button-a small orange add'
-      - else
-        = link_to "ADD PROJECT TYPE IN INSTANCE ADMIN", new_instance_admin_projects_transactable_type_path, class: 'button-a small orange add'
+        = link_to t(:log_in), new_user_session_path(wizard: :onboarding), class: 'button-a small alt'

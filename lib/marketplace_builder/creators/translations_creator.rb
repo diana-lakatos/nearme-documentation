@@ -5,9 +5,10 @@ module MarketplaceBuilder
       def execute!
         locales = get_data
         locales.keys.each do |locale|
-          MarketplaceBuilder::Logger.info "Translating locale #{locale}"
+          MarketplaceBuilder::Logger.info "Translating locale #{locale.upcase}\n"
 
-          locales_hash = convert_hash_to_dot_notation(data[locale])
+          # keys are duplicated, so we canretain the same format of translation files as in the original Rails i18n files
+          locales_hash = convert_hash_to_dot_notation(locales[locale][locale])
           locales_hash.each_pair do |key, value|
             create_translation(key, value, locale)
             MarketplaceBuilder::Logger.log '.', flush: true, new_line: false

@@ -35,7 +35,7 @@ module.exports = class PhotoView
     cropLink.attr('data-id', @data.id)
     actions.append(cropLink)
 
-    deleteLink = $('<button class="button-a small red action--remove" type="button" data-delete-photo title="Delete photo"><span class="intelicon-trash-outlined"></span></button>')
+    deleteLink = $('<button class="button-a small danger action--remove" type="button" data-delete-photo title="Delete photo"><span class="intelicon-trash-outlined"></span></button>')
     deleteLink.attr('data-url', @data.destroy_url)
     actions.append(deleteLink)
 

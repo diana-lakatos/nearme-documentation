@@ -96,7 +96,7 @@
   %p.action
 
     - if f.object.new_record? || f.object.draft?
-      = f.submit t(:save_for_later), name: 'save_for_later', class: 'button-a white'
+      = f.submit t(:save_for_later), name: 'save_for_later', class: 'button-a light'
 
       = f.submit t(:publish_project), name: 'submit', class: 'button-a'
 

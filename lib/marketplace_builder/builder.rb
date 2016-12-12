@@ -2,17 +2,17 @@
 require 'benchmark'
 
 module MarketplaceBuilder
-  class Builder
-    MODE_REPLACE = 'replace'
-    MODE_APPEND = 'append'
+  MODE_REPLACE = 'replace'
+  MODE_APPEND = 'append'
 
-    def initialize(instance_id, theme_path, mode = MODE_APPEND)
+  class Builder
+    def initialize(instance_id, theme_path, mode = MarketplaceBuilder::MODE_APPEND)
       @instance = Instance.find(instance_id)
       @instance.set_context!
 
       MarketplaceBuilder::Logger.info "Marketplace Builder loaded for #{@instance.name}"
 
-      MarketplaceBuilder::Logger.error "Mode #{mode} is not implemented", raise: true if [MODE_REPLACE, MODE_APPEND].include?(mode) == false
+      MarketplaceBuilder::Logger.error "Mode #{mode} is not implemented", raise: true if [MarketplaceBuilder::MODE_REPLACE, MarketplaceBuilder::MODE_APPEND].include?(mode) == false
 
       @mode = mode
       @theme_path = theme_path
@@ -20,13 +20,11 @@ module MarketplaceBuilder
 
       @creators = []
 
-      add_creator Creators::ReservationTypeCustomAttributesCreator.new
-      add_creator Creators::TransactableTypeCustomAttributesCreator.new
-      add_creator Creators::InstanceProfileTypeCustomAttributesCreator.new
-
-      add_creator Creators::TransactableTypeFormComponentsCreator.new
-      add_creator Creators::InstanceProfileTypeFormComponentsCreator.new
-      add_creator Creators::ReservationTypeFormComponentsCreator.new
+      add_creator Creators::InstanceCreator.new
+      add_creator Creators::TransactableTypesCreator.new
+      add_creator Creators::InstanceProfileTypesCreator.new
+      add_creator Creators::ReservationTypesCreator.new
+      add_creator Creators::TopicsCreator.new
 
       add_creator Creators::CategoriesCreator.new
       add_creator Creators::PagesCreator.new

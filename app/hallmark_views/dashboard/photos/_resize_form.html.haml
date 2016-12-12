@@ -5,7 +5,7 @@
     -if @user.try(:errors).try(:any?)
       .error-block Unable to save image
     %p
-      %button.button-a.small.orange{:type => "button", :data => {:"rotate-photo" => true}} Rotate
+      %button.button-a.small.alt{:type => "button", :data => {:"rotate-photo" => true}} Rotate
 
     = image_tag object_url, 'data-image' => true, data: { rotate: object.transformation_rotate, crop: object.transformation_crop, original_dimensions: object.original_dimensions}
 

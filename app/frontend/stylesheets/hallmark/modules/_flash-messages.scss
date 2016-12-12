@@ -1,54 +1,60 @@
 // Flash messages
 @mixin alert-color($class, $background, $color: null, $close: null) {
-    @if ($color == null) {
-        $color: darken($background, 20%);
-    }
-    @if ($close == null) {
-        $close: lighten($background, 30%);
-    }
-    &.#{$class} {
-        background: $background;
-        color: $color;
+  @if $color == null {
+    $color: darken($background, 20%);
+  }
 
-        .close {
-            color: $close;
-        }
+  @if $close == null {
+    $close: lighten($background, 30%);
+  }
+
+  &.#{$class} {
+    background: $background;
+    color: $color;
+
+    .close {
+      color: $close;
     }
+  }
 }
 
 .alert {
-    margin: 0;
-    overflow: hidden;
+  margin: 0;
+  overflow: hidden;
 
-    .contain {
-        position: relative;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        font-size: 20px;
-    }
+  .contain {
+    position: relative;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 20px;
+  }
 
-    .close {
-        vertical-align: middle;
-        margin-left: 30px;
-        padding: 0;
-        background: none;
-        text-align: center;
-        border: none;
-        font-size: 16px;
-        color: inherit;
-    }
+  .close {
+    vertical-align: middle;
+    margin-left: 30px;
+    padding: 0;
+    background: none;
+    text-align: center;
+    border: none;
+    font-size: 16px;
+    color: inherit;
+  }
 
-    ul {
-        margin-bottom: 0;
-    }
+  ul {
+    margin-bottom: 0;
+  }
 
-    li + .close, ul + .close {
-        margin-left: 0;
-    }
+  li + .close, ul + .close {
+    margin-left: 0;
+  }
 
-    @include alert-color(error, #f00, #fff);
-    @include alert-color(notice, #00aeef, #fff);
-    @include alert-color(warning, #f3d54e, #736009, #736009);
-    @include alert-color(success, #C4D600, #677000, #677000);
-    @include alert-color(deleted, #f3d54e, #736009, #736009);
+  @include alert-color(error, $color-red-1, #fff);
+
+  @include alert-color(notice, $color-blue, #fff);
+
+  @include alert-color(warning, $color-red-1, #fff);
+
+  @include alert-color(success, $color-green-1, #fff);
+
+  @include alert-color(deleted, $color-green-1, #fff);
 }

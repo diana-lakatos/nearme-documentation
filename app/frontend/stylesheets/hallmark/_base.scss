@@ -5,14 +5,31 @@ $screen-tablet-vertical: 768px;
 $screen-mobile: 600px;
 $screen-xs: 480px;
 
-
 // fonts
 
-$font-default: Intel Clear, Helvetica Neue, Helvetica, Arial, sans-serif;
-$font-alt: Intel Clear Pro, Helvetica Neue, Helvetica, Arial, sans-serif;
+$font-default: proxima-nova, Helvetica Neue, Helvetica, Arial, sans-serif;
+$font-alt: abril-text, Georgia, sans-serif;
 
 $font-icons: Icons;
+$font-icons-fa: FontAwesome;
 
 $modal-z-index: 1000;
 
 $avatar-background: #f5f6f8;
+
+$color-purple: #613790;
+$color-blue: #0077d9;
+$color-navy: #003f73;
+$color-red-1: #ed1c24;
+$color-red-2: #bf0000;
+$color-green-1: #388729;
+$color-green-2: #ed1c24;
+$color-gray-1: #a3a5a6;
+$color-gray-2: #7f8286;
+$color-gray-3: #5d6166;
+$color-gray-4: #293035;
+$color-white-1: #edecea;
+$color-white-2: #dcdcdc;
+$color-white-3: #f6f5f4;
+
+$color-default: $color-red-1;

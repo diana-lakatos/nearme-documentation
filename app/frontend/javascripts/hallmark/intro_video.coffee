@@ -6,6 +6,7 @@ module.exports = class IntroVideo
     @loadApi()
 
     @container = $(container)
+    @initStructure();
     @videoWrap = @container.find('.intro-video-wrapper')
     @iframe = @videoWrap.find('iframe')
     @overlay = @container.find('.intro-video-overlay')
@@ -13,7 +14,7 @@ module.exports = class IntroVideo
     @cookieName = 'hide_intro_video'
     @videoAspectRatio = 1280/720;
 
-    @initStructure()
+
     @bindEvents()
 
   loadApi: ->
@@ -23,6 +24,9 @@ module.exports = class IntroVideo
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
 
   initStructure: ->
+    @container.html('<div class="intro-video-overlay"></div><div class="intro-video-wrapper"><div id="intro-player"></div></div><button type="button" class="intro-video-close button-a">Close Video</button>');
+    @container.addClass('initialised');
+
     @trigger = $('<button type="button" id="intro-video-toggler">Play Video <span>Again</span></button>')
     @trigger.appendTo('body')
 

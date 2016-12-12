@@ -4,8 +4,8 @@
   - # do nothing
 - elsif transactable_collaborator
   - if transactable_collaborator.approved_by_user?
-    = link_to t(:leave_project), listing_transactable_collaborator_path(transactable, transactable_collaborator), method: :delete , class: 'button-a small red', remote: true
+    = link_to t(:leave_project), listing_transactable_collaborator_path(transactable, transactable_collaborator), method: :delete , class: 'button-a small danger', remote: true
   - else
-    = link_to t(:join_project), accept_listing_transactable_collaborator_path(id: transactable_collaborator, listing_id: transactable), class: 'button-a small red', remote: true
+    = link_to t(:join_project), accept_listing_transactable_collaborator_path(id: transactable_collaborator, listing_id: transactable), class: 'button-a small danger', remote: true
 - elsif transactable.seek_collaborators
   = link_to t(:join_project), listing_transactable_collaborators_path(transactable), method: :post , class: 'button-a small', remote: true

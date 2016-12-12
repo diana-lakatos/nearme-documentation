@@ -1,94 +1,90 @@
 /* socials */
 
 .socials-a {
+  p {
+    margin-bottom: 40px;
+    font-size: 15px;
+  }
 
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+    letter-spacing: -1em;
+  }
+
+  li {
+    display: inline-block;
+    font: 26px / 50px $font-icons-fa;
+    letter-spacing: 0;
+    vertical-align: top;
+  }
+
+  li ~ li {
+    margin-left: 30px;
+  }
+
+  li:before {
+    display: none;
+  }
+
+  li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0;
+  }
+
+  li a:hover {
+    background-color: $color-gray-4;
+  }
+
+  li a:before {
+    text-align: inherit;
+    font-size: 35px;
+  }
+
+  li.facebook a:before {
+    content: $fa-var-facebook-square;
+  }
+
+  li.twitter a:before {
+    content: $fa-var-twitter-square;
+  }
+
+  li.pinterest a:before {
+    content: $fa-var-pinterest-square;
+  }
+
+  li.instagram a:before {
+    content: $fa-var-instagram;
+  }
+
+  li.youtube a:before {
+    content: $fa-var-youtube-square;
+  }
+
+  li a span {
+    display: none;
+  }
+
+  @include bp($screen-mobile) {
     p {
-        margin-bottom: 40px;
-        font-size: 14px;
-    }
-
-    ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        font-size: 0;
-        letter-spacing: -1em;
+      margin-bottom: 20px;
     }
 
     li {
-        display: inline-block;
-        font: 26px/50px $font-icons;
-        letter-spacing: 0;
-        vertical-align: top;
+      font-size: 20px;
+      line-height: 40px;
     }
 
     li ~ li {
-        margin-left: 50px;
-    }
-
-    li:before {
-        display: none;
+      margin-left: 10px;
     }
 
     li a {
-        display: block;
-        width: 50px;
-        height: 50px;
-        background: #2071B9;
-        color: #fff;
-        text-decoration: none;
+      width: 40px;
+      height: 40px;
     }
-
-    li a:hover {
-        background-color: #18639B;
-    }
-
-    li a:before {
-        text-align: inherit;
-    }
-
-    li.facebook a:before {
-        content: '\e60f';
-    }
-
-    li.twitter a:before {
-        content: '\e612';
-    }
-
-    li.google a:before {
-        content: '\e611';
-    }
-
-    li.instagram a:before {
-        content: '\e613';
-    }
-
-    li.youtube a:before {
-        content: '\e610';
-    }
-
-    li a span {
-        display: none;
-    }
-
-    @include bp($screen-mobile) {
-
-        p {
-            margin-bottom: 20px;
-        }
-
-        li {
-            font-size: 20px;
-            line-height: 40px;
-        }
-
-        li ~ li {
-            margin-left: 10px;
-        }
-
-        li a {
-            width: 40px;
-            height: 40px;
-        }
-    }
+  }
 }

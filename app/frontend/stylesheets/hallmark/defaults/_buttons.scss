@@ -7,112 +7,110 @@ button,
 input[type="submit"],
 input[type="button"],
 input[type="reset"] {
-    display: inline-block;
-    padding: 9px 29px;
-    border: 1px solid #00aeef;
-    border-radius: 3px;
-    background: #00aeef;
-    color: #fff;
-    font-size: 16px;
-    line-height: 20px;
-    text-align: center;
-    text-decoration: none !important;
-    outline: none;
-    vertical-align: top;
+  display: inline-block;
+  padding: 9px 29px;
+  border: 1px solid #0077d9;
+  background: #0077d9;
+  color: #fff;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  text-decoration: none !important;
+  outline: none;
+  vertical-align: top;
+  font-weight: bold;
+  text-transform: uppercase;
 
-    &:hover {
-        border-color: #0071c5;
-        background-color: #0071c5;
-        color: #fff;
-    }
+  &:hover {
+    border-color: #003f73;
+    background-color: #003f73;
+    color: #fff;
+  }
 }
 
 .button-a {
+  &:before {
+    transition: none;
+  }
 
-    &:before {
-        transition: none;
-    }
+  &.large {
+    padding: 15px 30px;
+    font-size: 22px;
+    line-height: 30px;
+  }
 
-    &.large {
-        padding: 9px 39px;
-        font-size: 24px;
-        line-height: 30px;
-    }
+  &.small {
+    padding: 4px 19px;
+    font-size: 12px;
+  }
 
-    &.small {
-        padding: 4px 19px;
-        font-size: 14px;
-    }
+  &.tiny {
+    padding: 1px 14px;
+    font-size: 12px;
+  }
 
-    &.tiny {
-        padding: 1px 14px;
-        font-size: 14px;
-    }
+  &.alt {
+    border-color: #ed1c24;
+    background-color: #ed1c24;
+  }
 
-    &.orange {
-        border-color: #FAA21B;
-        background-color: #FAA21B;
-    }
+  &.alt:hover {
+    border-color: #ffffff;
+    background-color: #ffffff;
+    color: #0077d9;
+  }
 
-    &.orange:hover {
-        border-color: #f04e23;
-        background-color: #f04e23;
-    }
+  &.navy {
+    border-color: #163e70;
+    background-color: #163e70;
+  }
 
-    &.navy {
-        border-color: #163e70;
-        background-color: #163e70;
-    }
+  &.navy:hover {
+    border-color: #1671b9;
+    background-color: #1671b9;
+  }
 
-    &.navy:hover {
-        border-color: #1671b9;
-        background-color: #1671b9;
-    }
+  &.light {
+    border-color: #0077d9;
+    background-color: transparent;
+    color: #0077d9;
+  }
 
-    &.white {
-        border-color: #cdcccc;
-        background-color: #fff;
-        color: #0071c5;
-        font-weight: normal;
-    }
+  &.white:hover {
+    color: #00aeef;
+    background: #003f73;
+    border-color: #003f73;
+    color: #fff;
+  }
 
-    &.white:hover {
-        color: #00aeef;
-    }
+  &.danger {
+    border-color: #f00;
+    background-color: #f00;
+    color: #fff;
+    font-weight: normal;
+  }
 
-    &.red {
-        border-color: #f00;
-        background-color: #f00;
-        color: #fff;
-        font-weight: normal;
-    }
+  &.danger:hover {
+    background: darken(#f00, 10%);
+  }
 
-    &.gray {
-      background-color: #cdcccc;
-      border-color: #cdcccc;
-    }
+  &.off {
+    opacity: 0.6;
+  }
 
-    &.red:hover {
-        background: darken(#f00, 10%);
-    }
+  &.add:before {
+    display: inline-block;
+    content: '\e60e';
+    margin: 0 10px 0 -5px;
+    font: 14px $font-icons;
+    line-height: inherit;
+    vertical-align: top;
+  }
 
-    &.off {
-        opacity: 0.6;
-    }
-
-    &.add:before {
-        display: inline-block;
-        content: '\e60e';
-        margin: 0 10px 0 -5px;
-        font: 14px $font-icons;
-        line-height: inherit;
-        vertical-align: top;
-    }
-
-    [class*="intelicon-"] {
-        margin-left: -5px;
-        margin-right: 5px;
-        font-size: 15px;
-        line-height: inherit;
-    }
+  [class*="intelicon-"] {
+    margin-left: -5px;
+    margin-right: 5px;
+    font-size: 15px;
+    line-height: inherit;
+  }
 }

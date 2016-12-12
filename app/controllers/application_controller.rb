@@ -441,8 +441,17 @@ class ApplicationController < ActionController::Base
   helper_method :ckeditor_toolbar_creator, :enable_ckeditor_for_field?
 
   def prepend_view_paths
-    prepend_view_path("app/#{PlatformContext.current.instance.prepend_view_path}_views") if PlatformContext.current.instance.prepend_view_path.present?
+    prepend_view_path("app/#{custom_view_path}_views") if custom_view_path.present?
     prepend_view_path InstanceViewResolver.instance
+  end
+
+  def custom_view_path
+    # FIXME: tmp hack to fallback to 'intel' for is community
+    if PlatformContext.current.instance.is_community?
+      PlatformContext.current.instance.prepend_view_path.presence || 'devmesh'
+    else
+      PlatformContext.current.instance.prepend_view_path
+    end
   end
 
   # It's a valid single param, not an array, hash etc. or some other thing

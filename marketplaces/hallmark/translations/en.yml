@@ -1,2 +1,293 @@
-~
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
 en:
+  global_page_title: 'Hallmark Keepsake Ornament Club'
+
+  # top bar
+  skip_to_navigation: 'Skip to navigation'
+  skip_to_content: 'Skip to content'
+  skip_to_footer: 'Skip to footer'
+
+  members: 'Members'
+  extras: 'Extras'
+  topics: 'Topics'
+  groups_and_clubs: 'Groups & Clubs'
+  profile: 'Profile'
+  my_projects: 'My Projects'
+  my_groups: 'My Groups'
+  favorites: 'Favorites'
+  account: 'Account'
+  log_out: 'Log Out'
+  log_in: 'Log In'
+  add_project: 'Add Project'
+  add_group: 'Add Group'
+  create_group: 'Create Group'
+
+  # footer
+  copyright_html: '&copy; %{year} Hallmark Licensing, LLC'
+  join_us_on: 'Join Us On'
+
+  # home activity
+  user_possessive:
+    male: 'his'
+    female: 'her'
+  user_updated_status: "%{user_link} updated %{possessive} status"
+  user_created_transactable: "%{user_link} created a new %{project_link}"
+  user_shared_article: "%{user_link} shared an article on the %{page_link}"
+  user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} project"
+  user_added_photo: "%{user_link} added a photo to the %{project_link} project"
+  user_added_comment_discussion: "%{user_link} added a new comment in %{discussion_link}"
+  comment: 'Comment'
+  report_as_spam: 'Report as Spam'
+  cancel_spam_report: 'Cancel spam report'
+  load_more_comments: 'Load more comments'
+  remove_comment: 'Remove'
+  user_said: '%{user_link} said'
+  project: 'project'
+  see_more: 'See More'
+
+  # featured
+  featured_projects: 'Featured Projects'
+  featured_users: 'Featured Developers'
+  featured_topics: 'Featured Topics'
+  view_all: 'View All'
+  follow: 'Follow'
+
+
+  # home overview
+  hero_slogan: 'Hang out with the craftiest minds'
+  hero_description: 'Find, follow and chat with club members across Keepsake topics and groups'
+  join_now: 'Join Now'
+  explore_the_most_popular_projects: 'Browse featured projects, follow your favorites, contribute ideas, or share your own work.'
+  connect_with_influencers: 'Featured Developers'
+  connect_with_influencers_description: "Find and connect with the most interesting developers in your field, or even your city."
+  featured_topics_description: 'Follow your favorite development topics, including the latest trends, tutorials, and support.'
+
+  # user activity
+  featured_user: 'Featured User'
+  activity: 'Activity'
+  following: 'Following'
+  followers: 'Followers'
+  members: 'Members'
+  projects: 'Projects'
+  about: 'About'
+
+  # user profile
+  user_profile:
+    empty_resultset:
+      users: 'No users to show at the moment.'
+      topics: 'No topics to show at the moment.'
+      projects: 'No projects to show at the moment.'
+      groups: 'No groups to show at the moment.'
+
+
+  # search
+  search: "Search"
+  filter_by: 'Filter by:'
+  results_count: 'Results'
+  innovator: 'Innovator'
+  black_belt: 'Black Belt'
+  unfollow: 'Unfollow'
+  featured: 'Featured'
+  collaborators: 'Collaborators'
+
+  # projects
+  join_project: 'Join Project'
+  leave_project: 'Leave Project'
+  leave_project_confirm: 'Are you sure that you want to leave this project?'
+  comments: 'Comments'
+  gallery: 'Gallery'
+  description: 'Description'
+  links: 'Links'
+  video: 'Video'
+  read_more: '... Read More'
+
+  # time
+  hours:
+    one: '1hr'
+    other: '%{count}hrs'
+
+
+  # tutorial
+  step_no: 'Step %{number}'
+  tutorial:
+    step_1: 'The Activity Feed will show you the most recent updates from the people, projects, and topics you follow.'
+    step_2: "Let your followers know what you're up to by posting a status update."
+    step_3: 'Get recommendations for developers, projects, and topics to follow.'
+    step_4: "Share your projects to show what you're working on, get feedback from the community, and find collaborators."
+  next: 'Next'
+  finish: 'Finish'
+
+  # onboarding
+  onboarding:
+    step_1:
+      title: 'Almost there! Just a couple more questions to set up your Mesh account. Where do you live?'
+      description: "Let us know what city you're in so we can connect you with developers and events in your area."
+    step_2:
+      title: 'Connect your social accounts'
+      description: 'Get a jump start on building your Mesh network with people you already know.'
+    step_3:
+      title: 'Recommendations to get started'
+      description: "Based on what you've already told us, we've selected some people, projects, and topics for you to follow. You can find and follow more at any time."
+    step_4:
+      title: 'Congrats! Your account has been successfully created.'
+      description: 'Introduce yourself to the community in the most interesting way! It will make it easy for people to find you and follow you.'
+
+    more_info: 'You can add more information and complete your profile in your personal account'
+    step_x_of_total: 'Step %{step} of %{total}'
+    no_suggestions_at_this_time: "No suggestions at this time."
+
+  continue: 'Continue'
+  connect_with_service: 'Connect with %{service}'
+  connect: 'Connect'
+  people_to_follow: 'Developers to Follow'
+  projects_to_follow: 'Projects to Follow'
+  topics_to_follow: 'Topics to Follow'
+  add_photo: 'Add Photo'
+  skip: 'Skip'
+  location_placeholder: 'Enter your city'
+
+
+  # projects
+  my_projects: 'My Projects'
+  picture: 'Picture'
+  name: 'Name'
+  summary: 'Summary'
+  role: 'Role'
+  status: 'Status'
+  edit: 'Edit'
+  remove: 'Remove'
+  owner: 'Owner'
+  collaborator: 'Collaborator'
+  published: 'Published'
+  draft: 'Draft'
+  empty_cta: 'You haven’t added any project yet. Create your first one now!'
+  empty_groups: 'You haven’t added any group yet. Create your first one now!'
+  publish_project: 'Publish Project'
+  save_for_later: 'Save for Later'
+  images: 'Images'
+  add_another_photo: 'Add another photo'
+  add_link: 'Add link'
+  add_collaborator: 'Add collaborator'
+  or: 'or'
+  upload_image: 'Upload Image'
+  edit_project: 'Edit Project'
+  edit_group: 'Edit Group'
+  actions: 'Actions'
+  approve: 'Approve'
+  decline: 'Decline'
+  cancel_request: "Cancel request"
+  approved: 'Approved'
+  pending: 'Pending'
+  save_changes: 'Save Changes'
+  delete_project: 'Delete Project'
+  draft_project: 'This project is disabled.'
+  draft_group: 'This group is disabled.'
+
+  #collaborators
+  collaboration_cancelled: "Collaboration request has been cancelled."
+  collaboration_accepted: "Collaboration request has been approved."
+
+  # account
+  my_account: 'My Account'
+  edit_profile: 'Edit Profile'
+  notifications: 'Notifications'
+  social_accounts: 'Social Accounts'
+  disconnect: 'Disconnect'
+
+  #validation
+  not_exist: "does not exist"
+
+  # activity feed
+  activity_feed:
+    title: "Activity Feed"
+    user_status_text: "What are you working on?"
+    user_status_submit: "Post"
+    no_interactions_yet: "There were no interactions yet."
+    verbs:
+      follow: "Follow"
+      unfollow: "Unfollow"
+    events:
+      user_followed_user: '%{follower} started following user %{followed}'
+      user_followed_transactable: '%{follower} started following project %{followed}'
+      user_followed_topic: '%{follower} started following topic %{followed}'
+      user_created_transactable: '%{user} created project %{transactable}'
+      user_updated_user_status: '%{user} updated %{updated} status'
+      user_updated_transactable_status: '%{user} updated project %{updated} status'
+      user_updated_topic_status: '%{user} updated topic %{updated} status'
+      user_added_photos_to_transactable: '%{user} added photos to project %{transactable}'
+      user_added_links_to_transactable: '%{user} added links to project %{transactable}'
+      topic_created: '%{topic} has been created'
+      user_commented: "%{user} added a comment on %{followed}'s %{activity}"
+      user_commented_on_transactable: "%{user} added a comment on project %{transactable}"
+
+      user_created_group: '%{user} created group %{group}'
+      user_added_photos_to_group: '%{user} added photos to group %{group}'
+      user_updated_group_status: '%{user} posted an update in %{group}'
+      user_added_links_to_group: '%{user} added links to group %{group}'
+      user_commented_on_user_activity: "%{user} commented on %{followed}'s update in %{type}"
+
+  # groups
+  group:
+    name: 'Name'
+    description: 'Description'
+    location: 'Location'
+    gallery: 'Gallery'
+    videos: 'Videos'
+    links: 'Links'
+    invite_member: 'Invite Member'
+    accept: 'Accept'
+    decline: 'Decline'
+    ask_to_join: 'Ask to join'
+    join: 'Join'
+    leave: 'Leave'
+    request_sent: 'Request sent'
+    main_image: 'Main Image'
+    delete_group: 'Delete Group'
+    save_changes: 'Save Changes'
+    publish_group: 'Publish Group'
+    save_for_later: 'Save for Later'
+    moderator: 'Moderator'
+    placeholders:
+      video_url: 'Enter yourube or vimeo URL'
+      add_video: 'Add Video'
+      select_group_type: 'Select Group Type'
+      all_groups: 'All Groups'
+    manage_members: 'Manage Members'
+    group_deleted: "The group has been successfully deleted."
+
+    type:
+      public: 'Anyone can view group content and join. Only members can post.'
+      moderated: 'Anyone can view group content and request to join. Only members can post.'
+      private: 'Anyone can request to join. Only members can view group content and post.'
+
+  # membership
+  membership_cancelled: "Membership request has been cancelled."
+  membership_accepted: "Membership request has been approved."
+
+  custom_errors:
+    video_url_not_supported: "Video URL is invalid or video provider is not supported."
+    main_image_missing: 'Please upload main image'
+
+  transactable_type:
+    project:
+      name: "project"

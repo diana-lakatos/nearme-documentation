@@ -12,6 +12,9 @@ module MarketplaceBuilder
         categories.keys.each do |tt_name|
           MarketplaceBuilder::Logger.log "\t#{tt_name}:"
           object = @instance.transactable_types.where(name: tt_name).first
+          unless object.present?
+            return MarketplaceBuilder::Logger.error "#{tt_name} transactable type associated with categories does not exist, create it first"
+          end
           update_categories_for_object(object, categories[tt_name])
         end
       end
@@ -24,9 +27,11 @@ module MarketplaceBuilder
 
       def remove_unused_categories(categories)
         used_categories = []
+
         categories.each do |_tt, cats|
-          used_categories.concat(cats.keys)
+          cats.each { |c| used_categories << c['name'] }
         end
+
         used_categories.uniq!
 
         unused_categories = Category.where('name NOT IN (?) AND parent_id IS NULL', used_categories)
@@ -41,15 +46,15 @@ module MarketplaceBuilder
 
       def update_categories_for_object(tt, categories)
         MarketplaceBuilder::Logger.log "\t  Updating / creating categories:"
-        categories.each do |name, hash|
+
+        categories.each do |hash|
           hash = default_category_properties.merge(hash.symbolize_keys)
           children = hash.delete(:children) || []
-          category = Category.where(name: name).first_or_create!
+          category = Category.where(name: hash[:name]).first_or_create!
           category.transactable_types = category.transactable_types.push(tt) unless category.transactable_types.include?(tt)
-          category.instance_profile_types = category.instance_profile_types.push(InstanceProfileType.buyer.first) if hash.delete('assign_to_buyer_profile') && !category.instance_profile_types.include?(InstanceProfileType.buyer.first)
           category.save!
 
-          MarketplaceBuilder::Logger.log "\t    - #{name}"
+          MarketplaceBuilder::Logger.log "\t    - #{hash[:name]}"
 
           create_category_tree(category, children, 1)
         end
@@ -57,7 +62,7 @@ module MarketplaceBuilder
 
       def create_category_tree(category, children, level)
         children.each do |child|
-          name = child.is_a? Hash ? child['name'] : child
+          name = child.is_a?(Hash) ? child['name'] : child
           subcategory = category.children.where(name: name).first_or_create!(parent_id: category.id)
           MarketplaceBuilder::Logger.log "\t    #{'  ' * (level + 1)}- #{name}"
           create_category_tree(subcategory, child['children'], level + 1) if child['children']
