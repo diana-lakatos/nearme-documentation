@@ -1,0 +1,6 @@
+<h2>Hi, {{ enquirer.first_name }}</h2>
+
+<p>Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' will expire in {{ expires_in_hours }} hours.</p>
+
+<p>We're always happy to help! Just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>
+

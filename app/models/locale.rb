@@ -65,6 +65,10 @@ class Locale < ActiveRecord::Base
     custom_name.blank? ? name : custom_name
   end
 
+  def expire_cache_options
+    { with_defaults: true }
+  end
+
   private
 
   def create_tranlsation_keys_for_categories

@@ -1,3 +1,30 @@
+{% assign g = '
+  {
+    projects:transactables(take: 3, filters: [ACTIVE, FEATURED]) {
+      name
+      show_path
+      cover_photo_url
+      creator {
+        profile_path
+        avatar_url_thumb
+      }
+    }
+    users(take: 8, filters: [FEATURED]) {
+      profile_path
+      avatar_url_bigger
+      name_with_affiliation
+      display_location
+      short_bio: custom_attribute(name: "short_bio")
+    }
+    topics(filters: [FEATURED], arbitrary_order: ["Networking", "Dual Screen", "Big Data", "Open Source", "Android", "Real Sense"], take: 6) {
+      name
+      show_url
+      background_style
+      background_style_big
+    }
+  }' | query
+%}
+
 <div class="hero-a" style="background-image: url({{ platform_context.hero_url | image_url }});">
   <div class="contain">
     <h2 class="hx">{{ 'hero_slogan' | translate }}</h2>
@@ -14,7 +41,7 @@
     </div>
     <div class="grid-a-projects-a">
       <div class="wrap">
-        {% for project in projects %}
+        {% for project in g.projects %}
           <div class="cell">
             <article class="card-a" data-equalize>
               <figure><a href="{{ project.show_path }}"><img src="{{ project.cover_photo_url }}" /></a></figure>
@@ -25,7 +52,7 @@
                 <a href="{{ project.show_path}}">{{ project.name }}</a>
               </h3>
               <p class="user"><a href="{{ project.creator.profile_path }}"><img src="{{ project.creator.avatar_url_thumb }}" width="30" height="30" />{{ project.creator.name_with_affiliation }}</a></p>
-              <p>{{ project.summary }}</p>
+              <p>{% comment %}{{ project.summary }} {% endcomment %}</p>
             </article>
           </div>
         {% endfor %}
@@ -58,7 +85,7 @@
 
     <div class="grid-a-people-a">
       <div class="wrap">
-        {% for user in users %}
+        {% for user in g.users %}
           <div class="cell">
             <article class="card-a" data-equalize>
               <figure><a href="{{ user.profile_path }}"><img src="{{ user.avatar_url_bigger }}"  /></a></figure>
@@ -68,7 +95,7 @@
               <h3 class="hx">
                 <a href="{{ user.profile_path }}">{{ user.name_with_affiliation }}</a>
               </h3>
-              <p>{{ user.properties.short_bio }}</p>
+              <p>{{ user.short_bio }}</p>
               <p class="location">{{ user.display_location }}</p>
             </article>
           </div>
@@ -99,14 +126,14 @@
     <div class="topics-a">
       <div class="wrap">
         <ul class="a">
-          <li class="big"><a href="{{ topics[0].show_url }}" style="{{ topics[0].background_style_big }}"><span>{{ topics[0].name }}</span></a></li>
-          <li><a href="{{ topics[1].show_url }}" style="{{ topics[1].background_style }}"><span>{{ topics[1].name }}</span></a></li>
-          <li><a href="{{ topics[2].show_url }}" style="{{ topics[2].background_style }}"><span>{{ topics[2].name }}</span></a></li>
+          <li class="big"><a href="{{ g.topics[0].show_url }}" style="{{ g.topics[0].background_style_big }}"><span>{{ g.topics[0].name }}</span></a></li>
+          <li><a href="{{ g.topics[1].show_url }}" style="{{ g.topics[1].background_style }}"><span>{{ g.topics[1].name }}</span></a></li>
+          <li><a href="{{ g.topics[2].show_url }}" style="{{ g.topics[2].background_style }}"><span>{{ g.topics[2].name }}</span></a></li>
         </ul>
         <ul class="b">
-          <li><a href="{{ topics[3].show_url }}" style="{{ topics[3].background_style }}"><span>{{ topics[3].name }}</span></a></li>
-          <li><a href="{{ topics[4].show_url }}" style="{{ topics[4].background_style }}"><span>{{ topics[4].name }}</span></a></li>
-          <li class="big"><a href="{{ topics[5].show_url }}" style="{{ topics[5].background_style_big }}"><span>{{ topics[5].name }}</span></a></li>
+          <li><a href="{{ g.topics[3].show_url }}" style="{{ g.topics[3].background_style }}"><span>{{ g.topics[3].name }}</span></a></li>
+          <li><a href="{{ g.topics[4].show_url }}" style="{{ g.topics[4].background_style }}"><span>{{ g.topics[4].name }}</span></a></li>
+          <li class="big"><a href="{{ g.topics[5].show_url }}" style="{{ g.topics[5].background_style_big }}"><span>{{ g.topics[5].name }}</span></a></li>
         </ul>
       </div>
     </div>

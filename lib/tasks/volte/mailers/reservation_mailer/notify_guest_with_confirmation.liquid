@@ -1,0 +1,9 @@
+<h2>Almost there, {{ enquirer.first_name }}!</h2>
+
+<p class="first-paragraph">
+Your booking for '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>' is waiting for confirmation from the {{ listing.lessor }}! We'll get back to you as soon as the {{ listing.lessor }} confirms the booking. {{ listing.lessors | capitalize }} have 24 hours to confirm, but most reply sooner.
+</p>
+
+<a class="btn" href="{{ platform_context.host | append:enquirer.bookings_dashboard_url_with_tracking_and_token | append:signature_for_tracking }}">View Your Booking</a>
+
+<p>In the meantime, we're happy to help! If you have any questions about your booking, please send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>

@@ -1,0 +1,13 @@
+<h2>How was {{ reservation.owner.first_name }}, your recent {{ listing.lessee }}?</h2>
+
+<p>
+We would love to hear about your experience with <a href="{{ platform_context.host | append:reservation.owner.user_profile_url }}">{{ reservation.owner.first_name }}</a>.
+</p>
+
+<p>Your opinion is very important and it will help us ensure that our {{ listing.lessees }} are a good fit for you. 
+
+<p>Please take a moment to give us your feedback!</p>
+
+<a class="btn" href="{{ platform_context.host | append:reservation.reviews_reservation_url }}" >Write a Review</a>
+
+<p>If you'd prefer to talk to us directly, please send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>

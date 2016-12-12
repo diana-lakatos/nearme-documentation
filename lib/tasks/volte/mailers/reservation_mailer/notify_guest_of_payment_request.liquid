@@ -1,0 +1,13 @@
+<h2>What happened, {{ enquirer.first_name }}?</h2>
+
+<p>We noticed that there is no payment for your booking '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'.</p>
+
+<p>You can repeat the payment process by clicking the big button below.</p>
+
+<a class="btn" href="{{ platform_context.host | append:reservation.remote_payment_url }}">Pay now</a>
+
+<p>You can manage your booking here:</p>
+
+<a class="btn" href="{{ platform_context.host | append:enquirer.bookings_dashboard_url_with_tracking_and_token | append:signature_for_tracking  }}">My Bookings</a>
+
+<p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a>.</p>

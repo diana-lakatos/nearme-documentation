@@ -1,0 +1,7 @@
+<h2>Your booking commences tomorrow!</h2>
+
+<p>It's almost time to enjoy '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>'.</p>
+
+<p><a href="{{ platform_context.host | append:user.bookings_dashboard_url_with_token }}">Manage your booking here</a></p>
+
+<p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="mailto: {{ platform_context.support_email }}"> {{ platform_context.support_email }} </a>.</p>
