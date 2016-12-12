@@ -153,11 +153,6 @@ en:
     buttons:
       request: SUBMIT OFFER
 
-  activerecord:
-    attributes:
-      order/payment_documents:
-        file: "Secure Document Upload"
-
   activemodel:
     errors:
       models:
@@ -167,6 +162,11 @@ en:
               total_amount_changed: Bid on Project
   activerecord:
     attributes:
+      order/payment_documents:
+        file: "Secure Document Upload"
+      user:
+        buyer_properties.: 'Property'
+        seller_properties.: 'Property'
       user/buyer_profile:
         "Area Of Expertise": 'Area Of Expertise'
         "Languages": 'Languages'
