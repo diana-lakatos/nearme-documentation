@@ -7,22 +7,23 @@ class DnmKeyValueTest < ActiveSupport::TestCase
     @translation_global = FactoryGirl.create(:translation, key: 'translation_key', value: 'global value', instance_id: nil)
     @default_translation = FactoryGirl.create(:translation, key: 'some_key_for_instance', value: 'default value', instance_id: nil)
     @instance_translation = FactoryGirl.create(:translation, key: 'some_key_for_instance', value: 'instance value', instance_id: @instance.id)
-    @backend = I18n::Backend::DNMKeyValue.new(nil)
+    @backend = I18N_DNM_BACKEND
+    @backend.rebuild!
     @backend.set_instance(@instance)
     @backend.update_cache(@instance.id)
   end
 
   should 'handle advanced features ' do
     @translation_global = FactoryGirl.create(:translation, key: 'advanced.feature.count.one', value: 'one feature', instance_id: nil)
-    @backend.update_cache(@instance.id)
+    @backend.update_defaults
     assert_equal({ one: 'one feature' }, translate('advanced.feature.count'))
   end
 
   should 'update global translation' do
     @translation_global.update_attribute(:value, 'value updated')
-    # need to clear cache before this works
     assert_equal 'global value', translate('translation_key')
-    @backend.update_cache(@instance.id)
+    # need to clear default cache before this works
+    @backend.update_defaults
     assert_equal 'value updated', translate('translation_key')
   end
 
@@ -42,49 +43,41 @@ class DnmKeyValueTest < ActiveSupport::TestCase
   should 're-populate cache if it expired' do
     assert_equal 'instance value', translate('some_key_for_instance')
     @backend.set_instance(FactoryGirl.create(:instance))
-    @backend.update_cache(@instance.id)
     assert_equal 'default value', translate('some_key_for_instance')
     @backend.set_instance(@instance)
-    @backend.update_cache(@instance.id)
     assert_equal 'instance value', translate('some_key_for_instance')
   end
 
   should 'fallback to default if instance translation is empty' do
     @translation = FactoryGirl.create(:translation, value: '', instance_id: @instance.id)
-    @backend.update_cache(@instance.id)
     assert_equal 'global value', translate('translation_key')
   end
 
   should 'fallback to default if instance translation is nil' do
     @translation = FactoryGirl.create(:translation, value: nil, instance_id: @instance.id)
-    @backend.update_cache(@instance.id)
     assert_equal 'global value', translate('translation_key')
   end
 
   should 'return another languages' do
     I18n.locale = :cs
     @translation = FactoryGirl.create(:czech_translation, value: 'Jaromír je král', instance_id: @instance.id)
-    @backend.update_cache(@instance.id)
     assert_equal 'Jaromír je král', translate('translation_key')
   end
 
   should 'fallback to English if instance language key does not exist' do
     I18n.locale = :cs
-    @backend.update_cache(@instance.id)
     assert_equal 'global value', translate('translation_key')
   end
 
   should 'fallback to English if instance language key is empty' do
     I18n.locale = :cs
     @translation = FactoryGirl.create(:czech_translation, value: '', instance_id: @instance.id)
-    @backend.update_cache(@instance.id)
     assert_equal 'global value', translate('translation_key')
   end
 
   should 'fallback to English if instance language key is nil' do
     I18n.locale = :cs
     @translation = FactoryGirl.create(:czech_translation, value: nil, instance_id: @instance.id)
-    @backend.update_cache(@instance.id)
     assert_equal 'global value', translate('translation_key')
   end
 
