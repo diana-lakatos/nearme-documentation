@@ -323,7 +323,7 @@ namespace :litvault do
           child_object.destroy
         else
           found = [] if found.is_a?(String)
-          found = found['children'] if found.is_a?(Hash)
+          found = (found['children'].presence || []) if found.is_a?(Hash)
           remove_unused_categories(child_object.children, found)
         end
       end
@@ -717,9 +717,10 @@ namespace :litvault do
       end
 
       def create_category_tree(category, children, level)
-        children.each do |child|
+        children.each_with_index do |child, index|
           name = (child.is_a? Hash) ? child['name'] : child
           subcategory = category.children.where(name: name).first_or_create!(parent_id: category.id)
+          subcategory.update_column(:position, index)
           puts "\t    #{'  ' * (level + 1)}- #{name}"
           create_category_tree(subcategory, child['children'], level + 1) if child['children']
         end
