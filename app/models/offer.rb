@@ -15,7 +15,7 @@ class Offer < Order
 
   def complete!
     if can_complete?
-      self.archive!
+      archive!
 
       touch(:archived_at)
     else
@@ -105,6 +105,8 @@ class Offer < Order
   end
 
   def charge_and_confirm!
+    return true if confirmed?
+
     if (payment_subscription.present? || (payment.authorize && payment.capture!)) && confirm!
       create_payment_subscription! if payment_subscription.blank?
       transactable.start!
@@ -175,7 +177,9 @@ class Offer < Order
   alias enquirer_cancelable? enquirer_cancelable
 
   def enquirer_editable
-    state.in? %w(inactive) || draft_at?
+    editable_states = %w(inactive)
+    editable_states << 'unconfirmed' if reservation_type.edit_unconfirmed
+    state.in? editable_states || draft_at?
   end
   alias enquirer_editable? enquirer_editable
 

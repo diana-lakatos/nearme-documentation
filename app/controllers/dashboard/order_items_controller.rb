@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 class Dashboard::OrderItemsController < Dashboard::Company::BaseController
-  before_filter :find_order
-  before_filter :find_order_item, except: [:index, :new, :create]
-  before_filter :can_edit?, only: [:edit, :update]
-  before_action :ensure_merchant_account_exists
+  before_action :find_order
+  before_action :find_order_item, except: [:index, :new, :create]
+  before_action :can_edit?, only: [:edit, :update]
+  before_action :ensure_merchant_account_exists, except: [:index]
 
   def index
     @transactables = current_user.orders.where.not(confirmed_at: nil).order('created_at DESC').map(&:transactable)
@@ -27,9 +28,7 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
     else
       @order_item.set_service_fees
 
-      if @order_item.save
-        redirect_to(dashboard_order_order_items_path(@order, transactable_id: @order.transactable.id)) && return
-      end
+      redirect_to(dashboard_order_order_items_path(@order, transactable_id: @order.transactable.id)) && return if @order_item.save
     end
 
     render :new
@@ -46,7 +45,9 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
   end
 
   private
+
   def ensure_merchant_account_exists
+    return if @order.blank?
     return unless @order.reservation_type.try(:require_merchant_account?)
 
     unless @company.merchant_accounts.any?(&:verified?)
@@ -59,7 +60,7 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
     if (@order_item.paid? && @order_item.approved?) || @order_item.approved?
       flash[:error] = t('flash_messages.dashboard.order_items.can_not_edit_accepted_order_item')
       redirect_to dashboard_order_order_items_path(@order, transactable_id: @order.transactable.id)
-      return
+      nil
     end
   end
 
