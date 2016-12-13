@@ -24,9 +24,9 @@
 
 .row
   .col-sm-4
-    = form.input :month, as: :select, label: t('payments.cc_fields.expiration_date_month'), collection: credit_card_date[:month], input_html: { prompt: false, placeholder: 'Select month'}
+    = form.input :month, as: :select, label: t('payments.cc_fields.expiration_date_month'), required: true, collection: credit_card_date[:month], input_html: { prompt: false, placeholder: 'Select month'}
   .col-sm-4
-    = form.input :year, as: :select, label: t('payments.cc_fields.expiration_date_year'), collection: credit_card_date[:year], input_html: { prompt: false, placeholder: 'Select year' }
+    = form.input :year, as: :select, label: t('payments.cc_fields.expiration_date_year'), required: true, collection: credit_card_date[:year], input_html: { prompt: false, placeholder: 'Select year' }
 
   .col-sm-4
     = form.input :verification_value, label: t('payments.cc_fields.security_code'), required: true, input_html: { placeholder: 'CCV', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true, size: 3 }
