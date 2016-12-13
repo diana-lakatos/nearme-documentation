@@ -20,7 +20,7 @@ module MarketplaceBuilder
 
       @creators = []
 
-      add_creator Creators::InstanceCreator.new
+      add_creator Creators::MarketplaceCreator.new
       add_creator Creators::TransactableTypesCreator.new
       add_creator Creators::InstanceProfileTypesCreator.new
       add_creator Creators::ReservationTypesCreator.new

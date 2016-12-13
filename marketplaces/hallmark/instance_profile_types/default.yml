@@ -24,11 +24,23 @@ custom_attributes:
     label: Short bio
     search_in_query: true
 
-  - name: is_hallmark
-    html_tag: check_box
-    attribute_type: boolean
-    label: Hallmark Affiliate?
-    public: false
+  - name: date_of_birth
+    html_tag: input
+    attribute_type: date
+    label: Date of Birth
+    search_in_query: false
+
+  - name: member_since
+    html_tag: input
+    attribute_type: datetime
+    label: Member Since
+    search_in_query: false
+
+  - name: member_year
+    html_tag: input
+    attribute_type: datetime
+    label: Member Year
+    search_in_query: false
 
 custom_validators:
   - field_name: role

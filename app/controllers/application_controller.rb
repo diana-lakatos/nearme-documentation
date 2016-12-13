@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   layout :layout_for_request_type
 
+  before_action :redirect_unverified_user, if: -> { platform_context.instance.require_verified_user? }
   before_action :set_i18n_locale
   before_action :set_locale
   before_action :log_out_if_token_exists
@@ -56,6 +57,10 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def redirect_unverified_user
+    redirect_to root_path unless current_user&.verified_at.present?
+  end
 
   def validate_request_parameters
     RequestParametersValidator.new(params).validate!

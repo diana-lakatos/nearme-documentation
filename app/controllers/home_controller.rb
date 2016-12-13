@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class HomeController < ApplicationController
+  skip_before_action :redirect_unverified_user
+
   def index
     @transactable_types = current_instance.transactable_types.searchable
     @transactable_types += current_instance.instance_profile_types.searchable

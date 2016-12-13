@@ -2,7 +2,7 @@
 
 module MarketplaceBuilder
   module Creators
-    class InstanceCreator < DataCreator
+    class MarketplaceCreator < DataCreator
       def whitelisted_attributes
         %w(name is_community)
       end
