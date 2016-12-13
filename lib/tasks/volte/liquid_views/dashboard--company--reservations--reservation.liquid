@@ -47,8 +47,8 @@
       <dt>Shipping Package:</dt>
       <dd>{{ reservation.shipping_package.label }}</dd>
 
-      <dt>Borrower ship to address:</dt>
-      <dd>{{ reservation.enquirer_shipping_address.discreet }}</dd>
+      <dt>Borrower address:</dt>
+      <dd>{{ reservation.enquirer_shipping_address.full }}</dd>
 
       {% assign requested_dates = reservation.long_dates %}
       {% assign requested_dates_size = requested_dates.size %}
@@ -56,7 +56,7 @@
       <dt>Period:</dt>
       <dd>{{ reservation.transactable_pricing.number_of_units }} days</dd>
 
-      <dt>Rental date:</dt>
+      <dt>Rental date (Latest date Borrower can receive item):</dt>
       <dd>{{ reservation.starts_at | to_date | l: 'short' }}</dd>
 
       <dt>Return date:</dt>
@@ -84,7 +84,7 @@
           <input disabled="disabled" type="text" class="form-control" value="{{reservation.inbound_pickup_address_address}}" name="shipping_details[lender_pickup]" />
         </div>
         <div class="col-xs-12 col-md-6 form-group">
-          <label for="shipping_details[lender_ship]">Lender Ship To Address:</label>
+          <label for="shipping_details[lender_ship]">Lender Return Address:</label>
           <input disabled="disabled" type="text" class="form-control" value="{{reservation.outbound_return_address_address}}" name="shipping_details[lender_ship]" />
         </div>
        </div>
