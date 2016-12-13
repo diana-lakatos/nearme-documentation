@@ -1130,8 +1130,6 @@ class User < ActiveRecord::Base
     @reviews_counter
   end
 
-  private
-
   def get_ui_setting(key)
     populate_ui_settings
     @ui_settings_hash[key]
@@ -1142,6 +1140,8 @@ class User < ActiveRecord::Base
     @ui_settings_hash[key] = UiSettings.parse(key, value)
     update_attribute(:ui_settings, JSON.generate(@ui_settings_hash))
   end
+
+  private
 
   def get_all_ui_settings
     populate_ui_settings
