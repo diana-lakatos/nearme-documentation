@@ -55,7 +55,8 @@ class SecuredParams
       :wrapper_html_options_string,
       :validation_only_on_update,
       custom_validators_attributes: nested(custom_validator),
-      valid_values: []]
+      valid_values: []
+    ]
   end
 
   def custom_validator
@@ -1012,6 +1013,7 @@ class SecuredParams
       :validate_on_adding_to_cart,
       :skip_payment_authorization,
       :check_overlapping_dates,
+      :edit_unconfirmed,
       transactable_type_ids: []
     ]
   end

@@ -35,7 +35,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   after_initialize :build_current_address_if_needed
   def build_current_address_if_needed
-    self.build_current_address unless self.current_address
+    build_current_address unless current_address
   end
 
   def onboard!
@@ -236,7 +236,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       day_of_the_week = Date::DAYNAMES.index(transfer_schedule[:weekly_anchor].to_s.capitalize)
       Time.current.to_date + (day_of_the_week - Time.current.wday).modulo(7).days
     when 'monthly'
-      month = (Time.current.day > monthly_anchor) ? Time.current.month + 1 : Time.current.month
+      month = ((Time.current.day > monthly_anchor) ? Time.current.month + 1 : Time.current.month).modulo(12)
       year = month == 1 && Time.current.month == 12 ? Time.current.year + 1 : Time.current.year
       Date.parse("#{monthly_anchor}/#{month}/#{year}")
     end
@@ -337,6 +337,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   def localize_error(error_code)
     return if error_code.blank?
-    I18n.t('activerecord.errors.models.merchant_account.error_codes.' + error_code.gsub('.', '_'))
+    I18n.t('activerecord.errors.models.merchant_account.error_codes.' + error_code.tr('.', '_'))
   end
 end

@@ -2,9 +2,10 @@
 namespace :uot do
   desc 'Setup UoT'
 
-  task update: :environment do 
+  task update: :environment do
     @instance = Instance.find(195)
     @instance.set_context!
+    @instance.reservation_types.each {|r| r.settings.merge({edit_unconfirmed: 'true'}); r.save(validate: false) }
 
     setup = UotSetup.new(@instance)
 
@@ -20,6 +21,8 @@ namespace :uot do
       print '.'
       $stdout.flush
     end
+
+    setup.create_translation!('flash_messages.dashboard.order_items.approve_failed', 'Your Credit Card could not be charged.')
     puts ''
   end
 

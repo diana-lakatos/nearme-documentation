@@ -27,7 +27,7 @@
 {% for transactable in transactables %}
 <div class="panel" id="transactable_{{transactable.id}}" style="display: none">
   <div class="panel-body">
-    {% include 'dashboard/order_items/show', order: transactable.confirmed_order %}
+    {% include 'dashboard/order_items/show', order: transactable.confirmed_or_archived_order %}
   </div>
 </div>
 {% endfor %}
