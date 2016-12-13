@@ -2,11 +2,20 @@
 module MarketplaceBuilder
   module Creators
     class ContentHoldersCreator < TemplatesCreator
-      private
-
       def cleanup!
-        @instance.theme.content_holders.destroy_all
+        content_holders = get_templates
+
+        unused_content_holders = if content_holders.empty?
+                                   @instance.theme.content_holders.all
+                                 else
+                                   @instance.theme.content_holders.where('name NOT IN (?)', content_holders.map(&:name))
+                                 end
+
+        unused_content_holders.each { |ch| logger.debug "Removing unused content holder: #{ch.name}" }
+        unused_content_holders.destroy_all
       end
+
+      private
 
       def default_template_options
         {

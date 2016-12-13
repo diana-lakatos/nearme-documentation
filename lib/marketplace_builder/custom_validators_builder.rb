@@ -6,14 +6,11 @@ module MarketplaceBuilder
 
       object.custom_validators.destroy_all
 
-      unless validators.empty?
-        MarketplaceBuilder::Logger.log "\t  Updating / creating validators:"
-        validators.each do |validator|
-          validator = validator.symbolize_keys
-          field_name = validator.delete(:field_name)
-          create_custom_validator(object, field_name, default_validator_properties.merge(validator))
-          MarketplaceBuilder::Logger.log "\t    - #{field_name}"
-        end
+      validators.each do |validator|
+        validator = validator.symbolize_keys
+        field_name = validator.delete(:field_name)
+        create_custom_validator(object, field_name, default_validator_properties.merge(validator))
+        logger.debug "Creating custom validator for #{field_name}"
       end
     end
 

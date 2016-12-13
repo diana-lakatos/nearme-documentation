@@ -47,12 +47,6 @@ namespace :hallmark do
       end
     end
 
-    Utils::DefaultAlertsCreator::GroupCreator.new.create_all!
-    Utils::DefaultAlertsCreator::CollaboratorCreator.new.create_all!
-    Utils::DefaultAlertsCreator::UserCreator.new.create_user_promoted_email!
-    Utils::DefaultAlertsCreator::FollowerCreator.new.create_all!
-    Utils::DefaultAlertsCreator::CommenterCreator.new.create_all!
-
     Rails.cache.clear
   end
 

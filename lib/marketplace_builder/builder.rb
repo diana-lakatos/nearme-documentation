@@ -6,16 +6,22 @@ module MarketplaceBuilder
   MODE_APPEND = 'append'
 
   class Builder
-    def initialize(instance_id, theme_path, mode = MarketplaceBuilder::MODE_APPEND)
+    def initialize(instance_id, theme_path, mode = MarketplaceBuilder::MODE_APPEND, debug_level = MarketplaceBuilder::Loggers::Logger::INFO)
       @instance = Instance.find(instance_id)
       @instance.set_context!
 
-      MarketplaceBuilder::Logger.info "Marketplace Builder loaded for #{@instance.name}"
+      logger.level = debug_level
 
-      MarketplaceBuilder::Logger.error "Mode #{mode} is not implemented", raise: true if [MarketplaceBuilder::MODE_REPLACE, MarketplaceBuilder::MODE_APPEND].include?(mode) == false
+      logger.info "Marketplace Builder loaded for #{@instance.name}"
+
+      raise MarketplaceBuilder::Error, "Mode #{mode} is not implemented" if [MarketplaceBuilder::MODE_REPLACE, MarketplaceBuilder::MODE_APPEND].include?(mode) == false
 
       @mode = mode
+      logger.debug "Running in #{@mode.upcase} mode"
+
       @theme_path = theme_path
+      logger.debug "Loading data from #{theme_path}"
+
       @last_run_time = nil
 
       @creators = []
@@ -33,6 +39,7 @@ module MarketplaceBuilder
       add_creator Creators::SMSCreator.new
       add_creator Creators::LiquidViewsCreator.new
       add_creator Creators::TranslationsCreator.new
+      add_creator Creators::WorkflowAlertsCreator.new
     end
 
     def add_creator(*creators)
@@ -46,22 +53,39 @@ module MarketplaceBuilder
 
     def execute!
       @last_run_time = Benchmark.realtime do
-        @creators.each(&:execute!)
+        @creators.each do |creator|
+          creator.cleanup! if @mode == MarketplaceBuilder::MODE_REPLACE
+          creator.execute!
+        end
         expire_cache
       end
 
-      MarketplaceBuilder::Logger.success "Done in #{@last_run_time.round(2)}s"
+      logger.info "Finished in #{@last_run_time.round(2)}s"
+
+    rescue MarketplaceBuilder::Error => error
+      logger.fatal error
     end
 
     private
 
     def expire_cache
-      MarketplaceBuilder::Logger.info 'Clearing cache...'
+      logger.info 'Clearing cache'
 
       CacheExpiration.send_expire_command 'RebuildInstanceView', instance_id: @instance.id
+      logger.debug 'Clearing liquid views cache'
+
       CacheExpiration.send_expire_command 'RebuildTranslations', instance_id: @instance.id
+      logger.debug 'Clearing translations cache'
+
       CacheExpiration.send_expire_command 'RebuildCustomAttributes', instance_id: @instance.id
+      logger.debug 'Clearing custom attributes cache'
+
       Rails.cache.clear
+      logger.debug 'Clearing application cache'
+    end
+
+    def logger
+      Loggers::ConsoleLogger.instance
     end
   end
 end

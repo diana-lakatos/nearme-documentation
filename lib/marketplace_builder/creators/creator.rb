@@ -20,6 +20,14 @@ module MarketplaceBuilder
       def execute!
         raise NotImplementedError
       end
+
+      def cleanup!
+        logger.warn "cleanup! method not implemented for #{self.class}"
+      end
+
+      def logger
+        Loggers::ConsoleLogger.instance
+      end
     end
   end
 end

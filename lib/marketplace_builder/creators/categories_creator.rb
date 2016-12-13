@@ -3,20 +3,27 @@ module MarketplaceBuilder
   module Creators
     class CategoriesCreator < DataCreator
       def execute!
-        categories = get_data
-        return if categories.empty?
+        transactable_types = get_data
 
-        MarketplaceBuilder::Logger.info('Creating categories')
-
-        remove_unused_categories(categories)
-        categories.keys.each do |tt_name|
-          MarketplaceBuilder::Logger.log "\t#{tt_name}:"
+        transactable_types.keys.each do |tt_name|
+          logger.info "Updating categories for: #{tt_name}"
           object = @instance.transactable_types.where(name: tt_name).first
-          unless object.present?
-            return MarketplaceBuilder::Logger.error "#{tt_name} transactable type associated with categories does not exist, create it first"
-          end
-          update_categories_for_object(object, categories[tt_name])
+          return logger.error "#{tt_name} transactable type associated with categories does not exist, create it first" unless object.present?
+          update_categories_for_object(object, transactable_types[tt_name])
         end
+      end
+
+      def cleanup!
+        transactable_types = get_data
+        used_category_names = transactable_types.map { |_tt_name, categories| categories.map { |c| c['name'] } }.flatten.uniq
+        unused_categories = if used_category_names.empty?
+                              Category.all
+                            else
+                              Category.where('name NOT IN (?) AND parent_id IS NULL', used_category_names)
+                            end
+
+        unused_categories.each { |category| logger.debug "Removing unused category #{category.name}" }
+        unused_categories.destroy_all
       end
 
       private
@@ -25,28 +32,7 @@ module MarketplaceBuilder
         File.join('categories', 'transactable_types.yml')
       end
 
-      def remove_unused_categories(categories)
-        used_categories = []
-
-        categories.each do |_tt, cats|
-          cats.each { |c| used_categories << c['name'] }
-        end
-
-        used_categories.uniq!
-
-        unused_categories = Category.where('name NOT IN (?) AND parent_id IS NULL', used_categories)
-        unless unused_categories.empty?
-          MarketplaceBuilder::Logger.log "\tRemoving unused categories:"
-          unused_categories.each do |category|
-            MarketplaceBuilder::Logger.log "\t  - #{category.name}"
-            category.destroy!
-          end
-        end
-      end
-
       def update_categories_for_object(tt, categories)
-        MarketplaceBuilder::Logger.log "\t  Updating / creating categories:"
-
         categories.each do |hash|
           hash = default_category_properties.merge(hash.symbolize_keys)
           children = hash.delete(:children) || []
@@ -54,7 +40,7 @@ module MarketplaceBuilder
           category.transactable_types = category.transactable_types.push(tt) unless category.transactable_types.include?(tt)
           category.save!
 
-          MarketplaceBuilder::Logger.log "\t    - #{hash[:name]}"
+          logger.debug "Creating category #{hash[:name]}"
 
           create_category_tree(category, children, 1)
         end
@@ -64,7 +50,7 @@ module MarketplaceBuilder
         children.each do |child|
           name = child.is_a?(Hash) ? child['name'] : child
           subcategory = category.children.where(name: name).first_or_create!(parent_id: category.id)
-          MarketplaceBuilder::Logger.log "\t    #{'  ' * (level + 1)}- #{name}"
+          logger.debug "Creating subcategory: #{name}"
           create_category_tree(subcategory, child['children'], level + 1) if child['children']
         end
       end

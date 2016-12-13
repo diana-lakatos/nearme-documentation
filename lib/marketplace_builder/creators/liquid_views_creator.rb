@@ -2,11 +2,20 @@
 module MarketplaceBuilder
   module Creators
     class LiquidViewsCreator < TemplatesCreator
-      private
-
       def cleanup!
-        @instance.instance_views.liquid_views.destroy_all
+        liquid_views = get_templates
+
+        unused_liquid_views = if liquid_views.empty?
+                                @instance.instance_views.liquid_views.all
+                              else
+                                @instance.instance_views.liquid_views.where('path NOT IN (?)', liquid_views.map(&:liquid_path))
+                              end
+
+        unused_liquid_views.each { |lv| logger.debug "Removing unused liquid view: #{lv.path}" }
+        unused_liquid_views.destroy_all
       end
+
+      private
 
       def object_name
         'LiquidView'
@@ -17,6 +26,7 @@ module MarketplaceBuilder
           instance_id: @instance.id,
           path: template.liquid_path
         ).first_or_initialize
+
         iv.update!(transactable_types: TransactableType.all,
                    body: template.body,
                    format: 'html',

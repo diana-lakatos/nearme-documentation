@@ -11,14 +11,12 @@ module MarketplaceBuilder
         data = get_data
         return if data.empty?
 
-        MarketplaceBuilder::Logger.log 'Updating instance attributes'
+        logger.info 'Updating instance attributes'
 
         data.keys.each do |key|
-          unless whitelisted_attributes.include? key
-            MarketplaceBuilder::Logger.error "#{key} is not an allowed attribute", raise: true
-          end
+          return logger.error "#{key} is not an allowed attribute" unless whitelisted_attributes.include? key
 
-          MarketplaceBuilder::Logger.log "\t#{key}: #{data[key]}"
+          logger.debug "Setting instance attribute #{key}: #{data[key]}"
           @instance.update_attribute(key, data[key])
         end
       end

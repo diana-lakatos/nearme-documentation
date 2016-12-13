@@ -9,22 +9,14 @@ module MarketplaceBuilder
                        object.custom_attributes.where('name NOT IN (?)', attributes.map { |attr| attr['name'] })
                      end
 
-      unless unused_attrs.empty?
-        MarketplaceBuilder::Logger.log "\t  Removing unused attributes:"
-        unused_attrs.each do |ca|
-          MarketplaceBuilder::Logger.log "\t    - #{ca.name}"
-          ca.destroy
-        end
-      end
+      unused_attrs.each { |ca| logger.debug "Removing unused custom attribute: #{ca.name}" }
+      unused_attrs.destroy_all
 
-      unless attributes.empty?
-        MarketplaceBuilder::Logger.log "\t  Updating / creating attributes:"
-        attributes.each do |attribute|
-          attribute = attribute.symbolize_keys
-          name = attribute.delete(:name)
-          create_custom_attribute(object, name, default_attribute_properties.merge(attribute))
-          MarketplaceBuilder::Logger.log "\t    - #{name}"
-        end
+      attributes.each do |attribute|
+        attribute = attribute.symbolize_keys
+        name = attribute.delete(:name)
+        create_custom_attribute(object, name, default_attribute_properties.merge(attribute))
+        logger.debug "Creating custom attribute: #{name}"
       end
     end
 

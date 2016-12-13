@@ -2,14 +2,24 @@
 module MarketplaceBuilder
   module Creators
     class PagesCreator < TemplatesCreator
+      def cleanup!
+        pages = get_templates
+        return @instance.theme.pages.destroy_all if pages.empty?
+
+        unused_pages = if pages.empty?
+                         @instance.theme.pages.all
+                       else
+                         @instance.theme.pages.where('slug NOT IN (?)', pages.map { |page| page.name.parameterize })
+                       end
+
+        unused_pages.each { |page| logger.debug "Removing unused page: #{page.path}" }
+        unused_pages.destroy_all
+      end
+
       private
 
       def object_name
         'Page'
-      end
-
-      def cleanup!
-        @instance.theme.pages.destroy_all
       end
 
       def create!(template)
@@ -24,7 +34,7 @@ module MarketplaceBuilder
 
       def success_message(template)
         msg = template.redirect_url.present? ? "#{template.name} (redirect)" : template.name
-        MarketplaceBuilder::Logger.log "\t- #{msg}"
+        logger.debug "Creating page: #{msg}"
       end
     end
   end

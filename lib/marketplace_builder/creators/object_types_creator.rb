@@ -7,13 +7,10 @@ module MarketplaceBuilder
       include MarketplaceBuilder::FormComponentsBuilder
 
       def execute!
-        MarketplaceBuilder::Logger.info object_class_name.pluralize.underscore.humanize.titleize.to_s
-
         data = get_data
-        cleanup!(data) if @mode == MarketplaceBuilder::MODE_REPLACE
 
         data.keys.each do |key|
-          MarketplaceBuilder::Logger.log "\t#{key.underscore.humanize.titleize}:"
+          logger.info "Updating #{object_class_name.underscore.humanize.downcase}: #{key.underscore.humanize.titleize}"
           hash = data[key].symbolize_keys
 
           custom_attributes = hash.delete(:custom_attributes) || []
@@ -21,7 +18,7 @@ module MarketplaceBuilder
           form_components = hash.delete(:form_components) || []
 
           hash.each do |key, _value|
-            raise MarketplaceBuilder::Error, "#{key} is not allowed in #{object_class_name} settings" unless whitelisted_properties.include?(key)
+            logger.fatal("#{key} is not allowed in #{object_class_name} settings") unless whitelisted_properties.include?(key)
           end
 
           object = @instance.send(method_name).where(hash).first_or_create!
@@ -30,6 +27,18 @@ module MarketplaceBuilder
           update_custom_validators_for_object(object, custom_validators) unless custom_validators.empty?
           update_form_comopnents_for_object(object, form_components) unless form_components.empty?
         end
+      end
+
+      def cleanup!
+        objects = get_data
+        unused_objects = if objects.empty?
+                           @instance.send(method_name).all
+                         else
+                           @instance.send(method_name).where('name NOT IN (?)', objects.map { |_key, props| props['name'] })
+                         end
+
+        unused_objects.each { |obj| logger.debug "Removing unused #{object_class_name}: #{obj.name}" }
+        unused_objects.destroy_all
       end
 
       protected
@@ -43,14 +52,6 @@ module MarketplaceBuilder
       end
 
       private
-
-      def cleanup!(data)
-        used_objects = data.map do |_key, props|
-          props['name']
-        end
-
-        @instance.send(method_name).where('name NOT IN (?)', used_objects).destroy_all
-      end
 
       def method_name
         object_class_name.pluralize.underscore.to_sym

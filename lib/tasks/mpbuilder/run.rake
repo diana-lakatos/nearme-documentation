@@ -23,12 +23,14 @@ namespace :mpbuilder do
       next
     end
 
+    debug_level = ENV['verbose'].presence ? MarketplaceBuilder::Loggers::Logger::DEBUG : MarketplaceBuilder::Loggers::Logger::INFO
+
     config = JSON.parse(File.read(config_file))
 
     instance_id = config["instance_id"]
     mode = config["mode"] || MarketplaceBuilder::MODE_APPEND
 
-    builder = MarketplaceBuilder::Builder.new(instance_id, source, mode)
+    builder = MarketplaceBuilder::Builder.new(instance_id, source, mode, debug_level)
     builder.execute!
   end
 end

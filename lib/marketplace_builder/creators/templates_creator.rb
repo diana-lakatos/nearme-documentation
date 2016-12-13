@@ -3,12 +3,10 @@ module MarketplaceBuilder
   module Creators
     class TemplatesCreator < Creator
       def execute!
-        cleanup! if @mode == MarketplaceBuilder::MODE_REPLACE
-
-        templates = get_templates_from_dir(File.join(@theme_path, folder_name))
+        templates = get_templates
         return if templates.empty?
 
-        MarketplaceBuilder::Logger.info "Creating #{object_name.pluralize.humanize}"
+        logger.info "Updating #{object_name.pluralize.underscore.humanize.downcase}"
 
         templates.each do |template|
           create!(template)
@@ -19,7 +17,7 @@ module MarketplaceBuilder
       protected
 
       def success_message(template)
-        MarketplaceBuilder::Logger.log "\t- #{template.liquid_path}"
+        logger.debug "Creating #{object_name.underscore.humanize.downcase}: #{template.liquid_path}"
       end
 
       def object_name
@@ -30,12 +28,13 @@ module MarketplaceBuilder
         {}
       end
 
-      def cleanup!
+      def create!
         raise NotImplementedError
       end
 
-      def create!
-        raise NotImplementedError
+      def get_templates
+        @templates ||= get_templates_from_dir(File.join(@theme_path, folder_name))
+        @templates
       end
 
       private
