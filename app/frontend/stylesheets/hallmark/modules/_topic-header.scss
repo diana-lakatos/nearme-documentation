@@ -1,48 +1,47 @@
 /* topic header */
 
 .topic-a {
-    position: relative;
-    margin: 0;
+  position: relative;
+  margin: 0;
 
+  > .wrap {
+    margin: 0;
+    padding: 60px 0;
+    background-color: #808791;
+    background-position: 50% 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  > .wrap .hx {
+    margin: 0 0 10px;
+    color: inherit;
+    font: bold 50px / 1 $font-alt;
+  }
+
+  @include bp($screen-mobile) {
     > .wrap {
-        margin: 0;
-        padding: 60px 0;
-        background-color: #808791;
-        background-position: 50% 0;
-        background-repeat: no-repeat;
-        background-size: cover;
-        color: #fff;
-        font-size: 20px;
-        font-weight: bold;
-        text-align: center;
+      padding: 40px 0;
+      font-size: 14px;
     }
 
     > .wrap .hx {
-        margin: 0 0 10px;
-        color: inherit;
-        font: bold 80px/1 $font-alt;
+      font-size: 50px;
+    }
+  }
+
+
+  @include bp(414px) {
+    > .wrap {
+      padding: 30px 0;
     }
 
-    @include bp($screen-mobile) {
-
-        > .wrap {
-            padding: 40px 0;
-            font-size: 14px;
-        }
-
-        > .wrap .hx {
-            font-size: 50px;
-        }
+    > .wrap .hx {
+      font-size: 40px;
     }
-
-    @include bp(414px) {
-
-        > .wrap {
-            padding: 30px 0;
-        }
-
-        > .wrap .hx {
-            font-size: 40px;
-        }
-    }
+  }
 }

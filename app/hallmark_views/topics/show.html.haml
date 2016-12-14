@@ -21,7 +21,7 @@
       %p{:'data-follow-button' => true}
         = render partial: 'shared/follow_button', locals: { object: @topic }
         - if current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
-          %p= link_to t(:edit), edit_instance_admin_manage_topic_path(@topic), class: 'button-a small', rel: "modal"
+          = link_to t(:edit), edit_instance_admin_manage_topic_path(@topic), class: 'button-a small edit-action', rel: "modal"
 
 
 .tab-content
