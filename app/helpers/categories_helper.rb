@@ -29,7 +29,7 @@ module CategoriesHelper
       parent_ids = categories.map(&:parent_id)
       categories.reject { |c| c.id.in?(parent_ids) }.map do |category|
         @formatted_categories[category.root.name] ||= { 'name' => category.root.translated_name, 'children' => [] }
-        @formatted_categories[category.root.name]['children'] << category.self_and_ancestors.reject(&:root?).map(&:translated_name).join(': ')
+        @formatted_categories[category.root.name]['children'] << sorted_self_and_ancestors(category).reject(&:root?).map(&:translated_name).join(': ')
       end
       @formatted_categories.each_pair { |parent, values| @formatted_categories[parent]['children'] = values['children'].join(', ') }
     end
@@ -42,14 +42,23 @@ module CategoriesHelper
       parent_ids = categories.map(&:parent_id)
       categories.reject { |c| c.id.in?(parent_ids) }.map do |category|
         @formatted_categories[category.root.name] ||= { 'name' => category.root.translated_name, 'children' => [] }
-        @formatted_categories[category.root.name]['children'] << category.self_and_ancestors.reject(&:root?).map(&:translated_name)
+        @formatted_categories[category.root.name]['children'] = sorted_self_and_ancestors(category).reject(&:root?).map(&:translated_name)
       end
-      @formatted_categories.each_pair { |parent, values| @formatted_categories[parent]['children'] = values['children'] }
     end
     @formatted_categories
   end
 
   protected
+
+  def sorted_self_and_ancestors(start_category)
+    categories = []
+    current_category = start_category
+    while current_category.present? do
+      categories.prepend(current_category)
+      current_category = current_category.parent
+    end
+    categories
+  end
 
   def build_value_for_category(category)
     if @object_permalinks.include?(category.permalink)
