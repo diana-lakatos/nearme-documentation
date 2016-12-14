@@ -13,9 +13,17 @@ module Deliveries
 
         def validator_list
           [
-            presence_validator(attributes: [:city, :postcode, :country, :address, :state]),
+            presence_validator(attributes: [:suburb, :postcode, :country, :address, :state]),
             pickup_location_validator
           ]
+        end
+
+        def inclusion_validator(params)
+          ActiveModel::Validations::InclusionValidator.new(params)
+        end
+
+        def format_validator(params)
+          ActiveModel::Validations::FormatValidator.new(params)
         end
 
         def pickup_location_validator
@@ -24,32 +32,6 @@ module Deliveries
 
         def presence_validator(params)
           ActiveModel::Validations::PresenceValidator.new(params)
-        end
-      end
-
-      class PickupLocationValidator < ActiveModel::Validator
-        def validate(record)
-          return if valid_pickup_location?(record)
-
-          record.errors.add(:address, :invalid_pickup_location)
-        end
-
-        private
-
-        def valid_pickup_location?(record)
-          return unless record.city
-
-          pickup_locations.any? do |_location, suburb, postcode, _state, _zone|
-            suburb == normalize(record.city) && postcode == record.postcode
-          end
-        end
-
-        def normalize(city)
-          city.gsub(/^Saint\b/, 'St')
-        end
-
-        def pickup_locations
-          @locations ||= CSV.read('./vendor/gems/sendle_api/sendle_pickup_locations.csv')
         end
       end
     end

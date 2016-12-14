@@ -12,20 +12,16 @@ module Deliveries
     delegate :ping, to: :client
 
     def get_quote(delivery)
-      client.get_quote pickup_suburb:     delivery.sender_address_city,
-                       pickup_postcode:   delivery.sender_address_postcode,
-                       delivery_suburb:   delivery.receiver_address_city,
-                       delivery_postcode: delivery.receiver_address_postcode,
-                       kilogram_weight:   delivery.weight
-    end
-
-    def view_order(delivery)
-      client.view_order order_id: delivery.order_reference
+      GetQuote.new(delivery, client).perform
     end
 
     # TODO: update deivery status and order-reference
     def place_order(delivery)
-      client.place_order PlaceOrder.new(delivery).to_params
+      PlaceOrder.new(delivery, client).perform
+    end
+
+    def view_order(delivery)
+      client.view_order order_id: delivery.order_reference
     end
 
     def cancel_order(delivery)
