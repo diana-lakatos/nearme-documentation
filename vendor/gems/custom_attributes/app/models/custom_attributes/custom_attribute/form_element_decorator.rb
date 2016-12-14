@@ -30,6 +30,8 @@ module CustomAttributes
                                  CustomAttribute::FormElementDecorator::CheckBoxList.new(attribute)
                                when :range
                                  CustomAttribute::FormElementDecorator::RangeAttr.new(attribute)
+                               when :hidden
+                                 CustomAttribute::FormElementDecorator::HiddenAttr.new(attribute)
                                else
                                  raise NotImplementedError, "Not implemented options for #{html_tag}"
                                end

@@ -34,3 +34,4 @@ class User::Search::Params::Web < User::Search::Params
     end
   end
 end
+

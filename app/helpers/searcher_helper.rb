@@ -12,13 +12,25 @@ module SearcherHelper
     elsif params[:transactable_type_id].present?
       @transactable_type = TransactableType.find(params[:transactable_type_id])
     end
-    @transactable_type ||= TransactableType.searchable.by_position.first
-    params[:transactable_type_id] ||= @transactable_type.try(:id)
-    lookup_context.try(:transactable_type_id=, params[:transactable_type_id]) if respond_to?(:lookup_context)
+    unless @transactable_type
+      Instance::SEARCHABLE_CLASSES.each do|_klass|
+        @transactable_type ||= _klass.constantize.searchable.by_position.first
+      end
+    end
 
     if @transactable_type.blank?
       flash[:error] = t('flash_messages.search.missing_transactable_type')
-      redirect_to root_path
+      return redirect_to root_path
+    end
+
+    # TODO: as a lookup context we use TransactableType, but search can by for
+    # InstanceProfileType, this is temporary workaround. I think we need to add
+    # IPT as a lookup_context for InstanceViews
+    params[:transactable_type_id] ||= @transactable_type.id
+    if @transactable_type.is_a?(TransactableType)
+      lookup_context.try(:transactable_type_id=, @transactable_type.id) if respond_to?(:lookup_context)
+    else
+      lookup_context.try(:transactable_type_id=, TransactableType.first.id) if respond_to?(:lookup_context)
     end
   end
 

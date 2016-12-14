@@ -54,6 +54,7 @@ class SecuredParams
       :input_html_options_string,
       :wrapper_html_options_string,
       :validation_only_on_update,
+      :aggregate_in_search,
       custom_validators_attributes: nested(custom_validator),
       valid_values: []
     ]
