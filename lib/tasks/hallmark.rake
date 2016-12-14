@@ -94,7 +94,7 @@ namespace :hallmark do
         u.created_at = Date.parse(array[mapping.fetch(:created_at)])
         expires_at = array[mapping.fetch(:expires_at)]
         begin
-          u.expires_at = Date.parse("#{expires_at[0..3]}/#{expires_at[4..5]}")
+          u.expires_at = Date.parse("#{expires_at[0..3]}/#{expires_at[4..5]}").end_of_month
         rescue
           puts "##{index} - cannot set expire at (#{expires_at}) - skipping"
           next

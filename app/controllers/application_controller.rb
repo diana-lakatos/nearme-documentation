@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def redirect_unverified_user
-    unless current_user&.verified_at.present? || current_user&.admin? || current_user&.instance_admin?
+    unless (current_user&.verified_at.present? && current_user&.expires_at.try(:>, Time.zone.now)) || current_user&.admin? || current_user&.instance_admin?
       flash[:warning] = t('flash_messages.need_verification_html')
       redirect_to root_path
     end
