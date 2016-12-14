@@ -26,14 +26,15 @@ namespace :localdriva do
 
     @default_profile_type = InstanceProfileType.find(617)
     @instance_profile_type = InstanceProfileType.find(619)
-    @instance_profile_type.update_columns(
+    @instance_profile_type.attributes ={
       onboarding: true,
       create_company_on_sign_up: true,
       # show_categories: true,
       # category_search_type: 'AND',
       searchable: true,
       search_only_enabled_profiles: true
-    )
+    }
+    @instance_profile_type.save!
 
     setup = LocaldrivaSetup.new(@instance)
     setup.create_transactable_types!
