@@ -51,8 +51,10 @@
       <dt>Shipping Package:</dt>
       <dd>{{ reservation.shipping_package.label | default: '----' }}</dd>
 
-      <dt>Your Shipping Address:</dt>
-      <dd>{{ reservation.enquirer_shipping_address.full }}</dd>
+      {% if reservation.enquirer_shipping_address != blank %}
+        <dt>Your Shipping Address:</dt>
+        <dd>{{ reservation.enquirer_shipping_address.full }}</dd>
+      {% endif %}
 
       {% assign requested_dates = reservation.long_dates %}
       {% assign requested_dates_size = requested_dates.size %}
