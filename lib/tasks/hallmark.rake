@@ -68,19 +68,20 @@ namespace :hallmark do
     index = 0
     puts "Importing..."
     imported_users = Set.new
+    errors = {}
+    good_records = []
     CSV.foreach(path) do |array|
       index += 1
+      errors[index] = []
       if(index % 200).zero?
         puts "\t\tImported #{index} users"
       end
       if array[mapping.fetch(:email)].blank?
-        puts "\t##{index} - Blank email, skipping"
-        next
+        errors[index] << "Blank email"
       end
       external_id = array[mapping.fetch(:external_id)].strip
       if imported_users.include?(external_id)
-        puts "\t##{index} - Duplicated user for external id: #{external_id}"
-        next
+        errors[index] << "ID was already used for other record"
       end
       imported_users << external_id
       begin
@@ -91,12 +92,15 @@ namespace :hallmark do
         u.first_name = array[mapping.fetch(:first_name)].strip
         u.last_name = array[mapping.fetch(:last_name)].strip
         u.external_id = external_id
+        begin
         u.created_at = Date.parse(array[mapping.fetch(:created_at)])
+        rescue
+        end
         expires_at = array[mapping.fetch(:expires_at)]
         begin
           u.expires_at = Date.parse("#{expires_at[0..3]}/#{expires_at[4..5]}").end_of_month
         rescue
-          puts "##{index} - cannot set expire at (#{expires_at}) - skipping"
+          errors[index] << "cannot set expire at (#{expires_at})"
           next
         end
         u.mobile_number = array[mapping.fetch(:phone)]
@@ -107,7 +111,6 @@ namespace :hallmark do
           month = date[0..-7]
           u.default_profile.properties[:date_of_birth] = Date.parse("#{year}-#{month}-#{day}")
         rescue
-          # ignore
         end
         member_since = array[mapping.fetch(:member_since)]
         begin
@@ -115,11 +118,25 @@ namespace :hallmark do
         rescue
         end
         u.default_profile.properties[:member_year] = array[mapping.fetch(:member_year)]
-        u.save!
-        puts "\t##{index} - All good!"
+        if u.valid?
+        # u.save!
+        else
+          errors[index] << "Invalid rekord: #{u.errors.full_messages.join(', ')}"
+        end
       rescue ActiveRecord::RecordInvalid
         puts "\t##{index} - Invalid record #{u.errors.full_messages.join(', ')}"
       end
+      if errors[index].empty?
+        good_records << index
+        puts "\t##{index} - All good!"
+      else
+        puts "\t##{index} - Had Errors!"
+      end
+    end
+    puts "Good records: #{good_records.count}"
+    puts "Errors: "
+    puts errors.each do |i, errors|
+      puts "##{i}: #{errors.join(';')}"
     end
   end
 end
