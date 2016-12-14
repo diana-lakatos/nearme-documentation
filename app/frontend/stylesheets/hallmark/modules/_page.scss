@@ -1,0 +1,109 @@
+/* page */
+
+.page-copy-a {
+  @include clear;
+}
+
+.page-a {
+  margin-bottom: 40px;
+
+  &:after {
+    display: table;
+    clear: both;
+    content: '';
+  }
+
+  > .primary {
+    float: left;
+    width: 100%;
+    margin: 0 -100% 0 0;
+    padding: 0 430px 0 0;
+  }
+
+  > .secondary {
+    float: right;
+    width: 400px;
+    margin: 0;
+  }
+
+  > .secondary .header-a {
+    margin-bottom: 40px;
+  }
+
+  @include bp($screen-lg) {
+    > .primary {
+      padding: 0 380px 0 0;
+    }
+
+    > .secondary {
+      width: 360px;
+    }
+  }
+
+
+  @include bp($screen-tablet) {
+    > .primary {
+      float: none;
+      margin: 0 0 40px;
+      padding: 0;
+    }
+
+    > .secondary {
+      float: none;
+      margin: 0 0 40px;
+      width: auto;
+    }
+
+    > .secondary .header-a {
+      margin-bottom: 30px;
+    }
+
+    > .secondary .featured {
+      font-size: 0.01em;
+      letter-spacing: -1em;
+    }
+
+    > .secondary .featured > * {
+      font-size: 100em;
+      letter-spacing: 0;
+    }
+
+    > .secondary .featured > .card-a {
+      display: inline-block;
+      width: 46%;
+      margin: 0 2%;
+      vertical-align: top;
+    }
+
+    .csscalc & > .secondary .featured > .card-a {
+      width: calc(50% - 20px);
+      margin: 0;
+    }
+
+    .csscalc & > .secondary .featured > .card-a ~ .card-a {
+      margin-left: 30px;
+    }
+
+    > .secondary .featured > .card-a:nth-child(n+3) {
+      display: none;
+    }
+  }
+
+
+  @include bp($screen-tablet-vertical) {
+    > .secondary .featured > .card-a,
+    .csscalc & > .secondary .featured > .card-a {
+      display: block;
+      width: 100%;
+      margin: 0 0 30px;
+    }
+
+    .csscalc & > .secondary .featured > .card-a ~ .card-a {
+      margin-left: 0;
+    }
+
+    > .secondary .featured > .card-a:nth-child(n+3) {
+      display: block;
+    }
+  }
+}

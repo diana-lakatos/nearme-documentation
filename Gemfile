@@ -232,3 +232,4 @@ gem 'cocoon'
 
 gem 'redcarpet'
 gem 'slack-notifier', require: false
+gem 'colorize'

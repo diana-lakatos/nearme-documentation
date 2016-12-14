@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   layout :layout_for_request_type
 
+  before_action :redirect_unverified_user, if: -> { platform_context.instance.require_verified_user? }
   before_action :set_i18n_locale
   before_action :set_locale
   before_action :log_out_if_token_exists
@@ -56,6 +57,13 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def redirect_unverified_user
+    unless (current_user&.verified_at.present? && current_user&.expires_at.try(:>, Time.zone.now)) || current_user&.admin? || current_user&.instance_admin?
+      flash[:warning] = t('flash_messages.need_verification_html')
+      redirect_to root_path
+    end
+  end
 
   def validate_request_parameters
     RequestParametersValidator.new(params).validate!
@@ -441,8 +449,17 @@ class ApplicationController < ActionController::Base
   helper_method :ckeditor_toolbar_creator, :enable_ckeditor_for_field?
 
   def prepend_view_paths
-    prepend_view_path('app/community_views') if PlatformContext.current.instance.is_community?
+    prepend_view_path("app/#{custom_view_path}_views") if custom_view_path.present?
     prepend_view_path InstanceViewResolver.instance
+  end
+
+  def custom_view_path
+    # FIXME: tmp hack to fallback to 'intel' for is community
+    if PlatformContext.current.instance.is_community?
+      PlatformContext.current.instance.prepend_view_path.presence || 'devmesh'
+    else
+      PlatformContext.current.instance.prepend_view_path
+    end
   end
 
   # It's a valid single param, not an array, hash etc. or some other thing
@@ -469,7 +486,7 @@ class ApplicationController < ActionController::Base
   end
 
   def should_log_out_from_intel?
-    PlatformContext.current.instance.is_community? &&
+    PlatformContext.current.instance.id == 132 &&
       current_user.present? &&
       !current_user.admin? &&
       !Rails.env.test? &&

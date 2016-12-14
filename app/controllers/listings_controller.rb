@@ -1,31 +1,29 @@
 # frozen_string_literal: true
 class ListingsController < ApplicationController
-  before_action :authenticate_user!, only: [:ask_a_question], if: :not_community?
-  before_action :find_listing, only: [:show, :ask_a_question, :occurrences, :booking_module], if: :not_community?
-  before_action :find_location, only: [:show, :ask_a_question], if: :not_community?
-  before_action :find_transactable_type, only: [:show, :booking_module, :ask_a_question], if: :not_community?
-  before_action :find_siblings, only: [:show, :ask_a_question], if: :not_community?
+  before_action :authenticate_user!, only: [:ask_a_question]
+  before_action :find_listing, only: [:show, :ask_a_question, :occurrences, :booking_module]
+  before_action :find_location, only: [:show, :ask_a_question]
+  before_action :find_transactable_type, only: [:show, :booking_module, :ask_a_question]
+  before_action :find_siblings, only: [:show, :ask_a_question]
   before_action :redirect_if_no_access_granted, only: [:show, :ask_a_question], if: :restricted_access?
-  before_action :redirect_if_listing_inactive, only: [:show, :ask_a_question], if: :not_community?
-  before_action :redirect_if_non_canonical_url, only: [:show], if: :not_community?
-  before_action :assign_transactable_type_id_to_lookup_context, if: :not_community?
+  before_action :redirect_if_listing_inactive, only: [:show, :ask_a_question]
+  before_action :redirect_if_non_canonical_url, only: [:show]
+  before_action :assign_transactable_type_id_to_lookup_context
 
-  before_action :find_project, only: [:show], if: :is_community?
-  before_action :redirect_if_draft, only: [:show], if: :is_community?
-  before_action :build_comment, only: [:show], if: :is_community?
+  before_action :build_comment, only: [:show]
 
   def show
-    if !PlatformContext.current.instance.is_community?
+    if PlatformContext.current.instance.is_community?
+      @feed = ActivityFeedService.new(@transactable)
+      @followers = @transactable.feed_followers.paginate(pagination_params)
+      @collaborators = @transactable.collaborating_users.paginate(pagination_params)
+    else
       @section_name = 'listings'
 
       @listing.track_impression(request.remote_ip)
       @reviews = @listing.reviews.paginate(page: params[:reviews_page])
 
       @rating_questions = RatingSystem.active_with_subject(RatingConstants::TRANSACTABLE).try(:rating_questions)
-    else
-      @feed = ActivityFeedService.new(@transactable)
-      @followers = @transactable.feed_followers.paginate(pagination_params)
-      @collaborators = @transactable.collaborating_users.paginate(pagination_params)
     end
     respond_to :html
   end
@@ -60,6 +58,7 @@ class ListingsController < ApplicationController
 
   def find_listing
     @listing = Transactable.with_deleted.friendly.find(params[:id]).decorate
+    @transactable = @listing
   rescue
     # We used to use to_param set as $id-$name.parameterize, so
     # we're assuming the first - will separate id from the parameterized name.
@@ -93,6 +92,7 @@ class ListingsController < ApplicationController
   end
 
   def find_siblings
+    return true if @location.nil?
     @listing_siblings = @location.listings.includes(:transactable_type).where.not(id: @listing.id)
     @listing_siblings = if @transactable_type.groupable_with_others?
                           @listing_siblings.for_groupable_transactable_types

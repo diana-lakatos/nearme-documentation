@@ -1,0 +1,17 @@
+#activity
+  .wrap-a.reduce-top
+    .contain
+      .page-a
+        .primary
+          .box-a
+
+            %h1.h2
+              = t('activity_feed.title')
+
+            = render 'shared/activity_feed', feed: @feed, object: current_user
+
+        .secondary
+
+          = render 'shared/featured_users', users: @users
+          = render 'shared/featured_projects', projects: @projects
+          = render 'shared/featured_topics', topics: @topics

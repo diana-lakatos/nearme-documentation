@@ -1,5 +1,6 @@
 en:
   flash_messages:
+    need_verification_html: 'You need to be registered user in order to browse the website.'
     orders:
       draft_saved: "Your draft has been saved!"
     close_label: "Close"

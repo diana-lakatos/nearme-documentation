@@ -1,0 +1,267 @@
+<div id="intro-video"{% if hide_intro_video %} class="inactive"{% endif %}></div>
+
+<div class="hero-a">
+  <div class="contain">
+    <h2 class="hx">{{ 'hero_slogan' | translate }}</h2>
+    <p>{{ 'hero_description' | translate }}</p>
+    <p class="action"><a href="#signup" class="button-a large alt">{{ 'join_now' | translate }}</a></p>
+  </div>
+</div>
+
+<div class="wrap-a white">
+  <div class="contain">
+    <div class="header-a _mBa">
+      <h2 class="hx">Page Title</h2>
+      <p class="tx-a">Secondary title or call to action for the text that follows in this section below.</p>
+    </div>
+
+    <div class="page-copy-a">
+      <img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1377/placeholder.png" alt="placeholder" class="alignright">
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Doculpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+  </div>
+</div>
+
+<div class="wrap-a white">
+  <div class="contain">
+    <!-- header with button
+    -->
+    <div class="header-a _mBa">
+      <h2 class="hx">
+        {{ 'featured_topics' | translate }}
+      </h2>
+      <p class="tx-a">
+      {{ 'featured_topics_description' | translate }}
+      </p>
+      <p class="action">
+      <a href="/search/topics?sort=featured" class='button-a small light'>{{ 'view_all' | translate }}</a>
+      </p>
+    </div>
+    <!-- topics
+    -->
+    <div class="topics-a">
+      <div class="wrap">
+        <ul class="a">
+          <li class="big"><a href="{{ topics[0].show_url }}" style="{{ topics[0].background_style_big }}"><span>{{ topics[0].name }}</span></a></li>
+          <li><a href="{{ topics[1].show_url }}" style="{{ topics[1].background_style }}"><span>{{ topics[1].name }}</span></a></li>
+          <li><a href="{{ topics[2].show_url }}" style="{{ topics[2].background_style }}"><span>{{ topics[2].name }}</span></a></li>
+        </ul>
+        <ul class="b">
+          <li><a href="{{ topics[3].show_url }}" style="{{ topics[3].background_style }}"><span>{{ topics[3].name }}</span></a></li>
+          <li><a href="{{ topics[4].show_url }}" style="{{ topics[4].background_style }}"><span>{{ topics[4].name }}</span></a></li>
+          <li class="big"><a href="{{ topics[5].show_url }}" style="{{ topics[5].background_style_big }}"><span>{{ topics[5].name }}</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="wrap-a">
+  <div class="contain">
+    <div class="header-a">
+      <h2 class="hx">
+        {{ 'connect_with_influencers' | translate }}
+      </h2>
+      <p class="tx-a">
+      {{ 'connect_with_influencers_description' | translate }}
+      </p>
+      <p class="action">
+      <a href="/search/people?sort=featured" class='button-a small light'>{{ 'view_all' | translate }}</a>
+      </p>
+    </div>
+
+    <div class="grid-a-people-a">
+      <div class="wrap">
+        {% for user in users %}
+          <div class="cell">
+            <article class="card-a" data-equalize>
+              <figure><a href="{{ user.profile_path }}"><img src="{{ user.avatar_url_bigger }}" /></a></figure>
+              {% if user.role != blank %}
+              <figcaption>{{ user.role }}</figcaption>
+              {% endif %}
+              <p class="action">
+              <a href="{{ user.profile_path }}" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+              </p>
+              <h3 class="hx">
+                <a href="{{ user.profile_path }}">{{ user.name_with_affiliation }}</a>
+              </h3>
+              <p>{{ user.properties.short_bio }}</p>
+              <p class="location">{{ user.display_location }}</p>
+            </article>
+          </div>
+        {% endfor %}
+
+        <!-- temporary static content -->
+        <div class="cell">
+          <article class="card-a" data-equalize>
+            <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1384/user-avatar.jpg"  />
+            <figcaption>Superfan</figcaption>
+            </a></figure>
+            <p class="action">
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            </p>
+            <h3 class="hx">
+              <a href="./">Chloe Jones</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="location">St. Louis, MO</p>
+          </article>
+        </div>
+
+        <div class="cell">
+          <article class="card-a" data-equalize>
+            <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1384/user-avatar.jpg"  />
+            <figcaption>Fan</figcaption>
+            </a></figure>
+            <p class="action">
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            </p>
+            <h3 class="hx">
+              <a href="./">Chloe Jones</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="location">St. Louis, MO</p>
+          </article>
+        </div>
+
+        <div class="cell">
+          <article class="card-a" data-equalize>
+            <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1384/user-avatar.jpg"  />
+            <figcaption>Artist</figcaption>
+            </a></figure>
+            <p class="action">
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            </p>
+            <h3 class="hx">
+              <a href="./">Chloe Jones</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="location">St. Louis, MO</p>
+          </article>
+        </div>
+
+        <div class="cell">
+          <article class="card-a" data-equalize>
+            <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1384/user-avatar.jpg"  />
+            <figcaption>Community Friend</figcaption>
+            </a></figure>
+            <p class="action">
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            </p>
+            <h3 class="hx">
+              <a href="./">Chloe Jones</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="location">St. Louis, MO</p>
+          </article>
+        </div>
+
+        <div class="cell">
+          <article class="card-a" data-equalize>
+            <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1384/user-avatar.jpg"  />
+            <figcaption>Charter Member</figcaption>
+            </a></figure>
+            <p class="action">
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            </p>
+            <h3 class="hx">
+              <a href="./">Chloe Jones</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="location">St. Louis, MO</p>
+          </article>
+        </div>
+
+        <div class="cell">
+          <article class="card-a" data-equalize>
+            <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1384/user-avatar.jpg"  /></a></figure>
+            <p class="action">
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            </p>
+            <h3 class="hx">
+              <a href="./">Chloe Jones</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="location">St. Louis, MO</p>
+          </article>
+        </div>
+        <!-- \\ temporary static content -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- content wrapper
+-->
+<div class="wrap-a white">
+  <div class="contain">
+    <div class="header-a">
+      <h2 class="hx">{{ 'featured_projects' | translate }}</h2>
+      <p class="tx-a">{{ 'explore_the_most_popular_projects' | translate }}</p>
+      <p class="action"><a href="/search/projects?sort=featured" class='button-a small light'>{{ 'view_all' | translate }}</a></p>
+    </div>
+    <div class="grid-a-projects-a">
+      <div class="wrap">
+        {% for project in projects %}
+          <div class="cell">
+            <article class="card-a" data-equalize>
+              <figure><a href="{{ project.show_path }}"><img src="{{ project.cover_photo_url }}" /></a></figure>
+              <p class="action">
+              <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+              </p>
+              <h3 class="hx">
+                <a href="{{ project.show_path}}">{{ project.name }}</a>
+              </h3>
+              <p class="user"><a href="{{ project.creator.profile_path }}"><img src="{{ project.creator.avatar_url_thumb }}" width="30" height="30" />{{ project.creator.name_with_affiliation }}</a></p>
+            </article>
+          </div>
+        {% endfor %}
+
+          <!-- temporary static content -->
+          <div class="cell">
+            <article class="card-a" data-equalize>
+              <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1385/badge.jpg" /></a></figure>
+              <p class="action">
+              <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+              </p>
+              <h3 class="hx">
+                <a href="./">Dream Books</a>
+              </h3>
+              <p class="user"><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1384/user-avatar.jpg" width="30" height="30" />Chloe Johns</a></p>
+            </article>
+          </div>
+
+          <div class="cell">
+            <article class="card-a" data-equalize>
+              <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1385/badge.jpg" /></a></figure>
+              <p class="action">
+              <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+              </p>
+              <h3 class="hx">
+                <a href="./">Dream Books</a>
+              </h3>
+              <p class="user"><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1384/user-avatar.jpg" width="30" height="30" />Chloe Johns</a></p>
+            </article>
+          </div>
+
+          <div class="cell">
+            <article class="card-a" data-equalize>
+              <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1385/badge.jpg" /></a></figure>
+              <p class="action">
+              <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+              </p>
+              <h3 class="hx">
+                <a href="./">Dream Books</a>
+              </h3>
+              <p class="user"><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1384/user-avatar.jpg" width="30" height="30" />Chloe Johns</a></p>
+            </article>
+          </div>
+
+          <!-- \\ temporary static content -->
+      </div>
+    </div>
+  </div>
+</div>

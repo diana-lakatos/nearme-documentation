@@ -9,16 +9,25 @@ module.exports = function(gulp, config) {
 
   gulp.task('watch:scss', function() {
 
-    /* APPLICATION */
     gulp.watch([
-      '**/*.scss',
-      '!dashboard/**/*.scss',
-      '!dashboard.scss',
-      '!community/**/*.scss',
-      '!community.scss',
-      '!admin/**/*.scss',
-      '!admin.scss',
-      '!shared/**/*.scss'
+      'application.scss',
+      'application_vendor.scss',
+      'blog.scss',
+      'errors.scss',
+      'instance_admin.scss',
+      'instance_admin_vendor.scss',
+      'instance_wizard.scss',
+      'blog/**/*.scss',
+      'common/**/*.scss',
+      'components/**/*.scss',
+      'instance_admin/**/*.scss',
+      'instance_wizard/**/*.scss',
+      'layout/**/*.scss',
+      'pages/**/*.scss',
+      'sections/**/*.scss',
+      'themes/**/*.scss',
+      'user_blog/**/*.scss',
+      'vendor/**/*.scss',
     ], { cwd: config.paths.stylesheets }, ['styles:application', 'styles:instance_admin','styles:other']);
 
     /* Dashboard */
@@ -46,6 +55,10 @@ module.exports = function(gulp, config) {
     gulp.watch([
       'shared/**/*.scss'
     ], { cwd: config.paths.stylesheets }, ['styles:application', 'styles:dashboard']);
+
+    gulp.watch([
+      'images/**'
+    ], { cwd: config.paths.images }, ['images']);
   });
 
   gulp.task('watch', ['watch:scss', 'watch:images', 'watch:fonts', 'watch:webpack', 'watch:lint'], function(){

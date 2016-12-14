@@ -1,0 +1,31 @@
+%footer#footer.footer-a
+  .contain
+    .wrap
+      .copyright
+        = link_to 'https://hallmark.com' do
+          = image_tag "hallmark/logo-white.png", width: 109, height: 60, alt: 'Hallmark Keepsake Ornament Club'
+        %p
+          = t(:copyright_html, year: Time.now.year)
+      %ul.nav
+        - platform_context.pages.each do |page|
+          %li
+            = link_to page.path, pages_path(page)
+    .socials-a
+      %p
+        = t :join_us_on
+      %ul
+        %li.facebook
+          = link_to '#', rel: 'external' do
+            %span Facebook
+        %li.twitter
+          = link_to '#', rel: 'external' do
+            %span Twitter
+        %li.pinterest
+          = link_to '#', rel: 'external' do
+            %span Pinterest
+        %li.instagram
+          = link_to '#', rel: 'external' do
+            %span Instagram
+        %li.youtube
+          = link_to '#', rel: 'external' do
+            %span YouTube

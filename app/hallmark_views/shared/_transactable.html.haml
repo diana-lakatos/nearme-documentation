@@ -1,0 +1,32 @@
+- if transactable
+  .cell
+    %article.card-a{"data-equalize" => true}
+      %figure
+        = link_to transactable.decorate.show_path do
+          = image_tag transactable.cover_photo.image_url(:thumb)
+          - if transactable.try(:pending_collaboration)
+            %figcaption
+              = t :pending
+          - elsif transactable.featured?
+            %figcaption
+              = t :featured
+      %ul.numbers
+        %li
+          = t :collaborators
+          %span= transactable.transactable_collaborators.approved.count
+        %li
+          = t :followers
+          %span= transactable.feed_followers.count
+      %p.action
+        %p{:'data-follow-button' => true}
+          - if transactable.try(:pending_collaboration)
+            = render 'shared/collaboration_buttons', transactable: transactable, collaboration: transactable.transactable_collaborators.find(transactable.pending_collaboration)
+          - else
+            = render partial: 'shared/follow_button', locals: { object: transactable, css_class: 'tiny' }
+      %h3.hx
+        = link_to transactable.name, transactable.decorate.show_path
+      %p.user
+        = link_to user_path(transactable.creator) do
+          = image_tag transactable.creator.avatar.url(:thumb), width: 30, height: 30
+          = transactable.creator.decorate.name_with_affiliation
+      %p= custom_sanitze transactable.properties.try(:summary).to_s.truncate(100)

@@ -1,14 +1,18 @@
 .topic-a.group-a(data-object-id="#{@group.id}")
   .wrap
     .contain
-      %h1.hx= @group.name
-      %p= @group.summary
+      - if !@group.secret? || current_user.try(:is_member_of?, @group)
+        %h1.hx= @group.name
+        %p= @group.summary
+      - else
+        %h1.hx= t('group.secret_name')
+        %p= t('group.secret_description')
 
   .contain
     %nav.navbar-a
       %ul.nav.nav-tabs{role: "tablist"}
 
-        - if !@group.private? || current_user.try(:is_member_of?, @group)
+        - if !@group.confidential? || current_user.try(:is_member_of?, @group)
           %li.active
             = link_to '#activity', role: "tab", :'data-toggle' => "tab" do
               = t(:activity)
@@ -17,7 +21,7 @@
           = link_to '#about', role: "tab", :'data-toggle' => "tab" do
             = t(:about)
 
-        - if !@group.private? || current_user.try(:is_member_of?, @group)
+        - if !@group.confidential? || current_user.try(:is_member_of?, @group)
           %li
             = link_to '#members', role: "tab", :'data-toggle' => "tab" do
               = t(:members)
@@ -41,7 +45,7 @@
           = render 'group_members/group_members_button', group: @group, membership: @membership
 
 .tab-content
-  - if !@group.private? || current_user.try(:is_member_of?, @group)
+  - if !@group.confidential? || current_user.try(:is_member_of?, @group)
     #activity.tab-pane.fade.active{:role => "tabpanel"}
       = render 'activity', group: @group, feed: @feed
 
@@ -50,7 +54,7 @@
       .contain
         = render 'about', group: @group
 
-  - if !@group.private? || current_user.try(:is_member_of?, @group)
+  - if !@group.confidential? || current_user.try(:is_member_of?, @group)
     #members.tab-pane.fade{:role => "tabpanel"}
       .wrap-a.reduce-top
         .contain

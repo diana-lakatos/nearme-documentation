@@ -61,7 +61,7 @@
                 - else
                   = link_to link.text, link.url
 
-  - if !@group.private? || current_user.try(:is_member_of?, @group)
+  - if !@group.confidential? || current_user.try(:is_member_of?, @group)
     .secondary
       .box-a
         .header-a

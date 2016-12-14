@@ -1,0 +1,20 @@
+- is_active = (local_assigns[:is_active].presence || false)
+
+%footer{ class: (defined?(footer_class) ? footer_class : '') }
+  %p.actions
+    - if event.allowed_for_user(current_user)
+      - if user_signed_in?
+        = link_to t(:comment), '#', data: { comment: '' }
+      - else
+        = link_to t(:comment), new_user_session_path(return_to: request.path)
+
+      %span &bull;
+
+    - if event.is_reportable?
+      - if user_signed_in?
+        = link_to t(:report_as_spam), url_for([event, event.spam_reports.build]), remote: true, method: :post, 'data-report-spam': true
+        = link_to t(:cancel_spam_report), url_for([:cancel, event, event.spam_reports.build]), remote: true, method: :delete, 'data-cancel-report': true, style: "display: none"
+      - else
+        = link_to t(:report_as_spam), new_user_session_path(return_to: request.path)
+
+  = render 'comments/activity_feed_comments', comment: event.comments.build, is_active: is_active

@@ -1,0 +1,100 @@
+/*!
+ * Helpers
+/* ---------------------------------------- */
+
+.offset {
+  position: absolute !important;
+  left: -10001px !important;
+  overflow: hidden !important;
+}
+
+.alignright {
+  float: right;
+  margin: 0 0 20px 30px;
+}
+
+.alignleft {
+  float: left;
+  margin: 0 30px 20px 0;
+}
+
+.alignright img,
+.alignleft img {
+  display: block;
+  max-width: none;
+}
+
+.aligncenter {
+  display: block;
+  text-align: center;
+  margin: 0 auto 20px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.hide-initially {
+  display: none;
+}
+
+.tal {
+  text-align: left !important;
+}
+
+.tac {
+  text-align: center !important;
+}
+
+.tar {
+  text-align: right !important;
+}
+
+.ie8 .hide-desktop {
+  display: none !important;
+}
+
+@media screen and (min-width: 1px) {
+  .hide {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: $screen-tablet) {
+  .show-desktop {
+    display: block !important;
+  }
+
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+@include bp($screen-tablet) {
+  .show-tablet {
+    display: block !important;
+  }
+
+  .hide-tablet {
+    display: none !important;
+  }
+}
+
+
+@include bp($screen-mobile) {
+  .show-mobile {
+    display: block !important;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+
+.translation_missing {
+  display: inline-block;
+  box-shadow: 0 0 0 10px rgba(255, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+}

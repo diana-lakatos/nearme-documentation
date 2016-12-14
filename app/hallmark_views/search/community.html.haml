@@ -1,0 +1,30 @@
+.wrap-a.reduce-top
+  .contain
+    / tabs
+    %nav.tabs-a.trio.search-types
+      %p.actions
+        = link_to t(:create_group), new_dashboard_group_path, class: "button-a small orange add groups #{active_class(@search_type, 'groups', 'is-active')}"
+
+      %ul
+        %li{ class: active_class(@search_type, 'people', 'is-active')}
+          = link_to t(:people), search_url(search_type: :people), data: { search_type: 'people'}
+        %li{ class: active_class(@search_type, 'projects', 'is-active')}
+          = link_to t(:projects), search_url(search_type: :projects), data: { search_type: 'projects'}
+        %li{ class: active_class(@search_type, 'topics', 'is-active')}
+          = link_to t(:topics), search_url(search_type: :topics), data: { search_type: 'topics'}
+        %li{ class: active_class(@search_type, 'groups', 'is-active')}
+          = link_to t(:groups), search_url(search_type: :groups), data: { search_type: 'groups'}
+
+    / white box
+    .box-a
+      .search-container
+        / filters
+        = render "search/filters/#{@search_type}"
+        .grid-a-search-a
+          .wrap.search-results
+            = render @search_type
+        / more
+      .pagination-more-a
+        - if @searcher.results.next_page
+          %p.more-a{data: { next_page: @searcher.results.next_page }}
+            %button= t(:see_more)

@@ -1,0 +1,17 @@
+= simple_form_for '', url: search_url, html: { id: 'search_filter' } do |f|
+  .filters-a
+    .box
+      %h3.hx
+        = t(:filter_by)
+
+      - group_type_collection = [GroupType.new(id: '_blank_', name: t('group.placeholders.all_groups')), GroupType.not_secret].flatten
+      = f.input :query, as: :hidden, input_html: { value: params[:query] }
+      = f.input :group_type_id, as: :select, collection: group_type_collection, value_method: :id, label_method: :name, selected: params[:group_type_id], include_blank: t('group.placeholders.all_groups') , required: false, wrapper_html: { class: 'drop role' }, input_html: { class: 'selectize' }
+      = f.input :page, as: :hidden, input_html: { value: params[:page] }
+      = f.input :search_type, as: :hidden, input_html: { value: 'groups' }
+
+    .results
+      %span= @searcher.result_count
+      = t :results_count
+
+      = f.input :sort, as: :select, collection: Group::SORT_OPTIONS, required: false, prompt: t(:sort, scope: [:simple_form, :placeholders, :search_filter]), input_html: { class: 'selectize' }, wrapper_html: { class: 'sort drop role' }, selected: params[:sort]

@@ -1,0 +1,46 @@
+.wrap-a.reduce-top
+  .contain
+
+    %h1.h2
+      = t :my_account
+
+    %nav.tabs-a.trio
+      %ul
+        %li
+          = link_to t(:edit_profile), dashboard_profile_path
+        %li.is-active
+          = link_to t(:notifications), edit_dashboard_notification_preferences_path
+        %li
+          = link_to t(:social_accounts), social_accounts_path
+
+    .box-a
+      = simple_form_for @user, url: dashboard_notification_preferences_path, html: { class: 'form-a' } do |f|
+        .fields
+          - if HiddenUiControls.find('dashboard/notification_preferences/emails').visible?
+            = f.input :accept_emails, as: :switch, wrapper_html: { class: 'sep' }
+          - if HiddenUiControls.find('dashboard/notification_preferences/sms').visible?
+            = f.input :sms_notifications_enabled, as: :switch, wrapper_html: { class: 'sep' }
+
+        .notification-preferences
+          = f.fields_for :notification_preference, @notification_preference do |nf|
+            = nf.label :group_updates_enabled, t('simple_form.labels.notifications.group_updates_enabled')
+            %p= "(#{t('simple_form.labels.notifications.group_updates_enabled_hint')})"
+            = nf.input :group_updates_enabled, as: :switch, wrapper_html: { class: 'sep' }, label: false
+
+            = nf.label :project_updates_enabled, t('simple_form.labels.notifications.project_updates_enabled')
+            %p= "(#{t('simple_form.labels.notifications.project_updates_enabled_hint')})"
+            = nf.input :project_updates_enabled, as: :switch, wrapper_html: { class: 'sep' }, label: false
+
+            .form-row
+              = nf.radio_button :email_frequency, 'immediately'
+              = nf.label :email_frequency, t('simple_form.labels.notifications.email_frequency.immediately'), value: 'immediately'
+              %p= "(#{t('simple_form.labels.notifications.email_frequency.immediately_hint')})"
+
+            .form-row
+              = nf.radio_button :email_frequency, 'weekly'
+              = nf.label :email_frequency, t('simple_form.labels.notifications.email_frequency.weekly'), value: 'weekly'
+              %p= "(#{t('simple_form.labels.notifications.email_frequency.weekly_hint')})"
+
+        %p.action
+          = f.submit t('general.save')
+

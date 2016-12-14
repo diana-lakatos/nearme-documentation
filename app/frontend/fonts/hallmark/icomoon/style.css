@@ -1,0 +1,80 @@
+@font-face {
+  font-family: 'Icons';
+  src:
+    url('fonts/Icons.ttf?hm1qi4') format('truetype'),
+    url('fonts/Icons.woff?hm1qi4') format('woff'),
+    url('fonts/Icons.svg?hm1qi4#Icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-tutarrow:before {
+  content: "\e61e";
+}
+.icon-checked:before {
+  content: "\e600";
+}
+.icon-unchecked:before {
+  content: "\e605";
+}
+.icon-close:before {
+  content: "\e616";
+}
+.icon-menu:before {
+  content: "\e615";
+}
+.icon-check:before {
+  content: "\e606";
+}
+.icon-pin:before {
+  content: "\e607";
+}
+.icon-cross:before {
+  content: "\e608";
+}
+.icon-arrow-down:before {
+  content: "\e609";
+}
+.icon-arrow-right:before {
+  content: "\e60a";
+}
+.icon-arrow-left:before {
+  content: "\e60b";
+}
+.icon-arrow-up:before {
+  content: "\e60c";
+}
+.icon-minus-circle:before {
+  content: "\e60d";
+}
+.icon-plus-circle:before {
+  content: "\e60e";
+}
+.icon-pencil:before {
+  content: "\f040";
+}
+.icon-trash:before {
+  content: "\f1f8";
+}
+.icon-star:before {
+  content: "\e617";
+}
+.icon-search:before {
+  content: "\e614";
+}
+

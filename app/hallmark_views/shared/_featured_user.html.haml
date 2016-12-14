@@ -1,0 +1,10 @@
+%article.card-a
+  %figure
+    = link_to user_path(user) do
+      = image_tag user.avatar.url(:bigger)
+  %p.action{:'data-follow-button' => true}
+    = render partial: "shared/follow_button", locals: { object: user, css_class: "tiny" }
+  %h3.hx
+    = link_to user.decorate.name_with_affiliation, user_path(user)
+  %p= user.properties.try(:short_bio)
+  %p.location= "#{user.current_address.try(:city)}, #{user.current_address.try(:state)}"

@@ -1,0 +1,164 @@
+/* project header */
+
+.project-a {
+    position: relative;
+
+    &:after {
+        display: table;
+        clear: both;
+        content: '';
+    }
+
+    > figure {
+        float: left;
+        width: 55%;
+        margin: 0 -100% 0 0;
+
+        img {
+            display: block;
+            width: 100%;
+        }
+
+        figcaption {
+            position: absolute;
+            left: 45px;
+            top: 35px;
+            width: 250px;
+            margin: -15px 0 0 -125px;
+            padding: 2px 15px 0;
+            background: #fff;
+
+            background: rgba(255, 255, 255, 0.9);
+            color: #2071B9;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 50px;
+            text-transform: uppercase;
+            text-align: center;
+            -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .no-csstransforms & figcaption {
+            left: 0;
+            top: 10px;
+            width: auto;
+            margin: 0;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
+
+    > .wrap {
+        margin-left: 55%;
+        padding-left: 50px;
+        padding-bottom: 190px;
+    }
+
+    h1 {
+        color: #54565A;
+    }
+
+    .user {
+        margin-bottom: 30px;
+
+        figure {
+            float: left;
+            width: 40px;
+            margin: 0 -100% 0 0;
+        }
+
+        figure ~ * {
+            margin-left: 55px;
+        }
+
+        .hx {
+            margin-bottom: 0;
+            color: #2071B9;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .hx a {
+            color: inherit;
+        }
+
+        p {
+            margin-bottom: 0;
+        }
+
+        p:before {
+            display: inline-block;
+            content: '\e607';
+            margin: 0 5px 0 0;
+            font: 14px/1 $font-icons;
+            line-height: inherit;
+            vertical-align: top;
+        }
+    }
+
+    .topics {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    > .bignums-a {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin-left: 55%;
+        padding-left: 50px;
+    }
+
+    @include bp($screen-lg) {
+
+        > figure {
+            width: 50%;
+        }
+
+        > .wrap {
+            margin-left: 50%;
+        }
+
+        > .bignums-a {
+            margin-left: 50%;
+        }
+    }
+
+    @include bp($screen-tablet) {
+
+        > figure {
+            float: none;
+            width: 100%;
+            margin: 0 0 30px;
+        }
+
+        > .wrap {
+            margin-left: 0;
+            padding: 0;
+        }
+
+        .user {
+            margin-bottom: 25px;
+        }
+
+        .user .hx {
+            margin-bottom: 3px;
+            font-size: 16px;
+        }
+
+        .topics {
+            font-size: 16px;
+        }
+
+        > .bignums-a {
+            position: static;
+            left: auto;
+            right: auto;
+            bottom: auto;
+            margin: 30px 0;
+            padding-left: 0;
+        }
+    }
+}

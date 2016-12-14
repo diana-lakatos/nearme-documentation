@@ -1,0 +1,234 @@
+- no_topic_select = false if local_assigns[:no_topic_select].nil?
+
+.publish-a
+  = simple_form_for :activity_feed, url: root_url do |f|
+
+    %figure
+      = image_tag "community/tutorial/chloe.png", width: 80, height: 80
+
+    = f.input :content, as: :text, label: false, input_html: { cols: 40, rows: 3 }
+
+    - unless no_topic_select
+      = f.input :topics, as: :select, collection: ['Real Sense', 'Internet of Things', 'Dual Screen', 'Core', 'Analytics', 'Android', 'Design'], multiple: true, input_html: { class: 'selectize', multiple: true, data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }
+
+    %p.action
+      = f.button :submit, class: 'button-a tiny'
+
+
+/ status update
+%article.status-a
+
+  = render 'shared/activity_status_header', status_action: :created_project, user: { name: 'Mike M.', url: root_url, image_file: 'community/tutorial/mike-a.png' }, project: { url: root_url }, publish_date: '10/20/15'
+
+  %section
+    %article.status-a
+      %header
+        %figure
+          = link_to root_url do
+            = image_tag 'community/tutorial/dual-screen.png', width: 80, height: 80
+      %section
+        %h3.hx
+          = link_to 'Dual Screen Project', root_url
+        %p Wireless display technology is becoming more and more popular on Android* phones and tablets since Google* started supporting Miracast on Android 4.2. This article introduces how to enable dual display differentiation for Miracast by showing a case study of enabling iQiyi* online video player and WPS Office* on K900*.
+
+      = render 'shared/activity_status_footer'
+
+/ status update
+%article.status-a
+
+  = render 'shared/activity_status_header', status_action: :shared_article, user: { name: 'IDZ Connect', url: root_url, image_file: 'community/tutorial/intel.png'}, page: { name: 'Android Page', url: root_url }, publish_date: '10/20/15'
+
+  %section
+    %article.status-a
+      %header
+        %figure
+          = link_to root_url do
+            = image_tag 'community/tutorial/mesh-central.png', width: 80, height: 80
+      %section
+        %h3.hx
+          = link_to 'Meshcentral - now with text messaging', root_url
+        %p This week, we are taking Meshcentral for the first time into a completely new direction with the introduction of user-to-user text messaging.
+
+      = render 'shared/activity_status_footer'
+
+/ status update
+%article.status-a
+
+  = render 'shared/activity_status_header', status_action: :updated_message, user: { name: 'Jane R.', gender: :female, url: root_url, image_file: 'community/tutorial/jane.png' }, publish_date: '10/20/15'
+
+  %section
+    %article.status-a
+      %header
+        %figure
+          = image_tag 'community/status-a-chat-a.png', alt: ""
+      %section
+        %p What do you think about the Internet of Things? Do you have any comments?
+
+      %footer
+        %p.actions
+          = link_to t(:comment), '#', data: { comment: '' }
+
+          %span &bull;
+          = link_to t(:report_as_spam), root_url
+
+        = simple_form_for :comment, url: root_url, html: { class: 'comment is-active' } do |f|
+          = f.input :comment, as: :text, input_html: { cols: 40, rows: 4 }, label: false
+
+          %p.action
+            = f.button :submit, class: 'button-a tiny'
+
+
+        .comments
+          / comment
+          .comment-a
+            %figure
+              = image_tag 'community/tutorial/mike-b.png', width: 50, height: 50
+            %p.author
+              = t(:user_said, user_link: link_to('Mike M.', root_url)).html_safe
+            %blockquote
+              %p I’m a software engineer and I’m currently the head of Google’s Payments team.
+            %p.meta
+              %time
+                = t :hours, count: 3
+              %span &bull;
+              = link_to t(:report_as_spam), root_url
+          / comment
+          .comment-a
+            %figure
+              = image_tag 'community/tutorial/marissa.png', width: 50, height: 50
+            %p.author
+              = t(:user_said, user_link: link_to('Marissa H.', root_url)).html_safe
+            %blockquote
+              %p I’m a software engineer and I’m currently the head of Google’s Payments team.
+            %p.meta
+              %time
+                = t :hours, count: 3
+              %span &bull;
+              = link_to t(:report_as_spam), root_url
+
+/ status update
+%article.status-a
+
+  = render 'shared/activity_status_header', status_action: :updated_message, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'community/tutorial/jane.png' }, publish_date: '11/07/15'
+
+  %section
+    %article.status-a
+      %header
+        %figure
+          = image_tag 'community/status-a-chat-a.png', alt: ""
+      %section
+        %p I’ve just created an interesting project for mobile analytics. Come join me!
+
+      %footer
+        %p.actions
+          = link_to t(:comment), '#', data: { comment: '' }
+
+          %span &bull;
+          = link_to t(:report_as_spam), root_url
+
+        = simple_form_for :comment, url: root_url, class: 'comment' do |f|
+          = f.input :comment, as: :text, input_html: { cols: 40, rows: 4 }, label: false
+
+          %p.action
+            = f.button :submit, class: 'button-a tiny'
+
+        .comments
+          / comment
+          .comment-a
+            %figure
+              = image_tag 'community/tutorial/mike-b.png', width: 50, height: 50
+            %p.author
+              = t(:user_said, user_link: link_to('Mike M.', root_url)).html_safe
+            %blockquote
+              %p I’m a software engineer and I’m currently the head of Google’s Payments team.
+            %p.meta
+              %time
+                = t :hours, count: 3
+              %span &bull;
+              = link_to t(:report_as_spam), root_url
+
+/ status update
+%article.status-a
+
+  = render 'shared/activity_status_header', status_action: :added_photo, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'community/tutorial/chloe.png' }, project: { name: 'Mobile Analytics', url: root_url }, publish_date: '13/07/15'
+
+  %section
+    %article.status-a
+      %header
+        %figure
+          = link_to root_url do
+            = image_tag 'community/tutorial/infographic-a.png', width: 80, height: 80
+      %section
+        %p
+          = link_to 'Analytics Infographic.png', root_url
+
+/ status update
+%article.status-a
+
+  = render 'shared/activity_status_header', status_action: :added_comment_discussion, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'community/tutorial/chloe.png' }, discussion: { name: 'Discussions', url: root_url }, publish_date: '10/20/15'
+
+  %section
+    %article.status-a
+      %header
+        %figure
+          = link_to root_url do
+            = image_tag 'community/status-a-chat-a.png', alt: ""
+      %section
+        %p I would like to get 10 collaborators for the project. Can you please share with your contacts? Thanks!
+
+      = render 'shared/activity_status_footer'
+
+/ status update
+%article.status-a
+
+  = render 'shared/activity_status_header', status_action: :added_comment_discussion, user: { name: 'Stefano B.', gender: :female, url: root_url, image_file: 'community/tutorial/stefano.png' }, discussion: { name: 'Discussions', url: root_url }, publish_date: '10/20/15'
+
+  %section
+    %article.status-a
+      %header
+        %figure
+          = link_to root_url do
+            = image_tag 'community/status-a-chat-a.png', alt: ""
+      %section
+        %p I would like to get 10 collaborators for the project. Can you please share with your contacts? Thanks!
+
+      = render 'shared/activity_status_footer'
+
+
+/ status update
+%article.status-a
+
+  = render 'shared/activity_status_header', status_action: :added_collaborator, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'community/tutorial/chloe.png' }, project: { name: 'Mobile Analytics', url: root_url }, publish_date: '10/20/15'
+
+  %section
+    %article.status-a
+      %header
+        %figure
+          = link_to root_url do
+            = image_tag 'community/tutorial/craig.png', width: 80, height: 80
+      %section
+        %h3.hx
+          = link_to 'Craig T.', root_url
+        %p I’m a software engineer and I’m currently the head of Google TV team
+        %p.location San Francisco, CA
+
+/ status update
+%article.status-a
+
+  = render 'shared/activity_status_header', status_action: :added_photo, user: { name: 'Chloe J.', gender: :female, url: root_url, image_file: 'community/tutorial/chloe.png' }, project: { name: 'Mobile Analytics', url: root_url }, publish_date: '13/07/15'
+
+  %section
+    %article.status-a
+      %header
+        %figure
+          = link_to root_url do
+            = image_tag 'community/tutorial/infographic-b.png', width: 80, height: 80
+      %section
+        %p
+          = link_to 'Analytics Infographic.png', root_url
+
+
+
+
+%p.more-a
+  = link_to t(:see_more), root_url

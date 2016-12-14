@@ -7,7 +7,8 @@ class GroupMembersController < ApplicationController
   before_filter :find_group
 
   def create
-    @membership = @group.memberships.create(user: current_user, email: current_user.email, approved_by_user_at: Time.now)
+    raise ActiveRecord::NotFound if @group.secret?
+    @membership = @group.memberships.create(user: current_user, email: current_user.email, approved_by_user_at: Time.zone.now)
 
     if @group.public?
       @membership.update(approved_by_owner_at: Time.zone.now)

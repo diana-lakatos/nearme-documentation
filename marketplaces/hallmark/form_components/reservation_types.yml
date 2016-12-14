@@ -1,0 +1,8 @@
+~
+#"#{TransactableType} checkout ":
+#  RESERVATION_ATTRIBUTES:
+#    -
+#      name: "FORM COMPONENT NAME"
+#      fields:
+#        - group: field_name # e.g. user: company_name
+

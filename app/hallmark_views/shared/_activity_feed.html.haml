@@ -1,0 +1,33 @@
+- no_topic_select = false if local_assigns[:no_topic_select].nil?
+
+- if current_user.try(:can_update_feed_status?, object) == true
+  .publish-a
+    = simple_form_for UserStatusUpdate.new, method: :post do |f|
+      - image = current_user.try(:avatar).try(:url, :medium)
+      %figure= image_tag(image || space_listing_placeholder_path(width: 80, height: 80))
+
+      = f.input :text, label: false, placeholder: I18n.t('activity_feed.user_status_text'), input_html: { maxlength: 5000, cols: 40, rows: 3 }
+
+      - unless no_topic_select
+        = f.association :topics, as: :select, collection: Topic.all, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }
+
+      = f.input :updateable_id, as: :hidden, input_html: { value: feed.owner_id }
+      = f.input :updateable_type, as: :hidden, input_html: { value: feed.owner_type }
+      %p.action
+        = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'
+
+- if feed.events.count > 0
+  .content-container{ 'data-activity-feed': true, data: feed_data }
+    = render partial: "shared/activity_status", collection: feed.events, as: :event, locals: { object: object }
+
+  - if feed.has_next_page?
+    - if user_signed_in?
+      %p.more-a{ :'data-see-more' => true }
+        %button{ data: { url: see_more_activity_feed_path(id: feed.owner_id, type: feed.owner_type), next_page: feed.events.next_page } }
+          = t(:see_more)
+    - elsif
+      %p.more-a
+        = link_to t(:see_more), new_user_session_path
+
+- else
+  %p= t("activity_feed.no_interactions_yet")

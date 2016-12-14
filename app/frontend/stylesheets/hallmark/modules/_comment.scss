@@ -1,0 +1,71 @@
+/* comment */
+
+.comment-a {
+    margin: 0 0 30px;
+
+    &.commented-own-thread {
+
+      figure {
+        display: none;
+      }
+
+      blockquote, .author, .meta {
+        margin-left: 0;
+      }
+    }
+
+    figure {
+        float: left;
+        width: 50px;
+        margin: 0 -100% 0 0;
+        img {
+            width: 50px;
+        }
+    }
+
+
+    figure ~ * {
+        margin-left: 80px;
+
+        @include bp-range($screen-lg, $screen-tablet) {
+            margin-left: 70px;
+        }
+
+        @include bp($screen-tablet-vertical) {
+            margin-left: 70px;
+        }
+    }
+
+
+    .author {
+        margin-bottom: 3px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+
+    blockquote {
+        margin-bottom: 3px;
+        color: inherit;
+        font: 14px/1.4 Helvetica Neue, Helvetica, Arial, sans-serif;
+    }
+
+    @include bp($screen-mobile) {
+        margin-bottom: 15px;
+
+
+        figure {
+            width: 30px;
+        }
+
+
+        figure ~ * {
+            margin-left: 45px;
+        }
+
+
+        .meta {
+            font-size: 12px;
+        }
+    }
+}

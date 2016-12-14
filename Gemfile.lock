@@ -969,6 +969,7 @@ DEPENDENCIES
   ckeditor!
   cocoon
   codeclimate-test-reporter
+  colorize
   counter_culture
   cucumber
   cucumber-rails

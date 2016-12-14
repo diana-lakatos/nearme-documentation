@@ -1,0 +1,139 @@
+/* standard box */
+
+.box-a {
+    margin-bottom: 40px;
+    padding: 30px 25px;
+    border-radius: 4px;
+    background: #fff;
+
+    @include bp($screen-mobile) {
+        margin-bottom: 30px;
+        margin-left: -20px;
+        margin-right: -20px;
+        padding: 25px 20px;
+        border-radius: 0;
+    }
+}
+
+
+/* browser warning */
+
+.browser-a {
+    margin: 0;
+    padding: 20px 40px;
+    background: #b22;
+    color: #fff;
+    text-align: center;
+
+    a {
+        color: #fff !important;
+        text-decoration: underline;
+    }
+}
+
+
+/* global content */
+
+.content-a {
+    margin: 0;
+}
+
+
+/* feed wrapper */
+
+.more-a {
+    margin: 60px 0;
+    padding: 60px 0 0;
+    border-top: 3px solid #f3f3f3;
+    text-align: center;
+
+    button {
+        font-size: 18px;
+        font-weight: bold;
+        color: #0071c5;
+        background: none;
+        border: none;
+        padding: 0;
+
+        &:hover, &:focus, &:active {
+            color: #00aeef;
+            background: none;
+        }
+    }
+}
+
+.box-a > .more-a:last-child {
+    padding-bottom: 30px;
+}
+
+@include bp($screen-mobile) {
+
+    .more-a {
+        margin: 30px 0;
+        padding: 30px 0 0;
+    }
+
+    .box-a > .more-a:last-child {
+        padding-bottom: 5px;
+    }
+}
+
+.empty-resultset {
+    margin: 30px 0;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+/* responsive map */
+
+.map-a {
+    position: relative;
+    overflow: hidden;
+    height: 0;
+    padding-bottom: 90%;
+    /* (width / height = padding-bottom) */
+
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+
+/* readmore */
+
+.js .readmore-a:not(.is-active) {
+
+    &:before {
+        content: attr(data-label);
+        color: #1C75BC;
+        cursor: pointer;
+    }
+
+    span {
+        display: none;
+    }
+}
+
+
+/* responsive video */
+
+.video-a {
+    position: relative;
+    overflow: hidden;
+    height: 0;
+    padding: 0 0 56.25%;
+
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}

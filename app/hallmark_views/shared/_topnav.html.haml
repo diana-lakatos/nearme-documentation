@@ -1,0 +1,66 @@
+%nav.skips
+  %ul
+    %li
+      = link_to "#{t(:skip_to_navigation)} [n]".html_safe, '#nav', accesskey: 'n'
+    %li
+      = link_to "#{t(:skip_to_content)} [c]".html_safe, '#content', accesskey: 'c'
+    %li
+      = link_to "#{t(:skip_to_footer)} [f]".html_safe, '#footer', accesskey: 'f'
+
+%h2.toggler{"data-nav" => true}
+  %span Menu
+
+.wrap
+  = simple_form_for '', url: search_url(search_type: :people), html: { class: 'search', id: 'search_topnav' }, method: :get do |f|
+    %div
+      = f.input :query, label: false, wrapper: :simple, input_html: { value: params[:query], id: 'topnav_query' }, placeholder: t("search")
+      %button{:type => "submit"}
+        %span
+          = t :search_submit
+
+  %nav#nav.nav
+    %ul
+      %li.members
+        = link_to search_url(search_type: :people), accesskey: 1 do
+          %span.text
+            = "#{t(:members)} <em>1</em>".html_safe
+
+      %li.topics
+        = link_to search_url(search_type: :topics), accesskey: 2 do
+          %span.text
+            = "#{t(:topics)} <em>2</em>".html_safe
+
+      %li.groups
+        = link_to search_url(search_type: :groups), accesskey: 3 do
+          %span.text
+            = "#{t(:groups_and_clubs)} <em>3</em>".html_safe
+
+      %li.extras
+        = link_to search_url(search_type: :extras), accesskey: 4 do
+          %span.text
+            = "#{t(:extras)} <em>4</em>".html_safe
+
+  .corner
+    - if current_user
+      .user
+        %p.name
+          = link_to profile_path(current_user) do
+            = image_tag current_user.avatar.url(:thumb), size: "40x40"
+            = current_user.first_name
+        %ul
+          %li{ class: (controller_name == 'registrations' && action_name == 'show' ? 'active' : '') }
+            = link_to t(:profile), user_path(current_user)
+          - if (project_type = TransactableType.where(name: 'Project').first).present?
+            %li{ class: (controller_name == 'projects' ? 'active' : '') }
+              = link_to t(:my_projects), dashboard_project_type_projects_path(project_type)
+          - if (group_type = GroupType.first).present?
+            %li{ class: (controller_name == 'groups' ? 'active' : '') }
+              = link_to t(:my_groups), dashboard_groups_path
+
+          %li{ class: (controller_name == 'registrations' && action_name != 'show' ? 'active' : '') }
+            = link_to t(:account), dashboard_profile_path
+          %li
+            = link_to t(:log_out), destroy_user_session_path, method: :delete
+    - else
+      %p.actions
+        = link_to t(:log_in), new_user_session_path(wizard: :onboarding), class: 'button-a small alt'

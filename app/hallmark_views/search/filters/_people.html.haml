@@ -1,0 +1,18 @@
+= simple_form_for '', url: search_url, html: { id: 'search_filter' } do |f|
+  .filters-a
+    .box
+      %h3.hx
+        = t :filter_by
+      = f.input :role, as: :select, multiple: true, input_html: { class: 'selectize', multiple: true }, collection: CustomAttributes::CustomAttribute.where(target: current_instance.default_profile_type, name: 'role').first.try(:valid_values_translated), wrapper_html: { class: 'drop role' }, required: false, selected: params[:role], placeholder: t('simple_form.placeholders.defaults.role')
+
+      = f.input :topic_ids, as: :select, multiple: true, input_html: { class: 'selectize', multiple: true }, collection: Topic.pluck(:name, :id), wrapper_html: { class: 'drop topics' }, required: false, selected: params[:topic_ids], placeholder: t('simple_form.placeholders.defaults.topic_ids')
+      = f.input :query, as: :hidden, input_html: { value: params[:query] }
+      = f.input :page, as: :hidden, input_html: { value: params[:page] }
+      = f.input :search_type, as: :hidden, input_html: { value: 'people' }
+
+    .results
+      %p.count
+        %span= @searcher.result_count
+        = t :results_count
+
+      = f.input :sort, as: :select, collection: User::SORT_OPTIONS.map { |option| [I18n.t("simple_form.labels.search_filter.options.#{option}"), option] }, prompt: t(:sort, scope: [:simple_form, :placeholders, :search_filter]), input_html: { class: 'selectize'}, wrapper_html: { class: 'sort' }, selected: params[:sort]

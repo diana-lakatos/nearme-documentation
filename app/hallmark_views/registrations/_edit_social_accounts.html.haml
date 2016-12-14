@@ -1,0 +1,14 @@
+/ white box
+.box-a
+  .connect-a
+    %ul
+      - if @supported_providers.any?
+        - @supported_providers.each do |provider|
+          - provider_key = provider.downcase.split("_").first
+          %li{class: provider_key}
+            %span
+              = t :connect_with_service, service: provider
+            = build_link_for(provider, "button-a").html_safe
+      - else
+        %div
+          = t('registrations.social_accounts.no_social_providers', marketplace_name: platform_context.name).html_safe

@@ -1,0 +1,20 @@
+(function(){
+    'use strict';
+    var commentField = $('[data-new-comment-for="<%= @comment.commentable.id  %>"]');
+    var comments = $('[data-comments-for="<%= @comment.commentable.id  %>"]');
+
+    <% if @comment.errors.present? %>
+        commentField.parents(".control-group").addClass("error");
+    <% else %>
+        commentField.val('').parents(".control-group").removeClass("error");
+
+        if (comments.closest('.status-a').length > 0) {
+            comments.prepend('<%= escape_javascript( render "comments/activity_feed_comment", comment: @comment ) %>');
+        }
+        else {
+            comments.prepend('<%= escape_javascript( render @comment ) %>');
+        }
+        comments.find('[data-remove-comment]:first').show()
+    <% end %>
+
+}());

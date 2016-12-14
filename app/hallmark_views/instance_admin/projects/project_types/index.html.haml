@@ -1,0 +1,15 @@
+.content-container
+  %h4 Manage Project Types
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %tbody
+          - @project_types.each do |resource|
+            %tr
+              %td= resource.name.humanize
+              %td
+                = link_to t('instance_admin.manage.transactable_types.custom_validators'), instance_admin_projects_project_type_custom_validators_path(resource), class: 'pull-left btn btn-blue btn-bottom-margin'
+              %td
+                = link_to t('instance_admin.manage.transactable_types.custom_attributes'), instance_admin_projects_project_type_custom_attributes_path(resource), class: 'pull-left btn btn-blue btn-bottom-margin'
+              %td= link_to 'Edit', edit_instance_admin_projects_project_type_path(resource), class: 'pull-right'
+
