@@ -38,6 +38,7 @@ en:
   account: 'Account'
   log_out: 'Log Out'
   log_in: 'Log In'
+  back_to_log_in: 'Return to login screen'
   add_project: 'Add Project'
   add_group: 'Add Group'
   create_group: 'Create Group'

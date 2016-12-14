@@ -48,11 +48,11 @@
     margin-left: 0;
   }
 
-  @include alert-color(error, $color-red-1, #fff);
+  @include alert-color(error, $color-red-2, #fff);
 
   @include alert-color(notice, $color-blue, #fff);
 
-  @include alert-color(warning, $color-red-1, #fff);
+  @include alert-color(warning, $color-red-2, #fff);
 
   @include alert-color(success, $color-green-1, #fff);
 
