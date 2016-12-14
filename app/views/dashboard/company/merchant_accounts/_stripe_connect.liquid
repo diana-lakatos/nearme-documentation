@@ -88,9 +88,7 @@
       {% assign date_format = owner.date_format_readable %}
       {% input dob_formated, form: owners, required: true, input_html-data-date-picker: 'true', input_html-data-date-format: @date_format, disabled: @merchant_account.verified? %}
     </div>
-    {% if 'US CA' contains  merchant_account.iso_country_code %}
-      {% input document, form: owners, required: true %}
-    {% endif %}
+    {% input document, form: owners, required: true %}
   {% endfields_for %}
 
   {% fields_for current_address %}

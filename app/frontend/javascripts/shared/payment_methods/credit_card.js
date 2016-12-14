@@ -48,7 +48,6 @@ class PaymentMethodCreditCard {
       return;
     }
     this._ui.newCreditCard.classList.add('hidden');
-    $(this.form).unbind('submit');
   }
 
   _init(){
@@ -59,10 +58,8 @@ class PaymentMethodCreditCard {
   }
 
   _submitFormHandler(){
-
     var $form = $(this.form), that = this;
-
-    $form.submit(function(event) {
+    $form.unbind('submit').submit(function(event) {
       event.stopPropagation();
       event.preventDefault();
 
@@ -84,7 +81,7 @@ class PaymentMethodCreditCard {
           }
         }
       } else {
-        $form.get(0).submit();
+        that._submitCreditCardForm().call(that);
         $form.find('[data-disable-with]').prop('disabled', true);
       }
 

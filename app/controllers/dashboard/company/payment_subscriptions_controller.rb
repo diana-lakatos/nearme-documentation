@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseController
-  before_filter :find_order
-  before_filter :find_payment_subscription, except: [:new, :create]
-  before_filter :get_payment_gateway_data
-  before_filter :build_payment_subscription
+  before_action :find_order
+  before_action :find_payment_subscription, except: [:new, :create]
+  before_action :get_payment_gateway_data
+  before_action :build_payment_subscription, only: [:new, :create]
 
   def new
     @payment_subscription.build_credit_card
@@ -41,8 +42,10 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
   private
 
   def build_payment_subscription
-    @payment_subscription ||= @order.build_payment_subscription(payer: current_user.object,
-                                                                company: @order.owner.default_company)
+    @payment_subscription = @order.payment_subscription || @order.build_payment_subscription(
+      payer: current_user.object,
+      company: @order.owner.default_company
+    )
   end
 
   def get_payment_gateway_data
