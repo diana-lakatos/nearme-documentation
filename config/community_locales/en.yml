@@ -258,6 +258,8 @@ en:
 
   # groups
   group:
+    secret_name: 'Secret'
+    secret_description: 'This group is secret. you must be a member of this group to see its description.'
     name: 'Name'
     description: 'Description'
     location: 'Location'
@@ -289,6 +291,7 @@ en:
       public: 'Anyone can view group content and join. Only members can post.'
       moderated: 'Anyone can view group content and request to join. Only members can post.'
       private: 'Anyone can request to join. Only members can view group content and post.'
+      secret: 'Invite only. Only members can view group content and post.'
 
   # membership
   membership_cancelled: "Membership request has been cancelled."

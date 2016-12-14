@@ -59,7 +59,10 @@ class ApplicationController < ActionController::Base
   protected
 
   def redirect_unverified_user
-    redirect_to root_path unless current_user&.verified_at.present?
+    unless current_user&.verified_at.present? || current_user&.admin? || current_user&.instance_admin?
+      flash[:warning] = t('flash_messages.need_verification_html')
+      redirect_to root_path
+    end
   end
 
   def validate_request_parameters
@@ -483,7 +486,7 @@ class ApplicationController < ActionController::Base
   end
 
   def should_log_out_from_intel?
-    PlatformContext.current.instance.is_community? &&
+    PlatformContext.current.instance.id == 132 &&
       current_user.present? &&
       !current_user.admin? &&
       !Rails.env.test? &&

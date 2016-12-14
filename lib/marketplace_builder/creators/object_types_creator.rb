@@ -31,10 +31,11 @@ module MarketplaceBuilder
 
       def cleanup!
         objects = get_data
+        scope = respond_to?(:base_scope) ? base_scope : @instance.send(method_name)
         unused_objects = if objects.empty?
-                           @instance.send(method_name).all
+                           scope.all
                          else
-                           @instance.send(method_name).where('name NOT IN (?)', objects.map { |_key, props| props['name'] })
+                           scope.where('name NOT IN (?)', objects.map { |_key, props| props['name'] })
                          end
 
         unused_objects.each { |obj| logger.debug "Removing unused #{object_class_name}: #{obj.name}" }

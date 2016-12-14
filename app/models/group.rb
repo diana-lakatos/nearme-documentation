@@ -37,8 +37,9 @@ class Group < ActiveRecord::Base
     options.accepts_nested_attributes_for :links
   end
 
-  scope :only_private, -> { joins(:group_type).where(transactable_types: { name: 'Private' }) }
-  scope :not_public, -> { joins(:group_type).where(transactable_types: { name: %w(Private Moderated) }) }
+  scope :confidential, -> { joins(:group_type).where(transactable_types: { name: %(Private Secret) }) }
+  scope :not_public, -> { joins(:group_type).where(transactable_types: { name: %w(Secret Private Moderated) }) }
+  scope :not_secret, -> { joins(:group_type).where.not(transactable_types: { name: 'Secret' }) }
 
   scope :with_date, ->(date) { where(created_at: date) }
   scope :by_search_query, lambda { |query|
@@ -62,7 +63,7 @@ class Group < ActiveRecord::Base
   after_save :trigger_workflow_alert_for_added_group_members, unless: ->(record) { record.draft? }
   after_commit :user_created_group_event, on: :create, unless: ->(record) { record.draft? }
 
-  delegate :public?, :moderated?, :private?, to: :group_type
+  delegate :public?, :moderated?, :private?, :secret?, :confidential?, to: :group_type
   delegate :custom_validators, to: :transactable_type
 
   def self.custom_order(sort_name, params)

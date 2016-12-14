@@ -3,10 +3,6 @@
 module MarketplaceBuilder
   module Creators
     class MarketplaceCreator < DataCreator
-      def whitelisted_attributes
-        %w(name is_community)
-      end
-
       def execute!
         data = get_data
         return if data.empty?
@@ -14,7 +10,7 @@ module MarketplaceBuilder
         logger.info 'Updating instance attributes'
 
         data.keys.each do |key|
-          return logger.error "#{key} is not an allowed attribute" unless whitelisted_attributes.include? key
+          return logger.error "#{key} is not an allowed attribute" unless @instance.respond_to? key
 
           logger.debug "Setting instance attribute #{key}: #{data[key]}"
           @instance.update_attribute(key, data[key])

@@ -4,7 +4,7 @@
   <div class="contain">
     <h2 class="hx">{{ 'hero_slogan' | translate }}</h2>
     <p>{{ 'hero_description' | translate }}</p>
-    <p class="action"><a href="https://software.intel.com/registration/dev-mesh/" class="button-a large alt">{{ 'join_now' | translate }}</a></p>
+    <p class="action"><a href="#signup" class="button-a large alt">{{ 'join_now' | translate }}</a></p>
   </div>
 </div>
 
@@ -84,7 +84,7 @@
               <figcaption>{{ user.role }}</figcaption>
               {% endif %}
               <p class="action">
-              <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+              <a href="{{ user.profile_path }}" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
               </p>
               <h3 class="hx">
                 <a href="{{ user.profile_path }}">{{ user.name_with_affiliation }}</a>
@@ -102,7 +102,7 @@
             <figcaption>Superfan</figcaption>
             </a></figure>
             <p class="action">
-            <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
             </p>
             <h3 class="hx">
               <a href="./">Chloe Jones</a>
@@ -118,7 +118,7 @@
             <figcaption>Fan</figcaption>
             </a></figure>
             <p class="action">
-            <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
             </p>
             <h3 class="hx">
               <a href="./">Chloe Jones</a>
@@ -134,7 +134,7 @@
             <figcaption>Artist</figcaption>
             </a></figure>
             <p class="action">
-            <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
             </p>
             <h3 class="hx">
               <a href="./">Chloe Jones</a>
@@ -150,7 +150,7 @@
             <figcaption>Community Friend</figcaption>
             </a></figure>
             <p class="action">
-            <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
             </p>
             <h3 class="hx">
               <a href="./">Chloe Jones</a>
@@ -166,7 +166,7 @@
             <figcaption>Charter Member</figcaption>
             </a></figure>
             <p class="action">
-            <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
             </p>
             <h3 class="hx">
               <a href="./">Chloe Jones</a>
@@ -180,7 +180,7 @@
           <article class="card-a" data-equalize>
             <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1384/user-avatar.jpg"  /></a></figure>
             <p class="action">
-            <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
             </p>
             <h3 class="hx">
               <a href="./">Chloe Jones</a>
@@ -210,7 +210,7 @@
             <article class="card-a" data-equalize>
               <figure><a href="{{ project.show_path }}"><img src="{{ project.cover_photo_url }}" /></a></figure>
               <p class="action">
-              <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+              <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
               </p>
               <h3 class="hx">
                 <a href="{{ project.show_path}}">{{ project.name }}</a>
@@ -225,7 +225,7 @@
             <article class="card-a" data-equalize>
               <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1385/badge.jpg" /></a></figure>
               <p class="action">
-              <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+              <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
               </p>
               <h3 class="hx">
                 <a href="./">Dream Books</a>
@@ -238,7 +238,7 @@
             <article class="card-a" data-equalize>
               <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1385/badge.jpg" /></a></figure>
               <p class="action">
-              <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+              <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
               </p>
               <h3 class="hx">
                 <a href="./">Dream Books</a>
@@ -251,7 +251,7 @@
             <article class="card-a" data-equalize>
               <figure><a href="./"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1385/badge.jpg" /></a></figure>
               <p class="action">
-              <a href="/auth/saml" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+              <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
               </p>
               <h3 class="hx">
                 <a href="./">Dream Books</a>

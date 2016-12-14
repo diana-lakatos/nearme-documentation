@@ -5,7 +5,7 @@ namespace :hallmark do
     instance = Instance.find(5011)
     instance.set_context!
 
-    %w(Public Moderated Private).each do |name|
+    %w(Public Moderated Private Secret).each do |name|
       group_type = GroupType.where(name: name).first_or_create!
 
       group_type.custom_validators.where(field_name: 'name').first_or_initialize.tap do |cv|
@@ -31,7 +31,6 @@ namespace :hallmark do
   task setup: [:environment] do
     instance = Instance.find(5011)
     instance.set_context!
-    instance.update_attribute(:require_verified_user, true)
 
     WorkflowAlert
       .find_by(instance_id: instance.id, name: 'Member approved email')

@@ -2,10 +2,14 @@
 module MarketplaceBuilder
   module Creators
     class TransactableTypesCreator < ObjectTypesCreator
+      def base_scope
+        @instance.transactable_types.where.not(type: 'GroupType')
+      end
+
       private
 
       def object_class_name
-        return "TransactableType"
+        'TransactableType'
       end
     end
   end
