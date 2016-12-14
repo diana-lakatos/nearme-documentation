@@ -1,22 +1,19 @@
 name: Extra
+validation:
+  - field_name: name
+    max_length: 140
 
 custom_attributes:
   - name: description
     html_tag: textarea
     attribute_type: text
     search_in_query: true
+    validation:
+      max_length: 5000
 
   - name: summary
     search_in_query: true
     html_tag: textarea
     attribute_type: text
-
-custom_validators:
-  - field_name: name
-    max_length: 140
-
-  - field_name: description
-    max_length: 5000
-
-  - field_name: summary
-    max_length: 140
+    validation:
+      max_length: 140

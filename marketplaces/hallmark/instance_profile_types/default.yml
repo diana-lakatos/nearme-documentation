@@ -5,10 +5,12 @@ profile_type: default
 custom_attributes:
   - name: role
     public: false
-    valid_values: [ 'Superfan', 'Fan', 'Artist', 'Community Friend', 'Charter Member' ]
     html_tag: select
     label: Role
     searchable: true
+    validation:
+      valid_values: [ 'Superfan', 'Fan', 'Artist', 'Community Friend', 'Charter Member' ]
+      required: true
 
   - name: about_me
     html_tag: textarea
@@ -16,6 +18,8 @@ custom_attributes:
     input_html_options: { cols: 40, rows: 8 }
     label: About me
     search_in_query: true
+    validation:
+      max_length: 5000
 
   - name: short_bio
     html_tag: textarea
@@ -23,6 +27,8 @@ custom_attributes:
     input_html_options: { cols: 40, rows: 8 }
     label: Short bio
     search_in_query: true
+    validation:
+      max_length: 140
 
   - name: date_of_birth
     html_tag: input
@@ -41,14 +47,3 @@ custom_attributes:
     attribute_type: datetime
     label: Member Year
     search_in_query: false
-
-custom_validators:
-  - field_name: role
-    required: true
-    valid_values: ['Black Belt', 'Innovator', 'Featured', 'Other']
-
-  - field_name: about_me
-    max_length: 5000
-
-  - field_name: short_bio
-    max_length: 140

@@ -14,7 +14,7 @@ module MarketplaceBuilder
           hash = data[key].symbolize_keys
 
           custom_attributes = hash.delete(:custom_attributes) || []
-          custom_validators = hash.delete(:custom_validators) || []
+          custom_validators = hash.delete(:validation) || []
           form_components = hash.delete(:form_components) || []
 
           hash.each do |key, _value|
