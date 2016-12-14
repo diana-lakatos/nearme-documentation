@@ -1,0 +1,116 @@
+{% assign i18n_title = 'dashboard.transactables.manage' | translate %}
+{% title i18n_title %}
+
+{% capture is_client %}{% if current_user.buyer_profile == blank %}true{% else %}false{% endif %}{% endcapture %}
+{% if is_client == 'true' %}
+  {% assign role = 'lister' %}
+{% else %}
+  {% assign role = 'enquirer' %}
+{% endif %}
+
+{% if params.status != blank %}
+  {% assign current_status = params.status  %}
+{% else %}
+  {% assign current_status = 'pending'  %}
+{% endif %}
+
+{% content_for 'page_header' %}
+  <h1>
+    My Projects
+    <span class='hidden-xs'>&gt; {{ current_status | humanize }}</span>
+  </h1>
+
+  {% if is_client == "true" %}
+    <div class='options visible-sm visible-xs'>
+      <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary'>
+        <span class='fa fa-plus'></span>
+        {{ 'dashboard.items.new_listing_short' | translate }}
+      </a>
+    </div>
+  {% endif %}
+{% endcontent_for %}
+
+{% assign form_url = transactable_type.transactable_types_path %}
+
+<div class="sort-filter-search-wrapper">
+    <div class="sort-filter-a">
+      {% form_for :transactable, url: @form_url, method: 'get', form_for_type: 'dashboard' %}
+        <input type="hidden" name="status" value="{{ current_status }}">
+        <div class="form-group">
+          <label for="filter-properties-workplace" class="control-label">Workplace</label>
+          <select id="filter-properties-workplace" name="filter[properties][workplace_type]" data-allow-empty-option="true">
+            <option value="">Any</option>
+            <option value="Online" {% if params.filter.properties.workplace_type == 'Online' %}selected{% endif%}>Online</option>
+            <option value="On Site" {% if params.filter.properties.workplace_type == 'On Site' %}selected{% endif%}>On Site</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="filter-order-by" class="control-label">Order</label>
+          <select id="filter-order-by" name="order_by">
+            <option value="created_at desc">Newest</option>
+            <option value="created_at asc" {% if params.order_by == 'created_at asc' %}selected{% endif%}>Oldest</option>
+          </select>
+        </div>
+        <div class="form-action">
+          <button type="submit" class="btn btn-primary">Apply filter</button>
+        </div>
+      {% endform_for %}
+    </div>
+
+    {% if current_user.has_seller_profile? %}
+    <p class="find-expert-link"><a href="/search" class="btn btn-primary">Find an Expert</a></p>
+    {% endif %}
+</div>
+
+{% assign filter_params = "&amp;filter[properties][workplace_type]=" | append: params.filter.properties.workplace_type | append: "&amp;order_by=" | append: params.order_by %}
+
+{% content_for 'panel_navigation_links' %}
+    <li class='{{ 'pending' | active_class:current_status }}'>
+      <a href='{{ tt.transactable_types_path | append: "?status=pending" | append: filter_params }}'>Projects Pending ({{ pending_transactables | total_entries }})</a>
+    </li>
+    <li class='{{ 'in progress' | active_class:current_status }}'>
+      <a href='{{ tt.transactable_types_path | append: "?status=in+progress" | append: filter_params }}'>Projects In Progress ({{ in_progress_transactables | total_entries }})</a>
+    </li>
+    <li class='{{ 'archived' | active_class:current_status }}'>
+      <a href='{{ tt.transactable_types_path | append: "?status=archived" | append: filter_params }}'>Projects Archived ({{ archived_transactables | total_entries }})</a>
+    </li>
+{% endcontent_for %}
+
+{% if is_client == 'true' %}
+  {% content_for 'panel_options' %}
+  <div class='pull-right options {% if transactables.size > 0 %} additional-listing-options {% endif %}'>
+    <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary navbar-btn'>
+      <span class='fa fa-plus'></span>
+      {{ 'dashboard.items.new_listing_full' | translate: type: transactable_type.bookable_noun_plural }}
+    </a>
+  </div>
+  {% endcontent_for %}
+{% endif %}
+
+<nav class='panel-nav-mobile' role='navigation'>
+  {% if current_status == 'pending' %}
+    {% capture nav_label %}Projects Pending ({{ pending_transactables | total_entries }}){% endcapture %}
+  {% elsif current_status == 'in progress' %}
+    {% capture nav_label %}Projects In Progress ({{ in_progress_transactables | total_entries }}){% endcapture %}
+  {% elsif current_status == 'archived' %}
+    {% capture nav_label %}Projects Archived ({{ archived_transactables | total_entries }}){% endcapture %}
+  {% endif %}
+  {% dropdown_menu { label: nav_label, wrapper_class: 'links' } %}
+    {% yield 'panel_navigation_links' %}
+  {% enddropdown_menu %}
+</nav>
+
+<nav class='panel-nav'>
+  <ul class='tabs pull-left'>
+    {% yield 'panel_navigation_links' %}
+  </ul>
+  {% yield 'panel_options' %}
+</nav>
+
+{% if current_status == 'pending' %}
+  {% include 'dashboard/company/transactables/listing.html' transactables: pending_transactables, param_name: 'pending_page' %}
+{% elsif current_status == 'in progress' %}
+  {% include 'dashboard/company/transactables/listing.html' transactables: in_progress_transactables, param_name: 'in_progress_page' %}
+{% elsif current_status == 'archived' %}
+  {% include 'dashboard/company/transactables/listing.html' transactables: archived_transactables, param_name: 'archived_page' %}
+{% endif %}

@@ -1,0 +1,68 @@
+<footer class="footer">
+  <div class="container_main">
+    <div class="row">
+      <div class="col-sm-3 footer_left">
+        <a href="#" class="logo">
+          <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/attachment_file/data/3404/logo.svg" alt="">
+        </a>
+        <div class="footer_text">
+          Aliquam vicis et ad enim utinam ad. Modo facilisi capto mara. Iustum macto singularis feugait vel plaga damnum feugait consequat eum.
+        </div>
+      </div>
+      <div class="col-sm-9 footer_right">
+        <div class="row">
+          <div class="col-sm-3 col-xs-6 footer_block">
+            <h4 class="title_sm">General</h4>
+            <ul class="links_list">
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">Benefits</a></li>
+              <li><a href="#">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="col-sm-3 col-xs-6 footer_block">
+            <h4 class="title_sm">More</h4>
+            <ul class="links_list">
+              <li><a href="#">Sign Up</a></li>
+              <li><a href="#">Become a Seller</a></li>
+              <li><a href="#">Terms of Use</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div class="col-sm-3 col-xs-6 footer_block">
+            <h4 class="title_sm">Connect</h4>
+            <ul class="links_list soc_links_list">
+
+              {% if platform_context.facebook_url != blank %}<li><a href="{{ platform_context.facebook_url }}"><i class="fa fa-facebook-official"></i>Facebook</a></li>{% endif %}
+              {% if platform_context.twitter_url != blank %}<li><a href="{{ platform_context.twitter_url }}"><i class="fa fa-twitter"></i>Twitter</a></li>{% endif %}
+              {% if platform_context.linkedin_url != blank %}<li><a href="{{ platform_context.linkedin_url }}"><i class="fa fa-linkedin-square"></i>LinkedIn</a></li>{% endif %}
+              {% if platform_context.gplus_url != blank %}<li><a href="{{ platform_context.gplus_url }}"><i class="fa fa-google-plus"></i>Google+</a></li>{% endif %}
+              {% if platform_context.blog_url != blank %}<li><a href="{{ platform_context.blog_url }}"><i class="fa fa-feed"></i>Blog</a></li>{% endif %}
+            </ul>
+          </div>
+          <div class="col-sm-3 col-xs-6 footer_block">
+            <h4 class="title_sm">Contact</h4>
+            <div class="contact_item">
+              {{ platform_context.address }}
+            </div>
+            <div class="contact_item">
+              {{ platform_context.phone_number }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copyright">
+      <div class="row">
+        <div class="col-sm-6">&copy; 2017 LocalDriva. All rights reserved.</div>
+        <div class="col-sm-6 poweredby">
+          <a href="#" class="powered_link">
+            Powered by Near Me <i class="powered_logo"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</footer>

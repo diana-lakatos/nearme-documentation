@@ -1,0 +1,13 @@
+{% assign i18n_title = 'dashboard.analytics.title' | translate %}
+{% title i18n_title %}
+
+{% content_for 'page_header' %}
+<h1>{{ i18n_title }}</h1></h1>
+{% endcontent_for %}
+
+<div class="panel">
+  <div class="panel-body">
+    {% include 'shared/chart' %}
+    {% include 'shared/chart/list/transfers' %}
+  </div>
+</div>

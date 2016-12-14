@@ -1,0 +1,42 @@
+{% content_for 'hero' %}
+  <div class="video_holder">
+        <video autoplay muted loop>
+            <source src="https://s3.amazonaws.com/desksnearme.production/uploads/theme/assets/froggler/froggler_video.webm" type="video/webm">
+            <source src="video/video.mp4" type="video/mp4">
+            <source src="video/video.ogv" type="video/ogv">
+        </video>
+    </div>
+
+    <div class="hero_content">
+      <div class="container_main">
+        <h1 class="title main_title">Think Global. <span class="title_highlighted">Local Knowledge.</span></h1>
+        <div class="subtitle subtitle_light"><strong>Connecting travelers across the globe with affordable rideshare drivers and local guides.</strong></div>
+        <div class="filter_block">
+            <div class="location">City: <span>Sydney</span></div>
+            <div class="calendar_wrap">
+                <input type="text" name="daterange" class="daterange_field fake_select">
+                <span class="fake_select_arrow"></span>
+            </div>
+            <div class="select_wrap">
+            <select>
+              <option>How many passengers</option>
+              <option>1</option>
+              <option>2</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div class="call-to-action">
+    <a data-call-to-action="true" class="smooth_scroll" href="#section_info">
+      {{platform_context.call_to_action}}
+
+      Learn More
+      <br/>
+      <span class="fa fa-caret-down"></span>
+    </a>
+  </div>
+{% endcontent_for %}
+
+{% include 'home/homepage_content.html' %}
