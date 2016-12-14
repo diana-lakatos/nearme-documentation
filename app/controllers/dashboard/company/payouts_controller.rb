@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
   before_action :get_payment_gateway_data
   before_action :build_merchant_account
@@ -6,9 +7,7 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
   end
 
   def update
-    if @company.update_attributes(company_params)
-      flash[:success] = t('flash_messages.manage.payouts.updated')
-    end
+    flash[:success] = t('flash_messages.manage.payouts.updated') if @company.update_attributes(company_params)
 
     render :edit
   end
@@ -35,7 +34,7 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
     @payment_gateways.each do |payment_gateway|
       merchant_account = @company.merchant_accounts.mode_scope.where(payment_gateway: payment_gateway).first_or_initialize(
         payment_gateway_id: payment_gateway.id,
-        type: payment_gateway.merchant_account_type.to_s,
+        type: payment_gateway.merchant_account_type,
         test: current_instance.test_mode?
       )
 

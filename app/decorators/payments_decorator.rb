@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PaymentDecorator < Draper::Decorator
   include Draper::LazyHelpers
   delegate_all
@@ -31,6 +32,10 @@ class PaymentDecorator < Draper::Decorator
 
   def payment_gateways
     @payment_gateways ||= PlatformContext.current.instance.payment_gateways(company.iso_country_code, currency)
+  end
+
+  def payment_gateway_url
+    payment_gateway.payment_url(self)
   end
 
   def self.collection_decorator_class

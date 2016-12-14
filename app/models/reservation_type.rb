@@ -24,7 +24,8 @@ class ReservationType < ActiveRecord::Base
 
   validates :name, :transactable_types, presence: true
 
-  store_accessor :settings, :address_in_radius, :validate_on_adding_to_cart, :skip_payment_authorization, :check_overlapping_dates
+  store_accessor :settings, :address_in_radius, :validate_on_adding_to_cart, :skip_payment_authorization, :check_overlapping_dates,
+                 :edit_unconfirmed
 
   def translation_manager
     @translation_manager ||= InstanceProfileType::InstanceProfileTypeTranslationManager.new(self)
@@ -41,6 +42,10 @@ class ReservationType < ActiveRecord::Base
   alias skip_payment_authorization? skip_payment_authorization
 
   def check_overlapping_dates
+    super == 'true'
+  end
+
+  def edit_unconfirmed
     super == 'true'
   end
 end

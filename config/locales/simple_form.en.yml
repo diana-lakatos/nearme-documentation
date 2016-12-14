@@ -516,10 +516,16 @@ en:
         email: 'e.g. name@company.com'
 
     prompts:
+      merchant_account:
+        currency: "- Select Currency -"
+        account_type: "- Select Account Type -"
       location:
         administrator: 'Default'
 
     hints:
+      merchant_account:
+        currency: ""
+        bank_account_number: "Please enter your bank account number. It should consist of digits only"
       reservation_request:
         delivery_ids: ''
       location:

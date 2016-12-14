@@ -204,7 +204,7 @@ en:
         updated: 'Expenses have been updated.'
         approved: 'Expenses have been approved.'
         rejected: 'Expenses have been rejected'
-        approve_failed: 'Your Credit Card could not be charged, update your credit card and try again.'
+        approve_failed: 'Your Credit Card could not be charged.'
         reject_failed: 'Expenses could not be rejected'
         can_not_edit_accepted_order_item: "You can\'t edit accepted expenses."
         recently_edited: "Looks like total amount of expenses has changed. Please verify total price and reaccept."
@@ -224,5 +224,11 @@ en:
       transfers:
         total_fee: MP Fees
         lessee_service_fees: MP Fees
+      orders:
+        order_amount: "Total paid"
+        listing: "Listing"
+        user: "SME"
+        lister: "Client"
+        pro_bono: "ProBono"
 
 

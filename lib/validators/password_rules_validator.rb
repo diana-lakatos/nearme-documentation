@@ -6,7 +6,7 @@ class PasswordRulesValidator < ActiveModel::Validator
     min_password_length = record.password_validation_rules['min_password_length']
 
     if min_password_length.present?
-      if min_password_length.is_integer?
+      if min_password_length.is_a?(Integer)
         validate_min_length(record, min_password_length)
       else
         record.errors.add(:min_password_length, I18n.t('errors.messages.not_a_number'))

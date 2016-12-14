@@ -38,7 +38,7 @@ class PaymentTransfer < ActiveRecord::Base
   scope :last_x_days, lambda { |days_in_past|
     where("DATE(#{table_name}.created_at) >= ? ", days_in_past.days.ago)
   }
-  scope :with_token, -> (not_encrypted_token) { where(encrypted_token: PaymentTransfer.encrypt_token(not_encrypted_token, key: DesksnearMe::Application.config.secret_token)) }
+  scope :with_token, ->(not_encrypted_token) { where(encrypted_token: PaymentTransfer.encrypt_token(not_encrypted_token, key: DesksnearMe::Application.config.secret_token)) }
 
   scope :with_created_date, ->(date) { where(created_at: date) }
 
@@ -138,6 +138,10 @@ class PaymentTransfer < ActiveRecord::Base
     # true if instance makes it possible to make automated payout for given currency, but company does not support it
     # false if either company can process this payment transfer automatically or instance does not support it
     payout_gateway.try(:supports_payout?) && company.merchant_accounts.where(payment_gateway: payout_gateway).count.zero?
+  end
+
+  def payment_gateway_url
+    payment_gateway.transfer_url(self)
   end
 
   def to_liquid

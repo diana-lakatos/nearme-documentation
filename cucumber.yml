@@ -11,3 +11,4 @@ wip: "--tags @wip --tags ~@future --wip features"
 borked: --tags @borked --wip features
 rerun: <%= rerun_opts %> --format rerun --out rerun.txt --strict --tags ~@wip --tags ~@borked --tags ~@not_implemented
 verbose: <%= verbose_opts %>
+allow_connections: ALLOW_CONNECTIONS=true <%= verbose_opts %>

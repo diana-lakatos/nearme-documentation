@@ -1,0 +1,52 @@
+<div class="content-container">
+<div class="row">
+  <div class="table-container col-xs-12">
+    <table class="table table-striped sortable">
+      <thead>
+        <tr>
+          <th>{{ 'instance_admin.manage.orders.number' | translate }}</th>
+          <th>{{ 'instance_admin.manage.orders.listing' | translate }}</th>
+          <th>{{ 'instance_admin.manage.orders.user' | translate }}</th>
+          <th>{{ 'instance_admin.manage.orders.lister' | translate }}</th>
+          <th>{{ 'instance_admin.manage.orders.state' | translate }}</th>
+          <th>{{ 'instance_admin.manage.orders.pro_bono' | translate }}</th>
+          <th>{{ 'instance_admin.manage.orders.created_at' | translate }}</th>
+          <th><b>{{ 'instance_admin.manage.orders.order_amount' | translate }}</b></th>
+          <th>{{ 'instance_admin.manage.orders.details' | translate }}</th>
+        </tr>
+      </thead>
+      {% for order in @orders %}
+        <tr>
+          <td>{{ order.number }}</td>
+          <td><a href="{{ order.transactable.show_path }}">{{ order.transactable.name}}</a></td>
+          <td><a href='{{ 'edit_instance_admin_manage_user_path' | generate_url: @order.user.id }}'>{{ order.user.name }}<a></td>
+          <td>
+            {% if order.transactable.creator %}
+              <a href='{{ 'edit_instance_admin_manage_user_path' | generate_url: @order.transactable.creator.id }}'>{{ order.transactable.creator.name }}<a>
+            {% endif %}
+          </td>
+          <td>{{ order.state }}</td>
+          <td>{% if order.is_free_booking %}Yes{% else %}No {%endif%}</td>
+          <td>{{ order.created_at | localize }}</td>
+          <td>
+            {% if order.is_free_booking %}
+              <b>{{ order.payment.total_amount | render_money }}</b>
+            {% else %}
+              <b>{{ order.total_order_items_amount_formatted }}</b>
+            {% endif %}
+
+          </td>
+          <td><a href="{{ 'instance_admin_manage_order_path' | generate_url: order.id }}">Details</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+</div>
+<div class="row">
+  <div class="text-container">
+    <div class="pull-right">
+      {% will_paginate collection: @orders %}
+    </div>
+  </div>
+</div>

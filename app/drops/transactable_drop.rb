@@ -558,6 +558,12 @@ class TransactableDrop < BaseDrop
     line_item_orders.confirmed.first
   end
 
+  # @return [OrderDrop, nil] first confirmed order for this transactable or nil if not present
+  # @todo -- depracate in favor of filter (transactables.orders.confirmed | first? Or allow usage of .first)
+  def confirmed_or_archived_order
+    line_item_orders.confirmed_or_archived.first
+  end
+
   # @return [Array<UserMessageDrop>] array of user messages (internal messaging system for discussion between clients and hosts)
   #   for this transactable and for which this user is a recipient or an author
   def transactable_user_messages

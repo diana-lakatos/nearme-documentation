@@ -25,14 +25,14 @@
         .col-md-9.input-container
           = f.text_field :last_name, class: 'string optional', placeholder: t('dashboard.merchant_account.placeholders.last_name', default: '')
 
-
-  .form-group.string.optional{class: f.error(:dob) ? 'has-error' : ''}
-    = f.label :dob, class: 'string optional control-label' do
-      %abbr{title: "required"} *
-      =  t('dashboard.merchant_account.dob')
-      = translated_hint_button 'dashboard.merchant_account.hints.dob'
-    = f.text_field :dob_formated, placeholder: f.object.date_format_readable, class: 'string optional form-control'
-    %span.help-block= f.error :dob
+  .datetimepicker{style: 'position: relative'}
+    .form-group.string.optional{class: f.error(:dob) ? 'has-error' : ''}
+      = f.label :dob, class: 'string optional control-label' do
+        %abbr{title: "required"} *
+        =  t('dashboard.merchant_account.dob')
+        = translated_hint_button 'dashboard.merchant_account.hints.dob'
+      = f.text_field :dob_formated, placeholder: f.object.date_format_readable, class: 'string optional form-control', data: {'date-picker': true, 'date-format': f.object.date_format_readable}
+      %span.help-block= f.error :dob
 
   - if (@owners_counter == 0 && (merchant_account.iso_country_code == 'US' || merchant_account.needs?('legal_entity.verification.document'))) || @owners_counter != 0
     .form-group.string.optional{class: f.error(:document) ? 'has-error' : ''}

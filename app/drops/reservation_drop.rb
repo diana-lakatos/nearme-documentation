@@ -81,9 +81,9 @@ class ReservationDrop < OrderDrop
            to: :reservation
 
   # @!method bookable_noun
-  #   @return (see TransactableTypeDrop#bookable_noun)
+  #   @return see TransactableTypeDrop#bookable_noun
   # @!method bookable_noun_plural
-  #   @return (see TransactableTypeDrop#bookable_noun_plural)
+  #   @return see TransactableTypeDrop#bookable_noun_plural
   delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type_drop
 
   def initialize(reservation)
@@ -295,6 +295,6 @@ class ReservationDrop < OrderDrop
 
   # @return [String] shipping address for the enquirer (buyer)
   def enquirer_shipping_address
-    reservation.shipping_address.address
+    reservation.shipping_address.try(:address)
   end
 end

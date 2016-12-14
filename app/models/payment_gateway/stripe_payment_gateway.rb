@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 class PaymentGateway::StripePaymentGateway < PaymentGateway
-  API_VERSION = '2015-04-07'
+  API_VERSION = '2016-07-06'
+
+  include PaymentGateways::StripeCommon
 
   supported :multiple_currency, :recurring_payment, :credit_card_payment, :partial_refunds, :any_country
 

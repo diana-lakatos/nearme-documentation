@@ -22,7 +22,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   delegate :update_es_mapping, to: :target
 
-  has_many :custom_validators, as: :validatable
+  has_many :custom_validators, as: :validatable, dependent: :destroy
   accepts_nested_attributes_for :custom_validators, allow_destroy: true
 
   before_save :update_custom_validators

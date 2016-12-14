@@ -1,4 +1,6 @@
+# frozen_string_literal: true
 require 'test_helper'
+require 'stripe'
 
 class CreditCardTest < ActiveSupport::TestCase
   context 'save' do

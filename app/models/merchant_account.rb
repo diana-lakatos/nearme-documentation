@@ -26,29 +26,20 @@ class MerchantAccount < ActiveRecord::Base
 
   accepts_nested_attributes_for :payment_subscription, allow_destroy: true
 
-  # need to mention specific merchant accounts after associations
-  MERCHANT_ACCOUNTS = {
-    'braintree_marketplace' => MerchantAccount::BraintreeMarketplaceMerchantAccount,
-    'stripe_connect'        => MerchantAccount::StripeConnectMerchantAccount,
-    'paypal'                => MerchantAccount::PaypalMerchantAccount,
-    'paypal_adaptive'       => MerchantAccount::PaypalAdaptiveMerchantAccount,
-    'paypal_express_chain'  => MerchantAccount::PaypalExpressChainMerchantAccount
-  }.freeze
-
   validates :merchantable_id, :merchantable_type, presence: { unless: ->(ic) { ic.merchantable.present? } }
   validates :payment_gateway, presence: true
   validate :data_correctness
 
   delegate :supported_currencies, to: :payment_gateway
 
-  scope :verified_on_payment_gateway, -> (payment_gateway_id) { verified.where('merchant_accounts.payment_gateway_id = ?', payment_gateway_id) }
+  scope :verified_on_payment_gateway, ->(payment_gateway_id) { verified.where('merchant_accounts.payment_gateway_id = ?', payment_gateway_id) }
   scope :pending,  -> { where(state: 'pending') }
   scope :verified, -> { where(state: 'verified') }
   scope :failed,   -> { where(state: 'failed') }
   scope :failed,   -> { where(state: 'voided') }
   scope :live, -> { where(test: false) }
   scope :active, -> { where(state: %w(pending verified)) }
-  scope :mode_scope, -> (test_mode = PlatformContext.current.instance.test_mode?) { test_mode ? where(test: true) : where(test: false) }
+  scope :mode_scope, ->(test_mode = PlatformContext.current.instance.test_mode?) { test_mode ? where(test: true) : where(test: false) }
   scope :paypal_express_chain, -> { where(type: 'MerchantAccount::PaypalExpressChainMerchantAccount') }
 
   attr_accessor :skip_validation, :redirect_url
