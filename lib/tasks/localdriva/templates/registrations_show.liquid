@@ -1,0 +1,212 @@
+{% assign title = platform_context.name | append: ' - ' | append: user.name %}
+{% title title %}
+
+{% for customization in user.buyer_profile.customizations %}
+  {% if customization.custom_model_type.name == 'Recommendations' %}
+    {% assign recommendations  = recommendations | add_to_array: customization %}
+  {% elsif customization.custom_model_type.name == 'Links' %}
+    {% assign links = links | add_to_array: customization %}
+  {% endif %}
+{% endfor%}
+
+<main id="main">
+    <div class="wrapper-a">
+        <div class="back-to-search-results">
+            <a data-back-to-search-results-link href="/search">Back to search results</a>
+        </div>
+        <article class="user-a">
+            <div class="wrapper">
+                <header class="header">
+                    <figure>
+                        <img src="{{ user.avatar_url_big }}" alt="{{ user.name }}">
+                    </figure>
+                    <h1>{{ user.name }}</h1>
+
+                    <div class="properties">
+                        <p class="price">
+                            <strong>{{ user.buyer_properties['hourly_rate_decimal'] | price_with_cents_with_currency }} USD / hr</strong>
+                        </p>
+                        <dl class="property">
+                            <dt>Discounts:</dt>
+                            <dd>{{ user.buyer_properties['discounts_available'] }}</dd>
+                        </dl>
+                    </div>
+
+                    <div class="contact">
+                        <a class="button-b action-message" href="{{user.user_message_path}}" rel="modal">Send Message</a>
+                        {{ user.click_to_call_button }}
+                    </div>
+                </header>
+
+                <div class="content">
+                    {% if user.formatted_buyer_categories["Area Of Expertise"]['children'].size > 0 %}
+                      <h3>Expertise</h3>
+                      <ul>
+                          {% for exp in user.formatted_buyer_categories["Area Of Expertise"]['children'] %}
+                              <li>{{ exp[-1] }}</li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
+
+                    {% if user.formatted_buyer_categories["Industry"]['children'].size > 0 %}
+                      <h3>Industry</h3>
+                      <ul>
+                          {% for exp in user.formatted_buyer_categories["Industry"]['children'] %}
+                              <li>{{ exp[-1] }}</li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
+
+                    {% if user.buyer_properties['availability'] != blank %}
+                      <h3>Availability</h3>
+                      <p>{{ user.buyer_properties['availability'] | nl2br }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['cities'] != blank %}
+                      <h3>Will work in these Cities</h3>
+                      <p>{{ user.buyer_properties['cities'] | nl2br  }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_categories["Languages"]['children'].size > 0 %}
+                      <h3>Languages</h3>
+                      <ul>
+                      {% for exp in user.buyer_categories["Languages"]['children'] %}
+                          <li>{{ exp }}</li>
+                      {% endfor %}
+                      </ul>
+                    {% endif %}
+
+                    {% if user.buyer_properties['bio'] != blank %}
+                      <h3>Biography</h3>
+                      <p>{{ user.buyer_properties['bio'] | nl2br  }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['education'] != blank %}
+                      <h3>Education, Certifications and Training</h3>
+                      <p>{{ user.buyer_properties['education'] | nl2br }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['awards'] != blank %}
+                      <h3>Awards and Honors</h3>
+                      <p>{{ user.buyer_properties['awards'] | nl2br  }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['pro_service'] != blank %}
+                      <h3>Professional Service</h3>
+                      <p>{{ user.buyer_properties['pro_service'] | nl2br  }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['teaching'] != blank %}
+                      <h3>Teaching, Writing and Publishing</h3>
+                      <p>{{ user.buyer_properties['teaching'] | nl2br  }}</p>
+                    {% endif %}
+
+                    {% if links.size > 0 %}
+                      <h3>Links to whitepapers, articles</h3>
+                      <ul>
+                        {% for link in links %}
+                          <li><a href="{{ link.properties['url_link'] }}" target="_blank">{{ link.properties['url_link'] }}</a></li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+
+                    {% if user.buyer_properties['employers'] != blank %}
+                      <h3>Prior Employers or Clients</h3>
+                      <p>{{ user.buyer_properties['employers'] | nl2br  }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['accomplishments'] != blank %}
+                      <h3>Special Projects and Accomplishments</h3>
+                      <p>{{ user.buyer_properties['accomplishments'] | nl2br  }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['giving_back'] != blank %}
+                      <h3>Community and Giving Back Interests</h3>
+                      <p>{{ user.buyer_properties['giving_back'] | nl2br  }}</p>
+                    {% endif %}
+
+                    {% if user.buyer_properties['hobbies'] != blank %}
+                      <h3>Brief Personal Details (Family and Hobbies)</h3>
+                      <p>{{ user.buyer_properties['hobbies'] | nl2br  }}</p>
+                    {% endif %}
+
+
+                    {% if recommendations.size > 0 %}
+
+                      <hr>
+
+                      <section class="recommendations-a">
+                          <h3>Recommendations</h3>
+                          <div class="items">
+                              {% for recommendation in recommendations %}
+                                  <div class="item">
+                                      <blockquote>
+                                          <p>&ldquo;{{ recommendation.properties['recommendation'] }}&rdquo;</p>
+                                      </blockquote>
+                                      <p class="author">{{ recommendation.properties['author'] }}</p>
+                                  </div>
+                              {% endfor %}
+                          </div>
+                      </section>
+
+                    {% endif %}
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <ul class="actions-a">
+                    {% if current_user != blank and current_user.has_seller_profile? %}
+                        <li><a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Invite to project</a></li>
+                    {% endif %}
+                    <li>
+                      {% if current_user.has_seller_profile? %}
+                        <div data-add-favorite-button="true" data-path="{{ user.wish_list_path }}" data-wishlistable-type="{{ user.class_name }}" data-link-to-classes="{{ link_to_classes }}" data-path-bulk="{{ user.wish_list_bulk_path }}" data-object-id="{{ user.id }}" id="favorite-button-{{ user.class_name }}-{{ user.id }}">
+                          <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
+                        </div>
+                      {% endif %}
+                    </li>
+                    {% if user.has_active_blog? %}
+                        <li><a href="{{ user.user_blog_posts_list_path }}" class="button-b action-blog">View Blog</a></li>
+                    {% endif %}
+                    {% if user.buyer_properties['linkedin_url'] != blank %}
+                        <li><a href="{{ user.buyer_properties['linkedin_url'] }}" class="button-b action-linkedin" target="_blank">LinkedIn Bio</a></li>
+                    {% endif %}
+                </ul>
+
+                <hr>
+
+                <dl class="property">
+                    <dt>Discounts:</dt>
+                    <dd>{{ user.buyer_properties['discounts_available'] }}</dd>
+                </dl>
+
+                {% if user.buyer_properties['discounts_description'] != blank %}
+                  <p>{{ user.buyer_properties['discounts_description'] }}</p>
+                {% endif %}
+
+
+                {% if user.tags.size > 0 %}
+                  <hr>
+                  <div class="tags-a">
+                      <h4>Tags</h4>
+                      <ul>
+                          {% for tag in user.tags %}
+                              <li><a href="/search?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
+                          {% endfor %}
+                      </ul>
+                  </div>
+                {% endif %}
+
+                <hr>
+
+                <ul class="actions-a">
+                    <li>
+                        <a class="button-b action-flag" href="#" data-href="{{ user.inappropriate_report_path }}" data-modal="1">{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
+                    </li>
+                </p>
+            </aside>
+        </article>
+
+        <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
+    </div>
+</main>
