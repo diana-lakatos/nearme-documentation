@@ -36,12 +36,12 @@ namespace :localdriva do
     }
     @instance_profile_type.save!
 
-    setup = LocaldrivaSetup.new(@instance)
+    setup = LocaldrivaSetup.new(@instance, File.join(Rails.root, 'lib', 'tasks', 'localdriva'))
     setup.create_transactable_types!
     setup.create_custom_model!
-    # setup.create_custom_attributes!
+    setup.create_custom_attributes!
     # setup.create_categories!
-    # setup.create_or_update_form_components!
+    setup.create_or_update_form_components!
     # setup.set_theme_options
     setup.create_content_holders
     setup.create_views
@@ -51,18 +51,19 @@ namespace :localdriva do
   end
 
   class LocaldrivaSetup
-    def initialize(instance)
+    def initialize(instance, theme_path)
       @instance = instance
       @default_profile_type = InstanceProfileType.find(617)
       @instance_profile_type = InstanceProfileType.find(619)
       @transactable_type = TransactableType.find(807)
+      @theme_path = theme_path
     end
 
     def create_custom_model!
       cmt = CustomModelType.where(instance_id: @instance.id, name: 'Languages').first_or_create!
-      cmt.transactable_types = [@transactable_type]
+      cmt.instance_profile_types = [@instance_profile_type]
       cmt.save!
-      create_custom_attribute(cmt,         name: 'language',
+      create_custom_attribute(cmt, 'language',
                                            label: 'Language Spoken',
                                            attribute_type: 'string',
                                            html_tag: 'select',
@@ -70,7 +71,7 @@ namespace :localdriva do
                                            public: true,
                                            searchable: false,
                                            valid_values: ['English', 'Chinese (Mandarin)', 'Spanish', 'German', 'French', 'Italian', 'Japanese', 'Korean', 'Arabic', 'Russian'])
-      create_custom_attribute(cmt,         name: 'fluency',
+      create_custom_attribute(cmt, 'fluency',
                                            label: 'Fluency',
                                            attribute_type: 'string',
                                            html_tag: 'select',
@@ -86,8 +87,7 @@ namespace :localdriva do
         name: 'Booking',
         slug: 'booking',
         show_path_format: '/:transactable_type_id/:id',
-
-        default_search_view: 'list',
+        searchable: false,
         skip_payment_authorization: true,
         hours_for_guest_to_confirm_payment: 24,
         single_transactable: false,
@@ -125,6 +125,18 @@ namespace :localdriva do
     end
 
     def create_custom_attributes!
+      create_instance_profile_type_attributes
+    end
+
+    def create_instance_profile_type_attributes
+      puts "\nCustom instance profile type attributes:"
+      custom_attributes = YAML.load_file(File.join(@theme_path, 'custom_attributes', 'instance_profile_types.yml'))
+
+      custom_attributes.keys.each do |id|
+        puts "\n\tInstanceProfileType ##{id}:"
+        object = InstanceProfileType.find(id)
+        update_custom_attributes_for_object(object, custom_attributes[id])
+      end
     end
 
     def create_langauge_categories
@@ -148,76 +160,22 @@ namespace :localdriva do
     end
 
     def create_or_update_form_components!
-      @transactable_type.form_components.destroy_all
+      create_or_update_form_components_for_instance_profile_types
+    end
 
-      component = @transactable_type.form_components.where(form_type: 'space_wizard').first_or_initialize
-      component.name = 'Fill out the information below'
-      component.form_fields = [
-        { 'company' => 'name' },
-        { 'user' => 'current_address' },
-        { 'user' => 'mobile_phone' },
-        { 'seller' => 'linkedin_url' },
-        { 'user' => 'avatar' },
-        { 'user' => 'referred_by' }
-      ]
-      component.save!
-      component = TransactableType.first.form_components.where(form_type: 'transactable_attributes').first_or_initialize
-      component.name = 'Add a Booking'
-      component.form_fields = [
-        { 'transactable' => 'price' },
-        { 'transactable' => 'pro_bono' },
-        { 'transactable' => 'name' },
-        { 'transactable' => 'about_company' },
-        { 'transactable' => 'project_contact' },
-        { 'transactable' => 'description' },
-        { 'transactable' => 'type_of_deliverable' },
-        { 'transactable' => 'other_requirements' },
-        { 'transactable' => 'estimation' },
-        { 'transactable' => 'deadline' },
-        { 'transactable' => 'workplace_type' },
-        { 'transactable' => 'office_location' },
-        { 'transactable' => 'Category - Languages' },
-        { 'transactable' => 'budget' }
+    def create_or_update_form_components_for_instance_profile_types
 
-      ]
-      component.save!
-      component = @default_profile_type.form_components.where(form_type: 'instance_profile_types').first_or_initialize
-      component.form_fields = [
-        { 'buyer' => 'enabled' },
-        { 'user' => 'name' },
-        { 'user' => 'avatar' },
-        { 'user' => 'email' },
-        { 'user' => 'current_address' },
-        { 'user' => 'mobile_phone' },
-        { 'buyer' => 'linkedin_url' },
-        { 'buyer' => 'hourly_rate_decimal' },
-        { 'buyer' => 'workplace_type' },
-        { 'buyer' => 'discounts_available' },
-        { 'buyer' => 'discounts_description' },
-        { 'buyer' => 'travel' },
-        { 'buyer' => 'cities' },
-        { 'buyer' => 'Category - Area Of Expertise' },
-        { 'buyer' => 'Category - Industry' },
-        { 'buyer' => 'Category - Languages' },
-        { 'buyer' => 'bio' },
-        { 'buyer' => 'education' },
-        { 'buyer' => 'awards' },
-        { 'buyer' => 'pro_service' },
-        { 'buyer' => 'teaching' },
-        { 'buyer' => 'Custom Model - Links' },
-        { 'buyer' => 'employers' },
-        { 'buyer' => 'accomplishments' },
-        { 'buyer' => 'giving_back' },
-        { 'buyer' => 'hobbies' },
-        { 'buyer' => 'availability' },
-        { 'buyer' => 'tags' },
-        { 'buyer' => 'Custom Model - Recommendations' },
-        { 'seller' => 'linkedin_url' },
-        { 'seller' => 'company_name' },
-        { 'user' => 'password' }
-      ]
+      puts "\nUpdating existing form components"
+      instance_profile_types = YAML.load_file(File.join(@theme_path, 'form_components', 'instance_profile_types.yml'))
 
-      component.save!
+      instance_profile_types.keys.each do |id|
+        fc = FormComponent.find(id)
+        fc.update_attribute(:form_fields, instance_profile_types[id])
+        puts "\t- #{fc.name}:"
+        instance_profile_types[id].each do |object|
+          puts "\t\t- #{object.keys.first}: #{object.values.first}"
+        end
+      end
     end
 
     def set_theme_options
@@ -281,11 +239,11 @@ namespace :localdriva do
       create_theme_header!
       # create_listing_show!
       create_theme_footer!
-      # create_search_list!
+      create_search_list!
       # create_user_profile!
       # create_my_cases!
       # create_wish_list_views!
-      # create_registration_screens!
+      create_registration_screens!
       # create_analytics!
       # create_static_pages!
 
@@ -419,7 +377,7 @@ namespace :localdriva do
     end
 
     def create_registration_screens!
-      create_page!('Join Our Community')
+      # create_page!('Join Our Community')
       load_template('registrations/buyer_header')
       load_template('registrations/buyer_footer')
       load_template('registrations/seller_header')
@@ -497,11 +455,52 @@ namespace :localdriva do
 
     private
 
-    def create_custom_attribute(object, hash)
+    def update_custom_attributes_for_object(object, attributes)
+      attributes ||= {}
+      if attributes.size == 0
+        unused_attrs = object.custom_attributes
+      else
+        unused_attrs = object.custom_attributes.where("name NOT IN (?)", attributes.keys)
+      end
+
+      if unused_attrs.size > 0
+        puts "\t  Removing unused attributes:"
+        unused_attrs.each do |ca|
+          puts "\t    - #{ca.name}"
+          ca.destroy
+        end
+      end
+
+      if attributes.size > 0
+        puts "\t  Updating / creating attributes:"
+        attributes.each do |name, attrs|
+          create_custom_attribute(object, name, default_attribute_properties.merge(attrs.symbolize_keys))
+          puts "\t    - #{name}"
+        end
+      end
+    end
+
+    def create_custom_attribute(object, name, hash)
       hash = hash.with_indifferent_access
-      attr = object.custom_attributes.where(name: hash.delete(:name)).first_or_initialize
-      attr.assign_attributes(hash)
-      attr.set_validation_rules!
+      hash["custom_validators_attributes"]["[0]"]["field_name"] = name if hash["custom_validators_attributes"]
+      custom_attribute = object.custom_attributes.where({
+        name: name
+      }).first_or_initialize
+      custom_attribute.custom_validators.destroy_all
+
+      custom_attribute.assign_attributes(hash)
+      custom_attribute.save!
+      custom_attribute.custom_validators.each {|cv| cv.save! }
+    end
+
+    def default_attribute_properties
+      {
+        attribute_type: 'string',
+        html_tag: 'input',
+        public: true,
+        searchable: false,
+        required: false
+      }
     end
 
     def create_page!(name)
@@ -530,15 +529,6 @@ namespace :localdriva do
                  partial: partial,
                  view_type: 'view',
                  locales: Locale.all)
-    end
-
-    def create_custom_attribute(object, hash)
-      hash = hash.with_indifferent_access
-      custom_attribute = object.custom_attributes.where(name: hash.delete(:name)).first_or_initialize
-      custom_attribute.custom_validators.destroy_all
-      custom_attribute.assign_attributes(hash)
-      custom_attribute.save!
-      custom_attribute.custom_validators.each(&:save!)
     end
 
     def read_template(name)

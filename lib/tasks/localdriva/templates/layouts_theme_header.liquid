@@ -9,10 +9,10 @@
       <div class="col-sm-9 col-xs-12 main_menu">
         <button type="button" class="toggle_menu"></button>
         <ul class="menu">
-          <li class="active"><a href="#">Become a Driver</a></li>
+          <li class="active"><a href="/users?role=buyer">Become a Driver</a></li>
           <li><a href="#">FAQ</a></li>
           {% if current_user == blank %}
-            <li><a class="nav-link" href="/join-our-community">Sign Up</a></li>
+            <li><a class="nav-link" href="/users?role=seller">Sign Up</a></li>
             <li><a class="nav-link" href="#" data-href="/users/sign_in" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/"}'>Log In</a></li>
           {% else %}
 

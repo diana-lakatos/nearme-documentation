@@ -1,0 +1,4 @@
+- extra_options ||= {}
+- html_attributes = { input_html: { value: f.object.send(attribute.name) } }
+- extra_options.deep_merge!(html_attributes)
+= f.input attribute.name, attribute.options.deep_merge(extra_options)

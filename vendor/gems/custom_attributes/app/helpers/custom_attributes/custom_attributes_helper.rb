@@ -14,6 +14,8 @@ module CustomAttributes
         render partial: 'custom_attributes/switch', locals: { attribute: form_element, f: form }
       when :range
         render partial: 'custom_attributes/range', locals: { attribute: form_element, f: form }
+      when :hidden
+        render partial: 'custom_attributes/hidden', locals: { attribute: form_element, f: form }
       else
         raise "Unknown: #{attribute.html_tag}"
       end

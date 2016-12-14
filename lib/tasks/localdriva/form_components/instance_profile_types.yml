@@ -1,0 +1,19 @@
+---
+# buyer profile
+6052:
+  - user: name
+  - user: avatar
+  - buyer: driver_category
+  - buyer: backup_driver
+  - buyer: short_bio
+  - buyer: full_bio
+  - buyer: Custom Model - Languages
+  - buyer: availability
+  - buyer: enabled
+  - buyer: vehicle_type
+  - buyer: vehicle_model
+  - buyer: vehicle_year
+  - buyer: vehicle_capacity
+  - buyer: vehicle_description
+  - buyer: Category - Vehicle Features
+  - buyer: Category - Extras

@@ -60,21 +60,31 @@ class ConditionField {
       return;
     }
 
-    condition.hide.forEach((selector)=>{
-      Array.prototype.forEach.call(document.querySelectorAll(selector), (el)=>{
-        el.setAttribute('hidden', 'hidden');
-        el.setAttribute('aria-hidden', true);
-        this._disableFields(el);
+    if (condition.hide != undefined){
+      condition.hide.forEach((selector)=>{
+        Array.prototype.forEach.call(document.querySelectorAll(selector), (el)=>{
+          el.setAttribute('hidden', 'hidden');
+          el.setAttribute('aria-hidden', true);
+          this._disableFields(el);
+        });
       });
-    });
+    }
 
-    condition.show.forEach((selector)=>{
-      Array.prototype.forEach.call(document.querySelectorAll(selector), (el)=>{
-        el.removeAttribute('hidden');
-        el.setAttribute('aria-hidden', false);
-        this._enableFields(el);
+    if (condition.setValue != undefined){
+      Array.prototype.forEach.call(document.querySelectorAll(condition.setValue.selector), (el)=>{
+        el.setAttribute('value', condition.setValue.value);
       });
-    });
+    }
+
+    if (condition.show != undefined){
+      condition.show.forEach((selector)=>{
+        Array.prototype.forEach.call(document.querySelectorAll(selector), (el)=>{
+          el.removeAttribute('hidden');
+          el.setAttribute('aria-hidden', false);
+          this._enableFields(el);
+        });
+      });
+    }
   }
 
   /**
@@ -139,7 +149,7 @@ class ConditionField {
     });
 
     /* get value from last viable field or return empty */
-    let value = fields.length > 0 ? this._getValueFromField(fields.pop) : '';
+    let value = fields.length > 0 ? this._getValueFromField(fields.pop()) : '';
     this.applyConditionsForValue(value);
   }
 }
