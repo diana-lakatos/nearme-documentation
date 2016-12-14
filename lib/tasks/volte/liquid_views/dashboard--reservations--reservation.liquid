@@ -24,6 +24,10 @@
           <span class='confirmed'>
             {{ "reservations.states.completed" | t }}
           </span>
+        {% elsif reservation.unconfirmed? and reservation.lister_confirmed_at != blank %}
+          <span class='confirmed'>
+            Confirmed by Lender, awaiting your approval
+          </span>
         {% else %}
           <span class='{{ reservation.state }}'>
             {{ 'reservations.states.' | append: reservation.state | t }}
@@ -47,8 +51,10 @@
       <dt>Shipping Package:</dt>
       <dd>{{ reservation.shipping_package.label | default: '----' }}</dd>
 
-      <dt>Your Shipping Address:</dt>
-      <dd>{{ reservation.enquirer_shipping_address.full }}</dd>
+      {% if reservation.enquirer_shipping_address != blank %}
+        <dt>Your Shipping Address:</dt>
+        <dd>{{ reservation.enquirer_shipping_address.full }}</dd>
+      {% endif %}
 
       {% assign requested_dates = reservation.long_dates %}
       {% assign requested_dates_size = requested_dates.size %}
