@@ -31,6 +31,7 @@
         - transactable: law_firm
         - transactable: principal_office
         - transactable: "Category - Group Case Categories"
+        - transactable: category_other_description
         - transactable: tags
 
     -
@@ -57,6 +58,7 @@
         - transactable: law_firm
         - transactable: principal_office
         - transactable: "Category - Group Case Categories"
+        - transactable: category_other_description
         - transactable: tags
 
     - name: "Case Details"
@@ -103,6 +105,7 @@
         - transactable: law_firm
         - transactable: principal_office
         - transactable: "Category - Individual Case Categories"
+        - transactable: category_other_description
         - transactable: tags
 
     -
@@ -166,6 +169,7 @@
         - transactable: client_name
         - transactable: client_dob
         - transactable: "Category - Individual Case Categories"
+        - transactable: category_other_description
         - transactable: tags
 
     -

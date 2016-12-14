@@ -60,6 +60,10 @@
       - "No"
     wrapper_html_options_string: 'class=>form-group radio_buttons always-inline'
 
+  category_other_description:
+    label: "Describe the category if you chose other above, otherwise leave blank"
+    html_tag: input
+
 "Individual Case":
   law_firm:
     label: Law Firm
@@ -307,4 +311,7 @@
         required: true
         max_length: 30000
 
+  category_other_description:
+    label: "Describe the category if you chose other above, otherwise leave blank"
+    html_tag: input
 
