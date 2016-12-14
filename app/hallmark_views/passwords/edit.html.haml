@@ -1,0 +1,16 @@
+- title t('reset_password_form.title')
+
+%section.user-session-form
+  %header
+    %h2= t 'reset_password_form.heading'
+
+  %p.intro= t 'reset_password_form.instructions'
+
+  = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :class => "form-horizontal" }) do |f|
+    = f.hidden_field :reset_password_token
+
+    = f.input :password
+    = f.input :password_confirmation
+
+    .actions
+      = f.submit t('reset_password_form.buttons.change'), class: 'button-a'

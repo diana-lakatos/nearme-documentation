@@ -1,0 +1,23 @@
+- title t('sign_up_form.title')
+
+%section.user-session-form
+  %header
+    %h2= t 'sign_up_form.log_in_to', marketplace_name: platform_context.name
+
+  = render 'authentications/services'
+
+  = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
+
+    = f.input :email, :input_html => { :tabindex => '1', autofocus: '' }
+
+    = f.input :password, placeholder: t('simple_form.placeholders.session.password'), :input_html => { :tabindex => '2' }
+
+    .actions
+      = f.submit t('sign_up_form.buttons.log_in'), :tabindex => '3', class: 'btn'
+
+  %footer
+    .forgotten-password
+      = link_to t('sign_up_form.buttons.reset_password'), new_user_password_url(return_to: params[:return_to])
+
+    .new-user
+      = link_to t('sign_up_form.buttons.new_user'), '#'
