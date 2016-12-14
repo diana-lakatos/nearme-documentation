@@ -39,10 +39,14 @@
         - transactable: types_of_injuries_included
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
-        - transactable: seller_attachments
         - transactable: matters_to_include
         - transactable: case_short_description
         - transactable: case_full_description
+
+    -
+      name: 'Documents Related to Case'
+      fields:
+        - transactable: seller_attachments
 
   TRANSACTABLE_ATTRIBUTES:
     -
@@ -60,11 +64,10 @@
         - transactable: types_of_injuries_included
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
-        - transactable: seller_attachments
         - transactable: matters_to_include
         - transactable: case_short_description
         - transactable: case_full_description
-
+        - transactable: seller_attachments
 
 "Individual Case":
   SPACE_WIZARD:
@@ -109,7 +112,6 @@
         - transactable: date_engagement_agreement_signed
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
-        - transactable: seller_attachments
 
     -
       name: "Your client details"
@@ -148,6 +150,11 @@
         - transactable: underlying_records_documents
         - transactable: other_matters
 
+    -
+      name: 'Documents Related to Case'
+      fields:
+        - transactable: seller_attachments
+
   TRANSACTABLE_ATTRIBUTES:
     -
       name: "General"
@@ -168,7 +175,6 @@
         - transactable: date_engagement_agreement_signed
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
-        - transactable: seller_attachments
     -
       name: "Incident"
       fields:
@@ -199,4 +205,5 @@
         - transactable: description_of_records
         - transactable: underlying_records_documents
         - transactable: other_matters
+        - transactable: seller_attachments
 
