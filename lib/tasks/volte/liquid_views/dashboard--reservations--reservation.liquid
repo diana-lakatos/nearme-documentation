@@ -24,6 +24,10 @@
           <span class='confirmed'>
             {{ "reservations.states.completed" | t }}
           </span>
+        {% elsif reservation.unconfirmed? and reservation.lister_confirmed_at != blank %}
+          <span class='confirmed'>
+            Confirmed by Lender, awaiting your approval
+          </span>
         {% else %}
           <span class='{{ reservation.state }}'>
             {{ 'reservations.states.' | append: reservation.state | t }}
@@ -56,10 +60,10 @@
       <dt>Period:</dt>
       <dd>{{ reservation.transactable_pricing.number_of_units }} days</dd>
 
-      <dt>Rental date:</dt>
+      <dt>Rental date (Latest date Borrower can receive item):</dt>
       <dd>{{ reservation.starts_at | to_date | l: 'short' }}</dd>
 
-      <dt>Return date:</dt>
+      <dt>Return date (Date item will be picked up by courier from Borrower):</dt>
       <dd>{{ reservation.starts_at | to_date | add_to_date: reservation.transactable_pricing.number_of_units | l: 'short'  }} </dd>
     </dl>
   </div>
@@ -131,11 +135,11 @@
   {% endif %}
 
   {% if reservation.confirmed? %}
-    {% if reservation.inbound_shipment.label_url != blank %}
-      <a class="btn btn-default" href="{{ reservation.inbound_shipment.label_url }}">{{ 'dashboard.user_reservations.return_label' | t }}</a>
+    {% if reservation.inbound != blank %}
+      <a class="btn btn-primary" href="{{ reservation.inbound.tracking_url }}">{{ 'dashboard.host_reservations.track_package' | t }}</a>
     {% endif %}
-    {% if reservation.outbound_shipment.tracking_url_provider != blank %}
-      <a class="btn btn-default" href="{{ reservation.outbound_shipment.tracking_url_provider }}">{{ 'dashboard.user_reservations.track_package' | t }}</a>
+    {% if reservation.outbound != blank %}
+      <a class="btn gray full" href="{{ reservation.outbound.tracking_url }}">{{ 'dashboard.host_reservations.return_track_package' | t }}</a>
     {% endif %}
   {% endif %}
 
