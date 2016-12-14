@@ -77,10 +77,8 @@ class InstanceProfileType < ActiveRecord::Base
   private
 
   def es_users_reindex
-    if admin_approval_changed? && Rails.application.config.use_elastic_search
-      User.find_each do |user|
-        ElasticIndexerJob.perform(:update, 'User', user.id)
-      end
+    if admin_approval_changed?
+      ElasticIndexerUsersByProfileTypeJob.perform(self.id)
     end
   end
 end
