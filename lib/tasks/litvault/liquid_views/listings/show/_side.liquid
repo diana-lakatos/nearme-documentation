@@ -23,7 +23,7 @@
 
   <div class="about">
     <h3>About {{ listing.creator.company_name }}</h3>
-    <p>{{ listing.company.description | nl2br }}</p>
+    <p>{{ listing.creator.properties.company_about | nl2br }}</p>
   </div>
 
   <hr>
