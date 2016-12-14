@@ -170,7 +170,7 @@ namespace :volte do
         html_tag: 'select',
         required: "0",
         public: true,
-        valid_values: ['Bridesmaid', 'Formal', 'Races', 'Wedding', 'Guest', 'Cocktail',
+        valid_values: ['Bridesmaid', 'Formal', 'Races', 'Wedding guest', 'Cocktail',
           'Work Function', 'Daytime', 'Mother of the Bride', 'Evening', 'Ball',
           'Maternity', 'Bridal', 'Black Tie', 'Jumpsuit', 'Playsuit'
         ],

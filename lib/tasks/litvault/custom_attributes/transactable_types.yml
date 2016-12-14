@@ -33,7 +33,7 @@
     label: 'Case Short Description'
     html_tag: textarea
     input_html_options_string: "data-counter-limit=>1500"
-    hint: IMPORTANT - Do Not Post Any Confidential Information
+    hint: 'IMPORTANT: Do NOT post any confidential information in the short description as it will be made publicly available'
     custom_validators_attributes:
       "[0]":
         required: true
@@ -85,7 +85,7 @@
   date_engagement_agreement_signed:
     label: 'Date Engagement Signed'
     attribute_type: string
-    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => MM/DD/YYYY'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
 
@@ -113,13 +113,13 @@
       "[0]":
         required: true
     attribute_type: string
-    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => MM/DD/YYYY'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
   date_of_incident:
     label: 'Date of injury or accident'
     attribute_type: string
-    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => MM/DD/YYYY'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
     custom_validators_attributes:
@@ -203,7 +203,7 @@
   date_of_earliest_deadline:
     label: 'Please provide the date for the earliest deadline to file the lawsuit'
     attribute_type: string
-    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => YYYY/DD/MM'
+    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => MM/DD/YYYY'
     wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
 
     custom_validators_attributes:
@@ -292,7 +292,7 @@
     label: Case Short Description
     html_tag: textarea
     input_html_options_string: "data-counter-limit=>1500"
-    hint: IMPORTANT - Do Not Post Any Confidential Information
+    hint: 'IMPORTANT: Do NOT post any confidential information in the short description as it will be made publicly available'
     custom_validators_attributes:
       "[0]":
         required: true

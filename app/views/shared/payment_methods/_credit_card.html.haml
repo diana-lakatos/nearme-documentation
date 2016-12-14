@@ -31,9 +31,9 @@
         = form.input :number, required: true, label:  t('payments.cc_fields.card_number'), input_html: {'data-stripe': :number, placeholder: '•••• •••• •••• ••••', pattern: "[0-9]*", autocomplete: :off, 'data-card-number' => true }
 
         .nm-new-credit-card-form-exp-date-container
-          = form.input :month, as: :select, label: t('payments.cc_fields.expiration_date_month_html'), collection: credit_card_date[:month], input_html: {'data-stripe': :exp_month, prompt: false, placeholder: 'Select month'}
+          = form.input :month, as: :select, label: t('payments.cc_fields.expiration_date_month_html'), required: true, collection: credit_card_date[:month], input_html: {'data-stripe': :exp_month, prompt: false, placeholder: 'Select month'}
 
-          = form.input :year, as: :select, label: t('payments.cc_fields.expiration_date_year_html'), collection: credit_card_date[:year], input_html: {'data-stripe': :exp_year, prompt: false, placeholder: 'Select year' }
+          = form.input :year, as: :select, label: t('payments.cc_fields.expiration_date_year_html'), required: true, collection: credit_card_date[:year], input_html: {'data-stripe': :exp_year, prompt: false, placeholder: 'Select year' }
 
           = form.input :verification_value, label: t('payments.cc_fields.security_code'), required: true, input_html: {'data-stripe': :cvc, placeholder: 'CCV', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true, size: 3 }
 
