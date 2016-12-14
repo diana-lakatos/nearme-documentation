@@ -68,7 +68,7 @@ class PasswordValidatorTest < ActiveSupport::TestCase
       validation.stubs(:password_validation_rules).returns(password_validation_rules)
       validation.validate(@dummy_class)
 
-      assert_equal 'Password has an invalid format', @dummy_class.errors.full_messages.join(', ')
+      assert_equal 'Password should contain at least one capital letter', @dummy_class.errors.full_messages.join(', ')
     end
 
     should 'have one lowercase character' do
@@ -86,7 +86,7 @@ class PasswordValidatorTest < ActiveSupport::TestCase
       validation.stubs(:password_validation_rules).returns(password_validation_rules)
       validation.validate(@dummy_class)
 
-      assert_equal 'Password has an invalid format', @dummy_class.errors.full_messages.join(', ')
+      assert_equal 'Password should contain at least one small letter', @dummy_class.errors.full_messages.join(', ')
     end
 
     should 'have one number' do
@@ -104,7 +104,7 @@ class PasswordValidatorTest < ActiveSupport::TestCase
       validation.stubs(:password_validation_rules).returns(password_validation_rules)
       validation.validate(@dummy_class)
 
-      assert_equal 'Password has an invalid format', @dummy_class.errors.full_messages.join(', ')
+      assert_equal 'Password should contain at least one number', @dummy_class.errors.full_messages.join(', ')
     end
 
     should 'have one symbol character' do
@@ -122,7 +122,25 @@ class PasswordValidatorTest < ActiveSupport::TestCase
       validation.stubs(:password_validation_rules).returns(password_validation_rules)
       validation.validate(@dummy_class)
 
-      assert_equal 'Password has an invalid format', @dummy_class.errors.full_messages.join(', ')
+      assert_equal 'Password should contain at least one symbol', @dummy_class.errors.full_messages.join(', ')
+    end
+
+    should 'have all rules passed' do
+      password_validation_rules = {
+        'uppercase' => '1',
+        'lowercase' => '1',
+        'number' => '1',
+        'symbol' => '1',
+        'min_password_length' => '6'
+      }
+
+      @dummy_class.password = 'aaaaa'
+
+      validation = PasswordValidator.new
+      validation.stubs(:password_validation_rules).returns(password_validation_rules)
+      validation.validate(@dummy_class)
+
+      assert_equal 'Password should contain at least one capital letter, should contain at least one small letter, should contain at least one number, should contain at least one symbol, and is too short (minimum is 6 characters)', @dummy_class.errors.full_messages.join(', ')
     end
   end
 

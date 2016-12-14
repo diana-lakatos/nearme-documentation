@@ -140,6 +140,12 @@ en:
       minimum_open_time:
         one: "must be opened for at least %{minimum_hours} hour"
         other: "must be opened for at least %{minimum_hours} hours"
+      password:
+        should_have_small_latter: 'should contain at least one small letter'
+        should_have_capital_latter: 'should contain at least one capital letter'
+        should_have_number: 'should contain at least one number'
+        should_have_symbol: 'should contain at least one symbol'
+
 
       communications:
         not_verified:
