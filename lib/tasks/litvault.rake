@@ -49,6 +49,7 @@ namespace :litvault do
       setup.update_settings
       setup.create_payment_gateway!
       setup.create_transactable_types!
+      setup.create_custom_model_types!
       setup.create_custom_attributes!
       setup.create_categories!
       setup.create_or_update_form_components!
@@ -243,10 +244,29 @@ namespace :litvault do
       merchant_fee.save!
     end
 
+    def create_custom_model_types!
+      cmt = CustomModelType.where(name: 'Descendant').first_or_create
+      tt = @instance.transactable_types.where(name: 'Individual Case').first
+      tt.custom_model_types << cmt if !tt.custom_model_types.include?(cmt)
+    end
+
     def create_custom_attributes!
       create_transactable_type_attributes
       create_instance_profile_type_attributes
       create_reservation_type_attributes
+      create_custom_model_types_attributes
+    end
+
+    def create_custom_model_types_attributes
+      puts "\nCustom model type attributes:"
+
+      custom_attributes = YAML.load_file(File.join(@theme_path, 'custom_attributes', 'custom_model_types.yml'))
+
+      custom_attributes.keys.each do |model_name|
+        puts "\n\t#{model_name}:"
+        object = CustomModelType.where(instance_id: @instance.id, name: model_name).first
+        update_custom_attributes_for_object(object, custom_attributes[model_name])
+      end
     end
 
     def create_reservation_type_attributes
