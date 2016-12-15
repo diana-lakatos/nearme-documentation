@@ -17,7 +17,7 @@ module AdminHelper
       end
     end
 
-    help_content = HelpContent.find_by(slug: slug)
+    help_content = HelpContent.find_by(slug: slug) || (Rails.env.test? && HelpContent.new(id: 0, content: ''))
 
     raise "Missing help content object for: '#{slug}'" unless help_content
 
@@ -139,7 +139,8 @@ module AdminHelper
       { name: 'Support Email', url: admin_path(page: 'advanced_wizard_support_email') },
       { name: 'Custom Attributes', url: admin_path(page: 'advanced_wizard_custom_attributes') },
       { name: 'Validations', url: admin_path(page: 'advanced_wizard_validations') },
-      { name: 'Bulk data upload', url: admin_path(page: 'advanced_wizard_bulk') }
+      { name: 'Bulk data upload', url: admin_path(page: 'advanced_wizard_bulk') },
+      { name: 'Graph Queries', url: admin_advanced_graph_queries_path }
     ]
   end
 

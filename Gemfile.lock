@@ -462,8 +462,6 @@ GEM
     google_plus (0.2.4)
       json
       rest-client (~> 1.6)
-    graphiql-rails (1.4.0)
-      rails
     graphql (1.2.4)
     haml (4.0.7)
       tilt
@@ -998,7 +996,6 @@ DEPENDENCIES
   github_api
   googl
   google_plus
-  graphiql-rails
   graphql
   haml
   holidays

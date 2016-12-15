@@ -1236,9 +1236,6 @@ DesksnearMe::Application.routes.draw do
   end
 
   mount Ckeditor::Engine => '/ckeditor'
-  if Rails.env.development?
-    mount GraphiQL::Rails::Engine, at: '/graphiql', graphql_path: '/api/graph'
-  end
 
   get '/dynamic_theme/:stylesheet-:theme_id-:updated_at.css', to: 'dynamic_themes#show', as: :dynamic_theme, format: 'css', constraints: { stylesheet: /(application|dashboard)/ }
 
@@ -1274,6 +1271,7 @@ DesksnearMe::Application.routes.draw do
       resources :domains do
         resource :hosted_zone
       end
+      resources :graph_queries
     end
 
     namespace :design do

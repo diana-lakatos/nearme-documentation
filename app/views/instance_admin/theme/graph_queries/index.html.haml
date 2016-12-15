@@ -18,8 +18,8 @@
                   = graph_query.generate_tag_line
               %td
                 .pull-right{style: 'margin-left: 10px'}
-                  = link_to t('instance_admin.destroy'), instance_admin_theme_graph_query_path(graph_query), method: :delete,
-                      data: { confirm: 'Are you sure?' }
+                  = button_to t('instance_admin.destroy'), admin_advanced_graph_query_path(graph_query),
++                                                           method: :delete, data: { confirm: "Are you sure?" }
                 .pull-right{style: 'margin-left: 10px'}
                   = link_to t('instance_admin.edit'), edit_instance_admin_theme_graph_query_path(graph_query)
 

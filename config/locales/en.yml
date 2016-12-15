@@ -1152,6 +1152,12 @@ en:
     workflows:
       alerts:
         prevent_trigger_condition: "Liquid parsed string of conditions; leave blank to always run; if evaluates to true, it will not be triggered; e.g. listing.draft?"
+    graph_queries:
+      title: "Graph Queries"
+      name: "Name"
+      tag_line: "Tag line"
+      add_graph_query: "Add Graph Query"
+      query: "Query"
 
   buy_sell_market:
     buyer: "buyer"

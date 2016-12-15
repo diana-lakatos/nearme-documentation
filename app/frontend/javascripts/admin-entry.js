@@ -26,4 +26,5 @@ NM.on('ready', ()=>{
   require('initializers/admin/section_help.initializer');
   require('initializers/admin/versions_editor.initializer');
   require('initializers/admin/file_manager.initializer');
+  require('initializers/admin/graphql_editor.initializer');
 });
