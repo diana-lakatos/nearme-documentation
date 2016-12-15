@@ -8,8 +8,8 @@ class HomeController < ApplicationController
     @transactable_types.sort_by!(&:position)
     @transactable_type = @transactable_types.first
 
-    respond_to :html
     render_for_community
+    respond_to :html
   end
 
   private
