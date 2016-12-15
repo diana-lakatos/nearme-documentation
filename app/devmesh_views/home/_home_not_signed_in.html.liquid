@@ -1,29 +1,4 @@
-{% assign g = '
-  {
-    projects:transactables(take: 3, filters: [ACTIVE, FEATURED]) {
-      name
-      show_path
-      cover_photo_url
-      creator {
-        profile_path
-        avatar_url_thumb
-      }
-    }
-    users(take: 8, filters: [FEATURED]) {
-      profile_path
-      avatar_url_bigger
-      name_with_affiliation
-      display_location
-      short_bio: custom_attribute(name: "short_bio")
-    }
-    topics(filters: [FEATURED], arbitrary_order: ["Networking", "Dual Screen", "Big Data", "Open Source", "Android", "Real Sense"], take: 6) {
-      name
-      show_url
-      background_style
-      background_style_big
-    }
-  }' | query
-%}
+{% query_graph 'intel_home_not_signed_in', result_name: g %}
 
 <div class="hero-a" style="background-image: url({{ platform_context.hero_url | image_url }});">
   <div class="contain">
