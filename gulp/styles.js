@@ -58,9 +58,7 @@ module.exports = function(gulp, browserSync, config) {
   });
 
   gulp.task('styles:admin', function(){
-    return processStyles([
-      path.join(config.paths.stylesheets, 'admin.scss')
-    ]);
+    return processor.run('admin.scss');
   });
 
   /* Global task for all styles */
