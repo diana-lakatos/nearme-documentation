@@ -1029,6 +1029,15 @@ ActiveRecord::Schema.define(version: 20161213135545) do
 
   add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
 
+  create_table "help_contents", force: :cascade do |t|
+    t.string   "slug",       null: false
+    t.text     "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "help_contents", ["slug"], name: "index_help_contents_on_slug", unique: true, using: :btree
+
   create_table "host_fee_line_items", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "line_item_source_id"
@@ -1200,6 +1209,23 @@ ActiveRecord::Schema.define(version: 20161213135545) do
 
   add_index "instance_views", ["instance_id", "path", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
 
+  create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "instance_type_id"
+    t.integer  "instance_id"
+    t.text     "body"
+    t.string   "path",                 limit: 255
+    t.string   "locale",               limit: 255
+    t.string   "format",               limit: 255
+    t.string   "handler",              limit: 255
+    t.boolean  "partial"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "view_type",            limit: 255
+    t.integer  "transactable_type_id"
+    t.integer  "custom_theme_id"
+  end
+
   create_table "instances", force: :cascade do |t|
     t.string   "name",                                          limit: 255
     t.datetime "created_at",                                                                                                                   null: false
@@ -1300,8 +1326,8 @@ ActiveRecord::Schema.define(version: 20161213135545) do
     t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "twilio_ring_tone"
     t.string   "prepend_view_path"
+    t.string   "twilio_ring_tone"
     t.boolean  "require_verified_user",                                                             default: false
   end
 
@@ -3093,6 +3119,7 @@ ActiveRecord::Schema.define(version: 20161213135545) do
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
     t.integer  "wish_list_items_count",                              default: 0
     t.float    "product_average_rating",                             default: 0.0
+    t.text     "ui_settings",                                        default: "{}"
     t.datetime "expires_at"
   end
 
@@ -3264,6 +3291,38 @@ ActiveRecord::Schema.define(version: 20161213135545) do
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
   add_index "workflow_alerts", ["template_path", "workflow_step_id", "recipient_type", "alert_type", "deleted_at"], name: "index_workflows_alerts_on_templ_step_recipient_alert_and_del", unique: true, using: :btree
+
+  create_table "workflow_alerts_backup_20160926", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.string   "name",                      limit: 255
+    t.string   "alert_type",                limit: 255
+    t.string   "recipient_type",            limit: 255
+    t.string   "template_path",             limit: 255
+    t.integer  "workflow_step_id"
+    t.integer  "instance_id"
+    t.text     "options"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "delay"
+    t.text     "subject"
+    t.string   "layout_path",               limit: 255
+    t.text     "custom_options"
+    t.string   "from",                      limit: 255
+    t.string   "reply_to",                  limit: 255
+    t.string   "cc",                        limit: 255
+    t.string   "bcc",                       limit: 255
+    t.string   "recipient",                 limit: 255
+    t.string   "from_type",                 limit: 255
+    t.string   "reply_to_type",             limit: 255
+    t.text     "endpoint"
+    t.string   "request_type"
+    t.boolean  "use_ssl"
+    t.text     "payload_data"
+    t.text     "headers"
+    t.text     "prevent_trigger_condition"
+    t.string   "bcc_type"
+  end
 
   create_table "workflow_steps", force: :cascade do |t|
     t.string   "name",             limit: 255

@@ -32,14 +32,14 @@ en:
   topics: 'Topics'
   groups_and_clubs: 'Groups & Clubs'
   profile: 'Profile'
-  my_projects: 'My Projects'
+  my_projects: 'My Extras'
   my_groups: 'My Groups'
   favorites: 'Favorites'
   account: 'Account'
   log_out: 'Log Out'
   log_in: 'Log In'
   back_to_log_in: 'Return to login screen'
-  add_project: 'Add Project'
+  add_project: 'Add Extra'
   add_group: 'Add Group'
   create_group: 'Create Group'
 
@@ -54,8 +54,8 @@ en:
   user_updated_status: "%{user_link} updated %{possessive} status"
   user_created_transactable: "%{user_link} created a new %{project_link}"
   user_shared_article: "%{user_link} shared an article on the %{page_link}"
-  user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} project"
-  user_added_photo: "%{user_link} added a photo to the %{project_link} project"
+  user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} extra"
+  user_added_photo: "%{user_link} added a photo to the %{project_link} extra"
   user_added_comment_discussion: "%{user_link} added a new comment in %{discussion_link}"
   comment: 'Comment'
   report_as_spam: 'Report as Spam'
@@ -67,8 +67,8 @@ en:
   see_more: 'See More'
 
   # featured
-  featured_projects: 'Featured Projects'
-  featured_users: 'Featured Developers'
+  featured_projects: 'Featured Extras'
+  featured_users: 'Featured Members'
   featured_topics: 'Featured Topics'
   view_all: 'View All'
   follow: 'Follow'
@@ -78,18 +78,18 @@ en:
   hero_slogan: 'Hang out with the craftiest minds'
   hero_description: 'Find, follow and chat with club members across Keepsake topics and groups'
   join_now: 'Join Now'
-  explore_the_most_popular_projects: 'Browse featured projects, follow your favorites, contribute ideas, or share your own work.'
-  connect_with_influencers: 'Featured Developers'
-  connect_with_influencers_description: "Find and connect with the most interesting developers in your field, or even your city."
-  featured_topics_description: 'Follow your favorite development topics, including the latest trends, tutorials, and support.'
+  explore_the_most_popular_projects: 'Check out our past Dream Books, featured series, games and more'
+  connect_with_influencers: 'Featured Members'
+  connect_with_influencers_description: "Check out our past Dream Books, featured series, games and more"
+  featured_topics_description: 'Follow the topics that interest you and discover groups and club members related to them'
 
   # user activity
-  featured_user: 'Featured User'
+  featured_user: 'Featured Member'
   activity: 'Activity'
   following: 'Following'
   followers: 'Followers'
   members: 'Members'
-  projects: 'Projects'
+  projects: 'Extras'
   about: 'About'
 
   # user profile
@@ -97,7 +97,7 @@ en:
     empty_resultset:
       users: 'No users to show at the moment.'
       topics: 'No topics to show at the moment.'
-      projects: 'No projects to show at the moment.'
+      projects: 'No extras to show at the moment.'
       groups: 'No groups to show at the moment.'
 
 
@@ -112,9 +112,9 @@ en:
   collaborators: 'Collaborators'
 
   # projects
-  join_project: 'Join Project'
-  leave_project: 'Leave Project'
-  leave_project_confirm: 'Are you sure that you want to leave this project?'
+  join_project: 'Join Extra'
+  leave_project: 'Leave Extra'
+  leave_project_confirm: 'Are you sure that you want to leave this extra?'
   comments: 'Comments'
   gallery: 'Gallery'
   description: 'Description'
@@ -131,10 +131,10 @@ en:
   # tutorial
   step_no: 'Step %{number}'
   tutorial:
-    step_1: 'The Activity Feed will show you the most recent updates from the people, projects, and topics you follow.'
+    step_1: 'The Activity Feed will show you the most recent updates from the members, extras, and topics you follow.'
     step_2: "Let your followers know what you're up to by posting a status update."
-    step_3: 'Get recommendations for developers, projects, and topics to follow.'
-    step_4: "Share your projects to show what you're working on, get feedback from the community, and find collaborators."
+    step_3: 'Get recommendations for members, extras, and topics to follow.'
+    step_4: "Share your extras to show what you're working on, get feedback from the community, and find collaborators."
   next: 'Next'
   finish: 'Finish'
 
@@ -142,13 +142,13 @@ en:
   onboarding:
     step_1:
       title: 'Almost there! Just a couple more questions to set up your Mesh account. Where do you live?'
-      description: "Let us know what city you're in so we can connect you with developers and events in your area."
+      description: "Let us know what city you're in so we can connect you with members and events in your area."
     step_2:
       title: 'Connect your social accounts'
       description: 'Get a jump start on building your Mesh network with people you already know.'
     step_3:
       title: 'Recommendations to get started'
-      description: "Based on what you've already told us, we've selected some people, projects, and topics for you to follow. You can find and follow more at any time."
+      description: "Based on what you've already told us, we've selected some people, extras, and topics for you to follow. You can find and follow more at any time."
     step_4:
       title: 'Congrats! Your account has been successfully created.'
       description: 'Introduce yourself to the community in the most interesting way! It will make it easy for people to find you and follow you.'
@@ -160,8 +160,8 @@ en:
   continue: 'Continue'
   connect_with_service: 'Connect with %{service}'
   connect: 'Connect'
-  people_to_follow: 'Developers to Follow'
-  projects_to_follow: 'Projects to Follow'
+  people_to_follow: 'Mebers to Follow'
+  projects_to_follow: 'Extras to Follow'
   topics_to_follow: 'Topics to Follow'
   add_photo: 'Add Photo'
   skip: 'Skip'
@@ -169,7 +169,7 @@ en:
 
 
   # projects
-  my_projects: 'My Projects'
+  my_projects: 'My Extras'
   picture: 'Picture'
   name: 'Name'
   summary: 'Summary'
@@ -181,9 +181,9 @@ en:
   collaborator: 'Collaborator'
   published: 'Published'
   draft: 'Draft'
-  empty_cta: 'You haven’t added any project yet. Create your first one now!'
-  empty_groups: 'You haven’t added any group yet. Create your first one now!'
-  publish_project: 'Publish Project'
+  empty_cta: 'You haven’t added any extras yet. Create your first one now!'
+  empty_groups: 'You haven’t added any groups yet. Create your first one now!'
+  publish_project: 'Publish Extra'
   save_for_later: 'Save for Later'
   images: 'Images'
   add_another_photo: 'Add another photo'
@@ -191,7 +191,7 @@ en:
   add_collaborator: 'Add collaborator'
   or: 'or'
   upload_image: 'Upload Image'
-  edit_project: 'Edit Project'
+  edit_project: 'Edit Extra'
   edit_group: 'Edit Group'
   actions: 'Actions'
   approve: 'Approve'
@@ -200,8 +200,8 @@ en:
   approved: 'Approved'
   pending: 'Pending'
   save_changes: 'Save Changes'
-  delete_project: 'Delete Project'
-  draft_project: 'This project is disabled.'
+  delete_project: 'Delete Extra'
+  draft_project: 'This extra is disabled.'
   draft_group: 'This group is disabled.'
 
   #collaborators
@@ -229,17 +229,17 @@ en:
       unfollow: "Unfollow"
     events:
       user_followed_user: '%{follower} started following user %{followed}'
-      user_followed_transactable: '%{follower} started following project %{followed}'
+      user_followed_transactable: '%{follower} started following extra %{followed}'
       user_followed_topic: '%{follower} started following topic %{followed}'
-      user_created_transactable: '%{user} created project %{transactable}'
+      user_created_transactable: '%{user} created extra %{transactable}'
       user_updated_user_status: '%{user} updated %{updated} status'
-      user_updated_transactable_status: '%{user} updated project %{updated} status'
+      user_updated_transactable_status: '%{user} updated extra %{updated} status'
       user_updated_topic_status: '%{user} updated topic %{updated} status'
-      user_added_photos_to_transactable: '%{user} added photos to project %{transactable}'
-      user_added_links_to_transactable: '%{user} added links to project %{transactable}'
+      user_added_photos_to_transactable: '%{user} added photos to extra %{transactable}'
+      user_added_links_to_transactable: '%{user} added links to extra %{transactable}'
       topic_created: '%{topic} has been created'
       user_commented: "%{user} added a comment on %{followed}'s %{activity}"
-      user_commented_on_transactable: "%{user} added a comment on project %{transactable}"
+      user_commented_on_transactable: "%{user} added a comment on extra %{transactable}"
 
       user_created_group: '%{user} created group %{group}'
       user_added_photos_to_group: '%{user} added photos to group %{group}'
@@ -290,5 +290,177 @@ en:
     main_image_missing: 'Please upload main image'
 
   transactable_type:
-    project:
-      name: "project"
+    extra:
+      name: "Extra"
+
+      labels:
+        name: 'Extra Name'
+        description: 'Description'
+        topic: 'Topic'
+        add_collaborators: 'Add Collaborators'
+        seek_collaborators: 'Seeking Collaborators'
+
+      placeholders:
+        name: 'Enter the name of your extra'
+        description: 'Tell us all about this extra'
+        Topic: 'Select Topic'
+        link_url: 'Link to'
+        link_label: 'Text to display'
+        add_collaborators: 'Enter email address'
+        links:
+          url: 'Link to'
+          text: 'Text to Display'
+          photo: 'Photo'
+
+      hints:
+        seek_collaborators: 'You can add people to help your extra'
+        photos: 'For best results use images with dimensions 680×546px or crop them after upload.'
+
+
+
+
+  simple_form:
+    "yes": 'Yes'
+    "no": 'No'
+    required:
+      text: 'required'
+      mark: '*'
+      # You can uncomment the line below if you need to overwrite the whole required html.
+      # When using html, text and mark won't be used.
+      # html: '<abbr title="required">*</abbr>'
+    error_notification:
+      default_message: "Please review the problems below:"
+
+    placeholders:
+      defaults:
+        topic_ids: 'Select Topic'
+        project_ids: 'Select Topic'
+        group_ids: 'Select Group'
+        role: 'Select Role'
+        group_type_id: 'Select Group Type'
+      search:
+        search: 'Search'
+
+      activity_feed:
+        content: 'What are you working on?'
+        topics: 'Select topics'
+
+      comment:
+        body: 'Please, leave a comment'
+
+      search_filter:
+        sort: 'Sort by:'
+
+      address:
+        address: "What’s your nearest city?"
+      onboarding:
+        short_bio: 'Ex: I’m a IoT advocate and a technology wizard'
+
+      group:
+        name: 'Enter the name of your group'
+        description: 'Tell us all about this group'
+        project_ids: 'Select Extra'
+        video_url: 'Enter youtube or vimeo URL'
+        search_for_member: 'Search for Member'
+        new_group_members:
+          email: 'Enter e-mail address'
+          moderator: 'Can moderate'
+
+      profile:
+        bio: 'Describe yourself in less than 140 characters'
+        about: 'Tell us all about yourself extra'
+        location: 'Enter your city'
+
+      # this should be handled in transactable_type.extra but there is no support for custom attributes at the moment
+      transactable:
+        properties:
+          summary: 'Summarize this group in less than 140 characters'
+
+    labels:
+      merchant_account:
+        current_address: "Address"
+      user:
+        current_address: "Address"
+      defaults:
+        topic_ids: 'Topic'
+        seek_collaborators: 'Seeking Collaborators'
+        group_type_id: 'Group Type'
+      activity_feed:
+        topics: 'Select topics'
+
+      search_filter:
+        sort: 'Sort by:'
+        collaborators: 'Seeking Collaborators'
+        options:
+          all: "All"
+          featured: "Featured"
+          people_i_know: "People I Know"
+          most_popular: "Most Popular"
+          location: "Near Me"
+          number_of_projects: "Number of Extras"
+
+      onboarding:
+        location: 'Location'
+        'follow[]': 'Follow'
+        short_bio: 'Short Bio'
+        photo: 'Profile Photo'
+      address:
+        show:
+          address: "Location"
+
+      group:
+        transactable_type: 'Type'
+
+      photos:
+        file: 'Photo'
+        is_cover: 'Cover image'
+
+      links:
+        url: 'Link to'
+        label: 'Label'
+        photo: 'Photo'
+
+      profile:
+        bio: 'Short Bio'
+        about: 'About You'
+        avatar: 'Profile Photo'
+        cover: 'Cover Image'
+        location: 'Location'
+
+
+      notifications:
+        accept_emails: 'Accept Emails'
+        group_updates_enabled: 'Group notifications'
+        group_updates_enabled_hint: 'You will be notified about group updates like comments or status updates'
+        project_updates_enabled: 'Extra notifications'
+        project_updates_enabled_hint: 'You will be notified about extra updates like comments or status updates'
+
+        email_frequency:
+          immediately: 'immediately'
+          immediately_hint: 'Email me about each update right away'
+          weekly: 'weekly'
+          weekly_hint: 'Email me updates summary every week'
+
+      # this should be handled in transactable_type.extra but there is no support for custom attributes at the moment
+      transactable:
+        properties:
+          summary: 'Summary'
+
+    hints:
+      profile:
+        cover_image: 'For best results use an image with dimensions 1920×285px or crop it after upload.'
+        avatar: 'For best results use a square image with dimensions 200×200px or crop it after upload.'
+
+  search_submit: 'Go'
+
+  helpers:
+    submit:
+      search:
+        submit: 'Go'
+      activity_feed:
+        submit: 'Post'
+      comment:
+        submit: 'Post'
+      onboarding:
+        submit: 'Continue'
+
