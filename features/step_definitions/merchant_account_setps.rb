@@ -9,11 +9,11 @@ When(/^I update Stripe merchant form$/) do
   page.find("#merchant_account_account_type option", :visible => false).set('individual')
   fill_in 'merchant_account_bank_routing_number', with: '110000000'
   fill_in 'merchant_account_bank_account_number', with: '000123456789'
-  fill_in 'merchant_account_first_name', with: 'Tomasz'
-  fill_in 'merchant_account_last_name', with: 'Lemkowski'
+  fill_in 'merchant_account_owners_attributes_0_first_name', with: 'Tomasz'
+  fill_in 'merchant_account_owners_attributes_0_last_name', with: 'Lemkowski'
   fill_in 'merchant_account_owners_attributes_0_dob_formated', with: '01/22/1990'
-  fill_in 'merchant_account_current_address_attributes_address', with: '1600 Amphitheatre Parkway, Mountain View, CA 94043, USA'
-  fill_in 'merchant_account_personal_id_number', with: '694-07-7618'
+  fill_in 'merchant_account_owners_attributes_0_current_address_attributes_address', with: '1600 Amphitheatre Parkway, Mountain View, CA 94043, USA'
+  fill_in 'merchant_account_owners_attributes_0_personal_id_number', with: '694-07-7618'
   attach_file('merchant_account_owners_attributes_0_document', File.absolute_path('./public/favicon.png'))
   page.check('merchant_account_tos')
   find('input[type="submit"]').click

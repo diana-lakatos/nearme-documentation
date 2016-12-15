@@ -7,17 +7,21 @@ module AttributesParserHelper
   def create_initial_hash_from_liquid_tag_markup(markup)
     hash = {}
     markup.scan(TagAttributesWithHypen) do |key, value|
-      key.sub!(/^["']/, '')
-      key.sub!(/["']$/, '')
-      hash[key] = value
+      new_key = key.sub(/^["']/, '')
+      new_key = new_key.sub(/["']$/, '')
+      hash[new_key] = value
     end
     hash
   end
 
   def normalize_liquid_tag_attributes(hash, context, prefixes = [])
+    # We don't want to change the original hash because it's 
+    # reused in all fields_for iterations
+    hash_result = hash.try(:dup) || {}
+
     # inicjalize variables for each prefix, if prefix is 'html' then create '@html_attributes' variable
     prefixes.each { |p| instance_variable_set(:"@#{p}_attributes", {}) }
-    hash.each do |key, value|
+    hash_result.each do |key, value|
       next unless String === value
       # if value starts with @ then get value from context as it's variable, otherwise remove trailing quotes
       value = value.sub(/^["']/, '').sub(/["']$/, '')
@@ -29,29 +33,29 @@ module AttributesParserHelper
 
       # check if key starts with a prefix - if yes, then we should create nested hash
       if (prefix = prefixes.detect { |p| key =~ /^#{p}-/ }).present?
-        hash.delete(key)
+        hash_result.delete(key)
         # store in proper hash but not under %prefix%_key, but just as a key
         instance_variable_get(:"@#{prefix}_attributes")[key.sub(/^#{prefix}-/, '')] = value
         # otherwise just overwrite value in case there are quotes
       else
-        hash[key] = value
+        hash_result[key] = value
       end
     end
     # now build proper nested hash
 
-    prefixes.each { |p| hash[p.to_sym] = instance_variable_get(:"@#{p}_attributes") }
-    hash.deep_symbolize_keys
+    prefixes.each { |p| hash_result[p.to_sym] = instance_variable_get(:"@#{p}_attributes") }
+    hash_result.deep_symbolize_keys
   end
 
   def values_value(value, context)
-    value = value.sub(/^["']/, '').sub(/["']$/, '').strip
-    case value
+    new_value = value.sub(/^["']/, '').sub(/["']$/, '').strip
+    case new_value
     when /^@/
-      context[value].try(:source).presence || context[value]
+      context[new_value].try(:source).presence || context[new_value]
     when 'false'
       false
     else
-      value
+      new_value
     end
   end
 end

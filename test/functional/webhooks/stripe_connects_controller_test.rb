@@ -13,7 +13,7 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
       address = FactoryGirl.build(:full_address_in_sf)
       address.stubs('parse_address_components!').returns(true)
       address.stubs(:state_code).returns('CA')
-      @merchant_account.current_address = address
+      @merchant_account.owners.first.current_address = address
       @merchant_account.save
     end
 
