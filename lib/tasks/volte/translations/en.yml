@@ -17,6 +17,8 @@ en:
     manage:
       reservations:
         reservation_not_confirmed: 'Please confirm the below information to complete the order'
+    space_wizard:
+      space_listed: 'Congratulations, your %{bookable_noun} was created! To enable it, please <a href="dashboard/company/payouts/edit">provide Merchant Accounts details</a>.'
 
   simple_form:
     labels:
