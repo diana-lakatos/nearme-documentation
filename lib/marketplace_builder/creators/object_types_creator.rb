@@ -21,11 +21,13 @@ module MarketplaceBuilder
             logger.fatal("#{key} is not allowed in #{object_class_name} settings") unless whitelisted_properties.include?(key)
           end
 
-          object = @instance.send(method_name).where(hash).first_or_create!
+          hash = parse_params(hash)
+
+          object = find_or_create!(hash)
 
           update_custom_attributes_for_object(object, custom_attributes) unless custom_attributes.empty?
           update_custom_validators_for_object(object, custom_validators) unless custom_validators.empty?
-          update_form_comopnents_for_object(object, form_components) unless form_components.empty?
+          update_form_components_for_object(object, form_components) unless form_components.empty?
         end
       end
 
@@ -46,6 +48,14 @@ module MarketplaceBuilder
 
       def object_class_name
         raise NotImplementedError
+      end
+
+      def find_or_create!(_hash)
+        raise NotImplementedError
+      end
+
+      def parse_params(hash)
+        hash.with_indifferent_access
       end
 
       def whitelisted_properties

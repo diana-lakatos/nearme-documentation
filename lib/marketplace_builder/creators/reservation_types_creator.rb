@@ -5,7 +5,11 @@ module MarketplaceBuilder
       private
 
       def object_class_name
-        return "ReservationType"
+        'ReservationType'
+      end
+
+      def find_or_create!(hash)
+        @instance.reservation_types.where(name: hash[:name]).first_or_create!
       end
     end
   end

@@ -1,0 +1,16 @@
+name: Booking
+slug: 'booking'
+show_path_format: '/:transactable_type_id/:id'
+searchable: false
+skip_payment_authorization: true
+hours_for_guest_to_confirm_payment: 24
+single_transactable: false
+skip_location: true
+bookable_noun: 'Booking'
+enable_photo_required: false
+lessor: 'Passenger'
+lessee: 'Driver'
+enable_reviews: true
+auto_accept_invitation_as_collaborator: true
+require_transactable_during_onboarding: false
+access_restricted_to_invited: true

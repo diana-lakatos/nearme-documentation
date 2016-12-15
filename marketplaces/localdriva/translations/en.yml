@@ -1,0 +1,404 @@
+en:
+  activemodel:
+    errors:
+      models:
+        reservation:
+          attributes:
+            base:
+              total_amount_changed: "Looks like the total price of this bookingss has changed. Please verify all prices."
+        reservation_request:
+          attributes:
+            base:
+              total_amount_changed: "Looks like the total price of this bookingss has changed. Please verify all prices."
+  activerecord:
+    attributes:
+      transactable:
+        timezone_info: "Please note that this bookingss operates in %{timezone} time zone."
+    errors:
+      models:
+        order:
+          transactable_quantity: "Exceeded quantity for %{transactable_name}, please adjust Booking quantity to confirm that order."
+        reservation:
+          attributes:
+            base:
+              total_amount_changed: "Looks like the total price of this bookingss has changed. Please verify all prices."
+        transactable:
+          attributes:
+            cant_set_montly_price: "Cant't set monthly price if Booking is not open 7 days a week."
+            no_consecutive_days: "Bookings will not be possible if no consecutive days are open."
+  buy_sell_market:
+    buyer: driver
+    checkout:
+      order_mailer:
+        notify_seller_email:
+          dear_seller: "Dear Passenger,"
+    products:
+      buttons:
+        contact_host: "Contact Passenger"
+    seller: Passenger
+  confirmations:
+    are_you_sure_delete_price: "Are you sure? This price will be removed from all existing Bookings."
+  dashboard:
+    analytics:
+      bookings: Bookingss
+      columns:
+        bookings: Bookingss
+      no_reservations_yet: "Your locations haven't got any bookingsss yet."
+      total:
+        bookings: "%{total} bookingss"
+    click_to_call:
+      intro_html: "<h3>What is Click to Call?</h3> <p>We give you an easy to way to make calls between drivers and Passengers while keeping phone numbers of both parties private. Thanks to <a href=\"http://twilio.com\" rel=\"external\">Twilio</a> integration, you will be able to make and receive calls to other users who verified their number on our website.</p> <p>When setting up a call with Twilio the other party will receive a phone call on their verified number first. When they answer, Twilio will call you back on your phone registered in the system.</p>\n"
+      short_info: "Verify your number to enable voice calling between drivers and Passengers without revealing your phone number"
+    credit_cards:
+      delete_warning: "You are about to remove credit card. Please note that it still will be charged if used for any past and unpaid bookingsss you have made. Please make sure to cancel all transations separately."
+    document_requirements:
+      enter_your_documents: "Please, enter below the documents your users will need to provide before bookings the item"
+    host_reservations:
+      actions:
+        complete_reservation: "Complete bookingss"
+      complete_reservation:
+        title: "Complete bookingss"
+      confirmations:
+        cancel: "Do you really want to cancel this bookingss?"
+        confirm: "Do you want to confirm this bookingss?"
+        mark_as_paid: "Do you want to mark this bookingss as paid?"
+        request_payment: "Do you want to send payment request email for this driver?"
+      exclusive_price_guests_notes: "Exclusive bookings instructions from driver:"
+      no_archived_reservations: "You don't have any archived bookingsss."
+      no_confirmed_reservations: "You haven't confirmed any bookingsss yet."
+      no_overdue_reservations: "You don't have any overdue bookingsss."
+      no_reservations_promote_reservations: "You currently have no bookingsss. Promote your locations by tweeting or sharing a direct link!"
+      no_unconfirmed_reservations: "You have no unconfirmed bookingsss."
+      pending_confirmation: "You must confirm this bookings within <strong>%{time_to_expiry}</strong> or it will expire."
+      reservation_is_expired: "Bookingss is expired!"
+      reservation_state: "Bookingss state: "
+      show_listing_page: "Show Booking page"
+    items:
+      confirm_delete: "Are you sure you want to delete your Booking?"
+      delete_listing: "Delete Booking"
+      required_documents: "Please enter the documents your customers will need to provide before bookings this service."
+      unsaved_listing_changes: "You have unsaved changes to your Booking"
+      view_listing: "View Booking"
+    location:
+      are_you_sure: "If you continue, %{Bookings_count} Bookings which belong to this location will also be deleted. Are you really sure you want to proceed?"
+    nav:
+      host_reservations: "Bookingss Received"
+      host_reservations_count_html: "Bookingss Received <span>%{count}</span>"
+      user_reservations: "My Bookingss"
+      user_reservations_count_html: "My Bookingss <span>%{count}</span>"
+    payment_documents:
+      reservation: Bookingss
+    photos:
+      requirement: "Please upload at least one photo for your Booking."
+    products:
+      address_errors_html: "Please address the following <b>%{count}</b> errors in order to save your Booking."
+    reviews:
+      feedback:
+        guest_feedback: "driver Feedback"
+        seller_feedback: "Passenger Feedback"
+        subject:
+          buyer: driver
+          guest: driver
+          host: Passenger
+          seller: Passenger
+        view_buyer_profile: "View driver's Profile"
+        view_guest_profile: "View driver's Profile"
+        view_host_profile: "View Passenger's Profile"
+        view_seller_profile: "View Passenger's Profile"
+    transactables:
+      address_errors_html: "Please address the following <b>%{count}</b> errors in order to save your Booking."
+    user_profile:
+      sections:
+        buyer: driver
+        seller: Passenger
+    user_recurring_bookings:
+      booking_placed_html: "Bookingss placed: <span>%{date}</span>"
+      cancel_confirmation: "Do you really want to cancel this recurring bookings?"
+      guest_notes: "driver Notes"
+      other_recurring_booking:
+        one: "1 other recurring bookings"
+        other: "%{count} other recurring bookingss"
+      placed: "Bookingss placed"
+      successful_booking: "Your recurring bookings was requested successfully!"
+    user_reservations:
+      booking_successful: "Your bookings was requested successfully!"
+      cancel: "Do you really want to cancel this bookingss? %{penalty}"
+      cancel_confirmation: "Do you really want to cancel this bookingss?"
+      exclusive_price_guests_notes: "Exclusive bookings instructions:"
+      guest_notes: "driver Notes"
+      penalty_info: "The penalty fee for cancelling the bookingss is %{penalty}% of the bookingss price."
+      pending_confirmation: "Pending confirmation from Passenger. Bookings will expire in "
+      reservation_placed_html: "Bookingss placed: <span>%{date}</span>"
+      show_listing_page: "Show Booking page"
+      test_mode: "This bookingss was made in Test Mode. No money was actually transferred"
+      title_count: "Bookingss (%{count})"
+  datepicker:
+    dformat: "%m/%d/%Y"
+    pformat: MM/DD/YYYY
+  desk:
+    reservation_rejected_body: "%{user} declined bookingss with reason: %{reason}"
+    reservation_rejected_title: "[internal] User has declined bookingss"
+  errors:
+    messages:
+      not_in_radius: "Address is not in radius of Booking"
+    transactable:
+      cant_cancel: "Can't cancel a booking with unpaid expenses."
+  flash_messages:
+    buy_sell:
+      no_payment_gateway: "The Passenger does not support payments for the selected country."
+    dashboard:
+      buyer:
+        updated: "driver profile has been updated"
+      listings:
+        listing_deleted: "Your Booking has been deleted."
+        listing_updated: "Great, your Booking's details have been updated."
+      no_bookings: "You haven't made any bookingss yet!"
+      reservations:
+        lender_confirmed_both_side_confirmation: "You have confirmed the bookingss!"
+        reservation_already_confirmed: "This bookingss has already been confirmed."
+        reservation_cancelled: "You have cancelled this bookingss."
+        reservation_confirmed: "You have confirmed the bookingss!"
+        reservation_not_confirmed: "Your bookingss could not be confirmed."
+        reservation_rejected: "You have rejected the bookingss. Maybe next time!"
+      seller:
+        updated: "Passenger profile has been updated"
+    guest_rating:
+      already_exists: "Rating for this bookings has already been submitted."
+    host_rating:
+      already_exists: "Rating for this bookings has already been submitted."
+    instance_admin:
+      manage:
+        reservation_types:
+          created: "Bookingss Type created"
+          deleted: "Bookingss Type deleted"
+          updated: "Bookingss Type updated"
+      reports:
+        listings:
+          successfully_deleted: "The Booking has been successfully deleted."
+      settings:
+        listing_type_added: "New Booking type added."
+        listing_type_not_added: "Could not add new Booking type."
+    listings:
+      listing_disabled: "Your Booking has been temporarily disabled by the owner. Displaying other Bookings in this location."
+      listing_disabled_but_admin: "Your Booking has been temporarily disabled by the owner. Other users will not be able to browse it."
+      listing_inactive: "Your Booking is inactive. Displaying other Bookings in this location."
+      no_longer_have_access: "You no longer have an access to your Booking."
+    locations:
+      browsing_no_listings: "There aren't any active Bookings at that location. Other users will be redirected to search page."
+      listing_removed: "Your Booking has been removed. Displaying other Bookings near %{address}."
+      no_listings: "There aren't any Bookings at that location. Check out some other locations."
+    manage:
+      listings:
+        listing_cancelled: "Your Booking has been marked as completed."
+        listing_deleted: "Your Booking has been deleted."
+        listing_updated: "Great, your Booking's details have been updated."
+      reservations:
+        reservation_already_confirmed: "This bookingss has already been confirmed."
+        reservation_cancelled: "You have cancelled this bookingss."
+        reservation_confirmed: "You have confirmed the bookingss!"
+        reservation_confirmed_but_not_charged: "You have confirmed the bookingss, however we were not able to capture payment. We have reached out to driver to notify him about the issue."
+        reservation_not_confirmed: "Your bookingss could not be confirmed."
+        reservation_rejected: "You have rejected the bookingss. Maybe next time!"
+    reservations:
+      credit_card_will_be_charged: "Your credit card will be charged when your bookingss is confirmed by the Passenger."
+      invalid_operation: "Not a valid bookingss operation."
+      reservation_cancelled: "You have cancelled your bookingss."
+      reservation_made: "Your bookingss has been made! %{message}"
+      reservation_not_cancellable: "This bookingss can not be canceled anymore."
+      reservation_not_confirmed: "Your bookingss could not be confirmed."
+    space_wizard:
+      item_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and Booking from this page."
+      space_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and Booking from this page."
+    support:
+      offer_ticket:
+        created: "Offer has been sent. Passenger will be in touch shortly."
+      rfq_ticket:
+        created: "Your request has been sent. Passenger will be in touch shortly."
+  general:
+    generic_lessee_term: driver
+    generic_lessor_term: Passenger
+  instance_admin:
+    analytics:
+      no_bookings_yet: "No bookingss yet."
+      no_listings_visits_yet: "Your Bookings haven't been visited yet."
+    bookings: Bookingss
+    manage:
+      reservation_types:
+        new: "New Bookingss Type"
+        reservation_types: "Bookingss Types"
+      transactable_types:
+        booking_settings: "Bookings settings"
+      transfers:
+        guest_fee: "driver fee"
+        host_fee: "Passenger fee"
+        payout_failed: "We were notified that this payment transfer failed to be delivered, most likely due to wrong payout information. Please follow up with the Passenger and once issues are resolved, manually mark the payment as not failed."
+        transfers_are_generated_automatically: "Transfers are generated automatically depending on your setting in 'Settings > Configuration' for outstanding charges we've recieved on behalf of Passengers. The next batch will be generated at about:"
+    rating_systems:
+      index:
+        only_if_both_completed_products: "Only display reviews if both driver and Passenger have completed"
+        only_if_both_completed_services: "Only display reviews if both driver and Passenger have completed"
+      rate_subject:
+        guest: "Passenger/Passenger rates driver/driver"
+        host: "driver/driver rates Passenger/Passenger"
+        transactable: "driver/driver rates Listing/Product"
+    settings:
+      documents_upload:
+        form:
+          safety_and_trust: "For safety and trust purposes, some services might need extra documentation from customers before completing the bookings."
+        safety_and_trust: "For safety and trust purposes, some services might need extra documentation from customers before completing the bookings."
+      domains:
+        hosted_zones:
+          create: "Create Route53 Passengered zone"
+      seller_attachments:
+        access_levels:
+          sellers_preference: "Passengers preference"
+        activate_seller_attachments: "Activate Passenger attachments"
+        description: "If enabled, Passenger can upload additional documents for Bookings/products."
+        seller_attachments: "Passenger attachments"
+    workflows:
+      alerts:
+        prevent_trigger_condition: "Liquid parsed string of conditions; leave blank to always run; if evaluates to true, it will not be triggered; e.g. Booking.draft?"
+  mailers:
+    orders:
+      warn_guest_of_expiration:
+        subject: "Your bookingss is about to expire"
+    rating:
+      experience_hosting: "How was your experience Passengering %{name}?"
+  manage:
+    listings:
+      no_trust_explanation: "Your Booking will remain disabled until approved."
+  onboarding_wizard:
+    seller_info: "Passenger Info"
+    vendor_approval:
+      intro: "Please provide the following information to become an approved Passenger for this service. Your Booking will be published when the Marketplace Owner approves your status."
+  orders:
+    buttons:
+      buyer_feedback: "Leave driver feedback"
+      seller_feedback: "Leave Passenger feedback"
+      update_buyer_feedback: "Update driver feedback"
+      update_seller_feedback: "Update Passenger feedback"
+  payouts:
+    braintree:
+      credit_card_subscription_info: "A credit card is required in the case of a cancellation to provide a refund of the bookings charge to the driver."
+  pricing:
+    availability:
+      event_preset_info: "Want to use this event schedule for other Bookings?"
+      preset_info: "Want to use this availability schedule for other Bookings?"
+    daily_rate:
+      hours_count: "hours after bookings begins"
+    mode:
+      no_action_booking:
+        description: "No transaction is made between customer and Passenger"
+      offer_action:
+        description: "Customer makes an offer and Booking's owner accepts one of the offers"
+    schedule:
+      book_it_out:
+        minimum_bookings: "Minimum bookingss"
+      mode:
+        seller: "Passenger Preset"
+    time_booking_option:
+      quantity:
+        example: "Example of quantity based bookings option"
+      range:
+        example: "Example of time range based bookings option"
+  recurring_bookings:
+    overbooked: "Subscription can't be confirmed due to overbookings."
+  recurring_reservations_review:
+    total: "Total per bookingss"
+  registrations:
+    sms_preferences:
+      new_reservation: "I receive a bookingss request."
+      reservation_state_changed: "A bookingss I have requested is accepted or declined."
+  reservations:
+    booking_module:
+      only_exclusive_price: "Only exclusive bookings is possible"
+    booking_was_requested_successfully: "Your bookings was requested successfully!"
+    cancellation_time: "You have up to %{time} hours before the bookings takes place to cancel."
+    charge_after_confirmation: "You will not be charged until the bookings is confirmed."
+    company_address_not_valid: "The location address of the Passenger is not correct or complete. Please contact the Passenger."
+    manually_confirm: "This %{lessor} manually confirms all bookingss."
+    no_bookings_html: "You don't have any %{type} bookingss. <a href='/search'>Find %{bookable_nouns} near you!</a>"
+    paypal_and_cc_charge_after_confirmation: "Your will not be charged until the bookings is confirmed."
+    rfq_message: "Please, enter a message for the Passenger"
+    states:
+      cancelled_by_guest: "Cancelled by driver"
+      cancelled_by_host: "Cancelled by Passenger"
+  reservations_review:
+    buttons:
+      request: "Request Bookings"
+    disabled_buttons:
+      request: Bookings...
+    errors:
+      dates_not_available: "Unfortunately the following bookingss are no longer available: %{dates}"
+      no_minimum_days: "Bookings selection does not meet requirements. A minimum of %{minimum_days} consecutive bookable days are required."
+      no_minimum_minutes: "Bookings selection does not meet requirements. A minimum of %{minimum_minutes} hours are required."
+      whoops: "Whoops! We couldn't make that bookingss."
+    heading: "Review your bookings"
+  search:
+    list:
+      view_listing: "View Booking"
+  seller_attachments:
+    associated_with_order: "Here are the Passenger attachments associated with your order"
+    seller_attachments: "Passenger attachments"
+  shared:
+    booking_types_tabs:
+      booking_types: "Bookings types"
+  sign_up_form:
+    buyer_sign_up_to: "Sign Up for LocalDriva"
+    link_to_buyer: "Become a Driver here"
+    link_to_seller: "Become a Passenger here"
+    log_in_to: "Log in"
+    seller_sign_up_to: "Create a Passenger Account"
+  simple_form:
+    hints:
+      transactable_type:
+        all_action_types:
+          action_continuous_dates_booking: "Allow user to select only continuous dates when bookings"
+    labels:
+      company:
+        listings_public: "Enable public Bookings"
+      location:
+        email: "Bookings email"
+      transactable:
+        action_types:
+          minimum_booking_minutes: "Minimum bookings minutes"
+          no_action: "Disable bookings"
+        confirm_reservations: "Confirm bookingsss"
+      transactable_type:
+        all_action_types:
+          action_continuous_dates_booking: "Action continuous dates bookings"
+          allow_no_action: "Allow to disable bookings"
+          both_side_confirmation: "Bookingss is confirmed only if both sides accepts it"
+          cancellation_policy_hours_for_cancellation: "Number of hours before bookings to cancel"
+          hours_to_expiration: "Number of hours before unconfirmed bookingss expires"
+          minimum_booking_minutes: "Minimum bookings minutes (for hourly pricing)"
+          pricings:
+            allow_book_it_out_discount: "Allow Bulk Bookings Discount"
+            allow_free_booking: "Allow free bookings"
+          service_fee_guest_percent: "driver Service Fee Percent"
+          service_fee_host_percent: "Passenger Service Fee Percent"
+        lessee: "Lessee (e.g. driver)"
+        lessor: "Lessor (e.g. Passenger)"
+    placeholders:
+      location:
+        email: "Your bookings email"
+  top_navbar:
+    bookings_received: "Bookingss Received"
+    my_bookings: "My Bookingss"
+  transactable_types:
+    locations:
+      listings:
+        the_listing: "The Booking"
+  ui:
+    header:
+      list_your_thing: "Become a Driver"
+  user_profile:
+    labels:
+      contact_buyer: "Contact driver"
+      contact_seller: "Contact Passenger"
+  user_reviews:
+    reviews_about_product: "How %{first_name} rated products as a driver"
+    reviews_about_this_buyer: "How others rated %{first_name} as a driver"
+    reviews_about_this_seller: "How others rated %{first_name} as a Passenger"
+    reviews_left_by_this_buyer: "How %{first_name} rated others as a driver"
+    reviews_left_by_this_seller: "How %{first_name} rated others as a Passenger"

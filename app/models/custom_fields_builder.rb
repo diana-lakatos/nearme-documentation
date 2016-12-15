@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CustomFieldsBuilder
   def initialize(form_component)
     @form_type = form_component.form_type
@@ -18,7 +19,7 @@ class CustomFieldsBuilder
           to_object_field_notation(location_fields, 'location') +
           to_object_field_notation(transactable_fields, 'transactable')
       else
-        fail NotImplementedError.new("Unknown form type: #{@form_type}")
+        raise NotImplementedError, "Unknown form type: #{@form_type}"
       end
     when FormComponent::TRANSACTABLE_ATTRIBUTES
       to_object_field_notation(dashboard_transactable_fields, 'transactable')
@@ -47,7 +48,7 @@ class CustomFieldsBuilder
     when FormComponent::LOCATION_ATTRIBUTES
       to_object_field_notation(location_fields, 'location')
     else
-      fail NotImplementedError
+      raise NotImplementedError
     end
   end
 
@@ -58,7 +59,7 @@ class CustomFieldsBuilder
   def get_label(object_field_pair)
     object = object_field_pair.keys.first
     field = object_field_pair[object]
-    "#{object.humanize} - #{field.to_s.humanize}"
+    "#{object.to_s.humanize} - #{field.to_s.humanize}"
   end
 
   def valid_object_field_pair?(object_field_pair)
@@ -88,7 +89,7 @@ class CustomFieldsBuilder
       when 'transactable'
         transactable_fields
       else
-        fail NotImplementedError.new("Unknown object for which field #{field} was defined: #{object}. Valid objects: location, address, transactable, product")
+        raise NotImplementedError, "Unknown object for which field #{field} was defined: #{object}. Valid objects: location, address, transactable, product"
       end
     end
   end
@@ -134,6 +135,6 @@ class CustomFieldsBuilder
   end
 
   def to_object_field_notation(array, object)
-    array.map { |field, _label| { "#{object}" => field } }
+    array.map { |field, _label| { object.to_s => field } }
   end
 end

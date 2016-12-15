@@ -9,7 +9,12 @@ module MarketplaceBuilder
       end
 
       def whitelisted_properties
-        [:name, :profile_type]
+        [:name, :profile_type, :onboarding, :searchable, :search_only_enabled_profiles]
+      end
+
+      def find_or_create!(hash)
+        InstanceProfileType.where(instance_id: @instance.id, profile_type: hash[:profile_type]).first_or_create!
+      rescue
       end
     end
   end

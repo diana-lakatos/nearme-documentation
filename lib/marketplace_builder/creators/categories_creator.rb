@@ -4,6 +4,7 @@ module MarketplaceBuilder
     class CategoriesCreator < DataCreator
       def execute!
         transactable_types = get_data
+        return if transactable_types.empty?
 
         transactable_types.keys.each do |tt_name|
           logger.info "Updating categories for: #{tt_name}"
