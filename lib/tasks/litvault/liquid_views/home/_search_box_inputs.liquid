@@ -11,7 +11,7 @@
 
 
             <span class="select-a">
-                <select name='lg_custom_attributes[state][]' id="form-field-state" class="unstyled-select">
+                <select name='lg_custom_attributes[states][]' id="form-field-state" class="unstyled-select">
                     <option value="">By State</option>
                     {% if platform_context.transactable_types.first.name == 'Individual Case' %}
                         {% assign ca = platform_context.transactable_types.first.custom_attributes_as_hash %}

@@ -7,7 +7,7 @@
       <form action="{{  'search_path' | generate_url: search_type: 'people' }}" method="get" class="search-form">
         <div class="fields">
           <input type="hidden" name="transactable_type_class" value="InstanceProfileType">
-          <input type="hidden" name="lg_custom_attributes[state][]" value="{{ searcher.lg_custom_attributes_hash['state'] }}">
+          <input type="hidden" name="lg_custom_attributes[states][]" value="{{ searcher.lg_custom_attributes_hash['states'] }}">
           <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
           <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
           <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
@@ -21,11 +21,11 @@
           <div class="state-filter" data-search-filters-container>
             <label for="field-state" class="struct-label">Filter by state</label>
             <span class="select-a">
-              <select name="lg_custom_attributes[state][]" id="field-state" class="unstyled-select">
+              <select name="lg_custom_attributes[states][]" id="field-state" class="unstyled-select">
                 <option value="">By State</option>
                 {% for ca in platform_context.instance_profile_types.first.custom_attributes %}
                   {% for value in ca.valid_values %}
-                  <option value='{{ value }}'{% if value == searcher.lg_custom_attributes_hash['state'] %} selected{% endif %}>{{ value }}</option>
+                  <option value='{{ value }}'{% if value == searcher.lg_custom_attributes_hash['states'] %} selected{% endif %}>{{ value }}</option>
                   {% endfor %}
                 {% endfor %}
               </select>
