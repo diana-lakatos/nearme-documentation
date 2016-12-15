@@ -242,26 +242,6 @@
       "[0]":
         required: true
 
-  name_of_decedent:
-    label: 'First and Last Name of Decedent'
-
-  refer_only_clients_listed:
-    label: 'Is Referring Law Firm seeking to refer only the Client(s) listed in the Engagement or would proposed referral cover all statutory beneficiaries of the Decedent that end up being represented by Handling Firm?'
-    html_tag: 'select'
-    valid_values: ['Clients Only', 'All Statutory Beneficiaries']
-    custom_validators_attributes:
-      "[0]":
-        required: true
-
-  has_probate_estate_been_opened:
-    label: 'Has a probate estate been opened in Decedent’s home state?'
-    html_tag: radio_buttons
-    wrapper_html_options_string: 'class=>form-group radio_buttons always-inline'
-    valid_values: ['Yes', 'No', 'I don’t know']
-    custom_validators_attributes:
-      "[0]":
-        required: true
-
   available_records:
     label: Available Records
     attribute_type: array

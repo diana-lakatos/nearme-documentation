@@ -145,9 +145,7 @@
         - transactable: states
         - transactable: city_in_which_law_firm_must_be_located
         - transactable: involve_wrongful_death
-        - transactable: name_of_decedent
-        - transactable: refer_only_clients_listed
-        - transactable: has_probate_estate_been_opened
+        - transactable: "Custom Model - Descendant"
         - transactable: available_records
         - transactable: description_of_records
         - transactable: underlying_records_documents
@@ -202,9 +200,7 @@
         - transactable: states
         - transactable: city_in_which_law_firm_must_be_located
         - transactable: involve_wrongful_death
-        - transactable: name_of_decedent
-        - transactable: refer_only_clients_listed
-        - transactable: has_probate_estate_been_opened
+        - transactable: "Custom Model - Descendant"
         - transactable: available_records
         - transactable: description_of_records
         - transactable: underlying_records_documents
