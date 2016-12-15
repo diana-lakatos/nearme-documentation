@@ -23,7 +23,7 @@ class Dashboard::SellerAttachmentsController < Dashboard::AssetsController
       if attachment.save
         flash[:notice] = t('flash_messages.dashboard.seller_attachments.created')
       else
-        flash[:error] = t('flash_messages.dashboard.seller_attachments.not_created')
+        flash[:error] = t('flash_messages.dashboard.seller_attachments.not_created') + "\n" + attachment.errors.full_messages.join("\n")
       end
       redirect_to params[:path].presence || root_path
     end
