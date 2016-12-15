@@ -24,6 +24,7 @@ namespace :localdriva do
 
     def create_offer_action
       @transactable_type = TransactableType.find_by(name: 'Booking')
+      @transactable_type.time_based_booking = nil
 
       @transactable_type.offer_action ||= @transactable_type.build_offer_action(
         enabled: true,
@@ -36,11 +37,11 @@ namespace :localdriva do
 
       pricing = @transactable_type.offer_action.pricings.first_or_initialize
       pricing.attributes = {
-        min_price_cents: 50_00,
-        max_price_cents: 150_00,
         unit: 'hour',
         number_of_units: 1,
         order_class_name: 'Offer',
+        allow_free_booking: false,
+        allow_nil_price_cents: true
       }
 
       @transactable_type.save!
@@ -71,8 +72,8 @@ namespace :localdriva do
       theme.blog_url = '/blog'
       theme.linkedin_url = 'https://www.linkedin.com/company/upside-of-talent-llc'
 
-      theme.remote_favicon_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2760/favicon.png'
-      theme.remote_icon_retina_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2761/apple-touch-icon-60_2x.png'
+      # theme.remote_favicon_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2760/favicon.png'
+      # theme.remote_icon_retina_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2761/apple-touch-icon-60_2x.png'
 
       theme.updated_at = Time.now
       theme.save!

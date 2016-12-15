@@ -497,6 +497,7 @@ class SecuredParams
       :show_path_format,
       :hide_additional_charges_on_listing_page,
       :single_location,
+      :require_transactable_during_onboarding,
       availability_templates_attributes: nested(availability_template),
       allowed_currencies: [],
       merchant_fees_attributes: nested(charge_type),

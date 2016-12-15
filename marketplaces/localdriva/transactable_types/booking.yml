@@ -12,5 +12,113 @@ lessor: 'Passenger'
 lessee: 'Driver'
 enable_reviews: true
 auto_accept_invitation_as_collaborator: true
-require_transactable_during_onboarding: false
+require_transactable_during_onboarding: true
 access_restricted_to_invited: true
+
+custom_attributes:
+  - name: city_name
+    label: 'City'
+
+  - name: trip_start_date
+    label: 'Start Date'
+    attribute_type: 'date'
+    validation:
+      required: true
+
+  - name: trip_start_time
+    label: 'Start Time'
+    validation:
+      required: true
+
+  - name: pickup_location
+    label: 'Pickup Location'
+    validation:
+      required: true
+
+  - name: duration
+    label: 'Length'
+    attribute_type: 'integer'
+    html_tag: 'select'
+    validation:
+      required: true
+      valid_values:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+        - 10
+        - 11
+        - 12
+
+  - name: unknown_location
+    label: To Be Determined
+    attribute_type: boolean
+    html_tag: check_box
+    hint: 'must be set 48 hrs ahead of the pickup time and communicated with the driver through messaging'
+
+  - name: number_of_passengers
+    label: Number of Passengers
+    attribute_type: 'integer'
+    html_tag: 'select'
+    validation:
+      required: true
+      valid_values:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+        - 10
+        - 11
+        - 12
+
+  - name: special_requests
+    label: 'Special Requests'
+    hint: 'Enter Special Requests including dissabilities'
+    html_tag: textarea
+
+form_components:
+  - type: transactable_attributes
+    name: Details
+    fields:
+      - transactable: name
+      - transactable: description
+      - transactable: city_name
+      - transactable: trip_start_date
+      - transactable: trip_start_time
+      - transactable: duration
+      - transactable: pickup_location
+      - transactable: unknown_location
+      - transactable: number_of_passengers
+      - transactable: Category - Extras
+      - transactable: special_requests
+      - transactable: Category - Categories of Interest
+      - transactable: Custom Model - Languages
+      - transactable: price
+
+  - type: space_wizard
+    name: Tell us a little about your booking
+    fields:
+      - transactable: name
+      - transactable: description
+      - transactable: city_name
+      - transactable: trip_start_date
+      - transactable: trip_start_time
+      - transactable: duration
+      - transactable: pickup_location
+      - transactable: unknown_location
+      - transactable: number_of_passengers
+      - transactable: Category - Extras
+      - transactable: special_requests
+      - transactable: Category - Categories of Interest
+      - transactable: Custom Model - Languages
+      - transactable: price

@@ -19,7 +19,7 @@ module MarketplaceBuilder
 
           instance_profile_types = hash.delete(:instance_profile_types).each_with_object([]) do |name, arr|
             ipt = @instance.instance_profile_types.where(name: name).first
-            return logger.error "#{name} is not a valid instance profile type name for category #{hash[:name]}" unless tt
+            return logger.error "#{name} is not a valid instance profile type name for category #{hash[:name]}" unless ipt
 
             logger.debug "Adding #{name} instance profile type to category #{hash[:name]}"
             arr << ipt
