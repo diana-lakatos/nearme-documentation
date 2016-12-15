@@ -3,22 +3,20 @@
   background: $theme_white;
 
   a.accordion-toggle {
-    background: url('//s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png') right center no-repeat;
-    background-origin: content-box;
-    color: black;
-    opacity: .8;
-    transition: opacity .1s ease-in;
+    &:after {
+      content: "\46";
+      float: right;
+    }
 
-    &:hover {
-      opacity: 1;
+    &.collapsed:after {
+      content: "\44";
     }
   }
 }
 
 .accordion-dim {
-
   .accordion-group {
-    border:none;
+    border: none;
     background: $gray210;
 
     a.accordion-toggle {
