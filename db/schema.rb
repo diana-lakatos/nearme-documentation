@@ -960,6 +960,17 @@ ActiveRecord::Schema.define(version: 20161213135545) do
 
   add_index "form_components", ["instance_id", "form_componentable_id", "form_type"], name: "ttfs_instance_tt_form_type", using: :btree
 
+  create_table "form_configurations", force: :cascade do |t|
+    t.integer  "instance_id",                        null: false
+    t.string   "type",                               null: false
+    t.text     "configuration", default: "--- {}\n", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "form_configurations", ["instance_id", "type"], name: "index_form_configurations_on_instance_id_and_type", unique: true, where: "(deleted_at IS NULL)", using: :btree
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",           limit: 255, null: false
     t.integer  "sluggable_id",               null: false
@@ -1038,15 +1049,6 @@ ActiveRecord::Schema.define(version: 20161213135545) do
   end
 
   add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
-
-  create_table "help_contents", force: :cascade do |t|
-    t.string   "slug",       null: false
-    t.text     "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "help_contents", ["slug"], name: "index_help_contents_on_slug", unique: true, using: :btree
 
   create_table "host_fee_line_items", force: :cascade do |t|
     t.integer  "instance_id"
@@ -1336,8 +1338,8 @@ ActiveRecord::Schema.define(version: 20161213135545) do
     t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "prepend_view_path"
     t.string   "twilio_ring_tone"
+    t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
   end
 
@@ -3129,7 +3131,6 @@ ActiveRecord::Schema.define(version: 20161213135545) do
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
     t.integer  "wish_list_items_count",                              default: 0
     t.float    "product_average_rating",                             default: 0.0
-    t.text     "ui_settings",                                        default: "{}"
     t.datetime "expires_at"
   end
 
@@ -3356,5 +3357,4 @@ ActiveRecord::Schema.define(version: 20161213135545) do
     t.string   "workflow_type",   limit: 255
   end
 
-  add_foreign_key "graph_queries", "instances"
 end

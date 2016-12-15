@@ -241,14 +241,14 @@ namespace :volte do
 
       create_custom_attribute(@transactable_type, {
         name: 'color',
-        label: 'Color',
-        attribute_type: 'string',
+        label: 'Color (You can choose multiple colors)',
+        attribute_type: 'array',
         html_tag: 'select',
         required: "0",
         public: true,
         valid_values: [
           "Black", "Brown", "Blue", "Cream", "Gold", "Green", "Grey", "Navy", "Orange", "Pink",
-          "Print", "Purple ", "Red", "Silver", "White", "Yellow", "Assign your own color"
+          "Print", "Purple ", "Red", "Silver", "White", "Yellow", "Other"
         ],
         searchable: true
       })
