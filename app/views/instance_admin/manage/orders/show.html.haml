@@ -1,4 +1,20 @@
 .content-container
+  .row
+    %p
+      %b Order Details:
+    .table-container.col-xs-12
+      %table.table.table-striped.sortable
+        %tr
+          %td= t('instance_admin.manage.orders.id' )
+          %td= @order.id
+        %tr
+          %td= t('instance_admin.manage.orders.listing' )
+          %td= link_to @order.transactable.try(:name), @order.transactable.decorate.show_path
+        %tr
+          %td= t('instance_admin.manage.orders.state' )
+          %td= @order.state.capitalize
+
+.content-container
   - if @order.has_order_items?
     - if @order.subscription? && @order.payment_subscription.try(:test_mode?)
       .row
@@ -29,7 +45,7 @@
                     = link_to 'payment', instance_admin_manage_payment_path(order_item.payment)
                   - else
                     none
-                %td= order_item.paid_at
+                %td= order_item.paid_at ? l(order_item.paid_at, format: :long) : 'Not paid'
                 %td= l(order_item.created_at, format: :long)
                 %td= order_item.currency
                 %td

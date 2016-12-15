@@ -1,0 +1,95 @@
+= simple_form_for @instance, :url => lock_instance_admin_settings_configuration_path, method: :post, :html => { :multipart => true } do |f|
+  .content-container
+    %h4
+      = t('instance_admin.settings.configuration.master_lock')
+    .row
+      .input-container.col-xs-9
+        = f.input :mark_as_locked, as: :boolean, input_html: { checked: f.object.locked? }, inline_label: true
+      .input-container.col-xs-3
+        = f.button :submit, t('instance_admin.settings.configuration.update_lock'), class: 'btn btn-light pull-right'
+
+
+= simple_nested_form_for @instance, :url => instance_admin_settings_configuration_path, :html => { :multipart => true, :data => { 'edit_instance_form' => 1 } } do |f|
+  .content-container
+    %h4
+      = t('instance_admin.settings.configuration.basic_configuration')
+    .row
+      .input-container.col-xs-12
+        = f.input :name, input_html: { class: 'form-control' }, required: false, placeholder: t('instance_admin.settings.configuration.basic_configuration_section.placeholder_marketplace_name')
+    - if Rails.env.staging? # it's relevant only for staging -> staging_email.rb initializer
+      .row
+        .input-container.col-xs-12
+          = f.input :test_email, input_html: { class: 'form-control' }, required: false
+
+  .content-container
+    %h4
+      = t('instance_admin.settings.configuration.marketplace_password')
+    .row
+      .input-container.col-xs-6
+        = f.input :marketplace_password, placeholder: t('simple_form.labels.instance.marketplace_password'), as: :string, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :password_protected, as: :boolean, inline_label: true
+
+  .content-container
+    .row.heading-row
+      .col-xs-6
+        %h4
+          = t('instance_admin.settings.configuration.text_filters')
+      .col-xs-6
+        = f.link_to_add :text_filters, :data => { :target => "#text-filters" } do
+          .btn.btn-blue.pull-right
+            = t('instance_admin.settings.configuration.text_filters_section.add_text_filter')
+    .row
+      .input-container.col-xs-12
+        = f.input :apply_text_filters, inline_label: true
+      .fields
+        .row.table-header
+          .input-container.col-xs-2
+            = t('instance_admin.settings.configuration.text_filters_section.name')
+          .input-container.col-xs-4
+            = t('instance_admin.settings.configuration.text_filters_section.regexp')
+          .input-container.col-xs-3
+            = t('instance_admin.settings.configuration.text_filters_section.replacement_text')
+          .input-container.col-xs-2
+            = t('instance_admin.settings.configuration.text_filters_section.ignore_case')
+          .input-container.col-xs-1
+    #text-filters
+      = f.fields_for :text_filters, wrapper: false do |f|
+        .fields
+          .row
+            .input-container.col-xs-2
+              = f.input :name, label: false, placeholder: t('instance_admin.settings.configuration.text_filters_section.name'), input_html: { class: 'form-control' }
+            .input-container.col-xs-4
+              = f.input :regexp, label: false, placeholder: t('instance_admin.settings.configuration.text_filters_section.regexp'), input_html: { class: 'form-control' }
+            .input-container.col-xs-3
+              = f.input :replacement_text, placeholder: t('instance_admin.settings.configuration.text_filters_section.replacement_text'), label: false, input_html: { class: 'form-control' }
+            .input-container.col-xs-2.text-center
+              = f.input :flags, as: :boolean, label: false, inline_label: true
+            .input-container.col-xs-1.text-center
+              = f.link_to_remove confirm: (f.object.try(:name).present? ? "Are you sure you want to delete #{f.object.name}?" : false) do
+                .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
+
+  .content-container
+    %h4
+      = t('instance_admin.settings.configuration.support')
+    .row
+      .input-container.col-xs-3
+        = f.input :support_email, placeholder: 'example@gmail.com', input_html: { class: 'form-control' }
+      .input-container.col-xs-3
+        = f.input :support_imap_username, input_html: { autocomplete: 'off', class: 'form-control' }
+      .input-container.col-xs-3
+        = f.input :support_imap_password, input_html: { autocomplete: 'off', value: f.try(:object).try(:support_imap_password), class: 'form-control' }
+      .input-container.col-xs-3
+        = f.input :support_imap_server, input_html: { autocomplete: 'off', class: 'form-control' }
+    .row
+      .input-container.col-xs-3
+        = f.input :support_imap_port, input_html: { autocomplete: 'off', class: 'form-control' }
+      .input-container.col-xs-3
+        = f.input :support_imap_ssl, input_html: { autocomplete: 'off' }, inline_label: true
+        = f.submit 'Save', class: 'hidden_form_element'
+      .input-container.col-xs-3
+        = f.submit t('instance_admin.imap_settings.validate_imap_settings'), class: 'btn btn-light', name: 'validate_imap_settings_button'
+
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => '[data-edit-instance-form]' }
+

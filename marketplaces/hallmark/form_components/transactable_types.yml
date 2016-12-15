@@ -1,0 +1,7 @@
+~
+# "TRANSACTABLE_TYPE.name":
+#  SPACE_WIZARD:
+#    -
+#      name: "Form component name"
+#      fields:
+#        - group: field_name

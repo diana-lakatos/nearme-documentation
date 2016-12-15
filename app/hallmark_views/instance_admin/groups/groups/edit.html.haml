@@ -1,0 +1,10 @@
+= simple_form_for [:instance_admin, :groups, @group], html: { class: 'form-a' } do |f|
+  .content-container
+    %h4 Edit #{@group.name}
+
+    .row
+      .input-container.col-xs-12
+        = f.input :featured, as: :switch, label: 'Featured'
+
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

@@ -19,7 +19,7 @@ class ActivityFeedService
       @events = ActivityFeedEvent.with_identifiers(sql_array).includes(:event_source, :followed).exclude_events.paginate(page: @page, per_page: per)
     else
       followed_identifiers = [ActivityFeedService::Helpers.object_identifier_for(@object)]
-      excluded_identifiers = @object.groups.only_private.pluck(:id).map { |i| "Group_#{i}" }
+      excluded_identifiers = @object.groups.confidential.pluck(:id).map { |i| "Group_#{i}" }
 
       sql_include_array = "{#{followed_identifiers.join(',')}}"
       sql_exclude_array = "{#{excluded_identifiers.join(',')}}"

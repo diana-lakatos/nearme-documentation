@@ -1,0 +1,8 @@
+= simple_form_for '', url: search_url, html: { id: 'search_filter' } do |f|
+  .filters-a
+    .results
+      %span= @searcher.result_count
+      = t :results_count
+    = f.input :query, as: :hidden, input_html: { value: params[:query] }
+    = f.input :page, as: :hidden, input_html: { value: params[:page] }
+    = f.input :search_type, as: :hidden, input_html: { value: 'topics' }

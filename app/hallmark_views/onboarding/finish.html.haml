@@ -1,0 +1,67 @@
+= render 'shared/onboarding_heading', active_step: 4
+
+.wrap-a.white
+  .contain
+    = simple_form_for @user, url: wizard_path, html: { class: 'form-a', method: :put } do |f|
+      .fields
+        = f.simple_fields_for :default_profile do |default_profile_form|
+          = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
+            - (default_profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+              = draw_attribute_for_form(attribute, properties_form)
+
+        %p
+          = t :more_info, scope: [:onboarding]
+
+        %fieldset.media-group.sep
+          %legend Cover Photo
+
+          - if is_i18n_set?('forms.hints.user_form.cover_image')
+            %p.photo-uploader-hint
+              = t('forms.hints.user_form.cover_image')
+
+          .single-photo
+            = new_file_upload_input("cover_image",
+              cover_image_path,
+              @user.cover_image.thumbnail_dimensions[:thumbnail],
+              "Upload Photo",
+              "no-multiple" => true,
+              :error => f.object.errors.include?(:cover_image).present? ? "Please upload cover image." : nil) do
+              - if current_user.attributes['cover_image']
+
+                .photo-item{:id => "cover-photo-thumbnail"}
+                  = image_tag @user.cover_image_url
+                  .media-actions
+                    %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_cover_image_path }, :title => t('forms.photos.collection.rotate_and_crop')}
+                      %span.intelicon-edit
+
+                    %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_cover_image_path }, :title => t('forms.photos.collection.delete') }
+                      %span.intelicon-trash-outlined
+
+        %fieldset.media-group.sep
+          %legend Avatar
+
+          - if is_i18n_set?('forms.hints.user_form.avatar')
+            %p.photo-uploader-hint
+              = t('forms.hints.user_form.avatar')
+
+          .single-photo
+            = new_file_upload_input("avatar",
+              avatar_path,
+              @user.avatar.thumbnail_dimensions[:medium],
+              "Upload Photo",
+              "no-multiple" => true,
+              :error => f.object.errors.include?(:avatar).present? ? "Please upload avatar." : nil) do
+              - if current_user.attributes['avatar']
+
+                .photo-item{:id => "cover-photo-thumbnail"}
+                  = image_tag @user.avatar_url(:medium)
+                  .media-actions
+                    %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_avatar_path }, :title => t('forms.photos.collection.rotate_and_crop')}
+                      %span.intelicon-edit
+
+                    %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_avatar_path }, :title => t('forms.photos.collection.delete') }
+                      %span.intelicon-trash-outlined
+
+      %p.action
+        %button.button-a{type: "submit"}
+          = t :finish

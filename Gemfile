@@ -85,7 +85,7 @@ gem 'delayed_job_active_record'
 gem 'delayed_job_recurring'
 gem 'rdiscount', require: false
 gem 'attr_encrypted', '~> 1'
-gem 'stripe', require: false
+gem 'stripe', '1.57.0', require: false
 gem 'paypal-sdk-rest', '~> 1.3.2'
 gem 'paypal-sdk-merchant'
 gem 'paypal-sdk-adaptivepayments'
@@ -207,6 +207,7 @@ group :test do
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'ffaker', '~> 1.16'
 end
+
 gem 'mailman'
 
 gem 'nearme', path: 'vendor/gems/nearme', require: false
@@ -231,3 +232,4 @@ gem 'cocoon'
 
 gem 'redcarpet'
 gem 'slack-notifier', require: false
+gem 'colorize'

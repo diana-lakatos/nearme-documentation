@@ -1,0 +1,23 @@
+- if @transactable.description.present?
+  %h4
+    = t :description
+  = videoify_and_parse_with_markdown(@transactable.description)
+
+- if @transactable.photos.except_cover.any?
+  %h4= t :gallery
+  %ul.gallery-a
+    - @transactable.photos.except_cover.each do |p|
+      %li
+        = image_tag p.image_url(:thumb), width: 200, height: 175
+
+- video_embed_code = project_video_embed_html(@transactable)
+- if video_embed_code.present?
+  %h4= t :video
+  = video_embed_code
+
+- if @transactable.links.any?
+  %h4= t :links
+  - @transactable.links.each do |l|
+    %p
+      = link_to l.url do
+        = l.image.present? ? (image_tag(l.image_url(:standard), width: LinkImageUploader.dimensions[:standard][:width], height: LinkImageUploader.dimensions[:standard][:height])) : l.text

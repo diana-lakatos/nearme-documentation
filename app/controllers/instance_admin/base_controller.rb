@@ -2,6 +2,7 @@
 class InstanceAdmin::BaseController < ApplicationController
   layout 'instance_admin'
 
+  skip_before_action :redirect_unverified_user
   skip_before_action :set_locale
   before_action :auth_user!
   before_action :authorize_user!

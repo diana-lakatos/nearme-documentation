@@ -10,7 +10,7 @@ config = _.merge(config, {
 });
 
 config.plugins.push(
-    new webpack.optimize.CommonsChunkPlugin('common', 'common-bundle.js')
+  new webpack.optimize.CommonsChunkPlugin('common', 'common-bundle.js')
 );
 
 module.exports = config;

@@ -60,6 +60,10 @@
       - "No"
     wrapper_html_options_string: 'class=>form-group radio_buttons always-inline'
 
+  category_other_description:
+    label: "Describe the category if you chose other above, otherwise leave blank"
+    html_tag: input
+
 "Individual Case":
   law_firm:
     label: Law Firm
@@ -112,16 +116,15 @@
     custom_validators_attributes:
       "[0]":
         required: true
-    attribute_type: string
-    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => MM/DD/YYYY'
-    wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
+    attribute_type: date
+    input_html_options_string: ''
+    wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob, style=>position:relative'
 
   date_of_incident:
     label: 'Date of injury or accident'
-    attribute_type: string
-    input_html_options_string: 'class=date_picker,data-date-picker=>true, data-date-format => MM/DD/YYYY'
-    wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob datetimepicker, style=>position:relative'
-
+    attribute_type: date
+    input_html_options_string: ''
+    wrapper_html_options_string: 'class => form-group string optional transactable_properties_client_dob, style=>position:relative'
     custom_validators_attributes:
       "[0]":
         required: true
@@ -307,4 +310,7 @@
         required: true
         max_length: 30000
 
+  category_other_description:
+    label: "Describe the category if you chose other above, otherwise leave blank"
+    html_tag: input
 

@@ -17,6 +17,10 @@
         %span.intelicon-information-outlined
         = I18n.t('group.type.private')
 
+      %p.secret{class: ('active' if @group.secret?) }
+        %span.intelicon-information-outlined
+        = I18n.t('group.type.secret')
+
     = f.input :name, required: true, input_html: { maxlength: 140 }
     = f.input :summary, as: :text, required: true, input_html: { maxlength: 140, cols: 40, rows: 4 }
     = f.input :description, as: :text, required: true, input_html: { maxlength: 5000, cols: 40, rows: 8 }

@@ -118,30 +118,33 @@
 
 .content-container
   %h4
-    = t('instance_admin.manage.transfers.payments_included_in_the_payout_for')
-    .row
-      .table-container.col-xs-12
-        %table.table
-          %thead
+    = t('instance_admin.manage.transfers.included_payments')
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %thead
+          %tr
+            %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.reference')
+            %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.lister')
+            %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.enquirerer')
+            %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.amount')
+            %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.payment_state')
+            %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.payment_details')
+
+        %tbody
+          - resource.payments.each do |payment|
             %tr
-              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.reference')
-              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.id')
-              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.lister')
-              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.enquirerer')
-              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.amount')
-              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.payment_state')
-              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.payment_details')
+              %td= link_to "Order", instance_admin_manage_order_path(payment.payable.try(:order) || payment.payable)
+              %td
+                - if payment.payable
+                  = link_to payment.payable.creator.name, edit_instance_admin_manage_user_path(payment.payable.creator)
+              %td= link_to payment.payer.name, edit_instance_admin_manage_user_path(payment.payer)
 
-          %tbody
-            - resource.payments.each do |payment|
-              %tr
-                %td= payment.payable_type
-                %td= payment.payable_id
-                %td= link_to payment.payable.creator.name, edit_instance_admin_manage_user_path(payment.payable.creator)
-                %td= link_to payment.payer.name, edit_instance_admin_manage_user_path(payment.payer)
+              %td= number_to_currency_symbol(payment.currency, Money.new(payment.amount))
+              %td= payment.state.capitalize
+              %td= link_to 'Payment',  instance_admin_manage_payment_path(payment)
 
-                %td= number_to_currency_symbol(payment.currency, Money.new(payment.amount))
-                %td= payment.state.capitalize
-                %td= link_to 'Payment',  instance_admin_manage_payment_path(payment)
-
+= content_for :header_buttons do
+  - if resource.payment_gateway.class.name.include?("Stripe") && resource.payment_gateway_url
+    = link_to "View in Stripe", resource.payment_gateway_url, class: 'btn btn-info pull-right', target: '_blank'
 

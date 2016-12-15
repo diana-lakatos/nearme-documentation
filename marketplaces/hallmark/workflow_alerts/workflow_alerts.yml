@@ -1,0 +1,5 @@
+group: [ all ]
+collaborator: [ all ]
+user: [ user_promoted_email ]
+follower: [ all ]
+commenter: [ all ]

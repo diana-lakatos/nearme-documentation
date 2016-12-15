@@ -209,3 +209,7 @@
 .dash-foot {
     @extend .panel-footer;
 }
+
+.with-border {
+    border: 1px solid $gray-darker;
+}

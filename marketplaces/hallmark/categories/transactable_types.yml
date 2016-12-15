@@ -1,0 +1,10 @@
+Extra:
+  - name: "Extras Categories"
+    shared_with_users: true
+    children:
+      - name: '2017 Convention'
+      - name: 'Ask a Keepsake Artist'
+      - name: 'Featured Artist'
+      - name: 'Featured Series'
+      - name: 'Tutorials'
+      - name: 'Upcoming Events'

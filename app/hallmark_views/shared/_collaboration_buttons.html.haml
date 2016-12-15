@@ -1,0 +1,5 @@
+- if collaboration.approved_by_user?
+  = link_to t('cancel_request'), listing_transactable_collaborator_path(listing_id: transactable, id: transactable.pending_collaboration), method: :delete, class: "button-a tiny danger"
+- else
+  = link_to t('approve'), accept_listing_transactable_collaborator_path(id: transactable.pending_collaboration, listing_id: transactable),class: "button-a tiny"
+  = link_to t('decline'), listing_transactable_collaborator_path(listing_id: transactable, id: transactable.pending_collaboration), method: :delete, class: "button-a tiny red", style: "float: right;"

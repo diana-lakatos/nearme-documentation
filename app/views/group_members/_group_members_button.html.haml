@@ -1,5 +1,6 @@
 - if membership.blank?
-  = link_to group.button_join_name, [group, :group_members], class: 'button-a small', method: :post, remote: true
+  - unless group.secret?
+    = link_to group.button_join_name, [group, :group_members], class: 'button-a small', method: :post, remote: true
 - elsif membership.waiting_for_owner_response?
   %span.button-a.small.gray
     = t('group.request_sent')

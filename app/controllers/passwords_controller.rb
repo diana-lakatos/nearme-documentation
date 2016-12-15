@@ -1,8 +1,10 @@
+# frozen_string_literal: true
 class PasswordsController < Devise::PasswordsController
-  before_filter :set_return_to, only: [:new, :create]
-  skip_before_filter :require_no_authentication, only: [:new], if: ->(_c) { request.xhr? }
-  before_filter :redirect_if_logged_in, only: [:new], if: ->(_c) { request.xhr? }
-  after_filter :render_or_redirect_after_create, only: [:create]
+  skip_before_action :redirect_unverified_user
+  before_action :set_return_to, only: [:new, :create]
+  skip_before_action :require_no_authentication, only: [:new], if: ->(_c) { request.xhr? }
+  before_action :redirect_if_logged_in, only: [:new], if: ->(_c) { request.xhr? }
+  after_action :render_or_redirect_after_create, only: [:create]
 
   private
 

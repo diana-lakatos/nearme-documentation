@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'test_helper'
+require 'stripe'
 
 class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
   context '#index' do
@@ -8,7 +9,12 @@ class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
       Stripe::BalanceTransaction.stubs(:all).returns(transaction_balance)
       @company = FactoryGirl.create(:company)
       @payment_gateway = FactoryGirl.create(:stripe_connect_payment_gateway)
-      @merchant_account = FactoryGirl.create(:stripe_connect_merchant_account, external_id: 'xyz', payment_gateway: @payment_gateway, merchantable: @company)
+      @merchant_account = FactoryGirl.build(:stripe_connect_merchant_account, external_id: 'xyz', payment_gateway: @payment_gateway, merchantable: @company)
+      address = FactoryGirl.build(:full_address_in_sf)
+      address.stubs('parse_address_components!').returns(true)
+      address.stubs(:state_code).returns('CA')
+      @merchant_account.current_address = address
+      @merchant_account.save
     end
 
     context '#webhook' do

@@ -199,7 +199,7 @@ class Order < ActiveRecord::Base
   # @return [String] identifer of the order containing the class name (type of order)
   #   and the numeric identifer of the order
   def number
-    sprintf "#{self.class.name[0]}%08d", id
+    id
   end
 
   def should_validate_field?(key, value)
@@ -273,7 +273,7 @@ class Order < ActiveRecord::Base
   end
 
   def merchant_subject
-    company.paypal_express_chain_merchant_account.try(:subject)
+    company.merchant_accounts.where(type: 'MerchantAccount::PaypalExpressChainMerchantAccount').verified.first.try(:subject)
   end
 
   def host

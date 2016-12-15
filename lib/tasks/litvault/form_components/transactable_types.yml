@@ -31,6 +31,7 @@
         - transactable: law_firm
         - transactable: principal_office
         - transactable: "Category - Group Case Categories"
+        - transactable: category_other_description
         - transactable: tags
 
     -
@@ -39,10 +40,14 @@
         - transactable: types_of_injuries_included
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
-        - transactable: seller_attachments
         - transactable: matters_to_include
         - transactable: case_short_description
         - transactable: case_full_description
+
+    -
+      name: 'Documents Related to Case'
+      fields:
+        - transactable: seller_attachments
 
   TRANSACTABLE_ATTRIBUTES:
     -
@@ -53,6 +58,7 @@
         - transactable: law_firm
         - transactable: principal_office
         - transactable: "Category - Group Case Categories"
+        - transactable: category_other_description
         - transactable: tags
 
     - name: "Case Details"
@@ -60,11 +66,10 @@
         - transactable: types_of_injuries_included
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
-        - transactable: seller_attachments
         - transactable: matters_to_include
         - transactable: case_short_description
         - transactable: case_full_description
-
+        - transactable: seller_attachments
 
 "Individual Case":
   SPACE_WIZARD:
@@ -100,6 +105,7 @@
         - transactable: law_firm
         - transactable: principal_office
         - transactable: "Category - Individual Case Categories"
+        - transactable: category_other_description
         - transactable: tags
 
     -
@@ -109,7 +115,6 @@
         - transactable: date_engagement_agreement_signed
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
-        - transactable: seller_attachments
 
     -
       name: "Your client details"
@@ -148,6 +153,11 @@
         - transactable: underlying_records_documents
         - transactable: other_matters
 
+    -
+      name: 'Documents Related to Case'
+      fields:
+        - transactable: seller_attachments
+
   TRANSACTABLE_ATTRIBUTES:
     -
       name: "General"
@@ -159,6 +169,7 @@
         - transactable: client_name
         - transactable: client_dob
         - transactable: "Category - Individual Case Categories"
+        - transactable: category_other_description
         - transactable: tags
 
     -
@@ -168,7 +179,6 @@
         - transactable: date_engagement_agreement_signed
         - transactable: engagement_agreement_fee_percentage
         - transactable: engagement_agreement_expenses_advancement
-        - transactable: seller_attachments
     -
       name: "Incident"
       fields:
@@ -199,4 +209,5 @@
         - transactable: description_of_records
         - transactable: underlying_records_documents
         - transactable: other_matters
+        - transactable: seller_attachments
 

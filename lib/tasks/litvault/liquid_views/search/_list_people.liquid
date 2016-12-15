@@ -88,7 +88,7 @@
                   <h3>Group Cases</h3>
                   <ul class="short-list">
                     {% for cat in group_category.children %}
-                    <li>{{ cat[-1] }}</li>
+                    <li>{{ cat }}</li>
                     {% endfor %}
                   </ul>
                 {% endif %}
@@ -97,7 +97,7 @@
                   <h3>Individual Cases</h3>
                   <ul class="short-list">
                     {% for cat in individual_category.children %}
-                    <li>{{ cat[-1] }}</li>
+                    <li>{{ cat }}</li>
                     {% endfor %}
                   </ul>
                 {% endif %}
@@ -165,4 +165,3 @@
     {% include 'search/filter_categories' %}
   </div>
 </div>
-

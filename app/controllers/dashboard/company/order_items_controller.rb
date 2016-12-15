@@ -2,6 +2,7 @@ class Dashboard::Company::OrderItemsController < Dashboard::Company::BaseControl
   before_filter :find_order
   before_filter :find_order_item, except: [:index, :new, :create]
   before_filter :check_owner, only: [:approve, :reject]
+  before_filter :verfiy_merchant_account, only: [:approve]
 
   def index
     @transactables = current_user.created_listings.without_state(:pending).order('created_at DESC')
@@ -60,6 +61,13 @@ class Dashboard::Company::OrderItemsController < Dashboard::Company::BaseControl
     if @order.creator != current_user
       flash[:error] = t('flash_messages.authorizations.not_authorized')
       redirect_to dashboard_path(@order, transactable_id: @order.transactable.id)
+    end
+  end
+
+  def verfiy_merchant_account
+    if @order_item.user.default_company.possible_payout?
+      flash[:error] = t('flash_messages.dashboard.order_items.approve_failed')
+      redirect_to dashboard_company_order_order_items_path(@order, transactable_id: @order.transactable.id)
     end
   end
 end

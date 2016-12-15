@@ -1,0 +1,26 @@
+.cell
+  %article.card-a{"data-equalize" => true, 'data-object-id': group.id}
+    %figure
+      = link_to group_path(group) do
+        - if group.cover_image.present?
+          = image_tag group.cover_image.url(:golden)
+
+          - if group.featured?
+            %figcaption
+              = t :featured
+
+    %ul.numbers
+      %li
+        = t :members
+        %span
+          = group.approved_members.count
+
+    - if current_user.present?
+      %p.action(data-group-member-button)
+        = render 'group_members/group_members_button', group: group, membership: group.memberships.for_user(current_user).first
+
+    %h3.hx
+      = link_to group.name, group_path(group)
+
+    %p
+      = group.summary.to_s.truncate(100)

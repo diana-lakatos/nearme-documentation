@@ -1,0 +1,201 @@
+.project-actions {
+    @include clear;
+
+    a {
+        float: right;
+    }
+}
+
+.projects-listing {
+    width: 100%;
+    border: none;
+    table-layout: fixed;
+
+    td, th {
+        border: none;
+        padding: 20px 0;
+        vertical-align: top;
+        overflow: hidden;
+    }
+
+    td + td, th + th, td + th, th + td {
+        padding-left: 20px;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    .col-summary {
+        width: 30%;
+    }
+
+    .col-actions {
+        width: 10%;
+    }
+
+    tbody tr {
+        border-top: 1px solid #efefef;
+    }
+
+    img {
+        display: block;
+        max-width: 100%;
+    }
+
+    [class^="status"] {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 10px;
+        color: #fff;
+        text-transform: uppercase;
+        font-size: 10px;
+        font-weight: bold;
+    }
+
+    .status-published {
+        background: #6a6;
+    }
+
+    .status-draft {
+        background: #666;
+    }
+
+    .action-edit, .action-remove {
+        display: inline-block;
+
+        &:before {
+            display: inline-block;
+            font: 14px $font-icons;
+            margin-right: 5px;
+            overflow: hidden;
+        }
+    }
+
+    .action-edit:before {
+        content: "\f040";
+    }
+
+    .action-remove:before {
+        content: "\f1f8";
+    }
+
+    @include bp($screen-tablet-vertical) {
+        .col-summary,
+        .col-role,
+        .col-status {
+            display: none;
+        }
+
+        .col-summary {
+            width: auto;
+        }
+
+        .col-actions {
+            width: auto;
+            text-align: right;
+        }
+
+        .action-edit, .action-remove {
+            font-size: 0;
+
+            &:before {
+                padding: 8px;
+            }
+        }
+    }
+
+    .project-summary-wrapper {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        padding-right: 30px;
+
+        &:after {
+            position: absolute;
+            content: "";
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(90deg, rgba(#fff, 0), #fff);
+        }
+    }
+}
+
+.empty-projects {
+    text-align: center;
+    font-size: 1.5em;
+
+    // .cta {
+    //     font-size: 20px;
+    // }
+}
+
+.collaborators-listing-a {
+    margin-top: 50px;
+    margin-bottom: 50px;
+
+
+    td, th {
+        border: none;
+        text-align: left;
+        padding: 10px 30px;
+    }
+
+    thead tr > * {
+        border-top: 1px solid #dedede;
+        border-bottom: 1px solid #dedede;
+    }
+
+
+    td:last-child, th:last-child {
+        text-align: center;
+    }
+
+    tbody tr:hover {
+        background: #efefef;
+    }
+
+    .action--remove {
+        background: #f00;
+
+        &:hover, &:focus, &:active {
+            background: darken(#f00, 10%);
+        }
+    }
+
+    @include bp($screen-mobile) {
+        width: 100%;
+
+        .col-status {
+            display: none;
+        }
+
+        .button-a.action--remove, .button-a.action--approve {
+            font-size: 0;
+
+            span {
+                margin: 0;
+            }
+        }
+    }
+}
+
+.action--delete-project {
+    float: left;
+    color: #f00;
+    font-size: 16px;
+
+    &:hover, &:focus, &:active {
+        color: darken(#f00, 10%);
+        text-decoration: underline
+    }
+
+    @include bp($screen-mobile) {
+        display: inline-block;
+        float: none;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+}

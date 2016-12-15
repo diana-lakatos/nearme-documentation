@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 class Dashboard::OrdersController < Dashboard::BaseController
   before_action :find_order, except: [:index, :new]
-  before_action :find_transactable, only: :new
-  before_action :find_reservation_type, only: :new
+  before_action :find_transactable, only: [:new]
+  before_action :find_reservation_type, only: [:new]
   before_action :redirect_to_index_if_not_editable, only: [:edit, :update]
-  before_action :ensure_merchant_account_exists, only: [:new, :create]
+  before_action :ensure_merchant_account_exists, only: [:new, :create, :edit, :update]
 
   def index
     @rating_systems = reviews_service.get_rating_systems
@@ -118,12 +118,12 @@ class Dashboard::OrdersController < Dashboard::BaseController
   private
 
   def ensure_merchant_account_exists
-    return unless @reservation_type.require_merchant_account?
+    return unless (@reservation_type || @order.reservation_type).require_merchant_account?
 
     unless @company.merchant_accounts.any?(&:verified?)
       flash[:notice] = t('flash_messages.dashboard.order.valid_merchant_account_required')
       redirect_to edit_dashboard_company_payouts_path(redirect_url: new_dashboard_order_path(transactable_id: @transactable.id))
-   end
+    end
   end
 
   def find_transactable

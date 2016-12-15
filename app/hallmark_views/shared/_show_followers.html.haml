@@ -1,0 +1,3 @@
+= render 'shared/sort_form', form_url: see_more_route, sort_options: User::SORT_OPTIONS.map { |option| [I18n.t("simple_form.labels.search_filter.options.#{option}"), option] }, container: container
+
+= render 'shared/listing_people', users: collection, see_more_route: see_more_route

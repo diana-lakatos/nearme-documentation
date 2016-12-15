@@ -1,0 +1,327 @@
+.group-a {
+  nav {
+    p {
+      margin: 0 0 0 5px;
+    }
+  }
+}
+
+.group-actions {
+    @include clear;
+
+    a {
+        float: right;
+    }
+}
+
+.empty-groups {
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.group {
+
+  h2 {
+    font-weight: bold;
+    margin: 20px 0 0 0;
+  }
+
+  .group-location {
+    font-size: 15px;
+    margin: 5px 0 0 0;
+
+    span {
+      font-weight: bold;
+    }
+  }
+
+  .owner-card {
+    margin: 20px 0;
+    overflow: hidden;
+
+    a {
+      font-weight: bold;
+    }
+
+    figure {
+      float: left;
+      margin: 0 10px 0 0;
+
+      img {
+        width: 50px;
+      }
+    }
+
+    p {
+      margin: 0;
+
+      &:first-of-type {
+        font-size: 18px;
+      }
+
+      &.location:before {
+          display: inline-block;
+          content: '\e607';
+          font: 14px/1 $font-icons;
+          line-height: inherit;
+          vertical-align: top;
+      }
+    }
+  }
+
+  section.gallery {
+    .gallery-a {
+      li {
+        width: (100%/3);
+      }
+    }
+  }
+
+  section.videos {
+
+    .gallery-a {
+      li {
+        width: 50%;
+      }
+    }
+  }
+
+  section.links {
+    .gallery-a {
+      li {
+        width: 100%;
+
+        img {
+          width: auto;
+        }
+      }
+    }
+  }
+
+  .gallery-a {
+    img {
+      width: 100%;
+    }
+  }
+
+  .secondary {
+
+    .featured {
+      font-size: 0;
+      margin: 0 -10px 0 -10px;
+    }
+
+    p.action {
+      margin: 20px 0 0 0;
+      text-align: center;
+    }
+
+    article {
+      width: 50%;
+      display: inline-block;
+      padding: 0;
+      margin: 0;
+      border: 10px solid transparent;
+
+      figure {
+        margin: 0;
+      }
+
+      ul.numbers {
+        height: 30px;
+        line-height: 30px;
+        margin: -30px 0 10px 0;
+      }
+
+      p {
+        margin: 0 0 5px 0;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 20px;
+
+        &.missing-address:before {
+          content: '';
+        }
+
+        &:first-of-type {
+          color: #0071c5;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+.group-form-controller {
+  .group-inline {
+    input[type='text'] {
+      width: calc(100% - 150px);
+    }
+
+    input[type='submit'] {
+      width: 145px;
+    }
+  }
+
+  .control-group {
+      &.group_transactable_type {
+        margin: 0 0 10px;
+      }
+  }
+
+  .group-type-description {
+    p {
+      display: none;
+      margin: 0;
+
+      &.active {
+        display: block;
+      }
+    }
+  }
+
+  .gallery-a {
+    li {
+      width: (100%/3);
+      position: relative;
+    }
+  }
+
+  .gallery-video {
+
+    li.active {
+      .remove-video {
+        display: block;
+      }
+    }
+
+    .remove-video {
+      top: 10px;
+      right: 10px;
+      position: absolute;
+      display: none;
+
+      span {
+        margin: 0;
+      }
+    }
+  }
+
+  .members-listing-a {
+    width: 100%;
+    margin: 50px 0 0 0;
+
+    button {
+      span {
+        margin: 0;
+
+        &.text {
+          @include bp(815px) {
+            display: none;
+          }
+        }
+      }
+    }
+
+    th {
+      border: 1px solid #dedede;
+      border-width: 1px 0 1px 0;
+    }
+
+    td {
+      border: none;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 30px;
+
+      &:last-of-type {
+        text-align: center;
+      }
+    }
+  }
+
+  .can-moderate {
+    margin: 0 5px 0 0;
+  }
+}
+
+.group, .group-form-controller {
+
+  .group_transactable_type {
+    .selectize-control {
+      [data-value] {
+        padding-right: 0 !important;
+      }
+    }
+  }
+
+  .address-form {
+    .map {
+      width: 100%;
+      margin: 20px 0 40px 0;
+
+      div {
+        margin-bottom: 0;
+      }
+
+      img {
+        max-width: inherit;
+      }
+    }
+
+    .remove-address {
+      display: block;
+      margin: 20px 0 0 0;
+    }
+
+    &.no-address {
+      .remove-address {
+        display: none;
+      }
+
+      .map {
+        display: none !important;
+      }
+    }
+  }
+
+  .video-form {
+    margin: 0;
+  }
+
+  .gallery-video {
+    margin-top: 20px;
+  }
+
+  .video-wrapper {
+    max-width: 1000px;
+    height: auto;
+
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      position: absolute;
+    }
+  }
+
+  .group_cover_image {
+    label {
+      float: none !important;
+    }
+  }
+
+  .video-constrainer {
+    padding: 0 0 56.25% 0;
+    position: relative;
+  }
+}

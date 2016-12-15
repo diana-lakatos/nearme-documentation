@@ -1,3 +1,5 @@
+require_dependency 'line_item/transactable'
+
 # frozen_string_literal: true
 class Transactable < ActiveRecord::Base
   has_paper_trail
@@ -70,7 +72,7 @@ class Transactable < ActiveRecord::Base
   belongs_to :creator, -> { with_deleted }, class_name: 'User', inverse_of: :listings
   belongs_to :user, -> { with_deleted }, foreign_key: :creator_id, inverse_of: :listings
   counter_culture :creator,
-                  column_name: -> (t) { t.draft.nil? ? 'transactables_count' : nil },
+                  column_name: ->(t) { t.draft.nil? ? 'transactables_count' : nil },
                   column_names: { ['transactables.draft IS NULL AND transactables.deleted_at IS NULL'] => 'transactables_count' }
 
   belongs_to :administrator, -> { with_deleted }, class_name: 'User', inverse_of: :administered_listings
@@ -165,9 +167,9 @@ class Transactable < ActiveRecord::Base
   scope :searchable, -> { require_payout? ? active.visible.with_possible_payout : active.visible }
   scope :with_possible_payout, -> { where(possible_payout: true) }
   scope :without_possible_payout, -> { where(possible_payout: false) }
-  scope :for_transactable_type_id, -> (transactable_type_id) { where(transactable_type_id: transactable_type_id) }
+  scope :for_transactable_type_id, ->(transactable_type_id) { where(transactable_type_id: transactable_type_id) }
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
-  scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((transactables.properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
+  scope :filtered_by_custom_attribute, ->(property, values) { where("string_to_array((transactables.properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
   scope :last_x_days, ->(days_in_past) { where('DATE(transactables.created_at) >= ? ', days_in_past.days.ago) }
 
   scope :not_booked_relative, lambda { |start_date, end_date|
@@ -231,7 +233,7 @@ class Transactable < ActiveRecord::Base
   }
 
   scope :with_date, ->(date) { where(created_at: date) }
-  scope :by_topic, -> (topic_ids) { includes(:transactable_topics).where(transactable_topics: { topic_id: topic_ids }) if topic_ids.present? }
+  scope :by_topic, ->(topic_ids) { includes(:transactable_topics).where(transactable_topics: { topic_id: topic_ids }) if topic_ids.present? }
   scope :seek_collaborators, -> { where(seek_collaborators: true) }
   scope :feed_not_followed_by_user, lambda { |current_user|
     where.not(id: current_user.feed_followed_transactables.pluck(:id))
@@ -246,7 +248,7 @@ class Transactable < ActiveRecord::Base
   validates :photos, length: { minimum: 1 }, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates :quantity, presence: true, numericality: { greater_than: 0 }, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
 
-  validates :topics, length: { minimum: 1 }, if: -> (record) { record.topics_required && !record.draft.present? }
+  validates :topics, length: { minimum: 1 }, if: ->(record) { record.topics_required && !record.draft.present? }
 
   validates_associated :approval_requests, :action_type
   validates :name, length: { maximum: 255 }, allow_blank: true
@@ -630,10 +632,11 @@ class Transactable < ActiveRecord::Base
 
   def initialize_action_types
     transactable_type.action_types.enabled.each do |tt_action_type|
+      next if action_types.any? { |at| at.transactable_type_action_type == tt_action_type }
       action_types.build(
         transactable_type_action_type: tt_action_type,
         type: "Transactable::#{tt_action_type.class.name.demodulize}"
-      ) unless action_types.any? { |at| at.transactable_type_action_type == tt_action_type }
+      )
     end
     self.action_type ||= action_types.find(&:enabled) || action_types.first
     self.action_type.enabled = true

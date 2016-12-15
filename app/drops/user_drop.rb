@@ -88,6 +88,8 @@ class UserDrop < BaseDrop
   #   @return [Array<CompanyDrop>] array of companies belonging to this user
   # @!method user_messages_received
   #   @return [Array<UserMessageDrop>] array of received user messages
+  # @!method valid?
+  #   @return [Boolean] whether the user is valid (e.g. all required fields filled in etc.)
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends,
            :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
@@ -98,7 +100,7 @@ class UserDrop < BaseDrop
            :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
            :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
            :company_name, :instance_admins_metadata, :total_reviews_count, :companies, :instance_admin?,
-           :instance_admin?, :user_messages_received, to: :source
+           :instance_admin?, :user_messages_received, :valid?, to: :source
 
   # @return [String] class name, i.e. 'User'
   def class_name

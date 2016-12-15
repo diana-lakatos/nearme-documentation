@@ -1,0 +1,7 @@
+%header
+  %figure= formatted_event.image.present? ? image_tag(formatted_event.image) : space_listing_placeholder_path(width: 80, height: 80)
+  %p.desc= formatted_event.text
+
+  %p.meta
+    %time
+      = l(event.created_at, format: :long)

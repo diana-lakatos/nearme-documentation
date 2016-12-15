@@ -1,0 +1,134 @@
+/* connect */
+
+.connect-a {
+    margin: 0 0 60px;
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        position: relative;
+        margin: 0 0 60px;
+        font-size: 20px;
+        line-height: 80px;
+
+        ~ li:after {
+            position: absolute;
+            left: 0;
+            top: -30px;
+            right: 0;
+            content: '';
+            height: 1px;
+            background: #f9f9f9;
+        }
+
+        &:before {
+            display: inline-block;
+            content: '';
+            width: 80px;
+            height: 80px;
+            margin: 0 50px 0 0;
+            border: none;
+            color: #333;
+            vertical-align: top;
+            font: 80px/1 $font-icons;
+        }
+
+        &.linkedin:before {
+            content: '\e61c';
+            color: #2377b3;
+        }
+
+        &.github:before {
+            content: '\e61a';
+            color: #060709;
+        }
+
+        &.facebook:before {
+            content: '\e619';
+            color: #3b5f99;
+        }
+
+        &.twitter:before {
+            content: '\e61d';
+            color: #75b2e1;
+        }
+
+        &.google:before {
+            content: '\e61b';
+            color: #b53029;
+        }
+
+        &.instagram:before {
+            content: '\e613';
+            border-radius: 5px;
+            background: #b17d4e;
+            color: #fff;
+            font-size: 60px;
+            line-height: 80px;
+            text-align: center;
+        }
+
+        &.custom:before {
+            display: none;
+        }
+
+        img {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            margin: 0 50px 0 0;
+            border-radius: 5px;
+            vertical-align: top;
+        }
+
+        span {
+            vertical-align: top;
+        }
+
+        .button-a {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            margin: -20px 0 0;
+        }
+    }
+
+
+    @include bp($screen-mobile) {
+
+        li {
+            margin-bottom: 50px;
+            font-size: 18px;
+            line-height: 1.3;
+            text-align: center;
+
+            &:before,
+            img {
+                float: none;
+                display: block;
+                margin: 0 auto 20px !important;
+                text-align: center;
+            }
+
+            ~ li:after {
+                top: -25px;
+            }
+
+            span {
+                display: block;
+            }
+
+            .button-a {
+                display: inline-block;
+                position: static;
+                right: auto;
+                top: auto;
+                margin: 20px auto 0;
+            }
+        }
+    }
+}

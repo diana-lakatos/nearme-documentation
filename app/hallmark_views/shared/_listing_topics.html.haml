@@ -1,0 +1,18 @@
+- if topics.empty?
+  %p.empty-resultset= t('user_profile.empty_resultset.topics')
+- else
+  - hide_more = false if local_assigns[:hide_more].nil?
+
+  .grid-a-search-a
+    .wrap.content-container
+      - topics.each do |topic|
+        = render 'shared/topic', topic: topic
+
+  /more
+  - if user_signed_in?
+    %p.more-a{:'data-see-more' => true, class: "#{topics.next_page ? '' : 'hide-initially'}"}
+      %button{ data: { url: see_more_following_topics_path(id: @user.id, type: @user.class.name), next_page: topics.next_page } }
+        = t(:see_more)
+  - elsif topics.next_page
+    %p.more-a
+      = link_to t(:see_more), new_user_session_path

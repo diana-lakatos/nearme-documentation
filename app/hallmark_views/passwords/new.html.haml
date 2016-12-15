@@ -1,0 +1,21 @@
+- title t('reset_password_form.title')
+
+%section.user-session-form
+  %header
+    %h2= t 'reset_password_form.heading'
+
+  %p.intro= t 'reset_password_form.instructions_email'
+
+  = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name)) do |f|
+
+    = f.input :email, :placeholder => "Email", :tabindex => '1', autofocus: ''
+
+    .actions
+      = f.submit t('reset_password_form.buttons.reset'), class: 'button-a'
+
+  - if current_user.nil?
+    %footer
+      .back-to-login
+        = link_to t(:back_to_log_in), new_user_session_path(wizard: :onboarding)
+
+

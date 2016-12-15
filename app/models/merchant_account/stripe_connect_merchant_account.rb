@@ -15,7 +15,8 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   include MerchantAccount::Concerns::DataAttributes
 
-  has_many :owners, -> { order(:id) }, class_name: 'MerchantAccountOwner::StripeConnectMerchantAccountOwner', foreign_key: 'merchant_account_id', dependent: :destroy
+  has_many :owners, -> { order(:id) }, class_name: 'MerchantAccountOwner::StripeConnectMerchantAccountOwner',
+                                       foreign_key: 'merchant_account_id', dependent: :destroy
 
   has_one :current_address, class_name: 'Address', as: :entity
 
@@ -24,14 +25,18 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   validates :business_tax_id, presence: { if: proc { |m| m.iso_country_code == 'US' && m.account_type == 'company' } }
   validates :account_type, inclusion: { in: ACCOUNT_TYPES }
   validates :tos, acceptance: true
-  validates_associated :owners
   validate :validate_current_address
   validate :validate_owners_documents
 
   accepts_nested_attributes_for :owners, allow_destroy: true
   accepts_nested_attributes_for :current_address
 
-  delegate :direct_charge?, to: :payment_gateway
+  delegate :direct_charge?, :country_spec, to: :payment_gateway
+
+  after_initialize :build_current_address_if_needed
+  def build_current_address_if_needed
+    build_current_address unless current_address
+  end
 
   def onboard!
     result = payment_gateway.onboard!(create_params)
@@ -49,7 +54,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       data[:fields_needed] = result.verification.fields_needed
       upload_documents(result)
       self.response = result.to_yaml
-      self.bank_account_number = result.bank_accounts.first.last4
+      self.bank_account_number = mask_number(bank_account_number)
       data[:currency] = result.default_currency
       data[:secret_key] = result.keys.secret if result.keys.is_a?(Stripe::StripeObject)
       change_state_if_needed(result)
@@ -105,7 +110,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       last_name: last_name
     }
 
-    if owners.count == 1
+    if owners.size == 1
       legal_entity_hash[:additional_owners] = nil
     else
       legal_entity_hash[:additional_owners] = []
@@ -135,8 +140,8 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       bank_account: {
         country: iso_country_code,
         currency: get_currency,
-        account_number: bank_account_number,
-        routing_number: bank_routing_number
+        account_number: bank_account_number.to_s.scan(/\d+/).first,
+        routing_number: bank_routing_number.to_s.scan(/\d+/).first
       }
     }.merge(legal_entity: legal_entity_hash).merge(payment_gateway_config)
   end
@@ -144,27 +149,33 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def address_hash
     {
       country: iso_country_code,
-      state: address.state_code,
-      city: address.city,
-      postal_code: address.postcode,
-      line1: address.address,
-      line2: address.address2
+      state: current_address.state_code,
+      city: current_address.city,
+      postal_code: current_address.postcode,
+      line1: current_address.address,
+      line2: current_address.address2
     }
   end
 
   def address
-    @address = current_address || merchantable.company_address.try(:dup) || merchantable.creator.try(:current_address).try(:dup) || Address.new
-    @address.parse_address_components!
-    @address
+    merchantable.company_address.try(:dup) || merchantable.creator.try(:current_address).try(:dup) || Address.new
   end
 
   def change_state_if_needed(stripe_account, &_block)
-    void! && return if stripe_account.verification.disabled_reason.present?
+    if (data[:disabled_reason] = localize_error(stripe_account.verification.disabled_reason)).present?
+      failure(persisted?)
+      return
+    end
+
     if !verified? && stripe_account.charges_enabled && stripe_account.transfers_enabled
       if stripe_account.verification.fields_needed.empty? && stripe_account.legal_entity.verification.status == 'verified'
         verify(persisted?)
         yield('verified') if block_given?
       else
+        if stripe_account.legal_entity.verification.details.present?
+          data[:verification_details] = stripe_account.legal_entity.verification.details
+          data[:verification_message] = localize_error(stripe_account.legal_entity.verification.details_code)
+        end
         failure(persisted?)
         yield('failed') if block_given?
       end
@@ -214,7 +225,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def iso_country_code
-    @iso_country_code ||= address.iso_country_code || merchantable.iso_country_code
+    @iso_country_code ||= current_address.iso_country_code || address.iso_country_code || merchantable.iso_country_code
   end
 
   def next_transfer_date(transfer_created_on = Date.today)
@@ -225,7 +236,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       day_of_the_week = Date::DAYNAMES.index(transfer_schedule[:weekly_anchor].to_s.capitalize)
       Time.current.to_date + (day_of_the_week - Time.current.wday).modulo(7).days
     when 'monthly'
-      month = (Time.current.day > monthly_anchor) ? Time.current.month + 1 : Time.current.month
+      month = ((Time.current.day > monthly_anchor) ? Time.current.month + 1 : Time.current.month).modulo(12)
       year = month == 1 && Time.current.month == 12 ? Time.current.year + 1 : Time.current.year
       Date.parse("#{monthly_anchor}/#{month}/#{year}")
     end
@@ -235,7 +246,31 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     %w(daily monthly).include?(transfer_interval)
   end
 
+  def supported_currencies
+    SUPPORTED_CURRENCIES[location.upcase]
+  end
+
+  def minimum_company_fields
+    company_fields[:minimum].map { |k| FIELD_MAP[k] }.select { |k| !k.blank? }
+  end
+
   private
+
+  def individual_fields
+    verification_fields[:individual]
+  end
+
+  def company_fields
+    verification_fields[:company]
+  end
+
+  def verification_fields
+    @verification_fields ||= country_spec.verification_fields
+  end
+
+  def country_spec
+    @country_spec ||= payment_gateway.country_spec
+  end
 
   def payment_gateway_config
     if data[:payment_gateway_config].blank?
@@ -265,7 +300,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     files_data = owners.map { |owner| owner.upload_document(stripe_account.id) }
     if files_data.compact.present?
       stripe_account.legal_entity.verification.document = files_data[0].id
-      if stripe_account.legal_entity.additional_owners
+      if stripe_account.legal_entity.respond_to?(:additional_owners) && stripe_account.legal_entity.additional_owners
         files_data[1..-1].each_with_index do |file_data, index|
           if stripe_account.legal_entity.additional_owners[index]
             stripe_account.legal_entity.additional_owners[index].verification.document = file_data.id
@@ -282,7 +317,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     current_address.parse_address_components!
     current_address.errors.clear
 
-    errors.add(:current_address, :inacurate) if current_address.check_address && current_address.errors.any?
+    errors.add(:current_address, :inacurate) if current_address.valid? && current_address.check_address
   end
 
   def validate_owners_documents
@@ -294,5 +329,14 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
         end
       end
     end
+  end
+
+  def mask_number(number)
+    number.sub(/.*(?=\d{4}$)/) { |x| '*' * x.size }
+  end
+
+  def localize_error(error_code)
+    return if error_code.blank?
+    I18n.t('activerecord.errors.models.merchant_account.error_codes.' + error_code.tr('.', '_'))
   end
 end

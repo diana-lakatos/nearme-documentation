@@ -1,0 +1,35 @@
+- name: 2017 Convention
+  description: Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
+  category: 2017 Convention
+  featured: true
+  remote_cover_image_url: https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1383/2017_Convention.jpg
+
+- name: Ask a Keepsake Artist
+  description: Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
+  category: Ask a Keepsake Artist
+  featured: true
+  remote_cover_image_url: https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1382/Ask_a_Keepsake_Artist.jpg
+
+- name: Featured Artist
+  description: Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
+  category: Featured Artist
+  featured: true
+  remote_cover_image_url: https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1381/Featured_Artist.jpg
+
+- name: Featured Series
+  description: Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
+  category: Featured Series
+  featured: true
+  remote_cover_image_url: https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1380/Featured_Series.jpg
+
+- name: Tutorials
+  description: Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
+  category: Tutorials
+  featured: true
+  remote_cover_image_url: https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1379/Tutorials.jpg
+
+- name: Upcoming Events
+  description: Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
+  category: Upcoming Events
+  featured: true
+  remote_cover_image_url: https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1378/Upcoming_Events.jpg

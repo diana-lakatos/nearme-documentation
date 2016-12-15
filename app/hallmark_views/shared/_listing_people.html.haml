@@ -1,0 +1,17 @@
+- if users.empty?
+  %p.empty-resultset= t('user_profile.empty_resultset.users')
+- else
+  / grid
+  .grid-a-search-a
+    .wrap.content-container
+      - users.each do |user|
+        = render 'shared/person', user: user
+
+  / more
+  - if user_signed_in?
+    %p.more-a{:'data-see-more' => true, class: "#{users.next_page ? '' : 'hide-initially'}"}
+      %button{ data: { url: see_more_route, next_page: users.next_page } }
+        = t(:see_more)
+  - elsif users.next_page
+    %p.more-a
+      = link_to t(:see_more), new_user_session_path

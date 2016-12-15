@@ -31,6 +31,8 @@ class LiquidView
   Liquid::Template.register_tag('fields_for', FieldsForTag)
   Liquid::Template.register_tag('dropdown_menu', DropdownMenuBlock)
   Liquid::Template.register_tag('will_paginate', WillPaginateTag)
+  Liquid::Template.register_tag('link_to_add_association', LinkToAddAssociationTag)
+  Liquid::Template.register_tag('link_to_remove_association', LinkToRemoveAssociationTag)
   Liquid::Template.register_tag('title', TitleTag)
 
   def self.call(template)

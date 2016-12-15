@@ -1,0 +1,307 @@
+/* onboarding */
+
+.form-a {
+    .error-block {
+        color: #f00;
+    }
+
+    .required-info {
+        font-style: normal;
+        color: #f00;
+        font-size: 16px;
+    }
+
+    .connect-a {
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .fields {
+        max-width: 1000px;
+        padding-left: 200px;
+
+        .sep {
+            margin-top: 60px;
+        }
+
+        .control-label, legend {
+            float: left;
+            width: 190px;
+            margin: 0 0 0 -200px;
+            font-size: 20px;
+            line-height: 1.6;
+
+            abbr {
+                color: #f00;
+            }
+        }
+
+        fieldset {
+            border: none;
+            padding: 0;
+            margin: 0 0 15px;
+        }
+    }
+
+    .fieldset-actions {
+        text-align: right;
+    }
+
+    > .location {
+
+        .map {
+            width: 100%;
+            height: 350px;
+            margin: 40px 0;
+            // opacity: 0;
+        }
+
+        &.is-touched .map {
+            opacity: 1;
+        }
+
+        .map div {
+            margin-bottom: 0;
+        }
+    }
+
+    > .action {
+        margin-top: 60px;
+        text-align: right;
+
+        .button-a {
+            min-width: 125px;
+        }
+
+        .button-a + .button-a {
+            margin-left: 10px;
+        }
+    }
+
+    @include bp($screen-tablet) {
+
+        .fields {
+            padding-left: 0;
+
+
+            .control-label, legend {
+                float: none;
+                width: auto;
+                margin: 0 0 10px;
+                line-height: 1.3;
+            }
+        }
+    }
+
+    @include bp($screen-mobile) {
+
+        > .location .map {
+            height: 200px;
+            margin: 25px 0;
+        }
+
+        > .action {
+            text-align: center;
+        }
+
+        > .action .button-a {
+            display: block;
+            width: 100%;
+            margin: 10px 0 !important;
+        }
+    }
+}
+
+// Generated at https://proto.io/freebies/onoff/
+
+.onoffswitch {
+    display: inline-block;
+    position: relative; width: 90px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #00AEEF; border-radius: 19px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 33px; padding: 0; line-height: 33px;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "ON";
+    padding-left: 16px;
+    background-color: #00AEEF; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    content: "OFF";
+    padding-right: 16px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+.onoffswitch-switch {
+    box-sizing: content-box;
+    display: block; width: 18px; margin: 7.5px !important;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 53px;
+    border: 2px solid #00AEEF; border-radius: 19px;
+    transition: all 0.3s ease-in 0s;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px;
+}
+
+// Help text
+.help-block {
+    font-size: 14px;
+    color: #888;
+}
+
+.onoffswitch + .help-block {
+    display: inline-block;
+    margin-left: 20px;
+    vertical-align: top;
+    line-height: 40px;
+
+    @include bp($screen-tablet) {
+        margin-left: 0;
+        display: block;
+        line-height: 1.4;
+    }
+}
+
+.media-actions {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    .button-a span {
+        margin: 0;
+    }
+}
+
+.media-section, .photo-item {
+    &:hover .media-actions {
+        display: block;
+    }
+}
+
+// Photos
+
+.media-group {
+    .media-section, .photo-item {
+        position: relative;
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 20px;
+    }
+
+    .photo-item {
+        border: 1px solid #ccc;
+        padding: 2px;
+        background: #fff;
+        // width: 206px;
+        // height: 181px;
+        max-width: 200px;
+        min-height: 60px;
+
+        img {
+            display: block;
+        }
+    }
+
+    .photo-placeholder {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 20px;
+        width: 206px;
+        height: 181px;
+        border: 1px dotted #ccc;
+    }
+
+    .photo_upload {
+        margin-bottom: 5px;
+    }
+
+    .boolean .control-label {
+        display: none;
+    }
+
+    .new-photo {
+        position: relative;
+
+        label {
+            @extend .button-a;
+
+            &.active {
+                @extend .button-a.navy
+            }
+        }
+        input {
+            display: none;
+        }
+    }
+
+    .thumbnail-processing {
+        width: 100%;
+        height: 100%;
+        background: #efefef;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+
+        .loading-icon {
+            display: none;
+        }
+
+        .loading-text {
+
+        }
+    }
+
+    @include bp($screen-mobile) {
+
+        .action--edit {
+            display: none;
+        }
+    }
+}
+
+
+.control-group.hidden {
+    display: none;
+}
+
+.control-group.error {
+    input[type=text],
+    input[type=url],
+    input[type=email],
+    input[type=password],
+    input[type=number],
+    textarea {
+        border-color: #f00
+    }
+}
+
+
+.ui-sortable {
+    .photo-item {
+        cursor: move;
+    }
+}
+
+

@@ -1,0 +1,45 @@
+/* custom tick boxes */
+
+.tick-a {
+
+    :root & {
+        position: absolute;
+        left: -10001px;
+    }
+
+    :root & + label {
+        vertical-align: top;
+    }
+    :root & + label.no-label {
+        font-size: 0;
+    }
+
+    :root & + label:before {
+        display: inline-block;
+        content: '\e605';
+        margin: 0 10px 0 0;
+        font: 15px/1 $font-icons;
+        line-height: inherit;
+        vertical-align: top;
+    }
+
+    :root &:checked + label:before {
+        content: '\e600';
+    }
+
+    :root &[type=radio] + label:before {
+        content: '';
+        width: 17px;
+        height: 17px;
+        margin-top: -1px;
+        padding: 3px;
+        border: 2px solid;
+        border-radius: 50%;
+        background-clip: content-box;
+        vertical-align: middle;
+    }
+
+    :root &[type=radio]:checked + label:before {
+        background-color: #555;
+    }
+}

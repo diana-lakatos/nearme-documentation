@@ -1,4 +1,5 @@
 class SessionsController < Devise::SessionsController
+  skip_before_action :redirect_unverified_user
   skip_before_action :force_fill_in_wizard_form
   skip_before_action :redirect_to_set_password_unless_unnecessary, only: [:destroy]
   before_action :sso_logout, only: [:destroy]
@@ -105,7 +106,7 @@ class SessionsController < Devise::SessionsController
   end
 
   def after_sign_out_path_for(_resource_or_scope)
-    if PlatformContext.current.instance.is_community?
+    if PlatformContext.current.instance.id == 132
       'https://signin.intel.com/Logout'
     else
       request.referer && request.referer.include?('instance_admin') ? instance_admin_login_path : root_path

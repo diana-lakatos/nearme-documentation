@@ -1,0 +1,5 @@
+= simple_form_for '', remote: true, html: { method: :get, class: 'sort-form' }, url: form_url do |f|
+  .filters-a
+    .results
+      = f.input :container, as: :hidden, input_html: { value: container }
+      = f.input :sort, as: :select, collection: sort_options, prompt: t(:sort, scope: [:simple_form, :placeholders, :search_filter]), input_html: { class: 'selectize' }, wrapper_html: { class: 'sort' }, selected: params[:sort]
