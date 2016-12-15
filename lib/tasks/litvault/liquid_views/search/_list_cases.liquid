@@ -28,11 +28,11 @@
           <div class="state-filter" data-search-filters-container>
             <label for="field-state" class="struct-label">Filter by state</label>
             <span class="select-a">
-              <select name="lg_custom_attributes[state][]" id="field-state" class="unstyled-select">
+              <select name="lg_custom_attributes[states][]" id="field-state" class="unstyled-select">
                 <option value="">By State</option>
                 {% assign ca = platform_context.transactable_types.first.custom_attributes_as_hash %}
                 {% for value in ca['states'].valid_values %}
-                  <option value='{{ value }}' {% if value == searcher.lg_custom_attributes_hash['state'].first %} selected {% endif %}>{{ value }}</option>
+                  <option value='{{ value }}' {% if value == searcher.lg_custom_attributes_hash['states'].first %} selected {% endif %}>{{ value }}</option>
                 {% endfor %}
               </select>
             </span>

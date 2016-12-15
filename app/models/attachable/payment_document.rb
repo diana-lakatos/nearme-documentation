@@ -10,7 +10,7 @@ class Attachable::PaymentDocument < Attachable::Attachment
 
   accepts_nested_attributes_for :payment_document_info
 
-  validates :file, presence: true
+  validates :file, presence: true, file_size: { maximum: 50.megabytes.to_i }
 
   self.per_page = 20
 
