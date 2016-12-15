@@ -2,6 +2,7 @@ class Utils::DefaultAlertsCreator::PaymentGatewayCreator < Utils::DefaultAlertsC
   def create_all!
     create_notify_host_about_merchant_account_approved_email!
     create_notify_host_about_merchant_account_declined_email!
+    create_notify_host_about_merchant_account_requirements_email!
     create_notify_host_about_payout_failure_email!
   end
 
@@ -11,6 +12,10 @@ class Utils::DefaultAlertsCreator::PaymentGatewayCreator < Utils::DefaultAlertsC
 
   def create_notify_host_about_merchant_account_declined_email!
     create_alert!(associated_class: WorkflowStep::PaymentGatewayWorkflow::MerchantAccountDeclined, name: 'notify_host_about_merchant_account_declined_email', path: 'payment_gateway_mailer/notify_host_of_merchant_account_declinal', subject: 'Your payout information has been declined', alert_type: 'email', recipient_type: 'lister')
+  end
+
+  def create_notify_host_about_merchant_account_requirements_email!
+    create_alert!(associated_class: WorkflowStep::PaymentGatewayWorkflow::MerchantAccountPending, name: 'notify_host_about_merchant_account_requirements_email', path: 'payment_gateway_mailer/notify_host_of_merchant_account_requirements', subject: 'Please provide required information', alert_type: 'email', recipient_type: 'lister')
   end
 
   def create_notify_host_about_payout_failure_email!

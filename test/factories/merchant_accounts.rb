@@ -39,8 +39,8 @@ FactoryGirl.define do
       factory :failed_stripe_connect_merchant_account do
         data { {
           disabled_reason: 'This account is rejected for some other reason.',
-          verification_details: 'Please update your document',
-          verification_message: 'Scan failed for other reason.'
+          verification_message: 'Scan failed for other reason.',
+          fields_needed: ['legal_entity.verification.document']
         } }
         state 'failed'
       end

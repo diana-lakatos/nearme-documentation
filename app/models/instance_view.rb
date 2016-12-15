@@ -57,6 +57,7 @@ class InstanceView < ActiveRecord::Base
     'payment_gateway_mailer/notify_host_about_payout_failure_email',
     'payment_gateway_mailer/notify_host_of_merchant_account_approval',
     'payment_gateway_mailer/notify_host_of_merchant_account_declinal',
+    'payment_gateway_mailer/notify_host_of_merchant_account_requirements',
     'post_action_mailer/created_by_instance_admin',
     'post_action_mailer/instance_created',
     'post_action_mailer/list',
