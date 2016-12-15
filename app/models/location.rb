@@ -126,7 +126,11 @@ class Location < ActiveRecord::Base
   end
 
   def assign_default_availability_rules
-    self.availability_template ||= (listings.first.try(:transactable_type).try(:default_availability_template) || instance.availability_templates.first)
+    self.availability_template ||= default_availability_template
+  end
+
+  def default_availability_template
+    listings.first&.default_availability_template || instance.availability_templates.first
   end
 
   def name
@@ -215,7 +219,7 @@ class Location < ActiveRecord::Base
   end
 
   def custom_availability_template?
-    availability_template.try(:custom_for_location?)
+    availability_template&.custom_for_location?
   end
 
   def has_photos?

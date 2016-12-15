@@ -31,7 +31,7 @@ module AvailabilityRulesHelper
         'data-custom-rules': true,
         description: t('simple_form.hints.availability_template.description.custom')
       }
-      custom_options[:checked] = object.custom_availability_template?
+      custom_options[:checked] = availability_custom?(object)
       choices['Transactable::TimeBasedBooking'] = [['custom', t('simple_form.labels.availability_template.custom'), custom_options]]
     end
     # Return our set of choices in proper order

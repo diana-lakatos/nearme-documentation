@@ -25,6 +25,7 @@ module UsersIndex
 
         indexes :user_profiles, type: 'nested' do
           indexes :enabled, type: 'boolean'
+          indexes :availability_exceptions, type: 'date'
           indexes :profile_type, type: 'string'
           indexes :category_ids, type: 'integer'
           indexes :properties, type: 'object' do
@@ -60,9 +61,13 @@ module UsersIndex
             custom_attributes[custom_attribute] = (val.size == 1 ? val.first : val)
           end
         end
+        availability_exceptions = user_profile.availability_exceptions ? user_profile.availability_exceptions.map(&:all_dates).flatten : nil
 
-        user_profile.slice(:instance_profile_type_id, :profile_type, :enabled).merge(properties: custom_attributes,
-                                                                                     category_ids: user_profile.categories.map(&:id))
+        user_profile.slice(:instance_profile_type_id, :profile_type, :enabled).merge(
+          availability_exceptions: availability_exceptions,
+          properties: custom_attributes,
+          category_ids: user_profile.categories.map(&:id)
+        )
       end
 
       as_json(only: User.mappings.to_hash[:user][:properties].keys).merge(
