@@ -3,19 +3,43 @@ module MarketplaceBuilder
   module Creators
     class CategoriesCreator < DataCreator
       def execute!
-        transactable_types = get_data
+        categories = get_data
 
-        transactable_types.keys.each do |tt_name|
-          logger.info "Updating categories for: #{tt_name}"
-          object = @instance.transactable_types.where(name: tt_name).first
-          return logger.error "#{tt_name} transactable type associated with categories does not exist, create it first" unless object.present?
-          update_categories_for_object(object, transactable_types[tt_name])
+        categories.each do |_key, hash|
+          hash = default_category_properties.merge(hash.symbolize_keys)
+          logger.info "Updating category: #{hash[:name]}"
+
+          transactable_types = hash.delete(:transactable_types).each_with_object([]) do |name, arr|
+            tt = @instance.transactable_types.where(name: name).first
+            return logger.error "'#{name}' is not a valid transactable type name for category '#{hash[:name]}'" unless tt
+
+            logger.debug "Adding '#{name}' transactable type to category '#{hash[:name]}'"
+            arr << tt
+          end
+
+          instance_profile_types = hash.delete(:instance_profile_types).each_with_object([]) do |name, arr|
+            ipt = @instance.instance_profile_types.where(name: name).first
+            return logger.error "#{name} is not a valid instance profile type name for category #{hash[:name]}" unless tt
+
+            logger.debug "Adding #{name} instance profile type to category #{hash[:name]}"
+            arr << ipt
+          end
+
+          children = hash.delete(:children)
+
+          category = Category.where(name: hash[:name]).first_or_create!
+          category.assign_attributes(hash)
+          category.transactable_types = transactable_types
+          category.instance_profile_types = instance_profile_types
+          category.save!
+
+          create_category_tree(category, children, 1)
         end
       end
 
       def cleanup!
-        transactable_types = get_data
-        used_category_names = transactable_types.map { |_tt_name, categories| categories.map { |c| c['name'] } }.flatten.uniq
+        categories = get_data
+        used_category_names = categories.map { |_key, category| category['name'] }
         unused_categories = if used_category_names.empty?
                               Category.all
                             else
@@ -29,21 +53,7 @@ module MarketplaceBuilder
       private
 
       def source
-        File.join('categories', 'transactable_types.yml')
-      end
-
-      def update_categories_for_object(tt, categories)
-        categories.each do |hash|
-          hash = default_category_properties.merge(hash.symbolize_keys)
-          children = hash.delete(:children) || []
-          category = Category.where(name: hash[:name]).first_or_create!
-          category.transactable_types = category.transactable_types.push(tt) unless category.transactable_types.include?(tt)
-          category.save!
-
-          logger.debug "Creating category #{hash[:name]}"
-
-          create_category_tree(category, children, 1)
-        end
+        File.join('categories')
       end
 
       def create_category_tree(category, children, level)
@@ -60,6 +70,8 @@ module MarketplaceBuilder
           mandatory: false,
           multiple_root_categories: false,
           search_options: 'include',
+          transactable_types: [],
+          instance_profile_types: [],
           children: []
         }
       end
