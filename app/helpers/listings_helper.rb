@@ -52,15 +52,20 @@ module ListingsHelper
     if parent.availability_template && parent.custom_availability_template?
       parent.availability_template
     elsif parent.availability_template
-      default_template = parent.availability_template
-      parent.availability_template = default_template.dup
-      parent.availability_template.availability_rules = default_template.availability_rules.map(&:dup)
-      parent.availability_template
-    else
+      duplicate_template(parent, parent.availability_template)
+    elsif parent.availability_templates.any?
       parent.availability_templates.first_or_initialize do |at|
         at.availability_rules = [AvailabilityRule.new]
       end
+    elsif parent&.default_availability_template
+      duplicate_template(parent, parent.default_availability_template)
     end
+  end
+
+  def duplicate_template(parent, template)
+    parent.availability_template = template.dup
+    parent.availability_template.availability_rules = template.availability_rules.map(&:dup)
+    parent.availability_template
   end
 
   def link_to_activity_feed_object(text, object, *options, &block)

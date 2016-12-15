@@ -15,7 +15,6 @@ module MarketplaceBuilder
 
         creator = Utils::BaseComponentCreator.new(object)
         creator.instance_variable_set(:@form_type_class, form_type_class)
-        component[:fields].map!(&:symbolize_keys)
         creator.create_components!([component])
       end
     end

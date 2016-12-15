@@ -1,0 +1,22 @@
+= simple_nested_form_for [:instance_admin, :manage, resource] do |f|
+  %input{ name: :action_name, type: :hidden, value: :edit }
+  .content-container
+    %h4= t('instance_admin.manage.transactable_types.basic_configuration')
+    .row
+      .input-container.col-xs-4
+        = f.input :must_have_verified_phone_number, as: :boolean, :inline_label => true
+      .input-container.col-xs-4
+        = f.input :onboarding, as: :boolean, :inline_label => true
+      .input-container.col-xs-4
+        = f.input :create_company_on_sign_up, as: :boolean, :inline_label => true
+    .row
+      .input-container.col-xs-6
+        = f.input :search_only_enabled_profiles, as: :boolean, :inline_label => true
+      .input-container.col-xs-6
+        = f.input :default_sort_by
+    .row
+      .input-container.col-xs-6
+        = f.input :default_availability_template_id, collection: [[t('general.none'), '']] + current_instance.availability_templates.all.map { |at| [at.name, at.id] }, required: false, input_html: { class: 'form-control' }, include_blank: false
+
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

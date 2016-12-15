@@ -58,8 +58,8 @@ class AvailabilityTemplate < ActiveRecord::Base
     parent_type == 'Location'
   end
 
-  def custom_for_transactable?
-    parent_type && parent_type.include?('Transactable')
+  def custom_for_object?
+    ['Transactable', 'UserProfile'].include? parent_type
   end
 
   def timezone

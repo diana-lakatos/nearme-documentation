@@ -5,6 +5,9 @@ namespace :localdriva do
   desc 'Setup LocalDriva'
   task setup: :environment do
     @instance = Instance.find(211)
+    @instance.set_context!
+    @instance.build_availability_templates
+    @instance.save!
 
     setup = LocaldrivaSetup.new(@instance, File.join(Rails.root, 'lib', 'tasks', 'localdriva'))
     setup.create_offer_action
