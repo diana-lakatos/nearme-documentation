@@ -19,14 +19,22 @@ Feature: Stripe Connect Merchant flow
     And verified merchant account should be created
     And there should be no errors
 
-  Scenario: display proper error on failure
+  Scenario: Verify account with errors if Stripe allows trasnfers and charges
     When I go to the payouts page
-    And I set Stripe to respond with rejected.fraud
+    And I set Stripe to respond with disabled_reason rejected.fraud
     And I update Stripe merchant form
     Then Stripe rejected.fraud error should be presented to user
-    And failed merchant account should be created
+    And verified merchant account should be created
+    And due_by should be displayed
 
-  Scenario: merchant account errors should be presented
+  Scenario: Present errors to the user
     Given failed_stripe_connect_merchant_account is persisted
     When I go to the payouts page
     Then I should see all persisted errors
+
+  Scenario: should remain pending if not yet verified
+    When I go to the payouts page
+    And I set Stripe to respond with transfer_disabled and disabled_reason rejected.fraud
+    And I update Stripe merchant form
+    Then Stripe rejected.fraud error should be presented to user
+    And pending merchant account should be created

@@ -116,6 +116,7 @@ en:
         personal_id_number: 'Social Security Number'
         bank_routing_number: 'Routing Number'
       merchant_account_owner:
+        document: 'Photo ID'
         dob_formated: 'Date of birth'
   connections:
     facebook:
@@ -1774,8 +1775,15 @@ en:
       you_havent_added_anything_yet: "You haven't added anything yet!"
       contact_subscriber: 'Contact %{name}'
       reservation_is_expired: "Reservation is expired!"
-
     merchant_account:
+      fields_needed:
+        header: "Please provide additionl fields:"
+        legal_entity:
+          additional_owners: "Additional owners"
+          verification:
+            document: 'Photo ID'
+          personal_id_number': 'Social Security Number'
+      account_valid_until: "Your account is valid until %{due_by}. Please add required information to avoid disabling it."
       you_almost_there: "You're almost there!"
       stripe_needed_fields_1: "Stripe is asking for a few more details."
       stripe_needed_fields_2: " Please fill out all the flields below. An email will be sent to you when Stripe verifies your account."

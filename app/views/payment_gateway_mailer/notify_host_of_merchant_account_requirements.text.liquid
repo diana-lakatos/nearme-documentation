@@ -1,0 +1,15 @@
+We are sorry, {{ merchantable.creator.first_name }}!
+
+Your account was not able to be verified.
+
+{% if merchantable.all_errors %}
+  Reason:
+  {% for error in merchant_account.all_errors %}
+    {{ error }}
+  {% endfor %}
+{% endif %}
+
+Please update provide required information {{ platform_context.host | append:merchantable.payout_path }}
+
+
+We're glad to help! If you have any questions, please contact us at {{ platform_context.support_email }} or give us a call at {{ platform_context.phone_number }}.
