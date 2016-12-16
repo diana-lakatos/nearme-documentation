@@ -1,0 +1,18 @@
+name: "Categories of Interest"
+transactable_types:
+  - Booking
+shared_with_users: true
+multiple_root_categories: true
+children:
+  - name: 'Romantic'
+  - name: 'Nature'
+  - name: 'Beaches'
+  - name: 'Historical'
+  - name: 'Views/Scenic'
+  - name: 'Food'
+  - name: 'Cafe'
+  - name: 'Bars'
+  - name: 'Cultural'
+  - name: 'Art'
+  - name: 'Indigenous Australian'
+  - name: 'Shopping'

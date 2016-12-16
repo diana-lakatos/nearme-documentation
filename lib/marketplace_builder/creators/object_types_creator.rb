@@ -24,6 +24,7 @@ module MarketplaceBuilder
           hash = parse_params(hash)
 
           object = find_or_create!(hash)
+          object.update!(hash)
 
           update_custom_attributes_for_object(object, custom_attributes) unless custom_attributes.empty?
           update_custom_validators_for_object(object, custom_validators) unless custom_validators.empty?

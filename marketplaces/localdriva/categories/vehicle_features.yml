@@ -1,0 +1,8 @@
+name: "Vehicle Features"
+multiple_root_categories: true
+instance_profile_types:
+  - Buyer
+children:
+  - name: 'Airconditioning'
+  - name: 'Heated Seats'
+  - name: 'Sunroof'

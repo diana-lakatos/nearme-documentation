@@ -1,4 +1,5 @@
 name: Languages
+transactable_types: [Booking]
 instance_profile_types: [Buyer]
 
 custom_attributes:
