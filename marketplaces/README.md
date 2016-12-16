@@ -1,3 +1,3 @@
 # Marketplace Builder
 
-bin/rake mpbuilder:run source=marketplaces/X verbose=true
+bin/rake mpbuilder:run source=marketplaces/hallmark verbose=true

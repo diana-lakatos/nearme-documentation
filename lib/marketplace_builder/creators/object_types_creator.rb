@@ -3,6 +3,7 @@ module MarketplaceBuilder
   module Creators
     class ObjectTypesCreator < DataCreator
       include MarketplaceBuilder::CustomAttributesBuilder
+      include MarketplaceBuilder::ActionTypesBuilder
       include MarketplaceBuilder::CustomValidatorsBuilder
       include MarketplaceBuilder::FormComponentsBuilder
 
@@ -13,7 +14,9 @@ module MarketplaceBuilder
           logger.info "Updating #{object_class_name.underscore.humanize.downcase}: #{key.underscore.humanize.titleize}"
           hash = data[key].symbolize_keys
 
+          transactable_type = hash.delete(:attributes)
           custom_attributes = hash.delete(:custom_attributes) || []
+          action_types = hash.delete(:action_types) || []
           custom_validators = hash.delete(:validation) || []
           form_components = hash.delete(:form_components) || []
 
@@ -21,9 +24,12 @@ module MarketplaceBuilder
             logger.fatal("#{key} is not allowed in #{object_class_name} settings") unless whitelisted_properties.include?(key)
           end
 
-          object = @instance.send(method_name).where(hash).first_or_create!
+          object = @instance.send(method_name).where(hash).first_or_initialize
+          object.attributes = transactable_type
+          object.save!
 
           update_custom_attributes_for_object(object, custom_attributes) unless custom_attributes.empty?
+          update_action_types_for_object(object, action_types) unless action_types.empty?
           update_custom_validators_for_object(object, custom_validators) unless custom_validators.empty?
           update_form_comopnents_for_object(object, form_components) unless form_components.empty?
         end

@@ -1,7 +1,15 @@
 name: Extra
+attributes:
+  show_path_format: /:transactable_type_id/:id
+
 validation:
   - field_name: name
     max_length: 140
+
+action_types:
+  - enabled: true
+    type: TransactableType::NoActionBooking
+    allow_no_action: true
 
 custom_attributes:
   - name: description

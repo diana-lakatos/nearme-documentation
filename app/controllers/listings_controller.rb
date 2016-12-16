@@ -110,11 +110,15 @@ class ListingsController < ApplicationController
 
   def redirect_if_listing_inactive
     if @listing.deleted? || @listing.draft?
-      flash[:warning] = t('flash_messages.listings.listing_inactive', address: @listing.address)
-      if @listing_siblings.any?
-        redirect_to @listing_siblings.first.decorate.show_path
+      if @location.present?
+        flash[:warning] = t('flash_messages.listings.listing_inactive', address: @listing.address)
+        if @listing_siblings.any?
+          redirect_to @listing_siblings.first.decorate.show_path
+        else
+          redirect_to search_path(loc: @listing.location.address, q: @listing.name)
+        end
       else
-        redirect_to search_path(loc: @listing.location.address, q: @listing.name)
+        redirect_to search_path(q: @listing.name)
       end
     elsif @listing.disabled?
       if current_user_can_manage_listing?
