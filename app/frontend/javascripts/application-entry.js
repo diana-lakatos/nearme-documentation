@@ -60,6 +60,7 @@ NM.on('ready', ()=>{
   require('initializers/application/phone_number_fields.initializer');
   require('initializers/application/registration_forms.initializer');
   require('initializers/application/rel_submit_links.initializer');
+  require('initializers/application/flash_messages_links.initializer');
   require('initializers/application/reservation_review.initializer');
   require('initializers/application/reviews.initializer');
   require('initializers/application/route_link.initializer');
