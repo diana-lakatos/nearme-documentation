@@ -150,7 +150,7 @@
       <form class="edit_reservation" action="{{ 'approve_dashboard_order_path' | generate_url: id: reservation.id }}" accept-charset="UTF-8" method="post">
         <input name="utf8" type="hidden" value="&#x2713;" />
         <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
-        <input type="submit" name="commit" value="RENT ITEM" data-confirm="{{ 'confirmations.are_you_sure' | t }}" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-inverse" />
+        <input type="submit" name="commit" value="Confirm Booking" data-disable-with="{{ 'general.processing' | t }}" class="btn btn-inverse" />
       </form>
     {% endif %}
 
