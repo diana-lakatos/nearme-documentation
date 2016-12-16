@@ -317,6 +317,11 @@ module ApplicationHelper
     date
   end
 
+  def selected_account_standing(standing)
+    return I18n.t("instance_admin.manage.admin_searchable.user.#{standing}") if User::ACCOUNT_STANDINGS.include?(standing.to_sym)
+    standing
+  end
+
   def selected_transactable_type(transactable_type_id, default_text = '')
     transactable_type = TransactableType.find_by(id: transactable_type_id)
     if transactable_type

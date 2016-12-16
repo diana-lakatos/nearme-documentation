@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
 
   SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects].freeze
   SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation).freeze
+  ACCOUNT_STANDINGS = [:active, :deleted, :banned]
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -251,6 +252,9 @@ class User < ActiveRecord::Base
 
   scope :buyers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::BUYER])) }
   scope :sellers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::SELLER])) }
+
+  scope :banned, -> { where('banned_at is not null') }
+  scope :active_users, -> { where('banned_at is null AND deleted_at is null') }
 
   validates_with CustomValidators
 

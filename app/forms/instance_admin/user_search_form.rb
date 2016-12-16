@@ -3,6 +3,7 @@ class InstanceAdmin::UserSearchForm < SearchForm
   property :date, virtual: true
   property :filters, virtual: true
   property :item_type_id, virtual: true
+  property :state, virtual: true
 
   def initialize
     super Object.new
@@ -20,6 +21,12 @@ class InstanceAdmin::UserSearchForm < SearchForm
     result[:is_guest] = nil if filters.try(:include?, 'guest')
 
     result[:is_host] = nil if filters.try(:include?, 'host')
+
+    result[:banned] = nil if state.present? && state == 'banned'
+
+    result[:deleted] = nil if state.present? && state == 'deleted'
+
+    result[:active_users] = nil if state.present? && state == 'active'
 
     result
   end
