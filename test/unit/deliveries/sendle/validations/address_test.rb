@@ -10,7 +10,7 @@ require 'date'
 class MyAddress
   include ActiveModel::Validations
 
-  attr_accessor :city, :country, :postcode, :address, :state
+  attr_accessor :city, :country, :postcode, :address, :state, :suburb
 end
 
 class Deliveries::Sendle::Validations::AddressTest < ActiveSupport::TestCase
