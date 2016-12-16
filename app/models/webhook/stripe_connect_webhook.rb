@@ -60,6 +60,11 @@ class Webhook::StripeConnectWebhook < Webhook
         merchant_account.id,
         account.legal_entity.verification.details.presence || "Missing fields: #{account.verification.fields_needed.join(', ')}"
       )
+    when 'incomplete'
+      WorkflowStepJob.perform(
+        WorkflowStep::PaymentGatewayWorkflow::MerchantAccountPending,
+        merchant_account.id
+      )
     end
   end
 

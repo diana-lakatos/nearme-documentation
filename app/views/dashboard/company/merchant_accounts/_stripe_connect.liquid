@@ -8,6 +8,12 @@
   {% input id, as: hidden %}
 {% endif %}
 
+{% if merchant_account.due_by %}
+  <div class="alert alert-warning">
+    {{ "dashboard.merchant_account.account_valid_until" | translate: due_by:merchant_account.due_by }}
+  </div>
+{% endif %}
+
 {% if merchant_account.all_errors %}
   <div class="errors-global">
     <ul>
@@ -18,7 +24,7 @@
   </div>
 {% endif %}
 
-{% if merchant_account.verified? and params.edit_mode == blank %}
+{% if merchant_account.verified? and merchant_account.complete? and params.edit_mode == blank %}
 
  <h3>{{ 'dashboard.merchant_account.' | append: merchant_account.state | translate }}</h3>
     <div class='btn-group pull-right'>

@@ -51,13 +51,13 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def handle_result(result)
     if result.id
       self.external_id = result.id
-      data[:fields_needed] = result.verification.fields_needed
-      upload_documents(result)
       self.response = result.to_yaml
       self.bank_account_number = mask_number(bank_account_number)
-      data[:currency] = result.default_currency
-      data[:secret_key] = result.keys.secret if result.keys.is_a?(Stripe::StripeObject)
+
+      upload_documents(result)
+      set_data_attributes(result)
       change_state_if_needed(result)
+
       true
     elsif result.error
       errors.add(:base, result.error)
@@ -65,6 +65,15 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     else
       false
     end
+  end
+
+  def set_data_attributes(result)
+    data[:fields_needed] = result.verification.fields_needed
+    data[:disabled_reason] = localize_error(result.verification.disabled_reason)
+    data[:due_by] = result.verification.due_by
+    data[:verification_message] = localize_error(result.legal_entity.verification.details_code)
+    data[:currency] = result.default_currency
+    data[:secret_key] = result.keys.secret if result.keys.is_a?(Stripe::StripeObject)
   end
 
   def create_params
@@ -162,27 +171,24 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def change_state_if_needed(stripe_account, &_block)
-    if (data[:disabled_reason] = localize_error(stripe_account.verification.disabled_reason)).present?
-      failure(persisted?)
-      return
-    end
-
     if !verified? && stripe_account.charges_enabled && stripe_account.transfers_enabled
-      if stripe_account.verification.fields_needed.empty? && stripe_account.legal_entity.verification.status == 'verified'
-        verify(persisted?)
-        yield('verified') if block_given?
-      else
-        if stripe_account.legal_entity.verification.details.present?
-          data[:verification_details] = stripe_account.legal_entity.verification.details
-          data[:verification_message] = localize_error(stripe_account.legal_entity.verification.details_code)
-        end
-        failure(persisted?)
-        yield('failed') if block_given?
-      end
-    elsif verified? && ((stripe_account.legal_entity.verification.status != 'verified') || !stripe_account.charges_enabled || !stripe_account.transfers_enabled || !stripe_account.verification.fields_needed.empty?)
+      verify(persisted?)
+      yield('verified') if block_given?
+    elsif verified? && !(stripe_account.charges_enabled && stripe_account.transfers_enabled)
+      # 'failed' state is only possible when account was verfied previously
+      # in case it's pending we just wait for verification first.
       failure(persisted?)
       yield('failed') if block_given?
+    elsif account_incomplete?
+      yield('incomplete') if block_given?
     end
+  end
+
+  def account_incomplete?
+    return true if data[:fields_needed].present?
+    return true if data[:disabled_reason].present?
+    return true if data[:verification_message].present?
+    return true if data[:due_by].present?
   end
 
   def custom_options
@@ -248,10 +254,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   def supported_currencies
     SUPPORTED_CURRENCIES[location.upcase]
-  end
-
-  def minimum_company_fields
-    company_fields[:minimum].map { |k| FIELD_MAP[k] }.select { |k| !k.blank? }
   end
 
   private

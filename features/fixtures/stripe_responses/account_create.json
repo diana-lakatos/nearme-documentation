@@ -103,7 +103,7 @@
    "transfers_enabled":true,
    "verification":{
       "disabled_reason":null,
-      "due_by":null,
+      "due_by": 1411603199,
       "fields_needed":[
          "legal_entity.verification.document"
       ]

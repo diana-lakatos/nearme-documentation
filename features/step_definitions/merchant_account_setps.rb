@@ -35,7 +35,14 @@ end
 
 def account_create_respone_with_error(error)
   response = File.read(File.join(Rails.root, 'features', 'fixtures', 'stripe_responses', "account_create.json"))
-  response.gsub!("\"disabled_reason\":null", "\"disabled_reason\":\"#{error}\"")
+
+  if error.include? 'transfer_disabled'
+    response.gsub!("\"transfers_enabled\":true", "\"transfers_enabled\":false")
+  end
+
+  if error.include? ('disabled_reason')
+    response.gsub!("\"disabled_reason\":null", "\"disabled_reason\":\"rejected.fraud\"")
+  end
   response
 end
 
@@ -56,7 +63,7 @@ Then(/^Stripe (.*) error should be presented to user$/) do |error|
   end
 
   expect(page).to have_css("div.errors-global")
-  page.first('div.errors-global').text.should match(error_message)
+  expect(page.first('div.errors-global')).to have_content(error_message, count: 1)
 end
 
 And /^there should be no errors$/ do
@@ -73,10 +80,17 @@ end
 
 Then /^I should see all persisted errors$/ do
   expect(page).to have_css("div.errors-global")
-  ['This account is rejected for some other reason.', 'Please update your document', 'Scan failed for other reason.'].each do |error|
+  ['This account is rejected for some other reason.', 'Scan failed for other reason.', 'Please provide additionl fields', 'Photo ID'].each do |error|
     page.first('div.errors-global').text.should match(error)
   end
 end
+
+And /^due_by should be displayed$/ do
+  due_by = I18n.l(Time.at(1411603199), format: :long)
+  error_message = "Your account is valid until #{due_by}. Please add required information to avoid disabling it."
+  expect(page).to have_content(error_message, count: 1)
+end
+
 
 
 
