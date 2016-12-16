@@ -9,8 +9,9 @@ class InstanceProfileType < ActiveRecord::Base
   DEPENDENT_CLASS = User
 
   acts_as_custom_attributes_set
-  has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
   belongs_to :instance
+  belongs_to :default_availability_template, class_name: 'AvailabilityTemplate'
+  has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
   has_many :users, through: :user_profiles
   has_many :user_profiles
   has_many :custom_validators, as: :validatable

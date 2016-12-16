@@ -1,5 +1,6 @@
 class UserProfile < ActiveRecord::Base
   include Categorizable
+  include AvailabilityHelpers
 
   has_paper_trail
   acts_as_paranoid
@@ -8,13 +9,18 @@ class UserProfile < ActiveRecord::Base
 
   belongs_to :user, touch: true
   belongs_to :instance_profile_type
-  has_many :customizations, as: :customizable
+  belongs_to :availability_template
 
+  has_many :customizations, as: :customizable
+  has_many :availability_templates, as: :parent
+
+  accepts_nested_attributes_for :availability_template
   accepts_nested_attributes_for :customizations, allow_destroy: true
 
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
-  delegate :onboarding, :onboarding?, :has_fields?, :custom_attributes_custom_validators, to: :instance_profile_type, allow_nil: true
+  delegate :onboarding, :onboarding?, :has_fields?, :custom_attributes_custom_validators,
+    :default_availability_template, to: :instance_profile_type, allow_nil: true
 
   after_create :create_company_if_needed
 

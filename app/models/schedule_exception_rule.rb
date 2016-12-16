@@ -20,6 +20,7 @@ class ScheduleExceptionRule < ActiveRecord::Base
   scope :future, -> (date = Date.current) { where('duration_range_end >= ?', date) }
 
   validate :end_time_after_start_time
+  validates :duration_range_end, :duration_range_start, presence: true
 
   def parse_user_input
     self.duration_range_start = date_time_handler.convert_to_datetime(user_duration_range_start).try(:beginning_of_day) if user_duration_range_start.present?
