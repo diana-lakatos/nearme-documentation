@@ -48,6 +48,6 @@ class Deliveries::Sendle::Validations::DeliveryTest < ActiveSupport::TestCase
 
     validator.validate(delivery)
 
-    assert delivery.errors.added?(:pickup_date, :pick_up_only_on_business_days)
+    assert delivery.errors.added?(:pickup_date, :non_business_day)
   end
 end

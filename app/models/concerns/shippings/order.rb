@@ -20,9 +20,10 @@ module Shippings
           inbound_sender.errors.each { |k, v| errors.add("inbound_sender_#{k}", v) }
           outbound_receiver.errors.each { |k, v| errors.add("outbound_receiver_#{k}", v) }
 
-          inbound_sender.address.errors.each { |k, v| errors.add("inbound_pickup_address#{k}", v) }
+          inbound_sender.address.errors.each { |k, v| errors.add("inbound_pickup_address_#{k}", v) }
           outbound_receiver.address.errors.each { |k, v| errors.add("outbound_return_address_#{k}", v) }
         end
+
         true
       end
 
@@ -32,14 +33,10 @@ module Shippings
         deliveries.last(2).each do |delivery|
           shipping_order = client.place_order delivery
 
-          # TODO: handle error properly
-          # TODO: wrap response into response#delivery object
-          raise shipping_order.body.inspect unless shipping_order.success?
-
           delivery.update_attributes(
-            tracking_url: shipping_order.body['tracking_url'],
-            order_reference: shipping_order.body['sendle_reference'],
-            status: shipping_order.body['state']
+            tracking_url: shipping_order.tracking_url,
+            order_reference: shipping_order.order_reference,
+            status: shipping_order.status
           )
         end
       end
@@ -81,8 +78,8 @@ module Shippings
 
       delegate :address, :address=, :postcode, :postcode=, to: :outbound_return_address, prefix: true
       delegate :address, :address=, :postcode, :postcode=, to: :inbound_pickup_address, prefix: true
-      delegate :country, :country=, :city, :city=, to: :outbound_return_address, prefix: true
-      delegate :country, :country=, :city, :city=, to: :inbound_pickup_address, prefix: true
+      delegate :country, :country=, :suburb, :suburb=, to: :outbound_return_address, prefix: true
+      delegate :country, :country=, :suburb, :suburb=, to: :inbound_pickup_address, prefix: true
       delegate :state, :state=, to: :outbound_return_address, prefix: true
       delegate :state, :state=, to: :inbound_pickup_address, prefix: true
 

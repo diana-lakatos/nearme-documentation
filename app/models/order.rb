@@ -12,6 +12,7 @@ class Order < ActiveRecord::Base
   include Payable
   include ShippoLegacy::Order
   include Shippings::Order
+  include Validatable
 
   attr_accessor :skip_checkout_validation, :delivery_ids, :checkout_update, :save_draft, :cancel_draft
 

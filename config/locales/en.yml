@@ -23,8 +23,10 @@ en:
             failed_other: 'Verification failed for other reason.'
         address:
           attributes:
-            address:
-              invalid_pickup_location: 'is not valid for pickup'
+            postcode:
+              invalid_pickup_location: 'does not match suburb'
+            suburb:
+              invalid_pickup_location: 'does not match postcode'
         payment:
           attributes:
             payment_gateway:
@@ -34,7 +36,7 @@ en:
         delivery:
           attributes:
             pickup_date:
-              pick_up_only_on_business_days: PickUp available only on business days
+              non_business_day: PickUp available only on business days
         aws_certificate:
           attributes:
             arn:
@@ -108,7 +110,8 @@ en:
       user:
         default_properties: ""
       "order/shipping_address/address":
-        address: Shipping address
+        suburb: Shipping suburb
+        postcode: Shipping postcode
       instance_profile_type:
         admin_approval: 'Requires admin approval'
       merchant_account:
