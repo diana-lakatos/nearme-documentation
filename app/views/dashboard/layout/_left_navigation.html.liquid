@@ -11,8 +11,14 @@
         {% assign path = 'dashboard_user_messages_path' | generate_url %}
         {% assign selected = current_path | matches: path %}
 
+
         <li id="dashboard-nav-user_messages" class="{% if selected %}selected{% endif %}">
-          <a href="{{ path }}">{{ 'dashboard.nav.user_messages' | t }}</a>
+          <a href="{{ path }}">
+            {{ 'dashboard.nav.user_messages' | t }}
+            {% if current_user.unread_messages_count > 0 %}
+            <span class="count">{{ current_user.unread_messages_count }}</span>
+            {% endif %}
+          </a>
         </li>
       {% endif %}
 

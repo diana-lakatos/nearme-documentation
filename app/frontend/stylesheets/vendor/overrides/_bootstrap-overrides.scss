@@ -13,7 +13,6 @@ body {
 }
 
 .container-fluid {
-
   @media (max-width: $ipad-width) {
     padding: 0 20px;
   }
@@ -27,7 +26,6 @@ body {
   @media (max-width: $iphone-landscape) {
     padding: 0 .75em;
   }
-
 }
 
 .navbar-fixed-top,
@@ -71,20 +69,26 @@ abbr[title], .required > abbr {
 }
 
 .accordion-group {
-
-	background: $theme_white;
-	border-radius: $border-radius-default;
+  background: $theme_white;
+  border-radius: $border-radius-default;
 
   a.accordion-toggle {
-  	background: url('https://s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png') right center no-repeat;
-  	background-origin: content-box;
-  	color: black;
-  	opacity: .8;
-    transition: opacity .1s ease-in;
+    color: black;
+    opacity: .8;
 
-  	&:hover {
-  		opacity: 1;
-  	}
+    &:after {
+      transition: opacity .1s ease-in;
+      color: black;
+      font-family: icon-font !important;
+      font-weight: 400;
+      font-style: normal;
+      speak: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    &:hover {
+    	opacity: 1;
+    }
   }
 }
 
@@ -132,7 +136,6 @@ abbr[data-original-title] {
 
 .nav-tabs > li > a {
   border-top-left-radius: $border-radius-default / 2; border-top-right-radius: $border-radius-default / 2;
-
 }
 
 // Override bootstrap mixin that caused opacity to be reduced by 10x
@@ -156,7 +159,6 @@ abbr[data-original-title] {
 }
 
 .hidden-iphone {
-
   @media (max-width: $iphone-landscape) {
     display: none !important;
   }

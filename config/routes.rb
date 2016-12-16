@@ -377,6 +377,7 @@ DesksnearMe::Application.routes.draw do
         resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template', concerns: :versionable
         resources :content_holders, only: [:index, :new, :create, :edit, :update, :destroy]
         resources :liquid_views, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :versionable
+        resources :graph_queries, only: [:index, :new, :create, :edit, :update, :destroy]
         resources :file_uploads do
           collection do
             get :search

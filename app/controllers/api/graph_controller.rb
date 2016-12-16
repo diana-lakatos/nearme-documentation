@@ -1,18 +1,28 @@
 # frozen_string_literal: true
 module Api
   class Api::GraphController < BaseController
-    def create
-      query_string = params[:query]
-      query_variables = params[:variables] || {}
+    if Rails.env.development? # used for autocomplete in IDE
+      skip_before_action :verified_api_request?
+      skip_before_action :require_authentication
+      skip_before_action :require_authorization
+    end
 
-      result = schema.execute(query_string, variables: query_variables)
-      render json: result
+    def create
+      render json: schema.execute(query, variables: variables)
     end
 
     private
 
     def schema
       Graph::Schema
+    end
+
+    def query
+      params[:query]
+    end
+
+    def variables
+      params[:variables] || {}
     end
   end
 end

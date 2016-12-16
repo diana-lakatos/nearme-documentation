@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 class PasswordRulesValidator < ActiveModel::Validator
-  attr_reader :min_password_length
 
   def validate(record)
     min_password_length = record.password_validation_rules['min_password_length']
 
     if min_password_length.present?
-      if min_password_length.is_a?(Integer)
+      if PasswordRulesValidator.is_numeric?(min_password_length)
         validate_min_length(record, min_password_length)
       else
         record.errors.add(:min_password_length, I18n.t('errors.messages.not_a_number'))
@@ -15,6 +14,12 @@ class PasswordRulesValidator < ActiveModel::Validator
   end
 
   private
+
+  def self.is_numeric?(str)
+    str.present? && Float(str)
+  rescue
+    false
+  end
 
   def validate_min_length(record, min_password_length)
     if min_password_length.to_i < default_min_length

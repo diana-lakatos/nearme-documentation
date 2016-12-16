@@ -4,10 +4,11 @@
   %hr
   = f.hidden_field :custom_model_type_id, value: custom_model.id
   = f.simple_fields_for :properties, f.object.properties do |customization_properties_form|
-    - custom_model.custom_attributes.each do |ca|
+    - custom_model.custom_attributes.each_with_index do |ca, index|
       .col-xs-11
         = draw_attribute_for_form(ca, customization_properties_form)
-  .col-xs-1
-    = link_to_remove_association f, class: 'remove_fields' do
-      %button.action--remove
+      - if index.zero?
+        .col-xs-1
+          = link_to_remove_association f, class: 'remove_fields' do
+            %button.action--remove
 

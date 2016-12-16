@@ -1,0 +1,27 @@
+.content-container
+  .row
+    .table-container.col-xs-12
+      %table.table.table-striped
+        %tbody
+          %tr
+            %th
+              = t('instance_admin.graph_queries.name')
+            %th
+              = t('instance_admin.graph_queries.tag_line')
+            %th
+
+          - @graph_queries.each do |graph_query|
+            %tr
+              %td= pretty_path graph_query.name
+              %td
+                %code
+                  = graph_query.generate_tag_line
+              %td
+                .pull-right{style: 'margin-left: 10px'}
+                  = link_to t('instance_admin.destroy'), instance_admin_theme_graph_query_path(graph_query), method: :delete,
+                      data: { confirm: 'Are you sure?' }
+                .pull-right{style: 'margin-left: 10px'}
+                  = link_to t('instance_admin.edit'), edit_instance_admin_theme_graph_query_path(graph_query)
+
+= content_for :header_buttons do
+  = link_to t('instance_admin.graph_queries.add_graph_query'), new_instance_admin_theme_graph_query_path, class: 'pull-right btn btn-blue'

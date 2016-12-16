@@ -35,9 +35,11 @@
             %small= "(#{@user.followers_count})"
       %p
         - if current_user.try(:id) == resource.id
-          = link_to t(:edit), dashboard_profile_path, class: 'button-a small'
+          = link_to t(:edit), dashboard_profile_path, class: 'button-a small edit-action'
+
         - elsif current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
-          = link_to t(:edit), edit_instance_admin_manage_user_path, class: 'button-a small', rel: "modal"
+          = link_to t(:edit), edit_instance_admin_manage_user_path, class: 'button-a small edit-action', rel: "modal"
+
         - if current_user.try(:id) != resource.id
           %span{:'data-follow-button' => true}
             = render partial: 'shared/follow_button', locals: { object: @user }
