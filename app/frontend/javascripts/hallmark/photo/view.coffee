@@ -30,12 +30,12 @@ module.exports = class PhotoView
   singlePhotoHtml: ->
     actions = $('<div class="media-actions"></div>')
 
-    cropLink = $('<button type="button" class="button-a small action--edit" data-resize-photo data-modal title="Rotate & Crop"><span class="intelicon-edit"></span></button>')
+    cropLink = $('<button type="button" class="button-a small action--edit icon-only" data-resize-photo data-modal title="Rotate & Crop">Rotate & Crop</button>')
     cropLink.attr('data-href', @data.resize_url)
     cropLink.attr('data-id', @data.id)
-    actions.append(cropLink)
+    actions.append(cropLink, ' ')
 
-    deleteLink = $('<button class="button-a small danger action--remove" type="button" data-delete-photo title="Delete photo"><span class="intelicon-trash-outlined"></span></button>')
+    deleteLink = $('<button class="button-a small danger action--remove icon-only" type="button" data-delete-photo title="Delete photo">Delete photo</button>')
     deleteLink.attr('data-url', @data.destroy_url)
     actions.append(deleteLink)
 

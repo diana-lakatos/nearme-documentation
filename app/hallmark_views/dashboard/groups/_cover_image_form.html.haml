@@ -1,0 +1,29 @@
+= new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
+                                dashboard_photos_path,
+                                { width: 200, height: 175, transform: :resize_to_fill },
+                                t('simple_form.labels.listing.add_photo'),
+                                :required => true,
+                                'no-multiple' => true,
+                                :error => f.object.errors.include?(:cover_photo).present? ? t('custom_errors.main_image_missing') : nil,
+                                :label_for => 'group_cover_photo',
+                                :upload_type => 'cover-photo') do
+  - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
+  .thumbnail-processing{:hidden => true}
+    .loading-icon
+
+  = hidden_field_tag "#{f.object_name}", nil, placeholder: t('ui.photo_uploader.caption'), id: 'photo-item-input-template', disabled: true, 'data-number' => 0, 'data-no-caption' => true
+
+  - photo = @group.cover_photo
+  - if photo.present?
+    .photo-item{:id => "photo-" + photo.id.to_s}
+      = image_tag photo.image_url(:medium)
+      .media-actions
+        %button.button-a.small.action--edit.icon-only{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_dashboard_photo_path(photo), :'ajax-options' => { id: photo.id }}, :title => t('forms.photos.collection.rotate_and_crop')}
+          = t('forms.photos.collection.rotate_and_crop')
+
+        %button.button-a.small.danger.action--remove.icon-only{:type => "button", :data => { :"delete-photo" => true, :url => destroy_space_wizard_photo_path(:id => photo.id) }, :title => t('forms.photos.collection.delete') }
+          = t('forms.photos.collection.delete')
+
+      = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
+      = hidden_field_tag "#{f.object_name}[cover_photo_attributes][id]", photo.id
+      = hidden_field_tag "#{f.object_name}[cover_photo_attributes][photo_role]", 'cover'

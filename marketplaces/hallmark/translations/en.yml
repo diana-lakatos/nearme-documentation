@@ -196,6 +196,7 @@ en:
   actions: 'Actions'
   approve: 'Approve'
   decline: 'Decline'
+  moderator: 'Moderator'
   cancel_request: "Cancel request"
   approved: 'Approved'
   pending: 'Pending'

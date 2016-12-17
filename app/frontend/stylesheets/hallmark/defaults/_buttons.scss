@@ -84,14 +84,13 @@ input[type="reset"] {
   }
 
   &.danger {
-    border-color: #f00;
-    background-color: #f00;
+    border-color: $color-red-1;
+    background-color: $color-red-1;
     color: #fff;
-    font-weight: normal;
   }
 
   &.danger:hover {
-    background: darken(#f00, 10%);
+    background: $color-red-2;
   }
 
   &.off {
@@ -113,4 +112,50 @@ input[type="reset"] {
     font-size: 15px;
     line-height: inherit;
   }
+}
+
+// Actions
+[class^="action--"].button-a,
+[class*=" action--"].button-a {
+  &:before {
+    position: relative;
+    top: -1px;
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-size: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  &.icon-only {
+    font-size: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+    border: none;
+
+    &:before {
+      margin-right: 0;
+      font-size: 20px;
+    }
+  }
+}
+
+.button-a.action--remove:before {
+  content: $fa-var-trash-o;
+}
+
+.button-a.action--approve:before {
+  content: $fa-var-check;
+}
+
+.button-a.action--add-role:before {
+  content: $fa-var-plus-circle;
+}
+
+.button-a.action--remove-role:before {
+  content: $fa-var-minus-circle;
+}
+
+.button-a.action--edit:before {
+  content: $fa-var-pencil;
 }

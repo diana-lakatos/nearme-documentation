@@ -42,11 +42,11 @@
             .photo-item{:id => "photo-" + photo.id.to_s}
               = image_tag photo.image_url(:medium)
               .media-actions
-                %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_dashboard_photo_path(photo), :'ajax-options' => { id: photo.id }}, :title => t('forms.photos.collection.rotate_and_crop')}
-                  %span.intelicon-edit
+                %button.button-a.small.action--edit.icon-only{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_dashboard_photo_path(photo), :'ajax-options' => { id: photo.id }}, :title => t('forms.photos.collection.rotate_and_crop')}
+                  = t('forms.photos.collection.rotate_and_crop')
 
-                %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_space_wizard_photo_path(:id => photo.id) }, :title => t('forms.photos.collection.delete') }
-                  %span.intelicon-trash-outlined
+                %button.button-a.small.danger.action--remove.icon-only{:type => "button", :data => { :"delete-photo" => true, :url => destroy_space_wizard_photo_path(:id => photo.id) }, :title => t('forms.photos.collection.delete') }
+                  = t('forms.photos.collection.delete')
 
               = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
               = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id

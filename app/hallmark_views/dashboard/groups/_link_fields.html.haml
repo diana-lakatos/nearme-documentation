@@ -6,10 +6,7 @@
           = image_tag f.object.image_url(:standard), width: LinkImageUploader.dimensions[:standard][:width], height: LinkImageUploader.dimensions[:standard][:height]
       %p
         URL:
-        - if f.object.valid_attribute?(:url)
-          = link_to f.object.url, f.object.url
-        - else
-          = f.object.url
+        = link_to f.object.url, f.object.url
       - if f.object.text
         %p
           Label:
@@ -31,6 +28,3 @@
 
     = link_to_remove_association f, class: 'button-a small danger action--remove' do
       = t('remove', default: 'Remove')
-
-
-

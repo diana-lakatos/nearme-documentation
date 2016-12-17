@@ -25,11 +25,11 @@
               .photo-item{:id => "cover-photo-thumbnail"}
                 = image_tag resource.cover_image_url
                 .media-actions
-                  %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_cover_image_path }, :title => t('forms.photos.collection.rotate_and_crop')}
-                    %span.intelicon-edit
+                  %button.button-a.small.action--edit.icon-only{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_cover_image_path }, :title => t('forms.photos.collection.rotate_and_crop')}
+                    = t('forms.photos.collection.rotate_and_crop')
 
-                  %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_cover_image_path }, :title => t('forms.photos.collection.delete') }
-                    %span.intelicon-trash-outlined
+                  %button.button-a.small.danger.action--remove.icon-only{:type => "button", :data => { :"delete-photo" => true, :url => destroy_cover_image_path }, :title => t('forms.photos.collection.delete') }
+                    = t('forms.photos.collection.delete')
 
         - if is_i18n_set?('simple_form.hints.profile.cover_image')
           %p.photo-uploader-hint
@@ -51,11 +51,11 @@
               .photo-item{:id => "cover-photo-thumbnail"}
                 = image_tag resource.avatar_url(:medium)
                 .media-actions
-                  %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_avatar_path }, :title => t('forms.photos.collection.rotate_and_crop')}
-                    %span.intelicon-edit
+                  %button.button-a.small.action--edit.icon-only{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_avatar_path }, :title => t('forms.photos.collection.rotate_and_crop')}
+                    = t('forms.photos.collection.rotate_and_crop')
 
-                  %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_avatar_path }, :title => t('forms.photos.collection.delete') }
-                    %span.intelicon-trash-outlined
+                  %button.button-a.small.danger.action--remove.icon-only{:type => "button", :data => { :"delete-photo" => true, :url => destroy_avatar_path }, :title => t('forms.photos.collection.delete') }
+                    = t('forms.photos.collection.delete')
 
         - if is_i18n_set?('simple_form.hints.profile.avatar')
           %p.photo-uploader-hint
