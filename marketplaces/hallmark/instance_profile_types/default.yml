@@ -38,7 +38,7 @@ custom_attributes:
 
   - name: member_since
     html_tag: input
-    attribute_type: datetime
+    attribute_type: date
     label: Member Since
     search_in_query: false
 
