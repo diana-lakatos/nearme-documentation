@@ -141,11 +141,11 @@ en:
   # onboarding
   onboarding:
     step_1:
-      title: 'Almost there! Just a couple more questions to set up your Mesh account. Where do you live?'
+      title: 'Almost there! Just a couple more questions to set up your account. Where do you live?'
       description: "Let us know what city you're in so we can connect you with members and events in your area."
     step_2:
       title: 'Connect your social accounts'
-      description: 'Get a jump start on building your Mesh network with people you already know.'
+      description: 'Get a jump start on building your network with people you already know.'
     step_3:
       title: 'Recommendations to get started'
       description: "Based on what you've already told us, we've selected some people, extras, and topics for you to follow. You can find and follow more at any time."
