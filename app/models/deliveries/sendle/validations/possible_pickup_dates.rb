@@ -1,3 +1,5 @@
+require 'holidays'
+
 module Deliveries
   class Sendle
     module Validations
@@ -16,7 +18,7 @@ module Deliveries
 
         def possible_dates
           range.reject do |day|
-            business_day?(day) || cannot_pickup(day)
+            business_day?(day) || cannot_pickup(day) || holiday?(day)
           end
         end
 
@@ -26,6 +28,14 @@ module Deliveries
 
         def current_time_at_sender
           @time_zone.now
+        end
+
+        def holiday?(date)
+          Holidays.on(date, country_list).any?
+        end
+
+        def country_list
+          :au
         end
 
         def range
