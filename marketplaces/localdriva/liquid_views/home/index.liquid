@@ -11,20 +11,33 @@
     <div class="container_main">
       <h1 class="title main_title">Think Global. <span class="title_highlighted">Local Knowledge.</span></h1>
       <div class="subtitle subtitle_light"><strong>Connecting travelers across the globe with affordable rideshare drivers and local guides.</strong></div>
-      <div class="filter_block">
-        <div class="location">City: <span>Sydney</span></div>
-        <div class="calendar_wrap">
-          <input type="text" name="daterange" class="daterange_field fake_select">
-          <span class="fake_select_arrow"></span>
+
+      <form action="/search" class="no_inheritance" method="get" data-home-search>
+        <input type="hidden" name="transactable_type_class" value="InstanceProfileType">
+        <input type="hidden" name="availability_exceptions[from]" value="">
+        <input type="hidden" name="availability_exceptions[to]" value="">
+
+        <div class="filter_block">
+          <div class="location">City: <span>Sydney</span></div>
+          <div class="calendar_wrap">
+            <input type="text" class="daterange_field fake_select" data-date-range>
+            <span class="fake_select_arrow"></span>
+          </div>
+          <div class="select_wrap">
+            <select name="lg_custom_attributes[vehicle_capacity]">
+              <option>How many passengers</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button type="submit" class="button-a">Search</button>
+          </div>
         </div>
-        <div class="select_wrap">
-          <select>
-            <option>How many passengers</option>
-            <option>1</option>
-            <option>2</option>
-          </select>
-        </div>
-      </div>
+      </form>
+
     </div>
   </div>
 
@@ -39,4 +52,269 @@
   </div>
 {% endcontent_for %}
 
-{% include 'home/homepage_content.html' %}
+<div class="section section_info" id="section_info">
+  <div class="container_main">
+    <div class="section_info_item">
+      <h2 class="title title_highlighted">HOW IT WORKS</h2>
+      <div class="subtitle">A local driver knows the best spots in Sydney to show you.</div>
+      <div class="info_block_list">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="info_block">
+              <div class="info_block_img">
+                <svg xmlns="http://www.w3.org/2000/svg" width="92.279" height="99.902" viewBox="0 0 92.279 99.902"><style>.st0{fill:#fff}.st1{fill:#292e33}.st2{fill:#f16667}.st3{fill:#d1d3d4}</style><path class="st0" d="M50.513 87.315H17.169a3.294 3.294 0 0 1-3.294-3.295V5.297A3.295 3.295 0 0 1 17.169 2h55.38a3.296 3.296 0 0 1 3.295 3.297v46.659"/><path class="st1" d="M50.513 89.315H17.169a5.301 5.301 0 0 1-5.294-5.295V5.297A5.301 5.301 0 0 1 17.169 0h55.38a5.302 5.302 0 0 1 5.295 5.297v46.659h-4V5.297c0-.715-.581-1.297-1.295-1.297h-55.38c-.713 0-1.294.582-1.294 1.297v78.724c0 .714.581 1.295 1.294 1.295h33.344v3.999z"/><path class="st2" d="M18.585 11.703h52.549v68.434H18.585z"/><path class="st0" d="M47.351 7.638h-4.984"/><path class="st1" d="M42.367 5.638h4.983v4h-4.983z"/><path class="st0" d="M86.059 99.902v-5.066c2.561-1.914 4.221-4.959 4.221-8.4V68.219l-.195-4.023a3.904 3.904 0 0 0-3.903-3.905c-2.156 0-3.904.773-3.904 2.928v-.975a3.902 3.902 0 1 0-7.805 0V60.29a3.903 3.903 0 0 0-7.806 0v2.197c0-5.286-.035-22.489-.035-22.489a4.044 4.044 0 0 0-4.04-4.038 4.039 4.039 0 0 0-4.036 4.038l-.026 39.454-.081-1.921v-8.066a5.959 5.959 0 0 0-5.964-5.962H50.5c-.086 0 .082.007 0 .013v7.464c.011 0-.016.003 0 .006v9.903l11.304 13.436s2.929 1.858 4.732 2.297v3.282"/><path class="st1" d="M88.059 99.902h-4v-6.068l.802-.6c2.172-1.624 3.418-4.103 3.418-6.798V68.219l-.193-3.926c-.002-1.148-.856-2.002-1.906-2.002-1.898 0-1.904.6-1.904.924v.004h-4v-.975c0-1.05-.854-1.904-1.902-1.904a1.906 1.906 0 0 0-1.903 1.904h-4V60.29a1.905 1.905 0 0 0-1.904-1.902 1.904 1.904 0 0 0-1.902 1.902v2.197h-4c0-5.285-.035-22.484-.035-22.484a2.042 2.042 0 0 0-2.04-2.042 2.039 2.039 0 0 0-2.036 2.038l-.024 39.454-3.998.084-.081-1.921-.002-8.151a3.967 3.967 0 0 0-3.949-3.962v5.304l.244 1.551-.244.078v7.723l10.63 12.635c1.081.662 2.887 1.642 3.879 1.884l1.527.372v4.854h-4V98.04c-1.755-.74-3.551-1.865-3.804-2.025l-.261-.166L48.5 81.617V71.126l-.123-1.561.123-.04v-4.233l-.108-.012.108-2.282v-1.345l.076-.005.008-.144 3.901-.001c1.48 0 2.866.406 4.055 1.111l.013-22.616a6.043 6.043 0 0 1 6.036-6.037 6.045 6.045 0 0 1 6.04 6.038s.016 7.954.027 14.707a5.907 5.907 0 0 1 6.862 2.372 5.901 5.901 0 0 1 7.662 1.742c.802-.333 1.794-.529 3.001-.529a5.91 5.91 0 0 1 5.903 5.905l.193 3.926.002 18.314c0 3.624-1.526 6.978-4.221 9.351v4.115z"/><path class="st0" d="M10.754 47.643l.046-.099 13.273.2c.005.094.016.184.013.279l-.035 2.208a6.628 6.628 0 0 1-6.735 6.521l-1.453-.046-2.053 6.161c4.169 3.074 6.987 8.943 6.987 15.681 0 5.174-1.663 9.836-4.323 13.114H4.877v-30.72l5.877-13.299z"/><path class="st1" d="M17.425 93.663H2.877V60.52l6.654-14.996 16.441.248.097 1.868c.013.177.019.308.015.444l-.035 2.179c-.075 4.682-3.943 8.491-8.624 8.491l-.137-.001-1.146 3.439c4.135 3.705 6.654 9.824 6.654 16.357 0 5.478-1.694 10.583-4.77 14.374l-.601.74zm-10.548-4h8.604c2.115-2.977 3.315-6.971 3.315-11.114 0-5.871-2.366-11.263-6.174-14.071l-1.17-.863 2.983-8.954 2.942.093c2.558 0 4.632-2.043 4.673-4.555l.007-.485-9.966-.15-5.214 11.801v28.298z"/><path class="st3" d="M30.896 99.902V89.397H0v10.505"/><g><path class="st1" d="M42.347 33.622h-20v-18h20v18zm-16-4h12v-10h-12v10z"/></g><g><path class="st1" d="M22.097 37.622h30.417v4H22.097z"/></g><g><path class="st1" d="M29.097 45.622h23.417v4H29.097z"/></g><g><path class="st1" d="M29.097 53.622h23.417v4H29.097z"/></g><g><path class="st1" d="M22.097 61.622h22.667v4H22.097z"/></g></svg>
+              </div>
+              <div class="info_block_text">
+                Planning a trip? <strong>Search for an affordable private driver</strong> and guide on your travel dates.
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="info_block">
+              <div class="info_block_img">
+                <svg xmlns="http://www.w3.org/2000/svg" width="102.5" height="100.509" viewBox="0 0 102.5 100.509"><style>.st0_1{fill:#292e33}.st1_1{fill:#f16667}.st2_1{fill:#fff}.st3_1{fill:#d1d3d4}</style><path class="st0_1" d="M102.5 75.151h-7.82v-4h3.82V15.5H4v55.651h50.676v4H0V11.5h102.5z"/><path class="st1_1" d="M2 2h98.5v11.5H2z"/><path class="st0_1" d="M102.5 15.5H0V0h102.5v15.5zM4 11.5h94.5V4H4v7.5z"/><path class="st2_1" d="M6.5 7.667h3.738"/><path class="st0_1" d="M6.5 5.667h3.738v4H6.5z"/><path class="st2_1" d="M12.973 7.667h3.738"/><path class="st0_1" d="M12.973 5.667h3.738v4h-3.738z"/><g><path class="st2_1" d="M19.443 7.667h3.741"/><path class="st0_1" d="M19.443 5.667h3.74v4h-3.74z"/></g><g><path class="st2_1" d="M54.219 37.396h36.115"/><path class="st0_1" d="M54.219 35.396h36.115v4H54.219z"/><path class="st2_1" d="M54.219 43.64h31.324"/><path class="st0_1" d="M54.219 41.64h31.324v4H54.219z"/><g><path class="st2_1" d="M55.789 51.237h18.666v6.333H55.789z"/><path class="st1_1" d="M76.455 59.57H53.789V49.237h22.666V59.57zm-18.666-4h14.666v-2.333H57.789v2.333z"/></g><path class="st3_1" d="M54.219 25.571h38.166v6.334H54.219z"/></g><g><path class="st2_1" d="M86.02 75.884l-14.174-4.81-14.176-4.806 4.809 14.175 4.806 14.174 3.422-8.939 9.578 9.579 6.375-6.373-9.58-9.581z"/><path class="st0_1" d="M67.171 100.509L54.474 63.072l37.438 12.699-11.237 4.298 8.813 8.815-9.203 9.201-8.813-8.813-4.301 11.237zm2.77-18.425l10.344 10.345 3.547-3.545-10.347-10.348 6.642-2.54-19.261-6.533 6.533 19.262 2.542-6.641z"/></g><g><circle class="st1_1" cx="29.488" cy="42.659" r="17.906"/><circle class="st2_1" cx="29.488" cy="40.562" r="6.29"/><path class="st0_1" d="M29.488 48.851c-4.571 0-8.29-3.718-8.29-8.289s3.719-8.29 8.29-8.29 8.29 3.719 8.29 8.29-3.718 8.289-8.29 8.289zm0-12.579a4.295 4.295 0 0 0-4.29 4.29 4.295 4.295 0 0 0 4.29 4.289 4.295 4.295 0 0 0 4.29-4.289 4.296 4.296 0 0 0-4.29-4.29z"/><g><path class="st2_1" d="M34.207 47.551h-9.435a6.29 6.29 0 0 0-6.291 6.29v.512c2.877 2.709 6.744 4.381 11.008 4.381 4.266 0 8.131-1.672 11.009-4.381v-.512a6.292 6.292 0 0 0-6.291-6.29z"/><path class="st0_1" d="M29.488 60.733c-4.61 0-9.006-1.749-12.379-4.925l-.629-.592v-1.375c0-4.571 3.72-8.29 8.291-8.29h9.435c4.571 0 8.29 3.719 8.29 8.29v1.376l-.629.592a18.002 18.002 0 0 1-12.379 4.924zm-8.992-7.265c2.531 2.112 5.692 3.265 8.992 3.265s6.461-1.154 8.993-3.265a4.296 4.296 0 0 0-4.274-3.917h-9.435a4.296 4.296 0 0 0-4.276 3.917z"/></g></g></svg>
+              </div>
+              <div class="info_block_text">
+                <strong>View driver/guide profiles</strong> and send and communicate directly to plan your booking according to your interests and needs.
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="info_block">
+              <div class="info_block_img">
+                <svg xmlns="http://www.w3.org/2000/svg" width="76.707" height="100.5" viewBox="0 0 76.707 100.5"><style>.st0_2{fill:#292e33}.st1_2{fill:#d1d3d4}.st2_2{fill:#fff}.st3_2{fill:#f16667}</style><path class="st0_2" d="M36.802 100.5H5.063A5.069 5.069 0 0 1 0 95.436V5.063A5.07 5.07 0 0 1 5.063 0h42.891a5.07 5.07 0 0 1 5.063 5.063v31.474h-4V5.063A1.066 1.066 0 0 0 47.953 4H5.063C4.477 4 4 4.477 4 5.063v90.373c0 .587.477 1.064 1.063 1.064h31.739v4z"/><path class="st0_2" d="M49.016 47.555h4v8.731h-4z"/><path class="st1_2" d="M7.298 15.02h38.42v69.695H7.298z"/><path class="st0_2" d="M18.32 6.843h16.375v4H18.32zM24.508 88.511h4v4h-4z"/><path class="st2_2" d="M28.252 46.966l-5.802-2.264c-2.435-1.548-2.947-3.286-2.947-4.472v-2.431a5.577 5.577 0 0 1 5.57-5.572h2.868c3.071 0 5.569 2.5 5.569 5.572v1.136h-4v-1.136c0-.867-.704-1.572-1.569-1.572h-2.868c-.866 0-1.57.705-1.57 1.572v2.431c0 .105.173.477.935.993l5.244 2.008-1.43 3.735z"/><path class="st2_2" d="M27.942 56.133h-2.868a5.577 5.577 0 0 1-5.57-5.57v-1.137h4v1.137c0 .866.705 1.57 1.57 1.57h2.868c.865 0 1.569-.704 1.569-1.57V48.13c0-.079-.182-.501-.998-1.053l-4.997-1.924 1.438-3.733 5.547 2.177c2.488 1.578 3.01 3.336 3.01 4.532v2.433a5.575 5.575 0 0 1-5.569 5.571zM24.725 29.338h4v5.334h-4z"/><path class="st2_2" d="M24.725 53.271h4v5.334h-4z"/><g><path class="st0_2" d="M56.055 96.38h-3.762c-8.821 0-14.088-4.588-14.088-12.273V55.519c0-8.561 6.32-15.526 14.088-15.526h3.762c7.767 0 14.086 6.965 14.086 15.526v28.588c0 7.685-5.266 12.273-14.086 12.273zm-3.762-52.387c-5.563 0-10.088 5.17-10.088 11.526v28.588c0 5.49 3.394 8.273 10.088 8.273h3.762c6.692 0 10.086-2.783 10.086-8.273V55.519c0-6.355-4.524-11.526-10.086-11.526h-3.762z"/><path class="st3_2" d="M33.641 62.525h41.066V98.48H33.641z"/><path class="st0_2" d="M72.707 64.525V96.48H35.641V64.525h37.066m4-4H31.641v39.955h45.066V60.525z"/><path class="st0_2" d="M54.176 71.292c-1.888 0-3.421 1.71-3.421 3.826 0 1.394.67 2.607 1.667 3.277l-.775 9.421h5.052l-.771-9.421c.996-.669 1.666-1.883 1.666-3.277 0-2.116-1.533-3.826-3.418-3.826z"/></g></svg>
+              </div>
+              <div class="info_block_text">
+                <strong>Pay online to book</strong> your personal local driver and you're set to explore the city like a local!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section_info_item">
+      <h2 class="title title_highlighted">ACCESS + LOCAL KNOWLEDGE</h2>
+      <div class="subtitle">Connect with local drivers that know the best spots in Australia.</div>
+
+      <div class="img_link_list">
+        <div class="row">
+          <div class="col-sm-8">
+            <a href="#" class="img_link">
+              <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3355/img_link01.jpg" alt="">
+              <span class="img_link_inner">
+                <span class="img_link_text">
+                  <span class="img_link_title">SYDNEY</span>
+                </span>
+              </span>
+            </a>
+          </div>
+          <div class="col-sm-4 col-xs-6">
+            <a href="#" class="img_link">
+              <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3356/img_link02.jpg" alt="">
+              <span class="img_link_inner">
+                <span class="img_link_text">
+                  <span class="img_link_title">MELBOURNE<span>(coming soon)</span></span>
+                </span>
+              </span>
+            </a>
+          </div>
+          <div class="col-sm-4 col-xs-6">
+            <a href="#" class="img_link">
+              <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3357/img_link03.jpg" alt="">
+              <span class="img_link_inner">
+                <span class="img_link_text">
+                  <span class="img_link_title">NEW YORK<span>(coming soon)</span></span>
+                </span>
+              </span>
+            </a>
+          </div>
+          <div class="col-sm-4 col-xs-6">
+            <a href="#" class="img_link">
+              <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3358/img_link04.jpg" alt="">
+              <span class="img_link_inner">
+                <span class="img_link_text">
+                  <span class="img_link_title">LONDON<span>(coming soon)</span></span>
+                </span>
+              </span>
+            </a>
+          </div>
+          <div class="col-sm-4 col-xs-6">
+            <a href="#" class="img_link">
+              <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3359/img_link05.jpg" alt="">
+              <span class="img_link_inner">
+                <span class="img_link_text">
+                  <span class="img_link_title">PARIS<span>(coming soon)</span></span>
+                </span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section_info_item">
+      <h2 class="title title_highlighted">WHY TRAVEL WITH LOCALDRIVA?</h2>
+      <div class="subtitle">Discover all the benefits and convenience we have to make your travel experience great!</div>
+      <div class="info_block_list info_block_list_padd">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="info_block sm_size">
+              <div class="info_block_img">
+                <svg xmlns="http://www.w3.org/2000/svg" width="74" height="74.001" viewBox="0 0 74 74.001"><style>.st0_4{fill:#292e33}.st1_4{fill:#d1d3d4}.st2_4{fill:#f16667}.st3_4{fill:#fff}</style><path class="st0_4" d="M37.018 57.614h-.019c-1.071 0-2.147-.083-3.2-.247l.46-2.954c.901.14 1.823.211 2.74.211l.019 2.99zm3.224-.253l-.467-2.953a17.597 17.597 0 0 0 2.686-.645l.925 2.843a20.68 20.68 0 0 1-3.144.755zm-9.589-.743a20.559 20.559 0 0 1-2.991-1.236l1.356-2.664c.821.418 1.68.773 2.555 1.055l-.92 2.845zm15.72-1.254l-1.362-2.662a17.527 17.527 0 0 0 2.354-1.447l1.76 2.416a20.549 20.549 0 0 1-2.752 1.693zm-21.47-1.669a20.766 20.766 0 0 1-2.459-2.097l2.112-2.116a17.83 17.83 0 0 0 2.103 1.794l-1.756 2.419zm26.68-2.125l-2.116-2.111a17.968 17.968 0 0 0 1.797-2.105l2.417 1.759a20.942 20.942 0 0 1-2.098 2.457zm-31.242-2.426a20.876 20.876 0 0 1-1.696-2.75l2.659-1.366c.421.82.909 1.612 1.451 2.353l-2.414 1.763zm35.032-2.787L52.709 45c.42-.823.776-1.682 1.058-2.554l2.843.922a20.594 20.594 0 0 1-1.237 2.989zm-37.972-2.95a20.555 20.555 0 0 1-.758-3.143l2.953-.47c.145.909.362 1.812.647 2.686l-2.842.927zm39.961-3.186l-2.953-.463c.142-.907.214-1.834.214-2.758v-.077h2.989V37a20.622 20.622 0 0 1-.25 3.221zM16.386 37.04v-.039c0-1.064.082-2.134.244-3.18l2.954.458c-.139.894-.209 1.81-.209 2.722l-2.989.039zm38.011-2.868a17.65 17.65 0 0 0-.653-2.684l2.84-.933a20.63 20.63 0 0 1 .764 3.143l-2.951.474zM20.22 31.591l-2.845-.917c.33-1.024.744-2.031 1.233-2.992l2.665 1.353c-.416.821-.77 1.681-1.053 2.556zm32.456-2.651a17.533 17.533 0 0 0-1.454-2.348l2.41-1.768c.638.869 1.21 1.794 1.702 2.749l-2.658 1.367zm-29.961-2.265l-2.421-1.752a20.608 20.608 0 0 1 2.094-2.462l2.119 2.108a17.76 17.76 0 0 0-1.792 2.106zm26.703-2.179a17.804 17.804 0 0 0-2.108-1.79l1.752-2.423c.871.63 1.7 1.334 2.463 2.092l-2.107 2.121zm-22.814-1.729l-1.765-2.413a20.753 20.753 0 0 1 2.75-1.698l1.366 2.659c-.816.42-1.608.909-2.351 1.452zm18.345-1.5a17.454 17.454 0 0 0-2.557-1.05l.914-2.846c1.026.329 2.034.743 2.994 1.23l-1.351 2.666zM31.504 20.25l-.931-2.84a20.482 20.482 0 0 1 3.143-.762l.473 2.951c-.91.146-1.812.365-2.685.651zm8.2-.668a17.806 17.806 0 0 0-2.705-.206l-.043-2.249.014-.74h.006c1.085 0 2.146.081 3.182.24l-.454 2.955zM41.891 8.676l-4.452-4.45-4.452 4.45-2.113-2.114L37.439 0l6.566 6.562z"/><path class="st0_4" d="M35.945 3.204h2.989v9.319h-2.989z"/><path class="st1_4" d="M14.133 19.809h-2.99l.003-9.283 9.282-.003.002 2.989-6.296.002z"/><path transform="rotate(-45.009 16.708 16.086)" class="st1_4" d="M15.212 11.427h2.989v9.318h-2.989z"/><path class="st0_4" d="M6.56 43.127L0 36.561l6.56-6.566 2.115 2.113-4.449 4.453 4.449 4.453z"/><path class="st0_4" d="M3.202 35.066h9.32v2.989h-9.32z"/><path class="st1_4" d="M19.807 62.856l-9.282-.003-.003-9.282 2.989-.001.001 6.295 6.297.002z"/><path transform="rotate(-45.001 16.084 57.293)" class="st1_4" d="M11.424 55.798h9.32v2.989h-9.32z"/><g><path class="st1_4" d="M53.57 63.478l-.002-2.989 6.295-.002.003-6.295 2.989.001-.004 9.281z"/><path transform="rotate(-45.009 57.293 57.917)" class="st1_4" d="M55.797 53.256h2.989v9.319h-2.989z"/></g><g><path class="st0_4" d="M67.439 44.006l-2.115-2.113 4.45-4.452-4.45-4.453 2.115-2.113L74 37.441z"/><path class="st0_4" d="M61.477 35.947h9.319v2.989h-9.319z"/></g><g><path class="st0_4" d="M36.559 74.001l-6.565-6.561 2.113-2.114 4.452 4.45 4.454-4.45 2.112 2.115z"/><path class="st0_4" d="M35.064 61.479h2.989v9.32h-2.989z"/></g><g><path class="st1_4" d="M60.488 20.431l-.002-6.294-6.296-.003.001-2.989 9.283.004.003 9.281z"/><path transform="rotate(-45.001 57.914 16.71)" class="st1_4" d="M53.254 15.214h9.319v2.989h-9.319z"/></g><g><circle class="st2_4" cx="36.999" cy="37.001" r="13.382"/><circle class="st3_4" cx="36.999" cy="35.434" r="4.701"/><path class="st0_4" d="M36.999 41.629a6.202 6.202 0 0 1-6.195-6.195c0-3.416 2.779-6.195 6.195-6.195s6.195 2.779 6.195 6.195a6.2 6.2 0 0 1-6.195 6.195zm0-9.401a3.21 3.21 0 0 0-3.206 3.206 3.209 3.209 0 0 0 3.206 3.205 3.21 3.21 0 0 0 3.206-3.205 3.21 3.21 0 0 0-3.206-3.206z"/><g><path class="st3_4" d="M40.526 40.656h-7.051a4.7 4.7 0 0 0-4.701 4.701v.382A11.96 11.96 0 0 0 37 49.013a11.96 11.96 0 0 0 8.227-3.274v-.382a4.703 4.703 0 0 0-4.701-4.701z"/><path class="st0_4" d="M36.999 50.508c-3.445 0-6.73-1.307-9.251-3.68l-.47-.443v-1.028a6.203 6.203 0 0 1 6.196-6.195h7.051a6.202 6.202 0 0 1 6.195 6.195v1.028l-.47.443a13.45 13.45 0 0 1-9.251 3.68zm-6.72-5.429c1.892 1.578 4.254 2.44 6.72 2.44s4.828-.862 6.721-2.44a3.211 3.211 0 0 0-3.194-2.928h-7.051a3.212 3.212 0 0 0-3.196 2.928z"/></g></g></svg>
+              </div>
+              <div class="info_block_text">
+                Travel the city with a local who can give you the <strong>best advice on where to go</strong> and what to do.
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="info_block sm_size">
+              <div class="info_block_img">
+                <svg xmlns="http://www.w3.org/2000/svg" width="76" height="66.63" viewBox="0 0 76 66.63"><style>.st0_5{fill:#f16667}.st1_5{fill:#292e33}.st2_5{fill:#fff}.st3_5{fill:none}.st4_5{fill:#d1d3d4}</style><circle class="st0_5" cx="41.886" cy="24.253" r="24.253"/><path class="st1_5" d="M62.531 24.253h-3.006c0-9.727-7.913-17.639-17.638-17.639-9.727 0-17.64 7.913-17.64 17.639h-3.006c0-11.383 9.261-20.645 20.646-20.645 11.383 0 20.644 9.262 20.644 20.645z"/><path class="st1_5" d="M53.681 31.471l-2.934-.657c.467-2.085.704-4.292.704-6.561 0-9.561-4.38-17.639-9.565-17.639-5.187 0-9.57 8.078-9.57 17.639 0 2.096.204 4.146.603 6.096l-2.944.605a33.392 33.392 0 0 1-.665-6.701c0-11.577 5.525-20.645 12.576-20.645 7.049 0 12.571 9.068 12.571 20.645a33.1 33.1 0 0 1-.776 7.218z"/><path class="st1_5" d="M61.195 31.571l-2.81-1.066a17.54 17.54 0 0 0 1.14-6.25c0-9.22-7.111-16.81-16.136-17.576v23.846h-3.006V5.111c0-.83.673-1.503 1.503-1.503 11.383 0 20.644 9.261 20.644 20.645a20.533 20.533 0 0 1-1.335 7.318z"/><path class="st1_5" d="M59.782 32.502H23.99a1.504 1.504 0 0 1-1.407-.973 20.594 20.594 0 0 1-1.342-7.275c0-2.465.452-4.914 1.344-7.279a1.503 1.503 0 0 1 1.406-.972h35.79c.625 0 1.185.388 1.406.972.89 2.363 1.343 4.811 1.343 7.279s-.452 4.916-1.343 7.276a1.5 1.5 0 0 1-1.405.972zm-34.721-3.006h33.651c.54-1.716.813-3.475.813-5.243 0-1.769-.273-3.529-.813-5.246h-33.65a17.436 17.436 0 0 0-.815 5.246c0 1.765.273 3.524.814 5.243z"/><g><path class="st2_5" d="M59.263 64.195a.932.932 0 0 1-.932.932H2.435a.933.933 0 0 1-.932-.932V41.194c0-.515.42-.931.932-.931h55.897a.93.93 0 0 1 .932.931v23.001z"/><path class="st1_5" d="M58.332 66.63H2.435A2.437 2.437 0 0 1 0 64.195V41.194a2.437 2.437 0 0 1 2.435-2.434h55.897a2.437 2.437 0 0 1 2.435 2.434v23.001a2.439 2.439 0 0 1-2.435 2.435zM3.006 63.624H57.76V41.767H3.006v21.857z"/><g><path class="st3_5" d="M6.207 46.605h4.381"/><path class="st4_5" d="M6.207 45.102h4.381v3.006H6.207z"/><path class="st3_5" d="M13.535 46.605h4.382"/><path class="st4_5" d="M13.535 45.102h4.382v3.006h-4.382z"/><path class="st3_5" d="M20.866 46.605h4.379"/><path class="st4_5" d="M20.866 45.102h4.379v3.006h-4.379z"/><path class="st3_5" d="M28.195 46.605h4.38"/><path class="st4_5" d="M28.195 45.102h4.379v3.006h-4.379z"/><g><path class="st3_5" d="M35.524 46.605h4.38"/><path class="st4_5" d="M35.524 45.102h4.379v3.006h-4.379z"/></g><g><path class="st3_5" d="M42.854 46.605h4.379"/><path class="st4_5" d="M42.854 45.102h4.379v3.006h-4.379z"/></g><g><path class="st3_5" d="M50.18 46.605h4.381"/><path class="st4_5" d="M50.18 45.102h4.381v3.006H50.18z"/></g><g><path class="st3_5" d="M6.207 52.696h4.381"/><path class="st4_5" d="M6.207 51.193h4.381v3.006H6.207z"/><path class="st3_5" d="M13.535 52.696h4.382"/><path class="st4_5" d="M13.535 51.193h4.382v3.006h-4.382z"/><path class="st3_5" d="M20.866 52.696h4.379"/><path class="st4_5" d="M20.866 51.193h4.379v3.006h-4.379z"/><path class="st3_5" d="M28.195 52.696h4.38"/><path class="st4_5" d="M28.195 51.193h4.379v3.006h-4.379z"/><g><path class="st3_5" d="M35.524 52.696h4.38"/><path class="st4_5" d="M35.524 51.193h4.379v3.006h-4.379z"/></g><g><path class="st3_5" d="M42.854 52.696h4.379"/><path class="st4_5" d="M42.854 51.193h4.379v3.006h-4.379z"/></g><g><path class="st3_5" d="M50.18 52.696h4.381"/><path class="st4_5" d="M50.18 51.193h4.381v3.006H50.18z"/></g></g><g><path class="st3_5" d="M6.207 58.786h4.381"/><path class="st4_5" d="M6.207 57.283h4.381v3.006H6.207z"/><path class="st3_5" d="M13.535 58.786h4.382"/><path class="st4_5" d="M13.535 57.283h4.382v3.006h-4.382z"/><g><path class="st3_5" d="M20.866 58.786h26.433"/><path class="st4_5" d="M20.866 57.283H47.3v3.006H20.866z"/></g><g><path class="st3_5" d="M50.18 58.786h4.381"/><path class="st4_5" d="M50.18 57.283h4.381v3.006H50.18z"/></g></g></g></g><g><path class="st1_5" d="M23.863 32.472H11.039c-2.947 0-5.345-2.398-5.345-5.346s2.398-5.346 5.345-5.346h4.369v3.006h-4.369A2.342 2.342 0 0 0 8.7 27.127c0 1.29 1.049 2.34 2.339 2.34h12.822l.002 3.005z"/></g><g><path class="st1_5" d="M66.898 47.67h-6.46v-3.006h6.461a6.103 6.103 0 0 0 6.096-6.096 6.103 6.103 0 0 0-6.096-6.096h-7.813v-3.006h7.812c5.02 0 9.102 4.083 9.102 9.101.001 5.02-4.083 9.103-9.102 9.103z"/></g></svg>
+              </div>
+              <div class="info_block_text">
+                Book your own <strong>personal local driver and guide</strong> in advance for a fraction of the cost of other tour guides.
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="info_block sm_size">
+              <div class="info_block_img">
+                <svg xmlns="http://www.w3.org/2000/svg" width="76" height="54.825" viewBox="0 0 76 54.825"><style>.st0_6{fill:none}.st1_6{fill:#292e33}.st2_6{fill:#d1d3d4}.st3_6{fill:#fff}.st4_6{fill:#f16667}</style><path class="st0_6" d="M54.759 1.777H21.242"/><path class="st1_6" d="M56.707 3.311H19.294M23.19.242h29.622"/><g><path class="st2_6" d="M11.92 14.794a2.88 2.88 0 0 1-2.88 2.881H3.278a2.882 2.882 0 0 1 0-5.762h5.763a2.88 2.88 0 0 1 2.879 2.881zM75.606 14.794a2.88 2.88 0 0 1-2.882 2.881h-5.763a2.88 2.88 0 1 1 0-5.762h5.763a2.881 2.881 0 0 1 2.882 2.881z"/><path class="st3_6" d="M61.271 2.975c-.292-.793-1.222-1.44-2.066-1.44H16.797c-.844 0-1.774.647-2.065 1.44L8.131 20.867c-.292.793.16 1.44 1.004 1.44h57.732c.845 0 1.295-.648 1.004-1.44l-6.6-17.892z"/><path class="st1_6" d="M66.867 23.842H9.134c-.912 0-1.709-.394-2.187-1.08-.479-.687-.572-1.571-.257-2.426l6.601-17.892C13.804 1.051 15.312 0 16.797 0h42.409c1.485 0 2.991 1.051 3.505 2.443l6.6 17.892c.315.856.223 1.741-.256 2.427-.48.687-1.277 1.08-2.188 1.08zM9.801 20.773H66.2L59.83 3.506c-.069-.187-.425-.436-.625-.436H16.797c-.2 0-.556.249-.625.436L9.801 20.773z"/><path class="st2_6" d="M18.088 47.831a5.458 5.458 0 0 1-5.457 5.459H9.447a5.458 5.458 0 0 1-5.459-5.459v-18.65a5.458 5.458 0 0 1 5.459-5.459h3.184a5.458 5.458 0 0 1 5.457 5.459v18.65z"/><path class="st1_6" d="M12.631 54.825H9.447a7.002 7.002 0 0 1-6.994-6.994v-18.65c0-3.856 3.138-6.994 6.994-6.994h3.184c3.856 0 6.992 3.137 6.992 6.994v18.65c0 3.856-3.136 6.994-6.992 6.994zM9.446 25.257a3.929 3.929 0 0 0-3.925 3.924v18.65a3.928 3.928 0 0 0 3.925 3.924h3.184a3.927 3.927 0 0 0 3.922-3.924v-18.65a3.928 3.928 0 0 0-3.922-3.924H9.446z"/><g><path class="st2_6" d="M72.014 47.831a5.459 5.459 0 0 1-5.458 5.459h-3.184a5.46 5.46 0 0 1-5.459-5.459v-18.65a5.46 5.46 0 0 1 5.459-5.459h3.184a5.458 5.458 0 0 1 5.458 5.459v18.65z"/><path class="st1_6" d="M66.556 54.825h-3.184a7.002 7.002 0 0 1-6.994-6.994v-18.65a7.002 7.002 0 0 1 6.994-6.994h3.184a7.001 7.001 0 0 1 6.993 6.994v18.65c0 3.856-3.137 6.994-6.993 6.994zm-3.185-29.568a3.929 3.929 0 0 0-3.924 3.924v18.65a3.928 3.928 0 0 0 3.924 3.924h3.184a3.928 3.928 0 0 0 3.923-3.924v-18.65a3.928 3.928 0 0 0-3.923-3.924h-3.184z"/></g><g><path class="st3_6" d="M67.011 17.541c-.904-.797-2.628-1.45-3.833-1.45H12.823c-1.205 0-2.93.653-3.832 1.45l-5.812 5.136c-.905.798-1.643 2.437-1.643 3.641v14.64c0 1.205.985 2.189 2.19 2.189h68.551c1.204 0 2.19-.985 2.19-2.189v-14.64c0-1.204-.739-2.843-1.642-3.641l-5.814-5.136z"/><path class="st1_6" d="M72.277 44.682H3.725A3.728 3.728 0 0 1 0 40.958V26.317c0-1.645.929-3.704 2.162-4.792l5.812-5.135c1.184-1.046 3.269-1.835 4.849-1.835h50.356c1.579 0 3.662.788 4.848 1.834l5.815 5.136c1.231 1.09 2.16 3.149 2.16 4.791v14.64a3.73 3.73 0 0 1-3.725 3.726zM12.823 17.625c-.827 0-2.196.518-2.816 1.066l-5.812 5.136c-.579.51-1.124 1.721-1.124 2.49v14.64c0 .355.301.655.655.655h68.551c.355 0 .655-.3.655-.655v-14.64c0-.77-.546-1.981-1.124-2.491l-5.813-5.135c-.621-.547-1.99-1.066-2.816-1.066H12.823z"/></g><g><path class="st3_6" d="M59.367 43.147v-4.271a3.286 3.286 0 0 0-3.285-3.285H21.033a3.287 3.287 0 0 0-3.285 3.285v4.271h41.619z"/><path class="st1_6" d="M60.902 44.682H16.213v-5.806a4.825 4.825 0 0 1 4.82-4.82h35.048a4.825 4.825 0 0 1 4.82 4.82v5.806zm-41.619-3.069h38.549v-2.736c0-.965-.785-1.75-1.75-1.75H21.033c-.965 0-1.75.786-1.75 1.75v2.736z"/></g><g><path class="st1_6" d="M6.796 35.152h5.841v3.07H6.796zM64.113 35.152h5.842v3.07h-5.842z"/></g><path class="st2_6" d="M51.874 28.108c0 1.513-.871 2.738-1.945 2.738H26.073c-1.074 0-1.945-1.226-1.945-2.738 0-1.513.871-2.738 1.945-2.738h23.856c1.074-.001 1.945 1.226 1.945 2.738z"/><g><path class="st4_6" d="M19.649 28.108c-1.054-1.511-2.726-2.738-3.734-2.738H8.241a2.738 2.738 0 1 0 0 5.476h9.669c2.015 0 2.792-1.225 1.739-2.738zM56.352 28.108c1.054-1.511 2.726-2.738 3.735-2.738H67.762a2.738 2.738 0 1 1 0 5.476h-9.669c-2.015 0-2.793-1.225-1.741-2.738z"/></g></g></svg>
+              </div>
+              <div class="info_block_text">
+                Enjoy the convenience and comfort of traveling to each destination in a <strong>private car.</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="info_block sm_size">
+              <div class="info_block_img">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="76.354" viewBox="0 0 64 76.354"><style>.st0_7{fill:#292e33}.st1_7{fill:#f16667}</style><path class="st0_7" d="M32 52.256c-11.556 0-20.957-9.403-20.957-20.959h2.996c0 9.905 8.058 17.963 17.962 17.963s17.962-8.058 17.962-17.963c0-9.904-8.058-17.963-17.962-17.963v-2.996c11.556 0 20.957 9.402 20.957 20.958 0 11.559-9.402 20.96-20.958 20.96z"/><path class="st0_7" d="M14.038 31.298h-2.996c0-.536.02-1.078.061-1.611l2.987.226c-.034.457-.052.923-.052 1.385zM14.525 27.122l-2.914-.693a20.73 20.73 0 0 1 1.015-3.138l2.767 1.147a18.147 18.147 0 0 0-.868 2.684zm2.152-5.2l-2.554-1.567a21.29 21.29 0 0 1 1.936-2.664l2.279 1.945a18.002 18.002 0 0 0-1.661 2.286zm3.658-4.282l-1.947-2.277a21.069 21.069 0 0 1 2.663-1.937l1.568 2.553c-.8.49-1.57 1.05-2.284 1.661zm4.798-2.945l-1.147-2.767a20.817 20.817 0 0 1 3.136-1.016l.693 2.915a17.77 17.77 0 0 0-2.682.868zM30.618 13.388l-.23-2.987c.53-.041 1.072-.061 1.612-.061v2.996c-.464 0-.929.017-1.382.052z"/><circle class="st1_7" cx="32.001" cy="31.298" r="13.862"/><g><path class="st0_7" d="M29.154 38.802l-5.701-5.703 2.118-2.118 3.583 3.583 9.71-9.71 2.119 2.118z"/></g><g><path class="st0_7" d="M32.001 76.354c-.346 0-.692-.12-.972-.358C29.762 74.915 0 49.342 0 31.996 0 14.353 14.356 0 32.001 0S64 14.353 64 31.996c0 17.346-29.761 42.921-31.028 44a1.494 1.494 0 0 1-.971.358zm0-73.358c-15.994 0-29.005 13.009-29.005 29 0 6.52 5.143 15.773 14.875 26.758 5.898 6.658 11.848 12.09 14.13 14.113 2.286-2.027 8.254-7.475 14.152-14.138 9.716-10.974 14.852-20.218 14.852-26.732 0-15.992-13.011-29.001-29.004-29.001z"/></g></svg>
+              </div>
+              <div class="info_block_text">
+                Don’t spend your <strong>precious holiday time</strong> trying to follow maps or waiting for transport.
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="info_block sm_size">
+              <div class="info_block_img">
+                <svg xmlns="http://www.w3.org/2000/svg" width="74" height="67.868" viewBox="0 0 74 67.868"><style>.st0_8{fill:#292e33}.st1_8{fill:#fff}.st2_8{fill:none}.st3_8{fill:#d1d3d4}.st4_8{fill:#f16667}.st5_8{fill:#f47421}</style><path class="st0_8" d="M38.318 35.906h-3.033V7.277a4.248 4.248 0 0 0-4.244-4.244H3.11v32.873H.077V0h30.964c4.012 0 7.277 3.265 7.277 7.277v28.629z"/><path class="st0_8" d="M74 57.765h-6.785v-3.033h3.752v-51.7h-27.93a4.25 4.25 0 0 0-4.246 4.244v28.629h-3.033V7.277C35.758 3.264 39.023 0 43.037 0H74v57.765zM7.452 7.593h13.705v3.033H7.452zM7.452 16.499h23.085v3.033H7.452zM7.452 23.036h23.085v3.033H7.452zM7.452 29.572h16.485v3.033H7.452z"/><g><path class="st1_8" d="M62.399 65.37a.98.98 0 0 1-.982.981H2.498a.982.982 0 0 1-.982-.981V41.125c0-.541.442-.98.982-.98h58.919c.542 0 .982.439.982.98V65.37z"/><path class="st0_8" d="M61.418 67.868H2.498A2.501 2.501 0 0 1 0 65.37V41.125a2.5 2.5 0 0 1 2.498-2.497h58.919a2.5 2.5 0 0 1 2.498 2.497V65.37a2.5 2.5 0 0 1-2.497 2.498zM3.033 64.835h57.85V41.661H3.033v23.174z"/><g><path class="st2_8" d="M6.474 46.827h4.619"/><path class="st3_8" d="M6.474 45.311h4.619v3.033H6.474z"/><path class="st2_8" d="M14.2 46.827h4.617"/><path class="st3_8" d="M14.2 45.311h4.618v3.033H14.2z"/><path class="st2_8" d="M21.925 46.827h4.616"/><path class="st3_8" d="M21.925 45.311h4.616v3.033h-4.616z"/><path class="st2_8" d="M29.65 46.827h4.616"/><path class="st3_8" d="M29.65 45.311h4.617v3.033H29.65z"/><g><path class="st2_8" d="M37.376 46.827h4.616"/><path class="st3_8" d="M37.376 45.311h4.616v3.033h-4.616z"/></g><g><path class="st2_8" d="M45.102 46.827h4.615"/><path class="st3_8" d="M45.102 45.311h4.615v3.033h-4.615z"/></g><g><path class="st2_8" d="M52.826 46.827h4.616"/><path class="st3_8" d="M52.826 45.311h4.616v3.033h-4.616z"/></g><g><path class="st2_8" d="M6.474 53.249h4.619"/><path class="st3_8" d="M6.474 51.732h4.619v3.033H6.474z"/><path class="st2_8" d="M14.2 53.249h4.617"/><path class="st3_8" d="M14.2 51.732h4.618v3.033H14.2z"/><path class="st2_8" d="M21.925 53.249h4.616"/><path class="st3_8" d="M21.925 51.732h4.616v3.033h-4.616z"/><path class="st2_8" d="M29.65 53.249h4.616"/><path class="st3_8" d="M29.65 51.732h4.617v3.033H29.65z"/><g><path class="st2_8" d="M37.376 53.249h4.616"/><path class="st3_8" d="M37.376 51.732h4.616v3.033h-4.616z"/></g><g><path class="st2_8" d="M45.102 53.249h4.615"/><path class="st3_8" d="M45.102 51.732h4.615v3.033h-4.615z"/></g><g><path class="st2_8" d="M52.826 53.249h4.616"/><path class="st3_8" d="M52.826 51.732h4.616v3.033h-4.616z"/></g></g><g><path class="st2_8" d="M6.474 59.668h4.619"/><path class="st3_8" d="M6.474 58.151h4.619v3.033H6.474z"/><path class="st2_8" d="M14.2 59.668h4.617"/><path class="st3_8" d="M14.2 58.151h4.618v3.033H14.2z"/><g><path class="st2_8" d="M21.925 59.668h27.864"/><path class="st3_8" d="M21.925 58.151h27.864v3.033H21.925z"/></g><g><path class="st2_8" d="M52.826 59.668h4.616"/><path class="st3_8" d="M52.826 58.151h4.616v3.033h-4.616z"/></g></g></g></g><g><path class="st2_8" d="M54.535 12.499V7.931"/><path class="st4_8" d="M53.018 7.931h3.033v4.567h-3.033z"/><path class="st2_8" d="M50.234 15.292l-3.956-2.283"/><path transform="rotate(-60.012 48.256 14.152)" class="st4_8" d="M46.738 11.868h3.033v4.567h-3.033z"/><path class="st2_8" d="M50.502 20.415l-3.956 2.283"/><path transform="rotate(-29.98 48.525 21.558)" class="st4_8" d="M46.241 20.041h4.568v3.033h-4.568z"/><g><path class="st2_8" d="M55.073 22.742v4.57"/><path class="st5_8" d="M53.557 22.742h3.033v4.57h-3.033z"/></g><g><path class="st2_8" d="M59.373 19.95l3.958 2.284"/><path transform="rotate(-60.012 61.351 21.093)" class="st4_8" d="M59.833 18.808h3.033v4.569h-3.033z"/></g><g><path class="st2_8" d="M59.104 14.828l3.957-2.285"/><path transform="rotate(-30 61.082 13.69)" class="st4_8" d="M58.797 12.171h4.569v3.033h-4.569z"/></g><g><path class="st4_8" d="M54.878 22.279l2.32 4.102 2.32 4.105-4.713-.043-4.715-.043 2.395-4.06z"/><path class="st4_8" d="M62.13 32.026l-14.68-.133 7.455-12.646 7.225 12.779zm-9.399-3.119l4.175.038-2.055-3.634-2.12 3.596z"/><g><path transform="matrix(.0093 -1 1 .0093 21.142 87.605)" class="st4_8" d="M52.011 31.616h5.544v3.033h-5.544z"/></g></g></g></svg>
+              </div>
+              <div class="info_block_text">
+                With a local’s advice and suggestions, you can <strong>plan your trip to fit your own interests.</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="info_block sm_size">
+              <div class="info_block_img">
+                <svg xmlns="http://www.w3.org/2000/svg" width="79" height="72.2" viewBox="0 0 79 72.2"><style>.st0_9{fill:#292e33}.st1_9{fill:#d1d3d4}.st2_9{fill:#f16667}</style><path class="st0_9" d="M11.6 72.2V56.6H0V13h42.1v3.1H3v37.5h11.6v11.7l13-11.7h32.7V30.4h3v26.2H28.8z"/><path class="st1_9" d="M14.3 26h32.4v3H14.3zM14.3 33.6h32.4v3H14.3zM14.3 41.3h32.4v3H14.3z"/><g><path class="st2_9" d="M61 4.9l3.2 9.7h10.1l-8.2 5.9 3.2 9.7-8.3-6-8.2 6 3.2-9.7-8.3-5.9h10.2z"/><path class="st0_9" d="M72.1 34.2L61 26.1l-11.1 8.1 4.2-13-11-8.2h13.7L61 0l4.2 13H79l-11.1 8.1 4.2 13.1zM52.4 16.1l5.3 3.9-2 6.3 5.3-3.9 5.3 3.9-2-6.3 5.3-3.9H63l-2-6.3-2 6.3h-6.6z"/></g></svg>
+              </div>
+              <div class="info_block_text">
+                Safe and reliable. <strong>Driver guide profiles with passenger reviews</strong> lets you know you are in good hands.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section section_community">
+  <div class="container_main">
+    <h2 class="title">OUR COMMUNITY</h2>
+    <div class="community_list">
+      <div class="row">
+        <div class="col-sm-4">
+          <a href="#" class="community_item">
+            <h3 class="label_item label_driver">Driver Profile</h3>
+            <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3361/community01.jpg" alt="">
+            <span class="community_text">
+              <span class="community_text_inner">
+                Find out more about joining our <strong>team of drivers</strong>
+              </span>
+            </span>
+          </a>
+        </div>
+        <div class="col-sm-4">
+          <a href="#" class="community_item">
+            <h3 class="label_item label_passenger">Passenger Profile</h3>
+            <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3362/community02.jpg" alt="">
+            <span class="community_text">
+              <span class="community_text_inner">
+                Local Driva specializes in <strong>helping tourists</strong>
+              </span>
+            </span>
+          </a>
+        </div>
+        <div class="col-sm-4">
+          <a href="#" class="community_item">
+            <h3 class="label_item label_journey">The Journey</h3>
+            <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3363/community03.jpg" alt="">
+            <span class="community_text">
+              <span class="community_text_inner">
+                It is <strong>all about the journey</strong>, not the destination
+              </span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section section_testimonials">
+  <div class="container_main">
+    <h2 class="title title_highlighted">TESTIMONIALS</h2>
+    <div class="subtitle subtitle_light">Find out why people love our marketplace community!</div>
+
+    <div class="testimonial_list">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="testimonial_item">
+            <div class="testimonial_ava">
+              <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3352/ava01.png" alt="">
+            </div>
+            <blockquote>
+              “Aliquam vicis et ad enim utinam ad. Modo facilisi capto mara. Iustum macto singularis feugait vel plaga damnum feugait consequat eum lobortis.”
+            </blockquote>
+            <div class="testimonial_name">
+              Jane Doe
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="testimonial_item">
+            <div class="testimonial_ava">
+              <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3353/ava02.png" alt="">
+            </div>
+            <blockquote>
+              “Aliquam vicis et ad enim utinam ad. Modo facilisi capto mara. Iustum macto singularis feugait vel plaga damnum feugait consequat eum lobortis.”
+            </blockquote>
+            <div class="testimonial_name">
+              Kelly Reynolds
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="testimonial_item">
+            <div class="testimonial_ava">
+              <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3354/ava03.png" alt="">
+            </div>
+            <blockquote>
+              “Aliquam vicis et ad enim utinam ad. Modo facilisi capto mara. Iustum macto singularis feugait vel plaga damnum feugait consequat eum lobortis.”
+            </blockquote>
+            <div class="testimonial_name">
+              Kristina Weaks
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
