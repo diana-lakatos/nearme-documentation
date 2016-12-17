@@ -176,6 +176,15 @@
       &.active {
         display: block;
       }
+
+      &:before {
+        content: $fa-var-info-circle;
+        margin-right: 8px;
+        font-family: FontAwesome;
+        font-size: 1.2em;
+        vertical-align: middle;
+        color: $color-blue;
+      }
     }
   }
 

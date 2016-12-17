@@ -1,0 +1,127 @@
+= simple_form_for [:dashboard, @group], html: { multipart: true, class: 'form-a group-form-controller' } do |f|
+  -# needed for photo uploader to work correctly
+  = f.input :id, as: :hidden
+  .fields
+    = f.association :transactable_type, as: :select, required: true, input_html: { class: 'selectize' }
+
+    .group-type-description
+      %p.public{class: ('active' if @group.public?) }
+        = I18n.t('group.type.public')
+
+      %p.moderated{class: ('active' if @group.moderated?) }
+        = I18n.t('group.type.moderated')
+
+      %p.private{class: ('active' if @group.private?) }
+        = I18n.t('group.type.private')
+
+      %p.secret{class: ('active' if @group.secret?) }
+        = I18n.t('group.type.secret')
+
+    = f.input :name, required: true, input_html: { maxlength: 140 }
+    = f.input :summary, as: :text, required: true, input_html: { maxlength: 140, cols: 40, rows: 4 }
+    = f.input :description, as: :text, required: true, input_html: { maxlength: 5000, cols: 40, rows: 8 }
+
+  = f.simple_fields_for :current_address, (f.object.current_address.presence || f.object.build_current_address) do |address_form|
+    .fields.custom-location
+      .address-form.no-address
+        = render :partial => 'addresses/form', locals: { f: address_form, label: t('group.location'), required: false }
+        = address_form.hidden_field :_destroy, value: false, class: 'marked-to-delete'
+        = link_to 'Remove Address', '#', class: 'remove-address'
+
+  .fields
+    %fieldset.media-group.cover-image
+      %legend
+        %abbr{:title => t('general.required')} *
+        = t('group.main_image')
+
+      = render 'cover_image_form', f: f
+
+    %fieldset.media-group.sep
+      %legend
+        = t(:images)
+
+      .loading{:style => "display: none"}
+        = image_tag "spinner.gif"
+        %br/
+        .span
+          = t('manage.listings.photos.waiting_for_photo_processing')
+
+      = render 'photos_form', f: f
+
+    %fieldset.media-group.sep.group-videos
+      %legend
+        = t('group.videos')
+
+      .group-inline.video-form
+        %input(type='text' name='video-url' placeholder="#{t('simple_form.placeholders.group.video_url')}")
+        %button(data-href="#{video_dashboard_group_path('group')}")
+          = t('group.placeholders.add_video')
+
+      %ul.gallery-video.gallery-a
+        - if @group.properties.try(:videos).present?
+          - @group.properties.videos.each do |video|
+            = render 'video', video: video
+
+      = hidden_field_tag 'group[properties][videos][]', nil
+
+    %fieldset.media-group.sep
+      %legend
+        = t(:links)
+
+      .project-links-listing
+        = f.simple_fields_for :links do |link_form|
+          = render 'dashboard/projects/link_fields', f: link_form
+        .fieldset-actions
+          = link_to_add_association t(:add_link), f, :links, class: 'button-a small'
+
+    - if current_user.id == f.object.creator_id
+      %fieldset.media-group.sep
+        %legend
+          = t('group.invite_member')
+
+        #new_group_members
+          = f.simple_fields_for :new_group_members do |new_group_member_form|
+            = render 'dashboard/groups/new_group_member_fields', f: new_group_member_form
+          .fieldset-actions
+            = link_to_add_association t('group.invite_member'), f, :new_group_members, class: 'button-a small'
+
+    - if @group.group_members.any?
+
+      %fieldset.media-group.sep
+        %legend
+          = t('group.manage_members')
+
+        .group-inline
+          %input(type='text' id='search-for-member' placeholder="#{t('simple_form.placeholders.group.search_for_member')}")
+          %input(type='submit' id='search-for-member-submit' value="#{t('search')}" data-href='#{dashboard_group_group_members_path(@group)}')
+
+      %table.members-listing-a
+        %thead
+          %tr
+            %th
+              = t(:name)
+            %th
+              = t('group.moderator')
+            %th.col-status
+              = t(:status)
+            %th
+              = t(:actions)
+        %tbody
+          = render @group.memberships
+
+  %p.action
+
+    - if f.object.new_record? || f.object.draft?
+      = f.submit t('group.save_for_later'), name: 'save_for_later', class: 'button-a white'
+
+      = f.submit t('group.publish_group'), name: 'submit', class: 'button-a'
+
+    - else
+      = f.submit t('group.save_changes'), class: 'button-a'
+
+      - if current_user.id == f.object.creator_id && f.object.persisted?
+        = link_to t('group.delete_group'), dashboard_group_path(f.object), method: :delete, class: 'action--delete-project', data: { confirm: 'Are you sure?' }
+
+  %p.required-info
+    %em *
+    Required
