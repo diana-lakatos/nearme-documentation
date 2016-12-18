@@ -27,9 +27,9 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
     @user_message.author = current_user
     @user_message.set_message_context_from_request_params(params, current_user)
 
-    # if recipient is not valid, @user_message.save will fail, despite all is fine
-    # hence current_user.save!
-    if @user_message.valid? && current_user.save!
+    # @user_messave.save will always succeed because in update_unread_message_counter_for we do
+    # save(validate: false), so it will succeed even if the recipient is not valid
+    if @user_message.save
       @user_message.send_notification
 
       if request.xhr?
