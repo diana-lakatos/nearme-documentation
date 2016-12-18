@@ -37,6 +37,7 @@ en:
           attributes:
             pickup_date:
               non_business_day: PickUp available only on business days
+              non_holiday_day: PickUp available only on business days
         aws_certificate:
           attributes:
             arn:

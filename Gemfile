@@ -207,6 +207,7 @@ group :test do
 end
 
 gem 'mailman'
+gem 'holidays', require: false
 
 gem 'nearme', path: 'vendor/gems/nearme', require: false
 gem 'sendle_api', path: 'vendor/gems/sendle_api', require: false

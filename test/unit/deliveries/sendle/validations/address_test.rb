@@ -4,6 +4,8 @@ require 'active_model'
 # require './app/models/deliveries'
 require './app/models/deliveries/validations'
 require './app/models/deliveries/sendle/validations/address'
+require './app/models/deliveries/sendle/validations/pickup_location_validator'
+require './app/models/deliveries/sendle/sendle_pickup_locations'
 require 'pry'
 require 'date'
 
@@ -24,10 +26,10 @@ class Deliveries::Sendle::Validations::AddressTest < ActiveSupport::TestCase
     validator.validate(address)
 
     assert address.errors.added?(:address, :blank)
-    assert address.errors.added?(:city, :blank)
     assert address.errors.added?(:postcode, :blank)
     assert address.errors.added?(:country, :blank)
     assert address.errors.added?(:state, :blank)
+    assert address.errors.added?(:suburb, :blank)
   end
 
   test 'all good' do
@@ -44,10 +46,12 @@ class Deliveries::Sendle::Validations::AddressTest < ActiveSupport::TestCase
     address.city = 'Ethelton'
     address.country = 'New Zealand'
     address.postcode = '15015'
+    address.suburb = 'Ethelton'
 
     validator.validate(address)
 
-    assert address.errors.added?(:address, :invalid_pickup_location)
+    assert address.errors.added?(:suburb, :invalid_pickup_location)
+    assert address.errors.added?(:postcode, :invalid_pickup_location)
   end
 
   private
@@ -89,6 +93,7 @@ class Deliveries::Sendle::Validations::AddressTest < ActiveSupport::TestCase
         address.state = state
         address.country = country
         address.postcode = postcode
+        address.suburb = city
       end
     end
   end

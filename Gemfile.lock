@@ -470,6 +470,7 @@ GEM
     hashie (3.4.6)
     hike (1.2.3)
     hitimes (1.2.2)
+    holidays (5.3.0)
     hpricot (0.8.6)
     htmlentities (4.3.4)
     http (0.5.1)
@@ -994,6 +995,7 @@ DEPENDENCIES
   googl
   google_plus
   haml
+  holidays
   hpricot
   i18n-active_record!
   i18n_data
