@@ -975,16 +975,6 @@ ActiveRecord::Schema.define(version: 20161215193556) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
-  create_table "graph_queries", force: :cascade do |t|
-    t.integer  "instance_id"
-    t.string   "name"
-    t.text     "query_string"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
-  add_index "graph_queries", ["instance_id"], name: "index_graph_queries_on_instance_id", using: :btree
-
   create_table "group_members", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "user_id"
@@ -1327,9 +1317,7 @@ ActiveRecord::Schema.define(version: 20161215193556) do
     t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "prepend_view_path"
     t.string   "twilio_ring_tone"
-    t.boolean  "require_verified_user",                                                             default: false
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -3120,7 +3108,6 @@ ActiveRecord::Schema.define(version: 20161215193556) do
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
     t.integer  "wish_list_items_count",                              default: 0
     t.float    "product_average_rating",                             default: 0.0
-    t.datetime "expires_at"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
