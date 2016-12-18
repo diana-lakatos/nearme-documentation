@@ -42,8 +42,9 @@ module CategoriesHelper
       parent_ids = categories.map(&:parent_id)
       categories.reject { |c| c.id.in?(parent_ids) }.map do |category|
         @formatted_categories[category.root.name] ||= { 'name' => category.root.translated_name, 'children' => [] }
-        @formatted_categories[category.root.name]['children'] = sorted_self_and_ancestors(category).reject(&:root?).map(&:translated_name)
+        @formatted_categories[category.root.name]['children'] << sorted_self_and_ancestors(category).reject(&:root?).map(&:translated_name)
       end
+      @formatted_categories.each_pair { |parent, values| @formatted_categories[parent]['children'].flatten! }
     end
     @formatted_categories
   end

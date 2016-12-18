@@ -17,4 +17,5 @@ class UserProfileDrop < BaseDrop
   def properties
     @source.properties.to_h
   end
+
 end

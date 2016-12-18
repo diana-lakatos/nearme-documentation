@@ -24,7 +24,8 @@ module MarketplaceBuilder
           hash = parse_params(hash)
 
           object = find_or_create!(hash)
-          object.update!(hash)
+          object.attributes = hash
+          object.save!
 
           update_custom_attributes_for_object(object, custom_attributes) unless custom_attributes.empty?
           update_custom_validators_for_object(object, custom_validators) unless custom_validators.empty?
@@ -56,7 +57,10 @@ module MarketplaceBuilder
       end
 
       def parse_params(hash)
-        hash.with_indifferent_access
+        hash = hash.with_indifferent_access
+        hash[:instance_profile_types] = hash[:instance_profile_types].map { |ipt_name| InstanceProfileType.find_by(instance_id: @instance.id, name: ipt_name) } if hash[:instance_profile_types]
+        hash[:transactable_types] = hash[:transactable_types].map { |tt_name| TransactableType.find_by(instance_id: @instance.id, name: tt_name) } if hash[:transactable_types]
+        hash
       end
 
       def whitelisted_properties
