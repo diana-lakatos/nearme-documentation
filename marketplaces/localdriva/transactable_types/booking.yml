@@ -86,12 +86,26 @@ custom_attributes:
     hint: 'Enter Special Requests including dissabilities'
     html_tag: textarea
 
+  - name: driver_category
+    label: 'Driver Category'
+    html_tag: radio_buttons
+    searchable: true
+    wrapper_html_options_string: >-
+      data-condition-field => '{"Standard":{"setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "50"}}, "Pro":{ "setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "100"}}, "Plus":{ "setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "150"}}}'
+    validation:
+      valid_values:
+        - 'Standard'
+        - 'Pro'
+        - 'Plus'
+      required: true
+
 form_components:
   - type: transactable_attributes
     name: Details
     fields:
       - transactable: name
       - transactable: description
+      - transactable: driver_category
       - transactable: city_name
       - transactable: trip_start_date
       - transactable: trip_start_time
@@ -110,6 +124,7 @@ form_components:
     fields:
       - transactable: name
       - transactable: description
+      - transactable: driver_category
       - transactable: city_name
       - transactable: trip_start_date
       - transactable: trip_start_time

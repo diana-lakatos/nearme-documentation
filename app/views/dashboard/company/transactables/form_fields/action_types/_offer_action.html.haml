@@ -4,6 +4,7 @@
     = pricing.input :_destroy, as: :hidden
     = pricing.hidden_field :enabled, value: '1'
     = pricing.hidden_field :exclusive_price, value: '1'
+    = pricing.input :price, as: :hidden
 
     - if fields.include?('pro_bono')
       = pricing.input :is_free_booking, as: :radio_buttons, collection: [[t('pricing.free_disabled'), '0'], [t('pricing.free_enabled'), '1']], input_html: { 'data-free-booking' => true }, checked: (pricing.object.is_free_booking ? '1' : '0')
