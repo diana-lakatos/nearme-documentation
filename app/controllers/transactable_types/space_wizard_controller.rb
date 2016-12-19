@@ -58,6 +58,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       @user.companies.first.update_metadata(draft_at: Time.now, completed_at: nil)
       if @user.first_listing.nil? || @user.first_listing.new_record?
         @user.save(validate: false)
+        fix_action_types
         fix_availability_templates
         WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.try(:id))
       else
@@ -99,6 +100,17 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   private
+
+  # When saving drafts we end up with action_type = nil even though it was set from the before_validation callback, causing problems down the line
+  def fix_action_types
+    listing = @user.companies.first.locations.first.listings.first
+    return if listing.nil?
+    enabled_action_type = listing.action_types.find(&:enabled)
+    if enabled_action_type.present?
+      listing.action_type = enabled_action_type
+      listing.save(validate: false)
+    end
+  end
 
   # When saving drafts we end up with parent_type = nil for custom availability templates causing problems down the line
   def fix_availability_templates
