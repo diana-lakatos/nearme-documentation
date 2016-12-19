@@ -176,10 +176,22 @@ class ReservationDrop < OrderDrop
     routes.dashboard_user_reservations_path(reservation_id: @reservation, token_key => @reservation.owner.temporary_token)
   end
 
+  # @return [String] url to the dashboard area for managing own orders
+  # @todo -- depracate in favor of filter
+  def orders_dashboard_url
+    routes.dashboard_orders_path(token_key => @reservation.owner.temporary_token)
+  end
+
   # @return [String] url to the dashboard area for managing received bookings
   # @todo -- depracate in favor of filter
   def manage_guests_dashboard_url
     routes.dashboard_company_host_reservations_path
+  end
+
+  # @return [String] url to the dashboard area for managing received orders
+  # @todo -- depracate in favor of filter
+  def manage_orders_dashboard_url
+    routes.dashboard_company_orders_received_path(@reservation)
   end
 
   # @return [String] url to export the reservation to an ical file
