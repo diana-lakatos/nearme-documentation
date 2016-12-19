@@ -68,7 +68,7 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
 
       context 'assigned variables' do
         setup do
-          @reservation = FactoryGirl.create(:reservation, currency: 'USD', transactable: @listing)
+          @reservation = FactoryGirl.create(:reservation, currency: 'USD', transactable: @listing, state: 'confirmed')
         end
 
         should '@last_week_reservations includes user company reservations' do
@@ -79,7 +79,7 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
 
       context 'date' do
         setup do
-          @reservation_created_6_days_ago = FactoryGirl.create(:reservation, currency: 'USD', transactable: @listing, created_at: Time.zone.now - 6.days)
+          @reservation_created_6_days_ago = FactoryGirl.create(:reservation, currency: 'USD', transactable: @listing, created_at: Time.zone.now - 6.days, state: 'confirmed')
         end
 
         should '@last_week_reservations includes only reservations not older than 6 days' do
