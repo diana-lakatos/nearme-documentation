@@ -248,7 +248,7 @@ namespace :volte do
         public: true,
         valid_values: [
           "Black", "Brown", "Blue", "Cream", "Gold", "Green", "Grey", "Navy", "Orange", "Pink",
-          "Print", "Purple ", "Red", "Silver", "White", "Yellow", "Other"
+          "Print", "Purple", "Red", "Silver", "White", "Yellow", "Other"
         ],
         searchable: true
       })
