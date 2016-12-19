@@ -1,0 +1,39 @@
+<ul class="actions-a">
+
+  {% if current_status != 'archived' %}
+    <li>
+      <a href="{{ transactable.show_path }}" class="btn btn-default">Booking Details</a>
+    </li>
+  {% endif %}
+
+
+  {% if can_make_offer == true %}
+    <li>
+      {% if current_user.has_verified_merchant_account == true %}
+        <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Accept Booking</a>
+      {% else %}
+        <a class="btn btn-info" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Accept Booking</a>
+      {% endif %}
+
+    </li>
+  {% endif %}
+
+  {% if current_status == 'pending' %}
+    {% assign transactable_collaborator = current_user | find_collaborator: transactable %}
+    <li>
+      <a class="btn btn-danger" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure?">Decline Booking</a>
+    </li>
+  {% endif %}
+
+  <li>
+    {% if order != blank and order.transactable_user_messages.size > 0 %}
+      <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: order.transactable_user_messages.first.id }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+    {% else %}
+      <a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+    {% endif %}
+  </li>
+
+  <li>
+    {{ transactable.creator.click_to_call_button }}
+  </li>
+</ul>

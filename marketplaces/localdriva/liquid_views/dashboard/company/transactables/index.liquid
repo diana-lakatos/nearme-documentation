@@ -37,14 +37,6 @@
       {% form_for :transactable, url: @form_url, method: 'get', form_for_type: 'dashboard' %}
         <input type="hidden" name="status" value="{{ current_status }}">
         <div class="form-group">
-          <label for="filter-properties-workplace" class="control-label">Workplace</label>
-          <select id="filter-properties-workplace" name="filter[properties][workplace_type]" data-allow-empty-option="true">
-            <option value="">Any</option>
-            <option value="Online" {% if params.filter.properties.workplace_type == 'Online' %}selected{% endif%}>Online</option>
-            <option value="On Site" {% if params.filter.properties.workplace_type == 'On Site' %}selected{% endif%}>On Site</option>
-          </select>
-        </div>
-        <div class="form-group">
           <label for="filter-order-by" class="control-label">Order</label>
           <select id="filter-order-by" name="order_by">
             <option value="created_at desc">Newest</option>

@@ -359,6 +359,8 @@ en:
         listings_public: "Enable public Bookings"
       location:
         email: "Bookings email"
+      order:
+        guest_notes: 'Additional message'
       transactable:
         action_types:
           minimum_booking_minutes: "Minimum bookings minutes"

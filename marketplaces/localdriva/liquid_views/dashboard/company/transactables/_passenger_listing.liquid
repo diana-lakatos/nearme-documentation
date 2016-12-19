@@ -1,0 +1,85 @@
+{% for transactable in transactables %}
+  {% assign collaborator = transactable.transactable_collaborators[0] %}
+  {% assign accepted_order = transactable.first_accepted_order %}
+  {% assign offer = nil %}
+  {% for order in transactable.orders %}
+    {% if order.user.id != collaborator.user.id %}
+      {% continue %}
+    {% else %}
+      {% assign offer = order%}
+    {% endif %}
+  {% endfor %}
+  <article class="listing-b" id="transactable_{{transactable.id}}">
+
+    {% if transactable.state == 'pending' and collaborator != blank %}
+      {% if offer != blank %}
+        <span class="label label-success">Approved by Driver, waiting for your payment</span>
+      {% else %}
+        <span class="label label-success">Waiting for Driver to approve</span>
+      {% endif %}
+    {% elsif transactable.state == 'completed' %}
+      <span class="label label-success">Completed</span>
+    {% elsif transactable.state == 'cancelled' %}
+      <span class="label label-warning">Cancelled</span>
+    {% endif %}
+
+    <h2>{{ transactable.name }}</h2>
+
+    <div class="row">
+      <div class="col-md-8">
+        <dl class="properties">
+          <dt>Date</dt>
+          <dd>{{ transactable.properties.trip_start_date | to_date | l: 'short' }}</dd>
+
+          <dt>Start Time</dt>
+          <dd>{{ transactable.properties.trip_start_time }}</dd>
+
+          <dt>Length</dt>
+          <dd>{{ transactable.properties.duration }}</dd>
+
+          <dt>Pickup Location</dt>
+          <dd>{{ transactable.properties.pickup_location }}</dd>
+        </dl>
+      </div>
+      <div class="col-md-4">
+        {% include 'dashboard/company/transactables/passenger_actions.html' %}
+      </div>
+    </div>
+
+    {% if collaborator != blank %}
+      {% assign  driver = collaborator.user %}
+      <div class="row">
+
+        <dl class="properties">
+          <dt>Driver Name</dt>
+          <dd>{{ driver.name }}</dd>
+
+          <dt>Invite Sent</dt>
+          <dd>{{ collaborator.created_at | to_date | l: 'short' }}</dd>
+
+          <dt>Languages spoken</dt>
+          {% assign languages = driver.buyer_profile.customizations | map: 'properties' | map: 'language' %}
+          <dd>{{ languages | join: ', ' }}</dd>
+
+          <dt>Number of Passengers</dt>
+          <dd>{{ driver.buyer_properties.vehicle_capacity }}</dd>
+
+          <dt>Extras</dt>
+          <dd>{{ driver.formatted_buyer_categories['Extras']['children'] | join: ', ' }}</dd>
+
+          <dt>Price</dt>
+          <dd>{{ driver.buyer_properties.hourly_price }}</dd>
+        </dl>
+      </div>
+    {% endif %}
+
+
+    {% if current_status == "pending" %}
+
+
+    {% elsif current_status == "in progress" or current_status == "archived" and accepted_order != blank %}
+
+    {% endif %}
+
+  </article>
+{% endfor %}

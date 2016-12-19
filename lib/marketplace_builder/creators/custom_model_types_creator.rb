@@ -16,13 +16,6 @@ module MarketplaceBuilder
         [:name, :instance_profile_types, :transactable_types]
       end
 
-      def parse_params(hash)
-        hash = hash.with_indifferent_access
-        hash[:instance_profile_types] = hash[:instance_profile_types].map { |ipt_name| InstanceProfileType.find_by(instance_id: @instance.id, name: ipt_name) } if hash[:instance_profile_types]
-        hash[:transactable_types] = hash[:transactable_types].map { |tt_name| TransactableType.find_by(instance_id: @instance.id, name: tt_name) } if hash[:transactable_types]
-        hash
-      end
-
       def find_or_create!(hash)
         CustomModelType.where(instance_id: @instance.id, name: hash[:name]).first_or_create!
       end

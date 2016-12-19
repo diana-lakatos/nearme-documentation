@@ -9,8 +9,13 @@ module MarketplaceBuilder
       end
 
       def find_or_create!(hash)
-        @instance.reservation_types.where(name: hash[:name]).first_or_create!
+        @instance.reservation_types.where(name: hash[:name]).first_or_initialize
       end
+
+      def whitelisted_properties
+        [:name, :transactable_types]
+      end
+
     end
   end
 end
