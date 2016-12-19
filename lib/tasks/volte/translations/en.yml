@@ -28,6 +28,8 @@ en:
         dates: 'Delivery date'
       order:
         transactable_pricing_id: 'Rental period'
+      defaults:
+        bank_routing_number: 'BSB number'
   devise:
     registrations:
       signed_up: 'You have successfully registered. <a href="/dashboard/edit_profile">Click here</a> to complete your profile.'
