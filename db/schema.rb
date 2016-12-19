@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161215113700) do
+ActiveRecord::Schema.define(version: 20161221173658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -639,11 +639,39 @@ ActiveRecord::Schema.define(version: 20161215113700) do
     t.boolean  "validation_only_on_update",             default: false
     t.boolean  "search_in_query",                       default: false, null: false
     t.hstore   "properties",                            default: {},    null: false
+    t.boolean  "aggregate_in_search",                   default: false
+    t.string   "placeholder_image"
+    t.string   "type"
+    t.text     "settings",                              default: "{}",  null: false
   end
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
   add_index "custom_attributes", ["name", "target_id", "target_type", "deleted_at"], name: "index_custom_attributes_on_name_and_target_and_type_and_deleted", unique: true, using: :btree
   add_index "custom_attributes", ["target_id", "target_type"], name: "index_custom_attributes_on_target_id_and_target_type", using: :btree
+
+  create_table "custom_images", force: :cascade do |t|
+    t.integer  "instance_id",                 null: false
+    t.integer  "custom_attribute_id",         null: false
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "uploader_id"
+    t.string   "image"
+    t.integer  "crop_x"
+    t.integer  "crop_y"
+    t.integer  "crop_h"
+    t.integer  "crop_w"
+    t.integer  "rotation_angle"
+    t.text     "image_transformation_data"
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "image_versions_generated_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "custom_images", ["instance_id", "custom_attribute_id"], name: "index_custom_images_on_instance_id_and_custom_attribute_id", using: :btree
+  add_index "custom_images", ["owner_id", "owner_type"], name: "index_custom_images_on_owner_id_and_owner_type", using: :btree
 
   create_table "custom_model_type_linkings", force: :cascade do |t|
     t.integer  "instance_id"
@@ -1039,15 +1067,6 @@ ActiveRecord::Schema.define(version: 20161215113700) do
 
   add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
 
-  create_table "help_contents", force: :cascade do |t|
-    t.string   "slug",       null: false
-    t.text     "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "help_contents", ["slug"], name: "index_help_contents_on_slug", unique: true, using: :btree
-
   create_table "host_fee_line_items", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "line_item_source_id"
@@ -1182,20 +1201,20 @@ ActiveRecord::Schema.define(version: 20161215113700) do
   add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", unique: true, using: :btree
 
   create_table "instance_profile_types", force: :cascade do |t|
-    t.string   "name",                            limit: 255
+    t.string   "name",                             limit: 255
     t.integer  "instance_id"
     t.datetime "deleted_at"
     t.string   "profile_type"
     t.boolean  "searchable"
     t.boolean  "show_categories"
     t.string   "category_search_type"
-    t.integer  "position",                                    default: 0
-    t.boolean  "must_have_verified_phone_number",             default: false
-    t.boolean  "onboarding",                                  default: false
-    t.boolean  "create_company_on_sign_up",                   default: false
+    t.integer  "position",                                     default: 0
+    t.boolean  "must_have_verified_phone_number",              default: false
+    t.boolean  "onboarding",                                   default: false
+    t.boolean  "create_company_on_sign_up",                    default: false
     t.boolean  "search_only_enabled_profiles"
-    t.string   "search_engine",                   limit: 255, default: "postgresql", null: false
-    t.boolean  "admin_approval",                              default: false,        null: false
+    t.string   "search_engine",                    limit: 255, default: "postgresql", null: false
+    t.boolean  "admin_approval",                               default: false,        null: false
     t.string   "default_sort_by"
     t.integer  "default_availability_template_id"
   end
@@ -1337,8 +1356,8 @@ ActiveRecord::Schema.define(version: 20161215113700) do
     t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "prepend_view_path"
     t.string   "twilio_ring_tone"
+    t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
   end
 
@@ -1519,6 +1538,7 @@ ActiveRecord::Schema.define(version: 20161215113700) do
     t.string   "type",                limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "merchant_account_owners", ["instance_id"], name: "index_merchant_account_owners_on_instance_id", using: :btree
@@ -3131,7 +3151,6 @@ ActiveRecord::Schema.define(version: 20161215113700) do
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
     t.integer  "wish_list_items_count",                              default: 0
     t.float    "product_average_rating",                             default: 0.0
-    t.text     "ui_settings",                                        default: "{}"
     t.datetime "expires_at"
   end
 
@@ -3358,5 +3377,4 @@ ActiveRecord::Schema.define(version: 20161215113700) do
     t.string   "workflow_type",   limit: 255
   end
 
-  add_foreign_key "graph_queries", "instances"
 end

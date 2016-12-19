@@ -6,7 +6,6 @@ module CarrierWave
     included do
       include CarrierWave::MiniMagick
       include CarrierWave::Optimizable
-      include CarrierWave::MiniMagick
 
       attr_accessor :delayed_processing
 

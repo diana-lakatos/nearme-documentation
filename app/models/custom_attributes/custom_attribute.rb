@@ -33,6 +33,30 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
     true
   end
 
+  serialize :settings, Hash
+  store :settings, accessors: %i(versions_configuration optimization_settings aspect_ratio), coder: Hash
+
+  mount_uploader :placeholder_image, CustomImageUploader
+
+  DEFAULT_ASPECT_RATIO = 1.3
+  DEFAULT_VERSION_SETTINGS = {
+    mini: { width: 56, height: 56, transform: :resize_to_fill },
+    thumb: { width: 144, height: 109, transform: :resize_to_fill },
+    normal: { width: 1280, height: 960, transform: :resize_to_fill }
+  }.freeze
+
+  def aspect_ratio
+    aspect_ratio.presence || DEFAULT_ASPECT_RATIO
+  end
+
+  def settings_for_version(version)
+    versions_configuration.fetch(version.to_s, DEFAULT_VERSION_SETTINGS[version.to_sym])
+  end
+
+  def optimization_settings
+    optimization_settings.presence || CarrierWave::Optimizable::OPTIMIZE_SETTINGS
+  end
+
   def create_translations
     ::CustomAttributes::CustomAttribute::TranslationCreator.new(self).create_translations!
     expire_cache_key(cache_type: 'Translation')
@@ -56,6 +80,10 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   def required?
     custom_validators.required.any?
+  end
+
+  def uploadable?
+    attribute_type == 'photo'
   end
 
   private
