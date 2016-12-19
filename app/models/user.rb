@@ -1141,12 +1141,12 @@ class User < ActiveRecord::Base
     update_attribute(:ui_settings, JSON.generate(@ui_settings_hash))
   end
 
-  private
-
   def get_all_ui_settings
     populate_ui_settings
     @ui_settings_hash
   end
+
+  private
 
   def populate_ui_settings
     @ui_settings_hash ||= JSON.parse ui_settings

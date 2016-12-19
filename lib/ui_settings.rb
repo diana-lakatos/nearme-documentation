@@ -5,8 +5,9 @@ class UiSettings
     'help-is-detached': :boolean,
     'help-position': :json
   }.freeze
+
   def self.parse(key, value)
-    raise "Invalid UiSettings key: #{key}" if SETTINGS.key?(key.to_sym) == false
+    raise "Invalid UiSettings key: #{key}" unless SETTINGS.key?(key.to_sym)
 
     case SETTINGS[key.to_sym]
     when :boolean

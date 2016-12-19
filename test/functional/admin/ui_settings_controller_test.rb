@@ -21,26 +21,26 @@ class Admin::UiSettingsControllerTest < ActionController::TestCase
 
   context '#get' do
     should 'get null for unset setting' do
-      get :get, id: 'setting'
+      get :get, id: 'help-is-visible'
 
       assert_equal 'success', json_response['result']
       assert_equal nil, json_response['data']
     end
 
     should 'get value for set setting' do
-      @user.set_ui_setting('setting', 'value')
+      @user.set_ui_setting('help-is-visible', 'true')
 
-      get :get, id: 'setting'
+      get :get, id: 'help-is-visible'
 
       assert_equal 'success', json_response['result']
-      assert_equal 'value', json_response['data']
+      assert_equal true, json_response['data']
     end
   end
 
   context '#set' do
     should 'update ui setting' do
-      post :set, id: 'setting', value: 'value'
-      assert_equal 'value', @user.get_ui_setting('setting')
+      post :set, id: 'help-is-visible', value: 'true'
+      assert_equal true, @user.get_ui_setting('help-is-visible')
     end
   end
 

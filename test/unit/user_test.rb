@@ -843,9 +843,9 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'should persist a value when saving new ui setting' do
-      @user.set_ui_setting(:key, 'value')
-      assert_equal '{"key":"value"}', @user.ui_settings
-      assert_equal 'value', @user.get_ui_setting(:key)
+      @user.set_ui_setting('help-is-visible', 'true')
+      assert_equal '{"help-is-visible":true}', @user.ui_settings
+      assert_equal true, @user.get_ui_setting('help-is-visible')
     end
   end
 
