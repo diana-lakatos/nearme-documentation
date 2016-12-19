@@ -733,6 +733,10 @@ en:
         to: "To:"
         apply_filter: "Apply filter"
         search_by_keyword: "Search by keyword"
+        user:
+          banned: "Banned"
+          active: "Active"
+          deleted: "Deleted"
       reviews:
         index:
           missing: "Missing object"
