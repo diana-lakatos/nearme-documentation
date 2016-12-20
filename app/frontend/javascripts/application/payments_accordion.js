@@ -8,11 +8,11 @@ const PaymentsAccordion = () => {
     const $label = $(event.currentTarget);
 
     const $currentRadio = $label.siblings(RADIO_SELECTOR);
-    const currentValue = $currentRadio.attr('checked'); // Lets operate on existence of html attribute, its more reliable than other checks
+    const currentValue = $currentRadio.prop('checked'); // Lets operate on existence of html attribute, its more reliable than other checks
     const $allRadios = $label.closest('.accordion').find(RADIO_SELECTOR);
 
-    $allRadios.removeAttr('checked', false); // Reset all radio buttons to collapsed
-    $currentRadio.attr('checked', !currentValue); // Expand the one we are interested in
+    $allRadios.removeProp('checked', false); // Reset all radio buttons to collapsed
+    $currentRadio.prop('checked', !currentValue); // Expand the one we are interested in
   });
 };
 
