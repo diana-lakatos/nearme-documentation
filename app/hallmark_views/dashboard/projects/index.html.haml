@@ -7,54 +7,60 @@
     / white box
     .box-a
 
-      - if @transactables.empty?
+      - unless current_user.instance_admin?
         .empty-projects
           %p.cta
-            = t :empty_cta
-          %p
-            = link_to t(:add_project), new_dashboard_project_type_project_path(@transactable_type), class: 'button-a'
+          = t :extras_are_coming_soon
 
       - else
-        .project-actions
-          = link_to t(:add_project), new_dashboard_project_type_project_path(@transactable_type), class: 'button-a small'
+        - if @transactables.empty?
+          .empty-projects
+            %p.cta
+              = t :empty_cta
+            %p
+              = link_to t(:add_project), new_dashboard_project_type_project_path(@transactable_type), class: 'button-a'
 
-        %table.projects-listing
-          %thead
-            %tr
-              %th.col-picture
-                = t :picture
-              %th.col-name
-                = t :name
-              %th.col-summary
-                = t :summary
-              %th.col-role
-                = t :role
-              %th.col-status
-                = t :status
-              %td.col-actions
-          %tbody
+        - else
+          .project-actions
+            = link_to t(:add_project), new_dashboard_project_type_project_path(@transactable_type), class: 'button-a small'
 
-            - @transactables.each do |transactable|
+          %table.projects-listing
+            %thead
               %tr
-                %td.col-picture
-                  = link_to transactable.decorate.show_path do
-                    = image_tag transactable.cover_photo.image.url(:medium)
-                %td.col-name
-                  = link_to transactable.name, transactable.decorate.show_path
-                %td.col-summary
-                  = transactable.properties.summary
-                %td.col-role
-                  = t(transactable.creator_id == current_user.id ? :owner : :collaborator)
-                %td.col-status
-                  - if transactable.draft.present?
-                    %span.status-draft
-                      = t('draft')
-                  - else
-                    %span.status-published
-                      = t('published')
-
+                %th.col-picture
+                  = t :picture
+                %th.col-name
+                  = t :name
+                %th.col-summary
+                  = t :summary
+                %th.col-role
+                  = t :role
+                %th.col-status
+                  = t :status
                 %td.col-actions
-                  = link_to t(:edit), edit_dashboard_project_type_project_path(@transactable_type, transactable), class: 'action-edit'
-                  - if transactable.creator_id == current_user.id
-                    = link_to t(:remove), dashboard_project_type_project_path(@transactable_type, transactable), method: :delete, class: 'action-remove', data: { confirm: 'Are you sure?' }
+            %tbody
+
+              - @transactables.each do |transactable|
+                %tr
+                  %td.col-picture
+                    = link_to transactable.decorate.show_path do
+                      = image_tag transactable.cover_photo.image.url(:medium)
+                  %td.col-name
+                    = link_to transactable.name, transactable.decorate.show_path
+                  %td.col-summary
+                    = transactable.properties.summary
+                  %td.col-role
+                    = t(transactable.creator_id == current_user.id ? :owner : :collaborator)
+                  %td.col-status
+                    - if transactable.draft.present?
+                      %span.status-draft
+                        = t('draft')
+                    - else
+                      %span.status-published
+                        = t('published')
+
+                  %td.col-actions
+                    = link_to t(:edit), edit_dashboard_project_type_project_path(@transactable_type, transactable), class: 'action-edit'
+                    - if transactable.creator_id == current_user.id
+                      = link_to t(:remove), dashboard_project_type_project_path(@transactable_type, transactable), method: :delete, class: 'action-remove', data: { confirm: 'Are you sure?' }
 

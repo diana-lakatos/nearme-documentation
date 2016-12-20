@@ -5,8 +5,9 @@
       %p.actions
         = link_to t(:create_group), new_dashboard_group_path, class: "button-a small orange add groups #{active_class(@search_type, 'groups', 'is-active')}"
 
-        - project_type = TransactableType.where(name: 'Extra').first
-        = link_to t(:create_extra), new_dashboard_project_type_project_path(project_type), class: "button-a small orange add projects #{active_class(@search_type, 'projects', 'is-active')}"
+        - if current_user.instance_admin?
+          - project_type = TransactableType.where(name: 'Extra').first
+          = link_to t(:create_extra), new_dashboard_project_type_project_path(project_type), class: "button-a small orange add projects #{active_class(@search_type, 'projects', 'is-active')}"
 
 
       %ul

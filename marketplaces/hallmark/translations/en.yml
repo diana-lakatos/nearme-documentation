@@ -460,3 +460,5 @@ en:
     collaborator_cancelled: "You have declined collaboration in this extra."
     user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} extra"
     cant_remove_collaborator: "You can't remove user from this extra"
+
+  extras_are_coming_soon: You will be able to create your own extras soon!
