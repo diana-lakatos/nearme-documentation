@@ -28,10 +28,6 @@ class HomeController < ApplicationController
       @feed = ActivityFeedService.new(current_user.try(:model))
       @projects = Transactable.active.featured.where.not(id: current_user.feed_followed_transactables).take(3)
       @users = User.featured.includes(:current_address).where.not(id: current_user.feed_followed_users).take(8)
-    else
-      @topics = Topic.featured.to_a.sort { |a, b| order.index(b.name).to_i <=> order.index(a.name).to_i }
-      @projects = Transactable.active.featured.take(3)
-      @users = User.featured.includes(:current_address).take(6)
     end
   end
 
