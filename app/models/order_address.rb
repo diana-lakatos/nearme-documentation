@@ -21,7 +21,7 @@ class OrderAddress < ActiveRecord::Base
   accepts_nested_attributes_for :address
   validates :address, presence: true
 
-  delegate :city, :postcode, to: :address, allow_nil: true
+  delegate :suburb, :city, :postcode, to: :address, allow_nil: true
 
   validates :firstname, :lastname, :phone, :email, presence: true
 

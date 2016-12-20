@@ -2,6 +2,16 @@
 module Deliveries
   class Sendle
     class PlaceOrder
+      class UnprocessableEntity < StandardError
+        def initialize(response)
+          @response = response
+        end
+
+        def message
+          @response
+        end
+      end
+
       def initialize(delivery, client)
         @delivery = delivery
         @client = client
@@ -21,7 +31,7 @@ module Deliveries
       end
 
       def process_response
-        raise @response.body.inspect unless @response.success?
+        raise UnprocessableEntity, @response.body unless @response.success?
 
         PlaceOrderResponse.new(@response)
       end
