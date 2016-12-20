@@ -79,4 +79,5 @@ NM.on('ready', ()=>{
   require('initializers/application/truncated_text.initializer');
   require('initializers/application/user_reviews.initializer');
   require('initializers/application/wish_list_buttons.initializer');
+  require('initializers/application/payments_accordion.initializer');
 });
