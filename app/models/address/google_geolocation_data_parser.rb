@@ -37,6 +37,11 @@ class Address::GoogleGeolocationDataParser
     if type == 'sublocality' && component.missing?
       component = find_component_for('neighborhood')
     end
+
+    if type == 'sublocality' && component.missing?
+      component = find_component_for('locality')
+    end
+
     component
   rescue
     Component.new('long_name' => '', 'short_name' => '', 'types' => '')

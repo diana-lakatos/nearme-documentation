@@ -41,7 +41,7 @@ class AddressTest < ActiveSupport::TestCase
       should 'ignore missing fields and store the one present' do
         @address = FactoryGirl.create(:address_warsaw_address_components)
         assert_equal 'Warsaw', @address.city
-        assert_equal nil, @address.suburb
+        assert_equal 'Warsaw', @address.suburb
       end
     end
 
@@ -59,7 +59,7 @@ class AddressTest < ActiveSupport::TestCase
       assert_equal 'San Francisco', @address.city
       assert_equal 'California', @address.state
       assert_equal 'United States', @address.country
-      assert_equal nil, @address.suburb
+      assert_equal 'San Francisco', @address.suburb
       assert_equal 'San Francisco', @address.street # this is first part of address
     end
   end

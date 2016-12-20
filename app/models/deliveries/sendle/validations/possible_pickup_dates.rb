@@ -18,7 +18,7 @@ module Deliveries
 
         def possible_dates
           range.reject do |day|
-            business_day?(day) || cannot_pickup(day) || holiday?(day)
+            non_business_day?(day) || cannot_pickup(day)
           end
         end
 
@@ -30,20 +30,16 @@ module Deliveries
           @time_zone.now
         end
 
-        def holiday?(date)
-          Holidays.on(date, country_list).any?
-        end
-
-        def country_list
-          :au
-        end
-
         def range
           Range.new @from, @to.advance(days: -1)
         end
 
-        def business_day?(day)
-          day.sunday? || day.saturday?
+        def non_business_day?(day)
+          day.sunday? || day.saturday? || holiday?(day)
+        end
+
+        def holiday?(date, country_list = [:au])
+          Holidays.on(date, *country_list).any?
         end
       end
     end
