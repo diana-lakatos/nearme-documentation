@@ -40,7 +40,7 @@ class Elastic::AggregationsTest < ActiveSupport::TestCase
 
     # assert builder.body.dig(:custom_attrs, :global)
     assert_equal builder.body.dig(:custom_attrs, :aggregations).keys, [:color, :designer_name]
-    assert_equal builder.body.dig(:custom_attrs, :aggregations, :color), terms: { field: 'custom_attributes.color', size: 25 }
-    assert_equal builder.body.dig(:custom_attrs, :aggregations, :designer_name), terms: { field: 'custom_attributes.designer_name', size: 25 }
+    assert_equal builder.body.dig(:custom_attrs, :aggregations, :color), terms: { field: 'custom_attributes.color', size: 25, order: { '_term' => 'asc' } }
+    assert_equal builder.body.dig(:custom_attrs, :aggregations, :designer_name), terms: { field: 'custom_attributes.designer_name', size: 25, order: { '_term' => 'asc' } }
   end
 end
