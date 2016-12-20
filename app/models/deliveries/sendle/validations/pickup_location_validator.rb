@@ -13,8 +13,9 @@ module Deliveries
 
         def valid_pickup_location?(record)
           return unless record.suburb
+          return unless record.postcode
 
-          sendle_pickup_locations.exist?(postcode: record.postcode, suburb: record.suburb)
+          sendle_pickup_locations.exist?(postcode: record.postcode.strip, suburb: record.suburb.strip)
         end
 
         def pickup_locations
