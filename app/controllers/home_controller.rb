@@ -9,7 +9,11 @@ class HomeController < ApplicationController
     @transactable_type = @transactable_types.first
 
     render_for_community
-    respond_to :html
+    if current_instance.is_community? && current_user&.should_render_tutorial?
+      render(:tutorial)
+    else
+      respond_to :html
+    end
   end
 
   private
@@ -24,7 +28,6 @@ class HomeController < ApplicationController
       @feed = ActivityFeedService.new(current_user.try(:model))
       @projects = Transactable.active.featured.where.not(id: current_user.feed_followed_transactables).take(3)
       @users = User.featured.includes(:current_address).where.not(id: current_user.feed_followed_users).take(8)
-      render(:tutorial) && return if current_user.should_render_tutorial?
     else
       @topics = Topic.featured.to_a.sort { |a, b| order.index(b.name).to_i <=> order.index(a.name).to_i }
       @projects = Transactable.active.featured.take(3)

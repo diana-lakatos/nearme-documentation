@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class RegistrationsController < Devise::RegistrationsController
+  skip_before_action :redirect_unverified_user
   skip_before_action :redirect_unverified_user, only: [:verify, :unsubscribe]
   before_action :set_role_if_blank
   before_action :configure_permitted_parameters, only: :create
