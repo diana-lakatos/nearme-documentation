@@ -22,9 +22,20 @@ module Elastic
       end
 
       def field_meta
-        { field: @field }.tap do |data|
-          data.merge! size: BUCKET_SIZE if bucket?
-        end
+        field_data = default_field_data
+        field_data[:size] = BUCKET_SIZE if bucket?
+        field_data[:order] = { '_term' => 'asc' } if sortable?
+        field_data
+      end
+
+      def default_field_data
+        {
+          field: @field
+        }
+      end
+
+      def sortable?
+        @type == :terms
       end
 
       def bucket?

@@ -5,6 +5,8 @@ module LiquidFormHelpers
   end
 
   def options_from_collection_for_select(collection, selected = nil)
+    return [] unless collection
+
     if selected.present?
       collection.unshift first_select_option('- reset filter -')
     else
