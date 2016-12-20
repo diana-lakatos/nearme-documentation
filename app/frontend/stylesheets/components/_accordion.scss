@@ -2,20 +2,15 @@
   border-radius: $border-radius-default;
   background: $theme_white;
 
-  .accordion-toggle {
-    display: block !important;
+  a.accordion-toggle {
     &:after {
-      float: right
+      content: "\46";
+      float: right;
     }
-  }
 
-  //  By default, collapsed
-  input + .accordion-toggle:after {
-    content: "\44";
-  }
-
-  input[checked="checked"] + .accordion-toggle:after  {
-    content: "\46";
+    &.collapsed:after {
+      content: "\44";
+    }
   }
 }
 
@@ -24,7 +19,7 @@
     border: none;
     background: $gray210;
 
-    .accordion-toggle {
+    a.accordion-toggle {
       color: $theme_white;
     }
   }
