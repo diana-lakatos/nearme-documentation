@@ -50,9 +50,10 @@
         %ul
           %li{ class: (controller_name == 'registrations' && action_name == 'show' ? 'active' : '') }
             = link_to t(:profile), user_path(current_user)
-          - if (project_type = TransactableType.where(name: 'Extra').first).present?
-            %li{ class: (controller_name == 'projects' ? 'active' : '') }
-              = link_to t(:my_projects), dashboard_project_type_projects_path(project_type)
+          - if current_user.instance_admin?
+            - if (project_type = TransactableType.where(name: 'Extra').first).present?
+              %li{ class: (controller_name == 'projects' ? 'active' : '') }
+                = link_to t(:my_projects), dashboard_project_type_projects_path(project_type)
           - if (group_type = GroupType.first).present?
             %li{ class: (controller_name == 'groups' ? 'active' : '') }
               = link_to t(:my_groups), dashboard_groups_path
