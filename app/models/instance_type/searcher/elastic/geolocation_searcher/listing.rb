@@ -27,7 +27,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
     listings_scope = listings_scope.where(id: listing_ids)
 
     @results = listings_scope
-                 .includes(:location, :location_address, :company, :photos, :transactable_type)
+                 .includes(:location, :location_address, :company, :photos, :transactable_type, action_type: [:pricings], creator: [:user_profiles])
                  .order_by_array_of_ids(order_ids)
   end
 
