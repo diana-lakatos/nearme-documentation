@@ -25,10 +25,6 @@ class HomeController < ApplicationController
       @projects = Transactable.active.featured.where.not(id: current_user.feed_followed_transactables).take(3)
       @users = User.featured.includes(:current_address).where.not(id: current_user.feed_followed_users).take(8)
       render(:tutorial) && return if current_user.should_render_tutorial?
-    else
-      @topics = Topic.featured.to_a.sort { |a, b| order.index(b.name).to_i <=> order.index(a.name).to_i }
-      @projects = Transactable.active.featured.take(3)
-      @users = User.featured.includes(:current_address).take(6)
     end
   end
 
