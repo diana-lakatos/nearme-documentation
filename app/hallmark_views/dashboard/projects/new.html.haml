@@ -7,4 +7,9 @@
       = t :add_project
     / white box
     .box-a
-      = render 'form'
+      - unless current_user.instance_admin?
+        .empty-projects
+          %p.cta
+          = t :extras_are_coming_soon
+      - else
+        = render 'form'
