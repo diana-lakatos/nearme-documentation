@@ -3,7 +3,6 @@
 require 'stripe'
 
 class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountOwner
-
   ATTRIBUTES = %w(dob_formated dob first_name last_name personal_id_number business_vat_id business_tax_id)
 
   include MerchantAccount::Concerns::DataAttributes
@@ -17,7 +16,7 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
   validate :validate_dob_formated
   validates :personal_id_number, presence: { if: proc { |m| m.iso_country_code == 'US' } }
   validates :business_tax_id, presence: { if: proc { |m| m.iso_country_code == 'US' && m.account_type == 'company' } }
-  validate :validate_document
+  validate :validate_document, if: -> { false } # quick hack for UoT to charge them
 
   def validate_document
     if (attributes['document'] || document.file.try(:path)).blank?
