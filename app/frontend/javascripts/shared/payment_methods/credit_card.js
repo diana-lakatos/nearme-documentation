@@ -1,19 +1,8 @@
 /* global Stripe */
 
-require('../../vendor/jquery.visible');
-/* Better element visibility detection.
-
-  built-in jquery detection considers element visible only if it takes space on canvas
-  "Elements are considered visible if they consume space in the document.
-  Visible elements have a width or height that is greater than zero.
-  Elements with visibility: hidden or opacity: 0 are considered visible, since they still consume space in the layout."
-  More on the subject: https://api.jquery.com/visible-selector/
-*/
-
 class PaymentMethodCreditCard {
-  constructor(container) {
-    var that = this;
 
+  constructor(container) {
     this.form = $('#checkout-form, #new_payment');
     this._ui = {};
     this._ui.container = container;
@@ -28,6 +17,7 @@ class PaymentMethodCreditCard {
     this._ui.newCreditCard = container.querySelector('.nm-new-credit-card-form');
     this._ui.creditCardSwitcher = container.querySelector('.nm-credit-card-option-select');
 
+    var that = this;
 
     if (!window.Stripe) {
       let s = document.createElement('script');
@@ -73,7 +63,7 @@ class PaymentMethodCreditCard {
       event.stopPropagation();
       event.preventDefault();
 
-      if ($form.find('.nm-new-credit-card-form').visible()) {
+      if ($form.find('.nm-new-credit-card-form:visible').length > 0) {
         if (that._validateForm($form)) {
           that._showLoader();
           if (that._publishableToken.length > 0) {
@@ -87,10 +77,11 @@ class PaymentMethodCreditCard {
               }
             }
           } else {
-            that._submitCreditCardForm.call(that);
+            that._submitCreditCardForm().call(that);
           }
         }
       } else {
+        that._submitCreditCardForm().call(that);
         $form.find('[data-disable-with]').prop('disabled', true);
       }
 
@@ -118,15 +109,13 @@ class PaymentMethodCreditCard {
 
   _validateField(field, validator) {
     if (!validator(field.val())) {
-      field.parents('.control-group, .form-group')
-        .addClass('error has-error')
-        .find('.error-block').remove()
-        .append('<p class="error-block">' + this._validationMessage(validator) +'</p>');
+      field.parents('.control-group, .form-group').addClass('error has-error');
+      field.parents('.control-group, .form-group').find('.error-block').remove();
+      field.parents('.control-group, .form-group').append('<p class="error-block">' + this._validationMessage(validator) +'</p>');
       return false;
     } else {
-      field.parents('.control-group, .form-group')
-        .removeClass('error has-error')
-        .find('.error-block').remove();
+      field.parents('.control-group, .form-group').removeClass('error has-error');
+      field.parents('.control-group, .form-group').find('.error-block').remove();
 
       return true;
     }
@@ -153,6 +142,7 @@ class PaymentMethodCreditCard {
       return 'is required';
     }
   }
+
 
   _successResponse(response) {
     var $form = $('#checkout-form, #new_payment');
