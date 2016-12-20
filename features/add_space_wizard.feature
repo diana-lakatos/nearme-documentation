@@ -6,7 +6,7 @@ Feature: A user can add a space
   Background:
     Given a location_type exists with name: "Business"
     Given a location_type exists with name: "Public Space"
-    Given a transactable_type_listing_no_action exists with name: "Listing"
+    Given a transactable_type_listing exists with name: "Listing"
     And a country_nz exists
     Given I go to the home page
     And I follow "List Your" bookable noun
