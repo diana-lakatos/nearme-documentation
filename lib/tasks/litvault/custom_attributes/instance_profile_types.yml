@@ -37,18 +37,6 @@
   bio:
     label: "Bio"
     html_tag: textarea
-  states:
-    label: Select state(s) in which you are licensed to handle cases
-    attribute_type: array
-    html_tag: check_box_list
-    valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
-    validation_only_on_update: true
-    searchable: true
-    wrapper_html_options_string: 'class=>form-group check_boxes required checkbox-columns'
-    custom_validators_attributes:
-      "[0]":
-        field_name: 'states'
-        required: true
   honors_awards:
     label: 'Honors / Awards'
     attribute_type: array
@@ -91,7 +79,15 @@
     label: 'Title at law firm'
 
 # seller profile
-579: ~
+579:
+  states:
+    label: Select state(s) in which you are licensed to handle cases
+    attribute_type: array
+    html_tag: check_box_list
+    valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
+    validation_only_on_update: true
+    searchable: true
+    wrapper_html_options_string: 'class=>form-group check_boxes required checkbox-columns'
 
 # buyer profile
 580:
@@ -119,5 +115,12 @@
     label: 'Experience for Tier 1 Case Sub Classification'
     html_tag: 'textarea'
 
-
+  states:
+    label: Select state(s) in which you are licensed to handle cases
+    attribute_type: array
+    html_tag: check_box_list
+    valid_values: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
+    validation_only_on_update: true
+    searchable: true
+    wrapper_html_options_string: 'class=>form-group check_boxes required checkbox-columns'
 
