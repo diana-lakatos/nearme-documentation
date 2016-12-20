@@ -10,7 +10,7 @@
   {% if can_make_offer == true %}
     <li>
       {% if current_user.has_verified_merchant_account == true %}
-        <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}">Accept Booking</a>
+        <a class="btn btn-info" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration }}">Accept Booking</a>
       {% else %}
         <a class="btn btn-info" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Accept Booking</a>
       {% endif %}
