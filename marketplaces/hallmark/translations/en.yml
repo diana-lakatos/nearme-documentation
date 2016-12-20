@@ -24,6 +24,7 @@ en:
   add_project: 'Add Extra'
   add_group: 'Add Group'
   create_group: 'Create Group'
+  create_extra: 'Create Extra'
 
   # footer
   copyright_html: '&copy; %{year} Hallmark Licensing, LLC'
