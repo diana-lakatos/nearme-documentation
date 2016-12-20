@@ -32,7 +32,11 @@ class PlatformContextDecorator
   end
 
   def transactable_types_as_hash
-    Hash[@source.transactable_types.map { |ta| [ta.name.downcase, ta] }]
+    Hash[@platform_context.instance.transactable_types.map { |ta| [ta.name.downcase, ta] }]
+  end
+
+  def instance_profile_types_as_hash
+    Hash[@platform_context.instance.instance_profile_types.map { |ipt| [ipt.name.downcase, ipt] }]
   end
 
   def to_liquid

@@ -93,4 +93,10 @@ class InstanceProfileTypeDrop < BaseDrop
   def searchable_categories
     @instance_profile_type.categories.searchable.roots
   end
+
+  # @return [Hash{String => CustomAttributeDrop}] custom attributes as a hash
+  def custom_attributes_as_hash
+    Hash[@instance_profile_type.custom_attributes.map { |ca| [ca.name, ca] }]
+  end
+
 end
