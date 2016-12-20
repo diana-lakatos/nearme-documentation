@@ -27,6 +27,7 @@ module GmapsFake
            when /pulawska/i then 'pulawska'
            when /czestochowa/i then 'czestochowa'
            when /rydygiera/i then 'rydygiera'
+           when /United States/i then 'usa'
            else raise StandardError, "Define a place for #{address} (#{request.uri})"
     end
     { body: File.read(File.join(Rails.root, 'features', 'fixtures', 'gmaps', "#{file}.json")) }

@@ -118,7 +118,7 @@
                     </a>
                   </li>
                 {% endif %}
-                  <li id="dashboard-nav-transactables" class="{% if transactables_selected %}selected{% endif %}">
+                  <li id="dashboard-my-transactables" class="{% if transactables_selected %}selected{% endif %}">
                     <a href="{{ transactables_path }}">
                         {{ 'dashboard.nav.transactables' | t }}
                         {% if pending_transactables_count > 0 %}

@@ -1143,7 +1143,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      scope module: :v2, constraints: ApiConstraints.new(version: 2, default: false) do
+      scope module: :v2, constraints: Constraints::ApiConstraints.new(version: 2, default: false) do
         resources :sessions, only: [:create]
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
@@ -1157,7 +1157,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      scope module: :v3, constraints: ApiConstraints.new(version: 3, default: true) do
+      scope module: :v3, constraints: Constraints::ApiConstraints.new(version: 3, default: true) do
         resources :sessions, only: [:create]
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
