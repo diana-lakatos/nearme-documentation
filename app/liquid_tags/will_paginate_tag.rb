@@ -16,7 +16,7 @@ class WillPaginateTag < Liquid::Tag
   def initialize(tag_name, markup, tokens)
     super
     @attributes = create_initial_hash_from_liquid_tag_markup(markup)
-    @collection = @attributes.delete('collection')
+    @collection = @attributes.fetch('collection', nil)
   end
 
   def render(context)

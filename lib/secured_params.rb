@@ -802,10 +802,16 @@ class SecuredParams
   def merchant_account(merchant_account)
     attributes = [:id, :redirect_url]
     attributes << merchant_account.class::ATTRIBUTES
-    attributes << { current_address_attributes: nested(address) }
     attributes << { payment_subscription_attributes: nested(payment_subscription) }
-    attributes << { owners_attributes: nested([:document]) + MerchantAccountOwner::StripeConnectMerchantAccountOwner::ATTRIBUTES }
+    attributes << { owners_attributes: merchant_account_owner }
     attributes
+  end
+
+  def merchant_account_owner
+    attributes = [:id]
+    attributes << [:document]
+    attributes << { current_address_attributes: nested(address) }
+    attributes << MerchantAccountOwner::StripeConnectMerchantAccountOwner::ATTRIBUTES
   end
 
   def domain

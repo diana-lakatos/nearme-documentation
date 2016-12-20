@@ -80,8 +80,13 @@ class MerchantAccountDrop < BaseDrop
     @all_errors.presence
   end
 
+  # @return [Array] fields list requested by Stripe
+  def fields_needed
+    merchant_account.respond_to?(:fields_needed) ? merchant_account.fields_needed : []
+  end
+
   # @return [Boolean] true when no text errors passed in update
-  # this is different from verified? which observes ability to transfer money 
+  # this is different from verified? which observes ability to transfer money
   def complete?
     !merchant_account.account_incomplete?
   end
