@@ -121,7 +121,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   def default_currency
-    super.presence || instance.default_currency
+    super.presence || instance&.default_currency || PlatformContext.current.instance.default_currency
   end
 
   def translated_lessor(count = 1)
