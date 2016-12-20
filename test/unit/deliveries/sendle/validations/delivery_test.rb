@@ -1,11 +1,31 @@
 require 'test_helper_lite'
+require 'bundler'
 require 'active_model'
-# require './app/models/deliveries'
 require './app/models/deliveries/validations'
+require './app/models/deliveries/request_logger'
+require './app/models/deliveries/sendle/place_order'
 require './app/models/deliveries/sendle/validations/delivery'
+require './app/models/deliveries/sendle/validations/pickup_business_date_validator'
 require 'date'
 
 class MyOrderAddress
+end
+
+module Deliveries
+  class Sendle
+    class ValidatePlaceOrderRequest
+      def initialize(record)
+      end
+
+      def valid?
+        false
+      end
+
+      def errors
+        []
+      end
+    end
+  end
 end
 
 class MyDelivery

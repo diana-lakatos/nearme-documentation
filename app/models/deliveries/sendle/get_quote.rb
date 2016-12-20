@@ -21,9 +21,9 @@ module Deliveries
       end
 
       def make_request
-        @response = client.get_quote pickup_suburb:     delivery.sender_address_city,
+        @response = client.get_quote pickup_suburb:     delivery.sender_address_suburb,
                                      pickup_postcode:   delivery.sender_address_postcode,
-                                     delivery_suburb:   delivery.receiver_address_city,
+                                     delivery_suburb:   delivery.receiver_address_suburb,
                                      delivery_postcode: delivery.receiver_address_postcode,
                                      kilogram_weight:   delivery.weight
       end

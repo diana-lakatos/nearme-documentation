@@ -28,7 +28,7 @@
           <dd>{{ order.shipping_package.label }}</dd>
 
           <dt>Borrower ship to address:</dt>
-          <dd>{{ order.enquirer_shipping_address.discreet }}</dd>
+          <dd>{{ order.enquirer_shipping_address.full }}</dd>
 
           {% assign requested_dates = order.long_dates %}
           {% assign requested_dates_size = requested_dates.size %}

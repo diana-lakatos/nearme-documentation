@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Shippings
   class Quote
-    class UnprocessableEntity < StandardError;
+    class UnprocessableEntity < StandardError
       def initialize(response)
         @response = response
       end

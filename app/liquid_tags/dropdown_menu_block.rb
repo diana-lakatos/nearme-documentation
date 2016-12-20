@@ -15,7 +15,7 @@ class DropdownMenuBlock < Liquid::Block
   def initialize(tag_name, markup, tokens)
     super
     @attributes = create_initial_hash_from_liquid_tag_markup(markup)
-    @label = @attributes.delete('label')
+    @label = @attributes.fetch('label', nil)
   end
 
   def render(context)

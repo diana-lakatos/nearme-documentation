@@ -15,8 +15,8 @@ class Delivery < ActiveRecord::Base
 
   accepts_nested_attributes_for :sender_address, :receiver_address
 
-  delegate :city, :postcode, to: :sender_address, prefix: true
-  delegate :city, :postcode, to: :receiver_address, prefix: true
+  delegate :suburb, :postcode, to: :sender_address, prefix: true
+  delegate :suburb, :postcode, to: :receiver_address, prefix: true
 
   validates :dimensions_template, presence: true
 

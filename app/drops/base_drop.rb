@@ -21,7 +21,7 @@ class BaseDrop < Liquid::Drop
       private
 
       def url_helpers
-        Rails.application.routes.url_helpers
+        @url_helpers ||= Rails.application.routes.url_helpers
       end
 
       def language

@@ -97,6 +97,10 @@
         margin: 0;
       }
 
+      .tab-content .span3 {
+        padding-top: 0; // Remove padding set above
+      }
+
       .span9 {
         float: right;
         width: calc(100% - 220px);

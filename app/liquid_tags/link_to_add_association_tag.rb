@@ -16,15 +16,14 @@ class LinkToAddAssociationTag < Liquid::Tag
 
   def render(context)
     @attributes = normalize_liquid_tag_attributes(@attributes, context, %w(label_html wrapper_html input_html))
-
-    form_name = @attributes.delete(:form)
+    form_name = @attributes.fetch(:form, nil)
     @form = (context["form_object_#{form_name}"] || context['form_object'] || context[form_name]).source
     context.registers[:action_view].send(:link_to_add_association,
-      @attributes[:label],
-      @form,
-      @attributes[:asocciation],
-      partial: @attributes[:partial],
-      form_name: @attributes[:form_name] || @attributes[:asocciation]
-    )
+                                         @attributes[:label],
+                                         @form,
+                                         @attributes[:asocciation],
+                                         class: @attributes[:class],
+                                         partial: @attributes[:partial],
+                                         form_name: @attributes[:form_name] || @attributes[:asocciation])
   end
 end

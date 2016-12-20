@@ -54,7 +54,7 @@ en:
         merchant_account:
           attributes:
             account_type:
-              inclusion: 'Account type should be selected'
+              inclusion: 'should be selected'
             current_address:
               inacurate: "must be accurate. Street, number and postcode should be included."
 

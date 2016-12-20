@@ -59,7 +59,7 @@ module Deliveries
       def to_address(address)
         {
           address_line1: address.address,
-          suburb: address.city,
+          suburb: address.suburb,
           postcode: address.postcode,
           country: address.country,
           state_name: address.state

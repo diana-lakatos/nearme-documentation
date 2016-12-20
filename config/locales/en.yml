@@ -21,6 +21,12 @@ en:
             scan_failed_other: 'Scan failed for other reason.'
             failed_keyed_identity: 'The provided identity information could not be verified.'
             failed_other: 'Verification failed for other reason.'
+        merchant_account_owner:
+          attributes:
+            current_address:
+              inacurate: 'is not accurate.'
+              blank: "Can't be blank"
+
         address:
           attributes:
             postcode:
@@ -45,6 +51,7 @@ en:
     models:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
+      merchant_account_owner: "Additional owner"
     attributes:
       payment:
         payment_gateway: 'Payment gateway'
@@ -119,9 +126,18 @@ en:
         business_tax_id: 'Employer Identification Number'
         personal_id_number: 'Social Security Number'
         bank_routing_number: 'Routing Number'
+      merchant_account/owners:
+        last_name: "Last name"
+        first_name: "First name"
+        current_address: "Additonal owners address"
+        document: 'Photo ID'
+      merchant_account/owners/current_address:
+        address: "Additonal owners address"
       merchant_account_owner:
         document: 'Photo ID'
         dob_formated: 'Date of birth'
+
+
   connections:
     facebook:
       count:
