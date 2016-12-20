@@ -7,17 +7,17 @@
       .col-xs-7
         - if resource != current_user
           - if resource.deleted?
-            = link_to "Restore", restore_instance_admin_manage_user_path(resource), :method => :post, data: { confirm: 'Are you sure you want to restore this?' },  class: 'btn pull-right btn-danger'
+            = link_to "Restore", restore_instance_admin_manage_user_path(resource), :method => :post, data: { confirm: 'Are you sure you want to restore this?', disable_with: t('general.restoring') },  class: 'btn pull-right btn-danger'
           - else
-            = link_to "Delete", instance_admin_manage_user_path(resource), :method => :delete, data: { confirm: 'Are you sure you want to delete this user? All associated data is going to be removed permanently.' },  class: 'btn pull-right btn-danger'
+            = link_to "Delete", instance_admin_manage_user_path(resource), :method => :delete, data: { confirm: 'Are you sure you want to delete this user? All associated data is going to be removed permanently.', disable_with: t('general.deleting') },  class: 'btn pull-right btn-danger'
 
         - if resource != current_user && !resource.deleted?
           - if resource.banned? && resource.user_bans.first.present?
             = link_to t('instance_admin.manage.users.account.unban'), instance_admin_manage_user_user_ban_path(resource, resource.user_bans.first), :method => :delete, class: 'btn pull-right btn-info',
-              data: { confirm:  'You will unban this user from your marketplace, do you want to continue?' }
+              data: { confirm:  'You will unban this user from your marketplace, do you want to continue?', disable_with: t('general.unbanning') }
           - else
             = link_to t('instance_admin.manage.users.account.ban'), instance_admin_manage_user_user_bans_path(resource), :method => :post, class: 'btn pull-right btn-danger',
-              data: { confirm:  'You will ban this user from logging in to your marketplace, do you want to continue?' }
+              data: { confirm:  'You will ban this user from logging in to your marketplace, do you want to continue?', disable_with: t('general.banning') }
 
         - if !(resource.banned? || resource.deleted?)
           = link_to t('instance_admin.manage.users.login_as'), login_as_instance_admin_manage_user_path(resource), :method => :post, class: 'btn pull-right btn-blue',

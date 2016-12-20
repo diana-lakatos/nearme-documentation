@@ -240,6 +240,10 @@ en:
     session_stale: "The session is stale. Please log back in."
     saving: "Saving..."
     must_be_present: "must be present"
+    restoring: "Restoring..."
+    deleting: "Deleting..."
+    banning: "Banning..."
+    unbanning: "Unbanning..."
   transactable_types:
     locations:
       listings:
