@@ -59,9 +59,9 @@
             .cell
               / card
               .card-b.is-active
-                %figure{:style => "background-image: url(#{topic.cover_image.url(:medium)});"}
+                %figure{:style => "background-image: url(#{topic.image.url(:small)});"}
                   = link_to "topic_path(topic)" do
-                    = image_tag topic.cover_image.url(:medium)
+                    = image_tag topic.image.url(:small)
                 .wrap
                   = f.input 'topics][', as: :boolean, checked_value: topic.id, input_html: { checked: "checked", class: 'tick-a', id: "follow-topic-#{topic.id}" }, wrapper_html: { class: 'check' }, wrapper: :inline_checkbox, label_html: { id: "follow-topic-#{topic.id}", class: 'no-label' }
                   %h3.hx= topic.name

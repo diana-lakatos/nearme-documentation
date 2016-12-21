@@ -1,4 +1,4 @@
-- if current_user.nil?
+- if current_user.nil? || params[:home].present?
   = render 'home_not_signed_in'
 - else
   = render 'home_signed_in'
