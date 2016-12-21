@@ -1,7 +1,7 @@
 <ul class="actions-a">
 
   {% if offer != blank and current_status == 'pending' %}
-    <li><a class="btn btn-default" data-modal="true" href="{{ 'new_dashboard_orders_received_payment_path' | generate_url: offer.id }}">Pay now</a></li>
+    <li><a class="btn btn-default" data-modal="true" href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: offer.id }}">Pay now</a></li>
   {% endif %}
 
   {% if current_status != 'archived' %}

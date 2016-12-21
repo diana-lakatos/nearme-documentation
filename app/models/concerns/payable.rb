@@ -124,7 +124,7 @@ module Payable
 
     def shared_payment_attributes
       {
-        payer: payment_subscription ? payment_subscription.payer : owner,
+        payer: payer,
         company: payment_subscription ? payment_subscription.company : company,
         company_id: payment_subscription ? payment_subscription.company.id : company_id,
         currency: currency,
@@ -146,6 +146,10 @@ module Payable
         company: company,
         subscriber: self
       }
+    end
+
+    def payer
+      payment_subscription ? payment_subscription.payer : owner
     end
 
     monetize :total_amount_cents, with_model_currency: :currency
