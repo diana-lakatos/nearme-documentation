@@ -46,15 +46,17 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   }.freeze
 
   def aspect_ratio
-    aspect_ratio.presence || DEFAULT_ASPECT_RATIO
+    super.presence || DEFAULT_ASPECT_RATIO
   end
 
   def settings_for_version(version)
-    versions_configuration.fetch(version.to_s, DEFAULT_VERSION_SETTINGS[version.to_sym])
+    version_settings = (versions_configuration || {}).fetch(version.to_s,
+                                                    DEFAULT_VERSION_SETTINGS[version.to_sym]).with_indifferent_access
+    [version_settings[:transform], version_settings[:width], version_settings[:height]]
   end
 
   def optimization_settings
-    optimization_settings.presence || CarrierWave::Optimizable::OPTIMIZE_SETTINGS
+    super.presence || CarrierWave::Optimizable::OPTIMIZE_SETTINGS
   end
 
   def create_translations

@@ -24,6 +24,11 @@ custom_attributes:
     validation:
       required: true
 
+  - name: cover_image
+    label: 'Cover Image'
+    attribute_type: 'photo'
+    html_tag: 'input'
+
   - name: backup_driver
     label: 'Backup Driver'
     attribute_type: 'boolean'
@@ -82,6 +87,8 @@ form_components:
     fields:
       - user: name
       - user: avatar
+      - buyer: cover_image
+      - buyer: Custom Model - Car Photo
       - buyer: driver_category
       - buyer: backup_driver
       - buyer: hourly_price

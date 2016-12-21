@@ -750,6 +750,7 @@ DesksnearMe::Application.routes.draw do
           end
         end
       end
+      resources :custom_images, only: [:edit, :update, :destroy]
       resource :seller, only: [:show, :edit, :update]
       resource :buyer, only: [:show, :edit, :update]
 

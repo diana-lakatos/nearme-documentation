@@ -9,11 +9,6 @@ class CustomImageUploader < BaseUploader
     model.aspect_ratio || 1
   end
 
-  version :transformed, if: :delayed_processing? do
-    process :apply_rotate
-    process :apply_crop
-  end
-
   version :mini, from_version: :transformed, if: :delayed_processing? do
     process dynamic_version: :mini
   end
@@ -27,6 +22,7 @@ class CustomImageUploader < BaseUploader
   end
 
   def dynamic_version(version)
+    return unless model.custom_attribute.present?
     send(*model.settings_for_version(version))
     # i tried splitting dynamic_version and optimize but there is
     # an issue with ordering methods -> as the end result we first optimize
@@ -34,7 +30,7 @@ class CustomImageUploader < BaseUploader
     # By moving this method here, we guarantee the order will be correct.
     # Morever, we only want to invoke this in the background.
     # model.send(mounted_as) is necessary hack for some reason.
-    optimize(*model.optimization_settings) if model.send(mounted_as).delayed_processing
+    optimize(model.optimization_settings) if model.send(mounted_as).delayed_processing
   end
 
   def store_dir

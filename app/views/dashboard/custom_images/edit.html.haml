@@ -1,0 +1,18 @@
+%header.dialog__header
+  %h2#dialog__title= t('manage.photos.crop_and_rotate')
+
+= form_for [:dashboard, @custom_image], html: { id: 'crop-form', 'data-id' => @custom_image.id } do
+  .dialog__body
+    -if @custom_image.errors.any?
+      .error-block= t('manage.photos.edit.error')
+    %p
+      %button.btn.btn-primary.btn-xs{:type => "button", :data => {:"rotate-photo" => true}}= t('manage.photos.edit.rotate')
+
+    .resize-container
+      = image_tag @custom_image.image.url, :'data-image' => true, data: { rotate: @custom_image.image.transformation_rotate, crop: @custom_image.image.transformation_crop, original_dimensions: @custom_image.image.original_dimensions, :"aspect-ratio" => @custom_image.aspect_ratio }
+
+  .dialog__actions
+    = submit_tag t('manage.photos.edit.process'), class: "button-a"
+
+  :javascript
+    $(document).trigger('init:photomanipulator.nearme', ['#crop-form'])

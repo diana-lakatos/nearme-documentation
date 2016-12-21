@@ -10,8 +10,7 @@
             = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
           - elsif model == 'buyer' && @buyer_profile.try(:persisted?)
             = f.simple_fields_for :buyer_profile do |buyer_profile_form|
-              = buyer_profile_form.simple_fields_for :properties, @buyer_profile.properties do |buyer_properties_form|
-                = render :partial => 'buyers/buyer_form', :locals => { f: buyer_profile_form, user_form: f, only_inputs: [field.to_sym], properties_form: buyer_properties_form }
+              = render :partial => 'buyers/buyer_form', :locals => { f: buyer_profile_form, user_form: f, only_inputs: [field.to_sym] }
           - elsif model == 'seller' && @seller_profile.try(:persisted?)
             = f.simple_fields_for :seller_profile do |seller_profile_form|
               = seller_profile_form.simple_fields_for :properties, @seller_profile.properties do |seller_properties_form|
