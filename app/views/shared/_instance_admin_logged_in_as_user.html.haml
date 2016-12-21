@@ -1,8 +1,9 @@
 - # See InstanceAdmin::InventoriesController which sets this up.
-.alert.static.warning
+.alert.static.warning{ "data-flash-message" => true }
   %p
     %i
       Currently browsing the website as #{current_user.name}.
       = link_to "Return back.", restore_session_instance_admin_manage_users_path,
           :method => :post
+      %a.close.ico-close.right{href: '#'}
 
