@@ -22,6 +22,10 @@ class UserProfile < ActiveRecord::Base
   delegate :onboarding, :onboarding?, :has_fields?, :custom_attributes_custom_validators,
     :default_availability_template, to: :instance_profile_type, allow_nil: true
 
+  delegate :time_zone, to: :user
+  alias timezone time_zone
+
+
   after_create :create_company_if_needed
 
   SELLER = 'seller'.freeze
