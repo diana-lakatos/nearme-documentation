@@ -97,3 +97,10 @@ form_components:
       - buyer: vehicle_description
       - buyer: Category - Vehicle Features
       - buyer: Category - Extras
+
+  - type: buyer_registration
+    name: Buyer
+    fields:
+      - user: name
+      - user: email
+      - user: password

@@ -1,3 +1,11 @@
 # default profile
 name: Seller
 profile_type: seller
+
+form_components:
+  - type: seller_registration
+    name: Seller
+    fields:
+      - user: name
+      - user: email
+      - user: password

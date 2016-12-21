@@ -4,8 +4,12 @@ inject_pages: any_page
 position: head_bottom
 ---
 
-<link rel='stylesheet' media='screen' href='https://rawgit.com/mdyd-dev/marketplaces/master/localdriva/dist/localdriva.css'>
-<!-- <link rel='stylesheet' media='screen' href='http://localhost:4000/css/localdriva.css'> -->
+{% if rails_env == 'development' %}
+  <link rel='stylesheet' media='screen' href='http://localhost:4000/css/localdriva.css'>
+{% else %}
+  <link rel='stylesheet' media='screen' href='https://rawgit.com/mdyd-dev/marketplaces/master/localdriva/dist/localdriva.css'> -->
+{% endif %}
+
 
 <script>
   // Picture element HTML5 shiv
