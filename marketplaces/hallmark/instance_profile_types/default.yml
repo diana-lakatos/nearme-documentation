@@ -9,7 +9,7 @@ custom_attributes:
     label: Role
     searchable: true
     validation:
-      valid_values: [ 'Superfan', 'Fan', 'Artist', 'Community Friend', 'Charter Member' ]
+      valid_values: [ 'Superfan', 'Fan', 'Artist', 'Villager', 'Charter' ]
       required: false
 
   - name: about_me
