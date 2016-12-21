@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161215193556) do
+ActiveRecord::Schema.define(version: 20161215113700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1039,6 +1039,15 @@ ActiveRecord::Schema.define(version: 20161215193556) do
 
   add_index "groups", ["instance_id", "creator_id"], name: "index_groups_on_instance_id_and_creator_id", using: :btree
 
+  create_table "help_contents", force: :cascade do |t|
+    t.string   "slug",       null: false
+    t.text     "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "help_contents", ["slug"], name: "index_help_contents_on_slug", unique: true, using: :btree
+
   create_table "host_fee_line_items", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "line_item_source_id"
@@ -1173,20 +1182,20 @@ ActiveRecord::Schema.define(version: 20161215193556) do
   add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", unique: true, using: :btree
 
   create_table "instance_profile_types", force: :cascade do |t|
-    t.string   "name",                             limit: 255
+    t.string   "name",                            limit: 255
     t.integer  "instance_id"
     t.datetime "deleted_at"
     t.string   "profile_type"
     t.boolean  "searchable"
     t.boolean  "show_categories"
     t.string   "category_search_type"
-    t.integer  "position",                                     default: 0
-    t.boolean  "must_have_verified_phone_number",              default: false
-    t.boolean  "onboarding",                                   default: false
-    t.boolean  "create_company_on_sign_up",                    default: false
+    t.integer  "position",                                    default: 0
+    t.boolean  "must_have_verified_phone_number",             default: false
+    t.boolean  "onboarding",                                  default: false
+    t.boolean  "create_company_on_sign_up",                   default: false
     t.boolean  "search_only_enabled_profiles"
-    t.string   "search_engine",                    limit: 255, default: "postgresql", null: false
-    t.boolean  "admin_approval",                               default: false,        null: false
+    t.string   "search_engine",                   limit: 255, default: "postgresql", null: false
+    t.boolean  "admin_approval",                              default: false,        null: false
     t.string   "default_sort_by"
     t.integer  "default_availability_template_id"
   end
@@ -1328,8 +1337,8 @@ ActiveRecord::Schema.define(version: 20161215193556) do
     t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "twilio_ring_tone"
     t.string   "prepend_view_path"
+    t.string   "twilio_ring_tone"
     t.boolean  "require_verified_user",                                                             default: false
   end
 
@@ -3122,6 +3131,7 @@ ActiveRecord::Schema.define(version: 20161215193556) do
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
     t.integer  "wish_list_items_count",                              default: 0
     t.float    "product_average_rating",                             default: 0.0
+    t.text     "ui_settings",                                        default: "{}"
     t.datetime "expires_at"
   end
 
@@ -3348,4 +3358,5 @@ ActiveRecord::Schema.define(version: 20161215193556) do
     t.string   "workflow_type",   limit: 255
   end
 
+  add_foreign_key "graph_queries", "instances"
 end
