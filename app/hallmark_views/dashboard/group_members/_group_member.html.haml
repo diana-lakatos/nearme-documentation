@@ -1,0 +1,25 @@
+%tr
+  %td
+    = link_to group_member.name, user_path(group_member.user)
+  %td
+    = @group.can_moderate?(group_member.user)
+  %td.col-status
+    - if group_member.pending?
+      =t('pending')
+    - elsif group_member.approved?
+      =t('approved')
+
+  %td
+    - unless group_member.approved_by_owner?
+      %button.button-a.small.action--approve{'data-href': approve_dashboard_group_group_member_path(@group, group_member), 'data-action': 'PATCH' }
+        = t(:approve)
+
+    - if group_member.approved? && !@group.is_owner?(group_member.user) && group_member.user.id != current_user.id
+      - klass_name = "button-a small #{group_member.moderator ? 'action--remove-role' : 'action--add-role'}"
+      %button{class: klass_name, 'data-href': moderate_dashboard_group_group_member_path(@group, group_member), 'data-action': 'PATCH' }
+        = t(:moderator)
+
+
+    - unless @group.is_owner?(group_member.user)
+      %button.button-a.small.danger.action--remove{'data-href': dashboard_group_group_member_path(@group, group_member), 'data-action': 'DELETE' }
+        = t(:remove)

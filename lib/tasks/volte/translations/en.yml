@@ -17,6 +17,8 @@ en:
     manage:
       reservations:
         reservation_not_confirmed: 'Please confirm the below information to complete the order'
+    pace_listedpace_wizard:
+      space_listed: 'Congratulations on completing your first item listing.  Please <a href="dashboard/company/payouts/edit">complete your Banking Account details</a> at this time.'
 
   simple_form:
     labels:
@@ -26,6 +28,8 @@ en:
         dates: 'Delivery date'
       order:
         transactable_pricing_id: 'Rental period'
+      defaults:
+        bank_routing_number: 'BSB number'
   devise:
     registrations:
       signed_up: 'You have successfully registered. <a href="/dashboard/edit_profile">Click here</a> to complete your profile.'

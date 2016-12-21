@@ -151,7 +151,6 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     params[:order][:rejection_reason] if params[:order] && params[:order][:rejection_reason]
   end
 
-  # TODO: REFACTOR: perhaps this better to be factory
   def prepare_order_for_shipping
     return if @order.confirmed?
     return unless Shippings.enabled?(@order)

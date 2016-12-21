@@ -45,7 +45,15 @@ FactoryGirl.define do
         max_hourly_price_cents 100_00
         min_hourly_price_cents 11_00
       end
+      factory :transactable_type_listing_no_action do
+        after(:build) do |transactable_type|
+          TransactableType.transaction do
+            transactable_type.action_types = [FactoryGirl.build(:transactable_type_action_type, transactable_type: transactable_type)]
+          end
+        end
+      end
     end
+
 
     factory :transactable_type_buy_sell do
       sequence(:name) do |n|

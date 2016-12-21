@@ -30,7 +30,7 @@
             <span class="select-a">
               <select name="lg_custom_attributes[states][]" id="field-state" class="unstyled-select">
                 <option value="">By State</option>
-                {% assign ca = platform_context.transactable_types.first.custom_attributes_as_hash %}
+                {% assign ca = platform_context.transactable_types_as_hash['individual case'].custom_attributes_as_hash %}
                 {% for value in ca['states'].valid_values %}
                   <option value='{{ value }}' {% if value == searcher.lg_custom_attributes_hash['states'].first %} selected {% endif %}>{{ value }}</option>
                 {% endfor %}

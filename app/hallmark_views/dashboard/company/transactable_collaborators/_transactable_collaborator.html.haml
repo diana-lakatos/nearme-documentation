@@ -1,0 +1,14 @@
+%tr
+  %td= link_to transactable_collaborator.name, user_path(transactable_collaborator.user)
+  %td.col-status
+    - if transactable_collaborator.pending?
+      =t('transactable_collaborator.pending')
+    - elsif transactable_collaborator.approved?
+      =t('transactable_collaborator.approved')
+
+  %td
+    - unless transactable_collaborator.approved_by_owner?
+      %button.button-a.small.action--approve{"data-transactable-collaborator": transactable_collaborator.id, "data-action": 'PUT'}
+        = t 'transactable_collaborator.approve'
+    %button.button-a.small.action--remove.danger{"data-transactable-collaborator": transactable_collaborator.id, "data-action": 'DELETE'}
+      = t 'transactable_collaborator.remove'

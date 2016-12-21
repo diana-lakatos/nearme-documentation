@@ -8,6 +8,12 @@
   {% input id, as: hidden %}
 {% endif %}
 
+{% if merchant_account.due_by %}
+  <div class="alert alert-warning">
+    {{ "dashboard.merchant_account.account_valid_until" | translate: due_by:merchant_account.due_by }}
+  </div>
+{% endif %}
+
 {% if merchant_account.all_errors %}
   <div class="errors-global">
     <ul>
@@ -18,7 +24,7 @@
   </div>
 {% endif %}
 
-{% if merchant_account.verified? and params.edit_mode == blank %}
+{% if merchant_account.verified? and merchant_account.complete? and params.edit_mode == blank %}
 
  <h3>{{ 'dashboard.merchant_account.' | append: merchant_account.state | translate }}</h3>
     <div class='btn-group pull-right'>
@@ -54,20 +60,6 @@
     <h3>{{ "dashboard.merchant_account." | append: merchant_account.state | translate }}</h3>
   {% endif %}
 
-{% comment %}  {% fields_for owners %}
-    {% include 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', owners: owners, merchant_account: merchant_account %}
-  {% endfields_for %}
-
-  <div class='owners'>
-    <div class='links'>
-      {% assign link_label = 'dashboard.merchant_account.add_owner' | translate %}
-      {% link_to_add_association label: @link_label, asocciation: owners, partial: dashboard/company/merchant_accounts/stripe_connect_owner_fields, render_options-locals: merchant_account %}
-    </div>
-  </div>
-  <br />
-  <h3>{{ 'dashboard.merchant_account.main_owner_detail' | translate }}</h3>
-{% endcomment %}
-
   {% input :account_type, prompt: 'translate', required: true,  input_html-data-account-type: 'true', collection: @merchant_account.account_types %}
   {% if merchant_account.supported_currencies.size > 1 %}
     {% input currency, required: true, collection: @merchant_account.supported_currencies, prompt: 'translate' %}
@@ -75,30 +67,23 @@
 
   {% input bank_routing_number, required: true %}
   {% input bank_account_number, required: true %}
-  {% input first_name, required: true %}
-  {% input last_name, required: true %}
-  {% if 'US CA' contains  merchant_account.iso_country_code %}
-    {% input personal_id_number, required: true %}
-    {% input business_tax_id, required: true, wrapper_html-data-account-type: 'company' %}
-  {% endif%}
 
-  {% fields_for owners  %}
-    <div class='datetimepicker' style='position: relative'>
-      {% assign owner = merchant_account.owners.first %}
-      {% assign date_format = owner.date_format_readable %}
-      {% input dob_formated, form: owners, required: true, input_html-data-date-picker: 'true', input_html-data-date-format: @date_format, disabled: @merchant_account.verified? %}
-    </div>
-    {% input document, form: owners, required: true %}
-  {% endfields_for %}
+  <div class='nested-fields-set'>
+    {% fields_for owners %}
+      {% assign stripe_connect_owner_fields_count = 0 %}
+      {% include 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', merchant_account: merchant_account %}
+    {% endfields_for %}
+  </div>
 
-  {% fields_for current_address %}
-    <div class='fields location' data-address-field>
-      {% input address, form: current_address, input_html-data-address-input: 'true', input_html-data-behavior: 'address-autocomplete', required: true %}
-      <div class="map">
-        <div class="map-container"></div>
+  {% if merchant_account.fields_needed contains 'legal_entity.additional_owners' %}
+    <div class='owners'>
+      <div class='links'>
+        {% assign link_label = 'dashboard.merchant_account.add_owner' | translate %}
+        {% link_to_add_association label: @link_label, form: f, class: 'btn btn-danger', asocciation: owners, partial: dashboard/company/merchant_accounts/stripe_connect_owner_fields, render_options-locals: merchant_account %}
       </div>
     </div>
-  {% endfields_for %}
+    <br />
+  {% endif %}
 
   <div class="{% if merchant_account.tos_error %}has-error{%endif%}">
     <label>

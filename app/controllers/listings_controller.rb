@@ -110,11 +110,15 @@ class ListingsController < ApplicationController
 
   def redirect_if_listing_inactive
     if @listing.deleted? || @listing.draft?
-      flash[:warning] = t('flash_messages.listings.listing_inactive', address: @listing.address)
-      if @listing_siblings.any?
-        redirect_to @listing_siblings.first.decorate.show_path
+      if @location.present?
+        flash[:warning] = t('flash_messages.listings.listing_inactive', address: @listing.address)
+        if @listing_siblings.any?
+          redirect_to @listing_siblings.first.decorate.show_path
+        else
+          redirect_to search_path(loc: @listing.location.address, q: @listing.name)
+        end
       else
-        redirect_to search_path(loc: @listing.location.address, q: @listing.name)
+        redirect_to search_path(q: @listing.name)
       end
     elsif @listing.disabled?
       if current_user_can_manage_listing?
@@ -132,7 +136,7 @@ class ListingsController < ApplicationController
 
   def redirect_if_no_access_granted
     unless current_user && (current_user.can_manage_listing?(@listing) || @listing.transactable_collaborators.where(user: current_user).where.not(approved_by_owner_at: nil).exists?)
-      if current_user.admin?
+      if current_user&.admin?
         flash.now[:notice] = 'You are using administator account to view this project. <a href="/instance_admin/manage/orders">Back</a>'.html_safe
       else
         flash[:warning] = t('flash_messages.listings.no_longer_have_access')

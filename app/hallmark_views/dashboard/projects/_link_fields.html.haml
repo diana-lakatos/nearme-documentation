@@ -26,12 +26,10 @@
 
   .fieldset-actions
     - if f.object.url.present?
-      %button.button-a.small{:"data-link-edit" => true, type: 'button' }
-        %span.intelicon-edit
+      %button.button-a.small.action--edit{:"data-link-edit" => true, type: 'button' }
         = t('edit', default: 'Edit')
 
-    = link_to_remove_association f, class: 'button-a small danger' do
-      %span.intelicon-trash-outlined
+    = link_to_remove_association f, class: 'button-a small danger action--remove' do
       = t('remove', default: 'Remove')
 
 

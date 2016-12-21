@@ -809,10 +809,16 @@ class SecuredParams
   def merchant_account(merchant_account)
     attributes = [:id, :redirect_url]
     attributes << merchant_account.class::ATTRIBUTES
-    attributes << { current_address_attributes: nested(address) }
     attributes << { payment_subscription_attributes: nested(payment_subscription) }
-    attributes << { owners_attributes: nested([:document]) + MerchantAccountOwner::StripeConnectMerchantAccountOwner::ATTRIBUTES }
+    attributes << { owners_attributes: merchant_account_owner }
     attributes
+  end
+
+  def merchant_account_owner
+    attributes = [:id]
+    attributes << [:document]
+    attributes << { current_address_attributes: nested(address) }
+    attributes << MerchantAccountOwner::StripeConnectMerchantAccountOwner::ATTRIBUTES
   end
 
   def domain
@@ -1458,12 +1464,12 @@ class SecuredParams
       :inbound_pickup_date,
       :outbound_pickup_date,
       :outbound_return_address_address,
-      :outbound_return_address_city,
+      :outbound_return_address_suburb,
       :outbound_return_address_postcode,
       :outbound_return_address_state,
       :outbound_return_address_country,
       :inbound_pickup_address_address,
-      :inbound_pickup_address_city,
+      :inbound_pickup_address_suburb,
       :inbound_pickup_address_postcode,
       :inbound_pickup_address_state,
       :inbound_pickup_address_country,

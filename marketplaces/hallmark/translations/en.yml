@@ -1,24 +1,3 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
   global_page_title: 'Hallmark Keepsake Ornament Club'
 
@@ -28,8 +7,11 @@ en:
   skip_to_footer: 'Skip to footer'
 
   members: 'Members'
+  people: 'Members'
+  projects: 'Extras'
   extras: 'Extras'
   topics: 'Topics'
+  groups: 'Groups'
   groups_and_clubs: 'Groups & Clubs'
   profile: 'Profile'
   my_projects: 'My Extras'
@@ -42,6 +24,7 @@ en:
   add_project: 'Add Extra'
   add_group: 'Add Group'
   create_group: 'Create Group'
+  create_extra: 'Create Extra'
 
   # footer
   copyright_html: '&copy; %{year} Hallmark Licensing, LLC'
@@ -141,17 +124,17 @@ en:
   # onboarding
   onboarding:
     step_1:
-      title: 'Almost there! Just a couple more questions to set up your Mesh account. Where do you live?'
+      title: 'Almost there! Just a couple more questions to set up your account. Where do you live?'
       description: "Let us know what city you're in so we can connect you with members and events in your area."
     step_2:
       title: 'Connect your social accounts'
-      description: 'Get a jump start on building your Mesh network with people you already know.'
+      description: 'Get a jump start on building your network with members you already know.'
     step_3:
       title: 'Recommendations to get started'
-      description: "Based on what you've already told us, we've selected some people, extras, and topics for you to follow. You can find and follow more at any time."
+      description: "Based on what you've already told us, we've selected some members, extras, and topics for you to follow. You can find and follow more at any time."
     step_4:
       title: 'Congrats! Your account has been successfully created.'
-      description: 'Introduce yourself to the community in the most interesting way! It will make it easy for people to find you and follow you.'
+      description: 'Introduce yourself to the community in the most interesting way! It will make it easy for other members to find you and follow you.'
 
     more_info: 'You can add more information and complete your profile in your personal account'
     step_x_of_total: 'Step %{step} of %{total}'
@@ -160,7 +143,7 @@ en:
   continue: 'Continue'
   connect_with_service: 'Connect with %{service}'
   connect: 'Connect'
-  people_to_follow: 'Mebers to Follow'
+  people_to_follow: 'Members to Follow'
   projects_to_follow: 'Extras to Follow'
   topics_to_follow: 'Topics to Follow'
   add_photo: 'Add Photo'
@@ -196,6 +179,7 @@ en:
   actions: 'Actions'
   approve: 'Approve'
   decline: 'Decline'
+  moderator: 'Moderator'
   cancel_request: "Cancel request"
   approved: 'Approved'
   pending: 'Pending'
@@ -313,7 +297,7 @@ en:
           photo: 'Photo'
 
       hints:
-        seek_collaborators: 'You can add people to help your extra'
+        seek_collaborators: 'You can add other members to help your extra'
         photos: 'For best results use images with dimensions 680×546px or crop them after upload.'
 
 
@@ -394,7 +378,7 @@ en:
         options:
           all: "All"
           featured: "Featured"
-          people_i_know: "People I Know"
+          people_i_know: "Members I Know"
           most_popular: "Most Popular"
           location: "Near Me"
           number_of_projects: "Number of Extras"
@@ -464,3 +448,17 @@ en:
       onboarding:
         submit: 'Continue'
 
+  instance_admin:
+    projects: "Extras"
+
+  dashboard:
+    order_items:
+      back_to_projects: "Go Back to Extras In Progress"
+      back_to_projects_html: "Go Back<span class='hidden-xs'> to Extras In Progress</span>"
+
+  transactable_collaborator:
+    collaborator_cancelled: "You have declined collaboration in this extra."
+    user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} extra"
+    cant_remove_collaborator: "You can't remove user from this extra"
+
+  extras_are_coming_soon: You will be able to create your own extras soon!

@@ -36,6 +36,25 @@
                   %button.apply-filter.btn.btn-blue
                     = t('instance_admin.manage.admin_searchable.apply_filter')
 
+          .filter.state
+            .dropdown.date-dropdown
+              %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
+                - if params[:state].present?
+                  %span.current= selected_account_standing(params[:state])
+                - else
+                  %span.current
+                    = t('instance_admin.manage.admin_searchable.title_all')
+                %span.caret
+                = hidden_field_tag 'state', params[:state]
+              %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
+                %li
+                  %a{data: {date: ''}}
+                    = t('instance_admin.manage.admin_searchable.title_all')
+                - User::ACCOUNT_STANDINGS.each do |value|
+                  %li
+                    %a{data: {date: value}}
+                      = value.capitalize
+
           .filter.search
             %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
             %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}

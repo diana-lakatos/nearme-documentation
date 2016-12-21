@@ -85,9 +85,9 @@ PreCommit:
     quiet: true
     enabled: true
     include:
-      - 'app/drops/**/*.rb'
-      - 'app/liquid_tags/*.rb'
-      - 'lib/liquid_filters.rb'
+      - './app/drops/**/*.rb'
+      - './app/liquid_tags/*.rb'
+      - './lib/liquid_filters.rb'
     requires_files: true
     required_executable: './git-hooks/pre-commit/yard-frontend-docs-completeness'
     problem_on_unmodified_line: ignore

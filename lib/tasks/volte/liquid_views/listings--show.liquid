@@ -154,9 +154,9 @@
       <ul>
         {% for tag in listing.tags %}
           {% if forloop.index <= 5 %}
-            <li><a href="#" class="button button-inverse">{{ tag.name }}</a></li>
+            <li><a href="/search?query_fields=tags&amp;query={{ tag.name }}" class="button button-inverse">{{ tag.name }}</a></li>
           {% else %}
-            <li class="item-tags__hide" data-item-tags-hidden><a href="#" class="button button-inverse">{{ tag.name }}</a></li>
+            <li class="item-tags__hide" data-item-tags-hidden><a href="/search?query_fields=tags&amp;query={{ tag.name }}" class="button button-inverse">{{ tag.name }}</a></li>
           {% endif %}
 
           {% if listing.tags.size > 5 %}

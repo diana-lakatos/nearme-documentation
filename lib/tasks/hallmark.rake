@@ -52,7 +52,7 @@ namespace :hallmark do
   task import_users: [:environment] do
     instance = Instance.find(5011)
     instance.set_context!
-    path = '/Users/mkk/users-hallmark.csv'
+    path = Rails.root.join('marketplaces', 'hallmark', 'users-hallmark.csv')
     mapping = {
       external_id: 0,
       first_name: 1,
@@ -119,7 +119,7 @@ namespace :hallmark do
         end
         u.default_profile.properties[:member_year] = array[mapping.fetch(:member_year)]
         if u.valid?
-        # u.save!
+          u.save!
         else
           errors[index] << "Invalid rekord: #{u.errors.full_messages.join(', ')}"
         end

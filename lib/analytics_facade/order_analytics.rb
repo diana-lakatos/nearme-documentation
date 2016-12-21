@@ -2,7 +2,7 @@
 module AnalyticsFacade
   class OrderAnalytics < AnalyticsFacade::AnalyticsBase
     def base_scope
-      @base_scope ||= scope.orders
+      @base_scope ||= scope.orders.complete
     end
 
     def chart_data

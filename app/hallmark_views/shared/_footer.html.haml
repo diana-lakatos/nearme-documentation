@@ -1,11 +1,8 @@
 %footer#footer.footer-a
   .contain
     .wrap
-      .copyright
-        = link_to 'https://hallmark.com' do
-          = image_tag "hallmark/logo-white.png", width: 109, height: 60, alt: 'Hallmark Keepsake Ornament Club'
-        %p
-          = t(:copyright_html, year: Time.now.year)
+      %p.copyright
+        = t(:copyright_html, year: Time.now.year)
       %ul.nav
         - platform_context.pages.each do |page|
           %li

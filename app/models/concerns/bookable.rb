@@ -68,7 +68,7 @@ module Bookable
       elsif transactable.try(:location).try(:assigned_waiver_agreement_templates).try(:any?)
         transactable.location.assigned_waiver_agreement_templates.includes(:waiver_agreement_template).map(&:waiver_agreement_template)
       else (templates = PlatformContext.current.instance.waiver_agreement_templates).any?
-           templates
+        templates
       end
     end
 
@@ -119,10 +119,67 @@ module Bookable
     end
 
     def schedule_expiry
-      hours_to_expiration = transactable.hours_to_expiration.to_i.hours
-      expires_at = Time.current + hours_to_expiration
-      update_column(:expires_at, expires_at)
-      OrderExpiryJob.perform_later(expires_at, id) if hours_to_expiration > 0
+      calc = ExpiryAtTimeCalculator.build(self)
+
+      update_column(:expires_at, calc.expires_at)
+      OrderExpiryJob.perform_later(calc.expires_at, id) if calc.should_expire?
+    end
+  end
+
+  class ExpiryAtTimeCalculator
+    class DefaultExpiryAtTimeCalculator
+      def initialize(order)
+        @order = order
+      end
+
+      def expires_at
+        Time.current + @order.transactable.hours_to_expiration.to_i.hours
+      end
+
+      def should_expire?
+        @order.transactable.hours_to_expiration > 0
+      end
+    end
+
+    class DeliveryBasedExpiryAtTimeCalculator
+      def initialize(order)
+        @order = order
+      end
+
+      # TODO clarify how this should work
+      def should_expire?
+        expires_at.present?
+      end
+
+      # at this point there should always be at least one date available for pickup
+      # so if it fails something wrong is somewhere else but here
+      def expires_at
+        @expires_at ||= range.possible_dates.last.in_time_zone(time_zone.name).advance(hours: 17)
+      end
+
+      def range
+        @range ||= Deliveries::Sendle::Validations::PossiblePickupDates.new(time_zone: time_zone, to: date.to_date)
+      end
+
+      def date
+        @order.date
+      end
+
+      def time_zone
+        @time_zone ||= Deliveries::Sendle::Validations::ItemLocationTimeZone.new(item_address)
+      end
+
+      def item_address
+        @order.transactable.location.location_address
+      end
+    end
+
+    def self.build(order)
+      if Shippings.enabled?(order)
+        DeliveryBasedExpiryAtTimeCalculator.new(order)
+      else
+        DefaultExpiryAtTimeCalculator.new(order)
+      end
     end
   end
 

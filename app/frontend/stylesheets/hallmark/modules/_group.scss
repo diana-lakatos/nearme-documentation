@@ -7,11 +7,11 @@
 }
 
 .group-actions {
-    @include clear;
+  @include clear;
 
-    a {
-        float: right;
-    }
+  a {
+    float: right;
+  }
 }
 
 .empty-groups {
@@ -20,7 +20,6 @@
 }
 
 .group {
-
   h2 {
     font-weight: bold;
     margin: 20px 0 0 0;
@@ -60,11 +59,11 @@
       }
 
       &.location:before {
-          display: inline-block;
-          content: '\e607';
-          font: 14px/1 $font-icons;
-          line-height: inherit;
-          vertical-align: top;
+        display: inline-block;
+        content: '\e607';
+        font: 14px / 1 $font-icons;
+        line-height: inherit;
+        vertical-align: top;
       }
     }
   }
@@ -72,13 +71,12 @@
   section.gallery {
     .gallery-a {
       li {
-        width: (100%/3);
+        width: (100% / 3);
       }
     }
   }
 
   section.videos {
-
     .gallery-a {
       li {
         width: 50%;
@@ -105,7 +103,6 @@
   }
 
   .secondary {
-
     .featured {
       font-size: 0;
       margin: 0 -10px 0 -10px;
@@ -166,9 +163,9 @@
   }
 
   .control-group {
-      &.group_transactable_type {
-        margin: 0 0 10px;
-      }
+    &.group_transactable_type {
+      margin: 0 0 10px;
+    }
   }
 
   .group-type-description {
@@ -179,18 +176,26 @@
       &.active {
         display: block;
       }
+
+      &:before {
+        content: $fa-var-info-circle;
+        margin-right: 8px;
+        font-family: FontAwesome;
+        font-size: 1.2em;
+        vertical-align: middle;
+        color: $color-blue;
+      }
     }
   }
 
   .gallery-a {
     li {
-      width: (100%/3);
+      width: (100% / 3);
       position: relative;
     }
   }
 
   .gallery-video {
-
     li.active {
       .remove-video {
         display: block;
@@ -250,7 +255,6 @@
 }
 
 .group, .group-form-controller {
-
   .group_transactable_type {
     .selectize-control {
       [data-value] {
@@ -291,6 +295,10 @@
 
   .video-form {
     margin: 0;
+
+    button {
+      margin-top: 10px;
+    }
   }
 
   .gallery-video {
@@ -300,7 +308,6 @@
   .video-wrapper {
     max-width: 1000px;
     height: auto;
-
     margin: 0 auto;
     padding: 0;
     position: relative;

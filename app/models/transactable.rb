@@ -763,7 +763,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def set_action_type
-    self.action_type ||= action_types.find(&:enabled)
+    self.action_type = action_types.find(&:enabled) if self.action_type.blank? || !self.action_type.valid?
   end
 
   def decline_reservations

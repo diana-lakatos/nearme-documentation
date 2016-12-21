@@ -1,4 +1,4 @@
-- if @company.present? && @company.missing_payout_information?
+- if @company.present? && @company.missing_payout_information? && controller_name != 'payouts'
   %div{class: "alert error", :'data-flash-message' => true}
     = (t('flash_messages.dashboard.missing_payout_information', link: link_to("Admin/Payments", edit_dashboard_company_payouts_path )) ).html_safe
 

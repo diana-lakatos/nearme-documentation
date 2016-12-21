@@ -1,0 +1,48 @@
+= content_for :tutorial do
+
+  .tutorial-a.is-active
+    .mask
+
+    .slide.s1.is-active{"data-mask" => ".page-a > .primary > .box-a"}
+      .wrap
+        %p
+          = t :step_1, scope: [:tutorial]
+        %p.action
+          = link_to t(:next), '#s2', data: { next: true }, class: 'button-a'
+
+    .slide.s2{"data-mask" => ".publish-a"}
+      .wrap
+        %p
+          = t :step_2, scope: [:tutorial]
+        %p.action
+          = link_to t(:next), '#s3', data: { next: true }, class: 'button-a'
+
+    .slide.s3{"data-mask" => ".page-a > .secondary"}
+      .wrap
+        %p
+          = t :step_3, scope: [:tutorial]
+
+        %p.action
+          = link_to t(:finish), '#close', data: { close: true }, class: 'button-a'
+
+.wrap-a.reduce-top
+  .contain
+    / layout
+    .page-a
+      .primary
+        / white box
+        .box-a
+          %h1.h2
+            = t('activity_feed.title')
+
+          = render 'shared/activity_feed', feed: @feed, object: current_user
+
+
+      .secondary
+
+        = render 'shared/featured_projects', projects: @projects
+
+        = render 'shared/featured_users', users: @users
+
+        = render 'shared/featured_topics', topics: @topics
+

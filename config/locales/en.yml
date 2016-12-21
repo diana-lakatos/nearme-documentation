@@ -21,10 +21,18 @@ en:
             scan_failed_other: 'Scan failed for other reason.'
             failed_keyed_identity: 'The provided identity information could not be verified.'
             failed_other: 'Verification failed for other reason.'
+        merchant_account_owner:
+          attributes:
+            current_address:
+              inacurate: 'is not accurate.'
+              blank: "Can't be blank"
+
         address:
           attributes:
-            address:
-              invalid_pickup_location: 'is not valid for pickup'
+            postcode:
+              invalid_pickup_location: 'does not match suburb'
+            suburb:
+              invalid_pickup_location: 'does not match postcode'
         payment:
           attributes:
             payment_gateway:
@@ -34,7 +42,8 @@ en:
         delivery:
           attributes:
             pickup_date:
-              pick_up_only_on_business_days: PickUp available only on business days
+              non_business_day: PickUp available only on business days
+              non_holiday_day: PickUp available only on business days
         aws_certificate:
           attributes:
             arn:
@@ -42,6 +51,7 @@ en:
     models:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
+      merchant_account_owner: "Additional owner"
     attributes:
       payment:
         payment_gateway: 'Payment gateway'
@@ -108,15 +118,26 @@ en:
       user:
         default_properties: ""
       "order/shipping_address/address":
-        address: Shipping address
+        suburb: Shipping suburb
+        postcode: Shipping postcode
       instance_profile_type:
         admin_approval: 'Requires admin approval'
       merchant_account:
         business_tax_id: 'Employer Identification Number'
         personal_id_number: 'Social Security Number'
         bank_routing_number: 'Routing Number'
+      merchant_account/owners:
+        last_name: "Last name"
+        first_name: "First name"
+        current_address: "Additonal owners address"
+        document: 'Photo ID'
+      merchant_account/owners/current_address:
+        address: "Additonal owners address"
       merchant_account_owner:
+        document: 'Photo ID'
         dob_formated: 'Date of birth'
+
+
   connections:
     facebook:
       count:
@@ -219,6 +240,10 @@ en:
     session_stale: "The session is stale. Please log back in."
     saving: "Saving..."
     must_be_present: "must be present"
+    restoring: "Restoring..."
+    deleting: "Deleting..."
+    banning: "Banning..."
+    unbanning: "Unbanning..."
   transactable_types:
     locations:
       listings:
@@ -729,6 +754,10 @@ en:
         to: "To:"
         apply_filter: "Apply filter"
         search_by_keyword: "Search by keyword"
+        user:
+          banned: "Banned"
+          active: "Active"
+          deleted: "Deleted"
       reviews:
         index:
           missing: "Missing object"
@@ -1784,8 +1813,15 @@ en:
       you_havent_added_anything_yet: "You haven't added anything yet!"
       contact_subscriber: 'Contact %{name}'
       reservation_is_expired: "Reservation is expired!"
-
     merchant_account:
+      fields_needed:
+        header: "Please provide additionl fields:"
+        legal_entity:
+          additional_owners: "Additional owners"
+          verification:
+            document: 'Photo ID'
+          personal_id_number': 'Social Security Number'
+      account_valid_until: "Your account is valid until %{due_by}. Please add required information to avoid disabling it."
       you_almost_there: "You're almost there!"
       stripe_needed_fields_1: "Stripe is asking for a few more details."
       stripe_needed_fields_2: " Please fill out all the flields below. An email will be sent to you when Stripe verifies your account."

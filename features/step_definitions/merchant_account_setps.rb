@@ -9,11 +9,11 @@ When(/^I update Stripe merchant form$/) do
   page.find("#merchant_account_account_type option", :visible => false).set('individual')
   fill_in 'merchant_account_bank_routing_number', with: '110000000'
   fill_in 'merchant_account_bank_account_number', with: '000123456789'
-  fill_in 'merchant_account_first_name', with: 'Tomasz'
-  fill_in 'merchant_account_last_name', with: 'Lemkowski'
+  fill_in 'merchant_account_owners_attributes_0_first_name', with: 'Tomasz'
+  fill_in 'merchant_account_owners_attributes_0_last_name', with: 'Lemkowski'
   fill_in 'merchant_account_owners_attributes_0_dob_formated', with: '01/22/1990'
-  fill_in 'merchant_account_current_address_attributes_address', with: '1600 Amphitheatre Parkway, Mountain View, CA 94043, USA'
-  fill_in 'merchant_account_personal_id_number', with: '694-07-7618'
+  fill_in 'merchant_account_owners_attributes_0_current_address_attributes_address', with: '1600 Amphitheatre Parkway, Mountain View, CA 94043, USA'
+  fill_in 'merchant_account_owners_attributes_0_personal_id_number', with: '694-07-7618'
   attach_file('merchant_account_owners_attributes_0_document', File.absolute_path('./public/favicon.png'))
   page.check('merchant_account_tos')
   find('input[type="submit"]').click
@@ -35,7 +35,14 @@ end
 
 def account_create_respone_with_error(error)
   response = File.read(File.join(Rails.root, 'features', 'fixtures', 'stripe_responses', "account_create.json"))
-  response.gsub!("\"disabled_reason\":null", "\"disabled_reason\":\"#{error}\"")
+
+  if error.include? 'transfer_disabled'
+    response.gsub!("\"transfers_enabled\":true", "\"transfers_enabled\":false")
+  end
+
+  if error.include? ('disabled_reason')
+    response.gsub!("\"disabled_reason\":null", "\"disabled_reason\":\"rejected.fraud\"")
+  end
   response
 end
 
@@ -56,7 +63,7 @@ Then(/^Stripe (.*) error should be presented to user$/) do |error|
   end
 
   expect(page).to have_css("div.errors-global")
-  page.first('div.errors-global').text.should match(error_message)
+  expect(page.first('div.errors-global')).to have_content(error_message, count: 1)
 end
 
 And /^there should be no errors$/ do
@@ -73,10 +80,17 @@ end
 
 Then /^I should see all persisted errors$/ do
   expect(page).to have_css("div.errors-global")
-  ['This account is rejected for some other reason.', 'Please update your document', 'Scan failed for other reason.'].each do |error|
+  ['This account is rejected for some other reason.', 'Scan failed for other reason.', 'Please provide additionl fields', 'Photo ID'].each do |error|
     page.first('div.errors-global').text.should match(error)
   end
 end
+
+And /^due_by should be displayed$/ do
+  due_by = I18n.l(Time.at(1411603199), format: :long)
+  error_message = "Your account is valid until #{due_by}. Please add required information to avoid disabling it."
+  expect(page).to have_content(error_message, count: 1)
+end
+
 
 
 

@@ -1,4 +1,126 @@
-<header class="dialog__header">
+<<header class="dialog__header">
+  <h2 id="dialog__title">Approve Request</h2>
+</header>
+
+<hr/>
+
+{% assign form_url = 'confirm_dashboard_company_orders_received_path' | generate_url: order.id, listing_id: order.transactable.id %}
+
+{% form_for order, as: 'order', form_for_type: 'dashboard', url: @form_url, html-data-modal: true, method: post %}
+  <div class="dialog__body">
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Item Rental Summary</h3>
+
+        <dl class="clearfix">
+          <dt>Borrower:</dt>
+          <dd>{{ order.owner.name }}</dd>
+          <dt>Item:</dt>
+          <dd>
+            {% if order.transactable != blank %}
+              <a href="{{ order.transactable.show_path }}">
+                {{ order.transactable.name }}
+              </a>
+            {% endif %}
+          </dd>
+
+          <dt>Shipping Package:</dt>
+          <dd>{{ order.shipping_package.label }}</dd>
+
+          <dt>Borrower ship to address:</dt>
+          <dd>{{ order.enquirer_shipping_address.full }}</dd>
+
+          {% assign requested_dates = order.long_dates %}
+          {% assign requested_dates_size = requested_dates.size %}
+
+          <dt>Period:</dt>
+          <dd>{{ order.transactable_pricing.number_of_units }} days</dd>
+
+          <dt>Rental date:</dt>
+          <dd>{{ order.starts_at | to_date | l: 'short' }}</dd>
+
+          <dt>Return date:</dt>
+          <dd>{{ order.starts_at | to_date | add_to_date: order.transactable_pricing.number_of_units | l: 'short'  }} </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            {% input inbound_sender_firstname, label: 'Sender first name', required: true %}
+          </div>
+          <div class="col-xs-12 col-md-6">
+            {% input outbound_receiver_firstname, label: 'Receiver first name', required: true %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            {% input inbound_sender_lastname, label: 'Sender Last name', required: true %}
+          </div>
+          <div class="col-xs-12 col-md-6">
+            {% input outbound_receiver_lastname, label: 'Receiver Last name', required: true %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            {% input inbound_pickup_date, label: 'Pick Up Date', wrapper_html-class: 'datetimepicker', input_html-data-datetimepicker: "true", required: true %}
+          </div>
+          <div class="col-xs-12 col-md-6">
+            {% input outbound_pickup_date, label: 'Shipping Return Date', wrapper_html-class: 'datetimepicker', input_html-data-datetimepicker: "true", required: true %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            <div>
+              {% input inbound_pickup_address_address, label: "AddressLine" %}
+              {% input inbound_pickup_address_suburb, label: "Suburb" %}
+              {% input inbound_pickup_address_state, label: "State" %}
+              {% input inbound_pickup_address_postcode, label: "Postcode" %}
+              {% input inbound_pickup_address_country, as: hidden, value: 'Australia', label: "Country" %}
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6">
+            <div>
+              {% input outbound_return_address_address, label: "AddressLine" %}
+              {% input outbound_return_address_suburb, label: "Suburb" %}
+              {% input outbound_return_address_state, label: "State" %}
+              {% input outbound_return_address_postcode, label: "Postcode" %}
+              {% input outbound_return_address_country, as: hidden, value: 'Australia', label: "Country" %}
+            </div>
+          </div>
+        </div>
+
+        <hr/>
+
+        <h4>Total Cost</h4>
+
+        <dl class="item-pricing">
+          <dt>Item Rental ({{ order.transactable_pricing.number_of_units }} days)</dt>
+          <dd>{{ order.transactable_pricing.price | price_with_cents_with_currency }}</dd>
+          <dt>Service Fee</dt>
+          <dd>{{ order.service_fee_amount_host | price_with_cents_with_currency }}</dd>
+          <dt>Approx. Shipping Cost</dt>
+          <dd>{{ order.shipping_line_items.last.unit_price | price_with_cents_with_currency }}</dd>
+          <dt>You will earn (Approx)</dt>
+          <dd><strong>{{ order.total_payable_to_host_minus_second_shipping | price_with_cents_with_currency }}</strong></dd>
+
+
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog__actions">
+    {% submit Approve, class: 'button button-default' %}
+    <a href="#" class="button button-inverse" data-modal-close>Cancel</a>
+  </div>
+{% endform_for%}
+header class="dialog__header">
   <h2 id="dialog__title">Approve Request</h2>
 </header>
 
@@ -76,18 +198,18 @@
 
         <div class="row">
           <div class="col-xs-12 col-md-6">
-            <div data-address-field="true">
+            <div>
               {% input inbound_pickup_address_address, label: "AddressLine" %}
-              {% input inbound_pickup_address_city, label: "City" %}
+              {% input inbound_pickup_address_suburb, label: "Suburb" %}
               {% input inbound_pickup_address_state, label: "State" %}
               {% input inbound_pickup_address_postcode, label: "Postcode" %}
               {% input inbound_pickup_address_country, label: "Country" %}
             </div>
           </div>
           <div class="col-xs-12 col-md-6">
-            <div data-address-field="true">
+            <div>
               {% input outbound_return_address_address, label: "AddressLine" %}
-              {% input outbound_return_address_city, label: "City" %}
+              {% input outbound_return_address_suburb, label: "Suburb" %}
               {% input outbound_return_address_state, label: "State" %}
               {% input outbound_return_address_postcode, label: "Postcode" %}
               {% input outbound_return_address_country, label: "Country" %}

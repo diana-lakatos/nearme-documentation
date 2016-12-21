@@ -11,33 +11,33 @@ module Deliveries
         def validator_list
           [
             presence_validator(attributes: [:pickup_date, :sender_address, :receiver_address]),
-            pickup_date_validator
+            pickup_busines_date_validator(attributes: [:pickup_date]),
+            delivery_params_validator
           ]
         end
 
-        def pickup_date_validator
-          PickupDateValidator.new
+        def pickup_busines_date_validator(params)
+          Deliveries::Sendle::Validations::PickupBusinessDateValidator.new(params)
         end
 
         def presence_validator(params)
           ActiveModel::Validations::PresenceValidator.new(params)
         end
-      end
 
-      class PickupDateValidator < ActiveModel::Validator
-        def validate(record)
-          return unless record.pickup_date
-          validate_pickup_date(record)
+        def delivery_params_validator
+          DeliveryParamValidator.new
         end
 
-        private
+        class DeliveryParamValidator < ActiveModel::Validator
+          def validate(record)
+            validator = Deliveries::Sendle::ValidatePlaceOrderRequest.new(record)
 
-        def validate_pickup_date(record)
-          record.errors.add :pickup_date, :pick_up_only_on_business_days if business_day?(record.pickup_date)
-        end
+            return if validator.valid?
 
-        def business_day?(date)
-          date.sunday? || date.saturday?
+            validator.errors.each do |key, error|
+              record.errors.add key, error if error
+            end
+          end
         end
       end
     end

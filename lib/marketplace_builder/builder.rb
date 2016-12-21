@@ -41,6 +41,7 @@ module MarketplaceBuilder
       add_creator Creators::TranslationsCreator.new
       add_creator Creators::WorkflowAlertsCreator.new
       add_creator Creators::CustomModelTypesCreator.new
+      add_creator Creators::GraphQueriesCreator.new
     end
 
     def add_creator(*creators)

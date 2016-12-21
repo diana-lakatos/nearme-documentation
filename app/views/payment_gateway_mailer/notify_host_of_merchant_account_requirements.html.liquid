@@ -1,0 +1,19 @@
+<h2>We are sorry, {{ merchantable.creator.first_name }}!</h2>
+
+<p>Your account was not able to be verified.</p>
+
+{% if merchant_account.all_errors %}
+  Reason:
+  <ul>
+    {% for error in merchant_account.all_errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<p>Please update or provide required information</p>
+<a class='btn' href="{{ platform_context.host | append:merchantable.payout_path }}">Update payout information</a>
+
+
+
+</p>We're glad to help! If you have any questions, please contact us at {{ platform_context.support_email }} or give us a call at {{ platform_context.phone_number }}.</p>

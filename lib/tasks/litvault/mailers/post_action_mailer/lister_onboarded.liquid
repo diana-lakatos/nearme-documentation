@@ -1,17 +1,3 @@
 <p>Hello {{ user.first_name}},
 
-<p>You have successfully completed your profile. Now you're ready for next steps! Here are three ways to get more done:</p>
-
-<p>#1 Search for Experts<br />
-UoT will allow you to find Experts from a wide range of industries and experience. Find the best SMEs for your project.
-</p>
-
-<p>#2 Connect with People<br />
-Our community allows you to send UoT InMail communications or even call experts from within the UoT marketplace. Find out if they are the right fit for your project.
-</p>
-
-<p>#3 Invite Experts to a Project<br />
-Once you fit a match, you work together to develop the scope for the project. The SME responds with a quote, you accept, and the project begins.
-</p>
-
-<p><b>Access the World’s Best Subject Matter Experts. On Demand.</b></p>
+<p>You have successfully completed your referring lawyer profile. Now you're ready to search for handling lawyers: {{ 'search_url' | generate_url: search_type: 'people' }}</p>

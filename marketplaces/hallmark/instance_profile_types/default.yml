@@ -9,7 +9,7 @@ custom_attributes:
     label: Role
     searchable: true
     validation:
-      valid_values: [ 'Superfan', 'Fan', 'Artist', 'Community Friend', 'Charter Member' ]
+      valid_values: [ 'Superfan', 'Fan', 'Artist', 'Villager', 'Charter' ]
       required: false
 
   - name: about_me
@@ -31,18 +31,21 @@ custom_attributes:
       max_length: 140
 
   - name: date_of_birth
+    public: false
     html_tag: input
     attribute_type: date
     label: Date of Birth
     search_in_query: false
 
   - name: member_since
+    public: false
     html_tag: input
-    attribute_type: datetime
+    attribute_type: date
     label: Member Since
     search_in_query: false
 
   - name: member_year
+    public: false
     html_tag: input
     attribute_type: datetime
     label: Member Year

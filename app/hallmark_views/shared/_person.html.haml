@@ -21,5 +21,6 @@
       = render partial: "shared/follow_button", locals: { object: user, css_class: "tiny" }
     %h3.hx
       = link_to user.decorate.name_with_affiliation, user_path(user)
-    %p= user.properties.try(:short_bio)
+    - if user.properties.try(:short_bio)
+      %p= user.properties.short_bio
     = user.decorate.display_address

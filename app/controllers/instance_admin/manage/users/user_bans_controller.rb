@@ -14,6 +14,7 @@ class InstanceAdmin::Manage::Users::UserBansController < InstanceAdmin::Manage::
   def destroy
     @user_ban = UserBan.find(params[:id])
     @user_ban.unban_user!
+
     flash[:success] = t('flash_messages.instance_admin.manage.users.user_ban.deleted')
     redirect_to edit_instance_admin_manage_user_path(@user_ban.user_id)
   end
