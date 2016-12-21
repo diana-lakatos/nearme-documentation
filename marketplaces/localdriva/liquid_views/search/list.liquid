@@ -1,186 +1,209 @@
-{% content_for 'hero' %}
-    <div class="search-form" id="listing_search">
-        <div class="wrapper-a">
-            <form action="/search" method="get" id="search-form">
-                <div class="query">
-                    <label for="field-q" class="struct-label">Search keyword</label>
-                    <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
-                    <input type="hidden" name="lg_custom_attributes[workplace_type]" value="{{ searcher.lg_custom_attributes_hash['workplace_type'] }}">
-                    <input type="hidden" name="lg_custom_attributes[travel]" value="{{ searcher.lg_custom_attributes_hash['travel'] }}">
-                    <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
-                    <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
-                    <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
-                    <input type="hidden" name="query_fields" value="tags">
-                    <input type="hidden" name="sort">
-                    <input type="hidden" name="search_type" value="{{ params['search_type'] }}">
+<div class="search-form" id="listing_search">
+  <div class="wrapper-a">
+    <form action="/search" method="get" id="search-form" class="no_inheritance">
+      <div class="query">
+        <label for="field-q" class="struct-label">Search keyword</label>
+        <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
+        <input type="hidden" name="lg_custom_attributes[driver_category]" value="{{ searcher.lg_custom_attributes_hash['driver_category'] }}">
+        <input type="hidden" name="lg_custom_attributes[vehicle_capacity]" value="{{ searcher.lg_custom_attributes_hash['vehicle_capacity'] }}">
+        <input type="hidden" name="availability_exceptions[from]" value="{{ searcher.availability_exceptions['from'] }}" id="data-availability-from">
+        <input type="hidden" name="availability_exceptions[to]" value="{{ searcher.availability_exceptions['to'] }}" id="data-availability-to">
+        <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
+        <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
+        <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
+        <input type="hidden" name="query_fields" value="tags">
+        <input type="hidden" name="sort">
+        <input type="hidden" name="search_type" value="{{ params['search_type'] }}">
 
-                    <div class="form-action">
-                        <button type="submit" class="button-a">Search</button>
-                        <a class="button-b" href="{{ 'dashboard_wish_list_items_path' | generate_url }}">View Favorites</a>
-                    </div>
-                </div>
-            </form>
-
-            {% if params['search_type'] == 'advanced' %}
-                {% include 'search/advanced_search' %}
-            {% else %}
-                {% include 'search/basic_search' %}
-            {% endif %}
-
-
-            <div class="search-sort-order" data-search-filters-container>
-                <label for="search-order">Sort by:</label>
-                <span class="select-a">
-                    <select id="search-order" name="sort" class="unstyled-select">
-                        <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Relevance</option>
-                        <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_asc'  %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_asc'>Hourly rate ascending</option>
-                        <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_desc' %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_desc'>Houry rate descending</option>
-                    </select>
-                </span>
-            </div>
+        <div class="form-action">
+          <button type="submit" class="button-a">Search</button>
         </div>
-    </div>
-{% endcontent_for %}
+      </div>
+    </form>
+
+    <fieldset class="filters" data-search-filters-container>
+      <legend class="struct-label">Filter</legend>
+
+      <div class="filters-wrapper">
+        <div class="filter filter-dates">
+          <label for="filter-dates">Select Dates</label>
+          <input class="daterange_field" name="availability" data-date-range id="filter-dates" type="text">
+        </div>
+        <div class="filter">
+          <label for="filter-passengers">Passengers</label>
+          <span class="select-a">
+          <select name="lg_custom_attributes[vehicle_capacity]" id="filter-passengers" class="unstyled-select">
+            <option value="">Please select</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+          </span>
+        </div>
+
+        <div class="filter">
+          <label for="filter-driver-category">Driver Category</label>
+          <span class="select-a">
+          <select name="lg_custom_attributes[driver_category]" id="filter-driver-category" class="unstyled-select">
+            <option value="">Please select</option>
+            <option value="Standard">Standard</option>
+            <option value="Pro">Pro</option>
+            <option value="Plus">Plus</option>
+          </select>
+          </span>
+        </div>
+
+        <div class="filter">
+          <label for="filter-second-language">Second Language</label>
+          <span class="select-a">
+          <select name="lg_custom_attributes[second_language]" id="filter-second-language" class="unstyled-select">
+            <option value="">Please select</option>
+            <option value="EN">English</option>
+          </select>
+          </span>
+        </div>
+
+        <div class="filter">
+          <label for="filter-extras">Extras</label>
+          <span class="select-a">
+          <select name="category_ids[]" id="filter-extras" class="unstyled-select">
+            <option value="">Please select</option>
+            <option value="EN">English</option>
+          </select>
+          </span>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>
 
 <main id="results">
-    <div class="wrapper-a">
-        <h1 class="struct-label">SME Search results</h1>
-        <section class="search-results">
+  <div class="wrapper-a">
+    <h1 class="struct-label">Search results</h1>
+    <section class="search-results">
+      <header class="search-results-header">
+        <div class="search-results-query-info">
+          <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
 
-            <div class="search-results-query-info">
-                <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
-            </div>
+          <button type="button" class="button-c small">Reset Filters</button>
+        </div>
 
-            <div class="search-results-items">
-                {% for user in searcher.results %}
-                    <article class="user-a" id="user-{{ user.id }}">
-                        <div class="wrapper">
-                            <header class="header">
-                                <figure>
-                                    <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
-                                </figure>
-                                <h2><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h2>
+        <div class="search-sort-order" data-search-filters-container>
+          <label for="search-order">Sort by:</label>
+          <span class="select-a">
+            <select id="search-order" name="sort" class="unstyled-select">
+              <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Relevance</option>
+              <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_asc'  %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_asc'>Hourly rate ascending</option>
+              <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_desc' %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_desc'>Houry rate descending</option>
+            </select>
+          </span>
+          </div>
+      </header>
 
-                                <div class="properties">
-                                    <p class="price">
-                                        <strong>{{ user.buyer_properties.hourly_rate_decimal | price_with_cents_with_currency }} USD / hr</strong>
-                                    </p>
-                                    <dl class="property">
-                                        <dt>Discounts:</dt>
-                                        <dd>{{ user.buyer_properties.discounts_available | humanize }}</dd>
-                                    </dl>
-                                </div>
+      <div class="search-results-items">
+        {% for user in searcher.results %}
+        <article class="user-a" id="user-{{ user.id }}">
+          <figure class="avatar">
+            <a href="{{ user.user_profile_url }}">
+              <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+            </a>
+          </figure>
 
-                                <div class="contact">
-                                    <a class="button-b action-message" data-href='{{ user.user_message_path }}' data-modal='true'>Send Message</a>
-                                    {{ user.click_to_call_button }}
-                                </div>
-                            </header>
+          <div class="description">
+            <header>
+              <h2><a href="/{{ user.user_profile_url }}">{{ user.name }}</a></h2>
+              <div class="summary">
+                <div class="rating-a" data-rating="4">4 out of 5 stars</div>
+                <div class="price"><strong>AUD {{ user.buyer_properties.hourly_rate_decimal | price_with_cents_with_currency }}</strong> / hr</div>
+              </div>
+            </header>
+            <dl class="properties">
+              {% if user.buyer_properties.driver_category %}
+              <dt>Driver Type:</dt>
+              <dd>{{ user.buyer_properties.driver_category }}
+                <div class="driver-types-description" tabindex="0">
+                  <ul>
+                    <li>
+                      <b>Standard</b> -
+                      = t('driver_categories.descriptions.standard')
+                    </li>
+                    <li>
+                      <b>Pro</b> -
+                      = t('driver_categories.descriptions.pro')
+                    </li>
+                    <li>
+                      <b>Plus</b> -
+                      = t('driver_categories.descriptions.plus')
+                    </li>
+                  </ul>
+                </div>
+              </dd>
+              {% endif %}
 
-                            <ul class="actions-a">
-                            {% if current_user != blank and current_user.has_seller_profile? %}
-                              <li><a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Invite to project</a></li>
-                            {% endif %}
+              <dt>Joined:</dt>
+              <dd>{{ user.created_at | timeago }}</dd>
 
-                            <li>
-                              {% if current_user.has_seller_profile? %}
-                                <div data-add-favorite-button="true" data-path="{{ user.wish_list_path }}" data-wishlistable-type="{{ user.class_name }}" data-link-to-classes="{{ link_to_classes }}" data-path-bulk="{{ user.wish_list_bulk_path }}" data-object-id="{{ user.id }}" id="favorite-button-{{ user.class_name }}-{{ user.id }}">
-                                  <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
-                                </div>
-                              {% endif %}
-                            </li>
-                            {% if user.has_active_blog? %}
-                              <li><a href="{{ user.user_blog_posts_list_path }}" class="button-b action-blog">View Blog</a></li>
-                            {% endif %}
-                            {% if user.buyer_properties['linkedin_url'] != blank %}
-                              <li><a href="{{ user.buyer_properties['linkedin_url'] }}" class="button-b action-linkedin" target="_blank">LinkedIn Bio</a></li>
-                            {% endif %}
-                            </ul>
+              <dt>Number of Bookings:</dt>
+              <dd>{{ user.completed_host_reservations_count }}</dd>
 
-                            {% assign aoe_category = user.formatted_buyer_categories["Area Of Expertise"] %}
-                            {% assign industry_category = user.formatted_buyer_categories['Industry'] %}
-                            {% assign languages_category = user.buyer_categories['Languages'] %}
+              <dt>Number of Ratings:</dt>
+              <dd>{{ user.reviews_counter.about_seller }}</dd>
 
-                            {% if aoe_category.children.size > 0 || industry_category.children.size > 0 || languages_category.children.size > 0 || user.buyer_properties.bio != blank %}
-                                <div class="content">
-                                    <div class="props">
-                                    {% if aoe_category.children.size > 0 %}
-                                        <div class="prop">
-                                            <h3>{{ aoe_category.name }}</h3>
-                                            <ul class="short-list">
-                                                {% for expertise in aoe_category.children %}
-                                                <li>{{ expertise[-1] }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
-                                    {% endif %}
+              <dt>Capacity:</dt>
+              <dd>{{ 'passengers_count' | t, count: user.properties.vehicle_capacity }}</dd>
+            </dl>
 
-                                    {% if industry_category.children.size > 0 %}
-                                        <div class="prop">
-                                            <h3>{{ industry_category.name }}</h3>
-                                            <ul class="short-list">
-                                                {% for industry in industry_category.children %}
-                                                <li>{{ industry[-1] }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
-                                    {% endif %}
-
-                                    {% if languages_category.children.size > 0 %}
-                                        <div class="prop">
-                                            <h3>{{ languages_category.name }}</h3>
-                                            <p>{{ languages_category.children | join: ', ' }}</p>
-                                        </div>
-                                    {% endif %}
-
-                                    </div>
-
-                                    {% if user.buyer_properties.bio != blank %}
-                                        <h3>Bio</h3>
-                                        {% if user.buyer_properties.bio.size > 350 %}
-                                           <div data-shorten-description>
-                                            <p data-description>{{ user.buyer_properties.bio | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
-                                            <div style='display: none;'  class="rest_of_text">{{ user.buyer_properties.bio | slice: 350, user.buyer_properties.bio.size | nl2br }}</div>
-                                          </div>
-                                        {% else %}
-                                          <p>{{ user.buyer_properties.bio }}</p>
-                                        {% endif %}
-                                    {% endif %}
-                              </div>
-                          {% endif %}
-                      </div>
-
-                      {% if user.tags.size > 0 %}
-                      <div class="tags-a tags-short-list">
-                          <h4>Tags</h4>
-                          <ul>
-                              {% for tag in user.tags %}
-                                  <li><a href="?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
-                              {% endfor %}
-                          </ul>
-                      </div>
-                      {% endif %}
-
-                      <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
-                  </article>
-
-                  <script>
-                    $(function(){
-                      $(document).trigger('userLoaded.uot', 'user-{{user.id}}')
-                    });
-                  </script>
-              {% endfor %}
-            </div>
-
-            {% if searcher.next_page %}
-                <p class="search-results-more-trigger">
-                    <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
-                </p>
+            {% if user.buyer_properties.bio != blank %}
+            <h3>About {{ user.first_name }}</h3>
+            <p>{{ user.buyer_properties.bio | nl2br }}</p>
             {% endif %}
-        </section>
-    </div>
+
+            <h3>Languages</h3>
+            <dl class="languages-proficiency short-list">
+              <dt>English</dt>
+              <dd>Fluent</dd>
+
+              <dt>Spanish</dt>
+              <dd>Fair</dd>
+
+              <dt>French</dt>
+              <dd>Basic</dd>
+            </dl>
+          </div>
+
+          <div class="options">
+            <ul>
+              <li class="ask-to-book"><a href="/" class="button-a">Ask to Book</a></li>
+               >
+              <li><button type="button" data-href='{{ user.user_message_path }}' class="button-b" data-modal='true'>Message Me</a></li>
+              {% if current_user.has_seller_profile? %}
+              <li>
+                {% include 'shared/components/wish_list_button_injection.html', object: user %}
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+          <script>
+            $(function(){
+              $(document).trigger('userLoaded.localdriva', 'user-{{user.id}}')
+            });
+          </script>
+        </article>
+        {% endfor %}
+      </div>
+
+      {% if searcher.next_page %}
+      <p class="search-results-more-trigger">
+        <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
+      </p>
+      {% endif %}
+    </section>
+  </div>
 </main>
 
 {% content_for 'domready' %}
-    $(document).trigger('init:list:searchresults.nearme');
+$(document).trigger('init:list:searchresults.nearme');
 {% endcontent_for %}

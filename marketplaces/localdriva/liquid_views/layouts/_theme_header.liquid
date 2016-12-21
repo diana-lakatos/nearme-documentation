@@ -2,7 +2,7 @@
   <div class="container_main">
     <div class="row">
       <div class="col-sm-3">
-        <a href="#" class="logo">
+        <a href="/" class="logo">
           <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/attachment_file/data/3404/logo.svg" alt="">
         </a>
       </div>
@@ -10,7 +10,7 @@
         <button type="button" class="toggle_menu"></button>
         <ul class="menu">
           <li class="active"><a href="/users?role=buyer">Become a Driver</a></li>
-          <li><a href="#">FAQ</a></li>
+          <li><a href="/faq">FAQ</a></li>
           {% if current_user == blank %}
             <li><a class="nav-link" href="/users?role=seller">Sign Up</a></li>
             <li><a class="nav-link" href="#" data-href="/users/sign_in" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/"}'>Log In</a></li>
