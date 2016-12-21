@@ -404,3 +404,14 @@ en:
     reviews_about_this_seller: "How others rated %{first_name} as a Passenger"
     reviews_left_by_this_buyer: "How %{first_name} rated others as a driver"
     reviews_left_by_this_seller: "How %{first_name} rated others as a Passenger"
+
+  driver_categories:
+    descriptions:
+      pro: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+      plus: Duis aute irure dolor in voluptate velit esse eu fugiat nulla
+      standard: Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+
+  passengers_count:
+    one: '1 Passenger'
+    other: '%{count} Passengers'
+    one: ''

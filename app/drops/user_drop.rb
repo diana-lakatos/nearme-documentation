@@ -99,7 +99,7 @@ class UserDrop < BaseDrop
 
            :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
            :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
-           :company_name, :instance_admins_metadata, :total_reviews_count, :companies, :instance_admin?,
+           :company_name, :instance_admins_metadata, :total_reviews_count, :reviews_counter, :companies, :instance_admin?,
            :instance_admin?, :user_messages_received, :valid?, to: :source
 
   # @return [String] class name, i.e. 'User'

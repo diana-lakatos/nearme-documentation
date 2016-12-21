@@ -13,3 +13,4 @@ default_country: Australia
 force_accepting_tos: true
 user_blogs_enabled: true
 force_fill_in_wizard_form: false
+default_search_view: list
