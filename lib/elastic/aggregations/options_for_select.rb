@@ -6,6 +6,10 @@ module Elastic
         new(aggregations, key: key).build
       end
 
+      # combine two sets of aggregations
+      # default without filters
+      # and filtered one into one in a way:
+      # { red: 5, blue: 3, green: 7 } and { red: 3 } => { red: 3, blue: 0, green: 0 }
       def self.prepare(aggregations)
         global = build(aggregations, key: :global)
         custom = build(aggregations)
@@ -37,7 +41,8 @@ module Elastic
       end
 
       def aggregations
-        @aggregations[@key]
+        @aggregations
+          .fetch(@key, [])
           .reject { |key, _value| key == 'doc_count' }
       end
 
