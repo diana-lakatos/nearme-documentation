@@ -151,6 +151,16 @@ module Elastic
           }
       end
 
+      @query[:lg_customizations]&.each do |key, value|
+        next if value.blank?
+        user_profiles_filters <<
+          {
+            match: {
+              "user_profiles.customizations.#{key}" => value.to_s.split(',').map(&:downcase).join(' OR ')
+            }
+          }
+      end
+
       if @query[:availability_exceptions].present?
         from = to = nil
         from = Date.parse(@query[:availability_exceptions][:from]) if @query[:availability_exceptions][:from].present?

@@ -11,7 +11,6 @@
         <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
         <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
         <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
-        <input type="hidden" name="query_fields" value="tags">
         <input type="hidden" name="sort">
         <input type="hidden" name="search_type" value="{{ params['search_type'] }}">
 
@@ -59,22 +58,37 @@
         <div class="filter">
           <label for="filter-second-language">Second Language</label>
           <span class="select-a">
-          <select name="lg_custom_attributes[second_language]" id="filter-second-language" class="unstyled-select">
+          <select name="lg_customizations[language]" id="filter-second-language" class="unstyled-select">
             <option value="">Please select</option>
-            <option value="EN">English</option>
+            <option value="English">English</option>
+            <option value="Chinese (Mandarin)">Chinese (Mandarin)</option>
+            <option value="Spanish">Spanish</option>
+            <option value="German">German</option>
+            <option value="French">French</option>
+            <option value="Italian">Italian</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Korean">Korean</option>
+            <option value="Arabic">Arabic</option>
+            <option value="Russian">Russian</option>
           </select>
           </span>
         </div>
 
-        <div class="filter">
-          <label for="filter-extras">Extras</label>
-          <span class="select-a">
-          <select name="category_ids[]" id="filter-extras" class="unstyled-select">
-            <option value="">Please select</option>
-            <option value="EN">English</option>
-          </select>
-          </span>
-        </div>
+        {% assign categories = searcher.searchable_categories | rotate %}
+        {% for root_category in  categories %}
+          {% if root_category.name != 'Extras' %} {% continue %} {% endif %}
+          <div class="filter">
+            <label for="filter-extras">{{ root_category.name }}</label>
+            <span class="select-a">
+              <select id="filter-industry" class="unstyled-select" name='category_ids[]'>
+                <option value="">Please Select --</option>
+                {% for category in root_category.children %}
+                  <option {% if searcher.category_ids contains subcat.id %}selected{% endif %} value='{{category.id}}'>{{ category.name }}</option>
+                {% endfor %}
+              </select>
+            </span>
+          </div>
+        {% endfor %}
       </div>
     </fieldset>
   </div>
@@ -95,9 +109,9 @@
           <label for="search-order">Sort by:</label>
           <span class="select-a">
             <select id="search-order" name="sort" class="unstyled-select">
-              <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Relevance</option>
-              <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_asc'  %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_asc'>Hourly rate ascending</option>
-              <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_desc' %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_desc'>Houry rate descending</option>
+              <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Please Select</option>
+              <option {% if params['sort'] == 'number_of_completed_orders_desc'  %}selected{% endif %} value='number_of_completed_orders_desc'>Number of Bookings</option>
+              <option {% if params['sort'] == 'buyer_average_rating_desc' %}selected{% endif %} value='buyer_average_rating_desc'>Rating</option>
             </select>
           </span>
           </div>
@@ -116,8 +130,8 @@
             <header>
               <h2><a href="/{{ user.user_profile_url }}">{{ user.name }}</a></h2>
               <div class="summary">
-                <div class="rating-a" data-rating="4">4 out of 5 stars</div>
-                <div class="price"><strong>AUD {{ user.buyer_properties.hourly_rate_decimal | price_with_cents_with_currency }}</strong> / hr</div>
+                <div class="rating-a" data-rating="{{ user.buyer_average_rating }}">{{ user.buyer_average_rating }} out of 5 stars</div>
+                <div class="price"><strong>AUD {{ user.buyer_properties.hourly_price | price_with_cents_with_currency }}</strong> / hr</div>
               </div>
             </header>
             <dl class="properties">
@@ -127,16 +141,13 @@
                 <div class="driver-types-description" tabindex="0">
                   <ul>
                     <li>
-                      <b>Standard</b> -
-                      = t('driver_categories.descriptions.standard')
+                      <b>Standard</b> - {{ 'driver_categories.descriptions.standard' | t }}
                     </li>
                     <li>
-                      <b>Pro</b> -
-                      = t('driver_categories.descriptions.pro')
+                      <b>Pro</b> - {{ 'driver_categories.descriptions.pro' | t }}
                     </li>
                     <li>
-                      <b>Plus</b> -
-                      = t('driver_categories.descriptions.plus')
+                      <b>Plus</b> - {{ 'driver_categories.descriptions.plus' | t }}
                     </li>
                   </ul>
                 </div>
@@ -144,16 +155,16 @@
               {% endif %}
 
               <dt>Joined:</dt>
-              <dd>{{ user.created_at | timeago }}</dd>
+              <dd>{{ user.created_at | to_date | l: 'long' }}</dd>
 
               <dt>Number of Bookings:</dt>
               <dd>{{ user.completed_host_reservations_count }}</dd>
 
               <dt>Number of Ratings:</dt>
-              <dd>{{ user.reviews_counter.about_seller }}</dd>
+              <dd>{{ user.reviews_counter.about_buyer }}</dd>
 
               <dt>Capacity:</dt>
-              <dd>{{ 'passengers_count' | t, count: user.properties.vehicle_capacity }}</dd>
+              <dd>{{ 'passengers_count' | t: count: user.buyer_properties.vehicle_capacity }}</dd>
             </dl>
 
             {% if user.buyer_properties.bio != blank %}
@@ -163,14 +174,11 @@
 
             <h3>Languages</h3>
             <dl class="languages-proficiency short-list">
-              <dt>English</dt>
-              <dd>Fluent</dd>
-
-              <dt>Spanish</dt>
-              <dd>Fair</dd>
-
-              <dt>French</dt>
-              <dd>Basic</dd>
+              {% assign languages = user.buyer_profile.customizations | map: 'properties' %}
+              {% for language in languages %}
+                <dt>{{ language.language }}</dt>
+                <dd>{{ language.fluency }}</dd>
+              {% endfor %}
             </dl>
           </div>
 

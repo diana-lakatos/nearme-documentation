@@ -25,6 +25,7 @@ class CustomModelType < ActiveRecord::Base
   scope :users,         -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable: PlatformContext.current.instance.default_profile_type }) }
   scope :sellers,       -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable: PlatformContext.current.instance.seller_profile_type }) }
   scope :buyers,        -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable: PlatformContext.current.instance.buyer_profile_type }) }
+  scope :user_profiles, -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable_type: 'InstanceProfileType' }) }
 
   def translation_manager
     @translation_manager ||= CustomModelType::CustomModelTypeTranslationManager.new(self)
