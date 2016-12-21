@@ -2,6 +2,7 @@ class CustomValidator < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
+  has_paper_trail
 
   belongs_to :validatable, polymorphic: true
   belongs_to :instance
