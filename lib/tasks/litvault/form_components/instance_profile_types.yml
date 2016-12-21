@@ -23,6 +23,9 @@
   - user: password
   - user: avatar
 
+  - user: time_zone
+  - user: phone
+
   - user: bar_id
   - user: company_name
   - user: title_at_law_firm
@@ -60,6 +63,9 @@
   - user: email
   - user: password
   - user: avatar
+
+  - user: time_zone
+  - user: phone
 
   - user: bar_id
   - user: company_name
