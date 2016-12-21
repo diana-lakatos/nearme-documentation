@@ -12,6 +12,8 @@ class TransactableCollaboratorDrop < BaseDrop
   #   @return [Boolean] whether the colllaboration has been approved by the collaborating user
   # @!method approved_by_user_at
   #   @return [DateTime] Time when the collaborating user has approved the collaboration (if approved, otherwise nil)
+  # @!method approved?
+  #   @return [Boolean] Returns true if both collaborating user and transactable creator approved.
   # @!method approved_by_owner_at
   #   @return [DateTime] Time when the transactable creator has approved the collaboration (if approved, otherwise nil)
   # @!method transactable_id
@@ -28,7 +30,7 @@ class TransactableCollaboratorDrop < BaseDrop
   #     owner (if that is the case)
   delegate :id, :user, :transactable, :approved_by_owner?, :approved_by_user?,
            :approved_by_user_at, :approved_by_owner_at, :transactable_id, :user_id, :created_at,
-           :rejected_by_owner_at, :rejected_by_owner?, to: :source
+           :rejected_by_owner_at, :rejected_by_owner?, :approved?, to: :source
 
   # @return [String] url for the enquirer to cancel its collaboration request
   #   (must be used with the delete HTTP method)

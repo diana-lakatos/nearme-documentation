@@ -211,9 +211,11 @@ class User < ActiveRecord::Base
   }
 
   scope :friends_of, lambda { |user|
-    joins(
-      sanitize_sql(['INNER JOIN user_relationships ur on ur.followed_id = users.id and ur.follower_id = ?', user.id])
-    ) if user.try(:id)
+    if user.try(:id)
+      joins(
+        sanitize_sql(['INNER JOIN user_relationships ur on ur.followed_id = users.id and ur.follower_id = ?', user.id])
+      )
+    end
   }
 
   scope :for_instance, lambda  { |instance|
@@ -232,16 +234,16 @@ class User < ActiveRecord::Base
   scope :created_transactables, -> { joins('LEFT OUTER JOIN transactables p ON users.id = p.creator_id') }
   scope :featured, -> { where(featured: true) }
 
-  scope :by_topic, -> (topic_ids) do
+  scope :by_topic, ->(topic_ids) do
     if topic_ids.present?
       with_joined_transactable_collaborations.created_transactables
                                              .joins(' LEFT OUTER JOIN transactable_topics pt on pt.transactable_id = pc.transactable_id OR pt.transactable_id = p.id ')
                                              .where('pt.topic_id IN (?)', topic_ids).group('users.id')
     end
   end
-  scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
-  scope :by_profile_type, -> (ipt_id) { includes(:user_profiles).where(user_profiles: { instance_profile_type_id: ipt_id }) if ipt_id.present? }
-  scope :with_enabled_profile, -> (_ipt_id) { where(user_profiles: { enabled: true }) }
+  scope :filtered_by_custom_attribute, ->(property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
+  scope :by_profile_type, ->(ipt_id) { includes(:user_profiles).where(user_profiles: { instance_profile_type_id: ipt_id }) if ipt_id.present? }
+  scope :with_enabled_profile, ->(_ipt_id) { where(user_profiles: { enabled: true }) }
 
   scope :order_by_array_of_ids, lambda { |user_ids|
     user_ids ||= []
@@ -803,14 +805,16 @@ class User < ActiveRecord::Base
     listing_ids_of_cancelled_reservations = orders.reservations.cancelled_or_expired_or_rejected.pluck(:transactable_id) if without_listings_from_cancelled_reservations
 
     listings = []
-    locations_in_near.includes(:listings).each do |location|
-      if without_listings_from_cancelled_reservations && !listing_ids_of_cancelled_reservations.empty?
-        listings += location.listings.searchable.where('transactables.id NOT IN (?)', listing_ids_of_cancelled_reservations).limit((listings.size - results_size).abs)
-      else
-        listings += location.listings.searchable.limit((listings.size - results_size).abs)
+    if locations_in_near
+      locations_in_near.includes(:listings).each do |location|
+        if without_listings_from_cancelled_reservations && !listing_ids_of_cancelled_reservations.empty?
+          listings += location.listings.searchable.where('transactables.id NOT IN (?)', listing_ids_of_cancelled_reservations).limit((listings.size - results_size).abs)
+        else
+          listings += location.listings.searchable.limit((listings.size - results_size).abs)
+        end
+        return listings if listings.size >= results_size
       end
-      return listings if listings.size >= results_size
-    end if locations_in_near
+    end
     listings.uniq
   end
 
@@ -1118,6 +1122,11 @@ class User < ActiveRecord::Base
   #   left by the user as seller, left by the user as buyer, left by the user about transactables
   def total_reviews_count
     ReviewAggregator.new(self).total if RatingSystem.active.any?
+  end
+
+  def reviews_counter
+    @reviews_counter ||= ReviewAggregator.new(self) if RatingSystem.active.any?
+    @reviews_counter
   end
 
   private

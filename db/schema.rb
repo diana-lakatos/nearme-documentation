@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161220084319) do
+ActiveRecord::Schema.define(version: 20161221173658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -640,11 +640,33 @@ ActiveRecord::Schema.define(version: 20161220084319) do
     t.boolean  "search_in_query",                       default: false, null: false
     t.hstore   "properties",                            default: {},    null: false
     t.boolean  "aggregate_in_search",                   default: false
+    t.string   "placeholder_image"
+    t.string   "type"
+    t.text     "settings",                              default: "{}",  null: false
   end
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
   add_index "custom_attributes", ["name", "target_id", "target_type", "deleted_at"], name: "index_custom_attributes_on_name_and_target_and_type_and_deleted", unique: true, using: :btree
   add_index "custom_attributes", ["target_id", "target_type"], name: "index_custom_attributes_on_target_id_and_target_type", using: :btree
+
+  create_table "custom_images", force: :cascade do |t|
+    t.integer  "instance_id",                 null: false
+    t.integer  "custom_attribute_id",         null: false
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "uploader_id"
+    t.string   "image"
+    t.text     "image_transformation_data"
+    t.integer  "image_original_width"
+    t.integer  "image_original_height"
+    t.datetime "image_versions_generated_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "custom_images", ["instance_id", "custom_attribute_id"], name: "index_custom_images_on_instance_id_and_custom_attribute_id", using: :btree
+  add_index "custom_images", ["owner_id", "owner_type"], name: "index_custom_images_on_owner_id_and_owner_type", using: :btree
 
   create_table "custom_model_type_linkings", force: :cascade do |t|
     t.integer  "instance_id"
@@ -1174,21 +1196,22 @@ ActiveRecord::Schema.define(version: 20161220084319) do
   add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", unique: true, using: :btree
 
   create_table "instance_profile_types", force: :cascade do |t|
-    t.string   "name",                            limit: 255
+    t.string   "name",                             limit: 255
     t.integer  "instance_id"
     t.datetime "deleted_at"
     t.string   "profile_type"
     t.boolean  "searchable"
     t.boolean  "show_categories"
     t.string   "category_search_type"
-    t.integer  "position",                                    default: 0
-    t.boolean  "must_have_verified_phone_number",             default: false
-    t.boolean  "onboarding",                                  default: false
-    t.boolean  "create_company_on_sign_up",                   default: false
+    t.integer  "position",                                     default: 0
+    t.boolean  "must_have_verified_phone_number",              default: false
+    t.boolean  "onboarding",                                   default: false
+    t.boolean  "create_company_on_sign_up",                    default: false
     t.boolean  "search_only_enabled_profiles"
-    t.string   "search_engine",                   limit: 255, default: "postgresql", null: false
-    t.boolean  "admin_approval",                              default: false,        null: false
+    t.string   "search_engine",                    limit: 255, default: "postgresql", null: false
+    t.boolean  "admin_approval",                               default: false,        null: false
     t.string   "default_sort_by"
+    t.integer  "default_availability_template_id"
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
@@ -1210,6 +1233,23 @@ ActiveRecord::Schema.define(version: 20161220084319) do
   end
 
   add_index "instance_views", ["instance_id", "path", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
+
+  create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "instance_type_id"
+    t.integer  "instance_id"
+    t.text     "body"
+    t.string   "path",                 limit: 255
+    t.string   "locale",               limit: 255
+    t.string   "format",               limit: 255
+    t.string   "handler",              limit: 255
+    t.boolean  "partial"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "view_type",            limit: 255
+    t.integer  "transactable_type_id"
+    t.integer  "custom_theme_id"
+  end
 
   create_table "instances", force: :cascade do |t|
     t.string   "name",                                          limit: 255
@@ -1311,8 +1351,8 @@ ActiveRecord::Schema.define(version: 20161220084319) do
     t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "prepend_view_path"
     t.string   "twilio_ring_tone"
+    t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
   end
 
@@ -2968,6 +3008,7 @@ ActiveRecord::Schema.define(version: 20161220084319) do
     t.boolean  "enabled",                  default: false
     t.datetime "onboarded_at"
     t.boolean  "approved",                 default: false, null: false
+    t.integer  "availability_template_id"
   end
 
   add_index "user_profiles", ["instance_id", "user_id", "profile_type"], name: "index_user_profiles_on_instance_id_and_user_id_and_profile_type", unique: true, using: :btree
@@ -3276,6 +3317,38 @@ ActiveRecord::Schema.define(version: 20161220084319) do
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
   add_index "workflow_alerts", ["template_path", "workflow_step_id", "recipient_type", "alert_type", "deleted_at"], name: "index_workflows_alerts_on_templ_step_recipient_alert_and_del", unique: true, using: :btree
+
+  create_table "workflow_alerts_backup_20160926", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.string   "name",                      limit: 255
+    t.string   "alert_type",                limit: 255
+    t.string   "recipient_type",            limit: 255
+    t.string   "template_path",             limit: 255
+    t.integer  "workflow_step_id"
+    t.integer  "instance_id"
+    t.text     "options"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "delay"
+    t.text     "subject"
+    t.string   "layout_path",               limit: 255
+    t.text     "custom_options"
+    t.string   "from",                      limit: 255
+    t.string   "reply_to",                  limit: 255
+    t.string   "cc",                        limit: 255
+    t.string   "bcc",                       limit: 255
+    t.string   "recipient",                 limit: 255
+    t.string   "from_type",                 limit: 255
+    t.string   "reply_to_type",             limit: 255
+    t.text     "endpoint"
+    t.string   "request_type"
+    t.boolean  "use_ssl"
+    t.text     "payload_data"
+    t.text     "headers"
+    t.text     "prevent_trigger_condition"
+    t.string   "bcc_type"
+  end
 
   create_table "workflow_steps", force: :cascade do |t|
     t.string   "name",             limit: 255

@@ -1,0 +1,24 @@
+offer:
+  - all
+
+sign_up:
+  - guest_welcome_email
+  - host_welcome_email
+  - lister_onboarding_email
+  - enquirer_onboarding_email
+
+listing:
+  - notify_lister_of_cancellation
+  - notify_enquirer_of_completion
+  - notify_collaborators_of_cancellation
+
+user_message:
+  - user_message_created
+
+order_item:
+  - notify_enquirer_approved_order_item
+  - notify_enquirer_rejected_order_item
+  - notify_lister_created_order_item
+
+collaborator:
+  - all

@@ -1,0 +1,18 @@
+name: Languages
+transactable_types: [Booking]
+instance_profile_types: [Buyer]
+
+custom_attributes:
+  - name: language
+    label: Language Spoken
+    html_tag: select
+    validation:
+      valid_values: ['English', 'Chinese (Mandarin)', 'Spanish', 'German', 'French', 'Italian', 'Japanese', 'Korean', 'Arabic', 'Russian']
+      required: true
+
+  - name: fluency
+    label: Fluency
+    html_tag: select
+    validation:
+      valid_values: ['Basic', 'Fair', 'Fluent']
+      required: true

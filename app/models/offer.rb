@@ -60,40 +60,27 @@ class Offer < Order
       minimum_lister_service_fee_cents: transactable_pricing.action.minimum_lister_service_fee_cents
     )
 
-    transactable_type.merchant_fees.each do |merchant_fee|
-      host_line_items.build(
-        name: merchant_fee.name,
-        line_item_source: merchant_fee,
-        unit_price: merchant_fee.amount,
-        line_itemable: self
-      )
+    if self.is_free_booking?
+      transactable_type.merchant_fees.each do |merchant_fee|
+        host_line_items.build(
+          name: merchant_fee.name,
+          line_item_source: merchant_fee,
+          unit_price: merchant_fee.amount,
+          line_itemable: self
+        )
+      end
     end
 
-    # self.skip_checkout_validation = true
     save
   end
 
-  def shared_payment_attributes
-    {
-      payer: transactable.creator,
-      company: company,
-      company_id: company_id,
-      currency: currency,
-      total_amount_cents: host_subtotal_amount_cents,
-      subtotal_amount_cents: host_subtotal_amount_cents,
-      service_fee_amount_guest_cents: service_fee_amount_guest.try(:cents) || 0,
-      service_fee_amount_host_cents: service_fee_amount_host.try(:cents) || 0,
-      service_additional_charges_cents: service_additional_charges.try(:cents) || 0,
-      host_additional_charges_cents: host_additional_charges.try(:cents) || 0,
-      cancellation_policy_hours_for_cancellation: cancellation_policy_hours_for_cancellation,
-      cancellation_policy_penalty_percentage: cancellation_policy_penalty_percentage,
-      payable: self
-    }
+  def payer
+   transactable.creator
   end
 
-  monetize :host_subtotal_amount_cents, with_model_currency: :currency
-  def host_subtotal_amount_cents
-    host_line_items.map(&:total_price_cents).sum
+  monetize :unit_price_cents, with_model_currency: :currency
+  def unit_price_cents
+    transactable_line_items.map(&:total_price_cents).sum + host_line_items.map(&:total_price_cents).sum
   end
 
   def transactable

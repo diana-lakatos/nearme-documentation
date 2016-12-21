@@ -34,6 +34,8 @@ module MarketplaceBuilder
                    partial: template.partial,
                    view_type: 'view',
                    locales: Locale.all)
+
+      rescue
       end
     end
   end

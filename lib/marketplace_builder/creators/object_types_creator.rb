@@ -24,14 +24,16 @@ module MarketplaceBuilder
             logger.fatal("#{key} is not allowed in #{object_class_name} settings") unless whitelisted_properties.include?(key)
           end
 
-          object = @instance.send(method_name).where(hash).first_or_initialize
-          object.attributes = transactable_type
+          hash = parse_params(hash)
+
+          object = find_or_create!(hash)
+          object.attributes = hash
           object.save!
 
           update_custom_attributes_for_object(object, custom_attributes) unless custom_attributes.empty?
           update_action_types_for_object(object, action_types) unless action_types.empty?
           update_custom_validators_for_object(object, custom_validators) unless custom_validators.empty?
-          update_form_comopnents_for_object(object, form_components) unless form_components.empty?
+          update_form_components_for_object(object, form_components) unless form_components.empty?
         end
       end
 
@@ -52,6 +54,17 @@ module MarketplaceBuilder
 
       def object_class_name
         raise NotImplementedError
+      end
+
+      def find_or_create!(_hash)
+        raise NotImplementedError
+      end
+
+      def parse_params(hash)
+        hash = hash.with_indifferent_access
+        hash[:instance_profile_types] = hash[:instance_profile_types].map { |ipt_name| InstanceProfileType.find_by(instance_id: @instance.id, name: ipt_name) } if hash[:instance_profile_types]
+        hash[:transactable_types] = hash[:transactable_types].map { |tt_name| TransactableType.find_by(instance_id: @instance.id, name: tt_name) } if hash[:transactable_types]
+        hash
       end
 
       def whitelisted_properties

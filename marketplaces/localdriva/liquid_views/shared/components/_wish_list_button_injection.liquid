@@ -1,0 +1,19 @@
+{% assign delete_path = 'api_wish_list_item_path' | generate_url: id: object.id, wishlistable_type: object.class_name %}
+{% assign create_path = 'api_wish_list_items_path' | generate_url: id: object.id, wishlistable_type: object.class_name %}
+{% assign index_path = 'api_wish_list_items_path' | generate_url %}
+{% assign signin_path = 'new_user_session_path' | generate_url %}
+
+<div
+  data-add-favorite-button
+  data-path-create="{{ create_path }}"
+  data-path-delete="{{ delete_path }}"
+  data-wishlistable-type="{{ object.class_name }}"
+  data-path-load="{{ index_path }}"
+  data-object-id="{{ object.id }}"
+  data-path-signin="{{ signin_path }}"
+  id="favorite-button-{{ object.class_name }}-{{ object.id }}"
+  data-state="false">
+  <a href="{{ create_path }}" data-action-link class="button-b">
+    <span data-text data-active-state="{{ 'wish_lists.buttons.selected_state' | t}}" data-inactive-state="{{ 'wish_lists.buttons.unselected_state' | t }}">{{ 'wish_lists.buttons.unselected_state' | t }}</span>
+  </a>
+</div>

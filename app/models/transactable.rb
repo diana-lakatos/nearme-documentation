@@ -262,10 +262,10 @@ class Transactable < ActiveRecord::Base
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
            :custom_validators, :show_company_name, :display_additional_charges?, :auto_accept_invitation_as_collaborator?,
-           :auto_seek_collaborators?, to: :transactable_type
+           :auto_seek_collaborators?, :favourable_pricing_rate, :default_availability_template,
+           to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
-  delegate :favourable_pricing_rate, to: :transactable_type
   delegate :schedule_availability, :next_available_occurrences, :book_it_out_available?,
            :exclusive_price_available?, :only_exclusive_price_available?, to: :event_booking, allow_nil: true
   delegate :first_available_date, :second_available_date, :availability_exceptions,
