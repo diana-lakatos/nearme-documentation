@@ -1,5 +1,5 @@
 = simple_form_for [:global_admin, resource.instance, resource.becomes(TransactableType)], :html => { :multipart => true, :class => "form-horizontal" } do |f|
-  = render :partial => 'admin/transactable_types/attributes', :locals => { :f => f, resource: resource }
+  = render :partial => 'global_admin/transactable_types/attributes', :locals => { :f => f, resource: resource }
   .form-actions
     = f.button :submit
 

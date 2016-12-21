@@ -5,5 +5,5 @@
     = link_to 'Edit', edit_global_admin_instance_partner_path(resource.instance, resource), class: 'btn'
 
 = render 'attributes_table'
-= render :partial => 'admin/domains/attributes', :locals => { :domains => [resource.domain] }
-= render :partial => 'admin/themes/attributes', :locals => { :theme => resource.theme }
+= render :partial => 'global_admin/domains/attributes', :locals => { :domains => [resource.domain] }
+= render :partial => 'global_admin/themes/attributes', :locals => { :theme => resource.theme }
