@@ -27,7 +27,7 @@
       <div class="filters-wrapper">
         <div class="filter filter-dates">
           <label for="filter-dates">Select Dates</label>
-          <input class="daterange_field" name="availability" data-date-range id="filter-dates" type="text">
+          <input type="text" class="daterange_field fake_select" data-date-range placeholder="When do you need a driver?" data-date-range-from-selector="#data-availability-from" data-date-range-to-selector="#data-availability-to">
         </div>
         <div class="filter">
           <label for="filter-passengers">Passengers</label>
@@ -88,10 +88,10 @@
         <div class="search-results-query-info">
           <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
 
-          <button type="button" class="button-c small">Reset Filters</button>
+          <button type="button" class="button-c small" id="search-form-reset">Reset Filters</button>
         </div>
 
-        <div class="search-sort-order" data-search-filters-container>
+        <div class="search-sort-order">
           <label for="search-order">Sort by:</label>
           <span class="select-a">
             <select id="search-order" name="sort" class="unstyled-select">
