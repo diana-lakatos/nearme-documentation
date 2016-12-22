@@ -529,8 +529,8 @@ en:
     space_wizard:
       complete_fields: "Please complete all fields! Alternatively, you can Save for later."
       draft_saved: "Your draft has been saved!"
-      space_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
-      item_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
+      space_listed: "Your %{bookable_noun} was listed!"
+      item_listed: "Your %{bookable_noun} was listed!"
       finish_other_first: "Please complete %{already_started_noun} before trying to create %{wanted_create_noun}."
     offer:
       draft: 'This offer has been temporarily disabled by the owner.'
