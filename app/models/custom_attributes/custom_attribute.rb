@@ -28,6 +28,37 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   before_save :update_custom_validators
   after_save :ensure_custom_validators_are_properly_setup!
 
+  attr_accessor :aggregate_in_search
+  def aggregate_in_search
+    true
+  end
+
+  serialize :settings, Hash
+  store :settings, accessors: %i(versions_configuration optimization_settings aspect_ratio), coder: Hash
+
+  mount_uploader :placeholder_image, CustomImageUploader
+
+  DEFAULT_ASPECT_RATIO = 1.3
+  DEFAULT_VERSION_SETTINGS = {
+    mini: { width: 56, height: 56, transform: :resize_to_fill },
+    thumb: { width: 144, height: 109, transform: :resize_to_fill },
+    normal: { width: 1280, height: 960, transform: :resize_to_fill }
+  }.freeze
+
+  def aspect_ratio
+    super.presence || DEFAULT_ASPECT_RATIO
+  end
+
+  def settings_for_version(version)
+    version_settings = (versions_configuration || {}).fetch(version.to_s,
+                                                    DEFAULT_VERSION_SETTINGS[version.to_sym]).with_indifferent_access
+    [version_settings[:transform], version_settings[:width], version_settings[:height]]
+  end
+
+  def optimization_settings
+    super.presence || CarrierWave::Optimizable::OPTIMIZE_SETTINGS
+  end
+
   def create_translations
     ::CustomAttributes::CustomAttribute::TranslationCreator.new(self).create_translations!
     expire_cache_key(cache_type: 'Translation')
@@ -51,6 +82,10 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   def required?
     custom_validators.required.any?
+  end
+
+  def uploadable?
+    attribute_type == 'photo'
   end
 
   private

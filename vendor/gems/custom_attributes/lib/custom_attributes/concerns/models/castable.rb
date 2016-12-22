@@ -9,7 +9,6 @@ module CustomAttributes
             return [] if value.nil? && type == :array
             return nil if value.nil?
             case type
-            when :string, :text        then value
             when :integer              then begin
                                               value.to_i
                                             rescue

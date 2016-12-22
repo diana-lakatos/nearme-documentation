@@ -13,6 +13,8 @@ class UserProfile < ActiveRecord::Base
 
   has_many :customizations, as: :customizable
   has_many :availability_templates, as: :parent
+  has_many :custom_images, as: :owner
+  accepts_nested_attributes_for :custom_images, allow_destroy: true
 
   accepts_nested_attributes_for :availability_template
   accepts_nested_attributes_for :customizations, allow_destroy: true

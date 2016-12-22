@@ -17,6 +17,7 @@ class MigrateMerchantAccountToMerchantAccountOwners < ActiveRecord::Migration
       i.set_context!
       puts "Migration Stripe Merchant account for #{i.name}"
       MerchantAccount::StripeConnectMerchantAccount.all.each do |m|
+        begin
         m.skip_validation = true
         owner = m.owners.first || m.owners.build
         owner.first_name = m.data['first_name']
@@ -27,6 +28,8 @@ class MigrateMerchantAccountToMerchantAccountOwners < ActiveRecord::Migration
         owner.current_address = m.current_address
 
         owner.save(validate: false)
+        rescue
+        end
       end
     end
   end

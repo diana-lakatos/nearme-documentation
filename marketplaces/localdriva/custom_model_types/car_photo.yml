@@ -1,0 +1,9 @@
+name: Car Photo
+instance_profile_types: [Buyer]
+
+custom_attributes:
+  - name: image
+    label: Image
+    attribute_type: 'photo'
+    html_tag: input
+

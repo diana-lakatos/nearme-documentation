@@ -1,5 +1,9 @@
 = f.simple_fields_for :default_profile do |default_profile_form|
-  = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
-    - (default_profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
-      = draw_attribute_for_form(attribute, properties_form) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
-
+  - (default_profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |ca|
+    - next unless only_inputs.empty? || only_inputs.include?(ca.name.to_sym)
+    - if ca.uploadable?
+      = default_profile_form.simple_fields_for :custom_images, default_profile_form.object.custom_images.where(custom_attribute_id: ca.id).first_or_initialize  do |custom_images_form|
+        = render 'custom_images/attribute', f: custom_images_form, ca: ca
+    - else
+      = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
+        = draw_attribute_for_form(ca, properties_form)

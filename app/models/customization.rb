@@ -9,6 +9,9 @@ class Customization < ActiveRecord::Base
   belongs_to :custom_model_type
   belongs_to :customizable, polymorphic: true, touch: true
 
+  has_many :custom_images, as: :owner
+  accepts_nested_attributes_for :custom_images, allow_destroy: true
+
   def to_liquid
     @customization_drop ||= CustomizationDrop.new(self)
   end
