@@ -32,7 +32,7 @@
               <option value="">Please select --</option>
               {% assign capacity = "1 | 2 | 3 | 4 | 5 | 6" | split: " | " %}
               {% for v in capacity %}
-              <option value="{{ v }}"{% if params['lg_custom_attributes']['vehicle_capacity'] == v %} selected{% endif %}>{{ v }}</option>
+              <option value="{{ v }}"{% if params['lg_custom_attributes']['vehicle_capacity_gte'] == v %} selected{% endif %}>{{ v }}</option>
               {% endfor %}
             </select>
             </span>
@@ -116,7 +116,7 @@
 
           <div class="description">
             <header>
-              <h2><a href="/{{ user.user_profile_url }}">{{ user.name }}</a></h2>
+              <h2><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h2>
               <div class="summary">
                 <div class="rating-a" data-rating="{{ user.buyer_average_rating }}">{{ user.buyer_average_rating }} out of 5 stars</div>
                 <div class="price"><strong>AUD {{ user.buyer_properties.hourly_price | price_with_cents_with_currency }}</strong> / hr</div>
@@ -164,8 +164,10 @@
             <dl class="languages-proficiency short-list">
               {% assign languages = user.buyer_profile.customizations | map: 'properties' %}
               {% for language in languages %}
-                <dt>{{ language.language }}</dt>
-                <dd>{{ language.fluency }}</dd>
+                {% if language.language != blank and language.fluency != blank %}
+                  <dt>{{ language.language }}</dt>
+                  <dd>{{ language.fluency }}</dd>
+                {% endif %}
               {% endfor %}
             </dl>
           </div>
@@ -173,7 +175,6 @@
           <div class="options">
             <ul>
               <li class="ask-to-book"><a href="/" class="button-a">Ask to Book</a></li>
-               >
               <li><button type="button" data-href='{{ user.user_message_path }}' class="button-b" data-modal='true'>Message Me</a></li>
               {% if current_user.has_seller_profile? %}
               <li>

@@ -97,7 +97,6 @@ form_components:
       - buyer: full_bio
       - buyer: Custom Model - Languages
       - buyer: unavailable_periods
-      - buyer: enabled
       - buyer: vehicle_type
       - buyer: vehicle_model
       - buyer: vehicle_year
