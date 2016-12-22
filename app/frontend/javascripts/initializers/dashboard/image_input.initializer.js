@@ -12,7 +12,7 @@ function run(context = 'body') {
 
 let cocoonWrapper = $('.customizations');
 
-cocoonWrapper.on('cocoon:after-insert', '.nested-fields-set',  ()=>{
+cocoonWrapper.on('cocoon:after-insert',  ()=>{
   run(cocoonWrapper);
 });
 
