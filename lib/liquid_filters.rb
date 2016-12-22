@@ -658,6 +658,17 @@ module LiquidFilters
     object.map(&method.to_sym)
   end
 
+  # @return [Object] with first object from collection that matches provided conditions
+  # @param objects [Array<Object>] array of objects to be processed
+  # @param conditions [Hash] hash with conditions { field_name: value }
+  def detect(objects, conditions = {})
+    objects.detect do |object|
+      return object if conditions.to_a.all? do |attrib, val|
+        object[attrib] == val
+      end
+    end
+  end
+
   # @return [String] formatted representation of the date object; the formatted representation
   #   will be based on what the format parameter specifies
   # @param date [Date, Time, DateTime] date object

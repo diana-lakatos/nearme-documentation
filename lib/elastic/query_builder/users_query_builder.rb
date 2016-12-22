@@ -84,7 +84,11 @@ module Elastic
       if @query[:sort].present?
         sorting_fields = @query[:sort].split(',').compact.map do |sort_option|
           next unless sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
-          sort_column = "user_profiles.properties.#{sort[1].split('.').last}.raw"
+          if sort[1].split('.').first == 'custom_attributes'
+            sort_column = "user_profiles.properties.#{sort[1].split('.').last}.raw"
+          else
+            sort_column = sort[1]
+          end
           {
             sort_column => {
               order: sort[2],
@@ -143,12 +147,24 @@ module Elastic
 
       @query[:lg_custom_attributes]&.each do |key, value|
         next if value.blank?
-        user_profiles_filters <<
-          {
-            match: {
-              "user_profiles.properties.#{key}.raw" => value.to_s.split(',').map(&:downcase).join(' OR ')
+        attribute = key.match(/([a-zA-Z\.\_\-]*)_(gte|lte|gt|lt)/)
+        if attribute
+          user_profiles_filters <<
+            {
+              range: {
+                "user_profiles.properties.#{attribute[1]}" => {
+                  attribute[2] => (value.to_f - 0.00000001) # we deduct a small number because ES treats integer 4 not gte 4.0
+                }
+              }
             }
-          }
+        else
+          user_profiles_filters <<
+            {
+              match: {
+                "user_profiles.properties.#{key}.raw" => value.to_s.split(',').map(&:downcase).join(' OR ')
+              }
+            }
+        end
       end
 
       @query[:lg_customizations]&.each do |key, value|

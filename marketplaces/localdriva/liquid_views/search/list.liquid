@@ -31,7 +31,7 @@
         <div class="filter">
           <label for="filter-passengers">Passengers</label>
           <span class="select-a">
-          <select name="lg_custom_attributes[vehicle_capacity]" id="filter-passengers" class="unstyled-select">
+          <select name="lg_custom_attributes[vehicle_capacity_gte]" id="filter-passengers" class="unstyled-select">
             <option value="">Please select</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -74,21 +74,18 @@
           </span>
         </div>
 
-        {% assign categories = searcher.searchable_categories | rotate %}
-        {% for root_category in  categories %}
-          {% if root_category.name != 'Extras' %} {% continue %} {% endif %}
-          <div class="filter">
-            <label for="filter-extras">{{ root_category.name }}</label>
-            <span class="select-a">
-              <select id="filter-industry" class="unstyled-select" name='category_ids[]'>
-                <option value="">Please Select --</option>
-                {% for category in root_category.children %}
-                  <option {% if searcher.category_ids contains subcat.id %}selected{% endif %} value='{{category.id}}'>{{ category.name }}</option>
-                {% endfor %}
-              </select>
-            </span>
-          </div>
-        {% endfor %}
+        {% assign root_category = searcher.searchable_categories | detect: name: 'Extras' %}
+        <div class="filter">
+          <label for="filter-extras">{{ root_category.name }}</label>
+          <span class="select-a">
+            <select id="filter-industry" class="unstyled-select" name='category_ids[]'>
+              <option value="">Please Select --</option>
+              {% for category in root_category.children %}
+                <option {% if searcher.category_ids contains subcat.id %}selected{% endif %} value='{{category.id}}'>{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </span>
+        </div>
       </div>
     </fieldset>
   </div>
