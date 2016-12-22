@@ -1,7 +1,7 @@
 class FlashMessagesLinks {
   constructor(alert) {
     this.alert = alert;
-    this.link = this.alert.querySelector('a[href]:not(.close)');
+    this.link = this.alert.querySelector('a[href]:not(.close):not([data-method="post"])');
     this.hasLinkToFollow = this.link !== null;
 
     if (this.hasLinkToFollow) {
