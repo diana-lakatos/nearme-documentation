@@ -36,7 +36,7 @@ module Elastic
       end
 
       def create_field(field)
-        Field.new(label: field[:label], field: field[:field], type: field[:type])
+        Field.new(label: field[:label], field: field[:field], type: field[:type], size: field[:size])
       end
     end
   end
