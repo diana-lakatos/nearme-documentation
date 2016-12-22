@@ -37,6 +37,16 @@ module Graph
       def current_user
         @ctx[:current_user].source
       end
+
+      class CustomAttributePhotos
+        def call(obj, arg, _ctx)
+          user = obj.source
+          custom_attribute = ::CustomAttributes::CustomAttribute.find_by(name: arg[:name])
+          custom_images = ::CustomImage.where(owner: user.user_profiles, custom_attribute: custom_attribute) +
+                          ::CustomImage.where(owner: user.user_profiles.map(&:customizations).flatten, custom_attribute: custom_attribute)
+          custom_images.map { |custom_image| custom_image.image.url }
+        end
+      end
     end
   end
 end
