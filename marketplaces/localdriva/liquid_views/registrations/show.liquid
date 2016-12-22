@@ -1,212 +1,255 @@
+{{ platform_context.set_blank_theme_name }}
 {% assign title = platform_context.name | append: ' - ' | append: user.name %}
 {% title title %}
 
-{% for customization in user.buyer_profile.customizations %}
-  {% if customization.custom_model_type.name == 'Recommendations' %}
-    {% assign recommendations  = recommendations | add_to_array: customization %}
-  {% elsif customization.custom_model_type.name == 'Links' %}
-    {% assign links = links | add_to_array: customization %}
-  {% endif %}
-{% endfor%}
+{% query_graph 'get_user', result_name: g, userId: user.id %}
+
+{% for cover in g.user.cover_images %}
+<div class="user-cover" style="background-image: url({{ cover.url }});"></div>
+{% endfor %}
 
 <main id="main">
-    <div class="wrapper-a">
-        <div class="back-to-search-results">
-            <a data-back-to-search-results-link href="/search">Back to search results</a>
-        </div>
-        <article class="user-a">
-            <div class="wrapper">
-                <header class="header">
-                    <figure>
-                        <img src="{{ user.avatar_url_big }}" alt="{{ user.name }}">
-                    </figure>
-                    <h1>{{ user.name }}</h1>
-
-                    <div class="properties">
-                        <p class="price">
-                            <strong>{{ user.buyer_properties['hourly_rate_decimal'] | price_with_cents_with_currency }} USD / hr</strong>
-                        </p>
-                        <dl class="property">
-                            <dt>Discounts:</dt>
-                            <dd>{{ user.buyer_properties['discounts_available'] }}</dd>
-                        </dl>
-                    </div>
-
-                    <div class="contact">
-                        <a class="button-b action-message" href="{{user.user_message_path}}" rel="modal">Send Message</a>
-                        {{ user.click_to_call_button }}
-                    </div>
-                </header>
-
-                <div class="content">
-                    {% if user.formatted_buyer_categories["Area Of Expertise"]['children'].size > 0 %}
-                      <h3>Expertise</h3>
-                      <ul>
-                          {% for exp in user.formatted_buyer_categories["Area Of Expertise"]['children'] %}
-                              <li>{{ exp[-1] }}</li>
-                          {% endfor %}
-                      </ul>
-                    {% endif %}
-
-                    {% if user.formatted_buyer_categories["Industry"]['children'].size > 0 %}
-                      <h3>Industry</h3>
-                      <ul>
-                          {% for exp in user.formatted_buyer_categories["Industry"]['children'] %}
-                              <li>{{ exp[-1] }}</li>
-                          {% endfor %}
-                      </ul>
-                    {% endif %}
-
-                    {% if user.buyer_properties['availability'] != blank %}
-                      <h3>Availability</h3>
-                      <p>{{ user.buyer_properties['availability'] | nl2br }}</p>
-                    {% endif %}
-
-                    {% if user.buyer_properties['cities'] != blank %}
-                      <h3>Will work in these Cities</h3>
-                      <p>{{ user.buyer_properties['cities'] | nl2br  }}</p>
-                    {% endif %}
-
-                    {% if user.buyer_categories["Languages"]['children'].size > 0 %}
-                      <h3>Languages</h3>
-                      <ul>
-                      {% for exp in user.buyer_categories["Languages"]['children'] %}
-                          <li>{{ exp }}</li>
-                      {% endfor %}
-                      </ul>
-                    {% endif %}
-
-                    {% if user.buyer_properties['bio'] != blank %}
-                      <h3>Biography</h3>
-                      <p>{{ user.buyer_properties['bio'] | nl2br  }}</p>
-                    {% endif %}
-
-                    {% if user.buyer_properties['education'] != blank %}
-                      <h3>Education, Certifications and Training</h3>
-                      <p>{{ user.buyer_properties['education'] | nl2br }}</p>
-                    {% endif %}
-
-                    {% if user.buyer_properties['awards'] != blank %}
-                      <h3>Awards and Honors</h3>
-                      <p>{{ user.buyer_properties['awards'] | nl2br  }}</p>
-                    {% endif %}
-
-                    {% if user.buyer_properties['pro_service'] != blank %}
-                      <h3>Professional Service</h3>
-                      <p>{{ user.buyer_properties['pro_service'] | nl2br  }}</p>
-                    {% endif %}
-
-                    {% if user.buyer_properties['teaching'] != blank %}
-                      <h3>Teaching, Writing and Publishing</h3>
-                      <p>{{ user.buyer_properties['teaching'] | nl2br  }}</p>
-                    {% endif %}
-
-                    {% if links.size > 0 %}
-                      <h3>Links to whitepapers, articles</h3>
-                      <ul>
-                        {% for link in links %}
-                          <li><a href="{{ link.properties['url_link'] }}" target="_blank">{{ link.properties['url_link'] }}</a></li>
-                        {% endfor %}
-                      </ul>
-                    {% endif %}
-
-                    {% if user.buyer_properties['employers'] != blank %}
-                      <h3>Prior Employers or Clients</h3>
-                      <p>{{ user.buyer_properties['employers'] | nl2br  }}</p>
-                    {% endif %}
-
-                    {% if user.buyer_properties['accomplishments'] != blank %}
-                      <h3>Special Projects and Accomplishments</h3>
-                      <p>{{ user.buyer_properties['accomplishments'] | nl2br  }}</p>
-                    {% endif %}
-
-                    {% if user.buyer_properties['giving_back'] != blank %}
-                      <h3>Community and Giving Back Interests</h3>
-                      <p>{{ user.buyer_properties['giving_back'] | nl2br  }}</p>
-                    {% endif %}
-
-                    {% if user.buyer_properties['hobbies'] != blank %}
-                      <h3>Brief Personal Details (Family and Hobbies)</h3>
-                      <p>{{ user.buyer_properties['hobbies'] | nl2br  }}</p>
-                    {% endif %}
-
-
-                    {% if recommendations.size > 0 %}
-
-                      <hr>
-
-                      <section class="recommendations-a">
-                          <h3>Recommendations</h3>
-                          <div class="items">
-                              {% for recommendation in recommendations %}
-                                  <div class="item">
-                                      <blockquote>
-                                          <p>&ldquo;{{ recommendation.properties['recommendation'] }}&rdquo;</p>
-                                      </blockquote>
-                                      <p class="author">{{ recommendation.properties['author'] }}</p>
-                                  </div>
-                              {% endfor %}
-                          </div>
-                      </section>
-
-                    {% endif %}
-                </div>
-            </div>
-
-            <aside class="sidebar">
-                <ul class="actions-a">
-                    {% if current_user != blank and current_user.has_seller_profile? %}
-                        <li><a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Invite to project</a></li>
-                    {% endif %}
-                    <li>
-                      {% if current_user.has_seller_profile? %}
-                        <div data-add-favorite-button="true" data-path="{{ user.wish_list_path }}" data-wishlistable-type="{{ user.class_name }}" data-link-to-classes="{{ link_to_classes }}" data-path-bulk="{{ user.wish_list_bulk_path }}" data-object-id="{{ user.id }}" id="favorite-button-{{ user.class_name }}-{{ user.id }}">
-                          <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
-                        </div>
-                      {% endif %}
-                    </li>
-                    {% if user.has_active_blog? %}
-                        <li><a href="{{ user.user_blog_posts_list_path }}" class="button-b action-blog">View Blog</a></li>
-                    {% endif %}
-                    {% if user.buyer_properties['linkedin_url'] != blank %}
-                        <li><a href="{{ user.buyer_properties['linkedin_url'] }}" class="button-b action-linkedin" target="_blank">LinkedIn Bio</a></li>
-                    {% endif %}
-                </ul>
-
-                <hr>
-
-                <dl class="property">
-                    <dt>Discounts:</dt>
-                    <dd>{{ user.buyer_properties['discounts_available'] }}</dd>
-                </dl>
-
-                {% if user.buyer_properties['discounts_description'] != blank %}
-                  <p>{{ user.buyer_properties['discounts_description'] }}</p>
-                {% endif %}
-
-
-                {% if user.tags.size > 0 %}
-                  <hr>
-                  <div class="tags-a">
-                      <h4>Tags</h4>
-                      <ul>
-                          {% for tag in user.tags %}
-                              <li><a href="/search?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
-                          {% endfor %}
-                      </ul>
-                  </div>
-                {% endif %}
-
-                <hr>
-
-                <ul class="actions-a">
-                    <li>
-                        <a class="button-b action-flag" href="#" data-href="{{ user.inappropriate_report_path }}" data-modal="1">{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
-                    </li>
-                </p>
-            </aside>
-        </article>
-
-        <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
+  <div class="wrapper-a">
+    <div class="back-to-search-results">
+      <a data-back-to-search-results-link href="/search">Back to search results</a>
     </div>
+
+    <article class="box-a user-a" id="user-{{ user.id }}">
+      <figure class="avatar">
+        <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+      </figure>
+
+      <div class="description">
+
+        <header>
+          <h1>{{ user.name }}</h1>
+          <div class="summary">
+            <div class="rating-a" data-rating="{{ user.buyer_average_rating }}">{{ user.buyer_average_rating }} out of 5 stars</div>
+            <div class="price"><strong>AUD {{ user.buyer_properties.hourly_price | price_with_cents_with_currency }}</strong> / hr</div>
+          </div>
+        </header>
+
+        <dl class="properties">
+          {% if user.buyer_properties.driver_category %}
+          <dt>Driver Type:</dt>
+          <dd>{{ user.buyer_properties.driver_category }}
+            <div class="driver-types-description" tabindex="0">
+              <ul>
+                <li>
+                  <b>Standard</b> - {{ 'driver_categories.descriptions.standard' | t }}
+                </li>
+                <li>
+                  <b>Pro</b> - {{ 'driver_categories.descriptions.pro' | t }}
+                </li>
+                <li>
+                  <b>Plus</b> - {{ 'driver_categories.descriptions.plus' | t }}
+                </li>
+              </ul>
+            </div>
+          </dd>
+          {% endif %}
+
+          <dt>Joined:</dt>
+          <dd>{{ user.created_at | to_date | l: 'long' }}</dd>
+
+          <dt>Number of Bookings:</dt>
+          <dd>{{ user.completed_host_reservations_count }}</dd>
+
+          <dt>Number of Ratings:</dt>
+          <dd>{{ user.reviews_counter.about_buyer }}</dd>
+
+          <dt>Capacity:</dt>
+          <dd>{{ 'passengers_count' | t: count: user.buyer_properties.vehicle_capacity }}</dd>
+        </dl>
+
+        {% if user.buyer_properties.short_bio != blank %}
+        <h3>About {{ user.first_name }}</h3>
+        <p>{{ user.buyer_properties.short_bio | nl2br }}</p>
+        {% endif %}
+
+        <h3>Languages</h3>
+        <dl class="languages-proficiency short-list">
+          {% assign languages = user.buyer_profile.customizations | map: 'properties' %}
+          {% for language in languages %}
+          {% if language.language != blank and language.fluency != blank %}
+          <dt>{{ language.language }}</dt>
+          <dd>{{ language.fluency }}</dd>
+          {% endif %}
+          {% endfor %}
+        </dl>
+      </div>
+
+      {% if current_user.id != user.id %}
+      <div class="options">
+        <ul>
+          {% if current_user != blank and current_user.has_seller_profile? %}
+          <li class="ask-to-book">
+            <a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Ask to Book</a>
+          </li>
+          {% endif %}
+
+          <li>
+            <a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Message Me</a>
+          </li>
+
+          {% if current_user.has_seller_profile? %}
+          <li>
+            {% include 'shared/components/wish_list_button_injection.html', object: user %}
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+    </article>
+
+    <div class="box-a vehicle-information-a">
+      <h2>Vehicle - {{ user.buyer_properties.vehicle_type }} {{ user.buyer_properties.vehicle_model }} ({{ user.buyer_properties.vehicle_year }}) </h2>
+
+      <div class="specs">
+        <h3>Details</h3>
+        <dl class="specs-list">
+          <dt>Type: </dt>
+          <dd>{{ user.buyer_properties.vehicle_type }}</dd>
+
+          <dt>Model: </dt>
+          <dd>{{ user.buyer_properties.vehicle_model }}</dd>
+
+          <dt>Year: </dt>
+          <dd>{{ user.buyer_properties.vehicle_year }}</dd>
+
+          <dt>Capacity: </dt>
+          <dd>{{ 'passengers_count' | t: count: user.buyer_properties.vehicle_capacity }}</dd>
+        </dl>
+
+
+
+        {% for root_category in user.formatted_buyer_categories %}
+        {% if root_category[1]['children'].size > 0 %}
+        <h3>{{ root_category[1]['name'] }}</h3>
+        <ul class="props-list">
+          {% for category in root_category[1]['children'] %}
+            <li>{{ category }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="gallery-description">
+        {% if g.user.car_photos.size > 0 %}
+          <div class="gallery-a">
+
+            <figure class="preview">
+              <a href="{{ g.user.car_photos[0].normal }}" target="_blank"><img src="{{ g.user.car_photos[0].mini }}" alt="Car photo"></a>
+            </figure>
+
+            <ul class='thumbnails'>
+              {% for photo in g.user.car_photos %}
+              <li>
+              <a href="{{ photo.normal }}" data-full="{{ photo.normal }}" target="_blank">
+                <img src="{{ photo.thumb }}" alt="Car photo">
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <div class="description">
+          <h3>Vehicle Description</h3>
+          <p>{{ user.buyer_properties.vehicle_description | nl2br }}</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="box-a user-ratings-a">
+      <h2>Ratings</h2>
+
+      <article class="user-rating">
+        <header>
+          <figure><img src="https://rawgit.com/mdyd-dev/marketplaces/master/localdriva/images/avatar-big.png" alt="Jackie Bettye"></figure>
+          <h3>Jackie Bettye</h3>
+          <time datetime="2016-12-01">12/01/2016</time>
+        </header>
+
+        <div class="rating-body">
+          <p class="overall-rating"><span>Overall rating:</span> <span class="rating-a" data-rating="4">4 out of 5</span></p>
+
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
+
+          <dl class="compound-ratings">
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="user-rating">
+        <header>
+          <figure><img src="https://rawgit.com/mdyd-dev/marketplaces/master/localdriva/images/avatar-big.png" alt="Jackie Bettye"></figure>
+          <h3>Jackie Bettye</h3>
+          <time datetime="2016-12-01">12/01/2016</time>
+        </header>
+
+        <div class="rating-body">
+          <p class="overall-rating"><span>Overall rating:</span> <span class="rating-a" data-rating="4">4 out of 5</span></p>
+
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
+
+          <dl class="compound-ratings">
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="user-rating">
+        <header>
+          <figure><img src="https://rawgit.com/mdyd-dev/marketplaces/master/localdriva/images/avatar-big.png" alt="Jackie Bettye"></figure>
+          <h3>Jackie Bettye</h3>
+          <time datetime="2016-12-01">12/01/2016</time>
+        </header>
+
+        <div class="rating-body">
+          <p class="overall-rating"><span>Overall rating:</span> <span class="rating-a" data-rating="4">4 out of 5</span></p>
+
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
+
+          <dl class="compound-ratings">
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+
+            <dt>Driver friendliness</dt>
+            <dd><span class="rating-b" data-rating="4">4 out of 5</span></dd>
+          </dl>
+        </div>
+      </article>
+    </section>
+
+    <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
+  </div>
 </main>

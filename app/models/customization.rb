@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Customization < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
@@ -9,7 +10,7 @@ class Customization < ActiveRecord::Base
   belongs_to :custom_model_type
   belongs_to :customizable, polymorphic: true, touch: true
 
-  has_many :custom_images, as: :owner
+  has_many :custom_images, as: :owner, dependent: :destroy
   accepts_nested_attributes_for :custom_images, allow_destroy: true
 
   def to_liquid
