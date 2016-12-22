@@ -3,10 +3,11 @@ module Elastic
     class Field
       BUCKET_SIZE = 25
 
-      def initialize(label:, field:, type: :terms)
+      def initialize(label:, field:, type: :terms, size: nil)
         @field = field
         @label = label
         @type = type || :terms
+        @size = size
       end
 
       def enabled?
@@ -23,7 +24,7 @@ module Elastic
 
       def field_meta
         field_data = default_field_data
-        field_data[:size] = BUCKET_SIZE if bucket?
+        field_data[:size] = @size if @size
         field_data[:order] = { '_term' => 'asc' } if sortable?
         field_data
       end
@@ -38,8 +39,10 @@ module Elastic
         @type == :terms
       end
 
-      def bucket?
-        @type == :terms
+      def size
+        return if @field != :terms
+
+        @size || BUCKET_SIZE
       end
     end
   end
