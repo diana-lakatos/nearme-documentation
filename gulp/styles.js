@@ -61,6 +61,10 @@ module.exports = function(gulp, browserSync, config) {
     return processor.run('admin.scss');
   });
 
+  gulp.task('styles:global-admin', function(){
+    return processor.run('global-admin.scss');
+  });
+
   /* Global task for all styles */
   gulp.task('styles', ['styles:dashboard', 'styles:application', 'styles:instance_admin', 'styles:community', 'styles:other', 'styles:admin']);
 

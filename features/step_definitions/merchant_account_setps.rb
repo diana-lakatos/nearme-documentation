@@ -3,15 +3,15 @@ And (/^I remove all payment gateways$/) do
 end
 
 When(/^I update Stripe merchant form$/) do
-  account_type = page.find("#merchant_account_account_type option", :visible => false)
+  account_type = page.find("#merchant_account_account_type option", :visible => false, match: :first)
   account_type.set('individual')
   account_type.select_option
-  page.find("#merchant_account_account_type option", :visible => false).set('individual')
+  page.find("#merchant_account_account_type option", :visible => false, match: :first).set('individual')
   fill_in 'merchant_account_bank_routing_number', with: '110000000'
   fill_in 'merchant_account_bank_account_number', with: '000123456789'
   fill_in 'merchant_account_owners_attributes_0_first_name', with: 'Tomasz'
   fill_in 'merchant_account_owners_attributes_0_last_name', with: 'Lemkowski'
-  fill_in 'merchant_account_owners_attributes_0_dob_formated', with: '01/22/1990'
+  fill_in 'merchant_account_owners_attributes_0_dob_formated', with: '01-22-1990' #'01/22/1990'
   fill_in 'merchant_account_owners_attributes_0_current_address_attributes_address', with: '1600 Amphitheatre Parkway, Mountain View, CA 94043, USA'
   fill_in 'merchant_account_owners_attributes_0_personal_id_number', with: '694-07-7618'
   attach_file('merchant_account_owners_attributes_0_document', File.absolute_path('./public/favicon.png'))
@@ -90,7 +90,3 @@ And /^due_by should be displayed$/ do
   error_message = "Your account is valid until #{due_by}. Please add required information to avoid disabling it."
   expect(page).to have_content(error_message, count: 1)
 end
-
-
-
-
