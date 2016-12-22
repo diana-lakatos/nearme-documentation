@@ -51,26 +51,8 @@ namespace :localdriva do
     def set_theme_options
       theme = @instance.theme
 
-      theme.color_green = '#4fc6e1'
-      theme.color_blue = '#05caf9'
-      theme.color_red = '#e83d33'
-      theme.color_orange = '#ff8d00'
-      theme.color_gray = '#394449'
-      theme.color_black = '#1e2222'
-      theme.color_white = '#fafafa'
-      theme.call_to_action = 'Learn more'
-
-      theme.phone_number = '1-888-893-0705'
-      theme.contact_email = 'info@UpsideOfTalent.com'
-      theme.support_email = 'info@UpsideOfTalent.com'
-
-      theme.facebook_url = 'https://www.facebook.com/UpsideOfTalent'
-      theme.twitter_url = 'https://twitter.com/UpsideOfTalent'
-      theme.gplus_url = 'https://plus.google.com/102635346315218116617'
-      theme.instagram_url = 'https://www.instagram.com'
-      theme.youtube_url = 'https://www.youtube.com/channel/UChQrYDFiI79ViMy98FeulkQ'
-      theme.blog_url = '/blog'
-      theme.linkedin_url = 'https://www.linkedin.com/company/upside-of-talent-llc'
+      theme.color_green = '#f05b64'
+      theme.color_blue = '#f05b64'
 
       # theme.remote_favicon_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2760/favicon.png'
       # theme.remote_icon_retina_image_url = 'https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2761/apple-touch-icon-60_2x.png'
