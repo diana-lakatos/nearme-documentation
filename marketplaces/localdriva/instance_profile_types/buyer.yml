@@ -87,6 +87,7 @@ form_components:
     fields:
       - user: name
       - user: avatar
+      - buyer: enabled
       - buyer: cover_image
       - buyer: Custom Model - Car Photo
       - buyer: driver_category
