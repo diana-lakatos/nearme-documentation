@@ -27,6 +27,7 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
       @order_item.errors.add(:line_items, :blank)
     else
       @order_item.set_service_fees
+      @order_item.schedule_approval!
 
       redirect_to(dashboard_order_order_items_path(@order, transactable_id: @order.transactable.id)) && return if @order_item.save
     end
@@ -37,6 +38,9 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
   def update
     if @order_item.update(order_item_params)
       @order_item.recalculate_fees!
+      @order_item.schedule_approval!
+      @order_item.send_update_alert!
+
       flash[:notice] = t('flash_messages.dashboard.order_items.updated')
       redirect_to dashboard_order_order_item_path(@order, @order_item)
     else

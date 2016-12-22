@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161220084319) do
+ActiveRecord::Schema.define(version: 20161222235051) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1174,21 +1174,22 @@ ActiveRecord::Schema.define(version: 20161220084319) do
   add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", unique: true, using: :btree
 
   create_table "instance_profile_types", force: :cascade do |t|
-    t.string   "name",                            limit: 255
+    t.string   "name",                             limit: 255
     t.integer  "instance_id"
     t.datetime "deleted_at"
     t.string   "profile_type"
     t.boolean  "searchable"
     t.boolean  "show_categories"
     t.string   "category_search_type"
-    t.integer  "position",                                    default: 0
-    t.boolean  "must_have_verified_phone_number",             default: false
-    t.boolean  "onboarding",                                  default: false
-    t.boolean  "create_company_on_sign_up",                   default: false
+    t.integer  "position",                                     default: 0
+    t.boolean  "must_have_verified_phone_number",              default: false
+    t.boolean  "onboarding",                                   default: false
+    t.boolean  "create_company_on_sign_up",                    default: false
     t.boolean  "search_only_enabled_profiles"
-    t.string   "search_engine",                   limit: 255, default: "postgresql", null: false
-    t.boolean  "admin_approval",                              default: false,        null: false
+    t.string   "search_engine",                    limit: 255, default: "postgresql", null: false
+    t.boolean  "admin_approval",                               default: false,        null: false
     t.string   "default_sort_by"
+    t.integer  "default_availability_template_id"
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree
@@ -1311,8 +1312,8 @@ ActiveRecord::Schema.define(version: 20161220084319) do
     t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "prepend_view_path"
     t.string   "twilio_ring_tone"
+    t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
   end
 
@@ -1983,6 +1984,7 @@ ActiveRecord::Schema.define(version: 20161220084319) do
     t.text     "comment"
     t.string   "state"
     t.text     "rejection_reason"
+    t.datetime "approve_at"
   end
 
   create_table "refunds", force: :cascade do |t|
@@ -2657,6 +2659,7 @@ ActiveRecord::Schema.define(version: 20161220084319) do
     t.integer  "minimum_lister_service_fee_cents",           default: 0
     t.boolean  "both_side_confirmation",                     default: false
     t.boolean  "allow_drafts",                               default: false, null: false
+    t.integer  "hours_to_order_item_approval"
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree
@@ -2968,6 +2971,7 @@ ActiveRecord::Schema.define(version: 20161220084319) do
     t.boolean  "enabled",                  default: false
     t.datetime "onboarded_at"
     t.boolean  "approved",                 default: false, null: false
+    t.integer  "availability_template_id"
   end
 
   add_index "user_profiles", ["instance_id", "user_id", "profile_type"], name: "index_user_profiles_on_instance_id_and_user_id_and_profile_type", unique: true, using: :btree
