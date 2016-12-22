@@ -204,13 +204,20 @@ module Elastic
     end
 
     def aggregations
-      @global_aggs = @transactable_type
-                      .custom_attributes
-                      .select(&:searchable)
-                      .select(&:aggregate_in_search)
-                      .map { |attr| {label: attr.name, field: "custom_attributes.#{attr.name}"}}
+      Aggregations.build(filters: @filters, fields: aggregation_fields)
+    end
 
-      Aggregations.build(filters: @filters, fields: @global_aggs)
+    def aggregation_fields
+      @transactable_type
+        .custom_attributes
+        .where(searchable: true, aggregate_in_search: true)
+        .map do |attr|
+        {
+          label: attr.name,
+          field: "custom_attributes.#{attr.name}",
+          size: attr.valid_values.size
+        }
+      end
     end
 
     def match_query
