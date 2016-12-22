@@ -172,10 +172,19 @@
             </dl>
           </div>
 
+          {% if current_user.id != user.id %}
           <div class="options">
             <ul>
-              <li class="ask-to-book"><a href="/" class="button-a">Ask to Book</a></li>
-              <li><button type="button" data-href='{{ user.user_message_path }}' class="button-b" data-modal='true'>Message Me</a></li>
+              {% if current_user != blank and current_user.has_seller_profile? %}
+              <li class="ask-to-book">
+                <a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Ask to Book</a>
+              </li>
+              {% endif %}
+
+              <li>
+                <a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Message Me</a>
+              </li>
+
               {% if current_user.has_seller_profile? %}
               <li>
                 {% include 'shared/components/wish_list_button_injection.html', object: user %}
@@ -183,11 +192,15 @@
               {% endif %}
             </ul>
           </div>
+          {% endif %}
           <script>
             $(function(){
               $(document).trigger('userLoaded.localdriva', 'user-{{user.id}}')
             });
           </script>
+
+          <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
+
         </article>
         {% endfor %}
       </div>

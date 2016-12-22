@@ -38,14 +38,22 @@ class WishListButton {
 
   setActive() {
     this.state = true;
-    this.ui.icon.classList.add('selected');
-    this.ui.label.innerHTML = this.labels.active;
+    if (this.ui.icon) {
+      this.ui.icon.classList.add('selected');
+    }
+    if (this.ui.label) {
+      this.ui.label.innerHTML = this.labels.active;
+    }
   }
 
   setInactive() {
     this.state = false;
-    this.ui.icon.classList.remove('selected');
-    this.ui.label.innerHTML = this.labels.inactive;
+    if (this.ui.icon) {
+      this.ui.icon.classList.remove('selected');
+    }
+    if (this.ui.label) {
+      this.ui.label.innerHTML = this.labels.inactive;
+    }
   }
 
   _setState(state) {

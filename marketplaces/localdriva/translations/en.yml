@@ -414,3 +414,9 @@ en:
   passengers_count:
     one: '1 Passenger'
     other: '%{count} Passengers'
+
+  wish_lists:
+    buttons:
+      selected_state: Remove Favorite
+      unselected_state: Add Favorite
+
