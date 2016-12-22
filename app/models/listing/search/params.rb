@@ -85,6 +85,13 @@ class Listing::Search::Params
         }
       end
     end
+    # Fixes ES exception when bounding box coordinates are provided in wrong order
+    if @bounding_box && @bounding_box[:top_right][:lat] < @bounding_box[:bottom_left][:lat]
+      top_right = @bounding_box[:top_right]
+      @bounding_box[:top_right] = @bounding_box[:bottom_left]
+      @bottom_left = top_right
+    end
+    @bounding_box
   end
 
   def available_dates
