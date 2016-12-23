@@ -12,6 +12,11 @@ en:
               total_amount_changed: "Looks like the total price of this bookingss has changed. Please verify all prices."
   activerecord:
     attributes:
+      user:
+        buyer_properties.: 'Property'
+        seller_properties.: 'Property'
+      user/buyer_profile/custom_images:
+        image: 'Cover Image'
       transactable:
         timezone_info: "Please note that this bookingss operates in %{timezone} time zone."
     errors:
