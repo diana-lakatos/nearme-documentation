@@ -261,9 +261,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def payment_gateway_config
     if data[:payment_gateway_config].blank?
       data[:payment_gateway_config] = {}
-      if payment_gateway.config[:transfer_schedule] &&
-         %w(daily weekly monthly).include?(payment_gateway.config[:transfer_schedule][:interval])
-        data[:payment_gateway_config][:transfer_schedule] = payment_gateway.config[:transfer_schedule]
+      if payment_gateway.transfer_schedule &&
+         %w(daily weekly monthly).include?(payment_gateway.transfer_schedule[:interval])
+        data[:payment_gateway_config][:transfer_schedule] = payment_gateway.transfer_schedule
       end
     end
 

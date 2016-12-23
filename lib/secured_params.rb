@@ -525,6 +525,7 @@ class SecuredParams
       :allow_custom_pricings,
       :allow_drafts,
       :type,
+      :hours_to_order_item_approval,
       :confirm_reservations,
       :send_alert_hours_before_expiry,
       :send_alert_hours_before_expiry_hours,

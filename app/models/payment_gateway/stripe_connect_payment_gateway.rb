@@ -56,6 +56,12 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
     }
   end
 
+  def transfer_schedule
+    (config[:transfer_schedule] || {}).select do |key, _|
+      ['interval', transfer_anchor].include?(key)
+    end
+  end
+
   def direct_charge?
     return false if config['settings'].blank?
     config['settings']['charge_type'] == 'direct'
@@ -106,16 +112,25 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   end
 
   def validate_config_hash
-    intrval = config['transfer_schedule'] && config['transfer_schedule']['interval']
-    if intrval == 'daily'
+    if transfer_interval == 'daily'
       label = I18n.t('simple_form.labels.payment_gateway.config.transfer_schedule.delay_days')
       errors.add(:base, label + ' can\'t be blank.') if config['transfer_schedule']['delay_days'].blank?
-    elsif intrval == 'weekly'
+    elsif transfer_interval == 'weekly'
       label = I18n.t('simple_form.labels.payment_gateway.config.transfer_schedule.weekly_anchor')
       errors.add(:base, label + ' can\'t be blank.') if config['transfer_schedule']['weekly_anchor'].blank?
-    elsif intrval == 'monthly'
+    elsif transfer_interval == 'monthly'
       label = I18n.t('simple_form.labels.payment_gateway.config.transfer_schedule.monthly_anchor')
       errors.add(:base, label + ' can\'t be blank.') if config['transfer_schedule']['monthly_anchor'].blank?
     end
+  end
+
+  def transfer_interval
+    @transfer_interval ||= config['transfer_schedule'] && config['transfer_schedule']['interval']
+  end
+
+  def transfer_anchor
+    return 'delay_days' if 'daily' == transfer_interval
+
+    transfer_interval + '_anchor'
   end
 end

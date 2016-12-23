@@ -12,6 +12,10 @@
   letter-spacing: 1.3;
   text-align: center;
 
+  html.signed-in & {
+    background-image: url("/assets/hallmark/hero-a-signed-in.jpg");
+  }
+
   &:before {
     position: absolute;
     left: 0;

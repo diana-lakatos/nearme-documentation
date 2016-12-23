@@ -59,13 +59,18 @@ en:
 
 
   # home overview
-  hero_slogan: 'Hang out with the craftiest minds'
-  hero_description: 'Find, follow and chat with club members across Keepsake topics and groups'
+  hero_slogan_signed_out: 'Keepsake Community'
+  hero_slogan_signed_in: 'Welcome to the Keepsake Ornament Club Community'
+  hero_description_signed_out: 'Hang with fellow ornament enthusiasts among members-only exclusive content'
+  hero_description_signed_in: 'Find, follow, collaborate and share with Hallmark artists and fellow ornament enthusiasts.'
+  benefits_section_title: 'Come on in to Keepsake Community'
+  benefits_section_subtitle: 'Exclusively for Hallmark Keepsake Ornament Club Members'
+  benefits_section_body: 'Connect in a fun and interactive way with fellow fans and Keepsake Studio Artists, get insider news and other exclusive content 365 days a year. Access to Keepsake Community also gives you a free subscription to Feeln for unlimited streaming of your favorite feel-good movies and shows, without commercials or ads. Activate up to five devices and watch Christmas movies year-round, Hallmark Hall of Fame movies and other fresh titles added monthly. Join and get the full Keepsake Ornament Club experience - whenever and wherever you may be!'
   join_now: 'Join Now - Coming soon'
-  explore_the_most_popular_projects: 'Check out our past Dream Books, featured series, games and more'
+  explore_the_most_popular_projects: 'Browse featured DIY projects, follow your favorites, and share your own creations.'
   connect_with_influencers: 'Featured Members'
-  connect_with_influencers_description: "Check out our past Dream Books, featured series, games and more"
-  featured_topics_description: 'Follow the topics that interest you and discover groups and club members related to them'
+  connect_with_influencers_description: "Find and connect with your and fellow Keepsake Ornament Club members nationwide and favorite Keepsake Ornament Artists."
+  featured_topics_description: 'Follow the topics that interest you and discover the groups and Club members related to them.'
 
   # user activity
   featured_user: 'Featured Member'

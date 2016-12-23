@@ -87,6 +87,27 @@ class RecurringBookingPeriod < ActiveRecord::Base
     payment_object
   end
 
+  def schedule_approval!
+    set_approve_at!
+    OrderItemApprovalJob.perform_later(approve_at, id) if approve_at
+  end
+
+  def set_approve_at!
+    return unless action
+    return unless (tt_action_type = action.transactable_type_action_type)
+    return if (approve_in = tt_action_type.hours_to_order_item_approval.to_i).zero?
+
+    self.update_attributes!(approve_at: (Time.current + approve_in.hours))
+  end
+
+  def auto_approve!
+    return unless pending?
+    return unless approve_at
+    return if approve_at > Time.current
+
+    charge_and_approve!
+  end
+
   def paid?
     total_amount_cents.zero? ? true : !!payment.try(:paid?)
   end
@@ -113,6 +134,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def decorate
     @decorator ||= OrderItemDecorator.new(self)
+  end
+
+  def send_update_alert!
+    WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Updated, id)
   end
 
   private

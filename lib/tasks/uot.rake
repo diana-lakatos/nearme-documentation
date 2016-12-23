@@ -854,6 +854,7 @@ namespace :uot do
       @order_item_creator.create_notify_enquirer_approved_order_item!
       @order_item_creator.create_notify_enquirer_rejected_order_item!
       @order_item_creator.create_notify_lister_created_order_item!
+      @order_item_creator.create_notify_lister_updated_order_item!
 
       Utils::DefaultAlertsCreator::CollaboratorCreator.new.create_all!
 

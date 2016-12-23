@@ -34,7 +34,7 @@ class DefaultPhoto
     @cache.fetch(version: version, uploader_klass: uploader_klass) do
       image = default_image(version: version, uploader_klass: uploader_klass)
       if image.present?
-        image.photo_uploader_image.url(version)
+        image.photo_uploader_image.url
       else
         self.class.default_photo(version: version, uploader_klass: uploader_klass)
       end

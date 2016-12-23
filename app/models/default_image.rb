@@ -2,7 +2,7 @@ class DefaultImage < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  PHOTO_UPLOADERS = %w(PhotoUploader AvatarUploader AuthorAvatarUploader GroupCoverImageUploader LinkImageUploader SimpleAvatarUploader TopicCoverImageUploader TopicImageUploader)
+  PHOTO_UPLOADERS = %w(PhotoUploader AvatarUploader AuthorAvatarUploader GroupCoverImageUploader LinkImageUploader SimpleAvatarUploader TopicCoverImageUploader TopicImageUploader CoverImageUploader)
 
   belongs_to :theme
 
