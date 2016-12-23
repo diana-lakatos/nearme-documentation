@@ -8,20 +8,27 @@
   overflow: hidden !important;
 }
 
-.alignright {
-  float: right;
-  margin: 0 0 20px 30px;
-}
-
-.alignleft {
-  float: left;
-  margin: 0 30px 20px 0;
-}
-
-.alignright img,
-.alignleft img {
+.alignright, .alignleft {
   display: block;
-  max-width: none;
+  margin: 0 auto 20px;
+}
+
+@media screen and (min-width: $screen-tablet-vertical) {
+  .alignright {
+    float: right;
+    margin: 0 0 20px 30px;
+  }
+
+  .alignleft {
+    float: left;
+    margin: 0 30px 20px 0;
+  }
+
+  .alignright img,
+  .alignleft img {
+    display: block;
+    max-width: none;
+  }
 }
 
 .aligncenter {
