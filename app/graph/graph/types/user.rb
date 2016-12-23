@@ -16,6 +16,14 @@ module Graph
         resolve -> (obj, arg, _ctx) { obj.properties[arg[:name]] }
       end
 
+      field :custom_attribute_photos,
+            !types[Types::Image],
+            'Fetch images for photo custom attribute by name,
+             ex: cover_images: custom_attribute_photo(name: "cover_image")' do
+        argument :name, !types.String
+        resolve Graph::Resolvers::Users::CustomAttributePhotos.new
+      end
+
       field :profile_path, !types.String
       field :avatar_url_thumb, !types.String
       field :avatar_url_bigger, !types.String

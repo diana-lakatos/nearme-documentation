@@ -35,10 +35,10 @@
           %span.text
             = "#{t(:groups_and_clubs)} <em>3</em>".html_safe
 
-      %li.extras
-        = link_to search_url(search_type: :extras), accesskey: 4 do
+      %li.diy
+        = link_to search_url(search_type: :diys), accesskey: 4 do
           %span.text
-            = "#{t(:extras)} <em>4</em>".html_safe
+            = "#{t(:projects)} <em>4</em>".html_safe
 
   .corner
     - if current_user
@@ -50,10 +50,9 @@
         %ul
           %li{ class: (controller_name == 'registrations' && action_name == 'show' ? 'active' : '') }
             = link_to t(:profile), user_path(current_user)
-          - if current_user.instance_admin?
-            - if (project_type = TransactableType.where(name: 'Extra').first).present?
-              %li{ class: (controller_name == 'projects' ? 'active' : '') }
-                = link_to t(:my_projects), dashboard_project_type_projects_path(project_type)
+          - if (project_type = TransactableType.where(name: 'DIY').first).present?
+            %li{ class: (controller_name == 'projects' ? 'active' : '') }
+              = link_to t(:my_projects), dashboard_project_type_projects_path(project_type)
           - if (group_type = GroupType.first).present?
             %li{ class: (controller_name == 'groups' ? 'active' : '') }
               = link_to t(:my_groups), dashboard_groups_path
