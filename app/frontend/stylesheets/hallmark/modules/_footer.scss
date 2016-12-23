@@ -57,10 +57,10 @@
     box-shadow: 0 1px 0;
   }
 
-  .socials-a {
-    padding-top: 40px;
-    text-align: center;
-  }
+  // .socials-a {
+  //   padding-top: 40px;
+  //   text-align: center;
+  // }
 
   @include bp($screen-mobile) {
     padding: 40px 0;
@@ -81,8 +81,8 @@
       text-align: center;
     }
 
-    .socials-a {
-      padding-top: 30px;
-    }
+    // .socials-a {
+    //   padding-top: 30px;
+    // }
   }
 }
