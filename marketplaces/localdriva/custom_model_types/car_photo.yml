@@ -6,4 +6,17 @@ custom_attributes:
     label: Image
     attribute_type: 'photo'
     html_tag: input
+    versions_configuration:
+      mini:
+        width: 640
+        height: 440
+        transform: resize_to_fill
+      thumb:
+        width: 70
+        height: 70
+        transform: resize_to_fill
+      normal:
+        width: 1280
+        height: 880
+        transform: resize_to_fit
 
