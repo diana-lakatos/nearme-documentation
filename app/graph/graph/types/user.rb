@@ -17,8 +17,9 @@ module Graph
       end
 
       field :custom_attribute_photos,
-            !types[types.String],
-            'Fetch images for photo custom attribute by name, ex: cover_images: custom_attribute_photo(name: "cover_image")' do
+            !types[Types::Image],
+            'Fetch images for photo custom attribute by name,
+             ex: cover_images: custom_attribute_photo(name: "cover_image")' do
         argument :name, !types.String
         resolve Graph::Resolvers::Users::CustomAttributePhotos.new
       end

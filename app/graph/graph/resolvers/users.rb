@@ -42,9 +42,10 @@ module Graph
         def call(obj, arg, _ctx)
           user = obj.source
           custom_attribute = ::CustomAttributes::CustomAttribute.find_by(name: arg[:name])
-          custom_images = ::CustomImage.where(owner: user.user_profiles, custom_attribute: custom_attribute) +
-                          ::CustomImage.where(owner: user.user_profiles.map(&:customizations).flatten, custom_attribute: custom_attribute)
-          custom_images.map { |custom_image| custom_image.image.url }
+          attribute_images = ::CustomImage.where(custom_attribute: custom_attribute)
+          custom_images = attribute_images.where(owner: user.user_profiles) +
+                          attribute_images.where(owner: user.user_profiles.map(&:customizations).flatten)
+          custom_images.map(&:image)
         end
       end
     end
