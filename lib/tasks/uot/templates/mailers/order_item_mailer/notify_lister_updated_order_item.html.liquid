@@ -1,6 +1,6 @@
 <h2>Hello, {{ lister.name }}</h2>
 
-<p>{{ enquirer.name }} has been working on your project. They have recently submitted time and expense items for your approval.</p>
+<p>{{ enquirer.name }} has been working on your project. They have recently updated submitted time and expense items for your approval.</p>
 {% assign order_item_url = 'dashboard_company_order_order_items_path' | generate_url: @order_item.order.id, transactable_id: @order_item.order.transactable.id %}
 <p>Click <a href="{{ platform_context.host | append: order_item_url }}">here</a> to review time and expense details.</p>
 

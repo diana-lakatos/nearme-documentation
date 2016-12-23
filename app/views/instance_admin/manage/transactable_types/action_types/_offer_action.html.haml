@@ -10,7 +10,7 @@
         = pricing.input :number_of_units, as: :hidden, input_html: { value: 1}
         = pricing.input :unit, as: :hidden, input_html: { value: 'item'}
         = pricing.input :order_class_name, as: :select, collection: Order::ORDER_TYPES
-  %h4= t('instance_admin.manage.transactable_types.purchase_settings')
+  %h4= t('instance_admin.manage.transactable_types.offer_settings')
   .row
     .input-container.col-xs-12
       = pricing.input :allow_free_booking, as: :boolean, :inline_label => true
@@ -21,3 +21,7 @@
   .input-container.col-xs-6
     = f.input :service_fee_host_percent do
       = f.input_field :service_fee_host_percent, type: 'tel', class: 'form-control'
+.row
+  .input-container.col-xs-6
+    = f.input :hours_to_order_item_approval do
+      = f.input_field :hours_to_order_item_approval, type: 'tel', class: 'form-control'
