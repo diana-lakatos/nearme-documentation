@@ -4,9 +4,14 @@
 
 <div class="hero-a">
   <div class="contain">
-    <h2 class="hx">{{ 'hero_slogan' | translate }}</h2>
-    <p>{{ 'hero_description' | translate }}</p>
-    {% if current_user == blank %}<p class="action"><button type="button" class="button-a large alt static">{{ 'join_now' | translate }}</button></p>{% endif %}
+    {% if current_user == blank %}
+      <h2 class="hx">{{ 'hero_slogan_signed_out' | translate }}</h2>
+      <p>{{ 'hero_description_signed_out' | translate }}</p>
+      <p class="action"><button type="button" class="button-a large alt static">{{ 'join_now' | translate }}</button></p>
+    {% else %}
+      <h2 class="hx">{{ 'hero_slogan_signed_in' | translate }}</h2>
+      <p>{{ 'hero_description_signed_in' | translate }}</p>
+    {% endif %}
   </div>
 </div>
 
@@ -14,14 +19,14 @@
 <div class="wrap-a white">
   <div class="contain">
     <div class="header-a _mBa">
-      <h2 class="hx">Page Title</h2>
-      <p class="tx-a">Secondary title or call to action for the text that follows in this section below.</p>
+      <h2 class="hx">{{ 'benefits_section_title' | translate }}</h2>
+      <p class="tx-a">{{ 'benefits_section_subtitle' | translate }}</p>
     </div>
 
     <div class="page-copy-a">
       <img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1386/be-a-KOC-insider.jpg" alt="Be a KOC insider all year long!" class="alignright" width="438" height="279">
 
-      <p>Access to Keepsake Community also gives you a free subscription to Feeln for unlimited streaming of your favorite feel-good movies and shows &mdash; without commercials or ads. Activate up to five devices and watch Christmas movies year-round, Hallmark Hall of Fame movies and other fresh titles added monthly. Plus, exclusive Keepsake video content coming soon. Get the full Keepsake Ornament Club experience, 365 days a year, 24/7, whenever and wherever you may be!</p>
+      <p>{{ 'benefits_section_body' | translate }}</p>
     </div>
   </div>
 </div>
