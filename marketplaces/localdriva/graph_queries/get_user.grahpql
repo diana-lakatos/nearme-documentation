@@ -1,0 +1,13 @@
+query get_user($userId: ID!){
+  user(id: $userId){
+    name
+    car_photos:custom_attribute_photos(name: "image"){
+      thumb: url(version: "thumb")
+      mini: url(version: "mini")
+      normal: url(version: "normal")
+    }
+    cover_images: custom_attribute_photos(name: "cover_image"){
+      url: url
+    }
+  }
+}

@@ -8,8 +8,8 @@ module Graph
       field :url,
             !types.String,
             'image url, ex: thumb: url(version: "thumb")' do
-        argument :version, !types.String
-        resolve -> (obj, arg, _ctx) { obj.url(arg[:version]) }
+        argument :version, types.String
+        resolve ->(obj, arg, _ctx) { arg[:version].present? ? obj.url(arg[:version]) : obj.url }
       end
     end
   end
