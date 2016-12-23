@@ -21,6 +21,14 @@
     margin: 0;
     font-weight: normal;
     font-size: 15px;
+
+    a {
+      color: inherit;
+
+      &:hover, &:focus, &:active {
+        text-decoration: underline;
+      }
+    }
   }
 
   .nav {
