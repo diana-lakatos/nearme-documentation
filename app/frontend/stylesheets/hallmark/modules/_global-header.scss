@@ -240,7 +240,7 @@ $header-height: 80px;
       content: $fa-var-user;
     }
 
-    li.extras a:before {
+    li.diy a:before {
       content: $fa-var-gift;
     }
 
@@ -385,7 +385,7 @@ $header-height: 80px;
   }
 
 
-  @include bp(1270px) {
+  @include bp(1010px) {
     .toggler {
       display: block;
     }

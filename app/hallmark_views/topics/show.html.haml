@@ -1,6 +1,7 @@
 .topic-a
   / add background image with inline css, ex: <div class="wrap" style="background-image: url(path/to/image.jpg);">
-  .wrap
+  - style = @topic.cover_image.url ? "background-image: url(#{@topic.cover_image.url});" : '';
+  .wrap{ style: style }
     .contain
       %h1.hx= @topic.name
       %p= @topic.description
