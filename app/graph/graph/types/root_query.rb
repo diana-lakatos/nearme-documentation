@@ -34,6 +34,13 @@ module Graph
         resolve Resolvers::Users.new
       end
 
+      field :user do
+        type Types::User
+        argument :id, types.ID
+
+        resolve -> (_obj, args, _ctx) { UserDrop.new(::User.find(args[:id])) }
+      end
+
       field :topics do
         type !types[Types::Topic]
         argument :filters, types[Types::TopicFilterEnum]

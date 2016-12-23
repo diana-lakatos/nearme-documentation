@@ -63,7 +63,7 @@ module MarketplaceBuilder
     end
 
     def validator_properties
-      %w(required regex valid_values max_length min_length)
+      %w(required regex valid_values max_length min_length validation_only_on_update)
     end
   end
 end
