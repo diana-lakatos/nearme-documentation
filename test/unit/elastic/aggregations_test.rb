@@ -28,8 +28,8 @@ class Elastic::AggregationsTest < ActiveSupport::TestCase
 
   test 'prepare required custom-attrs aggregations' do
     definitions = [
-      { label: :color, field: 'custom_attributes.color' },
-      { label: :designer_name, field: 'custom_attributes.designer_name' }
+      { label: :color, field: 'custom_attributes.color', size: 25 },
+      { label: :designer_name, field: 'custom_attributes.designer_name', size: 25 }
     ]
 
     builder = Elastic::Aggregations::Builder.new
