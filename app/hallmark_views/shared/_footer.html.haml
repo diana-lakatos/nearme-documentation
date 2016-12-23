@@ -2,11 +2,13 @@
   .contain
     .wrap
       %p.copyright
-        = t(:copyright_html, year: Time.now.year)
+        %a{ href: "http://www.hallmark.com", rel: 'external' }
+          = t(:copyright_html, year: Time.now.year)
       %ul.nav
         - platform_context.pages.each do |page|
           %li
             = link_to page.path, pages_path(page)
+-#
     .socials-a
       %p
         = t :join_us_on
