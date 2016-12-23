@@ -9,7 +9,13 @@ module MarketplaceBuilder
       end
 
       def whitelisted_properties
-        [:name, :profile_type, :onboarding, :searchable, :search_only_enabled_profiles]
+        [:name, :profile_type, :onboarding, :searchable, :search_only_enabled_profiles, :search_engine, :default_availability_template]
+      end
+
+      def parse_params(hash)
+        hash = hash.with_indifferent_access
+        hash[:default_availability_template] = PlatformContext.current.instance.availability_templates.where(name: hash[:default_availability_template]).first if hash[:default_availability_template]
+        hash
       end
 
       def find_or_create!(hash)
