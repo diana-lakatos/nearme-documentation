@@ -18,7 +18,7 @@ class DefaultPhotoTest < ActiveSupport::TestCase
       @version = :custom
       @uploader_klass = stub
       @image_url = 'http://example.com/image.jpg'
-      @image_stub = mock.tap { |m| m.stubs(:url).with(@version).returns(@image_url) }
+      @image_stub = mock.tap { |m| m.stubs(:url).returns(@image_url) }
       @default_photo.stubs(:default_image)
                     .with(version: @version, uploader_klass: @uploader_klass)
                     .returns(OpenStruct.new(photo_uploader_image: @image_stub))
