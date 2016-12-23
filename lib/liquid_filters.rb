@@ -20,7 +20,9 @@ module LiquidFilters
     else
       Googl.shorten(url).short_url
     end
-  rescue StandardError => e
+  # We use Exception to silence exceptions already encountered coming from the Goo.gl service;
+  # a MarketplaceLogger error will be logged
+  rescue Exception => e
     if Rails.env.production?
       MarketplaceLogger.error('Url Shortening Error', e.to_s + ' :: ' + url, raise: false)
       ''
