@@ -9,7 +9,7 @@ custom_attributes:
     label: Role
     searchable: true
     validation:
-      valid_values: [ 'Superfan', 'Fan', 'Artist', 'Community Friend', 'Charter Member' ]
+      valid_values: ['Artist', 'Charter Member', 'Community Friend', 'Community Manager', 'Creative Director', 'Editor', 'Engineer', 'Fan', 'KOC Specialist', 'Marketing', 'Position', 'Product Development Manager', 'Product Director', 'Product Management', 'Retail Innovation Director', 'Studio Artist', 'Superfan', 'Villager', 'VP GM Hallmark Retail']
       required: false
 
   - name: about_me
