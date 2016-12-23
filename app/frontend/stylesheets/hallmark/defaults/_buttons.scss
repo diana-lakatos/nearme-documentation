@@ -159,3 +159,20 @@ input[type="reset"] {
 .button-a.action--edit:before {
   content: $fa-var-pencil;
 }
+
+// TODO: Remove when Coming Soon button is change to regular register link
+.button-a,
+button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
+  &.static {
+    cursor: default;
+  }
+
+  &.alt:hover {
+    border-color: #ed1c24;
+    background-color: #ed1c24;
+    color: #fff;
+  }
+}

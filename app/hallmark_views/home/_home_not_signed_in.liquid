@@ -6,7 +6,7 @@
   <div class="contain">
     <h2 class="hx">{{ 'hero_slogan' | translate }}</h2>
     <p>{{ 'hero_description' | translate }}</p>
-    {% if current_user == blank %}<p class="action"><a href="#signup" class="button-a large alt">{{ 'join_now' | translate }}</a></p>{% endif %}
+    {% if current_user == blank %}<p class="action"><button type="button" class="button-a large alt static">{{ 'join_now' | translate }}</button></p>{% endif %}
   </div>
 </div>
 
