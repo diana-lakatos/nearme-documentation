@@ -49,14 +49,14 @@ module CarrierWave
 
       def url(*args)
         version = args.first
-        super_url = super(*args)
-        if versions_generated? && super_url !~ /\?v=\d+$/
+        super_url = super(*args) rescue nil
+        if versions_generated? && super_url && super_url !~ /\?v=\d+$/
           # We use v=number to trigger CloudFront cache invalidation
           # We add 10 minutes because versions_generated_at is slightly in the past as to
           # our requirements
           "#{super_url}?v=#{model["#{mounted_as}_versions_generated_at"].to_i + 10.minutes.to_i}"
         elsif super_url.blank? || pending_processing?(version)
-          default_url(version)
+          default_url(*args)
         else
           super_url
         end
