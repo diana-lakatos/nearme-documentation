@@ -1,5 +1,5 @@
 !!!
-%html{:lang => "en"}
+%html{ class: html_element_classes, lang: I18n.locale }
   %head
     = render 'layouts/content_holder_injector'
     = inject_content_holder('HEAD')
