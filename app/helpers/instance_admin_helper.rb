@@ -111,7 +111,7 @@ module InstanceAdminHelper
     uploader_list.each do |uploader|
       uploaders[uploader] = []
       uploader.constantize.dimensions.each_pair do |key, value|
-        uploaders[uploader] << "#{key} (#{value[:width]}x#{value[:height]})"
+        uploaders[uploader] << ["#{key} (#{value[:width]}x#{value[:height]})", key]
       end
     end
     uploaders

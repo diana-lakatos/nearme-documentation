@@ -21,8 +21,8 @@ module.exports = class DefaultImages
       for version in current_versions
         data = current_versions[version]
         if selected_version == version
-          @select_versions.append($("<option selected></option>").attr("value", version).text(version))
+          @select_versions.append($("<option selected></option>").attr("value", version[1]).text(version[0]))
         else
-          @select_versions.append($("<option></option>").attr("value", version).text(version))
+          @select_versions.append($("<option></option>").attr("value", version[1]).text(version[0]))
       @select_versions.trigger('chosen:updated')
 
