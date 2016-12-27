@@ -3,6 +3,10 @@
   = simple_form_for resource, url: registration_path(resource_name), html: { class: 'form-a' } do |f|
     .fields
       = f.input :name
+
+      = f.input :password, :label => (f.object.persisted? ? t('general.change_password') : t('general.password') ), input_html: { autocomplete: 'off' }
+      = f.input :password_confirmation, :label => t('general.password_confirmation'), input_html: { autocomplete: 'off' }
+
       = f.simple_fields_for :default_profile do |default_profile_form|
         = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
           - (default_profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
