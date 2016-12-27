@@ -179,9 +179,9 @@ en:
         icon_image_html: 'Icon (60px &times; 60px)'
         icon_retina_image: 'Icon Retina (120px x 120px)'
         icon_retina_image_html: 'Icon Retina (120px &times; 120px)'
-        logo_image: 'Logo (240px x 60px)'
+        logo_image: 'Logo (variable width, max 30px height)'
         logo_image_html: 'Logo (240px &times; 60px)'
-        logo_retina_image: 'Logo Retina (480px x 120px)'
+        logo_retina_image: 'Logo Retina (variable width, max 30px height)'
         logo_retina_image_html: 'Logo Retina (480px &times; 120px)'
         call_to_action: "CTA button text"
         homepage_content: "Homepage HTML"

@@ -135,7 +135,13 @@ class LocationDrop < BaseDrop
   # @todo -- lets put this into the address formatter filter or something
   def address_formatted_additional
     parts = address.split(',')
-    ", #{parts[1, parts.length].join(', ')}"
+    additional_parts = parts[1, parts.length]
+
+    if additional_parts.present?
+      ", #{additional_parts.join(', ')}"
+    else
+      ""
+    end
   end
 
   # @return [String] route url to this location on Google Maps
