@@ -1,0 +1,32 @@
+.faq-a {
+  counter-reset: faq;
+
+  dt {
+    counter-increment: faq;
+    font-weight: bold;
+    color: $color-gray-4;
+
+    &::before {
+      content: counter(faq) ". ";
+    }
+  }
+
+  dd {
+    padding: 0;
+    margin-bottom: 2em;
+  }
+}
+
+.section-navigation-a {
+  margin-top: 3em;
+  margin-bottom: 3em;
+
+  li {
+    margin-bottom: .5em;
+  }
+
+  @include bp($screen-tablet-vertical) {
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
+}

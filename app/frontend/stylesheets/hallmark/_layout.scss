@@ -82,6 +82,11 @@ $footer-height: 250px;
   @include bp($screen-tablet) {
     padding: 60px 0;
   }
+
+
+  &.white + &.white {
+    padding-top: 0;
+  }
 }
 
 @include bp($screen-mobile) {
