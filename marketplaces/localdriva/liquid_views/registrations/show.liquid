@@ -137,21 +137,20 @@
 
       <div class="gallery-description">
         {% if g.user.car_photos.size > 0 %}
-          <div class="gallery-a">
+          {% assign first_photo = g.user.car_photos.first %}
+          <div class="gallery-a" data-photos-gallery>
 
             <figure class="preview">
-              <a href="{{ g.user.car_photos[0].normal }}" target="_blank"><img src="{{ g.user.car_photos[0].mini }}" alt="Car photo"></a>
+              <a href="{{ first_photo.url }}" data-photo data-photo-width="{{ first_photo.width }}"  data-photo-height="{{ first_photo.height }}"><img src="{{ first_photo.mini }}" alt="Car photo"></a>
             </figure>
 
+            {% if g.user.car_photos.size > 1 %}
             <ul class='thumbnails'>
-              {% for photo in g.user.car_photos %}
-              <li>
-              <a href="{{ photo.normal }}" data-full="{{ photo.normal }}" target="_blank">
-                <img src="{{ photo.thumb }}" alt="Car photo">
-                </a>
-              </li>
+              {% for photo in g.user.car_photos offset:1 %}
+              <li><a href="{{ photo.url }}" data-photo data-photo-width="{{ photo.width }}"  data-photo-height="{{ photo.height }}"><img src="{{ photo.thumb }}" alt="Car photo"></a></li>
               {% endfor %}
             </ul>
+            {% endif %}
           </div>
         {% endif %}
 
