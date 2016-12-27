@@ -1,7 +1,14 @@
 %article.card-a
   %figure
     = link_to topic_path(topic) do
-      = image_tag space_listing_placeholder_path(width: 600, height: 400)
+      - if topic.image.image
+        = image_tag topic.image.url(:medium)
+      - else
+        = image_tag Placeholder.new(height: TopicImageUploader.dimensions[:medium][:height], width:  TopicImageUploader.dimensions[:medium][:width]).path
+
+      - if topic.featured?
+        %figcaption
+          = t :featured
   %p.action{:'data-follow-button' => true}
     = render partial: 'shared/follow_button', locals: { object: topic, css_class: 'tiny' }
   %h3.hx
