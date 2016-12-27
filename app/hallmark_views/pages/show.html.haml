@@ -1,0 +1,7 @@
+- title @page.metadata_title.presence || @page.path
+- meta_description @page.metadata_meta_description
+- canonical_url @page.metadata_canonical_url.presence || request.original_url
+
+.wrap-a
+  .contain
+    = LiquidView.new(self).render(@page.html_content)
