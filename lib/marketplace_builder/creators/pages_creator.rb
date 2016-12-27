@@ -23,9 +23,10 @@ module MarketplaceBuilder
       end
 
       def create!(template)
-        slug = template.name.parameterize
+        slug = template.try(:slug) || template.name.parameterize
         page = @instance.theme.pages.where(slug: slug).first_or_initialize
         page.path = template.name
+        page.layout_name = template.layout if template.layout.present?
         page.content = template.body if template.body.present?
         page.redirect_url = template.redirect_url if template.redirect_url.present?
         page.redirect_code = template.redirect_code if template.redirect_code.present?
