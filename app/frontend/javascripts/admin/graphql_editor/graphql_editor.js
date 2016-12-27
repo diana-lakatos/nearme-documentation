@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ReactDom from 'react-dom';
-import GraphiQL from 'graphiql';
+import GraphiQL from 'graphiql'; /* eslint no-unused-vars: 0 */
 import fetch from 'isomorphic-fetch';
 
 if (process.env.NODE_ENV !== 'production') {
@@ -15,11 +15,7 @@ class GraphqlEditor {
     this._ui.container = container;
     this._ui.query = document.getElementById('graph_query_query_string');
 
-    this._bindEvents();
     this._initialize();
-  }
-
-  _bindEvents() {
   }
 
   _graphQLFetcher(graphQLParams) {
@@ -38,14 +34,15 @@ class GraphqlEditor {
     this._ui.query.value = query;
   }
 
-  _disableSubmittingFormOnQueryButton(){
-    let executeButton = this._ui.container.querySelector('button')
+  _disableSubmittingFormOnQueryButton() {
+    let executeButton = this._ui.container.querySelector('button');
     executeButton.type = 'button';
   }
 
   _initialize() {
-    this._setQueryString = this._setQueryString.bind(this);
-    ReactDom.render(<GraphiQL fetcher={this._graphQLFetcher} query={this._queryString()} onEditQuery={this._setQueryString} storage={null} />, this._ui.container );
+    const setQueryString = this._setQueryString.bind(this);
+    const graphiqlEditor = <GraphiQL fetcher={this._graphQLFetcher} query={this._queryString()} onEditQuery={setQueryString} storage={null} />;
+    ReactDom.render(graphiqlEditor, this._ui.container);
     this._disableSubmittingFormOnQueryButton();
   }
 }

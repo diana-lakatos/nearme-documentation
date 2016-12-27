@@ -1,4 +1,3 @@
-@javascript
 Feature: Change Graph Queries
 Background:
   Given a user exists with email: "valid@example.com", password: "password", name: "I am user", admin: true
@@ -10,7 +9,7 @@ Scenario: Admin user adds graph query
   When I create graph query
   Then I should see tag to insert graph query in liquid
 
-Scenario: Admin user adds graph query
+Scenario: Admin user remove graph query
   Given I have users graph query defined
   And I am on admin graph queries
   When I remove users graph query

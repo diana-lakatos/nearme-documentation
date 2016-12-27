@@ -1,4 +1,6 @@
-%link{rel: :stylesheet, type: :'text/css', href: 'http://cdn.jsdelivr.net/graphiql/0.8.0/graphiql.css'}
+// Vendorized graphiql css 0.8.0 -- No idea why it doesnt work when including those styles in normal way.
+= stylesheet_link_tag 'https://d2rw3as29v290b.cloudfront.net/instances/1/uploads/ckeditor/attachment_file/data/3626/graphiql.css'
+
 = simple_form_for @graph_query, as: :graph_query, url: @graph_query.persisted? ? admin_advanced_graph_query_path(@graph_query) : admin_advanced_graph_queries_path, method: @graph_query.persisted? ? :put : :post do |f|
   .content-container
     %h4
