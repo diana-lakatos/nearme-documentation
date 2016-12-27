@@ -1067,13 +1067,11 @@ body.login {
 /********************/
 
 .logo_image .fileupload .photo-item img{
-  width: 240px;
-  height: 60px;
+  max-width: 400px;
 }
 
 .logo_retina_image .fileupload .photo-item img{
-  width: 240px;
-  height: 60px;
+  max-width: 400px;
 }
 
 .favicon_image .fileupload .photo-item img{
