@@ -37,7 +37,6 @@ module Utils
       print_out "  #{count[:created]} translations were created."
       print_out "  #{count[:updated]} translations were updated."
       print_out ' ********** '
-      community_go!
       CacheExpiration.send_expire_command('RebuildTranslations')
     end
 
