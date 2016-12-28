@@ -11,8 +11,7 @@
     - Time.use_zone((f.object.try(:parent) || f.object.try(:scheduable).try(:transactable)).try(:timezone) || current_instance.time_zone) do
       = render 'schedules/schedule_exception_rule_fields', f: schedule_exception_rule_form
   .add-link
-    = link_to_add_association f, :schedule_exception_rules, partial: 'schedules/schedule_exception_rule_fields', class: 'button-a small', data: { association_insertion_method: :before } do
-      %button.btn.btn-primary{:type => "button"}
-        = t(:add_another, scope: [:pricing, :unavailability])
+    = link_to_add_association f, :schedule_exception_rules, partial: 'schedules/schedule_exception_rule_fields', class: 'btn btn-primary btn-sm', data: { association_insertion_method: :before } do
+      = t(:add_another, scope: [:pricing, :unavailability])
 
 %hr/
