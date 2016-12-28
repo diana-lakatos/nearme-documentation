@@ -171,29 +171,6 @@
         </li>
       {% endif %}
 
-      {% comment %} Blog menu {% endcomment %}
-      {% assign blog_menu_show = 'dashboard/blog' | is_visible %}
-
-      {% if blog_menu_show %}
-        {% assign blog_posts_path = 'dashboard_blog_path' | generate_url %}
-        {% assign blog_posts_selected = current_path | matches: '/dashboard/blog(/posts)?(?!/edit)' %}
-        {% assign blog_settings_path = 'edit_dashboard_blog_path' | generate_url %}
-        {% assign blog_settings_selected = current_path | matches: '/dashboard/blog/edit' %}
-
-        <li id="dashboard-nav-blog" class="{% if blog_settings_selected or blog_posts_selected %}selected{% endif %}">
-          <span>{{ 'dashboard.nav.blog' | t }}</span>
-          <ul>
-            <li id="dashboard-nav-blog_posts" class="{% if blog_posts_selected %}selected{% endif %}">
-              <a href="{{ blog_posts_path }}">{{ 'dashboard.nav.blog_posts' | t }}</a>
-            </li>
-
-            <li id="dashboard-nav-blog_settings" class="{% if blog_settings_selected %}selected{% endif %}">
-              <a href="{{ blog_settings_path }}">{{ 'dashboard.nav.blog_settings' | t }}</a>
-            </li>
-          </ul>
-        </li>
-      {% endif %}
-
       {% comment %} Account menu {% endcomment %}
       {% assign profile_edit_selected = current_path | matches: '(users/edit|dashboard/seller/edit|dashboard/buyer/edit|dashboard/edit_profile)' %}
       {% assign credit_cards_selected = current_path | matches: '/dashboard/payment_gateways/[0-9]+/credit_card/' %}
