@@ -1,0 +1,100 @@
+- # this should be changed to variable based on enabled_location value e.g.
+- # is_collapsed = @asset_type.enable_location
+- is_collapsed = false
+- # Same goes for asset type name, it should be dynamic e.g
+- # asset_type_name = @asset_type.name
+- asset_type_name = 'Event'
+
+= admin_side_navigation(:asset)
+
+= admin_simple_form_for :admin_config, url: admin_path(page: 'asset_wizard_payments') do |f|
+
+  .config-section-description
+    %h1 Payments
+    %p Unless you are running a marketplace where all assets are free, you will need to collect payments for services.
+
+  .config-section-fields
+    %h2 Test mode
+    %p By defaut our platform starts in test mode for payments. It means all payment gateways are running in a sandbox mode, no real transactions are performed.
+
+    = f.input :enable_test_mode, as: :switch, hint: t('simple_form.admin_config.hints.enable_test_mode', url: admin_path(page: 'general_settings'))
+
+    %h2 Seller payment transfers
+    %p In order to save on transaction costs we limit them to either weekly or monthly payouts between marketplace owner and asset sellers. All transactions from a given period are aggregated and sent as one transfer. You can define how ofter you would like to send these payment transfers
+
+    = f.input :transfers_frequency, as: :radio_buttons, collection: ['Weekly','Monthly'], inline: true
+
+    %h5.m-t-50 Payment Gateways
+
+    .table-responsive
+      %table.table.table-hover.table-condensed
+        %thead
+          %tr
+            %th{:style => "width:31%"} Name
+            %th{:style => "width:8%"} Live
+            %th{:style => "width:8%"} Test
+            %th{:style => "width:8%"} Payout
+            %th{:style => "width:18%"} Countries
+            %th{:style => "width:18%"} Currencies
+            %th{:style => "width:9%"}
+        %tbody
+          %tr#gateway-1.collapse.in
+            %td.v-align-middle Stripe
+            %td.v-align-middle
+              %span.fa.fa-check
+            %td.v-align-middle
+              %span.fa.fa-close
+            %td.v-align-middle
+              %span.fa.fa-check
+            %td.v-align-middle
+              Australia, Canada, Denmark
+            %td.v-align-middle
+              USD, PLN, GBP
+            %td.v-align-middle
+              %p.pull-right
+                %button.btn.btn-primary.btn-xs{type: 'button', data: { toggle: 'modal', target: '#gateway-modal' } }
+                  %span.fa.fa-pencil
+                %button.btn.btn-danger.btn-xs{type: 'button', data: { toggle: 'collapse', target: '#gateway-1'} }
+                  %span.fa.fa-trash
+          %tr#gateway-2.collapse.in
+            %td.v-align-middle PayPal
+            %td.v-align-middle
+              %span.fa.fa-check
+            %td.v-align-middle
+              %span.fa.fa-close
+            %td.v-align-middle
+              %span.fa.fa-check
+            %td.v-align-middle
+              Australia, Canada, Denmark
+            %td.v-align-middle
+              USD, PLN, GBP
+            %td.v-align-middle
+              %p.pull-right
+                %button.btn.btn-primary.btn-xs{type: 'button', data: { toggle: 'modal', target: '#gateway-modal' } }
+                  %span.fa.fa-pencil
+                %button.btn.btn-danger.btn-xs{type: 'button', data: { toggle: 'collapse', target: '#gateway-2'} }
+                  %span.fa.fa-trash
+          %tr#gateway-3.collapse.in
+            %td.v-align-middle PayPal Express
+            %td.v-align-middle
+              %span.fa.fa-check
+            %td.v-align-middle
+              %span.fa.fa-close
+            %td.v-align-middle
+              %span.fa.fa-check
+            %td.v-align-middle
+              Australia, Canada, Denmark
+            %td.v-align-middle
+              USD, PLN, GBP
+            %td.v-align-middle
+              %p.pull-right
+                %button.btn.btn-primary.btn-xs{type: 'button', data: { toggle: 'modal', target: '#gateway-modal' } }
+                  %span.fa.fa-pencil
+                %button.btn.btn-danger.btn-xs{type: 'button', data: { toggle: 'collapse', target: '#gateway-3'} }
+                  %span.fa.fa-trash
+
+        %p
+          = link_to 'Add new payment gateway', admin_dialog_path(id: "payment_gateway"), class: 'btn btn-sm'
+
+
+    = render 'admin/shared/navigation_nextprev', f: f

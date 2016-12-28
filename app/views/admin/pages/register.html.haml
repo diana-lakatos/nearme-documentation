@@ -1,0 +1,26 @@
+.register-form
+  %h1= t('admin.register.title')
+  %p= t('admin.register.intro_html', { support_email: 'support@near-me.com' })
+
+  = admin_simple_form_for :admin_register, url: admin_path(page: 'register') do |f|
+    .row
+      .col-sm-6
+        = f.input :first_name
+      .col-sm-6
+        = f.input :last_name
+
+    = f.input :email, as: :email
+
+    = f.input :password, as: :password_strength
+
+    = f.input :marketplace_name
+
+    = f.input :domain_name, wrapper: :admin_addon, suffix: 'near-me.com'
+
+    .actions
+      .row
+        .col-sm-6
+          = f.submit t('admin.register.submit'), class: 'btn'
+        .col-sm-6
+          %span.help-link
+            = mail_to('support@near-me.com', t('admin.register.help_link'))

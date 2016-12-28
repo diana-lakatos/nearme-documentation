@@ -1,0 +1,46 @@
+.properties-table {
+    .type {
+        display: none;
+    }
+
+    @include breakpoint(600px) {
+        .type {
+            display: table-cell;
+        }
+    }
+}
+
+.property-form-row {
+    @include clear;
+}
+
+@include breakpoint($touch-breakpoint) {
+    .property-form-name-type {
+        @include span(5);
+    }
+
+    .property-form-label-hint {
+        @include span(7);
+    }
+
+    .property-form-switch {
+        @include span(4);
+    }
+}
+
+
+.property-form-options {
+    fieldset {
+        border: none;
+        padding: 0;
+        display: none;
+    }
+
+    legend {
+        @include sr-only;
+    }
+
+    fieldset.active {
+        display: block;
+    }
+}

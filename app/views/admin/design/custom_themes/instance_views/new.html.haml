@@ -1,0 +1,14 @@
+- admin_help_area('liquid-views')
+
+= admin_side_navigation(:design)
+
+.go-back-link
+  = link_to t('admin.themes.actions.return_to_themes'), [:admin, :design, @custom_theme, :instance_views]
+
+%h1<
+  - if params[:path]
+    = t('admin.liquid_views.action.modify_html', template: pretty_path(params[:path]))
+  - else
+    = t('admin.liquid_views.action.create')
+
+= render :partial => "form"

@@ -2,19 +2,25 @@
 %html{ class: html_element_classes, lang: I18n.locale }
   %head
     %meta{name: 'app-server', content: ENV['HOSTNAME']}
-
+    %meta{:charset => "utf-8"}/
     %title
-      #{ platform_context.try(:name) || "Desks Near Me" } - #{@title}
-    %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
-    %meta{:name => "robots", :content => "noindex"}
-    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
-    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
-    %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
-    %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
+      = "#{ platform_context.try(:name) || "Desks Near Me" }"
+    %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", :name => "viewport"}/
+
+    = csrf_meta_tag
     = render 'layouts/favicon'
-    = stylesheet_link_tag 'application'
+
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}
+    %meta{:content => "yes", :name => "apple-touch-fullscreen"}
+    %meta{:content => "default", :name => "apple-mobile-web-app-status-bar-style"}
+
     = stylesheet_link_tag 'errors'
-    = render 'shared/head/fonts'
+    = stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Montserrat:400'
 
   %body
-    = yield
+    .wrapper
+      %main{role: "main"}
+        .branding
+          = image_tag 'admin/logo-black.svg', width: 184, height: 40, alt: 'NearMe'
+
+        = yield

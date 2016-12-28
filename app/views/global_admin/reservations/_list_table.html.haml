@@ -1,0 +1,15 @@
+%table.table.table-striped
+  %thead
+    %tr
+      %th State
+      %th Booker
+      %th Listing
+      %th Quantity
+      %th Created at
+      %th Periods
+      %th Total Cost
+
+  - collection.each do |resource|
+    = render 'global_admin/reservations/reservation', :resource => resource
+
+

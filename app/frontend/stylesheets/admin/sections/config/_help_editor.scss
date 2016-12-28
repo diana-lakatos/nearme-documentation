@@ -1,0 +1,20 @@
+.help-editor-pane-textarea {
+    width: 100%;
+}
+
+.help-editor-pane-preview {
+    overflow: auto;
+    display: none;
+}
+
+.help-editor {
+    @include breakpoint($touch-breakpoint) {
+        .fullscreen-editor-pane {
+            width: 50%;
+        }
+
+        .help-editor-pane-preview {
+            display: block;
+        }
+    }
+}

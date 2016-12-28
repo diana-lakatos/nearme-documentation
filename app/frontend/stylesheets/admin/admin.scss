@@ -1,0 +1,33 @@
+// vendor libs
+@import "font-awesome/scss/variables";
+@import "font-awesome/scss/mixins";
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: url("/assets/font-awesome/fontawesome-webfont.eot?v=#{$fa-version}");
+  src: url("/assets/font-awesome/fontawesome-webfont.eot?#iefix&v=#{$fa-version}") format("embedded-opentype"), url("/assets/font-awesome/fontawesome-webfont.woff2?v=#{$fa-version}") format("woff2"), url("/assets/font-awesome/fontawesome-webfont.woff?v=#{$fa-version}") format("woff"), url("/assets/font-awesome/fontawesome-webfont.ttf?v=#{$fa-version}") format("truetype"), url("/assets/font-awesome/fontawesome-webfont.svg?v=#{$fa-version}#fontawesomeregular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+// grid
+$enable-flex: true;
+$enable-grid-classes: true;
+
+// config
+
+@import "config/variables";
+@import "mixins";
+@import "config/base";
+
+@import "bootstrap/scss/_variables.scss";
+@import "bootstrap/scss/_mixins.scss";
+@import "bootstrap/scss/_grid.scss";
+
+@import "vendor/normalize/normalize";
+@import "common/common";
+@import "sections/sections";
+
+@import "dev/dev";
+
+@import "vendor/codemirror/mode-liquid";

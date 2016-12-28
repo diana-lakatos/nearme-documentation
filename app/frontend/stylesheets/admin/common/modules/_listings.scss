@@ -1,0 +1,11 @@
+.empty-listing {
+    margin: 3em 0;
+    text-align: center;
+
+    &:before {
+        @include fa-icon;
+
+        content: $fa-var-folder-o;
+        margin-right: 5px;
+    }
+}

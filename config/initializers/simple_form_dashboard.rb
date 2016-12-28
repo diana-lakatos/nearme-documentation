@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Use this setup block to configure all options available in SimpleForm.
 SimpleForm.setup do |config|
   config.wrappers :dashboard_form, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
@@ -7,7 +8,7 @@ SimpleForm.setup do |config|
     b.optional :pattern
     b.optional :min_max
     b.optional :readonly
-    b.use :label, class: 'control-label'
+    b.use :label
 
     b.use :input, class: 'form-control'
     b.use :error, wrap_with: { tag: 'span', class: 'help-block' }
@@ -21,7 +22,7 @@ SimpleForm.setup do |config|
     b.optional :pattern
     b.optional :min_max
     b.optional :readonly
-    b.use :label, class: 'control-label'
+    b.use :label
 
     b.wrapper tag: 'div', class: 'input-group' do |ba|
       ba.optional :prefix, wrap_with: { tag: 'div', class: 'input-group-addon' }
@@ -38,14 +39,14 @@ SimpleForm.setup do |config|
     b.use :placeholder
     b.optional :maxlength
     b.optional :readonly
-    b.use :label, class: 'control-label'
+    b.use :label
 
     b.use :input
     b.use :error, wrap_with: { tag: 'span', class: 'help-block' }
     b.use :hint,  wrap_with: { tag: 'p', class: 'hint help-block' }
   end
 
-  config.wrappers :dashboard_boolean, tag: 'div', class: 'form-group', boolean_style: :inline,  error_class: 'has-error' do |b|
+  config.wrappers :dashboard_boolean, tag: 'div', class: 'form-group', boolean_style: :inline, error_class: 'has-error' do |b|
     b.use :html5
     b.optional :readonly
 
@@ -61,7 +62,7 @@ SimpleForm.setup do |config|
     b.use :html5
     b.optional :readonly
 
-    b.use :label, class: 'control-label'
+    b.use :label
 
     b.wrapper tag: 'div', class: 'controls' do |ba|
       ba.use :input
@@ -74,7 +75,7 @@ SimpleForm.setup do |config|
   config.wrappers :dashboard_radio_and_checkboxes, tag: 'div', class: 'form-group', boolean_style: :inline, error_class: 'has-error' do |b|
     b.use :html5
     b.optional :readonly
-    b.use :label, class: 'control-label'
+    b.use :label
     b.use :input
     b.use :error, wrap_with: { tag: 'span', class: 'help-block' }
     b.use :hint,  wrap_with: { tag: 'p', class: 'hint help-block' }

@@ -1,0 +1,14 @@
+!!!
+%html.no-js{lang: "en"}
+  = render 'layouts/admin/head'
+
+  %body
+    = render 'admin/shared/flash'
+
+    .container-standalone
+      %main.page-content
+        = image_tag 'admin/logo-black.svg', width: 184, height: 40, alt: 'NearMe'
+
+        = yield
+
+    = render 'shared/javascripts/footer', entry: 'admin'

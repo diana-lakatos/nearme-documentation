@@ -825,6 +825,30 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context '#ui_settings' do
+    setup do
+      @user = create(:user)
+    end
+
+    should 'set ui_settings to {} for a new user' do
+      assert_equal '{}', @user.ui_settings
+    end
+
+    should 'return an empty hash for new user with get_all_ui_settings' do
+      assert_equal Hash.new, @user.get_all_ui_settings
+    end
+
+    should 'return nil for unset setting' do
+      assert_equal nil, @user.get_ui_setting(:key)
+    end
+
+    should 'should persist a value when saving new ui setting' do
+      @user.set_ui_setting('help-is-visible', 'true')
+      assert_equal '{"help-is-visible":true}', @user.ui_settings
+      assert_equal true, @user.get_ui_setting('help-is-visible')
+    end
+  end
+
   private
 
   def setup_user_with_all_objects

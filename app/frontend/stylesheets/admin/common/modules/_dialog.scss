@@ -1,0 +1,138 @@
+.dialog, .dialog-overlay, .dialog-container {
+    opacity: 0;
+    pointer-events: none;
+
+    .no-csspointerevents & {
+        display: none;
+    }
+
+    .dialog-visible & {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .no-csspointerevents .dialog-visible & {
+        display: block;
+    }
+}
+
+.dialog-overlay, .dialog-container {
+    transition: opacity .2s ease;
+}
+
+.dialog-overlay {
+    position: fixed;
+    z-index: 1100;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.dialog-container {
+    background: #fff;
+    position: fixed;
+    z-index: 1110;
+    left: 10px;
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    padding: 20px;
+    overflow: auto;
+    transition: transform .2s ease;
+
+    @media (min-width: $touch-breakpoint) {
+        left: 50%;
+        top: 50%;
+        right: auto;
+        bottom: auto;
+        min-height: 200px;
+        width: $touch-breakpoint;
+        max-height: 98vh;
+        transform: translate(-50%, -100%);
+
+        .dialog-visible & {
+            transform: translate(-50%, -50%);
+        }
+    }
+}
+
+.dialog-fullscreen .dialog-container {
+    .dialog-content {
+        height: 100%;
+        overflow: auto;
+    }
+
+    @media (min-width: $touch-breakpoint) {
+        left: 10px;
+        top: 10px;
+        right: 10px;
+        bottom: 10px;
+        width: auto;
+        padding: 0;
+        max-height: 98vh;
+        transform: none;
+
+        .dialog--visible & {
+            transform: none;
+        }
+    }
+}
+
+.dialog-close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 0;
+    background: none;
+    border: none;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+
+    &:before {
+        text-align: center;
+        color: $color-primary;
+
+        @include fa-icon;
+
+        content: $fa-var-close;
+        font-size: 15px;
+        line-height: 30px;
+    }
+
+    &:hover, &:focus, &:active {
+        background: none;
+    }
+}
+
+.dialog-header {
+    margin-bottom: 30px;
+
+    h2 {
+        margin: 0;
+    }
+}
+
+.dialog-body {}
+
+.dialog-actions {
+    margin-top: 30px;
+    text-align: center;
+
+    @include breakpoint($touch-breakpoint) {
+        text-align: right;
+    }
+}
+
+.dialog-actions-alt {
+    text-align: center;
+    padding-top: 20px;
+    margin-top: 20px;
+    border-top: 1px solid $color-separator;
+}
+
+.pac-container {
+    z-index: 1200;
+}

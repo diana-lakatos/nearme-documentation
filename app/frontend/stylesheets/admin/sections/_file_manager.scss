@@ -1,0 +1,26 @@
+@import "file_manager/header";
+@import "file_manager/header_actions";
+@import "file_manager/folder_path";
+@import "file_manager/file_listing";
+@import "file_manager/info_pane";
+
+.file-manager {
+  @include breakpoint($touch-breakpoint) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .file-manager-header {
+      width: 100%;
+    }
+
+    .file-manager-files-pane {
+      width: 49%;
+    }
+
+    .file-manager-info-pane {
+      margin-top: 0;
+      width: 49%;
+    }
+  }
+}

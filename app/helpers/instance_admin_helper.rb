@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module InstanceAdminHelper
   def support_link_to_filter(active_filter, filter)
     link = filter == 'open' ? '' : filter
-    link_to filter.titleize, url_for(filter: link), class: "#{active_filter == filter ? 'active' : ''}"
+    link_to filter.titleize, url_for(filter: link), class: (active_filter == filter ? 'active' : '').to_s
   end
 
   def support_ticket_title(ticket, length = 60)
@@ -47,7 +48,7 @@ module InstanceAdminHelper
   end
 
   def pretty_path(path)
-    path.gsub('/', ' > ').titleize
+    path.titleize.gsub('/', ' &rsaquo; ').html_safe
   end
 
   def currency_name(iso_code)
@@ -84,7 +85,11 @@ module InstanceAdminHelper
 
   def languages
     I18nData.languages.map do |lang|
-      translated_name = I18nData.languages(lang[0])[lang[0]].mb_chars.capitalize rescue lang[1].capitalize
+      translated_name = begin
+                          I18nData.languages(lang[0])[lang[0]].mb_chars.capitalize
+                        rescue
+                          lang[1].capitalize
+                        end
       [lang[1].capitalize, lang[0].downcase, { 'data-translated' => translated_name }]
     end
   end

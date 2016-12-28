@@ -1,0 +1,21 @@
+- admin_help_area('pages')
+
+- admin_side_navigation(:design)
+
+- content_for :form_actions do
+  %hr
+  = admin_versions_link(versions_admin_design_page_path(@page))
+
+.go-back-link
+  = link_to t('admin.pages.actions.return_to_pages'), admin_design_pages_path
+
+- if @redirect_form
+  %h1 Edit redirect
+  = render :partial => "redirect_form"
+- else
+  %h1 Edit page
+  = render :partial => "form"
+
+.form-delete-action
+  = button_to admin_design_pages_path(@page), method: 'delete', form: { "data-confirm" => t('admin.pages.confirm_delete.prompt'), "data-confirm-label-yes" => t('admin.pages.confirm_delete.yes'), 'data-confirm-label-no' => t('admin.pages.confirm_delete.no') }, class: 'btn btn-delete' do
+    = t('admin.pages.actions.delete')

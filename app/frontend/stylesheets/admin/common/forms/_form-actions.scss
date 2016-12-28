@@ -1,0 +1,61 @@
+.form-actions {
+    text-align: right;
+
+    button, input[type="submit"], a {
+        margin-left: 10px;
+    }
+}
+
+.form-actions-floating {
+    display: flex;
+    flex-direction: column;
+
+    .form-actions {
+        order: 999;
+
+        hr {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    }
+
+    :not(.has-visible-help) &,
+    .has-visible-help.has-detached-help & {
+        @include breakpoint($touch-breakpoint) {
+            position: relative;
+            padding-right: 200px;
+            display: block;
+
+            .form-actions {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                width: 180px;
+
+                .btn {
+                    display: block;
+                    width: 100%;
+                    margin: 0 0 10px;
+                }
+            }
+
+            .form-actions-wrapper {
+                position: sticky;
+                top: 20px;
+            }
+        }
+    }
+}
+
+.form-delete-action {
+    border-top: 1px solid $color-separator;
+    text-align: center;
+    margin: 20px 0 0;
+    padding: 20px 0 0;
+
+    button {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}

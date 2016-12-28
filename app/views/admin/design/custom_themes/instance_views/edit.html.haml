@@ -1,0 +1,18 @@
+- admin_help_area('liquid-views')
+
+= admin_side_navigation(:design)
+
+- content_for :form_actions do
+  %hr
+  = admin_versions_link(versions_admin_design_theme_instance_view_path(@custom_theme, @instance_view), [:versions, :api, @custom_theme, @instance_view])
+
+.go-back-link
+  = link_to t('admin.themes.actions.return_to_themes'), admin_design_theme_instance_views_path(@custom_theme)
+
+%h1= t('admin.liquid_views.action.edit_html', template: pretty_path(@instance_view.path))
+
+= render :partial => "form"
+
+.form-delete-action
+  = admin_delete_action admin_design_theme_instance_view_path(@custom_theme, @instance_view), object_name: 'template' do
+    = t('admin.liquid_views.action.delete')

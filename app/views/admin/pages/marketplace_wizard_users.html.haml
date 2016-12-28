@@ -1,0 +1,95 @@
+- admin_help_area('users')
+
+= admin_side_navigation(:marketplace)
+
+%h1 User settings
+
+%h5.m-t-50 Company
+%p
+  %span.label.label-danger CHRISD - WHAT DOES IT DO?
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus dignissimos nam quam quasi saepe non, maxime, suscipit eum veniam placeat nesciunt pariatur necessitatibus natus fuga at, voluptate minus ut. Voluptas.
+
+%p.checkbox.check-success
+  %input#company-mandatory{type:"checkbox" }
+  %label{for: 'company-mandatory'}
+    %b Do not require company
+
+%h5.m-t-50 Terms of Service
+%p
+  You can decide to force users to accept terms of service of your marketplace on sign up.
+
+%p.checkbox.check-success
+  %input#tos{type:"checkbox", checked: 'checked'  }
+  %label{for: 'tos'}
+    %b Force accepting ToS on sign up
+
+%p
+  %a{:href => "#"} Edit terms of service
+
+%h5.m-t-50 Admin users
+%p
+  Admin users have more privilidges than regular users. They can access this access panel and make adjustments.
+
+%p
+  Right now
+  %b you have 2 admin users.
+
+.table-responsive
+  %table.table.table-hover.table-condensed
+    %thead
+      %tr
+        %th{:style => "width:70%"} Admin name
+        %th{:style => "width:30%"}
+
+    %tbody
+      %tr#user-1.collapse.in
+        %td.v-align-middle
+          %p Chris Danek
+        %td.v-align-middle
+          %p.pull-right
+            can't modify own account
+
+      %tr#shipping-2.collapse.in
+        %td.v-align-middle
+          %p Adam Broadway
+        %td.v-align-middle
+          %p.pull-right
+            %button.btn.btn-danger{type: 'button', data: { toggle: 'collapse', target: '#shipping-2', confirm: 'Are you sure you want to continue?'} }
+              %span.fa.fa-ban
+              Revoke admin rights
+
+
+%p.clearfix
+  %button.pull-right.btn.btn-primary{type: 'button', data: { toggle: 'modal', target: '#user-modal' } }
+    %span.fa.fa-plus
+    Add new admin user
+
+%p
+  %small.hint-text
+    There are additional user roles you can set in
+    %a{:href => "#"} advanced settings for users.
+
+
+#user-modal.modal.fade.slide-up{"aria-hidden" => "false", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content-wrapper
+      .modal-content
+        .modal-header.clearfix.text-left
+          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"}
+            %i.pg-close.fs-14
+          %h5
+            Create
+            %span.semi-bold Admin User
+
+        .modal-body
+          %form{:role => "form"}
+
+          %p Please provide an email address for the new admin user. If they are not already in the system they will be asked to create a new user account first.
+
+          .form-group.form-group-default.required
+            %label{:for => ""} User email
+            %input.form-control{:type => "email", placeholder: 'example@example.com'}/
+
+          %p.m-t-30
+            %button.btn.btn-success.pull-right{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} Create admin user
+            .clearfix

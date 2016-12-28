@@ -1,0 +1,46 @@
+#rootwizard.m-t-50.bg-white
+  = render 'admin/pages/asset_wizard/nav', active: 'waiver_agreements'
+
+  .tab-content
+    = render 'admin/pages/asset_wizard/next_prev', previous_link: admin_path(page: 'asset_wizard_ammenities'), next_link: admin_path(page: 'asset_wizard_file_uploads')
+
+    .tab-pane.padding-20.slide-left.active
+      .row.row-same-height
+        .col-md-5.b-r.b-dashed.b-grey.sm-b-b
+          .padding-30
+            %h2 Waiver Agreements
+            %p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur perferendis in repellendus enim labore ratione ipsum voluptates. Sequi iusto aut dolorum sed, ipsam assumenda, voluptate molestias quibusdam, autem blanditiis magnam?
+            %p
+              %label
+                %input{type:"checkbox", "data-init-plugin" => "switchery", "data-toggle" => 'collapse', "data-target" => '#props' }
+                %b
+                  Enable custom waiver agreements
+
+
+        .col-md-7
+          .padding-30
+            %form{:role => "form"}
+
+              #props.collapse{"aria-expanded" => false}
+
+                %h5.m-t-50 Custom Waiver Agreement options
+
+
+
+    = render 'admin/pages/asset_wizard/next_prev', previous_link: admin_path(page: 'asset_wizard_ammenities'), next_link: admin_path(page: 'asset_wizard_file_uploads')
+
+  .clearfix
+
+#ammenities-modal.modal.fade.slide-up{"aria-hidden" => "false", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content-wrapper
+      .modal-content
+        .modal-header.clearfix.text-left
+          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"}
+            %i.pg-close.fs-14
+          %h5
+            Ammenity
+            %span.semi-bold Types
+          %p.p-b-10 Simple tree UI with edit in place will be here to edit location ammenities, similar to categories management.
+        .modal-body
+          %form{:role => "form"}

@@ -1,0 +1,11 @@
+%h1 Transactable Type Attibutes
+
+= link_to 'New Transactable Type Attibute', new_global_admin_transactable_type_custom_attribute_path(transactable_type), class: 'btn'
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Name
+  %tbody
+    - transactable_type.custom_attributes.each do |resource|
+      = render 'global_admin/custom_attributes/index_row', :resource => resource

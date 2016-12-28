@@ -1,0 +1,10 @@
+.file-manager-header {
+  @include breakpoint($touch-breakpoint) {
+    display: flex;
+    justify-content: space-between;
+
+    .folder-actions {
+      flex-grow: 1;
+    }
+  }
+}

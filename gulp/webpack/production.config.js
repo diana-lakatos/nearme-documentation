@@ -8,11 +8,11 @@ config = _.merge(config, {
 });
 
 config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      mangle: {
-        except: ['Modernizr','jQuery','$', 'exports', 'require']
-      }
-    })
+  new webpack.optimize.UglifyJsPlugin({
+    mangle: {
+      except: ['Modernizr','jQuery','$', 'exports', 'require']
+    }
+  })
 );
 
 module.exports = config;

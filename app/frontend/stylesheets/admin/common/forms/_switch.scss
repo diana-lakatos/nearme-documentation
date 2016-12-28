@@ -1,0 +1,149 @@
+// Generated at https://proto.io/freebies/onoff/
+
+$switch-height: 36px;
+$switch-width: 80px;
+$switch-border-width: 1px;
+$switch-border-color: #e2e2e2;
+$switch-active-background: $color-primary;
+$switch-active-color: #fff;
+$switch-inactive-background: #f4f4f4;
+$switch-inactive-color: #999;
+$switch-toggler-size: 26px;
+$switch-toggler-background: #fff;
+
+.control-label.switch {
+    font-weight: normal;
+    text-transform: none;
+    display: inline;
+    margin: 0 0 0 15px;
+    vertical-align: middle;
+    font-size: 1em;
+    color: #333;
+    font-weight: bold;
+}
+
+.form-group.switch .hint {
+    margin-top: 15px;
+}
+
+@mixin switchSize($width, $height, $border-width, $toggler-size) {
+    .onoffswitch {
+        width: $width;
+        height: $height;
+    }
+
+    .onoffswitch-checkbox {
+        display: none;
+    }
+
+    .onoffswitch-label {
+        border-width: $border-width;
+        border-radius: $height;
+    }
+
+    .onoffswitch-inner:before, .onoffswitch-inner:after {
+        height: $height - 2 * $border-width;
+        line-height: $height - 2 * $border-width;
+    }
+
+    .onoffswitch-inner:before {
+        padding-left: $width / 5;
+    }
+
+    .onoffswitch-inner:after {
+        padding-right: $width / 5;
+    }
+
+    .onoffswitch-switch {
+        width: $toggler-size;
+        margin: ($height - 2 * $border-width - $toggler-size) / 2;
+        right: $width - $toggler-size - ($height - 2 * $border-width - $toggler-size);
+        border-width: $border-width;
+        border-radius: $height;
+    }
+}
+
+.form-group.switch {
+    .onoffswitch {
+        display: inline-block;
+        vertical-align: middle;
+        position: relative;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+    &.disabled .onoffswitch {
+        opacity: 0.5;
+    }
+
+    .onoffswitch-checkbox {
+        display: none;
+    }
+
+    .onoffswitch-label {
+        display: block;
+        overflow: hidden;
+        cursor: pointer;
+        border-style: solid;
+        border-color: $switch-border-color;
+    }
+
+    &.disabled .onoffswitch-label {
+        cursor: not-allowed;
+    }
+
+    .onoffswitch-inner {
+        display: block;
+        width: 200%;
+        margin-left: -100%;
+        transition: margin 0.3s ease-in;
+    }
+
+    .onoffswitch-inner:before, .onoffswitch-inner:after {
+        display: block;
+        float: left;
+        width: 50%;
+        padding: 0;
+        font-size: 14px;
+        color: white;
+        font-family: $font-stack-alt;
+        font-weight: normal;
+        box-sizing: border-box;
+        text-transform: uppercase;
+    }
+
+    .onoffswitch-inner:before {
+        content: attr(data-label-on);
+        background-color: $switch-active-background;
+        color: $switch-active-color;
+    }
+
+    .onoffswitch-inner:after {
+        content: attr(data-label-off);
+        background-color: $switch-inactive-background;
+        color: $switch-inactive-color;
+        text-align: right;
+    }
+
+    .onoffswitch-switch {
+        display: block;
+        background: $switch-toggler-background;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        border-style: solid;
+        border-color: $switch-border-color;
+        transition: all 0.3s ease-in;
+    }
+
+    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+        margin-left: 0;
+    }
+
+    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+        right: 0px;
+    }
+
+    @include switchSize($switch-width, $switch-height, $switch-border-width, $switch-toggler-size);
+}

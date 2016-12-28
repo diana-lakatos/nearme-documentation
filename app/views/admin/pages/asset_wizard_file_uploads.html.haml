@@ -1,0 +1,98 @@
+#rootwizard.m-t-50.bg-white
+  = render 'admin/pages/asset_wizard/nav', active: 'file_uploads'
+
+  .tab-content
+    = render 'admin/pages/asset_wizard/next_prev', previous_link: admin_path(page: 'asset_wizard_waiver_agreements'), next_link: admin_path(page: 'asset_wizard_search')
+
+    .tab-pane.padding-20.slide-left.active
+      .padding-30
+        %h2 File uploads
+
+        %p
+          %span.hint-text These setting are shared across your asset types.
+
+        %form{:role => "form"}
+
+          %h5.m-t-50 Approval documents upload
+
+          %p For safety and trust purposes, some services might need extra documentation from customers before completing the booking.
+          %p.checkbox.check-success
+            %input#enable-approval{type:"checkbox", "data-toggle" => 'collapse', "data-target" => '#approval-props'  }
+            %label{:for => "enable-approval"} Enable approval documents upload
+
+          #approval-props.collapse{"aria-expanded" => false}
+            %p.m-t-20 You can make this a mandatory requirement within your marketplace, optional or let vendors decide.
+
+            .radio.radio-success
+              %input#approval-mandatory{:name => "approval", :type => "radio", :value => "1", checked: 'checked'}/
+              %label{:for => "approval-mandatory"} Mandatory
+
+              %input#approval-optional{:name => "approval", :type => "radio", :value => "2"}/
+              %label{:for => "approval-optional"} Optional
+
+              %input#approval-venor{:name => "approval", :type => "radio", :value => "3"}/
+              %label{:for => "approval-venor"} Vendor Decides
+
+          %h5.m-t-50 Listing attachments upload
+
+          %p If enabled, seller can upload additional documents for their asset listing.
+          %p.checkbox.check-success
+            %input#enable-attachments{type:"checkbox", "data-toggle" => 'collapse', "data-target" => '#seller-attachments-props'  }
+            %label{:for => "enable-attachments"} Enable seller attachments upload
+
+          #seller-attachments-props.collapse{"aria-expanded" => false}
+            %p<
+              Following formats are supported:
+              %code doc
+              ,
+              %code docx
+              ,
+              %code xls
+              ,
+              %code odt
+              ,
+              %code ods
+              ,
+              %code pdf
+              ,
+              %code rar
+              ,
+              %code zip
+              ,
+              %code tar
+              ,
+              %code tar.gz
+              ,
+              %code swf
+              ,
+              %code mp4
+              ,
+              %code css
+              ,
+              %code txt
+              ,
+              %code text
+              ,
+              %code js
+              ,
+              %code xlsx
+              \.
+
+            %p.m-t-20 You can choose access level for these documents, they can be accessible to everyone or registered users or to purchasers only.
+
+            .radio.radio-success
+              %input#seller-attachments-all{:name => "seller-attachments", :type => "radio", :value => "1", checked: 'checked'}/
+              %label{:for => "seller-attachments-all"} Unregistered users
+
+              %input#seller-attachments-registered{:name => "seller-attachments", :type => "radio", :value => "2"}/
+              %label{:for => "seller-attachments-registered"} Registered users only
+
+              %input#seller-attachments-purchasers{:name => "seller-attachments", :type => "radio", :value => "3"}/
+              %label{:for => "seller-attachments-purchasers"} Purchasers users only
+
+              %input#seller-attachments-venor{:name => "seller-attachments", :type => "radio", :value => "4"}/
+              %label{:for => "seller-attachments-venor"} Vendor Decides
+
+
+    = render 'admin/pages/asset_wizard/next_prev', previous_link: admin_path(page: 'asset_wizard_waiver_agreements'), next_link: admin_path(page: 'asset_wizard_search')
+  .clearfix

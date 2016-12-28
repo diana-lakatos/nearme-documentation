@@ -617,6 +617,7 @@ class InstanceView < ActiveRecord::Base
   validates :locales, length: { minimum: 1 }
   validates :handler, inclusion: { in: ActionView::Template::Handlers.extensions.map(&:to_s) }
   validates :format, inclusion: { in: Mime::SET.symbols.map(&:to_s) }
+
   validate :does_not_duplicate_locale_and_transactable_type
 
   def does_not_duplicate_locale_and_transactable_type
@@ -630,5 +631,9 @@ class InstanceView < ActiveRecord::Base
 
   def expire_cache_options
     { path: path }
+  end
+
+  def jsonapi_serializer_class_name
+    'InstanceViewJsonSerializer'
   end
 end

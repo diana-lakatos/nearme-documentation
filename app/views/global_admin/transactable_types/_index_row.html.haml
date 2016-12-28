@@ -1,0 +1,6 @@
+%tr
+  %td= link_to resource.name, global_admin_instance_transactable_type_path(resource.instance, resource)
+  %td= link_to 'Edit', edit_global_admin_instance_transactable_type_path(resource.instance, resource), class: 'btn'
+  %td
+    = link_to "Delete", global_admin_instance_transactable_type_path(resource.instance, resource), method: :delete,
+      data: { confirm: 'Are you sure you want to delete this?' }, :class => "btn btn-danger"

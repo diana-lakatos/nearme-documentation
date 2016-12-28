@@ -1,0 +1,53 @@
+.nav-config-main {
+  h1 {
+    padding: 0 20px;
+  }
+
+  h2 {
+    padding: 10px 20px;
+    margin: 0;
+    border-bottom: 1px solid $color-separator;
+  }
+
+  ul {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+  }
+
+  ul + h2 {
+    margin-top: 50px;
+  }
+
+  li {
+    page-break-inside: avoid;
+  }
+
+  ul a {
+    display: block;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-bottom: 1px solid $color-separator;
+    transition: none;
+
+    &:hover, &:focus, &:active {
+      background: $color-separator;
+    }
+  }
+
+  .create-asset:before {
+    @include fa-icon;
+
+    content: $fa-var-plus;
+    margin-right: 5px;
+    transform: scale(0.8);
+  }
+}
+
+.nav-config-main-advanced {
+  @include breakpoint($touch-breakpoint) {
+    ul {
+      column-count: 2;
+    }
+  }
+}

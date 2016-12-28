@@ -1,0 +1,13 @@
+- admin_help_area('pages')
+
+- admin_side_navigation(:design)
+
+.go-back-link
+  = link_to t('admin.pages.actions.return_to_pages'), admin_design_pages_path
+
+- if @redirect_form
+  %h1 Add a new redirect
+  = render :partial => "redirect_form"
+- else
+  %h1 Add a new page
+  = render :partial => "form"

@@ -1,0 +1,33 @@
+.loading-indicator {
+    position: fixed;
+    z-index: 12000;
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    opacity: 0;
+    transition: .3s ease opacity;
+
+    .no-csspointerevents & {
+        display: none;
+    }
+
+    &.is-active {
+        opacity: 1;
+
+        .no-csspointerevents & {
+            display: block;
+        }
+    }
+
+    @include breakpoint($touch-breakpoint) {
+        right: 20px;
+        top: 20px;
+        transform: none;
+    }
+}

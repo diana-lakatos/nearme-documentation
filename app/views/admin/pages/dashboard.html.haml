@@ -1,0 +1,497 @@
+.content.sm-gutter
+
+  / START CONTAINER FLUID
+  .container-fluid.padding-25.sm-padding-10
+    %h2 Dashboard
+    .row
+      .col-sm-3
+        .panel.panel-default
+          .panel-heading
+            .panel-title Manage
+
+          %nav
+            %ul.nav
+              %li
+                = link_to 'Pages', admin_path(page: 'manage_pages')
+              %li
+                = link_to 'Files', admin_path(page: 'manage_files')
+              %li
+                = link_to 'Blog Posts', admin_path(page: 'manage_blog')
+              %li
+                = link_to 'User Blog Posts', admin_path(page: 'manage_blog')
+              %li
+                = link_to admin_path(page: 'manage_approval_requests') do
+                  Approval Requests
+                  %span.count 2
+
+              %li
+                = link_to admin_path(page: 'manage_approval_requests') do
+                  Support Tickets
+                  %span.count 4
+
+        .panel.panel-default
+          .panel-heading
+            .panel-title Reports
+
+          %nav
+            %ul.nav
+              %li
+                = link_to 'Assets', admin_path(page: 'manage_assets')
+              %li
+                = link_to 'Reviews', admin_path(page: 'manage_transfers')
+              %li
+                = link_to 'Transfers', admin_path(page: 'manage_transfers')
+              %li
+                = link_to 'Payments', admin_path(page: 'manage_payments')
+              %li
+                = link_to 'Blog', admin_path(page: 'manage_blog')
+              %li
+                = link_to 'Logs', admin_path(page: 'manage_logs')
+
+
+      .col-sm-9
+        / START ROW
+        .row
+          .col-md-12
+            .row
+              .col-sm-4.m-b-10
+                .ar-2-1
+                  / START WIDGET widget_graphTile
+                  .widget-4.panel.no-border.no-margin.widget-loader-bar
+                    .container-sm-height.full-height
+                      .row-sm-height
+                        .col-sm-height.col-top
+                          .panel-heading
+                            .panel-title.text-black.hint-text
+                              %span.font-montserrat.fs-11.all-caps
+                                Users
+                                %i.fa.fa-chevron-right
+                            .panel-controls
+                              %ul
+                                %li
+                                  %a.portlet-refresh.text-black{"data-toggle" => "refresh", :href => "#"}
+                                    %i.portlet-icon.portlet-icon-refresh
+                      .row-sm-height
+                        .col-sm-height.col-top
+                          .p-l-20.p-r-20
+                            %h5.no-margin.p-b-5.pull-left.hint-text User count
+                            %p.pull-right.no-margin.bold.hint-text 125
+                            .clearfix
+                      .row-sm-height
+                        .col-sm-height.col-bottom
+                          .widget-4-chart.line-chart{"data-area-color" => "success-light", "data-line-color" => "success", "data-points" => "false", "data-stroke-width" => "2", "data-y-grid" => "false"}
+                            %svg
+                  / END WIDGET
+              .col-sm-4.m-b-10
+                .ar-2-1
+                  / START WIDGET widget_graphTile
+                  .widget-4.panel.no-border.no-margin.widget-loader-bar
+                    .container-sm-height.full-height
+                      .row-sm-height
+                        .col-sm-height.col-top
+                          .panel-heading
+                            .panel-title.text-black.hint-text
+                              %span.font-montserrat.fs-11.all-caps
+                                Asset Name
+                                %i.fa.fa-chevron-right
+                            .panel-controls
+                              %ul
+                                %li
+                                  %a.portlet-refresh.text-black{"data-toggle" => "refresh", :href => "#"}
+                                    %i.portlet-icon.portlet-icon-refresh
+                      .row-sm-height
+                        .col-sm-height.col-top
+                          .p-l-20.p-r-20
+                            %h5.no-margin.p-b-5.pull-left.hint-text Bookings
+                            %p.pull-right.no-margin.bold.hint-text 2,563
+                            .clearfix
+                      .row-sm-height
+                        .col-sm-height.col-bottom
+                          .widget-4-chart.widget-4-chart-a.line-chart{"data-area-color" => "success-light", "data-line-color" => "success", "data-points" => "false", "data-stroke-width" => "2", "data-y-grid" => "false"}
+                            %svg
+                  / END WIDGET
+              .col-sm-4.m-b-10
+                .ar-2-1
+
+                  / END WIDGET
+          / Filler
+
+        .row
+          .col-md-12
+            .row
+              .col-sm-4.m-b-10
+                .ar-2-1
+                  / START WIDGET widget_barTile
+                  .widget-5.panel.no-border.widget-loader-bar
+                    .panel-heading.pull-top.top-right
+                      .panel-controls
+                        %ul
+                          %li
+                            %a.portlet-refresh.text-black{"data-toggle" => "refresh", :href => "#"}
+                              %i.portlet-icon.portlet-icon-refresh
+                    .container-xs-height.full-height
+                      .row.row-xs-height
+                        .col-xs-5.col-xs-height.col-middle.relative
+                          .padding-15.top-left.bottom-left
+                            %h5.hint-text.no-margin.p-l-10 Events, Revenue
+                            %p.bold.font-montserrat.p-l-10
+                              2,345,789
+                              = succeed "USD" do
+                                %br/
+
+                        .col-xs-7.col-xs-height.col-bottom.relative.widget-5-chart-container
+                          .widget-5-chart
+              .col-sm-4.m-b-10
+                .ar-2-1
+                  / START WIDGET widget_barTile
+                  .widget-5.panel.no-border.widget-loader-bar
+                    .panel-heading.pull-top.top-right
+                      .panel-controls
+                        %ul
+                          %li
+                            %a.portlet-refresh.text-black{"data-toggle" => "refresh", :href => "#"}
+                              %i.portlet-icon.portlet-icon-refresh
+                    .container-xs-height.full-height
+                      .row.row-xs-height
+                        .col-xs-5.col-xs-height.col-middle.relative
+                          .padding-15.top-left.bottom-left
+                            %h5.hint-text.no-margin.p-l-10 Total blog page views last week
+                            %p.bold.font-montserrat.p-l-10
+                              4,230
+
+                        .col-xs-7.col-xs-height.col-middle.relative.widget-5-chart-container
+                          .widget-20-chart
+                            %svg
+                  / END WIDGET
+              .col-sm-4.m-b-10
+                .ar-2-1
+                  / START WIDGET widget_barTile
+                  .widget-5.panel.no-border.widget-loader-bar
+                    .panel-heading.pull-top.top-right
+                      .panel-controls
+                        %ul
+                          %li
+                            %a.portlet-refresh.text-black{"data-toggle" => "refresh", :href => "#"}
+                              %i.portlet-icon.portlet-icon-refresh
+                    .container-xs-height.full-height
+                      .row.row-xs-height
+                        .col-xs-5.col-xs-height.col-middle.relative
+                          .padding-15.top-left.bottom-left
+                            %h5.hint-text.no-margin.p-l-10 Events, Bookings
+                            %p.bold.font-montserrat.p-l-10
+                              743
+                        .col-xs-7.col-xs-height.col-bottom.relative.widget-5-chart-container
+                          .widget-5-chart.widget-5-chart-b
+          / Filler
+
+
+        .row
+          .col-md-8.m-b-10
+            .row
+              .col-md-12
+                / START WIDGET D3 widget_graphWidget
+                .widget-12.panel.no-border.widget-loader-circle.no-margin
+                  .row
+                    .col-xlg-8
+                      .panel-heading.pull-up.top-right
+                        .panel-controls
+                          %ul
+                            %li.hidden-xlg
+                              .dropdown
+                                %a{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                                  %i.portlet-icon.portlet-icon-settings
+                                %ul.dropdown-menu.pull-right{:role => "menu"}
+                                  %li
+                                    %a{:href => "#"} Bags
+                                  %li
+                                    %a{:href => "#"} Shoes
+                                  %li
+                                    %a{:href => "#"} Cloths
+                            %li
+                              %a.portlet-refresh.text-black{"data-toggle" => "refresh", :href => "#"}
+                                %i.portlet-icon.portlet-icon-refresh
+                  .panel-body
+                    .row
+                      .col-xlg-8
+                        .p-l-10
+                          %h2.pull-left Bags Revenue
+                          %h2.pull-left.m-l-50.text-danger
+                            %span.bold 448.97
+                            %span.text-danger.fs-12 -318.24
+                          .clearfix
+                          .full-width
+                            %ul.list-inline
+                              %li
+                                %a.font-montserrat.text-master{:href => "#"} 1D
+                              %li.active
+                                %a.font-montserrat.bg-master-light.text-master{:href => "#"} 5D
+                              %li
+                                %a.font-montserrat.text-master{:href => "#"} 1M
+                              %li
+                                %a.font-montserrat.text-master{:href => "#"} 1Y
+                          .nvd3-line.line-chart.text-center{"data-x-grid" => "false"}
+                            %svg
+                      .col-xlg-4.visible-xlg
+                        .widget-12-search
+                          %p.pull-left
+                            Company
+                            %span.bold List
+                          %button.btn.btn-default.btn-xs.pull-right
+                            %span.bold +
+                          .clearfix
+                          %input.form-control.m-t-5{:placeholder => "Search list", :type => "text"}/
+                        .company-stat-boxes
+                          .company-stat-box.m-t-15.active.padding-20.bg-master-lightest{"data-index" => "0"}
+                            %div
+                              %button.close{"data-dismiss" => "modal", :type => "button"}
+                                %i.pg-close.fs-12
+                              %p.company-name.pull-left.text-uppercase.bold.no-margin
+                                %span.fa.fa-circle.text-success.fs-11
+                                AAPL
+                              %small.hint-text.m-l-10 Yahoo Inc.
+                              .clearfix
+                            .m-t-10
+                              %p.pull-left.small.hint-text.no-margin.p-t-5 9:42AM ET
+                              .pull-right
+                                %p.small.hint-text.no-margin.inline 37.73
+                                %span.label.label-important.p-t-5.m-l-5.p-b-5.inline.fs-12 + 0.09
+                              .clearfix
+                          .company-stat-box.m-t-15.padding-20.bg-master-lightest{"data-index" => "1"}
+                            %div
+                              %button.close{"data-dismiss" => "modal", :type => "button"}
+                                %i.pg-close.fs-12
+                              %p.company-name.pull-left.text-uppercase.bold.no-margin
+                                %span.fa.fa-circle.text-primary.fs-11
+                                YHOO
+                              %small.hint-text.m-l-10 Yahoo Inc.
+                              .clearfix
+                            .m-t-10
+                              %p.pull-left.small.hint-text.no-margin.p-t-5 9:42AM ET
+                              .pull-right
+                                %p.small.hint-text.no-margin.inline 37.73
+                                %span.label.label-success.p-t-5.m-l-5.p-b-5.inline.fs-12 + 0.09
+                              .clearfix
+                          .company-stat-box.m-t-15.padding-20.bg-master-lightest{"data-index" => "2"}
+                            %div
+                              %button.close{"data-dismiss" => "modal", :type => "button"}
+                                %i.pg-close.fs-12
+                              %p.company-name.pull-left.text-uppercase.bold.no-margin
+                                %span.fa.fa-circle.text-complete.fs-11
+                                GOOG
+                              %small.hint-text.m-l-10 Yahoo Inc.
+                              .clearfix
+                            .m-t-10
+                              %p.pull-left.small.hint-text.no-margin.p-t-5 9:42AM ET
+                              .pull-right
+                                %p.small.hint-text.no-margin.inline 37.73
+                                %span.label.label-success.p-t-5.m-l-5.p-b-5.inline.fs-12 + 0.09
+                              .clearfix
+                / END WIDGET
+          .col-md-6.col-lg-4.m-b-10
+            / START WIDGET widget_tableWidgetBasic
+            .widget-11-2.panel.no-border.panel-condensed.no-margin.widget-loader-circle
+              .panel-heading.top-right
+                .panel-controls
+                  %ul
+                    %li
+                      %a.portlet-refresh.text-black{"data-toggle" => "refresh", :href => "#"}
+                        %i.portlet-icon.portlet-icon-refresh
+              .padding-25
+                .pull-left
+                  %h2.text-success.no-margin Transactions
+                  %p.no-margin This week sales
+                %h3.pull-right.semi-bold
+                  %sup
+                    %small.semi-bold $
+                  102,967
+                .clearfix
+              .auto-overflow.widget-11-2-table
+                %table.table.table-condensed.table-hover
+                  %tbody
+                    %tr
+                      %td.font-montserrat.all-caps.fs-12.col-lg-6 Purchase CODE #2345
+                      %td.text-right.hidden-lg
+                        %span.hint-text.small dewdrops
+                      %td.text-right.b-r.b-dashed.b-grey.col-lg-3
+                        %span.hint-text.small Qty 1
+                      %td.col-lg-3
+                        %span.font-montserrat.fs-18 $27
+                    %tr
+                      %td.font-montserrat.all-caps.fs-12.col-lg-6 Purchase CODE #2345
+                      %td.text-right.hidden-lg
+                        %span.hint-text.small dewdrops
+                      %td.text-right.b-r.b-dashed.b-grey.col-lg-3
+                        %span.hint-text.small Qty 1
+                      %td.col-lg-3
+                        %span.font-montserrat.fs-18 $27
+                    %tr
+                      %td.font-montserrat.all-caps.fs-12.col-lg-6 Purchase CODE #2345
+                      %td.text-right.hidden-lg
+                        %span.hint-text.small dewdrops
+                      %td.text-right.b-r.b-dashed.b-grey.col-lg-3
+                        %span.hint-text.small Qty 1
+                      %td.col-lg-3
+                        %span.font-montserrat.fs-18 $27
+                    %tr
+                      %td.font-montserrat.all-caps.fs-12.col-lg-6 Purchase CODE #2345
+                      %td.text-right.hidden-lg
+                        %span.hint-text.small dewdrops
+                      %td.text-right.b-r.b-dashed.b-grey.col-lg-3
+                        %span.hint-text.small Qty 1
+                      %td.col-lg-3
+                        %span.font-montserrat.fs-18 $27
+                    %tr
+                      %td.font-montserrat.all-caps.fs-12.col-lg-6 Purchase CODE #2345
+                      %td.text-right.hidden-lg
+                        %span.hint-text.small dewdrops
+                      %td.text-right.b-r.b-dashed.b-grey.col-lg-3
+                        %span.hint-text.small Qty 1
+                      %td.col-lg-3
+                        %span.font-montserrat.fs-18 $27
+                    %tr
+                      %td.font-montserrat.all-caps.fs-12.col-lg-6 Purchase CODE #2345
+                      %td.text-right.hidden-lg
+                        %span.hint-text.small dewdrops
+                      %td.text-right.b-r.b-dashed.b-grey.col-lg-3
+                        %span.hint-text.small Qty 1
+                      %td.col-lg-3
+                        %span.font-montserrat.fs-18 $27
+                    %tr
+                      %td.font-montserrat.all-caps.fs-12.col-lg-6 Purchase CODE #2345
+                      %td.text-right.hidden-lg
+                        %span.hint-text.small dewdrops
+                      %td.text-right.b-r.b-dashed.b-grey.col-lg-3
+                        %span.hint-text.small Qty 1
+                      %td.col-lg-3
+                        %span.font-montserrat.fs-18 $27
+                    %tr
+                      %td.font-montserrat.all-caps.fs-12.col-lg-6 Purchase CODE #2345
+                      %td.text-right.hidden-lg
+                        %span.hint-text.small dewdrops
+                      %td.text-right.b-r.b-dashed.b-grey.col-lg-3
+                        %span.hint-text.small Qty 1
+                      %td.col-lg-3
+                        %span.font-montserrat.fs-18 $27
+                    %tr
+                      %td.font-montserrat.all-caps.fs-12.col-lg-6 Purchase CODE #2345
+                      %td.text-right.hidden-lg
+                        %span.hint-text.small dewdrops
+                      %td.text-right.b-r.b-dashed.b-grey.col-lg-3
+                        %span.hint-text.small Qty 1
+                      %td.col-lg-3
+                        %span.font-montserrat.fs-18 $27
+                    %tr
+                      %td.font-montserrat.all-caps.fs-12.col-lg-6 Purchase CODE #2345
+                      %td.text-right.hidden-lg
+                        %span.hint-text.small dewdrops
+                      %td.text-right.b-r.b-dashed.b-grey.col-lg-3
+                        %span.hint-text.small Qty 1
+                      %td.col-lg-3
+                        %span.font-montserrat.fs-18 $27
+              .padding-25
+                %p.small.no-margin
+                  %a{:href => "#"}
+                    %i.fa.fs-16.fa-arrow-circle-o-down.text-success.m-r-10
+                  %span.hint-text Show more transactions
+            / END WIDGET
+
+        .row
+          .col-md-4
+            / START WIDGET D3 widget_stackedBarWidgetBasic
+            .widget-15-2.panel.no-margin.no-border.widget-loader-circle
+              .panel-heading.top-right
+                .panel-controls
+                  %ul
+                    %li
+                      %a.portlet-refresh.text-black{"data-toggle" => "refresh", :href => "#"}
+                        %i.portlet-icon.portlet-icon-refresh
+              %ul.nav.nav-tabs.nav-tabs-simple
+                %li.active
+                  %a{:href => "#widget-15-2-tab-1"}
+                    Shoes
+                    %br/
+                    22.23
+                    %br/
+                    %span.text-success +60.223%
+                %li
+                  %a{:href => "#widget-15-2-tab-2"}
+                    Bags
+                    %br/
+                    45.97
+                    %br/
+                    %span.text-danger -06.56%
+                %li
+                  %a{:href => "#widget-15-2-tab-3"}
+                    Cloths
+                    %br/
+                    22.23
+                    %br/
+                    %span.text-success +60.223%
+              .tab-content
+                #widget-15-2-tab-1.tab-pane.no-padding.active
+                  .full-width
+                    .widget-15-chart2.rickshaw-chart.full-height
+                #widget-15-2-tab-2.tab-pane.no-padding
+                #widget-15-2-tab-3.tab-pane
+              .p-t-10.p-l-20.p-r-20.p-b-30
+                .row
+                  .col-md-9
+                    %p.fs-16.text-black
+                      Apple’s Motivation - Innovation distinguishes between A leader and a follower.
+                    %p.small.hint-text
+                      VIA Apple Store (Consumer and Education Individuals)
+                      = succeed "(800)" do
+                        %br/
+                  .col-md-3.text-right
+                    %h5.font-montserrat.bold.text-success +0.94
+                    %h5.font-montserrat.bold.text-danger -0.63
+            / END WIDGET
+          .col-md-8.m-b-10
+            / START WIDGET D3 widget_graphOptionsWidget
+            .widget-16.panel.no-border.no-margin.widget-loader-circle
+              .panel-heading
+                .panel-title
+                  Page Options
+                .panel-controls
+                  %ul
+                    %li
+                      %a.portlet-refresh.text-black{"data-toggle" => "refresh", :href => "#"}
+                        %i.portlet-icon.portlet-icon-refresh
+              .widget-16-header.padding-20
+                %span.icon-thumbnail.bg-master-light.pull-left.text-master ws
+                .pull-left
+                  %p.hint-text.all-caps.font-montserrat.small.no-margin.overflow-ellipsis
+                    Pages name
+                  %h5.no-margin.overflow-ellipsis Webarch Sales Analysis
+                .clearfix
+              .p-l-25.p-r-45.p-t-25.p-b-25
+                .row
+                  .col-md-4
+                    %p.hint-text.all-caps.font-montserrat.small.no-margin Views
+                    %p.all-caps.font-montserrat.no-margin.text-success 14,256
+                  .col-md-4.text-center
+                    %p.hint-text.all-caps.font-montserrat.small.no-margin Today
+                    %p.all-caps.font-montserrat.no-margin.text-warning 24
+                  .col-md-4.text-right
+                    %p.hint-text.all-caps.font-montserrat.small.no-margin Week
+                    %p.all-caps.font-montserrat.no-margin.text-success 56
+              .relative.no-overflow
+                .widget-16-chart.line-chart{"data-line-color" => "success", "data-point-color" => "white", "data-points" => "true", "data-stroke-width" => "2"}
+                  %svg
+              .b-b.b-t.b-grey.p-l-20.p-r-20.p-b-10.p-t-10
+                %p.pull-left Post is Public
+                .pull-right
+                  %input{"data-init-plugin" => "switchery", :type => "checkbox"}/
+                .clearfix
+              .b-b.b-grey.p-l-20.p-r-20.p-b-10.p-t-10
+                %p.pull-left Maintenance mode
+                .pull-right
+                  %input{:checked => "checked", "data-init-plugin" => "switchery", :type => "checkbox"}/
+                .clearfix
+              .p-l-20.p-r-20.p-t-10.p-b-10
+                %p.pull-left.no-margin.hint-text Super secret options
+                %a.pull-right{:href => "#"}
+                  %i.fa.fa-arrow-circle-o-down.text-success.fs-16
+                .clearfix
+            / END WIDGET
+      / END CONTAINER FLUID

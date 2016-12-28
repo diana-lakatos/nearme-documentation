@@ -1730,4 +1730,10 @@ class SecuredParams
     allowed << :access_level if instance.seller_attachments_access_sellers_preference?
     allowed
   end
+
+  def help_content
+    [
+      :content
+    ]
+  end
 end

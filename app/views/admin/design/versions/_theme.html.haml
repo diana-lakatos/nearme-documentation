@@ -1,0 +1,10 @@
+.content-container.show-version
+  %h4= "Homepage version ##{@version.id}"
+  .row
+    .input-container.col-xs-12
+      .field-name Homepage Conetent
+      %textarea.form-control{rows: 20, data: { editor: 'liquid' } }= @version.reify.homepage_content
+  .row
+    .input-container.col-xs-12
+      .field-name Homepage CSS
+      %textarea.form-control{rows: 20, data: { editor: 'liquid' } }= @version.reify.homepage_css

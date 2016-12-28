@@ -1,0 +1,75 @@
+- content_for :dialog_title do
+  Create Shipping Profile
+
+= admin_simple_form_for :admin_shipping_profile, url: admin_dialog_path(id: 'shipping_profile'), html: { id: 'shipping-profile-form', class: 'shipping-profile-form' } do |f|
+  .dialog-body
+
+    = f.input :name
+
+    %h3 Rules
+
+    %fieldset
+      = f.simple_fields_for :rule do |rf|
+        = rf.input :name
+
+        .row
+          .col-sm-6
+            = rf.input :processing_time, as: :integer, wrapper: :admin_addon, suffix: 'days'
+
+          .col-sm-6
+            = rf.input :cost, as: :price, input_html: { value: 20, currency: 'USD' }
+
+        %h4 Shipping location
+
+        .row
+          .col-sm-4
+            = rf.input :location_type, as: :radio_buttons, collection: ['Country', 'State']
+
+          .col-sm-8
+            %div{:"shipping-location-type" => "country"}
+              = rf.input :country, collection: ['Poland', 'United States']
+
+            %div{:"shipping-location-type" => "state"}
+              = rf.input :country2, collection: ['Poland', 'United States']
+              = rf.input :state, collection: ['California', 'Texas']
+
+    %fieldset
+      .rule-actions
+        %button.btn-delete.btn-xs Remove this rule
+
+      = f.simple_fields_for :rule do |rf|
+        = rf.input :name
+
+        .row
+          .col-sm-6
+            = rf.input :processing_time, as: :integer, wrapper: :admin_addon, suffix: 'days'
+
+          .col-sm-6
+            = rf.input :cost, as: :price, input_html: { value: 20, currency: 'USD' }
+
+        %h4 Shipping location
+
+        .row
+          .col-sm-4
+            = rf.input :location_type, as: :radio_buttons, collection: ['Country', 'State']
+
+          .col-sm-8
+            %div{:"shipping-location-type" => "country"}
+              = rf.input :country, collection: ['Poland', 'United States']
+
+            %div{:"shipping-location-type" => "state"}
+              = rf.input :country2, collection: ['Poland', 'United States']
+              = rf.input :state, collection: ['California', 'Texas']
+
+    .rule-add
+      %button.btn-sm Add another rule
+
+  .dialog-actions
+    = f.button :submit, t('simple_form.labels.admin_shipping_profile.save')
+
+:javascript
+  document.dispatchEvent(new CustomEvent('initialize:shipping_profile_form.nearme'));
+
+.dialog-actions.dialog-actions-alt
+  = button_to admin_dialog_path(id: 'shipping_profile'), method: 'delete', form: { "data-confirm" => 'Are you sure you want to remove this shipping profile?', "data-confirm-label-yes" => 'Yes, delete it', 'data-confirm-label-no' => 'Cancel' }, class: 'btn btn-delete' do
+    Delete this shipping profile

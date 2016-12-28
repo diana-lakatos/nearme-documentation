@@ -6,7 +6,7 @@ config = _.merge(config, {
   debug: true,
   displayErrorDetails: true,
   outputPathinfo: true,
-  devtool: 'source-map',
+  devtool: 'source-map'
 });
 
 config.plugins.push(

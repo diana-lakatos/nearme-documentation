@@ -1,0 +1,12 @@
+%h1= resource_class.name.underscore.humanize.pluralize
+
+%ul.nav.nav-pills
+  %li{:class => ('active' if params[:scope] == 'upcoming' || params[:scope].blank?)}
+    = link_to "Upcoming Reservations", global_admin_reservations_url(:scope => 'upcoming')
+  %li{:class => ('active' if params[:scope] == 'past')}
+    = link_to "Past Reservations", global_admin_reservations_url(:scope => 'past')
+
+= render 'list_table'
+
+= will_paginate collection
+

@@ -1,0 +1,7 @@
+%tr
+  %td= link_to admin_resource_name(resource), [:global_admin, resource]
+  %td
+    = link_to "Edit", [:edit, :global_admin, resource], :class => "btn btn-default"
+    = link_to "Delete", [:global_admin, resource], :method => :delete,
+        data: { confirm: 'Are you sure you want to delete this?'}, :class => "btn btn-danger"
+

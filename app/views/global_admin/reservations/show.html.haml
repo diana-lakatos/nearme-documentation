@@ -1,0 +1,65 @@
+%h1 Reservation
+
+%table.table
+  %tr
+    %th Booker
+    %td
+      %div= link_to resource.owner.name, global_admin_user_url(resource.owner)
+      %small= resource.owner.email
+
+  %tr
+    %th Listing
+    %td
+      %div= resource.transactable.name
+      %div
+        %small= resource.transactable.company.name
+      %div
+        %small= resource.transactable.location.address
+      %div
+        %small= link_to resource.transactable.creator.name, global_admin_user_url(resource.transactable.creator)
+
+  %tr
+    %th Quantity
+    %td= resource.quantity
+
+  %tr
+    %th State
+    %td
+      %span.label{:class => "label-#{admin_reservation_state_label_class(resource)}"}
+        = resource.state
+
+  %tr
+    %th Total Amount
+    %td= resource.total_amount
+
+
+%h2 Periods
+
+%table.table.table-striped
+  %tr
+    %th Date
+    %th Start Time
+    %th End Time
+
+  - @periods.each do |period|
+    %tr
+      %td= period.date
+      %td= I18n.l(period.minute_of_day_to_time(period.start_minute), format: :short)
+      %td= I18n.l(period.minute_of_day_to_time(period.end_minute), format: :short)
+
+%h2 Charges
+
+%table.table.table-striped
+  - charge = resource.payment
+  %tr
+
+    %td
+      %span.label{:class => "label=#{charge.paid? ? 'success' : 'danger'}"}
+        = charge.paid? ? 'successful' : 'failed'
+    %td= charge.amount
+    %td= charge.created_at
+    %td
+      - unless charge.paid?
+        - charge.charges.each do |charge_attempt|
+          %pre
+            = charge_attempt.inspect

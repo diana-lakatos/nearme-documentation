@@ -1,0 +1,67 @@
+.versions-editor {
+    position: relative;
+
+    .fullscreen-editor-pane {
+        position: relative;
+        width: 100%;
+    }
+
+    @include breakpoint($touch-breakpoint) {
+        .versions-editor-pane-textarea {
+            width: calc(100% - 300px);
+        }
+
+        .versions-editor-pane-list {
+            width: 300px;
+        }
+    }
+}
+
+.no-versions-found,
+.select-version {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: #bbb;
+    font-size: 20px;
+    line-height: 1.4;
+    text-align: center;
+    font-family: montserrat;
+}
+
+.versions-editor-pane-list {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    li {}
+
+    a {
+        display: block;
+        padding: 5px 10px;
+        text-decoration: none;
+
+        &:hover, &:focus, &:active {
+            background: #efefef;
+        }
+    }
+
+    span {
+        display: block;
+        color: #999;
+        font-size: 0.75em;
+    }
+
+    a.is-active {
+        background: $color-primary;
+        color: #fff;
+
+        span {
+            color: inherit;
+        }
+    }
+}

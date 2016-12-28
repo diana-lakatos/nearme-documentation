@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Dummy::Application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -41,14 +42,14 @@ Dummy::Application.routes.draw do
 
   # Sample resource route within a namespace:
   #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
+  #     # Directs /admin/products/* to GlobalAdmin::ProductsController
+  #     # (app/controllers/global_admin/products_controller.rb)
   #     resources :products
   #   end
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'sample#index'
+  root to: 'sample#index'
 
   # See how all your routes lay out with "rake routes"
 

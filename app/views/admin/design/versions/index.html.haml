@@ -1,0 +1,15 @@
+= admin_side_navigation(:advanced)
+
+%h1 Previous versions
+
+.table-container
+  %table
+    %thead
+      %tr
+        %th Version
+        %th Author
+    %tbody
+      = render partial: 'admin/theme/versions/version', collection: @versions
+
+= will_paginate @versions
+

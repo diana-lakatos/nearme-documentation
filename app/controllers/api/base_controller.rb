@@ -2,20 +2,36 @@
 class Api::BaseController < ActionController::Base
   force_ssl if: -> { Rails.application.config.use_only_ssl }
 
+  JSONAPI_CONTENT_TYPE = 'application/vnd.api+json'
+
   respond_to :json
 
   around_action :set_time_zone
 
   before_action :set_i18n_locale
   before_action :set_raygun_custom_data
-
   before_action :verified_api_request?
   before_action :require_authentication # whitelist approach
   before_action :require_authorization # some actions only by MPO or token
   before_action :set_paper_trail_whodunnit
+  before_action :set_content_type
 
   rescue_from ::DNM::Error, with: :nm_error
   rescue_from ::DNM::Unauthorized, with: :nm_unauthorized
+
+  protected
+
+  def render_api_object(object, options = {})
+    render json: ApiSerializer.serialize_object(object, options)
+  end
+
+  def render_api_collection(collection, options = {})
+    render json: ApiSerializer.serialize_collection(collection, options)
+  end
+
+  def render_api_errors(errors, status = 409)
+    render json: ApiSerializer.serialize_errors(errors), status: status
+  end
 
   private
 
@@ -69,7 +85,11 @@ class Api::BaseController < ActionController::Base
 
   # Render an unauthorized message
   def nm_unauthorized(e)
-    render json: { message: e.message }, status: 401
+    render json: { meta: { message: e.message } }, status: 401
+  end
+
+  def set_content_type
+    response.headers['Content-Type'] = JSONAPI_CONTENT_TYPE
   end
 
   def set_i18n_locale

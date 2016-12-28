@@ -1,0 +1,23 @@
+- admin_help_area('themes')
+
+= admin_side_navigation(:design)
+
+%h1= t('admin.themes.title.index')
+
+.table-container
+  %table
+    %thead
+      %tr
+        %th
+          = t('admin.themes.columns.name')
+
+        %th
+
+    %tbody
+      = render 'classic_theme_row'
+
+      - @custom_themes.each do |custom_theme|
+        = render 'index_row', custom_theme: custom_theme
+
+.listing-actions
+  = link_to t('admin.themes.actions.create'), new_admin_design_theme_path, class: 'action--create'

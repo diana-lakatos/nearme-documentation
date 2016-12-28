@@ -1,0 +1,41 @@
+= simple_form_for [:instance_admin, :settings, @domain] do |f|
+  .row
+    .input-container.col-xs-12
+      = f.input :secured, as: :boolean, input_html: { checked: f.object.secured? }, inline_label: true
+  .row
+    .input-container.col-xs-12
+      = f.input :use_as_default, as: :boolean, input_html: { checked: f.object.use_as_default?, disabled: f.object.use_as_default? && !f.object.new_record? }, inline_label: true
+  .row
+    .input-container.col-xs-12
+      = f.input :name, required: false, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-12
+      = f.input :certificate_body, as: :text, required: false, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-12
+      = f.input :private_key, as: :text, required: false, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-12
+      = f.input :certificate_chain, as: :text, required: false, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-5
+      = f.input :redirect_code, collection: redirect_codes, include_blank: 'None', input_html: { class: 'form-control' }
+    .input-container.col-xs-7
+      = f.input :redirect_to, required: false, input_html: { class: 'form-control' }
+
+  .row
+    .input-container.col-xs-5
+      = f.input :uploaded_sitemap, label: t("instance_admin.settings.domains.sitemap")
+    .input-container.col-xs-7
+      = f.input :remove_uploaded_sitemap, as: :boolean, inline_label: true, label: t("instance_admin.settings.domains.remove_uploaded_sitemap") if f.object.uploaded_sitemap.file.present?
+
+  .row
+    .input-container.col-xs-5
+      = f.input :uploaded_robots_txt, label: t("instance_admin.settings.domains.robots")
+    .input-container.col-xs-7
+      = f.input :remove_uploaded_robots_txt, as: :boolean, inline_label: true, label: t("instance_admin.settings.domains.remove_uploaded_robots") if f.object.uploaded_robots_txt.file.present?
+
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    = link_to t('instance_admin.cancel'), instance_admin_settings_domains_url , class: 'btn btn-light pull-right'
+

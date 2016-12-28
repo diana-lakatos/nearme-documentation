@@ -1,0 +1,103 @@
+- # this should be changed to variable based on enabled_location value e.g.
+- # is_collapsed = @asset_type.enable_location
+- is_collapsed = false
+- # Same goes for asset type name, it should be dynamic e.g
+- # asset_type_name = @asset_type.name
+- asset_type_name = 'Event'
+
+= admin_side_navigation(:asset)
+
+= admin_simple_form_for :admin_config, url: admin_path(page: 'asset_wizard_taxes') do |f|
+
+  .config-section-description
+    %h1 Taxes
+
+    %p Depending on your location and markets customers of your marketplace are active on different tax rules can apply. Unfortunatelly taxes come in different types and flavours, based on their category, transaction parties, asset type etc.
+
+    %h2 Categories
+
+    %p There are different tax categories that could be applied to your transactions like VAT, Income tax, Sales tax etc.
+
+    %h2 Zones
+
+    %p Same tax can be applied differently based on location of transaction parties involved. VAT within and outside of EU is a good example.
+
+    %h2 Rates
+
+    %p Different product types can be a subject of different tax rates in certain countries. Good example would be food, clothing, toys, etc.
+
+  .config-section-fields
+    %h2 General
+    = f.input :enable_taxes, as: :switch, input_html: { "aria-controls" => 'taxes-props', checked: !is_collapsed }, label: t('simple_form.labels.admin_config.enable_taxes', name: asset_type_name.downcase.pluralize)
+
+    - section_class = 'collapsible'
+    - section_class += ' active' unless is_collapsed
+
+    #taxes-props{"aria-expanded" => is_collapsed, class: section_class }
+      %h2 Categories
+
+      .table-container
+        %table.actions-table
+          %thead
+            %tr
+              %th Name
+              %th.actions Options
+          %tbody
+            %tr
+              %td VAT
+              %td.actions
+                = link_to 'Edit', admin_dialog_path(id: "tax_category"), class: 'action-edit', data: { modal: "" }
+
+            %tr
+              %td Sales tax
+              %td.actions
+                = link_to 'Edit', admin_dialog_path(id: "tax_category"), class: 'action-edit', data: { modal: "" }
+      %p
+        = link_to 'Create new tax category', admin_dialog_path(id: "tax_category"), class: 'btn btn-sm', data: { modal: "" }
+
+      %h2 Zones
+
+      .table-container
+        %table.actions-table
+          %thead
+            %tr
+              %th Name
+              %th.actions Options
+          %tbody
+            %tr
+              %td EU
+              %td.actions
+                = link_to 'Edit', admin_dialog_path(id: "tax_zone"), class: 'action-edit', data: { modal: "" }
+
+            %tr
+              %td Outside EU
+              %td.actions
+                = link_to 'Edit', admin_dialog_path(id: "tax_zone"), class: 'action-edit', data: { modal: "" }
+        %p
+          = link_to 'Create new tax zone', admin_dialog_path(id: "tax_zone"), class: 'btn btn-sm', data: { modal: "" }
+
+      %h2 Rates
+
+      .table-container
+        %table.actions-table
+          %thead
+            %tr
+              %th Name
+              %th Rate
+              %th.actions Options
+          %tbody
+            %tr
+              %td Food VAT
+              %td 7%
+              %td.actions
+                = link_to 'Edit', admin_dialog_path(id: "tax_rate"), class: 'action-edit', data: { modal: "" }
+
+            %tr
+              %td Regular VAT
+              %td 23%
+              %td.actions
+                = link_to 'Edit', admin_dialog_path(id: "tax_rate"), class: 'action-edit', data: { modal: "" }
+        %p
+          = link_to 'Create new tax rate', admin_dialog_path(id: "tax_rate"), class: 'btn btn-sm', data: { modal: "" }
+
+    = render 'admin/shared/navigation_nextprev', f: f

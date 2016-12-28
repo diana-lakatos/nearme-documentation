@@ -1,0 +1,76 @@
+.notification-area {
+    position: fixed;
+    z-index: 1100;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+
+    @include breakpoint(600px) {
+        top: 50px;
+        width: 600px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
+}
+
+.notification {
+    position: relative;
+    padding: 10px 50px 10px 20px;
+    margin-bottom: 10px;
+    background: #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.notification-body {
+    font-size: 12px;
+    font-weight: bold;
+
+    a {
+        color: inherit;
+    }
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    width: 40px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    text-align: center;
+    font-size: 0;
+    color: inherit;
+
+    &:before {
+        @include fa-icon;
+
+        font-size: 16px;
+        line-height: 24px;
+        content: $fa-var-close;
+    }
+}
+
+.notification {
+    &.is-success {
+        background: $color-notification-success;
+        color: $color-notification-success-text;
+    }
+
+    &.is-notice {
+        background: $color-notification-notice;
+        color: $color-notification-notice-text;
+    }
+
+    &.is-warning {
+        background: $color-notification-warning;
+        color: $color-notification-warning-text;
+    }
+
+    &.is-error {
+        background: $color-notification-error;
+        color: $color-notification-error-text;
+    }
+}

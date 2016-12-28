@@ -1,0 +1,14 @@
+= admin_simple_form_for [:admin, :design, @page], :html => { :multipart => true } do |f|
+  %input{type: 'hidden', name: 'redirect', value: 'true'}
+
+  = f.input :path
+
+  = f.input :redirect_url
+
+  = f.input :redirect_code, collection: Page.redirect_statuses
+
+  = f.input :open_in_new_window, as: :switch
+
+  .form-actions
+    = f.button :submit, t('admin.actions.save'), class: 'btn'
+

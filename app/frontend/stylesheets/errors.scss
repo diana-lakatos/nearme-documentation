@@ -1,79 +1,99 @@
-html, 
-body {
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-  background: rgb(240, 240, 240);
-} 
+* {
+    box-sizing: border-box;
+}
 
-.container-fluid {
-  display: table;
-  height: 100%;
-  width: 100%;
-  padding-right: 0px;
-  padding-left: 0px;
-}   
-
-.error-background {
-  width: 86%;
-  height: 86%;
-  position: absolute;
-  left: 7%;
-  top: 7%;
-  z-index: 1;
-
-  @media (max-width: 480px){
-    width: 100%;
+html, body {
+    padding: 0;
+    margin: 0;
     height: 100%;
-    left: 0px;
-    top: 0px;
-  }
-
-  path {
-    fill: rgb(230, 230, 230);
-  }
 }
 
-.row-fluid {
-  display: table-cell;
-  height: 100%;
-  width: 100%;
-  vertical-align: middle;
+body {
+    background: #fafafa;
+    color: #626262;
+    font: 16px/1.3 'Segoe UI', Arial, sans-serif;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.centering {
-  float: none;
-  margin: 0px auto;
-  text-align: center;
-  position: relative;
-  z-index: 10;
-  margin-top: -38px;
+.wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
-  &.server-error{
-    margin-top: 0px;
-  }
-
-
-  @media (max-width: 480px){
-    padding: 0px 25px;
-  }
-  h1 {
-    font-size: 38px;
-  }
-
-  div {
+main {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 20px;
     text-align: center;
-    font-size: 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 2;
+}
 
-    &.suggestion-text {
-      margin-top: 15px;
-      font-size: 22px;
+h1, h2 {
+    color: #2c2c2c;
+    text-align: center;
+}
 
-      a {
-        color: rgb(120,120,120);
-        text-decoration: underline !important;
-        font-weight: bold;
-      }
+.branding {
+    margin-bottom: 20px;
+}
+
+h1 {
+    font: 400 90px/1 'Montserrat';
+    margin: 0 0 20px;
+}
+
+h2 {
+    margin: 0 0 20px;
+    font-weight: 400;
+    line-height: 32px;
+    font-size: 28px;
+}
+
+ul {
+    padding: 0;
+    margin: 0 0 10px;
+    list-style: none;
+
+    li {
+        display: inline-block;
     }
-  }
-} 
+
+    a {
+        display: inline-block;
+        padding: 2px 5px;
+        background: #f0f0f0;
+        border-radius: 3px;
+        margin: 5px;
+    }
+}
+
+p {
+    margin: 0 0 10px;
+}
+
+small {
+    font-size: 0.75rem;
+}
+
+a {
+    color: #3a8fc8;
+    transition: color .3s ease;
+    text-decoration: none;
+
+    &:hover, &:focus, &:active {
+        color: #48b0f7;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    body {
+        font-size: 13px;
+    }
+}

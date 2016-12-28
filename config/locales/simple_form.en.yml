@@ -19,6 +19,10 @@ en:
     error_notification:
       default_message: "Some errors were found, please take a look:"
     labels:
+      custom_theme:
+        in_use: 'Enable'
+        in_use_for_instance_admins: 'Preview mode'
+        copy_from_template: 'Duplicate existing theme'
       merchant_account:
         current_address: "Address"
       shipment:
@@ -191,13 +195,17 @@ en:
       liquid_view:
         path: "View path"
         transactable_type: "Service Type"
+        partial: 'Is that a partial?'
       page:
-        path: "Path"
+        path: "Page Title"
         content: "Content"
         css_content: "Page CSS"
         hero_image: "Hero image"
         redirect_url: "Redirect URL"
         open_in_new_window: "Open in new window?"
+        metadata_title: "Meta title"
+        metadata_meta_description: "Meta description"
+        metadata_canonical_url: 'Canonical URL'
       listings:
         price: 'Price'
         photos: 'Photos'
@@ -398,7 +406,101 @@ en:
         width_unit: "Type of Unit"
         depth_unit: "Type of Unit"
 
+    # ADMIN
+      admin_register:
+        first_name: First name
+        last_name: Last name
+        email: Email address
+
+      admin_login:
+        username: 'Login'
+        password: 'Password'
+        remember: 'Keep me signed in'
+
+      service_type:
+        # all_action_types:
+        name: 'Asset Name'
+        lessor: 'Asset seller / lessor'
+        lessee: 'Asset buyer / lessee'
+        group_locations: 'Group my listings belonging to one location'
+        enable_location: '%{name} are location based'
+        path_format: 'Listing path format'
+        enable_booking: 'Enable booking for %{name}'
+        enable_availability_time: 'Enable time based availability'
+        enable_availability_event: 'Enable event based availability'
+        enable_availability_recurring: 'Enable subscriptions'
+        default_availability_template: 'Default availability template'
+        minimum_booking_length: 'Minimum booking length in minutes'
+        define_one_day: 'Define one day'
+        force_continous: 'Force continuous reservation periods'
+        expiration_period: 'Number of hours before unconfirmed reservations expire'
+        cancellation_grace_period: 'Cancellation grace period in hours'
+        cancellation_penalty_fee: 'Cancellation grace period in hours'
+        enable_pricing: 'Enable pricing for %{name}'
+        free_option: 'Enable free option'
+
+        enable_taxes: 'Enable taxation for %{name}'
+        enable_test_mode: 'Enable test mode'
+
+      admin_property:
+        name: 'Property name'
+        label: 'Form label'
+        type: 'Property type'
+
+        text_type: 'Input type'
+        text_placeholder: 'Input placeholder'
+        text_min_length: 'Minimum length'
+        text_max_length: 'Maximum length'
+        text_default_value: 'Default value'
+
+        number_type: 'Input type'
+        number_placeholder: 'Input placeholder'
+        number_min: 'Minimum value'
+        number_max: 'Maximum value'
+        number_default_value: 'Default value'
+
+        select_one_type: 'Input type'
+        select_one_values: 'Available values'
+        select_one_default_value: 'Default value'
+
+        select_many_type: 'Input type'
+        select_many_values: 'Available values'
+        select_many_default_value: 'Default values'
+
+        datetime_type: 'Input type'
+        boolean_type: 'Input type'
+
+        boolean_default_value: 'Yes by default?'
+
+      admin_shipping_profile:
+        name: 'Name'
+        rule:
+          country2: 'Country'
+        save: 'Save shipping profile'
+
+      admin_dimensions_template:
+        name: 'Template name'
+        default_rule: 'Make this the default template'
+
+      admin_tax_category:
+        name: 'Category name'
+        default_category: 'Make this the default category'
+        save: 'Save tax category'
+
+      admin_tax_zone:
+        name: 'Zone name'
+        default_zone: 'Make this the default zone'
+        zone_type: 'Type'
+        save: 'Save tax zone'
+
+      admin_tax_rate:
+        name: 'Rate name'
+        included: 'Include tax in price'
+        save: 'Save tax rate'
+
     placeholders:
+      custom_theme:
+        name: 'Unique theme name'
       support_ticket_message:
         message: 'Please, enter message'
       user_message:
@@ -515,6 +617,50 @@ en:
       user:
         email: 'e.g. name@company.com'
 
+      # ADMIN
+      admin_login:
+        username: 'User Name'
+        password: 'Credentials'
+
+      admin_register:
+        first_name: John
+        last_name: Smith
+        email: name@domain.com
+        password: Mimimum 4 characters
+        marketplace_name: 'Awesome Marketplace™'
+        domain_name: 'your-marketplace'
+
+      admin_config:
+        asset_name: 'e.g. Desk, Apparel, Project, Service'
+        lessor: 'e.g. owner, seller, host'
+        lessee: 'e.g. contributor, buyer, guest'
+        path_format: '/locations/:location_id/:id'
+        minimum_booking_length: 'Enter number greater than 0'
+      admin_property:
+        name: 'e.g. total_weight'
+        label: 'e.g. Total Weight'
+        hint: 'Additional description...'
+        select_one_values: 'Comma separated list eg. apples, oranges'
+        select_many_values: 'Comma separated list eg. apples, oranges'
+        select_many_default_values: 'Comma separated list eg. apples, oranges'
+
+      admin_shipping_profile:
+        name: 'e.g. International Shipping'
+
+      admin_dimensions_template:
+        name: 'e.g. A4 Envelope'
+
+      admin_tax_category:
+        name: 'e.g. VAT'
+        description: 'Describe your tax category if necessary'
+
+      admin_tax_zone:
+        name: 'e.g. Within EU'
+        description: 'Describe your tax zone if necessary'
+
+      admin_tax_rate:
+        name: 'e.g. Food, Clothing, Toys'
+
     prompts:
       merchant_account:
         currency: "- Select Currency -"
@@ -522,10 +668,30 @@ en:
       location:
         administrator: 'Default'
 
+      admin_property:
+        type: '- select property type -'
+
+        text_type: '- select form input -'
+        number_type: '- select form input -'
+        select_one_type: '- select form input -'
+        select_many_type: '- select form input -'
+        datetime_type: '- select form input -'
+        boolean_type: '- select form input -'
+
+      admin_tax_rate:
+        category: '- select tax category -'
+        zone: '- select tax zone -'
+
     hints:
       merchant_account:
         currency: ""
         bank_account_number: "Please enter your bank account number. It should consist of digits only"
+      page:
+        slug: 'Used as a part of URL'
+        no_layout: 'When enabled only content of the page will be displayed, without any additional HTML'
+        metadata_title: "A good title has between 40 - 250 characters"
+        metadata_meta_description: "A good meta description has between 100 - 350 characters"
+        metadata_canonical_url: 'You can <a href="https://support.google.com/webmasters/answer/139066?hl=en" rel="external">learn more about canonical urls from Google</a>.'
       reservation_request:
         delivery_ids: ''
       location:
@@ -572,6 +738,76 @@ en:
         header_logo: "Suggested image size is 240 x 60 pixels"
         header_icon: "Suggested image size is 60 x 60 pixels"
 
+      # ADMIN
+      service_type:
+        name: 'Try to use as generic name for your asset type as possible. You will be able to add categories and custom attributes that will allow for creating different variants of your asset.'
+        enable_location: 'You are not limited to just renting or just selling items. For example you can run a bike shop and rent bikes per hour.'
+        path_format: 'Available path components: <code>:id</code></code>, <code>:location_id</code>, <code>:location_slug</code>, <code>:transactable_type_id</code>'
+        enable_booking: 'With this setting on each listing is treated as a separate entity rather than a collection like identical items in a shop inventory.'
+        define_one_day: 'Based on how day is defined picking dates in calendar will affect price.'
+        cancellation_grace_period: 'Number of hours before reservation guest can cancel their booking'
+        cancellation_penalty_fee: 'Penalty fee applies only when payment is processed with Stripe or Braintree Payment Gateway'
+        enable_availability_time: 'This allows defining regular hours when the asset is available, like business hours, 24/7 or location defined hours (if applicable).'
+        default_availability_template: 'When time based availability is enabled you should pick the default availability template. Users will be able to define their own template as well.'
+        enable_availability_event: 'This mode works best if your asset rather than being available on a regular basis is better suited to use a specific schedule e.g. open houses, concert tickets etc.'
+        enable_availability_recurring: 'Enabling this mode also gives you an option to set up reservations based on weekly or monthly basis.'
+        minimum_booking_length: 'When enabling booking by the hour you can define minimum booking length that needs to be selected by person making the reservation.'
+        force_continous: 'Based on the specificity of your marketplace you can either allow clients to make reservations on specific dates or force them to pick continuous date ranges.'
+        define_one_day: 'You can give your hosts / sellers an option to choose what defines <i>one day</i> for their business.'
+        default_time_zone: 'It’s important to define time zone for which all of the scheduling will be based on. It can be based on either asset location (if application) or buyer’s or seller’s selected time zones.'
+        expiration_period: 'Reservations that have not been confirmed by the owner by default expire 24 hours before the reservation period begins. Hosts can also cancel reservation at any time.'
+        free_option: 'Free option is not necessarily the same thing as disabling pricing for asset altogether, as it can go along your regular priced items or services.'
+        enable_taxes: 'Taxing settings are shared across all of your asset types'
+        enable_test_mode: In order to enable test mode your marketplace <a href="%{url}">needs to be password protected</a>'
+
+      admin_property:
+        name: 'This is the internal identifier used in liquid views. It should contain only letters a-z, numbers 0-9 and underscores "_"'
+        label: 'Label will be used as the visible text everywhere the field is displayed on the site'
+        type: 'Based on the type selected different options will become available to you.'
+        hint: 'Text in a hint will be displayed next to the field, so you can provide an additional description if necessary.'
+        public: 'Disabling this option will hide all UI for this parameter from regular users. Only MPO will be able to change it in the admin section.'
+        searchable: 'Enables turning on UI for filtering search results by this attribute.'
+        required: 'If turned on, providing a value will be required when editing.'
+
+        text_type: 'Text area will allow you to enter multiline text.'
+        text_placeholder: 'Used in empty form control as helper text.'
+        text_min_length: 'Minimum length of entered text.'
+        text_max_length: 'Maximum length of entered text.'
+        text_default_value: 'Default parameter value'
+
+        number_type: ''
+        number_placeholder: 'Used in empty form control as helper text.'
+        number_min: 'Minimum value that can be entered'
+        number_max: 'Maximum value that can be entered.'
+        number_default_value: 'Default parameter value'
+
+        select_one_values: 'All values should be separated by comma ","'
+        select_one_default_value: 'This should match one of the available values.'
+
+        select_many_values: 'All values should be separated by comma ","'
+        select_many_default_value: 'These should match items from available values list.'
+
+        boolean_default_value: 'Determines if input should be set to <code>true</code> by default.'
+
+        input_html_options: 'Proper format is <code>key=>value,key2=>value2</code>'
+        wrapper_html_options: 'Proper format is <code>key=>value,key2=>value2</code>'
+
+      admin_shipping_profile:
+        name: 'Each profile can have multiple rules based on shipping location.'
+        rule:
+          location_type: 'Selecting state will allow you to differentiate cost based on regions in given country'
+
+      admin_tax_zone:
+        zone_type: 'Your zone can be either country based or state based if tax regulations differ between states in a given country.'
+
+      admin_tax_rate:
+        included: 'Your tax can be either included in the price entered by host or applied on top of it.'
+
+      custom_theme:
+        in_use: '<b>Notice:</b> When you enable this theme you current active theme will be disabled and changes will be '
+        in_use_for_instance_admins: 'Theme in preview mode overrides your current active theme, but changes are visible only to logged in instance admins. Use for development.'
+        copy_from_template: 'When creating a new theme you can choose to duplicate an existing one to use as a starting point.'
+
     required:
       mark: '*'
       text: 'required'
@@ -581,6 +817,7 @@ en:
           mandatory: 'Mandatory'
           optional: 'Optional'
           vendor_decides: 'Vendor decides'
+
 
   instance_admin:
     settings:

@@ -1,0 +1,14 @@
+%p.copyright
+  %small
+    Copyright © #{Time.now.year}
+    %span NearMe
+    \.
+    All rights reserved.
+
+%nav
+  %ul
+    %li= link_to 'Support', admin_path(page: 'support')
+    %li= link_to 'Terms of use', admin_path(page: 'terms_of_use')
+
+.app-version
+  Version 10.0.1

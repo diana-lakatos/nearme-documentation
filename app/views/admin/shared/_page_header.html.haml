@@ -1,0 +1,19 @@
+.brand
+  = link_to admin_path(page: 'index') do
+    = image_tag "admin/logo-black.svg", :alt => "NearMe", :height => "25", :width => "115"
+
+%nav.nav-primary
+  %h2.struct-label= t('admin.site_header.primary_navigation')
+  %ul
+    %li.primary-nav-configure
+      = link_to t('admin.site_header.configure'), admin_configure_path
+    %li.primary-nav-knowledgebase
+      = link_to t('admin.site_header.knowledge_base'), 'http://support.near-me.com/', rel: 'external'
+
+  .nav-user
+    %h2.struct-label= t('admin.site_header.user_navigation')
+    %h3= current_user.first_name
+    = image_tag current_user.avatar_url(:thumb), width: 64, height: 64, alt: current_user.name
+    %ul
+      %li.nav-user-profile= link_to t('admin.site_header.your_profile'), admin_path(page: 'profile')
+      %li.nav-user-log-out= link_to t('admin.site_header.log_out'), admin_path(page: 'logout')

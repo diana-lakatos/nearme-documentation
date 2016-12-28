@@ -1,0 +1,22 @@
+!!!
+%html.no-js{lang: "en"}
+  = yield :head_top
+  = render 'layouts/admin/head'
+  = yield :head_bottom
+
+  %body
+    = yield :body_top
+    %header.page-header
+      = render 'admin/shared/page_header'
+
+    = render 'admin/shared/flash'
+
+    %main.page-content
+      = content_for?(:content) ? yield(:content) : yield
+
+    %footer.page-footer
+      = render 'admin/shared/footer'
+
+    = render 'shared/javascripts/footer', entry: 'admin'
+
+    = yield :body_end
