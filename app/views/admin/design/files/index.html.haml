@@ -1,0 +1,18 @@
+- admin_limit_content_width(false)
+- admin_help_area('files')
+
+= admin_side_navigation(:design)
+
+%h1 File manager
+
+%section#file-manager
+  / .file-manager
+
+
+  /   .files-pane
+  /     = render "admin/design/files/file_listing"
+
+
+  /   / = render "admin/design/files/info_pane/no_file"
+  /   = render "admin/design/files/info_pane/single_file"
+  /   / = render "admin/design/files/info_pane/multiple_files"

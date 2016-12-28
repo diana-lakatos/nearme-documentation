@@ -1,0 +1,13 @@
+%h1= resource_class.name.underscore.humanize.pluralize
+
+= link_to 'New Page', new_global_admin_page_path, class: 'btn'
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Path
+  %tbody
+    - collection.each do |resource|
+      = render 'index_row', :resource => resource
+
+= will_paginate collection

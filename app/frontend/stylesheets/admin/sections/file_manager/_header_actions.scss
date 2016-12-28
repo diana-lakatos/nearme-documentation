@@ -1,0 +1,47 @@
+.file-manager-header-actions {
+  padding: 0;
+  margin: 0 0 20px;
+  list-style: none;
+
+  li {
+    display: inline-block;
+    margin-left: 5px;
+  }
+
+  [class^="action--"] {
+    padding: 2px 10px;
+    text-transform: uppercase;
+    border: none;
+    border: none;
+    background: #ddd;
+    color: $color-primary;
+    font-family: $font-stack-alt;
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 20px;
+
+    &:before {
+      font-family: FontAwesome;
+      margin-right: 5px;
+      font-weight: normal;
+      font-size: 1em;
+      line-height: 20px;
+    }
+  }
+
+  .action--upload:before {
+    content: $fa-var-cloud-upload;
+  }
+
+  .action--new-folder:before {
+    content: $fa-var-folder;
+  }
+
+  .action--new-file:before {
+    content: $fa-var-file;
+  }
+
+  .action--trash:before {
+    content: $fa-var-trash;
+  }
+}

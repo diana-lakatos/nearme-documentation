@@ -1,0 +1,70 @@
+- active = nil
+
+.content.sm-gutter
+  .panel.panel-transparent
+    .panel-heading
+      .panel-title Manage
+
+    .panel-body
+      .row
+        .col-md-3
+          .panel.panel-default
+            .panel-heading
+              .panel-title Pages
+
+              .panel-controls
+                %ul
+                  %li
+                    .dropdown
+                      %a#portlet-settings{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                        %i.fa.fa-plus
+                      %ul.dropdown-menu.pull-right{"aria-labelledby" => "portlet-settings", :role => "menu"}
+                        %li
+                          %a{:href => "#"} Add new page
+            %nav
+              %ul.nav
+                %li
+                  = link_to 'Home', admin_path(page: 'manage_pages')
+                %li
+                  = link_to 'About', admin_path(page: 'manage_pages')
+                %li
+                  = link_to 'Privacy Policy', admin_path(page: 'manage_pages')
+
+        .col-md-3
+          .panel.panel-default
+            .panel-heading
+              .panel-title Files
+            %nav
+              %ul.nav
+                %li
+                  = link_to admin_path(page: 'manage_files') do
+                    File Manager
+              .panel-body
+                .quick-upload
+                  Quick Upload
+                  %span
+                    Click or drop here
+
+                %p After upload there will be a list of direct urls to each uploaded file.
+
+
+        .col-md-3
+          .panel.panel-default
+            .panel-heading
+              .panel-title
+                Cash Flow
+
+              .panel-controls
+                %ul
+                  %li
+                    .dropdown
+                      %a#cash-flow-settings{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                        %i.portlet-icon.portlet-icon-settings
+                      %ul.dropdown-menu.pull-right{"aria-labelledby" => "cash-flow-settings", :role => "menu"}
+                        %li
+                          %a{:href => "#"} Setup payment gateways
+
+            %nav
+              %ul.nav
+                %li= link_to 'Transfers', admin_path(page: 'manage_transfers')
+                %li= link_to 'Payments', admin_path(page: 'manage_payments')

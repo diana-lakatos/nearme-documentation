@@ -1,0 +1,10 @@
+- admin_help_area('themes')
+
+= admin_side_navigation(:design)
+
+.go-back-link
+  = link_to t('admin.themes.actions.return_to_themes'), [:admin, :design, :custom_themes]
+
+%h1= t('admin.themes.title.new')
+
+= render "form"

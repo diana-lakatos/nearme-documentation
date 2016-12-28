@@ -1,0 +1,3 @@
+%tr
+  %td= link_to l(version.created_at, format: :long), url_for(action: :show_version, version_id: version.id)
+  %td= User.exists?(version.whodunnit.to_i) ? User.find(version.whodunnit.to_i).try(:name) : version.whodunnit

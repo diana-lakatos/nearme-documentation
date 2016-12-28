@@ -1,0 +1,78 @@
+- admin_help_area('asset-booking')
+
+- # this should be changed to variable based on enabled_location value e.g.
+- # is_collapsed = @asset_type.enable_location
+- is_collapsed = false
+- # Same goes for asset type name, it should be dynamic e.g
+- # asset_type_name = @asset_type.name
+- asset_type_name = 'Event'
+
+= admin_side_navigation(:asset)
+
+= admin_simple_form_for :admin_config, url: admin_path(page: 'asset_wizard_booking') do |f|
+
+  %h1 Event booking
+  = f.input :enable_booking, as: :switch, input_html: { "aria-controls" => 'booking-props', checked: !is_collapsed }, label: t('simple_form.labels.admin_config.enable_booking', name: asset_type_name.downcase.pluralize)
+
+  - section_class = 'collapsible'
+  - section_class += ' active' unless is_collapsed
+
+  #booking-props{"aria-expanded" => is_collapsed, class: section_class }
+    %h2 Reservation modes
+    %p We have two separate modes for defining when your asset is available and how customers can book it.
+
+    %h3
+      %span.fa.fa-clock-o
+      Time based availability
+
+    = f.input :enable_availability_time, as: :switch, input_html: { "aria-controls" => 'time-based-options'}
+
+    #time-based-options.collapsible.section-inner
+      = f.input :default_availability_template, collection: ['24/7', 'Regular business hours 9am - 5pm', 'Location hours'], prompt: '- select template-'
+
+      %h4 Hourly booking
+      .section-inner
+        = f.input :minimum_booking_length, as: :integer, input_html: { value: 60, size: 4 }
+
+
+      %h4 Daily booking
+      .section-inner
+        = f.input :define_one_day, as: :radio_buttons, collection: ['Business day (until closing time)', 'Hotel day (ending next day)']
+
+        = f.input :force_continous, as: :boolean
+
+    %hr/
+
+    %h3
+      %span.fa.fa-refresh
+      Recurring booking / subscriptions
+
+    = f.input :enable_availability_recurring, as: :switch
+
+    %hr/
+
+    %h3
+      %span.fa.fa-calendar
+      Event based availability
+
+    = f.input :enable_availability_event, as: :switch, input_html: { "aria-controls" => 'event-based-options'}
+
+    #event-based-options.collapsible.section-inner
+      = render 'admin/shared/availability_schedule'
+
+    / Default time zone
+
+    %h2 Default time zone
+
+    = f.input :default_time_zone, as: :radio_buttons, collection: ['Location’s time zone', 'Buyer’s time zone', 'Seller’s time zone'], label: false
+
+    %h2 Expirations and cancellation policy
+    = f.input :expiration_period, as: :integer, input_html: { value: 24, size: 4 }, required: true
+
+    %p You can enable cancelling reservations by the guest.
+
+    = f.input :cancellation_grace_period, as: :integer, input_html: { value: 0, size: 4 }
+
+    = f.input :cancellation_penalty_fee, as: :integer, input_html: { value: 0, size: 4 }, suffix: '%', wrapper: :admin_addon
+
+  = render 'admin/shared/navigation_nextprev', f: f

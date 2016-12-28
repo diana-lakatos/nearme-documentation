@@ -1,0 +1,42 @@
+// Normalize
+
+// Colors
+
+$color-text: #666;
+$color-link: #337ab7;
+$color-link-hover: #48b0f7;
+$color-background: #fafafa;
+
+$touch-breakpoint: 980px;
+
+$max-content-width: 1580px;
+
+$container-max-widths: (sm: 540px, md: 720px, lg: 960px, xl: 1150px);
+
+$side-spacing-small: 20px;
+$side-spacing-large: 40px;
+
+$color-primary: #6d5cae;
+$color-active: #933;
+
+$color-success: #39b318;
+$color-warning: #f3d54e;
+$color-error: #f00;
+$color-notice: #00aeef;
+
+$color-separator: #ededed;
+$color-required: $color-error;
+$color-danger: $color-error;
+
+$font-stack-default: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-stack-alt: "Montserrat", Trebuchet, $font-stack-default;
+$font-stack-mono: "Andale Mono WT", "Andale Mono", "Monaco", "Consolas", "Courier New", Courier, monospace;
+
+$color-notification-notice: $color-notice;
+$color-notification-notice-text: #fff;
+$color-notification-success: $color-success;
+$color-notification-success-text: #fff;
+$color-notification-warning: $color-warning;
+$color-notification-warning-text: #736009;
+$color-notification-error: $color-error;
+$color-notification-error-text: #fff;

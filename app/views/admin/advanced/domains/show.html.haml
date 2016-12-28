@@ -1,0 +1,37 @@
+.content-container
+  .row
+    .col-sm-12
+      %h3= t('instance_admin.settings.domains.hosted_zones.load_balancer')
+      %table.table.compact
+        %tr
+          %th= t('instance_admin.settings.domains.status')
+          %td
+            = @domain.state
+            .small= @domain.error_message
+        %tr
+          %th= t('instance_admin.settings.domains.load_balancer_name')
+          %td= @domain.balancer.load_balancer_name
+        %tr
+          %th= t('instance_admin.settings.domains.dns_name')
+          %td= @domain.balancer.dns_name
+
+  - if @domain.hosted_zone?
+    .row
+      .col-sm-12
+        %h3 DNS Records
+
+        %table.table
+          %thead
+            %tr
+              %th= t('instance_admin.settings.domains.hosted_zones.record_name')
+              %th= t('instance_admin.settings.domains.hosted_zones.record_type')
+              %th= t('instance_admin.settings.domains.hosted_zones.record_values')
+          - @domain.hosted_zone.records.each do |record|
+            = render partial: 'dns_record', locals:{record: record}
+
+  = content_for :header_buttons do
+    = link_to t('instance_admin.back'), instance_admin_settings_domains_url , class: 'btn btn-light pull-right'
+    - if @domain.balancer? && !@domain.hosted_zone?
+      .pull-right
+        = form_tag instance_admin_settings_domain_hosted_zone_path(@domain) do |form|
+          = button_tag t('instance_admin.settings.domains.hosted_zones.create'), class: 'btn btn-blue pull-right', data:{disable_with: 'Creating Route53 hosted zone ...'}

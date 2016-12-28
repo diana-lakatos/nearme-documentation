@@ -1,0 +1,238 @@
+/ START QUICKVIEW
+#quickview.quickview-wrapper{"data-pages" => "quickview"}
+  / Nav tabs
+  %ul.nav.nav-tabs
+    %li
+      %a{"data-toggle" => "tab", :href => "#quickview-notes"} Notes
+    %li
+      %a{"data-toggle" => "tab", :href => "#quickview-alerts"} Alerts
+    %li.active
+      %a{"data-toggle" => "tab", :href => "#quickview-chat"} Chat
+  %a.btn-link.quickview-toggle{"data-toggle" => "quickview", "data-toggle-element" => "#quickview"}
+    %i.pg-close
+  / Tab panes
+  .tab-content
+    / BEGIN Notes !
+    #quickview-notes.tab-pane.fade.in.no-padding
+      #note-views.view-port.clearfix.quickview-notes
+        / BEGIN Note List !
+        #quick-note-list.view.list
+          .toolbar.clearfix
+            %ul.pull-right
+              %li
+                %a.delete-note-link{:href => "#"}
+                  %i.fa.fa-trash-o
+              %li
+                %a.new-note-link{"data-navigate" => "view", "data-view-animation" => "push", "data-view-port" => "#note-views", :href => "#"}
+                  %i.fa.fa-plus
+            %button.btn-delete-notes.btn.btn-xs.btn-block{:style => "display:none"}
+              %i.fa.fa-times
+              Delete
+          %ul
+            / BEGIN Note Item !
+            %li{"data-navigate" => "view", "data-noteid" => "1", "data-view-animation" => "push", "data-view-port" => "#note-views"}
+              .left
+                / BEGIN Note Action !
+                .checkbox.check-warning.no-margin
+                  %input#qncheckbox1{:type => "checkbox", :value => "1"}
+                    %label{:for => "qncheckbox1"}
+                / END Note Action !
+                / BEGIN Note Preview Text !
+                %p.note-preview Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
+                / BEGIN Note Preview Text !
+              / BEGIN Note Details !
+              .right.pull-right
+                / BEGIN Note Date !
+                %span.date 12/12/14
+                %a{:href => "#"}
+                  %i.fa.fa-chevron-right
+                / END Note Date !
+              / END Note Details !
+            / END Note List !
+        / END Note List !
+        #quick-note.view.note
+          %div
+            %ul.toolbar
+              %li
+                %a.close-note-link{"data-navigate" => "view", "data-view-animation" => "push", "data-view-port" => "#note-views", :href => "#"}
+                  %i.pg-arrow_left
+              %li
+                %a.Bold{:href => "#"}
+                  %i.fa.fa-bold
+              %li
+                %a.Italic{:href => "#"}
+                  %i.fa.fa-italic
+              %li
+                %a{:href => "#"}
+                  %i.fa.fa-link
+            .body
+              %div
+                .top
+                  %span 21st april 2014 2:13am
+                .content
+                  .quick-note-editor.full-width.full-height.js-input{:contenteditable => "true"}
+    / END Notes !
+    / BEGIN Alerts !
+    #quickview-alerts.tab-pane.fade.no-padding
+      #alerts.view-port.clearfix
+        / BEGIN Alerts View !
+        .view.bg-white
+          / BEGIN View Header !
+          .navbar.navbar-default.navbar-sm
+            .navbar-inner
+              / BEGIN Header Controler !
+              %a.inline.action.p-l-10.link.text-master{"data-navigate" => "view", "data-view-animation" => "push-parrallax", "data-view-port" => "#chat", :href => "javascript:;"}
+                %i.pg-more
+              / END Header Controler !
+              .view-heading
+                Notications
+              / BEGIN Header Controler !
+              %a.inline.action.p-r-10.pull-right.link.text-master{:href => "#"}
+                %i.pg-search
+              / END Header Controler !
+          / END View Header !
+          / BEGIN Alert List !
+          .list-view.boreded.no-top-border{"data-init-list-view" => "ioslist"}
+            / BEGIN List Group !
+            .list-view-group-container
+              / BEGIN List Group Header!
+              .list-view-group-header.text-uppercase
+                Calendar
+              / END List Group Header!
+              %ul
+                / BEGIN List Group Item!
+                %li.alert-list
+                  / BEGIN Alert Item Set Animation using data-view-animation !
+                  %a{"data-navigate" => "view", "data-view-animation" => "push-parrallax", "data-view-port" => "#chat", :href => "javascript:;"}
+                    %p.col-xs-height.col-middle
+                      %span.text-warning.fs-10
+                        %i.fa.fa-circle
+                    %p.p-l-10.col-xs-height.col-middle.col-xs-9.overflow-ellipsis.fs-12
+                      %span.text-master David Nester Birthday
+                    %p.p-r-10.col-xs-height.col-middle.fs-12.text-right
+                      %span.text-warning
+                        Today
+                        %br/
+                      %span.text-master All Day
+                  / END Alert Item!
+                  / BEGIN List Group Item!
+                / END List Group Item!
+            / END List Group !
+          / END Alert List !
+        / EEND Alerts View !
+    / END Alerts !
+    #quickview-chat.tab-pane.fade.in.active.no-padding
+      #chat.view-port.clearfix
+        .view.bg-white
+          / BEGIN View Header !
+          .navbar.navbar-default
+            .navbar-inner
+              / BEGIN Header Controler !
+              %a.inline.action.p-l-10.link.text-master{"data-navigate" => "view", "data-view-animation" => "push-parrallax", "data-view-port" => "#chat", :href => "javascript:;"}
+                %i.pg-plus
+              / END Header Controler !
+              .view-heading
+                Chat List
+                .fs-11 Show All
+              / BEGIN Header Controler !
+              %a.inline.action.p-r-10.pull-right.link.text-master{:href => "#"}
+                %i.pg-more
+              / END Header Controler !
+          / END View Header !
+          .list-view.boreded.no-top-border{"data-init-list-view" => "ioslist"}
+            .list-view-group-container
+              .list-view-group-header.text-uppercase
+                a
+              %ul
+                / BEGIN Chat User List Item  !
+                %li.chat-user-list.clearfix
+                  %a{"data-navigate" => "view", "data-view-animation" => "push-parrallax", "data-view-port" => "#chat", :href => "#"}
+                    %span.col-xs-height.col-middle
+                      %span.thumbnail-wrapper.d32.circular.bg-success
+                        = image_tag current_user.avatar_url(:thumb), width: 34, height: 34, alt: current_user.name, class: 'col-top'
+                    %p.p-l-10.col-xs-height.col-middle.col-xs-12
+                      %span.text-master ava flores
+                      %span.text-master.hint-text.fs-12 Hello there
+                / END Chat User List Item  !
+            .list-view-group-container
+              .list-view-group-header.text-uppercase b
+              %ul
+                / BEGIN Chat User List Item  !
+                %li.chat-user-list.clearfix
+                  %a{"data-navigate" => "view", "data-view-animation" => "push-parrallax", "data-view-port" => "#chat", :href => "#"}
+                    %span.col-xs-height.col-middle
+                      %span.thumbnail-wrapper.d32.circular.bg-success
+                        = image_tag current_user.avatar_url(:thumb), width: 34, height: 34, alt: current_user.name, class: 'col-top'
+                    %p.p-l-10.col-xs-height.col-middle.col-xs-12
+                      %span.text-master bella mccoy
+                      %span.text-master.hint-text.fs-12 Hello there
+                / END Chat User List Item  !
+                / BEGIN Chat User List Item  !
+                %li.chat-user-list.clearfix
+                  %a{"data-navigate" => "view", "data-view-animation" => "push-parrallax", "data-view-port" => "#chat", :href => "#"}
+                    %span.col-xs-height.col-middle
+                      %span.thumbnail-wrapper.d32.circular.bg-success
+                        = image_tag current_user.avatar_url(:thumb), width: 34, height: 34, alt: current_user.name, class: 'col-top'
+                    %p.p-l-10.col-xs-height.col-middle.col-xs-12
+                      %span.text-master bob stephens
+                      %span.text-master.hint-text.fs-12 Hello there
+                / END Chat User List Item  !
+        / BEGIN Conversation View  !
+        .view.chat-view.bg-white.clearfix
+          / BEGIN Header  !
+          .navbar.navbar-default
+            .navbar-inner
+              %a.link.text-master.inline.action.p-l-10{"data-navigate" => "view", "data-view-animation" => "push-parrallax", "data-view-port" => "#chat", :href => "javascript:;"}
+                %i.pg-arrow_left
+              .view-heading
+                John Smith
+                .fs-11.hint-text Online
+              %a.link.text-master.inline.action.p-r-10.pull-right{:href => "#"}
+                %i.pg-more
+          / END Header  !
+          / BEGIN Conversation  !
+          #my-conversation.chat-inner
+            / BEGIN From Me Message  !
+            .message.clearfix
+              .chat-bubble.from-me
+                Hello there
+            / END From Me Message  !
+            / BEGIN From Them Message  !
+            .message.clearfix
+              .profile-img-wrapper.m-t-5.inline
+                = image_tag current_user.avatar_url(:thumb), width: 30, height: 30, alt: current_user.name, class: 'col-top'
+              .chat-bubble.from-them
+                Hey
+            / END From Them Message  !
+            / BEGIN From Me Message  !
+            .message.clearfix
+              .chat-bubble.from-me
+                Did you check out Pages framework ?
+            / END From Me Message  !
+            / BEGIN From Me Message  !
+            .message.clearfix
+              .chat-bubble.from-me
+                Its an awesome chat
+            / END From Me Message  !
+            / BEGIN From Them Message  !
+            .message.clearfix
+              .profile-img-wrapper.m-t-5.inline
+                = image_tag current_user.avatar_url(:thumb), width: 30, height: 30, alt: current_user.name, class: 'col-top'
+              .chat-bubble.from-them
+                Yea
+            / END From Them Message  !
+          / BEGIN Conversation  !
+          / BEGIN Chat Input  !
+          .b-t.b-grey.bg-white.clearfix.p-l-10.p-r-10
+            .row
+              .col-xs-1.p-t-15
+                %a.link.text-master{:href => "#"}
+                  %i.fa.fa-plus-circle
+              .col-xs-8.no-padding
+                %input.form-control.chat-input{"data-chat-conversation" => "#my-conversation", "data-chat-input" => "", :placeholder => "Say something", :type => "text"}
+              .col-xs-2.link.text-master.m-l-10.m-t-15.p-l-10.b-l.b-grey.col-top
+                %a.link.text-master{:href => "#"}
+                  %i.pg-camera
+          / END Chat Input  !
+        / END Conversation View  !
+/ END QUICKVIEW

@@ -6,6 +6,7 @@ var mkdirp = require('mkdirp');
 var uglifyJS = require('uglify-js');
 var modernizrConfig = require('../.modernizrrc.json');
 
+
 function buildModernizr(output, environment, optimize) {
 
   optimize = optimize || false;

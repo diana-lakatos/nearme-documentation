@@ -1,0 +1,41 @@
+.label {
+    display: inline-block;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background: #999;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: $font-stack-alt;
+    font-size: 12px;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.label-danger {
+    background: $color-danger;
+}
+
+.label-warning {
+    background: $color-warning;
+}
+
+.label-error {
+    background: $color-error;
+}
+
+.label-success {
+    background: $color-success;
+}
+
+.label-notice {
+    background: $color-notice;
+}
+
+.label-active {
+    background: $color-success;
+}
+
+.label-inactive {
+    background: $color-danger;
+}

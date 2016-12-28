@@ -1,9 +1,0 @@
-= simple_form_for [:admin, resource], :html => { :multipart => true } do |f|
-  = f.input :path
-  = f.input :content, width: 50
-  = f.input :theme_id, collection: Theme.all, prompt: false
-  = f.input :hero_image
-  = link_to(resource.hero_image.filename, resource.hero_image.url) if resource.hero_image.present?
-
-  .form-actions
-    = f.button :submit

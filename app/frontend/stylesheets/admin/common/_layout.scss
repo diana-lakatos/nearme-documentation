@@ -1,0 +1,13 @@
+.container {
+  margin: 0 auto;
+  width: auto;
+  max-width: $max-content-width;
+  padding: 0 $side-spacing-small;
+
+  @include clear;
+
+  @include breakpoint($touch-breakpoint) {
+    padding-left: $side-spacing-large;
+    padding-right: $side-spacing-large;
+  }
+}

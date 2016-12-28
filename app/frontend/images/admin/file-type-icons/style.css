@@ -1,0 +1,216 @@
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+/* ==========================================
+Single-colored icons can be modified like so:
+.name {
+  font-size: 32px;
+  color: red;
+}
+========================================== */
+
+.gp-file-type {
+  width: 0.7138671875em;
+}
+
+.z-file-type {
+  width: 0.7138671875em;
+}
+
+.ae-file-type {
+  width: 0.7138671875em;
+}
+
+.ai-file-type {
+  width: 0.7138671875em;
+}
+
+.apk-file-type {
+  width: 0.7138671875em;
+}
+
+.asf-file-type {
+  width: 0.7138671875em;
+}
+
+.avi-file-type {
+  width: 0.7138671875em;
+}
+
+.bak-file-type {
+  width: 0.7138671875em;
+}
+
+.bmp-file-type {
+  width: 0.7138671875em;
+}
+
+.cdr-file-type {
+  width: 0.7138671875em;
+}
+
+.css-file-type {
+  width: 0.7138671875em;
+}
+
+.csv-file-type {
+  width: 0.7138671875em;
+}
+
+.divx-file-type {
+  width: 0.7138671875em;
+}
+
+.dll-file-type {
+  width: 0.7138671875em;
+}
+
+.doc-file-type {
+  width: 0.7138671875em;
+}
+
+.docx-file-type {
+  width: 0.7138671875em;
+}
+
+.dw-file-type {
+  width: 0.7138671875em;
+}
+
+.dwg-file-type {
+  width: 0.7138671875em;
+}
+
+.eps-file-type {
+  width: 0.7138671875em;
+}
+
+.exe-file-type {
+  width: 0.7138671875em;
+}
+
+.flv-file-type {
+  width: 0.7138671875em;
+}
+
+.fw-file-type {
+  width: 0.7138671875em;
+}
+
+.gif-file-type {
+  width: 0.7138671875em;
+}
+
+.gz-file-type {
+  width: 0.7138671875em;
+}
+
+.html-file-type {
+  width: 0.7138671875em;
+}
+
+.ico-file-type {
+  width: 0.7138671875em;
+}
+
+.iso-file-type {
+  width: 0.7138671875em;
+}
+
+.jar-file-type {
+  width: 0.7138671875em;
+}
+
+.jpg-file-type {
+  width: 0.7138671875em;
+}
+
+.js-file-type {
+  width: 0.7138671875em;
+}
+
+.mov-file-type {
+  width: 0.7138671875em;
+}
+
+.mp3-file-type {
+  width: 0.7138671875em;
+}
+
+.mp4-file-type {
+  width: 0.7138671875em;
+}
+
+.mpeg-file-type {
+  width: 0.7138671875em;
+}
+
+.pdf-file-type {
+  width: 0.7138671875em;
+}
+
+.php-file-type {
+  width: 0.7138671875em;
+}
+
+.png-file-type {
+  width: 0.7138671875em;
+}
+
+.ppt-file-type {
+  width: 0.7138671875em;
+}
+
+.ps-file-type {
+  width: 0.7138671875em;
+}
+
+.psd-file-type {
+  width: 0.7138671875em;
+}
+
+.rar-file-type {
+  width: 0.7138671875em;
+}
+
+.svg-file-type {
+  width: 0.7138671875em;
+}
+
+.swf-file-type {
+  width: 0.7138671875em;
+}
+
+.sys-file-type {
+  width: 0.7138671875em;
+}
+
+.tar-file-type {
+  width: 0.7138671875em;
+}
+
+.tiff-file-type {
+  width: 0.7138671875em;
+}
+
+.txt-file-type {
+  width: 0.7138671875em;
+}
+
+.unknown-file-type {
+  width: 0.7138671875em;
+}
+
+.wav-file-type {
+  width: 0.7138671875em;
+}
+
+.zip-file-type {
+  width: 0.7138671875em;
+}

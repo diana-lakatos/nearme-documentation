@@ -1,0 +1,14 @@
+.confirm-box {
+    border: 1px dashed $color-separator;
+    padding: 10px 20px;
+    margin: 10px 0;
+    display: none;
+
+    &.active {
+        display: block;
+    }
+
+    p {
+        margin: 0;
+    }
+}

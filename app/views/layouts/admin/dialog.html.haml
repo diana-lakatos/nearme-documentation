@@ -1,0 +1,5 @@
+- if content_for(:dialog_title)
+  %header.dialog-header
+    %h2#dialog-title= yield(:dialog_title)
+
+= yield

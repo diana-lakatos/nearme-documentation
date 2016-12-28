@@ -9,8 +9,8 @@
     %meta{:name => "viewport", :content => "width=980"}
     = csrf_meta_tag
     = render 'layouts/favicon'
-    = stylesheet_link_tag 'instance_admin_vendor'
-    = stylesheet_link_tag 'instance_admin'
+    = stylesheet_link_tag 'instance_admin_vendor', media: 'all'
+    = stylesheet_link_tag 'instance_admin', media: 'all'
     = yield :styles
 
     = render 'shared/head/fonts'

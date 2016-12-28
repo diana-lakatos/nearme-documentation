@@ -1,3 +1,6 @@
+node_modules
 vendor
 data_tables
-sessioncam.js
+jquery.dataTables.min.js
+dataTables.bootstrap.js
+public/assets

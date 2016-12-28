@@ -1,0 +1,31 @@
+- admin_help_area('asset-location')
+
+- asset_type_name = 'Event'
+
+- is_collapsed = false
+
+= admin_side_navigation(:asset)
+
+= admin_simple_form_for :admin_config, url: admin_path(page: 'asset_wizard_booking') do |f|
+
+
+  %h1 Event Location
+  = f.input :enable_location, as: :switch, input_html: { "aria-controls" => 'location-props', checked: !is_collapsed}, label: t('simple_form.labels.admin_config.enable_location', name: asset_type_name.capitalize.pluralize)
+
+  - section_class = 'collapsible'
+  - section_class += ' active' unless is_collapsed
+
+  #location-props{"aria-expanded" => is_collapsed, class: section_class }
+    %h2 Grouping
+
+    %p In case you have more then one asset in a given location you can choose to display them all on one page, rather than having a separate page for each listing.
+
+    = f.input :group_locations, as: :switch
+
+    %h2 URL format
+
+    %p You can update the default URL for listings on your marketplace. Please keep in mind that when you are using grouping separate listing pages are disabled and only location places are available
+
+    = f.input :path_format, as: :string
+
+  = render 'admin/shared/navigation_nextprev', f: f

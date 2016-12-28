@@ -1,0 +1,17 @@
+= simple_form_for [:global_admin, resource.transactable_type, resource], :html => { :multipart => true} do |f|
+  = f.input :name
+  = f.input :label
+  = f.input :attribute_type, :as => :select, :collection => %w(string integer float decimal datetime time date binary boolean), :prompt => "Choose..."
+  = f.input :html_tag, :as => :select, :collection => %w(input select switch), :prompt => "Choose..."
+  = f.input :placeholder
+  = f.input :prompt
+  = f.input :default_value
+  = f.input :public
+  = f.input :validation_rules
+  = f.input :valid_values
+  = f.input :input_html_options
+  = f.input :wrapper_html_options
+  = f.input :hint
+
+  .form-actions
+    = f.button :submit

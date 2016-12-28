@@ -1,0 +1,209 @@
+// Make viewport responsive
+//
+// @viewport is needed because IE 10+ doesn't honor <meta name="viewport"> in
+// some cases. See http://timkadlec.com/2012/10/ie10-snap-mode-and-responsive-design/.
+// Eventually @viewport will replace <meta name="viewport">. It's been manually
+// prefixed for forward-compatibility.
+//
+// However, `device-width` is broken on IE 10 on Windows (Phone) 8,
+// (see http://timkadlec.com/2013/01/windows-phone-8-and-device-width/ and https://github.com/twbs/bootstrap/issues/10497)
+// and the fix for that involves a snippet of JavaScript to sniff the user agent
+// and apply some conditional CSS.
+//
+// See http://getbootstrap.com/getting-started/#support-ie10-width for the relevant hack.
+//
+// Wrap `@viewport` with `@at-root` for when folks do a nested import (e.g.,
+// `.class-name { @import "bootstrap"; }`).
+//
+// Includes future-proofed vendor prefixes as well.
+@at-root {
+  @-moz-viewport {
+    width: device-width;
+  }
+
+  @-ms-viewport {
+    width: device-width;
+  }
+
+  @-o-viewport {
+    width: device-width;
+  }
+
+  @-webkit-viewport {
+    width: device-width;
+  }
+
+  @viewport {
+    width: device-width;
+  }
+}
+
+// Suppress the focus outline on elements that cannot be accessed via keyboard.
+// This prevents an unwanted focus outline from appearing around elements that
+// might still respond to pointer events.
+//
+// Credit: https://github.com/suitcss/base
+[tabindex="-1"]:focus {
+  outline: none !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-y: scroll;
+  height: 100%;
+}
+
+body {
+  background: $color-background;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  // overflow-x: hidden;
+}
+
+body, textarea, input, select, option, button {
+  color: $color-text;
+}
+
+a {
+  color: $color-link;
+  text-decoration: underline;
+  transition: color .2s;
+
+  span {
+    cursor: pointer;
+  }
+
+  @include breakpoint($touch-breakpoint) {
+    &:hover, &:focus, &:active {
+      text-decoration: none;
+      color: $color-link-hover;
+    }
+  }
+}
+
+[href^="tel:"] {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  border-width: 0;
+  box-sizing: content-box;
+  vertical-align: middle;
+}
+
+a,
+area,
+button,
+[role="button"],
+input,
+label,
+select,
+summary,
+textarea {
+  touch-action: manipulation;
+}
+
+pre {
+  font-family: Consolas,Monaco,Courier New,monospace;
+  white-space: pre;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+hr {
+  overflow: hidden;
+  width: 100%;
+  height: 1px;
+  margin: 15px 0;
+  border: none;
+  border-top: 1px solid #eee;
+  background: none;
+  font-size: 0;
+}
+
+strong {
+  font-weight: bold;
+}
+
+iframe {
+  border: none;
+}
+
+label img {
+  user-select: none;
+  pointer-events: none;
+}
+
+code {
+  padding: 0 5px;
+  background: #ffc;
+  color: #000;
+}
+
+textarea {
+  // Textareas should really only resize vertically so they don't break their (horizontal) containers.
+  resize: vertical;
+}
+
+fieldset {
+  // Chrome and Firefox set a `min-width: min-content;` on fieldsets,
+  // so we reset that to ensure it behaves more like a standard block element.
+  // See https://github.com/twbs/bootstrap/issues/12359.
+  min-width: 0;
+
+  // Reset the default outline behavior of fieldsets so they don't affect page layout.
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+input[type="search"] {
+  // Undo Normalize's default here to match our global overrides.
+  box-sizing: inherit;
+
+  // This overrides the extra rounded corners on search inputs in iOS so that our
+  // `.form-control` class can properly style them. Note that this cannot simply
+  // be added to `.form-control` as it's not specific enough. For details, see
+  // https://github.com/twbs/bootstrap/issues/11586.
+  -webkit-appearance: none;
+}
+
+// Always hide an element with the `hidden` HTML attribute (from PureCSS).
+[hidden] {
+  display: none !important;
+}
+
+/*! helpers ------- */
+
+.offset, .struct-label, .sr-only {
+  position: absolute;
+  left: -10001px;
+  overflow: hidden;
+}
+
+.alignright {
+  float: right;
+  margin: 0 0 20px 20px;
+}
+
+.alignleft {
+  float: left;
+  margin: 0 20px 20px 0;
+}
+
+.alignright, .alignleft {
+  img {
+    display: block;
+    max-width: none;
+  }
+}
+
+.center {
+  text-align: center;
+}

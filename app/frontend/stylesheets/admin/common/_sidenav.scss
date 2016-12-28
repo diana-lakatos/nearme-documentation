@@ -1,0 +1,123 @@
+.layout-sidenav {
+  background: #fff;
+  margin: 20px;
+
+  @include breakpoint($touch-breakpoint) {
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+}
+
+.nav-side {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: none;
+  }
+
+  li {
+    border-bottom: 1px solid $color-separator;
+  }
+
+  li:last-child {
+    border-bottom: none;
+  }
+
+  a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: $font-stack-alt;
+    font-size: .9em;
+
+    &:hover, &:focus, &:active {
+      background: #f6f6f6;
+    }
+  }
+
+  .selected > a {
+    position: relative;
+
+    &:before {
+      content: "";
+      top: 0;
+      bottom: 0;
+      right: -1px;
+      position: absolute;
+      border-right: 3px $color-active solid;
+      color: $color-active;
+    }
+  }
+
+  .js & {
+    padding: 10px 20px;
+    background: #ddd;
+
+    h2 {
+      font-size: 1rem;
+      margin: 0 0 5px;
+    }
+
+    select {
+      width: 100%;
+      margin: 0 0 10px;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 5px 10px;
+    }
+
+    @include breakpoint($touch-breakpoint) {
+      background: none;
+      padding: 0;
+
+      select {
+        display: none;
+      }
+
+      h2 {
+        background: #e3e3e3;
+        color: #555;
+        display: block;
+        padding: 15px 20px;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-family: $font-stack-alt;
+        font-size: 0.9em;
+        margin: 0;
+      }
+
+      ul {
+        display: block;
+      }
+    }
+  }
+}
+
+@include breakpoint($touch-breakpoint) {
+  .layout-sidenav {
+    display: flex;
+
+    .nav-side {
+      position: relative;
+      z-index: 20;
+      width: 18%;
+      border-right: 1px solid $color-separator;
+
+      .selected > a:after {
+        @include triangle(left, $color-active, 6px, 4px);
+
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+
+    .main-content {
+      width: 82%;
+      display: flex;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+= admin_simple_form_for [:admin, :design, @custom_theme],
+  html: { multipart: true,
+  id: "custom-theme-form",
+  "data-api-endpoint": url_for([:api, @custom_theme]),
+  class: 'nm-form' } do |f|
+
+  = f.input :name
+
+  = f.input :in_use, as: :switch, input_html: { :"data-enable-switch" => true }
+  = f.input :in_use_for_instance_admins, as: :switch, disabled: f.object.in_use, input_html: { :"data-preview-switch" => true }
+
+  - unless f.object.persisted?
+    = f.input :copy_from_template, collection: CustomTheme::AVAILABLE_DEFAULT_TEMPLATES, include_blank: 'None', inline_label: true
+
+  .form-actions
+    = link_to t('admin.actions.cancel'), admin_design_themes_path, class: 'btn btn-flat'
+
+    = f.button :submit, t(f.object.persisted? ? :save : :create, scope: [:admin, :themes, :actions]), class: 'btn'
+

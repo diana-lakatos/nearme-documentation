@@ -1,0 +1,238 @@
+$config-column-fields: 55%;
+$config-column-description: 45%;
+
+.config-section-description,
+.config-section-fields {
+  position: relative;
+  padding: (1.2 * $side-spacing-small) $side-spacing-small;
+
+  hr {
+    margin: 30px 0;
+    border-top: 1px dotted rgba(0, 0, 0, 0.1);
+  }
+}
+
+.config-section {
+  position: relative;
+}
+
+.config-section-fields {
+  background: #f3f3f3;
+}
+
+.config-section-fields-wrapper {
+  max-width: 750px;
+}
+
+.nav-config-nextprev {
+  text-align: right;
+}
+
+@include breakpoint($touch-breakpoint) {
+  .config-section-description,
+  .config-section-fields {
+    padding: $side-spacing-large ($side-spacing-large * 1.5);
+  }
+
+  .config-section-fields {
+    order: 1;
+    width: $config-column-fields;
+  }
+
+  .config-section-description {
+    order: 2;
+    width: $config-column-description;
+  }
+}
+
+
+.section-inner {
+  padding-left: 20px;
+  border-left: 3px solid rgba(0, 0, 0, 0.2);
+
+  .section-inner {
+    padding: 20px;
+    background: #fcfcfc;
+    border-left: none;
+
+    *:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.help-options {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+
+  .btn {
+    margin-left: 5px;
+    user-select: none;
+  }
+}
+
+.help-option-button {
+  font-size: 12px;
+  text-transform: uppercase;
+  font-family: $font-stack-alt;
+  line-height: 1;
+  padding: 5px 10px;
+  transition: all .3s ease;
+  text-align: center;
+  background: $color-primary;
+  color: #fff;
+  outline: none;
+
+  &:before {
+    @include fa-icon;
+
+    margin-right: 5px;
+  }
+
+  &:hover {
+    background: #666;
+    color: #fff;
+  }
+}
+
+.help-toggler {
+  position: absolute;
+  z-index: 10;
+  right: 10px;
+  top: 10px;
+
+  &:before {
+    content: $fa-var-info;
+    margin-right: 5px;
+  }
+}
+
+.help-close:before {
+  content: $fa-var-close;
+}
+
+.help-detach-toggler:before {
+  content: $fa-var-clone;
+
+  .has-detached-help & {
+    content: $fa-var-columns;
+  }
+}
+
+.help-drag-handle {
+  background: #ccc;
+  color: #666;
+  cursor: move;
+
+  &:hover, &:focus, &:active {
+    background: #ccc;
+    color: #666;
+  }
+
+  &:before {
+    content: $fa-var-arrows;
+  }
+}
+
+.help-edit:before {
+  content: $fa-var-pencil;
+}
+
+@mixin config-detached {
+  position: fixed;
+  z-index: 1000;
+  left: 20px;
+  right: 20px;
+  top: 20px;
+  bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  width: auto;
+
+  [data-help-container] {
+    overflow: auto;
+  }
+}
+
+.js {
+  .config-section-description {
+    display: none;
+  }
+
+  .config-section-fields {
+    width: 100%;
+  }
+
+  @include breakpoint(0 ($touch-breakpoint - 1)) {
+    .config-section-description {
+      @include config-detached;
+
+      transform: none !important;
+    }
+
+    .has-visible-help .config-section-description {
+      display: block;
+    }
+
+    .help-drag-handle, .help-detach-toggler {
+      display: none;
+    }
+  }
+
+
+  @include breakpoint($touch-breakpoint) {
+    .has-visible-help {
+      .config-section-description {
+        display: block;
+        width: $config-column-description;
+      }
+
+      .config-section-description + .config-section-fields {
+        width: $config-column-fields;
+      }
+
+      &:not(.has-detached-help) .help-toggler {
+        display: none;
+      }
+    }
+
+    .help-drag-handle {
+      display: none;
+    }
+
+    .config-section:not(.has-detached-help) .config-section-description {
+      transform: none !important;
+    }
+
+    .has-detached-help .config-section-description {
+      @include config-detached;
+
+      top: 5vh;
+      right: 5vw;
+      left: auto;
+      width: 500px;
+      min-height: 400px;
+      bottom: auto;
+      max-height: 90vh;
+
+      + .config-section-fields {
+        width: 100%;
+      }
+
+      .help-drag-handle {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+// Specific config pages
+@import "config/asset_type";
+@import "config/properties";
+@import "config/shipping_profiles";
+@import "config/help_editor";
+@import "config/versions_editor";
+@import "config/themes";
+@import "config/actions";
+@import "config/domains";

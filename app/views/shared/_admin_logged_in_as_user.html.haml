@@ -1,8 +1,8 @@
-- # See Admin::UsersController which sets this up.
+- # See GlobalAdmin::UsersController which sets this up.
 .alert.static.warning
   %p
     %i
       Currently browsing the website as #{current_user.name}.
-      = link_to "Return back.", restore_session_admin_users_path,
+      = link_to "Return back.", restore_session_global_admin_users_path,
           :method => :post
 

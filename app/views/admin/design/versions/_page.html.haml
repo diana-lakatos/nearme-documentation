@@ -1,0 +1,14 @@
+.content-container.show-version
+  %h4= "Page '#{resource.try(:path)}' version ##{@version.id}"
+  .row
+    .input-container.col-xs-12
+      .field-name Path
+      = @version.reify.path
+  .row
+    .input-container.col-xs-12
+      .field-name Content
+      %textarea.form-control{rows: 20}= @version.reify.content
+  .row
+    .input-container.col-xs-12
+      .field-name CSS Content
+      %textarea.form-control{rows: 20}= @version.reify.css_content

@@ -1,0 +1,29 @@
+%h1= "Instance View '#{@instance_view.path}' version ##{@version.id}"
+
+.pull-right
+  = link_to "All versions", global_admin_instance_instance_view_versions_path(@instance_view.instance_id, @instance_view),  :class => "btn btn-default"
+  = link_to "Rollback", rollback_global_admin_instance_instance_view_version_path(@instance_view.instance_id, @instance_view, @version),  :class => "btn btn-default", data: { confirm: 'Are you sure you want to rollback to this version?'}
+
+%table.table
+  %tr
+    %th= "Path"
+    %td= @instance_view.path
+  %tr
+    %th= "Transactable Type"
+    %td= @instance_view.transactable_type.try(:name)
+  %tr
+    %th= "Locale"
+    %td= @instance_view.locale
+  %tr
+    %th= "Format"
+    %td= @instance_view.format
+  %tr
+    %th= "Handler"
+    %td= @instance_view.handler
+  %tr
+    %th= "Partial"
+    %td= @instance_view.partial
+  %tr
+    %th= "Body"
+    %td
+      %pre= @instance_view.body

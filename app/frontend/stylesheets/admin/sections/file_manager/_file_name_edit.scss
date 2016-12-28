@@ -1,0 +1,58 @@
+.file-manager-info-pane {
+  .file-name {
+    margin-bottom: 15px;
+
+    h2 {
+      display: inline-block;
+    }
+
+    .edit-name {
+      display: inline-block;
+      background: none;
+      border: none;
+      font-size: 0;
+      line-height: 1;
+
+      &:before {
+        font-family: FontAwesome;
+        font-size: 20px;
+        content: $fa-var-pencil;
+        color: #999;
+      }
+    }
+
+    .js & {
+      .file-name-text-wrapper {
+        cursor: pointer;
+      }
+
+      .file-name-form {
+        display: none;
+
+        input {
+          font-size: 1.5em;
+          font-weight: normal;
+          margin: 0;
+          padding: 0;
+          border: none;
+          line-height: 1.4;
+          color: #333;
+        }
+
+        button {
+          @include sr-only;
+        }
+      }
+
+      &.file-name-edit--enabled {
+        .file-name-form {
+          display: block;
+        }
+
+        .file-name-text-wrapper {
+          display: none;
+        }
+      }
+    }
+  }
+}

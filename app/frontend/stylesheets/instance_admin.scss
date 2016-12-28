@@ -11,7 +11,6 @@
 @import "instance_admin/support";
 @import "instance_admin/style";
 
-
 @import "instance_admin/rating_systems";
 @import "instance_admin/reviews";
 @import "instance_admin/users";
@@ -31,7 +30,33 @@
 @import "instance_admin/content_holders";
 @import "instance_admin/schedule";
 @import "instance_admin/tabs";
-@import "instance_admin/custom_attributes";
-@import "instance_admin/charts";
 
 @import "instance_admin/dashboard_modal";
+
+@media print {
+  nav {
+    display: none !important;
+  }
+
+  #main-container {
+    max-width: none;
+    margin: 0 0 25px;
+  }
+
+  .main-header {
+    padding: 15px;
+    position: relative;
+
+    .header-buttons {
+      display: none;
+    }
+  }
+
+  .header-filler {
+    display: none;
+  }
+
+  a:after {
+    display: none !important;
+  }
+}

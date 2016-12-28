@@ -1,0 +1,59 @@
+#rootwizard.m-t-50.bg-white
+  = render 'admin/pages/asset_wizard/nav', active: 'ammenities'
+
+  .tab-content
+    = render 'admin/pages/asset_wizard/next_prev', next_link: admin_path(page: 'asset_wizard_waiver_agreements'), previous_link: admin_path(page: 'asset_wizard_categories')
+
+    .tab-pane.padding-20.slide-left.active
+      .padding-30
+        %h2 Ammenities
+        %p In case your assets often share common traits you can add predefined list of ammenities to help hosts/sellers better organize their listings.
+
+        %p.small.hint-text Ammenities are shared across all of your different asset types.
+
+        %form{:role => "form"}
+
+          #location-props.collapse.in{"aria-expanded" => true}
+            %h5.m-t-50
+              Listing
+
+            %p
+              %button.btn.btn-primary{type: 'button', data: { toggle: 'modal', target: '#ammenities-modal' } } Edit listing ammenities
+            %p
+              Currently you have
+              %b 175
+              listing ammenities in
+              %b 5
+              categories.
+
+            %h5.m-t-50
+              Location
+              %span.label.label-danger OPTIONAL SECTION
+            %p Ammenities can be available at location level as well
+
+            %p
+              %button.btn.btn-primary{type: 'button', data: { toggle: 'modal', target: '#ammenities-modal' } } Edit location ammenities
+            %p
+              Currently you have
+              %b 175
+              location ammenities in
+              %b 5
+              categories.
+
+
+    = render 'admin/pages/asset_wizard/next_prev', next_link: admin_path(page: 'asset_wizard_waiver_agreements'), previous_link: admin_path(page: 'asset_wizard_categories')
+  .clearfix
+
+#ammenities-modal.modal.fade.slide-up{"aria-hidden" => "false", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content-wrapper
+      .modal-content
+        .modal-header.clearfix.text-left
+          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"}
+            %i.pg-close.fs-14
+          %h5
+            Ammenity
+            %span.semi-bold Types
+          %p.p-b-10 Simple tree UI with edit in place will be here to edit location ammenities, similar to categories management.
+        .modal-body
+          %form{:role => "form"}

@@ -1,0 +1,32 @@
+.fullscreen-editor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.fullscreen-editor-panes {
+    display: flex;
+    height: calc(100% - 50px);
+    width: 100%;
+}
+
+.fullscreen-editor-pane {
+    padding: 10px;
+}
+
+.fullscreen-editor-panes textarea,
+.fullscreen-editor-panes .CodeMirror,
+.fullscreen-editor-panes .CodeMirror-merge,
+.fullscreen-editor-panes .CodeMirror-merge-pane,
+.fullscreen-editor-panes .CodeMirror-merge .CodeMirror {
+    height: 100%;
+}
+
+.fullscreen-editor-actions {
+    height: 50px;
+    text-align: center;
+}
+
+.fullscreen-editor-actions .is-hidden {
+    display: none;
+}

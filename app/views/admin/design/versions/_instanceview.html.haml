@@ -1,0 +1,6 @@
+.content-container.show-version
+  %h4= "Version ##{@version.id}"
+  .row
+    .input-container.col-xs-12
+      .field-name Html body
+      %textarea.form-control{rows: 20, data: { editor: 'liquid' } }= @version.reify.body

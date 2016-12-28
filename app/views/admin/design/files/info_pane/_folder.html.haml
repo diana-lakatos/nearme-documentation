@@ -1,0 +1,11 @@
+.file-manager-info-pane.folder
+  %h2 Folder name
+  %button.edit-name{:type => "button"}
+    Edit
+
+  %form{:action => "#"}
+    %input{:type => "text", value: 'file_1.pdf'}/
+    %button{ type: 'submit' } Change name
+    .actions
+      %form{:action => "#"}
+        %button{ type: 'submit' } Delete folder

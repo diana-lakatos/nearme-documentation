@@ -1,0 +1,24 @@
+- admin_help_area('domains')
+
+= admin_side_navigation(:advanced)
+
+%h1= t('admin.domains.title')
+
+.table-container
+  %table
+    %thead
+      %tr
+        %th= t('admin.domains.columns.domain')
+        %th= t('admin.domains.columns.status')
+        %th= t('admin.domains.columns.dns_name')
+        %th= t('admin.domains.columns.redirects_to')
+        %th= t('admin.domains.columns.default')
+        %th= t('admin.domains.columns.sitemap')
+        %th= t('admin.domains.columns.robots')
+    %tbody
+      = render @domains
+
+.listing-actions
+  = link_to t('admin.domains.actions.new_domain'), new_admin_advanced_domain_path, class: 'action--create'
+  = link_to t('admin.domains.actions.new_csr'), new_instance_admin_settings_certificate_request_path, class: 'action--create'
+
