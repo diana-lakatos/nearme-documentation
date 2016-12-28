@@ -2,6 +2,11 @@ en:
   activerecord:
     errors:
       models:
+        delayed_reservation:
+          attributes:
+            dates_fake:
+              invalid_date_for_delivery: must be acceptable by courier, please try later date
+              non_business_day: must be business day acceptable by courier, please try later date
         merchant_account:
           error_codes:
             rejected_fraud: 'This account is rejected due to suspected fraud or illegal activity.'
@@ -1876,8 +1881,11 @@ en:
       address_line2: 'Address line 2 (Apartment/Suite/Building)'
       additional_owners: 'Additional owners'
       additional_owner: 'Additional owner'
+
     reservations:
-      purchase_was_successful: "Your purchase was successful!"
+      purchase_was_successful: Your purchase was successful!
+      cancel_confirmation: Do you really want to cancel this reservation?
+
     products:
       title:
         manage: 'Manage'
@@ -2613,6 +2621,7 @@ en:
   validation_messages:
     price_too_high: '%{price} is too high'
     price_too_low: '%{price} is too low'
+    unprocessable_entity: "We could not process your request due to: %{message}"
   data_upload:
     manage:
       bulk_upload: 'Bulk upload'

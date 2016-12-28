@@ -4,7 +4,7 @@
   .row
     .input-container.col-xs-12
       = simple_form_for [:instance_admin, :settings, @resource] do |form|
-        = form.input :shipping_provider_name, as: :radio_buttons, collection: Shippings::Provider.for(@instance).map(&:name)
+        = form.input :shipping_provider_name, as: :radio_buttons, collection: Deliveries::Provider.for(@instance).map(&:name)
 
         = form.submit
         = link_to :back, [:instance_admin, :settings, :shippings, :shipping_providers]

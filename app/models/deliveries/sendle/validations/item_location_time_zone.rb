@@ -14,6 +14,10 @@ module Deliveries
           time_zone.name
         end
 
+        def parse(*args)
+          time_zone.parse(*args)
+        end
+
         private
 
         def time_zone

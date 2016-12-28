@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Shippings
+module Deliveries
   class DeliveryFactory
     DEFAULT_MESSAGE = 'no notes'
 

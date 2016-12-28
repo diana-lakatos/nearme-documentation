@@ -12,20 +12,19 @@ module Deliveries
     delegate :ping, to: :client
 
     def get_quote(delivery)
-      GetQuote.new(delivery, client).perform
+      Deliveries::Sendle::Commands::GetQuote.new(delivery, client).perform
     end
 
-    # TODO: update deivery status and order-reference
     def place_order(delivery)
-      PlaceOrder.new(delivery, client).perform
+      Deliveries::Sendle::Commands::PlaceOrder.new(delivery, client).perform
     end
 
-    def view_order(delivery)
-      client.view_order order_id: delivery.order_reference
+    def sync_order(delivery)
+      Deliveries::Sendle::Commands::SyncDelivery.new(delivery, client).perform
     end
 
     def cancel_order(delivery)
-      client.cancel_order(order_id: delivery.order_reference)
+      Deliveries::Sendle::Commands::CancelDelivery.new(delivery, client).perform
     end
 
     def track_parcel(delivery)

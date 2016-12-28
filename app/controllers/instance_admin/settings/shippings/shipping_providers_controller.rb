@@ -61,7 +61,7 @@ class InstanceAdmin::Settings::Shippings::ShippingProvidersController < Instance
 
   def prepare_view_object
     @view = OpenStruct.new(
-      provider: Shippings::Provider.find(resource.shipping_provider_name),
+      provider: Deliveries::Provider.find(resource.shipping_provider_name),
       resource: resource
     )
   end

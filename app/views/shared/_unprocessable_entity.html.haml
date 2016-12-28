@@ -2,7 +2,7 @@
   %h3 Shipping provider has not accepted your request due to the following errors:
   - $!.message['messages'].each do |key, value|
     %li
-      = key.humanize
+      = key.to_s.humanize
       = value.first.humanize
   %h3
     Please check the location settings for your listing:

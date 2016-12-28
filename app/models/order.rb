@@ -57,7 +57,7 @@ class Order < ActiveRecord::Base
   state_machine :state, initial: :inactive do
     after_transition inactive: :unconfirmed, do: :activate_order!
     after_transition unconfirmed: :confirmed, do: [:set_confirmed_at, :set_archived_at]
-    after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at, :schedule_refund]
+    after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at, :schedule_refund, :cancel_deliveries]
     after_transition unconfirmed: [:cancelled_by_host], do: [:mark_as_archived!]
     after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:mark_as_archived!, :schedule_void]
     after_transition any => [:rejected] { |o| WorkflowStepJob.perform("WorkflowStep::#{o.class.workflow_class}Workflow::Rejected".constantize, o.id) }

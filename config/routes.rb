@@ -741,6 +741,10 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
+      resources :deliveries do
+        resources :package_labels
+      end
+
       resource :blog, controller: 'user_blog/blog', only: [:show, :edit, :update] do
         collection do
           delete :delete_image

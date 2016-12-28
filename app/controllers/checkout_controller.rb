@@ -120,7 +120,7 @@ class CheckoutController < ApplicationController
 
     # FIX this should be generic validation
     @order.add_validator Deliveries::Sendle::Validations::Order.new
-    @order.shipping_address = Shippings::ShippingAddressBuilder.build(@order, @order.user)
+    @order.shipping_address = Deliveries::ShippingAddressBuilder.build(@order, @order.user)
   end
 
   # We want the price by default to be nil if the pricing select is in the form

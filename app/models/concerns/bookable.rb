@@ -146,7 +146,7 @@ module Bookable
         @order = order
       end
 
-      # TODO clarify how this should work
+      # TODO: clarify how this should work
       def should_expire?
         expires_at.present?
       end

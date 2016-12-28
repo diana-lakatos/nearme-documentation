@@ -52,8 +52,9 @@ class Purchase < Order
     transactable_line_items.each { |t| t.validate_transactable_quantity(self) }
 
     if errors.empty? && valid?
+      process_deliveries! if unconfirmed?
+
       if unconfirmed? && (paid? || payment.capture!)
-        process_deliveries!
         confirm!
         transactable_line_items.each(&:reduce_transactable_quantity!)
       # We need to touch transactable so it's reindexed by ElasticSearch
