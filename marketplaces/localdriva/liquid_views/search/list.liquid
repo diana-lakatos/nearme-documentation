@@ -25,6 +25,7 @@
             <label for="filter-dates">Select Dates</label>
             <input type="text" class="daterange_field fake_select" data-date-range placeholder="When do you need a driver?" data-date-range-from-selector="#data-availability-from" data-date-range-to-selector="#data-availability-to">
           </div>
+
           <div class="filter">
             <label for="filter-passengers">Passengers</label>
             <span class="select-a">
@@ -64,18 +65,22 @@
             </span>
           </div>
 
-          {% assign root_category = searcher.searchable_categories | detect: name: 'Extras' %}
-          <div class="filter">
-            <label for="filter-extras">{{ root_category.name }}</label>
-            <span class="select-a">
-              <select id="filter-industry" class="unstyled-select" data-category-filter>
-                <option value="">Please Select --</option>
-                {% for category in root_category.children %}
-                  <option {% if searcher.category_ids contains category.id %}selected{% endif %} value='{{category.id}}'>{{ category.name }}</option>
-                {% endfor %}
-              </select>
-            </span>
-          </div>
+          {% assign extras_category = searcher.searchable_categories | detect: name: 'Extras' %}
+          {% assign vehicle_features_category = searcher.searchable_categories | detect: name: 'Vehicle Features' %}
+          {% assign root_category = extras_category.children | concat: vehicle_features_category.children | sort: 'name' %}
+          <fieldset class="filter filter-extras">
+            <legend>Extras</legend>
+            <ul>
+              {% for category in root_category %}
+                <li>
+                  <span class="checkbox-a">
+                    <input type="checkbox" id="category-{{ category.id }}" data-category-filter {% if searcher.category_ids contains category.id %}checked{% endif %} value="{{ category.id }}">
+                    <label for="category-{{ category.id }}">{{ category.name }}</label>
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          </fieldset>
         </div>
       </fieldset>
     </form>
