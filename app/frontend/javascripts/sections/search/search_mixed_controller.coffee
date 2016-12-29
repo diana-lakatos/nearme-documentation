@@ -292,7 +292,7 @@ module.exports = class SearchMixedController extends SearchSearchController
   # Trigger automatic updating of search results
   fieldChanged: (field, value) ->
     @renderChildCategories()
-    @triggerSearchFromQueryAfterDelay()
+    @triggerSearchFromQuery()
 
   autocompleteCategories: () ->
     self = this

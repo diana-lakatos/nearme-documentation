@@ -191,7 +191,8 @@ module.exports = class SearchProductsSearchController extends SearchController
   #
   # Returns a jQuery Promise object which can be bound to execute response semantics.
   triggerSearchRequest: ->
-    $.ajax(
+    @currentAjaxRequest.abort() if @currentAjaxRequest
+    @currentAjaxRequest = $.ajax(
       url  : @form.attr("action")
       type : 'GET',
       data : @form.serialize()
