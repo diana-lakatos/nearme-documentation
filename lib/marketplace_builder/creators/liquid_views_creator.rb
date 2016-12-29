@@ -32,7 +32,7 @@ module MarketplaceBuilder
                    format: 'html',
                    handler: 'liquid',
                    partial: template.partial,
-                   view_type: 'view',
+                   view_type: template.view_type,
                    locales: Locale.all)
 
       rescue
