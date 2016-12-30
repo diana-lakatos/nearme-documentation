@@ -29,7 +29,8 @@
           <dd>{{ transactable.properties.trip_start_time }}</dd>
 
           <dt>Length</dt>
-          <dd>{{ transactable.properties.duration }}</dd>
+          {% assign duration = transactable.properties.duration | plus: 0 %}
+          <dd>{{ duration }} {% if duration == 1 %}hour{% else %}hours{% endif %}</dd>
 
           <dt>Pickup Location</dt>
           <dd>{{ transactable.properties.pickup_location }}</dd>
