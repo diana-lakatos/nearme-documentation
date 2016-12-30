@@ -67,6 +67,7 @@ module MarketplaceBuilder
         config['liquid_path'] ||= path.sub("#{template_folder}/", '').gsub(/\.[a-z]+$/, '').gsub(/\/_(?=[^\/]+$)/, '/') # first remove folder path, then file extension, then `_` partial symbol
         config['name'] ||= File.basename(path, '.*').sub(/^_/, '').humanize.titleize
         config['path'] ||= path
+        config['view_type'] ||= 'view'
 
         OpenStruct.new(config)
       end

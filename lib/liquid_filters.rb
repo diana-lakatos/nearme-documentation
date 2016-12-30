@@ -730,4 +730,12 @@ module LiquidFilters
                    .order("#{sort_option} #{sort_direction}")
                    .paginate(page: options['page'] || 1, per_page: [(options['per_page'] || 10).to_i, 50].min)
   end
+
+  # @return [Array] array that is the result of of concatenating passed arguments
+  # @param arr_a [Array]
+  # @param arr_b [Array]
+  # @todo -- remove after upgrade to Liquid 4.x as duplicated
+  def concat(arr_a, arr_b)
+    arr_a + arr_b
+  end
 end

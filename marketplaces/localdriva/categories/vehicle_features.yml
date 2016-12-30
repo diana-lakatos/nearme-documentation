@@ -3,6 +3,6 @@ multiple_root_categories: true
 instance_profile_types:
   - Buyer
 children:
-  - name: 'Airconditioning'
+  - name: 'Air Conditioning'
   - name: 'Heated Seats'
   - name: 'Sunroof'
