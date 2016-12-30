@@ -60,15 +60,13 @@ class Offer < Order
       minimum_lister_service_fee_cents: transactable_pricing.action.minimum_lister_service_fee_cents
     )
 
-    if self.is_free_booking?
-      transactable_type.merchant_fees.each do |merchant_fee|
-        host_line_items.build(
-          name: merchant_fee.name,
-          line_item_source: merchant_fee,
-          unit_price: merchant_fee.amount,
-          line_itemable: self
-        )
-      end
+    transactable_type.merchant_fees.each do |merchant_fee|
+      host_line_items.build(
+        name: merchant_fee.name,
+        line_item_source: merchant_fee,
+        unit_price: merchant_fee.amount,
+        line_itemable: self
+      )
     end
 
     save
