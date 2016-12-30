@@ -23,6 +23,9 @@
     .row
       .input-container.col-xs-12
         = f.input :edit_unconfirmed, as: :boolean, checked_value: true, unchecked_value: false
+    .row
+      .input-container.col-xs-12
+        = f.input :withdraw_invitation_when_reject, as: :boolean, checked_value: true, unchecked_value: false
 
   = content_for :header_buttons do
     = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

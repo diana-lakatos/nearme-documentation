@@ -158,6 +158,13 @@ class Offer < Order
     state == 'unconfirmed'
   end
 
+  def reject(reason = nil)
+    if reservation_type.withdraw_invitation_when_reject?
+      user.transactable_collaborators.where(transactable: transactable).destroy_all
+    end
+    super
+  end
+
   def enquirer_cancelable
     draft_at? || (state == 'unconfirmed')
   end

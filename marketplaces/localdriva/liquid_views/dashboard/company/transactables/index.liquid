@@ -16,7 +16,7 @@
 
 {% content_for 'page_header' %}
   <h1>
-    My Projects
+    My Bookings
     <span class='hidden-xs'>&gt; {{ current_status | humanize }}</span>
   </h1>
 
@@ -58,13 +58,13 @@
 
 {% content_for 'panel_navigation_links' %}
     <li class='{{ 'pending' | active_class:current_status }}'>
-      <a href='{{ tt.transactable_types_path | append: "?status=pending" | append: filter_params }}'>Projects Pending ({{ pending_transactables | total_entries }})</a>
+      <a href='{{ tt.transactable_types_path | append: "?status=pending" | append: filter_params }}'>Bookings Pending ({{ pending_transactables | total_entries }})</a>
     </li>
     <li class='{{ 'in progress' | active_class:current_status }}'>
-      <a href='{{ tt.transactable_types_path | append: "?status=in+progress" | append: filter_params }}'>Projects In Progress ({{ in_progress_transactables | total_entries }})</a>
+      <a href='{{ tt.transactable_types_path | append: "?status=in+progress" | append: filter_params }}'>Bookings In Progress ({{ in_progress_transactables | total_entries }})</a>
     </li>
     <li class='{{ 'archived' | active_class:current_status }}'>
-      <a href='{{ tt.transactable_types_path | append: "?status=archived" | append: filter_params }}'>Projects Archived ({{ archived_transactables | total_entries }})</a>
+      <a href='{{ tt.transactable_types_path | append: "?status=archived" | append: filter_params }}'>Bookings Archived ({{ archived_transactables | total_entries }})</a>
     </li>
 {% endcontent_for %}
 
