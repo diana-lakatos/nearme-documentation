@@ -634,6 +634,13 @@ class UserDrop < BaseDrop
     pending_transactables_for_current_user.where('tc.id is NULL')
   end
 
+  # @return [Array<Transactable>] array of pending transactables for the user
+  #   (in the pending state, and with no collaborators)
+  def transactables_without_collaborators
+    @source.transactables.with_state(:pending)
+      .where(TransactableCollaborator.where("transactable_collaborators.transactable_id = transactables.id").exists.not)
+  end
+
   # @return [Array<TransactableDrop>] array of pending transactables for the user to which the user is a collaborator
   #   (created by the currently logged in user, in the pending state, and to which this user is a collaborator)
   # @todo -- same as above

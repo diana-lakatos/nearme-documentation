@@ -1030,6 +1030,7 @@ class SecuredParams
       :skip_payment_authorization,
       :check_overlapping_dates,
       :edit_unconfirmed,
+      :withdraw_invitation_when_reject,
       transactable_type_ids: []
     ]
   end

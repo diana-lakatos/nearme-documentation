@@ -1,12 +1,5 @@
 <ul class="actions-a">
 
-  {% if current_status != 'archived' %}
-    <li>
-      <a href="{{ transactable.show_path }}" class="btn btn-default">Booking Details</a>
-    </li>
-  {% endif %}
-
-
   {% if can_make_offer == true %}
     <li>
       {% if current_user.has_verified_merchant_account == true %}
@@ -33,7 +26,10 @@
     {% endif %}
   </li>
 
-  <li>
-    {{ transactable.creator.click_to_call_button }}
-  </li>
+    {% if current_status != 'archived' %}
+    <li>
+      <a href="{{ transactable.show_path }}" class="btn btn-default">Booking Details</a>
+    </li>
+  {% endif %}
+
 </ul>
