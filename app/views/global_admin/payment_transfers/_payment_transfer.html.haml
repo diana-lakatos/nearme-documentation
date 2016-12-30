@@ -10,7 +10,7 @@
   %td= resource.payments.count
   %td= resource.created_at
   %td= resource.transferred_at
-  %td= resource.service_fee_amount_guest.format with_currency: true
-  %td= resource.amount.format with_currency: true
+  %td= render_money resource.service_fee_amount_guest
+  %td= render_money resource.amount
   %td= link_to "Show details", [:global_admin, resource], :class => 'btn'
 

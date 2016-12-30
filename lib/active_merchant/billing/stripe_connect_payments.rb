@@ -25,6 +25,14 @@ module ActiveMerchant
         nil
       end
 
+      def create_customer(token, description, merchant_account_id = nil)
+        if merchant_account_id.present?
+          Stripe::Customer.create({ description: description, source: token}, stripe_account: merchant_account_id)
+        else
+          Stripe::Customer.create({ description: description, source: token })
+        end
+      end
+
       def parse_webhook(id, merchant_account_id = nil)
         if merchant_account_id.present?
           Stripe::Event.retrieve({ id: id }, stripe_account: merchant_account_id)
@@ -63,6 +71,16 @@ module ActiveMerchant
             Stripe::Charge.retrieve({ id: id }, stripe_account: merchant_account_id)
           else
             Stripe::Charge.retrieve(id)
+          end
+        )
+      end
+
+      def find_customer(id, merchant_account_id = nil)
+        PaymentGateway::Response::Stripe::Customer.new(
+          if merchant_account_id.present?
+            Stripe::Customer.retrieve({ id: id }, stripe_account: merchant_account_id)
+          else
+            Stripe::Customer.retrieve(id)
           end
         )
       end

@@ -1,0 +1,31 @@
+.panel
+  - if @bank_accounts.empty?
+    %table.table.table-listing
+      %thead.hidden-sm.hidden-xs
+        %tr
+          %td
+            %p.empty-resultset= t('dashboard.items.empty_bank_accounts')
+  - else
+    %table.table.table-listing
+      %thead.hidden-sm.hidden-xs
+        %tr
+          -# %td
+          %th.name{:scope => "col"}= t('dashboard.items.columns.name')
+          %th.last4{:scope => "col"}= t('dashboard.items.columns.state')
+          %th.added{:scope => "col"}= t('dashboard.items.columns.added')
+          %th.authorized_payments{:scope => "col"}= t('dashboard.items.columns.payments')
+          %td.actions
+            %tbody
+              - @bank_accounts.each do |bank_account|
+                %tr
+                  %td.name
+                    %span= bank_account.name
+                  %td.name
+                    %span= bank_account.state.capitalize
+                  %td.added
+                    = I18n.l(bank_account.created_at.to_date, format: :short)
+                  %td.authorized_payments
+                    = bank_account.payments.count
+                  %td.actions.hidden-sm.hidden-xs
+                    - unless bank_account.verified?
+                      = link_to t('general.verify'), edit_dashboard_bank_account_path(bank_account), data: { 'modal': true, 'modal-class': "verify_modal_#{bank_account.id}"}

@@ -3,6 +3,14 @@
     = image_submit_tag("https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif")
   - else
     = t('buy_sell_market.checkout.payment_authorized')
-    = f.hidden_field :express_token
+
+  = f.simple_fields_for :payment_source_attributes, f.object.payment_source || f.object.new_payment_source(payment_method) do |form|
+    .has-error.errors
+      = form.error :base
+      = f.error :base
+    = form.hidden_field :id
+
 
 = render 'listings/reservations/confirm_reservations', f: f
+
+

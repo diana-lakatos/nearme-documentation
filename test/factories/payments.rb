@@ -11,6 +11,11 @@ FactoryGirl.define do
     association(:payment_method, factory: :credit_card_payment_method)
     association(:credit_card, factory: :credit_card_attributes)
 
+    trait :paypal_express do
+      association(:payment_method, factory: :paypal_express_payment_method)
+      association(:payment_source, factory: :paypal_account)
+    end
+
     factory :manual_payment do
       association(:payment_method, factory: :manual_payment_method)
     end

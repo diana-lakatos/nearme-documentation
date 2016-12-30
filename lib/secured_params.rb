@@ -30,6 +30,13 @@ class SecuredParams
     ]
   end
 
+  def bank_account
+    [
+      :verification_amount_1,
+      :verification_amount_2
+    ]
+  end
+
   def custom_attribute
     [
       :name,
@@ -598,8 +605,18 @@ class SecuredParams
   def payment_method
     [
       :active,
+      :type,
       :payment_method_type,
-      :id
+      :id,
+      settings: PaymentMethod::AchPaymentMethod.settings.keys
+    ]
+  end
+
+  def payment_source
+    [
+      :public_token,
+      :account_id,
+      :express_token
     ]
   end
 
@@ -1536,7 +1553,10 @@ class SecuredParams
       :payment_method_id,
       :payment_method_nonce,
       :chosen_credit_card_id,
-      credit_card_attributes: nested(credit_card)
+      :payment_source_id,
+      :payment_source_type,
+      credit_card_attributes: nested(credit_card),
+      payment_source_attributes: nested(payment_source)
     ]
   end
 
@@ -1551,8 +1571,11 @@ class SecuredParams
       :payer_id,
       :payment_method_id,
       :credit_card_id,
+      :payment_source_id,
+      :payment_source_type,
       :chosen_credit_card_id,
-      credit_card_attributes: nested(credit_card)
+      credit_card_attributes: nested(credit_card),
+      payment_source_attributes: nested(payment_source)
     ]
   end
 

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseController
   before_action :find_order
+  before_action :find_countries
   before_action :find_payment_subscription, except: [:new, :create]
   before_action :get_payment_gateway_data
   before_action :build_payment_subscription, only: [:new, :create]
 
   def new
-    @payment_subscription.build_credit_card
     @redirect_to = dashboard_company_transactable_type_transactables_path(@order.transactable.transactable_type, status: 'in progress')
     render layout: false
   end
@@ -15,7 +15,7 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
     @payment_subscription.attributes = payment_subscription_params
     @redirect_to = dashboard_company_transactable_type_transactables_path(@order.transactable.transactable_type, status: 'in progress')
 
-    if @payment_subscription.save && @order.charge_and_confirm!
+    if @payment_subscription.process! && @payment_subscription.save! && @order.charge_and_confirm!
       flash[:notice] = I18n.t('flash_messages.dashboard.offer.accepted')
       render json: { saved: true }.to_json
     else
@@ -30,8 +30,8 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
 
   def update
     @redirect_to = dashboard_company_order_order_items_path(@order, transactable_id: @order.transactable.id)
-
-    if @payment_subscription.update_attributes(payment_subscription_params)
+    @payment_subscription.attributes = payment_subscription_params
+    if @payment_subscription.process! && @payment_subscription.save!
       flash[:notice] = t('flash_messages.dashboard.payment_subscription.updated')
       render json: { saved: true }.to_json
     else
@@ -45,7 +45,7 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
     @payment_subscription = @order.payment_subscription || @order.build_payment_subscription(
       payer: current_user.object,
       company: @order.owner.default_company
-    )
+    ).decorate
   end
 
   def get_payment_gateway_data
@@ -62,6 +62,10 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
 
   def find_order
     @order = @company.orders.find(params[:order_id])
+  end
+
+  def find_countries
+    @countries = Country.order('name')
   end
 
   def find_payment_subscription

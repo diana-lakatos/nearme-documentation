@@ -61,8 +61,8 @@ module PaymentExtention::PaypalExpressModule
     %w(AUD BRL CAD CHF CZK DKK EUR GBP HDK HUF HKD ILS JPY MXN MYR NOK NZD PHP PLN RUB SEK SGD THB TRY TWD USD)
   end
 
-  def authorize(authoriazable, options = {})
-    PaymentAuthorizer::PaypalExpressPaymentAuthorizer.new(self, authoriazable, options).process!
+  def gateway_authorize(amount, payer_id, options)
+    express_gateway(options.delete(:merchant_account_id)).authorize(amount, options.merge(payer_id: payer_id))
   end
 
   def gateway_capture(amount, token, options)

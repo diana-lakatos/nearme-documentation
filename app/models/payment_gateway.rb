@@ -15,6 +15,7 @@ class PaymentGateway < ActiveRecord::Base
   scope :payout_type, -> { where(type: PAYOUT_GATEWAYS.values + IMMEDIATE_PAYOUT_GATEWAYS.values) }
   scope :payment_type, -> { where.not(type: PAYOUT_GATEWAYS.values) }
   scope :with_credit_card, -> { joins(:payment_methods).merge(PaymentMethod.active.credit_card) }
+  scope :with_bank_accounts, -> { joins(:payment_methods).merge(PaymentMethod.active.ach) }
 
   serialize :test_settings, Hash
   serialize :live_settings, Hash
@@ -105,8 +106,9 @@ class PaymentGateway < ActiveRecord::Base
 
   unsupported :payout, :any_country, :any_currency, :paypal_express_payment, :paypal_chain_payments,
               :multiple_currency, :express_checkout_payment, :nonce_payment, :company_onboarding, :remote_paymnt,
-              :recurring_payment, :credit_card_payment, :manual_payment, :remote_payment, :free_payment, :immediate_payout, :free_payment,
-              :partial_refunds, :refund_from_host, :host_subscription
+              :payment_source_store, :credit_card_payment, :manual_payment, :remote_payment, :free_payment,
+              :immediate_payout, :free_payment, :partial_refunds, :refund_from_host, :host_subscription,
+              :ach_payment, :payment_source_store
 
   attr_encrypted :test_settings, :live_settings, marshal: true
 
@@ -179,20 +181,20 @@ class PaymentGateway < ActiveRecord::Base
     ActiveModel::Name.new(PaymentGateway)
   end
 
-  def self.validate_settings(payment_gateway, attribute, value)
-    if payment_gateway.send(attribute.to_s.gsub('settings', 'active?'))
+  def self.validate_settings(parent_object, attribute, value)
+    if parent_object.send(attribute.to_s.gsub('settings', 'active?'))
       if value.present?
         value.each do |key, value|
-          next if payment_gateway.class.settings[key.to_sym].blank? ||
-                  payment_gateway.class.settings[key.to_sym][:validate].blank?
+          next if parent_object.class.settings[key.to_sym].blank? ||
+                  parent_object.class.settings[key.to_sym][:validate].blank?
 
-          payment_gateway.class.settings[key.to_sym][:validate].each do |validation|
+          parent_object.class.settings[key.to_sym][:validate].each do |validation|
             case validation
             when :presence
-              payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank!") if value.blank?
+              parent_object.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank!") if value.blank?
             when :presence_if_direct
-              if value.blank? && payment_gateway.direct_charge?
-                payment_gateway.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank when direct charge enabled!")
+              if value.blank? && parent_object.direct_charge?
+                parent_object.errors.add(attribute, ": #{key.capitalize.gsub('_id', '')} can't be blank when direct charge enabled!")
               end
             end
           end
@@ -287,28 +289,6 @@ class PaymentGateway < ActiveRecord::Base
     gateway.create_token(credit_card, customer_id, merchant_id)
   end
 
-  def charge(user, amount, currency, payment, token)
-    force_mode(payment.payment_gateway_mode)
-
-    @payment = payment
-    @merchant_account = payment.merchant_account
-    @payable = @payment.payable
-    @charge = charges.create(
-      amount: amount,
-      payment: payment,
-      currency: currency,
-      user_id: user.id,
-      payment_gateway_mode: mode
-    )
-
-    options = custom_capture_options.merge(currency: currency)
-    options.merge!(@merchant_account.custom_options) if @merchant_account
-
-    response = gateway_capture(amount, token, options.with_indifferent_access)
-    response.success? ? charge_successful(response) : charge_failed(response)
-    @charge
-  end
-
   def gateway_authorize(amount, cc, options)
     gateway.authorize(amount, cc, options)
   rescue => e
@@ -317,6 +297,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def gateway_capture(amount, token, options)
+    force_mode(options.delete(:payment_gateway_mode)) if options[:payment_gateway_mode]
     gateway.capture(amount, token, options)
   rescue => e
     MarketplaceLogger.error(CAPTURE_ERROR, e.to_s, raise: false)
@@ -325,6 +306,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def gateway_purchase(amount, credit_card_or_vault_id, options)
+    force_mode(options.delete(:payment_gateway_mode)) if options[:payment_gateway_mode]
     gateway.purchase(amount, credit_card_or_vault_id, options)
   rescue => e
     MarketplaceLogger.error(PURCHASE_ERROR, e.to_s, raise: false)
@@ -398,7 +380,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def store_credit_card(client, credit_card)
-    return nil unless supports_recurring_payment?
+    return nil unless supports_payment_source_store?
 
     @instance_client = instance_clients.where(client: client).first_or_initialize
     options = { email: client.email, default_card: true, customer: @instance_client.customer_id }
@@ -458,7 +440,12 @@ class PaymentGateway < ActiveRecord::Base
   def build_payment_methods(active = false)
     PaymentMethod::PAYMENT_METHOD_TYPES.each do |payment_method|
       if send("supports_#{payment_method}_payment?") && payment_methods.find_by(payment_method_type: payment_method).blank?
-        payment_methods.build(payment_method_type: payment_method, active: active, instance_id: instance_id)
+        payment_methods.build(
+          type: "PaymentMethod::#{payment_method.classify}PaymentMethod",
+          payment_method_type: payment_method,
+          active: active,
+          instance_id: instance_id
+        )
       end
     end
   end
@@ -471,17 +458,6 @@ class PaymentGateway < ActiveRecord::Base
 
   def void_merchant_accounts
     mearchant_accounts.each(&:void!)
-  end
-
-  # Callback invoked by processor when charge was successful
-  def charge_successful(response)
-    @charge.charge_successful(response)
-  end
-
-  # Callback invoked by processor when charge failed
-  def charge_failed(response)
-    @charge.charge_failed(response)
-    @payment.errors.add(:base, response.message) if response.respond_to?(:message)
   end
 
   # Callback invoked by processor when refund was successful

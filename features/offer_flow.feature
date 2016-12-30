@@ -5,6 +5,7 @@ Feature: Offer like end to end flow
     And a enquirer exists
     And a lister exists
     And stripe_connect_payment_gateway exists
+    And only credit_card payment_method is set
 
   Scenario: 'Enquirer fills out profile'
     Given I am logged in as enquirer

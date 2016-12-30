@@ -6,11 +6,10 @@ class Offer < Order
   delegate :action, to: :transactable_pricing
   before_update :set_draft_at
 
-  def try_to_activate!
-    return true unless inactive? && valid? && checkout_completed?
-    return true if draft_at?
-
-    activate!
+  def can_activate?
+    return false unless inactive? && valid? && checkout_completed?
+    return false if draft_at?
+    true
   end
 
   def complete!
@@ -70,6 +69,7 @@ class Offer < Order
       )
     end
 
+    activate! if can_activate?
     save
   end
 
@@ -92,8 +92,9 @@ class Offer < Order
 
   def charge_and_confirm!
     return true if confirmed?
+    return false unless valid?
 
-    if ((payment_subscription.present? && !reservation_type.reverse_immediate_payment?) || (payment.authorize && payment.capture!)) && confirm!
+    if ((payment_subscription.present? && !reservation_type.reverse_immediate_payment?) || (payment.authorize! && payment.capture!)) && confirm!
       create_payment_subscription! if payment_subscription.blank?
       transactable.start!
       reject_related_offers!

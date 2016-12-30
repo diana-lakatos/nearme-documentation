@@ -12,7 +12,8 @@ class RecurringBookingPeriod < ActiveRecord::Base
            :service_fee_guest_percent, :service_fee_host_percent, :payment_subscription,
            :transactable, :quantity, :cancellation_policy_hours_for_cancellation,
            :cancellation_policy_penalty_percentage, :action, :host, :is_free_booking?,
-           :minimum_lister_service_fee_cents, :archived_at, :owner_id, to: :order
+           :minimum_lister_service_fee_cents, :archived_at, :owner_id, :cancelled_by_guest?,
+           :cancelled_by_host?, to: :order
 
   scope :unpaid, -> { where(paid_at: nil) }
   scope :paid, -> { where.not(paid_at: nil) }
@@ -69,11 +70,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
     payment_object = payment || build_payment
 
-    payment_object.attributes = shared_payment_attributes.merge(credit_card: payment_subscription.credit_card,
+    payment_object.attributes = shared_payment_attributes.merge(payment_source: payment_subscription.payment_source,
                                                                 payment_method: payment_subscription.payment_method)
 
-    payment_object.authorize && payment_object.capture!
-    payment_object.save!
+    payment_object.save! && payment_object.purchase!
 
     if payment_object.paid?
       payment_subscription.try(:unexpire!)
@@ -114,8 +114,9 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def update_payment
     # we have unique index so there can be only one payment
-    payment.update_attribute(:credit_card_id, payment_subscription.credit_card_id)
-    payment.authorize && payment.capture!
+    payment.payment_source = payment_subscription.payment_source
+    payment.purchase!
+
     if payment.paid?
       update_attribute(:paid_at, Time.zone.now)
       mark_recurring_booking_as_paid!

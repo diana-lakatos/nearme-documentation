@@ -1,0 +1,7 @@
+- title t "dashboard.bank_accounts.manage"
+- content_for :page_header do
+  %h1
+    %span.hidden-xs= t('dashboard.bank_accounts.manage')
+    = t('dashboard.bank_accounts.bank_accounts')
+
+= render 'bank_account'

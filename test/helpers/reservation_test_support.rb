@@ -19,7 +19,7 @@ module ReservationTestSupport
   def prepare_charged_reservations_for_transactable(transactable, count = 1, _options = {})
     user = FactoryGirl.create(:user)
     payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
-    payment_method = payment_gateway.payment_methods.first
+    payment_method = payment_gateway.payment_methods.credit_card.first
     stub_active_merchant_interaction
 
     date = Time.zone.now.advance(weeks: 1).beginning_of_week.to_date

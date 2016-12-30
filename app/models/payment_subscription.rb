@@ -15,23 +15,45 @@ class PaymentSubscription < ActiveRecord::Base
   belongs_to :instance
   belongs_to :payment_method
   belongs_to :payment_gateway
-  belongs_to :credit_card, -> { with_deleted }
   belongs_to :payer, class_name: 'User'
   belongs_to :company, -> { with_deleted }
+  belongs_to :payment_source, polymorphic: true
 
   attr_accessor :chosen_credit_card_id
 
-  accepts_nested_attributes_for :credit_card
+  accepts_nested_attributes_for :payment_source
 
-  validates_associated :credit_card
-  validates :credit_card, presence: true, if: proc { |p| p.new_record? }
+  validates_associated :payment_source
+  validates :payment_source, presence: true, if: proc { |p| p.new_record? }
   validates :payer, presence: true
 
-  before_validation do |p|
-    self.payer ||= subscriber.try(:owner)
-    if p.payment_method.try(:payment_method_type) == 'credit_card' && payer.respond_to?(:instance_clients) && p.chosen_credit_card_id.present? && p.chosen_credit_card_id != 'custom'
-      self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id, test_mode: test_mode?).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id)
-    end
+  def payment_source_attributes=(source_attributes)
+    return unless payment_method.respond_to?(:payment_sources)
+
+    source = self.payment_source || payment_method.payment_sources.new
+    source.attributes = source_attributes.merge({ payment_method: payment_method, payer: payer })
+    self.payment_source = source
+  end
+  alias credit_card_attributes= payment_source_attributes=
+  alias credit_card= payment_source=
+
+  def credit_card
+    self.payment_source if self.payment_source_type == 'CreditCard'
+  end
+
+  def bank_account
+    self.payment_source if self.payment_source_type == 'BankAccount'
+  end
+
+  def can_activate?
+    payment_source.try(:can_activate?)
+  end
+
+  def process!
+    return false unless valid?
+    return false if payment_source.blank?
+    return false unless payment_source.process!
+
     true
   end
 
@@ -57,18 +79,14 @@ class PaymentSubscription < ActiveRecord::Base
   end
 
   def payment_methods
-    ids = if payment_method
-            [payment_method]
-          else
-            fetch_payment_methods
-    end.flatten.uniq.map(&:id)
+    ids = fetch_payment_methods.compact.flatten.uniq.map(&:id)
 
-    PaymentMethod.where(id: ids)
+    PaymentMethod.recurring.where(id: ids)
   end
 
   def fetch_payment_methods
     payment_gateways = PlatformContext.current.instance.payment_gateways(iso_country_code, currency)
-    PaymentMethod.active.credit_card.where(payment_gateway_id: payment_gateways.select(&:supports_recurring_payment?).map(&:id))
+    PaymentMethod.active.recurring.where(payment_gateway_id: payment_gateways.select(&:supports_payment_source_store?).map(&:id))
   end
 
   def payment_method_id=(payment_method_id)
@@ -79,15 +97,6 @@ class PaymentSubscription < ActiveRecord::Base
     super(payment_method)
     self.payment_gateway = self.payment_method.payment_gateway
     self.test_mode = payment_gateway.test_mode?
-  end
-
-  def credit_card_attributes=(cc_attrs)
-    super(cc_attrs.merge(
-      payment_gateway: payment_gateway,
-      test_mode: test_mode?,
-      client: self.payer || subscriber.user
-    )
-    )
   end
 
   def to_liquid

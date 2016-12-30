@@ -93,6 +93,8 @@ class Dashboard::OrdersController < Dashboard::BaseController
     @order.save_draft = true if params[:save_draft]
     @order.cancel_draft = true if params[:cancel_draft]
     @order.attributes = order_params
+    @order.activate! if @order.can_activate?
+
     if @order.inactive? && @order.save_draft && @order.save(validate: false)
       @update_path = dashboard_order_path(@order)
       respond_to do |format|

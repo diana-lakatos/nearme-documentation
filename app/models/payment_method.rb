@@ -1,5 +1,5 @@
 class PaymentMethod < ActiveRecord::Base
-  PAYMENT_METHOD_TYPES = %w(credit_card nonce express_checkout manual remote free).freeze
+  PAYMENT_METHOD_TYPES = %w(credit_card nonce express_checkout manual remote free ach).freeze
 
   auto_set_platform_context
   scoped_to_platform_context
@@ -11,6 +11,8 @@ class PaymentMethod < ActiveRecord::Base
   scope :remote, -> { where(payment_method_type: 'remote') }
   scope :free, -> { where(payment_method_type: 'free') }
   scope :except_free, -> { where.not(payment_method_type: 'free') }
+  scope :ach, -> { where(payment_method_type: 'ach') }
+  scope :recurring, -> { where(payment_method_type: ['ach', 'credit_card']) }
 
   belongs_to :payment_gateway, -> { with_deleted }
 
@@ -18,9 +20,19 @@ class PaymentMethod < ActiveRecord::Base
   has_many :payments
 
   validates :payment_method_type, presence: true, inclusion: { in: PAYMENT_METHOD_TYPES }
+  validates :type, presence: true, inclusion: { in: PAYMENT_METHOD_TYPES.map {|t| "PaymentMethod::#{t.classify}PaymentMethod"} }
+
+  delegate :authorize, to: :payment_gateway
 
   PAYMENT_METHOD_TYPES.each do |pmt|
     define_method("#{pmt}?") { payment_method_type == pmt.to_s }
+  end
+
+  serialize :settings, Hash
+  attr_encrypted :settings, marshal: true, key: DesksnearMe::Application.config.secret_token
+
+  def self.settings
+    {}
   end
 
   def name
@@ -28,6 +40,7 @@ class PaymentMethod < ActiveRecord::Base
   end
 
   def capturable?
-    [:credit_card, :nonce, :express_checkout, :remote].include?(payment_method_type.to_sym)
+    [:credit_card, :nonce, :express_checkout, :remote, :ach].include?(payment_method_type.to_sym)
   end
+
 end

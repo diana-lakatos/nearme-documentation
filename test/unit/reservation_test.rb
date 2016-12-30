@@ -29,7 +29,7 @@ class ReservationTest < ActiveSupport::TestCase
       should 'confirm reservation on autoconfirm mode' do
         Transactable.any_instance.stubs(:confirm_reservations?).returns(false)
         @reservation.payment = FactoryGirl.build(:authorized_payment, payable: @reservation)
-        @reservation.save!
+        @reservation.process!
 
         assert @reservation.confirmed?
         assert @reservation.payment.paid?

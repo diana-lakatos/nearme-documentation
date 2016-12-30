@@ -62,6 +62,10 @@ Then /^I can add new project$/ do
   click_button 'Save'
 end
 
+And /^only credit_card payment_method is set$/ do
+  model('stripe_connect_payment_gateway').payment_methods.ach.destroy_all
+end
+
 And /^I invite enquirer to my project$/ do
   page.should have_css('a[data-project-invite-trigger]')
   find('a[data-project-invite-trigger]').click
@@ -83,10 +87,8 @@ Then /^I fill credit card payment subscription form$/ do
   fill_in 'payment_subscription_credit_card_attributes_first_name', with: 'FirstName'
   fill_in 'payment_subscription_credit_card_attributes_last_name', with: 'LastName'
   fill_in 'payment_subscription_credit_card_attributes_number', :with => "4242424242424242"
-  find('.payment_subscription_credit_card_month .selectize-input').trigger('click')
-  find('.payment_subscription_credit_card_month .selectize-dropdown-content [data-value="12"]').trigger('click')
-  find('.payment_subscription_credit_card_year .selectize-input').trigger('click')
-  find('.payment_subscription_credit_card_year .selectize-dropdown-content [data-value="2024"]').trigger('click')
+  find('.payment_subscription_credit_card_month').find("option[value='12']").select_option
+  find('.payment_subscription_credit_card_year').find("option[value='2024']").select_option
   fill_in 'payment_subscription_credit_card_attributes_verification_value', :with => '411'
 
   find('.dialog__actions button').trigger('click')
@@ -100,10 +102,8 @@ Then /^I fill credit card payment form$/ do
   fill_in 'payment_credit_card_attributes_first_name', with: 'FirstName'
   fill_in 'payment_credit_card_attributes_last_name', with: 'LastName'
   fill_in 'payment_credit_card_attributes_number', :with => "4242424242424242"
-  find('.payment_credit_card_month .selectize-input').trigger('click')
-  find('.payment_credit_card_month .selectize-dropdown-content [data-value="12"]').trigger('click')
-  find('.payment_credit_card_year .selectize-input').trigger('click')
-  find('.payment_credit_card_year .selectize-dropdown-content [data-value="2024"]').trigger('click')
+  find('.payment_credit_card_month').find("option[value='12']").select_option
+  find('.payment_credit_card_year').find("option[value='2024']").select_option
   fill_in 'payment_credit_card_attributes_verification_value', :with => '411'
 
   find('.dialog__actions button').trigger('click')

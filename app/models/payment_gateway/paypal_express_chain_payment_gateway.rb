@@ -58,8 +58,8 @@ class PaymentGateway::PaypalExpressChainPaymentGateway < PaymentGateway
     OpenStruct.new(success?: false, message: e.to_s)
   end
 
-  def express_gateway
-    gateway(@order.try(:merchant_subject))
+  def express_gateway(merchant_account_id=nil)
+    gateway(merchant_account_id || @order.try(:merchant_subject))
   end
 
   def set_billing_agreement(options)

@@ -286,6 +286,22 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.datetime "updated_at",       null: false
   end
 
+  create_table "bank_accounts", force: :cascade do |t|
+    t.integer  "instance_client_id"
+    t.integer  "instance_id",                          null: false
+    t.datetime "deleted_at"
+    t.text     "encrypted_response"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "payment_gateway_id"
+    t.integer  "payment_method_id"
+    t.boolean  "test_mode",             default: true
+    t.string   "last4"
+    t.string   "status"
+    t.string   "bank_name"
+    t.string   "encrypted_external_id"
+  end
+
   create_table "billing_authorizations", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "reservation_id"
@@ -591,6 +607,7 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.datetime "updated_at"
     t.integer  "payment_gateway_id"
     t.boolean  "test_mode",                      default: true
+    t.integer  "payment_method_id"
   end
 
   add_index "credit_cards", ["instance_client_id"], name: "index_credit_cards_on_instance_client_id", using: :btree
@@ -1360,8 +1377,8 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "prepend_view_path"
     t.string   "twilio_ring_tone"
+    t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
   end
 
@@ -1781,6 +1798,8 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.string   "type"
+    t.text     "encrypted_settings"
   end
 
   add_index "payment_methods", ["instance_id"], name: "index_payment_methods_on_instance_id", using: :btree
@@ -1796,10 +1815,12 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.boolean  "test_mode"
     t.datetime "deleted_at"
     t.string   "subscriber_type"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.integer  "payer_id"
     t.datetime "expired_at"
+    t.string   "payment_source_type"
+    t.integer  "payment_source_id"
   end
 
   add_index "payment_subscriptions", ["company_id"], name: "index_payment_subscriptions_on_company_id", using: :btree
@@ -1869,6 +1890,8 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.boolean  "exclude_from_payout",                                                            default: false
     t.string   "external_id"
     t.integer  "payment_gateway_fee_cents",                                                      default: 0
+    t.integer  "payment_source_id"
+    t.string   "payment_source_type"
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
@@ -1898,6 +1921,18 @@ ActiveRecord::Schema.define(version: 20170120072027) do
   end
 
   add_index "payouts", ["instance_id", "payment_gateway_id"], name: "index_payouts_on_instance_id_and_payment_gateway_id", using: :btree
+
+  create_table "paypal_accounts", force: :cascade do |t|
+    t.string  "email"
+    t.integer "instance_id",                       null: false
+    t.integer "instance_client_id"
+    t.integer "deleted_at"
+    t.string  "encrypted_response"
+    t.integer "payment_gateway_id"
+    t.integer "payment_method_id"
+    t.boolean "test_mode",          default: true
+    t.string  "express_payer_id"
+  end
 
   create_table "phone_calls", force: :cascade do |t|
     t.integer  "caller_id"
@@ -3173,8 +3208,8 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
     t.integer  "wish_list_items_count",                              default: 0
     t.float    "product_average_rating",                             default: 0.0
-    t.text     "ui_settings",                                        default: "{}"
     t.datetime "expires_at"
+    t.text     "ui_settings",                                        default: "{}"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

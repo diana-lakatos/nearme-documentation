@@ -12,6 +12,7 @@ class InstanceClient < ActiveRecord::Base
   belongs_to :payment_gateway
 
   has_many :credit_cards
+  has_many :bank_accounts
   before_save :clear_decorator, if: ->(ic) { ic.encrypted_response_changed? }
 
   validates_presence_of :client_id, :client_type, unless: ->(ic) { ic.client.present? }
@@ -40,6 +41,11 @@ class InstanceClient < ActiveRecord::Base
 
   def customer_id
     decorator.try(:customer_id)
+  end
+
+  def find
+    return false unless customer_id
+    decorator.try(:find)
   end
 
   private

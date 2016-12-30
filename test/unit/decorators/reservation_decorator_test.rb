@@ -64,7 +64,7 @@ class ReservationDecoratorTest < ActionView::TestCase
       TransactableType.first.update_columns(service_fee_guest_percent: 0)
       @payment = FactoryGirl.build(:manual_payment)
       transactable = FactoryGirl.create(:transactable, :free_listing)
-      @reservation = FactoryGirl.build(:unconfirmed_reservation,
+      @reservation = FactoryGirl.create(:unconfirmed_reservation,
                                        transactable: transactable,
                                        transactable_pricing: transactable.action_type.pricings.first,
                                        payment: @payment).decorate

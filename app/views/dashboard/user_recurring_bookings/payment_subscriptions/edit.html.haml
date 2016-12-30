@@ -1,5 +1,5 @@
 %header.dialog__header
-  %h2#dialog__title= t('dashboard.payments.change_credit_card')
+  %h2#dialog__title= t('dashboard.payments.change_payment_method')
 
 - if @unpaid_recurring_booking_periods.any?
   %div= t('dashboard.payments.periods_affected')
@@ -13,20 +13,11 @@
         %tr
           %td= "#{I18n.l(period.period_start_date, format: :short)} - #{I18n.l(period.period_end_date, format: :short)}"
           %td= render_money(period.total_amount)
+#credit-card-select
 
-= dashboard_simple_form_for @payment_subscription, url: dashboard_user_recurring_booking_payment_subscription_path(@recurring_booking, @payment_subscription), method: :put, data: { modal: true } do |f|
-  .dialog__body
-    - based_collection = current_user.instance_clients.for_payment_gateway(@payment_subscription.payment_gateway_id, @payment_subscription.test_mode).first.try(:credit_cards).try(:select, &:active?).try(:map) { |cc| [I18n.t('credit_cards.masked_number', last4: cc.last_4), cc.id] } || []
-    - default_option = based_collection.first.present? ? based_collection.first[1] : 'custom'
-    - selected_option = f.object.chosen_credit_card_id.presence || default_option
+  = dashboard_simple_form_for @payment_subscription, url: dashboard_user_recurring_booking_payment_subscription_path(@recurring_booking, @payment_subscription), method: :put, data: { modal: true }, html: {id: 'new_payment'} do |f|
+    .dialog__body
+      = render 'shared/payment_form', f: f
 
-    = f.input :chosen_credit_card_id, as: :radio_buttons, collection: based_collection << [I18n.t('payments.cc_fields.add_new'), 'custom'], label: false, checked: selected_option
-    .new-credit-card-form{style: "#{'display: none;' unless f.object.chosen_credit_card_id == 'custom'}"}
-      = f.simple_fields_for :credit_card_attributes, f.object.credit_card do |form|
-        = render 'credit_cards/credit_card_fields', form: form
-
-  .dialog__actions
-    = f.submit t('general.save')
-
-:javascript
-  $(function() { $(document).trigger('init:paymentmodal.nearme'); });
+    .dialog__actions
+      = f.submit t('general.save')

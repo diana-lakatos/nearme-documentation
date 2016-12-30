@@ -23,4 +23,20 @@ class BillingAuthorization < ActiveRecord::Base
   def to_liquid
     @billing_authorization_drop ||= BillingAuthorizationDrop.new(self)
   end
+
+  def received_response=response
+    self.response = response
+    self.token = response.authorization
+    self.success = response.success?
+  end
+
+  def reference=payable
+    self.user = payable.user
+    super
+  end
+
+  def payment_gateway=gateway
+    self.payment_gateway_mode = gateway.mode
+    super
+  end
 end

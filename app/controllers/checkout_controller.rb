@@ -15,27 +15,18 @@ class CheckoutController < ApplicationController
 
   def update
     @order.checkout_update = true
-    if @order.update_attributes(order_params)
-      if @order.payment && @order.payment.express_checkout_payment? && @order.payment.express_checkout_redirect_url
-        redirect_to @order.payment.express_checkout_redirect_url
-        return
+    @order.attributes = order_params
+    if @order.process!
+      if @order.inactive?
+        redirect_to @order.redirect_to_gateway || { action: :show }
+      else
+        card_message = @order.payment.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
+        flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
+        redirect_to dashboard_order_path(@order)
       end
-
-      flash[:notice] = '' unless @order.inactive?
-      flash[:error] = @order.errors.full_messages.join(',<br />')
     else
-      set_countries_states
-      flash[:error] = @order.errors.full_messages.join(',<br />')
-
-      render(:show) && return
-    end
-
-    if @order.inactive?
-      redirect_to action: :show
-    else
-      card_message = @order.payment.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
-      flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
-      redirect_to dashboard_order_path(@order)
+      flash.now[:error] = @order.errors.full_messages.join(',<br />')
+      render(:show)
     end
   end
 

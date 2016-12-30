@@ -32,26 +32,6 @@ module Payable
 
     delegate :remote_payment?, :manual_payment?, :active_merchant_payment?, :paid?, :billing_authorizations, to: :payment, allow_nil: true
 
-    before_update :authorize_payment!
-    def authorize_payment!
-      return true unless @payment_step
-      return true if payment.blank?
-      return true unless payment.pending?
-      return true if skip_payment_authorization
-
-      payment.try(:authorize!)
-    end
-
-    before_update :store_credit_card!
-    def store_credit_card!
-      credit_card = payment.try(:credit_card) || payment_subscription.try(:credit_card)
-
-      return true if credit_card.blank?
-      return true unless credit_card.payment_gateway.supports_recurring_payment?
-
-      credit_card.store!
-    end
-
     def build_first_line_item
       if line_items.blank? && transactable_line_items.blank? && additional_line_items.blank?
         transactable_line_items.build(

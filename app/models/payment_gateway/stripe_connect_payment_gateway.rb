@@ -3,12 +3,12 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   include PaymentGateways::StripeCommon
 
   belongs_to :instance
-  has_many :webhooks, class_name: 'Webhook::StripeConnectWebhook', foreign_key: 'payment_gateway_id'
+  has_many :webhooks, class_name: 'Webhook::StripeWebhook', foreign_key: 'payment_gateway_id'
 
-  supported :immediate_payout, :credit_card_payment, :multiple_currency, :partial_refunds, :recurring_payment
+  supported :immediate_payout, :ach_payment, :credit_card_payment, :multiple_currency, :partial_refunds, :payment_source_store
 
   delegate :parse_webhook, :retrieve_account, :onboard!, :update_onboard!, :find_transfer_transactions,
-           :find_payment, :find_balance, :country_spec, to: :gateway
+           :find_payment, :find_balance, :country_spec, :create_customer, :find_customer, to: :gateway
 
   validate :validate_config_hash
 
@@ -69,29 +69,6 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
 
   def gateway
     @gateway ||= ActiveMerchant::Billing::StripeConnectPayments.new(settings)
-  end
-
-  def charge(user, amount, currency, payment, token)
-    charge_record = super(user, amount.to_i, currency, payment, token)
-    if charge_record.try(:success?)
-      response = charge_record.response
-      if direct_charge?
-        balance_response = find_balance(response.params['balance_transaction'], payment.merchant_account.try(:external_id))
-        payment.payment_gateway_fee_cents = balance_response.payment_gateway_fee_cents
-      else
-        create_payment_transfer(payment, response)
-      end
-    end
-    charge_record
-  end
-
-  def create_payment_transfer(payment, response)
-    payment.company.payment_transfers.create!(
-      payments: [payment.reload],
-      payment_gateway_mode: mode,
-      payment_gateway_id: id,
-      token: response.params['transfer']
-    )
   end
 
   def custom_options

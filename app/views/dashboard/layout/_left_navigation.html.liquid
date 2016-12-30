@@ -285,6 +285,11 @@
             </li>
           {% endif %}
 
+            {% assign bank_accounts_path = 'dashboard_bank_accounts_path' | generate_url %}
+            <li id="dashboard-nav-bank-accounts" class="{% if credit_cards_selected %}selected{% endif %}">
+              <a href="{{ bank_accounts_path }}">{{ 'dashboard.nav.bank_accounts' | t }}</a>
+            </li>
+
           {% if notification_preferences_show %}
             <li id="dashboard-nav-notification_preferences" class="{% if notification_preferences_selected %}selected{% endif %}">
               <a href="{{ notification_preferences_path }}">{{ 'dashboard.nav.notification_preferences' | t }}</a>

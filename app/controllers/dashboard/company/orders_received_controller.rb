@@ -132,7 +132,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
   end
 
   def location_after_save
-    if @order.owner.id == current_user.id
+    if @order.user_id == current_user.id
       dashboard_orders_path
     else
       dashboard_company_orders_received_index_path

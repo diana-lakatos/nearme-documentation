@@ -1,0 +1,14 @@
+%header.dialog__header
+  %h2#dialog__title
+    = t('dashboard.bank_accounts.verification')
+
+  .span.info= t('dashboard.bank_accounts.verification_info')
+  %br
+  = dashboard_simple_form_for ['dashboard', @bank_account] do |f|
+    .dialog__body
+      .panel
+        = f.input :verification_amount_1
+        = f.input :verification_amount_2
+    .dialog__actions
+      = f.submit
+

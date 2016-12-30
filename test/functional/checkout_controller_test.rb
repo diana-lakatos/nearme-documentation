@@ -6,7 +6,8 @@ class CheckoutControllerTest < ActionController::TestCase
     @reservation = FactoryGirl.create(:reservation_without_payment)
     @transactable = @reservation.transactable
     @payment_gateway = stub_billing_gateway(@transactable.instance)
-    @payment_method = @payment_gateway.payment_methods.first
+    @payment_gateway.payment_methods.ach.first.update(active: false)
+    @payment_method = @payment_gateway.payment_methods.credit_card.first
 
     sign_in @reservation.user
   end

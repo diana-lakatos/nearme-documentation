@@ -546,7 +546,7 @@ class User < ActiveRecord::Base
   # @return [Boolean] whether the user has any active credit cards
   def has_active_credit_cards?
     instance_clients.mode_scope.any? do |i|
-      i.payment_gateway.active_in_current_mode?
+      i.payment_gateway.active_in_current_mode? && i.payment_gateway.active_payment_methods.credit_card.any?
     end
   end
 

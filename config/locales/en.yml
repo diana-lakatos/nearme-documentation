@@ -7,6 +7,10 @@ en:
             dates_fake:
               invalid_date_for_delivery: must be acceptable by courier, please try later date
               non_business_day: must be business day acceptable by courier, please try later date
+        bank_account:
+          attributes:
+            base:
+              incrrect_account: "This account is not correct. Please provide different account."
         merchant_account:
           error_codes:
             rejected_fraud: 'This account is rejected due to suspected fraud or illegal activity.'
@@ -81,6 +85,7 @@ en:
         manual: "Offline Payments"
         remote: 'Fetch'
         free: 'Free Payments'
+        ach: 'ACH'
       payment_gateway:
         name: "Name"
         type: "Type"
@@ -205,6 +210,7 @@ en:
     validation:
       question_quantity: "Only %{number} questions or less for one rating system"
   general:
+    verify: "Verify"
     remove: "Remove"
     reply: 'Reply'
     processing: 'Processing ...'
@@ -1459,6 +1465,11 @@ en:
       merchant_boarding_missing_gateway: "Looks like this marketplace doesn't support %{currency} currency for your country (%{country_code}). Please contact marketplace owner if you are missing some payouts."
     additional_charge_type:
       new: "New Upsell & Add-ons"
+    bank_accounts:
+      manage: "Manage"
+      bank_accounts: "Bank Accounts"
+      verification: "Bank Account Verifcation"
+      verification_info: "In order to verify your Bank Account please fill in values of two deposits that Stripe sent to your account."
     credit_cards:
       manage: 'Manage'
       credit_cards: 'Credit Cards'
@@ -1512,6 +1523,7 @@ en:
         delete: 'Delete'
 
       columns:
+        state: 'State'
         last4: 'Number'
         photo: 'Photo'
         name: 'Name'
@@ -1521,6 +1533,7 @@ en:
         location: 'Location'
         quantity: 'Quantity'
         authorized_payments: 'Payments pending capture'
+        payments: 'Payments count'
       edit_listing: 'Edit Listing'
       unsaved_listing_changes: 'You have unsaved changes to this listing'
       save: 'Save'
@@ -1539,6 +1552,7 @@ en:
       required_documents: 'Please enter the documents your customers will need to provide before booking this service.'
       empty: 'There are no %{name} to show.'
       empty_credit_cards: 'There are no credit cards to show.'
+      empty_bank_accounts: 'There are no bank accounts to show.'
 
     modal:
       close: 'Close modal'
@@ -1546,6 +1560,7 @@ en:
     nav:
       title: 'Dashboard'
       orders: 'My Orders'
+      bank_accounts: 'Bank Accounts'
       credit_cards: 'Credit Cards'
       user_reservations: 'My Bookings'
       user_reservations_count_html: 'My Bookings <span>%{count}</span>'
@@ -1717,11 +1732,11 @@ en:
       paid_until: 'Paid until'
       contact_subscriber: 'Contact %{name}'
 
-
     payments:
       approve: "Approve offer"
       reject: "What's wrong?"
       change_credit_card: 'Change credit card'
+      change_payment_method: 'Change payment method'
       periods_affected: 'Periods affected'
       merchant_fee_charge: "%{name} of %{price} is going to be charged upon confirmation."
       reject_placeholder: 'Please let us know what is the reason of declining payment'
@@ -1780,6 +1795,7 @@ en:
       return_label: 'Return shipping label'
       delivery_type: 'Delivery type:'
       payment_methods:
+        ach: "ACH Payment"
         credit_card: "Credit Card"
         express_checkout: "PayPal"
         manual: "Offline payment"
@@ -2875,8 +2891,12 @@ en:
     manual: 'Manual Payment'
     nonce: 'PayPal Payment'
     remote: 'Fetch Payment'
-    cc_fields:
+    ach:
+      add_new: 'Add new ACH account'
+      link: 'Open Plaid Link'
+    credit_card:
       add_new: 'Add new credit card'
+    cc_fields:
       cannot_delete: "You can't delete this card."
       subscribed: "Your card ending with: %{last_4} is saved in the system."
       unsubscribe: "Remove this card"
@@ -3071,6 +3091,10 @@ en:
     view_item: 'View %{item_type_name}'
   credit_cards:
     masked_number: '**** **** **** %{last4}'
+  payment_source:
+    masked_number_with_bank_name: '%{bank}: **** **** **** %{last4}'
+    authorize_with: 'You are about to authorize with'
+    please_continue: 'You are about to authorize with'
   toggle_hint: 'Toggle hint'
   transactable_collaborator:
     collaborators: 'Collaborators'

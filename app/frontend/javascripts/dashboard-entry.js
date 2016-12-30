@@ -13,7 +13,7 @@ NM.on('ready', ()=>{
   require('initializers/shared/timeago.initializer');
   require('initializers/shared/ckeditor.initializer');
   require('initializers/shared/colorpicker.initializer');
-  require('initializers/shared/credit_cards.initializer');
+  require('initializers/shared/payment_method_selector.initializer');
 
   require('initializers/dashboard/address.initializer');
   require('initializers/dashboard/attachment_input.initializer');

@@ -26,7 +26,7 @@ NM.on('ready', ()=>{
 
   require('initializers/shared/ckeditor.initializer');
   require('initializers/shared/modal.initializer');
-  require('initializers/shared/credit_cards.initializer');
+  require('initializers/shared/payment_method_selector.initializer');
   require('initializers/shared/timeago.initializer');
   require('initializers/shared/colorpicker.initializer');
   require('initializers/shared/icui.initializer');
