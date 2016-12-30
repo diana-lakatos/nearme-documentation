@@ -55,5 +55,26 @@ FactoryGirl.define do
     factory :user_with_verified_phone_number do
       communication
     end
+
+    factory :enquirer do
+      after(:build) do |u|
+        u.get_buyer_profile
+      end
+
+      after(:create) do |u|
+        FactoryGirl.create(:company, creator: u)
+      end
+    end
+
+    factory :lister do
+      after(:build) do |u|
+        u.get_seller_profile
+      end
+      factory :registered_lister do
+        after(:build) do |u|
+          u.companies.build(name: "Test Company", completed_at: Time.current)
+        end
+      end
+    end
   end
 end

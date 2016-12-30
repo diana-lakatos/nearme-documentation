@@ -11,7 +11,10 @@ require_relative 'minitest_setup'
 Capybara::Webkit.configure do |config|
   config.allow_url('http://maps.googleapis.com/*')
   config.allow_url('http://csi.gstatic.com/*')
+  config.allow_url('https://rawgit.com/mdyd-dev/marketplaces/*')
   config.block_unknown_urls
+  # Uncomment if you want to debug JavaScript
+  # config.debug = true
 end
 
 Before do

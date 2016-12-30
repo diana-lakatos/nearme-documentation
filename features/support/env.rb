@@ -13,6 +13,8 @@ require 'cucumber/rails'
 
 require 'capybara-screenshot/cucumber'
 Capybara::Screenshot.autosave_on_failure = true
+Capybara::Screenshot.webkit_options = { width: 1824, height: 1368 }
+
 
 require 'rack/utils'
 Capybara.app = Rack::ShowExceptions.new(DesksnearMe::Application)

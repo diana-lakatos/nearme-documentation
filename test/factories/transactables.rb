@@ -60,6 +60,7 @@ FactoryGirl.define do
         end
       end
 
+
       trait :free_listing do
         after(:build) do |listing|
           listing.action_types.destroy_all
@@ -196,6 +197,26 @@ FactoryGirl.define do
           new(transactable_type: (FactoryGirl.create(:transactable_type_listing_with_price_constraints)))
         end
       end
+    end
+
+    factory :transactable_offer do
+      creator { User.sellers.last || FactoryGirl.build(:lister)}
+      location { Location.last || FactoryGirl.build(:location, company: creator.default_company ) }
+      after(:build) do |listing|
+        listing.action_types.destroy_all
+        listing.transactable_type.offer_action ||= FactoryGirl.create(:transactable_type_offer_action, transactable_type: listing.transactable_type)
+        listing.action_type = FactoryGirl.build(:offer_action, transactable: listing, transactable_type_action_type: listing.transactable_type.offer_action)
+        listing.transactable_collaborators.build(approved_by_user_at: Time.current, approved_by_owner_at: Time.current, user: User.buyers.last)
+      end
+
+      trait :free do
+        after(:build) do |listing|
+          listing.action_types.destroy_all
+          listing.action_type = FactoryGirl.build(:offer_action, :free, transactable: listing, transactable_type_action_type: listing.transactable_type.action_types.first)
+        end
+      end
+
+      factory :free_transactable_offer, traits: [:free]
     end
 
     factory :transactable_project do

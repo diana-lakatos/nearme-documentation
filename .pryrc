@@ -2,7 +2,7 @@ require "awesome_print"
 AwesomePrint.pry!
 Pry.config.exception_handler = proc do |output, exception, _pry_|
   output.puts "#{exception}"
-  output.puts "#{exception.backtrace.first(10)}"
+  output.puts "#{exception.backtrace.join("\n\t")}".html_safe
 end
 
 if defined?(Rails) && Rails.env
@@ -22,14 +22,6 @@ if defined?(Rails) && Rails.env
     PlatformContext.clear_current
   end
   alias dc load_c
-
-  def u
-    User.find_by_email("lemkowski@gmail.com")
-  end
-
-  def r
-    reload!
-  end
 
   def saop
     save_and_open_page
