@@ -53,7 +53,7 @@
                   </a>
                 </li>
 
-                {% if platform_context.wish_lists_enabled? %}
+                {% if platform_context.wish_lists_enabled? and current_user.has_seller_profile? %}
                   {% comment %} Favorites menu {% endcomment %}
                   {% assign show = 'dashboard/wish_list_items' | is_visible %}
                   {% if show %}
