@@ -1,4 +1,5 @@
 FactoryGirl.define do
+
   factory :transactable_type, class: 'TransactableType' do
     sequence(:name) { |n| "Transactable Type #{n}" }
 
@@ -52,14 +53,6 @@ FactoryGirl.define do
           end
         end
       end
-    end
-
-
-    factory :transactable_type_buy_sell do
-      sequence(:name) do |n|
-        "Buy/Sell #{n}"
-      end
-      buyable true
     end
 
     factory :transactable_type_location do

@@ -11,6 +11,16 @@ FactoryGirl.define do
       unit 'hour'
     end
 
+    factory :transactable_type_offer_pricing do
+      min_price_cents 50_00
+      max_price_cents 150_00
+      unit 'item'
+      number_of_units 1
+      order_class_name 'Offer'
+      allow_free_booking true
+      allow_nil_price_cents true
+    end
+
     factory :transactable_type_event_pricing do
       allow_book_it_out_discount true
       allow_exclusive_price true

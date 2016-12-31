@@ -22,7 +22,7 @@
     </div>
   {% endif %}
 
-  {% if user.pending_transactables.size > 0 %}
+  {% if current_user.transactables_without_collaborators.size > 0 %}
 
     {% if user.pending_collaborated_transactables.size == 0 %}
       <p><strong>{{ user.name }}</strong> will be invited to become your driver.</p>
@@ -39,7 +39,7 @@
         <label for="projects-list" class="control-label">My bookings</label>
         <span class="select-a">
           <select id="projects-list" name="transactable_collaborator[transactable_id]" class="unstyled-select">
-            {% for project in user.pending_transactables %}
+            {% for project in current_user.transactables_without_collaborators %}
             <option value="{{ project.id }}">{{ project.name }}</option>
             {% endfor %}
           </select>
@@ -56,16 +56,7 @@
       </div>
     </form>
 
-  {% elsif current_user.has_pending_transactables? && user.pending_transactables.size == 0 %}
-
-    <p>There are no other bookings to invite {{ user.name }} to. Would you can create another booking right now?</p>
-
-    <div class="actions">
-      <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Create a booking</a>
-      <button type="button" class="button-b" data-close>I'm done</button>
-    </div>
-
-  {% else %}
+  {% elsif current_user.transactables.size == 0 %}
 
     <p>In order to invite a driver, you must first create a booking.</p>
 
@@ -76,5 +67,13 @@
       <button type="button" class="button-b" data-close>Cancel</button>
     </div>
 
+  {% else %}
+
+    <p>There are no other bookings to invite {{ user.name }} to. Would you can create another booking right now?</p>
+
+    <div class="actions">
+      <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Create a booking</a>
+      <button type="button" class="button-b" data-close>I'm done</button>
+    </div>
   {% endif %}
 </div>

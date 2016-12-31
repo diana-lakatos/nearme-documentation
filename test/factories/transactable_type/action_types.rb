@@ -21,6 +21,24 @@ FactoryGirl.define do
       end
     end
 
+
+    factory :transactable_type_offer_action, class: TransactableType::OfferAction do
+      type 'TransactableType::OfferAction'
+
+      cancellation_policy_enabled '1'
+      cancellation_policy_hours_for_cancellation 24
+      cancellation_policy_penalty_hours 1.5
+      service_fee_guest_percent 0
+      service_fee_host_percent 30
+
+      after(:build) do |at|
+        at.pricings << FactoryGirl.build(
+          :transactable_type_offer_pricing,
+          action: at
+        )
+      end
+    end
+
     factory :transactable_type_purchase_action, class: TransactableType::PurchaseAction do
       type 'TransactableType::PurchaseAction'
 

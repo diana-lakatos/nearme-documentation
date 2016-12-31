@@ -37,11 +37,17 @@ module NavigationHelpers
     when /the guests/
       dashboard_company_orders_received_index_path
 
+    when /the dashboard page/
+      dashboard_company_orders_received_index_path
+
     when /manage guests/
       dashboard_company_orders_received_index_path
 
     when /confirmed reservations/
       dashboard_company_orders_received_index_path(state: 'confirmed')
+
+    when /the space list page/
+      transactable_type_list_path(TransactableType.last)
 
     when /the bookings/
       dashboard_orders_path

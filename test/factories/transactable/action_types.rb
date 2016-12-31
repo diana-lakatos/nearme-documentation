@@ -53,6 +53,31 @@ FactoryGirl.define do
       end
     end
 
+    factory :offer_action, class: Transactable::OfferAction do
+      association :transactable, strategy: :build
+      type 'Transactable::OfferAction'
+
+      after(:build) do |at|
+        at.transactable_type_action_type ||= FactoryGirl.build(:transactable_type_offer_action, transactable_type: at.transactable.transactable_type)
+        at.pricings << FactoryGirl.build(
+          :offer_pricing,
+          action: at,
+          transactable_type_pricing: at.transactable_type_action_type.pricing_for('1_item')
+        )
+      end
+
+      trait :free do
+        after(:build) do |at|
+          at.pricings = [FactoryGirl.build(
+            :offer_pricing,
+            :free,
+            action: at,
+            transactable_type_pricing: at.transactable_type_action_type.pricings.first
+          )]
+        end
+      end
+    end
+
     factory :event_booking, class: Transactable::EventBooking do
       association :transactable, strategy: :build
       type 'Transactable::EventBooking'
