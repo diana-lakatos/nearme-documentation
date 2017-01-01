@@ -4,6 +4,7 @@ onboarding: true
 searchable: true
 search_engine: 'elasticsearch'
 search_only_enabled_profiles: true
+create_company_on_sign_up: true
 default_availability_template: '24/7'
 
 custom_attributes:
