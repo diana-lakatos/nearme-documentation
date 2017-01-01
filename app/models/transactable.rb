@@ -391,6 +391,9 @@ class Transactable < ActiveRecord::Base
     lowest_price = lowest_price_with_type(available_price_types)
 
     if lowest_price.present?
+      # If we set the full price on the original object it will have side effects for subsequent code using the pricing object
+      lowest_price = lowest_price.dup
+
       full_price_cents = lowest_price.price
 
       full_price_cents *= (1 + service_fee_guest_percent / 100.0) unless service_fee_guest_percent.to_f.zero?
