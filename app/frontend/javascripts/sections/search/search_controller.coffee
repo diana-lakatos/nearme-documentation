@@ -304,14 +304,9 @@ module.exports = class SearchSearchController extends SearchController
         @updateMapWithListingResults() if @map?
         @updateLinks()
 
-
-  # Trigger the search after waiting a set time for further updated user input/filters
-  triggerSearchFromQueryAfterDelay: _.debounce(->
-    @triggerSearchFromQuery()
-  , 500)
-
   # Triggers a search with default UX behaviour and semantics.
   triggerSearchAndHandleResults: (callback) ->
+    $(document).trigger('loading:searchResults.nearme')
     @loader.showWithoutLocker()
     @triggerSearchRequest().success (html) =>
       @processingResults = true
@@ -331,9 +326,10 @@ module.exports = class SearchSearchController extends SearchController
   #
   # Returns a jQuery Promise object which can be bound to execute response semantics.
   triggerSearchRequest: ->
+    @currentAjaxRequest.abort() if @currentAjaxRequest
     data = @form.serializeArray()
     data.push({"name": "map_moved", "value": @mapTrigger})
-    $.ajax(
+    @currentAjaxRequest = $.ajax(
       url  : @form.attr("action")
       type : 'GET',
       data : $.param(data)
@@ -361,7 +357,7 @@ module.exports = class SearchSearchController extends SearchController
 
   # Trigger automatic updating of search results
   fieldChanged: (field, value) ->
-    @triggerSearchFromQueryAfterDelay()
+    @triggerSearchFromQuery()
 
   updateUrlForSearchQuery: ->
     url = document.location.href.replace(/\?.*$/, "")

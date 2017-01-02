@@ -16,7 +16,7 @@
 
 {% content_for 'page_header' %}
   <h1>
-    My Projects
+    My Bookings
     <span class='hidden-xs'>&gt; {{ current_status | humanize }}</span>
   </h1>
 
@@ -24,7 +24,7 @@
     <div class='options visible-sm visible-xs'>
       <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary'>
         <span class='fa fa-plus'></span>
-        {{ 'dashboard.items.new_listing_short' | translate }}
+        New
       </a>
     </div>
   {% endif %}
@@ -50,7 +50,7 @@
     </div>
 
     {% if current_user.has_seller_profile? %}
-    <p class="find-expert-link"><a href="/search" class="btn btn-primary">Find an Expert</a></p>
+    <p class="find-expert-link"><a href="/search" class="btn btn-primary">Find a Driver</a></p>
     {% endif %}
 </div>
 
@@ -58,13 +58,13 @@
 
 {% content_for 'panel_navigation_links' %}
     <li class='{{ 'pending' | active_class:current_status }}'>
-      <a href='{{ tt.transactable_types_path | append: "?status=pending" | append: filter_params }}'>Projects Pending ({{ pending_transactables | total_entries }})</a>
+      <a href='{{ tt.transactable_types_path | append: "?status=pending" | append: filter_params }}'>Pending Bookings ({{ pending_transactables | total_entries }})</a>
     </li>
     <li class='{{ 'in progress' | active_class:current_status }}'>
-      <a href='{{ tt.transactable_types_path | append: "?status=in+progress" | append: filter_params }}'>Projects In Progress ({{ in_progress_transactables | total_entries }})</a>
+      <a href='{{ tt.transactable_types_path | append: "?status=in+progress" | append: filter_params }}'>Accepted Bookings ({{ in_progress_transactables | total_entries }})</a>
     </li>
     <li class='{{ 'archived' | active_class:current_status }}'>
-      <a href='{{ tt.transactable_types_path | append: "?status=archived" | append: filter_params }}'>Projects Archived ({{ archived_transactables | total_entries }})</a>
+      <a href='{{ tt.transactable_types_path | append: "?status=archived" | append: filter_params }}'>Archived Bookings ({{ archived_transactables | total_entries }})</a>
     </li>
 {% endcontent_for %}
 
@@ -73,7 +73,7 @@
   <div class='pull-right options {% if transactables.size > 0 %} additional-listing-options {% endif %}'>
     <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary navbar-btn'>
       <span class='fa fa-plus'></span>
-      {{ 'dashboard.items.new_listing_full' | translate: type: transactable_type.bookable_noun_plural }}
+      Add a Booking
     </a>
   </div>
   {% endcontent_for %}
@@ -81,11 +81,11 @@
 
 <nav class='panel-nav-mobile' role='navigation'>
   {% if current_status == 'pending' %}
-    {% capture nav_label %}Projects Pending ({{ pending_transactables | total_entries }}){% endcapture %}
+    {% capture nav_label %}Pending Bookings ({{ pending_transactables | total_entries }}){% endcapture %}
   {% elsif current_status == 'in progress' %}
-    {% capture nav_label %}Projects In Progress ({{ in_progress_transactables | total_entries }}){% endcapture %}
+    {% capture nav_label %}Bookings in Progress ({{ in_progress_transactables | total_entries }}){% endcapture %}
   {% elsif current_status == 'archived' %}
-    {% capture nav_label %}Projects Archived ({{ archived_transactables | total_entries }}){% endcapture %}
+    {% capture nav_label %}Archived Bookings ({{ archived_transactables | total_entries }}){% endcapture %}
   {% endif %}
   {% dropdown_menu { label: nav_label, wrapper_class: 'links' } %}
     {% yield 'panel_navigation_links' %}

@@ -1,0 +1,73 @@
+.file-manager-info-pane.single-file
+  .file-name{ "data-file-name": "", }
+    .file-name-text-wrapper{ "data-file-name-text-wrapper": '' }
+      %h2{ 'data-file-name-string': '' }
+        file_1.pdf
+      %button.edit-name{:type => "button"}
+        Edit
+    %form.file-name-form{ action: "#", 'data-file-name-form': ''}
+      %input{:type => "text", value: 'file_1.pdf', 'data-file-name-input': ''}/
+      %button{ type: 'submit' } Change name
+
+  %ul.selection-actions
+    %li
+      %a.edit-file{:href => "#"} Edit
+    %li
+      %a{:href => "#", download: '' } Download
+    %li
+      / .file-move-action
+      %button Move
+      / %form{:action => "#"}
+      /   %input{:type => "text", value: '/folder/subfolder '}/
+      /   %button{ type: 'submit' } Move to this folder
+    %li
+      %form{:action => "#"}
+        %button{ type: 'submit' } Trash
+
+  %dl.properties
+    %dt Created
+    %dd= l(Time.now, format: '%Y-%m-%d')
+
+    %dt Last modified
+    %dd= l(Time.now, format: '%Y-%m-%d')
+
+    %dt Size
+    %dd 40kb
+
+    %dt Absolute URL
+    %dd
+      %input{:type => "url", readonly: '', value: 'http://example.com/file/somefolder/file_1.pdf'}/
+      %button.clipboard-copy Copy to clipboard
+
+    %dt Liquid tag
+    %dd
+      %input{:type => "url", readonly: '', value: '{{ "file/somefolder/file_1.pdf" | asset_url }} '}/
+      %button.clipboard-copy{title: 'Copy to clipboard'} Copy to clipboard
+
+    %dt Access
+    %dd
+      %form.access-level{:action => "#"}
+        %ul
+          %li
+            %span.radio
+              %input{ id: 'access-1', name: 'access', type: 'radio', value: 1 }
+              %label{:for => "access-1"} Public
+          %li
+            %span.radio
+              %input{ id: 'access-2', name: 'access', type: 'radio', value: 2, checked: ''}
+              %label{:for => "access-2"} Listers
+          %li
+            %span.radio
+              %input{ id: 'access-3', name: 'access', type: 'radio', value: 3 }
+              %label{:for => "access-3"} Enquirers
+
+        %button{ type: 'submit' } Change access level
+
+    %dt Preview
+    %dd.preview
+      %img{:src => Placeholder.new({ width: 500, height: 200 }).path, :alt => "Placeholder"}
+
+  %h3 More info
+  %dl.properties
+    %dt Size
+    %dd 1000px &times; 200px

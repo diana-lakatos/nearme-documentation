@@ -1,0 +1,21 @@
+%h4 Note:
+.span12
+  %p.span6 If you need to edit the instance on behalf of the client you should do it through the marketplace admin for that instance, not here. This form only contains features not yet accessable through the marketplace admin, or hidden features we have not exposed yet.
+
+= simple_form_for [:global_admin, resource], :html => { :multipart => true } do |f|
+  = f.input :name
+  = f.input :user_based_marketplace_views
+  = f.input :click_to_call
+
+  %p
+    = f.button :submit, 'Save'
+  %br
+
+  - if defined?(@user)
+    %h4 Instance Admin
+    = simple_fields_for @user do |f_user|
+      = f_user.input :name
+      = f_user.input :email, required: true
+
+  .form-actions
+    = f.button :submit

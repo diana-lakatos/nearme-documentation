@@ -1,0 +1,104 @@
+.templates-list {
+    padding: 0;
+    list-style: none;
+
+    > li {
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+    @for $i from 1 through 10 {
+        .level-#{$i} {
+            padding-left: $i * 20px;
+        }
+    }
+
+    .template-name {
+        position: relative;
+        margin-bottom: 5px;
+        color: #000;
+
+        &:before {
+            @include fa-icon;
+
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            content: $fa-var-angle-right;
+            font-size: 12px;
+        }
+    }
+
+    .versions {
+        padding: 0;
+        margin: 0 0 20px;
+        list-style: none;
+        font-size: 0.75em;
+
+        li + li {
+            margin-top: 10px;
+        }
+
+        a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            padding: 5px 10px;
+            background: rgba(0, 0, 0, 0.05);
+            transition: none;
+
+            &:before {
+                @include fa-icon;
+
+                content: $fa-var-file-text-o;
+                margin-right: 10px;
+            }
+
+            &:hover, &:focus, &:active {
+                color: #fff;
+                background: $color-primary;
+
+                * {
+                    color: inherit;
+                }
+            }
+        }
+    }
+
+    h4 {
+        margin: 0;
+        padding: 0;
+        font-weight: normal;
+        line-height: 1.4;
+        color: #000;
+        display: none;
+    }
+
+    dl {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+        line-height: 1.4;
+
+        + dl {
+            margin-left: 20px;
+            border-left: 1px dotted #ccc;
+            padding-left: 20px;
+        }
+    }
+
+    dt {
+        display: inline-block;
+        line-height: 1.4;
+        margin-right: 10px;
+    }
+
+    dd {
+        display: inline-block;
+        margin: 0;
+        font-weight: bold;
+        color: #000;
+        line-height: 1.4;
+    }
+}

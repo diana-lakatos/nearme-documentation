@@ -3,7 +3,8 @@
 var
   eslint = require('gulp-eslint'),
   path = require('path'),
-  cache = require('gulp-cached');
+  cache = require('gulp-cached'),
+  flow = require('gulp-flowtype');
 
 
 module.exports = function(gulp){
@@ -11,11 +12,7 @@ module.exports = function(gulp){
   var files = [
     'gulp/**/*.js',
     'app/frontend/javascripts/*.js',
-    'app/frontend/javascripts/**/*.js',
-    '!node_modules/**',
-    '!**/vendor/**',
-    '!app/frontend/javascripts/instance_admin/data_tables/*',
-    '!public/**/*.js'
+    'app/frontend/javascripts/**/*.js'
   ];
 
 
@@ -26,7 +23,17 @@ module.exports = function(gulp){
     .pipe(eslint.failAfterError());
   });
 
-  gulp.task('lint', ['lint:javascript']);
+  gulp.task('lint:typecheck', function() {
+    return gulp.src(files)
+    .pipe(flow({
+      // declarations: './declarations',
+      killFlow: false,
+      beep: true,
+      abort: false
+    }));
+  });
+
+  gulp.task('lint', ['lint:javascript', 'lint:typecheck']);
 
 
   gulp.task('lint:javascript:cached', function() {
@@ -55,6 +62,10 @@ module.exports = function(gulp){
     });
   });
 
+  gulp.task('watch:lint:typecheck', ['lint:typecheck'], function(){
+    return gulp.watch(files, ['lint:typecheck']);
+  });
 
-  gulp.task('watch:lint', ['watch:lint:javascript']);
+
+  gulp.task('watch:lint', ['watch:lint:javascript', 'watch:lint:typecheck']);
 };

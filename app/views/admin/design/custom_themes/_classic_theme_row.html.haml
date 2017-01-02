@@ -1,0 +1,8 @@
+%tr
+  %td
+    = link_to t('admin.themes.classic.name'), admin_design_liquid_views_path
+    - if @classic_theme_active
+      %span.label.label-active= t('admin.themes.state.active')
+
+  %td.actions
+    = link_to t('admin.media_library.title'), '#', class: 'action--assets'

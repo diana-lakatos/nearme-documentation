@@ -1,0 +1,13 @@
+= configurations_sidebar_menu_item Spree.t(:general_settings), edit_global_admin_general_settings_path
+= configurations_sidebar_menu_item Spree.t(:tax_categories), global_admin_tax_categories_path
+= configurations_sidebar_menu_item Spree.t(:tax_rates), global_admin_tax_rates_path
+= configurations_sidebar_menu_item Spree.t(:tax_settings), edit_global_admin_tax_settings_path
+= configurations_sidebar_menu_item Spree.t(:zones), global_admin_zones_path
+= configurations_sidebar_menu_item Spree.t(:countries), global_admin_countries_path
+- if Spree::Config[:default_country_id]
+  = configurations_sidebar_menu_item Spree.t(:states), global_admin_country_states_path(Spree::Config[:default_country_id])
+= configurations_sidebar_menu_item Spree.t(:payment_methods), global_admin_payment_methods_path
+= configurations_sidebar_menu_item Spree.t(:shipping_methods), global_admin_shipping_methods_path
+= configurations_sidebar_menu_item Spree.t(:shipping_categories), global_admin_shipping_categories_path
+= configurations_sidebar_menu_item Spree.t(:stock_transfers), global_admin_stock_transfers_path
+= configurations_sidebar_menu_item Spree.t(:stock_locations), spree.global_admin_stock_locations_path

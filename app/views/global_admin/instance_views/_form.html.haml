@@ -1,0 +1,10 @@
+= simple_form_for [:global_admin, @instance, @instance_view] do |f|
+  = f.input :path
+  = f.association :transactable_types
+  = f.input :body, input_html: { class: 'input-block-level', rows: '35' }
+  = f.association :locales
+  = f.input :format
+  = f.input :handler
+  = f.input :partial
+  .form-actions
+    = f.button :submit

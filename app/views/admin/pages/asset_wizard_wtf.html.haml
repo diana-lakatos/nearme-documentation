@@ -1,0 +1,31 @@
+#rootwizard.m-t-50.bg-white
+  = render 'admin/pages/asset_wizard/nav', active: 'wtf'
+
+  .tab-content
+    = render 'admin/pages/asset_wizard/next_prev', previous_link: admin_path(page: 'asset_wizard_form_layouts')
+
+    .tab-pane.padding-20.slide-left.active
+      .row.row-same-height
+        .col-md-5.b-r.b-dashed.b-grey.sm-b-b
+          .padding-30
+            %h2 WTF Options
+
+            %p Everything else I didn't know where to put :(
+
+
+
+        .col-md-7
+          .padding-30
+            %form{:role => "form"}
+              %p.checkbox
+                %input#show-company-name{type:"checkbox", checked: 'checked'  }
+                %label{:for => "show-company-name"} Show company name
+
+            %h5.m-t-50 Reservation types
+
+            I know I can enable that for transactable but not much else.
+
+
+    = render 'admin/pages/asset_wizard/next_prev', previous_link: admin_path(page: 'asset_wizard_form_layouts')
+
+  .clearfix

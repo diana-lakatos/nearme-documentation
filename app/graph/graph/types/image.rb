@@ -11,6 +11,18 @@ module Graph
         argument :version, types.String
         resolve ->(obj, arg, _ctx) { arg[:version].present? ? obj.url(arg[:version]) : obj.url }
       end
+
+      field :image_original_width,
+            !types.Int,
+            'image original width' do
+        resolve ->(obj, _arg, _ctx) { obj.model.image_original_width }
+      end
+
+      field :image_original_height,
+            !types.Int,
+            'image original height' do
+        resolve ->(obj, _arg, _ctx) { obj.model.image_original_height }
+      end
     end
   end
 end

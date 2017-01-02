@@ -101,8 +101,9 @@ module.exports = class Search
   #
   # Returns a jQuery Promise object which can be bound to execute response semantics.
   triggerSearchRequest: (data) ->
+    @currentAjaxRequest.abort() if @currentAjaxRequest
     data = @form.serialize() unless data
-    $.ajax(
+    @currentAjaxRequest = $.ajax(
       url  : @form.attr("action")
       type : 'GET',
       data : data

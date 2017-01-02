@@ -1,0 +1,25 @@
+%head
+  %meta{:charset => "utf-8"}/
+  %title= "#{platform_context.name} - Marketplace Admin"
+  %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", :name => "viewport"}/
+
+  = csrf_meta_tag
+  - if current_user
+    %meta{"name": 'authorization-token', "content": current_user.authentication_token }
+
+  = render 'layouts/favicon'
+
+  %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}
+  %meta{:content => "yes", :name => "apple-touch-fullscreen"}
+  %meta{:content => "default", :name => "apple-mobile-web-app-status-bar-style"}
+
+  = stylesheet_link_tag 'admin'
+
+  = yield :styles
+
+  = stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Montserrat:400,700'
+
+  = render 'shared/javascripts/header', no_jquery: true
+
+  = render 'admin/shared/header/javascript'
+

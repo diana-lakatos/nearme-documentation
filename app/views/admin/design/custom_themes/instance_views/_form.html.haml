@@ -1,0 +1,29 @@
+= admin_simple_form_for @instance_view,
+  url: admin_design_theme_instance_view_path(@custom_theme, @instance_view),
+  html: { class: 'form-actions-floating nm-form',
+  "data-api-endpoint": url_for([:api, @custom_theme, @instance_view]) } do |f|
+
+  .form-actions
+    .form-actions-wrapper
+      = f.button :submit, t('admin.actions.save')
+
+      = link_to t('admin.actions.cancel'), admin_design_theme_instance_views_path(@custom_theme), class: 'btn btn-flat'
+
+      = yield(:form_actions)
+
+  = f.input :path, readonly: @instance_view.persisted?
+
+  .row
+    .col-sm-4
+      = f.association :transactable_types, as: :check_boxes
+
+    .col-sm-4
+      = f.association :locales, as: :check_boxes
+
+    .col-sm-4
+      - if @base_view.present?
+        = f.input :partial, as: :hidden
+      - else
+        = f.input :partial
+
+  = f.input :body, as: :code_editor, syntax: 'liquid', input_html: { :"data-main-editor" => true }

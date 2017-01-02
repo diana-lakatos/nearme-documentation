@@ -1,0 +1,47 @@
+%table.file-listing
+  %thead
+    %tr
+      %th.files-name
+        %a{:href => ""} Name
+      %th.files-size
+        %a{:href => ""} Size
+      %th.files-modified
+        %a{:href => ""} Modified
+  %tbody
+    %tr.file-type-dir
+      %td
+        %a{:href => "#"}
+          \..
+      %td
+        \--
+      %td
+        \--
+    %tr.file-type-dir
+      %td
+        %a{:href => "#"}
+          subfolder
+      %td
+        \--
+      %td
+        = l(Time.now, format: '%Y-%m-%d')
+    %tr.file-type-zip
+      %td
+        %a{:href => "#"} file_1.pdf
+      %td
+        45kb
+      %td
+        = l(Time.now, format: '%Y-%m-%d')
+    %tr.file-type-zip
+      %td
+        %a{:href => "#"} file_1.zip
+      %td
+        45kb
+      %td
+        = l(Time.now, format: '%Y-%m-%d')
+    %tr.file-type-png
+      %td
+        %a{:href => "#"} file_1.png
+      %td
+        45kb
+      %td
+        = l(Time.now, format: '%Y-%m-%d')

@@ -1,0 +1,242 @@
+.page-header {
+    position: relative;
+    z-index: 1000;
+    background: #fff;
+
+    @include clear;
+
+    .brand {
+        position: relative;
+        z-index: 1020;
+        background: inherit;
+
+        img {
+            display: block;
+            margin: 0 auto;
+        }
+    }
+}
+
+.nav-user {
+    img {
+        display: block;
+        border-radius: 100%;
+        padding: 2px;
+        border: 1px solid #ededed;
+    }
+}
+
+.nav-user-log-out a:after {
+    @include fa-icon;
+
+    content: $fa-var-power-off;
+    margin-left: 10px;
+}
+
+@include breakpoint(0 ($touch-breakpoint - 1)) {
+    .page-header {
+        .brand {
+            padding: 10px $side-spacing-small;
+            border-bottom: 1px solid #ededed;
+        }
+    }
+
+    .nav-primary {
+        background: inherit;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+        > ul {
+            padding: 0;
+            margin: 0;
+
+            a {
+                display: block;
+                padding: 10px 20px;
+                border-bottom: 1px solid #ededed;
+                text-decoration: none;
+
+                &:hover, &:focus, &:active {
+                    background: #ededed;
+                }
+            }
+        }
+    }
+
+    .nav-user {
+        padding: 20px;
+
+        h3 {
+            font-weight: 300;
+            text-align: center;
+            margin: 0 0 15px;
+        }
+
+        img {
+            display: block;
+            margin: 15px auto;
+        }
+
+        ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            text-align: center;
+        }
+
+        li {
+            display: inline;
+        }
+
+        li + li:before {
+            content: " | ";
+        }
+
+        a {
+            margin: 0 10px;
+        }
+    }
+
+    .nav-primary-toggler {
+        position: absolute;
+        z-index: 1020;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: none;
+        width: 45px;
+        font-size: 1.5em;
+        border: none;
+        overflow: hidden;
+        font-size: 0;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 2px;
+            background: #000;
+            box-shadow: 0 5px 0 0 #000, 0 10px 0 0 #000;
+            transform: translate(-50%, -50%);
+            margin-top: -5px;
+        }
+
+        &:hover, &:focus, &:active {
+            background: none;
+        }
+    }
+
+    // JavaScript enabled nav
+    .js {
+        .page-header {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 46px;
+        }
+
+        body {
+            padding-top: 46px;
+        }
+
+        .nav-primary {
+            position: absolute;
+            z-index: 1010;
+            left: 0;
+            right: 0;
+            top: 100%;
+            transform: translateY(-100%);
+            transition: transform .3s ease;
+        }
+
+        .page-header.navigation-active .nav-primary {
+            transform: translateY(0);
+        }
+    }
+}
+
+
+@include breakpoint($touch-breakpoint) {
+    .page-header {
+        padding: 20px $side-spacing-large;
+        border-bottom: 1px solid #ededed;
+
+        .brand {
+            float: left;
+        }
+    }
+
+    .nav-primary-toggler {
+        display: none;
+    }
+
+    .nav-primary {
+        > ul {
+            padding: 0;
+            margin: 0 0 0 20px;
+            display: inline;
+            border-left: 1px solid #ccc;
+        }
+
+        > ul li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        > ul a {
+            text-decoration: none;
+            font-weight: 300;
+        }
+    }
+
+    .nav-user {
+        float: right;
+
+        h3 {
+            display: inline;
+            margin: 0;
+            float: left;
+            font-size: 16px;
+        }
+
+        img {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: top;
+            margin: 0 0 0 10px;
+        }
+
+        ul {
+            padding: 0;
+            display: inline;
+            margin: 0;
+            list-style: none;
+        }
+
+        ul:before {
+            content: "";
+            border-left: 1px solid #ccc;
+            margin-left: 20px;
+            padding-left: 20px;
+        }
+
+        ul, li {
+            display: inline;
+        }
+
+        li {
+            font-weight: 300;
+
+            a {
+                text-decoration: none;
+            }
+        }
+
+        li + li {
+            margin-left: 20px;
+        }
+    }
+}

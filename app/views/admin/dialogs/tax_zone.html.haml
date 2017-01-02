@@ -1,0 +1,29 @@
+- content_for :dialog_title do
+  Create Tax Zone
+
+= admin_simple_form_for :admin_tax_zone, url: admin_dialog_path(id: 'tax_zone'), html: { id: 'tax-zone-form', class: 'tax-zone-form' } do |f|
+
+  .dialog-body
+
+    = f.input :name
+
+    = f.input :description, as: :text
+
+    %h4 Type
+
+    .row
+      .col-sm-4
+        = f.input :zone_type, as: :radio_buttons, collection: ['Country', 'State']
+
+      .col-sm-8
+        %div{:"zone-type" => "country"}
+          = f.input :country, collection: ['Poland', 'United States']
+
+        %div{:"zone-type" => "state"}
+          = f.input :country2, collection: ['Poland', 'United States']
+          = f.input :state, collection: ['California', 'Texas']
+
+    = f.input :default_zone, as: :switch
+
+  .dialog-actions
+    = f.button :submit, t('simple_form.labels.admin_tax_zone.save')

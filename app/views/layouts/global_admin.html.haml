@@ -1,0 +1,64 @@
+!!!
+%html
+  %head
+    %meta{name: 'app-server', content: ENV['HOSTNAME']}
+
+    %title
+      Desks Near Me - Admin
+    = csrf_meta_tag
+    %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
+    %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
+
+    = stylesheet_link_tag 'global-admin'
+
+    = render 'shared/head/fonts'
+
+    = render 'shared/javascripts/header'
+
+  %body
+    .navbar
+      .navbar-inner
+        .container
+          = link_to "Desks Near Me Admin", "#", :class => "brand"
+          .nav-collapse.collapse
+            %p.navbar-text.pull-right
+              Logged in as #{current_user.name}
+              = link_to "Log Out", destroy_user_session_url, :method => :delete, :data => {:user => current_user.first_name }
+
+    .container-fluid
+      .row-fluid
+        .span3
+          .well.sidebar-nav
+            %ul.nav.nav-list
+              %li= link_to "Dashboard", global_admin_url
+              %li{:class => ("active" if request.url.include?(global_admin_users_url))}
+                = link_to "Users", global_admin_users_url
+              %li{:class => ("active" if request.url.include?(global_admin_reservations_url))}
+                = link_to "Platform Admins", global_admin_platform_admins_url
+              %li{:class => ("active" if request.url.include?(global_admin_platform_admins_url))}
+                = link_to "Reservations", global_admin_reservations_url
+              %li{:class => ("active" if request.url.include?(global_admin_companies_url))}
+                = link_to "Companies", global_admin_companies_url
+              %li{:class => ("active" if request.url.include?(global_admin_payment_transfers_url))}
+                = link_to "Payment Transfers", global_admin_payment_transfers_url
+              %li{:class => ("active" if request.url.include?(global_admin_instance_creators_url))}
+                = link_to "Instance Creators", global_admin_instance_creators_url
+              %li{:class => ("active" if request.url.include?(global_admin_instances_url))}
+                = link_to "Instances", global_admin_instances_url
+              %li{:class => ("active" if request.url.include?(global_admin_instance_reports_url))}
+                = link_to "Instance Reports", global_admin_instance_reports_url
+
+        .span9
+          - flash.each do |type, message|
+            .alert{:class => "alert-#{type}"}
+              = message
+
+          = yield
+
+      %hr
+
+      %footer
+        %p
+          &copy; Company #{Date.current.year}
+
+    = render 'shared/javascripts/footer', entry: 'global-admin'

@@ -1,0 +1,264 @@
+- # this should be changed to variable based on enabled_location value e.g.
+- # is_collapsed = @asset_type.enable_location
+- is_collapsed = false
+- # Same goes for asset type name, it should be dynamic e.g
+- # asset_type_name = @asset_type.name
+- asset_type_name = 'Event'
+
+= admin_side_navigation(:asset)
+
+= admin_simple_form_for :admin_config, url: admin_path(page: 'asset_wizard_shipping') do |f|
+
+  .config-section-description
+    %h1 Pricing
+
+    %p Every marketplace is different when it comes to dealing with asset prices. Some of them focus on selling physical items, other are based on time or event basis. Finally there are some that do not pricing altogether as they are used for managing digital products or just user profiles.
+
+  .config-section-fields
+    %h2 General
+    = f.input :enable_pricing, as: :switch, input_html: { "aria-controls" => 'pricing-props', checked: !is_collapsed }, label: t('simple_form.labels.admin_config.enable_pricing', name: asset_type_name.downcase.pluralize)
+
+    - section_class = 'collapsible'
+    - section_class += ' active' unless is_collapsed
+
+    #pricing-props{"aria-expanded" => is_collapsed, class: section_class }
+
+      %h3 Currencies
+
+      %p Based on where your users are located and what payment options you are planning to integrate, you might want to allow or disallow certain currencies and set the default currency for your transactable.
+
+      = f.input :allowed_currencies, as: :combobox, collection: ['USD - United States Dollar','PLN - Polish Zloty']
+
+      = f.input :default_currency, collection: ['USD - United States Dollar','PLN - Polish Zloty'], prompt: false
+
+
+      %h3 Free option
+
+      = f.input :free_option, as: :switch
+
+      %hr/
+
+      %h3
+        Time based pricing
+        %span.label.label-danger CONDITIONAL SECTION
+
+
+      %p For time based pricing you can enable different periods and minimum and maximum prices that seller / host can apply for their listings.
+
+      .row
+        .col-sm-4
+          %p.checkbox.check-success
+            %input#enable-hourly{type:"checkbox", checked: 'checked'  }
+            %label{for: 'enable-hourly'} Enable Hourly
+
+        .col-sm-4
+          .form-group.form-group-default
+            %label Minimum price
+            %input.form-control{:type => "number", min: 0 }/
+        .col-sm-4
+          .form-group.form-group-default
+            %label Maximum price
+            %input.form-control{:type => "number", min: 0 }/
+      .row
+        .col-sm-4
+          %p.checkbox.check-success
+            %input#enable-daily{type:"checkbox", checked: 'checked'  }
+            %label{for: 'enable-daily'} Enable Daily
+
+        .col-sm-4
+          .form-group.form-group-default
+            %label Minimum price
+            %input.form-control{:type => "number", min: 0 }/
+        .col-sm-4
+          .form-group.form-group-default
+            %label Maximum price
+            %input.form-control{:type => "number", min: 0 }/
+
+
+      %hr/
+
+      %h3
+        Subscription based pricing
+        %span.label.label-danger CONDITIONAL SECTION
+
+      %p Subscriptions can be enabled on either weekly or monthly basis.
+
+
+      %p.checkbox.check-success
+        %input#enable-monthly-subscription{type:"checkbox", checked: 'checked'  }
+        %label{for: 'enable-monthly-subscription'} Enable Monthly Subscription
+
+
+      %hr/
+
+      %h3 Per unit pricing
+      %p If you want to enable selling products via marketplace you will need to enable pet unit pricing for your assets.
+
+      %p.checkbox.check-success
+        %input#enable-per-unit{type:"checkbox", checked: 'checked'  }
+        %label{for: 'enable-per-uni'} Enable Per Unit pricing
+
+      %hr/
+
+      %h3 Special Pricing options
+      %p You can give item owners or service providers an option to add discount based on quantity bought.
+
+      %p.checkbox.check-success
+        %input#enable-bulk{type:"checkbox", checked: 'checked'  }
+        %label{for: 'enable-bulk'} Enable bulk discount
+
+      %p.m-t-20
+        %span.label.label-danger I don't know what does either Exclusive Price ...
+
+      %p.checkbox.check-success
+        %input#enable-exclusive{type:"checkbox", checked: 'checked'  }
+        %label{for: 'enable-exclusive'} Enable Exclusive Price
+
+      %p.m-t-20
+        %span.label.label-danger ... or Favorable Pricing Rate mean :(
+
+      %p.checkbox.check-success
+        %input#enable-favorable{type:"checkbox", checked: 'checked'  }
+        %label{for: 'enable-favorable'} Enable Favorable Pricing Rate
+
+      %h5.m-t-50 Fees and Commissions
+      %p You can enable additional commissions or fees for each transaction in your marketplace. It can either be a percentage or flat fee applied to either or both parties in the transaction.
+
+      .radio.radio-success
+        %input#fee-percent{:name => "time-zone", :type => "radio", :value => "1", checked: 'checked'}/
+        %label{:for => "fee-percent"} Percentage fee
+
+        %input#fee-flat{:name => "time-zone", :type => "radio", :value => "2"}/
+        %label{:for => "fee-flat"} Flat fee
+
+      .row
+        .col-sm-6
+          .form-group.form-group-default.input-group
+            %label
+              Buyer fee
+            %input.form-control{:type => "number", value: 0, required: '', minimum: 0 }/
+            %span.input-group-addon %
+        .col-sm-6
+          .form-group.form-group-default.input-group
+            %label
+              Seller fee
+            %input.form-control{:type => "number", value: 0, required: '', minimum: 0 }/
+            %span.input-group-addon %
+
+      %h5.m-t-50 Upsell &amp; Addons
+
+      %p Upselling is a sales technique whereby a seller induces the customer to purchase more expensive items, upgrades or other add-ons in an attempt to make a more profitable sale.
+
+      %p.label.label-danger So how does this apply to what we have?! And what about the addons?!
+
+      .table-responsive
+        %table.table.table-hover.table-condensed
+          %thead
+            %tr
+              %th{:style => "width:50%"} Name
+              %th{:style => "width:25%"} Amount
+              %th{:style => "width:25%"}
+                %span.pull-right Edit
+          %tbody
+            %tr#upsell-1.collapse.in
+              %td.v-align-middle
+                %p First Upsell
+              %td.v-align-middle
+                %p $22.00
+              %td.v-align-middle
+                %p.pull-right
+                  %button.btn.btn-primary.btn-xs{type: 'button', data: { toggle: 'modal', target: '#upsell-modal' } }
+                    %span.fa.fa-pencil
+                  %button.btn.btn-danger.btn-xs{type: 'button', data: { toggle: 'collapse', target: '#upsell-1'} }
+                    %span.fa.fa-trash
+
+            %tr#upsell-2.collapse.in
+              %td.v-align-middle
+                %p Second Upsell
+              %td.v-align-middle
+                %p 5%
+              %td.v-align-middle
+                %p.pull-right
+                  %button.btn.btn-primary.btn-xs{type: 'button', data: { toggle: 'modal', target: '#upsell-modal' } }
+                    %span.fa.fa-pencil
+                  %button.btn.btn-danger.btn-xs{type: 'button', data: { toggle: 'collapse', target: '#upsell-2'} }
+                    %span.fa.fa-trash
+
+      %p
+        %button.pull-right.btn.btn-primary{type: 'button', data: { toggle: 'modal', target: '#upsell-modal' } }
+          %span.fa.fa-plus
+          Add new upsell
+
+
+      %h3 Requests for quote
+
+      %p Rather than showing a price altogether you can give clients an option to request a quote via the built-in message system
+
+      %p.checkbox.check-success
+        %input#enable-rfq{type:"checkbox" }
+        %label{for: 'enable-rfq'} Enable request for quotes
+
+
+    = render 'admin/shared/navigation_nextprev', f: f
+
+
+/ #upsell-modal.modal.fade.slide-up{"aria-hidden" => "true", :role => "dialog", :tabindex => "-1"}
+/   .modal-dialog
+/     .modal-content-wrapper
+/       .modal-content
+/         .modal-header.clearfix.text-left
+/           %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"}
+/             %i.pg-close.fs-14
+/           %h5
+/             Create
+/             %span.semi-bold Upsell
+
+/         .modal-body
+/           %form{:role => "form"}
+
+/           .form-group.attached
+/             .form-group.form-group-default.required
+/               %label{:for => ""} Name
+/               %input.form-control{:type => "text", placeholder: 'e.g. My awesome promotion!'}/
+/             .form-group.form-group-default
+/               %label{:for => ""} Description
+/               %textarea.form-control{:name => "description", :cols => "30", :rows => "10", placeholder: 'Description displayed to hosts and guests...', style: 'height: 100px;'}
+
+/           %p.m-t-20 Upsells can be either based on flat amount or percentage from the transaction.
+
+/           .row
+/             .col-sm-5
+/               .radio.radio-success
+/                 %input#upsell-percent{:name => "time-zone", :type => "radio", :value => "1", checked: 'checked'}/
+/                 %label{:for => "upsell-percent"} Percentage
+
+/                 %input#upsell-flat{:name => "time-zone", :type => "radio", :value => "2"}/
+/                 %label{:for => "upsell-flat"} Flat
+
+/             .col-sm-7
+/               .form-group.form-group-default.input-group.required
+/                 %label{:for => ""} Upsell value
+/                 %input.form-control{:type => "number", minimum: 0}/
+/                 %span.input-group-addon %
+
+/           %p.m-t-20 You can decide if the upsell should be a mandatory additiona for all hosts or an optional one.
+
+/           .checkbox.check-success
+/             %input#upsell-mandatory{:name => "upsell-mandatory", :type => "checkbox", :value => "1"}/
+/             %label{:for => "upsell-mandatory"} Make this upsell mandatory
+
+/           %p.m-t-20 Finally, you can select which part should receive the commission for this upsell
+
+/           %h6
+/             %b Commission receiver
+
+/           .radio.radio-success
+/             %input#commission-mpo{:name => "commission-received", :type => "radio", :value => "1", checked: 'checked'}/
+/             %label{:for => "commission-mpo"} Marketplace Owner
+
+/             %input#commission-host{:name => "commission-received", :type => "radio", :value => "2"}/
+/             %label{:for => "commission-host"} Host / Seller
+
+/           %p.m-t-30
+/             %button.btn.btn-success.pull-right{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} Save upsell
+/             .clearfix

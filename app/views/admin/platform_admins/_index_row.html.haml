@@ -1,6 +1,0 @@
-%tr
-  %td= link_to admin_resource_name(resource), [:admin, resource]
-  %td= resource.email
-  %td
-    = link_to "Remove admin", admin_platform_admin_path(resource), :method => :delete,
-        data: { confirm: 'Are you sure you want to remove platform admin access for this user?'}, :class => "btn btn-danger"

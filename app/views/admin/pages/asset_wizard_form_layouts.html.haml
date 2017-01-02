@@ -1,0 +1,19 @@
+#rootwizard.m-t-50.bg-white
+  = render 'admin/pages/asset_wizard/nav', active: 'form_layouts'
+
+  .tab-content
+    = render 'admin/pages/asset_wizard/next_prev', previous_link: admin_path(page: 'asset_wizard_bulk'), next_link: admin_path(page: 'asset_wizard_wtf')
+
+    .tab-pane.padding-20.slide-left.active
+      .row.row-same-height
+        .col-md-5.b-r.b-dashed.b-grey.sm-b-b
+          .padding-30
+            %h2 Form layouts &amp; components
+
+        .col-md-7
+          .padding-30
+            %form{:role => "form"}
+
+    = render 'admin/pages/asset_wizard/next_prev', previous_link: admin_path(page: 'asset_wizard_bulk'), next_link: admin_path(page: 'asset_wizard_wtf')
+
+  .clearfix

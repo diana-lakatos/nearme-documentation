@@ -1,0 +1,37 @@
+= admin_simple_form_for [:admin, :design, @page], :html => { :multipart => true, class: 'form-actions-floating' } do |f|
+
+  .form-actions
+    .form-actions-wrapper
+      = f.button :submit, t('admin.actions.save')
+
+      = link_to t('admin.actions.cancel'), admin_design_pages_url, class: 'btn btn-flat'
+
+      = yield(:form_actions)
+
+  = f.input :path
+
+  = f.input :slug
+
+  = f.input :no_layout, as: :switch
+
+  = f.input :content, as: :code_editor, syntax: 'html', input_html: { :"data-main-editor" => true }
+
+  = f.input :css_content, as: :code_editor, syntax: 'css'
+
+  = f.input :hero_image, as: :image, delete_url: delete_image_admin_design_page_path(@page)
+
+  / - if @page.hero_image.present?
+  /   = link_to(@page.hero_image.filename, @page.hero_image.url)
+  /   = link_to 'Delete', delete_image_instance_admin_theme_page_path, data: { confirm: t('confirmations.are_you_sure') }, method: :delete
+
+  %hr/
+
+  %h2= t('admin.pages.meta.title')
+  %p= t('admin.pages.meta.description_html')
+
+
+  = f.input :metadata_title
+
+  = f.input :metadata_meta_description, as: :text
+
+  = f.input :metadata_canonical_url

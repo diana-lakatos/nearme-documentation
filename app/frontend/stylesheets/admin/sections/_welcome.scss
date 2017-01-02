@@ -1,0 +1,131 @@
+.setup-sections {
+    counter-reset: setup;
+
+    article {
+        background: #fff;
+        border-radius: 5px;
+        counter-increment: setup;
+        margin-bottom: 20px;
+
+        > a {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+            padding: 20px;
+
+            &:hover, &:focus, &:active {
+                color: inherit;
+                text-decoration: none;
+            }
+        }
+
+        > a:before {
+            content: counter(setup);
+            display: block;
+            width: 150px;
+            height: 150px;
+            margin: 40px auto;
+            border-radius: 100%;
+            border: 10px solid $color-primary;
+            font-weight: bold;
+            line-height: 150px;
+            text-align: center;
+            font-size: 120px;
+            color: $color-primary;
+            font-family: $font-stack-alt;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .inactive {
+        position: relative;
+        opacity: 0.4;
+
+        &:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+        }
+    }
+
+    h3 {
+        text-align: center;
+        margin: 0;
+    }
+
+    @include breakpoint(600px ($touch-breakpoint - 1px)) {
+        article {
+            padding: 30px;
+
+            @include clear;
+
+            > a:before {
+                margin: 0;
+                float: left;
+            }
+
+            h3, p {
+                margin-left: 200px;
+            }
+
+            h3 {
+                text-align: left;
+            }
+        }
+    }
+
+
+    @include breakpoint($touch-breakpoint) {
+        display: flex;
+        justify-content: space-between;
+
+        article {
+            display: flex;
+            align-items: stretch;
+            flex-direction: column;
+            width: 32%;
+        }
+
+        article > a {
+            display: flex;
+            flex-grow: 1;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        p:last-child {
+            display: flex;
+            flex-grow: 1;
+            flex-direction: row;
+
+            span {
+                align-self: flex-end;
+                flex: 1;
+            }
+        }
+    }
+}
+
+.welcome-intro {
+    @include container;
+
+    @include breakpoint($touch-breakpoint) {
+        .col {
+            @include span(6);
+        }
+
+        .col:first-child {
+            padding-left: 0;
+        }
+
+        .col:last-child {
+            padding-right: 0;
+        }
+    }
+}

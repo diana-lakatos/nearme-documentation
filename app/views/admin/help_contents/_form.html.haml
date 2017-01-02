@@ -1,0 +1,8 @@
+= admin_simple_form_for @help_content, as: :help_content, url: admin_help_content_path(@help_content), method: :put, html: { class: 'nm-form' } do |f|
+
+  = f.input :slug, disabled: true
+
+  = f.input :content, as: :code_editor, syntax: 'markdown'
+
+  .form-actions
+    = f.button :submit, t('admin.save')

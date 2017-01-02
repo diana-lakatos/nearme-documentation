@@ -1030,6 +1030,7 @@ class SecuredParams
       :skip_payment_authorization,
       :check_overlapping_dates,
       :edit_unconfirmed,
+      :withdraw_invitation_when_reject,
       transactable_type_ids: []
     ]
   end
@@ -1729,5 +1730,11 @@ class SecuredParams
     allowed = [:title]
     allowed << :access_level if instance.seller_attachments_access_sellers_preference?
     allowed
+  end
+
+  def help_content
+    [
+      :content
+    ]
   end
 end

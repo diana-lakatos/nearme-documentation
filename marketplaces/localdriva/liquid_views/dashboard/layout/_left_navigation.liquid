@@ -51,7 +51,7 @@
         </li>
       {% endif %}
 
-      {% if platform_context.wish_lists_enabled? %}
+      {% if platform_context.wish_lists_enabled? and current_user.has_seller_profile? %}
         {% comment %} Favorites menu {% endcomment %}
         {% assign show = 'dashboard/wish_list_items' | is_visible %}
         {% if show %}
@@ -83,12 +83,6 @@
         {% assign new_transactable_selected = current_path | matches: '/transactables/new' %}
         {% assign transactables_visible = 'dashboard/transactables' | is_visible %}
         {% assign transactables_show = current_user.registration_completed? and transactables_visible %}
-        {% if current_user.buyer_profile == blank %}
-          {% assign order_items_path = 'dashboard_company_order_items_path' | generate_url %}
-        {% else %}
-          {% assign order_items_path = 'dashboard_order_items_path' | generate_url %}
-        {% endif %}
-        {% assign order_items_selected = current_path | matches: 'dashboard/(company/)?(orders/[0-9]*/)?order_items' %}
         {% if projects_show %}
           <li id="dashboard-nav_projects_header" class="{% if projects_selected %}selected{% endif %}">
             <span>{{ 'dashboard.nav.projects_header' | t }}</span>
@@ -102,7 +96,7 @@
 
         {% if transactables_show %}
           {% assign pending_transactables_count = current_user.pending_transactables_count %}
-          <li id="dashboard-nav-transactables" class="{% if new_transactable_selected or transactables_selected or order_items_selected %}selected{% endif %}">
+          <li id="dashboard-nav-transactables" class="{% if new_transactable_selected or transactables_selected %}selected{% endif %}">
             <span>
                 {{ 'dashboard.nav.transactables' | t }}
                 {% if pending_transactables_count > 0 %}
@@ -114,7 +108,7 @@
                 {% if current_user.buyer_profile == blank %}
                   <li id="dashboard-nav-new_transactable" class="{% if new_transactable_selected %}selected{% endif %}">
                     <a href='{{ platform_context.transactable_types[0].new_transactable_path }}'>
-                      Add a Project
+                      Create new Booking
                     </a>
                   </li>
                 {% endif %}
@@ -127,9 +121,6 @@
                     </a>
                   </li>
 
-                  <li id="dashboard-nav-order_items" class="{% if order_items_selected %}selected{% endif %}">
-                    <a href="{{ order_items_path }}">{{ 'dashboard.nav.order_items' | t }}</a>
-                  </li>
               </ul>
           </li>
         {% endif %}
@@ -167,29 +158,6 @@
                 <a href="{{ analytics_path }}">{{ 'dashboard.nav.analytics' | t }}</a>
               </li>
             {% endif %}
-          </ul>
-        </li>
-      {% endif %}
-
-      {% comment %} Blog menu {% endcomment %}
-      {% assign blog_menu_show = 'dashboard/blog' | is_visible %}
-
-      {% if blog_menu_show %}
-        {% assign blog_posts_path = 'dashboard_blog_path' | generate_url %}
-        {% assign blog_posts_selected = current_path | matches: '/dashboard/blog(/posts)?(?!/edit)' %}
-        {% assign blog_settings_path = 'edit_dashboard_blog_path' | generate_url %}
-        {% assign blog_settings_selected = current_path | matches: '/dashboard/blog/edit' %}
-
-        <li id="dashboard-nav-blog" class="{% if blog_settings_selected or blog_posts_selected %}selected{% endif %}">
-          <span>{{ 'dashboard.nav.blog' | t }}</span>
-          <ul>
-            <li id="dashboard-nav-blog_posts" class="{% if blog_posts_selected %}selected{% endif %}">
-              <a href="{{ blog_posts_path }}">{{ 'dashboard.nav.blog_posts' | t }}</a>
-            </li>
-
-            <li id="dashboard-nav-blog_settings" class="{% if blog_settings_selected %}selected{% endif %}">
-              <a href="{{ blog_settings_path }}">{{ 'dashboard.nav.blog_settings' | t }}</a>
-            </li>
           </ul>
         </li>
       {% endif %}

@@ -1,0 +1,9 @@
+%tr
+  %td= link_to page.path, edit_admin_design_page_path(page)
+  %td
+    - if page.redirect?
+      = page.redirect_url
+    - else
+      = pages_path(page)
+  %td.actions
+    = link_to t('admin.pages.actions.visit'), page.redirect? ? page.redirect_url : pages_path(page), class: 'action--visit', rel: 'external'

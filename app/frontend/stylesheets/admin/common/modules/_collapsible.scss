@@ -1,0 +1,8 @@
+.collapsible {
+    display: none;
+
+    &.active {
+        animation: opacity-fadein .3s ease;
+        display: block;
+    }
+}

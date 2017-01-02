@@ -1,0 +1,42 @@
+- content_for :dialog_title do
+  Create Dimensions template
+
+= admin_simple_form_for :admin_dimensions_template, url: admin_dialog_path(id: 'dimensions_template'), html: { id: 'dimensions-template-form', class: 'dimensions-template-form' } do |f|
+  .dialog-body
+
+    .row
+      .col-md-8
+        = f.input :name
+
+      .col-md-4
+        = f.input :measurement_system, as: :radio_buttons, item_wrapper_class: 'inline', collection: ['Imperial','Metric']
+
+    .row
+      .col-md-6
+        - %w(weight height).each do |prop|
+          .row
+            .col-sm-8
+              = f.input prop.to_sym, as: :integer
+            .col-sm-4
+              = f.input "#{prop}_unit".to_sym, as: :radio_buttons, item_wrapper_class: 'inline', collection: ['oz', 'lb']
+
+      .col-md-6
+        - %w(width depth).each do |prop|
+          .row
+            .col-sm-8
+              = f.input prop.to_sym, as: :integer
+            .col-sm-4
+              = f.input "#{prop}_unit".to_sym, as: :radio_buttons, item_wrapper_class: 'inline', collection: ['oz', 'lb']
+
+
+    = f.input :default_rule, as: :boolean
+
+  .dialog-actions
+    = f.button :submit, 'Save dimensions template'
+
+:javascript
+  document.dispatchEvent(new CustomEvent('initialize:dimensions_template_form.nearme'));
+
+.dialog-actions.dialog-actions-alt
+  = button_to admin_dialog_path(id: 'dimensions_template'), method: 'delete', form: { "data-confirm" => 'Are you sure you want to remove this dimensions template?', "data-confirm-label-yes" => 'Yes, delete it', 'data-confirm-label-no' => 'Cancel' }, class: 'btn btn-delete' do
+    Delete this dimensions template

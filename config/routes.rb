@@ -160,14 +160,15 @@ DesksnearMe::Application.routes.draw do
       resources :requests_for_quotes, only: [:index]
     end
 
-    namespace :admin do
+    namespace :global_admin do
+      get '/', to: 'dashboard#show'
+
       namespace :blog do
         get '/', to: redirect('/admin/blog/blog_posts')
         resources :blog_posts
         resource :blog_instance, only: [:edit, :update]
       end
 
-      get '/', to: 'dashboard#show'
       resources :users do
         member do
           post :login_as
@@ -1134,14 +1135,29 @@ DesksnearMe::Application.routes.draw do
     resources :waiver_agreement_templates, only: [:show]
 
     namespace :api do
-      scope module: :v2, constraints: ApiConstraints.new(version: 2, default: false) do
+      concern :versionable do
+        member do
+          get :versions
+          get 'show_version/:version_id', action: :show_version
+          get 'rollback_version/:version_id', action: :rollback
+        end
+      end
+
+      scope module: :v2, constraints: Constraints::ApiConstraints.new(version: 2, default: false) do
         resources :sessions, only: [:create]
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
         resources :transactables, only: [:index]
         resources :reverse_proxy_links, only: [:index, :create]
+        resources :instance_views, only: [:show, :create, :update, :destroy], concerns: :versionable
+
+        resources :themes, as: 'custom_themes', controller: 'custom_themes', only: [:show, :create, :update, :destroy] do
+          resources :instance_views, controller: 'custom_themes/instance_views', concerns: :versionable
+          resources :assets, as: 'custom_theme_assets', controller: 'custom_themes/custom_theme_assets', concerns: :versionable
+        end
       end
-      scope module: :v3, constraints: ApiConstraints.new(version: 3, default: true) do
+
+      scope module: :v3, constraints: Constraints::ApiConstraints.new(version: 3, default: true) do
         resources :sessions, only: [:create]
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
@@ -1155,6 +1171,13 @@ DesksnearMe::Application.routes.draw do
           end
         end
         resources :instances, only: [:index, :create]
+
+        resources :instance_views, only: [:show, :create, :update, :destroy], concerns: :versionable
+
+        resources :themes, as: 'custom_themes', controller: 'custom_themes', only: [:show, :create, :update, :destroy] do
+          resources :instance_views, controller: 'custom_themes/instance_views', concerns: :versionable
+          resources :assets, as: 'custom_theme_assets', controller: 'custom_themes/custom_theme_assets', concerns: :versionable
+        end
       end
       resources :graph, via: [:post, :options]
     end
@@ -1218,4 +1241,74 @@ DesksnearMe::Application.routes.draw do
   end
 
   get '/dynamic_theme/:stylesheet-:theme_id-:updated_at.css', to: 'dynamic_themes#show', as: :dynamic_theme, format: 'css', constraints: { stylesheet: /(application|dashboard)/ }
+
+  namespace :admin do
+    get '/register', to: 'pages#register'
+    get '/login', to: 'pages#login'
+
+    get '/ui_settings', to: 'ui_settings#index', as: :get_all_ui_settings
+    get '/ui_settings/get/:id', to: 'ui_settings#get', as: :get_ui_setting
+    patch '/ui_settings', to: 'ui_settings#set', as: :set_ui_setting
+
+    get '/configure', to: 'configure#index'
+
+    # get '/:page', to: 'pages#show'
+
+    # get '/dialog/:id', to: 'dialogs#show', as: 'dialog'
+
+    resources :help_contents, only: [:edit, :update, :show]
+
+    namespace :assets do
+      get '/new', to: 'transactable_type#new', as: :new
+      post '/', to: 'transactable_type#create'
+
+      delete '/:slug', to: 'transactable_type#destroy', as: :asset
+
+      get '/:slug/general_settings', to: 'general_settings#edit', as: :general_settings
+      patch '/:slug/general_settings', to: 'general_settings#update'
+      put '/:slug/general_settings', to: 'general_settings#update'
+    end
+
+    namespace :advanced do
+      get '/', to: 'base#index'
+      resources :domains do
+        resource :hosted_zone
+      end
+    end
+
+    namespace :design do
+      get '/', to: 'base#index'
+
+      concern :versionable do
+        member do
+          get :versions
+          get 'show_version/:version_id', action: :show_version
+          get 'rollback_version/:version_id', action: :rollback
+        end
+      end
+
+      resources :pages, concerns: :versionable do
+        member do
+          delete :delete_image
+        end
+      end
+
+      resources :themes, controller: 'custom_themes' do
+        resources :instance_views, controller: 'custom_themes/instance_views', concerns: :versionable
+        resources :assets, controller: 'custom_themes/custom_theme_assets', concerns: :versionable
+      end
+
+      resources :content_holders, only: [:index, :new, :create, :edit, :update, :destroy]
+      resources :liquid_views, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :versionable
+      resources :file_uploads do
+        collection do
+          get :search
+        end
+      end
+
+      get '/files', to: 'files#index'
+    end
+
+    get '/', to: 'configure#index'
+  end
 end

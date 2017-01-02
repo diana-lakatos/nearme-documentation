@@ -9,7 +9,11 @@ module MarketplaceBuilder
       end
 
       def whitelisted_properties
-        [:name, :profile_type, :onboarding, :searchable, :search_only_enabled_profiles, :search_engine, :default_availability_template]
+        [
+          :name, :profile_type, :onboarding, :searchable,
+          :search_only_enabled_profiles, :search_engine, :default_availability_template,
+          :create_company_on_sign_up
+        ]
       end
 
       def parse_params(hash)

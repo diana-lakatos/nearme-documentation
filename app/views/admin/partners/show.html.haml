@@ -1,9 +1,0 @@
-%h1
-  = resource.name
-  = resource.instance.name
-  .pull-right
-    = link_to 'Edit', edit_admin_instance_partner_path(resource.instance, resource), class: 'btn'
-
-= render 'attributes_table'
-= render :partial => 'admin/domains/attributes', :locals => { :domains => [resource.domain] }
-= render :partial => 'admin/themes/attributes', :locals => { :theme => resource.theme }

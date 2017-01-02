@@ -1,0 +1,40 @@
+.shipping-profile-form {
+    fieldset {
+        position: relative;
+        border: none;
+        padding: 20px;
+        background: #fafafa;
+        border: 1px solid $color-separator;
+        margin: 0 0 20px;
+    }
+
+    .rule-add {
+        margin: 20px 0;
+        text-align: center;
+
+        button {
+            &:before {
+                @include fa-icon;
+
+                content: $fa-var-plus;
+                margin-right: 5px;
+            }
+        }
+    }
+
+    .rule-actions {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+
+        .btn-remove {
+            background: none;
+            color: $color-danger;
+            font-weight: bold;
+
+            &:before {
+                margin-right: 5px;
+            }
+        }
+    }
+}

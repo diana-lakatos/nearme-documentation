@@ -1,0 +1,13 @@
+- admin_help_area('validations')
+
+= admin_side_navigation(:advanced)
+
+%h1 Validations
+
+%h2 Photos
+
+%p Having some visual representation of your asset really helps with conversion so you can force asset owners to upload at least one photo for their asset.
+
+%p.checkbox
+  %input#photo-required{type:"checkbox", checked: 'checked'  }
+  %label{:for => "photo-required"} Require at least one photo for asset

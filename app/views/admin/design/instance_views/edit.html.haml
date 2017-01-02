@@ -1,0 +1,20 @@
+- admin_help_area('liquid-views')
+
+= admin_side_navigation(:design)
+
+- content_for :form_actions do
+  %hr
+
+  = link_to t('admin.liquid_views.duplicate'), new_admin_design_instance_view_path(instance_view_id: @instance_view.id), class: 'btn btn-flat btn-duplicate'
+
+  = admin_versions_link([:versions, :admin, :design, @instance_view], [:versions, :api, @instance_view])
+
+.go-back-link
+  = link_to t('admin.liquid_views.action.return_to_templates'), [:admin, :design, :instance_views]
+
+%h1= t('admin.liquid_views.action.edit_html', template: pretty_path(@instance_view.path))
+
+= render :partial => "form"
+
+.form-delete-action
+  = admin_delete_action [:admin, :design, @instance_view], object_name: @instance_view.class.name.humanize

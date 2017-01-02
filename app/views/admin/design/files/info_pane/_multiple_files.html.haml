@@ -1,0 +1,24 @@
+.file-manager-info-pane.multiple-files
+  %h2 10 files selected
+
+  .actions
+    %form{:action => "#"}
+      %input{:type => "text", value: '/folder/subfolder '}/
+      %button{ type: 'submit' } Move to this folder
+
+    %form{:action => "#"}
+      %button{ type: 'submit' } Delete 10 files
+
+  %dl
+    %dt Access
+    %dd
+      Various
+      %button.btn{:type => "button"}
+        Edit
+
+      %form{:action => "#"}
+        %select
+          %option{:value => "1"} Public
+          %option{:value => "2"} Listers
+          %option{:value => "3"} Enquirers
+        %button{ type: 'submit' } Change access level

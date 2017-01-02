@@ -5,11 +5,11 @@ en:
         reservation:
           attributes:
             base:
-              total_amount_changed: "Looks like the total price of this bookingss has changed. Please verify all prices."
+              total_amount_changed: "Looks like the total price of this booking has changed. Please verify all prices."
         reservation_request:
           attributes:
             base:
-              total_amount_changed: "Looks like the total price of this bookingss has changed. Please verify all prices."
+              total_amount_changed: "Looks like the total price of this booking has changed. Please verify all prices."
   activerecord:
     attributes:
       user:
@@ -18,7 +18,7 @@ en:
       user/buyer_profile/custom_images:
         image: 'Cover Image'
       transactable:
-        timezone_info: "Please note that this bookingss operates in %{timezone} time zone."
+        timezone_info: "Please note that this booking operates in %{timezone} time zone."
     errors:
       models:
         order:
@@ -26,11 +26,11 @@ en:
         reservation:
           attributes:
             base:
-              total_amount_changed: "Looks like the total price of this bookingss has changed. Please verify all prices."
+              total_amount_changed: "Looks like the total price of this booking has changed. Please verify all prices."
         transactable:
           attributes:
             cant_set_montly_price: "Cant't set monthly price if Booking is not open 7 days a week."
-            no_consecutive_days: "Bookings will not be possible if no consecutive days are open."
+            no_consecutive_days: "Booking will not be possible if no consecutive days are open."
   buy_sell_market:
     buyer: driver
     checkout:
@@ -45,54 +45,55 @@ en:
     are_you_sure_delete_price: "Are you sure? This price will be removed from all existing Bookings."
   dashboard:
     analytics:
-      bookings: Bookingss
+      bookings: Bookings
       columns:
-        bookings: Bookingss
-      no_reservations_yet: "Your locations haven't got any bookingsss yet."
+        bookings: Bookings
+      no_reservations_yet: "Your locations haven't got any bookings yet."
       total:
-        bookings: "%{total} bookingss"
+        bookings: "%{total} bookings"
     click_to_call:
       intro_html: "<h3>What is Click to Call?</h3> <p>We give you an easy to way to make calls between drivers and Passengers while keeping phone numbers of both parties private. Thanks to <a href=\"http://twilio.com\" rel=\"external\">Twilio</a> integration, you will be able to make and receive calls to other users who verified their number on our website.</p> <p>When setting up a call with Twilio the other party will receive a phone call on their verified number first. When they answer, Twilio will call you back on your phone registered in the system.</p>\n"
       short_info: "Verify your number to enable voice calling between drivers and Passengers without revealing your phone number"
     credit_cards:
-      delete_warning: "You are about to remove credit card. Please note that it still will be charged if used for any past and unpaid bookingsss you have made. Please make sure to cancel all transations separately."
+      delete_warning: "You are about to remove credit card. Please note that it still will be charged if used for any past and unpaid bookings you have made. Please make sure to cancel all transations separately."
     document_requirements:
-      enter_your_documents: "Please, enter below the documents your users will need to provide before bookings the item"
+      enter_your_documents: "Please, enter below the documents your users will need to provide before booking the item"
     host_reservations:
       actions:
-        complete_reservation: "Complete bookingss"
+        complete_reservation: "Complete booking"
       complete_reservation:
-        title: "Complete bookingss"
+        title: "Complete booking"
       confirmations:
-        cancel: "Do you really want to cancel this bookingss?"
-        confirm: "Do you want to confirm this bookingss?"
-        mark_as_paid: "Do you want to mark this bookingss as paid?"
+        cancel: "Do you really want to cancel this booking?"
+        confirm: "Do you want to confirm this booking?"
+        mark_as_paid: "Do you want to mark this booking as paid?"
         request_payment: "Do you want to send payment request email for this driver?"
-      exclusive_price_guests_notes: "Exclusive bookings instructions from driver:"
-      no_archived_reservations: "You don't have any archived bookingsss."
-      no_confirmed_reservations: "You haven't confirmed any bookingsss yet."
-      no_overdue_reservations: "You don't have any overdue bookingsss."
-      no_reservations_promote_reservations: "You currently have no bookingsss. Promote your locations by tweeting or sharing a direct link!"
-      no_unconfirmed_reservations: "You have no unconfirmed bookingsss."
-      pending_confirmation: "You must confirm this bookings within <strong>%{time_to_expiry}</strong> or it will expire."
-      reservation_is_expired: "Bookingss is expired!"
-      reservation_state: "Bookingss state: "
+      exclusive_price_guests_notes: "Exclusive booking instructions from driver:"
+      no_archived_reservations: "You don't have any archived bookings."
+      no_confirmed_reservations: "You haven't confirmed any bookings yet."
+      no_overdue_reservations: "You don't have any overdue bookings."
+      no_reservations_promote_reservations: "You currently have no bookings. Promote your locations by tweeting or sharing a direct link!"
+      no_unconfirmed_reservations: "You have no unconfirmed bookings."
+      pending_confirmation: "You must confirm this booking within <strong>%{time_to_expiry}</strong> or it will expire."
+      reservation_is_expired: "Booking has expired!"
+      reservation_state: "Booking state: "
       show_listing_page: "Show Booking page"
     items:
       confirm_delete: "Are you sure you want to delete your Booking?"
       delete_listing: "Delete Booking"
-      required_documents: "Please enter the documents your customers will need to provide before bookings this service."
+      required_documents: "Please enter the documents your customers will need to provide before booking this service."
       unsaved_listing_changes: "You have unsaved changes to your Booking"
       view_listing: "View Booking"
     location:
-      are_you_sure: "If you continue, %{Bookings_count} Bookings which belong to this location will also be deleted. Are you really sure you want to proceed?"
+      are_you_sure: "If you continue, %{Bookings_count} bookings which belong to this location will also be deleted. Are you really sure you want to proceed?"
     nav:
-      host_reservations: "Bookingss Received"
-      host_reservations_count_html: "Bookingss Received <span>%{count}</span>"
-      user_reservations: "My Bookingss"
-      user_reservations_count_html: "My Bookingss <span>%{count}</span>"
+      host_reservations: "Bookings Received"
+      host_reservations_count_html: "Bookings Received <span>%{count}</span>"
+      user_reservations: "My Bookings"
+      user_reservations_count_html: "My Bookings <span>%{count}</span>"
+      transactables: "My Bookings"
     payment_documents:
-      reservation: Bookingss
+      reservation: Bookings
     photos:
       requirement: "Please upload at least one photo for your Booking."
     products:
@@ -117,32 +118,32 @@ en:
         buyer: driver
         seller: Passenger
     user_recurring_bookings:
-      booking_placed_html: "Bookingss placed: <span>%{date}</span>"
-      cancel_confirmation: "Do you really want to cancel this recurring bookings?"
+      booking_placed_html: "Booking placed: <span>%{date}</span>"
+      cancel_confirmation: "Do you really want to cancel this recurring booking?"
       guest_notes: "driver Notes"
       other_recurring_booking:
-        one: "1 other recurring bookings"
-        other: "%{count} other recurring bookingss"
-      placed: "Bookingss placed"
-      successful_booking: "Your recurring bookings was requested successfully!"
+        one: "1 other recurring booking"
+        other: "%{count} other recurring bookings"
+      placed: "Booking placed"
+      successful_booking: "Your recurring booking was requested successfully!"
     user_reservations:
-      booking_successful: "Your bookings was requested successfully!"
-      cancel: "Do you really want to cancel this bookingss? %{penalty}"
-      cancel_confirmation: "Do you really want to cancel this bookingss?"
-      exclusive_price_guests_notes: "Exclusive bookings instructions:"
-      guest_notes: "driver Notes"
-      penalty_info: "The penalty fee for cancelling the bookingss is %{penalty}% of the bookingss price."
-      pending_confirmation: "Pending confirmation from Passenger. Bookings will expire in "
-      reservation_placed_html: "Bookingss placed: <span>%{date}</span>"
+      booking_successful: "Your booking was requested successfully!"
+      cancel: "Do you really want to cancel this booking? %{penalty}"
+      cancel_confirmation: "Do you really want to cancel this booking?"
+      exclusive_price_guests_notes: "Exclusive booking instructions:"
+      guest_notes: "Driver Notes"
+      penalty_info: "The penalty fee for cancelling the booking is %{penalty}% of the booking price."
+      pending_confirmation: "Pending confirmation from Passenger. Booking will expire in "
+      reservation_placed_html: "Booking placed: <span>%{date}</span>"
       show_listing_page: "Show Booking page"
-      test_mode: "This bookingss was made in Test Mode. No money was actually transferred"
-      title_count: "Bookingss (%{count})"
+      test_mode: "This booking was made in Test Mode. No money was actually transferred"
+      title_count: "Bookings (%{count})"
   datepicker:
     dformat: "%m/%d/%Y"
     pformat: MM/DD/YYYY
   desk:
-    reservation_rejected_body: "%{user} declined bookingss with reason: %{reason}"
-    reservation_rejected_title: "[internal] User has declined bookingss"
+    reservation_rejected_body: "%{user} declined booking with reason: %{reason}"
+    reservation_rejected_title: "[internal] User has declined booking"
   errors:
     messages:
       not_in_radius: "Address is not in radius of Booking"
@@ -157,26 +158,26 @@ en:
       listings:
         listing_deleted: "Your Booking has been deleted."
         listing_updated: "Great, your Booking's details have been updated."
-      no_bookings: "You haven't made any bookingss yet!"
+      no_bookings: "You haven't made any bookings yet!"
       reservations:
-        lender_confirmed_both_side_confirmation: "You have confirmed the bookingss!"
-        reservation_already_confirmed: "This bookingss has already been confirmed."
-        reservation_cancelled: "You have cancelled this bookingss."
-        reservation_confirmed: "You have confirmed the bookingss!"
-        reservation_not_confirmed: "Your bookingss could not be confirmed."
-        reservation_rejected: "You have rejected the bookingss. Maybe next time!"
+        lender_confirmed_both_side_confirmation: "You have confirmed the booking!"
+        reservation_already_confirmed: "This booking has already been confirmed."
+        reservation_cancelled: "You have cancelled this booking."
+        reservation_confirmed: "You have confirmed the booking!"
+        reservation_not_confirmed: "Your booking could not be confirmed."
+        reservation_rejected: "You have rejected the booking. Maybe next time!"
       seller:
         updated: "Passenger profile has been updated"
     guest_rating:
-      already_exists: "Rating for this bookings has already been submitted."
+      already_exists: "Rating for this booking has already been submitted."
     host_rating:
-      already_exists: "Rating for this bookings has already been submitted."
+      already_exists: "Rating for this booking has already been submitted."
     instance_admin:
       manage:
         reservation_types:
-          created: "Bookingss Type created"
-          deleted: "Bookingss Type deleted"
-          updated: "Bookingss Type updated"
+          created: "Booking Type created"
+          deleted: "Booking Type deleted"
+          updated: "Booking Type updated"
       reports:
         listings:
           successfully_deleted: "The Booking has been successfully deleted."
@@ -198,19 +199,19 @@ en:
         listing_deleted: "Your Booking has been deleted."
         listing_updated: "Great, your Booking's details have been updated."
       reservations:
-        reservation_already_confirmed: "This bookingss has already been confirmed."
-        reservation_cancelled: "You have cancelled this bookingss."
-        reservation_confirmed: "You have confirmed the bookingss!"
-        reservation_confirmed_but_not_charged: "You have confirmed the bookingss, however we were not able to capture payment. We have reached out to driver to notify him about the issue."
-        reservation_not_confirmed: "Your bookingss could not be confirmed."
-        reservation_rejected: "You have rejected the bookingss. Maybe next time!"
+        reservation_already_confirmed: "This booking has already been confirmed."
+        reservation_cancelled: "You have cancelled this booking."
+        reservation_confirmed: "You have confirmed the booking!"
+        reservation_confirmed_but_not_charged: "You have confirmed the booking, however we were not able to capture payment. We have reached out to driver to notify him about the issue."
+        reservation_not_confirmed: "Your booking could not be confirmed."
+        reservation_rejected: "You have rejected the booking. Maybe next time!"
     reservations:
-      credit_card_will_be_charged: "Your credit card will be charged when your bookingss is confirmed by the Passenger."
-      invalid_operation: "Not a valid bookingss operation."
-      reservation_cancelled: "You have cancelled your bookingss."
-      reservation_made: "Your bookingss has been made! %{message}"
-      reservation_not_cancellable: "This bookingss can not be canceled anymore."
-      reservation_not_confirmed: "Your bookingss could not be confirmed."
+      credit_card_will_be_charged: "Your credit card will be charged when your booking is confirmed by the Passenger."
+      invalid_operation: "Not a valid booking operation."
+      reservation_cancelled: "You have cancelled your booking."
+      reservation_made: "Your booking has been made! %{message}"
+      reservation_not_cancellable: "This booking can not be canceled anymore."
+      reservation_not_confirmed: "Your booking could not be confirmed."
     space_wizard:
       item_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and Booking from this page."
       space_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and Booking from this page."
@@ -224,15 +225,15 @@ en:
     generic_lessor_term: Passenger
   instance_admin:
     analytics:
-      no_bookings_yet: "No bookingss yet."
-      no_listings_visits_yet: "Your Bookings haven't been visited yet."
-    bookings: Bookingss
+      no_bookings_yet: "No bookings yet."
+      no_listings_visits_yet: "Your Booking haven't been visited yet."
+    bookings: Bookings
     manage:
       reservation_types:
-        new: "New Bookingss Type"
-        reservation_types: "Bookingss Types"
+        new: "New Booking Type"
+        reservation_types: "Booking Types"
       transactable_types:
-        booking_settings: "Bookings settings"
+        booking_settings: "Booking settings"
       transfers:
         guest_fee: "driver fee"
         host_fee: "Passenger fee"
@@ -249,8 +250,8 @@ en:
     settings:
       documents_upload:
         form:
-          safety_and_trust: "For safety and trust purposes, some services might need extra documentation from customers before completing the bookings."
-        safety_and_trust: "For safety and trust purposes, some services might need extra documentation from customers before completing the bookings."
+          safety_and_trust: "For safety and trust purposes, some services might need extra documentation from customers before completing the booking."
+        safety_and_trust: "For safety and trust purposes, some services might need extra documentation from customers before completing the booking."
       domains:
         hosted_zones:
           create: "Create Route53 Passengered zone"
@@ -266,7 +267,7 @@ en:
   mailers:
     orders:
       warn_guest_of_expiration:
-        subject: "Your bookingss is about to expire"
+        subject: "Your booking is about to expire"
     rating:
       experience_hosting: "How was your experience Passengering %{name}?"
   manage:
@@ -284,13 +285,13 @@ en:
       update_seller_feedback: "Update Passenger feedback"
   payouts:
     braintree:
-      credit_card_subscription_info: "A credit card is required in the case of a cancellation to provide a refund of the bookings charge to the driver."
+      credit_card_subscription_info: "A credit card is required in the case of a cancellation to provide a refund of the booking charge to the driver."
   pricing:
     availability:
       event_preset_info: "Want to use this event schedule for other Bookings?"
       preset_info: "Want to use this availability schedule for other Bookings?"
     daily_rate:
-      hours_count: "hours after bookings begins"
+      hours_count: "hours after booking begins"
     mode:
       no_action_booking:
         description: "No transaction is made between customer and Passenger"
@@ -298,47 +299,47 @@ en:
         description: "Customer makes an offer and Booking's owner accepts one of the offers"
     schedule:
       book_it_out:
-        minimum_bookings: "Minimum bookingss"
+        minimum_bookings: "Minimum bookings"
       mode:
         seller: "Passenger Preset"
     time_booking_option:
       quantity:
-        example: "Example of quantity based bookings option"
+        example: "Example of quantity based booking option"
       range:
-        example: "Example of time range based bookings option"
+        example: "Example of time range based booking option"
   recurring_bookings:
-    overbooked: "Subscription can't be confirmed due to overbookings."
+    overbooked: "Subscription can't be confirmed due to overbooking."
   recurring_reservations_review:
-    total: "Total per bookingss"
+    total: "Total per booking"
   registrations:
     sms_preferences:
-      new_reservation: "I receive a bookingss request."
-      reservation_state_changed: "A bookingss I have requested is accepted or declined."
+      new_reservation: "I receive a booking request."
+      reservation_state_changed: "A booking I have requested is accepted or declined."
   reservations:
     booking_module:
-      only_exclusive_price: "Only exclusive bookings is possible"
-    booking_was_requested_successfully: "Your bookings was requested successfully!"
-    cancellation_time: "You have up to %{time} hours before the bookings takes place to cancel."
-    charge_after_confirmation: "You will not be charged until the bookings is confirmed."
+      only_exclusive_price: "Only exclusive booking is possible"
+    booking_was_requested_successfully: "Your booking was requested successfully!"
+    cancellation_time: "You have up to %{time} hours before the booking takes place to cancel."
+    charge_after_confirmation: "You will not be charged until the booking is confirmed."
     company_address_not_valid: "The location address of the Passenger is not correct or complete. Please contact the Passenger."
-    manually_confirm: "This %{lessor} manually confirms all bookingss."
-    no_bookings_html: "You don't have any %{type} bookingss. <a href='/search'>Find %{bookable_nouns} near you!</a>"
-    paypal_and_cc_charge_after_confirmation: "Your will not be charged until the bookings is confirmed."
+    manually_confirm: "This %{lessor} manually confirms all bookings."
+    no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find %{bookable_nouns} near you!</a>"
+    paypal_and_cc_charge_after_confirmation: "Your will not be charged until the booking is confirmed."
     rfq_message: "Please, enter a message for the Passenger"
     states:
       cancelled_by_guest: "Cancelled by driver"
       cancelled_by_host: "Cancelled by Passenger"
   reservations_review:
     buttons:
-      request: "Request Bookings"
+      request: "Request Booking"
     disabled_buttons:
-      request: Bookings...
+      request: Booking...
     errors:
-      dates_not_available: "Unfortunately the following bookingss are no longer available: %{dates}"
-      no_minimum_days: "Bookings selection does not meet requirements. A minimum of %{minimum_days} consecutive bookable days are required."
-      no_minimum_minutes: "Bookings selection does not meet requirements. A minimum of %{minimum_minutes} hours are required."
-      whoops: "Whoops! We couldn't make that bookingss."
-    heading: "Review your bookings"
+      dates_not_available: "Unfortunately the following booking are no longer available: %{dates}"
+      no_minimum_days: "Booking selection does not meet requirements. A minimum of %{minimum_days} consecutive bookable days are required."
+      no_minimum_minutes: "Booking selection does not meet requirements. A minimum of %{minimum_minutes} hours are required."
+      whoops: "Whoops! We couldn't make that booking."
+    heading: "Review your booking"
   search:
     list:
       view_listing: "View Booking"
@@ -347,7 +348,7 @@ en:
     seller_attachments: "Passenger attachments"
   shared:
     booking_types_tabs:
-      booking_types: "Bookings types"
+      booking_types: "Booking types"
   sign_up_form:
     buyer_sign_up_to: "Sign Up for LocalDriva"
     link_to_buyer: "Become a Driver here"
@@ -358,27 +359,27 @@ en:
     hints:
       transactable_type:
         all_action_types:
-          action_continuous_dates_booking: "Allow user to select only continuous dates when bookings"
+          action_continuous_dates_booking: "Allow user to select only continuous dates when booking"
     labels:
       company:
         listings_public: "Enable public Bookings"
       location:
-        email: "Bookings email"
+        email: "Booking email"
       order:
         guest_notes: 'Additional message'
       transactable:
         action_types:
-          minimum_booking_minutes: "Minimum bookings minutes"
-          no_action: "Disable bookings"
-        confirm_reservations: "Confirm bookingsss"
+          minimum_booking_minutes: "Minimum booking minutes"
+          no_action: "Disable booking"
+        confirm_reservations: "Confirm booking"
       transactable_type:
         all_action_types:
-          action_continuous_dates_booking: "Action continuous dates bookings"
+          action_continuous_dates_booking: "Action continuous dates booking"
           allow_no_action: "Allow to disable bookings"
-          both_side_confirmation: "Bookingss is confirmed only if both sides accepts it"
-          cancellation_policy_hours_for_cancellation: "Number of hours before bookings to cancel"
-          hours_to_expiration: "Number of hours before unconfirmed bookingss expires"
-          minimum_booking_minutes: "Minimum bookings minutes (for hourly pricing)"
+          both_side_confirmation: "Booking is confirmed only if both sides accept it"
+          cancellation_policy_hours_for_cancellation: "Number of hours before booking to cancel"
+          hours_to_expiration: "Number of hours before unconfirmed booking expires"
+          minimum_booking_minutes: "Minimum booking minutes (for hourly pricing)"
           pricings:
             allow_book_it_out_discount: "Allow Bulk Bookings Discount"
             allow_free_booking: "Allow free bookings"
@@ -388,10 +389,10 @@ en:
         lessor: "Lessor (e.g. Passenger)"
     placeholders:
       location:
-        email: "Your bookings email"
+        email: "Your booking email"
   top_navbar:
-    bookings_received: "Bookingss Received"
-    my_bookings: "My Bookingss"
+    bookings_received: "Bookings Received"
+    my_bookings: "My Bookings"
   transactable_types:
     locations:
       listings:

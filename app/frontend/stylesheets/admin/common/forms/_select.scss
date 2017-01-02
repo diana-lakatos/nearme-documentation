@@ -1,0 +1,17 @@
+.form-group .select-wrapper {
+    position: relative;
+
+    select {
+        padding-right: 30px;
+    }
+
+    &:after {
+        @include triangle(down, #333, 5px, 5px);
+
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        content: "";
+    }
+}

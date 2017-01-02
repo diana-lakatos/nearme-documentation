@@ -1,0 +1,44 @@
+- admin_help_area('theme-assets')
+
+= admin_side_navigation(:design)
+
+.go-back-link
+  = link_to t('admin.assets.actions.return_to_themes'), [:admin, :design, :custom_themes]
+
+%h1= t('admin.assets.title_theme_html', theme: @custom_theme.name)
+
+- if @custom_theme_assets.size > 0
+  .table-container
+    %table
+      %thead
+        %tr
+          %th File name
+          %th Size
+          %th Modified
+          %th.actions
+      %tbody
+
+        - @custom_theme_assets.each do |custom_theme_asset|
+          %tr
+            %td
+              - file_type = custom_theme_asset.class.name.demodulize.sub('Theme', '').sub('File', '').downcase
+              %span{ class: "file-type file-type-#{file_type}" }
+              = link_to custom_theme_asset.name, edit_admin_design_theme_custom_theme_asset_path(@custom_theme, custom_theme_asset)
+            %td
+              - if custom_theme_asset.supports_body?
+                = number_to_human_size custom_theme_asset.inspect.bytesize
+              - else
+                N/A
+            %td= l(custom_theme_asset.file_updated_at, format: :long)
+            %td.actions
+              = link_to custom_theme_asset.file.url, class: 'action--link--icon-only', rel: 'external' do
+                = t('admin.assets.actions.link')
+              = link_to "#{custom_theme_asset.file.url}?download", rel: 'external', class: 'action--download--icon-only' do
+                = t('admin.assets.actions.download')
+              = admin_delete_action admin_design_theme_custom_theme_asset_path(@custom_theme, custom_theme_asset)
+- else
+  .empty-listing= t('admin.liquid_views.empty_listing')
+
+.listing-actions
+  = link_to t('admin.assets.actions.create'), [:new, :admin, :design, @custom_theme, :custom_theme_asset], class: 'action--create'
+

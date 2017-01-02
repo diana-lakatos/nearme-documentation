@@ -1,7 +1,0 @@
-%tr
-  %td= link_to resource.name, admin_transactable_type_custom_attribute_path(resource.target, resource)
-  %td= link_to 'Edit', edit_admin_transactable_type_custom_attribute_path(resource.target, resource), class: 'btn'
-  %td
-    = link_to "Delete", [:admin, resource.target, resource], :method => :delete,
-      data: { confirm: 'Are you sure you want to delete this?' }, :class => "btn btn-danger"
-

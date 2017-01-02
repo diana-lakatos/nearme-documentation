@@ -7,6 +7,7 @@ require('jquery-ujs/src/rails');
 
 require('../vendor/jquery-ui-1.10.4.custom.min');
 require('jquery-ui/ui/widget');
+
 require('jquery-ui-touch-punch');
 
 require('../vendor/bootstrap');
@@ -14,7 +15,6 @@ require('../vendor/bootstrap-modal-fullscreen');
 require('../vendor/detect-mobile-browser');
 require('../vendor/nested_form');
 require('../vendor/cocoon');
-
 
 $.ajaxSetup({
   'beforeSend': function(xhr) {

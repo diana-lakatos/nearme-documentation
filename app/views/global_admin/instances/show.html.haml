@@ -1,0 +1,10 @@
+%h1
+  = resource.name
+  .pull-right
+    = link_to 'Edit', edit_global_admin_instance_path(resource), class: 'btn'
+
+= render 'attributes_table'
+= render :partial => 'global_admin/domains/attributes', :locals => { :domains => resource.domains }
+= render :partial => 'global_admin/themes/attributes', :locals => { :theme => resource.theme }
+= render :partial => 'global_admin/partners/index', :locals => { :instance => resource }
+= render :partial => 'global_admin/transactable_types/index', :locals => { :instance => resource }

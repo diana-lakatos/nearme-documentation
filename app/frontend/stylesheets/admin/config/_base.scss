@@ -1,0 +1,7 @@
+@import "susy/sass/susy";
+@import "breakpoint-sass/stylesheets/breakpoint";
+
+// Susy layout
+$susy: (columns: 12, gutters: 0.5, math: fluid);
+
+@include layout($susy float inside border-box);

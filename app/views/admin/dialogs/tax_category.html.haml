@@ -1,0 +1,15 @@
+- content_for :dialog_title do
+  Create Tax Category
+
+= admin_simple_form_for :admin_tax_category, url: admin_dialog_path(id: 'tax_category'), html: { id: 'tax-category-form', class: 'tax-category-form' } do |f|
+
+  .dialog-body
+
+    = f.input :name
+
+    = f.input :description, as: :text
+
+    = f.input :default_category, as: :switch
+
+  .dialog-actions
+    = f.button :submit, t('simple_form.labels.admin_tax_category.save')

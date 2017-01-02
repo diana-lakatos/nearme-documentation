@@ -1,0 +1,7 @@
+.lessee-lessor-name {
+    @include container;
+
+    .form-group {
+        @include span(6);
+    }
+}

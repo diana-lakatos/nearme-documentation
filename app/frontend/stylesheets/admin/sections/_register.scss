@@ -1,0 +1,26 @@
+.register-form {
+    h1 {
+        font-size: 1.6em;
+        margin-bottom: 0;
+    }
+
+    h1 + p {
+        font-size: 0.75em;
+        margin-top: 0.5em;
+    }
+
+    .actions {
+        padding-top: 15px;
+        margin-top: 15px;
+        border-top: 1px solid $color-separator;
+    }
+
+    .help-link {
+        display: block;
+        text-align: right;
+
+        a {
+            font-size: .75em;
+        }
+    }
+}

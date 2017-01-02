@@ -1,0 +1,6 @@
+= render "admin/theme/versions/#{resource.class.name.downcase}"
+
+
+= link_to 'Rollback', { action: :rollback, version_id: @version.id }, class: 'btn btn-blue pull-right', data: { confirm: 'Are you sure you want to rollback page to this version?'}
+= link_to 'All Versions', { action: :versions, id: resource.id }, class: 'btn btn-blue pull-right'
+

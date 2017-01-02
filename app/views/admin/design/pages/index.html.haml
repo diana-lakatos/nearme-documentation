@@ -1,0 +1,19 @@
+- admin_help_area('pages')
+= admin_side_navigation(:design)
+
+%h1= t('admin.pages.title')
+
+.table-container
+  %table
+    %thead
+      %tr
+        %th= t('admin.pages.columns.name')
+        %th= t('admin.pages.columns.path')
+        %td
+    %tbody
+      - @pages.each_with_index do |page|
+        = render 'index_row', page: page
+
+.listing-actions
+  = link_to t('admin.pages.actions.add_new_page'), new_admin_design_page_path, class: 'action--create'
+  = link_to t('admin.pages.actions.add_new_redirect'), new_admin_design_page_path(redirect: true), class: 'action--create'
