@@ -7,6 +7,8 @@ class Authentication::GoogleProvider < Authentication::BaseProvider
 
   def friend_ids
     @friend_ids ||= GooglePlus::Person.list('me', 'visible', max_results: 100, access_token: token).items.try(:map, &:id) || []
+  rescue Exception => e
+    @friend_ids = []
   end
 
   def info
