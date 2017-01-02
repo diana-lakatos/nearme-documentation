@@ -5,7 +5,8 @@ class GraphQuery < ActiveRecord::Base
 
   belongs_to :instance
 
-  validates :name, uniqueness: { scope: [:instance_id] }
+  validates :name, uniqueness: { scope: [:instance_id] }, presence: true
+  validates :name, :query_string, presence: true
   validate :parse_query
 
   def generate_tag_line

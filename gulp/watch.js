@@ -16,6 +16,7 @@ module.exports = function(gulp, config) {
       'errors.scss',
       'instance_admin.scss',
       'instance_admin_vendor.scss',
+      'admin/**/*.scss',
       'instance_wizard.scss',
       'blog/**/*.scss',
       'common/**/*.scss',
@@ -28,7 +29,7 @@ module.exports = function(gulp, config) {
       'themes/**/*.scss',
       'user_blog/**/*.scss',
       'vendor/**/*.scss',
-    ], { cwd: config.paths.stylesheets }, ['styles:application', 'styles:instance_admin','styles:other']);
+    ], { cwd: config.paths.stylesheets }, ['styles:application', 'styles:instance_admin', 'styles:admin', 'styles:other']);
 
     /* Dashboard */
 

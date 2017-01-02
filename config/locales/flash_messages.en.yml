@@ -175,6 +175,10 @@ en:
           created: 'Reservation Type created'
           updated: 'Reservation Type updated'
           deleted: 'Reservation Type deleted'
+        graph_queries:
+          deleted: "Query removed"
+          created: "Query created"
+          updated: "Query updated"
 
       settings:
         listing_type_added: 'New listing type added.'

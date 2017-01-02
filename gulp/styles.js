@@ -32,6 +32,14 @@ module.exports = function(gulp, browserSync, config) {
 
   gulp.task('styles:instance_admin', ['styles:instance_admin:app','styles:instance_admin:vendor']);
 
+
+  /* New instance admin */
+  gulp.task('styles:admin:app', function(){
+    return processor.run('admin.scss');
+  });
+
+  gulp.task('styles:admin', ['styles:admin:app']);
+
   /* Application */
   gulp.task('styles:application:app', function(){
     return processor.run('application.scss');
@@ -66,7 +74,7 @@ module.exports = function(gulp, browserSync, config) {
   });
 
   /* Global task for all styles */
-  gulp.task('styles', ['styles:dashboard', 'styles:application', 'styles:instance_admin', 'styles:community', 'styles:other', 'styles:admin']);
+  gulp.task('styles', ['styles:admin', 'styles:dashboard', 'styles:application', 'styles:instance_admin', 'styles:community', 'styles:other']);
 
   gulp.task('styles:dist', function(){
     return processor.run('*.scss', true);

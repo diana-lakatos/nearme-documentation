@@ -68,6 +68,9 @@ module NavigationHelpers
     when /instance admin sign in page/
       instance_admin_login_path
 
+    when /admin graph queries/
+      admin_advanced_graph_queries_path
+
     when /^(my|my archived|my unconfirmed|unconfirmed|confirmed|overdue|archived) subscriptions page$/
       case Regexp.last_match(1)
       when 'my'

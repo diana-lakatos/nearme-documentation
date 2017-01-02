@@ -10,7 +10,7 @@ class GraphQueryTest < ActiveSupport::TestCase
   end
 
   test 'valid query' do
-    query = GraphQuery.new(query_string: '{ location { name }}')
+    query = GraphQuery.new(query_string: '{ location { name }}', name: 'users')
 
     assert query.valid?
     assert_not query.errors.include?(:query_string)

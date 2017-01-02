@@ -1,0 +1,29 @@
+- admin_help_area('graph-queries')
+= admin_side_navigation(:advanced)
+
+%h1= t('instance_admin.graph_queries.title')
+
+.table-container
+  %table
+    %thead
+      %tr
+        %th= t('instance_admin.graph_queries.name')
+        %th= t('instance_admin.graph_queries.tag_line')
+        %th= t('instance_admin.graph_queries.query')
+        %th
+      %tbody
+        - @graph_queries.each do |graph_query|
+          %tr
+            %td= pretty_path graph_query.name
+            %td
+              %code
+                = graph_query.generate_tag_line
+            %td=truncate(graph_query.query_string)
+            %td
+              .pull-right{style: 'margin-left: 10px'}
+                = button_to t('instance_admin.destroy'), admin_advanced_graph_query_path(graph_query), method: :delete, class: 'btn btn-link'
+              .pull-right{style: 'margin-left: 10px'}
+                = link_to t('instance_admin.edit'), edit_admin_advanced_graph_query_path(graph_query)
+
+.listing-actions
+  = link_to t('instance_admin.graph_queries.add_graph_query'), new_admin_advanced_graph_query_path, class: 'pull-right btn btn-blue'

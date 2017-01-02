@@ -30,6 +30,7 @@ namespace :new_admin do
       'users',
       'validations',
       'wish-lists',
+      'graph-queries',
     ]
 
     slugs.each do |slug|
