@@ -72,7 +72,7 @@ And /^I invite enquirer to my project$/ do
 end
 
 And /^I wait for modal with credit card fields to render$/ do
-  page.should have_css(".nm-credit-card-fields")
+  page.should have_css(".nm-new-credit-card-form-name-container")
 end
 
 Then /^I fill credit card payment subscription form$/ do
