@@ -35,7 +35,7 @@ class RequestParametersValidator
 
   def valid_integer?(value)
     return true if value.blank?
-    value.to_i.to_s == value
+    value.respond_to?(:to_i) && value.to_i.to_s == value
   end
 
   class InvalidParameterError < StandardError; end
