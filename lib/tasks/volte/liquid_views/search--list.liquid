@@ -88,7 +88,7 @@ partial: false
             <fieldset>
               <legend>{{ attributes.color.label }}</legend>
               <select {{ attributes.color.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.color.name }}][]" id="">
-                {{ searcher.options_for_select.color | options_from_collection_for_select: params['lg_custom_attributes']['color'], reset_filter_label  }}
+                {{ searcher.options_for_select.color | options_from_collection_for_select: params['lg_custom_attributes']['color']  }}
                 <optgroup disabled hidden></optgroup>
               </select>
             </fieldset>
