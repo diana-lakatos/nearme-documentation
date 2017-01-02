@@ -5,7 +5,7 @@ require 'utils/s3_file_helper'
 namespace :backup do
   desc 'Runs pg_dump on current env and stores it in S3.'
   task :capture do
-    pathname = Pathname.new('/tmp/backup.dump')
+    pathname = Rails.root + Pathname.new('tmp/backup.dump')
 
     puts "[#{Time.now}] Backing up (pg_dump) ENV DB to #{pathname} (excluding versions tables)"
     `#{Utils::DatabaseConnectionHelper.new(pathname).build_dump_command}`
@@ -21,7 +21,7 @@ namespace :backup do
 
   desc 'Restores DB from pg_dump in S3.'
   task :restore  do
-    pathname = Pathname.new('/tmp/backup.dump')
+    pathname = Rails.root + Pathname.new('tmp/backup.dump')
 
     puts "[#{Time.now}] Downloading from S3 to local #{pathname}"
     Utils::S3FileHelper.new(pathname).download_file!
@@ -36,15 +36,15 @@ namespace :backup do
   end
 
   task :download do
-    pathname = Pathname.new('/tmp/backup.dump')
+    pathname = Rails.root + Pathname.new('tmp/backup.dump')
 
     puts "[#{Time.now}] Downloading from S3 to local #{pathname}"
     Utils::S3FileHelper.new(pathname).download_file!
   end
 
   task :restore_from_local  do
-    pathname = Pathname.new('/tmp/backup.dump')
-
+    pathname = Rails.root + Pathname.new('tmp/backup.dump')
+    
     puts "[#{Time.now}] Restoring #{pathname} to ENV DB"
     `#{Utils::DatabaseConnectionHelper.new(pathname).build_restore_command}`
 
