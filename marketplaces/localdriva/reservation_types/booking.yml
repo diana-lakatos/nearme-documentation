@@ -1,0 +1,9 @@
+name: Booking
+transactable_types:
+  - Booking
+
+form_components:
+  - type: reservation_attributes
+    name: Booking form
+    fields:
+      - reservation: guest_notes

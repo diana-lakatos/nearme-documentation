@@ -8,13 +8,13 @@ module MarketplaceBuilder
 
         alert_groups.each do |group, alert_types|
           begin
-            klass = "Utils::DefaultAlertsCreator::#{group.titleize}Creator".constantize
+            klass = "Utils::DefaultAlertsCreator::#{group.classify}Creator".constantize
             raise NameError unless klass.is_a?(Class)
           rescue NameError
-            raise MarketplaceBuilderr::Error, "#{group} is not a valid workflow alert group name"
+            raise MarketplaceBuilder::Error, "#{group} is not a valid workflow alert group name"
           end
 
-          logger.info "Creating workflow alerts for: #{group.titleize}"
+          logger.info "Creating workflow alerts for: #{group.classify}"
 
           alert_creator = klass.new
 

@@ -1,0 +1,126 @@
+name: Buyer
+profile_type: buyer
+onboarding: true
+searchable: true
+search_engine: 'elasticsearch'
+search_only_enabled_profiles: true
+default_availability_template: '24/7'
+
+custom_attributes:
+  - name: driver_category
+    label: 'Driver Category'
+    html_tag: radio_buttons
+    searchable: true
+    wrapper_html_options_string: >-
+      data-condition-field => '{"Standard":{"setValue":{"selector": "#user_buyer_profile_attributes_properties_attributes_hourly_price", "value": "50"}}, "Pro":{ "setValue":{"selector": "#user_buyer_profile_attributes_properties_attributes_hourly_price", "value": "100"}}, "Plus":{ "setValue":{"selector": "#user_buyer_profile_attributes_properties_attributes_hourly_price", "value": "150"}}}'
+    validation:
+      valid_values:
+        - 'Standard'
+        - 'Pro'
+        - 'Plus'
+      required: true
+      validation_only_on_update: true
+
+  - name: hourly_price
+    attribute_type: 'float'
+    html_tag: 'hidden'
+    validation:
+      required: true
+      validation_only_on_update: true
+
+  - name: cover_image
+    label: 'Cover Image'
+    attribute_type: 'photo'
+    html_tag: 'input'
+    validation:
+      validation_only_on_update: true
+
+  - name: backup_driver
+    label: 'Backup Driver'
+    attribute_type: 'boolean'
+    html_tag: 'check_box'
+
+  - name: short_bio
+    label: Short Bio
+    hint: appears in list view
+    html_tag: 'textarea'
+    input_html_options_string: "data-counter-limit=>120"
+    validation:
+      required: true
+      max_length: 120
+      validation_only_on_update: true
+
+  - name: full_bio
+    label: Full Bio
+    html_tag: 'textarea'
+    hint: appears in detail view
+    input_html_options_string: "data-counter-limit=>600"
+    validation:
+      required: true
+      max_length: 600
+      validation_only_on_update: true
+
+  - name: vehicle_type
+    label: Vehicle Type
+    validation:
+      required: true
+      validation_only_on_update: true
+
+  - name: vehicle_model
+    label: 'Vehicle Model'
+    validation:
+      required: true
+      validation_only_on_update: true
+
+  - name: vehicle_year
+    label: 'Vehicle Year'
+    validation:
+      required: true
+      validation_only_on_update: true
+
+  - name: vehicle_capacity
+    label: 'Vehicle Capacity'
+    attribute_type: integer
+    validation:
+      required: true
+      validation_only_on_update: true
+
+  - name: vehicle_description
+    label: 'Vehicle Description'
+    html_tag: 'textarea'
+    input_html_options_string: "data-counter-limit=>600"
+    validation:
+      required: true
+      max_length: 600
+      validation_only_on_update: true
+
+form_components:
+  - type: buyer_profile_types
+    name: Buyer
+    fields:
+      - user: name
+      - user: avatar
+      - buyer: enabled
+      - buyer: cover_image
+      - buyer: Custom Model - Car Photo
+      - buyer: driver_category
+      - buyer: backup_driver
+      - buyer: hourly_price
+      - buyer: short_bio
+      - buyer: full_bio
+      - buyer: Custom Model - Languages
+      - buyer: unavailable_periods
+      - buyer: vehicle_type
+      - buyer: vehicle_model
+      - buyer: vehicle_year
+      - buyer: vehicle_capacity
+      - buyer: vehicle_description
+      - buyer: Category - Vehicle Features
+      - buyer: Category - Extras
+
+  - type: buyer_registration
+    name: Buyer
+    fields:
+      - user: name
+      - user: email
+      - user: password

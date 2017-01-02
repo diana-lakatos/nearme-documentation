@@ -35,6 +35,7 @@ class Transactable < ActiveRecord::Base
   include CreationFilter
 
   has_many :customizations, as: :customizable
+  has_many :custom_images, through: :customizations
   has_many :additional_charge_types, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
@@ -260,17 +261,18 @@ class Transactable < ActiveRecord::Base
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
-  delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :hours_for_guest_to_confirm_payment,
+  delegate :hours_to_expiration, :hours_for_guest_to_confirm_payment,
            :custom_validators, :show_company_name, :display_additional_charges?, :auto_accept_invitation_as_collaborator?,
-           :auto_seek_collaborators?, to: :transactable_type
+           :auto_seek_collaborators?, :favourable_pricing_rate, :default_availability_template,
+           to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
-  delegate :favourable_pricing_rate, to: :transactable_type
   delegate :schedule_availability, :next_available_occurrences, :book_it_out_available?,
            :exclusive_price_available?, :only_exclusive_price_available?, to: :event_booking, allow_nil: true
   delegate :first_available_date, :second_available_date, :availability_exceptions,
            :custom_availability_template?, :availability, :overnight_booking?, to: :time_based_booking, allow_nil: true
-  delegate :open_on?, :open_now?, :bookable?, :has_price?, :hours_to_expiration, to: :action_type, allow_nil: true
+  delegate :open_on?, :open_now?, :bookable?, :has_price?, :hours_to_expiration, 
+           :service_fee_guest_percent, :service_fee_host_percent, to: :action_type, allow_nil: true
 
   attr_accessor :distance_from_search_query, :photo_not_required, :enable_monthly,
                 :enable_weekly, :enable_daily, :enable_hourly, :skip_activity_feed_event,

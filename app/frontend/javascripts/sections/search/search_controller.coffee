@@ -260,8 +260,8 @@ module.exports = class SearchSearchController extends SearchController
   # Note that the behaviour semantics are different to manually moving the map.
   triggerSearchFromQuery: (page = false) ->
     # we want to log any new search query
-    categories_checkboxes = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val()))
-    category_selects = _.toArray(@container.find('select[name="category_ids[]"] option:selected').map(-> $(this).val() if $(this).val()))
+    categories_checkboxes = _.toArray(@container.find('input[name="category_ids[]"]:checked, input[data-category-filter]:checked').map(-> $(this).val()))
+    category_selects = _.toArray(@container.find('select[name="category_ids[]"] option:selected, select[data-category-filter] option:selected').map(-> $(this).val() if $(this).val()))
     category_inputs = []
     @container.find('input[name="categories_ids[]"]').each ->
       value = $(this).val()

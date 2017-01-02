@@ -22,21 +22,23 @@ module UsersIndex
 
         indexes :instance_id, type: 'integer'
         indexes :instance_profile_type_ids, type: 'integer'
+        indexes :number_of_completed_orders, type: 'integer'
+        indexes :seller_average_rating, type: 'float'
+        indexes :buyer_average_rating, type: 'float'
 
         indexes :user_profiles, type: 'nested' do
           indexes :enabled, type: 'boolean'
+          indexes :availability_exceptions, type: 'date'
           indexes :profile_type, type: 'string'
           indexes :category_ids, type: 'integer'
+          indexes :customizations, type: 'object' do
+            CustomAttributes::CustomAttribute.custom_attributes_mapper(CustomModelType, CustomModelType.user_profiles) do |attribute_name, type|
+              indexes attribute_name, type: type, fields: { 'raw': { type: type, index: 'not_analyzed' } }
+            end
+          end
           indexes :properties, type: 'object' do
-            if InstanceProfileType.table_exists?
-              all_custom_attributes = CustomAttributes::CustomAttribute
-                                      .where(target: InstanceProfileType.where(instance: instance))
-                                      .pluck(:name, :attribute_type).uniq
-
-              all_custom_attributes.each do |attribute_name, attribute_type|
-                type = attribute_type.in?(%w(integer boolean float)) ? attribute_type : 'string'
-                indexes attribute_name, type: type, fields: { 'raw': { type: type, index: 'not_analyzed' } }
-              end
+            CustomAttributes::CustomAttribute.custom_attributes_mapper(InstanceProfileType, InstanceProfileType.where(instance: instance)) do |attribute_name, type|
+              indexes attribute_name, type: type, fields: { 'raw': { type: type, index: 'not_analyzed' } }
             end
           end
         end
@@ -44,31 +46,27 @@ module UsersIndex
     end
 
     def as_indexed_json(_options = {})
-      custom_attributes_by_type = InstanceProfileType.all.map do |instance_profile_type|
-        instance_profile_type.custom_attributes.pluck(:name)
-      end.flatten.uniq
-
       profiles = user_profiles.map do |user_profile|
-        custom_attributes = {}
-        custom_attributes_by_type.each do |custom_attribute|
-          next unless user_profile.properties.respond_to?(custom_attribute)
-          val = user_profile.properties.send(custom_attribute)
-          val = Array(val).map { |v| v.to_s.downcase }
-          if custom_attributes[custom_attribute].present?
-            (Array(custom_attributes[custom_attribute]) + val).flatten
-          else
-            custom_attributes[custom_attribute] = (val.size == 1 ? val.first : val)
-          end
+
+        customizations_attributes = user_profile.customizations.map do |customization|
+          CustomAttributes::CustomAttribute.custom_attributes_indexer(CustomModelType, customization)
         end
 
-        user_profile.slice(:instance_profile_type_id, :profile_type, :enabled).merge(properties: custom_attributes,
-                                                                                     category_ids: user_profile.categories.map(&:id))
+        availability_exceptions = user_profile.availability_exceptions ? user_profile.availability_exceptions.map(&:all_dates).flatten : nil
+
+        user_profile.slice(:instance_profile_type_id, :profile_type, :enabled).merge(
+          availability_exceptions: availability_exceptions,
+          properties: CustomAttributes::CustomAttribute.custom_attributes_indexer(InstanceProfileType, user_profile),
+          category_ids: user_profile.categories.map(&:id),
+          customizations: customizations_attributes
+        )
       end
 
       as_json(only: User.mappings.to_hash[:user][:properties].keys).merge(
         instance_profile_type_ids: user_profiles.map(&:instance_profile_type_id),
         tags: tags_as_comma_string,
-        user_profiles: profiles
+        user_profiles: profiles,
+        number_of_completed_orders: listing_orders.reservations.reviewable.count
       )
     end
 

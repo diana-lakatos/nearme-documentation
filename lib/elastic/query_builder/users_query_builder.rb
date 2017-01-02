@@ -84,7 +84,11 @@ module Elastic
       if @query[:sort].present?
         sorting_fields = @query[:sort].split(',').compact.map do |sort_option|
           next unless sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
-          sort_column = "user_profiles.properties.#{sort[1].split('.').last}.raw"
+          if sort[1].split('.').first == 'custom_attributes'
+            sort_column = "user_profiles.properties.#{sort[1].split('.').last}.raw"
+          else
+            sort_column = sort[1]
+          end
           {
             sort_column => {
               order: sort[2],
@@ -143,12 +147,54 @@ module Elastic
 
       @query[:lg_custom_attributes]&.each do |key, value|
         next if value.blank?
+        attribute = key.match(/([a-zA-Z\.\_\-]*)_(gte|lte|gt|lt)/)
+        if attribute
+          user_profiles_filters <<
+            {
+              range: {
+                "user_profiles.properties.#{attribute[1]}" => {
+                  attribute[2] => (value.to_f - 0.00000001) # we deduct a small number because ES treats integer 4 not gte 4.0
+                }
+              }
+            }
+        else
+          user_profiles_filters <<
+            {
+              match: {
+                "user_profiles.properties.#{key}.raw" => value.to_s.split(',').map(&:downcase).join(' OR ')
+              }
+            }
+        end
+      end
+
+      @query[:lg_customizations]&.each do |key, value|
+        next if value.blank?
         user_profiles_filters <<
           {
             match: {
-              "user_profiles.properties.#{key}.raw" => value.to_s.split(',').map(&:downcase).join(' OR ')
+              "user_profiles.customizations.#{key}" => value.to_s.split(',').map(&:downcase).join(' OR ')
             }
           }
+      end
+
+      if @query[:availability_exceptions].present?
+        from = to = nil
+        from = Date.parse(@query[:availability_exceptions][:from]) if @query[:availability_exceptions][:from].present?
+        to = Date.parse(@query[:availability_exceptions][:to]) if @query[:availability_exceptions][:to].present?
+
+        if from.present? || to.present?
+          hash = {
+            not: {
+              range: {
+                "user_profiles.availability_exceptions" => {
+                }
+              }
+            }
+          }
+          hash[:not][:range]["user_profiles.availability_exceptions"][:gte] = from if from.present?
+          hash[:not][:range]["user_profiles.availability_exceptions"][:lte] = to if to.present?
+          user_profiles_filters << hash
+        end
       end
 
       if @instance_profile_type.search_only_enabled_profiles? || @instance_profile_type.admin_approval?

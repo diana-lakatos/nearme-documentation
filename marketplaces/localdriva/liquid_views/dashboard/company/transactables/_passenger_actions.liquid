@@ -1,0 +1,28 @@
+<ul class="actions-a">
+
+  {% if offer != blank and current_status == 'pending' %}
+    <li><a class="btn btn-default" data-modal="true" href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: offer.id }}">Pay now</a></li>
+  {% endif %}
+
+  {% if current_status != 'archived' %}
+    <li><a href="{{ transactable.show_path }}" class="btn btn-default">Booking Details</a></li>
+  {% endif %}
+
+  {% if current_status == 'pending' %}
+    <li><a href='{{ transactable.edit_path }}' class="btn btn-primary">Edit Booking</a></li>
+  {% endif %}
+
+  {% if current_status != 'archived' %}
+    <li><a href='{{ transactable.cancel_path | append: "?status=" | append: current_status }}' data-confirm="Are you sure you want to cancel this booking?" class="btn btn-danger">Cancel Booking</a></li>
+  {% endif %}
+
+  {% if collaborator != blank %}
+
+    {% if collaborator.transactable_user_messages.size == 0 %}
+      <li><a class="btn btn-info" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, user_id: collaborator.user.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a></li>
+    {% else %}
+      <li><a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: collaborator.transactable_user_messages.first.id }}">{{ 'dashboard.user_reservations.send_message' | t}}</a></li>
+    {% endif %}
+
+  {% endif %}
+</ul>

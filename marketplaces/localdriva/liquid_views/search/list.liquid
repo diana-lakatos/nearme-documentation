@@ -1,0 +1,219 @@
+<div class="search-form" id="listing_search">
+  <div class="wrapper-a">
+    <form action="/search" method="get" id="search-form" class="no_inheritance">
+      <div class="query">
+        <label for="field-q" class="struct-label">Search keyword</label>
+        <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
+        <input type="hidden" name="availability_exceptions[from]" value="{{ params['availability_exceptions']['from'] }}" id="data-availability-from">
+        <input type="hidden" name="availability_exceptions[to]" value="{{ params['availability_exceptions']['to'] }}" id="data-availability-to">
+        <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
+        <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
+        <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
+        <input type="hidden" name="sort">
+        <input type="hidden" name="search_type" value="{{ params['search_type'] }}">
+
+        <div class="form-action">
+          <button type="submit" class="button-a">Search</button>
+        </div>
+      </div>
+
+      <fieldset class="filters" data-search-filters-container>
+        <legend class="struct-label">Filter</legend>
+
+        <div class="filters-wrapper">
+          <div class="filter filter-dates">
+            <label for="filter-dates">Select Dates</label>
+            <input type="text" class="daterange_field fake_select" data-date-range placeholder="When do you need a driver?" data-date-range-from-selector="#data-availability-from" data-date-range-to-selector="#data-availability-to">
+          </div>
+          <div class="filter">
+            <label for="filter-passengers">Passengers</label>
+            <span class="select-a">
+            <select name="lg_custom_attributes[vehicle_capacity_gte]" id="filter-passengers" class="unstyled-select">
+              <option value="">Please select --</option>
+              {% assign capacity = "1 | 2 | 3 | 4 | 5 | 6" | split: " | " %}
+              {% for v in capacity %}
+              <option value="{{ v }}"{% if params['lg_custom_attributes']['vehicle_capacity_gte'] == v %} selected{% endif %}>{{ v }}</option>
+              {% endfor %}
+            </select>
+            </span>
+          </div>
+
+          <div class="filter">
+            <label for="filter-driver-category">Driver Category</label>
+            <span class="select-a">
+            <select name="lg_custom_attributes[driver_category]" id="filter-driver-category" class="unstyled-select">
+              <option value="">Please select --</option>
+              {% assign driver_categories = "Standard | Pro | Plus" | split: " | " %}
+              {% for cat in driver_categories %}
+              <option value="{{ cat }}"{% if searcher.lg_custom_attributes_hash['driver_category'] == cat %} selected{% endif %}>{{ cat }}</option>
+              {% endfor %}
+            </select>
+            </span>
+          </div>
+
+          <div class="filter">
+            <label for="filter-second-language">Second Language</label>
+            <span class="select-a">
+              <select name="lg_customizations[language]" id="filter-second-language" class="unstyled-select">
+                <option value="">Please select --</option>
+                {% assign languages = "English | Chinese (Mandarin) | Spanish | German | French | Italian | Japanese | Korean | Arabic | Russian" | split: " | " %}
+                {% for l in languages %}
+                <option value="{{ l }}"{% if params["lg_customizations"]["language"] == l %} selected{% endif %}>{{ l }}</option>
+                {% endfor %}
+              </select>
+            </span>
+          </div>
+
+          {% assign root_category = searcher.searchable_categories | detect: name: 'Extras' %}
+          <div class="filter">
+            <label for="filter-extras">{{ root_category.name }}</label>
+            <span class="select-a">
+              <select id="filter-industry" class="unstyled-select" data-category-filter>
+                <option value="">Please Select --</option>
+                {% for category in root_category.children %}
+                  <option {% if searcher.category_ids contains category.id %}selected{% endif %} value='{{category.id}}'>{{ category.name }}</option>
+                {% endfor %}
+              </select>
+            </span>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<main id="results">
+  <div class="wrapper-a">
+    <h1 class="struct-label">Search results</h1>
+    <section class="search-results">
+      <header class="search-results-header">
+        <div class="search-results-query-info">
+          <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
+
+          <button type="button" class="button-c small" id="search-form-reset">Reset Filters</button>
+        </div>
+
+        <div class="search-sort-order">
+          <label for="search-order">Sort by:</label>
+          <span class="select-a">
+            <select id="search-order" name="sort" class="unstyled-select">
+              <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Please Select</option>
+              <option {% if params['sort'] == 'number_of_completed_orders_desc'  %}selected{% endif %} value='number_of_completed_orders_desc'>Number of Bookings</option>
+              <option {% if params['sort'] == 'buyer_average_rating_desc' %}selected{% endif %} value='buyer_average_rating_desc'>Rating</option>
+            </select>
+          </span>
+          </div>
+      </header>
+
+      <div class="search-results-items">
+        {% for user in searcher.results %}
+        <article class="box-a user-a" id="user-{{ user.id }}">
+          <figure class="avatar">
+            <a href="{{ user.user_profile_url }}">
+              <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+            </a>
+          </figure>
+
+          <div class="description">
+            <header>
+              <h2><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h2>
+              <div class="summary">
+                <div class="rating-a" data-rating="{{ user.buyer_average_rating }}">{{ user.buyer_average_rating }} out of 5 stars</div>
+                <div class="price"><strong>AUD {{ user.buyer_properties.hourly_price | price_with_cents_with_currency }}</strong> / hr</div>
+              </div>
+            </header>
+            <dl class="properties">
+              {% if user.buyer_properties.driver_category %}
+              <dt>Driver Type:</dt>
+              <dd>{{ user.buyer_properties.driver_category }}
+                <div class="driver-types-description" tabindex="0">
+                  <ul>
+                    <li>
+                      <b>Standard</b> - {{ 'driver_categories.descriptions.standard' | t }}
+                    </li>
+                    <li>
+                      <b>Pro</b> - {{ 'driver_categories.descriptions.pro' | t }}
+                    </li>
+                    <li>
+                      <b>Plus</b> - {{ 'driver_categories.descriptions.plus' | t }}
+                    </li>
+                  </ul>
+                </div>
+              </dd>
+              {% endif %}
+
+              <dt>Joined:</dt>
+              <dd>{{ user.created_at | to_date | l: 'long' }}</dd>
+
+              <dt>Number of Bookings:</dt>
+              <dd>{{ user.completed_host_reservations_count }}</dd>
+
+              <dt>Number of Ratings:</dt>
+              <dd>{{ user.reviews_counter.about_buyer }}</dd>
+
+              <dt>Capacity:</dt>
+              <dd>{{ 'passengers_count' | t: count: user.buyer_properties.vehicle_capacity }}</dd>
+            </dl>
+
+            {% if user.buyer_properties.short_bio != blank %}
+            <h3>About {{ user.first_name }}</h3>
+            <p>{{ user.buyer_properties.short_bio | nl2br }}</p>
+            {% endif %}
+
+            <h3>Languages</h3>
+            <dl class="languages-proficiency short-list">
+              {% assign languages = user.buyer_profile.customizations | map: 'properties' %}
+              {% for language in languages %}
+                {% if language.language != blank and language.fluency != blank %}
+                  <dt>{{ language.language }}</dt>
+                  <dd>{{ language.fluency }}</dd>
+                {% endif %}
+              {% endfor %}
+            </dl>
+          </div>
+
+          {% if current_user.id != user.id %}
+          <div class="options">
+            <ul>
+              {% if current_user != blank and current_user.has_seller_profile? %}
+              <li class="ask-to-book">
+                <a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Ask to Book</a>
+              </li>
+              {% endif %}
+
+              <li>
+                <a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Message Me</a>
+              </li>
+
+              {% if current_user.has_seller_profile? %}
+              <li>
+                {% include 'shared/components/wish_list_button_injection.html', object: user %}
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+          {% endif %}
+          <script>
+            $(function(){
+              $(document).trigger('userLoaded.localdriva', 'user-{{user.id}}')
+            });
+          </script>
+
+          <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
+
+        </article>
+        {% endfor %}
+      </div>
+
+      {% if searcher.next_page %}
+      <p class="search-results-more-trigger">
+        <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
+      </p>
+      {% endif %}
+    </section>
+  </div>
+</main>
+
+{% content_for 'domready' %}
+$(document).trigger('init:list:searchresults.nearme');
+{% endcontent_for %}

@@ -8,8 +8,6 @@ class SearchController < ApplicationController
   before_action :assign_transactable_type_id_to_lookup_context
   before_action :store_search
 
-  before_action :parse_uot_search_params, if:
-    -> { PlatformContext.current.instance.id.eql?(195) || params[:search_type] == 'people' }
   before_action :parse_community_search_params, if:
     -> { PlatformContext.current.instance.is_community? }
 
@@ -89,10 +87,6 @@ class SearchController < ApplicationController
       value: params.except(:controller, :action).select { |_k, v| v.present? }.to_json,
       expires: 30.minutes.from_now
     }
-  end
-
-  def parse_uot_search_params
-    @transactable_type = InstanceProfileType.buyer.first
   end
 
   def parse_community_search_params

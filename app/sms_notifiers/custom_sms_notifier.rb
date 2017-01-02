@@ -42,8 +42,8 @@ class CustomSmsNotifier < InstanceSmsNotifier
       @step.lister if @step.lister.accepts_sms?
     when 'enquirer'
       @step.enquirer if @step.enquirer.accepts_sms?
-    when 'administrator'
-      users = InstanceAdminRole.where(name: @workflow_alert.send("#{field}_type")).first.try(:instance_admins).try(:includes, :user) || []
+    else
+      users = InstanceAdminRole.where(name: @workflow_alert.recipient_type).first.try(:instance_admins).try(:includes, :user) || []
       users.find { |ia| ia.user.accepts_sms? }.try(:user)
     end
   end

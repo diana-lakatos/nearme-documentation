@@ -1,9 +1,18 @@
-<h2>We are sorry, {{ merchantable.creator.first_name }}!</h2>
 
-<p>Your account was not able to be verified.</p>
+{% if merchant_account.verified? %}
+  <h2>Congratulations, {{ merchantable.creator.first_name }}!</h2>
+
+  <p>Your payout information has been conditionally approved.</p>
+
+  <p>Please provide requested information.</p>
+{% else %}
+  <h2>We are sorry, {{ merchantable.creator.first_name }}!</h2>
+
+  <p>Your account was not able to be verified.</p>
+{% endif %}
 
 {% if merchant_account.all_errors %}
-  Reason:
+  Details:
   <ul>
     {% for error in merchant_account.all_errors %}
       <li>{{ error }}</li>

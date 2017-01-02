@@ -1,6 +1,5 @@
 name: Extra
-attributes:
-  show_path_format: /:transactable_type_id/:id
+show_path_format: /:transactable_type_id/:id
 
 validation:
   - field_name: name

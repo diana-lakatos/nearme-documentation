@@ -417,7 +417,7 @@ DesksnearMe::Application.routes.draw do
           resources :workflow_alerts, except: [:index], controller: 'workflows/workflow_alerts'
         end
 
-        resources :instance_profile_types, only: [:index, :destroy, :update] do
+        resources :instance_profile_types, except: [:show] do
           collection do
             post :enable
           end
@@ -750,6 +750,7 @@ DesksnearMe::Application.routes.draw do
           end
         end
       end
+      resources :custom_images, only: [:edit, :update, :destroy]
       resource :seller, only: [:show, :edit, :update]
       resource :buyer, only: [:show, :edit, :update]
 

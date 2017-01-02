@@ -20,7 +20,9 @@ module LiquidFilters
     else
       Googl.shorten(url).short_url
     end
-  rescue StandardError => e
+  # We use Exception to silence exceptions already encountered coming from the Goo.gl service;
+  # a MarketplaceLogger error will be logged
+  rescue Exception => e
     if Rails.env.production?
       MarketplaceLogger.error('Url Shortening Error', e.to_s + ' :: ' + url, raise: false)
       ''
@@ -656,6 +658,17 @@ module LiquidFilters
   #   in array of objects
   def map(object, method)
     object.map(&method.to_sym)
+  end
+
+  # @return [Object] with first object from collection that matches provided conditions
+  # @param objects [Array<Object>] array of objects to be processed
+  # @param conditions [Hash] hash with conditions { field_name: value }
+  def detect(objects, conditions = {})
+    objects.detect do |object|
+      return object if conditions.to_a.all? do |attrib, val|
+        object[attrib] == val
+      end
+    end
   end
 
   # @return [String] formatted representation of the date object; the formatted representation

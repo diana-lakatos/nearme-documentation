@@ -39,7 +39,7 @@ class DateTimeHandler
       begin
         Time.zone.local_to_utc(DateTime.strptime(object, I18n.t('timepicker.dformat'))).in_time_zone
       rescue
-        nil
+        Time.zone.local_to_utc(DateTime.strptime(object, "%H:%M")).in_time_zone
       end
     when Date, DateTime, ActiveSupport::TimeWithZone, nil
       object

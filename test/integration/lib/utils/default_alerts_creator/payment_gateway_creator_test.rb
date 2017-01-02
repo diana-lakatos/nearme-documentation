@@ -55,9 +55,10 @@ class Utils::DefaultAlertsCreator::PaymentGatewayCreatorTest < ActionDispatch::I
       assert_difference 'ActionMailer::Base.deliveries.size' do
         WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::MerchantAccountPending, @merchant_account.id, 'Epic fail')
       end
+
       mail = ActionMailer::Base.deliveries.last
       assert_equal [@merchant_account.merchantable.creator.email], mail.to
-      assert_contains "We are sorry, #{@merchant_account.merchantable.creator.first_name}!", mail.html_part.body
+      assert_contains "Congratulations, #{@merchant_account.merchantable.creator.first_name}!", mail.html_part.body
       assert_contains 'https://custom.domain.com/dashboard/company/payouts/edit', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_equal 'Please provide required information', mail.subject

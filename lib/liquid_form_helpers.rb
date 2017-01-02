@@ -4,14 +4,10 @@ module LiquidFormHelpers
     form_helper.options_for_select(*args)
   end
 
-  def options_from_collection_for_select(collection, selected = nil)
+  def options_from_collection_for_select(collection, selected = nil, include_blank = false)
     return [] unless collection
 
-    if selected.present?
-      collection.unshift first_select_option('- reset filter -')
-    else
-      collection.unshift first_select_option
-    end
+    collection = unshift_blank(collection, selected, include_blank) if include_blank
 
     collection.map do |item|
       label = item.label
@@ -25,7 +21,12 @@ module LiquidFormHelpers
 
   private
 
-  def first_select_option(label = 'Please select')
+  def unshift_blank(collection, selected, label, default_label = 'Please select')
+    label = selected.present? ? label : default_label
+    collection.unshift first_select_option(label)
+  end
+
+  def first_select_option(label)
     OpenStruct.new(label: label, key: '', value: 0, disabled: false)
   end
 

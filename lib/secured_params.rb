@@ -49,6 +49,7 @@ class SecuredParams
       :hint,
       :searchable,
       :search_in_query,
+      :aggregate_in_search,
       :input_html_options,
       :wrapper_html_options,
       :input_html_options_string,
@@ -399,7 +400,12 @@ class SecuredParams
       :category_search_type,
       :position,
       :search_only_enabled_profiles,
+      :onboarding,
+      :default_availability_template_id,
+      :must_have_verified_phone_number,
       :admin_approval,
+      :create_company_on_sign_up,
+      :default_sort_by,
       custom_attributes_attributes: [:searchable, :id]
     ]
   end
@@ -492,6 +498,7 @@ class SecuredParams
       :show_path_format,
       :hide_additional_charges_on_listing_page,
       :single_location,
+      :require_transactable_during_onboarding,
       availability_templates_attributes: nested(availability_template),
       allowed_currencies: [],
       merchant_fees_attributes: nested(charge_type),
@@ -959,6 +966,7 @@ class SecuredParams
   def customization(transactable_type)
     [
       :custom_model_type_id,
+      custom_images_attributes: nested(custom_image),
       properties: transactable_type ? transactable_type.custom_model_types.map { |cmt| Customization.public_custom_attributes_names(cmt) }.flatten : [],
       properties_attributes: transactable_type ? transactable_type.custom_model_types.map { |cmt| Customization.public_custom_attributes_names(cmt) }.flatten : []
     ]
@@ -1141,6 +1149,14 @@ class SecuredParams
     ]
   end
 
+  def custom_image
+    [
+      :id,
+      :image,
+      :custom_attribute_id
+    ]
+  end
+
   def photo
     [
       :id,
@@ -1222,6 +1238,7 @@ class SecuredParams
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
       properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.default_profile_type.try(:id)),
       category_ids: [],
+      custom_images_attributes: nested(custom_image),
       customizations_attributes: nested(customization(PlatformContext.current.instance.default_profile_type))
     ]
   end
@@ -1233,7 +1250,9 @@ class SecuredParams
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)),
       properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.seller_profile_type.try(:id)),
       category_ids: [],
-      customizations_attributes: nested(customization(PlatformContext.current.instance.seller_profile_type))
+      customizations_attributes: nested(customization(PlatformContext.current.instance.seller_profile_type)),
+      availability_template_attributes: nested(availability_template),
+      custom_images_attributes: nested(custom_image),
     ]
   end
 
@@ -1244,7 +1263,9 @@ class SecuredParams
       properties: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)),
       properties_attributes: UserProfile.public_custom_attributes_names(PlatformContext.current.instance.buyer_profile_type.try(:id)),
       category_ids: [],
-      customizations_attributes: nested(customization(PlatformContext.current.instance.buyer_profile_type))
+      customizations_attributes: nested(customization(PlatformContext.current.instance.buyer_profile_type)),
+      availability_template_attributes: nested(availability_template),
+      custom_images_attributes: nested(custom_image)
     ]
   end
 

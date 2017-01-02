@@ -21,8 +21,8 @@ module CustomAttributes
           SEARCHABLE = 6 unless defined?(SEARCHABLE)
           SEARCH_IN_QUERY = 7 unless defined?(SEARCH_IN_QUERY)
 
-          ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean).freeze unless defined?(ATTRIBUTE_TYPES)
-          HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list range).freeze unless defined?(HTML_TAGS)
+          ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean photo).freeze unless defined?(ATTRIBUTE_TYPES)
+          HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list range hidden).freeze unless defined?(HTML_TAGS)
           MULTIPLE_ARRAY_TAGS = %w(check_box_list select).freeze unless defined?(MULTIPLE_ARRAY_TAGS)
 
           scope :listable, -> { all }
@@ -146,6 +146,38 @@ module CustomAttributes
 
           def target_type=(sType)
             super(sType.to_s)
+          end
+
+          def self.custom_attributes_mapper(_klass, targets)
+            if _klass.table_exists?
+              all_custom_attributes = self
+                                      .where(target: targets)
+                                      .pluck(:name, :attribute_type).uniq
+
+              all_custom_attributes.map do |attribute_name, attribute_type|
+                type = attribute_type.in?(%w(integer boolean float)) ? attribute_type : 'string'
+                [attribute_name, type]
+              end
+            end
+          end
+
+          def self.custom_attributes_indexer(_klass, object)
+            custom_attributes_by_type = _klass.all.map do |obj|
+              obj.custom_attributes.pluck(:name)
+            end.flatten.uniq
+
+            custom_attributes = {}
+            custom_attributes_by_type.each do |custom_attribute|
+              next unless object.properties.respond_to?(custom_attribute)
+              val = object.properties.send(custom_attribute)
+              val = Array(val).map { |v| v.to_s.downcase }
+              if custom_attributes[custom_attribute].present?
+                (Array(custom_attributes[custom_attribute]) + val).flatten
+              else
+                custom_attributes[custom_attribute] = (val.size == 1 ? val.first : val)
+              end
+            end
+            custom_attributes
           end
         end
       end

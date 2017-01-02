@@ -1,9 +1,18 @@
-We are sorry, {{ merchantable.creator.first_name }}!
+{% if merchant_account.verified? %}
+  Congratulations, {{ merchantable.creator.first_name }}!
 
-Your account was not able to be verified.
+  Your payout information has been conditionally approved.
+
+  Please provide requested information.
+
+{% else %}
+  We are sorry, {{ merchantable.creator.first_name }}!
+
+  Your account was not able to be verified.
+{% end %}
 
 {% if merchantable.all_errors %}
-  Reason:
+  Details:
   {% for error in merchant_account.all_errors %}
     {{ error }}
   {% endfor %}

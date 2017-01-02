@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 class Transactable::TimeBasedBooking < Transactable::ActionType
+  include AvailabilityHelpers
   include AvailabilityRule::TargetHelper
 
   belongs_to :availability_template
   has_many :availability_templates, as: :parent
 
-  delegate :availability_for, to: :transactable
+  delegate :availability_for, :default_availability_template, to: :transactable
 
   accepts_nested_attributes_for :availability_template
 
@@ -34,15 +35,6 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
 
   def availability_template
     super || transactable.location.try(:availability_template)
-  end
-
-  # @return [Array<ScheduleExceptionRule>] array of schedule exception rules for future dates
-  def availability_exceptions
-    availability_template.try(:future_availability_exceptions)
-  end
-
-  def custom_availability_template?
-    availability_template.try(:custom_for_transactable?)
   end
 
   def first_available_date
@@ -141,18 +133,6 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
                 hourly_availability_schedule_url: Rails.application.routes.url_helpers.hourly_availability_schedule_listing_reservations_path(transactable, format: :json),
                 hourly_availability_schedule: { I18n.l(first_date.to_date, format: :short) => hourly_availability_schedule(first_date).as_json }) if hour_booking?
     hash
-  end
-
-  def availability_template_attributes=(template_attributes)
-    if template_attributes.present?
-      if template_attributes['id'].present?
-        availability_template.assign_attributes template_attributes
-      else
-        template_attributes[:name] = 'Custom transactable availability'
-        template_attributes[:parent] = self
-        self.availability_template = AvailabilityTemplate.new(template_attributes)
-      end
-    end
   end
 
   def booking_days_per_month

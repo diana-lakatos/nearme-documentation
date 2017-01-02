@@ -12,4 +12,5 @@
                   = link_to t('instance_admin.manage.user_profiles.custom_validators'), instance_admin_manage_instance_profile_type_custom_validators_path(instance_profile_type), class: 'pull-left btn btn-blue btn-bottom-margin'
                   = link_to t('instance_admin.manage.user_profiles.form_components'), instance_admin_manage_instance_profile_type_form_components_path(instance_profile_type), class: 'pull-left btn btn-blue btn-bottom-margin'
                   = link_to t('instance_admin.manage.user_profiles.search'), search_settings_instance_admin_manage_instance_profile_type_path(instance_profile_type), class: 'pull-left btn btn-blue btn-bottom-margin'
+                %td= link_to t('instance_admin.edit'), [:edit, :instance_admin, @controller_scope, instance_profile_type], class: 'pull-right'
 
