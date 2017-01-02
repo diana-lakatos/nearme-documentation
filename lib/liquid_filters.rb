@@ -40,7 +40,7 @@ module LiquidFilters
 
   # @return [Hash] returns data
   # @param query_string [String] graphql query
-  # @param variables [Hash, nil] variables used in query
+  # @param params [Hash, nil] variables used in query
   # @param current_user [User]
   def query(query_string, params = {}, current_user = nil)
     response = ::Graph::Schema.execute(

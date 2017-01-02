@@ -33,6 +33,7 @@ class AnalyticsFacadeDrop < BaseDrop
   end
 
   # @return [String] no results text in the format (taken from the translation string 'dashboard.analytics.no_results')
+  # @example
   #   'No %{type} in last %{period}.' where type is 'dashboard.analytics.%{chart_type}' (chart_type e.g. transfers, expenses, revenue)
   #   and period is 'dashboard.analytics.%{period}' (period e.g. last_7_days, last_30_days)
   def no_result

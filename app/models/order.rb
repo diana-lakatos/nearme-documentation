@@ -443,7 +443,8 @@ class Order < ActiveRecord::Base
     steps.join('|')
   end
 
-  # @return [Boolean] whether reservations need to be confirmed first
+  # @!method confirm_reservations?
+  #   @return [Boolean] whether reservations need to be confirmed first
   delegate :confirm_reservations?, to: :transactable
 
   def transactable_pricing

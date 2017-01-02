@@ -30,13 +30,13 @@ class PlatformContextDrop < BaseDrop
   #   @return [String] Lessor name for this marketplace
   #   @deprecated use {TransactableTypeDrop#lessor} instead
   # @!method lessors
-  #   @return [String] plural of {Instance#lessor}
+  #   @return [String] plural of lessor
   #   @deprecated use {TransactableTypeDrop#lessor} instead
   # @!method lessee
   #   @return [String] Lessee name for this marketplace
   #   @deprecated use {TransactableTypeDrop#lessee} instead
   # @!method lessees
-  #   @return [String] plural of {Instance#lessee}
+  #   @return [String] plural of lessee
   #   @deprecated use {TransactableTypeDrop#lessee} instead
   # @!method search_by_keyword_placeholder
   #   @return [String] placeholder for the search box on the homepage
@@ -90,9 +90,7 @@ class PlatformContextDrop < BaseDrop
   # @!method enable_geo_localization
   #   @return [Boolean] Whether geo localization is enabled for this instance
   # @!method split_registration?
-  #   Whether split registration is enabled for this instance allowing separate
-  #     profiles for buyers/sellers
-  #   @return (see Instance#split_registration)
+  #   @return [Boolean] Whether split registration is enabled for this instance allowing separate profiles for buyers/sellers
   # @!method enquirer_blogs_enabled
   #   @return [Boolean] Whether blogs for enquirers (buyers) are enabled for this instance
   # @!method lister_blogs_enabled
