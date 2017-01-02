@@ -1,5 +1,5 @@
 require "nearme/backup"
-require 'mocha/mini_test'
+# require 'mocha/mini_test'
 
 namespace :spacer do
   namespace :test do
