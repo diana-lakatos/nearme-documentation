@@ -5,7 +5,6 @@ module UserNameUtility
   extend ActiveSupport::Concern
 
   included do
-
     validates :name, :first_name, presence: true
     validates :first_name, length: { maximum: UserNameUtility::MAX_NAME_LENGTH }
     validates :middle_name, length: { maximum: UserNameUtility::MAX_NAME_LENGTH }
@@ -20,11 +19,11 @@ module UserNameUtility
     end
 
     def first_name
-      self[:last_name].present? ? self[:first_name] : self[:name].split.first
+      self[:last_name].present? ? self[:first_name] : self[:name]&.split&.first
     end
 
     def last_name
-      self[:last_name].presence || self[:name].split.last
+      self[:last_name].presence || self[:name]&.split&.last
     end
 
     def name_with_state
@@ -50,9 +49,8 @@ module UserNameUtility
     end
 
     def prepare_name_fields
-      self.first_name = name.split.first unless first_name.present?
+      self.first_name = name&.split&.first unless first_name.present?
       self.name = full_name_from_parts unless name.present?
     end
-
   end
 end
