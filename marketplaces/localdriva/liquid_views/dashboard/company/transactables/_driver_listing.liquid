@@ -85,7 +85,7 @@
         <dd>{{ transactable.formatted_categories['Extras']['children'] }}</dd>
 
         <dt>Price</dt>
-        <dd>{{ current_user.buyer_properties.hourly_price | times: transactable.properties.number_of_passengers }}</dd>
+        <dd>{{ current_user.buyer_properties.hourly_price | times: transactable.properties.number_of_passengers | pricify }}</dd>
       </dl>
     </div>
 
