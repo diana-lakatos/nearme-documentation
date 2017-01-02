@@ -1,0 +1,36 @@
+- content_for :category_tree do
+  - if @transactable_type.show_categories
+    %div{"data-search-filters-container" => true, :class => container_class}
+      %section#category-tree
+        - @searcher.searchable_categories.where(display_options: 'tree').each do |category|
+          .nav-categories.collapse.in
+            %ul
+              %li.nav-heading
+                = label_tag "category_#{category.id}" do
+                  - if @transactable_type.category_search_type == "OR"
+                    = check_box_tag("category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), hidden: true, id: "category_#{category.id}")
+                  - else
+                    = check_box_tag("parent_category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), hidden: true, id: "category_#{category.id}")
+
+                  = category.translated_name
+              = category_tree(category, @category, 4, @searcher.category_ids)
+
+      %section.autocomplete-categories
+        - @searcher.searchable_categories.where(display_options: 'autocomplete').each do |category|
+          = label_tag "category_#{category.id}" do
+            - if @transactable_type.category_search_type == "OR"
+              = check_box_tag("category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), hidden: true, id: "category_#{category.id}")
+            - else
+              = check_box_tag("parent_category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), hidden: true, id: "category_#{category.id}")
+
+            = category.translated_name
+
+          %input{ class: "text optional", 'data-selected-categories' => @searcher.category_ids.to_s,
+            'data-category-autocomplete' => true, 'data-category-id' => category.id,
+            'data-api-category-path' => dashboard_api_category_path(category),
+            name: "category_ids[]", type: "text", autocomplete: "off" }
+
+
+
+
+

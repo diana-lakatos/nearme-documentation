@@ -1,0 +1,63 @@
+- content_for :hero do
+  %header#listing_search.list.container-fluid{class: result_view == 'map' ? 'with-map' : ''}
+    .header-inner
+      %form.search_results{:action => search_path(v: result_view), :method => "get"}
+        -unless @transactable_type.fulltext_search?
+          - search_geofields.each do |geofield|
+            = hidden_field_tag geofield, ''
+        = hidden_field_tag :v, result_view
+        = hidden_field_tag :transactable_type_id, @transactable_type.id
+        = hidden_field_tag :transactable_type_class, @transactable_type.class.name
+        = hidden_field_tag :lntype, @searcher.search.lntype
+        = hidden_field_tag :ignore_search_event, 0
+        = hidden_field_tag :page, 1
+        = hidden_field_tag :category_ids, @searcher.search.category_ids
+        = hidden_field_tag 'price[min]'
+        = hidden_field_tag 'price[max]'
+        = hidden_field_tag :date
+        = hidden_field_tag :time_from
+        = hidden_field_tag :time_to
+        = hidden_field_tag :sort
+        - if @transactable_type.show_date_pickers?
+          = hidden_field_tag :start_date, @searcher.search.display_dates[:start]
+          = hidden_field_tag :end_date, @searcher.search.display_dates[:end]
+          = hidden_field_tag 'availability[dates][start]', @searcher.search.start_date
+          = hidden_field_tag 'availability[dates][end]', @searcher.search.end_date
+        - @searcher.filterable_custom_attributes.each do |ca|
+          = hidden_field_tag "lg_custom_attributes[#{ca.name}]", @searcher.search.lg_custom_attributes[ca.name]
+        .row-fluid
+          .span12
+            .list-map-toggle.span2
+              - unless @transactable_type.is_a?(InstanceProfileType)
+                %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: t('search.header.list'), data: { view: 'list' } }
+                  = t('search.header.list')
+                %a.map{ href: search_path(params.merge(v: @transactable_type.other_search_view)), class: active_class(result_view, @transactable_type.other_search_view), title: t('search.header.map'), data: { view: @transactable_type.other_search_view } }
+                  = t('search.header.map')
+            .geolocation-input{ :class => (@transactable_type.fulltext_geo_search? ? 'span3' : 'span6')}
+              .geolocation
+                %span.ico-crosshairs
+                .geo-loading.text-center(data-loading style='display: none')
+                  = image_tag('spinner.gif', width: '16', style: 'margin-left: -15px;')
+              %input#search.query{:name => @transactable_type.search_input_name, :placeholder => @transactable_type.search_field_placeholder, :type => "text", :value => @searcher.input_value(@transactable_type.search_input_name), :autocomplete => "off", 'data-disable-autocomplete' => @transactable_type.fulltext_search?}
+            -if @transactable_type.fulltext_geo_search?
+              .keyword-input.span3
+                .search-loop-icon
+                  %span.ico-search
+                %input.query{:name => "query", :placeholder => @transactable_type.fulltext_placeholder, :type => "text", :value => @searcher.keyword, :autocomplete => "off"}
+            .span1.search-button
+              .search-icon.btn.btn-green
+                %span.ico-search
+                  %span.text= t 'homepage.buttons.search'
+
+            = render 'search/save'
+
+
+    .search-filters{:'data-search-filters-container' => true, :class => platform_context.domain.name.include?('desksnear.me') ? '' : 'two-filters'}
+      = render partial: 'search/transactable_type_filter' if current_instance.transactable_types.searchable.many?
+      - @searcher.filterable_custom_attributes.each do |ca|
+        = render partial: 'search/filter', locals: { header_name: t(ca.label_key), selected_values: params[:lg_custom_attributes] ? params[:lg_custom_attributes][ca.name] || [] : [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated.map { |pair| [pair[1], pair[0]] }, name: ca.name }
+      - if @transactable_type.display_location_type_filter?
+        = render partial: 'search/filter', locals: { header_name: 'Location Types', selected_values: params[:location_types_ids] || [], input_name: 'location_types_ids[]', options: @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
+      - if @transactable_type.show_price_slider
+        .search-list-price-slider-container
+          = render partial: 'search/shared/price_slider'

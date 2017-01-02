@@ -9,6 +9,7 @@ module Graph
 
       field :id, !types.ID
       field :url, types.String
+      field :name, !types.String
       field :description, types.String
     end
   end

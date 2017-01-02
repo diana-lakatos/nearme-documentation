@@ -40,12 +40,17 @@ data using `rake backup:restore` in your console.
 
 ### ElasticSearch on local
 
-to make ES search work locally you have to enable scripting queries in your local ES instance. to do so please edit ES config file in ES installation path (for example /usr/local/Cellar/elasticsearch/2.4.0/libexec/config/elasticsearch.yml) and add:
+To make ES search work locally you have to enable scripting queries in your local ES instance. to do so please edit ES config file in ES installation path (for example /usr/local/Cellar/elasticsearch/2.4.0/libexec/config/elasticsearch.yml) and add:
 
     script.engine.groovy.inline.search: on
     script.inline: on
     script.indexed: on
     script.disable_dynamic: false
+
+After installing ES you load need to create indecies
+
+    rake elastic:indices:create_all
+    rake "elastic:indices:rebuild:all_for_instance[1]"
 
 ### Assets on local
 
@@ -139,7 +144,7 @@ If you have xcode 8.0+ and get an error:
 
 Look into this solution [https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#xcode-80](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#xcode-80)
 
-If you have Sierra, you wont be able to install Qt55 normally, to work around this look into this solution: [https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#macos-sierra-1012](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#macos-sierra-1012) 
+If you have Sierra, you wont be able to install Qt55 normally, to work around this look into this solution: [https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#macos-sierra-1012](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#macos-sierra-1012)
 
 More on [capybara-webkit troubleshooting.](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit)
 

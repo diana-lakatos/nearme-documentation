@@ -1,0 +1,20 @@
+%form#listing_search.search_results{:action => search_path, :method => "get"}
+  = hidden_field_tag :transactable_type_id, @transactable_type.id
+  - search_geofields.each do |geofield|
+    = hidden_field_tag geofield, ''
+  = hidden_field_tag 'ignore_search_event', 0
+
+  .row-fluid
+    .span6
+      %input#search{:name => "q", :placeholder => "Search by location", :type => "text", :value => query, :class => "query", :autocomplete => "off"}
+      .geolocation
+        %span.ico-crosshairs
+    .span6
+      .three.columns.availability-date-start
+        = text_field_tag "availability[dates][start]", search_availability_dates_start, :autocomplete => "off", :placeholder => "Starting on"
+        .calendar
+          %span.ico-calender
+      .three.columns.availability-date-end
+        = text_field_tag "availability[dates][end]", search_availability_dates_end, :autocomplete => "off", :placeholder => "Ending on"
+        .calendar
+          %span.ico-calender
