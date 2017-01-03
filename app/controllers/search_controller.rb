@@ -83,8 +83,10 @@ class SearchController < ApplicationController
   end
 
   def store_search
+    values = params.except(:controller, :action).select { |_k, v| v.present? }
+    values[:transactable_type_class] ||= @transactable_type.class.name if @transactable_type
     cookies[:last_search] = {
-      value: params.except(:controller, :action).select { |_k, v| v.present? }.to_json,
+      value: values.to_json,
       expires: 30.minutes.from_now
     }
   end
