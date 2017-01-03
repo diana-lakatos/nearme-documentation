@@ -9,6 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
+
 class GraphqlEditor {
   constructor(container: string) {
     this._ui = {};
@@ -21,7 +22,12 @@ class GraphqlEditor {
   _graphQLFetcher(graphQLParams) {
     return fetch(window.location.origin + '/api/graph', {
       method: 'post',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': this._getCSRFToken(),
+        'UserAuthorization': this._getAuthToken()
+      },
+      credentials: 'same-origin',
       body: JSON.stringify(graphQLParams),
     }).then(response => response.json());
   }
@@ -40,10 +46,20 @@ class GraphqlEditor {
   }
 
   _initialize() {
+    const graphQLFetcher = this._graphQLFetcher.bind(this);
     const setQueryString = this._setQueryString.bind(this);
-    const graphiqlEditor = <GraphiQL fetcher={this._graphQLFetcher} query={this._queryString()} onEditQuery={setQueryString} storage={null} />;
+    const graphiqlEditor = <GraphiQL fetcher={graphQLFetcher} query={this._queryString()} onEditQuery={setQueryString} storage={null} />;
     ReactDom.render(graphiqlEditor, this._ui.container);
     this._disableSubmittingFormOnQueryButton();
+  }
+
+
+  _getCSRFToken(){
+    return document.querySelector('meta[name="csrf-token"]').content;
+  }
+
+  _getAuthToken(){
+    return document.querySelector('meta[name="authorization-token"]').content;
   }
 }
 
