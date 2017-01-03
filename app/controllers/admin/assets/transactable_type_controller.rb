@@ -7,7 +7,7 @@ class Admin::Assets::TransactableTypeController < Admin::Assets::BaseController
   end
 
   def create
-    @transactable_type = ServiceType.new(transactable_type_params)
+    @transactable_type = TransactableType.new(transactable_type_params)
 
     if @transactable_type.save
       Utils::FormComponentsCreator.new(@transactable_type).create!
