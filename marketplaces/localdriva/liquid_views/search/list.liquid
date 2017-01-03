@@ -124,7 +124,7 @@
               <h2><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h2>
               <div class="summary">
                 <div class="rating-a" data-rating="{{ user.buyer_average_rating }}">{{ user.buyer_average_rating }} out of 5 stars</div>
-                <div class="price"><strong>AUD {{ user.buyer_properties.hourly_price | price_with_cents_with_currency }}</strong> / hr</div>
+                <div class="price" data-convert-price="{{ user.buyer_properties.hourly_price }}"><strong>AUD {{ user.buyer_properties.hourly_price | price_with_cents_with_currency }}</strong> / hr</div>
               </div>
             </header>
             <dl class="properties">
