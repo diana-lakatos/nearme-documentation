@@ -50,7 +50,7 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
         render json: { status: 'success', data: { message: t('flash_messages.instance_admin.manage.liquid_views.created') } }
       else
         flash[:success] = t 'flash_messages.instance_admin.manage.liquid_views.created'
-        redirect_to edit_admin_theme_liquid_view_path(@liquid_view)
+        redirect_to edit_instance_admin_theme_liquid_view_path(@liquid_view)
       end
     else
       if request.xhr?
