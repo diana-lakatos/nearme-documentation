@@ -15,6 +15,8 @@ class CustomModelType < ActiveRecord::Base
   has_many :project_types, through: :custom_model_type_linkings
   has_many :offer_types, through: :custom_model_type_linkings
   has_many :instance_profile_types, through: :custom_model_type_linkings
+  has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
+  has_many :custom_validators, as: :validatable
 
   after_update :destroy_translations!, if: ->(model_type) { model_type.name_changed? }
   after_create :create_translations!

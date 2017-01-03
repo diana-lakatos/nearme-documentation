@@ -167,12 +167,10 @@
 
             <h3>Languages</h3>
             <dl class="languages-proficiency short-list">
-              {% assign languages = user.buyer_profile.customizations | map: 'properties' %}
+              {% assign languages = user.buyer_profile.customizations_by_type['Languages'] %}
               {% for language in languages %}
-                {% if language.language != blank and language.fluency != blank %}
-                  <dt>{{ language.language }}</dt>
-                  <dd>{{ language.fluency }}</dd>
-                {% endif %}
+                <dt>{{ language.language }}</dt>
+                <dd>{{ language.fluency }}</dd>
               {% endfor %}
             </dl>
           </div>

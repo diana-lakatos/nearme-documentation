@@ -31,12 +31,8 @@
               <dt>City:</dt>
               <dd>Sydney</dd>
 
-              {% assign languages = listing.customizations | map: 'properties' %}
-
-              {% for language in languages %}
-                {% if language.language != blank and language.fluency != blank %}
+              {% for language in listing.customizations_by_type['Languages'] %}
                 {% capture langs %}{{ langs }}{% unless langs == blank %}, {% endunless %}{{ language.language }} ({{ language.fluency }}){% endcapture %}
-                {% endif %}
               {% endfor %}
 
               {% if langs != blank %}
