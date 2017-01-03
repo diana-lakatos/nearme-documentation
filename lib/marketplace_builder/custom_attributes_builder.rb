@@ -33,7 +33,6 @@ module MarketplaceBuilder
         custom_attribute = create_custom_attribute(object, name, default_attribute_properties.merge(attribute))
         logger.debug "Creating custom attribute: #{name}"
         unless validator_hash.empty?
-          cleanup_validators_for_object(custom_attribute)
           create_custom_validator(custom_attribute, name, validator_hash)
         end
       end

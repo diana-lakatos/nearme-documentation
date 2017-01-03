@@ -74,9 +74,14 @@
         <dt>City</dt>
         <dd>{{ transactable.properties.city }}</dd>
 
-        <dt>Languages spoken</dt>
-        {% assign languages = transactable.customizations | map: 'properties' | map: 'language' %}
-        <dd>{{ languages | join: ', ' }}</dd>
+        {% for language in transactable.customizations_by_type['Languages'] %}
+          {% capture langs %}{{ langs }}{% unless langs == blank %}, {% endunless %}{{ language.language }} ({{ language.fluency }}){% endcapture %}
+        {% endfor %}
+
+        {% if langs != blank %}
+          <dt>Languages Spoken:</dt>
+          <dd>{{ langs }}</dd>
+        {% endif %}
 
         <dt>Number of Passengers</dt>
         <dd>{{ transactable.properties.number_of_passengers }}</dd>

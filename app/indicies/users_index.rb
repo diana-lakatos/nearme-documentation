@@ -53,11 +53,11 @@ module UsersIndex
         end
 
         Time.use_zone(time_zone) do
-          availability_exceptions = user_profile.availability_exceptions ? user_profile.availability_exceptions.map(&:all_dates).flatten : nil
+          @availability_exceptions = user_profile.availability_exceptions ? user_profile.availability_exceptions.map(&:all_dates).flatten : nil
         end
 
         user_profile.slice(:instance_profile_type_id, :profile_type, :enabled).merge(
-          availability_exceptions: availability_exceptions,
+          availability_exceptions: @availability_exceptions,
           properties: CustomAttributes::CustomAttribute.custom_attributes_indexer(InstanceProfileType, user_profile),
           category_ids: user_profile.categories.map(&:id),
           customizations: customizations_attributes

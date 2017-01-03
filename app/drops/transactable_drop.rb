@@ -597,4 +597,13 @@ class TransactableDrop < BaseDrop
   def cover_photo_url
     @source.cover_photo&.image&.url(:golden)
   end
+
+    # @return [Hash{String => Array}] hash of customizations grouped by custom model type name
+  def customizations_by_type
+    @source.customizations.inject({}) do |results, customization|
+      results[customization.custom_model_type.name] ||= []
+      results[customization.custom_model_type.name] << customization.properties
+      results
+    end
+  end
 end

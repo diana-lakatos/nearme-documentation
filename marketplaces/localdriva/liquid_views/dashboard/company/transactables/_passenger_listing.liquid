@@ -52,9 +52,14 @@
           <dt>Invite Sent</dt>
           <dd>{{ collaborator.created_at | to_date | l: 'short' }}</dd>
 
-          <dt>Languages spoken</dt>
-          {% assign languages = driver.buyer_profile.customizations | map: 'properties' | map: 'language' %}
-          <dd>{{ languages | join: ', ' }}</dd>
+          {% for language in driver.buyer_profile.customizations_by_type['Languages'] %}
+            {% capture langs %}{{ langs }}{% unless langs == blank %}, {% endunless %}{{ language.language }} ({{ language.fluency }}){% endcapture %}
+          {% endfor %}
+
+          {% if langs != blank %}
+            <dt>Languages Spoken:</dt>
+            <dd>{{ langs }}</dd>
+          {% endif %}
 
           <dt>Number of Passengers</dt>
           <dd>{{ driver.buyer_properties.vehicle_capacity }}</dd>
