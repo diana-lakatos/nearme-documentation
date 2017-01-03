@@ -96,6 +96,7 @@ function xhr(url, options = {}) {
     credentials: 'same-origin',
     headers: {
       'Accept': getContentTypeString(options.contentType),
+      'Content-Type': getContentTypeString(options.contentType),
       'X-CSRF-Token': getCSRFToken(),
       'UserAuthorization': getAuthToken(),
       'X-Requested-With': 'XMLHttpRequest'
