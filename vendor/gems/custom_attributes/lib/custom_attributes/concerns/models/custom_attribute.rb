@@ -156,7 +156,7 @@ module CustomAttributes
 
               all_custom_attributes.map do |attribute_name, attribute_type|
                 type = attribute_type.in?(%w(integer boolean float)) ? attribute_type : 'string'
-                [attribute_name, type]
+                yield [attribute_name, type]
               end
             end
           end

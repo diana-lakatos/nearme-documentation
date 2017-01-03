@@ -33,12 +33,12 @@ module UsersIndex
           indexes :category_ids, type: 'integer'
           indexes :customizations, type: 'object' do
             CustomAttributes::CustomAttribute.custom_attributes_mapper(CustomModelType, CustomModelType.user_profiles) do |attribute_name, type|
-              indexes attribute_name, type: type, fields: { 'raw': { type: type, index: 'not_analyzed' } }
+              indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
             end
           end
           indexes :properties, type: 'object' do
             CustomAttributes::CustomAttribute.custom_attributes_mapper(InstanceProfileType, InstanceProfileType.where(instance: instance)) do |attribute_name, type|
-              indexes attribute_name, type: type, fields: { 'raw': { type: type, index: 'not_analyzed' } }
+              indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
             end
           end
         end

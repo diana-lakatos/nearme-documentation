@@ -63,7 +63,7 @@ module Elastic
           query: {
             multi_match: {
               query: @query[:query],
-              fields: @query_searchable_attributes
+              fields: search_by_query_attributes
             }
           }
         }
@@ -172,7 +172,7 @@ module Elastic
         user_profiles_filters <<
           {
             match: {
-              "user_profiles.customizations.#{key}" => value.to_s.split(',').map(&:downcase).join(' OR ')
+              "user_profiles.customizations.#{key}.raw" => value.to_s.split(',').map(&:downcase).join(' OR ')
             }
           }
       end
