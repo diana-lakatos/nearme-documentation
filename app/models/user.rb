@@ -1146,6 +1146,10 @@ class User < ActiveRecord::Base
     @ui_settings_hash
   end
 
+  def time_zone
+    super || instance.time_zone
+  end
+
   private
 
   def populate_ui_settings
