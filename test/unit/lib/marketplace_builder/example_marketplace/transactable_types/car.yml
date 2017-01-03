@@ -1,0 +1,37 @@
+name: Car
+show_path_format: /:transactable_type_id/:id
+
+validation:
+  - field_name: name
+    max_length: 140
+
+action_types:
+  - enabled: true
+    type: TransactableType::NoActionBooking
+    allow_no_action: true
+
+  - enabled: true
+    type: TransactableType::SubscriptionBooking
+    allow_no_action: true
+    pricings:
+      - number_of_units: 30
+        unit: day
+        min_price_cents: 0
+        max_price_cents: 0
+        order_class_name: RecurringBooking
+        allow_nil_price_cents: false
+
+custom_attributes:
+  - name: description
+    html_tag: textarea
+    attribute_type: text
+    search_in_query: true
+    validation:
+      max_length: 5000
+
+  - name: summary
+    search_in_query: true
+    html_tag: textarea
+    attribute_type: text
+    validation:
+      max_length: 140

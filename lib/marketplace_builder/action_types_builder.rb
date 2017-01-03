@@ -25,8 +25,13 @@ module MarketplaceBuilder
       hash = hash.with_indifferent_access
       action_type = object.action_types.where(type: type).first_or_initialize
 
+      pricings = hash.delete(:pricings) || []
+
       action_type.assign_attributes(hash)
       action_type.save!
+
+      create_pricings(action_type, pricings)
+
       action_type
     end
 
@@ -35,6 +40,14 @@ module MarketplaceBuilder
         enabled: true,
         allow_no_action: false
       }
+    end
+
+    def create_pricings(action_type, pricings)
+      pricings.each do |pricing_attrs|
+        pricing = TransactableType::Pricing.new(pricing_attrs, action_type: action_type.type, action_id: action_type.id)
+        pricing.save!
+        pricing.update! action_type: action_type.type, action_id: action_type.id
+      end
     end
   end
 end

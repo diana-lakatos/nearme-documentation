@@ -1,8 +1,7 @@
 name: Booking
 withdraw_invitation_when_reject: true
-reverse_immediate_payment: true
 transactable_types:
-  - Booking
+  - Car
 
 form_components:
   - type: reservation_attributes
