@@ -112,7 +112,12 @@ en:
         view_host_profile: "View Passenger's Profile"
         view_seller_profile: "View Passenger's Profile"
     transactables:
+      manage: 'Manage Bookings'
+      list_new_item: 'Create a new Booking'
       address_errors_html: "Please address the following <b>%{count}</b> errors in order to save your Booking."
+      view: 'View Booking'
+      view_html: 'View <span class="hidden-xs">Booking</span>'
+      transactable_not_saved: 'Booking not saved.'
     user_profile:
       sections:
         buyer: driver
@@ -426,3 +431,21 @@ en:
       selected_state: Remove Favorite
       unselected_state: Add Favorite
 
+  transactable_type:
+    booking:
+      placeholders:
+        special_requests: 'Let the driver know if you have any specific needs for the duration of your booking, e.g. any disabilities he might need to be aware of beforehand'
+        pickup_location: 'Enter address of your pickup location'
+        description: 'Destinations, interests and any other requirements that are relevant to your booking'
+        name: 'Short title that will be used to identify your booking'
+
+  errors:
+    attributes:
+      pickup_location:
+        blank: Please select a pickup location
+      duration:
+        inclusion: Please select the duration of your booking
+      number_of_passengers:
+        inclusion: Please select the number of passengers for your booking
+      driver_category:
+        blank: Select driver category

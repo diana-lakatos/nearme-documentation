@@ -18,25 +18,29 @@ access_restricted_to_invited: true
 custom_attributes:
   - name: city_name
     label: 'City'
+    html_tag: 'hidden'
+    default_value: 'Sydney'
 
   - name: trip_start_date
     label: 'Start Date'
     attribute_type: 'date'
+    html_tag: 'hidden'
     validation:
       required: true
 
   - name: trip_start_time
     label: 'Start Time'
+    html_tag: 'hidden'
     validation:
       required: true
 
   - name: pickup_location
-    label: 'Pickup Location'
+    label: 'Pickup location'
     validation:
       required: true
 
   - name: duration
-    label: 'Length'
+    label: 'How many hours you want to book?'
     attribute_type: 'integer'
     html_tag: 'select'
     validation:
@@ -83,7 +87,7 @@ custom_attributes:
 
   - name: special_requests
     label: 'Special Requests'
-    hint: 'Enter Special Requests including dissabilities'
+    hint: 'Enter Special Requests including disabilities'
     html_tag: textarea
 
   - name: driver_category
@@ -98,6 +102,11 @@ custom_attributes:
         - 'Pro'
         - 'Plus'
       required: true
+
+validation:
+  - field_name: name
+    required: true
+
 
 form_components:
   - type: transactable_attributes
