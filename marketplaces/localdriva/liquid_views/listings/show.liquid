@@ -51,7 +51,8 @@
               {% endif %}
 
               <dt>Price:</dt>
-              <dd>{{ listing.creator.properties.hourly_price | times: listing.properties.duration | pricify }}</dd>
+              {% assign total = listing.creator.properties.hourly_price | times: listing.properties.duration %}
+              <dd data-convert-price="{{ total }}">{{ total | pricify }}</dd>
             </dl>
 
             <dl>
