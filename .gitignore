@@ -3,6 +3,8 @@
 .bundle
 db/*.sqlite3
 capybara-*
+doc/
+.yardoc/
 public/instances
 public/uploads
 public/media

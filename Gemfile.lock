@@ -1106,7 +1106,7 @@ DEPENDENCIES
   wicked
   will_paginate
   yard (~> 0.9.5)
-  yard-activerecord
+  yard-activerecord (~> 0.0.16)
   yardstick
 
 RUBY VERSION
