@@ -6,7 +6,7 @@ namespace :documentation do
     FileUtils.remove_dir(File.join(Rails.root, '.yardoc'), true)
     FileUtils.remove_dir(File.join(Rails.root, 'public', 'doc'), true)
 
-    system("export RUBY_THREAD_VM_STACK_SIZE=5000000; yard -e lib/yard_frontend_customizations.rb -p .yard/frontend_template/ --hide-tag todo --plugin yard-activerecord --markup markdown 'app/drops/**/*.rb' 'lib/liquid_filters.rb' 'app/liquid_tags/*.rb'")
+    system("export RUBY_THREAD_VM_STACK_SIZE=5000000; bundle exec yard -e lib/yard_frontend_customizations.rb -p .yard/frontend_template/ --hide-tag todo --plugin yard-activerecord --markup markdown 'app/drops/**/*.rb' 'lib/liquid_filters.rb' 'app/liquid_tags/*.rb'")
 
     FileUtils.remove_dir(File.join(Rails.root, '.yardoc'), true)
     FileUtils.remove_file(File.join(Rails.root, 'doc', 'file.README.html'), true)
