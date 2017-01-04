@@ -30,13 +30,9 @@ class GraphqlEditor {
     const url = window.location.origin + '/api/graph';
     return xhr(url, {
       method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': this._getCSRFToken(),
-        'UserAuthorization': this._getAuthToken()
-      },
-      body: JSON.stringify(graphQLParams),
-    }).then(response => response.json());
+      contentType: 'application/json',
+      data: JSON.stringify(graphQLParams),
+    }).then(response => response);
   }
 
   _queryString() {
