@@ -42,10 +42,29 @@ module Graph
         def call(obj, arg, _ctx)
           user = obj.source
           custom_attribute = ::CustomAttributes::CustomAttribute.find_by(name: arg[:name])
-          attribute_images = ::CustomImage.where(custom_attribute: custom_attribute)
-          custom_images = attribute_images.where(owner: user.user_profiles) +
-                          attribute_images.where(owner: user.user_profiles.map(&:customizations).flatten)
+          custom_images = ::CustomImage.where(id: custom_images_ids(custom_attribute, user))
+                                       .order(order(arg) => order_direction(arg))
           custom_images.map(&:image)
+        end
+
+        private
+
+        def custom_images_ids(custom_attribute, user)
+          attribute_images = ::CustomImage.where(custom_attribute: custom_attribute)
+          profile_images = attribute_images.where(owner: user.user_profiles)
+          customization_images = attribute_images.where(
+            owner_type: ::Customization.to_s,
+            owner_id: user.user_profiles.map{ |up| up.customizations.pluck(:id) }.flatten
+          )
+          profile_images.pluck(:id) + customization_images.pluck(:id)
+        end
+
+        def order(arg)
+          arg[:order] || Graph::Types::CustomImageOrderEnum.values['DATE'].value
+        end
+
+        def order_direction(arg)
+          arg[:order_direction] || Graph::Types::OrderDirectionEnum.values['DESC'].value
         end
       end
     end
