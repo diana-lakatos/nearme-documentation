@@ -136,7 +136,8 @@ class PlatformContextDrop < BaseDrop
   # @return [String] url to the logo image as set in the current theme
   # @todo depracate per DIY
   def logo_url
-    @platform_context_decorator.logo_image.url
+    platform_image_url = @platform_context_decorator.logo_image.url
+    platform_image_url.present? ? platform_image_url : ActionController::Base.helpers.asset_path('admin/logo-black.svg')
   end
 
   # @return [String] url to the hero image as set in the current theme or a default image

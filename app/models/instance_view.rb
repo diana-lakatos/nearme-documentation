@@ -525,6 +525,12 @@ class InstanceView < ActiveRecord::Base
     'dashboard/offers/offer' => {
       is_partial: true,
       offer: 'OfferDrop'
+    },
+    'errors/not_found' => {
+      is_partial: false
+    },
+    'errors/server_error' => {
+      is_partial: false
     }
 
   }.sort.to_h.freeze

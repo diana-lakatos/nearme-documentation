@@ -1,8 +1,0 @@
-%h1.error-number 403
-%h2.semi-bold Aw, Snap!
-%p You do not have permission to access this #{@object_name}
-%p
-  You are currently logged in as
-  = succeed '.' do
-    %b= current_user.email
-  Perhaps you need to #{link_to 'log in as different user', request.original_url.split('?').first+"?token=relog", :method => :delete}?
