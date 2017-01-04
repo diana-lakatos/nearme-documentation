@@ -19,6 +19,11 @@ en:
         image: 'Cover Image'
       transactable:
         timezone_info: "Please note that this booking operates in %{timezone} time zone."
+      user/buyer_profile/availability_template:
+        schedule_exception_rules: 'Unavailable period'
+      user/buyer_profile/availability_template/schedule_exception_rules:
+        duration_range_start: 'Unavailable period start of range'
+        duration_range_end: 'Unavailable period end of range'
     errors:
       models:
         order:
