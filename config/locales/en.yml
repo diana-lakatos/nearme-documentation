@@ -1904,7 +1904,6 @@ en:
         manage: 'Manage'
         listings: 'Listings'
       manage: 'Manage Listings'
-      list_new_item: 'List New Item'
       edit: 'Edit Item'
       view: 'View Listing'
       view_html: 'View <span class="hidden-xs">Listing</span>'

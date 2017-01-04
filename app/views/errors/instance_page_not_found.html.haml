@@ -1,8 +1,0 @@
-%h1.error-number 404
-%h2.semi-bold Aw, Snap!
-%p The page you were looking for could not be located.
-%p Perhaps you were looking for one of these pages:
-%ul
-  - platform_context.pages.each do |page|
-    %li
-      = link_to page.path, pages_url(page)

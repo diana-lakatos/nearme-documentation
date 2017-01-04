@@ -43,8 +43,6 @@ class ConditionField {
     let condition;
     value = (value + '').toLowerCase();
 
-    console.log(value);
-
     for (let prop in this.conditions) {
       if (this.conditions.hasOwnProperty(prop) && value === (prop+ '').toLowerCase()){
         condition = this.conditions[prop];
