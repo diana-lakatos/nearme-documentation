@@ -1,3 +1,7 @@
+# workaround for sendle
+# making request to sandbox environment with real user data
+# in order to validate correctness of dates and places
+# before making real request to production env
 module Deliveries
   class Sendle
     class ValidatePlaceOrderRequest
@@ -9,10 +13,12 @@ module Deliveries
       end
 
       def valid?
-        client.place_order(delivery)
-      rescue Deliveries::Sendle::PlaceOrder::UnprocessableEntity => e
+        @response ||= client.place_order(delivery)
+      rescue Deliveries::UnprocessableEntity => e
         @errors = parse_error_response e.message
-        @errors.empty?
+        @errors
+          .reject! { |_k, value| value.empty? }
+          .empty?
       end
 
       private
@@ -22,7 +28,7 @@ module Deliveries
       # outbound_receiver.address.errors.each { |k, v| errors.add("outbound_return_address_#{k}", v) }
       def parse_error_response(message)
         {
-          pickup_date: message.dig('messages', 'pickup_date'),
+          pickup_date: message.dig('messages', 'pickup_date').join(', '),
           'pickup_address_state' => Array(message.dig('messages', 'sender', 0, 'address', 0, 'state_name')).join(', '),
           'return_address_state' => Array(message.dig('messages', 'receiver', 0, 'address', 0, 'state_name')).join(', ')
         }

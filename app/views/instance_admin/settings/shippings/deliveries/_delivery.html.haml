@@ -2,6 +2,7 @@
   %tr
     %th.well{colspan:2, width: '20%'}
       = format('[%d]', delivery.id)
+      = format('[%d]', delivery.order.id)
       = delivery.order.transactable.name
       = ' :: '
       = delivery.pickup_date
@@ -34,6 +35,9 @@
       = '/'
       = delivery.dimensions_template.description
 
+  %tr
+    %th delivery.external_order_id
+    %td= delivery.external_order_id
   %tr
     %th delivery.order_reference
     %td= delivery.order_reference

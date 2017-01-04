@@ -3,17 +3,17 @@ require 'holidays'
 module Deliveries
   class Sendle
     module Validations
+      # TODO: the class name sux
       class PossiblePickupDates
-        TIME_REQUIRED_FOR_DELIVERY = 25.hours
-
-        def initialize(to:, from: Date.today, time_zone:)
+        def initialize(to:, from: Date.today, time_zone:, estimated_delivery: 1)
           @to = to
           @from = from
           @time_zone = time_zone
+          @estimated_delivery = estimated_delivery
         end
 
         def any?
-          possible_dates.any?
+          possible_dates.size > @estimated_delivery
         end
 
         def possible_dates
@@ -22,8 +22,9 @@ module Deliveries
           end
         end
 
+        # check if it's before 5pm at pickup location
         def cannot_pickup(day)
-          day.to_time - current_time_at_sender < TIME_REQUIRED_FOR_DELIVERY
+          day.in_time_zone(@time_zone.name).end_of_day.advance(hours: -7) < current_time_at_sender
         end
 
         def current_time_at_sender

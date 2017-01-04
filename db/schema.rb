@@ -850,7 +850,7 @@ ActiveRecord::Schema.define(version: 20170103072659) do
     t.integer  "sender_address_id",      null: false
     t.integer  "receiver_address_id",    null: false
     t.string   "courier"
-    t.string   "status"
+    t.string   "state"
     t.string   "notes"
     t.string   "order_reference"
     t.string   "tracking_url"
@@ -1360,8 +1360,8 @@ ActiveRecord::Schema.define(version: 20170103072659) do
     t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "prepend_view_path"
     t.string   "twilio_ring_tone"
+    t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
   end
 
@@ -2301,6 +2301,18 @@ ActiveRecord::Schema.define(version: 20170103072659) do
   add_index "shipping_rules", ["instance_id"], name: "index_shipping_rules_on_instance_id", using: :btree
   add_index "shipping_rules", ["shipping_profile_id"], name: "index_shipping_rules_on_shipping_profile_id", using: :btree
 
+  create_table "shippings_delivery_external_states", force: :cascade do |t|
+    t.integer  "delivery_id", null: false
+    t.text     "body",        null: false
+    t.integer  "instance_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "shippings_delivery_external_states", ["delivery_id"], name: "index_shippings_delivery_external_states_on_delivery_id", using: :btree
+  add_index "shippings_delivery_external_states", ["instance_id"], name: "index_shippings_delivery_external_states_on_instance_id", using: :btree
+
   create_table "shippings_shipping_providers", force: :cascade do |t|
     t.integer  "instance_id",            null: false
     t.string   "shipping_provider_name", null: false
@@ -3113,7 +3125,7 @@ ActiveRecord::Schema.define(version: 20170103072659) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "time_zone",                              limit: 255
+    t.string   "time_zone"
     t.boolean  "sms_notifications_enabled",                          default: true
     t.string   "sms_preferences",                        limit: 255, default: "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
     t.text     "instance_unread_messages_threads_count",             default: "--- {}\n"
@@ -3158,8 +3170,8 @@ ActiveRecord::Schema.define(version: 20170103072659) do
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
     t.integer  "wish_list_items_count",                              default: 0
     t.float    "product_average_rating",                             default: 0.0
-    t.text     "ui_settings",                                        default: "{}"
     t.datetime "expires_at"
+    t.text     "ui_settings",                                        default: "{}"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

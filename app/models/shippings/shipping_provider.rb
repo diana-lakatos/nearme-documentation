@@ -3,7 +3,7 @@ class Shippings::ShippingProvider < ActiveRecord::Base
   include Encryptable
 
   validates :shipping_provider_name, uniqueness: { scope: [:instance_id] }
-  validates_with Shippings::ProviderSettingsValidator, on: :update
+  validates_with Deliveries::ProviderSettingsValidator, on: :update
 
   belongs_to :instance
 

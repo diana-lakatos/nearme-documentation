@@ -1,19 +1,7 @@
 # frozen_string_literal: true
-module Shippings
+module Deliveries
   class Quote
-    class UnprocessableEntity < StandardError
-      def initialize(response)
-        @response = response
-      end
-
-      def message
-        @response
-      end
-    end
-
     def initialize(response)
-      raise UnprocessableEntity.new(response.body) unless response.success?
-
       @body = response.body.first
     end
 

@@ -257,6 +257,7 @@ en:
       no_listings: "There aren't any listings at that location. Check out some other locations."
       browsing_no_listings: "There aren't any active listings at that location. Other users will be redirected to search page."
     dashboard:
+      label_not_found: 'We could not find requested shipping label, please try again in a few minutes'
       missing_payout_information: "You are missing required payment information. Your products are going to be hidden until we verify your account. Please fill the form in %{link}"
       add_merchant_account: "Please configure your merchant account"
       add_your_company: "Please add your company first"

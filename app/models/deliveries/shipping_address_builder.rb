@@ -1,4 +1,4 @@
-module Shippings
+module Deliveries
   class ShippingAddressBuilder
     def self.build(order, user)
       shipping_address = new(order, user).shipping_address

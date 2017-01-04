@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Shippings
+module Deliveries
   class Provider < OpenStruct
     def self.find(name)
       all.find { |p| p.name == name }
@@ -16,7 +16,7 @@ module Shippings
     end
 
     def self.from_file
-      YAML.load_file File.join(__dir__, 'providers.yml')
+      YAML.load_file File.join(Rails.root, 'config', 'shipping_providers.yml')
     end
   end
 end

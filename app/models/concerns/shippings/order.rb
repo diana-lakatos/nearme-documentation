@@ -27,18 +27,16 @@ module Shippings
         true
       end
 
-      # move to command
       def process_deliveries!
-        # FIX: takes two last - should not contain more than allowed in shipping-profile
-        deliveries.last(2).each do |delivery|
-          shipping_order = client.place_order delivery
+        return unless Shippings.enabled?(self)
 
-          delivery.update_attributes(
-            tracking_url: shipping_order.tracking_url,
-            order_reference: shipping_order.order_reference,
-            status: shipping_order.status
-          )
-        end
+        Deliveries::PlaceOrderDeliveries.new(self).perform
+      end
+
+      def cancel_deliveries
+        return unless Shippings.enabled?(self)
+
+        Deliveries::CancelOrderDeliveries.new(self).perform
       end
 
       # FIX: bad approach
@@ -107,14 +105,6 @@ module Shippings
       delegate :firstname=, :firstname, :lastname, :lastname=, to: :outbound_receiver, prefix: true
       def outbound_receiver
         outbound.receiver_address
-      end
-
-      private
-
-      def client
-        Deliveries.courier name: shipping_provider.shipping_provider_name,
-                           settings: shipping_provider.settings,
-                           logger: Deliveries::RequestLogger.new(context: self)
       end
     end
   end

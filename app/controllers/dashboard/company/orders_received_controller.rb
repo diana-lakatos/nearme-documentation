@@ -2,10 +2,10 @@
 class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseController
   before_action :find_order, except: :index
   before_action :prepare_order_for_shipping, only: [:show, :confirm, :confirmation_form]
+  before_action :validate_deliveries, only: [:cancel]
 
-  rescue_from Shippings::Quote::UnprocessableEntity do
-    Raygun.track_exception($!)
-    render partial: 'unprocessable_entity', layout: false
+  rescue_from Deliveries::UnprocessableEntity do
+    render partial: 'shared/unprocessable_entity', layout: false
   end
 
   def index
@@ -155,7 +155,14 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     return if @order.confirmed?
     return unless Shippings.enabled?(@order)
 
-    Shippings::DeliveryFactory.build(order: @order)
-    Commands::BuildShippingLineItems.build(order: @order)
+    Deliveries::DeliveryFactory.build(order: @order)
+    Deliveries::BuildShippingLineItems.build(order: @order)
+  end
+
+  def validate_deliveries
+    return unless Shippings.enabled?(@order)
+
+    Deliveries::SyncOrderDeliveries.new(@order).perform
+    redirect_to request.referer.presence, flash: { error: t('flash_messages.manager.reservations.could_not_be_cancelled') } unless Reservation::CancellationPolicy.new(@order).cancelable?
   end
 end

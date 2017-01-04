@@ -1,4 +1,4 @@
-module Shippings
+module Deliveries
   class ProviderSettingsValidator < ActiveModel::Validator
     def validate(record)
       check_api_credentials(record)

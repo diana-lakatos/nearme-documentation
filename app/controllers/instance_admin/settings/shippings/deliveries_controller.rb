@@ -11,7 +11,7 @@ class InstanceAdmin::Settings::Shippings::DeliveriesController < InstanceAdmin::
   end
 
   def destroy
-    #TODO implement
+    # TODO: implement
     respond_with :instance_admin, :settings, :shippings, :shipping_providers
   end
 

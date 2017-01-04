@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Commands
+module Deliveries
   class BuildShippingLineItems
     def self.build(order:)
       new(order: order).prepare
@@ -39,15 +39,13 @@ module Commands
     end
 
     def client
-      Deliveries.courier name: provider.shipping_provider_name,
-                         settings: provider.settings,
+      Deliveries.courier name: shipping_provider.shipping_provider_name,
+                         settings: shipping_provider.settings,
                          logger: Deliveries::RequestLogger.new(context: @order)
     end
 
-    # TODO: this should be determined from order itself
-    # user should be able to pick the best provider during chechout
-    def provider
-      @order.instance.shipping_providers.last
+    def shipping_provider
+      @order.shipping_provider
     end
   end
 end
