@@ -44,6 +44,7 @@ custom_attributes:
   - name: short_bio
     label: Short Bio
     hint: appears in list view
+    search_in_query: true
     html_tag: 'textarea'
     input_html_options_string: "data-counter-limit=>120"
     validation:
@@ -54,6 +55,7 @@ custom_attributes:
   - name: full_bio
     label: Full Bio
     html_tag: 'textarea'
+    search_in_query: true
     hint: appears in detail view
     input_html_options_string: "data-counter-limit=>600"
     validation:
