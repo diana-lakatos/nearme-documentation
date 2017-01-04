@@ -19,4 +19,12 @@ form_components:
       - user: name
       - user: email
       - user: password
+
+  - type: seller_profile_types
+    name: Seller
+    fields:
+      - user: name
       - seller: about
+      - user: avatar
+      - user: email
+      - user: password

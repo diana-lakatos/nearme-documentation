@@ -159,8 +159,9 @@ en:
       no_payment_gateway: "The Passenger does not support payments for the selected country."
     dashboard:
       buyer:
-        updated: "driver profile has been updated"
+        updated: "Driver profile has been updated"
       listings:
+        listing_cancelled: 'Your booking has been archived.'
         listing_deleted: "Your Booking has been deleted."
         listing_updated: "Great, your Booking's details have been updated."
       no_bookings: "You haven't made any bookings yet!"
@@ -173,6 +174,22 @@ en:
         reservation_rejected: "You have rejected the booking. Maybe next time!"
       seller:
         updated: "Passenger profile has been updated"
+      order:
+        canceled: 'Your booking is now archived.'
+        approved: 'Your booking has been moved to archive'
+      add_your_company: "Please create your booking first."
+      locations:
+        add_your_company: "Please create your booking first."
+    dashboard:
+      order:
+        canceled: 'Your Case is now archived.'
+        approved: 'Your Case has been moved to archive'
+      add_your_company: "Please create your booking first."
+      locations:
+        add_your_company: "Please create your booking first."
+    space_wizard:
+      space_listed: "Your Case has been submitted to the marketplace!"
+
     guest_rating:
       already_exists: "Rating for this booking has already been submitted."
     host_rating:
@@ -210,6 +227,9 @@ en:
         reservation_confirmed_but_not_charged: "You have confirmed the booking, however we were not able to capture payment. We have reached out to driver to notify him about the issue."
         reservation_not_confirmed: "Your booking could not be confirmed."
         reservation_rejected: "You have rejected the booking. Maybe next time!"
+      order:
+        canceled: 'Your booking is now archived.'
+        approved: 'Your booking has been moved to archive.'
     reservations:
       credit_card_will_be_charged: "Your credit card will be charged when your booking is confirmed by the Passenger."
       invalid_operation: "Not a valid booking operation."
@@ -218,8 +238,8 @@ en:
       reservation_not_cancellable: "This booking can not be canceled anymore."
       reservation_not_confirmed: "Your booking could not be confirmed."
     space_wizard:
-      item_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and Booking from this page."
-      space_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and Booking from this page."
+      item_listed: "Your booking was created!"
+      space_listed: "Your booking was created!"
     support:
       offer_ticket:
         created: "Offer has been sent. Passenger will be in touch shortly."

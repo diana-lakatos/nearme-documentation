@@ -25,12 +25,16 @@ custom_attributes:
     label: 'Start Date'
     attribute_type: 'date'
     html_tag: 'hidden'
+    wrapper_html_options_string: >-
+      data-property-start-date => ''
     validation:
       required: true
 
   - name: trip_start_time
     label: 'Start Time'
     html_tag: 'hidden'
+    wrapper_html_options_string: >-
+      data-property-start-time => ''
     validation:
       required: true
 
@@ -43,6 +47,8 @@ custom_attributes:
     label: 'How many hours you want to book?'
     attribute_type: 'integer'
     html_tag: 'select'
+    wrapper_html_options_string: >-
+      data-property-duration => ''
     validation:
       required: true
       valid_values:
@@ -95,7 +101,7 @@ custom_attributes:
     html_tag: radio_buttons
     searchable: true
     wrapper_html_options_string: >-
-      data-condition-field => '{"Standard":{"setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "50"}}, "Pro":{ "setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "100"}}, "Plus":{ "setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "150"}}}'
+      data-property-driver-category => '',data-condition-field => '{"Standard":{"setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "50"}}, "Pro":{ "setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "100"}}, "Plus":{ "setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "150"}}}'
     validation:
       valid_values:
         - 'Standard'
@@ -138,9 +144,9 @@ form_components:
       - transactable: trip_start_date
       - transactable: trip_start_time
       - transactable: duration
+      - transactable: number_of_passengers
       - transactable: pickup_location
       - transactable: unknown_location
-      - transactable: number_of_passengers
       - transactable: Category - Extras
       - transactable: special_requests
       - transactable: Category - Categories of Interest
