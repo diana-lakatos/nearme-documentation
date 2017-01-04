@@ -119,7 +119,6 @@ class Reservation < Order
     schedule_expiry if action.both_side_confirmation && (lister_confirmed_at.nil? || enquirer_confirmed_at.nil?)
     if errors.empty? && valid? && check_double_confirmation
       if block_given? ? yield : true
-        process_deliveries!
         confirm!
         # We need to touch transactable so it's reindexed by ElasticSearch
         transactable.touch

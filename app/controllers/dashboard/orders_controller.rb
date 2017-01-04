@@ -1,10 +1,18 @@
 # frozen_string_literal: true
 class Dashboard::OrdersController < Dashboard::BaseController
   before_action :find_order, except: [:index, :new]
+  before_action :inject_conditional_shipping_validations, only: [:approve]
   before_action :find_transactable, only: [:new]
   before_action :find_reservation_type, only: [:new]
   before_action :redirect_to_index_if_not_editable, only: [:edit, :update]
   before_action :ensure_merchant_account_exists, only: [:new, :create, :edit, :update]
+
+  rescue_from Deliveries::UnprocessableEntity do |exception|
+    Raygun.track_exception(exception)
+    error_message = I18n.t(:unprocessable_entity, scope: :validation_messages, message: exception.message)
+
+    redirect_to dashboard_orders_path, flash: { error: error_message }
+  end
 
   def index
     @rating_systems = reviews_service.get_rating_systems
@@ -33,6 +41,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
       @order.touch(:enquirer_confirmed_at)
 
       @order.invoke_confirmation! do
+        @order.process_deliveries!
         if @order.shipping_line_items.count > 0
           @order.recalculate_fees!
           @order.reload
@@ -178,16 +187,52 @@ class Dashboard::OrdersController < Dashboard::BaseController
     @reservation_type = @transactable.transactable_type.reservation_type
   end
 
+  # inject specific validators
+  # it's mostly because of the volte multi step confirmation workflow
+  # we have to verify the order deliveries one more time just before final confirmation
+  # TODO: move to view object
+  def inject_conditional_shipping_validations
+    return unless Shippings.enabled?(@order)
+
+    OrderDeliveriesValidator.new(@order).validate!
+  end
+
   def reviews_service
     @reviews_service ||= ReviewsService.new(current_user, params)
   end
 
   def redirect_to_index_if_not_editable
     return if @order.enquirer_editable?
-    redirect_to (request.referer.presence || dashboard_orders_path)
+    redirect_to(request.referer.presence || dashboard_orders_path)
   end
 
   def order_params
     params.require(:order).permit(secured_params.order(@reservation_type || @order.reservation_type))
+  end
+
+  class OrderDeliveriesValidator
+    def initialize(order)
+      @order = order
+      @deliveries = order.deliveries
+    end
+
+    def validate!
+      inject_validator
+      validate_each_delivery
+    end
+
+    def validate_each_delivery
+      @deliveries
+        .each { |delivery| raise_error(delivery.errors) unless delivery.valid? }
+    end
+
+    def inject_validator
+      @deliveries
+        .each { |d| d.add_validator Deliveries::Validations::Delivery.new }
+    end
+
+    def raise_error(errors)
+      raise Deliveries::UnprocessableEntity, errors.full_messages.join(', ')
+    end
   end
 end
