@@ -90,6 +90,8 @@ class UserDrop < BaseDrop
   #   @return [Array<UserMessageDrop>] array of received user messages
   # @!method valid?
   #   @return [Boolean] whether the user is valid (e.g. all required fields filled in etc.)
+  # @!method reviews_counter
+  #   @return [ReviewAggregatorDrop, nil] {ReviewAggregatorDrop} for current user, if rating systems exist/are enabled for the instance
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends,
            :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
@@ -113,7 +115,7 @@ class UserDrop < BaseDrop
     routes.api_wish_list_items_path(id: @source.id, wishlistable_type: 'User')
   end
 
-  # @return [String] location of the user taken from its associated current_address {Address} object or, if not present,
+  # @return [String] location of the user taken from its associated current_address {AddressDrop} object or, if not present,
   #   from the country_name basic user profile field
   def display_location
     @source.decorate.display_location

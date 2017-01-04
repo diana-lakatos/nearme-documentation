@@ -15,6 +15,7 @@ en:
       user_navigation: 'User Navigation'
       your_profile: 'Your Profile'
       log_out: 'Log out'
+      frontend_documentation: "Frontend Documentation"
 
     versions:
       trigger:

@@ -16,6 +16,7 @@ public/javascripts
 public/images
 public/stylesheets
 public/fonts
+public/doc
 db/sphinx
 config/*.sphinx.conf
 config/redis.yml
