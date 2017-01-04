@@ -27,6 +27,10 @@ module Deliveries
       Deliveries::Sendle::Commands::CancelDelivery.new(delivery, client).perform
     end
 
+    def fetch_label(label_url)
+      client.fetch_label label_url: label_url
+    end
+
     def track_parcel(delivery)
       client.track_parcel delivery.sendle_reference
     end
