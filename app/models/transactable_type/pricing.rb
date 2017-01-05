@@ -12,6 +12,7 @@ class TransactableType::Pricing < ActiveRecord::Base
 
   monetize :min_price_cents, allow_nil: true
   monetize :max_price_cents, allow_nil: true
+  monetize :fixed_price_cents, allow_nil: true
 
   before_validation :set_default_order_class
 
@@ -63,6 +64,10 @@ class TransactableType::Pricing < ActiveRecord::Base
 
   def order_class_name
     super || action.try(:related_order_class)
+  end
+
+  def fixed_price?
+    fixed_price_cents && fixed_price_cents > 0
   end
 
   private

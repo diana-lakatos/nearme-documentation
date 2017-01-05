@@ -1,6 +1,6 @@
 {% for transactable in transactables %}
   {% assign collaborator = transactable.transactable_collaborators[0] %}
-  {% assign offer = transactable.orders | select: user_id: collaborator.user.id | first %}
+  {% assign offer = transactable.not_cancelled_orders | detect: user_id: current_user.id %}
 
   <article class="listing-b" id="transactable_{{transactable.id}}">
 
@@ -49,7 +49,7 @@
           <dd>{{ transactable.properties.trip_start_time }}</dd>
 
           <dt>Length</dt>
-          {% assign duration = transactable.properties.duration | plus: 0 %}
+          {% assign duration = transactable.properties.duration %}
           <dd>{{ duration }} {% if duration == 1 %}hour{% else %}hours{% endif %}</dd>
 
           <dt>Pickup Location</dt>
@@ -82,7 +82,11 @@
           <dd>{{ transactable.formatted_categories['Extras']['children'] }}</dd>
 
           <dt>Price</dt>
-          <dd>{{ current_user.buyer_properties.hourly_price | times: transactable.properties.number_of_passengers | pricify }}</dd>
+          {% if offer != blank %}
+            <dd>{{ offer.total_amount_money | pricify }}</dd>
+          {% else %}
+            <dd>{{ current_user.buyer_properties.hourly_price | times: transactable.properties.duration | pricify }}</dd>
+          {% endif %}
         </dl>
       </div>
       <div class="col-md-4">

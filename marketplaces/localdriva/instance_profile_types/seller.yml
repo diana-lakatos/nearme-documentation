@@ -1,6 +1,7 @@
 # default profile
 name: Seller
 profile_type: seller
+onboarding: true
 custom_attributes:
   - name: about
     label: About

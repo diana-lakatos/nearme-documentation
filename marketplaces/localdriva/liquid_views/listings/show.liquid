@@ -49,10 +49,11 @@
               <dt>Extras:</dt>
               <dd>{{ listing.categories["Extras"]["children"] | join: ', ' }}</dd>
               {% endif %}
-
-              <dt>Price:</dt>
-              {% assign total = listing.creator.properties.hourly_price | times: listing.properties.duration %}
-              <dd data-convert-price="{{ total }}">{{ total | pricify }}</dd>
+              {% if listing.transactable_collaborators[0] != blank %}
+                <dt>Price:</dt>
+                {% assign total = listing.transactable_collaborators[0].user.buyer_properties.hourly_price | times: listing.properties.duration %}
+                <dd data-convert-price="{{ total }}">{{ total | pricify }}</dd>
+              {% endif %}
             </dl>
 
             <dl>
@@ -68,7 +69,7 @@
 
 
               {% if transactable.properties.duration != blank %}
-                {% assign duration = transactable.properties.duration | plus: 0 %}
+                {% assign duration = transactable.properties.duration %}
                 <dt>Length: </dt>
                 <dd>{{ duration }} {% if duration == 1 %}hour{% else %}hours{% endif %}</dd>
               {% endif %}

@@ -63,7 +63,13 @@ module CustomAttributes
     end
 
     def to_liquid
-      @hash
+      @casted_hash ||= @model.custom_attributes.inject({}) do |results, custom_attributes_array|
+        key = custom_attributes_array[CustomAttribute::NAME]
+        type = custom_attributes_array[CustomAttribute::ATTRIBUTE_TYPE].to_sym
+
+        results[key] = custom_property_type_cast(@hash[key], type.to_s.to_sym)
+        results
+      end
     end
   end
 end

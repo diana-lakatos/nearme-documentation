@@ -35,16 +35,52 @@ namespace :localdriva do
         service_fee_host_percent: 10
       )
 
-      pricing = @transactable_type.offer_action.pricings.first_or_initialize
+      @transactable_type.save!
+
+      if @transactable_type.offer_action.pricings.count == 1
+        pricing = @transactable_type.offer_action.pricings.first
+        pricing.attributes = {
+          unit: 'hour',
+          number_of_units: 1,
+          order_class_name: 'Offer',
+          allow_free_booking: false,
+          allow_nil_price_cents: true,
+          fixed_price_cents: 50_00
+        }
+        pricing.save!
+      end
+
+      pricing = @transactable_type.offer_action.pricings.where(fixed_price_cents: 50_00).first_or_initialize
       pricing.attributes = {
         unit: 'hour',
         number_of_units: 1,
         order_class_name: 'Offer',
         allow_free_booking: false,
-        allow_nil_price_cents: true
+        allow_nil_price_cents: true,
+        fixed_price_cents: 50_00
       }
+      pricing.save!
 
-      @transactable_type.save!
+      pricing = @transactable_type.offer_action.pricings.where(fixed_price_cents: 100_00).first_or_initialize
+      pricing.attributes = {
+        unit: 'hour',
+        number_of_units: 2,
+        order_class_name: 'Offer',
+        allow_free_booking: false,
+        allow_nil_price_cents: true,
+        fixed_price_cents: 100_00
+      }
+      pricing.save!
+
+      pricing = @transactable_type.offer_action.pricings.where(fixed_price_cents: 150_00).first_or_initialize
+      pricing.attributes = {
+        unit: 'hour',
+        number_of_units: 3,
+        order_class_name: 'Offer',
+        allow_free_booking: false,
+        allow_nil_price_cents: true,
+        fixed_price_cents: 150_00
+      }
       pricing.save!
     end
 
