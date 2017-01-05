@@ -32,7 +32,7 @@
 
     > .drop {
       position: relative;
-      width: 355px;
+      width: 354px;
     }
 
     > .drop + .drop {
@@ -92,6 +92,14 @@
     }
   }
 
+  @include bp(1075px) {
+    > .box {
+      > .drop {
+        width: 335px;
+      }
+    }
+  }
+
   @include bp($screen-tablet) {
     > .box {
       > .hx {
@@ -105,7 +113,7 @@
       }
 
       > .drop {
-        width: 290px;
+        width: 285px;
       }
 
       > .tick {
