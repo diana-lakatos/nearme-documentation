@@ -45,7 +45,6 @@ module Utils
     end
 
     def create_components!(components, ui_version = nil)
-      raise AlreadyCreatedError, "This #{@form_componentable.class} already has form components for #{@form_type_class} populated" if @form_componentable.form_components.where(form_type: @form_type_class).count > 0
       components.each do |component|
         next if component[:fields].nil?
 
