@@ -9,8 +9,16 @@ module MarketplaceBuilder
       end
 
       def create!(template)
-        iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: template.liquid_path, handler: 'liquid', format: 'html', partial: false).first_or_initialize
+        # text version
+        iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: template.liquid_path, handler: 'liquid', format: 'text', partial: false).first_or_initialize
         iv.body = ActionView::Base.full_sanitizer.sanitize(template.body)
+        iv.locales = Locale.all
+        iv.transactable_types = TransactableType.all
+        iv.save!
+
+        # HTML version
+        iv = InstanceView.where(instance_id: @instance.id, view_type: 'email', path: template.liquid_path, handler: 'liquid', format: 'html', partial: false).first_or_initialize
+        iv.body = template.body
         iv.locales = Locale.all
         iv.transactable_types = TransactableType.all
         iv.save!
