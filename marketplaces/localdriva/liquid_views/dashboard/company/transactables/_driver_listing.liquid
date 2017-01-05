@@ -64,7 +64,7 @@
           {% endif %}
 
           <dt>City</dt>
-          <dd>{{ transactable.properties.city }}</dd>
+          <dd>{{ transactable.properties.city_name }}</dd>
 
           {% for language in transactable.customizations_by_type['Languages'] %}
             {% capture langs %}{{ langs }}{% unless langs == blank %}, {% endunless %}{{ language.language }} ({{ language.fluency }}){% endcapture %}
