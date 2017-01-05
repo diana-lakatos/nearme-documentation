@@ -49,6 +49,7 @@ en:
   confirmations:
     are_you_sure_delete_price: "Are you sure? This price will be removed from all existing Bookings."
   dashboard:
+
     analytics:
       bookings: Bookings
       columns:
@@ -148,6 +149,7 @@ en:
       show_listing_page: "Show Booking page"
       test_mode: "This booking was made in Test Mode. No money was actually transferred"
       title_count: "Bookings (%{count})"
+      send_message: "Send Message"
   datepicker:
     dformat: "%m/%d/%Y"
     pformat: MM/DD/YYYY

@@ -40,6 +40,10 @@ module SendleApi
       api.get "tracking/#{sendle_reference}"
     end
 
+    def fetch_label(label_url:)
+      api.download label_url
+    end
+
     private
 
     SENDLE_TEST_URL = 'https://sandbox.sendle.com/api/'.freeze

@@ -87,6 +87,12 @@ function parseRequestMethod(options) {
   return options;
 }
 
+/**
+ * Makes xhr request
+ * @param {String} url
+ * @param {Object} options ex. {contentType: 'application/vnd.api+json', data: JSON.stringify({foo: bar}), method: 'post'}
+ * @return {Promise} result
+ */
 function xhr(url, options = {}) {
   options = Object.assign({}, defaults, options);
   options = parseRequestMethod(options);

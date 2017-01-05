@@ -54,45 +54,40 @@
 
           <dt>Pickup Location</dt>
           <dd>{{ transactable.properties.pickup_location }}</dd>
+
+          <dt>Passenger Name</dt>
+          <dd>{{ transactable.creator.name }}</dd>
+
+          {% if collaborator != blank%}
+            <dt>Invite Sent</dt>
+            <dd>{{ collaborator.created_at | to_date | l: 'short' }}</dd>
+          {% endif %}
+
+          <dt>City</dt>
+          <dd>{{ transactable.properties.city }}</dd>
+
+          {% for language in transactable.customizations_by_type['Languages'] %}
+            {% capture langs %}{{ langs }}{% unless langs == blank %}, {% endunless %}{{ language.language }} ({{ language.fluency }}){% endcapture %}
+          {% endfor %}
+
+          {% if langs != blank %}
+            <dt>Languages Spoken:</dt>
+            <dd>{{ langs }}</dd>
+          {% endif %}
+
+          <dt>Number of Passengers</dt>
+          <dd>{{ transactable.properties.number_of_passengers }}</dd>
+
+          <dt>Extras</dt>
+          <dd>{{ transactable.formatted_categories['Extras']['children'] }}</dd>
+
+          <dt>Price</dt>
+          <dd>{{ current_user.buyer_properties.hourly_price | times: transactable.properties.number_of_passengers | pricify }}</dd>
         </dl>
       </div>
       <div class="col-md-4">
         {% include 'dashboard/company/transactables/driver_actions.html', order: orders.last %}
       </div>
     </div>
-
-    <div class="row">
-      <dl class="properties">
-        <dt>Passenger Name</dt>
-        <dd>{{ transactable.creator.name }}</dd>
-
-        {% if collaborator != blank%}
-          <dt>Invite Sent</dt>
-          <dd>{{ collaborator.created_at | to_date | l: 'short' }}</dd>
-        {% endif %}
-
-        <dt>City</dt>
-        <dd>{{ transactable.properties.city }}</dd>
-
-        {% for language in transactable.customizations_by_type['Languages'] %}
-          {% capture langs %}{{ langs }}{% unless langs == blank %}, {% endunless %}{{ language.language }} ({{ language.fluency }}){% endcapture %}
-        {% endfor %}
-
-        {% if langs != blank %}
-          <dt>Languages Spoken:</dt>
-          <dd>{{ langs }}</dd>
-        {% endif %}
-
-        <dt>Number of Passengers</dt>
-        <dd>{{ transactable.properties.number_of_passengers }}</dd>
-
-        <dt>Extras</dt>
-        <dd>{{ transactable.formatted_categories['Extras']['children'] }}</dd>
-
-        <dt>Price</dt>
-        <dd>{{ current_user.buyer_properties.hourly_price | times: transactable.properties.number_of_passengers | pricify }}</dd>
-      </dl>
-    </div>
-
   </article>
 {% endfor %}

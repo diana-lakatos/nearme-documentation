@@ -38,13 +38,20 @@
       <div class="control-group">
         <label for="projects-list" class="control-label">My bookings</label>
         <span class="select-a">
-          <select id="projects-list" name="transactable_collaborator[transactable_id]" class="unstyled-select">
-            {% for project in current_user.transactables_without_collaborators %}
-            <option value="{{ project.id }}">{{ project.name }}</option>
+          <select id="projects-list" name="transactable_collaborator[transactable_id]" class="unstyled-select" data-projects-list>
+            {% for booking in current_user.transactables_without_collaborators %}
+            <option value="{{ booking.id }}" data-booking-duration="{{ booking.properties.duration }}">{{ booking.name }}</option>
             {% endfor %}
           </select>
         </span>
       </div>
+      {% assign first_booking_price = current_user.transactables_without_collaborators[0].properties.duration %}
+
+      <p class="cost">Cost: <span class="price" data-driver-cost="{{ user.buyer_properties.hourly_price }}">{{ user.buyer_properties.hourly_price | times: first_booking_price | pricify }}</span></p>
+
+      <p>The cost is calculated based on the selected booking and the selected driver. For more details, please read our <a href="/pricing">pricing structure</a> guidelines.</p>
+
+      <p><strong>Please note that you will also be responsible for any expenses paid by the driver on your behalf, such as parking, toll etc. You will be required to compensate the driver directly in cash upon completion of the booking.</strong></p>
 
       <div class="actions">
         <button type="submit" class="button-a">Invite</button>
@@ -55,6 +62,7 @@
         {% endif %}
       </div>
     </form>
+
 
   {% elsif current_user.transactables.size == 0 %}
 

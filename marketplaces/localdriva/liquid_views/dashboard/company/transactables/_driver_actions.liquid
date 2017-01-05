@@ -3,18 +3,17 @@
   {% if can_make_offer == true %}
     <li>
       {% if current_user.has_verified_merchant_account == true %}
-        <a class="btn btn-default" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration }}">Accept Booking</a>
+        <a class="btn btn-primary" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration }}">Accept Booking</a>
       {% else %}
         <a class="btn btn-default" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Accept Booking</a>
       {% endif %}
-
     </li>
   {% endif %}
 
   {% if current_status == 'pending' %}
     {% assign transactable_collaborator = current_user | find_collaborator: transactable %}
     <li>
-      <a class="btn btn-danger" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this booking?">Decline Booking</a>
+      <a class="btn btn-default" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this booking?">Decline Booking</a>
     </li>
   {% endif %}
 
@@ -26,7 +25,7 @@
     {% endif %}
   </li>
 
-    {% if current_status != 'archived' %}
+  {% if current_status != 'archived' %}
     <li>
       <a href="{{ transactable.show_path }}" class="btn btn-default">Booking Details</a>
     </li>
