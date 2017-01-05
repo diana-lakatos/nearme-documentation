@@ -1,14 +1,14 @@
 <ul class="actions-a">
 
   {% if offer != blank and current_status == 'pending' and offer.unconfirmed? %}
-    <li><a class="btn btn-default" data-modal="true" href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: offer.id }}">Pay now</a></li>
+    <li><a class="btn btn-primary" data-modal="true" href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: offer.id }}">Pay now</a></li>
     <li><a class="btn btn-default" data-modal="true" href="{{ 'rejection_form_dashboard_company_orders_received_path' | generate_url: offer.id, listing_id: transactable.id }}">Reject Offer</a></li>
   {% endif %}
 
   {% if collaborator != blank %}
 
     {% if offer == blank %}
-      <a class="btn btn-danger" href="{{ collaborator.destroy_path }}" data-method="delete" data-confirm="Are you sure you want to remove this invite?">Remove invite</a>
+      <li><a class="btn btn-default" href="{{ collaborator.destroy_path }}" data-method="delete" data-confirm="Are you sure you want to remove this invite?">Remove invite</a></li>
     {% endif %}
 
     {% if collaborator.transactable_user_messages.size == 0 %}
@@ -28,7 +28,7 @@
   {% endif %}
 
   {% if current_status != 'archived' %}
-    <li><a href='{{ transactable.cancel_path | append: "?status=" | append: current_status }}' data-confirm="Are you sure you want to cancel this booking?" class="btn btn-danger">Cancel Booking</a></li>
+    <li><a href='{{ transactable.cancel_path | append: "?status=" | append: current_status }}' data-confirm="Are you sure you want to cancel this booking?" class="btn btn-default">Cancel Booking</a></li>
   {% endif %}
 
 </ul>
