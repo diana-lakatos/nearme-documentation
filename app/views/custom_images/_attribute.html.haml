@@ -4,5 +4,5 @@
 - if f.object.persisted?
   - options[:delete_url] = dashboard_custom_image_path(f.object)
   - options[:edit_url] = edit_dashboard_custom_image_path(f.object)
-  - options[:thumb] = :thumb
+  - options[:thumb] = :mini
 = f.input :image, options

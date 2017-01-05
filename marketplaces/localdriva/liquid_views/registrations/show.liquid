@@ -172,6 +172,8 @@
       </div>
     </div>
 
+
+{% comment %}
     <section class="box-a user-ratings-a">
       <h2>Ratings</h2>
 
@@ -259,6 +261,7 @@
         </div>
       </article>
     </section>
+{% endcomment %}
 
     <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
   </div>
