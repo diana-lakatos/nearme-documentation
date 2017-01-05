@@ -4,9 +4,9 @@
 
 {% query_graph 'get_user', result_name: g, userId: user.id %}
 
-{% for cover in g.user.cover_images %}
-<div class="user-cover" style="background-image: url({{ cover.url }});"></div>
-{% endfor %}
+{% if g.user.cover_images[0] != blank %}
+<div class="user-cover" style="background-image: url({{ g.user.cover_images[0].url }});"></div>
+{% endif %}
 
 <main id="main">
   <div class="wrapper-a">

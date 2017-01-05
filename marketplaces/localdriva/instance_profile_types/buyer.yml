@@ -34,6 +34,11 @@ custom_attributes:
     label: 'Cover Image'
     attribute_type: 'photo'
     html_tag: 'input'
+    versions_configuration:
+      mini:
+        width: 640
+        height: 440
+        transform: resize_to_fill
     validation:
       validation_only_on_update: true
 
