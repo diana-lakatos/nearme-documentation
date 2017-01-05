@@ -12,9 +12,13 @@
           {% if current_user == blank %}
             <li class="active"><a href="/users?role=buyer">Become a Driver</a></li>
             <li><a href="/faq">FAQ</a></li>
-            <li><a href="/users?role=seller">Sign Up</a></li>
+            <li><a href="/users?role=seller&amp;return_to=/transactable_types/booking/list" data-href="/users?role=seller" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/transactable_types/booking/list"}'>Sign Up</a></li>
             <li><a href="#" data-href="/users/sign_in" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/"}'>Log In</a></li>
           {% else %}
+            {% if current_user.has_seller_profile? %}
+            <li class="active"><a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}">Create a Booking</a></li>
+            {% endif %}
+
             <li><a href="/faq">FAQ</a></li>
             <li>
               <a href="{{ 'dashboard_user_messages_path' | generate_url }}">

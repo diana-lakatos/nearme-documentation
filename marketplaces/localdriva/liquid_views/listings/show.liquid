@@ -151,18 +151,15 @@
           {{ listing.creator.properties.about | nl2br }}
         {% endif %}
 
+        {% if listing.creator.seller_avarage_rating > 0 %}
         <div class="rating-a" data-rating="{{ listing.creator.seller_avarage_rating | default: 0 }}">{{ listing.creator.seller_avarage_rating | default: 0 }} out of 5 stars</div>
+        {% endif %}
 
         <ul class="user-properties">
           <li><b>{{ listing.creator.transactables_count }}</b> Bookings Requested</li>
           <li><b>{{ listing.creator.completed_transactables_count }}</b> Bookings Completed</li>
-          <li><a href=""><b>2</b> Reviews</a></li>
           <li>{{ 'registrations.member_since' | translate }} {{ listing.creator.created_at | to_date | l: 'short' }}</li>
         </ul>
-
-        <p class="payment-verified">
-          <strong>Payment Method Verified</strong>
-        </p>
 
         {% if listing.creator.has_active_credit_cards? %}
         <p class="payment-verified">

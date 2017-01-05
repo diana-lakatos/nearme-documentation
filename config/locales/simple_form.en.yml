@@ -661,6 +661,10 @@ en:
       admin_tax_rate:
         name: 'e.g. Food, Clothing, Toys'
 
+      merchant_account:
+        owners:
+          dob_formated: 'MM-DD-YYYY'
+
     prompts:
       merchant_account:
         currency: "- Select Currency -"
@@ -686,6 +690,8 @@ en:
       merchant_account:
         currency: ""
         bank_account_number: "Please enter your bank account number. It should consist of digits only"
+        owners:
+          dob_formated: 'Valid format: MM-DD-YYYY'
       page:
         slug: 'Used as a part of URL'
         no_layout: 'When enabled only content of the page will be displayed, without any additional HTML'
