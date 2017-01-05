@@ -2,7 +2,6 @@
 = f.hidden_field :custom_attribute_id, value: ca.id
 - options = { label: ca.label, as: :image }
 - if f.object.persisted?
-  - options[:delete_url] = dashboard_custom_image_path(f.object)
   - options[:edit_url] = edit_dashboard_custom_image_path(f.object)
   - options[:thumb] = :mini
 = f.input :image, options
