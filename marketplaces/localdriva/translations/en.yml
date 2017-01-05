@@ -132,7 +132,7 @@ en:
       transactable_not_saved: 'Booking not saved.'
     user_profile:
       sections:
-        buyer: driver
+        buyer: Driver
         seller: Passenger
     user_recurring_bookings:
       booking_placed_html: "Booking placed: <span>%{date}</span>"
