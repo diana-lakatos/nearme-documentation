@@ -94,9 +94,15 @@
       <div class="options">
         <ul>
           {% if current_user != blank and current_user.has_seller_profile? %}
+
           <li class="ask-to-book">
+            {% if current_user.transactables_count == 0 %}
+            <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Ask to Book</a>
+            {% else %}
             <a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Ask to Book</a>
+            {% endif %}
           </li>
+
           {% endif %}
 
           <li>
