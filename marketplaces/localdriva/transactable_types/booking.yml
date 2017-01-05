@@ -94,19 +94,6 @@ custom_attributes:
     hint: 'Enter Special Requests including disabilities'
     html_tag: textarea
 
-  - name: driver_category
-    label: 'Driver Category'
-    html_tag: radio_buttons
-    searchable: true
-    wrapper_html_options_string: >-
-      data-property-driver-category => '',data-condition-field => '{"Standard":{"setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "50"}}, "Pro":{ "setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "100"}}, "Plus":{ "setValue":{"selector": "#transactable_action_types_attributes_0_pricings_attributes_0_price", "value": "150"}}}'
-    validation:
-      valid_values:
-        - 'Standard'
-        - 'Pro'
-        - 'Plus'
-      required: true
-
 validation:
   - field_name: name
     required: true

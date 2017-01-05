@@ -1,10 +1,11 @@
 /**
  * Allows conditional display of fields in dashboard and space wizard
+ * setValue option enables conditional defining a value of other field
  * Requires an element with data-condition-field containing configuration in json format.
  *
  * Expected format:
  *
- * { "@value" : { "show": [], "hide": [] }, "default": { "show": [], "hide": [] }}
+ * { "@value" : { "show": [], "hide": [], "setValue": [{ "selector": "", "value": ""}] }, "default": { "show": [], "hide": [] }}
  *
  * @value - control value that triggers certain state
  * show and hide - array of selectors for fields that are supposed to be hidden / shown
@@ -69,8 +70,10 @@ class ConditionField {
     }
 
     if (condition.setValue != undefined){
-      Array.prototype.forEach.call(document.querySelectorAll(condition.setValue.selector), (el)=>{
-        el.setAttribute('value', condition.setValue.value);
+      condition.setValue.forEach((cond)=>{
+        Array.prototype.forEach.call(document.querySelectorAll(cond.selector), (el)=>{
+          el.setAttribute('value', cond.value);
+        });
       });
     }
 

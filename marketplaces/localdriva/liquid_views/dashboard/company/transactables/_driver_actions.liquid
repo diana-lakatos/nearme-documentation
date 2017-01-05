@@ -3,7 +3,8 @@
   {% if can_make_offer == true %}
     <li>
       {% if current_user.has_verified_merchant_account == true %}
-        <a class="btn btn-primary" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration }}" data-modal="true">Accept Booking</a>
+        {% assign pricing = transactable.action_type.pricings | detect: number_of_units: current_user.buyer_properties.driver_type_unit %}
+        <a class="btn btn-primary" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration, transactable_pricing_id: pricing.id }}" data-modal="true">Accept Booking</a>
       {% else %}
         <a class="btn btn-default" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Accept Booking</a>
       {% endif %}

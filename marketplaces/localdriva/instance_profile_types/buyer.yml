@@ -14,7 +14,7 @@ custom_attributes:
     html_tag: radio_buttons
     searchable: true
     wrapper_html_options_string: >-
-      data-condition-field => '{"Standard":{"setValue":{"selector": "#user_buyer_profile_attributes_properties_attributes_hourly_price", "value": "50"}}, "Pro":{ "setValue":{"selector": "#user_buyer_profile_attributes_properties_attributes_hourly_price", "value": "100"}}, "Plus":{ "setValue":{"selector": "#user_buyer_profile_attributes_properties_attributes_hourly_price", "value": "150"}}}'
+      data-condition-field => '{"Standard":{"setValue":[{"selector": "#user_buyer_profile_attributes_properties_attributes_hourly_price", "value": "50"}, {"selector": "#user_buyer_profile_attributes_properties_attributes_driver_type_unit", "value": "1"}]},"Pro":{ "setValue":[{"selector": "#user_buyer_profile_attributes_properties_attributes_hourly_price", "value": "100"}, {"selector": "#user_buyer_profile_attributes_properties_attributes_driver_type_unit", "value": "2"}]},"Plus":{ "setValue":[{"selector": "#user_buyer_profile_attributes_properties_attributes_hourly_price", "value": "150"},{"selector": "#user_buyer_profile_attributes_properties_attributes_driver_type_unit", "value": "3"}]}}'
     validation:
       valid_values:
         - 'Standard'
@@ -29,6 +29,10 @@ custom_attributes:
     validation:
       required: true
       validation_only_on_update: true
+
+  - name: driver_type_unit
+    attribute_type: 'integer'
+    html_tag: 'hidden'
 
   - name: cover_image
     label: 'Cover Image'
@@ -115,6 +119,7 @@ form_components:
       - buyer: driver_category
       - buyer: backup_driver
       - buyer: hourly_price
+      - buyer: driver_type_unit
       - buyer: short_bio
       - buyer: full_bio
       - buyer: Custom Model - Languages

@@ -534,6 +534,11 @@ class TransactableDrop < BaseDrop
     line_item_orders.upcoming.confirmed.uniq
   end
 
+  # @return [Array<OrderDrop>] not cancelled orders for this transactable
+  def not_cancelled_orders
+    line_item_orders.not_rejected_or_cancelled.uniq
+  end
+
   # @return [OrderDrop, nil] last confirmed, upcoming (not archived/expired) order for this transactable or nil if not present
   # @todo -- depracate in favor of filter (transactables.orders.accepted | last? Or allow usage of .last)
   def last_accepted_order
