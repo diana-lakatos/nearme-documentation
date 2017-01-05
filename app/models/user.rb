@@ -774,7 +774,7 @@ class User < ActiveRecord::Base
       false
     else
       self.tutorial_displayed = true
-      save!
+      save(validate: false)
     end
   end
 
