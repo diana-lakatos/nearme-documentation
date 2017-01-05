@@ -26,10 +26,11 @@
 
 {% if merchant_account.verified? and merchant_account.complete? and params.edit_mode == blank %}
 
- <h3>{{ 'dashboard.merchant_account.' | append: merchant_account.state | translate }}</h3>
-    <div class='btn-group pull-right'>
-      <a href='?edit_mode=true' class='btn btn-blue'>Edit</a>
-    </div>
+  <h3>{{ 'dashboard.merchant_account.' | append: merchant_account.state | translate }}</h3>
+
+  <p class="text-right">
+    <a href='?edit_mode=true' class='btn btn-primary'>Edit</a>
+  </p>
 
   <table class='table table-simple'>
     <tr>

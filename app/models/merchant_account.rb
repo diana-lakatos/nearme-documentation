@@ -114,7 +114,7 @@ class MerchantAccount < ActiveRecord::Base
     self.class.name.underscore.gsub('merchant_account/', '') + '_attributes'
   end
 
-  def parital_location
+  def partial_location
     "dashboard/company/merchant_accounts/#{payment_gateway.type_name}"
   end
 
