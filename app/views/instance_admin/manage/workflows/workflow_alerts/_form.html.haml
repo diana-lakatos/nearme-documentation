@@ -45,7 +45,7 @@
         .input-container.col-xs-4
           = f.input :bcc, required: true, input_html: { class: 'form-control' }, placeholder: 'email1@example.com, email2@example.com...'
         .input-container.col-xs-4
-          = f.input :bcc_type, collection: f.object.bcc_types, include_blank: true, input_html: { class: 'form-control' }
+          = f.input :bcc_type, collection: f.object.bcc_types, include_blank: t('general.none'), input_html: { class: 'form-control' }
       .row
         .input-container.col-xs-6
           = f.input :reply_to, input_html: { class: 'form-control' }, placeholder: 'email1@example.com, email2@example.com...'
