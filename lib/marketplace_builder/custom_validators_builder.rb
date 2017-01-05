@@ -2,9 +2,8 @@
 module MarketplaceBuilder
   module CustomValidatorsBuilder
     def update_custom_validators_for_object(object, validators)
-      validators ||= {}
 
-      cleanup_validators_for_object(object)
+      return cleanup_validators_for_object(object) if validators.empty?
 
       validators.each do |validator|
         validator = validator.symbolize_keys
@@ -14,6 +13,8 @@ module MarketplaceBuilder
     end
 
     def create_custom_validator(object, field_name, hash)
+      return cleanup_validators_for_object(object) if hash.empty?
+
       hash = default_validator_properties.merge(hash).with_indifferent_access
       custom_validator = object.custom_validators.where(field_name: field_name).first_or_initialize
 

@@ -16,6 +16,14 @@
         = f.input :default_sort_by
     .row
       .input-container.col-xs-6
+        .input-col-clearfix
+          = f.input :show_categories, as: :boolean, inline_label: true
+      .input-container.col-xs-6
+        .input-col-clearfix
+          = f.input :category_search_type, collection: %w(AND OR), include_blank: false,
+              input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
         = f.input :default_availability_template_id, collection: [[t('general.none'), '']] + current_instance.availability_templates.all.map { |at| [at.name, at.id] }, required: false, input_html: { class: 'form-control' }, include_blank: false
 
   = content_for :header_buttons do
