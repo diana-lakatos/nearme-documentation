@@ -40,8 +40,6 @@ custom_attributes:
 
   - name: pickup_location
     label: 'Pickup location'
-    validation:
-      required: true
 
   - name: duration
     label: 'How many hours you want to book?'
@@ -133,6 +131,11 @@ form_components:
       - transactable: Category - Categories of Interest
       - transactable: Custom Model - Languages
       - transactable: price
+
+  - type: space_wizard
+    name: Tell us a little about yourself
+    fields:
+      - seller: about
 
   - type: space_wizard
     name: Tell us a little about your booking

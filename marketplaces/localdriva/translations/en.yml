@@ -43,6 +43,12 @@ en:
     seller: Passenger
   confirmations:
     are_you_sure_delete_price: "Are you sure? This price will be removed from all existing Bookings."
+
+  transactable_collaborator:
+    collaboration_cancelled: "Invitation has been cancelled."
+    collaborator_cancelled: "You have declined invitation."
+    collaboration_accepted: "Invitation has been accepted."
+    cant_remove_collaborator: "You can't remove this invitation."
   dashboard:
 
     analytics:
