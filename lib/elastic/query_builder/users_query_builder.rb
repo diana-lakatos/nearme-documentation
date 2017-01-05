@@ -134,7 +134,7 @@ module Elastic
               'user_profiles.category_ids': category_ids.map(&:to_i)
             }
           }
-        elsif @instance_profile_type.category_search_type == 'AND'
+        else
           category_ids.each do |category|
             user_profiles_filters << {
               terms: {

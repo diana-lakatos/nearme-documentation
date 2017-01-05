@@ -57,12 +57,15 @@ module MarketplaceBuilder
       end
 
       def create_category_tree(category, children, level)
+        children_names = []
         children.each do |child|
           name = child.is_a?(Hash) ? child['name'] : child
+          children_names << name
           subcategory = category.children.where(name: name).first_or_create!(parent_id: category.id)
           logger.debug "Creating subcategory: #{name}"
           create_category_tree(subcategory, child['children'], level + 1) if child['children']
         end
+        category.children.where.not(name: children_names).destroy_all
       end
 
       def default_category_properties

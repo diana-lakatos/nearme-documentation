@@ -32,7 +32,7 @@ module MarketplaceBuilder
 
           update_custom_attributes_for_object(object, custom_attributes) unless custom_attributes.empty?
           update_action_types_for_object(object, action_types) unless action_types.empty?
-          update_custom_validators_for_object(object, custom_validators) unless custom_validators.empty?
+          update_custom_validators_for_object(object, custom_validators)
           update_form_components_for_object(object, form_components) unless form_components.empty?
         end
       end
