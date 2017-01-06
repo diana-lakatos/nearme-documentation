@@ -165,14 +165,16 @@
             <p>{{ user.buyer_properties.short_bio | nl2br }}</p>
             {% endif %}
 
+            {% assign languages = user.buyer_profile.customizations_by_type['Languages'] %}
+            {% if languages.size > 0 %}
             <h3>Languages</h3>
             <dl class="languages-proficiency short-list">
-              {% assign languages = user.buyer_profile.customizations_by_type['Languages'] %}
               {% for language in languages %}
                 <dt>{{ language.language }}</dt>
                 <dd>{{ language.fluency }}</dd>
               {% endfor %}
             </dl>
+            {% endif %}
           </div>
 
           {% if current_user.id != user.id %}
