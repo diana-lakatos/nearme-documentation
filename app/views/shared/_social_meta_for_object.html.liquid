@@ -1,0 +1,37 @@
+<meta property="og:title" content="{{ object.name | meta_attr }}">
+<meta property="og:description" content="{{ object.description | meta_attr }}">
+<meta property="og:type" content="place">
+{% if object.latitude != blank %}
+  <meta property="place:location:latitude" content="{{ object.latitude }}">
+  <meta property="place:location:longitude" content="{{ object.longitude }}">
+{% endif %}
+<meta property="og:site_name" content="{{ platform_context.name | meta_attr }}">
+<meta property="og:url" content="{{ url }}">
+{% if object.photos != blank %}
+  {% if object.photos.size > 0 %}
+    <meta property="og:image" content="{{ object.photos[0]['large'] }}">
+  {% endif %}
+{% endif %}
+
+
+
+<meta itemprop="name" content="{{ platform_context.name | meta_attr }}">
+<meta itemprop="description" content="{{ object.description | meta_attr }}">
+{% if object.photos != blank %}
+  {% if object.photos.size > 0 %}
+    <meta itemprop="image" content="{{ object.photos[0]['large'] }}">
+  {% endif %}
+{% endif %}
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="{{ platform_context.name | meta_attr }}">
+<meta name="twitter:title" content="{{ object.name | meta_attr }}">
+<meta name="twitter:description" content="{{ object.description | meta_attr }}">
+{% if object.photos != blank %}
+  {% if object.photos.size > 0 %}
+    <meta name="twitter:image" content="{{ object.photos[0]['large'] }}">
+  {% endif %}
+{% endif %}
+<meta name="twitter:url" content="{{ current_url }}">
