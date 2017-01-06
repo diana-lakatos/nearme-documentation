@@ -2076,6 +2076,7 @@ ActiveRecord::Schema.define(version: 20170106184357) do
     t.boolean  "step_checkout",                   default: false
     t.boolean  "require_merchant_account",        default: false
     t.boolean  "withdraw_invitation_when_reject"
+    t.boolean  "reverse_immediate_payment"
   end
 
   add_index "reservation_types", ["instance_id"], name: "index_reservation_types_on_instance_id", using: :btree
