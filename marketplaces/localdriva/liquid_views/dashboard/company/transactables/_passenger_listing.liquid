@@ -64,7 +64,8 @@
             {% if offer != blank %}
               <dd>{{ offer.total_amount_money | pricify }}</dd>
             {% else %}
-              <dd>{{ driver.buyer_properties.hourly_price | times: transactable.properties.duration | pricify }}</dd>
+              {% assign total = driver.buyer_properties.hourly_price | times: transactable.properties.duration %}
+              <dd data-convert-price="{{ total }}">{{ total | pricify }}</dd>
             {% endif %}
           </dl>
         {% endif %}
