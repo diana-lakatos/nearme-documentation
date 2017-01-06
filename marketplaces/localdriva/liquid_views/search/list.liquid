@@ -31,7 +31,7 @@
             <span class="select-a">
             <select name="lg_custom_attributes[vehicle_capacity_gte]" id="filter-passengers" class="unstyled-select">
               <option value="">Please select --</option>
-              {% assign capacity = "1 | 2 | 3 | 4 | 5 | 6" | split: " | " %}
+              {% assign capacity = "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8" | split: " | " %}
               {% for v in capacity %}
               <option value="{{ v }}"{% if params['lg_custom_attributes']['vehicle_capacity_gte'] == v %} selected{% endif %}>{{ v }}</option>
               {% endfor %}
