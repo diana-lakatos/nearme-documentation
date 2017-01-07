@@ -1,5 +1,18 @@
-<h2>Congratulations!, {{ user.first_name }}!</h2>
+<h2>All set, {{ enquirer.first_name }}!</h2>
 
-<p>You offer has been accepted by {{ transactable.creator.name }} and you will be able to get started working on this project per the agreed terms of your offer.</p>
+<p>The booking {{ transactable.name }} has been paid by {{ transactable.creator.first_name }}.</p>
 
-<p>We're happy you are part of our community and expect to hear great things about your collaboration. The project can now be tracked under the <a href="{{ platform_context.host | append: listing.in_progress_index_url_without_token }}">My Projects > Projects in Progress</a> in your user dashboard.</p>
+{% assign duration = transactable.properties.duration -%}
+<p>{{ lister.first_name }} will be your passenger for "{{ transactable.name }}" for {{ duration }} {% if duration == 1 -%}hour{% else -%}hours{% endif -%} starting at {{ transactable.properties.trip_start_time }} on {{ transactable.properties.trip_start_date | to_date | l: 'short' }}.</p>
+
+<p>They will be waiting for you at the above booking starting time at {% if transactable.properties.pickup_location != blank %}<a href="https://www.google.pl/maps/place/{{ transactable.properties.pickup_location }}">{{ transactable.properties.pickup_location }}</a>{% else %}TBD{% endif %}.
+
+<p>Please remember (IMPORTANT):</p>
+
+<ul>
+<li>Cost of food/drink, parking/tolls, entry fees or cost of 3rd party services (if relevant) are not included in the booking fee.</li>
+<li>If you are running late, please let your passenger know ASAP.</li>
+<li>Drop-off location should be within approximately 30 minutes of Sydney CBD or another location agreed upon by passenger.</li>
+</ul>
+
+<p>Have a great trip!</p>
