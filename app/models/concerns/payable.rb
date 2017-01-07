@@ -125,8 +125,8 @@ module Payable
     def shared_payment_attributes
       {
         payer: payer,
-        company: payment_subscription ? payment_subscription.company : company,
-        company_id: payment_subscription ? payment_subscription.company.id : company_id,
+        company: payment_company,
+        company_id: payment_company.id,
         currency: currency,
         total_amount_cents: total_amount_cents,
         subtotal_amount_cents: subtotal_amount_cents,
@@ -138,6 +138,12 @@ module Payable
         cancellation_policy_penalty_percentage: cancellation_policy_penalty_percentage,
         payable: self
       }
+    end
+
+    def payment_company
+      return payment_subscription.company if payment_subscription
+      return user.default_company if reservation_type.reverse_immediate_payment
+      company
     end
 
     def shared_payment_subscription_attributes

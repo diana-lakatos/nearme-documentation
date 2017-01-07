@@ -44,4 +44,4 @@ class PaymentAuthorizer::PaypalExpressPaymentAuthorizer < PaymentAuthorizer
                   payer_id: @payment.express_payer_id,
                   currency: @payment.currency).with_indifferent_access
   end
-  end
+end
