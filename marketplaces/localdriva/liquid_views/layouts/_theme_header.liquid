@@ -12,7 +12,7 @@
           {% if current_user == blank %}
             <li class="active"><a href="/users?role=buyer">Become a Driver</a></li>
             <li><a href="/faq">FAQ</a></li>
-            <li><a href="/users?role=seller">Sign Up</a></li>
+            <li><a href="/users?role=seller&amp;return_to=/transactable_types/booking/list">Sign Up</a></li>
             <li><a href="#" data-href="/users/sign_in" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/"}'>Log In</a></li>
           {% else %}
             <li><a href="/faq">FAQ</a></li>
