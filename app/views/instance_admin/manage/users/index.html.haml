@@ -1,3 +1,23 @@
+- users_pending_approval = UserProfile.includes(:user).joins(:instance_profile_type).where(instance_profile_types: { admin_approval: true }, approved: false)
+- if users_pending_approval.any?
+  .content-container
+    %h4 Users pending approval
+    .row
+      .table-container.col-xs-12
+        %table.table
+          %tr
+            %th
+              = t('instance_admin.manage.users.name')
+            %th
+              = t('instance_admin.manage.users.email')
+            %th
+              = t('instance_admin.manage.users.signed_up')
+            %th
+            %th
+            %th
+          - users_pending_approval.find_each do |user_profile|
+            = render 'index_row', :resource => user_profile.user
+
 .content-container
   %h4= t('instance_admin.manage.users.manage_users')
 
