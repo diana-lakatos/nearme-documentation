@@ -1,4 +1,7 @@
 <p>Congratulations, {{ lister.first_name }}!</p>
 
 <p>Driver {{ enquirer.name }}, has accepted your booking {{ transactable.name }}</p>
+{% if offer.guest_notes %}
+  <p>Additional notes from driver: {{ offer.guest_notes }}</p>
+{% endif %}
 <p>To finalize the booking you have to provide a payment method for this booking.</p>
