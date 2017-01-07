@@ -359,6 +359,7 @@ en:
     sms_preferences:
       new_reservation: "I receive a booking request."
       reservation_state_changed: "A booking I have requested is accepted or declined."
+    accept_terms_of_service: 'confirm that you accept the <a href="/terms-of-use" target="_blank">Terms of Use</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>'
   reservations:
     booking_module:
       only_exclusive_price: "Only exclusive booking is possible"
