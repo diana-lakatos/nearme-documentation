@@ -1,5 +1,5 @@
 #open_graph_content.hidden
-  = render :partial => 'shared/og_meta', :locals => { :object => @recurring_booking.listing, :url => @recurring_booking.listing.decorate.show_url) }
+  = render :partial => 'shared/social_meta_for_object', :locals => { :object => @recurring_booking.listing, :url => @recurring_booking.listing.decorate.show_url }
 %div{class: section_class}
   %header
     %h2

@@ -1,4 +1,4 @@
-- unless (['locations', 'products'].any? { |w| params[:controller].try(:include?, w) })
+- unless (['locations', 'products', 'listings'].any? { |w| params[:controller].try(:include?, w) })
   - s_name = content_for(:social_site_name).to_s.strip.presence || platform_context.site_name
   - c_url =  content_for(:social_original_url).to_s.strip.presence || request.original_url
   - desc = content_for(:social_description).to_s.strip.presence || platform_context.description

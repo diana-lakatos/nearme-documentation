@@ -1637,7 +1637,7 @@ en:
       booking_successful: 'Your booking was requested successfully!'
 
     user_profile:
-      requires_approval: 'Your profile has to be first approved to be visible.'
+      requires_approval: 'Your profile has to be approved by administrator to be visible. Upon approval we will automically enable it.'
       view_profile: 'View Profile'
       view_profile_html: 'View <span class="hidden-xs">Profile</span>'
       submit: 'Save'

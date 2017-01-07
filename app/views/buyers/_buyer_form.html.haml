@@ -1,10 +1,12 @@
 - only_inputs ||= []
 
 - if only_inputs.empty? || only_inputs.include?(:enabled)
-  = f.input :enabled, as: :switch
+
+  - options = { as: :switch }
   - if f.object.instance_profile_type.admin_approval? && !f.object.approved?
-    .alert.alert-warning
-      = t('dashboard.user_profile.requires_approval')
+    - options[:disabled] = true
+    - options[:hint] = t('dashboard.user_profile.requires_approval')
+  = f.input :enabled, options
 - elsif only_inputs.empty? || only_inputs.include?(:unavailable_periods)
   = render 'registrations/attributes/unavailable_periods', f: f
 - elsif only_inputs.empty? || (category = f.object.instance_profile_type.try(:categories).try(:roots).try(:detect) { |c| "Category - #{c.name}".to_sym == only_inputs.first}).present?

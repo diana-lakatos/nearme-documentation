@@ -531,6 +531,9 @@ class InstanceView < ActiveRecord::Base
     },
     'errors/server_error' => {
       is_partial: false
+    },
+    'shared/social_meta_for_object' => {
+      is_partial: true
     }
 
   }.sort.to_h.freeze

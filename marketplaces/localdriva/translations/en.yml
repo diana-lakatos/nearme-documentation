@@ -24,6 +24,10 @@ en:
       user/buyer_profile/availability_template/schedule_exception_rules:
         duration_range_start: 'Unavailable period start of range'
         duration_range_end: 'Unavailable period end of range'
+      user/buyer_profile/customizations/custom_images:
+        image: 'Car image'
+      user/buyer_profile/customizations:
+        properties: 'Property'
     errors:
       models:
         order:
@@ -132,7 +136,7 @@ en:
       transactable_not_saved: 'Booking not saved.'
     user_profile:
       sections:
-        buyer: driver
+        buyer: Driver
         seller: Passenger
     user_recurring_bookings:
       booking_placed_html: "Booking placed: <span>%{date}</span>"
@@ -190,6 +194,8 @@ en:
       order:
         canceled: 'Your booking is now archived.'
         approved: 'Your booking has been moved to archive'
+      offer:
+        accepted: "You have successfuly paid and accepted an offer."
       add_your_company: "Please create your booking first."
       locations:
         add_your_company: "Please create your booking first."

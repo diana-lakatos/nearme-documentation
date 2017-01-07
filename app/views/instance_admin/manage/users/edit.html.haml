@@ -82,36 +82,35 @@
           %td= @user.last_sign_in_ip
 
 - @user.user_profiles.each do |user_profile|
-  - if user_profile.properties.any?
-    .content-container
-      .row
-        .col-xs-5
-          %h3 #{user_profile.instance_profile_type.name}
-        .col-xs-7
-          - if user_profile.instance_profile_type.searchable? && user_profile.instance_profile_type.admin_approval?
-            = link_to t("instance_admin.locales.buttons.approve.on_#{user_profile.approved}"),
-              approve_instance_admin_manage_user_user_profile_path(resource, user_profile),
-              :method => :post,  class: 'btn pull-right btn-blue'
+  .content-container
+    .row
+      .col-xs-5
+        %h3 #{user_profile.instance_profile_type.name}
+      .col-xs-7
+        - if user_profile.instance_profile_type.searchable? && user_profile.instance_profile_type.admin_approval?
+          = link_to t("instance_admin.locales.buttons.approve.on_#{user_profile.approved}"),
+            approve_instance_admin_manage_user_user_profile_path(resource, user_profile),
+            :method => :post,  class: 'btn pull-right btn-blue'
 
-      .table-responsive
-        %table.table.table-striped.sortable
-          %tbody
-            - if user_profile.instance_profile_type.searchable?
-              - if user_profile.instance_profile_type.admin_approval?
-                %tr
-                  %td Approved
-                  %td= user_profile.approved
-
-              - if user_profile.instance_profile_type.search_only_enabled_profiles?
-                %tr
-                  %td Enabled
-                  %td= user_profile.enabled
-
-            - user_profile.properties.each do |property, value|
-
-              - labels = {}
-              - user_profile.instance_profile_type.custom_attributes.each{ |ca| labels[ca.name] = ca.label }
-
+    .table-responsive
+      %table.table.table-striped.sortable
+        %tbody
+          - if user_profile.instance_profile_type.searchable?
+            - if user_profile.instance_profile_type.admin_approval?
               %tr
-                %td= labels[property] || property
-                %td= value
+                %td Approved
+                %td= user_profile.approved
+
+            - if user_profile.instance_profile_type.search_only_enabled_profiles?
+              %tr
+                %td Enabled
+                %td= user_profile.enabled
+
+          - user_profile.properties.each do |property, value|
+
+            - labels = {}
+            - user_profile.instance_profile_type.custom_attributes.each{ |ca| labels[ca.name] = ca.label }
+
+            %tr
+              %td= labels[property] || property
+              %td= value
