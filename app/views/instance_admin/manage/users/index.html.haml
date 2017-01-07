@@ -1,4 +1,4 @@
-- users_pending_approval = UserProfile.includes(:user).joins(:instance_profile_type).where(instance_profile_types: { admin_approval: true }, approved: false)
+- users_pending_approval = UserProfile.includes(:user).joins(:instance_profile_type).where(instance_profile_types: { admin_approval: true }, approved: false).where(users: { deleted_at: nil }).order('user_profiles.created_at DESC')
 - if users_pending_approval.any?
   .content-container
     %h4 Users pending approval
