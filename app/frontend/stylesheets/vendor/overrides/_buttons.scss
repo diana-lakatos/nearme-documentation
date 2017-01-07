@@ -7,6 +7,7 @@ a.btn {
   color: $pure-white;
   text-decoration: none;
   letter-spacing: 1px;
+  background-color: $theme_blue;
   transition: background .1s ease-in;
 
   &.full-width {
@@ -17,12 +18,13 @@ a.btn {
   &.margin-bottom {
     margin-bottom: 1em;
   }
+
   .icon {
     vertical-align: middle;
   }
 
   &:visited, &:hover {
-    color: #fff ;
+    color: #fff;
   }
 
   &.btn-small {
@@ -58,6 +60,7 @@ a.btn {
   &.btn-gray {
     background: $light-gray;
     color: black;
+
     &:hover {
       background: $pure-white;
     }
@@ -71,6 +74,7 @@ a.btn {
     border: 2px solid $light_gray !important;
     background: $dnm_white;
     color: black;
+
     &:hover {
       background: $pure-white;
     }
@@ -139,7 +143,6 @@ a.btn {
   &.linkedin,
   &.instagram,
   &.google {
-
     &.connected {
       background: $red;
 
@@ -213,4 +216,3 @@ a.btn {
     border-right: none;
   }
 }
-

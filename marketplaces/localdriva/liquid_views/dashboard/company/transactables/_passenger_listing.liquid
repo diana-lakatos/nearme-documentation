@@ -90,7 +90,7 @@
 
           {% if offer != blank and current_status == 'pending' and offer.unconfirmed? -%}
           <p class="actions">
-            <a class="btn btn-primary btn-sm" data-modal="true" href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: offer.id }}">Pay now</a>
+            <a class="btn btn-primary btn-sm" data-modal="true" href="{{ offer.confirmation_form_path }}">Pay now</a>
             <a class="btn btn-default btn-sm" data-modal="true" href="{{ 'rejection_form_dashboard_company_orders_received_path' | generate_url: offer.id, listing_id: transactable.id }}">Reject Offer</a>
           </p>
           {% endif -%}
