@@ -194,6 +194,8 @@ en:
       order:
         canceled: 'Your booking is now archived.'
         approved: 'Your booking has been moved to archive'
+      offer:
+        accepted: "You have successfuly paid and accepted an offer."
       add_your_company: "Please create your booking first."
       locations:
         add_your_company: "Please create your booking first."

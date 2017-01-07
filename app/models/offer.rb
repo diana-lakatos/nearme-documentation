@@ -92,7 +92,16 @@ class Offer < Order
   def charge_and_confirm!
     return true if confirmed?
 
-    if (payment_subscription.present? || (payment.authorize && payment.capture!)) && confirm!
+    if reservation_type.reverse_immediate_payment? && payment.nil?
+      build_payment(shared_payment_attributes.merge({
+        credit_card_id: payment_subscription.credit_card_id,
+        payment_gateway: payment_subscription.payment_gateway,
+        payment_method: payment_subscription.payment_method
+      }))
+      return false unless payment.save
+    end
+
+    if ((payment_subscription.present? && !reservation_type.reverse_immediate_payment?) || (payment.authorize && payment.capture!)) && confirm!
       create_payment_subscription! if payment_subscription.blank?
       transactable.start!
       reject_related_offers!
