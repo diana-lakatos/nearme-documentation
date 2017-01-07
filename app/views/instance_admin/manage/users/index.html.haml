@@ -16,6 +16,7 @@
             %th
             %th
           - users_pending_approval.find_each do |user_profile|
+            - next unless user_profile.user
             = render 'index_row', :resource => user_profile.user
 
 .content-container
