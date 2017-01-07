@@ -66,8 +66,7 @@
           </div>
 
           {% assign extras_category = searcher.searchable_categories | detect: name: 'Extras' %}
-          {% assign vehicle_features_category = searcher.searchable_categories | detect: name: 'Vehicle Features' %}
-          {% assign root_category = extras_category.children | concat: vehicle_features_category.children | sort: 'name' %}
+          {% assign root_category = extras_category.children | sort: 'name' %}
           <fieldset class="filter filter-extras">
             <legend>Extras</legend>
             <ul>

@@ -404,6 +404,9 @@ en:
       transactable_type:
         all_action_types:
           action_continuous_dates_booking: "Allow user to select only continuous dates when booking"
+      user:
+        buyer_profile:
+          enabled: 'Disabling public profile means your driver profile won’t be included in the search results'
     labels:
       company:
         listings_public: "Enable public Bookings"
@@ -431,6 +434,9 @@ en:
           service_fee_host_percent: "Passenger Service Fee Percent"
         lessee: "Lessee (e.g. driver)"
         lessor: "Lessor (e.g. Passenger)"
+      user:
+        buyer_profile:
+          enabled: 'Public profile'
     placeholders:
       location:
         email: "Your booking email"
