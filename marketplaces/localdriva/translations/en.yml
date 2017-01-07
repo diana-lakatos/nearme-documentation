@@ -359,6 +359,7 @@ en:
     sms_preferences:
       new_reservation: "I receive a booking request."
       reservation_state_changed: "A booking I have requested is accepted or declined."
+    accept_terms_of_service: 'confirm that you accept the <a href="/terms-of-use" target="_blank">Terms of Use</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>'
   reservations:
     booking_module:
       only_exclusive_price: "Only exclusive booking is possible"
@@ -404,6 +405,9 @@ en:
       transactable_type:
         all_action_types:
           action_continuous_dates_booking: "Allow user to select only continuous dates when booking"
+      user:
+        buyer_profile:
+          enabled: 'Disabling public profile means your driver profile won’t be included in the search results'
     labels:
       company:
         listings_public: "Enable public Bookings"
@@ -431,6 +435,9 @@ en:
           service_fee_host_percent: "Passenger Service Fee Percent"
         lessee: "Lessee (e.g. driver)"
         lessor: "Lessor (e.g. Passenger)"
+      user:
+        buyer_profile:
+          enabled: 'Public profile'
     placeholders:
       location:
         email: "Your booking email"
