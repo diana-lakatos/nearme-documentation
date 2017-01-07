@@ -38,8 +38,8 @@
               <div class="price" data-convert-price="{{ user.buyer_properties.hourly_price }}"><strong>AUD {{ user.buyer_properties.hourly_price | price_with_cents_with_currency }}</strong> / hr</div>
 
               <div class="share-a">
-                Share
-                {% assign share_url = user.profile_url | url_encode %}
+                <span>Share</span>
+                {% assign share_url = user.profile_url | url_encode -%}
                 <ul>
                   <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}" class="facebook">Facebook</a></li>
                   <li><a href="https://twitter.com/home?status={{ share_url }}" class="twitter" data-height="253">Twitter</a></li>
