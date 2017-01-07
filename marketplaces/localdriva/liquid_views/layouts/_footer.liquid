@@ -17,15 +17,16 @@
               <li><a href="/">Home</a></li>
               <li><a href="/about">About</a></li>
               <li><a href="/faq">FAQ</a></li>
-              {% comment %}<li><a href="/benefits">Benefits</a></li>{% endcomment %}
               <li><a href="/contact-us">Contact Us</a></li>
             </ul>
           </div>
           <div class="col-sm-3 col-xs-6 footer_block">
             <h4 class="title_sm">More</h4>
             <ul class="links_list">
-              <li><a href="/users">Sign Up</a></li>
-              <li><a href="/users">Become a Seller</a></li>
+              {% if current_user == blank %}
+              <li><a href="/users?role=seller&amp;return_to=/transactable_types/booking/list" data-href="/users?role=seller" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/transactable_types/booking/list"}'>Sign Up</a></li>
+              <li><a href="/users?role=buyer" data-href="/users?role=buyer" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled">Become a Driver</a></li>
+              {% endif %}
               <li><a href="/terms-of-use">Terms of Use</a></li>
               <li><a href="/privacy-policy">Privacy Policy</a></li>
             </ul>
@@ -44,10 +45,7 @@
           <div class="col-sm-3 col-xs-6 footer_block">
             <h4 class="title_sm">Contact</h4>
             <div class="contact_item">
-              {{ platform_context.address }}
-            </div>
-            <div class="contact_item">
-              {{ platform_context.phone_number }}
+              <a href="mailto:info@localdriva.com">info@localdriva.com</a>
             </div>
           </div>
         </div>

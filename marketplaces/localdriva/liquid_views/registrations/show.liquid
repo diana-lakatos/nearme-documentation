@@ -86,9 +86,9 @@
             <dd>{{ 'passengers_count' | t: count: capacity }}</dd>
           </dl>
 
-          {% if user.buyer_properties.short_bio != blank %}
+          {% if user.buyer_properties.full_bio != blank %}
           <h3>About {{ user.first_name }}</h3>
-          <p>{{ user.buyer_properties.short_bio | nl2br }}</p>
+          <p>{{ user.buyer_properties.full_bio | nl2br }}</p>
           {% endif %}
 
           {% assign languages = user.buyer_profile.customizations | map: 'properties' %}
