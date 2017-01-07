@@ -3,6 +3,11 @@ multiple_root_categories: true
 instance_profile_types:
   - Buyer
 children:
-  - name: 'Air Conditioning'
-  - name: 'Heated Seats'
+  - name: 'Air conditioning'
+  - name: 'Heating'
   - name: 'Sunroof'
+  - name: 'Extra storage'
+  - name: 'Roof racks'
+  - name: 'TV screen'
+  - name: 'Rear headrests'
+  - name: 'Leather seats'
