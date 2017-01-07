@@ -1,12 +1,9 @@
 <h2>Offer Rejected</h2>
 
-<p>Unfortunately, your offer for {{ transactable.name }} has been rejected. Rejection could be based on many factors such as: availability, budget, timeline, experience, etc.</p>
+<p>Unfortunately, Passenger for {{ transactable.name }} decided not to pay. This could be based on many factors such as: availability, budget, timeline, experience, etc.</p>
 
 {% if offer.rejection_reason != blank %}
-  <p>Client said: "{{ offer.rejection_reason }}"</p>
+  <p>Passenger said: "{{ offer.rejection_reason }}"</p>
 {% endif %}
 
 <p>Feel free to <a href="{{ platform_context.host | append: lister.user_message_path }}">reach out to {{ lister.name }}</a> for more details.</p>
-
-<p>You are able to submit another offer with updated details at your convenience.</p>
-

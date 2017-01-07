@@ -1,7 +1,14 @@
 <h1>Congratulations, {{ enquirer.first_name }}</h1>
 
 <p>
-You have been invited to a project by {{ lister.name }}. You will now have the ability to review the project details and contact the client for any questions or follow-up. If you are interested in the project, you can make an offer at anytime. If you are not interested you may kindly reject the offer as well.
+You have been invited to a booking by passenger {{ lister.name }}. You now have the ability to review the booking details.
 </p>
 
-<p><a href="{{ transactable.listing_url }}">Click here to view the project details.</a></p>
+<p><a href="{{ transactable.listing_url }}">Click here to view the booking details.</a></p>
+
+<p>You're options are to:</p>
+<ul>
+<li>Send message to Passenger for any clarifications or suggestions</li>
+<li>Accept the Booking</li>
+<li>Reject the Booking</li>
+</ul>

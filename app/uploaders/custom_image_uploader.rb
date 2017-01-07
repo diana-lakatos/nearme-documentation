@@ -9,7 +9,7 @@ class CustomImageUploader < BaseUploader
     model.aspect_ratio || 1
   end
 
-  version :mini, from_version: :transformed, if: :delayed_processing? do
+  version :mini, from_version: :transformed do
     process dynamic_version: :mini
   end
 

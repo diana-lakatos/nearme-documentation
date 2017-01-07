@@ -1828,6 +1828,7 @@ en:
       fields_needed:
         header: "Please provide additionl fields:"
         legal_entity:
+          ssn_last_4: 'Last 4 digits of SSN'
           additional_owners: "Additional owners"
           verification:
             document: 'Photo ID'
