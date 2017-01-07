@@ -35,6 +35,10 @@
             <a href='{{ transactable.edit_path }}' class="btn btn-default btn-sm">Edit details</a>
           {% endif -%}
 
+          {% if current_status == 'in progress' %}
+            <a href="{{ offer.order_complete_url }}" data-method="post" class="btn btn-default btn-sm" data-confirm="Are you sure you want to mark this booking as completed?">Mark as completed</a>
+          {% endif %}
+
           {% if current_status != 'archived' -%}
               <a href='{{ transactable.cancel_path | append: "?status=" | append: current_status }}' data-confirm="Are you sure you want to cancel this booking?" class="btn btn-default btn-sm">Cancel Booking</a>
           {% endif -%}
