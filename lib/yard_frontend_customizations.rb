@@ -1,9 +1,12 @@
-# frozen_string_literal: true
 class CustomVerifier < YARD::Verifier
   def run(obj_list)
     obj_list.reject do |obj|
+      # Exclusions
+      if (obj.is_a?(YARD::CodeObjects::ClassObject) && class_exclusions.any? { |pattern| pattern.match(obj.path) }) ||
+            (obj.is_a?(YARD::CodeObjects::MethodObject) && method_exclusions.any? { |pattern| pattern.match(obj.path) })
+        true
       # Methods
-      if obj.is_a?(YARD::CodeObjects::MethodObject)
+      elsif obj.is_a?(YARD::CodeObjects::MethodObject)
         if obj.visibility == :private
           true
         else
@@ -24,6 +27,22 @@ class CustomVerifier < YARD::Verifier
       end
     end
   end
+
+  # We do it this way to avoid constant already initialized due to how yard loads this file
+  def class_exclusions
+    @class_exclusions = [
+                          /CollectionNotDefinedError/,
+                         /NameNotDefinedError/
+                        ]
+  end
+
+  # We do it this way to avoid constant already initialized due to how yard loads this file
+  def method_exclusions
+    @method_exclusions ||= [
+                             /#initialize$/
+                           ]
+  end
+
 end
 
 class YARD::CLI::YardocOptions
