@@ -35,7 +35,10 @@
       %meta{:name => "robots", "content" => "noindex, nofollow"}/
     = inject_content_holder('HEAD')
 
-    = render 'social/social_meta_tags' rescue ''
+    - if content_for?(:social_meta_tags)
+      = yield :social_meta_tags
+    - else
+      = render 'social/social_meta_tags' rescue ''
 
     = yield(:meta)
     = csrf_meta_tag

@@ -4,9 +4,6 @@
 
 = transactable_structured_data
 
-- content_for :meta do
-  = render :partial => 'shared/og_meta', locals: { object: @listing, url: @listing.show_path }
-
 - content_for :hero do
   - cache i18n_cache_key('listings_show', @listing, @listing.location, @listing.company, @listing.administrator, [@listing_siblings.maximum(:updated_at), @listing_siblings.count]) do
     = render 'show'
