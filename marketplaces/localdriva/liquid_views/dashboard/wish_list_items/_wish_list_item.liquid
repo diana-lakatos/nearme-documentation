@@ -23,8 +23,6 @@
         <a href="#project-invite-{{ wish_list_item.wishlistable_id }}" class="action--invite" data-project-invite-trigger>Invite</a>
         {% endif %}
 
-
-
         {% content_for 'body_bottom' %}
         <div class="project-invite" id="project-invite-{{ wish_list_item.wishlistable_id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: wish_list_item.wishlistable_id }}"></div>
         {% endcontent_for %}
