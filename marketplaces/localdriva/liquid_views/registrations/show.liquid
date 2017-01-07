@@ -15,7 +15,6 @@
     </div>
 
     {% if user.buyer_properties.driver_category == blank %}
-
       <div class="box-a incomplete-profile">
         <figure class="avatar">
           <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
@@ -23,7 +22,6 @@
         <h1>Driver profile not finished!</h1>
         <p>It looks like this driver hasn’t updated his profile yet. Come back later to find out more about <strong>{{ user.name }}.</p>
       </div>
-
     {% else %}
 
       <article class="box-a user-a" id="user-{{ user.id }}">
@@ -153,8 +151,6 @@
             <dd>{{ 'passengers_count' | t: count: capacity }}</dd>
           </dl>
 
-
-
           {% for root_category in user.formatted_buyer_categories %}
           {% if root_category[1]['children'].size > 0 %}
           <h3>{{ root_category[1]['name'] }}</h3>
@@ -198,6 +194,5 @@
       <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
 
     {% endif %}
-
   </div>
 </main>
