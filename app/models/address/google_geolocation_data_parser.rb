@@ -7,7 +7,8 @@ class Address::GoogleGeolocationDataParser
     'locality'  =>  'city',
     'sublocality' => 'suburb',
     'administrative_area_level_1' => 'state',
-    'postal_code' => 'postcode'
+    'postal_code' => 'postcode',
+    'street_number' => 'street_number'
   }
 
   def initialize(address_components)
