@@ -25,7 +25,11 @@
 
   {% fields_for current_address, form: owners %}
     <div class='fields location' data-address-field>
-      {% input address, form: current_address, input_html-data-address-input: 'true', input_html-data-behavior: 'address-autocomplete', required: true %}
+      {% input street, form: current_address, required: true %}
+      {% input city, form: current_address, required: true %}
+      {% input postcode, form: current_address, required: true %}
+      {% input state, form: current_address, required: true %}
+      {% input raw_address, form: current_address, required: true, input_html-value: true, as: hidden %}
       <div class="map">
         <div class="map-container"></div>
       </div>
