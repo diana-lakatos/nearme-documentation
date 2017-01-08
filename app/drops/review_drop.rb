@@ -11,7 +11,9 @@ class ReviewDrop < BaseDrop
   #   @return [String] Comment provided by the reviewer
   # @!method date_format
   #   @return [String] Formatted created_at date, returning either "Today" or date in :short format
-  delegate :reviewable, :rating, :comment, :date_format,
+  # @!method created_at
+  #   @return [Date] Date object for created timestamp
+  delegate :reviewable, :rating, :comment, :date_format, :created_at
            to: :review
 
   def initialize(review)
