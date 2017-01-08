@@ -1,6 +1,0 @@
-- if @reviews.count > 0
-  %li
-    %a{'data-toggle' => 'tab', href: "##{params[:subject]}-reviews", role: 'tab'}
-      = t("dashboard.reviews.feedback.subject.#{params[:subject]}").capitalize
-      = t('buy_sell_market.products.labels.reviews')
-      = "(#{@total_reviews})"

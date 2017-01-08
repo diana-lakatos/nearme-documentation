@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ReviewsController < ApplicationController
   def index
     if invalid_subject? || params[:reviewable_parent_type].blank? || params[:reviewable_parent_id].blank?
@@ -11,6 +12,7 @@ class ReviewsController < ApplicationController
 
       tab_content, tab_header = Rails.cache.fetch(['reviews_view', @reviewable_parent, params[:subject], page], expires_in: 2.hours) do
         set_reviews_avg_rating_and_question_avg_rating
+        @max_rating = RatingConstants::MAX_RATING
         @total_reviews = @reviews.length
         @reviews = @reviews.paginate(page: params[:page], total_entries: @total_reviews)
         @rating_questions = RatingSystem.active_with_subject(params[:subject]).try(:rating_questions)

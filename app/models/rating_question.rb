@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class RatingQuestion < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
@@ -8,11 +9,15 @@ class RatingQuestion < ActiveRecord::Base
   belongs_to :instance
   has_many :rating_answers, dependent: :destroy
 
-  validates_presence_of :text
+  validates :text, presence: true
 
   default_scope { order('id ASC') }
 
   after_create :create_empty_answers
+
+  def to_liquid
+    @rating_question_drop ||= RatingQuestionDrop.new(self)
+  end
 
   private
 

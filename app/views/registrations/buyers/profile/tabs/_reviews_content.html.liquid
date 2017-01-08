@@ -1,0 +1,19 @@
+<div class="rating-averages">
+  <div class="row-fluid reviews-summary">
+    <div class="span8">
+      <p>{{ 'buy_sell_market.products.labels.summary' | t }}</p>
+    </div>
+    <div class="span3">
+      <div class="rating">
+        {% include 'shared/stars', stars_count: average_rating, max_rating: max_rating %}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="reviews">
+  {% for review in reviews -%}
+    {% include 'reviews/review', entry: review %}
+  {% endfor %}
+
+  {{ reviews | pagination_links, class: '', param_name: 'reviews_page' }}
+</div>

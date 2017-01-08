@@ -1,7 +1,0 @@
-- if @reviews.count > 0
-  - if params[:page].present?
-    = render 'reviews/reviews'
-  - else
-    %article.tab-pane{id: "#{params[:subject]}-reviews"}
-      = render 'reviews/reviews'
-
