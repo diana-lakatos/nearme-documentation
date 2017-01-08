@@ -6,17 +6,24 @@ module MarketplaceBuilder
   MODE_APPEND = 'append'
 
   class Builder
-    def initialize(instance_id, theme_path, mode = MarketplaceBuilder::MODE_APPEND, debug_level = MarketplaceBuilder::Loggers::Logger::INFO)
+    def initialize(instance_id, theme_path, creators, options = {})
+      default_options = {
+        mode: MarketplaceBuilder::MODE_APPEND,
+        debug_level: MarketplaceBuilder::Loggers::Logger::INFO
+      }
+
+      options = options.reverse_merge(default_options)
+
       @instance = Instance.find(instance_id)
       @instance.set_context!
 
-      logger.level = debug_level
+      logger.level = options[:debug_level]
 
       logger.info "Marketplace Builder loaded for #{@instance.name}"
 
-      raise MarketplaceBuilder::Error, "Mode #{mode} is not implemented" if [MarketplaceBuilder::MODE_REPLACE, MarketplaceBuilder::MODE_APPEND].include?(mode) == false
+      raise MarketplaceBuilder::Error, "Mode #{options[:mode]} is not implemented" if [MarketplaceBuilder::MODE_REPLACE, MarketplaceBuilder::MODE_APPEND].include?(options[:mode]) == false
 
-      @mode = mode
+      @mode = options[:mode]
       logger.debug "Running in #{@mode.upcase} mode"
 
       @theme_path = theme_path
@@ -26,22 +33,9 @@ module MarketplaceBuilder
 
       @creators = []
 
-      add_creator Creators::MarketplaceCreator.new
-      add_creator Creators::TransactableTypesCreator.new
-      add_creator Creators::InstanceProfileTypesCreator.new
-      add_creator Creators::ReservationTypesCreator.new
-      add_creator Creators::TopicsCreator.new
-
-      add_creator Creators::CategoriesCreator.new
-      add_creator Creators::PagesCreator.new
-      add_creator Creators::ContentHoldersCreator.new
-      add_creator Creators::MailersCreator.new
-      add_creator Creators::SMSCreator.new
-      add_creator Creators::LiquidViewsCreator.new
-      add_creator Creators::TranslationsCreator.new
-      add_creator Creators::WorkflowAlertsCreator.new
-      add_creator Creators::CustomModelTypesCreator.new
-      add_creator Creators::GraphQueriesCreator.new
+      creators.each do |klass|
+        add_creator klass.new
+      end
     end
 
     def add_creator(*creators)
