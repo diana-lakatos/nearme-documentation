@@ -1,7 +1,20 @@
 {% content_for 'meta' %}
-  <meta name="proof_of_concept" value="yes!">
-  <title>Super Cool Theme {{ params.controller }}</title>
+<meta name="proof_of_concept" value="yes!">
+<title>Super Cool Theme {{ params.controller }}</title>
 {% endcontent_for %}
 
 <h1>Hello liquid!</h1>
 <a href="/search">Search</a>
+
+
+
+<p>Congratulations, {{ lister.first_name }}!</p>
+
+<p>Driver {{ enquirer.name }}, has accepted your booking {{ transactable.name }}</p>
+{% if offer.guest_notes != blank %}
+  <p>Additional notes from driver: {{ offer.guest_notes }}</p>
+{% endif %}
+
+<p>To finalize the booking you have to provide a payment method for this booking.</p>
+
+<a class='btn' href="{{ platform_context.host | append:'dashboard/company/transactable_types/818/transactables?status=in+progress#transactable_' | append: transactable.id' }}">Pay now</a>

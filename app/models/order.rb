@@ -85,7 +85,7 @@ class Order < ActiveRecord::Base
   scope :not_archived, -> { where("(orders.type != 'RecurringBooking' AND (orders.state != 'inactive' OR orders.draft_at IS NOT NULL) AND orders.archived_at IS NULL) OR (orders.type = 'RecurringBooking' AND (orders.state NOT IN ('inactive', 'cancelled_by_guest', 'cancelled_by_host', 'rejected', 'expired') OR (orders.state = 'inactive' AND orders.draft_at IS NOT NULL)))") }
   scope :archived, -> { where("(orders.type != 'RecurringBooking' AND orders.archived_at IS NOT NULL) OR (orders.type = 'RecurringBooking' AND orders.state IN ('rejected', 'expired', 'cancelled_by_host', 'cancelled_by_guest'))") }
   # we probably want new state - completed
-  scope :reviewable, -> { where.not(archived_at: nil).where("orders.state ='confirmed' OR orders.type='RecurringBooking'") }
+  scope :reviewable, -> { where.not(archived_at: nil).where("orders.state = 'confirmed' OR orders.type='RecurringBooking' OR (orders.type='Offer' AND orders.state = 'archived')" ) }
   scope :cancelled, -> { with_state(:cancelled_by_guest, :cancelled_by_host) }
   scope :confirmed, -> { with_state(:confirmed) }
   scope :confirmed_or_archived, -> { with_state(:confirmed, :archived) }
