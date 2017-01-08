@@ -277,14 +277,14 @@ class SearchControllerTest < ActionController::TestCase
       PlatformContext.current.instance.stubs(:is_community?).returns(true)
     end
 
-    should 'prepare view variables when param is known' do
-      get :index, { search_type: 'people' }
-      assert_equal assigns(:search_type), 'people'
-    end
-
     should 'fallback to "projects" when param is unknown' do
       get :index, { search_type: 'something' }
       assert_equal assigns(:search_type), 'projects'
+    end
+
+    should 'prepare view variables when param is known' do
+      get :index, { search_type: 'people' }
+      assert_equal assigns(:search_type), 'people'
     end
 
     should 'fallback to "projects" when no param' do

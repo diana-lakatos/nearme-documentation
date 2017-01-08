@@ -126,7 +126,7 @@ module Payable
       {
         payer: payer,
         company: payment_company,
-        company_id: payment_company.id,
+        company_id: payment_company&.id,
         currency: currency,
         total_amount_cents: total_amount_cents,
         subtotal_amount_cents: subtotal_amount_cents,
@@ -142,7 +142,7 @@ module Payable
 
     def payment_company
       return payment_subscription.company if payment_subscription
-      return user.default_company if reservation_type.reverse_immediate_payment
+      return user.default_company if reservation_type&.reverse_immediate_payment?
       company
     end
 
