@@ -33,8 +33,6 @@ class ReservationDrop < OrderDrop
   #   @return [UserDrop] User owner of the reservation
   # @!method action_hourly_booking?
   #   @return [Boolean] whether hourly booking is available for this reservation
-  # @!method guest_notes
-  #   @return [String] guest notes left for the order
   # @!method created_at
   #   @return [DateTime] time when the reservation process was initiated
   # @!method total_payable_to_host_formatted

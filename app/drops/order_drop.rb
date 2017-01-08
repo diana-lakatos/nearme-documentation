@@ -20,6 +20,8 @@ class OrderDrop < BaseDrop
   #   @return [Boolean] whether the host can cancel the order at this stage
   # @!method can_confirm?
   #   @return [Boolean] whether the order can be confirmed at this stage
+  # @!method guest_notes
+  #   @return [String] guest notes left for the order
   # @!method can_reject?
   #   @return [Boolean] whether the order can be rejected at this stage
   # @!method paid?
@@ -112,7 +114,7 @@ class OrderDrop < BaseDrop
   #   @return [Integer] quantity for this order
   # @!method is_free_booking
   #   @return [Boolean] if order is free
-  delegate :id, :user, :company, :number, :line_items,
+  delegate :id, :user, :company, :number, :line_items, :guest_notes,
            :can_host_cancel?, :can_confirm?, :can_reject?,
            :paid?, :unconfirmed?, :confirmed?, :inactive?, :manual_payment?, :can_complete_checkout?,
            :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
