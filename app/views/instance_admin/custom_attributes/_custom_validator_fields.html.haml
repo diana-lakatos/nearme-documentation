@@ -5,6 +5,10 @@
   .row
     .input-container.col-xs-6
       = f.input :valid_values, label: t('instance_admin.manage.custom_validators.valid_values_separate_with_comma'), wrapper_html_options: { class: 'for-select-tag' }, input_html: { value: f.object.valid_values.join(', '), style: "width: 100%;" }
+
+  .row
+    .input-container.col-xs-12
+      = f.input :validation_only_on_update, as: :boolean, inline_label: true
   .row
     .input-container.col-xs-4
       = f.input :required, as: :boolean, inline_label: true
