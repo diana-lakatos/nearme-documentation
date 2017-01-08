@@ -18,12 +18,18 @@
         <input type="hidden" name="availability_exceptions[to]" id="data-availability-to">
 
         <div class="filter_block">
-          <div class="location">City: <span>Sydney</span></div>
+          <div class="select_wrap select-location">
+            <select name="lg_custom_attributes[city_name]">
+              <option value="">Where do you want to go?</option>
+              <option value="Sydney">Sydney</option>
+              <option value="">More locations coming soon...</option>
+            </select>
+          </div>
           <div class="calendar_wrap">
             <input type="text" class="daterange_field fake_select" data-date-range placeholder="When do you need a driver?" data-date-range-from-selector="#data-availability-from" data-date-range-to-selector="#data-availability-to">
             <span class="fake_select_arrow"></span>
           </div>
-          <div class="select_wrap">
+          <div class="select_wrap select-passengers">
             <select name="lg_custom_attributes[vehicle_capacity_gte]">
               <option value="">How many people?</option>
               <option value="1">1</option>
@@ -113,44 +119,44 @@
             </a>
           </div>
           <div class="col-sm-4 col-xs-6">
-            <a href="#" class="img_link">
+            <span class="img_link">
               <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3356/img_link02.jpg" alt="">
               <span class="img_link_inner">
                 <span class="img_link_text">
                   <span class="img_link_title">MELBOURNE<span>(coming soon)</span></span>
                 </span>
               </span>
-            </a>
+            </span>
           </div>
           <div class="col-sm-4 col-xs-6">
-            <a href="#" class="img_link">
+            <span class="img_link">
               <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3357/img_link03.jpg" alt="">
               <span class="img_link_inner">
                 <span class="img_link_text">
                   <span class="img_link_title">NEW YORK<span>(coming soon)</span></span>
                 </span>
               </span>
-            </a>
+            </span>
           </div>
           <div class="col-sm-4 col-xs-6">
-            <a href="#" class="img_link">
+            <span class="img_link">
               <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3358/img_link04.jpg" alt="">
               <span class="img_link_inner">
                 <span class="img_link_text">
                   <span class="img_link_title">LONDON<span>(coming soon)</span></span>
                 </span>
               </span>
-            </a>
+            </span>
           </div>
           <div class="col-sm-4 col-xs-6">
-            <a href="#" class="img_link">
+            <span class="img_link">
               <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/picture/data/3359/img_link05.jpg" alt="">
               <span class="img_link_inner">
                 <span class="img_link_text">
                   <span class="img_link_title">PARIS<span>(coming soon)</span></span>
                 </span>
               </span>
-            </a>
+            </span>
           </div>
         </div>
       </div>
@@ -321,4 +327,3 @@
     </div>
   </div>
 </div>
-
