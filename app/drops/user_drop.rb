@@ -53,7 +53,9 @@ class UserDrop < BaseDrop
   # @!method external_id
   #   @return [String] ID of a user in a third party system, used mainly by bulk upload
   # @!method seller_average_rating
-  #   @return [Integer] average rating of this user as a seller
+  #   @return [Integer] average rating of this user as a lister
+  # @!method buyer_average_rating
+  #   @return [Integer] average rating of this user as a enquirer
   # @!method default_wish_list
   #   @return [WishList] default wish list for the user, creates it if not present
   # @!method buyer_profile
@@ -98,7 +100,7 @@ class UserDrop < BaseDrop
            :country_name, :phone, :current_address, :is_trusted?,
            :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
            :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
-
+           :buyer_average_rating,
            :tags, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
            :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
            :company_name, :instance_admins_metadata, :total_reviews_count, :reviews_counter, :companies, :instance_admin?,
