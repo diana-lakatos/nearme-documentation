@@ -15,7 +15,7 @@ class ElasticIndexerJob < Job
 
   def should_update_index?
     Rails.application.config.use_elastic_search &&
-      PlatformContext.current.instance.searchable_classes.include?(@klass.constantize)
+      PlatformContext.current && PlatformContext.current.instance.searchable_classes.include?(@klass.constantize)
   end
 
   def perform
