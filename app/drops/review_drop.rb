@@ -5,6 +5,10 @@ class ReviewDrop < BaseDrop
 
   # @!method reviewable
   #   @return [Object] polymorphic object (can be of multiple types)
+  # @!method buyer
+  #   @return [User] enquirer object
+  # @!method seller
+  #   @return [User] lister object
   # @!method rating
   #   @return [Integer] Numeric value for the overall rating
   # @!method comment
@@ -13,7 +17,7 @@ class ReviewDrop < BaseDrop
   #   @return [String] Formatted created_at date, returning either "Today" or date in :short format
   # @!method created_at
   #   @return [Date] Date object for created timestamp
-  delegate :reviewable, :rating, :comment, :date_format, :created_at, to: :review
+  delegate :reviewable, :seller, :buyer, :rating, :comment, :date_format, :created_at, to: :review
 
   def initialize(review)
     @review = review.decorate
