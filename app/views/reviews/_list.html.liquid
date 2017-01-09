@@ -1,0 +1,41 @@
+<div class="rating-averages">
+  <div class="row-fluid reviews-summary first-rating">
+    <div class="span3">
+      <p>{{ 'buy_sell_market.products.labels.summary' | t }}</p>
+    </div>
+    <div class="span9">
+      <div class="rating">
+        {% assign average = average_rating | round -%}
+        {% include "shared/stars", stars_count: average, max_rating: max_rating -%}
+      </div>
+    </div>
+  </div>
+  {% if rating_questions != blank %}
+    <div class="row-fluid row-rating-questions">
+      {% for rating_question in rating_questions %}
+        <div class="span3">
+          <p>
+          {{ rating_question.text }}
+          </p>
+        </div>
+        <div class="span3">
+          <div class="rating">
+            {% for entry in question_average_rating -%}
+              {% if entry[0] == rating_question.id %}
+                {% assign stars_count = entry[1] | default: 0 | round -%}
+                {% include 'shared/stars', stars_count: stars_count, max_rating: max_rating -%}
+              {% endif -%}
+            {% endfor -%}
+          </div>
+        </div>
+        <div class="clear-row"></div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% for review in reviews -%}
+    {% include 'reviews/review', entry: review %}
+  {% endfor %}
+</div>
+
+{{ reviews | pagination_links, class: '', param_name: 'page' }}

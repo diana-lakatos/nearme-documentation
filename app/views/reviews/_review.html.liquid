@@ -1,0 +1,33 @@
+<div class="review" id="review-{{ entry.id }}">
+  <div class="row-fluid">
+    <div class="span2">
+      {{ entry.reviewable.owner.name }}
+      {{ entry.reviewable_info }}
+    </div>
+    <div class="span10">
+      <div class="rating">
+        {% include 'shared/stars', stars_count: entry.rating, max_rating: entry.max_rating -%}
+        <p class="review-date">
+          {{ entry.date_format }}
+        </p>
+      </div>
+      <p class="comment">
+        {{ entry.comment }}
+      </p>
+      <div class="review-details-questions">
+        {% for question in entry.questions %}
+          <div class="row-fluid compact">
+            <div class="span8">
+              <span class="question">{{ question.text }}</span>
+            </div>
+            <div class="span3">
+              <div class="rating">
+                {% include 'shared/stars', stars_count: question.rating, max_rating: entry.max_rating %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
