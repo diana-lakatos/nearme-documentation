@@ -51,6 +51,7 @@ class Offer < Order
     transactable_line_items.build(
       name: transactable.name,
       transactable_pricing: transactable_pricing,
+      user: user,
       quantity: attrs[:quantity] || 1,
       line_item_source: transactable,
       unit_price: transactable_pricing.price,

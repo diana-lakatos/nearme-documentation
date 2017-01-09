@@ -42,7 +42,6 @@ class Review < ActiveRecord::Base
   scope :left_by_seller, ->(user) { displayable.where(seller_id: user.id, user_id: user.id, subject: RatingConstants::GUEST) }
   scope :left_by_buyer, ->(user) { displayable.where(buyer_id: user.id, user_id: user.id, subject: [RatingConstants::HOST, RatingConstants::TRANSACTABLE]) }
   scope :active_with_subject, ->(subject) { joins(:rating_system).merge(RatingSystem.active_with_subject(subject)) }
-  scope :for_type_of_transactable_type, ->(type) { joins(:rating_system).merge(RatingSystem.for_type_of_transactable_type(type)) }
   scope :for_transactables, lambda { |order_ids, line_items_ids|
     where(subject: RatingConstants::TRANSACTABLE)
       .where("(reviewable_id in (?) AND reviewable_type = 'Reservation') or (reviewable_id in (?) AND reviewable_type = 'LineItem::Transactable')", order_ids, line_items_ids)

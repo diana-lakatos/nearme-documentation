@@ -13,7 +13,7 @@ class ReviewsService
   end
 
   def get_reviews_collection(completed_tab)
-    completed_tab ? get_reviews_by(get_line_items_for_owner_and_creator) : get_reviewables(get_line_items_for_owner_and_creator, TransactableType)
+    completed_tab ? get_reviews_by(get_line_items_for_owner_and_creator) : get_reviewables(get_line_items_for_owner_and_creator)
   end
 
   def self.generate_csv_for(reviews)
@@ -78,11 +78,11 @@ class ReviewsService
     end
   end
 
-  def get_reviewables(reviewables, transactable_type)
+  def get_reviewables(reviewables)
     {
-      seller_collection: exclude_reviewables_by(reviewables, RatingConstants::HOST, transactable_type).map(&:decorate),
-      product_collection: exclude_reviewables_by(reviewables, RatingConstants::TRANSACTABLE, transactable_type).map(&:decorate),
-      buyer_collection: exclude_reviewables_by(reviewables, RatingConstants::GUEST, transactable_type).map(&:decorate)
+      seller_collection: exclude_reviewables_by(reviewables, RatingConstants::HOST).map(&:decorate),
+      product_collection: exclude_reviewables_by(reviewables, RatingConstants::TRANSACTABLE).map(&:decorate),
+      buyer_collection: exclude_reviewables_by(reviewables, RatingConstants::GUEST).map(&:decorate)
     }
   end
 
@@ -113,17 +113,17 @@ class ReviewsService
     start_date.beginning_of_day..end_date.end_of_day
   end
 
-  def exclude_reviewables_by(reservations, subject, transactable_type)
+  def exclude_reviewables_by(reservations, subject)
     if collection = reservations[subject]
-      collection.where.not(id: reviewables_ids_with_feedback(transactable_type)[key_for_constant(subject)])
+      collection.where.not(id: reviewables_ids_with_feedback[key_for_constant(subject)])
     else
       []
     end
   end
 
-  def reviewables_ids_with_feedback(tt_class)
-    @reservation_ids_with_feedback = RatingConstants::RATING_SYSTEM_SUBJECTS.each_with_object({}) do |subject, hash|
-      hash[key_for_constant(subject)] = Review.for_type_of_transactable_type(tt_class).active_with_subject(subject).pluck(:reviewable_id)
+  def reviewables_ids_with_feedback
+    @reservation_ids_with_feedback ||= RatingConstants::RATING_SYSTEM_SUBJECTS.each_with_object({}) do |subject, hash|
+      hash[key_for_constant(subject)] = Review.active_with_subject(subject).pluck(:reviewable_id)
     end
   end
 

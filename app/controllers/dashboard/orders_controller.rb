@@ -75,6 +75,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
       redirect_to(action: 'edit', id: @order)
     else
       @order.add_line_item!(params)
+      raise "User #{current_user.id} was not able to create order because of: #{@order.errors.full_messages.join(', ')}" if @order.id.nil?
       build_payment_documents
       @update_path = dashboard_order_path(@order)
       render template: 'checkout/show'

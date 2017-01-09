@@ -76,7 +76,7 @@
           = text_area_tag :comment, nil, id: "#{subject}-#{feedback.id}-comments", class: 'form-control'
 
 
-      %button.btn.btn-primary{ :type => "submit" }
+      %button.btn.btn-primary{ :type => "submit", data: { disable_with: t('general.processing') } }
         = t('dashboard.reviews.feedback.submit_review')
 
 

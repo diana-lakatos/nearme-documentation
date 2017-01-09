@@ -24,6 +24,7 @@ class ValidValuesValidator
 
     def normalize_value(value)
       return nil if value.blank?
+      value = value.to_s if value.is_a?(Integer) || value.is_a?(Float)
       return value unless value.is_a?(String)
       value.mb_chars.downcase
     end
