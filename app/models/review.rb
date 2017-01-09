@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Review < ActiveRecord::Base
   has_paper_trail
   auto_set_platform_context
@@ -6,8 +7,8 @@ class Review < ActiveRecord::Base
 
   self.per_page = 10
 
-  LAST_30_DAYS = '30_days'.freeze
-  LAST_6_MONTHS = '6_months'.freeze
+  LAST_30_DAYS = '30_days'
+  LAST_6_MONTHS = '6_months'
   DATE_VALUES = %w(today yesterday week_ago month_ago 3_months_ago 6_months_ago).freeze
 
   belongs_to :user, -> { with_deleted }
@@ -34,14 +35,14 @@ class Review < ActiveRecord::Base
   scope :with_transactable_type, ->(transactable_type_id) { where(transactable_type_id: transactable_type_id) }
   scope :by_reservations, ->(id) { where(reviewable_id: id, reviewable_type: 'Reservation').includes(rating_answers: [:rating_question]) }
   scope :by_line_items, ->(id) { where(reviewable_id: id, reviewable_type: ['LineItem::Transactable', 'LineItem']).includes(rating_answers: [:rating_question]) }
-  scope :by_search_query, -> (query) { joins(:user).where('users.name ILIKE ?', query) }
+  scope :by_search_query, ->(query) { joins(:user).where('users.name ILIKE ?', query) }
   scope :displayable, -> { where(displayable: true).joins(:rating_system).where('rating_systems.active = ?', true) }
-  scope :about_seller, -> (user) { displayable.where(seller_id: user.id, subject: RatingConstants::HOST).where.not(user_id: user.id) }
-  scope :about_buyer, -> (user) { displayable.where(buyer_id: user.id, subject: [RatingConstants::GUEST]).where.not(user_id: user.id) }
-  scope :left_by_seller, -> (user) { displayable.where(seller_id: user.id, user_id: user.id, subject: RatingConstants::GUEST) }
-  scope :left_by_buyer, -> (user) { displayable.where(buyer_id: user.id, user_id: user.id, subject: [RatingConstants::HOST, RatingConstants::TRANSACTABLE]) }
-  scope :active_with_subject, -> (subject) { joins(:rating_system).merge(RatingSystem.active_with_subject(subject)) }
-  scope :for_type_of_transactable_type, -> (type) { joins(:rating_system).merge(RatingSystem.for_type_of_transactable_type(type)) }
+  scope :about_seller, ->(user) { displayable.where(seller_id: user.id, subject: RatingConstants::HOST).where.not(user_id: user.id) }
+  scope :about_buyer, ->(user) { displayable.where(buyer_id: user.id, subject: [RatingConstants::GUEST]).where.not(user_id: user.id) }
+  scope :left_by_seller, ->(user) { displayable.where(seller_id: user.id, user_id: user.id, subject: RatingConstants::GUEST) }
+  scope :left_by_buyer, ->(user) { displayable.where(buyer_id: user.id, user_id: user.id, subject: [RatingConstants::HOST, RatingConstants::TRANSACTABLE]) }
+  scope :active_with_subject, ->(subject) { joins(:rating_system).merge(RatingSystem.active_with_subject(subject)) }
+  scope :for_type_of_transactable_type, ->(type) { joins(:rating_system).merge(RatingSystem.for_type_of_transactable_type(type)) }
   scope :for_transactables, lambda { |order_ids, line_items_ids|
     where(subject: RatingConstants::TRANSACTABLE)
       .where("(reviewable_id in (?) AND reviewable_type = 'Reservation') or (reviewable_id in (?) AND reviewable_type = 'LineItem::Transactable')", order_ids, line_items_ids)
@@ -61,6 +62,10 @@ class Review < ActiveRecord::Base
 
   def reviewable_object
     reviewable.try(:line_item_source) || reviewable.try(:transactable) || reviewable.try(:offer)
+  end
+
+  def to_liquid
+    @review_drop ||= ReviewDrop.new(self)
   end
 
   protected
@@ -83,10 +88,6 @@ class Review < ActiveRecord::Base
 
   def creator_does_not_review_own_objects
     errors.add(:base, I18n.t('errors.messages.cant_review_own_product')) if buyer_id == seller_id
-  end
-
-  def to_liquid
-    @review_drop ||= ReviewDrop.new(self)
   end
 
   private

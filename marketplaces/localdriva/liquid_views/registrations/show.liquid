@@ -206,7 +206,13 @@
         </div>
       </div>
 
-      {% include "registrations/ratings" %}
+      <section class="box-a user-ratings-a">
+        <h2>Ratings</h2>
+
+        <div data-user-ratings-url="{{ user.reviews_collection_path }}?option=reviews_about_buyer" class="loading-ratings">
+          <p>Loading ratings...</p>
+        </div>
+      </section>
 
       <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
 
