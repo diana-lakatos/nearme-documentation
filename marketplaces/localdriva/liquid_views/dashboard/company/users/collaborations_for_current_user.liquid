@@ -39,8 +39,15 @@
         <label for="projects-list" class="control-label">My bookings</label>
         <span class="select-a">
           <select id="projects-list" name="transactable_collaborator[transactable_id]" class="unstyled-select" data-projects-list>
+            {% assign any_booking_with_capacity = false %}
             {% for booking in current_user.transactables_without_collaborators %}
-            <option value="{{ booking.id }}" data-booking-duration="{{ booking.properties.duration }}">{{ booking.name }}</option>
+              {% assign capacity_not_met = false %}
+              {% if booking.properties.number_of_passengers > user.buyer_properties.vehicle_capacity %}
+                {% assign capacity_not_met = true %}
+              {% else %}
+                {% assign any_booking_with_capacity = true %}
+              {% endif %}
+            <option {% if capacity_not_met %}disabled {% endif %} value="{{ booking.id }}" data-booking-duration="{{ booking.properties.duration }}">{{ booking.name }}{% if capacity_not_met %} (Driver's car doesn't have required number of seats){% endif %}</option>
             {% endfor %}
           </select>
         </span>
@@ -54,7 +61,11 @@
       <p><strong>Please note that you will also be responsible for any expenses paid by the driver on your behalf, such as parking, toll etc. You will be required to compensate the driver directly in cash upon completion of the booking.</strong></p>
 
       <div class="actions">
-        <button type="submit" class="button-a">Invite</button>
+        {% if any_booking_with_capacity %}
+          <button type="submit" class="button-a">Invite</button>
+        {% else %}
+          <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Create a booking</a>
+        {% endif %}
         {% if user.pending_collaborated_transactables.size == 0 %}
           <button type="button" class="button-b" data-close>Cancel</button>
         {% else %}
@@ -77,7 +88,7 @@
 
   {% else %}
 
-    <p>There are no other bookings to invite {{ user.name }} to. Would you can create another booking right now?</p>
+    <p>There are no other bookings to invite {{ user.name }} to. Would you like to create another booking right now?</p>
 
     <div class="actions">
       <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Create a booking</a>

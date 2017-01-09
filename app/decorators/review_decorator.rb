@@ -83,10 +83,6 @@ class ReviewDecorator < Draper::Decorator
     object.reviewable
   end
 
-  def to_liquid
-    @review_drop ||= ReviewDrop.new(self)
-  end
-
   private
 
   def reviewable_info(attrs)

@@ -1,0 +1,9 @@
+{% if reviews.size > 0 -%}
+  {% if params.page != blank -%}
+    {% include 'reviews/list' -%}
+  {% else -%}
+    <article class="tab-pane" id="{{ params.subject }}-reviews">
+      {% include 'reviews/list' -%}
+    </article>
+  {% endif -%}
+{% endif -%}

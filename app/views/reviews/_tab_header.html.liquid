@@ -1,0 +1,10 @@
+{% if reviews.size > 0 -%}
+  <li>
+    <a data-toggle="tab" href="#{{ params.subject }}-reviews" role="tab">
+      {% assign subject_string = "dashboard.reviews.feedback.subject." | append: params.subject -%}
+      {{ subject_string | t | upcase }}
+      {{ "buy_sell_market.products.labels.reviews" | t }}
+      ({{ total_reviews }})
+    </a>
+  </li>
+{% endif -%}

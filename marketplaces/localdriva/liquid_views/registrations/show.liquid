@@ -8,6 +8,23 @@
 <div class="user-cover" style="background-image: url({{ g.user.cover_images[0].url }});"></div>
 {% endif %}
 
+{% if user.has_buyer_profile? == false -%}
+<main id="main">
+  <div class="wrapper-a">
+    <div class="back-to-search-results">
+      <a href="/">Back to home page</a>
+    </div>
+
+    <div class="box-a incomplete-profile">
+      <figure class="avatar">
+        <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+      </figure>
+      <h1>Passenger profiles are coming soon!</h1>
+      <p>We are going to introduce passenger profiles in early 2017. Come back later to find out more about <strong>{{ user.name }}.</strong></p>
+    </div>
+  </div>
+</main>
+{% else -%}
 <main id="main">
   <div class="wrapper-a">
     <div class="back-to-search-results">
@@ -20,7 +37,7 @@
           <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
         </figure>
         <h1>Driver profile not finished!</h1>
-        <p>It looks like this driver hasn’t updated their profile yet. Come back later to find out more about <strong>{{ user.name }}.</p>
+        <p>It looks like this driver hasn’t updated their profile yet. Come back later to find out more about <strong>{{ user.name }}.</strong></p>
       </div>
     {% else %}
 
@@ -189,10 +206,17 @@
         </div>
       </div>
 
-      {% include "registrations/ratings" %}
+      <section class="box-a user-ratings-a">
+        <h2>Ratings</h2>
+
+        <div data-user-ratings-url="{{ user.reviews_collection_path }}?option=reviews_about_buyer" class="loading-ratings">
+          <p>Loading ratings...</p>
+        </div>
+      </section>
 
       <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
 
     {% endif %}
   </div>
 </main>
+{% endif -%}
