@@ -68,7 +68,7 @@ module UsersIndex
         instance_profile_type_ids: user_profiles.map(&:instance_profile_type_id),
         tags: tags_as_comma_string,
         user_profiles: profiles,
-        number_of_completed_orders: listing_orders.reservations.reviewable.count
+        number_of_completed_orders: listing_orders.reviewable.count
       )
     end
 
