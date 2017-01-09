@@ -163,7 +163,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should 'return reservations' do
-      result = @reviews_service.get_reviewables(@reservations_hash, TransactableType)
+      result = @reviews_service.get_reviewables(@reservations_hash)
       assert_equal 1, result[:seller_collection].count
       assert_equal @reservations.last, result[:seller_collection].first
     end
