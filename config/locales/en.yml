@@ -1828,6 +1828,12 @@ en:
       fields_needed:
         header: "Please provide additionl fields:"
         legal_entity:
+          address:
+            city: City
+            postal_code: Postcode
+            line1: Street
+            state: State
+            country: Country
           ssn_last_4: 'Last 4 digits of SSN'
           additional_owners: "Additional owners"
           verification:

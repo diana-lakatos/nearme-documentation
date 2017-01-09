@@ -1147,7 +1147,7 @@ class User < ActiveRecord::Base
   end
 
   def time_zone
-    super || instance.time_zone || 'Pacific Time (US & Canada)'
+    super || instance.time_zone.presence || 'Pacific Time (US & Canada)'
   end
 
   private
