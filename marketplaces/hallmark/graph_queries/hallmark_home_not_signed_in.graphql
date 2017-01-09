@@ -2,7 +2,7 @@
   projects:transactables(take: 3, filters: [ACTIVE, FEATURED]) {
     name
     show_path
-    cover_photo_url
+    cover_photo_thumbnail_url
     creator {
       profile_path
       avatar_url_thumb
@@ -14,11 +14,5 @@
     name_with_affiliation
     display_location
     short_bio: custom_attribute(name: "short_bio")
-  }
-  topics(filters: [FEATURED], arbitrary_order: ["Featured Artist", "Featured Series", "Ask a Keepsake Artist", "2017 Convention", "Upcoming Events", "Tutorials"], take: 6) {
-    name
-    show_url
-    background_style
-    background_style_big
   }
 }

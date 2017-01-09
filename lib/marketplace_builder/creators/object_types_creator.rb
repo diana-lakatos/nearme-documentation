@@ -10,6 +10,8 @@ module MarketplaceBuilder
       def execute!
         data = get_data
 
+        return unless data.respond_to?(:keys)
+
         data.keys.each do |key|
           logger.info "Updating #{object_class_name.underscore.humanize.downcase}: #{key.underscore.humanize.titleize}"
           hash = data[key].symbolize_keys

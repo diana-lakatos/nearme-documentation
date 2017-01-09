@@ -603,9 +603,15 @@ class TransactableDrop < BaseDrop
     @source.cover_photo&.image&.url(:golden)
   end
 
-    # @return [Hash{String => Array}] hash of customizations grouped by custom model type name
+  # @return [String] cover photo url for the transactable
+  # @todo -- depracate in favor of filter
+  def cover_photo_thumbnail_url
+    @source.cover_photo&.image&.url(:space_listing)
+  end
+
+  # @return [Hash{String => Array}] hash of customizations grouped by custom model type name
   def customizations_by_type
-    @source.customizations.inject({}) do |results, customization|
+    @source.customizations.each_with_object({}) do |customization, results|
       results[customization.custom_model_type.name] ||= []
       results[customization.custom_model_type.name] << customization.properties
       results
