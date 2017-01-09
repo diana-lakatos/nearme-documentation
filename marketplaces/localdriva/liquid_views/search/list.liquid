@@ -102,8 +102,8 @@
           <span class="select-a">
             <select id="search-order" name="sort" class="unstyled-select">
               <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Please Select</option>
-              <option {% if params['sort'] == 'number_of_completed_orders_desc'  %}selected{% endif %} value='number_of_completed_orders_desc'>Number of Bookings</option>
-              <option {% if params['sort'] == 'buyer_average_rating_desc' %}selected{% endif %} value='buyer_average_rating_desc'>Rating</option>
+              <option {% if params['sort'] == 'user.number_of_completed_orders_desc'  %}selected{% endif %} value='user.number_of_completed_orders_desc'>Number of Bookings</option>
+              <option {% if params['sort'] == 'user.buyer_average_rating_desc' %}selected{% endif %} value='user.buyer_average_rating_desc'>Rating</option>
             </select>
           </span>
           </div>

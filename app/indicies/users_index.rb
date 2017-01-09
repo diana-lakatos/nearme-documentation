@@ -28,8 +28,6 @@ module UsersIndex
 
         indexes :user_profiles, type: 'nested' do
           indexes :enabled, type: 'boolean'
-          indexes :number_of_completed_orders, type: 'integer'
-          indexes :buyer_average_rating, type: 'float'
           indexes :availability_exceptions, type: 'date'
           indexes :profile_type, type: 'string'
           indexes :category_ids, type: 'integer'
