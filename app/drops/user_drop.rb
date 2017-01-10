@@ -557,9 +557,14 @@ class UserDrop < BaseDrop
     I18n.l(@source.created_at.to_date, format: :short)
   end
 
-  # @return [Integer] total count of reviewable reservations (confirmed and not archived)
+  # @return [Integer] total count of reviewable reservations (confirmed and archived)
   def completed_host_reservations_count
     @source.listing_orders.reservations.reviewable.count
+  end
+
+  # @return [Integer] total count of reviewable orders (confirmed and archived)
+  def completed_orders_count
+    @source.orders.reviewable.count
   end
 
   # @return [String, nil] click to call button for this user if enabled for this

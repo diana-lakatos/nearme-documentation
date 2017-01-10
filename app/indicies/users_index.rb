@@ -22,14 +22,13 @@ module UsersIndex
 
         indexes :instance_id, type: 'integer'
         indexes :instance_profile_type_ids, type: 'integer'
-        indexes :number_of_completed_orders, type: 'integer'
+        indexes :number_of_completed_orders_creator, type: 'integer'
+        indexes :number_of_completed_orders_user, type: 'integer'
         indexes :seller_average_rating, type: 'float'
         indexes :buyer_average_rating, type: 'float'
 
         indexes :user_profiles, type: 'nested' do
           indexes :enabled, type: 'boolean'
-          indexes :number_of_completed_orders, type: 'integer'
-          indexes :buyer_average_rating, type: 'float'
           indexes :availability_exceptions, type: 'date'
           indexes :profile_type, type: 'string'
           indexes :category_ids, type: 'integer'
@@ -70,7 +69,8 @@ module UsersIndex
         instance_profile_type_ids: user_profiles.map(&:instance_profile_type_id),
         tags: tags_as_comma_string,
         user_profiles: profiles,
-        number_of_completed_orders: listing_orders.reviewable.count
+        number_of_completed_orders_creator: listing_orders.reviewable.count,
+        number_of_completed_orders_user: orders.reviewable.count
       )
     end
 

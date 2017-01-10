@@ -84,21 +84,30 @@ module Elastic
       if @query[:sort].present?
         sorting_fields = @query[:sort].split(',').compact.map do |sort_option|
           next unless sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
+
+          default_user_profile_body = {
+            order: sort[2],
+            nested_path: 'user_profiles',
+            nested_filter: {
+              term: {
+                'user_profiles.instance_profile_type_id': @instance_profile_type.id
+              }
+            }
+          }
+
+          body = default_user_profile_body
+
           if sort[1].split('.').first == 'custom_attributes'
             sort_column = "user_profiles.properties.#{sort[1].split('.').last}.raw"
+          elsif sort[1].split('.').first == 'user'
+            sort_column = sort[1].split('.').last
+            body = sort[2]
           else
             sort_column = sort[1]
           end
+
           {
-            sort_column => {
-              order: sort[2],
-              nested_path: 'user_profiles',
-              nested_filter: {
-                term: {
-                  'user_profiles.instance_profile_type_id': @instance_profile_type.id
-                }
-              }
-            }
+            sort_column => body
           }
         end.compact
       end
@@ -152,8 +161,8 @@ module Elastic
           user_profiles_filters <<
             {
               range: {
-                "user_profiles.properties.#{attribute[1]}" => {
-                  attribute[2] => (value.to_f - 0.00000001) # we deduct a small number because ES treats integer 4 not gte 4.0
+                "user_profiles.properties.#{attribute[1]}.raw" => {
+                  attribute[2] => value.to_f
                 }
               }
             }
