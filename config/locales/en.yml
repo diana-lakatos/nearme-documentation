@@ -1835,6 +1835,7 @@ en:
             state: State
             country: Country
           ssn_last_4: 'Last 4 digits of SSN'
+          business_tax_id: 'Business Tax ID'
           additional_owners: "Additional owners"
           verification:
             document: 'Photo ID'
