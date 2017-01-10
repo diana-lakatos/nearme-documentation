@@ -161,8 +161,8 @@ module Elastic
           user_profiles_filters <<
             {
               range: {
-                "user_profiles.properties.#{attribute[1]}" => {
-                  attribute[2] => (value.to_f - 0.00000001) # we deduct a small number because ES treats integer 4 not gte 4.0
+                "user_profiles.properties.#{attribute[1]}.raw" => {
+                  attribute[2] => value.to_f
                 }
               }
             }
