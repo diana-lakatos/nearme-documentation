@@ -1363,6 +1363,7 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.string   "twilio_ring_tone"
     t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
+    t.boolean  "only_first_name_as_user_slug",                                                      default: false,                            null: false
   end
 
   create_table "line_items", force: :cascade do |t|

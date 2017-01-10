@@ -26,7 +26,20 @@ class User < ActiveRecord::Base
 
   extend FriendlyId
 
-  friendly_id :name, use: [:slugged, :finders]
+  friendly_id :slug_candidates, use: [:slugged, :finders]
+  def slug_candidates
+    if PlatformContext.current.instance.only_first_name_as_user_slug?
+      main_component = :first_name
+    else
+      main_component = :name
+    end
+
+    [
+      main_component,
+      [main_component, self.class.last.try(:id).to_i + 1],
+      [main_component, rand(1_000_000)]
+    ]
+  end
 
   has_metadata accessors: [:support_metadata]
 

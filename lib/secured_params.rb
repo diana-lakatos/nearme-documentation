@@ -379,6 +379,7 @@ class SecuredParams
       :google_maps_api_key,
       :debugging_mode_for_admins,
       :timeout_in_minutes,
+      :only_first_name_as_user_slug,
       allowed_currencies: [],
       allowed_countries: [],
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],

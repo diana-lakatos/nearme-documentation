@@ -554,6 +554,7 @@ en:
             hint: "Default and minimum value is %{default_min_length}"
         support: "Support"
         currency_options: "Currency Options"
+        slugs: "Slugs"
       payments:
         payment_gateways:
           new: "New Payment Gateway"
