@@ -7,6 +7,7 @@ module Deliveries
 
           record.errors.add(:postcode, :invalid_pickup_location)
           record.errors.add(:suburb, :invalid_pickup_location)
+          record.errors.add(:state, :invalid_pickup_location)
         end
 
         private
@@ -14,8 +15,9 @@ module Deliveries
         def valid_pickup_location?(record)
           return unless record.suburb
           return unless record.postcode
+          return unless record.state
 
-          sendle_pickup_locations.exist?(postcode: record.postcode.strip, suburb: record.suburb.strip)
+          sendle_pickup_locations.exist?(postcode: record.postcode, suburb: record.suburb, state: record.state)
         end
 
         def pickup_locations
