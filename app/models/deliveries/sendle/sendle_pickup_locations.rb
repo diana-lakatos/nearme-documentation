@@ -12,13 +12,19 @@ module Deliveries
         pickup_locations.map(&:third)
       end
 
-      def exist?(postcode:, suburb:)
+      def exist?(postcode:, suburb:, state:)
         all.any? do |row|
-          row['Suburb'] == normalize(suburb) && row['Postcode'] == postcode
+          equal?(row['Suburb'], normalize(suburb)) &&
+            equal?(row['Postcode'], postcode) &&
+            equal?(row['State'], state)
         end
       end
 
       private
+
+      def equal?(a, b)
+        a.strip == b.strip
+      end
 
       def pickup_locations
         @locations ||= CSV.read('./vendor/gems/sendle_api/sendle_pickup_locations.csv', headers: true)
