@@ -91,7 +91,7 @@
             <dd>{{ user.created_at | to_date | l: 'long' }}</dd>
 
             <dt>Number of Bookings:</dt>
-            <dd>{{ user.completed_host_reservations_count }}</dd>
+            <dd>{{ user.completed_orders_count }}</dd>
 
             <dt>Number of Ratings:</dt>
             <dd>{{ user.reviews_counter.about_buyer | default: 0 }}</dd>
