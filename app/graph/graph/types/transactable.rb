@@ -12,9 +12,10 @@ module Graph
       field :description, !types.String
       field :show_path, !types.String
       field :cover_photo_url, !types.String
+      field :cover_photo_thumbnail_url, !types.String
       field :summary, !types.String
       field :creator, !Types::User do
-        resolve -> (obj, _args, _ctx) { UserDrop.new(obj.creator) }
+        resolve ->(obj, _args, _ctx) { UserDrop.new(obj.creator) }
       end
     end
 
