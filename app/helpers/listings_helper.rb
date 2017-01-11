@@ -51,14 +51,18 @@ module ListingsHelper
   def get_availability_template_object(parent)
     if parent.availability_template && parent.custom_availability_template?
       parent.availability_template
-    elsif parent.availability_template
-      duplicate_template(parent, parent.availability_template)
     elsif parent.availability_templates.any?
       parent.availability_templates.first_or_initialize do |at|
-        at.availability_rules = [AvailabilityRule.new]
+        at.availability_rules ||= [AvailabilityRule.new]
       end
+    elsif parent.availability_template
+      duplicate_template(parent, parent.availability_template)
     elsif parent&.default_availability_template
       duplicate_template(parent, parent.default_availability_template)
+    else
+      parent.availability_templates.new do |at|
+        at.availability_rules = [AvailabilityRule.new]
+      end
     end
   end
 
