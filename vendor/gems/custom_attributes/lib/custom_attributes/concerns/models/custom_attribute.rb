@@ -154,30 +154,49 @@ module CustomAttributes
                                       .where(target: targets)
                                       .pluck(:name, :attribute_type).uniq
 
-              all_custom_attributes.map do |attribute_name, attribute_type|
-                type = attribute_type.in?(%w(integer boolean float)) ? attribute_type : 'string'
-                yield [attribute_name, type]
+              all_custom_attributes.map do |name, type|
+                yield [name, attribute_type_to_es_type(type)]
               end
+            end
+          end
+
+          def self.attribute_type_to_es_type(type)
+            case type
+            when 'integer', 'boolean', 'float' then type
+            when 'decimal' then 'float'
+            else
+              'string'
             end
           end
 
           def self.custom_attributes_indexer(_klass, object)
             custom_attributes_by_type = _klass.all.map do |obj|
-              obj.custom_attributes.pluck(:name)
-            end.flatten.uniq
+              obj.custom_attributes.pluck(:name, :attribute_type)
+            end.flatten(1).uniq
 
             custom_attributes = {}
-            custom_attributes_by_type.each do |custom_attribute|
-              next unless object.properties.respond_to?(custom_attribute)
-              val = object.properties.send(custom_attribute)
-              val = Array(val).map { |v| v.to_s.downcase }
-              if custom_attributes[custom_attribute].present?
-                (Array(custom_attributes[custom_attribute]) + val).flatten
+            custom_attributes_by_type.each do |name, type|
+              next unless object.properties.respond_to?(name)
+              val = object.properties.send(name)
+              val = Array(val).map { |v| coerce(v, type) }
+              if custom_attributes[name].present?
+                (Array(custom_attributes[name]) + val).flatten
               else
-                custom_attributes[custom_attribute] = (val.size == 1 ? val.first : val)
+                custom_attributes[name] = (val.size == 1 ? val.first : val)
               end
             end
             custom_attributes
+          end
+
+          def self.coerce(value, type)
+            case type
+            when 'decimal'
+              value.to_f
+            when 'integer'
+              value.to_i
+            else
+              value.to_s.downcase
+            end
           end
         end
       end
