@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# TODO: move to sendle namespace or even to the gem
 module Deliveries
   class Quote
     def initialize(response)

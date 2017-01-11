@@ -1492,6 +1492,8 @@ class SecuredParams
       :outbound_receiver_lastname,
       :inbound_sender_firstname,
       :outbound_receiver_firstname,
+      :inbound_sender_phone,
+      :outbound_receiver_phone,
       :dates,
       :step_control,
       :total_amount_check,

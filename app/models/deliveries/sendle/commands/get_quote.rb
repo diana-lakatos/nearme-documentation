@@ -30,7 +30,6 @@ module Deliveries
 
           ::Deliveries::Quote.new @response
         end
-
       end
     end
   end

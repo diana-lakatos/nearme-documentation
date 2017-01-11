@@ -16,4 +16,10 @@ class Shippings::ShippingProvider < ActiveRecord::Base
   def environment
     settings && settings['environment']
   end
+
+  def api_client
+    Deliveries.courier(name: shipping_provider_name, settings: settings).tap do |client|
+      yield client if block_given?
+    end
+  end
 end

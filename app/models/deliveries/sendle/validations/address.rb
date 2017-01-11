@@ -14,6 +14,7 @@ module Deliveries
         def validator_list
           [
             presence_validator(attributes: [:suburb, :postcode, :country, :address, :state]),
+            inclusion_validator(attributes: [:country], in: ['Australia']),
             pickup_location_validator
           ]
         end

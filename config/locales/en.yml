@@ -34,10 +34,12 @@ en:
 
         address:
           attributes:
+            state:
+              invalid_pickup_location: 'does not match postcode or suburb'
             postcode:
-              invalid_pickup_location: 'does not match suburb'
+              invalid_pickup_location: 'does not match suburb or state'
             suburb:
-              invalid_pickup_location: 'does not match postcode'
+              invalid_pickup_location: 'does not match postcode or state'
         payment:
           attributes:
             payment_gateway:
