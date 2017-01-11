@@ -98,12 +98,12 @@ module Shippings
         outbound.receiver_address.address
       end
 
-      delegate :firstname=, :firstname, :lastname, :lastname=, to: :inbound_sender, prefix: true
+      delegate :phone, :phone=, :firstname=, :firstname, :lastname, :lastname=, to: :inbound_sender, prefix: true
       def inbound_sender
         inbound.sender_address
       end
 
-      delegate :firstname=, :firstname, :lastname, :lastname=, to: :outbound_receiver, prefix: true
+      delegate :phone, :phone=, :firstname=, :firstname, :lastname, :lastname=, to: :outbound_receiver, prefix: true
       def outbound_receiver
         outbound.receiver_address
       end
