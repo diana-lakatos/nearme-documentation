@@ -51,7 +51,7 @@ class AvailabilityTemplate < ActiveRecord::Base
   end
 
   def custom?
-    parent_type.in? ['Location', 'Transactable::TimeBasedBooking', 'Transactable']
+    parent_type.in? ['Location', 'Transactable::TimeBasedBooking', 'Transactable', 'UserProfile']
   end
 
   def custom_for_location?
@@ -59,7 +59,7 @@ class AvailabilityTemplate < ActiveRecord::Base
   end
 
   def custom_for_object?
-    ['Transactable', 'UserProfile'].include? parent_type
+    ['Transactable', 'UserProfile', 'Transactable::TimeBasedBooking'].include? parent_type
   end
 
   def timezone

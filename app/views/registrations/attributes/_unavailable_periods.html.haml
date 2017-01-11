@@ -11,3 +11,4 @@
       - (af.object.try(:days).presence || (0..6).to_a).each do |day|
         = af.input :days, as: :hidden, input_html: { value: day, multiple: true }
     .unavailability= render 'schedules/unavailability', f: at
+  %hr/
