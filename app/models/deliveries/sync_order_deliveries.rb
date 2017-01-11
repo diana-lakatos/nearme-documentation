@@ -19,17 +19,9 @@ module Deliveries
     end
 
     def client
-      @client ||= shipping_client
-    end
-
-    def shipping_client
-      Deliveries.courier name: shipping_provider.shipping_provider_name,
-                         settings: shipping_provider.settings,
-                         logger: Deliveries::RequestLogger.new(context: order)
-    end
-
-    def shipping_provider
-      order.shipping_provider
+      order.shipping_provider.api_client do |c|
+        c.logger = Deliveries::RequestLogger.new(context: order)
+      end
     end
   end
 end
