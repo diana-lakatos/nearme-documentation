@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170106184357) do
+ActiveRecord::Schema.define(version: 20170110160816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2315,11 +2315,12 @@ ActiveRecord::Schema.define(version: 20170106184357) do
   add_index "shippings_delivery_external_states", ["instance_id"], name: "index_shippings_delivery_external_states_on_instance_id", using: :btree
 
   create_table "shippings_shipping_providers", force: :cascade do |t|
-    t.integer  "instance_id",            null: false
-    t.string   "shipping_provider_name", null: false
+    t.integer  "instance_id",                        null: false
+    t.string   "shipping_provider_name",             null: false
     t.string   "encrypted_settings"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.integer  "mpo_extra_shipping_fee", default: 0
   end
 
   create_table "spam_reports", force: :cascade do |t|

@@ -88,7 +88,7 @@ class InstanceAdmin::Settings::Shippings::ShippingProvidersController < Instance
     def perform
       return if already_imported?
 
-      client.predefined_packages.each do |package|
+      @provider.api_client.predefined_packages.each do |package|
         import package.attributes
       end
     end
@@ -101,13 +101,6 @@ class InstanceAdmin::Settings::Shippings::ShippingProvidersController < Instance
 
     def import(attributes)
       @provider.dimensions_templates.create! attributes
-    end
-
-    # TODO: load settings based on env
-    # TODO: make it injectable [DI/IoC]
-    def client
-      Deliveries.courier name: @provider.shipping_provider_name,
-                         settings: @provider.settings
     end
   end
 

@@ -30,11 +30,7 @@ module Deliveries
       private
 
       def connection
-        @connection ||= client.ping
-      end
-
-      def client
-        Deliveries.courier(name: provider.shipping_provider_name, settings: provider.settings)
+        @connection ||= provider.api_client.ping
       end
     end
   end

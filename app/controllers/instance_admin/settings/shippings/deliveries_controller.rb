@@ -22,20 +22,7 @@ class InstanceAdmin::Settings::Shippings::DeliveriesController < InstanceAdmin::
   end
 
   def collection
-    @providers ||= Delivery
-                     .order('id desc')
-                     .paginate(page: params[:page], per_page: 10)
-  end
-
-  class DestroyDeliveryOrder
-    def initialize(provider:)
-      @provider = provider
-    end
-
-    def client
-      Deliveries.courier name: @provider.shipping_provider_name,
-                         settings: @provider.settings
-    end
+    @deliveries ||= Delivery.order('id desc').paginate(page: params[:page], per_page: 10)
   end
 
   protected

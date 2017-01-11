@@ -40,6 +40,7 @@ module Shippings
       end
 
       # FIX: bad approach
+      # TODO: provider should be selected by user during checkout phase
       def shipping_provider
         instance.shipping_providers.first
       end
