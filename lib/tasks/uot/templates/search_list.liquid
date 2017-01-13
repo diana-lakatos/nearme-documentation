@@ -1,44 +1,42 @@
 {% content_for 'hero' %}
     <div class="search-form" id="listing_search">
-        <div class="wrapper-a">
-            <form action="/search" method="get" id="search-form">
-                <div class="query">
-                    <label for="field-q" class="struct-label">Search keyword</label>
-                    <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
-                    <input type="hidden" name="lg_custom_attributes[workplace_type]" value="{{ searcher.lg_custom_attributes_hash['workplace_type'] }}">
-                    <input type="hidden" name="lg_custom_attributes[travel]" value="{{ searcher.lg_custom_attributes_hash['travel'] }}">
-                    <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
-                    <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
-                    <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
-                    <input type="hidden" name="query_fields" value="tags">
-                    <input type="hidden" name="sort">
-                    <input type="hidden" name="search_type" value="{{ params['search_type'] }}">
+      <div class="wrapper-a">
+        <form action="/search" method="get" id="search-form">
+          <div class="query">
+            <label for="field-q" class="struct-label">Search keyword</label>
+            <input type="text" name="query" id="field-q" placeholder="Enter keywords... (Searches Bios and tags)" value="{{ params['query'] }}">
+            <input type="hidden" name="lg_custom_attributes[workplace_type]" value="{{ searcher.lg_custom_attributes_hash['workplace_type'] }}">
+            <input type="hidden" name="lg_custom_attributes[travel]" value="{{ searcher.lg_custom_attributes_hash['travel'] }}">
+            <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
+            <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
+            <input type="hidden" name="query_fields" value="tags">
+            <input type="hidden" name="sort">
+            <input type="hidden" name="search_type" value="{{ params['search_type'] }}">
 
-                    <div class="form-action">
-                        <button type="submit" class="button-a">Search</button>
-                        <a class="button-b" href="{{ 'dashboard_wish_list_items_path' | generate_url }}">View Favorites</a>
-                    </div>
-                </div>
-            </form>
-
-            {% if params['search_type'] == 'advanced' %}
-                {% include 'search/advanced_search' %}
-            {% else %}
-                {% include 'search/basic_search' %}
-            {% endif %}
-
-
-            <div class="search-sort-order" data-search-filters-container>
-                <label for="search-order">Sort by:</label>
-                <span class="select-a">
-                    <select id="search-order" name="sort" class="unstyled-select">
-                        <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Relevance</option>
-                        <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_asc'  %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_asc'>Hourly rate ascending</option>
-                        <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_desc' %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_desc'>Houry rate descending</option>
-                    </select>
-                </span>
+            <div class="form-action">
+              <button type="submit" class="button-a">Search</button>
+              <a class="button-b" href="{{ 'dashboard_wish_list_items_path' | generate_url }}">View Favorites</a>
             </div>
+          </div>
+
+        </form>
+        {% if params['search_type'] == 'advanced' %}
+          {% include 'search/advanced_search' %}
+        {% else %}
+          {% include 'search/basic_search' %}
+        {% endif %}
+
+        <div class="search-sort-order" data-search-filters-container>
+          <label for="search-order">Sort by:</label>
+          <span class="select-a">
+            <select id="search-order" name="sort" class="unstyled-select">
+              <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Relevance</option>
+              <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_asc'  %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_asc'>Hourly rate ascending</option>
+              <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_desc' %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_desc'>Houry rate descending</option>
+            </select>
+          </span>
         </div>
+      </div>
     </div>
 {% endcontent_for %}
 
@@ -47,8 +45,8 @@
         <h1 class="struct-label">SME Search results</h1>
         <section class="search-results">
 
-            <div class="search-results-query-info">
-                <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
+            <div class="search-results-query-info" style="border: none; height: 37px;">
+                <span class="results-count"></span>
             </div>
 
             <div class="search-results-items">
@@ -84,9 +82,7 @@
 
                             <li>
                               {% if current_user.has_seller_profile? %}
-                                <div data-add-favorite-button="true" data-path="{{ user.wish_list_path }}" data-wishlistable-type="{{ user.class_name }}" data-link-to-classes="{{ link_to_classes }}" data-path-bulk="{{ user.wish_list_bulk_path }}" data-object-id="{{ user.id }}" id="favorite-button-{{ user.class_name }}-{{ user.id }}">
-                                  <div class="text-center"><img src="{{ 'components/modal/loader.gif' | image_url }}" /></div>
-                                </div>
+                                {% include 'shared/components/wish_list_button_injection', object: user, link_to_classes: 'button-b action-favorite' %}
                               {% endif %}
                             </li>
                             {% if user.has_active_blog? %}
@@ -97,39 +93,39 @@
                             {% endif %}
                             </ul>
 
-                            {% assign aoe_category = user.formatted_buyer_categories["Area Of Expertise"] %}
-                            {% assign industry_category = user.formatted_buyer_categories['Industry'] %}
-                            {% assign languages_category = user.buyer_categories['Languages'] %}
+                            {% assign aoe_categories = user.fetch_buyer_categories["Area Of Expertise"] %}
+                            {% assign industry_categories = user.fetch_buyer_categories["Industry"] %}
+                            {% assign languages = user.fetch_buyer_categories["Languages"] %}
 
-                            {% if aoe_category.children.size > 0 || industry_category.children.size > 0 || languages_category.children.size > 0 || user.buyer_properties.bio != blank %}
+                            {% if aoe_categories.size > 0 || industry_categories.size > 0 || languages.size > 0 || user.buyer_properties.bio != blank %}
                                 <div class="content">
                                     <div class="props">
-                                    {% if aoe_category.children.size > 0 %}
+                                    {% if industry_categories.size > 0 %}
                                         <div class="prop">
-                                            <h3>{{ aoe_category.name }}</h3>
+                                            <h3>Industry</h3>
                                             <ul class="short-list">
-                                                {% for expertise in aoe_category.children %}
-                                                <li>{{ expertise[-1] }}</li>
+                                                {% for industry in industry_categories %}
+                                                <li>{{ industry }}</li>
                                                 {% endfor %}
                                             </ul>
                                         </div>
                                     {% endif %}
 
-                                    {% if industry_category.children.size > 0 %}
+                                    {% if aoe_categories.size > 0 %}
                                         <div class="prop">
-                                            <h3>{{ industry_category.name }}</h3>
+                                            <h3>Area of Expertise</h3>
                                             <ul class="short-list">
-                                                {% for industry in industry_category.children %}
-                                                <li>{{ industry[-1] }}</li>
+                                                {% for expertise in aoe_categories %}
+                                                <li>{{ expertise }}</li>
                                                 {% endfor %}
                                             </ul>
                                         </div>
                                     {% endif %}
 
-                                    {% if languages_category.children.size > 0 %}
+                                    {% if languages.size > 0 %}
                                         <div class="prop">
-                                            <h3>{{ languages_category.name }}</h3>
-                                            <p>{{ languages_category.children | join: ', ' }}</p>
+                                            <h3>Languages</h3>
+                                            <p>{{ languages | join: ', ' }}</p>
                                         </div>
                                     {% endif %}
 
@@ -171,7 +167,6 @@
                   </script>
               {% endfor %}
             </div>
-
             {% if searcher.next_page %}
                 <p class="search-results-more-trigger">
                     <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>

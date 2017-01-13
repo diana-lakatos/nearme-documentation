@@ -41,6 +41,7 @@ class InstanceType::Searcher::UserSearcher
       end
     end
 
+    @fetcher = @fetcher.paginate(page: @params[:page], per_page: @params[:page])
     @fetcher
   end
 
@@ -82,9 +83,5 @@ class InstanceType::Searcher::UserSearcher
 
   def set_options_for_filters
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable
-  end
-
-  def to_event_params
-    { search_query: query, result_count: result_count }
   end
 end

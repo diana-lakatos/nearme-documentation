@@ -47,9 +47,9 @@ class InstanceType::SearcherFactory
 
   def user_searcher
     if elasticsearch?
-      'InstanceType::Searcher::Elastic::UserSearcher'.constantize.new(@params, @current_user, @transactable_type)
+      InstanceType::Searcher::Elastic::UserSearcher.new(@params, @current_user, @transactable_type)
     else
-      'InstanceType::Searcher::UserSearcher'.constantize.new(@params, @current_user, @transactable_type)
+      InstanceType::Searcher::UserSearcher.new(@params, @current_user, @transactable_type)
     end
   end
 
