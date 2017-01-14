@@ -14,9 +14,7 @@ module Deliveries
 
       def exist?(postcode:, suburb:, state:)
         all.any? do |row|
-          equal?(row['Suburb'], normalize(suburb)) &&
-            equal?(row['Postcode'], postcode) &&
-            equal?(row['State'], state)
+          row.fetch('Suburb') == normalize(suburb) && row.fetch('Postcode') == postcode && row.fetch('State') == state
         end
       end
 

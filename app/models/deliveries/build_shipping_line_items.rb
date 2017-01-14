@@ -10,7 +10,7 @@ module Deliveries
     end
 
     def prepare
-      deliveries.map do |delivery|
+      @order.deliveries.map do |delivery|
         quote = get_quote(delivery)
 
         build_shipping_line_item line_item_source: delivery,
@@ -31,21 +31,30 @@ module Deliveries
     end
 
     def get_quote(delivery)
-      client.get_quote(delivery)
+      build_quote client.get_quote(delivery)
     end
 
-    def deliveries
-      @order.deliveries
+    def build_quote(response)
+      EnhancedQuote.new(response).tap do |q|
+        q.extra_fee = shipping_provider.mpo_extra_shipping_fee
+      end
     end
 
     def client
-      Deliveries.courier name: shipping_provider.shipping_provider_name,
-                         settings: shipping_provider.settings,
-                         logger: Deliveries::RequestLogger.new(context: @order)
+      shipping_provider.api_client do |c|
+        c.logger = Deliveries::RequestLogger.new(context: @order)
+      end
     end
 
     def shipping_provider
       @order.shipping_provider
+    end
+
+    class EnhancedQuote < SimpleDelegator
+      attr_accessor :extra_fee
+      def gross
+        super + extra_fee
+      end
     end
   end
 end

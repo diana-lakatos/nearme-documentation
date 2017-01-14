@@ -34,6 +34,7 @@ module Deliveries
         }
       end
 
+      # TODO: could have shipping-provider created with name: 'validator'
       def client
         @client = Deliveries.courier(name: 'sendle', settings: settings, logger: logger)
       end

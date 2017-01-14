@@ -42,13 +42,7 @@ class Dashboard::PackageLabelsController < ApplicationController
     private
 
     def client
-      Deliveries.courier name: shipping_provider.shipping_provider_name,
-                         settings: shipping_provider.settings,
-                         logger: nil
-    end
-
-    def shipping_provider
-      @delivery.order.shipping_provider
+      @delivery.order.shipping_provider.api_client
     end
   end
 end
