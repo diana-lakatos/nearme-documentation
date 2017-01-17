@@ -9,6 +9,7 @@
             <input type="hidden" name="lg_custom_attributes[travel]" value="{{ searcher.lg_custom_attributes_hash['travel'] }}">
             <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
             <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
+            <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
             <input type="hidden" name="query_fields" value="tags">
             <input type="hidden" name="sort">
             <input type="hidden" name="search_type" value="{{ params['search_type'] }}">
@@ -18,8 +19,8 @@
               <a class="button-b" href="{{ 'dashboard_wish_list_items_path' | generate_url }}">View Favorites</a>
             </div>
           </div>
-
         </form>
+
         {% if params['search_type'] == 'advanced' %}
           {% include 'search/advanced_search' %}
         {% else %}
