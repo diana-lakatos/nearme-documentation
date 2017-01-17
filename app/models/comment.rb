@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Comment < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
@@ -23,9 +24,7 @@ class Comment < ActiveRecord::Base
     when 'ActivityFeedEvent'
       event = :user_commented
 
-      if commentable.event_source.try(:updateable_type).eql?('Group')
-        event = :user_commented_on_user_activity
-      end
+      event = :user_commented_on_user_activity if commentable.event_source.try(:updateable_type).eql?('Group')
 
       followed = commentable.followed
     when 'Transactable'
@@ -41,12 +40,12 @@ class Comment < ActiveRecord::Base
 
   def trigger_workflow_alert_for_new_comment
     klass = case commentable_type
-    when 'Transactable'
-      WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable
-    when 'Group'
-      WorkflowStep::CommenterWorkflow::UserCommentedOnGroup
-    when 'ActivityFeedEvent'
-      WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate if commentable.event_source_type == 'UserStatusUpdate'
+            when 'Transactable'
+              WorkflowStep::CommenterWorkflow::UserCommentedOnTransactable
+            when 'Group'
+              WorkflowStep::CommenterWorkflow::UserCommentedOnGroup
+            when 'ActivityFeedEvent'
+              WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate if commentable.event_source_type == 'UserStatusUpdate'
     end
     WorkflowStepJob.perform(klass, id) if klass.present?
     true
@@ -68,6 +67,8 @@ class Comment < ActiveRecord::Base
     return unless current_user
     [creator, passed_commentable.creator].include?(current_user)
   end
+
+  alias can_edit? can_remove?
 
   def event
     body

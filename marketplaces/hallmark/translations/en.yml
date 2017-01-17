@@ -46,6 +46,7 @@ en:
   cancel_spam_report: 'Cancel spam report'
   load_more_comments: 'Load more comments'
   remove_comment: 'Remove'
+  edit_comment: 'Edit'
   user_said: '%{user_link} said'
   project: 'project'
   see_more: 'See More'
