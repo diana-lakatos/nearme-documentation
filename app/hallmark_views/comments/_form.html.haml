@@ -1,0 +1,6 @@
+= simple_form_for comment, url: url_to_comment(comment.commentable, comment), remote: true  do |f|
+
+  = f.input :body, label: false, input_html: { maxlength: 5000, data: {'new-comment-for': comment.commentable.id }, cols: 40, rows: 3 }
+
+  %p.action
+    = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'

@@ -562,6 +562,8 @@ DesksnearMe::Application.routes.draw do
             get :jstree
           end
         end
+
+        resources :inappropriate_reports
       end
 
       namespace :manage_blog do

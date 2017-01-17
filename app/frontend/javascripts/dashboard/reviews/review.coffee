@@ -98,6 +98,7 @@ module.exports = class Review
 
       error: (response) =>
         @showErrors(response)
+        $.rails.enableFormElements($('form.review-form'))
 
   createRatingData: =>
     return {

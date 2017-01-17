@@ -28,21 +28,19 @@
       .input-container.col-xs-12
         = link_to "Total payments count: #{@user.payments.count}", instance_admin_manage_payments_path(payer_id: @user.id) if @user.payments.count > 0
 
-    - if PlatformContext.current.instance.is_community?
-      .row
-        .input-container.col-xs-12
-          = f.input :featured, as: :switch, label: 'Featured'
+    .row
+      .input-container.col-xs-12
+        = f.input :featured, as: :switch, label: 'Featured'
 
+    = f.simple_fields_for :default_profile do |default_profile_form|
+      = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
+        - (default_profile_form.object.instance_profile_type.try(:custom_attributes).try(:where, public: false) || []).each do |attribute|
+          .row
+            .input-container.col-xs-12
+              = draw_attribute_for_form(attribute, properties_form, true)
 
-      = f.simple_fields_for :default_profile do |default_profile_form|
-        = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
-          - (default_profile_form.object.instance_profile_type.try(:custom_attributes).try(:where, public: false) || []).each do |attribute|
-            .row
-              .input-container.col-xs-12
-                = draw_attribute_for_form(attribute, properties_form, true)
-
-      = content_for :header_buttons do
-        = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    = content_for :header_buttons do
+      = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 
 
 .content-container

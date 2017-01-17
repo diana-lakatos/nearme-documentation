@@ -1092,6 +1092,16 @@ en:
         services_search:
           services_custom_search: "Services Custom Search"
           search_location_type_filter: "Display Location Type filter?"
+      inappropriate_reports:
+        manage: "Manage Inappropriate Reports"
+        reported_object_class: 'Reported Object Class'
+        reported_object_id: 'Reported Object Id'
+        link_to_object: 'Link To Object'
+        reported_by: 'Reported by'
+        report_reason: 'Report Reason'
+        ip_address: 'IP Address'
+        actions: 'Actions'
+        anonymous: 'Anonymous'
     blog:
       posts:
         name: "Name"

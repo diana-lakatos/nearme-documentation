@@ -1,0 +1,7 @@
+.comment-content-a{ id: "comment-content-#{comment.id}" }
+  .comment-body{ class: ('edited' if comment.created_at != comment.updated_at) }
+    = videoify_and_parse_with_markdown(comment.body , { iframe_width: 400, iframe_height: 225 })
+
+  - if comment.can_edit?(current_user)
+    .comment-editor
+      = render "comments/form", comment: comment
