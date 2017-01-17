@@ -1,12 +1,17 @@
 - hide_comment_options = local_assigns[:hide_comment_options].presence || false
 - target = local_assigns[:target].presence || "_self"
+- own_comment = commented_own_thread?(comment)
 
-.comment-a{ class: ('commented-own-thread' if commented_own_thread?(comment)), data: { comment_id: comment.id, creator_id: comment.creator_id, commentable_creator_id: comment.commentable.try(:creator_id) } }
-  %figure
-    = image_tag comment.creator.avatar.url(:thumb)
+.comment-a{ class: ('commented-own-thread' if own_comment), data: { comment_id: comment.id, creator_id: comment.creator_id, commentable_creator_id: comment.commentable.try(:creator_id) } }
+  - unless own_comment
+    %figure
+      = image_tag comment.creator.avatar.url(:thumb)
+
   %p.author
     = link_to comment.creator.decorate.secret_name, profile_path(comment.creator), target: target
-  %p= videoify_and_parse_with_markdown(comment.body, { iframe_width: 400, iframe_height: 225 })
+
+  = videoify_and_parse_with_markdown(comment.body, { iframe_width: 400, iframe_height: 225 })
+
   %p.meta
     %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :long)
 

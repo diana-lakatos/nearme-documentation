@@ -1,52 +1,51 @@
 /* header */
 
 .header-a {
-    position: relative;
-    margin-bottom: 80px;
+  position: relative;
+  margin-bottom: 80px;
+
+  + .dots-a {
+    margin-top: -30px;
+  }
+
+  > * {
+    margin-bottom: 0;
+    margin-top: 10px;
+  }
+
+  .hx {
+    margin-top: 0;
+  }
+
+  .action {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .step {
+    margin-top: 40px;
+    font-size: 20px;
+  }
+
+  @include bp($screen-mobile) {
+    margin-bottom: 40px;
 
     + .dots-a {
-        margin-top: -30px;
-    }
-
-    > * {
-        margin-bottom: 0;
-        margin-top: 10px;
+      margin-top: -10px;
     }
 
     .hx {
-        margin-top: 0;
-        padding-right: 120px;
+      padding-right: 0;
     }
 
     .action {
-        position: absolute;
-        right: 0;
-        top: 0;
-        margin: 0;
-        padding: 0;
+      position: static;
+      right: auto;
+      top: auto;
+      margin: 10px 0 0;
     }
-
-    .step {
-        margin-top: 40px;
-        font-size: 20px;
-    }
-
-    @include bp($screen-mobile) {
-        margin-bottom: 40px;
-
-        + .dots-a {
-            margin-top: -10px;
-        }
-
-        .hx {
-            padding-right: 0;
-        }
-
-        .action {
-            position: static;
-            right: auto;
-            top: auto;
-            margin: 10px 0 0;
-        }
-    }
+  }
 }
