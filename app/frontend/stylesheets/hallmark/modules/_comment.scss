@@ -1,71 +1,108 @@
 /* comment */
 
 .comment-a {
-    margin: 0 0 30px;
+  margin: 0 0 30px;
 
-    &.commented-own-thread {
+  & + .comment-a {
+    border-top: 1px solid #e5e5e5;
+    padding-top: 30px;
+  }
 
-      figure {
-        display: none;
-      }
+  figure {
+    float: left;
+    width: 50px;
+    margin: 0 -100% 0 0;
 
-      blockquote, .author, .meta {
-        margin-left: 0;
-      }
+    img {
+      width: 50px;
     }
+  }
+
+  figure ~ * {
+    margin-left: 80px;
+
+    @include bp-range($screen-lg, $screen-tablet) {
+      margin-left: 70px;
+    }
+
+
+    @include bp($screen-tablet-vertical) {
+      margin-left: 70px;
+    }
+  }
+
+  .author {
+    @include clear;
+
+    margin-bottom: 3px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .edit-link {
+    float: right;
+  }
+
+  blockquote {
+    margin-bottom: 3px;
+    color: inherit;
+    font: 14px/1.4 Helvetica Neue, Helvetica, Arial, sans-serif;
+  }
+
+  @include bp($screen-mobile) {
+    margin-bottom: 15px;
 
     figure {
-        float: left;
-        width: 50px;
-        margin: 0 -100% 0 0;
-        img {
-            width: 50px;
-        }
+      width: 30px;
     }
-
 
     figure ~ * {
-        margin-left: 80px;
-
-        @include bp-range($screen-lg, $screen-tablet) {
-            margin-left: 70px;
-        }
-
-        @include bp($screen-tablet-vertical) {
-            margin-left: 70px;
-        }
+      margin-left: 45px;
     }
 
+    .meta {
+      font-size: 12px;
+    }
+  }
+}
 
-    .author {
-        margin-bottom: 3px;
-        font-size: 14px;
-        font-weight: bold;
+.comment-content-a {
+  .comment-editor {
+    textarea {
+      margin-top: 10px;
     }
 
+    .action {
+      text-align: right;
+    }
+  }
 
-    blockquote {
-        margin-bottom: 3px;
-        color: inherit;
-        font: 14px/1.4 Helvetica Neue, Helvetica, Arial, sans-serif;
+  .comment-body {
+    display: block;
+  }
+
+  .comment-editor {
+    display: none;
+  }
+
+  &.is-active {
+    .comment-body {
+      display: none;
     }
 
-    @include bp($screen-mobile) {
-        margin-bottom: 15px;
-
-
-        figure {
-            width: 30px;
-        }
-
-
-        figure ~ * {
-            margin-left: 45px;
-        }
-
-
-        .meta {
-            font-size: 12px;
-        }
+    .comment-editor {
+      display: block;
     }
+  }
+
+  .comment-body.edited > *:last-child::after {
+    content: " (edited)";
+    opacity: 0.5;
+    font-weight: normal;
+    text-transform: lowercase;
+  }
+}
+
+.edit-link-a {
+  float: right;
 }

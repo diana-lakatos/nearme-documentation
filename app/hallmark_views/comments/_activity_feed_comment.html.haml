@@ -10,9 +10,13 @@
   %p.author
     = link_to comment.creator.decorate.secret_name, profile_path(comment.creator), target: target
 
-  = videoify_and_parse_with_markdown(comment.body, { iframe_width: 400, iframe_height: 225 })
+    - if comment.can_edit?(current_user)
+      = link_to t(:edit_comment), "#comment-content-#{comment.id}", 'data-edit-comment': '', class: 'button-a tiny light edit-link-a'
+
+  = render 'comments/comment_content', comment: comment
 
   %p.meta
+
     %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :long)
 
     - unless hide_comment_options
@@ -23,6 +27,7 @@
           = link_to t(:cancel_spam_report), url_to_cancel_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :delete, 'data-cancel-report': true, style: "display: none"
         - else
           = link_to t(:report_as_spam), new_user_session_path(return_to: request.path)
-      %span.remove-link{ 'data-remove-comment': true, style: comment.can_remove?(current_user) ? '' : 'display: none' }
-        %span &bull;
-        = link_to t(:remove_comment), url_to_comment(comment.commentable, comment), remote: true, method: :delete
+      - if comment.can_remove?(current_user)
+        %span.remove-link{ 'data-remove-comment': true }
+          %span &bull;
+          = link_to t(:remove_comment), url_to_comment(comment.commentable, comment), remote: true, method: :delete

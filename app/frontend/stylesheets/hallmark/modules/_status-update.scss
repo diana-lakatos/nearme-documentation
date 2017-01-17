@@ -1,185 +1,183 @@
 /* status update */
 
 .status-a {
-    overflow: hidden;
-    margin: 0 0 40px;
-    padding: 0;
+  overflow: hidden;
+  margin: 0 0 40px;
+  padding: 0;
+
+  & + & {
+    padding-top: 40px;
+    border-top: 1px solid #dcdcdc;
+  }
+
+  > header {
+    margin: 0;
+
+    figure {
+      float: left;
+      width: 80px;
+      margin: 0 -100% 0 0;
+    }
+
+    p {
+      margin: 0 0 0 120px;
+    }
+
+    p.desc {
+      color: #53565a;
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+
+    p.meta {
+      padding-bottom: 20px;
+    }
+  }
+
+  > section {
+    margin: 0 0 5px 120px;
+
+    > .hx {
+      margin: 0 0 3px;
+      color: #2071B9;
+      font: inherit;
+      font-weight: bold;
+    }
+
+    > p {
+      margin-bottom: 3px;
+    }
+
+    > .location:before {
+      display: inline-block;
+      content: '\e607';
+      margin: 0 5px 0 0;
+      font: 14px / 1 $font-icons;
+      line-height: inherit;
+      vertical-align: top;
+    }
+
+    .status-update {
+      .hx, header {
+        display: none;
+      }
+
+      section {
+        margin: 0 0 5px 0;
+      }
+
+      footer {
+        margin: 0 0 0 0;
+      }
+    }
+  }
+
+  > footer {
+    margin: 0 0 0 120px;
+
+    > .actions {
+      margin-bottom: 0;
+    }
+
+    > .actions span {
+      padding: 0 2px;
+    }
+
+    > .comment {
+      display: none;
+      margin-top: 25px;
+    }
+
+    > .comment.is-active {
+      display: block;
+    }
+
+    > .comment p {
+      margin-bottom: 15px;
+    }
+
+    > .comment .action {
+      text-align: right;
+    }
+
+    > .comment .button-a {
+      padding: 0 29px;
+    }
+
+    > .comments {
+      margin-top: 20px;
+      padding-top: 25px;
+      border-top: 1px solid #e5e5e5;
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    .aligncenter:empty {
+      display: none;
+    }
+  }
+
+  > footer.no-spacing {
+    margin: 0px;
+  }
+
+  @include bp-range($screen-lg, $screen-tablet) {
+    > header p,
+    > section,
+    > footer {
+      margin-left: 100px;
+    }
+  }
+
+
+  @include bp($screen-tablet-vertical) {
+    > header p,
+    > section,
+    > footer {
+      margin-left: 100px;
+    }
+  }
+
+
+  @include bp($screen-mobile) {
+    margin-bottom: 30px;
 
     & + & {
-        padding-top: 40px;
-        border-top: 1px solid #dcdcdc;
+      padding-top: 30px;
     }
 
-    > header {
-        margin: 0;
-
-        figure {
-            float: left;
-            width: 80px;
-            margin: 0 -100% 0 0;
-        }
-
-        p {
-            margin: 0 0 0 120px;
-        }
-
-        p.desc {
-            color: #53565a;
-            font-size: 18px;
-            font-weight: bold;
-            line-height: 1.2;
-        }
-
-        p.meta {
-            padding-bottom: 20px;
-        }
+    > header figure {
+      width: 40px;
     }
 
-    > section {
-        margin: 0 0 5px 120px;
-
-        > .hx {
-            margin: 0 0 3px;
-            color: #2071B9;
-            font: inherit;
-            font-weight: bold;
-        }
-
-        > p {
-            margin-bottom: 3px;
-        }
-
-        > .location:before {
-            display: inline-block;
-            content: '\e607';
-            margin: 0 5px 0 0;
-            font: 14px/1 $font-icons;
-            line-height: inherit;
-            vertical-align: top;
-        }
-
-        .status-update {
-            .hx, header {
-              display: none;
-            }
-
-            section {
-              margin: 0 0 5px 0;
-            }
-
-            footer {
-              margin: 0 0 0 0;
-            }
-        }
+    > header p.desc {
+      padding-top: 2px;
+      font-size: 14px;
     }
 
+    > header p {
+      margin-left: 55px;
+    }
+
+    > header p.meta {
+      padding-bottom: 15px;
+    }
+
+    > section,
     > footer {
-        margin: 0 0 0 120px;
-
-        > .actions {
-            margin-bottom: 0;
-        }
-
-        > .actions span {
-            padding: 0 2px;
-        }
-
-        > .comment {
-            display: none;
-            margin-top: 25px;
-        }
-
-        > .comment.is-active {
-            display: block;
-        }
-
-        > .comment p {
-            margin-bottom: 15px;
-        }
-
-        > .comment .action {
-            text-align: right;
-        }
-
-        > .comment .button-a {
-            padding: 0 29px;
-        }
-
-        > .comments {
-            margin-top: 20px;
-            padding-top: 25px;
-            border-top: 1px solid #e5e5e5;
-
-            &:empty {
-                display: none;
-            }
-        }
-
-        .aligncenter:empty {
-            display: none;
-        }
+      margin-left: 55px;
     }
 
-    > footer.no-spacing {
-      margin: 0px;
+    > footer > .actions {
+      font-size: 12px;
     }
 
-    @include bp-range($screen-lg, $screen-tablet) {
-
-        > header p,
-        > section,
-        > footer {
-            margin-left: 100px;
-        }
+    > footer > .comments {
+      margin-top: 15px;
+      padding-top: 20px;
     }
-
-    @include bp($screen-tablet-vertical) {
-
-        > header p,
-        > section,
-        > footer {
-            margin-left: 100px;
-        }
-    }
-
-    @include bp($screen-mobile) {
-
-        margin-bottom: 30px;
-
-
-        & + & {
-            padding-top: 30px;
-        }
-
-        > header figure {
-            width: 40px;
-        }
-
-        > header p.desc {
-            padding-top: 2px;
-            font-size: 14px;
-        }
-
-        > header p {
-            margin-left: 55px;
-        }
-
-        > header p.meta {
-            padding-bottom: 15px;
-        }
-
-        > section,
-        > footer {
-            margin-left: 55px;
-        }
-
-        > footer > .actions {
-            font-size: 12px;
-        }
-
-        > footer > .comments {
-            margin-top: 15px;
-            padding-top: 20px;
-        }
-    }
+  }
 }
