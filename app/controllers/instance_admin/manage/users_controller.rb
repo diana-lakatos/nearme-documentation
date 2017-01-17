@@ -13,7 +13,10 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
 
   def update
     @user = User.find(params[:id])
-    @user.update(user_params)
+    @user.assign_attributes(user_params)
+    # We want the admin user to be able to make the user featured (or other changes) without regard
+    # to how things stand with the user (might be missing a photo or a phone etc.)
+    @user.save(validate: false)
     if request.xhr?
       render layout: false
     else
