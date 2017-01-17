@@ -473,6 +473,16 @@ class UserDrop < BaseDrop
     build_categories_to_array(@source.buyer_profile.categories) if @source.buyer_profile
   end
 
+
+  # @return [Hash{String => Array}] returns hash of categories !{ "name" => [array with category names] } }
+  #   for this user's buyer profile
+  # @todo -- investigate if its possible to leave formatting for users (DIY)
+  def fetch_buyer_categories
+    return unless @source.buyer_profile
+
+    CategoryRepository.paths @source.buyer_profile.category_ids
+  end
+
   # @return [Hash{String => Hash{String => String, Array}}] returns hash of categories !{ "name" => { "name" => 'translated_name', "children" => [array with children] } }
   #   for this user's seller profile
   # @todo -- investigate if its possible to leave formatting for users (DIY)
