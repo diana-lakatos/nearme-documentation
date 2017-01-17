@@ -19,8 +19,9 @@
               = t(:projects)
               = "(#{group.transactables.count})"
 
-            %p.action
-              = link_to t(:view_all), '#projects', role: "tab", :'data-toggle' => "tab" , class: 'button-a small white'
-
           .featured
             = render partial: 'shared/transactable', collection: group.transactables.last(4)
+
+          .more-b
+            = link_to t(:view_all), '#projects', role: "tab", :'data-toggle' => "tab" , class: 'button-a small light'
+

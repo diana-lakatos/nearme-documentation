@@ -88,5 +88,5 @@
               %p{class: "location #{'missing-address' if member.current_address.blank? }"}
                 = member.current_address.try(:address)
 
-          %p.action
-            = link_to t(:view_all), '#members', role: 'tab', :'data-force-toggle-tab' => '#members' , class: 'button-a small'
+          %p.more-b
+            = link_to t(:view_all), '#members', role: 'tab', :'data-force-toggle-tab' => '#members' , class: 'button-a small light'

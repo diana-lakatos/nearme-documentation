@@ -12,12 +12,12 @@
           = render 'shared/activity_feed', object: object, feed: feed
       .secondary
         .box-a
-          / header with button
           .header-a
             %h2.hx
               = t :projects
               = "(#{@topic.transactables.count})"
-            %p.action
-              = link_to t(:view_all), '#projects', role: "tab", :'data-toggle' => "tab" , class: 'button-a small light'
           .featured
             = render partial: 'shared/transactable', collection: @topic.transactables.last(4)
+
+          .more-b
+            = link_to t(:view_all), '#projects', role: "tab", :'data-toggle' => "tab" , class: 'button-a small light'
