@@ -55,7 +55,7 @@
 
     = yield(:head_bottom)
 
-  %body{class: theme_class(@theme_name), itemscope: true, itemtype: "http://schema.org/WebPage"}
+  %body{class: theme_class(@theme_name), itemscope: '', itemtype: "http://schema.org/WebPage"}
     = yield(:body_top)
     .dnm-page-body{:class => "#{'main-page' if home_page?}" }
       = render 'shared/render_flash'
