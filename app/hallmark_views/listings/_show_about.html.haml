@@ -5,10 +5,11 @@
 
 - if @transactable.photos.except_cover.any?
   %h4= t :gallery
-  %ul.gallery-a
+  %ul.gallery-a{ :"data-gallery" => '' }
     - @transactable.photos.except_cover.each do |p|
       %li
-        = image_tag p.image_url(:thumb), width: 200, height: 175
+        %a{ href: p.image_url, data: { "original-width": p.image_original_width, "original-height": p.image_original_height } }
+          = image_tag p.image_url(:thumb), width: 200, height: 175
 
 - video_embed_code = project_video_embed_html(@transactable)
 - if video_embed_code.present?

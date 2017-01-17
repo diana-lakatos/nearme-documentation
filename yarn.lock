@@ -5034,6 +5034,10 @@ pend@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
 
+photoswipe:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/photoswipe/-/photoswipe-4.1.1.tgz#41b756a2387e220c286598945503014bf622bba9"
+
 pify@^2.0.0, pify@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
@@ -5456,6 +5460,10 @@ raty-js@^2.7.0:
   resolved "https://registry.yarnpkg.com/raty-js/-/raty-js-2.7.1.tgz#30ad1d6190d61b6cf01c4a166c35123a47caf273"
   dependencies:
     jquery "2"
+
+raw-loader:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/raw-loader/-/raw-loader-0.5.1.tgz#0c3d0beaed8a01c966d9787bf778281252a979aa"
 
 raygun4js@^2.4.3:
   version "2.4.3"
