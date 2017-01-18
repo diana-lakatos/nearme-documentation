@@ -30,32 +30,34 @@ class InstanceType::Searcher::Elastic::UserSearcher
   # page-page and page for ES and PG are not the same thing
   # when paging PG results based on ES search we take only first page
   def results
-    @results ||= load_results
-                   .offset(0)
-                   .map { |user| build_user_view(user, @fetcher.results, @instance_profile_type.profile_type) }
-                   .paginate(page: @params[:page], per_page: @params[:per_page], total_entries: @fetcher.results.total)
+    @results ||= append_es_data user_collection
   end
 
-  def build_user_view(user, data, type)
-    UserView.new(user, data.find {|r| r.id.to_i == user.id}, type)
+  def append_es_data(users)
+    users.each do |user|
+      es_data = find_es_user(user.id)
+
+      user.extend(UserDAO)
+      user.append_data es_data, @instance_profile_type.profile_type
+    end
+
+    users
   end
 
+  def find_es_user(id)
+    @fetcher.results.find { |item| item.id.to_i == id }
+  end
 
   # first iteration
   # combine results from ES and DB
-  class UserView < SimpleDelegator
-    def initialize(object, data, profile_type)
-      super(object)
-      @data = data
-      @profile_type = profile_type
+  module UserDAO
+    def append_data(data, profile_type)
+      @__data = data
+      @__profile_type = profile_type
     end
 
     def category_ids
       __profile.category_ids
-    end
-
-    def to_liquid
-      @user_drop ||= UserDrop.new(self)
     end
 
     def buyer_properties
@@ -71,18 +73,20 @@ class InstanceType::Searcher::Elastic::UserSearcher
       self
     end
 
+    def to_liquid
+      @user_drop ||= UserDrop.new(self)
+    end
+
     private
 
     def __profile
-      __source.user_profiles.find { |p| p.profile_type == @profile_type }
+      __source.user_profiles.find { |p| p.profile_type == @__profile_type }
     end
 
     def __source
-      @data._source
+      @__data._source
     end
   end
-
-
 
   private
 
@@ -91,8 +95,7 @@ class InstanceType::Searcher::Elastic::UserSearcher
   def search_params
     default_search_params.merge sort: (@params[:sort].presence || 'relevance').inquiry,
                                 limit: @params[:per_page],
-                                page: @params[:page],
-                                category_ids: Array(@params[:category_ids]).reject(&:blank?).join(',')
+                                page: @params[:page]
   end
 
   def default_search_params
@@ -100,13 +103,14 @@ class InstanceType::Searcher::Elastic::UserSearcher
                   instance_profile_type_id: @instance_profile_type.id
   end
 
-  # TODO: merge already fetched data from ES with state from DB
-  def load_results
+  def user_collection
     User
       .where(id: user_ids)
       .includes(:current_address, :blog)
       .not_admin
       .order_by_array_of_ids(user_ids)
+      .paginate(page: @params[:page], per_page: @params[:per_page], total_entries: @fetcher.results.total)
+      .offset(0)
   end
 
   def user_ids
