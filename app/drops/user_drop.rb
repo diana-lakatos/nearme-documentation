@@ -478,9 +478,7 @@ class UserDrop < BaseDrop
   #   for this user's buyer profile
   # @todo -- investigate if its possible to leave formatting for users (DIY)
   def fetch_buyer_categories
-    return unless @source.buyer_profile
-
-    CategoryRepository.paths @source.buyer_profile.category_ids
+    CategoryRepository.paths @source.category_ids
   end
 
   # @return [Hash{String => Hash{String => String, Array}}] returns hash of categories !{ "name" => { "name" => 'translated_name', "children" => [array with children] } }
