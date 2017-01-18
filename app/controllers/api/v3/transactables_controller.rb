@@ -8,7 +8,6 @@ module Api
       params[:v] = 'listing_mixed'
       search_params = params
       @searcher = InstanceType::SearcherFactory.new(@transactable_type, search_params, result_view, current_user).get_searcher
-      @searcher.paginate_results([(params[:page].presence || 1).to_i, 1].max, params[:per_page] || 20)
       render json: ApiSerializer.serialize_collection(
         @searcher.results.includes(categories: [:parent]),
         include: ['categories', 'action-type', 'action-type.pricings'],
