@@ -7,7 +7,7 @@
   %h3.hx
     = link_to project.name, listing_path(project)
   %p.user
-    = link_to user_path(project.creator) do
+    = link_to user_path(project.creator.slug) do
       = image_tag project.creator.avatar.url(:thumb), width: 30, height: 30
       = project.creator.decorate.name_with_affiliation
   %p= custom_sanitze project.description.truncate(100)
