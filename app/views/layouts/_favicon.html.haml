@@ -2,9 +2,9 @@
   %link{href: asset_url('favicon.png'), rel: 'shortcut icon'}/
 - else
   %link{href: platform_context.favicon_image.url || asset_url('favicon.png'), rel: 'shortcut icon', type: 'image/png' }/
-  - if platform_context.icon_image.url
+  - if platform_context.icon_image.url.present?
     %link{href: platform_context.icon_image.url, rel: 'icon', sizes: '60x60'}/
     %link{href: platform_context.icon_image.url, rel: 'apple-touch-icon-precomposed', sizes: '60x60'}/
-  - if platform_context.icon_retina_image.url
+  - if platform_context.icon_retina_image.url.present?
     %link{href: platform_context.icon_retina_image.url, rel: 'icon', sizes: '120x120'}/
     %link{href: platform_context.icon_retina_image.url, rel: 'apple-touch-icon-precomposed', sizes: '120x120'}/
