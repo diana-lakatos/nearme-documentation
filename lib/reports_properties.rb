@@ -21,7 +21,7 @@ module ReportsProperties
   def export_data_to_csv(items, attribute_names = [], properties_columns)
     csv = CSV.generate do |csv|
       if items.first.is_a?(Transactable)
-        csv << [attribute_names, 'url', 'latitude', 'longitude', 'address', 'street', 'suburb', 'city', 'country', 'state', 'postcode', properties_columns].flatten
+        csv << [attribute_names, 'url', 'latitude', 'longitude', 'address', 'street', 'suburb', 'city', 'country', 'state', 'postcode', 'prices', properties_columns].flatten
       else
         csv << [attribute_names, properties_columns].flatten
       end
@@ -42,6 +42,7 @@ module ReportsProperties
           values << (record.location.location_address.try(:country) || '')
           values << (record.location.location_address.try(:state) || '')
           values << (record.location.location_address.try(:postcode) || '')
+          values << record.action_type.pricings.inject({}) { |hash, p| hash[p.unit] = p.price_cents; hash }
         end
 
         properties_columns.each do |column|

@@ -35,4 +35,5 @@ NM.on('ready', ()=>{
   require('hallmark/initializers/see_more.initializer');
   require('hallmark/initializers/tabs.initializer');
   require('hallmark/initializers/tutorial.initializer');
+  require('hallmark/initializers/gallery.initializer');
 });

@@ -271,7 +271,7 @@ class Transactable < ActiveRecord::Base
            :exclusive_price_available?, :only_exclusive_price_available?, to: :event_booking, allow_nil: true
   delegate :first_available_date, :second_available_date, :availability_exceptions,
            :custom_availability_template?, :availability, :overnight_booking?, to: :time_based_booking, allow_nil: true
-  delegate :open_on?, :open_now?, :bookable?, :has_price?, :hours_to_expiration, 
+  delegate :open_on?, :open_now?, :bookable?, :has_price?, :hours_to_expiration,
            :service_fee_guest_percent, :service_fee_host_percent, to: :action_type, allow_nil: true
 
   attr_accessor :distance_from_search_query, :photo_not_required, :enable_monthly,

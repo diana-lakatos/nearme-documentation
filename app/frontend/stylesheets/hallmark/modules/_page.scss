@@ -17,29 +17,18 @@
     float: left;
     width: 100%;
     margin: 0 -100% 0 0;
-    padding: 0 430px 0 0;
+    padding: 0 330px 0 0;
   }
 
   > .secondary {
     float: right;
-    width: 400px;
+    width: 300px;
     margin: 0;
   }
 
   > .secondary .header-a {
     margin-bottom: 40px;
   }
-
-  @include bp($screen-lg) {
-    > .primary {
-      padding: 0 380px 0 0;
-    }
-
-    > .secondary {
-      width: 360px;
-    }
-  }
-
 
   @include bp($screen-tablet) {
     > .primary {

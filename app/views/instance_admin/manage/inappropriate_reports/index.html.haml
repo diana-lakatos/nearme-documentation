@@ -1,0 +1,34 @@
+.content-container
+  %h4
+    = t('instance_admin.manage.inappropriate_reports.manage')
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %tbody
+          %tr
+            %td= t('instance_admin.manage.inappropriate_reports.reported_object_class')
+            %td= t('instance_admin.manage.inappropriate_reports.reported_object_id')
+            %td= t('instance_admin.manage.inappropriate_reports.link_to_object')
+            %td= t('instance_admin.manage.inappropriate_reports.reported_by')
+            %td= t('instance_admin.manage.inappropriate_reports.report_reason')
+            %td= t('instance_admin.manage.inappropriate_reports.ip_address')
+            %td= t('instance_admin.manage.inappropriate_reports.actions')
+
+          - @inappropriate_reports.each do |report|
+            %tr
+              %td= report.reportable.class.name
+              %td= report.reportable.id
+              %td= inappropriate_report_target_link(report)
+              - if report.user.present?
+                %td= link_to report.user.name, profile_path(report.user)
+              - else
+                %td= t('instance_admin.manage.inappropriate_reports.anonymous')
+              %td= report.reason
+              %td= report.ip_address
+              %td= link_to t('general.delete'), instance_admin_manage_inappropriate_report_path(report), method: :delete, data: { confirm: t('instance_admin.are_you_sure'), class: "pull-right" }
+
+.row
+  .text-container
+    .pull-right
+      = will_paginate @inappropriate_reports
+

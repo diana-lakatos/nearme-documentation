@@ -63,6 +63,10 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
     render nothing: true, status: 200
   end
 
+  def show
+    redirect_to [:instance_admin, controller_scope, resource_class]
+  end
+
   private
 
   def collection
