@@ -9,14 +9,13 @@ class V3::TransactableJsonSerializer
   attribute :longitude
   attribute :company_name
   attribute :currency
-  attribute :address
-  attribute :postcode
-  attribute :street
-  attribute :suburb
-  attribute :state
-  attribute :city
-  attribute :country
   attribute :quantity
+  attribute :state
+
+  attribute :location_address do
+    object.location_address.attributes.slice('address', 'postcode', 'street', 'suburb', 'state', 'city', 'country')
+  end
+
   attribute :path do
     object.decorate.show_path
   end
