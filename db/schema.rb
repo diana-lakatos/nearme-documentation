@@ -3341,6 +3341,7 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.text     "headers",                               default: "{}"
     t.text     "prevent_trigger_condition",             default: "",   null: false
     t.string   "bcc_type"
+    t.boolean  "enabled",                               default: true
   end
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree

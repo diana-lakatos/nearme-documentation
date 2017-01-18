@@ -8,6 +8,7 @@
             %th Recipient Type
             %th Alert Type
             %th Delay?
+            %th Enabled
             %th
             %th
         %tbody
@@ -17,6 +18,7 @@
               %td= workflow_alert.recipient_type
               %td= workflow_alert.alert_type
               %td= workflow_alert.delay.to_i.zero? ? 'No' : "#{(workflow_alert.delay.to_f/60.0).round(2)}h"
+              %td= workflow_alert.enabled ? 'Yes' : 'No'
               %td= link_to 'Edit', edit_instance_admin_manage_workflow_step_workflow_alert_path(resource, workflow_alert), class: 'pull-right'
               %td
                 = link_to "Delete", instance_admin_manage_workflow_step_workflow_alert_path(resource, workflow_alert),

@@ -13,6 +13,7 @@ class WorkflowAlert < ActiveRecord::Base
   REQUEST_TYPE = %w(GET POST PUT DELETE).freeze
   BCC_TYPES  = %w(collaborators members)
 
+  scope :enabled, -> { where(enabled: true) }
   scope :for_sms_path, -> path { where(alert_type: 'sms', template_path: path) }
   scope :for_api_calls_path, -> path { where(alert_type: 'api_call', template_path: path) }
   scope :for_email_path, -> path { where(alert_type: 'email', template_path: path) }

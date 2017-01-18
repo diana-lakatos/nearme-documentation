@@ -1,6 +1,11 @@
 = simple_form_for [:instance_admin, :manage, @workflow_step, resource], html: { id: 'workflow_form'} do |f|
   .content-container
-    %h4 Main settings
+    .row
+      .input-container.col-xs-6
+        %h4 Main settings
+      .input-container.col-xs-6
+        .pull-right
+          = f.input :enabled, as: :bootstrap_switch, default: true
     .row
       .input-container.col-xs-12
         = f.input :name, required: true, input_html: { class: 'form-control' }

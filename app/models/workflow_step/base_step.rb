@@ -7,7 +7,7 @@ class WorkflowStep::BaseStep
   end
 
   def invoke!
-    alerts.each do |alert|
+    alerts.enabled.each do |alert|
       WorkflowAlert::InvokerFactory.get_invoker(alert).invoke!(self) if invokable_alert?(alert)
     end
   end
@@ -39,7 +39,7 @@ class WorkflowStep::BaseStep
   protected
 
   def alerts
-    workflow_step.try(:workflow_alerts) || []
+    workflow_step.try(:workflow_alerts) || WorkflowAlert.none
   end
 
   def workflow
