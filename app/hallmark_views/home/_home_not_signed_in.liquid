@@ -86,10 +86,11 @@
         {% for user in g.users %}
           <div class="cell">
             <article class="card-a" data-equalize>
-              <figure><a href="{{ user.profile_path }}"><img src="{{ user.avatar_url_bigger }}" /></a></figure>
+              <figure><a href="{{ user.profile_path }}"><img src="{{ user.avatar_url_bigger }}" /></a>
               {% if user.role != blank %}
               <figcaption>{{ user.role }}</figcaption>
               {% endif %}
+              </figure>
               <p class="action">
               <a href="{{ user.profile_path }}" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
               </p>
