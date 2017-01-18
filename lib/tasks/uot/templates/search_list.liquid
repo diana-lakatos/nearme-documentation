@@ -147,12 +147,12 @@
                           {% endif %}
                       </div>
 
-                      {% if user.tags.size > 0 %}
+                      {% if user.tag_list.size > 0 %}
                       <div class="tags-a tags-short-list">
                           <h4>Tags</h4>
                           <ul>
-                              {% for tag in user.tags %}
-                                  <li><a href="?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
+                              {% for tag in user.tag_list %}
+                                  <li><a href="?query_fields=tags&amp;query={{ tag }}">{{ tag }}</a></li>
                               {% endfor %}
                           </ul>
                       </div>

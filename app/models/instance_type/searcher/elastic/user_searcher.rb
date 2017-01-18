@@ -16,7 +16,7 @@ class InstanceType::Searcher::Elastic::UserSearcher
   end
 
   def searchable_categories
-    @instance_profile_type.categories.searchable.roots.includes(children: [:children])
+    @instance_profile_type.categories.searchable.roots.includes(children: { children: :children })
   end
 
   def search
@@ -31,9 +31,58 @@ class InstanceType::Searcher::Elastic::UserSearcher
   # when paging PG results based on ES search we take only first page
   def results
     @results ||= load_results
-                   .paginate(page: @params[:page], per_page: @params[:per_page], total_entries: @fetcher.results.total)
                    .offset(0)
+                   .map { |user| build_user_view(user, @fetcher.results, @instance_profile_type.profile_type) }
+                   .paginate(page: @params[:page], per_page: @params[:per_page], total_entries: @fetcher.results.total)
   end
+
+  def build_user_view(user, data, type)
+    UserView.new(user, data.find {|r| r.id.to_i == user.id}, type)
+  end
+
+
+  # first iteration
+  # combine results from ES and DB
+  class UserView < SimpleDelegator
+    def initialize(object, data, profile_type)
+      super(object)
+      @data = data
+      @profile_type = profile_type
+    end
+
+    def category_ids
+      __profile.category_ids
+    end
+
+    def to_liquid
+      @user_drop ||= UserDrop.new(self)
+    end
+
+    def buyer_properties
+      __profile.properties
+    end
+
+    def tag_list
+      @tag_list ||= __source.tags.split(',')
+    end
+
+    # do not decorate decorated decorator
+    def decorate
+      self
+    end
+
+    private
+
+    def __profile
+      __source.user_profiles.find { |p| p.profile_type == @profile_type }
+    end
+
+    def __source
+      @data._source
+    end
+  end
+
+
 
   private
 
@@ -55,9 +104,8 @@ class InstanceType::Searcher::Elastic::UserSearcher
   def load_results
     User
       .where(id: user_ids)
+      .includes(:current_address, :blog)
       .not_admin
-      .includes(:current_address, :blog, :tags, :communication)
-      .references(:tags, :communication)
       .order_by_array_of_ids(user_ids)
   end
 

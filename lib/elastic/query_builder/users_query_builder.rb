@@ -18,7 +18,6 @@ module Elastic
       {
         size: query_limit,
         from: query_offset,
-        fields: ['_id'],
         sort: sorting_options,
         query: match_query,
         filter: {
