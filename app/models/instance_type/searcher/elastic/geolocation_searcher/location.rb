@@ -27,10 +27,14 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
       order_ids = location_ids
       filtered_listings = Transactable.where(id: locations.values.flatten)
     end
+
+
     @search_results_count = fetcher.response[:aggregations]['filtered_aggregations']['distinct_locations'][:value]
-    @results = ::Location.includes(:location_address, :company, listings: [:transactable_type])
-               .where(id: location_ids).order_by_array_of_ids(order_ids)
-               .merge(filtered_listings)
+    @results = ::Location
+                 .includes(:location_address, :company, listings: [:transactable_type])
+                 .where(id: location_ids).order_by_array_of_ids(order_ids).merge(filtered_listings)
+                 .paginate(page: @params[:page], per_page: @params[:per_page], total_entries: @search_results_count)
+    @results = @results.offset(0) unless postgres_filters?
   end
 
   def per_page_elastic

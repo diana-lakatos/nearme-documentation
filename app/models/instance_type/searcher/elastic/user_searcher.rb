@@ -9,31 +9,10 @@ class InstanceType::Searcher::Elastic::UserSearcher
     @current_user = current_user
     @params = params
     @instance_profile_type = instance_profile_type
-
-    @results = load_results
-  end
-
-  def load_results
-    user_ids = fetcher.map(&:id)
-
-    order_ids = user_ids
-
-    results = User.where(id: user_ids).not_admin
-
-    results.includes(:current_address).order_by_array_of_ids(order_ids)
   end
 
   def fetcher
-    @fetcher ||=
-      begin
-        @search_params = @params.merge(sort: (@params[:sort].presence || 'relevance').inquiry,
-                                       limit: @params[:per_page],
-                                       page: @params[:page])
-
-        searcher_params = initialize_search_params.merge(@search_params)
-
-        User.regular_search(searcher_params, @instance_profile_type)
-      end
+    @fetcher ||= User.regular_search(search_params, @instance_profile_type)
   end
 
   def searchable_categories
@@ -48,13 +27,41 @@ class InstanceType::Searcher::Elastic::UserSearcher
     { query: @params[:query] }
   end
 
-  def to_event_params
-    { search_query: query, result_count: result_count }
+  # page-page and page for ES and PG are not the same thing
+  # when paging PG results based on ES search we take only first page
+  def results
+    @results ||= load_results
+                   .paginate(page: @params[:page], per_page: @params[:per_page], total_entries: @fetcher.results.total)
+                   .offset(0)
   end
 
   private
 
-  def initialize_search_params
-    { instance_id: PlatformContext.current.instance.id, instance_profile_type_id: @instance_profile_type.id }
+  # TODO: 1. coerse pagination params at this stage
+  # TODO: 2. standarise category_ids format - array<integer> or string of integers comma sepd
+  def search_params
+    default_search_params.merge sort: (@params[:sort].presence || 'relevance').inquiry,
+                                limit: @params[:per_page],
+                                page: @params[:page],
+                                category_ids: Array(@params[:category_ids]).reject(&:blank?).join(',')
+  end
+
+  def default_search_params
+    @params.merge instance_id: PlatformContext.current.instance.id,
+                  instance_profile_type_id: @instance_profile_type.id
+  end
+
+  # TODO: merge already fetched data from ES with state from DB
+  def load_results
+    User
+      .where(id: user_ids)
+      .not_admin
+      .includes(:current_address, :blog, :tags, :communication)
+      .references(:tags, :communication)
+      .order_by_array_of_ids(user_ids)
+  end
+
+  def user_ids
+    @user_ids = fetcher.map(&:id)
   end
 end

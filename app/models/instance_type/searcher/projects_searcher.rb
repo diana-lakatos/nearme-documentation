@@ -15,6 +15,7 @@ class InstanceType::Searcher::ProjectsSearcher
     if @params[:sort] =~ /collaborators/i && selected_topic_ids.present?
       @fetcher = @fetcher.group('transactable_topics.id')
     end
+    @fetcher = @fetcher.paginate(page: @params[:page], per_page: @params[:per_page])
     @fetcher
   end
 

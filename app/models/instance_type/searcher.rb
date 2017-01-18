@@ -92,14 +92,6 @@ module InstanceType::Searcher
     @params[:price] && @params[:price][:max]
   end
 
-  def paginate_results(page = 1, per_page)
-    paginated_results(page || 1, per_page)
-  end
-
-  def paginated_results(page, per_page)
-    @results = @results.paginate(page: page.to_pagination_number, per_page: per_page.to_pagination_number(20), total_entries: @search_results_count)
-  end
-
   def total_pages
     result_count / @params[:per_page].to_pagination_number(20)
   end

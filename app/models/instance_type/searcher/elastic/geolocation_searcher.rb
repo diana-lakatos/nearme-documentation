@@ -2,14 +2,6 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   include InstanceType::Searcher
   attr_reader :filterable_location_types, :filterable_custom_attributes, :search
 
-  def per_page_elastic
-    postgres_filters? ? nil : @params[:per_page]
-  end
-
-  def page_elastic
-    postgres_filters? ? nil : @params[:page]
-  end
-
   def fetcher
     @fetcher ||=
       begin
@@ -107,5 +99,13 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
                             lon: lng,
                             distance: "#{radius}km")
     end
+  end
+
+  def per_page_elastic
+    postgres_filters? ? nil : @params[:per_page]
+  end
+
+  def page_elastic
+    postgres_filters? ? nil : @params[:page]
   end
 end
