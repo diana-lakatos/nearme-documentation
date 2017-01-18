@@ -4,7 +4,7 @@
     %figure
       = link_to user_path(user) do
         = image_tag user.avatar.url(:bigger)
-        - if user.featured?
+        - if (user.properties.respond_to?(:role) && user.properties.role.present?) || user.featured?
           %figcaption
             - if user.properties.respond_to?(:role) && user.properties.role.present?
               = user.properties.role
