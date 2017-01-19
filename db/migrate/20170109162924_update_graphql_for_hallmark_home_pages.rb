@@ -26,6 +26,7 @@ class UpdateGraphqlForHallmarkHomePages < ActiveRecord::Migration
     name_with_affiliation
     display_location
     short_bio: custom_attribute(name: "short_bio")
+    role: custom_attribute(name: "role")
   }
 }
 EOQ
