@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
     if current_user&.verified_at.blank? || current_user&.expires_at.blank?
       flash[:warning] = t('flash_messages.need_verification_html')
       redirect_to root_path
-    elsif current_user&.expires_at.try(:>, Time.zone.now)
+    elsif current_user&.expires_at.try(:<, Time.zone.now)
       flash[:warning] = I18n.t('flash_messages.account_expired_html', expires_at: I18n.l(current_user&.expires_at.to_date, format: :short))
       redirect_to root_path
     end
