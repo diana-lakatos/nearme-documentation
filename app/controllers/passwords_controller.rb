@@ -6,6 +6,20 @@ class PasswordsController < Devise::PasswordsController
   before_action :redirect_if_logged_in, only: [:new], if: ->(_c) { request.xhr? }
   after_action :render_or_redirect_after_create, only: [:create]
 
+  def create
+    self.resource = resource_class.send_reset_password_instructions(resource_params)
+    yield resource if block_given?
+
+    if successfully_sent?(resource)
+      if PlatformContext.current.instance.id == 5011
+        resource.touch(:verified_at) unless resource.verified_at.present?
+      end
+      respond_with({}, location: after_sending_reset_password_instructions_path_for(resource_name))
+    else
+      respond_with(resource)
+    end
+  end
+
   private
 
   def after_sending_reset_password_instructions_path_for(resource)
