@@ -32,8 +32,4 @@ class InstanceType::Searcher::ProjectsSearcher
       query: @params[:query]
     }
   end
-
-  def to_event_params
-    { search_query: @params[:query], result_count: result_count }
-  end
 end

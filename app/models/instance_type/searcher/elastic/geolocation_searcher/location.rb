@@ -1,14 +1,11 @@
-class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
-  include InstanceType::Searcher::Elastic::GeolocationSearcher
-
+class InstanceType::Searcher::Elastic::GeolocationSearcher::Location < Searching::ElasticSearchBased
   def initialize(transactable_type, params)
-    @transactable_type = transactable_type
-    @params = params
+    super(transactable_type, params)
     set_options_for_filters
     @filters = { date_range: search.available_dates }
     locations = {}
 
-    fetcher.each do|f|
+    fetcher.each do |f|
       locations[f.fields.location_id.first] ||= []
       locations[f.fields.location_id.first] << f.id
     end
@@ -36,12 +33,6 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
                  .paginate(page: @params[:page], per_page: @params[:per_page], total_entries: @search_results_count)
     @results = @results.offset(0) unless postgres_filters?
   end
-
-  def per_page_elastic
-    10_000
-  end
-
-  def page_elastic; end
 
   def max_price
     return 0 if !@transactable_type.show_price_slider || results.blank?

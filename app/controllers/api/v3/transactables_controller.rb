@@ -1,8 +1,11 @@
 module Api
   class V3::TransactablesController < BaseController
-    before_filter :find_transactable_type
-    skip_before_filter :require_authentication
-    skip_before_filter :require_authorization
+    include CoercionHelpers::Controller
+
+    before_action :find_transactable_type
+    skip_before_action :require_authentication
+    skip_before_action :require_authorization
+    before_action :coerce_pagination_params
 
     def index
       params[:v] = 'listing_mixed'
@@ -30,13 +33,12 @@ module Api
     end
 
     def pagination_links
-      page = params[:page].to_pagination_number
       query = params.except(:page, :controller, :action)
       {
         first: api_transactables_url(query.merge(page: 1)),
         last: api_transactables_url(query.merge(page: @searcher.total_pages)),
-        prev: page > 1 ? api_transactables_url(query.merge(page: page - 1)) : nil,
-        next: page < @searcher.total_pages ? api_transactables_url(query.merge(page: page + 1)) : nil
+        prev: params[:page] > 1 ? api_transactables_url(query.merge(page: params[:page] - 1)) : nil,
+        next: params[:page] < @searcher.total_pages ? api_transactables_url(query.merge(page: params[:page] + 1)) : nil
       }
     end
   end

@@ -1,9 +1,6 @@
-class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
-  include InstanceType::Searcher::Elastic::GeolocationSearcher
-
+class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing < Searching::ElasticSearchBased
   def initialize(transactable_type, params)
-    @transactable_type = transactable_type
-    @params = params
+    super(transactable_type, params)
     @filters = { date_range: [] }
   end
 
@@ -29,14 +26,14 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
     @results = listings_scope
                  .includes(:location, :location_address, :company, :photos, :transactable_type, action_type: [:pricings], creator: [:user_profiles])
                  .order_by_array_of_ids(order_ids)
-                 .paginate(page: @params[:page], per_page: @params[:per_page], total_entries: @search_results_count)
+                 .paginate(page: params[:page], per_page: params[:per_page], total_entries: @search_results_count)
     @results = @results.offset(0) unless postgres_filters?
   end
 
   def filters
     search_filters = {}
-    search_filters[:location_type_filter] = @params[:location_types_ids] if @params[:location_types_ids]
-    search_filters[:custom_attributes] = @params[:lg_custom_attributes] unless @params[:lg_custom_attributes].blank?
+    search_filters[:location_type_filter] = params[:location_types_ids] if params[:location_types_ids]
+    search_filters[:custom_attributes] = params[:lg_custom_attributes] unless params[:lg_custom_attributes].blank?
     search_filters
   end
 

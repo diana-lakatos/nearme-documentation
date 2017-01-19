@@ -2,8 +2,10 @@ require 'will_paginate/array'
 class SearchController < ApplicationController
   include SearchHelper
   include SearcherHelper
+  include CoercionHelpers::Controller
 
   before_action :ensure_valid_params
+  before_action :coerce_pagination_params
   before_action :find_transactable_type
   before_action :assign_transactable_type_id_to_lookup_context
   before_action :store_search
@@ -53,7 +55,7 @@ class SearchController < ApplicationController
   private
 
   def search_params
-    @search_params ||= params.merge(per_page: per_page).reverse_merge(sort: @transactable_type.default_sort_by)
+    @search_params ||= params.merge(per_page: params[:per_page]).reverse_merge(sort: @transactable_type.default_sort_by)
   end
 
   def remember_search_query
@@ -70,15 +72,15 @@ class SearchController < ApplicationController
   end
 
   def current_page_offset
-    @current_page_offset ||= ((params[:page] || 1).to_i - 1) * per_page
+    @current_page_offset ||= (params[:page] - 1) * per_page
   end
 
   def first_result_page?
-    !params[:page] || params[:page].to_pagination_number == 1
+    params[:page] == 1
   end
 
   def per_page
-    (params[:per_page] || 20).to_pagination_number(20)
+    params[:per_page]
   end
 
   def ignore_search_event_flag_false?
