@@ -1517,7 +1517,7 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.datetime "updated_at"
   end
 
-  add_index "marketplace_error_groups", ["instance_id", "error_type", "message_digest"], name: "meg_instance_type_digest", unique: true, using: :btree
+  add_index "marketplace_error_groups", ["instance_id", "error_type", "message_digest"], name: "meg_instance_type_digest", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "marketplace_errors", force: :cascade do |t|
     t.integer  "instance_id"
