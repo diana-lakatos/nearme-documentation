@@ -20,8 +20,8 @@
               locals: { form: f, tab_index: tab_index, hide_password: hide_password, profile_form: profile_form, properties_form: properties_form }
 
         - (profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
-          = draw_attribute_for_form(attribute, properties_form, nil, { label: false, placeholder: attribute.label,
-            input_html: { tabindex: tab_index } }) if field == attribute.name
+          = draw_attribute_for_form(attribute, properties_form, nil, { placeholder: attribute.label,
+            input_html: { tabindex: tab_index }, label_html: { class: 'hidden' } }) if field == attribute.name
 
       - if platform_context.instance.force_accepting_tos
         = render 'registrations/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '),

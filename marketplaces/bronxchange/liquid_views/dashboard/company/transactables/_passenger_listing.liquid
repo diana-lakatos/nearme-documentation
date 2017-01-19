@@ -1,0 +1,132 @@
+{% for transactable in transactables -%}
+  {% assign collaborator = transactable.transactable_collaborators[0] -%}
+  {% assign offer = transactable.not_cancelled_orders | detect: user_id: collaborator.user.id -%}
+  <article class="listing-b" id="transactable_{{transactable.id}}">
+    <header>
+      <h2>{{ transactable.name }}</h2>
+
+      {% if current_status != 'archived' -%}
+        <a href="{{ transactable.show_path }}" class="btn btn-primary btn-sm" rel="external">Visit booking page</a>
+      {% endif -%}
+
+      {% if transactable.state == 'completed' -%}
+        <span class="label label-success">Completed</span>
+      {% elsif transactable.state == 'cancelled' -%}
+        <span class="label label-warning">Cancelled</span>
+      {% endif -%}
+    </header>
+
+    <div class="listing-b-inner">
+      <div class="listing-b-booking-details">
+        <dl class="properties">
+          <dt>When:</dt>
+          <dd>{{ transactable.properties.trip_start_date | to_date | l: 'short' }} at {{ transactable.properties.trip_start_time }}</dd>
+
+          <dt>How long:</dt>
+          {% assign duration = transactable.properties.duration -%}
+          <dd>{{ duration }} {% if duration == 1 -%}hour{% else -%}hours{% endif -%}</dd>
+
+          <dt>Pickup at:</dt>
+          <dd>{{ transactable.properties.pickup_location }}</dd>
+        </dl>
+
+        <div class="actions">
+          {% if current_status == 'pending' -%}
+            <a href='{{ transactable.edit_path }}' class="btn btn-default btn-sm">Edit details</a>
+          {% endif -%}
+
+          {% if current_status == 'in progress' %}
+            <a href="{{ offer.order_complete_url }}" data-method="post" class="btn btn-default btn-sm" data-confirm="Are you sure you want to mark this booking as completed?">Mark as completed</a>
+          {% endif %}
+
+          {% if current_status != 'archived' -%}
+              <a href='{{ transactable.cancel_path | append: "?status=" | append: current_status }}' data-confirm="Are you sure you want to cancel this booking?" class="btn btn-default btn-sm">Cancel Booking</a>
+          {% endif -%}
+        </div>
+      </div>
+
+      <div class="listing-b-user-details">
+        {% if collaborator == blank -%}
+          <h3 class="no-driver-selected">You have not selected a driver for this booking yet.</h3>
+        {% else -%}
+          {% assign driver = collaborator.user -%}
+          <div class="user-profile">
+
+            <figure class="avatar">
+              <a href="{{ driver.user_profile_url }}" rel="external"><img src="{{ driver.avatar_url_big }}" alt="{{ driver.name }}"></a>
+
+              {% if collaborator.transactable_user_messages.size == 0 -%}
+                <a data-modal="true" class="action-message" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, user_id: collaborator.user.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+              {% else -%}
+                <a data-modal="true"  class="action-message" href="{{ 'dashboard_user_message_path' | generate_url: collaborator.transactable_user_messages.first.id }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+              {% endif -%}
+            </figure>
+
+            <h3><a href="{{ driver.user_profile_url }}" rel="external">{{ driver.name }}</a></h3>
+            <p class="driver-category driver-category-{{ driver.buyer_properties.driver_category | downcase }}">Category: <b>{{ driver.buyer_properties.driver_category }}</b></p>
+            <p class="price">Price:
+              {% if offer != blank -%}
+              <span data-convert-price="{{ offer.total_amount_money.to_i }}">{{ offer.total_amount_money | pricify }}</span>
+              {% else -%}
+              {% assign total = driver.buyer_properties.hourly_price | times: transactable.properties.duration -%}
+              <span data-convert-price="{{ total }}">{{ total | pricify }}</span>
+              {% endif -%}
+            </p>
+
+            {% if driver.buyer_properties.short_bio != blank -%}
+            <p class="bio">{{ driver.buyer_properties.short_bio | nl2br }}</p>
+            {% endif -%}
+          </div>
+
+          {% if transactable.state == 'pending' and collaborator != blank -%}
+            {% if offer != blank and offer.unconfirmed? -%}
+              <div class="alert alert-info">Approved by Driver, waiting for your payment</div>
+            {% elsif offer != blank and offer.rejected? -%}
+              <div class="alert alert-warning">Approved by Driver, waiting for your payment</div>
+            {% else -%}
+              <div class="alert alert-info">Waiting for Driver to approve</div>
+            {% endif -%}
+          {% endif -%}
+
+          {% if offer != blank and current_status == 'pending' and offer.unconfirmed? -%}
+          <p class="actions">
+            <a class="btn btn-primary btn-sm" data-modal="true" href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: offer.id }}">Pay now</a>
+            <a class="btn btn-default btn-sm" data-modal="true" href="{{ 'rejection_form_dashboard_company_orders_received_path' | generate_url: offer.id, listing_id: transactable.id }}">Reject Offer</a>
+          </p>
+          {% endif -%}
+
+          {% if offer == blank -%}
+          <p class="actions">
+            <a class="btn btn-default btn-sm" href="{{ collaborator.destroy_path }}" data-method="delete" data-confirm="Are you sure you want to remove this invite?">Remove invite</a>
+          </p>
+          {% endif -%}
+
+
+            {% for language in driver.buyer_profile.customizations_by_type['Languages'] -%}
+              {% capture langs -%}{{ langs }}{% unless langs == blank -%}, {% endunless -%}{{ language.language }} ({{ language.fluency }}){% endcapture -%}
+            {% endfor -%}
+            <dl class="properties">
+              {% if langs != blank -%}
+                <dt>Languages</dt>
+                <dd>{{ langs }}</dd>
+              {% endif -%}
+
+              <dt>Vehicle</dt>
+              <dd>{{ driver.buyer_properties.vehicle_type }} {{ driver.buyer_properties.vehicle_model }} ({{ driver.buyer_properties.vehicle_year }})</dd>
+
+              <dt>Capacity</dt>
+              <dd>{{ 'passengers_count' | t: count: driver.buyer_properties.vehicle_capacity }}</dd>
+
+              {% if driver.formatted_buyer_categories['Extras']['children'].size > 0 -%}
+                <dt>Extras</dt>
+                <dd>{{ driver.formatted_buyer_categories['Extras']['children'] | join: ', ' }}</dd>
+              {% endif -%}
+            </dl>
+
+            <p class="invite-sent"><small>Invite Sent: {{ collaborator.created_at | to_date | l: 'short' }}</small></p>
+          </div>
+        {% endif -%}
+      </div>
+    </div>
+  </article>
+{% endfor -%}

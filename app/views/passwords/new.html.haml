@@ -10,7 +10,7 @@
 
         = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name)) do |f|
           .email-holder.input-icon-holder
-            = f.input :email, :label => false, :placeholder => "Email", :tabindex => '1'
+            = f.input :email, :placeholder => "Email", :tabindex => '1', label_html: { class: 'hidden' }
             %span.ico-mail
 
           .actions

@@ -1,0 +1,26 @@
+name: Buyer
+profile_type: buyer
+onboarding: true
+searchable: true
+search_engine: 'elasticsearch'
+search_only_enabled_profiles: true
+category_search_type: 'AND'
+create_company_on_sign_up: true
+admin_approval: true
+default_availability_template: '24/7'
+
+custom_attributes: ~
+
+form_components:
+  - type: buyer_profile_types
+    name: Buyer
+    fields:
+      - buyer: enabled
+      - user: name
+      - user: avatar
+  - type: buyer_registration
+    name: Buyer
+    fields:
+      - user: name
+      - user: email
+      - user: password

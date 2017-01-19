@@ -1,0 +1,17 @@
+split_registration: true
+enable_reply_button_on_host_reservations: true
+hidden_ui_controls:
+  'main_menu/cta': 1
+  'dashboard/offers': 1
+  'dashboard/user_bids': 1
+  'dashboard/host_reservations': 1
+  'main_menu/my_bookings': 1
+skip_company: true
+wish_lists_enabled: true
+default_currency: AUD
+default_country: Australia
+time_zone: 'Sydney'
+force_accepting_tos: true
+user_blogs_enabled: true
+force_fill_in_wizard_form: false
+default_search_view: list

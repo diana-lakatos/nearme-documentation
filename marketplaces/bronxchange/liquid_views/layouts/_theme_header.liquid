@@ -1,0 +1,87 @@
+<header class="header">
+  <div class="container_main">
+    <div class="row">
+      <div class="col-sm-3">
+        <a href="/" class="logo">
+          <img src="https://d2rw3as29v290b.cloudfront.net/instances/209/uploads/ckeditor/attachment_file/data/3404/logo.svg" alt="">
+        </a>
+      </div>
+      <div class="col-sm-9 col-xs-12 main_menu">
+        <button type="button" class="toggle_menu"></button>
+        <ul class="menu">
+          {% if current_user == blank %}
+            <li class="active"><a href="/users?role=buyer" data-href="/users?role=buyer" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled">Become a Driver</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/users?role=seller&amp;return_to=/transactable_types/booking/list" data-href="/users?role=seller" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/transactable_types/booking/list"}'>Sign Up</a></li>
+            <li><a href="#" data-href="/users/sign_in" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/"}'>Log In</a></li>
+          {% else %}
+            {% if current_user.has_seller_profile? %}
+            <li class="active"><a href="{{ 'new_dashboard_company_transactable_type_transactable_path' | generate_url: platform_context.transactable_types.first.id }}">Create a Booking</a></li>
+            {% endif %}
+
+            <li><a href="/faq">FAQ</a></li>
+            <li>
+              <a href="{{ 'dashboard_user_messages_path' | generate_url }}">
+              Messages
+              {% assign unread_messages_count = current_user.unread_messages_count %}
+              {% if unread_messages_count > 0 %}
+                <span class="count">{{ unread_messages_count }}</span>
+              {% endif %}
+              </a>
+            </li>
+
+            {% assign pending_transactables_count = current_user.pending_transactables_count %}
+            <li class="dropdown">
+              <a class="nav-link dropdown-toggle user-dropdown" data-toggle="dropdown" href="#">
+                <span class="text">{{ current_user.first_name }}</span>
+                {% if pending_transactables_count > 0 %}
+                <span class="count">{{ pending_transactables_count }}</span>
+                {% endif %}
+              </a>
+              <ul class="dropdown-menu">
+
+                {% if current_user.instance_admins_metadata %}
+                  <li>
+                    <a href="{{ current_user.user_menu_instance_admin_path}}" class='nav-link' target='_blank'>
+                      <span>{{ 'top_navbar.marketplace_admin' | t }}</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                <li>
+                  <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}">
+                    My Bookings
+                    {% if pending_transactables_count > 0 %}
+                    <span class="count">{{ pending_transactables_count }}</span>
+                    {% endif %}
+                  </a>
+                </li>
+
+                {% if platform_context.wish_lists_enabled? and current_user.has_seller_profile? %}
+                  {% comment %} Favorites menu {% endcomment %}
+                  {% assign show = 'dashboard/wish_list_items' | is_visible %}
+                  {% if show %}
+                    {% assign path = 'dashboard_wish_list_items_path' | generate_url %}
+                    {% assign selected = current_path | matches: path %}
+                    <li>
+                      <a href="{{ path }}">{{ 'wish_lists.name' | t }}</a>
+                    </li>
+                  {% endif %}
+                {% endif %}
+
+                <li><a href="{{ 'dashboard_profile_path' | generate_url }}">Edit Profile</a></li>
+
+                {% if current_user.has_buyer_profile? %}
+                  <li><a href="{{ 'user_path' | generate_url: current_user.id }}">View Profile</a></li>
+                {% endif %}
+
+                <li><a data-user="{{ current_user.first_name }}" rel="nofollow" data-method="delete" href="{{ 'destroy_user_session_path' | generate_url }}" class="nav-link">Log Out</a></li>
+              </ul>
+            </li>
+
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>

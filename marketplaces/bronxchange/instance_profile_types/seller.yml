@@ -1,0 +1,31 @@
+# default profile
+name: Seller
+profile_type: seller
+onboarding: false
+custom_attributes:
+  - name: about
+    label: About
+    html_tag: 'textarea'
+    hint: appears on the booking page
+    input_html_options_string: "data-counter-limit=>600"
+    validation:
+      required: true
+      max_length: 600
+      validation_only_on_update: true
+
+form_components:
+  - type: seller_registration
+    name: Seller
+    fields:
+      - user: name
+      - user: email
+      - user: password
+
+  - type: seller_profile_types
+    name: Seller
+    fields:
+      - user: name
+      - seller: about
+      - user: avatar
+      - user: email
+      - user: password

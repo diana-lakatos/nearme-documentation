@@ -14,11 +14,11 @@
 
         = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
           .email-holder.input-icon-holder
-            = f.input :email, :label => false, placeholder: t('simple_form.placeholders.session.email'), :input_html => { :tabindex => '1' }
+            = f.input :email, placeholder: t('simple_form.placeholders.session.email'), :input_html => { :tabindex => '1' }, label_html: { class: 'hidden' }
             %span.ico-mail
+
           .password-holder.input-icon-holder
-            = f.input :password, :label => false, placeholder: t('simple_form.placeholders.session.password'),
-              :input_html => { :tabindex => '2' }
+            = f.input :password, placeholder: t('simple_form.placeholders.session.password'), :input_html => { :tabindex => '2' }, label_html: { class: 'hidden' }
             %span.ico-lock
 
           %div.pnotice
