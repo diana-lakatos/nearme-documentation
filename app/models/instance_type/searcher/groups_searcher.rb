@@ -13,6 +13,7 @@ class InstanceType::Searcher::GroupsSearcher
     @fetcher = Group.not_secret.active.search_by_query([:name, :description, :summary], @params[:query])
     @fetcher = @fetcher.where(transactable_type_id: @params[:group_type_id]) if @params[:group_type_id].present?
     @fetcher = @fetcher.custom_order(@params[:sort].try(:to_s).presence || 'members', sort_params)
+    @fetcher = @fetcher.paginate(page: @params[:page], per_page: @params[:per_page])
     @fetcher
   end
 

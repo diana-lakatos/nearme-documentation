@@ -30,6 +30,7 @@ class Listing::SearchFetcher
     @locations_scope = @locations_scope.includes(:location_address).bounding_box(@bounding_box, @midpoint) if @bounding_box.present?
     @locations_scope = @locations_scope.filtered_by_location_types_ids(@filters[:location_types_ids]) if @filters[:location_types_ids].present?
     @locations_scope = @locations_scope.order(Location.build_order(@filters.except(:price))) if Location.can_order_by?(@filters.except(:price))
+    @locations_scope = @locations_scope.paginate(page: @filters[:page], per_page: @filters[:per_page])
     @locations_scope
   end
 
@@ -69,6 +70,7 @@ class Listing::SearchFetcher
     @listings_scope = Transactable.where(id: @listings_scope.pluck(:id))
     @listings_scope = @listings_scope.search_by_query([:name, :description, :properties], @filters['query'])
     @listings_scope = @listings_scope.order(Transactable.build_order(@filters)) if Transactable.can_order_by?(@filters)
+    @listings_scope = @listings_scope.paginate(page: @filters[:page], per_page: @filters[:per_page])
     @listings_scope
   end
 

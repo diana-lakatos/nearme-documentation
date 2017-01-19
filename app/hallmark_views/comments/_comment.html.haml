@@ -3,7 +3,7 @@
     %figure
       = image_tag comment.creator.avatar.url(:thumb)
     %p.desc
-      = link_to comment.creator.decorate.secret_name, profile_path(comment.creator)
+      = link_to comment.creator.decorate.secret_name, profile_path(comment.creator.slug)
 
       - if comment.can_edit?(current_user)
         = link_to t(:edit_comment), "#comment-content-#{comment.id}", 'data-edit-comment': '', class: 'button-a tiny light edit-link-a'

@@ -41,7 +41,7 @@ class InstanceType::Searcher::UserSearcher
       end
     end
 
-    @fetcher = @fetcher.paginate(page: @params[:page], per_page: @params[:page])
+    @fetcher = @fetcher.paginate(page: @params[:page], per_page: @params[:per_page])
     @fetcher
   end
 

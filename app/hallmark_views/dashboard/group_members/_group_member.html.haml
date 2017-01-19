@@ -1,6 +1,6 @@
 %tr
   %td
-    = link_to group_member.name, user_path(group_member.user)
+    = link_to group_member.name, user_path(group_member.user.slug)
   %td
     = @group.can_moderate?(group_member.user)
   %td.col-status

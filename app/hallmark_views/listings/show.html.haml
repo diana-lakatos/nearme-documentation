@@ -15,10 +15,10 @@
         %h1= @transactable.name
         .user
           %figure
-            = link_to user_path(@transactable.creator) do
+            = link_to user_path(@transactable.creator.slug) do
               = image_tag @transactable.creator.avatar.url(:thumb), width: 40, height: 40, alt: @transactable.creator.decorate.name_with_affiliation(true)
           %h3.hx
-            = link_to @transactable.creator.decorate.name_with_affiliation, user_path(@transactable.creator)
+            = link_to @transactable.creator.decorate.name_with_affiliation, user_path(@transactable.creator.slug)
           %p.location= "#{@transactable.creator.current_address.try(:city)}, #{@transactable.creator.current_address.try(:state)}"
         %p.tx-a= nl2br(@transactable.properties.summary)
         %p.topics

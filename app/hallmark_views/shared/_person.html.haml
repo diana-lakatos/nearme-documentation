@@ -2,9 +2,9 @@
   / teaser box
   %article.card-a{"data-equalize" => true}
     %figure
-      = link_to user_path(user) do
+      = link_to user_path(user.slug) do
         = image_tag user.avatar.url(:bigger)
-        - if user.featured?
+        - if (user.properties.respond_to?(:role) && user.properties.role.present?) || user.featured?
           %figcaption
             - if user.properties.respond_to?(:role) && user.properties.role.present?
               = user.properties.role
@@ -20,7 +20,7 @@
     %p.action{:'data-follow-button' => true}
       = render partial: "shared/follow_button", locals: { object: user, css_class: "tiny" }
     %h3.hx
-      = link_to user.decorate.name_with_affiliation, user_path(user)
+      = link_to user.decorate.name_with_affiliation, user_path(user.slug)
     - if user.properties.try(:short_bio)
       %p= user.properties.short_bio
     = user.decorate.display_address

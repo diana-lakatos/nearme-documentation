@@ -5,7 +5,7 @@
   %figure
     = image_tag comment.creator.avatar.url(:thumb)
   %p.author
-    = link_to comment.creator.decorate.secret_name, profile_path(comment.creator), target: target
+    = link_to comment.creator.decorate.secret_name, profile_path(comment.creator.slug), target: target
   %p= videoify_and_parse_with_markdown(comment.body, { iframe_width: 400, iframe_height: 225 })
   %p.meta
     %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :long)
