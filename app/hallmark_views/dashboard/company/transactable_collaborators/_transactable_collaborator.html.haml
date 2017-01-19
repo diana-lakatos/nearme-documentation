@@ -1,5 +1,5 @@
 %tr
-  %td= link_to transactable_collaborator.name, user_path(transactable_collaborator.user)
+  %td= link_to transactable_collaborator.name, user_path(transactable_collaborator.user.slug)
   %td.col-status
     - if transactable_collaborator.pending?
       =t('transactable_collaborator.pending')

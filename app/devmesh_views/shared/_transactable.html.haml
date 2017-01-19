@@ -26,7 +26,7 @@
       %h3.hx
         = link_to transactable.name, transactable.decorate.show_path
       %p.user
-        = link_to user_path(transactable.creator) do
+        = link_to user_path(transactable.creator.slug) do
           = image_tag transactable.creator.avatar.url(:thumb), width: 30, height: 30
           = transactable.creator.decorate.name_with_affiliation
       %p= custom_sanitze transactable.properties.try(:summary).to_s.truncate(100)

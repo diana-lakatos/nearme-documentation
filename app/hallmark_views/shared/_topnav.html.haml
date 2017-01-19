@@ -44,12 +44,12 @@
     - if current_user
       .user
         %p.name
-          = link_to profile_path(current_user) do
+          = link_to profile_path(current_user.slug) do
             = image_tag current_user.avatar.url(:thumb), size: "40x40"
             = current_user.first_name
         %ul
           %li{ class: (controller_name == 'registrations' && action_name == 'show' ? 'active' : '') }
-            = link_to t(:profile), user_path(current_user)
+            = link_to t(:profile), user_path(current_user.slug)
           - if (project_type = TransactableType.where(name: 'DIY').first).present?
             %li{ class: (controller_name == 'projects' ? 'active' : '') }
               = link_to t(:my_projects), dashboard_project_type_projects_path(project_type)

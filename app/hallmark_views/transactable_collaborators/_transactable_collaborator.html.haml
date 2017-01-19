@@ -16,7 +16,7 @@
     %p.action
       = link_to t(:unfollow), root_url, class: 'button-a tiny'
     %h3.hx
-      = link_to transactable_collaborator.name, profile_path(transactable_collaborator.user)
+      = link_to transactable_collaborator.name, profile_path(transactable_collaborator.user.slug)
     %p Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
     %p.location San Francisco, CA
 / repeated structure
