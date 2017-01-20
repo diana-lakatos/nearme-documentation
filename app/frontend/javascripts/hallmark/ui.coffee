@@ -28,7 +28,7 @@ module.exports = class UI
       event.preventDefault()
       $(this).closest('footer').find('> .comment').toggleClass 'is-active'
 
-    $('body').on 'click', '[data-edit-comment]', (event) ->
+    $('body').on 'click', '[data-edit-comment], [data-edit-status]', (event) ->
       event.preventDefault()
       $($(event.target).closest('a').attr('href')).toggleClass('is-active')
 
