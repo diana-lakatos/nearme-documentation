@@ -136,7 +136,7 @@ class ListingsController < ApplicationController
 
   def redirect_if_no_access_granted
     unless current_user && (current_user.can_manage_listing?(@listing) || @listing.transactable_collaborators.where(user: current_user).where.not(approved_by_owner_at: nil).exists?)
-      if current_user&.admin?
+      if current_user&.admin? || current_user&.instance_admins.present?
         flash.now[:notice] = 'You are using administator account to view this project. <a href="/instance_admin/manage/orders">Back</a>'.html_safe
       else
         flash[:warning] = t('flash_messages.listings.no_longer_have_access')
