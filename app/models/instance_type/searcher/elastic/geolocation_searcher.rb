@@ -16,7 +16,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
 
         geo_searcher_params = initialize_search_params
 
-        if located || adjust_to_map
+        if located || (adjust_to_map && search.bounding_box.present?)
           extend_params_by_geo_filters
           Transactable.geo_search(geo_searcher_params.merge(@search_params), @transactable_type)
         else

@@ -12,6 +12,7 @@ Capybara::Webkit.configure do |config|
   config.allow_url('http://maps.googleapis.com/*')
   config.allow_url('http://csi.gstatic.com/*')
   config.allow_url('https://rawgit.com/mdyd-dev/marketplaces/*')
+  config.allow_url('https://*.cloudfront.net/*')
   config.block_unknown_urls
   # Uncomment if you want to debug JavaScript
   # config.debug = true
@@ -49,9 +50,12 @@ Before do
   PaymentGateway.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(response.reverse_merge(authorization: 'token ')))
   PaymentGateway.any_instance.stubs(:gateway_void).returns(OpenStruct.new(response.reverse_merge(authorization: '54533')))
   PaymentGateway.any_instance.stubs(:gateway_capture).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
+  PaymentGateway.any_instance.stubs(:gateway_purchase).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
   PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
   PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: 'COMPLETED')))
-
+  PaymentGateway::StripePaymentGateway.any_instance.stubs(:find_balance).returns(
+      OpenStruct.new({ id: '1', status: 'succeeded', fee_details: [OpenStruct.new(type: 'stripe_fee', amount: 10)] })
+    )
   stub = OpenStruct.new(success?: true, params: {
                           'object' => 'customer',
                           'id' => 'customer_1',

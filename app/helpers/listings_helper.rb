@@ -76,6 +76,8 @@ module ListingsHelper
     text = capture(&block) if block_given?
     if object.is_a?(Transactable)
       link_to(text, object.decorate.show_path, *options)
+    elsif object.is_a?(User)
+      link_to(text, object.decorate.show_path)
     else
       link_to(text, object, *options)
     end

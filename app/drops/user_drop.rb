@@ -94,6 +94,16 @@ class UserDrop < BaseDrop
   #   @return [Boolean] whether the user is valid (e.g. all required fields filled in etc.)
   # @!method reviews_counter
   #   @return [ReviewAggregatorDrop, nil] {ReviewAggregatorDrop} for current user, if rating systems exist/are enabled for the instance
+  # @!method last_sign_in_at
+  #   @return [DateTime] date/time when the user last sign in
+  # @!method left_by_seller_average_rating
+  #   @return averange rating by sellers
+  # @!method left_by_buyer_average_rating
+  #   @return averange rating by buyers
+  # @!method followers_count
+  #   @return [Integer] number of user followers
+  # @!method following_count
+  #   @return [Integer] number of follows given by this user
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends,
            :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
@@ -104,7 +114,8 @@ class UserDrop < BaseDrop
            :tags, :tag_list, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
            :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
            :company_name, :instance_admins_metadata, :total_reviews_count, :reviews_counter, :companies, :instance_admin?,
-           :instance_admin?, :user_messages_received, :valid?, to: :source
+           :instance_admin?, :user_messages_received, :valid?, :last_sign_in_at, :left_by_seller_average_rating,
+           :left_by_buyer_average_rating, :followers_count, :following_count, to: :source
 
   # @return [String] class name, i.e. 'User'
   def class_name
