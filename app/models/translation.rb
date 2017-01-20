@@ -19,7 +19,7 @@ class Translation < ActiveRecord::Base
   include Cacheable
 
   def key_format
-    if key.match /[!@#$%^&*()\-+:'";,?}{\[\]\\<>\|=±`~§]|\s/
+    if key.match /[!@#$%^&*()\+:'";,?}{\[\]\\<>\|=±`~§]|\s/
       errors.add :key, 'Unsupported format. Valid format: this.is.my_custom_key'
     end
   end
