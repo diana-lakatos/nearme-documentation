@@ -150,3 +150,25 @@
     }
   }
 }
+
+.topic-a {
+  > .wrap {
+    position: relative;
+    background-color: #4c8fb6;
+  }
+
+  > .wrap::before {
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    content: "";
+  }
+
+  > .wrap .contain {
+    position: relative;
+  }
+}

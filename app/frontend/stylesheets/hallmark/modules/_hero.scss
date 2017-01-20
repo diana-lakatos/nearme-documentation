@@ -3,8 +3,7 @@
 .hero-a {
   position: relative;
   margin: 0;
-  padding: 200px 0;
-  background: url("/assets/hallmark/hero-a-bg-a.jpg") center top no-repeat #333;
+  background: url("https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1421/hero-signed-out.jpg") center top no-repeat #333;
   background-size: cover;
   color: #fff;
   font-size: 28px;
@@ -13,7 +12,7 @@
   text-align: center;
 
   html.signed-in & {
-    background-image: url("/assets/hallmark/hero-a-signed-in.jpg");
+    background-image: url("https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1420/home-signed-in.jpg");
   }
 
   &:before {
@@ -23,12 +22,16 @@
     top: 0;
     bottom: 0;
     content: '';
-    background: rgba(0, 0, 0, 0.6);
-    background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.6));
+    background: rgba(0, 0, 0, 0.3);
   }
 
   > .contain {
     position: relative;
+    padding: 200px 0;
+
+    &.compact {
+      padding: 100px 0;
+    }
   }
 
   .hx {
@@ -37,7 +40,7 @@
     font: bold 42px / 1 $font-alt;
   }
 
-  .hx + p {
+  p {
     max-width: 910px;
     margin-left: auto;
     margin-right: auto;
@@ -45,20 +48,44 @@
     font-family: $font-alt;
   }
 
+  .signup-cta {
+    margin-top: 75px;
+  }
+
   @include bp($screen-lg) {
-    padding: 175px 0;
     font-size: 24px;
+
+    > .contain {
+      padding: 175px 0;
+
+      &.compact {
+        padding: 100px 0;
+      }
+    }
   }
 
 
   @include bp($screen-tablet) {
-    padding: 150px 0;
+    > .contain {
+      padding: 150px 0;
+
+      &.compact {
+        padding: 75px 0;
+      }
+    }
   }
 
 
   @include bp($screen-mobile) {
-    padding: 100px 0;
     font-size: 18px;
+
+    > .contain {
+      padding: 100px 0;
+
+      &.compact {
+        padding: 50px 0;
+      }
+    }
 
     .hx {
       margin-bottom: 15px;
@@ -73,4 +100,8 @@
 
 .benefits-section {
   padding-top: 50px;
+
+  img {
+    height: initial;
+  }
 }
