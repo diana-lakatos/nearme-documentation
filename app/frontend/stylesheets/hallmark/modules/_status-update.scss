@@ -181,3 +181,44 @@
     }
   }
 }
+
+.status-content-a {
+  .status-editor {
+    textarea {
+      margin-top: 10px;
+    }
+
+    .action {
+      text-align: right;
+    }
+  }
+
+  .status-body {
+    display: block;
+  }
+
+  .status-editor {
+    display: none;
+  }
+
+  &.is-active {
+    .status-body {
+      display: none;
+    }
+
+    .status-editor {
+      display: block;
+    }
+  }
+
+  .status-body.edited > *:last-child::after {
+    content: " (edited)";
+    opacity: 0.5;
+    font-weight: normal;
+    text-transform: lowercase;
+  }
+}
+
+.edit-link-a {
+  float: right;
+}

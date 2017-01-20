@@ -1,6 +1,10 @@
 %header
   %figure= formatted_event.image.present? ? image_tag(formatted_event.image) : space_listing_placeholder_path(width: 80, height: 80)
-  %p.desc= formatted_event.text
+  %p.desc
+    = formatted_event.text
+
+    - if event.event.to_sym == :user_updated_user_status && event.event_source.can_edit?(current_user)
+      = link_to 'Edit', "#status-content-#{event.event_source.id}", 'data-edit-status': '', class: 'button-a tiny light edit-link-a'
 
   %p.meta
     %time

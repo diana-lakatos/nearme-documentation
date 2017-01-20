@@ -1,0 +1,5 @@
+.status-body{ class: ('edited' if @user_status_update.created_at != @user_status_update.updated_at) }
+  = simple_format auto_link(@user_status_update.text, html: { target: '_blank', ref: 'nofollow' })
+
+.status-editor
+  = render "user_status_updates/form", user_status_update: @user_status_update, no_topic_select: true, remote: true, no_avatar: true

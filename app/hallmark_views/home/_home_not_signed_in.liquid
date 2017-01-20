@@ -121,7 +121,7 @@
         {% for project in g.projects %}
           <div class="cell">
             <article class="card-a" data-equalize>
-              <figure><a href="{{ project.show_path }}"><img src="{{ project.cover_photo_url }}" /></a></figure>
+              <figure><a href="{{ project.show_path }}"><img src="{{ project.cover_photo_thumbnail_url }}" /></a></figure>
               <p class="action">
               <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
               </p>
