@@ -23,12 +23,10 @@
         %figure
           = followed_link(followed, target) do
             = header_image.present? ? image_tag(header_image) : image_tag(space_listing_placeholder_path(width: 80, height: 80))
+
       %section
         %h3.hx= title if title.present?
-        - if body.present?
-          - if event.is_text_update? || event.event.to_sym == :user_created_transactable
-            = videoify_and_parse_with_markdown(body)
-          - else
-            = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' })
+        .status-content-a{ id: "status-content-#{event.event_source.id}" }
+          = render 'shared/activity_status_body_content', event: event, title: title, body: body
 
       = render 'shared/activity_status_footer', event: event

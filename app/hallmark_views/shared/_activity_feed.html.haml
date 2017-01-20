@@ -2,19 +2,7 @@
 
 - if current_user.try(:can_update_feed_status?, object) == true
   .publish-a
-    = simple_form_for UserStatusUpdate.new, method: :post do |f|
-      - image = current_user.try(:avatar).try(:url, :medium)
-      %figure= image_tag(image || space_listing_placeholder_path(width: 80, height: 80))
-
-      = f.input :text, label: false, placeholder: I18n.t('activity_feed.user_status_text'), input_html: { maxlength: 5000, cols: 40, rows: 3 }
-
-      - unless no_topic_select
-        = f.association :topics, as: :select, collection: Topic.all, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }
-
-      = f.input :updateable_id, as: :hidden, input_html: { value: feed.owner_id }
-      = f.input :updateable_type, as: :hidden, input_html: { value: feed.owner_type }
-      %p.action
-        = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'
+    = render 'user_status_updates/form', user_status_update: UserStatusUpdate.new, no_topic_select: no_topic_select, feed: feed
 
 - if feed.events.count > 0
   .content-container{ 'data-activity-feed': true, data: feed_data }

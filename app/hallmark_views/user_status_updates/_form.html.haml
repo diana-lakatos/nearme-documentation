@@ -1,0 +1,20 @@
+- feed = (local_assigns[:feed].presence || false)
+- remote = (local_assigns[:remote].presence || false)
+- no_avatar = (local_assigns[:no_avatar].presence || false)
+
+= simple_form_for user_status_update, remote: remote do |f|
+  - unless no_avatar
+    - image = current_user.try(:avatar).try(:url, :medium)
+    %figure= image_tag(image || space_listing_placeholder_path(width: 80, height: 80))
+
+  = f.input :text, label: false, placeholder: I18n.t('activity_feed.user_status_text'), input_html: { maxlength: 5000, cols: 40, rows: 3, required: true }
+
+  - unless no_topic_select
+    = f.association :topics, as: :select, collection: Topic.all, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }
+
+  - if feed
+    = f.input :updateable_id, as: :hidden, input_html: { value: feed.owner_id }
+    = f.input :updateable_type, as: :hidden, input_html: { value: feed.owner_type }
+
+  %p.action
+    = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'
