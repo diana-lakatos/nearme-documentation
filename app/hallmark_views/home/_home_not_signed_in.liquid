@@ -3,30 +3,34 @@
 <div id="intro-video"{% if hide_intro_video %} class="inactive"{% endif %}></div>
 
 <div class="hero-a">
-  <div class="contain">
-    {% if current_user == blank %}
+  {% if current_user == blank %}
+    <div class="contain compact">
       <h2 class="hx">{{ 'hero_slogan_signed_out' | translate }}</h2>
       <p>{{ 'hero_description_signed_out' | translate }}</p>
-      <p class="action"><button type="button" class="button-a large alt static">{{ 'join_now' | translate }}</button></p>
-    {% else %}
+      <div class="action"><a href="/users/password/new" class="button-a large alt">{{ 'join_now' | translate }}</a></div>
+
+      <p class="signup-cta">Not a Keepsake Ornament Club member? Unlock access to Keepsake Community PLUS many other benefits for a whole year!</p>
+      <div class="action"><a href="http://explore.hallmark.com/keepsake-ornaments/keepsake-ornament-club/" class="button-a large alt">Join the Club</a></div>
+    </div>
+  {% else %}
+    <div class="contain">
       <h2 class="hx">{{ 'hero_slogan_signed_in' | translate }}</h2>
       <p>{{ 'hero_description_signed_in' | translate }}</p>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 </div>
 
 {% if current_user == blank %}
 <div class="wrap-a white benefits-section">
   <div class="contain">
+    <img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1422/intro-image.jpg" alt="Wooden bird" class="alignright" width="220" height="220">
+
     <div class="header-a _mBa">
-      <h2 class="hx">{{ 'benefits_section_title' | translate }}</h2>
-      <p class="tx-a">{{ 'benefits_section_subtitle' | translate }}</p>
+      <h2 class="hx">Join the club or sign in to Keepsake Community</h2>
     </div>
 
     <div class="page-copy-a">
-      <img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1386/be-a-KOC-insider.jpg" alt="Be a KOC insider all year long!" class="alignright" width="438" height="279">
-
-      <p>{{ 'benefits_section_body' | translate }}</p>
+      <p>Now you can connect with people who share your passion for Keepsake Ornaments and interact with artists like never before! With your Keepsake Ornament Club membership, you will be part of an exclusive members-only digital community where you can make new connections, talk to artists, get exclusive content and find sneak peeks &mdash; all year round. Plus, we’ll be adding more exciting features, including a marketplace where you can buy, sell and trade ornaments!</p>
     </div>
   </div>
 </div>
@@ -40,9 +44,7 @@
       <h2 class="hx">
         {{ 'featured_topics' | translate }}
       </h2>
-      <p class="tx-a">
-      {{ 'featured_topics_description' | translate }}
-      </p>
+      <p class="tx-a">Follow the topics that interest you and join the conversation.</p>
       <p class="action">
       <a href="/search/topics?sort=featured" class='button-a small light'>{{ 'view_all' | translate }}</a>
       </p>
@@ -52,14 +54,14 @@
     <div class="topics-a">
       <div class="wrap">
         <ul class="a">
-          <li class="big"><a href="/topics/50" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1392/Tutorials.jpg);"><span>Tutorials</span></a></li>
-          <li><a href="/topics/59" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1393/Upcoming_Events.jpg);"><span>Upcoming Events</span></a></li>
-          <li><a href="/topics/57" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1389/In_the_News.jpg);"><span>In the News</span></a></li>
+          <li class="big"><a href="/topics/50" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1398/Tutorials.jpg);"><span>Tutorials</span></a></li>
+          <li><a href="/topics/59" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1399/Upcoming_Events.jpg);"><span>Upcoming Events</span></a></li>
+          <li><a href="/topics/57" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1395/In_the_News.jpg);"><span>In the News</span></a></li>
         </ul>
         <ul class="b">
-          <li><a href="/topics/56" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1391/Sneak_Peeks.jpg);"><span>Sneak Peeks</span></a></li>
-          <li><a href="/topics/52" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1390/Lets_Chat.jpg);"><span>Let’s Chat</span></a></li>
-          <li class="big"><a href="/topics/58" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1388/Artist_Corner.jpg);"><span>Artist Corner</span></a></li>
+          <li><a href="/topics/56" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1397/Sneak_Peeks.jpg);"><span>Sneak Peeks</span></a></li>
+          <li><a href="/topics/52" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1396/Lets_Chat.jpg);"><span>Let’s Chat</span></a></li>
+          <li class="big"><a href="/topics/58" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1394/Artist_Corner.jpg);"><span>Artist Corner</span></a></li>
         </ul>
       </div>
     </div>
@@ -73,9 +75,8 @@
       <h2 class="hx">
         {{ 'connect_with_influencers' | translate }}
       </h2>
-      <p class="tx-a">
-      {{ 'connect_with_influencers_description' | translate }}
-      </p>
+      <p class="tx-a">Connect with fellow Keepsake Ornament Club members and your favorite artists.</p>
+
       <p class="action">
       <a href="/search/people?sort=featured" class='button-a small light'>{{ 'view_all' | translate }}</a>
       </p>
@@ -89,8 +90,7 @@
               <figure><a href="{{ user.profile_path }}"><img src="{{ user.avatar_url_bigger }}" /></a>
               {% if user.role != blank %}
               <figcaption>{{ user.role }}</figcaption>
-              {% endif %}
-              </figure>
+              {% endif %}</figure>
               <p class="action">
               <a href="{{ user.profile_path }}" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
               </p>
@@ -113,7 +113,7 @@
   <div class="contain">
     <div class="header-a">
       <h2 class="hx">{{ 'featured_projects' | translate }}</h2>
-      <p class="tx-a">{{ 'explore_the_most_popular_projects' | translate }}</p>
+      <p class="tx-a">Browse other members’ collections, decor and more, and share your own creations.</p>
       <p class="action"><a href="/search/projects?sort=featured" class='button-a small light'>{{ 'view_all' | translate }}</a></p>
     </div>
     <div class="grid-a-projects-a">
@@ -121,7 +121,7 @@
         {% for project in g.projects %}
           <div class="cell">
             <article class="card-a" data-equalize>
-              <figure><a href="{{ project.show_path }}"><img src="{{ project.cover_photo_thumbnail_url }}" /></a></figure>
+              <figure><a href="{{ project.show_path }}"><img src="{{ project.cover_photo_url }}" /></a></figure>
               <p class="action">
               <a href="#signup" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
               </p>
