@@ -738,4 +738,12 @@ module LiquidFilters
   def concat(arr_a, arr_b)
     arr_a + arr_b
   end
+
+  # @return [String] path used for a form for creating a new message in a thread
+  # @param displayed_user_message [UserMessageDrop] the parent displayed message
+  # @param user_message [UserMessageDrop] 
+  def user_message_create_path(displayed_user_message, user_message)
+    displayed_user_message.user_message.decorate.create_path(user_message.try(:user_message))
+  end
+
 end
