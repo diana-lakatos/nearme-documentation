@@ -6,7 +6,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::M
   end
 
   def create
-    @user = User.where(email: params[:email]).first
+    @user = User.where(email: params[:email].downcase).first
     if @user
       if InstanceAdmin.where(user_id: @user.id).first.present?
         flash[:warning] = "User with email #{@user.email} has already been added as admin"
