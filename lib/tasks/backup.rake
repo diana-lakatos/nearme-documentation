@@ -44,7 +44,7 @@ namespace :backup do
 
   task :restore_from_local  do
     pathname = Rails.root + Pathname.new('tmp/backup.dump')
-    
+
     puts "[#{Time.now}] Restoring #{pathname} to ENV DB"
     `#{Utils::DatabaseConnectionHelper.new(pathname).build_restore_command}`
 
@@ -57,6 +57,7 @@ namespace :backup do
     when 'nm-qa-2' then 'qa-2'
     when 'nm-qa-3' then 'qa-3'
     when 'nm-staging' then 'staging'
+    when 'nm-staging-oregon' then 'oregon-staging'
     end
 
     if stack_name.blank?
