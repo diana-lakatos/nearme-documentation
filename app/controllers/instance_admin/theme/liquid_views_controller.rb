@@ -41,11 +41,9 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   end
 
   def create
-    @liquid_view = platform_context.instance.instance_views.build(template_params)
-    @liquid_view.format = 'html'
-    @liquid_view.handler = 'liquid'
-    @liquid_view.view_type = InstanceView::VIEW_VIEW
-    if @liquid_view.save
+    @liquid_view = InstanceAdmin::LiquidViewService.new.create template_params
+
+    if @liquid_view.errors.empty?
       if request.xhr?
         render json: { status: 'success', data: { message: t('flash_messages.instance_admin.manage.liquid_views.created') } }
       else
@@ -63,9 +61,9 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   end
 
   def update
-    # do not allow to change path for now
-    params[:liquid_view][:path] = @liquid_view.path
-    if @liquid_view.update_attributes(template_params)
+    @liquid_view = InstanceAdmin::LiquidViewService.new.update @liquid_view, template_params
+
+    if @liquid_view.errors.empty?
       if request.xhr?
         render json: { status: 'success' }
       else
