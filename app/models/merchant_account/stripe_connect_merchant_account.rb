@@ -6,6 +6,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   ACCOUNT_TYPES = %w(individual company).freeze
 
   SUPPORTED_CURRENCIES = {
+    'NZ'   => %w(NZD),
     'US'   => %w(USD),
     'CA'   => %w(USD CAD),
     'AU'   => %w(AUD),
