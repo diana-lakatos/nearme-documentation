@@ -23,13 +23,6 @@ class InstanceType::Searcher::GroupsSearcher
     }
   end
 
-  def to_event_params
-    {
-      search_query: @params[:query],
-      result_count: result_count
-    }
-  end
-
   private
 
   def sort_params

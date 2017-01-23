@@ -1,50 +1,52 @@
 class CategoryRepository
   def self.paths(category_ids)
-    lookup_table
-      .select { |n, _| category_ids.include? n[:id] }
-      .each_with_object({}) { |(node, *rest), acc| acc[rest.last[:name]] ||= []; acc[rest.last[:name]] << node[:name] }
+    category_list(category_ids)
   end
 
-  def self.lookup_table
-    @lookup_table ||= CategoryLookupTable.new.tap(&:prepare)
+  def self.category_list(category_ids)
+    Category
+      .where(id: category_ids)
+      .order(:permalink)
+      .pluck(:permalink, :name)
+      .map { |permalink, name| NodeCategory.new(permalink, name) }
+      .each_with_object(CategoryTree.new) { |category, output| output.add(category) }
   end
 
-  class CategoryLookupTable
-    attr_reader :table
-
+  class CategoryTree
     def initialize
-      @table = []
+      @tree = Hash.new
     end
 
-    def select(&block)
-      return unless block_given?
-
-      @table.select(&block)
+    def add(category)
+      @tree[category.root] ||= []
+      @tree[category.root] << category.name
     end
 
-    def prepare
-      tree.each { |root| traverse(root, []) }
+    def [](key)
+      @tree[key]
     end
 
-    def tree
-      @db ||= category_list
+    def to_liquid
+      @tree.to_liquid
+    end
+  end
+
+  class NodeCategory
+    attr_reader :name
+
+    def initialize(permalink, name)
+      @permalink = permalink
+      @name = name
     end
 
-    def traverse(current, parents)
-      current[:children].each { |node| traverse node, [current, parents] }
-
-      add current, parents
+    def root
+      body.first
     end
 
-    def add(*nodes)
-      @table << nodes.flatten.map { |n| n.slice(:id, :name) }
-    end
+    private
 
-    def category_list
-      Category
-        .includes(:parent, children: { children: { children: :children } })
-        .roots
-        .map { |x| CategorySerializer.new(x).as_json }
+    def body
+      @permalink.split('/')
     end
   end
 end

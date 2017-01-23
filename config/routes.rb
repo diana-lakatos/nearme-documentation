@@ -1093,7 +1093,7 @@ DesksnearMe::Application.routes.draw do
     get '/see_more_members', to: 'activity_feed#members', as: :see_more_members
     get '/see_more_groups', to: 'activity_feed#groups', as: :see_more_groups
 
-    resources :user_status_updates, only: [:create]
+    resources :user_status_updates, only: [:create, :update]
 
     resources :activity_feed_event do
       resources :spam_reports, only: [:create, :destroy] do
