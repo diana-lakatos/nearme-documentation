@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < ActiveSupport::TestCase
@@ -83,7 +84,8 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < Active
     end
 
     should 'use "geo_search" when map is moved' do
-      @searcher.instance_variable_set(:@params, map_moved: 'true')
+      @searcher.params = { map_moved: 'true' }
+      @search_web_params.stubs(:bounding_box).returns(top_right: { lat: 123, lon: 123 }, bottom_left: { lat: 123, lon: 123 })
       @searcher.expects(:extend_params_by_geo_filters)
       @searcher.fetcher
     end
@@ -96,7 +98,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < Active
 
     should 'use geo distance query when address is located' do
       @searcher.search.instance_variable_set(:@options, lat: 123, lng: 123)
-      @searcher.instance_variable_set(:@params, lat: 123, lng: 123)
+      @searcher.params = { lat: 123, lng: 123 }
       @searcher.fetcher
 
       params = @searcher.instance_variable_get(:@search_params)
@@ -106,7 +108,8 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < Active
     end
 
     should 'use bounding_box query when map is moved' do
-      @searcher.instance_variable_set(:@params, map_moved: 'true')
+      @searcher.params = { map_moved: 'true' }
+      @search_web_params.stubs(:bounding_box).returns(top_right: { lat: 123, lon: 123 }, bottom_left: { lat: 123, lon: 123 })
       @searcher.fetcher
 
       params = @searcher.instance_variable_get(:@search_params)
@@ -114,11 +117,11 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < Active
     end
 
     should 'use geo distance query when address is not precise but service radius is enabled' do
-      @searcher.instance_variable_set(:@params, lat: 123, lng: 123)
+      @searcher.params = { lat: 123, lng: 123 }
       @searcher.search.instance_variable_set(:@options, lat: 123, lng: 123)
       @searcher.stubs(:service_radius_enabled?).returns(true)
       @search_web_params.stubs(:precise_address?).returns(false)
-      @search_web_params.stubs(:bounding_box).returns({ top_right: { lat: 123, lon: 123}, bottom_left: { lat: 123, lon: 123 }})
+      @search_web_params.stubs(:bounding_box).returns(top_right: { lat: 123, lon: 123 }, bottom_left: { lat: 123, lon: 123 })
 
       @searcher.fetcher
 
@@ -126,6 +129,9 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::ListingTest < Active
       assert params.key?(:lat)
       assert params.key?(:lng)
       assert params.key?(:distance)
+
+      assert @searcher.params.key?(:page)
+      assert @searcher.params.key?(:per_page)
     end
   end
 end

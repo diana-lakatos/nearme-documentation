@@ -94,9 +94,9 @@
                             {% endif %}
                             </ul>
 
-                            {% assign aoe_categories = user.fetch_buyer_categories["Area Of Expertise"] %}
-                            {% assign industry_categories = user.fetch_buyer_categories["Industry"] %}
-                            {% assign languages = user.fetch_buyer_categories["Languages"] %}
+                            {% assign aoe_categories = user.fetch_buyer_categories["area-of-expertise"] %}
+                            {% assign industry_categories = user.fetch_buyer_categories["industry"] %}
+                            {% assign languages = user.fetch_buyer_categories["languages"] %}
 
                             {% if aoe_categories.size > 0 || industry_categories.size > 0 || languages.size > 0 || user.buyer_properties.bio != blank %}
                                 <div class="content">

@@ -15,7 +15,7 @@ module InstanceType::Searcher
   # @param input_name [String] name for the input
   # @return [String] value for the input with the given name
   def input_value(input_name)
-    @params[input_name]
+    params[input_name]
   end
 
   # @return [Array<String,Integer>] array of searched for category ids
@@ -34,10 +34,6 @@ module InstanceType::Searcher
     category.children.inject([]) { |options, c| options << [c.id, c.translated_name] }
   end
 
-  def to_event_params
-    { search_query: query, result_count: result_count }.merge(filters)
-  end
-
   # @return [String, nil] query keyword
   def keyword
     @keyword ||= search.keyword
@@ -49,15 +45,15 @@ module InstanceType::Searcher
   end
 
   def adjust_to_map
-    @params[:map_moved] == 'true'
+    params[:map_moved] == 'true'
   end
 
   def global_map
-    !@params[:loc].present?
+    !params[:loc].present?
   end
 
   def repeated_search?(values)
-    (@params[:loc] || @params[:query]) && search_query_values.to_s == values.try(:to_s)
+    (params[:loc] || params[:query]) && search_query_values.to_s == values.try(:to_s)
   end
 
   # @return [Integer] search offset (with what result number we're starting)
@@ -67,7 +63,7 @@ module InstanceType::Searcher
 
   # @return [Integer] minimum price requested for the search
   def min_price
-    @params[:price] ? @params[:price][:min].to_i : 0
+    params[:price] ? params[:price][:min].to_i : 0
   end
 
   def count_query(query)
@@ -84,16 +80,16 @@ module InstanceType::Searcher
 
   # @return [Boolean] whether a minimum price was requested for the query
   def current_min_price
-    @params[:price] && @params[:price][:min]
+    params[:price] && params[:price][:min]
   end
 
   # @return [Boolean] whether a maximum price was requested for the query
   def current_max_price
-    @params[:price] && @params[:price][:max]
+    params[:price] && params[:price][:max]
   end
 
   def total_pages
-    result_count / @params[:per_page].to_pagination_number(20)
+    result_count / params[:per_page]
   end
 
   # @return [TransactableTypeDecorator] transactable type object associated with the query

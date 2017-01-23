@@ -1,10 +1,7 @@
-class InstanceType::Searcher::GeolocationSearcher::Location
-  include InstanceType::Searcher::GeolocationSearcher
-
+class InstanceType::Searcher::GeolocationSearcher::Location < Searching::SqlBased
   def initialize(transactable_type, params)
-    @transactable_type = transactable_type
+    super(transactable_type, params)
     set_options_for_filters
-    @params = params
     @results = fetcher.locations
   end
 

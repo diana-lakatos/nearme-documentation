@@ -1,10 +1,7 @@
-class InstanceType::Searcher::GeolocationSearcher::Listing
-  include InstanceType::Searcher::GeolocationSearcher
-
+class InstanceType::Searcher::GeolocationSearcher::Listing < Searching::SqlBased
   def initialize(transactable_type, params)
-    @transactable_type = transactable_type
+    super(transactable_type, params)
     set_options_for_filters
-    @params = params
   end
 
   def invoke
@@ -14,7 +11,7 @@ class InstanceType::Searcher::GeolocationSearcher::Listing
   def filters
     search_filters = {}
     search_filters[:location_type_filter] = search.location_types_ids if search.location_types_ids && !search.location_types_ids.empty?
-    search_filters[:custom_attributes] = @params[:lg_custom_attributes] unless @params[:lg_custom_attributes].blank?
+    search_filters[:custom_attributes] = params[:lg_custom_attributes] unless params[:lg_custom_attributes].blank?
     search_filters
   end
 

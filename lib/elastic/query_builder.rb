@@ -31,13 +31,11 @@ module Elastic
     end
 
     def query_per_page
-      per_page = @query[:per_page].to_i
-      per_page > 0 ? per_page : PER_PAGE
+      @query[:per_page] > 0 ? @query[:per_page] : PER_PAGE
     end
 
     def query_page
-      page = @query[:page].to_pagination_number
-      page > 0 ? page : PAGE
+      @query[:page] > 0 ? @query[:page] : PAGE
     end
 
     def query_offset
