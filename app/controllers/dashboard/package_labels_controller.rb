@@ -42,7 +42,9 @@ class Dashboard::PackageLabelsController < ApplicationController
     private
 
     def client
-      @delivery.order.shipping_provider.api_client
+      @delivery.order.shipping_provider.api_client do |api|
+        api.logger = nil
+      end
     end
   end
 end
