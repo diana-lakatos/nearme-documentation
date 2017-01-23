@@ -40,6 +40,14 @@ class CommunityAdvancedReportsGenerator
     end
   end
 
+  def hostname
+    @hostname ||= PlatformContext.current.decorate.host
+  end
+
+  def url_helpers
+    @url_helpers ||= Rails.application.routes.url_helpers
+  end
+
   private
 
   def get_project_attributes(project, type)
@@ -55,7 +63,7 @@ class CommunityAdvancedReportsGenerator
     when :project_groups
       project.groups.map { |g| [g.id, g.name] }
     when :project_video_url
-      project.properties.video_url
+      project.properties.try(:video_url)
     when :project_created_at
       project.created_at
     when :project_name
@@ -67,7 +75,7 @@ class CommunityAdvancedReportsGenerator
     when :project_owner_name
       project.creator.name
     when :project_owner_profile_url
-      Rails.application.routes.url_helpers.profile_url(project.creator.slug)
+      url_helpers.profile_url(host: hostname, id: project.creator.slug)
     when :project_owner_email_address
       project.creator.email
     when :project_owner_follower_count
