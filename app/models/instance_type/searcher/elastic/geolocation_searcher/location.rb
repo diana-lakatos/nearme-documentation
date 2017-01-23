@@ -1,4 +1,6 @@
 class InstanceType::Searcher::Elastic::GeolocationSearcher::Location < Searching::ElasticSearchBased
+  LOAD_ALL_ITEMS = 10_000
+
   def initialize(transactable_type, params)
     super(transactable_type, params)
     set_options_for_filters
@@ -34,6 +36,17 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location < Searching
     @results = @results.offset(0) unless postgres_filters?
   end
 
+  def search_params
+    @search_params ||= params.merge date_range: search.available_dates,
+                                    custom_attributes: search.lg_custom_attributes,
+                                    location_types_ids: search.location_types_ids,
+                                    listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
+                                    category_ids: category_ids,
+                                    sort: search.sort,
+                                    page: 1,
+                                    limit: LOAD_ALL_ITEMS
+  end
+
   def max_price
     return 0 if !@transactable_type.show_price_slider || results.blank?
     max = fetcher.response[:aggregations]['filtered_aggregations']['maximum_price'].try(:[], 'value') || 0
@@ -50,7 +63,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location < Searching
 
   private
 
-  def initialize_search_params
+  def default_search_params
     { instance_id: PlatformContext.current.instance.id, transactable_type_id: @transactable_type.id }
   end
 end

@@ -1,34 +1,14 @@
+# TODO: promote module to class
 module InstanceType::Searcher::Elastic::GeolocationSearcher
   include InstanceType::Searcher
   attr_reader :filterable_location_types, :filterable_custom_attributes, :search
 
   def fetcher
-    @fetcher ||=
-      begin
-        if located || (adjust_to_map && search.bounding_box.present?)
-          extend_params_by_geo_filters
-          Transactable.geo_search(geo_searcher_params.merge(search_params), @transactable_type)
-        else
-          Transactable.regular_search(geo_searcher_params.merge(search_params), @transactable_type)
-        end
-      end
-  end
-
-  def geo_searcher_params
-    initialize_search_params
+    @fetcher ||= invoke_search
   end
 
   def search
     @search ||= ::Listing::Search::Params::Web.new(params, @transactable_type)
-  end
-
-  def search_params
-    @search_params ||= params.merge date_range: search.available_dates,
-                                    custom_attributes: search.lg_custom_attributes,
-                                    location_types_ids: search.location_types_ids,
-                                    listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
-                                    category_ids: category_ids,
-                                    sort: search.sort
   end
 
   def search_query_values
@@ -43,6 +23,27 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable.where(" NOT (custom_attributes.attribute_type = 'string' AND custom_attributes.html_tag IN ('input', 'textarea'))")
     @offset = (params[:page] - 1) * params[:per_page]
     @to = @offset + params[:per_page] + 5
+  end
+
+  def invoke_search
+    if located || (adjust_to_map && search.bounding_box.present?)
+      geo_search
+    else
+      regular_search
+    end
+  end
+
+  def regular_search
+    Transactable.regular_search(geo_searcher_params, @transactable_type)
+  end
+
+  def geo_search
+    extend_params_by_geo_filters
+    Transactable.geo_search(geo_searcher_params, @transactable_type)
+  end
+
+  def geo_searcher_params
+    default_search_params.merge(search_params)
   end
 
   def availability_filter?
