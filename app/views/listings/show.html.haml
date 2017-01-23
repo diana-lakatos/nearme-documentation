@@ -5,7 +5,7 @@
 = transactable_structured_data
 
 - content_for :hero do
-  - cache i18n_cache_key('listings_show', @listing, @listing.location, @listing.company, @listing.administrator, [@listing_siblings.maximum(:updated_at), @listing_siblings.count]) do
+  - cache i18n_cache_key('listings_show', @listing, @listing.location, @listing.company, @listing.administrator, [@listing_siblings.maximum(:updated_at), @listing_siblings.count], cache_params_string) do
     = render 'show'
 
 - content_for :domready do
