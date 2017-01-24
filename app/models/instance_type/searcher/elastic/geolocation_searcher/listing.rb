@@ -30,6 +30,15 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing < Searching:
     @results = @results.offset(0) unless postgres_filters?
   end
 
+  def search_params
+    @search_params ||= params.merge date_range: search.available_dates,
+                                    custom_attributes: search.lg_custom_attributes,
+                                    location_types_ids: search.location_types_ids,
+                                    listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
+                                    category_ids: category_ids,
+                                    sort: search.sort
+  end
+
   def filters
     search_filters = {}
     search_filters[:location_type_filter] = params[:location_types_ids] if params[:location_types_ids]
@@ -45,7 +54,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing < Searching:
 
   private
 
-  def initialize_search_params
+  def default_search_params
     { instance_id: PlatformContext.current.instance.id, transactable_type_id: @transactable_type.id }
   end
 end
