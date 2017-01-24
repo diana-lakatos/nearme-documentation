@@ -9,6 +9,7 @@ class Address < ActiveRecord::Base
 
   attr_accessor :local_geocoding # set this to true in js
   attr_accessor :should_check_address
+  attr_accessor :country_id, :state_id
 
   serialize :address_components, JSON
   geocoded_by :address
@@ -99,6 +100,28 @@ class Address < ActiveRecord::Base
 
   def state_code
     @state_code ||= Address::GoogleGeolocationDataParser.new(address_components).fetch_address_component('state', :short)
+  end
+
+  def country_id=(attr_id)
+    @country_id = attr_id
+    self.country = Country.find_by(id: attr_id).try(:name)
+  end
+
+  def state_id=(attr_id)
+    @state_id = attr_id
+    self.state = State.find_by(id: attr_id).try(:name)
+  end
+
+  def country_id
+    return unless country
+    Country.find_by(name: country).try(:id)
+  end
+
+  def state_id
+    return unless state
+    return unless country
+
+    State.find_by(name: state, country_id: country_id).try(:id)
   end
 
   def street_number

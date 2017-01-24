@@ -19,6 +19,14 @@ if (el.length > 0) {
     loadStatesForCountry($(this).val(), $(this).data('get-states-url'),1);
   });
 
+  $('#order_shipping_address_attributes_address_attributes_country_id').on('change', function() {
+    loadStatesForCountry($(this).val(), $(this).data('get-states-url'),1);
+  });
+
+  $('#order_shipping_address_attributes_country_id').on('change', function() {
+    loadStatesForCountry($(this).val(), $(this).data('get-states-url'), 0);
+  });
+
   $('#order_shipping_address_attributes_country_id').on('change', function() {
     loadStatesForCountry($(this).val(), $(this).data('get-states-url'), 0);
   });
