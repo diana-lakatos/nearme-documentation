@@ -32,12 +32,12 @@ class AddressDrop < BaseDrop
   # @return [String] string containing the address in the format "city, suburb state"
   # @todo -- leave formatting for the user
   def discreet
-    format('%s %s', city, postcode)
+    format('%s, %s %s', city || suburb, state, postcode)
   end
 
   # @return [String] full address as a string
   # @todo -- leave formatting for the user
   def full
-    format('%s, %s %s', address, city, postcode)
+    format('%s, %s, %s %s', address, city || suburb, state, postcode)
   end
 end

@@ -860,6 +860,7 @@ class SecuredParams
       :address, :address2, :formatted_address, :postcode,
       :suburb, :city, :state, :country, :street, :should_check_address,
       :latitude, :local_geocoding, :longitude, :state_code, :raw_address,
+      :state_id, :country_id,
       address_components: [:long_name, :short_name, :types]
     ]
   end
