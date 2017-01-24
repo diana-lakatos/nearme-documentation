@@ -1,0 +1,12 @@
+name: test workflow
+workflow_type: test_workflow
+
+workflow_steps:
+  - name: test step
+    associated_class: WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate
+
+    workflow_alerts:
+      - name: test alert
+        alert_type: email
+        recipient_type: lister
+        template_path: user_mailer/user_commented_on_user_update

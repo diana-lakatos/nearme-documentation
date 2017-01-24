@@ -24,9 +24,14 @@ module MarketplaceBuilder
     def create_action_type(object, type, hash)
       hash = hash.with_indifferent_access
       action_type = object.action_types.where(type: type).first_or_initialize
+      action_type = action_type.becomes(type.constantize)
+
+      pricings = hash.delete(:pricings) || []
 
       action_type.assign_attributes(hash)
+      create_pricings(action_type, pricings)
       action_type.save!
+
       action_type
     end
 
@@ -35,6 +40,24 @@ module MarketplaceBuilder
         enabled: true,
         allow_no_action: false
       }
+    end
+
+    def create_pricings(action_type, pricings)
+      unused_attrs = if pricings.empty?
+                 action_type.pricings
+               else
+                  action_type.pricings.all.select do |pricing|
+                    pricings.none?{ |p|  pricing.units_to_s == [p[:number_of_units],p[:unit]].join('_') }
+                  end
+               end
+
+      unused_attrs.each { |p| logger.debug "Removing unused pricings: #{p.units_to_s}" }
+      unused_attrs.each(&:destroy)
+      pricings.each do |pricing_attrs|
+        pricing = action_type.pricings.where(number_of_units: pricing_attrs[:number_of_units], unit: pricing_attrs[:unit]).first_or_initialize
+        pricing.assign_attributes(pricing_attrs)
+        pricing.save! if action_type.persisted?
+      end
     end
   end
 end

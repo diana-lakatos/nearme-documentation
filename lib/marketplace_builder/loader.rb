@@ -1,26 +1,28 @@
 # frozen_string_literal: true
 module MarketplaceBuilder
   class Loader
+    AVAILABLE_CREATORS_LIST = [
+      Creators::MarketplaceCreator,
+      Creators::TransactableTypesCreator,
+      Creators::InstanceProfileTypesCreator,
+      Creators::ReservationTypesCreator,
+      Creators::TopicsCreator,
+      Creators::CategoriesCreator,
+      Creators::PagesCreator,
+      Creators::ContentHoldersCreator,
+      Creators::MailersCreator,
+      Creators::SMSCreator,
+      Creators::LiquidViewsCreator,
+      Creators::TranslationsCreator,
+      Creators::WorkflowCreator,
+      Creators::CustomModelTypesCreator,
+      Creators::GraphQueriesCreator
+    ]
+
     def self.load(source, options = {})
       default_options = {
         verbose: false,
-        creators: [
-          Creators::MarketplaceCreator,
-          Creators::TransactableTypesCreator,
-          Creators::InstanceProfileTypesCreator,
-          Creators::ReservationTypesCreator,
-          Creators::TopicsCreator,
-          Creators::CategoriesCreator,
-          Creators::PagesCreator,
-          Creators::ContentHoldersCreator,
-          Creators::MailersCreator,
-          Creators::SMSCreator,
-          Creators::LiquidViewsCreator,
-          Creators::TranslationsCreator,
-          Creators::WorkflowAlertsCreator,
-          Creators::CustomModelTypesCreator,
-          Creators::GraphQueriesCreator
-        ]
+        creators: AVAILABLE_CREATORS_LIST
       }
       options = options.reverse_merge(default_options)
 
