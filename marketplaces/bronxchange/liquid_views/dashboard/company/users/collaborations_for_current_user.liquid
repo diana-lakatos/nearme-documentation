@@ -1,0 +1,98 @@
+<div class="project-invite-content">
+  <header>
+    <h2>Invite a Driver</h2>
+    <button type="button" data-close>Close</button>
+  </header>
+
+  {% assign collaborators = current_user | find_collaborators_for_user_transactables: user %}
+
+  {% if collaborators.size > 0 %}
+    <div class="existing-projects" data-delete-url="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">
+      <h3>You have invited {{ user.name }} as a driver to your booking.</h3>
+      <ul>
+        {% for collaborator in collaborators %}
+        <li>
+          {{ collaborator.transactable.name }}
+          {% if collaborator.transactable.pending? %}
+            <button type="button" class="button-b action-remove" data-transactable-collaborator-id="{{ collaborator.id }}" data-transactable-id="{{ collaborator.transactable.id }}">Remove</button>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if current_user.transactables_without_collaborators.size > 0 %}
+
+    {% if user.pending_collaborated_transactables.size == 0 %}
+      <p><strong>{{ user.name }}</strong> will be invited to become your driver.</p>
+      <p>Please select your booking:</p>
+    {% else %}
+      <p>You have other bookings, would you like to invite <strong>{{ user.name }}</strong> to another one? If so, please select from your the list below.</p>
+    {% endif %}
+
+    <form method="post" action="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">
+      <input type="hidden" name="transactable_collaborator[user_id]" value="{{ user.id }}">
+      <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+
+      <div class="control-group">
+        <label for="projects-list" class="control-label">My bookings</label>
+        <span class="select-a">
+          <select id="projects-list" name="transactable_collaborator[transactable_id]" class="unstyled-select" data-projects-list>
+            {% assign any_booking_with_capacity = false %}
+            {% for booking in current_user.transactables_without_collaborators %}
+              {% assign capacity_not_met = false %}
+              {% if booking.properties.number_of_passengers > user.buyer_properties.vehicle_capacity %}
+                {% assign capacity_not_met = true %}
+              {% else %}
+                {% assign any_booking_with_capacity = true %}
+              {% endif %}
+            <option {% if capacity_not_met %}disabled {% endif %} value="{{ booking.id }}" data-booking-duration="{{ booking.properties.duration }}">{{ booking.name }}{% if capacity_not_met %} (Driver's car doesn't have required number of seats){% endif %}</option>
+            {% endfor %}
+          </select>
+        </span>
+      </div>
+      {% assign first_booking_price = current_user.transactables_without_collaborators[0].properties.duration %}
+
+      <p class="cost">Cost: <span class="price" data-driver-cost="{{ user.buyer_properties.hourly_price }}">{{ user.buyer_properties.hourly_price | times: first_booking_price | pricify }}</span></p>
+
+      <p>The cost is calculated based on the selected booking and the selected driver. For more details, please read our <a href="/about">pricing structure</a> guidelines.</p>
+
+      <p><strong>Please note that you will also be responsible for any expenses paid by the driver on your behalf, such as parking, toll etc. You will be required to compensate the driver directly in cash upon completion of the booking.</strong></p>
+
+      <div class="actions">
+        {% if any_booking_with_capacity %}
+          <button type="submit" class="button-a">Invite</button>
+        {% else %}
+          <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Create a booking</a>
+        {% endif %}
+        {% if user.pending_collaborated_transactables.size == 0 %}
+          <button type="button" class="button-b" data-close>Cancel</button>
+        {% else %}
+          <button type="button" class="button-b" data-close>I'm done</button>
+        {% endif %}
+      </div>
+    </form>
+
+
+  {% elsif current_user.transactables.size == 0 %}
+
+    <p>In order to invite a driver, you must first create a booking.</p>
+
+    <p>Would you like to create a booking now?</p>
+
+    <div class="actions">
+      <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Create a booking</a>
+      <button type="button" class="button-b" data-close>Cancel</button>
+    </div>
+
+  {% else %}
+
+    <p>There are no other bookings to invite {{ user.name }} to. Would you like to create another booking right now?</p>
+
+    <div class="actions">
+      <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Create a booking</a>
+      <button type="button" class="button-b" data-close>I'm done</button>
+    </div>
+  {% endif %}
+</div>

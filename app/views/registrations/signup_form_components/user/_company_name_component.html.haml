@@ -1,4 +1,4 @@
 .company-name-holder.input-icon-holder
   = form.input :company_name, as: :string, placeholder: t('simple_form.placeholders.registration.company_name'),
-    label: false, input_html: { tabindex: tab_index }
+    input_html: { tabindex: tab_index }, label_html: { class: 'hidden' }
   %span.fa.fa-briefcase

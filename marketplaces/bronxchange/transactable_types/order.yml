@@ -1,0 +1,43 @@
+name: Order
+slug: 'order'
+show_path_format: '/:transactable_type_id/:id'
+searchable: false
+skip_payment_authorization: true
+hours_for_guest_to_confirm_payment: 24
+single_transactable: false
+skip_location: true
+bookable_noun: 'Order'
+enable_photo_required: false
+lessor: 'Purchaser'
+lessee: 'Vendor'
+enable_reviews: true
+auto_accept_invitation_as_collaborator: true
+require_transactable_during_onboarding: true
+access_restricted_to_invited: true
+
+custom_attributes: ~
+
+validation:
+  - field_name: name
+    required: true
+
+
+form_components:
+  - type: transactable_attributes
+    name: Details
+    fields:
+      - transactable: name
+      - transactable: description
+      - transactable: price
+
+  - type: space_wizard
+    name: Tell us a little about yourself
+    fields:
+      - seller: about
+
+  - type: space_wizard
+    name: Tell us a little about your order
+    fields:
+      - transactable: name
+      - transactable: description
+      - transactable: price
