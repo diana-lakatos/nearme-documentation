@@ -1,4 +1,4 @@
-%div{data: {shipping_address: 'true'}}
+%div{data: {shipping_address: 'true', shipping_country_controller: 'true' }}
   #shipping-address
     = f.simple_fields_for :shipping_address do |s|
       = s.input :firstname, placeholder: t('buy_sell_market.checkout.placeholders.first_name')
@@ -13,5 +13,5 @@
           = address_form.input :address, required: true, label_html: { class: 'control-label'}
           = address_form.input :suburb, required: true, label_html: { class: 'control-label'}
           = address_form.input :postcode, required: true, label_html: { class: 'control-label'}
-          = address_form.input :state, required: true, label_html: { class: 'control-label'}
-          = address_form.input :country, required: true, label_html: { class: 'control-label'}
+          = address_form.input :country_id, collection: @countries, input_html: { class: 'checkout-select',  data: { get_states_url: get_states_order_checkout_url(@order, format: :js) }}, include_blank: false
+          = address_form.input :state_id, collection: @country_states, include_blank: false, input_html: { class: 'checkout-select' }
