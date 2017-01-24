@@ -6,7 +6,7 @@ module MarketplaceBuilder
   MODE_APPEND = 'append'
 
   class Builder
-    def initialize(instance_id, theme_path, creators, options = {})
+    def initialize(instance_id, theme_path, creators = Loader::AVAILABLE_CREATORS_LIST, options = {})
       default_options = {
         mode: MarketplaceBuilder::MODE_APPEND,
         debug_level: MarketplaceBuilder::Loggers::Logger::INFO

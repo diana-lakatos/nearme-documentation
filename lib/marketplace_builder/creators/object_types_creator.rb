@@ -9,6 +9,7 @@ module MarketplaceBuilder
 
       def execute!
         data = get_data
+        return if data.empty?
 
         return unless data.respond_to?(:keys)
 

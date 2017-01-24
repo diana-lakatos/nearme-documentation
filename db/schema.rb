@@ -1360,8 +1360,8 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "prepend_view_path"
     t.string   "twilio_ring_tone"
+    t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
   end
 
@@ -3173,8 +3173,8 @@ ActiveRecord::Schema.define(version: 20170120072027) do
     t.integer  "transactable_collaborators_count",                   default: 0,                                                                                   null: false
     t.integer  "wish_list_items_count",                              default: 0
     t.float    "product_average_rating",                             default: 0.0
-    t.text     "ui_settings",                                        default: "{}"
     t.datetime "expires_at"
+    t.text     "ui_settings",                                        default: "{}"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

@@ -19,12 +19,13 @@ module MarketplaceBuilder
         name = attribute.delete(:name)
 
         validator_hash = attribute.delete(:validation) || {}
+        validator_hash = validator_hash.first if validator_hash.kind_of?(Array)
         validator_hash = validator_hash.with_indifferent_access
 
         validator_hash.keys.each do |prop|
           unless validator_properties.include? prop.to_s
             validator_hash.delete(prop)
-            logger.error "Removing invalid validator property #{prop} from #{ca.name} custom field validator"
+            logger.error "Removing invalid validator property #{prop} from custom field validator"
           end
         end
 

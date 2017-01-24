@@ -90,8 +90,6 @@ class InstanceType::Searcher::Elastic::UserSearcher
 
   private
 
-  # TODO: 1. coerse pagination params at this stage
-  # TODO: 2. standarise category_ids format - array<integer> or string of integers comma sepd
   def search_params
     default_search_params.merge sort: (@params[:sort].presence || 'relevance').inquiry,
                                 limit: @params[:per_page],

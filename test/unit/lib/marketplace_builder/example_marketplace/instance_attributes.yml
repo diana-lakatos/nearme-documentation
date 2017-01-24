@@ -1,0 +1,19 @@
+---
+name: example_marketplace
+is_community: true
+require_verified_user: false
+bookable_noun: test
+wish_lists_enabled: true
+enable_reply_button_on_host_reservations: true
+force_accepting_tos: true
+default_country: United States
+default_currency: USD
+skip_company: true
+split_registration: true
+hidden_ui_controls:
+  dashboard/companies: 1
+  dashboard/users: 1
+  dashboard/waiver_agreement_templates: 1
+  dashboard/white_labels: 1
+  dashboard/transactables/bulk_upload: 1
+  main_menu/view_profile: 1

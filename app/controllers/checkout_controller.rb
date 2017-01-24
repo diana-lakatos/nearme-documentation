@@ -55,7 +55,8 @@ class CheckoutController < ApplicationController
   end
 
   def set_countries_states
-    @countries = Country.order('name')
+    @countries = Country.where(name: current_instance.allowed_countries).presence || Country.order('name')
+    @country_states = @countries.first.states
     @billing_states = billing_states
     @shipping_states = shipping_states
   end
