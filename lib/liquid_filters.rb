@@ -508,7 +508,7 @@ module LiquidFilters
   #   e.g. !{{ @some_variable_with_html_contents | make_html_safe }}
   # @param html [String] input string to mark as 'HTML safe'
   def make_html_safe(html = '')
-    html.html_safe
+    html.to_s.html_safe
   end
 
   # @return [String] input string HTML-escaped; this will return a string whose HTML tags will be visible in

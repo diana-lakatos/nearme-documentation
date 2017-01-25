@@ -85,7 +85,9 @@ class SmsNotifier < AbstractController::Base
   # return the rendered template as a string.
   def render_message
     lookup_context.transactable_type_id = @transactable_type_id
-    render template: template_path, formats: [:text], handlers: [:liquid], locale: I18n.locale
+    rendered_message = render(template: template_path, formats: [:text], handlers: [:liquid], locale: I18n.locale)
+    # We call .to_str to avoid a bug where unescapeHTML crashes when processing an ActiveSupport::SafeBuffer
+    CGI::unescapeHTML(rendered_message.to_str)
   end
 
   def template_path
