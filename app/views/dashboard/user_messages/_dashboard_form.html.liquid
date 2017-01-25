@@ -1,0 +1,14 @@
+<form novalidate="novalidate" class="simple_form new_user_message" id="new_user_message" enctype="multipart/form-data" action="{{ @displayed_user_message | user_message_create_path: @user_message }}" accept-charset="UTF-8" data-remote="true" method="post">
+  <input name="authenticity_token" data-authenticity-token="1" type="hidden">
+
+  <input value="{{ @user_message.replying_to_id }}" name="user_message[replying_to_id]" id="user_message_replying_to_id" type="hidden">
+  <div class="form-group text optional user_message_body">
+    <textarea data-message-body="true" class="text optional form-control" placeholder="Leave a message..." name="user_message[body]" id="user_message_body"></textarea>
+  </div>
+  <div class="form-group file optional user_message_attachments_file">
+    <label class="file optional control-label" for="user_message_attachments_attributes_0_file">Attachment</label>
+		<input data-file="true" class="file optional" name="user_message[attachments_attributes][0][file]" id="user_message_attachments_attributes_0_file" type="file">
+	</div>
+	<input name="commit" value="Send" class="btn btn-primary" type="submit">
+</form>
+

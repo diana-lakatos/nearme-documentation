@@ -13,7 +13,9 @@ class UserMessageDrop < BaseDrop
   #   @return [String] first name of the recipient of the message
   # @!method create_path
   #   @return [String] path to creating a new message in the thread of this message
-  delegate :id, :body, :thread_context, :recipient_name, :create_path, to: :user_message
+  # @!method replying_to_id
+  #   @return [Integer] message to which this message constitutes a reply
+  delegate :id, :body, :thread_context, :recipient_name, :create_path, :replying_to_id, to: :user_message
 
   def initialize(user_message)
     @user_message = user_message.decorate

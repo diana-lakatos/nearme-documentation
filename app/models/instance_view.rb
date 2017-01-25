@@ -534,6 +534,9 @@ class InstanceView < ActiveRecord::Base
     },
     'shared/social_meta_for_object' => {
       is_partial: true
+    },
+    'dashboard/user_messages/dashboard_form' => {
+      is_partial: true
     }
 
   }.sort.to_h.freeze
