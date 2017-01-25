@@ -204,7 +204,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def location
-    iso_country_code.in?(%w(US CA AU JP)) ? iso_country_code.downcase : 'euuk'
+    iso_country_code.in?(%w(US CA AU JP NZ)) ? iso_country_code.downcase : 'euuk'
   end
 
   def needs?(attribute)
