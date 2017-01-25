@@ -198,6 +198,8 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       'AUD'
     when 'JP'
       'JPY'
+    when 'NZ'
+      'NZD'
     else
       currency
     end
