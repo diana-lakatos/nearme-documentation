@@ -15,7 +15,7 @@ class WorkflowStep::BaseStepTest < ActiveSupport::TestCase
       @alert1 = stub(alert_type: 'email')
       @alert2 = stub(alert_type: 'email')
       @dummy_step = DummyStep.new
-      @dummy_step.expects(:alerts).returns([@alert1, @alert2])
+      @dummy_step.expects(:alerts).returns(stub(enabled: [@alert1, @alert2]))
       @invoker_instance = stub
       @invoker_instance.expects(:invoke!).with(@dummy_step).twice
       WorkflowAlert::InvokerFactory.expects(:get_invoker).with(@alert1).returns(@invoker_instance)
