@@ -13,5 +13,5 @@
           = address_form.input :address, required: true, label_html: { class: 'control-label'}
           = address_form.input :suburb, required: true, label_html: { class: 'control-label'}
           = address_form.input :postcode, required: true, label_html: { class: 'control-label'}
-          = address_form.input :country_id, collection: @countries, input_html: { class: 'checkout-select',  data: { get_states_url: get_states_order_checkout_url(@order, format: :js) }}, include_blank: false
           = address_form.input :state_id, collection: @country_states, include_blank: false, input_html: { class: 'checkout-select' }
+          = address_form.input :country_id, collection: @countries, input_html: { class: 'checkout-select',  data: { get_states_url: get_states_order_checkout_url(@order, format: :js) }}, include_blank: false

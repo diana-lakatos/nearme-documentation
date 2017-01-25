@@ -44,8 +44,9 @@ class CheckoutController < ApplicationController
     redirect_to action: :show
   end
 
+  # TODO: move to states-controller
   def get_states
-    @states = State.where(country_id: params[:country_id])
+    @states = State.where(country_id: params[:country_id]).order(:name)
   end
 
   private
@@ -56,7 +57,7 @@ class CheckoutController < ApplicationController
 
   def set_countries_states
     @countries = Country.where(name: current_instance.allowed_countries).presence || Country.order('name')
-    @country_states = @countries.first.states
+    @country_states = @countries.first.states.order(:name)
     @billing_states = billing_states
     @shipping_states = shipping_states
   end
