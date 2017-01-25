@@ -3,7 +3,7 @@
 .row.nested-fields
   %hr
   = f.hidden_field :custom_model_type_id, value: custom_model.id
-  - custom_model.custom_attributes.each_with_index do |ca, index|
+  - custom_model.custom_attributes.order('updated_at DESC').each_with_index do |ca, index|
     - if ca.uploadable?
       = f.simple_fields_for :custom_images, f.object.custom_images.where(custom_attribute_id: ca.id).first_or_initialize  do |custom_images_form|
         .col-xs-11
