@@ -7,5 +7,5 @@
 
       = calling_code
     = form.input :mobile_number, placeholder: t('simple_form.labels.user.mobile_number', default: 'Mobile number'),
-      label: false, input_html: { tabindex: tab_index }
+      input_html: { tabindex: tab_index }, label_html: { class: 'hidden' }
     %span.ico-phone

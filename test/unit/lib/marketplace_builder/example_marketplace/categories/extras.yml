@@ -1,0 +1,10 @@
+name: "Extras"
+multiple_root_categories: true
+transactable_types:
+  - Car
+instance_profile_types:
+  - Default
+shared_with_users: true
+children:
+  - name: 'Child Seat'
+  - name: 'Bike Rack'

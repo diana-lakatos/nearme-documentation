@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 require 'sanitize'
 
 module ApplicationHelper
@@ -337,6 +336,10 @@ module ApplicationHelper
 
   def i18n_cache_key(*args)
     args.compact + [PlatformContext.current.instance.context_cache_key.to_s, I18n.locale, PlatformContext.current.domain.name]
+  end
+
+  def cache_params_string
+    request.query_parameters.to_a.sort_by { |el| el[0] }.map { |k,v| "#{k}=#{v}" }.join(',')
   end
 
   def is_i18n_set?(key)

@@ -213,7 +213,7 @@ module Elastic
         {
           label: attr.name,
           field: "custom_attributes.#{attr.name}",
-          size: attr.valid_values.size
+          size: attr.valid_values.size + 1 # plus one extra for empty
         }
       end
     end

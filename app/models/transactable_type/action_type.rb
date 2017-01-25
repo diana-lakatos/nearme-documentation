@@ -8,7 +8,7 @@ class TransactableType::ActionType < ActiveRecord::Base
   belongs_to :instance
   belongs_to :transactable_type
   has_many :reservations
-  has_many :pricings, as: :action, inverse_of: :action
+  has_many :pricings, as: :action, inverse_of: :action, dependent: :destroy
   has_many :transactable_action_types, class_name: 'Transactable::ActionType', foreign_key: :transactable_type_action_type_id
 
   delegate :default_currency, :hide_location_availability?, to: :transactable_type, allow_nil: true

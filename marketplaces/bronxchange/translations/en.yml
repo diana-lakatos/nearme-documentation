@@ -1,0 +1,234 @@
+en:
+  datepicker:
+    dformat: '%m/%d/%Y'
+    pformat: 'MM/DD/YYYY'
+
+  sign_up_form:
+    buyer_sign_up_to: Sign Up for BronXchange
+    seller_sign_up_to: Create a Purchaser Account
+    link_to_buyer: Become a Vendor here
+    link_to_seller: Become a Purchaser here
+    log_in_to: Log in
+  errors:
+    transactable:
+      cant_cancel: "Can't cancel a project with unpaid expenses."
+
+  ui:
+    header:
+      list_your_thing: Become a Purchaser
+
+  registrations:
+    accept_terms_of_service: Yes, I understand and agree to <a href="/terms-of-use" target="_blank">Terms of Service</a> including the <a href="/user-agreement" target="_blank">User Agreement</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a>
+
+  onboarding_wizard:
+    list_your: Complete Your Profile
+  phone_calls:
+    buttons:
+      click_to_call_user: 'Call Me'
+  pricing:
+    free_enabled: 'Pro Bono'
+    free_disabled: 'Paid'
+  custom_model_type:
+    links:
+      name:
+        one: 'Links to whitepapers, articles'
+        other: 'Links to whitepapers, articles'
+  dashboard:
+    user_profile:
+      sections:
+        default: 'My Profile'
+    order_items:
+      reject: "What's wrong?"
+      reject_placeholder: 'Please let us know what is the reason of declining expenses'
+      free_unit_price: 'Pro bono projects don’t allow hourly rate to be set as project time is free.'
+    payments:
+      merchant_fee_charge: '<b>Important Note:</b> Pro bono projects will not charge any hourly time expenses due to the nature of the project. However, there is a one time "%{name}" of %{price} due. Also, system will track any expense items required for the project.'
+    nav:
+      user_reservations: My Offers
+      reviews: Ratings
+      host_reservations: My Offers
+      edit: Edit Profile
+      transactables: My Orders
+      order_items: 'Time / Expense Overview'
+      user_reservations_count_html: My Offers <span>%{count}</span>
+      admin: 'Payments Admin'
+      payouts: 'Merchant Account'
+
+    user_reservations:
+      reservation_placed_html: 'Offer created: <span>%{date}</span>'
+      title_count: Offers (%{count})
+      archived: Offers Closed
+      upcoming: Offers Open
+      send_message: Send Message
+      track_time: Track Time & Expenses
+      approved_offer: Approved Offer
+
+    host_reservations:
+      no_unconfirmed_reservations: You have no unconfirmed offers.
+      no_confirmed_reservations: You have no confirmed offers.
+      no_archived_reservations: You have no archived offers.
+      no_overdue_reservations: You have no overdue offers.
+      no_reservations_promote_reservations: You currently have no offers.
+      pending_confirmation: You must confirm this offer within <strong>%{time_to_expiry}</strong> or it will expire.
+      unconfirmed: Offers Pending
+      confirmed: Offers Open
+      archived: Offers Closed
+
+    analytics:
+      bookings: Offers
+      no_reservations_yet: You currently do not have any offers.
+      no_invoices_paid: You've not paid any invoices.
+
+      columns:
+        bookings: Offers
+        transactable: Order
+      total:
+        bookings: '%{total} offers'
+
+    transactables:
+      view_html: View Order
+      title:
+        listings: My Orders
+
+    manage_listings:
+      tab: My Orders
+
+    items:
+      new_listing_full: Add new Order
+      delete_listing: Delete Order
+
+  homepage:
+    search_field_placeholder:
+      full_text: General search...
+
+  transactable_type:
+    project:
+      labels:
+        name: Order Title
+        description: Vignette of a Scope (describe the project)
+      placeholders:
+        name: Enter Title
+        description: Description, format of delivery, any other requirements
+
+
+  general:
+    generic_lessee_term: purchaser
+
+  simple_form:
+    labels:
+      user:
+        name: 'Full Name'
+      transactable:
+        confirm_reservations: Manually confirm offers
+        action_types:
+          pricings:
+            is_free_booking: 'Please define project type?'
+    hints:
+      user:
+        verify_number: 'Verifying your mobile number allows you to take advantage of Click to Call functionality. This allows you to communicate with vendorss without sharing your private number information.'
+      buyer_profile:
+        enabled: 'In order for your Vendor Profile to be listed in our marketplace, it must be set to ON. You can work on your profile as a draft or disable your listing from being publicly listed while it is OFF. Make sure to click save for settings to be applied.'
+
+  reservations:
+    states:
+      unconfirmed: Pending
+      confirmed: Accepted
+      archived: Closed
+      cancelled_by_guest: Cancelled by Vendor
+      cancelled_by_host: Cancelled by Purchaser
+
+  top_navbar:
+    manage_bookable: My Orders
+    bookings_received: My Offers
+    my_bookings: My Offers
+    sign_up: Join Our Community
+    account: 'Edit Profile'
+
+  reservations_review:
+    heading: Bid on Order
+    errors:
+      whoops: Whoops! We couldn't make that offer.
+    disabled_buttons:
+      request: Bidding...
+    buttons:
+      request: SUBMIT OFFER
+
+  activemodel:
+    errors:
+      models:
+        reservation_request:
+          attributes:
+            base:
+              total_amount_changed: Bid on Order
+  activerecord:
+    attributes:
+      order/payment_documents:
+        file: "Secure Document Upload"
+      user:
+        buyer_properties.: 'Property'
+        seller_properties.: 'Property'
+      user/buyer_profile:
+        "Area Of Expertiseise": 'Area Of Expertiseise'
+        "Languages": 'Languages'
+        "Industry": 'Industry'
+        "travel": 'Travel'
+        "hourly_rate_decimal": 'Hourly Rate'
+        "linkedin_url": 'Linkedin URL'
+  buy_sell_market:
+    products:
+      labels:
+        summary: 'Overall Rating:'
+    checkout:
+      labels:
+        the_following_documents: 'Please make an offer by submitting a proposal with scope of work and terms for purchaser to review.  Please upload your PDF file here:'
+
+  time:
+    formats:
+      short: '%l:%M %p'
+
+  wish_lists:
+    buttons:
+      selected_state: Remove Favorite
+      unselected_state: Add to Favorites
+
+  flash_messages:
+    space_wizard:
+      space_listed: You have successfully completed profile!
+    listings:
+      no_longer_have_access: "You no longer have an access to this project."
+    dashboard:
+      locations:
+        add_your_company: Please complete your Order first.
+      add_your_company: Please complete your Order first.
+      order_items:
+        updated: 'Expenses have been updated.'
+        approved: 'Expenses have been approved.'
+        rejected: 'Expenses have been rejected'
+        approve_failed: 'Your Credit Card could not be charged.'
+        reject_failed: 'Expenses could not be rejected'
+        can_not_edit_accepted_order_item: "You can\'t edit accepted expenses."
+        recently_edited: "Looks like total amount of expenses has changed. Please verify total price and reaccept."
+    manage:
+      order:
+        can_not_approve: "Can't approve offer with pending expenses. Please approve or reject all pending expenses."
+
+      listings:
+        listing_cancelled: "Your project has been canceled."
+
+  transactable_collaborator:
+    collaboration_cancelled: User has been removed from project.
+    collaborator_cancelled: "You have declined collaboration in this project."
+
+  instance_admin:
+    manage:
+      transfers:
+        total_fee: MP Fees
+        lessee_service_fees: MP Fees
+      orders:
+        order_amount: "Total paid"
+        listing: "Listing"
+        user: "SME"
+        lister: "Purchaser"
+        pro_bono: "ProBono"
+
+

@@ -1,0 +1,11 @@
+name: Order
+withdraw_invitation_when_reject: true
+reverse_immediate_payment: true
+transactable_types:
+  - Order
+
+form_components:
+  - type: reservation_attributes
+    name: Order form
+    fields:
+      - reservation: guest_notes

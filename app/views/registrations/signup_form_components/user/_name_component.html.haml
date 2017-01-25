@@ -1,4 +1,4 @@
 .name-holder.input-icon-holder
-  = form.input :name, label: false, placeholder: t('simple_form.placeholders.registration.name'),
-    input_html: { tabindex: tab_index }
+  = form.input :name, placeholder: t('simple_form.placeholders.registration.name'),
+    input_html: { tabindex: tab_index }, label_html: { class: 'hidden' }
   %span.ico-user

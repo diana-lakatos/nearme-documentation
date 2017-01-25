@@ -2,11 +2,11 @@ select {
   margin: 16px 0;
 }
 
-.controls .switch{
+.controls .switch {
   margin-top: 9px;
 }
 
-.custom-availability-rules select{
+.custom-availability-rules select {
   margin: 16px 2px;
 }
 
@@ -30,8 +30,8 @@ input[type=email],
 input[type=password],
 input[type=url],
 input[type=tel] {
-   -webkit-appearance: none;
-   cursor: pointer;
+  -webkit-appearance: none;
+  cursor: pointer;
 }
 
 body.home-index, body.search-index {
@@ -49,7 +49,6 @@ label.radio {
 }
 
 #space_wizard {
-
   .periodicity {
     margin-right: 10px;
   }
@@ -60,7 +59,6 @@ label.radio {
 }
 
 form:not(.no_inheritance) {
-
   div.input,
   div.field {
     margin-bottom: 20px;
@@ -156,8 +154,6 @@ form:not(.no_inheritance) {
   }
 
   .card-info.error, .row-fluid.error, .control-group.error {
-
-
     // ul is for chosen
     .controls {
       input,
@@ -167,11 +163,9 @@ form:not(.no_inheritance) {
         border-color: lighten($red, 10%);
       }
     }
-
   }
 
   label {
-
     a[rel=tooltip] {
       color: $theme_black;
 
@@ -191,12 +185,14 @@ form:not(.no_inheritance) {
       margin-bottom: auto;
       font-size: 14px;
     }
-  }
 
+    &.hidden {
+      display: none;
+    }
+  }
 
   fieldset,
   .fieldset {
-
     // Prevent additional padding at bottom of fieldset
     .control-group:last-child {
       margin-bottom: 0;
@@ -215,7 +211,6 @@ form:not(.no_inheritance) {
     &.small {
       padding: 6px 8px;
     }
-
 
     // A mini input field
 
@@ -237,19 +232,15 @@ form:not(.no_inheritance) {
   }
 
   textarea {
-
-
     // 4 lines
 
     height: 88px;
-
 
     // 2 lines
 
     &.short {
       height: 44px;
     }
-
 
     // 8 Lines
 
@@ -270,15 +261,16 @@ form:not(.no_inheritance) {
     > legend,
     > .legend {
       @extend h2;
+
       border-radius: $border-radius-default $border-radius-default 0 0;
     }
 
     > .border-legend {
-        position: absolute;
-        top: -14px;
-        background: #fafafa;
-        display: inline-block;
-        padding: 0px 10px;
+      position: absolute;
+      top: -14px;
+      background: #fafafa;
+      display: inline-block;
+      padding: 0px 10px;
     }
   }
 
@@ -294,9 +286,8 @@ form:not(.no_inheritance) {
 
     input {
       padding-left: 35px;
-      background-image:-webkit-linear-gradient(hsla(0,0%,100%,0), hsla(0,0%,100%,0));
+      background-image: -webkit-linear-gradient(hsla(0, 0%, 100%, 0), hsla(0, 0%, 100%, 0));
     }
-
 
     // Icons
 
@@ -324,9 +315,12 @@ form:not(.no_inheritance) {
 
   input[type='submit'] {
     @extend .btn;
+
     @extend .btn-large;
+
     @extend .btn-green;
-    width:100%;
+
+    width: 100%;
     border: none;
     font-size: 18px;
   }
@@ -355,17 +349,14 @@ form:not(.no_inheritance) {
 //   </form>
 
 .form-horizontal {
-
   .control-group {
     clear: both;
     margin-bottom: 10px;
-
 
     // An indented control group
 
     &.indent {
       margin-left: 200px;
-
 
       // Override the label so that it's not floating and doesn't float
 
@@ -377,7 +368,6 @@ form:not(.no_inheritance) {
         width: auto;
         text-align: left;
       }
-
 
       // Controls don't need a margin as already indented
 
@@ -440,12 +430,10 @@ form:not(.no_inheritance) {
   }
 }
 
-
 // Width overrides for restricted width forms
 
 .two-thirds.column form.form-horizontal,
 .eleven.columns form.form-horizontal {
-
   input[type="text"],
   input[type="password"],
   input[type="email"],
@@ -462,7 +450,6 @@ form:not(.no_inheritance) {
   }
 
   .controls {
-
     &.two-up input {
       width: 169px;
 
@@ -477,12 +464,10 @@ form:not(.no_inheritance) {
     margin-bottom: 20px;
   }
 
-
   // Fieldsets require even further smaller width fields
 
   .fieldset,
   fieldset {
-
     input[type="text"],
     input[type="password"],
     input[type="email"],
@@ -494,8 +479,7 @@ form:not(.no_inheritance) {
   }
 }
 
-@media screen and (max-width:959px) {
-
+@media screen and (max-width: 959px) {
   .two-thirds.column form.form-horizontal input[type="text"],
   .two-thirds.column form.form-horizontal input[type="password"],
   .two-thirds.column form.form-horizontal input[type="email"],
@@ -506,10 +490,9 @@ form:not(.no_inheritance) {
   form .hint,
   form .help-block,
   .two-thirds.column form.form-horizontal .fieldset input[type="text"],
-  .two-thirds.column form.form-horizontal .fieldset textarea  {
-
+  .two-thirds.column form.form-horizontal .fieldset textarea {
     box-sizing: border-box;
-    position:relative;
+    position: relative;
     float: left;
     clear: both;
     width: 100%;
@@ -517,9 +500,9 @@ form:not(.no_inheritance) {
 
   form .controls .input-icon-wrapper,
   .two-thirds.column form.form-horizontal .input-icon-wrapper input[type="text"] {
-    display:block;
-    float:left;
-    width:100%;
+    display: block;
+    float: left;
+    width: 100%;
   }
 
   .form-horizontal .control-group .control-label {
@@ -527,13 +510,13 @@ form:not(.no_inheritance) {
   }
 
   .form-horizontal .control-group .controls {
-    margin:10px 0;
+    margin: 10px 0;
     clear: both;
   }
 
   .two-thirds.column form.form-horizontal .actions,
   .form-horizontal .control-group.indent {
-    margin-left:0;
+    margin-left: 0;
   }
 
   .actions input[type='submit'] {
@@ -544,7 +527,6 @@ form:not(.no_inheritance) {
 }
 
 @media screen and (max-width: $iphone-landscape) {
-
   select.currency {
     width: 100%;
   }
@@ -558,7 +540,6 @@ form:not(.no_inheritance) {
     padding-left: 32px !important;
 
     &:focus {
-
       + span {
         color: $icon-hover !important;
       }
@@ -582,7 +563,6 @@ form:not(.no_inheritance) {
     padding-right: 32px !important;
 
     &:focus {
-
       + span {
         color: $icon-hover !important;
       }
@@ -608,21 +588,20 @@ form:not(.no_inheritance) {
 }
 
 .select2-container {
-  width:100%;
+  width: 100%;
 
   input.select2-input:focus {
     border: none !important;
   }
 }
 
-
 .error {
-
   .select2-container, .category_tree a {
-    border: solid #ec8473 1px !important; //TODO remove important here
+    border: solid #ec8473 1px !important;
+
+    //TODO remove important here
     input, textarea {
       border: none !important;
     }
-
   }
 }

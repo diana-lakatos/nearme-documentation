@@ -1,0 +1,10 @@
+---
+name: Custom JS
+inject_pages: any_page
+position: body_bottom
+---
+{% if platform_context.rails_env == 'development' %}
+  <script src="http://localhost:4000/js/bronxchange-bundle.js" async></script>
+{% else %}
+  <script src="https://rawgit.com/mdyd-dev/marketplaces/master/bronxchange/dist/bronxchange-bundle.js" async></script>
+{% endif %}

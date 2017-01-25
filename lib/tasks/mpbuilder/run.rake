@@ -13,4 +13,20 @@ namespace :mpbuilder do
     ]
     MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
   end
+
+  task content_holders: :environment do
+    creators = [
+      MarketplaceBuilder::Creators::ContentHoldersCreator
+    ]
+    MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
+  end
+
+  task views: :environment do
+    creators = [
+      MarketplaceBuilder::Creators::ContentHoldersCreator,
+      MarketplaceBuilder::Creators::LiquidViewsCreator,
+      MarketplaceBuilder::Creators::PagesCreator
+    ]
+    MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
+  end
 end

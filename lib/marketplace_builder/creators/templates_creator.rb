@@ -48,11 +48,11 @@ module MarketplaceBuilder
         template_files.map! do |filename|
           options = default_template_options
           options[:partial] = !/^_/.match(File.basename(filename)).nil?
-          load_file_with_yaml_front_matter(filename, template_folder, options)
+          self.class.load_file_with_yaml_front_matter(filename, template_folder, options)
         end
       end
 
-      def load_file_with_yaml_front_matter(path, template_folder, config = {})
+      def self.load_file_with_yaml_front_matter(path, template_folder, config = {})
         body = File.read(path)
         regex = /\A---(.|\n)*?---\n/
 
