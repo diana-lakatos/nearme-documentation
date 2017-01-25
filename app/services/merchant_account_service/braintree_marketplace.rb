@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class MerchantAccountService::BraintreeMarketplace
+  include ActiveRecord::ActAsSupported
+
   supported :store_credit_card
 
   def initialize(merchant_account)
