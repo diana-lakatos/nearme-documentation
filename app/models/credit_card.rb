@@ -2,27 +2,25 @@ class CreditCard < ActiveRecord::Base
   include Encryptable
   include Modelable
 
-  attr_accessor :client, :credit_card_token
+  attr_accessor :client, :credit_card_token, :payer
 
   attr_encrypted :response
 
   belongs_to :instance_client, -> { with_deleted }
   belongs_to :instance
-  belongs_to :payment_gateway, -> { with_deleted }
-  has_many :payments
+  has_one :payment_gateway, through: :payment_method
+  belongs_to :payment_method, -> { with_deleted }
+  has_many :payments, as: :payment_source
   has_many :authorized_payments, -> { authorized }, class_name: 'Payment'
   has_many :reservations
 
   before_validation :set_instance_client
   before_create :set_as_default
   before_create :set_mode
-  before_create :store!
-  # we do not want to do this
-  # before_destroy :delete!
 
   scope :default, -> { where(default_card: true).limit(1) }
 
-  validate :validate_card
+  validate :validate_card, on: :create
   validates :instance_client, presence: true
 
   delegate :expires_at, :last_4, :name, to: :decorator, allow_nil: true
@@ -38,15 +36,32 @@ class CreditCard < ActiveRecord::Base
     end
   end
 
-  def customer_id
-    instance_client.customer_id if credit_card_token.blank?
+  def can_activate?
+    success?
   end
 
-  def store!
+  def name
+    I18n.t('credit_cards.masked_number', last4: last_4)
+  end
+
+  def authorizable?
+    true
+  end
+
+  def customer_id
+    instance_client.try(:customer_id)
+  end
+
+  def charge!(amount, options)
+    payment_gateway.gateway_authorize(amount, charge_token, options)
+  end
+
+  def process!
+    return true unless payment_gateway.supports_payment_source_store?
     return true  if success?
     return false if payment_gateway.blank?
 
-    original_response = payment_gateway.store(active_merchant_card, instance_client)
+    original_response = payment_gateway.store(credit_card_token || active_merchant_card, instance_client)
     self.response = original_response.to_yaml
 
     if success?
@@ -84,13 +99,11 @@ class CreditCard < ActiveRecord::Base
   end
 
   def success?
-    return true if persisted? && response.blank?
-
     has_response = begin
-                     response.present?
-                   rescue
-                     false
-                   end
+                   response.present?
+                 rescue
+                   false
+                 end
     if has_response
       !!YAML.load(response).try(&:success?)
     else
@@ -145,7 +158,7 @@ class CreditCard < ActiveRecord::Base
 
   def set_instance_client
     self.instance_client ||= payment_gateway.instance_clients.where(
-      client: client,  test_mode: test_mode?
+      client: payer,  test_mode: test_mode?
     ).first_or_initialize
     true
   end

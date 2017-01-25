@@ -100,7 +100,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       @reservation = @reservation.reload
       @reservation.update_payment_attributes
       @reservation.save!
-      if @reservation.payment.authorize
+      if @reservation.payment.authorize!
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerSubmittedCheckout, @reservation.id)
         PaymentConfirmationExpiryJob.perform_later(@reservation.pending_guest_confirmation + @reservation.transactable.hours_for_guest_to_confirm_payment.hours, @reservation.id) if @reservation.transactable.hours_for_guest_to_confirm_payment.to_i > 0
       else

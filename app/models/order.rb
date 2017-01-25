@@ -13,8 +13,10 @@ class Order < ActiveRecord::Base
   include ShippoLegacy::Order
   include Shippings::Order
   include Validatable
+  include PaypalExpressOrder
 
   attr_accessor :skip_checkout_validation, :delivery_ids, :checkout_update, :save_draft, :cancel_draft
+  attr_reader :external_redirect
 
   store_accessor :settings, :validate_on_adding_to_cart, :skip_payment_authorization
 
@@ -52,7 +54,6 @@ class Order < ActiveRecord::Base
 
   before_validation :remove_empty_documents
   before_validation :set_owner, :skip_validation_for_custom_attributes, :set_owner_for_payment_documents
-  after_save :try_to_activate!
 
   state_machine :state, initial: :inactive do
     after_transition inactive: :unconfirmed, do: :activate_order!
@@ -146,6 +147,21 @@ class Order < ActiveRecord::Base
   # This is workaround to use STI class with routing Rails standards
   def routing_object
     Order.new(id: id)
+  end
+
+  def process!
+    return false unless valid?
+    return false unless skip_payment_authorization || payment_processor.blank? || payment_processor.process!
+    activate! if inactive? && can_activate?
+    save
+  end
+
+  def payment_processor
+    payment || payment_subscription
+  end
+
+  def can_activate?
+    payment_processor.try(:can_activate?)
   end
 
   def complete!
@@ -283,15 +299,6 @@ class Order < ActiveRecord::Base
 
   def administrator
     super.presence || creator
-  end
-
-  # TODO: chante to order.id and adjust routes
-  def express_return_url
-    PlatformContext.current.decorate.build_url_for_path("/orders/#{id}/express_checkout/return")
-  end
-
-  def express_cancel_return_url
-    PlatformContext.current.decorate.build_url_for_path("/orders/#{id}/express_checkout/cancel")
   end
 
   # ----- SETTERS ---------
@@ -446,6 +453,7 @@ class Order < ActiveRecord::Base
   # @!method confirm_reservations?
   #   @return [Boolean] whether reservations need to be confirmed first
   delegate :confirm_reservations?, to: :transactable
+  delegate :redirect_to_gateway, to: :payment, allow_nil: true
 
   def transactable_pricing
     super || transactable_line_items.first.transactable_pricing
@@ -501,6 +509,12 @@ class Order < ActiveRecord::Base
     raise NotImplementedError
   end
 
+  def try_to_activate!
+    return true unless inactive? && valid?
+
+    activate! if payment && payment.can_activate?
+  end
+
   private
 
   def skip_validation_for_custom_attributes
@@ -518,11 +532,6 @@ class Order < ActiveRecord::Base
     true
   end
 
-  def try_to_activate!
-    return true unless inactive? && valid?
-
-    activate! if payment && payment.authorized?
-  end
 
   def send_rejected_workflow_alerts!
   end

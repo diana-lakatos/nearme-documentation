@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class MerchantAccountService::BraintreeMarketplace
+  supported :store_credit_card
+
   def initialize(merchant_account)
     @merchant_account = merchant_account
   end

@@ -1,0 +1,37 @@
+- bank_account =  f.object.bank_account || f.object.new_payment_source(payment_method)
+.nm-ach-fields
+  .row-fluid.nm-payment-subscription-fields
+    - payment_soruces_collection = f.object.payment_sources_collection(payment_method)
+    = f.input :payment_source_id, as: :radio_buttons, collection: payment_soruces_collection, label: false, checked: :first, wrapper_html: { class: 'payment-source-option-select' }, checked:  payment_soruces_collection.last
+    = f.input :payment_source_type, as: :hidden, input_html: { value: 'BankAccount' }
+
+    %div{ class: 'payment-source-form' }
+      = f.simple_fields_for :payment_source_attributes, bank_account do |form|
+        .has-error.errors
+          = f.error :base
+          = form.error :base
+
+        - if payment_method.plaid_configured?
+          = form.input(:account_id, as: :hidden, input_html: { id: 'stripe_plaid_account_id' })
+          = form.input(:public_token, as: :hidden, input_html: { id: 'stripe_plaid_public_token' })
+
+          %button#linkButton.btn.blue= t('payments.ach.link')
+          %p#plaid_institution
+        - else
+          #ach_manual_payment_form{'data-publishable' => "#{payment_method.payment_gateway.settings[:publishable_key]}"}
+            = form.input(:public_token, as: :hidden, input_html: { id: 'stripe_plaid_public_token' })
+
+            = form.input(:account_holder_type, collection: [['Company', 'company'], ["Individual", 'individual']], input_html: {data: {account_holder_type: true}} )
+            = form.input(:country, collection: @countries.map {|c| [c.name, c.iso]} , input_html: { data: {country: true}}, selected: f.object.company.iso_country_code  )
+            = form.input(:currency, as: :hidden, input_html: {value: f.object.currency, data: {currency: true}} )
+            = form.input(:routing_number, input_html: { data: {routing_number: true}})
+            = form.input(:account_number, input_html: { data: {account_number: true}} )
+            = form.input(:account_holder_name, input_html: { value: f.object.payer.name, data: {account_holder_name: true}} )
+
+:javascript
+  var plaid_options = {
+    env: "#{current_instance.test_mode? ? 'tartan' : 'production'}",
+    name: "#{PlatformContext.current.instance.name}",
+    key: '#{payment_method.key}',
+    auth_with: "#{t('payment_source.authorize_with')} "
+  }

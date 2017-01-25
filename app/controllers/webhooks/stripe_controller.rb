@@ -1,5 +1,5 @@
 module Webhooks
-  class StripeConnectsController < Webhooks::BaseWebhookController
+  class StripeController < Webhooks::BaseWebhookController
     def webhook
       webhook = @payment_gateway.webhooks.where(
         external_id: external_id

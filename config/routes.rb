@@ -780,6 +780,8 @@ DesksnearMe::Application.routes.draw do
       resources :payment_gateways, only: [] do
         resources :credit_cards, only: [:new, :create, :index, :destroy], controller: 'payment_gateways/credit_cards'
       end
+      resources :bank_accounts
+
       namespace :company do
         resource :analytics do
           get ':chart_type', to: :show
@@ -1225,11 +1227,8 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    resource :stripe_connect, only: [] do
-      collection do
-        match '', via: :post, as: :webhook, action: :webhook
-      end
-    end
+    post 'stripe', to: 'stripe#webhook'
+    post 'stripe_connect', to: 'stripe#webhook'
 
     resource :communications, only: [:status] do
       post :status, on: :collection

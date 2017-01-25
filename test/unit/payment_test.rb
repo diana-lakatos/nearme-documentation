@@ -19,15 +19,15 @@ class PaymentTest < ActiveSupport::TestCase
 
     should 'raise validation errors on credit card on authorize' do
       stub_active_merchant_interaction
-      @payment.credit_card = FactoryGirl.build(:invalid_credit_card_attributes)
-      refute @payment.authorize
-      assert_equal [I18n.t('buy_sell_market.checkout.invalid_cc')], @payment.credit_card.errors[:base]
+      @payment.payment_source = FactoryGirl.build(:invalid_credit_card_attributes)
+      refute @payment.process!
+      assert_equal [I18n.t('buy_sell_market.checkout.invalid_cc')], @payment.payment_source.errors[:base]
     end
 
     should 'be authorized correctly when CC is valid' do
       stub_active_merchant_interaction
       @payment.credit_card = FactoryGirl.build(:credit_card_attributes)
-      assert @payment.authorize
+      assert @payment.authorize!
       assert @payment.valid?
       assert @payment.successful_billing_authorization.present?
       assert_equal(
@@ -39,7 +39,7 @@ class PaymentTest < ActiveSupport::TestCase
     should 'not authorize when authorization response is not success' do
       stub_active_merchant_interaction(success?: false, message: 'fail')
       @payment.credit_card_attributes = FactoryGirl.attributes_for(:credit_card_attributes)
-      refute @payment.authorize
+      refute @payment.authorize!
       billing_authorization = @payment.billing_authorizations.last
       assert_equal true, @payment.errors.present?
       assert_equal @payment.payment_gateway, billing_authorization.payment_gateway
@@ -51,7 +51,7 @@ class PaymentTest < ActiveSupport::TestCase
       response = OpenStruct.new(code: '500', message: 'Internal server error')
       @payment.payment_gateway.gateway.stubs(:authorize).raises(ResponseError.new(response))
       @payment.credit_card_attributes = FactoryGirl.attributes_for(:credit_card_attributes)
-      refute @payment.authorize
+      refute @payment.authorize!
       assert @payment.errors[:base].include?('Failed with 500 Internal server error')
     end
   end
@@ -157,7 +157,7 @@ class PaymentTest < ActiveSupport::TestCase
 
       should 'not refund while Internal Gateway error is raised' do
         response = OpenStruct.new(code: '500', message: 'Internal server error')
-        ActiveMerchant::Billing::StripeCustomGateway.any_instance.stubs(:refund).raises(ResponseError.new(response))
+        ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:refund).raises(ResponseError.new(response))
 
         refute @payment.refund!
         assert @payment.paid?
@@ -227,7 +227,7 @@ class PaymentTest < ActiveSupport::TestCase
     setup do
       @reservation = FactoryGirl.create(:reservation)
       @reservation.payment.destroy
-      @payment = @reservation.build_payment(@reservation.shared_payment_attributes.merge(payment_method: FactoryGirl.build(:credit_card_payment_method),
+      @payment = @reservation.build_payment(@reservation.shared_payment_attributes.merge(payment_method: FactoryGirl.create(:credit_card_payment_method),
                                                                                          credit_card_attributes: FactoryGirl.attributes_for(:credit_card_attributes)))
       @payment.save!
     end

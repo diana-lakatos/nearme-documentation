@@ -4,9 +4,9 @@ class ExpressCheckoutControllerTest < ActionController::TestCase
   setup do
     details = OpenStruct.new(params: { "payer_id": 'payer_identification' })
     ActiveMerchant::Billing::PaypalExpressGateway.any_instance.stubs(:details_for).returns(details)
-
     @payment_method = FactoryGirl.create(:paypal_express_payment_method)
-    @payment = FactoryGirl.create(:pending_payment, express_token: 'token', payment_method: @payment_method)
+    @payment = FactoryGirl.create(:pending_payment, :paypal_express, express_token: 'token', payment_method: @payment_method)
+
     @reservation = @payment.payable
     sign_in @reservation.user
   end

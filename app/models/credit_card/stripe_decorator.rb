@@ -1,3 +1,5 @@
+require 'stripe'
+
 class CreditCard::StripeDecorator
   attr_accessor :credit_card
 

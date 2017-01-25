@@ -86,6 +86,7 @@ gem 'delayed_job_recurring'
 gem 'rdiscount', require: false
 gem 'attr_encrypted', '~> 1'
 gem 'stripe', '1.57.0', require: false
+gem 'plaid', require: false
 gem 'paypal-sdk-rest', '~> 1.3.2'
 gem 'paypal-sdk-merchant'
 gem 'paypal-sdk-adaptivepayments'

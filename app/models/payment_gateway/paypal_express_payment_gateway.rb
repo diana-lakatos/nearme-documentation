@@ -30,7 +30,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
     all_supported_by_pay_pal
   end
 
-  def express_gateway
+  def express_gateway(_merchant_account=nil)
     gateway
   end
 end

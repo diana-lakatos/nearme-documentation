@@ -65,18 +65,6 @@
                   = link_to " official documentation.", @payment_gateway.documentation_url, :target => '_blank'
 
         .input-container.col-xs-6
-          - if @payment_gateway.payment_methods.size > 1
-            .row
-              %h4 Payment Methods:
-          .row
-            = f.simple_fields_for :payment_methods do |p|
-              .input-container.col-xs-6
-                = p.input :payment_method_type, as: :hidden
-                - if @payment_gateway.payment_methods.size > 1
-                  = p.input :active, as: :boolean, inline_label: p.object.name, :input_html => { :checked => p.object.active? }
-                - else
-                  = p.input :active, as: :hidden, :input_html => { :value => true }
-
           - if f.object.class.settings.keys.present?
             - if current_instance.test_mode?
               %h4 Sandbox settings:
@@ -102,8 +90,22 @@
                         = t('flash_messages.instance_admin.settings.payments.payment_gateways.can_not_be_edited')
                         Use ON/OFF switch to prevent users from using it. Payment Gateway will move into editable state when there are no refundable or pending Payments, all Merchant Accounts should be removed.
 
-
       %br
+
+    .content-container
+      .row
+        %h4 Payment Methods:
+      .row
+        = f.simple_fields_for :payment_methods do |p|
+          .input-container.col-xs-6
+            = p.input :payment_method_type, as: :hidden
+            = p.input :type, as: :hidden
+            = p.input :active, as: :boolean, inline_label: p.object.name, :input_html => { :checked => p.object.active? }
+
+            = p.fields_for :settings, OpenStruct.new(p.object.settings) do |live|
+              - p.object.class.settings.each do |setting, options|
+                = live.input setting, as: :string,label: options[:label], input_html: {class: 'form-control', required: false }
+
     - if @payment_gateway.config_settings.present?
       .content-container
         .row

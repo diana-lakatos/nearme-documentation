@@ -4,9 +4,12 @@ class PaymentGateway::StripePaymentGateway < PaymentGateway
 
   include PaymentGateways::StripeCommon
 
-  supported :multiple_currency, :recurring_payment, :credit_card_payment, :partial_refunds, :any_country
+  has_many :webhooks, class_name: 'Webhook::StripeWebhook', foreign_key: 'payment_gateway_id'
 
-  delegate :find_payment, to: :gateway
+  supported :multiple_currency, :ach_payment, :payment_source_store, :credit_card_payment, :partial_refunds, :any_country
+
+  delegate :parse_webhook, :retrieve_account, :find_payment, :find_balance, :country_spec, :create_customer,
+    :find_customer, to: :gateway
 
   def self.settings
     {
@@ -47,6 +50,6 @@ class PaymentGateway::StripePaymentGateway < PaymentGateway
   end
 
   def gateway
-    @gateway ||= ActiveMerchant::Billing::StripeCustomGateway.new(settings)
+    @gateway ||= ActiveMerchant::Billing::StripeConnectPayments.new(settings)
   end
 end

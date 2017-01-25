@@ -91,6 +91,7 @@ FactoryGirl.define do
 
     factory :reservation_with_remote_payment do
       association :transactable, factory: :listing_in_auckland
+      state 'unconfirmed'
       after(:build) do |reservation|
         reservation.payment ||= FactoryGirl.build(:remote_payment, payable: reservation)
       end

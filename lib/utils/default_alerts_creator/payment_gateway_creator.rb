@@ -4,6 +4,15 @@ class Utils::DefaultAlertsCreator::PaymentGatewayCreator < Utils::DefaultAlertsC
     create_notify_host_about_merchant_account_declined_email!
     create_notify_host_about_merchant_account_requirements_email!
     create_notify_host_about_payout_failure_email!
+    create_notify_enquirer_of_bank_account_creation!
+  end
+
+  def create_notify_enquirer_of_bank_account_creation!
+    create_alert!(associated_class: WorkflowStep::PaymentGatewayWorkflow::BankAccountPending, name: 'notify_enquirer_of_bank_account_creation', path: 'payment_gateway_mailer/notify_enquirer_of_bank_account_creation', subject: 'Your BankAccount is pending verification', alert_type: 'email', recipient_type: 'enquirer')
+  end
+
+  def create_notify_enquirer_of_bank_account_verification!
+    create_alert!(associated_class: WorkflowStep::PaymentGatewayWorkflow::BankAccountVerified, name: 'notify_enquirer_of_bank_account_verification', path: 'payment_gateway_mailer/notify_enquirer_of_bank_account_verification', subject: 'Your BankAccount is verified', alert_type: 'email', recipient_type: 'enquirer')
   end
 
   def create_notify_host_about_merchant_account_approved_email!

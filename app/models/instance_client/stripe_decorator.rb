@@ -1,3 +1,5 @@
+require 'stripe'
+
 class InstanceClient::StripeDecorator
   attr_accessor :instance_client
 
@@ -6,7 +8,7 @@ class InstanceClient::StripeDecorator
   end
 
   def customer_id
-    response.params['id']
+    response.try(:id) || response.params['id']
   rescue
     nil
   end
@@ -15,6 +17,10 @@ class InstanceClient::StripeDecorator
     @response ||= YAML.load(instance_client.response)
   rescue
     nil
+  end
+
+  def find
+    @instance_client.payment_gateway.find_customer(customer_id)
   end
 
   def test_mode?

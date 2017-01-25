@@ -1,18 +1,24 @@
 - if @order.respond_to?(:monthly?) && @order.monthly?
   %p= t 'recurring_reservations_review.prorated_info'
 
-#accordion2.accordion
-  - if f.object.decorate.payment_methods.any?
-    - f.object.decorate.payment_methods.each_with_index do |payment_method, index|
-      - selected_payment_method = f.object.payment_method_id == payment_method.id || (index.zero? && f.object.payment_method_id.blank?)
-      .accordion-group
+- if f.object.decorate.payment_methods.any?
+  #accordion2.accordion{"data-payment-methods": true}
+    .accordion-group
+      - f.object.decorate.payment_methods.each_with_index do |payment_method, index|
+        - selected_payment_method = f.object.payment_method_id == payment_method.id || (index.zero? && f.object.payment_method_id.blank?)
         .accordion-heading
-          %a.accordion-toggle{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapse_#{payment_method.id}", "onclick" => "$(this).next().click();"}
-            = payment_method.name
+          %a.accordion-toggle{"data-payment-method-link": true, "data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapse_#{payment_method.id}", "data-target": "#collapse_#{payment_method.id}"}
+            - if f.object.decorate.payment_methods.count > 1
+              = payment_method.name
           = f.radio_button :payment_method_id, payment_method.id, hidden: true, checked: selected_payment_method
-        .accordion-body.collapse{id: "collapse_#{payment_method.id}", class: (selected_payment_method ? "in" : '')}
+        .accordion-body.collapse{id: "collapse_#{payment_method.id}", class: (selected_payment_method ? "in" : ''), "data-payment-method-type": payment_method.payment_method_type}
           .accordion-inner
-            = render partial: "shared/payment_methods/" + payment_method.payment_method_type, locals: {f: f, payment_method: payment_method}
-  - else
-    .alert.alert-danger
-      %b= t("reservations_review.missing_payment_method")
+            %fieldset{disabled: true}
+              = render partial: "shared/payment_methods/" + payment_method.payment_method_type, locals: {f: f, payment_method: payment_method}
+
+- else
+  .alert.alert-danger
+    %b= t("reservations_review.missing_payment_method")
+
+:javascript
+  $(document).trigger('init:paymentMethodSelector.nearme');

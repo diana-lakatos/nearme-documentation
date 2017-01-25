@@ -67,23 +67,14 @@ class PaymentGateway::FetchPaymentGateway < PaymentGateway
     protocol + host + path
   end
 
-  def charge(user, amount, currency, payment, _token)
-    @payment = payment
-    @mns_params = payment.payment_response_params
-
-    @charge = Charge.create(
-      amount: amount,
-      payment: payment,
-      currency: currency,
-      user_id: user.id
-    )
+  def gateway_capture(amount, token, options)
+    @mns_params = options[:mns_params]
 
     if verify && mns_params['transaction_status'] == '2'
-      charge_successful(mns_params)
+      OpenStruct.new(success?: true, message: mns_params)
     else
-      charge_failed(mns_params)
+      OpenStruct.new(success?: false, message: mns_params)
     end
-    @charge
   end
 
   private

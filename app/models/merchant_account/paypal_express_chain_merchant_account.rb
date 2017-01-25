@@ -5,6 +5,10 @@ class MerchantAccount::PaypalExpressChainMerchantAccount < MerchantAccount
 
   after_initialize :generate_merchant_token!
 
+  def custom_options
+    { merchant_account_id: external_id }
+  end
+
   def create_billing_agreement(token)
     response = payment_gateway.express_gateway.store(token)
     if response.success?

@@ -28,7 +28,7 @@
           </td>
           <td>{{ order.state }}</td>
           <td>{{ order.created_at | localize }}</td>
-          <td><b>{{ order.total_amount | render_money }}</b></td>
+          <td><b>{{ order.total_amount_money | render_money }}</b></td>
           <td><a href="{{ 'instance_admin_manage_order_path' | generate_url: order.id }}">Details</a></td>
         </tr>
       {% endfor %}

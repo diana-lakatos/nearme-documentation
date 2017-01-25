@@ -11,14 +11,14 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   }.freeze
 
   def process!
-    process_error('Webhook not found') && return if event.blank?
-    process_error("Webhook type #{event.kind} not allowed") && return unless ALLOWED_WEBHOOKS.include?(event.kind)
-    process_error('Mode mismatch') && return if payment_gateway_mode != payment_gateway.mode
+    return process_error('Webhook not found') if event.blank?
+    return process_error("Webhook type #{event.kind} not allowed") unless ALLOWED_WEBHOOKS.include?(event.kind)
+    return process_error('Mode mismatch') if payment_gateway_mode != payment_gateway.mode
 
     increment!(:retry_count)
 
     success = send(ALLOWED_WEBHOOKS[event.kind])
-    success ? archive : mark_as_failed
+    success ? success! : failed!
 
   rescue => e
     process_error(e, should_raise: true)

@@ -6,7 +6,7 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
 
   MAX_REFUND_ATTEMPTS = 10
 
-  supported :company_onboarding, :recurring_payment, :nonce_payment,
+  supported :company_onboarding, :payment_source_store, :nonce_payment,
             :credit_card_payment, :partial_refunds, :multiple_currency
 
   delegate :verify_webhook, :parse_webhook, :find_payment, :find_merchant, :onboard!, :update_onboard!,

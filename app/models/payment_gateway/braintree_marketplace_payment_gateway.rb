@@ -3,7 +3,7 @@ require 'braintree'
 
 class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   supported :company_onboarding, :immediate_payout, :credit_card_payment,
-            :partial_refunds, :host_subscription, :multiple_currency, :recurring_payment
+            :partial_refunds, :host_subscription, :multiple_currency, :payment_source_store
 
   delegate :verify_webhook, :parse_webhook, :find_payment, :find_merchant, :onboard!, :update_onboard!,
            :client_token, :payment_settled?, to: :gateway
@@ -39,19 +39,6 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
 
   def gateway
     @gateway ||= ActiveMerchant::Billing::BraintreeCustomGateway.new(settings)
-  end
-
-  def charge(user, amount, currency, payment, token)
-    charge_record = super(user, amount, currency, payment, token)
-    if charge_record.try(:success?)
-      payment_transfer = payment.company.payment_transfers.create!(
-        payments: [payment.reload],
-        payment_gateway_mode: mode,
-        payment_gateway_id: id
-      )
-    end
-
-    charge_record
   end
 
   def process_payout(_merchant_account, _amount, _payment_transfer)

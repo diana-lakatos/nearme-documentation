@@ -353,6 +353,9 @@ en:
       missing_transactable_type: 'There is nothing to search yet!'
 
     manage:
+      bank_accounts:
+        not_verified: 'Your Bank Account could not be verified.'
+        verified: 'Your Bank Account is now verified!'
       credit_cards:
         added: 'Credit card has been added'
         not_configured: "You have not made any transaction for this payment gateway. You can add your first credit card during your first transaction."

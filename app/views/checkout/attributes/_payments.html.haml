@@ -2,28 +2,10 @@
   - if f.object.with_payment?
     #credit-card-select
       = f.simple_fields_for :payment_attributes, f.object.decorate.payment_decorator do |form|
+        = form.hidden_field :id
         = render 'shared/payment_form', f: form
 
   - if f.object.with_payment_subscription?
     #credit-card-select
       = f.simple_fields_for :payment_subscription_attributes, f.object.payment_subscription_decorator do |form|
-        - if form.object.payment_methods.blank?
-          %h2= t("reservations_review.missing_payment_method")
-          %span= t("reservations_review.missing_payment_method_info")
-        - else
-          - if form.object.subscriber.respond_to?(:monthly?) && form.object.subscriber.monthly?
-            %p= t 'recurring_reservations_review.prorated_info'
-
-          = form.error :base
-
-          #accordion2.accordion
-            - form.object.payment_methods.each_with_index do |payment_method, index|
-              - selected_payment_method = form.object.payment_method_id == payment_method.id|| (index.zero? && form.object.payment_method_id.blank?)
-              .accordion-group
-                .accordion-heading
-                  %a.accordion-toggle{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapse_#{payment_method.id}", "onclick" => "$(this).next().click();"}
-                    = payment_method.name
-                  = form.radio_button :payment_method_id, payment_method.id, hidden: true, checked: selected_payment_method
-                .accordion-body.collapse{id: "collapse_#{payment_method.id}", class: (selected_payment_method ? "in" : '')}
-                  .accordion-inner
-                    = render partial: "shared/payment_methods/" + payment_method.payment_method_type, locals: {f: form, payment_method: payment_method}
+        = render 'shared/payment_form', f: form

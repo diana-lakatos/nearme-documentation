@@ -10,12 +10,11 @@ class PaymentGateway::BraintreePaymentGatewayTest < ActiveSupport::TestCase
   should 'properly translate options keys' do
     @payment = FactoryGirl.build(:payment)
     @payment.stubs(:payment_gateway).returns(@braintree_marketplace_processor)
-    @payment.stubs(merchant_account: stub(verified?: true))
-    options = @payment.authorize_options
-    options = @payment.payment_gateway.translate_option_keys(options)
-
-    assert_equal @payment.total_service_amount_cents, @payment.authorize_options[:application_fee]
-    assert_equal options.size, @payment.authorize_options.size
+    @payment.stubs(merchant_account: stub(verified?: true, custom_options: { merchant_account_id: 123 }))
+    options = @payment.send(:payment_options)
+    assert_equal @payment.send(:total_service_amount_cents), options[:service_fee_amount]
+    assert_equal 123, options[:merchant_account_id]
+    assert_equal options.size, options.size
   end
 
   should 'include environment in settings' do

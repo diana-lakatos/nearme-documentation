@@ -1,37 +1,5 @@
 
 # frozen_string_literal: true
-# Payment class helps interact with Active Merchant via different Payment Gateways.
-# It's now isolated from Reservation, Order etc. All you need to do to add payment
-# to new model is to build payment object (see build_payment method in Reservation class).
-# CreditCard object is required to process CC authorization.
-# To create valid Payment object it's necessary to pass PaymentMethod that describe payment type
-#
-# Manual and free payments are now created so it can be taken into statistics in the future.
-#
-# There are serveral flow methods that can be invoked on Payment object:
-#
-# - authorize:
-#     - validates CC/Token if needed
-#     - authorize via appropriate PaymentAuthorizer class, BillingAuthorization with
-#       token returned from Gateway call is saved. We do not persist failed authorizations.
-#     - store card token if PaymentGateway supports that option
-#
-# - void!:
-#     - release frozen money, and marks payment as "voided"
-#     - failed void does not block Reservation status change
-#
-# - capture!:
-#     - create Charge object with capture response. If successful moves money from buyer to
-#       primary receiver. In chained transactions, after successful capture, second trasaction
-#       is created with service fee for MPO
-#     - failed capture BLOCKS Reservation status chage, TODO we could add fallback: "We failed to
-#       capture payment, do you wish to confirm that resrevation anyway?" in modal box.
-#
-# - refund!
-#     - refund method is invoked by PaymentRefundJob that first call refund! method
-#       where 3 attempts are executed. Payment#amount_to_be_refunded method determines amount
-#       that is refunded.
-#     - failed refund does not block Reservation status chage
 
 class Payment < ActiveRecord::Base
   has_paper_trail
@@ -40,14 +8,15 @@ class Payment < ActiveRecord::Base
   scoped_to_platform_context
 
   attr_accessor :express_checkout_redirect_url, :payment_response_params, :payment_method_nonce, :customer,
-                :recurring, :rejection_form, :chosen_credit_card_id
+                :recurring, :rejection_form, :chosen_credit_card_id, :public_token, :account_id, :redirect_to_gateway
 
   # === Associations
 
   # Payable association connects Payment with Reservation and Order
   belongs_to :payable, polymorphic: true
+  # BankAccount/CreditCard
+  belongs_to :payment_source, polymorphic: true
   belongs_to :company, -> { with_deleted }
-  belongs_to :credit_card, -> { with_deleted }
   belongs_to :instance
   belongs_to :payment_transfer
   belongs_to :payment_gateway, -> { with_deleted }
@@ -79,7 +48,7 @@ class Payment < ActiveRecord::Base
   scope :refunded, -> { where("#{table_name}.state = 'refunded'") }
   scope :not_refunded, -> { where("#{table_name}.state IS NOT 'refunded'") }
   scope :last_x_days, ->(days_in_past) { where('DATE(payments.created_at) >= ? ', days_in_past.days.ago) }
-  scope :needs_payment_transfer, -> { paid_or_refunded.where(payment_transfer_id: nil, offline: false, exclude_from_payout: false).migrated_payment }
+  scope :needs_payment_transfer, -> {paid_or_refunded.where(payment_transfer_id: nil, offline: false, exclude_from_payout: false).migrated_payment }
   scope :transferred, -> { where.not(payment_transfer_id: nil) }
 
   scope :total_by_currency, lambda {
@@ -92,24 +61,21 @@ class Payment < ActiveRecord::Base
    ')
   }
 
-  accepts_nested_attributes_for :credit_card
+  accepts_nested_attributes_for :payment_source
 
   before_validation do |p|
     self.payer ||= payable.try(:owner)
-    if p.payment_method.try(:payment_method_type) == 'credit_card' && p.chosen_credit_card_id.present? && p.chosen_credit_card_id != 'custom'
-      self.credit_card_id ||= payer.instance_clients.find_by(payment_gateway: payment_gateway.id, test_mode: test_mode?).try(:credit_cards).try(:find, p.chosen_credit_card_id).try(:id)
-    end
     true
   end
 
   validates :currency, presence: true
-  validates :credit_card, presence: true, if: proc { |p| p.credit_card_payment? && p.save_credit_card? && p.new_record? }
+  validates :payment_source, presence: true, if: proc { |p| p.payment_gateway.supports_payment_source_store? && p.new_record? }
   validates :payer, presence: true
   validates :payment_gateway, presence: true
   validates :payment_method, presence: true
   validates :payable_id, uniqueness: { scope: [:payable_type, :payable_id, :instance_id] }, if: proc { |p| p.payable_id.present? }
 
-  validates_associated :credit_card
+  validates_associated :payment_source, on: :create
 
   # === Helpers
   monetize :subtotal_amount_cents, with_model_currency: :currency
@@ -124,10 +90,11 @@ class Payment < ActiveRecord::Base
   delegate :subject, to: :merchant_account, allow_nil: true
   delegate :customer_id, to: :credit_card, allow_nil: true
   delegate :merchant_id, to: :merchant_account, allow_nil: true
+  delegate :cancelled_by_guest?, :cancelled_by_host?, to: :payable, allow_nil: true
 
   state_machine :state, initial: :pending do
     event :mark_as_authorized do transition [:pending, :voided] => :authorized; end
-    event :mark_as_paid       do transition authorized: :paid; end
+    event :mark_as_paid       do transition [:pending, :authorized] => :paid; end
     event :mark_as_voided     do transition [:authorized, :paid] => :voided; end
     event :mark_as_refuneded  do transition paid: :refunded; end
     event :mark_as_failed     do transition any => :failed; end
@@ -138,40 +105,144 @@ class Payment < ActiveRecord::Base
     define_method("#{pmt}_payment?") { payment_method.try(:payment_method_type) == pmt.to_s }
   end
 
+  def process!
+    return false unless valid?
+    return true unless pending?
+    return true unless payment_method.respond_to?(:payment_sources)
+    return false if payment_source.blank?
+    return generate_paypal_express_link! if express_checkout_payment? && payment_source.express_payer_id.blank?
+    return false unless payment_source.process!
+    return false if payment_source.authorizable? && !authorize!
+
+    true
+  end
+
+  # authorize!
+  #  sends authorize call to PaymentGateway (usually via ActiveMerchant)
+  #  usually authorized amount is freezed on payment source account
+  #  creates BillingAuthorization with proper state
+  #  adjust Payment state accoridng to PaymentGateway response
+  #  adds errors (usually passed by exteranl PaymentGateway) if something goes wrong
+  #  returns true or false depending on authorization success
+
   def authorize!
-    !!(valid? && payment_gateway.authorize(self, authorize_options))
+    response = payment_gateway.gateway_authorize(total_amount.cents, source, payment_options)
+
+    billing_authorizations.build(
+      received_response: response,
+      payment_gateway: payment_gateway,
+      reference: payable,
+      immediate_payout: payment_gateway.immediate_payout(company)
+    )
+
+    if response.success?
+      mark_as_authorized!
+    else
+      errors.add(:base, response.message)
+      errors.add(:base, I18n.t('activemodel.errors.models.payment.attributes.base.authorization_failed'))
+    end
+
+    response.success?
   end
 
-  alias authorize authorize!
+  # void!
+  # - release frozen money, and marks payment as "voided"
+  # - failed void does not block Reservation status change
 
-  def authorize_options
-    options = {
-      customer: credit_card.try(:customer_id),
-      currency: currency,
-      payment_method_nonce: payment_method_nonce
-    }
+  def void!
+    return false unless authorized? || paid?
+    return false unless active_merchant_payment?
+    return false if successful_billing_authorization.blank?
 
-    options[:application_fee] = total_service_amount_cents if merchant_account.try(:verified?)
+    response = payment_gateway.void(self)
+    successful_billing_authorization.void_response = response
 
-    options
+    if response.success?
+      mark_as_voided!
+      successful_billing_authorization.touch(:void_at)
+      true
+    else
+      successful_billing_authorization.save!
+      false
+    end
   end
+
+  # capture!
+  # - caputre authorized transaction - money transfer from payment source account is triggered
+  # - create Charge object with capture response. If successful moves money from buyer to
+  #   primary receiver. In chained transactions, after successful capture, second trasaction
+  #   is created with service fee for MPO
+  # - failed capture BLOCKS Reservation status chage, TODO we could add fallback: "We failed to
+  #   capture payment, do you wish to confirm that resrevation anyway?" in modal box.
 
   def capture!
+    pay_with! do
+      payment_gateway.gateway_capture(total_amount.cents, authorization_token, payment_options)
+    end
+  end
+
+  # purchase!
+  # - creates money transfer omiting prior authorization of payment
+
+  def purchase!
+    pay_with! do
+      payment_gateway.gateway_purchase(total_amount.cents, source, payment_options)
+    end
+  end
+
+  # There are few scenarios for PaymentSource to be authorized/captured
+  # - direct_token - is usued only for Stripe PaymentGateway in Direct mode.
+  #     Customer in that scenario is Stored in MPO account not Merchant, because of that 
+  #     we have to generate token that will allow to authorize this card in Merchant Account
+  # - token - when card is saved and charged again MPO account
+  # - active_merchant_card - card details send to PG
+
+  def source
+    return if payment_source.blank?
+    direct_token || payment_source.to_active_merchant
+  end
+
+  def direct_token
+    return unless payment_gateway.direct_charge?
+
+    (payment_source.respond_to?(:credit_card_token) ? payment_source.credit_card_token : nil) || generate_direct_token
+  end
+
+  def generate_direct_token
+    return unless payment_source.token && payment_source.customer_id && merchant_id
+
+    payment_gateway.create_token(
+      payment_source.token,
+      payment_source.customer_id,
+      merchant_id,
+      payment_gateway_mode
+    ).try('[]', :id)
+  end
+
+  # pay_with!
+  # - capture (needs prior authorization) or purchase
+
+  def pay_with!(&block)
+    return false unless block_given?
     return true if manual_payment? || total_amount_cents.zero?
     return false unless active_merchant_payment?
     return false unless valid?
 
-    charge = payment_gateway.charge(payable.owner, total_amount.cents, currency, self, authorization_token)
+    response = yield
 
-    if charge.success?
-      # this works for braintree, might not work for others - to be moved to separate class etc, and ideally somewhere else... hackish hack as a quick win
-      update_attribute(:external_id, authorization_token)
-      mark_as_paid!
-    else
-      touch(:failed_at)
-      false
-    end
+    create_transfer(response) if response.try(:success?) && immediate_payout?
+    set_pg_fee(response)
+    self.external_id ||= response.params.try("[]", 'id')
+    charges.create!(charge_attributes(response))
+    errors.add(:base, response.message) if response.try(:message)
+    response.success? ? mark_as_paid! : touch(:failed_at) && false
   end
+
+  # refund!
+  # - refund method is invoked by PaymentRefundJob that first call refund! method
+  #   where 3 attempts are executed. Payment#amount_to_be_refunded method determines amount
+  #   that is refunded.
+  # - failed refund does not block Reservation status chage
 
   def refund!
     return false if refunded?
@@ -223,7 +294,7 @@ class Payment < ActiveRecord::Base
       currency: currency,
       payment_gateway: payment_gateway,
       payment_gateway_mode: payment_gateway_mode,
-      credit_card_id: credit_card_id
+      credit_card_id: credit_card.try(:id)
     )
 
     options = { currency: currency, customer_id: merchant_subscription_customer_id }
@@ -269,10 +340,17 @@ class Payment < ActiveRecord::Base
     end
   end
 
+  # Use API to get payment object stored in payment gateway
+  # This objec is stadardised with our response parser
+  # for example PaymentGateway::Response::Stripe::Payment
   def fetch
     return unless payment_gateway.gateway.respond_to?(:find_payment)
 
     payment_gateway.find_payment(authorization_token, merchant_account.try(:external_id))
+  end
+
+  def can_activate?
+    authorized? || !payment_method.respond_to?(:payment_sources) || payment_source.try(:can_activate?)
   end
 
   def service_fee_refund_amount_cents
@@ -284,42 +362,10 @@ class Payment < ActiveRecord::Base
     end
   end
 
-  def total_service_amount_cents
-    service_fee_amount_host.cents + service_fee_amount_guest.cents + service_additional_charges.cents
-  end
-
-  def host_cc_token
-    merchant_account.try(:payment_subscription).try(:credit_card).try(:token)
-  end
-
-  # Return customer id of Merchant Credit Card
-  # user when Merchant CC is charged for Braintree Payout
-
-  def merchant_subscription_customer_id
-    merchant_account.try(:payment_subscription).try(:credit_card).try(:customer_id)
-  end
-
-  def void!
-    return false unless authorized? || paid?
-    return false unless active_merchant_payment?
-    return false if successful_billing_authorization.blank?
-
-    response = payment_gateway.void(self)
-    successful_billing_authorization.void_response = response
-
-    if response.success?
-      mark_as_voided!
-      successful_billing_authorization.touch(:void_at)
-      true
-    else
-      successful_billing_authorization.save!
-      false
-    end
-  end
-
   # @return [Boolean] whether the payment has been made with the payment gateway
   #   in test mode
   def test_mode?
+    payment_gateway.test_mode? if payment_gateway_mode.blank?
     payment_gateway_mode == PaymentGateway::TEST_MODE
   end
 
@@ -331,17 +377,22 @@ class Payment < ActiveRecord::Base
     end
   end
 
-  def credit_card_attributes=(cc_attributes)
-    return unless credit_card_payment?
-    super(cc_attributes.merge(payment_gateway: payment_gateway,
-                              test_mode: test_mode?,
-                              instance_client: payment_gateway.try { |p| p.instance_clients.where(client: payer, test_mode: test_mode?).first_or_initialize(client: payer, test_mode: test_mode?) }))
+  def payment_source_attributes=(source_attributes)
+    return unless payment_method.respond_to?(:payment_sources)
+
+    source = self.payment_source || payment_method.payment_sources.new
+    source.attributes = source_attributes.merge({ payment_method: payment_method, payer: payer })
+    self.payment_source = source
+  end
+  alias credit_card_attributes= payment_source_attributes=
+  alias credit_card= payment_source=
+
+  def credit_card
+    self.payment_source if self.payment_source_type == 'CreditCard'
   end
 
-  # Currently we store all CC if PamentGateway allows us to do so.
-  # We should change that to let MPO decide if it's mandatory or optional
-  def save_credit_card?
-    payment_gateway.supports_recurring_payment?
+  def bank_account
+    self.payment_source if self.payment_source_type == 'BankAccount'
   end
 
   def total_additional_charges_cents
@@ -412,14 +463,6 @@ class Payment < ActiveRecord::Base
     amount_to_be_refunded - service_fee_amount_host.cents
   end
 
-  def cancelled_by_guest?
-    payable.respond_to?(:cancelled_by_guest?) && payable.cancelled_by_guest?
-  end
-
-  def cancelled_by_host?
-    payable.respond_to?(:cancelled_by_host?) && payable.cancelled_by_host?
-  end
-
   def full_refund?
     amount_to_be_refunded == total_amount.cents
   end
@@ -444,28 +487,6 @@ class Payment < ActiveRecord::Base
   def payment_method_nonce=(token)
     return false if token.blank?
     @payment_method_nonce = token
-  end
-
-  def express_token=(token)
-    self[:express_token] = token
-    unless token.blank?
-      details = payment_gateway.gateway(subject).details_for(token)
-      self.express_payer_id = details.params['payer_id']
-    end
-  end
-
-  def redirect_to_paypal?
-    express_checkout_payment? && express_checkout_redirect_url.present?
-  end
-
-  # This method remains here to make possible flawless transition after adding
-  # payment_gateway_mode attribute. It can be removed a week or two after of the release.
-  def payment_gateway_mode
-    super || charges.successful.first.try(:payment_gateway_mode)
-  end
-
-  def payment_gateway
-    @payment_gateway ||= super || payable.try(:billing_authorization).try(:payment_gateway)
   end
 
   def payment_method_id=(payment_method_id)
@@ -505,6 +526,67 @@ class Payment < ActiveRecord::Base
 
   private
 
+  def payment_options
+    options = { currency: currency, payment_gateway_mode: payment_gateway_mode }
+
+    options.merge!(merchant_account.try(:custom_options) || {}) if merchant_account.try(:verified?)
+    options.merge!({ customer: payment_source.customer_id }) unless payment_gateway.direct_charge?
+    options.merge!({ mns_params: payment_response_params }) if payment_response_params
+    options.merge!({ application_fee: total_service_amount_cents }) if merchant_account.try(:verified?)
+    options.merge!({ token: express_token }) if express_token
+
+    options = payment_gateway.translate_option_keys(options)
+    options.with_indifferent_access
+  end
+
+  def charge_attributes(response)
+    {
+      response: response,
+      success: response.success?,
+      amount: total_amount.cents,
+      currency: currency,
+      user_id: payer_id,
+      payment_gateway_mode: payment_gateway_mode
+    }
+  end
+
+  def create_transfer(response)
+    return if payment_gateway.direct_charge?
+
+    company.payment_transfers.create!(
+      payments: [self],
+      payment_gateway_mode: payment_gateway_mode,
+      payment_gateway_id: payment_gateway_id,
+      token: response.params.try('[]', 'transfer')
+    )
+  end
+
+  # set_pg_fee
+  # - sets payment_gateway_fee_cents based on balance response, this currently works only for Stripe
+
+  def set_pg_fee(response)
+    return unless payment_gateway.respond_to?(:find_balance)
+    return if response.blank? || response.params.blank? || (balance_id = response.params['balance_transaction']).blank?
+
+    balance_response = payment_gateway.find_balance(balance_id, merchant_account.try(:external_id))
+    self.payment_gateway_fee_cents = balance_response.payment_gateway_fee_cents
+  end
+
+  # @return [Integer, nil] customer_id of Merchant Credit Card
+  # user when Merchant CC is charged for Braintree Payout
+
+  def merchant_subscription_customer_id
+    merchant_account.try(:payment_subscription).try(:credit_card).try(:customer_id)
+  end
+
+  def total_service_amount_cents
+    service_fee_amount_host.cents + service_fee_amount_guest.cents + service_additional_charges.cents
+  end
+
+  def host_cc_token
+    merchant_account.try(:payment_subscription).try(:credit_card).try(:token)
+  end
+
   # TODO: move this flague to Payment from BillingAuthorization
   def immediate_payout?
     successful_billing_authorization.try(:immediate_payout?) == true
@@ -522,5 +604,19 @@ class Payment < ActiveRecord::Base
   def set_merchant_account
     return unless payment_gateway
     self.merchant_account ||= payment_gateway.merchant_account(company)
+  end
+
+  def generate_paypal_express_link!
+    response = payment_gateway.gateway.setup_authorization(total_amount.cents, payable.setup_authorization_options)
+    if response.success?
+      payable.restore_cached_step!
+      # TODO token should be passed to PaypalAccount
+      self.express_token = response.token
+      self.redirect_to_gateway = payment_gateway.gateway.redirect_url_for(express_token)
+      true
+    else
+      errors.add(:base, response.params['Errors']['LongMessage'])
+      false
+    end
   end
 end

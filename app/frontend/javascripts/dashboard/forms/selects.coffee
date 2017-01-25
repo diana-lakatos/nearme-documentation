@@ -1,7 +1,7 @@
 require 'selectize/dist/js/selectize'
 
 selects = (context = 'body')->
-  $(context).find('.form-group select').each ->
+  $(context).find('.form-group select:not(.customSelect)').each ->
     select = this
     options =
       onInitialize: ->

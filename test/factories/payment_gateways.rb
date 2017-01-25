@@ -5,7 +5,7 @@ FactoryGirl.define do
     live_settings { { api_key: 'present' } }
 
     after :build do |payment_gateway, _payment_methods|
-      build_active_payment_methods(payment_gateway)
+      payment_gateway.build_payment_methods(true)
     end
 
     before(:create) do |payment_gateway|
@@ -146,14 +146,6 @@ FactoryGirl.define do
     end
 
     factory :manual_payment_gateway, class: PaymentGateway::ManualPaymentGateway do
-    end
-  end
-end
-
-def build_active_payment_methods(payment_gateway)
-  PaymentMethod::PAYMENT_METHOD_TYPES.each do |payment_method|
-    if payment_gateway.send("supports_#{payment_method}_payment?")
-      payment_gateway.payment_methods.build(payment_method_type: payment_method, active: true)
     end
   end
 end

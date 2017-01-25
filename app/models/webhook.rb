@@ -16,8 +16,8 @@ class Webhook < ActiveRecord::Base
   before_create :set_payment_gateway_mode
 
   state_machine :state, initial: :pending do
-    event :mark_as_failed do transition [:failed, :pending, :archived] => :failed; end
-    event :archive do transition [:pending, :failed] => :archived; end
+    event :failed do transition [:failed, :pending, :archived] => :failed; end
+    event :success do transition [:pending, :failed] => :success; end
   end
 
   # We use params method only to display saved YAML webhook request
@@ -42,7 +42,7 @@ class Webhook < ActiveRecord::Base
 
   def process_error(error_message, should_raise: false)
     self.error = error_message.to_s
-    mark_as_failed
-    should_raise ? raise(error_message) : true
+    failed!
+    should_raise ? raise(error_message) : false
   end
 end

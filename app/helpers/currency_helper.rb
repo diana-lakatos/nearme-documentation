@@ -27,7 +27,6 @@ module CurrencyHelper
       with_currency: instance.show_currency_name,
       no_cents_if_whole: instance.no_cents_if_whole
     }
-
     money = money.to_money
     money.format(options)
   end

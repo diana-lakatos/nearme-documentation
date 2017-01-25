@@ -39,7 +39,11 @@ class InstanceAdmin::Manage::PaymentsController < InstanceAdmin::Manage::BaseCon
   end
 
   def reload
-    PaymentReloaderService.new(@payment).process!
+    if @payment.external_id
+      PaymentReloaderService.new(@payment, @payment.fetch).process!
+    else
+      flash[:notice] = 'Can\'t update payment without external id'
+    end
     redirect_to instance_admin_manage_payment_path(@payment)
   end
 

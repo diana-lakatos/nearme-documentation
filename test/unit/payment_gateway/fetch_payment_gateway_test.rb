@@ -25,7 +25,7 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
     assert_equal Payment.last, @reservation.payment
     assert_equal Charge.last, @charge = @reservation.payment.charges.last
     assert_equal true, @charge.success
-    assert_equal SUCCESS_FETCH_RESPONSE, @charge.response
+    assert_equal OpenStruct.new(success?: true, message: parse_params(SUCCESS_FETCH_RESPONSE)), @charge.response
   end
 
   should 'set reservation as failed after declined response' do
@@ -41,7 +41,14 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
     assert @reservation.payment.authorized?
     @charge = @reservation.payment.charges.last
     refute @charge.success
-    assert_equal FAILED_FETCH_RESPONSE, @charge.response
+    assert_equal OpenStruct.new(success?: false, message: parse_params(FAILED_FETCH_RESPONSE)), @charge.response
+  end
+
+  def parse_params(mns_params)
+    mns_params.reject! { |k, _v| %w(action controller reservation_id).include?(k) }
+    mns_params.each { |k, v| mns_params[k] = v.gsub(/\s+/, '%20') }
+    mns_params.merge!('cmd' => '_xverify-transaction')
+    mns_params
   end
 
   FETCH_RESPONSE = {

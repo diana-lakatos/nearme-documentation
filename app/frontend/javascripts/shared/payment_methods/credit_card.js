@@ -1,4 +1,5 @@
 /* global Stripe */
+require('jquery.payment')
 
 class PaymentMethodCreditCard {
 
@@ -6,16 +7,16 @@ class PaymentMethodCreditCard {
     this.form = $('#checkout-form, #new_payment');
     this._ui = {};
     this._ui.container = container;
+    this._ui.container.querySelector('fieldset').disabled = false;
 
-    this._publishableToken = this.form.find('.nm-credit-card-fields').data('publishable');
-    if (this._ui.container.dataset.initialised) {
-      return;
+    if (this._ui.container.querySelectorAll('input[type=radio]:checked').length == 0) {
+      $(this._ui.container.querySelector('input[type=radio]')).click();
+      this._ui.container.querySelector('input[type=radio]').checked = true;
     }
 
-    this._ui.container.dataset.initialised = true;
-
-    this._ui.newCreditCard = container.querySelector('.nm-new-credit-card-form');
-    this._ui.creditCardSwitcher = container.querySelector('.nm-credit-card-option-select');
+    this._publishableToken = this.form.find('.nm-credit-card-fields').data('publishable');
+    this._ui.newCreditCard = this._ui.container.querySelector('.nm-credit-card-option-select, .payment-source-form');
+    this._ui.creditCardSwitcher = container.querySelector('.payment-source-option-select, .nm-new-credit-card-form');
 
     var that = this;
 
@@ -39,19 +40,50 @@ class PaymentMethodCreditCard {
     });
     this._submitFormHandler();
     this._bindFieldValidation();
+    this._formatCreditCard();
+  }
+
+  _formatCreditCard() {
+    let ccNumber = $('input[data-card-number]');
+    let ccCVC = $('input[data-card-code]');
+
+    if (ccNumber.length === 0 && ccCVC.length === 0) {
+      return;
+    }
+
+    ccNumber.payment('formatCardNumber');
+    ccCVC.payment('formatCardCVC');
   }
 
   _toggleByValue(value) {
-    if (value === 'custom') {
+    if (value === 'new_credit_card') {
       this._ui.newCreditCard.classList.remove('hidden');
+      var inputs = this._ui.newCreditCard.getElementsByTagName('input');
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].disabled = false;
+      }
+      var selects = this._ui.newCreditCard.getElementsByTagName('select');
+      for (var i = 0; i < selects.length; i++) {
+        selects[i].disabled = false;
+      }
+
       this._submitFormHandler();
       return;
     }
     this._ui.newCreditCard.classList.add('hidden');
+    var inputs = this._ui.newCreditCard.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].disabled = true;
+    }
+    var selects = this._ui.newCreditCard.getElementsByTagName('select');
+    for (var i = 0; i < selects.length; i++) {
+      selects[i].selectize;
+      selects[i].disabled = false;
+    }
   }
 
   _init() {
-    let current = this._ui.creditCardSwitcher.querySelector('input[checked]');
+    let current = this._ui.creditCardSwitcher.querySelector('input:checked');
     if (current) {
       this._toggleByValue(current.value);
     }
@@ -60,11 +92,12 @@ class PaymentMethodCreditCard {
   _submitFormHandler() {
     var $form = $(this.form),
       that = this;
+
     $form.unbind('submit').submit((event) => {
       event.stopPropagation();
       event.preventDefault();
 
-      const CCFormVisible = $('.nm-new-credit-card-form.hidden').size() === 0;
+      var CCFormVisible = $(that._ui.container).find('.payment-source-form.hidden').size() === 0;
 
       if (CCFormVisible) {
         if (that._validateForm($form)) {
@@ -129,7 +162,7 @@ class PaymentMethodCreditCard {
       that = this,
       valid = true;
 
-    $form.find('[data-stripe]').change(function(event) {
+    $(this._ui.container).find('[data-stripe]').change(function(event) {
       valid = that._validateField($(event.target), that._presenceValidator);
       if ($(event.target).data('stripe') == 'number') {
         valid && that._validateField($form.find('[data-stripe="number"]'), $.payment.validateCardNumber);
@@ -194,17 +227,16 @@ class PaymentMethodCreditCard {
   }
 
   _stripeResponseHandler(status, response) {
-    // Grab the form:
-    var $form = $('#checkout-form, #new_payment');
+    if (response.error) {
+      console.log('cont', $(this._ui.container).find('.has-error'))
+      $(this._ui.container).find('.has-error').text(response.error.message);
 
-    if (response.error) { // Problem!
-      // Show the errors on the form:
-      $form.find('.errors').eq(0).html('<p class="error-block">' + response.error.message + '</p>');
       this._hideLoader();
     } else { // Token was created!
 
       // Get the token ID:
       var token = response.id;
+      var $form = $('#checkout-form, #new_payment');
 
       // Insert the token ID into the form so it gets submitted to the server:
       this._updateCCToken($form, token);

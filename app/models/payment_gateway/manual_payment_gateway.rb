@@ -5,8 +5,12 @@ class PaymentGateway::ManualPaymentGateway < PaymentGateway
     {}
   end
 
-  def authorize(payment, options = {})
-    PaymentAuthorizer::ManualPaymentAuthorizer.new(self, payment, options).process!
+  def gateway_authorize(*args)
+    OpenStruct.new(success?: true, message: 'Mnaual payment auth', authorization: 'manual')
+  end
+
+  def gateway_purchase(*args)
+    OpenStruct.new(success?: true, message: 'Mnaual payment auth', authorization: 'manual')
   end
 
   def self.supported_countries

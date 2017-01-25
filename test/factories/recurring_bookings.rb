@@ -18,7 +18,13 @@ FactoryGirl.define do
       booking.transactable_line_items << LineItem::Transactable.new(unit_price_cents: 1670, quantity: 1, name: booking.transactable.name)
     end
 
-    after(:create, &:authorize_payment!)
+    trait :activated do
+      after(:build) do |booking|
+        booking.try_to_activate!
+      end
+    end
+
+    factory :activated_recurring_booking, traits: [:activated]
 
     factory :confirmed_recurring_booking do
       state 'confirmed'

@@ -10,7 +10,7 @@ class CreditCardTest < ActiveSupport::TestCase
 
     should 'not persist card if not valid' do
       card = FactoryGirl.build(:invalid_credit_card_attributes, response: nil)
-      refute card.save
+      refute card.save && card.process!
       refute card.persisted?
       assert_equal card.errors[:base][0], I18n.t('buy_sell_market.checkout.invalid_cc')
     end
@@ -19,7 +19,7 @@ class CreditCardTest < ActiveSupport::TestCase
       ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(am_success_response(customer_params))
       Instance.any_instance.stubs(:test_mode?).returns(false)
       card = FactoryGirl.build(:credit_card_attributes, response: nil, instance_client: @instance_client)
-      assert card.save
+      assert card.save && card.process!
       assert card.success?
       assert_equal customer_params['default_source'], card.token
       assert_equal false, card.test_mode
@@ -28,7 +28,7 @@ class CreditCardTest < ActiveSupport::TestCase
     should 'persist card if valid and successful multi response with correct mode' do
       ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(am_success_multi_response)
       card = FactoryGirl.build(:credit_card_attributes, response: nil, instance_client: @instance_client)
-      assert card.save
+      assert card.save && card.process!
       assert card.success?
       assert_equal customer_params['default_source'], card.token
       assert_equal customer_params['id'], card.instance_client.customer_id
@@ -38,8 +38,8 @@ class CreditCardTest < ActiveSupport::TestCase
     should 'find instance_client when deleted' do
       ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(am_success_response(customer_params))
       Instance.any_instance.stubs(:test_mode?).returns(false)
-      card = FactoryGirl.build(:credit_card_attributes, response: nil, instance_client: @instance_client, payment_gateway: @instance_client.payment_gateway)
-      assert card.save
+      card = FactoryGirl.build(:credit_card_attributes, response: nil, instance_client: @instance_client, payment_method: @instance_client.payment_gateway.payment_methods.first)
+      assert card.save && card.process!
       card.payment_gateway.destroy
       card.reload
       assert card.payment_gateway.deleted?

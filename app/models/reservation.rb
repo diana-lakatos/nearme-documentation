@@ -132,7 +132,7 @@ class Reservation < Order
 
   def charge_and_confirm!
     invoke_confirmation! do
-      payment.capture!
+      payment.authorized? ? payment.capture! : payment.purchase!
     end
   end
 

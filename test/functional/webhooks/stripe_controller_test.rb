@@ -2,7 +2,7 @@
 require 'test_helper'
 require 'stripe'
 
-class Webhooks::StripeConnectsControllerTest < ActionController::TestCase
+class Webhooks::StripeControllerTest < ActionController::TestCase
   context '#index' do
     setup do
       MerchantAccount::StripeConnectMerchantAccount.any_instance.stubs(:onboard!).returns(true)

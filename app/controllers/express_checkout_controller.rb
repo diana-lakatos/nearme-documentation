@@ -3,9 +3,11 @@ class ExpressCheckoutController < ApplicationController
   before_action :find_payment
 
   def return
-    @payment.express_payer_id = params[:PayerID]
-    reservation = @payment.payable
-    if @payment.authorize && reservation.reload.save
+    payment_source = @order.payment.payment_source
+    payment_source.express_payer_id = params[:PayerID]
+    payment_source.response = @order.payment.payment_gateway.gateway.details_for(@order.payment.express_token).params.to_yaml
+
+    if @order.process!
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: '')
       redirect_to dashboard_order_path(@order)
     else
@@ -18,7 +20,6 @@ class ExpressCheckoutController < ApplicationController
       redirect_to dashboard_order_path(@payment.payable)
     else
       flash[:error] = t('flash_messages.reservations.payment_failed')
-      @order = @payment.payable
       @payment.destroy
 
       redirect_to order_checkout_path(@order)
@@ -28,7 +29,7 @@ class ExpressCheckoutController < ApplicationController
   private
 
   def find_payment
-    @order = current_user.orders.find(params[:order_id])
-    @payment = Payment.where(payable_id: @order.id, payable_type: @order.class.name).find_by!(express_token: params[:token])
+    @order = current_user.orders.cart.find(params[:order_id])
+    @payment = @order.payment
   end
 end
