@@ -11,6 +11,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :find_company, only: [:social_accounts, :edit]
   before_action :set_form_components, only: [:edit, :update]
   before_action :redirect_from_default, only: [:edit, :update]
+  before_action :find_user_or_redirect_to_slug, only: [:show]
 
   # NB: Devise calls User.new_with_session when building the new User resource.
   # We use this to apply any Provider based authentications to the user record.
@@ -89,11 +90,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def show
     @theme_name = 'buy-sell-theme'
-    @user = if current_user.try(:admin?)
-              User.find(params[:id])
-            else
-              User.not_admin.find(params[:id])
-            end
 
     if platform_context.instance.is_community?
       @projects = IntelFakerService.projects(4)
@@ -432,5 +428,17 @@ class RegistrationsController < Devise::RegistrationsController
     return if current_user&.has_default_profile?
     return redirect_to(edit_dashboard_seller_path) if current_user&.has_seller_profile?
     return redirect_to(edit_dashboard_buyer_path) if current_user&.has_buyer_profile?
+  end
+
+  def find_user_or_redirect_to_slug
+    @user = if current_user.try(:admin?)
+              User.find(params[:id])
+            else
+              User.not_admin.find(params[:id])
+            end
+
+    if @user.id.to_s == params[:id] && @user.slug.present? && @user.slug != @user.id.to_s
+      redirect_to profile_url(@user.slug)
+    end
   end
 end

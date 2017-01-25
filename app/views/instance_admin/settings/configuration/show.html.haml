@@ -70,6 +70,13 @@
 
   .content-container
     %h4
+      = t('instance_admin.settings.configuration.slugs')
+    .row
+      .input-container.col-xs-6
+        = f.input :only_first_name_as_user_slug, as: :boolean, inline_label: true
+
+  .content-container
+    %h4
       = t('instance_admin.settings.configuration.checkout')
     .row
       .input-container.col-xs-6
