@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 class RegistrationsController < Devise::RegistrationsController
   skip_before_action :redirect_unverified_user
-  skip_before_action :redirect_unverified_user, only: [:verify, :unsubscribe]
   before_action :set_role_if_blank
   before_action :configure_permitted_parameters, only: :create
   skip_before_action :redirect_to_set_password_unless_unnecessary, only: [:update_password, :set_password]
@@ -438,7 +437,7 @@ class RegistrationsController < Devise::RegistrationsController
             end
 
     if @user.id.to_s == params[:id] && @user.slug.present? && @user.slug != @user.id.to_s
-      redirect_to profile_url(@user.slug)
+      redirect_to profile_url(@user.slug), status: 301
     end
   end
 end
