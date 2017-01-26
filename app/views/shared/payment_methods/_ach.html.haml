@@ -19,10 +19,10 @@
           %p#plaid_institution
         - else
           #ach_manual_payment_form{'data-publishable' => "#{payment_method.payment_gateway.settings[:publishable_key]}"}
+            = form.input :country, as: :hidden, input_html: { value: 'US', data: {country: true} }
             = form.input(:public_token, as: :hidden, input_html: { id: 'stripe_plaid_public_token' })
 
             = form.input(:account_holder_type, collection: [['Company', 'company'], ["Individual", 'individual']], input_html: {data: {account_holder_type: true}} )
-            = form.input(:country, collection: @countries.map {|c| [c.name, c.iso]} , input_html: { data: {country: true}}, selected: f.object.company.iso_country_code  )
             = form.input(:currency, as: :hidden, input_html: {value: f.object.currency, data: {currency: true}} )
             = form.input(:routing_number, input_html: { data: {routing_number: true}})
             = form.input(:account_number, input_html: { data: {account_number: true}} )
