@@ -1,0 +1,35 @@
+name: "Industry"
+instance_profile_types:
+  - Buyer
+multiple_root_categories: true
+children:
+  - name: 'Food and Beverage'
+    children:
+      - name: 'Baked Goods (e.g. Il Forno, Soul Snacks)'
+      - name: 'Catering (e.g. Bascom, Bronx Beer Hall)'
+  - name: 'Building Services'
+    children:
+      - name: 'Janitorial (e.g. BioClassic)'
+      - name: 'HVAC  (e.g. IES)'
+  - name: 'Business Services'
+    children:
+      - name: 'Printing & Design (e.g. ProPrinting, Syllable Cooperative)'
+      - name: 'Technology (e.g. Global Cluster)'
+      - name: 'Marketing & Communications (e.g. Mainland Media)'
+      - name: 'Promotional Merchandising (e.g. From the Bronx)'
+  - name: 'Energy & Fuel'
+    children:
+      - name: 'Heating Oil (e.g. TriState)'
+  - name: 'Building and Office Supplies'
+    children:
+      - name: 'Maintenance & Contractor Supplies (e.g. F&F)'
+      - name: 'Office Supplies (e.g. ISEOP)'
+  - name: 'Special Events'
+    children:
+      - name: 'Event Space (e.g. Bronx Beer Hall, Sweet Water)'
+  - name: 'Health & Wellness'
+    children:
+      - name: 'Fitness and Self-Care (e.g. Sweetwater)'
+  - name: 'Financial Services'
+    children:
+      - name: 'Banking (e.g. Spring Bank)'

@@ -1,0 +1,12 @@
+name: Media
+instance_profile_types: [Buyer]
+
+custom_attributes:
+  - name: label
+    label: Label
+    attribute_type: string
+    html_tag: input
+  - name: link
+    label: Link
+    attribute_type: 'string'
+    html_tag: input
