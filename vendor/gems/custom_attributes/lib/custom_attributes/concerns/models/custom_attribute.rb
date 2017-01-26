@@ -195,7 +195,7 @@ module CustomAttributes
             when 'integer'
               value.to_i
             else
-              value.to_s.downcase
+              value.to_s
             end
           end
         end
