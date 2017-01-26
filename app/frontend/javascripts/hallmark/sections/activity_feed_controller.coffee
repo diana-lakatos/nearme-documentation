@@ -11,12 +11,11 @@ module.exports = class ActivityFeedController
       @initialize()
 
   initialize: ->
-    @showDeleteCommentLinks()
+    @showActionLinks()
     @showSpamReportLinks()
 
-  showDeleteCommentLinks: ->
-    @container.find(".comment-a[data-creator-id=#{@currentUser}] [data-remove-comment]").show()
-    @container.find(".comment-a[data-commentable-creator-id=#{@currentUser}] [data-remove-comment]").show()
+  showActionLinks: ->
+    @container.find(".status-a[data-creator-id=#{@currentUser}], .comment-a[data-creator-id=#{@currentUser}], .comment-a[data-commentable-creator-id=#{@currentUser}]").addClass('is-current-user')
 
   showSpamReportLinks: ->
     for commentId in @commentsSpamReports

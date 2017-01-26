@@ -141,6 +141,7 @@ class InstanceView < ActiveRecord::Base
     'user_mailer/created_by_instance_admin',
     'user_mailer/notify_about_unread_messages',
     'user_mailer/notify_about_wrong_phone_number',
+    'user_mailer/profile_approved',
     'user_mailer/user_commented_on_group',
     'user_mailer/user_commented_on_transactable',
     'user_mailer/user_commented_on_user_update',
