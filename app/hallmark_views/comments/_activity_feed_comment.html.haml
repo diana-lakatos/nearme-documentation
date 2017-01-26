@@ -10,8 +10,7 @@
   %p.author
     = link_to comment.creator.decorate.secret_name, profile_path(comment.creator.slug), target: target
 
-    - if comment.can_edit?(current_user)
-      = link_to t(:edit_comment), "#comment-content-#{comment.id}", 'data-edit-comment': '', class: 'button-a tiny light edit-link-a'
+    = link_to t(:edit_comment), "#comment-content-#{comment.id}", 'data-edit-comment': '', class: 'button-a tiny light edit-link-a action--edit-comment'
 
   = render 'comments/comment_content', comment: comment
 
@@ -21,13 +20,12 @@
 
     - unless hide_comment_options
       - if comment.can_be_reported?
-        %span &bull;
-        - if user_signed_in?
-          = link_to t(:report_as_spam), url_to_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :post, 'data-report-spam': true
-          = link_to t(:cancel_spam_report), url_to_cancel_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :delete, 'data-cancel-report': true, style: "display: none"
-        - else
-          = link_to t(:report_as_spam), new_user_session_path(return_to: request.path)
+        %span.action--report-spam
+          - if user_signed_in?
+            = link_to t(:report_as_spam), url_to_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :post, 'data-report-spam': true
+            = link_to t(:cancel_spam_report), url_to_cancel_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :delete, 'data-cancel-report': true, style: "display: none"
+          - else
+            = link_to t(:report_as_spam), new_user_session_path(return_to: request.path)
       - if comment.can_remove?(current_user)
-        %span.remove-link{ 'data-remove-comment': true }
-          %span &bull;
+        %span.action--remove-comment{ 'data-remove-comment': true }
           = link_to t(:remove_comment), url_to_comment(comment.commentable, comment), remote: true, method: :delete
