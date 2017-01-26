@@ -1,6 +1,8 @@
 name: "Language"
 instance_profile_types:
   - Buyer
+transactable_types:
+  - Order
 children:
   - name: 'English (default)'
   - name: 'Albanian'
