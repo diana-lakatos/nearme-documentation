@@ -222,3 +222,16 @@
 .edit-link-a {
   float: right;
 }
+
+/* Enable action links */
+.status-a {
+  > header .action--edit-comment {
+    display: none;
+  }
+
+  &.is-current-user {
+    > header .action--edit-comment {
+      display: block;
+    }
+  }
+}

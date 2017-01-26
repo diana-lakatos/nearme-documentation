@@ -1,12 +1,11 @@
-%article.status-a{"data-comment-id": comment.id}
+%article.status-a{"data-comment-id": comment.id, "data-creator-id": comment.creator.id }
   %header
     %figure
       = image_tag comment.creator.avatar.url(:thumb)
     %p.desc
       = link_to comment.creator.decorate.secret_name, profile_path(comment.creator.slug)
 
-      - if comment.can_edit?(current_user)
-        = link_to t(:edit_comment), "#comment-content-#{comment.id}", 'data-edit-comment': '', class: 'button-a tiny light edit-link-a'
+      = link_to t(:edit_comment), "#comment-content-#{comment.id}", 'data-edit-comment': '', class: 'button-a tiny light action--edit-comment edit-link-a'
 
   %section
     = render 'comments/comment_content', comment: comment
@@ -15,12 +14,11 @@
     %p.actions
       %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :long)
 
-      %span &bull;
+      %span.action--report-spam
       - if report = comment.reported_by(current_user, request.remote_ip)
         = link_to t(:cancel_spam_report), url_to_spam_report(comment.commentable, comment, report), remote: true, method: :delete
       - elsif current_user
         = link_to t(:report_as_spam), url_to_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :post
 
-      - if comment.can_remove?(current_user)
-        %span &bull;
+      %span.action--remove-comment
         = link_to t(:remove_comment), url_to_comment(comment.commentable, comment), remote: true, method: :delete
