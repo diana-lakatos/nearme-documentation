@@ -169,7 +169,7 @@ module Elastic
           user_profiles_filters <<
             {
               match: {
-                "user_profiles.properties.#{key}.raw" => value.to_s.split(',').map(&:downcase).join(' OR ')
+                "user_profiles.properties.#{key}.raw" => value.to_s.split(',').join(' OR ')
               }
             }
         end
@@ -180,7 +180,7 @@ module Elastic
         user_profiles_filters <<
           {
             match: {
-              "user_profiles.customizations.#{key}.raw" => value.to_s.split(',').map(&:downcase).join(' OR ')
+              "user_profiles.customizations.#{key}.raw" => value.to_s.split(',').join(' OR ')
             }
           }
       end
