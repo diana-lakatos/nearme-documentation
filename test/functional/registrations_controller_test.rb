@@ -60,15 +60,21 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_select '#verifications dt', 'Twitter'
     end
 
-    should 'not display company info on user profile when user does not have a company' do
+    should 'redirect to slug url if id given' do
       get :show, { id: @user.id }
+      assert_response 301
+      assert_redirected_to profile_path(@user.slug)
+    end
+
+    should 'not display company info on user profile when user does not have a company' do
+      get :show, { id: @user.slug }
       assert_response 200
       assert_select '.vendor-profile .shop-info p', false
     end
 
     should 'show company info on user profile' do
       FactoryGirl.create(:company, creator: @user)
-      get :show, { id: @user.id }
+      get :show, { id: @user.slug }
 
       assert_response 200
       assert_select '#shop-info h2', 'Company Info'
@@ -77,7 +83,7 @@ class RegistrationsControllerTest < ActionController::TestCase
     should 'display edit actions if user is logged in' do
       FactoryGirl.create(:company, creator: @user)
       sign_in @user
-      get :show, { id: @user.id }
+      get :show, { id: @user.slug }
 
       assert_response 200
       assert_select '#vendor-profile a', 'Edit'
