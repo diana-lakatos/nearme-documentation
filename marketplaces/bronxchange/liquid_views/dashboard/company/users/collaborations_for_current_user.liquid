@@ -1,20 +1,20 @@
-<div class="project-invite-content">
+<div class="collaborations-content">
   <header>
-    <h2>Invite a Driver</h2>
+    <h2>Invite a Vendor</h2>
     <button type="button" data-close>Close</button>
   </header>
 
   {% assign collaborators = current_user | find_collaborators_for_user_transactables: user %}
 
   {% if collaborators.size > 0 %}
-    <div class="existing-projects" data-delete-url="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">
+    <div class="existing-collaborations" data-delete-url="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">
       <h3>You have invited {{ user.name }} as a driver to your booking.</h3>
       <ul>
         {% for collaborator in collaborators %}
         <li>
           {{ collaborator.transactable.name }}
           {% if collaborator.transactable.pending? %}
-            <button type="button" class="button-b action-remove" data-transactable-collaborator-id="{{ collaborator.id }}" data-transactable-id="{{ collaborator.transactable.id }}">Remove</button>
+            <button type="button" class="button-b action-remove" data-transactable-collaborator-id="{{ collaborator.id }}" data-transactable-id="{{ collaborator.transactable.id }}" data-remove-collaborator>Remove</button>
           {% endif %}
         </li>
         {% endfor %}
