@@ -19,8 +19,8 @@ brew install redis postgresql elasticsearch imagemagick qt55 icu4c node
 brew linkapps qt55
 brew link --force qt55
 bundle
-npm install -g gulp
-npm install
+npm install -g yarn
+yarn install
 gulp build
 ```
 
@@ -56,7 +56,7 @@ You have to install gulp on local - use
 
 Then in project directory:
 
-    npm install
+    yarn install
 
 And last thing:
 
