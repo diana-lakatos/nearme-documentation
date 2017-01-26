@@ -1,5 +1,5 @@
 /* global Stripe */
-require('jquery.payment')
+require('jquery.payment');
 
 class PaymentMethodCreditCard {
 
@@ -56,27 +56,32 @@ class PaymentMethodCreditCard {
   }
 
   _toggleByValue(value) {
+
     if (value === 'new_credit_card') {
       this._ui.newCreditCard.classList.remove('hidden');
-      var inputs = this._ui.newCreditCard.getElementsByTagName('input');
-      for (var i = 0; i < inputs.length; i++) {
+      let inputs = this._ui.newCreditCard.getElementsByTagName('input');
+      for (let i = 0; i < inputs.length; i++) {
         inputs[i].disabled = false;
       }
-      var selects = this._ui.newCreditCard.getElementsByTagName('select');
-      for (var i = 0; i < selects.length; i++) {
+
+      let selects = this._ui.newCreditCard.getElementsByTagName('select');
+      for (let i = 0; i < selects.length; i++) {
         selects[i].disabled = false;
       }
 
       this._submitFormHandler();
       return;
     }
+
     this._ui.newCreditCard.classList.add('hidden');
-    var inputs = this._ui.newCreditCard.getElementsByTagName('input');
-    for (var i = 0; i < inputs.length; i++) {
+
+    let inputs = this._ui.newCreditCard.getElementsByTagName('input');
+    for (let i = 0; i < inputs.length; i++) {
       inputs[i].disabled = true;
     }
-    var selects = this._ui.newCreditCard.getElementsByTagName('select');
-    for (var i = 0; i < selects.length; i++) {
+
+    let selects = this._ui.newCreditCard.getElementsByTagName('select');
+    for (let i = 0; i < selects.length; i++) {
       selects[i].selectize;
       selects[i].disabled = false;
     }
@@ -228,7 +233,7 @@ class PaymentMethodCreditCard {
 
   _stripeResponseHandler(status, response) {
     if (response.error) {
-      console.log('cont', $(this._ui.container).find('.has-error'))
+      // console.log('cont', $(this._ui.container).find('.has-error'));
       $(this._ui.container).find('.has-error').text(response.error.message);
 
       this._hideLoader();

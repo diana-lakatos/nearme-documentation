@@ -3,9 +3,9 @@
 
 class PaymentMethodAch {
 
-  constructor(container, options) {
+  constructor(container) {
     this.form = $('#checkout-form, #new_payment');
-    this.__plaid_options = plaid_options
+    this.__plaid_options = window.plaid_options;
 
     this._publishableToken = this.form.find('#ach_manual_payment_form').data('publishable');
     this._ui = {};
@@ -13,7 +13,7 @@ class PaymentMethodAch {
     this._ui.container.querySelector('fieldset').disabled = false;
 
     if (this._ui.container.querySelectorAll('input[type=radio]:checked').length == 0) {
-      $(this._ui.container.querySelector('input[type=radio]')).click();
+      $(this._ui.container.querySelector('input[type=radio]')).trigger('click');
       this._ui.container.querySelector('input[type=radio]').checked = true;
     }
     this._ui.newCreditCard = this._ui.container.querySelector('.payment-source-form');
@@ -21,7 +21,7 @@ class PaymentMethodAch {
 
     var that = this;
 
-    Array.prototype.forEach.call(this._ui.creditCardSwitcher.querySelectorAll('input[type=radio]'), (el)=>{
+    Array.prototype.forEach.call(this._ui.creditCardSwitcher.querySelectorAll('input[type=radio]'), (el) => {
       el.addEventListener('change', (event) => this._toggleByValue(event.target.value));
     });
 
@@ -50,51 +50,44 @@ class PaymentMethodAch {
     }
   }
 
-  _init(){
+  _init() {
     let current = this._ui.creditCardSwitcher.querySelector('input:checked');
     if (current) {
       this._toggleByValue(current.value);
     }
   }
 
+  _setFormFieldDisabledAttribute(elements, value) {
+    Array.prototype.forEach.call(elements, (element) => element.disabled = value);
+  }
+
   _toggleByValue(value) {
+    let $form = $(this.form);
+    let inputs = this._ui.newCreditCard.querySelectorAll('input');
+    let selects = this._ui.newCreditCard.querySelectorAll('select');
+
     if (value === 'new_ach') {
       this._ui.newCreditCard.classList.remove('hidden');
-      var inputs = this._ui.newCreditCard.getElementsByTagName("input");
-      for (var i = 0; i < inputs.length; i++) {
-          inputs[i].disabled = false;
-      }
-      var selects = this._ui.newCreditCard.getElementsByTagName("select");
-      for (var i = 0; i < selects.length; i++) {
-          selects[i].disabled = false;
-      }
-
-      this._submitFormHandler();
-      return;
+      this._setFormFieldDisabledAttribute(inputs, false);
+      this._setFormFieldDisabledAttribute(selects, false);
+      return this._submitFormHandler();
     }
+
     this._ui.newCreditCard.classList.add('hidden');
-    var inputs = this._ui.newCreditCard.getElementsByTagName("input");
-    for (var i = 0; i < inputs.length; i++) {
-        inputs[i].disabled = true;
-    }
-    var selects = this._ui.newCreditCard.getElementsByTagName("select");
-    for (var i = 0; i < selects.length; i++) {
-        selects[i].selectize
-        selects[i].disabled = false;
-    }
 
-    var $form = $(this.form), that = this;
+    this._setFormFieldDisabledAttribute(inputs, true);
+    this._setFormFieldDisabledAttribute(selects, false);
 
-    $form.unbind('submit')
+    $form.unbind('submit');
   }
 
   _bindEvents() {
     this._submitFormHandler();
   }
 
- _setupPlaid(){
-    if (this.__plaid_options.key.length < 1 ) {
-      return true
+  _setupPlaid() {
+    if (this.__plaid_options.key.length < 1) {
+      return true;
     }
 
     var linkHandler = Plaid.create({
@@ -104,31 +97,30 @@ class PaymentMethodAch {
       product: 'auth',
       selectAccount: true,
       onSuccess: function(public_token, metadata) {
-        $('#stripe_plaid_public_token').val(public_token)
-        $('#stripe_plaid_account_id').val(metadata.account_id)
-        $('#plaid_institution').text(plaid_options.auth_with + metadata.institution.name)
+        $('#stripe_plaid_public_token').val(public_token);
+        $('#stripe_plaid_account_id').val(metadata.account_id);
+        $('#plaid_institution').text(this.__plaid_options.auth_with + metadata.institution.name);
       },
     });
 
     // Trigger the Link UI
-    var plaidLink = document.getElementById('linkButton');
-    if (plaidLink != undefined) {
-      plaidLink.onclick = function(event) {
-        event.preventDefault()
-        linkHandler.open();
-      };
-    }
+    $('#linkButton').on('click', (event) => {
+      event.preventDefault();
+      linkHandler.open();
+    });
   }
 
+  _submitFormHandler(event) {
+    event.preventDefault();
 
-  _submitFormHandler(){
-    var $form = $(this.form), that = this;
+    var $form = $(this.form),
+      that = this;
 
     if (that._publishableToken == undefined) {
-      return true
+      return true;
     }
 
-    $form.unbind('submit').submit(function(event) {
+    $form.off('submit').on('submit', (event) => {
       event.stopPropagation();
       event.preventDefault();
       $form = $(event.target);
@@ -142,13 +134,9 @@ class PaymentMethodAch {
         account_holder_type: $('[data-account-holder-type]').val()
       }, that._stripeResponseHandler.bind(that));
     });
-
-    // Prevent the form from being submitted:
-    return false;
   }
 
   _stripeResponseHandler(status, response) {
-
     // Grab the form:
     var $form = $('#checkout-form, #new_payment');
 
@@ -167,12 +155,9 @@ class PaymentMethodAch {
       this._ui.container.querySelector('#stripe_plaid_public_token').value = token;
 
       // Submit the form:
-      $form.get(0).submit();
-
+      $form.submit();
     }
   }
-
 }
 
 module.exports = PaymentMethodAch;
-
