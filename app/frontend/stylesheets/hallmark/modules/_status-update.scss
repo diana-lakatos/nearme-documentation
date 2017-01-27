@@ -124,6 +124,13 @@
     margin: 0px;
   }
 
+  .action--remove-comment,
+  .action--report-spam {
+    &::before {
+      content: "\2022 ";
+    }
+  }
+
   @include bp-range($screen-lg, $screen-tablet) {
     > header p,
     > section,
@@ -225,13 +232,18 @@
 
 /* Enable action links */
 .status-a {
-  > header .action--edit-comment {
+  > header .action--edit-comment,
+  > footer > .actions .action--remove-comment {
     display: none;
   }
 
   &.is-current-user {
     > header .action--edit-comment {
       display: block;
+    }
+
+    > footer > .actions .action--remove-comment {
+      display: inline;
     }
   }
 }
