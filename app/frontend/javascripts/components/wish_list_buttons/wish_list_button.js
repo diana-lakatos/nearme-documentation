@@ -38,6 +38,7 @@ class WishListButton {
 
   setActive() {
     this.state = true;
+    this.ui.link.classList.add('selected');
     if (this.ui.icon) {
       this.ui.icon.classList.add('selected');
     }
@@ -48,6 +49,8 @@ class WishListButton {
 
   setInactive() {
     this.state = false;
+    this.ui.link.classList.remove('selected');
+
     if (this.ui.icon) {
       this.ui.icon.classList.remove('selected');
     }
