@@ -125,7 +125,7 @@ en:
             is_free_booking: 'Please define project type?'
     hints:
       user:
-        verify_number: 'Verifying your mobile number allows you to take advantage of Click to Call functionality. This allows you to communicate with vendorss without sharing your private number information.'
+        verify_number: 'Verifying your mobile number allows you to take advantage of Click to Call functionality. This allows you to communicate with vendors without sharing your private number information.'
       buyer_profile:
         enabled: 'In order for your Vendor Profile to be listed in our marketplace, it must be set to ON. You can work on your profile as a draft or disable your listing from being publicly listed while it is OFF. Make sure to click save for settings to be applied.'
 
