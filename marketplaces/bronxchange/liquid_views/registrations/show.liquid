@@ -2,222 +2,24 @@
 {% assign title = platform_context.name | append: ' - ' | append: user.name %}
 {% title title %}
 
-{% query_graph 'get_user', result_name: g, userId: user.id %}
-
-{% if g.user.cover_images[0] != blank %}
-<div class="user-cover" style="background-image: url({{ g.user.cover_images[0].url }});"></div>
-{% endif %}
-
-{% if user.has_buyer_profile? == false -%}
-<main id="main">
-  <div class="wrapper-a">
+<main id="main" class="registrations-show">
+  {% if user.has_buyer_profile? == false -%}
     <div class="back-to-search-results">
       <a href="/">Back to home page</a>
     </div>
+    {% include "registrations/purchaser_profile", user: user %}
+  {% else -%}
 
-    <div class="box-a incomplete-profile">
-      <figure class="avatar">
-        <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
-      </figure>
-      <h1>Passenger profiles are coming soon!</h1>
-      <p>We are going to introduce passenger profiles in early 2017. Come back later to find out more about <strong>{{ user.name }}.</strong></p>
-    </div>
-  </div>
-</main>
-{% else -%}
-<main id="main">
-  <div class="wrapper-a">
     <div class="back-to-search-results">
       <a data-back-to-search-results-link href="/search">Back to search results</a>
     </div>
 
-    {% if user.buyer_properties.driver_category == blank %}
-      <div class="box-a incomplete-profile">
-        <figure class="avatar">
-          <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
-        </figure>
-        <h1>Driver profile not finished!</h1>
-        <p>It looks like this driver hasn’t updated their profile yet. Come back later to find out more about <strong>{{ user.name }}.</strong></p>
-      </div>
+    {% if user.buyer_properties.onboarding_at == blank %}
+      {% include "registrations/vendor_profile", user: user %}
+      <!-- {% include "registrations/incomplete_profile", user: user %} -->
     {% else %}
-
-      <article class="box-a user-a" id="user-{{ user.id }}">
-        <figure class="avatar">
-          <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
-          <span class="verified">Verified</span>
-        </figure>
-
-        <div class="description">
-
-          <header>
-            <h1>{{ user.name }}</h1>
-            <div class="summary">
-              <div class="rating-a" data-rating="{{ user.buyer_average_rating }}">{{ user.buyer_average_rating }} out of 5 stars</div>
-              <div class="price" data-convert-price="{{ user.buyer_properties.hourly_price }}"><strong>AUD {{ user.buyer_properties.hourly_price | price_with_cents_with_currency }}</strong> / hr</div>
-
-              <div class="share-a">
-                <span>Share</span>
-                {% assign share_url = user.profile_url | url_encode -%}
-                <ul>
-                  <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}" class="facebook">Facebook</a></li>
-                  <li><a href="https://twitter.com/home?status={{ share_url }}" class="twitter" data-height="253">Twitter</a></li>
-                  <li><a href="https://plus.google.com/share?url={{ share_url }}" class="googleplus" data-height="453" data-width="397">Google+</a></li>
-                  <li><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ share_url }}&amp;title={{ user.name | url_encode }}" class="linkedin">LinkedIn</a></li>
-                </ul>
-              </div>
-            </div>
-          </header>
-
-          <dl class="properties">
-            {% if user.buyer_properties.driver_category %}
-            <dt>Driver Type:</dt>
-            <dd>{{ user.buyer_properties.driver_category }}
-              <div class="driver-types-description" tabindex="0">
-                <ul>
-                  <li>
-                    <b>Standard</b> - Locals who know their city well but are not professional tour guides to show you around their city using their vehicle.
-                  </li>
-                  <li>
-                    <b>Pro</b> - Drivers who have formal qualifications and recognised experience as a tour guide in the city they are providing the service.
-                  </li>
-                  <li>
-                    <b>Plus</b> - Drivers with a luxury car providing a service for business travellers and other users seeking a luxury vehicle.
-                  </li>
-                </ul>
-              </div>
-            </dd>
-            {% endif %}
-
-            <dt>Joined:</dt>
-            <dd>{{ user.created_at | to_date | l: 'long' }}</dd>
-
-            <dt>Number of Bookings:</dt>
-            <dd>{{ user.completed_orders_count }}</dd>
-
-            <dt>Number of Ratings:</dt>
-            <dd>{{ user.reviews_counter.about_buyer | default: 0 }}</dd>
-
-            {% assign capacity = user.buyer_properties.vehicle_capacity | default: 0 %}
-            <dt>Capacity:</dt>
-            <dd>{{ 'passengers_count' | t: count: capacity }}</dd>
-          </dl>
-
-          {% if user.buyer_properties.full_bio != blank %}
-          <h3>About {{ user.first_name }}</h3>
-          <p>{{ user.buyer_properties.full_bio | nl2br }}</p>
-          {% endif %}
-
-          {% assign languages = user.buyer_profile.customizations | map: 'properties' %}
-          {% if languages.size > 0 %}
-          <h3>Languages</h3>
-          <dl class="languages-proficiency short-list">
-            {% for language in languages %}
-            {% if language.language != blank and language.fluency != blank %}
-            <dt>{{ language.language }}</dt>
-            <dd>{{ language.fluency }}</dd>
-            {% endif %}
-            {% endfor %}
-          </dl>
-          {% endif %}
-        </div>
-
-        {% if current_user.id != user.id %}
-        <div class="options">
-          <ul>
-            {% if current_user != blank and current_user.has_seller_profile? %}
-
-            <li class="ask-to-book">
-              {% if current_user.transactables_count == 0 %}
-              <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Ask to Book</a>
-              {% else %}
-              <a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Ask to Book</a>
-              {% endif %}
-            </li>
-
-            {% endif %}
-
-            <li>
-              <a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Message Me</a>
-            </li>
-
-            {% if current_user.has_seller_profile? %}
-            <li>
-              {% include 'shared/components/wish_list_button_injection.html', object: user %}
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-        {% endif %}
-      </article>
-
-      <div class="box-a vehicle-information-a">
-        <h2>Vehicle - {{ user.buyer_properties.vehicle_type }} {{ user.buyer_properties.vehicle_model }} ({{ user.buyer_properties.vehicle_year }}) </h2>
-
-        <div class="specs">
-          <h3>Details</h3>
-          <dl class="specs-list">
-            <dt>Type: </dt>
-            <dd>{{ user.buyer_properties.vehicle_type }}</dd>
-
-            <dt>Model: </dt>
-            <dd>{{ user.buyer_properties.vehicle_model }}</dd>
-
-            <dt>Year: </dt>
-            <dd>{{ user.buyer_properties.vehicle_year }}</dd>
-
-            <dt>Capacity: </dt>
-            <dd>{{ 'passengers_count' | t: count: capacity }}</dd>
-          </dl>
-
-          {% for root_category in user.formatted_buyer_categories %}
-          {% if root_category[1]['children'].size > 0 %}
-          <h3>{{ root_category[1]['name'] }}</h3>
-          <ul class="props-list">
-            {% for category in root_category[1]['children'] %}
-              <li>{{ category }}</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-          {% endfor %}
-        </div>
-
-        <div class="gallery-description">
-          {% if g.user.car_photos.size > 0 %}
-            {% assign first_photo = g.user.car_photos.first %}
-            <div class="gallery-a" data-photos-gallery>
-
-              <figure class="preview">
-                <a href="{{ first_photo.url }}" data-photo data-photo-width="{{ first_photo.width }}"  data-photo-height="{{ first_photo.height }}"><img src="{{ first_photo.mini }}" alt="Car photo"></a>
-              </figure>
-
-              {% if g.user.car_photos.size > 1 %}
-              <ul class='thumbnails'>
-                {% for photo in g.user.car_photos offset:1 %}
-                <li><a href="{{ photo.url }}" data-photo data-photo-width="{{ photo.width }}"  data-photo-height="{{ photo.height }}"><img src="{{ photo.thumb }}" alt="Car photo"></a></li>
-                {% endfor %}
-              </ul>
-              {% endif %}
-            </div>
-          {% endif %}
-
-          <div class="description">
-            <h3>Vehicle Description</h3>
-            <p>{{ user.buyer_properties.vehicle_description | nl2br }}</p>
-          </div>
-        </div>
-      </div>
-
-      <section class="box-a user-ratings-a">
-        <h2>Ratings</h2>
-
-        <div data-user-ratings-url="{{ user.reviews_collection_path }}?option=reviews_about_buyer" class="loading-ratings">
-          <p>Loading ratings...</p>
-        </div>
-      </section>
-
-      <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
-
+      {% include "registrations/vendor_profile", user: user %}
     {% endif %}
-  </div>
+
+  {% endif -%}
 </main>
-{% endif -%}

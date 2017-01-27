@@ -60,39 +60,8 @@
 
 
   <div class="user-profile-a-description">
-    {% comment %}
-    <!-- TODO: UPDATE PROPERTY NAMES ACCORDINGLY -->
-    {% if user.buyer_properties.has_badge1 or user.buyer_properties.has_badge3 or user.buyer_properties.has_badge3 %}{% endif %}
-    {% endcomment %}
-    <ul class="badges">
-      {% comment %}
-      {% if user.buyer_properties.has_badge1 %}{% endif %}
-      {% endcomment %}
-      <li class="workplace">Workplace</li>
-      {% comment %}
-      {% if true %}{% endif %}
-      {% endcomment %}
 
-      {% comment %}
-      {% if user.buyer_properties.has_badge2 %}{% endif %}
-      {% endcomment %}
-      <li class="commmunity-wealth">Community Wealth</li>
-      {% comment %}
-      {% if true %}{% endif %}
-      {% endcomment %}
-
-      {% comment %}
-      {% if user.buyer_properties.has_badge3 %}{% endif %}
-      {% endcomment %}
-      <li class="environment-health">Environment &amp; Health</li>
-      {% comment %}
-      {% if true %}{% endif %}
-      {% endcomment %}
-    </ul>
-    {% comment %}
-    {% if true %}{% endif %}
-    {% endcomment %}
-
+    {% include 'registrations/badges', user: user, full: false %}
 
     <div class="products-services">
       <h3>Products &amp; Services</h3>
