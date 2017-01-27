@@ -1,0 +1,33 @@
+name: "Language"
+instance_profile_types:
+  - Buyer
+transactable_types:
+  - Order
+children:
+  - name: 'English (default)'
+  - name: 'Albanian'
+  - name: 'Arabic'
+  - name: 'Bengali'
+  - name: 'Chinese'
+  - name: 'Ewe'
+  - name: 'French'
+  - name: 'French Creole'
+  - name: 'Fulani'
+  - name: 'German'
+  - name: 'Greek'
+  - name: 'Ibo'
+  - name: 'Italian'
+  - name: 'Japanese'
+  - name: 'Khmer'
+  - name: 'Korean'
+  - name: 'Korean'
+  - name: 'Kru'
+  - name: 'Mande'
+  - name: 'Polish'
+  - name: 'Russian'
+  - name: 'Spanish'
+  - name: 'Tagalog'
+  - name: 'Urdu'
+  - name: 'Vietnamese'
+  - name: 'Wolof'
+  - name: 'Yoruba'

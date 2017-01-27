@@ -15,7 +15,97 @@ auto_accept_invitation_as_collaborator: true
 require_transactable_during_onboarding: true
 access_restricted_to_invited: true
 
-custom_attributes: ~
+action_types:
+  - enabled: true
+    service_fee_guest_percent: 0
+    service_fee_host_percent: 12
+    minimum_booking_minutes: 60
+    hours_to_expiration: 24
+    cancellation_policy_enabled: '1'
+    cancellation_policy_hours_for_cancellation: 24
+    cancellation_policy_penalty_percentage: 0
+    cancellation_policy_penalty_hours: 1
+    confirm_reservations: true
+    send_alert_hours_before_expiry: false
+    send_alert_hours_before_expiry_hours: 0
+    minimum_lister_service_fee_cents: 0
+    both_side_confirmation: false
+    allow_drafts: false
+    type: TransactableType::OfferAction
+    pricings:
+      - number_of_units: 1
+        unit: 'item'
+        min_price_cents: 5000
+        max_price_cents: 15000
+        allow_free_booking: true
+        order_class_name: 'Offer'
+        allow_nil_price_cents: true
+
+custom_attributes:
+  - name: how_pay_for_order
+    label: 'How are you paying for this order'
+    attribute_type: string
+    html_tag: select
+    validation:
+      required: true
+      valid_values:
+        - 'Credit Card'
+        - 'ACH'
+        - 'Check'
+  - name: purchase_order_number
+    label: 'Purchase Order Number'
+    attribute_type: string
+    html_tag: input
+    validation:
+      required: true
+  - name: about_organization
+    label: 'About Organization'
+    attribute_type: string
+    html_tag: textarea
+    validation:
+      required: false
+  - name: order_contact
+    label: 'Order Contact'
+    attribute_type: string
+    html_tag: input
+    validation:
+      required: false
+  - name: other_requirements
+    label: 'Other Requirements'
+    attribute_type: string
+    html_tag: textarea
+    validation:
+      required: false
+  - name: delivery_date
+    label: 'Delivery Date'
+    attribute_type: date
+    html_tag: input
+    validation:
+      required: true
+  - name: delivery_address
+    label: 'Delivery Address'
+    attribute_type: string
+    html_tag: textarea
+    validation:
+      required: false
+  - name: approximate_budget
+    label: 'Approximate Budget'
+    attribute_type: string
+    html_tag: input
+    validation:
+      required: false
+  - name: order_title
+    label: 'Order Title'
+    attribute_type: string
+    html_tag: input
+    validation:
+      required: true
+  - name: order_description
+    label: 'Order Description'
+    attribute_type: string
+    html_tag: textarea
+    validation:
+      required: true
 
 validation:
   - field_name: name
@@ -26,18 +116,37 @@ form_components:
   - type: transactable_attributes
     name: Details
     fields:
-      - transactable: name
-      - transactable: description
-      - transactable: price
+      - transactable: how_pay_for_order
+      - transactable: order_title
+      - transactable: purchase_order_number
+      - transactable: about_organization
+      - transactable: order_contact
+      - transactable: order_description
+      - transactable: other_requirements
+      - transactable: delivery_date
+      - transactable: delivery_address
+      - transactable: Category - Language
+      - transactable: approximate_budget
+      - transactable: seller_attachments
 
   - type: space_wizard
     name: Tell us a little about yourself
     fields:
-      - seller: about
+      - user: name
 
   - type: space_wizard
     name: Tell us a little about your order
     fields:
-      - transactable: name
-      - transactable: description
-      - transactable: price
+      - transactable: how_pay_for_order
+      - transactable: order_title
+      - transactable: purchase_order_number
+      - transactable: about_organization
+      - transactable: order_contact
+      - transactable: order_description
+      - transactable: other_requirements
+      - transactable: delivery_date
+      - transactable: delivery_address
+      - transactable: Category - Language
+      - transactable: approximate_budget
+      - transactable: seller_attachments
+
