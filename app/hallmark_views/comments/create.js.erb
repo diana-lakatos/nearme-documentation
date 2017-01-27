@@ -14,7 +14,7 @@
         else {
             comments.prepend('<%= escape_javascript( render @comment ) %>');
         }
-        comments.find('[data-remove-comment]:first').show()
+        comments.find('[data-remove-comment]:first, .action--remove-comment').show()
         comments.find('.action--edit-comment:first').show()
     <% end %>
 
