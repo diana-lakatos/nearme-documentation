@@ -23,6 +23,9 @@
                 <a href="#" data-href="/users/sign_in" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" url_options='{:return_to="/"}'>Log In</a>
               </li>
           {% else %}
+             <li>
+              <a href="{{ platform_context.blog_url }}">Blog</a>
+            </li>
             <li>
               <a href="/transactable_types/item/list">List your items</a>
             </li>
