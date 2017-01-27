@@ -1,0 +1,55 @@
+{% comment %}
+{% if user.buyer_properties.has_badge1 or user.buyer_properties.has_badge3 or user.buyer_properties.has_badge3 %}{% endif %}
+{% endcomment %}
+<ul class="badges-a{% if full %} badges-a-full{% endif %}">
+  {% comment %}
+  {% if user.buyer_properties.has_badge1 %}{% endif %}
+  {% endcomment %}
+    <li class="workplace">
+      <h3>Workplace</h3>
+      {% if full %}
+        <ul>
+          <li>Ne humo tincidunt dolor immitto et. Ventosus natu tum aliquip conventio eros voco</li>
+        </ul>
+      {% endif %}
+    </li>
+  {% comment %}
+  {% if true %}{% endif %}
+  {% endcomment %}
+
+  {% comment %}
+  {% if user.buyer_properties.has_badge2 %}{% endif %}
+  {% endcomment %}
+
+    <li class="commmunity-wealth">
+      <h3>Community Wealth</h3>
+      {% if full %}
+      <ul>
+        <li>Ne humo tincidunt dolor immitto et. Ventosus natu tum aliquip conventio eros voco</li>
+        <li>Consectetuer occuro. Enim humo consequat vero refero augue vero duis ea damnum.</li>
+      </ul>
+      {% endif %}
+    </li>
+  {% comment %}
+  {% if true %}{% endif %}
+  {% endcomment %}
+
+  {% comment %}
+  {% if user.buyer_properties.has_badge3 %}{% endif %}
+  {% endcomment %}
+    <li class="environment-health">
+    <h3>Environment &amp; Health</h3>
+    {% if full %}
+    <ul>
+      <li>Ne humo tincidunt dolor immitto et. Ventosus natu tum aliquip conventio eros voco</li>
+      <li>Consectetuer occuro. Enim humo consequat vero refero augue vero duis ea damnum.</li>
+    </ul>
+    {% endif %}
+          </li>
+  {% comment %}
+  {% if true %}{% endif %}
+  {% endcomment %}
+</ul>
+{% comment %}
+{% if true %}{% endif %}
+{% endcomment %}
