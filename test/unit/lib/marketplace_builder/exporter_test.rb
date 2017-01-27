@@ -238,6 +238,21 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal yaml_content, {}
   end
 
+  def setup_custom_themes
+    File.open("#{Rails.root}/tmp/main.js", "w+") { |f| f.puts "js content" }
+
+    custom_theme = @instance.custom_themes.create! name: 'Default', in_use: false, in_use_for_instance_admins: true
+    custom_theme.custom_theme_assets.create! name: 'main.js', file: File.open("#{Rails.root}/tmp/main.js"), type: 'CustomThemeAsset::ThemeJsFile'
+  end
+
+  def should_export_custom_themes
+    yaml_content = read_exported_file('custom_themes/default.yml')
+    assert_equal yaml_content, {"name"=>"Default", "in_use"=>false, "in_use_for_instance_admins"=>true}
+
+    js_content = read_exported_file('custom_themes/default_custom_theme_assets/main.js')
+    assert_equal js_content, 'js content'
+  end
+
   private
 
   def read_exported_file(path, reader = :yml)

@@ -11,7 +11,7 @@
           - @custom_theme_assets.each do |custom_theme_asset|
             %tr
               %td= link_to custom_theme_asset.name, custom_theme_asset.file.url, target: '_blank'
-              %td= custom_theme_asset.class.name.demodulize.sub('Theme', '').sub('File', '')
+              %td= custom_theme_asset.asset_type.humanize
               %td
                 .pull-right{style: 'margin-left: 10px'}
                   = link_to t('instance_admin.destroy'), instance_admin_custom_templates_custom_theme_custom_theme_asset_path(@custom_theme, custom_theme_asset), method: :delete,

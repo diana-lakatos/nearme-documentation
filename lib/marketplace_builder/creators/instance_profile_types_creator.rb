@@ -23,8 +23,7 @@ module MarketplaceBuilder
       end
 
       def find_or_create!(hash)
-        InstanceProfileType.where(instance_id: @instance.id, profile_type: hash[:profile_type]).first_or_create!
-      rescue
+        InstanceProfileType.with_deleted.where(instance_id: @instance.id, profile_type: hash[:profile_type]).first_or_create!
       end
     end
   end

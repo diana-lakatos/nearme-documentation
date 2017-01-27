@@ -127,6 +127,22 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
     assert_equal pricing.allow_nil_price_cents, false
   end
 
+  def should_import_custom_themes
+    assert_equal 1, @instance.custom_themes.count
+    custom_theme = @instance.custom_themes.first
+
+    assert_equal custom_theme.name, 'Default'
+    assert_equal custom_theme.in_use, false
+    assert_equal custom_theme.in_use_for_instance_admins, false
+
+    assert_equal 1, custom_theme.custom_theme_assets.count
+    custom_asset = custom_theme.custom_theme_assets.first
+
+    assert_equal custom_asset.name, 'application.css'
+    assert_equal custom_asset.type, 'CustomThemeAsset::ThemeCssFile'
+    assert_includes custom_asset.file.read, 'h1 { font-size: 100px }'
+  end
+
   private
 
   def run_all_should_import_methods
