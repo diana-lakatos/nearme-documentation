@@ -3936,19 +3936,15 @@ jquery.customSelect@^0.5.2:
   dependencies:
     jquery ">=1.7.2"
 
-jquery.payment@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/jquery.payment/-/jquery.payment-1.0.2.tgz#537a33bce1c76e98833efb9d9b54739099db8d0b"
+jquery.payment@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jquery.payment/-/jquery.payment-3.0.0.tgz#71b2319547cf430bdaeebd1091b77d6cae5cd505"
   dependencies:
-    jquery latest
+    jquery ">=1.7"
 
-"jquery@1.9.1 - 3", jquery@2, "jquery@>= 1.9.1", jquery@>=1.10, jquery@>=1.4.4, jquery@>=1.7.2, jquery@>=1.8.0, jquery@>=1.9.0, "jquery@^1.8.3 || ^2.0", jquery@^2.2.3:
+"jquery@1.9.1 - 3", jquery@2, "jquery@>= 1.9.1", jquery@>=1.10, jquery@>=1.2.3, jquery@>=1.4.4, jquery@>=1.7, jquery@>=1.7.2, jquery@>=1.8.0, jquery@>=1.9.0, jquery@>=1.9.1, "jquery@^1.8.3 || ^2.0", jquery@^2.2.3:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
-
-jquery@>=1.2.3, jquery@>=1.7, jquery@>=1.9.1, jquery@latest:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.1.1.tgz#347c1c21c7e004115e0a4da32cece041fad3c8a3"
 
 js-base64@^2.1.9:
   version "2.1.9"
