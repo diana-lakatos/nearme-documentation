@@ -205,7 +205,7 @@ class Payment < ActiveRecord::Base
   def direct_token
     return unless payment_gateway.direct_charge?
 
-    (payment_source.respond_to?(:credit_card_token) ? payment_source.credit_card_token : nil) || generate_direct_token
+    @direct_token ||=  (payment_source.respond_to?(:credit_card_token) ? payment_source.credit_card_token : nil) || generate_direct_token
   end
 
   def generate_direct_token
@@ -530,7 +530,7 @@ class Payment < ActiveRecord::Base
     options = { currency: currency, payment_gateway_mode: payment_gateway_mode }
 
     options.merge!(merchant_account.try(:custom_options) || {}) if merchant_account.try(:verified?)
-    options.merge!({ customer: payment_source.customer_id }) unless payment_gateway.direct_charge?
+    options.merge!({ customer: payment_source.customer_id }) if direct_token.blank?
     options.merge!({ mns_params: payment_response_params }) if payment_response_params
     options.merge!({ application_fee: total_service_amount_cents }) if merchant_account.try(:verified?)
     options.merge!({ token: express_token }) if express_token
