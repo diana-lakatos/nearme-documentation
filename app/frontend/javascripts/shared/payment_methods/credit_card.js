@@ -40,51 +40,31 @@ class PaymentMethodCreditCard {
     });
     this._submitFormHandler();
     this._bindFieldValidation();
-    this._formatCreditCard();
+    $(document).trigger('init:creditcardform.nearme');
   }
 
-  _formatCreditCard() {
-    let ccNumber = $('input[data-card-number]');
-    let ccCVC = $('input[data-card-code]');
 
-    if (ccNumber.length === 0 && ccCVC.length === 0) {
-      return;
-    }
-
-    ccNumber.payment('formatCardNumber');
-    ccCVC.payment('formatCardCVC');
+  _setFormFieldDisabledAttribute(elements, value) {
+    Array.prototype.forEach.call(elements, (element) => element.disabled = value);
   }
 
   _toggleByValue(value) {
+    let inputs = this._ui.newCreditCard.querySelectorAll('input');
+    let selects = this._ui.newCreditCard.querySelectorAll('select');
 
     if (value === 'new_credit_card') {
       this._ui.newCreditCard.classList.remove('hidden');
-      let inputs = this._ui.newCreditCard.getElementsByTagName('input');
-      for (let i = 0; i < inputs.length; i++) {
-        inputs[i].disabled = false;
-      }
 
-      let selects = this._ui.newCreditCard.getElementsByTagName('select');
-      for (let i = 0; i < selects.length; i++) {
-        selects[i].disabled = false;
-      }
+      this._setFormFieldDisabledAttribute(inputs, false);
+      this._setFormFieldDisabledAttribute(selects, false);
 
-      this._submitFormHandler();
-      return;
+      return this._submitFormHandler();
     }
 
     this._ui.newCreditCard.classList.add('hidden');
 
-    let inputs = this._ui.newCreditCard.getElementsByTagName('input');
-    for (let i = 0; i < inputs.length; i++) {
-      inputs[i].disabled = true;
-    }
-
-    let selects = this._ui.newCreditCard.getElementsByTagName('select');
-    for (let i = 0; i < selects.length; i++) {
-      selects[i].selectize;
-      selects[i].disabled = false;
-    }
+    this._setFormFieldDisabledAttribute(inputs, true);
+    this._setFormFieldDisabledAttribute(selects, false);
   }
 
   _init() {
@@ -98,7 +78,7 @@ class PaymentMethodCreditCard {
     var $form = $(this.form),
       that = this;
 
-    $form.unbind('submit').submit((event) => {
+    $form.off('submit').on('submit', (event) => {
       event.stopPropagation();
       event.preventDefault();
 
@@ -198,6 +178,7 @@ class PaymentMethodCreditCard {
     } else {
       $('.dialog__content').html(response.html);
     }
+
     this._hideLoader();
   }
 
@@ -233,7 +214,6 @@ class PaymentMethodCreditCard {
 
   _stripeResponseHandler(status, response) {
     if (response.error) {
-      // console.log('cont', $(this._ui.container).find('.has-error'));
       $(this._ui.container).find('.has-error').text(response.error.message);
 
       this._hideLoader();

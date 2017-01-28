@@ -155,7 +155,7 @@ class PaymentMethodAch {
       this._ui.container.querySelector('#stripe_plaid_public_token').value = token;
 
       // Submit the form:
-      $form.submit();
+      $form.get(0).submit();
     }
   }
 }
