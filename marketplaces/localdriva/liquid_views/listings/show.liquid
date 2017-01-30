@@ -59,12 +59,12 @@
             <dl>
               {% if listing.properties.trip_start_date != blank %}
               <dt>Date:</dt>
-              <dd>{{ listing.properties.trip_start_date }}</dd>
+              <dd>{{ listing.properties.trip_start_date | l: 'short' }}</dd>
               {% endif %}
 
               {% if listing.properties.trip_start_time != blank %}
               <dt>Start Time:</dt>
-              <dd>{{ listing.properties.trip_start_time }}</dd>
+              <dd>{{ listing.properties.trip_start_time | l: 'short' }}</dd>
               {% endif %}
 
 
