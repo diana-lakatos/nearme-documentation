@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 
   extend FriendlyId
 
-  friendly_id :slug_candidates, use: [:slugged, :finders]
+  friendly_id :slug_candidates, use: [:slugged, :history, :finders, :scoped], scope: :instance
   def slug_candidates
     if PlatformContext.current.instance.only_first_name_as_user_slug?
       main_component = :first_name
@@ -1167,6 +1167,10 @@ class User < ActiveRecord::Base
 
   def populate_ui_settings
     @ui_settings_hash ||= JSON.parse ui_settings
+  end
+
+  def should_generate_new_friendly_id?
+    slug.blank? || name_changed? || first_name_changed? || last_name_changed?
   end
 
   def get_first_name_from_name
