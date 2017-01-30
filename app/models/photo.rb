@@ -40,13 +40,18 @@ class Photo < ActiveRecord::Base
   after_commit :user_added_photos_to_project_event, on: [:create, :update]
   after_commit :user_added_photos_to_group_event, on: [:create, :update]
   def user_added_photos_to_project_event
-    if owner_type == 'Project' && owner.present? && !owner.draft? && !skip_activity_feed_event
-      event = :user_added_photos_to_project
+    return if paranoia_destroyed?
+    return if !PlatformContext.current.instance.is_community?
+
+    if owner_type == 'Transactable' && owner.present? && !owner.draft? && !skip_activity_feed_event
+      event = :user_added_photos_to_transactable
       ActivityFeedService.create_event(event, owner, [owner.creator], self) unless ActivityFeedEvent.where(followed: owner, event_source: self, event: event, created_at: Time.now - 1.minute..Time.now).count > 0
     end
   end
 
   def user_added_photos_to_group_event
+    return if paranoia_destroyed?
+
     if owner_type == 'Group' && owner.present?
       event = :user_added_photos_to_group
       ActivityFeedService.create_event(event, owner, [owner.creator], self) unless ActivityFeedEvent.where(followed: owner, event_source: self, event: event, created_at: Time.now - 1.minute..Time.now).count > 0
