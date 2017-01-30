@@ -313,7 +313,7 @@ class User < ActiveRecord::Base
 
     # FIND undeleted users first (for example for find_by_email finds)
     def with_deleted
-      super.order('deleted_at IS NOT NULL, deleted_at DESC')
+      super.order('users.deleted_at IS NOT NULL, users.deleted_at DESC')
     end
 
     # Added back method removed by Diego without which it wouldn't work (throws error)
