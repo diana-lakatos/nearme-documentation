@@ -99,8 +99,6 @@
     </header>
 
     <div class="search-results-items">
-      {% include "search/search_listing", user: current_user %}
-
       {% if searcher.result_count == 0 %}
         <p class="empty-resultset">There are no results to show for your current query.</p>
       {% else %}

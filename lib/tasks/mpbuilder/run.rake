@@ -29,4 +29,11 @@ namespace :mpbuilder do
     ]
     MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
   end
+
+  task user_profiles: :environment do
+    creators = [
+      MarketplaceBuilder::Creators::InstanceProfileTypesCreator
+    ]
+    MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
+  end
 end
