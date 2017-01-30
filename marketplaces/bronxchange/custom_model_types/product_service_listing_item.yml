@@ -10,4 +10,6 @@ custom_attributes:
     label: Description
     attribute_type: string
     html_tag: textarea
+    input_html_options_string: >-
+      data-markdown-editor => ''
 
