@@ -3,6 +3,7 @@ class PaypalAccount < ActiveRecord::Base
   include Modelable
 
   attr_accessor :payer
+  attr_accessor :payment_method_nonce
 
   attr_encrypted :response
 
@@ -22,7 +23,7 @@ class PaypalAccount < ActiveRecord::Base
   end
 
   def authorizable?
-    express_payer_id.present?
+    express_payer_id.present? || payment_method_nonce.present?
   end
 
   def process!
