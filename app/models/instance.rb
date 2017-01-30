@@ -239,7 +239,7 @@ class Instance < ActiveRecord::Base
   end
 
   def payment_gateways(country, currency)
-    PaymentGateway.payment_type.mode_scope.joins(:payment_countries, :payment_currencies).where(currencies: { iso_code: currency }, countries: { iso: country })
+    PaymentGateway.payment_type.mode_scope.joins(:payment_countries, :payment_currencies).where(currencies: { iso_code: currency }, countries: { iso: country }).distinct(:id)
   end
 
   def payment_gateway(country, currency)
@@ -247,7 +247,7 @@ class Instance < ActiveRecord::Base
   end
 
   def payout_gateways(country, currency)
-    PaymentGateway.payout_type.mode_scope.joins(:payment_countries, :payment_currencies).where(currencies: { iso_code: currency }, countries: { iso: country })
+    PaymentGateway.payout_type.mode_scope.joins(:payment_countries, :payment_currencies).where(currencies: { iso_code: currency }, countries: { iso: country }).distinct(:id)
   end
 
   def payout_gateway(country, currency)

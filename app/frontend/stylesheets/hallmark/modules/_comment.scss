@@ -49,6 +49,13 @@
     font: 14px/1.4 Helvetica Neue, Helvetica, Arial, sans-serif;
   }
 
+  .action--remove-comment,
+  .action--report-spam {
+    &::before {
+      content: "\2022 ";
+    }
+  }
+
   @include bp($screen-mobile) {
     margin-bottom: 15px;
 
@@ -105,4 +112,22 @@
 
 .edit-link-a {
   float: right;
+}
+
+/* Enable action links */
+.comment-a {
+  > .author .action--edit-comment,
+  > .meta .action--remove-comment {
+    display: none;
+  }
+
+  &.is-current-user {
+    > .author .action--edit-comment {
+      display: block;
+    }
+
+    > .meta .action--remove-comment {
+      display: inline;
+    }
+  }
 }

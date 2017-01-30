@@ -3,8 +3,8 @@
   %p.desc
     = formatted_event.text
 
-    - if event.event.to_sym == :user_updated_user_status && event.event_source.can_edit?(current_user)
-      = link_to 'Edit', "#status-content-#{event.event_source.id}", 'data-edit-status': '', class: 'button-a tiny light edit-link-a'
+    - if event.event.to_sym == :user_updated_user_status
+      = link_to 'Edit', "#status-content-#{event.event_source.id}", 'data-edit-status': '', class: 'button-a tiny light edit-link-a action--edit-comment'
 
   %p.meta
     %time
