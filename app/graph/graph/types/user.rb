@@ -19,8 +19,11 @@ module Graph
       field :custom_attribute_photos,
             !types[Types::Image],
             'Fetch images for photo custom attribute by name,
-             ex: cover_images: custom_attribute_photo(name: "cover_image")' do
+             ex: cover_images: custom_attribute_photo(name: "cover_image")
+             by default they are ordered by DATE' do
         argument :name, !types.String
+        argument :order, Types::CustomImageOrderEnum
+        argument :order_direction, Types::OrderDirectionEnum
         resolve Graph::Resolvers::Users::CustomAttributePhotos.new
       end
 
@@ -30,6 +33,19 @@ module Graph
       field :name_with_affiliation, !types.String
       field :display_location, !types.String
       field :current_address, Types::Address
+    end
+
+    CustomImageOrderEnum = GraphQL::EnumType.define do
+      name 'CustomImageOrder'
+      description 'Available order for custom images'
+      value('DATE', 'Date added image', value: :created_at)
+    end
+
+    OrderDirectionEnum = GraphQL::EnumType.define do
+      name 'OrderDirection'
+      description 'Order direction'
+      value('DESC', 'Desc')
+      value('ASC', 'Asc')
     end
 
     UserFilterEnum = GraphQL::EnumType.define do
