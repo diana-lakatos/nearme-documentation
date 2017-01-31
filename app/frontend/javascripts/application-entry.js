@@ -1,5 +1,3 @@
-'use strict';
-
 import NM from 'nm';
 
 require('expose?jQuery|expose?$!jquery');
@@ -22,16 +20,16 @@ $.ajaxSetup({
   }
 });
 
-NM.on('ready', ()=>{
-
+NM.on('ready', () => {
+  require('initializers/shared/bootstrap_tooltip.initializer');
   require('initializers/shared/ckeditor.initializer');
+  require('initializers/shared/colorpicker.initializer');
+  require('initializers/shared/credit_card_formatter.initializer');
+  require('initializers/shared/fileupload.initializer');
+  require('initializers/shared/icui.initializer');
   require('initializers/shared/modal.initializer');
   require('initializers/shared/payment_method_selector.initializer');
   require('initializers/shared/timeago.initializer');
-  require('initializers/shared/colorpicker.initializer');
-  require('initializers/shared/icui.initializer');
-  require('initializers/shared/fileupload.initializer');
-  require('initializers/shared/bootstrap_tooltip.initializer');
 
   require('initializers/application/address_autocomplete.initializer');
   require('initializers/application/approval_request_attachments.initializer');

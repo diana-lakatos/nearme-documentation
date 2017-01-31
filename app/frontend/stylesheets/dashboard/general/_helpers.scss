@@ -1,13 +1,17 @@
 .translation_missing {
-    display: inline-block !important;
-    font-size: 2em !important;
-    color: #fff !important;
-    padding: 0.25em 0.5em !important;
-    background: red !important;
-    border-radius: 50px !important;
-    font-weight: bold;
+  display: inline-block !important;
+  font-size: 2em !important;
+  color: #fff !important;
+  padding: 0.25em 0.5em !important;
+  background: red !important;
+  border-radius: 50px !important;
+  font-weight: bold;
 }
 
 html.js .js-hidden {
-    display: none;
+  display: none;
+}
+
+.sr-only {
+  @include sr-only;
 }

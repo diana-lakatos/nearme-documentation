@@ -3,15 +3,55 @@ name: Seller
 profile_type: seller
 onboarding: false
 custom_attributes:
-  - name: about
-    label: About
-    html_tag: 'textarea'
-    hint: appears on the booking page
-    input_html_options_string: "data-counter-limit=>600"
+  # We use custom attributes for some fields that are in user to avoid
+  # messing with the translations (as fields may have a different title
+  # for seller)
+  - name: profile_photo
+    label: 'Profile Photo'
+    attribute_type: photo
+    html_tag: input
+    versions_configuration:
+      mini:
+        width: 640
+        height: 440
+        transform: resize_to_fill
+      thumb:
+        width: 70
+        height: 70
+        transform: resize_to_fill
+      normal:
+        width: 1280
+        height: 880
+        transform: resize_to_fit
+  - name: user_logo
+    label: 'Logo'
+    attribute_type: photo
+    html_tag: input
+    versions_configuration:
+      mini:
+        width: 640
+        height: 440
+        transform: resize_to_fill
+      thumb:
+        width: 70
+        height: 70
+        transform: resize_to_fill
+      normal:
+        width: 1280
+        height: 880
+        transform: resize_to_fit
+  - name: organization_name
+    label: 'Organization Name'
+    html_tag: input
+    attribute_type: string
     validation:
-      required: true
-      max_length: 600
-      validation_only_on_update: true
+      required: false
+  - name: organizational_mission
+    label: 'Organizational Mission'
+    html_tag: textarea
+    attribute_type: string
+    validation:
+      required: false
 
 form_components:
   - type: seller_registration
@@ -22,10 +62,22 @@ form_components:
       - user: password
 
   - type: seller_profile_types
-    name: Seller
+    name: General
     fields:
       - user: name
-      - seller: about
-      - user: avatar
+      - seller: profile_photo
+      - seller: user_logo
       - user: email
+      - user: current_address
+      - user: phone
+
+  - type: seller_profile_types
+    name: Organization
+    fields:
+      - seller: organization_name
+      - seller: organizational_mission
+
+  - type: seller_profile_types
+    name: Password
+    fields:
       - user: password

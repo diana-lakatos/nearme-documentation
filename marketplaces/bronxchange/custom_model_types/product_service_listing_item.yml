@@ -1,0 +1,15 @@
+name: Product / Service listing item
+instance_profile_types: [Buyer]
+
+custom_attributes:
+  - name: title
+    label: Title
+    attribute_type: string
+    html_tag: input
+  - name: description
+    label: Description
+    attribute_type: string
+    html_tag: textarea
+    input_html_options_string: >-
+      data-markdown-editor => ''
+

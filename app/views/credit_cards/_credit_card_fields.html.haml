@@ -29,7 +29,7 @@
     = form.input :year, as: :select, label: t('payments.cc_fields.expiration_date_year'), required: true, collection: credit_card_date[:year], input_html: { prompt: false, placeholder: 'Select year' }
 
   .col-sm-4
-    = form.input :verification_value, label: t('payments.cc_fields.security_code'), required: true, input_html: { placeholder: 'CCV', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true, size: 3 }
+    = form.input :verification_value, label: t('payments.cc_fields.security_code'), required: true, input_html: { placeholder: 'CVV', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true, size: 3 }
 
 :javascript
   $('.dialog__body').each(function(index, el){

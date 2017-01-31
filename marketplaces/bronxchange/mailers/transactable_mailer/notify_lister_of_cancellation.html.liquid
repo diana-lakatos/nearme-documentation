@@ -1,0 +1,5 @@
+<h2>Order Canceled</h2>
+
+<p>Changed your mind? Don't worry - we've canceled your order {{ transactable.properties.order_title }} and have notified the Vendor. You can still access this order, for your reference, in the Archived Orders section {{ 'dashboard_company_transactable_type_transactables_path' | generate_url: @transactable.transactable_type | append: "?status=archived" }} in your dashboard. Alert notifications have been sent to Vendors that have been invited to the project.</p>
+
+<p>Remember, we're always here to help. If you would like help from our support team, just email or call us. Send us a message at <a href="mailto:support@bronXchange.com">support@bronXchange.com</a> or call {{ platform_context.phone_number }} and we'll take care of you right away.</p>

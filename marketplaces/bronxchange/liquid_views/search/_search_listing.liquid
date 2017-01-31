@@ -1,0 +1,130 @@
+<article class="user-profile-a search-listing-a" id="user-{{ user.id }}" itemscope itemtype="http://schema.org/Organization">
+  <header class="user-profile-a-header">
+    <a href="{{ user.user_profile_url }}">
+      <div class="branding">
+        <img src="{{user.avatar_url_big}}" alt="{{ user.company }}" itemprop="logo">
+        <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+      </div>
+
+      <div class="desc">
+        <h2 itemprop="name">Spring Bank</h2>
+
+        <p class="address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+          <span itemprop="streetAddress">69 E 167th St.</span><br>
+          <span itemprop="addressLocality">Bronx</span>, <span itemprop="addressRegion">NY</span> <span itemprop="postalCode">10452</span>
+          <span class="neighborhood">Concourse</span>
+        </p>
+
+      </div>
+    </a>
+  </header>
+
+
+  <div class="user-profile-a-options">
+    {% comment %}
+    {% if current_user.id != user.id %}{% endif %}
+    {% endcomment %}
+    <ul>
+      {% comment %}
+      {% if current_user != blank and current_user.has_seller_profile? %}{% endif %}
+      {% endcomment %}
+      <li class="begin-collaboration">
+        {% if current_user.seller_profile.onboarding_at == blank %}
+        <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Request Proposal</a>
+        {% else %}
+        <a href="#collaboration-{{ user.id }}" class="button-a" data-collaborations-trigger>Request Proposal</a>
+        {% endif %}
+      </li>
+      {% comment %}
+      {% if true %}{% endif %}
+      {% endcomment %}
+
+      <li>
+        <a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Send Message</a>
+      </li>
+
+      {% comment %}
+      {% if current_user.has_seller_profile? %}{% endif %}
+      {% endcomment %}
+      <li>
+        {% include 'shared/components/wish_list_button_injection.html', object: user %}
+      </li>
+      {% comment %}
+      {% if true %}{% endif %}
+      {% endcomment %}
+    </ul>
+  {% comment %}
+  {% if true %}{% endif %}
+  {% endcomment %}
+  </div>
+
+
+  <div class="user-profile-a-description">
+
+    {% include 'registrations/badges', user: user, full: false %}
+
+    <div class="products-services">
+      <h3>Products &amp; Services</h3>
+      <ul>
+        <li>Borrow &amp; Save Loan Program</li>
+        <li>Employee Opportunity Loan Program</li>
+        <li>Nonprofit Banking</li>
+        <li>Small Business Loan</li>
+      </ul>
+
+      <p><a href="{{ user.user_profile_url }}" class="more-a">View more</a></p>
+    </div>
+
+    <div class="languages">
+      <h3>Languages</h3>
+      <ul>
+        <li>English</li>
+        <li>Italian</li>
+      </ul>
+
+      <p><a href="{{ user.user_profile_url }}" class="more-a">View more</a></p>
+    </div>
+
+    <div class="availability">
+      <h3>Hours / Days of Operation</h3>
+      <p>M-F  9:00 AM - 5:30 PM<br>
+      S-S   10:00 AM - 12:00 PM</p>
+
+      <h3>Availability</h3>
+      <p>We are closed the first Monday in the month</p>
+    </div>
+
+    <div class="company-description" itemprop="description">
+      <h3>Company Description</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio. <a href="{{ user.user_profile_url }}" class="more-a">Show More</a></p>
+    </div>
+
+    {% comment %}
+    {% if user.tag_list.size > 0 %}{% endif %}
+    {% endcomment %}
+    <div class="tags-a tags-short-list">
+      <h4>Tags</h4>
+      <ul>
+        <li><a href="?query_fields=tags&amp;query={{ tag }}">Tag 1</a></li>
+        <li><a href="?query_fields=tags&amp;query={{ tag }}">Tag 2</a></li>
+        <li><a href="?query_fields=tags&amp;query={{ tag }}">Tag 3</a></li>
+        <li><a href="?query_fields=tags&amp;query={{ tag }}">Tag 4</a></li>
+        {% for tag in user.tag_list %}
+         <li><a href="?query_fields=tags&amp;query={{ tag }}">{{ tag }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% comment %}
+    {% if true %}{% endif %}
+    {% endcomment %}
+  </div>
+
+  <script>
+    $(function(){
+      $(document).trigger('user:loaded', 'user-{{user.id}}')
+    });
+  </script>
+
+  <div class="collaborations-a" id="collaboration-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}" data-collaborations-container></div>
+
+</article>

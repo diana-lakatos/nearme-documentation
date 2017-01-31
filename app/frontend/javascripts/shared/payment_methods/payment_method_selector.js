@@ -29,7 +29,8 @@ class PaymentMethodSelector {
       'ach': PaymentMethodAch
     };
 
-    this.lastActiveFieldset = this._ui.currentPaymentMethodContainer.querySelector('fieldset')
+    this.lastActiveFieldset = this._ui.currentPaymentMethodContainer.querySelector('fieldset');
+
     if (paymentMethodProcessors[selectedPaymentMethod]) {
       this.paymentMethodProcessor = new paymentMethodProcessors[selectedPaymentMethod](this._ui.currentPaymentMethodContainer);
     } else {

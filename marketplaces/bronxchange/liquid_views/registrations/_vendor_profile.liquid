@@ -1,0 +1,161 @@
+{% query_graph 'get_user', result_name: g, userId: user.id %}
+
+<article class="user-profile-a" id="user-{{ user.id }}" itemscope itemtype="http://schema.org/Organization">
+  <header class="user-profile-a-header">
+    <div class="branding">
+      {% if g.user.logo[0] != blank %}
+      <img src="{{ g.user.logo[0].mini }}" alt="{{ user.buyer_properties.company_name }}" itemprop="logo">
+      {% endif %}
+
+      {% if g.user.owner_photo[0] != blank %}
+      <img src="{{ g.user.owner_photo[0].mini }}" alt="{{ user.full_name }}">
+      {% endif %}
+    </div>
+
+    <div class="desc">
+      <h2 itemprop="name">{{ user.buyer_properties.company_name }}</h2>
+
+      <p class="address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+        <span itemprop="streetAddress">{{ user.current_address.street }}</span><br>
+        <span itemprop="addressLocality">{{ user.current_address.suburb }}</span>, <span itemprop="addressRegion">{{ user.current_address.state }}</span> <span itemprop="postalCode">{{ user.current_address.postcode }}</span>
+        <span class="neighborhood">{{ user.buyer_properties.neighborhood }}</span>
+      </p>
+
+      <ul class="social-a">
+        {% if user.buyer_properties.facebook_url != blank %}
+        <li class="facebook"><a href="{{ user.buyer_properties.facebook_url }}" itemprop="sameAs" rel="external">Facebook</a></li>
+        {% endif %}
+        {% if user.buyer_properties.google_plus_url != blank %}
+        <li class="googleplus"><a href="{{ user.buyer_properties.google_plus_url }}" itemprop="sameAs" rel="external">Google+</a></li>
+        {% endif %}
+        {% if user.buyer_properties.twitter_url != blank %}
+        <li class="twitter"><a href="{{ user.buyer_properties.twitter }}" itemprop="sameAs" rel="external">Twitter</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </header>
+
+
+  <div class="user-profile-a-options">
+      {% if current_user.id != user.id %}
+      <ul>
+        {% if current_user != blank and current_user.has_seller_profile? %}
+        <li class="begin-collaboration">
+          {% if current_user.seller_profile.onboarding_at == blank %}
+            <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Request Proposal</a>
+          {% else %}
+            <a href="#collaboration-{{ user.id }}" class="button-a" data-collaborations-trigger>Request Proposal</a>
+          {% endif %}
+        </li>
+        {% endif %}
+
+        <li><a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Send Message</a></li>
+
+        {% if current_user.has_seller_profile? %}
+          <li>{% include 'shared/components/wish_list_button_injection.html', object: user %}</li>
+        {% endif %}
+
+      </ul>
+    {% endif %}
+  </div>
+
+
+  <div class="user-profile-a-full-description">
+    <div class="main">
+      <div class="company-description" itemprop="description">
+
+        {% include 'registrations/badges', user: user, full: true %}
+
+        {% if g.user.workplace_photo[0] != blank %}
+        <figure class="team-photo">
+          <img src="{{ g.user.workplace_photo[0].mini }}" alt="Workplace / Team Image">
+        </figure>
+        {% endif %}
+
+        {% include "registrations/products_services", user: user %}
+
+        {% if user.buyer_properties.our_story != blank %}
+        <h3>Our Story</h3>
+        {{ user.buyer_properties.our_story | markdownify }}
+        {% endif %}
+
+        {% if user.buyer_properties.certifications != blank %}
+        <h3>Certifications</h3>
+        {{ user.buyer_properties.certifications }}
+        {% assign certs = user.buyer_properties.certifications  %}
+        {% endif %}
+
+        {% if user.buyer_properties.awards != blank %}
+        <h3>Awards</h3>
+        {{ user.buyer_properties.awards | markdownify }}
+        {% endif %}
+
+        {% if user.buyer_properties.media != blank %}
+        <h3>Media</h3>
+        {{ user.buyer_properties.media | markdownify }}
+        {% endif %}
+
+        {% if user.buyer_properties.clients != blank %}
+        <h3>Clients</h3>
+        {{ user.buyer_properties.clients | markdownify }}
+        {% endif %}
+
+        {% if user.buyer_properties.community_involvement != blank %}
+        <h3>Community Involvement</h3>
+        {{ user.buyer_properties.community_involvement | markdownify }}
+        {% endif %}
+
+        {% include "registrations/testimonials", user: user %}
+      </div>
+    </div>
+    <div class="sidebar">
+      <div class="availability">
+        {% if user.buyer_properties.hours_days_of_operation != blank %}
+        <h3>Hours / Days of Operation</h3>
+        <p>{{ user.buyer_properties.hours_days_of_operation | nl2br }}</p>
+        {% endif %}
+
+        {% if user.buyer_properties.availability != blank %}
+        <h3>Availability</h3>
+        <p>{{ user.buyer_properties.availability | nl2br }}</p>
+        {% endif %}
+      </div>
+
+      <div class="languages">
+        <h3>Languages</h3>
+        <ul>
+          <li>English</li>
+          <li>Italian</li>
+        </ul>
+      </div>
+
+
+
+      {% if user.tag_list.size > 0 %}
+
+      <div class="tags-a tags-short-list">
+        <h4>Tags</h4>
+        <ul>
+          {% for tag in user.tag_list %}
+           <li><a href="?query_fields=tags&amp;query={{ tag }}">{{ tag }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      {% endif %}
+
+
+      <hr>
+      <a class="button-b action-flag" href="#" data-href="{{ user.inappropriate_report_path }}" data-modal="true">{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
+    </div>
+  </div>
+
+  <script>
+    $(function(){
+      $(document).trigger('user:loaded', 'user-{{user.id}}')
+    });
+  </script>
+
+  <div class="collaborations-a" id="collaboration-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}" data-collaborations-container></div>
+
+</article>

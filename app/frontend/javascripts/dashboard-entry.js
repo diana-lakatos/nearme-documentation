@@ -1,19 +1,17 @@
-'use strict';
-
 import NM from 'nm';
 
-require('expose?jQuery|expose?$!jquery');
-require('jquery-ujs/src/rails');
-require('jquery-ui/ui/widget');
 require('bootstrap-sass/assets/javascripts/bootstrap');
+require('expose?jQuery|expose?$!jquery');
+require('jquery-ui/ui/widget');
+require('jquery-ujs/src/rails');
 require('../vendor/cocoon');
 
-
-NM.on('ready', ()=>{
-  require('initializers/shared/timeago.initializer');
+NM.on('ready', () => {
   require('initializers/shared/ckeditor.initializer');
   require('initializers/shared/colorpicker.initializer');
+  require('initializers/shared/credit_card_formatter.initializer');
   require('initializers/shared/payment_method_selector.initializer');
+  require('initializers/shared/timeago.initializer');
 
   require('initializers/dashboard/address.initializer');
   require('initializers/dashboard/attachment_input.initializer');
@@ -59,4 +57,5 @@ NM.on('ready', ()=>{
   require('initializers/dashboard/tags.initializer');
   require('initializers/dashboard/ticket_message.initializer');
   require('initializers/dashboard/white_label.initializer');
+
 });
