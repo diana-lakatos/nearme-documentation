@@ -29,4 +29,7 @@
         = link_to user_path(transactable.creator.slug) do
           = image_tag transactable.creator.avatar.url(:thumb), width: 30, height: 30
           = transactable.creator.decorate.name_with_affiliation
+      %p.created_at
+        Created:
+        = I18n.l(transactable.created_at.to_date, format: :short)
       %p= custom_sanitze transactable.properties.try(:summary).to_s.truncate(100)
