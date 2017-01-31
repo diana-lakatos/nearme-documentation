@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ActivityFeedEvent < ActiveRecord::Base
   EVENT_WHITELIST = %w(
     user_followed_user
@@ -37,8 +38,8 @@ class ActivityFeedEvent < ActiveRecord::Base
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :spam_reports, as: :spamable
 
-  validates_inclusion_of :followed_type, in: ActivityFeedService::Helpers::FOLLOWED_WHITELIST
-  validates_inclusion_of :event, in: EVENT_WHITELIST
+  validates :followed_type, inclusion: { in: ActivityFeedService::Helpers::FOLLOWED_WHITELIST }
+  validates :event, inclusion: { in: EVENT_WHITELIST }
 
   scope :exclude_events, lambda {
     where('event NOT IN (?)', %w(user_followed_user user_followed_transactable user_followed_topic))
@@ -95,14 +96,18 @@ class ActivityFeedEvent < ActiveRecord::Base
   end
 
   # Since both restrictions are the same
-  alias_method :is_reportable?, :has_body?
+  alias is_reportable? has_body?
 
   def i18n_key
     "activity_feed.events.#{event}"
   end
 
   def creator
-    event_source.try(:user)
+    event_source.try(:user) || event_source.try(:creator)
+  end
+
+  def creator_id
+    creator.try(:id)
   end
 
   def reported_by(user, ip)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ListingsHelper
   def listing_inline_description(listing, length = 65)
     raw(truncate(strip_tags(listing.company_description), length: length))
@@ -111,7 +112,7 @@ module ListingsHelper
         listing_comment_spam_report_path(listing_id: commentable.id, comment_id: comment.id, id: report.id)
       end
     else
-      [comment.commentable, comment, report]
+      url_for([comment.commentable, comment, report])
     end
   end
 
@@ -123,7 +124,7 @@ module ListingsHelper
         cancel_listing_comment_spam_report_path(listing_id: commentable.id, comment_id: comment.id, id: report.id)
       end
     else
-      [:cancel, comment.commentable, comment, report]
+      url_for([:cancel, comment.commentable, comment, report])
     end
   end
 

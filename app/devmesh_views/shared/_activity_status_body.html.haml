@@ -12,7 +12,7 @@
   - title = link_to_activity_feed_object event.name, followed, target: target
 
 %section
-  %article.status-a{ class: ('status-update' if status_update?(event.event)) }
+  %article.status-a{ class: ('status-update' if status_update_event?(event.event)) }
     - if big_image.present?
       = followed_link(followed, target) do
         = image_tag big_image
