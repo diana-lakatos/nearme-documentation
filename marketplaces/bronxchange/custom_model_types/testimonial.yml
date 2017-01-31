@@ -6,10 +6,12 @@ custom_attributes:
     label: Testimonial
     attribute_type: string
     html_tag: textarea
+
   - name: author
     label: Author
     attribute_type: string
     html_tag: input
+
   - name: organization
     label: Organization
     attribute_type: string

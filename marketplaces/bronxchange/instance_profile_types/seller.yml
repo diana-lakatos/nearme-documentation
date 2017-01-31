@@ -62,7 +62,7 @@ form_components:
       - user: password
 
   - type: seller_profile_types
-    name: Seller
+    name: General
     fields:
       - user: name
       - seller: profile_photo
@@ -70,6 +70,14 @@ form_components:
       - user: email
       - user: current_address
       - user: phone
+
+  - type: seller_profile_types
+    name: Organization
+    fields:
       - seller: organization_name
       - seller: organizational_mission
+
+  - type: seller_profile_types
+    name: Password
+    fields:
       - user: password

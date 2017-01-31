@@ -1,9 +1,5 @@
 class Validator {
   constructor() {
-    if (new.target === Validator) {
-      throw new TypeError('Cannot construct Validator class directly');
-    }
-
     if (this.run === undefined) {
       throw new TypeError('Must implement run method');
     }

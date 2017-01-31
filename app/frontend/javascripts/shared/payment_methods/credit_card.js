@@ -1,5 +1,10 @@
 /* global Stripe */
-require('jquery.payment')
+require('jquery.payment');
+
+const Loader = {
+  show: () => { $('.spinner-overlay').show(); },
+  hide: () => { $('.spinner-overlay').hide(); }
+};
 
 class PaymentMethodCreditCard {
 
@@ -40,46 +45,31 @@ class PaymentMethodCreditCard {
     });
     this._submitFormHandler();
     this._bindFieldValidation();
-    this._formatCreditCard();
+    $(document).trigger('init:creditcardform.nearme');
   }
 
-  _formatCreditCard() {
-    let ccNumber = $('input[data-card-number]');
-    let ccCVC = $('input[data-card-code]');
 
-    if (ccNumber.length === 0 && ccCVC.length === 0) {
-      return;
-    }
-
-    ccNumber.payment('formatCardNumber');
-    ccCVC.payment('formatCardCVC');
+  _setFormFieldDisabledAttribute(elements, value) {
+    Array.prototype.forEach.call(elements, (element) => element.disabled = value);
   }
 
   _toggleByValue(value) {
+    let inputs = this._ui.newCreditCard.querySelectorAll('input');
+    let selects = this._ui.newCreditCard.querySelectorAll('select');
+
     if (value === 'new_credit_card') {
       this._ui.newCreditCard.classList.remove('hidden');
-      var inputs = this._ui.newCreditCard.getElementsByTagName('input');
-      for (var i = 0; i < inputs.length; i++) {
-        inputs[i].disabled = false;
-      }
-      var selects = this._ui.newCreditCard.getElementsByTagName('select');
-      for (var i = 0; i < selects.length; i++) {
-        selects[i].disabled = false;
-      }
 
-      this._submitFormHandler();
-      return;
+      this._setFormFieldDisabledAttribute(inputs, false);
+      this._setFormFieldDisabledAttribute(selects, false);
+
+      return this._submitFormHandler();
     }
+
     this._ui.newCreditCard.classList.add('hidden');
-    var inputs = this._ui.newCreditCard.getElementsByTagName('input');
-    for (var i = 0; i < inputs.length; i++) {
-      inputs[i].disabled = true;
-    }
-    var selects = this._ui.newCreditCard.getElementsByTagName('select');
-    for (var i = 0; i < selects.length; i++) {
-      selects[i].selectize;
-      selects[i].disabled = false;
-    }
+
+    this._setFormFieldDisabledAttribute(inputs, true);
+    this._setFormFieldDisabledAttribute(selects, false);
   }
 
   _init() {
@@ -93,7 +83,7 @@ class PaymentMethodCreditCard {
     var $form = $(this.form),
       that = this;
 
-    $form.unbind('submit').submit((event) => {
+    $form.off('submit').on('submit', (event) => {
       event.stopPropagation();
       event.preventDefault();
 
@@ -101,14 +91,14 @@ class PaymentMethodCreditCard {
 
       if (CCFormVisible) {
         if (that._validateForm($form)) {
-          that._showLoader();
+          Loader.show();
           if (that._publishableToken.length > 0) {
             try {
               Stripe.setPublishableKey(that._publishableToken);
               Stripe.card.createToken($form, that._stripeResponseHandler.bind(that));
             } catch (err) {
               if (err) {
-                that._hideLoader();
+                Loader.hide();
               }
             }
           } else {
@@ -193,30 +183,25 @@ class PaymentMethodCreditCard {
     } else {
       $('.dialog__content').html(response.html);
     }
-    this._hideLoader();
-  }
-
-  _showLoader() {
-    $('.spinner-overlay').show();
-  }
-
-  _hideLoader() {
-    $('.spinner-overlay').hide();
   }
 
   _submitCheckoutForm() {
     var $form = $('#checkout-form, #new_payment'),
       that = this;
 
+    // Send form via ajax if its in a modalbox (ie. when accepting offer in UOT)
     if ($form.parents('.dialog__content').length > 0) {
       $.ajax({
         url: $form.attr('action'),
         method: 'POST',
         dataType: 'json',
         data: $form.serialize()
-      }).done(that._successResponse);
+      })
+      .done(that._successResponse)
+      .always(Loader.hide);
 
     } else {
+      // Submit form while going through standard checkout process
       $form.get(0).submit();
     }
   }
@@ -228,10 +213,9 @@ class PaymentMethodCreditCard {
 
   _stripeResponseHandler(status, response) {
     if (response.error) {
-      console.log('cont', $(this._ui.container).find('.has-error'))
       $(this._ui.container).find('.has-error').text(response.error.message);
 
-      this._hideLoader();
+      Loader.hide();
     } else { // Token was created!
 
       // Get the token ID:

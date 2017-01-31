@@ -14,9 +14,8 @@
       <a data-back-to-search-results-link href="/search">Back to search results</a>
     </div>
 
-    {% if user.buyer_properties.onboarding_at == blank %}
-      {% include "registrations/vendor_profile", user: user %}
-      <!-- {% include "registrations/incomplete_profile", user: user %} -->
+    {% if user.buyer_properties.company_name == blank %}
+      {% include "registrations/incomplete_profile", user: user %}
     {% else %}
       {% include "registrations/vendor_profile", user: user %}
     {% endif %}
