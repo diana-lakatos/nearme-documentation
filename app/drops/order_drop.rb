@@ -381,6 +381,11 @@ class OrderDrop < BaseDrop
     @order.service_fee_amount_guest - (@order.shipping_line_items.first&.unit_price || 0)
   end
 
+  # @return [String] current state of the object (e.g. unconfirmed etc.) as a human readable string
+  def state_to_string
+    @order.state.humanize
+  end
+
   private
 
   # @return [LineItemDrop] returns the first line item for this order
