@@ -41,7 +41,7 @@
       <div class="listing-b-booking-details">
         <dl class="properties">
           <dt>When:</dt>
-          <dd>{{ transactable.properties.trip_start_date | to_date | l: 'short' }} at {{ transactable.properties.trip_start_time }}</dd>
+          <dd>{{ transactable.properties.trip_start_date | l: 'short' }} at {{ transactable.properties.trip_start_time | l: 'short' }}</dd>
 
           <dt>Where:</dt>
           <dd>{{ transactable.properties.city_name }}</dd>

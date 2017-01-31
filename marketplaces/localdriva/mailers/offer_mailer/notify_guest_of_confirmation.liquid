@@ -3,7 +3,7 @@
 <p>The booking {{ transactable.name }} has been paid by {{ transactable.creator.first_name }}.</p>
 
 {% assign duration = transactable.properties.duration -%}
-<p>{{ lister.first_name }} will be your passenger for "{{ transactable.name }}" for {{ duration }} {% if duration == 1 -%}hour{% else -%}hours{% endif -%} starting at {{ transactable.properties.trip_start_time }} on {{ transactable.properties.trip_start_date | to_date | l: 'short' }}.</p>
+<p>{{ lister.first_name }} will be your passenger for "{{ transactable.name }}" for {{ duration }} {% if duration == 1 -%}hour{% else -%}hours{% endif -%} starting at {{ transactable.properties.trip_start_time | l: 'short' }} on {{ transactable.properties.trip_start_date | l: 'short' }}.</p>
 
 <p>They will be waiting for you at the above booking starting time at {% if transactable.properties.pickup_location != blank %}<a href="https://www.google.pl/maps/place/{{ transactable.properties.pickup_location }}">{{ transactable.properties.pickup_location }}</a>{% else %}TBD{% endif %}.
 

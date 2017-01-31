@@ -60,6 +60,7 @@ custom_attributes:
 
   - name: trip_start_time
     label: 'Start Time'
+    attribute_type: 'time'
     html_tag: 'hidden'
     wrapper_html_options_string: >-
       data-property-start-time => ''
