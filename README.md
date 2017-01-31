@@ -19,8 +19,8 @@ brew install redis postgresql elasticsearch imagemagick qt55 icu4c node
 brew linkapps qt55
 brew link --force qt55
 bundle
-npm install -g gulp
-npm install
+npm install -g yarn
+yarn install
 gulp build
 ```
 
@@ -56,7 +56,7 @@ You have to install gulp on local - use
 
 Then in project directory:
 
-    npm install
+    yarn install
 
 And last thing:
 
@@ -77,7 +77,7 @@ Go to the Payments Settings in instance_admin in your Application `/instance_adm
 
 If there is no "Stripe" Payment Gateway, just create it.
 
-For payments use any Security Code (CCV), Expiration date that is in future and card numbers from: `https://stripe.com/docs/testing#cards`
+For payments use any Security Code (CVV), Expiration date that is in future and card numbers from: `https://stripe.com/docs/testing#cards`
 
 ### Different Instances (Market Places [MP])
 
