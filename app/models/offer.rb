@@ -94,7 +94,7 @@ class Offer < Order
     return true if confirmed?
     return false unless valid?
 
-    if ((payment_subscription.present? && !reservation_type.reverse_immediate_payment?) || (payment.authorize! && payment.capture!)) && confirm!
+    if ((payment_subscription.present? && !reservation_type.reverse_immediate_payment?) || (payment.process! && payment.capture!)) && confirm!
       create_payment_subscription! if payment_subscription.blank?
       transactable.start!
       reject_related_offers!
@@ -106,7 +106,7 @@ class Offer < Order
   end
 
   def create_payment_subscription!
-    create_payment_subscription(credit_card_id: payment.credit_card_id,
+    create_payment_subscription(payment_source: payment.payment_source,
                                 payment_method_id: payment.payment_method_id,
                                 payment_gateway_id: payment.payment_gateway_id,
                                 company_id: payment.company_id,

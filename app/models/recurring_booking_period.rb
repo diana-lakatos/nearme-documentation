@@ -67,7 +67,6 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def generate_payment!
     return true if paid?
-
     payment_object = payment || build_payment
 
     payment_object.attributes = shared_payment_attributes.merge(payment_source: payment_subscription.payment_source,
