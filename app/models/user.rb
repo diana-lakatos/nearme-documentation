@@ -563,6 +563,13 @@ class User < ActiveRecord::Base
     end
   end
 
+  # @return [Boolean] whether the user has any active bank accounts
+  def has_active_bank_accounts?
+    instance_clients.mode_scope.any? do |i|
+      i.payment_gateway.active_in_current_mode? && i.payment_gateway.active_payment_methods.ach.any?
+    end
+  end
+
   # Whether the user has - or should have - a password.
   def has_password?
     encrypted_password.present? || password_required?
