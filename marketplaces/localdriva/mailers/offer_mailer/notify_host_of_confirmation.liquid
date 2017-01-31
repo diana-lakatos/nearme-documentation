@@ -3,7 +3,7 @@
 <p>You have successfully paid for the booking. This means the your travel arrangements are all set and you're good to go!</p>
 
 {% assign duration = transactable.properties.duration -%}
-<p>{{ enquirer.name }} will be your driver for "{{ transactable.name }}" for {{ duration }} {% if duration == 1 -%}hour{% else -%}hours{% endif -%} starting at {{ transactable.properties.trip_start_time }} on {{ transactable.properties.trip_start_date | to_date | l: 'short' }}.</p>
+<p>{{ enquirer.name }} will be your driver for "{{ transactable.name }}" for {{ duration }} {% if duration == 1 -%}hour{% else -%}hours{% endif -%} starting at {{ transactable.properties.trip_start_time | l: 'short' }} on {{ transactable.properties.trip_start_date | l: 'short' }}.</p>
 
 <p>They will be waiting for you at the above booking starting time at {% if transactable.properties.pickup_location != blank %}<a href="https://www.google.pl/maps/place/{{ transactable.properties.pickup_location }}">{{ transactable.properties.pickup_location }}</a>{% else %}TBD{% endif %}, and will take you to the location of your choice at the above booking finsihing time.
 
