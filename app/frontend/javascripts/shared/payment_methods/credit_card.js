@@ -1,6 +1,11 @@
 /* global Stripe */
 require('jquery.payment');
 
+const Loader = {
+  show: () => { $('.spinner-overlay').show(); },
+  hide: () => { $('.spinner-overlay').hide(); }
+};
+
 class PaymentMethodCreditCard {
 
   constructor(container) {
@@ -86,14 +91,14 @@ class PaymentMethodCreditCard {
 
       if (CCFormVisible) {
         if (that._validateForm($form)) {
-          that._showLoader();
+          Loader.show();
           if (that._publishableToken.length > 0) {
             try {
               Stripe.setPublishableKey(that._publishableToken);
               Stripe.card.createToken($form, that._stripeResponseHandler.bind(that));
             } catch (err) {
               if (err) {
-                that._hideLoader();
+                Loader.hide();
               }
             }
           } else {
@@ -178,31 +183,25 @@ class PaymentMethodCreditCard {
     } else {
       $('.dialog__content').html(response.html);
     }
-
-    this._hideLoader();
-  }
-
-  _showLoader() {
-    $('.spinner-overlay').show();
-  }
-
-  _hideLoader() {
-    $('.spinner-overlay').hide();
   }
 
   _submitCheckoutForm() {
     var $form = $('#checkout-form, #new_payment'),
       that = this;
 
+    // Send form via ajax if its in a modalbox (ie. when accepting offer in UOT)
     if ($form.parents('.dialog__content').length > 0) {
       $.ajax({
         url: $form.attr('action'),
         method: 'POST',
         dataType: 'json',
         data: $form.serialize()
-      }).done(that._successResponse);
+      })
+      .done(that._successResponse)
+      .always(Loader.hide);
 
     } else {
+      // Submit form while going through standard checkout process
       $form.get(0).submit();
     }
   }
@@ -216,7 +215,7 @@ class PaymentMethodCreditCard {
     if (response.error) {
       $(this._ui.container).find('.has-error').text(response.error.message);
 
-      this._hideLoader();
+      Loader.hide();
     } else { // Token was created!
 
       // Get the token ID:
