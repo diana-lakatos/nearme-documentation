@@ -2,6 +2,7 @@ class CommunityAdvancedReportsGenerator
   COLUMNS = {
     project_id: 'Project ID',
     project_created_at: 'Project Created At',
+    project_updated_at: 'Project Updated At',
     project_name: 'Project Name',
     project_owner_id: 'Project Owner ID',
     project_owner_slug: 'Project Owner Slug',
@@ -66,6 +67,8 @@ class CommunityAdvancedReportsGenerator
       project.properties.try(:video_url)
     when :project_created_at
       project.created_at
+    when :project_updated_at
+      project.updated_at
     when :project_name
       project.name
     when :project_url
