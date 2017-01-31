@@ -23,8 +23,20 @@ module.exports = class CustomInputs
   bindEvents: ->
     @body.on 'change.customInputs.nearme', '.checkbox, .radio, .checkbox input, .radio input', @updateControls
 
-    @body.on 'click.customInputs.nearme', '.checkbox-icon-outer, .radio-icon-outer', (event) =>
-      input = $(event.target).closest('.radio, .checkbox').find('input[type="checkbox"]:not(:disabled), input[type="radio"]:not(:disabled)')
+    @body.on 'click.customInputs.nearme', '.radio-icon-outer', (event) =>
+      customInput = $(event.target).closest('.radio')
+      input = customInput.find('input[type="radio"]:not(:disabled)')
+      label = customInput.find('label')
+
+      label.trigger('click')
+      input.triggerHandler('change')
+
+      @updateControls()
+
+    @body.on 'click.customInputs.nearme', '.checkbox-icon-outer', (event) =>
+      customInput = $(event.target).closest('.checkbox')
+      input = customInput.find('input[type="checkbox"]:not(:disabled)')
+
       input.prop('checked', !input.prop('checked')).triggerHandler('change')
 
       @updateControls()
@@ -33,6 +45,6 @@ module.exports = class CustomInputs
     @context.find('.checkbox input[type="checkbox"], .radio input[type="radio"]').each (index, element) ->
       $this = $(element)
 
-      $this.parents('.checkbox, .radio')
+      $this.closest('.checkbox, .radio')
         .toggleClass('checked', $this.is(':checked'))
         .toggleClass('disabled', $this.is(':disabled'))
