@@ -56,13 +56,13 @@
         <div class="cell">
         <article class="card-a">
           <figure>
-            <a href="{{ topic.show_path }}"><img src="{{ topic.listing_image_url }}" alt="{{ topic.name }}" /></a>
+            <a href="{{ topic.show_url }}"><img src="{{ topic.listing_image_url }}" alt="{{ topic.name }}" /></a>
           </figure>
           <p class="action">
-            <a href="{{ topic.show_path }}" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+            <a href="{{ topic.show_url }}" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
           </p>
           <h3 class="hx">
-            <a href="{{ topic.show_path }}">{{ topic.name }}</a>
+            <a href="{{ topic.show_url }}">{{ topic.name }}</a>
           </h3>
         </article>
         </div>
