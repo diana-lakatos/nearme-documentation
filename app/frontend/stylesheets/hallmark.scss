@@ -3,6 +3,7 @@
 @import "jquery-jcrop/css/jquery.Jcrop";
 @import "photoswipe/src/css/main";
 @import "hallmark/vendor/photoswipe-default-skin-mods";
+@import "hallmark/vendor/facebook";
 
 @import "hallmark/overrides/jcrop";
 
@@ -51,8 +52,8 @@
 @import "hallmark/modules/notification_preferences";
 @import "hallmark/modules/user-session-forms";
 @import "hallmark/modules/faq";
-
 @import "hallmark/modules/intro-video";
+@import "hallmark/modules/actionable-entry";
 
 // Defaults
 @import "hallmark/defaults/buttons";

@@ -14,8 +14,7 @@
         else {
             comments.prepend('<%= escape_javascript( render @comment ) %>');
         }
-        comments.find('[data-remove-comment]:first').show()
-        comments.find('.action--edit-comment:first').show()
+        $(document).trigger('new-comment');
     <% end %>
 
 }());

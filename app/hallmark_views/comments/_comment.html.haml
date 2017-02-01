@@ -1,11 +1,11 @@
-%article.status-a{"data-comment-id": comment.id, "data-creator-id": comment.creator.id }
+%article.status-a{ data: { comment_id: comment.id, creator_id: comment.creator_id, actionable_entry: '' } }
   %header
     %figure
       = image_tag comment.creator.avatar.url(:thumb)
     %p.desc
       = link_to comment.creator.decorate.secret_name, profile_path(comment.creator.slug)
 
-      = link_to t(:edit_comment), "#comment-content-#{comment.id}", 'data-edit-comment': '', class: 'button-a tiny light action--edit-comment edit-link-a'
+    = render 'comments/comment_actions', comment: comment
 
   %section
     = render 'comments/comment_content', comment: comment
@@ -13,12 +13,3 @@
   %footer
     %p.actions
       %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :long)
-
-      %span.action--report-spam
-      - if report = comment.reported_by(current_user, request.remote_ip)
-        = link_to t(:cancel_spam_report), url_to_spam_report(comment.commentable, comment, report), remote: true, method: :delete
-      - elsif current_user
-        = link_to t(:report_as_spam), url_to_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :post
-
-      %span.action--remove-comment
-        = link_to t(:remove_comment), url_to_comment(comment.commentable, comment), remote: true, method: :delete

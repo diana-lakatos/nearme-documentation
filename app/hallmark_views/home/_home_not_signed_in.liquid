@@ -23,10 +23,10 @@
 {% if current_user == blank %}
 <div class="wrap-a white benefits-section">
   <div class="contain">
-    <img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1422/intro-image.jpg" alt="Wooden bird" class="alignright" width="220" height="220">
+    <img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1422/intro-image.jpg" alt="Wooden bird" class="alignright" width="440" height="440">
 
-    <div class="header-a _mBa">
-      <h2 class="hx">Join the club or sign in to Keepsake Community</h2>
+    <div class="header-a _mBb">
+      <h2 class="hx">Join the club or sign in to <span>Keepsake Community</span></h2>
     </div>
 
     <div class="page-copy-a">
@@ -49,9 +49,29 @@
       <a href="/search/topics?sort=featured" class='button-a small light'>{{ 'view_all' | translate }}</a>
       </p>
     </div>
-    <!-- topics
-    -->
-    <div class="topics-a">
+
+    <div class="grid-a-projects-a">
+      <div class="wrap">
+      {% for topic in g.topics %}
+        <div class="cell">
+        <article class="card-a">
+          <figure>
+            <a href="{{ topic.show_path }}"><img src="{{ topic.listing_image_url }}" alt="{{ topic.name }}" /></a>
+          </figure>
+          <p class="action">
+            <a href="{{ topic.show_path }}" class='button-a tiny'>{{ 'activity_feed.verbs.follow' | translate }}</a>
+          </p>
+          <h3 class="hx">
+            <a href="{{ topic.show_path }}">{{ topic.name }}</a>
+          </h3>
+        </article>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+
+
+<!--     <div class="topics-a">
       <div class="wrap">
         <ul class="a">
           <li class="big"><a href="/topics/50" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1398/Tutorials.jpg);"><span>Tutorials</span></a></li>
@@ -64,7 +84,7 @@
           <li class="big"><a href="/topics/58" style="background-image: url(https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1394/Artist_Corner.jpg);"><span>Artist Corner</span></a></li>
         </ul>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 

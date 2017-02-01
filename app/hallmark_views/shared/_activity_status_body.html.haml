@@ -1,8 +1,8 @@
-- if [:user_commented_on_project, :user_commented, :user_commented_on_user_activity].include?(event.event.to_sym)
+- if comment_event?(event.event)
   - followed = event.event_source.commentable
   - body = event.event_source.body
   - header_image = "community/status-a-chat-a.png"
-- elsif [:user_added_photos_to_project, :user_added_photos_to_group].include?(event.event.to_sym) && event.event_source.is_a?(Photo)
+- elsif [:user_added_photos_to_transactable, :user_added_photos_to_group].include?(event.event.to_sym) && event.event_source.is_a?(Photo)
   - followed = event.followed
   - big_image = event.event_source.image.url(:space_listing)
 - else
@@ -12,7 +12,7 @@
   - title = link_to_activity_feed_object event.name, followed, target: target
 
 %section
-  %article.status-a{ class: ('status-update' if status_update?(event.event)) }
+  %article.status-a{ class: ('status-update' if status_update_event?(event.event)) }
     - if big_image.present?
       = followed_link(followed, target) do
         = image_tag big_image
@@ -25,8 +25,8 @@
             = header_image.present? ? image_tag(header_image) : image_tag(space_listing_placeholder_path(width: 80, height: 80))
 
       %section
-        %h3.hx= title if title.present?
-        .status-content-a{ id: "status-content-#{event.event_source.id}" }
-          = render 'shared/activity_status_body_content', event: event, title: title, body: body
+        - if title.present?
+          %h3.hx= title
+        = render 'shared/activity_status_body_content', event: event, title: title, body: body
 
       = render 'shared/activity_status_footer', event: event

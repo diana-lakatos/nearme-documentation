@@ -16,4 +16,9 @@
     short_bio: custom_attribute(name: "short_bio")
     role: custom_attribute(name: "role")
   }
+  topics(filters: [FEATURED], arbitrary_order: ["Tutorials", "Upcoming Events", "In the News", "Sneak Peeks", "Let’s Chat", "Artist Corner"], take: 6) {
+    name
+    show_url
+    listing_image
+  }
 }

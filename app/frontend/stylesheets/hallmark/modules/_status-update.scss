@@ -1,9 +1,14 @@
 /* status update */
 
 .status-a {
-  overflow: hidden;
   margin: 0 0 40px;
   padding: 0;
+
+  &::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
 
   & + & {
     padding-top: 40px;
@@ -11,7 +16,9 @@
   }
 
   > header {
+    position: relative;
     margin: 0;
+    padding-right: 40px;
 
     figure {
       float: left;
@@ -124,6 +131,13 @@
     margin: 0px;
   }
 
+  .action--remove-comment,
+  .action--report-spam {
+    &::before {
+      content: "\2022 ";
+    }
+  }
+
   @include bp-range($screen-lg, $screen-tablet) {
     > header p,
     > section,
@@ -182,56 +196,6 @@
   }
 }
 
-.status-content-a {
-  .status-editor {
-    textarea {
-      margin-top: 10px;
-    }
-
-    .action {
-      text-align: right;
-    }
-  }
-
-  .status-body {
-    display: block;
-  }
-
-  .status-editor {
-    display: none;
-  }
-
-  &.is-active {
-    .status-body {
-      display: none;
-    }
-
-    .status-editor {
-      display: block;
-    }
-  }
-
-  .status-body.edited > *:last-child::after {
-    content: " (edited)";
-    opacity: 0.5;
-    font-weight: normal;
-    text-transform: lowercase;
-  }
-}
-
-.edit-link-a {
-  float: right;
-}
-
-/* Enable action links */
-.status-a {
-  > header .action--edit-comment {
-    display: none;
-  }
-
-  &.is-current-user {
-    > header .action--edit-comment {
-      display: block;
-    }
-  }
+.new_user_status_update .action [data-cancel-edit] {
+  display: none;
 }

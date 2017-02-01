@@ -1,10 +1,16 @@
-.status-body{ class: ('edited' if event.event_source.respond_to?(:created_at) && event.event_source.created_at != event.event_source.updated_at) }
-  - if body.present?
-    - if event.is_text_update? || event.event.to_sym == :user_created_transactable
-      = videoify_and_parse_with_markdown(body)
-    - else
-      = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' })
+.entry-content-a{ id: "entry-content-#{event.event_source.id}" }
+  .entry-body{ class: ('edited' if event.event_source.respond_to?(:created_at) && event.event_source.created_at != event.event_source.updated_at) }
+    - if body.present?
+      - if event.is_text_update? || event.event.to_sym == :user_created_transactable
+        = videoify_and_parse_with_markdown(body)
+      - else
+        = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' })
 
-- if event.event.to_sym == :user_updated_user_status && event.event_source.can_edit?(current_user)
-  .status-editor
-    = render "user_status_updates/form", user_status_update: event.event_source, no_topic_select: true, remote: true, no_avatar: true
+  - if status_update_event?(event.event)
+    .entry-editor
+      = render "user_status_updates/form", user_status_update: event.event_source, no_topic_select: true, remote: true, no_avatar: true
+
+  - elsif comment_event?(event.event)
+    .entry-editor
+      = render "comments/form", comment: event.event_source
+

@@ -10,6 +10,11 @@ class UserStatusUpdatesController < ApplicationController
     return render nothing: true unless @user_status_update.can_edit?(current_user) && @user_status_update.update(permitted_params)
   end
 
+  def destroy
+    @user_status_update = UserStatusUpdate.find(params[:id])
+    return render nothing: true unless @user_status_update.can_remove?(current_user) && @user_status_update.destroy
+  end
+
   private
 
   def permitted_params
