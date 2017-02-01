@@ -1,0 +1,153 @@
+.entry-content-a {
+  .entry-editor {
+    .hx + textarea {
+      margin-top: 10px;
+    }
+
+    .action {
+      text-align: right;
+    }
+  }
+
+  .entry-body {
+    display: block;
+  }
+
+  .entry-editor {
+    display: none;
+  }
+
+  &.is-active {
+    .entry-body {
+      display: none;
+    }
+
+    .entry-editor {
+      display: block;
+    }
+  }
+
+  .entry-body.edited > *:last-child::after {
+    content: " (edited)";
+    opacity: 0.5;
+    font-weight: normal;
+    text-transform: lowercase;
+  }
+}
+
+$entry-actions-border-radius: 2px;
+$entry-actions-border-color: #e3e3e3;
+
+.entry-actions-a {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 100;
+
+  .comment-a + .comment-a & {
+    top: 30px;
+  }
+
+  > button {
+    position: relative;
+    z-index: 10;
+    background: none;
+    border: 1px solid transparent;
+    font-size: 0;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    color: #999;
+    border-radius: $entry-actions-border-radius $entry-actions-border-radius 0 0;
+    transition: none;
+
+    &:hover, &:focus, &:active {
+      background: none;
+      border: none;
+      color: #999;
+    }
+
+    &::before {
+      font-family: FontAwesome;
+      content: $fa-var-angle-down;
+      font-size: 16px;
+    }
+  }
+
+  ul {
+    position: absolute;
+    z-index: 5;
+    top: 29px;
+    right: 0;
+    display: none;
+    padding: 0;
+    list-style: none;
+    background: #fff;
+    border: 1px solid $entry-actions-border-color;
+    border-radius: $entry-actions-border-radius 0 $entry-actions-border-radius $entry-actions-border-radius;
+
+    li {
+      font-size: 13px;
+      white-space: nowrap;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    a {
+      display: block;
+      padding: 4px 10px;
+      transition: none;
+
+      &:hover, &:focus, &:active {
+        background: #f4f4f4;
+      }
+    }
+
+    a::before {
+      font-family: FontAwesome;
+      margin-right: 6px;
+    }
+
+    .edit-action a::before {
+      content: $fa-var-pencil;
+    }
+
+    .remove-action a::before {
+      content: $fa-var-trash-o;
+    }
+
+    .report-spam-action a::before {
+      content: $fa-var-warning;
+    }
+  }
+
+  &.actions--active {
+    z-index: 500;
+
+    > button {
+      background: #fff;
+      border: 1px solid $entry-actions-border-color;
+      border-bottom-color: #fff;
+    }
+
+    ul {
+      display: block;
+    }
+  }
+}
+
+[data-actionable-entry] {
+  .entry-actions-a {
+    .edit-action, .remove-action {
+      display: none;
+    }
+  }
+
+  &.current-user-is-owner {
+    .edit-action, .remove-action {
+      display: block;
+    }
+  }
+}

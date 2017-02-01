@@ -28,6 +28,8 @@ class UserStatusUpdate < ActiveRecord::Base
     checked_user == user
   end
 
+  alias can_remove? can_edit?
+
   private
 
   def group_membership

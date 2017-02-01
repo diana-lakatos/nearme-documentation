@@ -23,7 +23,13 @@
     = csrf_meta_tags
     = yield(:head_bottom)
 
-  %body{class: body_classes}
+    = render "shared/javascripts/typekit"
+
+  - data = {}
+  - data[:cid] = current_user.id if current_user
+  %body{ class: body_classes, data: data }
+    = render "shared/facebook_init"
+
     = yield(:body_top)
     .root-a
       .wrap
@@ -49,8 +55,6 @@
 
     = render 'shared/modal'
     = yield :modals
-
-    = render "shared/javascripts/typekit"
 
     = render "shared/javascripts/javascript_assets"
     = render 'shared/javascripts/raygun/libs'

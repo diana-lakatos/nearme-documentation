@@ -6,7 +6,7 @@ $moreButton = $container.find(".more-a")
 <% elsif %>
   $container.find('.content-container').append(content)
 <% end %>
-$container.find('.content-container').trigger('next-page')
+$(document).trigger('activity-feed-next-page')
 
 <% if @collection.next_page %>
   $moreButton.show()

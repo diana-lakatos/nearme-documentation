@@ -11,7 +11,7 @@
             = render 'shared/activity_feed', feed: @feed, object: current_user
 
         .secondary
-
-          = render 'shared/featured_users', users: @users
           = render 'shared/featured_projects', projects: @projects
+          = render 'shared/facebook_activity_widget'
+          = render 'shared/featured_users', users: @users
           = render 'shared/featured_topics', topics: @topics

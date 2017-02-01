@@ -3,8 +3,11 @@
   %p.desc
     = formatted_event.text
 
-    - if event.event.to_sym == :user_updated_user_status
-      = link_to 'Edit', "#status-content-#{event.event_source.id}", 'data-edit-status': '', class: 'button-a tiny light edit-link-a action--edit-comment'
+  - if status_update_event?(event.event)
+    = render "shared/activity_status_actions", event: event
+
+  - if comment_event?(event.event)
+    = render "comments/comment_actions", comment: event.event_source
 
   %p.meta
     %time
