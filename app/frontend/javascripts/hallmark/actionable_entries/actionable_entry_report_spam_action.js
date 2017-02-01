@@ -20,9 +20,6 @@ class ActionableEntryReportSpamAction {
       method: 'post'
     };
 
-    console.log(this.actionCancel);
-    console.log(this.actionCreate);
-
     this.container = container;
 
     resolver.get().then((data) => {
@@ -35,7 +32,6 @@ class ActionableEntryReportSpamAction {
 
   initialize() {
     let spamReports = this.data[`${this.type}s_spam_reports`];
-    console.log(spamReports, this.entryId);
 
     if (spamReports.indexOf(this.entryId) > -1) {
       this.raportExists = true;
