@@ -1,0 +1,154 @@
+<div class="row">
+  <div class="text-container">
+    {% form_tag url: '/instance_admin/manage/orders', method: 'get' %}
+      <div class="filters">
+        <div class="filter transactable">
+          <div class="dropdown item-type-dropdown"></div>
+        </div>
+        <div class="filter multiline search ">
+          Buyer name
+          <div style="position: relative;">
+            <input name="buyer_name" placeholder="Search by buyer name" type="text" value="{{ params.buyer_name }}">
+            <input class="hidden_form_element2" name="commit" type="submit" value="submit">
+            <i class="fa fa-search fa-action-icon-submit"></i>
+          </div>
+        </div>
+        <div class="filter multiline search ">
+          Seller name
+          <div style="position: relative;">
+            <input name="seller_name" placeholder="Search by seller name" type="text" value="{{ params.seller_name }}">
+            <input class="hidden_form_element2" name="commit" type="submit" value="submit">
+            <i class="fa fa-search fa-action-icon-submit"></i>
+          </div>
+        </div>
+        <div class="filter multiline value">
+          Order state 
+          <div style="position: relative;">
+            <div class="dropdown filter-value-dropdown">
+              {% assign order_states = 'cancelled_by_guest,expired,rejected,unconfirmed,cancelled_by_host,overdued,confirmed,archived' | split: ',' %}
+              <a aria-expanded="false" aria-haspopup="true" class="dropdown-trigger" data-target="#" data-toggle="dropdown" id="dLabel" role="button">
+                <span class="current">
+                  {% assign current_order_state = 'All' %}
+                  {% for order_state in order_states %}
+                    {% if order_state == params.order_state %}
+                      {% assign current_order_state = order_state %}
+                    {% endif %}
+                  {% endfor %}
+                  {{ current_order_state | titleize }}
+                </span>
+                <span class="caret"></span>
+                <input type="hidden" name="order_state" id="created_at_date" value="{{ params.order_state }}">
+              </a>
+              <ul aria-labelledby="dLabel" class="dropdown-menu" role="menu">
+                <li>
+                  <a data-value="">All</a>
+                </li>
+                {% for order_state in order_states %}
+                  <li>
+                    <a data-value="{{ order_state }}">{{ order_state | titleize }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="filter multiline value">
+          Payment type
+          <div style="position: relative;">
+            <div class="dropdown filter-value-dropdown">
+              <a aria-expanded="false" aria-haspopup="true" class="dropdown-trigger" data-target="#" data-toggle="dropdown" id="dLabel" role="button">
+                <span class="current">
+                  {% if params.payment_type == 'free' %}
+                    Free
+                  {% elsif params.payment_type == 'paid' %}
+                    Paid
+                  {% else %}
+                      All
+                  {% endif %}
+                </span>
+                <span class="caret"></span>
+                <input type="hidden" name="payment_type" id="created_at_date" value="{{ params.payment_type }}">
+              </a>
+              <ul aria-labelledby="dLabel" class="dropdown-menu" role="menu">
+                <li>
+                  <a data-value="">All</a>
+                </li>
+                <li>
+                  <a data-value="free">Free</a>
+                </li>
+                <li>
+                  <a data-value="paid">Paid</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="filter multiline value">
+          Sort by date
+          <div style="position: relative;">
+            <div class="dropdown filter-value-dropdown">
+              <a aria-expanded="false" aria-haspopup="true" class="dropdown-trigger" data-target="#" data-toggle="dropdown" id="dLabel" role="button">
+                <span class="current">
+                  {% if params.sort_by_date == 'asc' %}
+                    Ascending
+                  {% elsif params.sort_by_date == 'desc' %}
+                    Descending
+                  {% else %}
+                    None
+                  {% endif %}
+                </span>
+                <span class="caret"></span>
+                <input type="hidden" name="sort_by_date" id="created_at_date" value="{{ params.sort_by_date }}">
+              </a>
+              <ul aria-labelledby="dLabel" class="dropdown-menu" role="menu">
+                <li>
+                  <a data-value="">None</a>
+                </li>
+                <li>
+                  <a data-value="asc">Ascending</a>
+                </li>
+                <li>
+                  <a data-value="desc">Descending</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="filter multiline value">
+          Sort by total paid
+          <div style="position: relative;">
+            <div class="dropdown filter-value-dropdown">
+              <a aria-expanded="false" aria-haspopup="true" class="dropdown-trigger" data-target="#" data-toggle="dropdown" id="dLabel" role="button">
+                <span class="current">
+                  {% if params.sort_by_total_paid == 'asc' %}
+                    Ascending
+                  {% elsif params.sort_by_total_paid == 'desc' %}
+                    Descending
+                  {% else %}
+                    All
+                  {% endif %}
+                </span>
+                <span class="caret"></span>
+                <input type="hidden" name="sort_by_total_paid" id="created_at_date" value="{{ params.sort_by_total_paid }}">
+              </a>
+              <ul aria-labelledby="dLabel" class="dropdown-menu" role="menu">
+                <li>
+                  <a data-value="">All</a>
+                </li>
+                <li>
+                  <a data-value="asc">Ascending</a>
+                </li>
+                <li>
+                  <a data-value="desc">Descending</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="filter multiline download-export">
+          <a data-download-report="1" data-report-url="/instance_admin/manage/orders.csv" href="">Download report as CSV</a>
+        </div>
+      </div>
+      {% endform_tag %}
+  </div>
+</div>
