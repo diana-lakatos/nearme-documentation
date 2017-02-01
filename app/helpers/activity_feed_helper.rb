@@ -23,7 +23,8 @@ module ActivityFeedHelper
   def status_update_event?(event_name)
     [
       :user_updated_group_status,
-      :user_updated_user_status
+      :user_updated_user_status,
+      :user_updated_transactable_status
     ].include?(event_name.to_sym)
   end
 
