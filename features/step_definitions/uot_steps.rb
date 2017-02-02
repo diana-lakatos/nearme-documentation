@@ -75,8 +75,7 @@ And /^I invite enquirer to my project$/ do
   assert Transactable.last.transactable_collaborators.any?
 end
 
-When /^I accept the offer $/ do
-  sleep(2) # :))) just to test... :)
+When /^I accept the offer$/ do
   page.should have_css('.accept-link')
   page.execute_script("$('.accept-link').eq(0).click()")
   page.should have_css(".nm-new-credit-card-form-name-container")
@@ -84,6 +83,7 @@ end
 
 Then /^I fill credit card payment subscription form$/ do
   # I submit empty form to check validation
+  sleep(1)
   find('.dialog__actions button').trigger('click')
   page.should have_content('required')
 
@@ -100,6 +100,7 @@ end
 
 Then /^I fill credit card payment form$/ do
   # I submit empty form to check validation
+  sleep(1)
   find('.dialog__actions button').trigger('click')
   page.should have_content('required')
 

@@ -258,6 +258,7 @@ Then /^the reservation total should show \$?([0-9\.,]+)$/ do |cost|
 end
 
 When /^I click to review the bookings?$/ do
+  sleep(1) # :)) I gope this will fix randomly failing tests ;)
   click_button 'Book'
 end
 
