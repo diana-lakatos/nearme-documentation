@@ -75,7 +75,10 @@ And /^I invite enquirer to my project$/ do
   assert Transactable.last.transactable_collaborators.any?
 end
 
-And /^I wait for modal with credit card fields to render$/ do
+When /^I accept the offer $/ do
+  sleep(2) # :))) just to test... :)
+  page.should have_css('.accept-link')
+  page.execute_script("$('.accept-link').eq(0).click()")
   page.should have_css(".nm-new-credit-card-form-name-container")
 end
 
