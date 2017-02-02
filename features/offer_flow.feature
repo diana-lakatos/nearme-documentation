@@ -40,9 +40,8 @@ Feature: Offer like end to end flow
     And I click element with selector "#dashboard-nav-transactables"
     And I follow "My Listings"
     Then I should see "SMEs Invited (1)"
-    And I follow "Accept"
-    And I wait for modal with credit card fields to render
-    When I fill credit card payment subscription form
+    When I accept the offer
+     And I fill credit card payment subscription form
     Then offer is confirmed
     And my credit card is saved
 
@@ -55,9 +54,8 @@ Feature: Offer like end to end flow
     And I click element with selector "#dashboard-nav-transactables"
     And I follow "My Listings"
     Then I should see "SMEs Invited (1)"
-    And I follow "Accept"
-    And I wait for modal with credit card fields to render
-    When I fill credit card payment form
+    When I accept the offer
+     And I fill credit card payment form
     Then offer is confirmed
     And my credit card is saved
     And payment for 100$ was created

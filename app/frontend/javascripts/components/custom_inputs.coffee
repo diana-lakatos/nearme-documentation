@@ -14,11 +14,11 @@ module.exports = class CustomInputs
     @bindEvents()
     @updateControls()
 
-    @body.data('custom-inputs-initialized', true);
+    @body.data('custom-inputs-initialized', true)
 
   buildElements: ->
-    @context.find('.checkbox').each (index, element) => $(element).prepend(CHECKBOX_HTML)
-    @context.find('.radio').each (index, element) => $(element).prepend(RADIO_HTML)
+    @context.find('.checkbox').each (index, element) -> $(element).prepend(CHECKBOX_HTML)
+    @context.find('.radio').each (index, element) -> $(element).prepend(RADIO_HTML)
 
   bindEvents: ->
     @body.on 'change.customInputs.nearme', '.checkbox, .radio, .checkbox input, .radio input', @updateControls

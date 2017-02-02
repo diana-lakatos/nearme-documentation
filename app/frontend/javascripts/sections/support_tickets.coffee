@@ -3,7 +3,7 @@ require('jquery-inview/jquery.inview')
 module.exports = class SupportTickets
 
   constructor: (@container) ->
-      $(@container).on 'inview', (e, visible) ->
-        return unless visible
+    $(@container).on 'inview', (e, visible) ->
+      return unless visible
 
-        $.getScript $(this).attr('href')
+      $.getScript $(this).attr('href')

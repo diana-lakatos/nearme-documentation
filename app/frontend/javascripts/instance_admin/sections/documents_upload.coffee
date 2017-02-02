@@ -1,4 +1,4 @@
-require('bootstrap-switch/src/coffee/bootstrap-switch');
+require('bootstrap-switch/src/coffee/bootstrap-switch')
 
 module.exports = class InstanceAdminDocumentsUploadController
   constructor: (@container) ->

@@ -1,6 +1,6 @@
 require 'timepicker/jquery.timepicker'
 
-timepickers = (context = 'body')->
+timepickers = (context = 'body') ->
   $(context).find('input.time_picker').each ->
     input = $(this)
     input.timepicker({

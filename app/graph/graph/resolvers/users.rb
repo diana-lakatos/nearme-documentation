@@ -60,11 +60,19 @@ module Graph
         end
 
         def order(arg)
-          arg[:order] || Graph::Types::CustomImageOrderEnum.values['DATE'].value
+          arg[:order] || default_order
         end
 
         def order_direction(arg)
-          arg[:order_direction] || Graph::Types::OrderDirectionEnum.values['DESC'].value
+          arg[:order_direction] || default_order_direction
+        end
+
+        def default_order_direction
+          Graph::Types::OrderDirectionEnum.values['ASC'].value
+        end
+
+        def default_order
+          Graph::Types::CustomImageOrderEnum.values['DATE'].value
         end
       end
     end

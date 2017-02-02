@@ -15,4 +15,4 @@ module.exports = class DashboardController
     @location = @container.find('li.location').eq(0)
     $('li.location .name').css('maxWidth', (@location.width() - $(@location).find('.links').width()) - 10 + 'px')
     @container.find('li.listing').each (index, element) ->
-        $(element).find('.name').css('maxWidth', ($(element).width() - $(element).find('a').width()) - 10 + 'px')
+      $(element).find('.name').css('maxWidth', ($(element).width() - $(element).find('a').width()) - 10 + 'px')

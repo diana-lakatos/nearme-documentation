@@ -2,7 +2,7 @@
 module AnalyticsFacade
   class OrderAnalytics < AnalyticsFacade::AnalyticsBase
     def base_scope
-      @base_scope ||= scope.orders.complete
+      @base_scope ||= scope.orders.where(state: ['confirmed', 'completed'])
     end
 
     def chart_data

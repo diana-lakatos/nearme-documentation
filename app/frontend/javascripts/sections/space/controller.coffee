@@ -24,7 +24,7 @@ module.exports = class SpaceController
     @adjustFullGalleryHeight()
 
   _bindEvents: ->
-    @container.on 'click', '[data-behavior=scrollToBook]', (event) =>
+    @container.on 'click', '[data-behavior=scrollToBook]', (event) ->
       event.preventDefault()
       $('html, body').animate({
         scrollTop: $(".bookings").offset().top - 20
@@ -54,7 +54,7 @@ module.exports = class SpaceController
     @container.on 'click', '.amenities-header a', (event) =>
       @toggleAmenities(event)
 
-    @container.on 'click', '[data-booking-trigger]', (event) =>
+    @container.on 'click', '[data-booking-trigger]', (event) ->
       event.preventDefault()
       $(event.target).closest('[data-toggleable-booking-module]').toggleClass('collapsed')
       $(event.target).closest('.booking-module').find('select').trigger('render')
@@ -116,7 +116,7 @@ module.exports = class SpaceController
     @map.map = SmartGoogleMap.createMap(@googleMapElementWrapper[0], {
       zoom: 13,
       zoomControlOptions: {
-          style:google.maps.ZoomControlStyle.SMALL
+        style:google.maps.ZoomControlStyle.SMALL
       },
       mapTypeControl: false,
       panControl: false,

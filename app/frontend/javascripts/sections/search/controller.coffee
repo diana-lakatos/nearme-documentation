@@ -1,6 +1,6 @@
 SearchDatepickers = require('./datepickers')
 Geocoder = require('./geocoder')
-urlUtil = require('../../lib/utils/url');
+urlUtil = require('../../lib/utils/url')
 PriceRange = require('../../components/price_range')
 require('nouislider/distribute/jquery.nouislider.all')
 
@@ -17,7 +17,7 @@ module.exports = class SearchController
     @initializeGeocoder()
     new SearchDatepickers($('body'))
 
-  initializeAutocomplete: (queryField)->
+  initializeAutocomplete: (queryField) ->
     queryField ||= @queryField
     autocomplete = new google.maps.places.Autocomplete(queryField[0], {})
     @submit_form = false
@@ -200,7 +200,7 @@ module.exports = class SearchController
 
   # If element has data-value attribute it will replace native value of the element
   # Used for date range picker
-  replaceWithData: (formParams)->
+  replaceWithData: (formParams) ->
     params = []
     for k, param of formParams
       element = @form.find("input[name='#{param['name']}']")
@@ -219,7 +219,7 @@ module.exports = class SearchController
         @categoryTreeInit(true)
       @categoryTreeInit(false)
 
-  categoryTreeInit: (windowResized)->
+  categoryTreeInit: (windowResized) ->
     unless windowResized
       $('.nav-categories  > ul > .categories-list > .nav-item ').find('.categories-list').hide()
 
@@ -236,7 +236,7 @@ module.exports = class SearchController
         $(event.target).closest('li').find('.categories-list').hide()
         $(event.target).closest('label').next().find('input:checked').prop('checked', false)
 
-  updatePriceSlider: ()->
+  updatePriceSlider: ->
     start_value = $('.search-max-price:first').attr('data-min-price')
     end_value = $('.search-max-price:first').attr('data-max-price')
     $('#price-slider').val([start_value, end_value])

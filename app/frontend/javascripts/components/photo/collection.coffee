@@ -1,16 +1,16 @@
 PhotoView = require('./view')
-SearchScreenLockLoader = require('../../sections/search/screen_lock_loader');
+SearchScreenLockLoader = require('../../sections/search/screen_lock_loader')
 
 module.exports = class PhotoCollection
 
-  constructor : (container) ->
+  constructor: (container) ->
     @container = container
     @sortable = container.find('#sortable-photos')
     @uploaded = container.find('.uploaded').eq(0)
     @initial_length = @sortable.find('.photo-item').length
     @position = 1
     @photos = []
-    @loader = new SearchScreenLockLoader => $('.loading')
+    @loader = new SearchScreenLockLoader -> $('.loading')
     @processingPhotos = 0
     @init()
 

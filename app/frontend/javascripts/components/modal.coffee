@@ -1,4 +1,4 @@
-require('../../vendor/bootstrap-modal-fullscreen');
+require('../../vendor/bootstrap-modal-fullscreen')
 CustomInputs = require('../components/custom_inputs')
 
 # A simple modal implementation
@@ -33,7 +33,7 @@ module.exports = class Modal
       @modalClickedLegacy(e)
       false
 
-    $('body').delegate 'form[data-modal]', 'submit', (e) =>
+    $('body').delegate 'form[data-modal]', 'submit', (e) ->
       e.preventDefault()
       form = $(e.currentTarget)
 
@@ -50,10 +50,10 @@ module.exports = class Modal
     $(document).on 'ajaxSend', '.modal-content form', =>
       @showLoading()
 
-    $(document).on 'ajaxSuccess', '.modal-content form', (event, data) =>
+    $(document).on 'ajaxSuccess', '.modal-content form', (event, data) ->
       Modal.showContent(data)
 
-  @modalClickedLegacy : (e) ->
+  @modalClickedLegacy: (e) ->
     e.preventDefault()
     target = $(e.currentTarget)
     modalClass = matches[1] if matches = target.attr("rel").match(/modal\.([^\s]+)/)
@@ -61,7 +61,7 @@ module.exports = class Modal
     @load(ajaxOptions, modalClass)
     false
 
-  @modalClicked : (e) ->
+  @modalClicked: (e) ->
     e.preventDefault()
     target = $(e.currentTarget)
     modalClass = null
@@ -76,16 +76,11 @@ module.exports = class Modal
     @instance().showLoading()
 
   # Show the content on the modal
-  @showContent : (content) ->
+  @showContent: (content) ->
     @instance().showContent(content)
 
   # Trigger laoding of the URL within the modal via AJAX
-  @load : (ajaxOptions, modalClass = null, overlayCloseDisabled = false) ->
-    @instance().setClass(modalClass)
-    @instance().setOverlayCloseDisabled(overlayCloseDisabled)
-    @instance().load(ajaxOptions)
-
-  @load : (ajaxOptions, modalClass = null, overlayCloseDisabled = false, callback = null) ->
+  @load: (ajaxOptions, modalClass = null, overlayCloseDisabled = false, callback = null) ->
     @instance().setClass(modalClass)
     @instance().setOverlayCloseDisabled(overlayCloseDisabled)
     @instance().load(ajaxOptions)
@@ -118,19 +113,19 @@ module.exports = class Modal
       if !@overlayCloseDisabled
         @hide()
 
-  setCallback : (callback) ->
+  setCallback: (callback) ->
     @callback = callback
 
-  setOverlayCloseDisabled : (overlayCloseDisabled) ->
+  setOverlayCloseDisabled: (overlayCloseDisabled) ->
     @overlayCloseDisabled = overlayCloseDisabled
 
-  setClass : (klass) ->
+  setClass: (klass) ->
     @container.removeClass(@customClass) if @customClass
 
     @customClass = klass
     @container.addClass(klass) if klass
 
-  showContent : (content) ->
+  showContent: (content) ->
     @_show()
     @container.removeClass('loading')
     @loading.hide()
@@ -200,14 +195,14 @@ module.exports = class Modal
     , 20
 
     # start listening to ESC keypress
-    $('body').on 'keydown.modalclose', (e)=>
+    $('body').on 'keydown.modalclose', (e) =>
       if e.which is 27
         @hide()
 
   # Load the given URL in the modal
   # Displays the modal, shows the loading status, fires an AJAX request and
   # displays the content
-  load : (ajaxOptions) ->
+  load: (ajaxOptions) ->
     @_show()
     @showLoading()
 

@@ -1,5 +1,5 @@
-JavascriptModule = require('../lib/javascript_module');
-ShippoDimensionable = require('../lib/shippo_dimensionable');
+JavascriptModule = require('../lib/javascript_module')
+ShippoDimensionable = require('../lib/shippo_dimensionable')
 
 module.exports = class RentalShippingTypeSelector extends JavascriptModule
   @include ShippoDimensionable
@@ -19,7 +19,7 @@ module.exports = class RentalShippingTypeSelector extends JavascriptModule
       return
     ), 200
 
-  toggleDimensionsContainer: () ->
+  toggleDimensionsContainer: ->
     if @select.val() == 'delivery' || @select.val() == 'both'
       @dimensionsTemplatesContainer.show()
       $('input[data-remove-object]').val('')

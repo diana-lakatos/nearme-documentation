@@ -1,15 +1,15 @@
 module.exports = class Forms
-  constructor: ()->
+  constructor: ->
 
   # updates placeholder class on selects
-  @placeholders: ()->
+  @placeholders: ->
     $('select').on('change.placeholder', ->
       $(this).toggleClass 'placeholder', !$(this).val()
     ).triggerHandler 'change.placeholder'
 
 
   # zooms out to full page once you leave input control
-  @blurZoomOut: ()->
+  @blurZoomOut: ->
     viewport = $('meta[name=viewport]')
     $('input, textarea, select').on 'blur', (event) ->
       event.preventDefault()
@@ -19,9 +19,9 @@ module.exports = class Forms
       ), 50
 
   # placeholders and checking empty on file inputs
-  @fileInputs: ()->
+  @fileInputs: ->
     inputs = $('.file-a input')
-    inputs.on 'change', ()->
+    inputs.on 'change', ->
       $input = $(this)
       value = $input.val()
       $input.parent().toggleClass 'is-empty', value == ''
@@ -35,22 +35,22 @@ module.exports = class Forms
       $(this).after('<span/>').triggerHandler 'change'
       return
 
-  @linkImages: ()->
+  @linkImages: ->
     inputs = $('.links-group .control-group.file input')
 
-    inputs.each ()->
+    inputs.each ->
       $(this).data('empty-label', $(this).attr('data-upload-label'))
 
-    trimFileName = (str)->
+    trimFileName = (str) ->
       str.replace('C:\\fakepath\\','')
 
 
-    inputs.on 'change', ()->
+    inputs.on 'change', ->
       label = if $(this).val() then trimFileName($(this).val()) else $(this).data('empty-label')
       $(this).closest('.control-group.file').attr('data-upload-label', label)
 
   # selectize plugin
-  @selectize: ()->
+  @selectize: ->
     return unless $.fn.selectize and !Modernizr.touch
 
     $('select.selectize').each (index, el) ->
@@ -60,11 +60,11 @@ module.exports = class Forms
         hideSelected: false
         closeAfterSelect: !$select.is('[multiple]')
 
-      $select.on 'change', =>
-        if `$select.val() == 0`
+      $select.on 'change', ->
+        if $select.val() == 0
           $select.val('')
 
-  @initialize: ()->
+  @initialize: ->
     @placeholders()
     @blurZoomOut()
     @fileInputs()

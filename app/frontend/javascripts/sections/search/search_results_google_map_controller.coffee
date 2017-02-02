@@ -1,4 +1,4 @@
-SmartGoogleMap = require('../../components/smart_google_map');
+SmartGoogleMap = require('../../components/smart_google_map')
 
 # Controller for Adding JS for each search result in 'list' view
 #
@@ -22,7 +22,7 @@ module.exports = class SearchResultsGoogleMapController
       google.maps.event.trigger(@map, "resize")
       @map.setCenter(@map.marker.getPosition())
 
-    @container.on 'mouseleave', '.photo-container', (event) =>
+    @container.on 'mouseleave', '.photo-container', (event) ->
       element = $(event.target).closest('.listing')
       elementsGoogleMapWrapper = element.find('.listing-google-map')
       element.find('.listing-google-map-wrapper').hide()

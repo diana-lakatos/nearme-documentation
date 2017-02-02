@@ -13,15 +13,15 @@ module.exports = class InstanceAdminForms
     @selects()
 
   bindEvents: ->
-    @root.on 'datepickers.init.forms', (event, context = 'body')=>
+    @root.on 'datepickers.init.forms', (event, context = 'body') =>
       @datepickers(context)
 
-    @root.on 'timepickers.init.forms', (event, context = 'body')=>
+    @root.on 'timepickers.init.forms', (event, context = 'body') =>
       @timepickers(context)
 
-    @root.on 'selects.init.forms', (event, context = 'body')=>
+    @root.on 'selects.init.forms', (event, context = 'body') =>
       @selects(context)
 
 
-  selects: (context = 'body')->
+  selects: (context = 'body') ->
     $(context).find('select.select').chosen({ width: '100%' })

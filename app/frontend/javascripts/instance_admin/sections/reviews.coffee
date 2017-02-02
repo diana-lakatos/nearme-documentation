@@ -13,7 +13,7 @@ module.exports = class InstanceAdminReviewsController extends JavascriptModule
   bindEvents: ->
     @container.find('#to, #from').datepicker()
 
-    @container.on 'click', '#to, #from', (e) =>
+    @container.on 'click', '#to, #from', (e) ->
       e.stopPropagation()
 
     @container.on 'click', '.more-filters', =>

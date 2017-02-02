@@ -1,13 +1,13 @@
 module.exports = class ReservationReviewController
 
-  require('./../../../vendor/jquery-ui-datepicker');
+  require('./../../../vendor/jquery-ui-datepicker')
 
   constructor: (@container) ->
-    @dateInput = @container.find('.jquery-datepicker');
+    @dateInput = @container.find('.jquery-datepicker')
     @startTimeInput = @container.find('#order_start_time')
     if @dateInput.length > 0
       OverlappingReservationsController = require('./overlapping_reservations')
-      @overlappingCheck = new OverlappingReservationsController(@container.find('[data-reservation-dates-controller]'));
+      @overlappingCheck = new OverlappingReservationsController(@container.find('[data-reservation-dates-controller]'))
       @initializeDatepicker()
       @disableHours(@dateInput.val())
       @overlappingCheck.checkNewDate()
@@ -30,7 +30,7 @@ module.exports = class ReservationReviewController
         @disableHours(date_string)
         @overlappingCheck.checkNewDate()
 
-  disableHours: (date_string)->
+  disableHours: (date_string) ->
     date = new Date(date_string)
     ranges = @dateInput.data('days-with-ranges')[date.getDay()]
 
@@ -55,5 +55,5 @@ module.exports = class ReservationReviewController
         opts.filter('[selected]').prop('selected', false)
         opts.filter(':not([disabled])').first().prop('selected', true)
         @startTimeInput.trigger('change')
-        @startTimeInput.val(@startTimeInput.val());
+        @startTimeInput.val(@startTimeInput.val())
 

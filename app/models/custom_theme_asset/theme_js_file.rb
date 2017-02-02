@@ -5,4 +5,8 @@ class CustomThemeAsset::ThemeJsFile < CustomThemeAsset
   def supports_body?
     true
   end
+
+  def asset_type
+    'js'
+  end
 end

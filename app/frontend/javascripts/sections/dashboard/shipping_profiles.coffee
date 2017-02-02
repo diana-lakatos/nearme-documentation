@@ -71,17 +71,17 @@ module.exports = class ShippingProfiles
   enableZoneSelect: (select) ->
     if $(select).val() == 'state_based'
       $(select).closest(".state_based_select").parent().show()
-      $(select).closest(".state_based_select").removeAttr('disabled');
+      $(select).closest(".state_based_select").removeAttr('disabled')
       $(select).closest(".country_based_select").parent().hide()
-      $(select).closest(".country_based_select").attr('disabled','disabled');
+      $(select).closest(".country_based_select").attr('disabled','disabled')
     else
       $(select).closest(".country_based_select").parent().show()
-      $(select).closest(".country_based_select").removeAttr('disabled');
+      $(select).closest(".country_based_select").removeAttr('disabled')
       $(select).closest(".state_based_select").parent().hide()
-      $(select).closest(".state_based_select").attr('disabled','disabled');
+      $(select).closest(".state_based_select").attr('disabled','disabled')
 
   setupShippingMethods: ->
-    @form.find(".remove_shipping_profile:not(:first)").removeClass('hidden');
+    @form.find(".remove_shipping_profile:not(:first)").removeClass('hidden')
 
     for shipping_hidden in @form.find(".shipping_hidden")
       if $(shipping_hidden).prop("checked")

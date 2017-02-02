@@ -1,10 +1,10 @@
 window.IASCallbacks = require('exports?IASCallbacks!../vendor/jquery-ias/callbacks')
-require('../vendor/jquery-ias/jquery-ias');
+require('../vendor/jquery-ias/jquery-ias')
 urlUtil = require('../lib/utils/url')
 
 module.exports = class BlogPostsController
 
-  constructor: () ->
+  constructor: ->
     @initializeInfiniteScroll()
 
   initializeInfiniteScroll: ->
@@ -18,5 +18,5 @@ module.exports = class BlogPostsController
       loader: '<div class="spinner col-xs-12"><h1><img src="' + urlUtil.assetUrl('spinner.gif') + '"></div>'
     })
 
-    ias.on 'rendered', (items)->
+    ias.on 'rendered', (items) ->
       $(document).trigger('rendered-blog:ias.nearme', [items])

@@ -39,9 +39,9 @@ module.exports = class AddressField
             query = "#{first_item.find('.pac-item-query').eq(0).text()}, #{first_item.find('> span').eq(-1).text()}"
             deferred = geocoder.geocodeAddress(query)
             deferred.done (resultset) =>
-                  result = Geocoder.wrapResult resultset.getBestResult().result
-                  @input.val(query)
-                  @pickSuggestion(result)
+              result = Geocoder.wrapResult resultset.getBestResult().result
+              @input.val(query)
+              @pickSuggestion(result)
           else
             @setLatLng(null, null)
             @inputWrapper.find("[data-formatted-address]").val(null)
@@ -55,9 +55,9 @@ module.exports = class AddressField
       geocoder = new Geocoder()
       deferred = geocoder.reverseGeocodeLatLng(lat, lng)
       deferred.done (resultset) =>
-            result = Geocoder.wrapResult resultset.getBestResult().result
-            @input.val(result.formattedAddress())
-            @pickSuggestion(result)
+        result = Geocoder.wrapResult resultset.getBestResult().result
+        @input.val(result.formattedAddress())
+        @pickSuggestion(result)
     , 200)
 
   bump: ->

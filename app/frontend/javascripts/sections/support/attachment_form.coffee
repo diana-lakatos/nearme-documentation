@@ -1,4 +1,4 @@
-Modal = require('../../components/modal');
+Modal = require('../../components/modal')
 
 module.exports = class SupportAttachmentForm
 
@@ -12,7 +12,7 @@ module.exports = class SupportAttachmentForm
         type: 'POST'
         url: @form.attr("action")
         data: @form.serialize()
-        success: (data) =>
+        success: (data) ->
           $("#support_ticket_message_attachment_#{data.attachment_id}").replaceWith(data.attachment_content)
           Modal.close()
         error: (xhr) ->

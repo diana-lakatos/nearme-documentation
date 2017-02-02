@@ -37,7 +37,7 @@ module.exports = class MapMixed extends SearchMap
     google.maps.event.addListener @googleMap, 'zoom_changed', =>
       @trigger 'viewportChanged'
 
-    google.maps.event.addListener @googleMap, 'click', (e)=>
+    google.maps.event.addListener @googleMap, 'click', (e) =>
       @trigger 'click'
 
     null
@@ -59,10 +59,10 @@ module.exports = class MapMixed extends SearchMap
     @listings[listing.id()] = listing
     @bounds.extend(listing.latLng())
 
-    google.maps.event.addListener marker, 'mouseover', =>
+    google.maps.event.addListener marker, 'mouseover', ->
       marker.setIcon(SearchResultsGoogleMapMarker.getMarkerOptions().hover.image)
 
-    google.maps.event.addListener marker, 'mouseout', =>
+    google.maps.event.addListener marker, 'mouseout', ->
       marker.setIcon(SearchResultsGoogleMapMarker.getMarkerOptions().default.image)
 
     google.maps.event.addListener marker, 'click', =>

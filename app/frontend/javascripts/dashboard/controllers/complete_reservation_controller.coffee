@@ -14,14 +14,14 @@ module.exports = class CompleteReservationController
     @container.on 'change', '[data-hours-input]', (event) =>
       @calculateSubTotal($(event.target))
 
-    @container.on 'cocoon:before-remove', '.nested-fields-set',  (e,fields)=>
+    @container.on 'cocoon:before-remove', '.nested-fields-set',  (e,fields) =>
       $(fields).find('[data-subtotal]').data('amount', '0')
       @calculateTotal()
 
-    @container.on 'cocoon:after-insert', '.nested-fields-set',  (e,fields)=>
+    @container.on 'cocoon:after-insert', '.nested-fields-set',  (e,fields) =>
       @calculateTotal()
 
-  calculateSubTotal: (target)=>
+  calculateSubTotal: (target) =>
     fieldset = target.parents('.nested-fields')
     if fieldset.find('.rate').length > 0
       rate = parseInt(fieldset.find('.rate').data('amount')) / 100

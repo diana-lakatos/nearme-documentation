@@ -31,6 +31,7 @@ module MarketplaceBuilder
 
           object = find_or_create!(hash)
           object.attributes = hash
+          object.restore if object.deleted?
           object.save!
 
           update_custom_attributes_for_object(object, custom_attributes) unless custom_attributes.empty?

@@ -143,7 +143,7 @@ class OrderDrop < BaseDrop
 
   # @return [String] the total amount to be charged for this order
   def total_amount
-    @order.total_amount.to_s
+    @order.total_amount
   end
 
   # @return [MoneyDrop] total amount to be charged for this order as a MoneyDrop
@@ -379,6 +379,11 @@ class OrderDrop < BaseDrop
   # @return [MoneyDrop] service_fee_amount_guest minus shipping charges
   def service_fee_amount_guest_money_without_shipping
     @order.service_fee_amount_guest - (@order.shipping_line_items.first&.unit_price || 0)
+  end
+
+  # @return [String] current state of the object (e.g. unconfirmed etc.) as a human readable string
+  def state_to_string
+    @order.state.humanize
   end
 
   private

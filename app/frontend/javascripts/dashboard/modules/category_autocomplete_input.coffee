@@ -2,7 +2,7 @@ require 'selectize/dist/js/selectize'
 
 module.exports = class CategoryAutocompleteInput
 
-  constructor: (el)->
+  constructor: (el) ->
     @input = $(el)
     @categoryId = @input.data('category-id')
     @attrName = "#{@input.attr('name')}[]"
@@ -25,7 +25,7 @@ module.exports = class CategoryAutocompleteInput
       labelField: 'name',
       searchField: 'name',
       options: @input.data('items'),
-      load: (query, callback)=>
+      load: (query, callback) =>
         return callback() unless query.length
 
         $.ajax
@@ -38,13 +38,13 @@ module.exports = class CategoryAutocompleteInput
           error: ->
             callback()
 
-          success: (res)->
+          success: (res) ->
             callback(res)
       onChange: @update
 
-  update: () =>
+  update: =>
     ids = @input.get(0).selectize.getValue().split(',')
     @valueInputsContainer.empty()
 
-    $.each ids, (index, id)=>
+    $.each ids, (index, id) =>
       @valueInputsContainer.append("<input type='hidden' name='#{@attrName}' value='#{id}'>")

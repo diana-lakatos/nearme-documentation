@@ -37,7 +37,8 @@ module MarketplaceBuilder
 
         ch.update!(content: template.body,
                    inject_pages: template.inject_pages,
-                   position: template.position)
+                   position: template.position,
+                   enabled: template.enabled)
       end
     end
   end
