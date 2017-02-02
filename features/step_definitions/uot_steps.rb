@@ -86,7 +86,8 @@ Then /^I fill credit card payment subscription form$/ do
 
   fill_in 'payment_subscription_credit_card_attributes_first_name', with: 'FirstName'
   fill_in 'payment_subscription_credit_card_attributes_last_name', with: 'LastName'
-  fill_in 'payment_subscription_credit_card_attributes_number', :with => "4242424242424242"
+  # note we provide invalid credit card number on purpose - payment.js should validate the input and remove unnecessary 555
+  page.execute_script("$('#payment_subscription_credit_card_attributes_number').val('42 42424 24242 4242 555').trigger('change')")
   find('.payment_subscription_credit_card_month').find("option[value='12']").select_option
   find('.payment_subscription_credit_card_year').find("option[value='2024']").select_option
   fill_in 'payment_subscription_credit_card_attributes_verification_value', :with => '411'
@@ -101,7 +102,8 @@ Then /^I fill credit card payment form$/ do
 
   fill_in 'payment_credit_card_attributes_first_name', with: 'FirstName'
   fill_in 'payment_credit_card_attributes_last_name', with: 'LastName'
-  fill_in 'payment_credit_card_attributes_number', :with => "4242424242424242"
+  # note we provide invalid credit card number on purpose - payment.js should validate the input and remove unnecessary 555
+  page.execute_script("$('#payment_credit_card_attributes_number').val('42 42424 24242 4242 555').trigger('change')")
   find('.payment_credit_card_month').find("option[value='12']").select_option
   find('.payment_credit_card_year').find("option[value='2024']").select_option
   fill_in 'payment_credit_card_attributes_verification_value', :with => '411'
