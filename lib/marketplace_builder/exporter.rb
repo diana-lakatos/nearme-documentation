@@ -1,3 +1,5 @@
+require 'open-uri'
+
 module MarketplaceBuilder
   class Exporter
     AVAILABLE_SERIALIZERS_LIST = {
@@ -17,7 +19,8 @@ module MarketplaceBuilder
       Serializers::SmsSerializer           => 'liquid',
       Serializers::LiquidViewSerializer    => 'liquid',
 
-      Serializers::GraphQuerySerializer => 'graphql'
+      Serializers::GraphQuerySerializer  => 'graphql',
+      Serializers::CustomThemeSerializer => 'theme_with_assets'
     }
 
     def initialize(instance_id, destination_path)
@@ -37,7 +40,11 @@ module MarketplaceBuilder
     def create_exported_files(files_to_create, extension)
       files_to_create.each do |file_to_create|
         ensure_directory_exist! file_to_create[:resource_name]
-        create_file_with_content! file_to_create, extension
+        if extension != 'theme_with_assets'
+          create_file_with_content! file_to_create, extension
+        else
+          create_theme_files! file_to_create
+        end
       end
     end
 
@@ -57,6 +64,30 @@ module MarketplaceBuilder
 
         f.write raw_content
       end
+    end
+
+    def create_theme_files!(exported_hash)
+      custom_theme_assets = exported_hash[:exported_data].delete('custom_theme_assets')
+      create_file_with_content! exported_hash, 'yml'
+
+      FileUtils.mkdir_p "#{@destination_path}/#{@instance.name}/#{exported_hash[:resource_name]}_custom_theme_assets/"
+      create_assets!(exported_hash[:resource_name], custom_theme_assets) if custom_theme_assets
+    end
+
+    def create_assets!(theme_name, custom_theme_assets)
+      custom_theme_assets.each do |asset|
+        download_and_save_asset(theme_name, asset)
+      end
+    end
+
+    def download_and_save_asset(theme_name, asset)
+      open(asset['remote_url']) do |downloaded_asset|
+        IO.copy_stream(downloaded_asset, "#{@destination_path}/#{@instance.name}/#{theme_name}_custom_theme_assets/#{asset['name']}")
+      end
+    rescue OpenURI::HTTPError => e
+      puts "Error while downloading #{asset['remote_url']} status: #{e.io.status}"
+    rescue Exception => e
+      puts "Error: #{e.message}"
     end
 
     def instance

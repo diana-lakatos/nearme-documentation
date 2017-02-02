@@ -16,7 +16,8 @@ module MarketplaceBuilder
       Creators::TranslationsCreator,
       Creators::WorkflowCreator,
       Creators::CustomModelTypesCreator,
-      Creators::GraphQueriesCreator
+      Creators::GraphQueriesCreator,
+      Creators::CustomThemesCreator,
     ]
 
     def self.load(source, options = {})
@@ -51,8 +52,10 @@ module MarketplaceBuilder
       instance_id = config['instance_id']
       mode = config['mode'] || MarketplaceBuilder::MODE_APPEND
 
-      builder = MarketplaceBuilder::Builder.new(instance_id, source, options[:creators], mode: mode, debug_level: debug_level)
-      builder.execute!
+      Instance.transaction do
+        builder = MarketplaceBuilder::Builder.new(instance_id, source, options[:creators], mode: mode, debug_level: debug_level)
+        builder.execute!
+      end
     end
   end
 end
