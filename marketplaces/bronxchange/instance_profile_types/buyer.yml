@@ -66,12 +66,14 @@ custom_attributes:
 
   - name: company_description
     label: "Company Description"
+    hint: Displayed on search listing page
     html_tag: textarea
     attribute_type: string
-    input_html_options_string: >-
-      data-markdown-editor => ''
+    input_html_options_string: "data-counter-limit=>500"
     validation:
       required: false
+      max_length: 500
+      validation_only_on_update: true
 
   - name: our_story
     label: "Our Story"
