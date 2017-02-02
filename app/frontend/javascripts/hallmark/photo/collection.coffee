@@ -3,14 +3,14 @@ PhotoView = require('./view')
 
 module.exports = class PhotoCollection
 
-  constructor : (container) ->
+  constructor: (container) ->
     @container = container
     @sortable = container.find('#sortable-photos')
     @uploaded = container.find('.uploaded').eq(0)
     @initial_length = @sortable.find('.photo-item').length
     @position = 1
     @photos = []
-    @loader = new ScreenLockLoader => $('.loading')
+    @loader = new ScreenLockLoader -> $('.loading')
     @processingPhotos = 0
     @init()
 

@@ -1,4 +1,4 @@
-ranges = (context = 'body')->
+ranges = (context = 'body') ->
 
   calculateOutput = ($rangeInput, $outputLeft, $outputRight, max) ->
     per = ((max - $rangeInput.val())*100)/max

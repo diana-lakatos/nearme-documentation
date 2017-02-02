@@ -1,9 +1,9 @@
 module.exports = class SearchSaveSearchController
 
-  constructor: () ->
+  constructor: ->
     @bindEvents()
 
-  bindEvents: () =>
+  bindEvents: =>
     $('a[data-save-search]').on 'click', (event) =>
       event.preventDefault()
       @showSaveSearchDialog()
@@ -18,11 +18,11 @@ module.exports = class SearchSaveSearchController
         $('div[data-save-search-modal]').modal('hide')
         @saveSearch()
 
-  showSaveSearchDialog: () =>
+  showSaveSearchDialog: ->
     $('div[data-save-search-modal]').modal('show')
     $('input[data-save-search-title]').focus()
 
-  saveSearch: () =>
+  saveSearch: =>
     title = $('input[data-save-search-title]').val()
     $('input[data-save-search-title]').val('')
     $.ajax
@@ -35,7 +35,7 @@ module.exports = class SearchSaveSearchController
       error: =>
         @showSaveStatusDialog(false)
 
-  showSaveStatusDialog: (success, title = null) =>
+  showSaveStatusDialog: (success, title = null) ->
     successTag = $('h4[data-save-search-status-success]')
     errorTag = $('h4[data-save-search-status-error]')
     if success

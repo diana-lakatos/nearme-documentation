@@ -18,12 +18,12 @@ module.exports = class DimensionTemplates
     @dimensions_templates_select.on 'change', =>
       @updateDimensionsFieldsFromTemplates()
 
-    @container.on 'toggle.dimensiontemplates', (e, state)=>
+    @container.on 'toggle.dimensiontemplates', (e, state) =>
       @toggle(state)
 
     @unit_of_measure.filter('select').on 'change', @updateUnits
 
-    @addTemplateTrigger.on 'click', (e)=>
+    @addTemplateTrigger.on 'click', (e) =>
       e.preventDefault()
       return false unless @state
 
@@ -40,14 +40,14 @@ module.exports = class DimensionTemplates
 
   initialize: ->
     return unless @dimensions_templates_select.length > 0
-    interval = window.setInterval(()=>
+    interval = window.setInterval(=>
       if @dimensions_templates_select.get(0).selectize
         window.clearInterval(interval)
         @setDefaultOptionAsSelected()
         @updateDimensionsFieldsFromTemplates()
     , 50)
 
-  toggle: (state)->
+  toggle: (state) ->
     @state = state
     @container.toggleClass('form-section-disabled', !state)
     @container.find('input, textarea').attr('readonly', !state)
@@ -94,7 +94,7 @@ module.exports = class DimensionTemplates
 
   updateDimensionTemplateSelect: ->
     current = null
-    $.each @dimensions_templates_select.get(0).selectize.options, (index, option)=>
+    $.each @dimensions_templates_select.get(0).selectize.options, (index, option) =>
       template = option.template
       return if @unit_of_measure.val() isnt template['unit_of_measure']
 

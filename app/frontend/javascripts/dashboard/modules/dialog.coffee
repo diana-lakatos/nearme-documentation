@@ -1,11 +1,19 @@
 module.exports = class Dialog
 
-  constructor: ()->
+  constructor: ->
     @build()
     @bindEvents()
 
   build: ->
-    @dialog = $('<div class="dialog" role="dialog" aria-hidden="true" aria-describedby="dialog__title"><div class="dialog__overlay"></div><div class="dialog__container"><div class="dialog__content"></div><button type="button" data-modal-close class="dialog__close">Close</button></div></div>')
+    @dialog = $("""
+      <div class='dialog' role='dialog' aria-hidden='true' aria-describedby='dialog__title'>
+        <div class='dialog__overlay'>
+        </div>
+        <div class='dialog__container'>
+          <div class='dialog__content'></div>
+            <button type='button' data-modal-close class='dialog__close'>Close</button>
+          </div>
+      </div>""")
     @overlay = @dialog.find('.dialog__overlay')
     @contentHolder = @dialog.find('.dialog__content')
     $('body').append(@dialog)
@@ -14,7 +22,7 @@ module.exports = class Dialog
 
     @resetCallbacks()
 
-    @dialog.on 'click', '[data-modal-close]', (e)=>
+    @dialog.on 'click', '[data-modal-close]', (e) =>
       e.preventDefault()
       @hide()
 
@@ -37,7 +45,7 @@ module.exports = class Dialog
     $(document).on 'hide:dialog.nearme', =>
       @hide()
 
-    $(document).on 'load:dialog.nearme', (event, ajaxOptions = {}, klass = null, callbacks = {})=>
+    $(document).on 'load:dialog.nearme', (event, ajaxOptions = {}, klass = null, callbacks = {}) =>
       @load(ajaxOptions, klass, callbacks)
 
     @overlay.on 'click', =>
@@ -49,7 +57,7 @@ module.exports = class Dialog
       onHide: (->)
     }
 
-  load: (ajaxOptions, klass, callbacks = {})=>
+  load: (ajaxOptions, klass, callbacks = {}) =>
     @resetCallbacks()
     @callbacks = $.extend({}, @callbacks, callbacks)
     @setClass(klass)
@@ -73,7 +81,7 @@ module.exports = class Dialog
   showLoading: =>
     @dialog.removeClass('dialog--loaded')
 
-  showContent: (content)=>
+  showContent: (content) =>
     @contentHolder.html(content)
     @dialog.addClass('dialog--loaded')
     $('html').trigger('loaded:dialog.nearme')
@@ -87,11 +95,11 @@ module.exports = class Dialog
 
 
   bindEscapeKey: =>
-    $('body').on 'keydown.dialog', (e)=>
+    $('body').on 'keydown.dialog', (e) =>
       return unless e.which == 27
       @hide()
 
-  setClass: (klass)=>
+  setClass: (klass) =>
     @dialog.removeClass(@customClass) if @customClass
     return unless klass
     @customClass = klass

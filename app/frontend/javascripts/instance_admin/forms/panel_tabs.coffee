@@ -1,5 +1,5 @@
 module.exports = class PanelTabs
-  constructor: (el)->
+  constructor: (el) ->
     @nav = $(el)
     @triggers = @nav.find('li')
     @tabs = $('.panel-tab-container')
@@ -8,16 +8,16 @@ module.exports = class PanelTabs
     @activate(@getInitialIndex())
 
   bindEvents: ->
-    @nav.on 'click', 'a', (e)=>
+    @nav.on 'click', 'a', (e) =>
       e.preventDefault()
       index = $(e.target).closest('li').index()
       @activate(index)
       # true
 
-  activate: (index)->
+  activate: (index) ->
     @triggers.removeClass('active').eq(index).addClass('active')
     @tabs.removeClass('active').eq(index).addClass('active')
 
-  getInitialIndex: ()->
+  getInitialIndex: ->
     index = @nav.find("li:has(a[href='#{window.location.hash}'])").index()
     if index < 0 then 0 else index

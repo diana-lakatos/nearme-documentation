@@ -20,7 +20,7 @@ module.exports = class PositionedView
     @container.addClass(@options.containerClass) if @options.containerClass
     @positionTarget = $(@options.positionTarget)
 
-    @container.on 'click', (event) => event.stopPropagation()
+    @container.on 'click', (event) -> event.stopPropagation()
 
   closeIfClickedOutside: (clickTarget) ->
     clickTarget = $(clickTarget)

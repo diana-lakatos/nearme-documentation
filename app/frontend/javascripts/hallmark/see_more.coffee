@@ -6,7 +6,7 @@ module.exports = class SeeMore
     $('form.sort-form').on 'change', (e) ->
       $(e.target).submit()
 
-    $("[data-see-more] button").on "click", (event)->
+    $("[data-see-more] button").on "click", (event) ->
       event.preventDefault()
       $button = $(event.target)
       nextPage = $button.data('next-page')

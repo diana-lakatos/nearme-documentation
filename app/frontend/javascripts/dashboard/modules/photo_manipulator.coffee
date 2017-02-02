@@ -62,7 +62,7 @@ module.exports = class PhotoManipulator
 
   bindRotationHandler: =>
     @angle = @originalRotate
-    $('[data-rotate-photo]').on 'click', ()=>
+    $('[data-rotate-photo]').on 'click', =>
       @angle = (@angle + 90)
       @angle = 0 if @angle is 360
       @image.cropper('rotate', 90)

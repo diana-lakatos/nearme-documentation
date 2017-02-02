@@ -1,13 +1,13 @@
 module.exports = class ProjectLinks
-  constructor: (el)->
+  constructor: (el) ->
     @wrapper = $(el)
     @initEvents()
 
-  initEvents: ()->
-    @wrapper.on 'click', '[data-link-edit]', (e)=>
+  initEvents: ->
+    @wrapper.on 'click', '[data-link-edit]', (e) =>
       @enableEditForm $(e.target).closest('.link')
 
-    @wrapper.on 'click', '[data-link-remove]', (e)=>
+    @wrapper.on 'click', '[data-link-remove]', (e) =>
       @hideOnRemove $(e.target).closest('.link')
 
     @wrapper.on 'change', 'input[type=file]', (e) =>
@@ -18,17 +18,17 @@ module.exports = class ProjectLinks
 
 
 
-  enableEditForm: (link)->
+  enableEditForm: (link) ->
     link.find('.media-group_link-form').show()
     link.find('[data-link-edit]').hide()
 
-  hideOnRemove: (link)->
+  hideOnRemove: (link) ->
     link.fadeOut()
 
-  trimFileName: (str)->
+  trimFileName: (str) ->
     str.replace('C:\\fakepath\\','')
 
-  updateUploadLabel: (control_group)->
+  updateUploadLabel: (control_group) ->
     file_name = @trimFileName(control_group.find('[type="file"]').val())
 
     control_group.find('label').html file_name

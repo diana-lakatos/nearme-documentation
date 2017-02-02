@@ -18,7 +18,7 @@ module.exports = class HomeController extends SearchController
 
     @initializeGeocoder()
 
-    $.each @form.find('.transactable-type-search-box'), (idx, container)=>
+    $.each @form.find('.transactable-type-search-box'), (idx, container) =>
       new SearchDatepickers($(container))
       geo_input = $(container).find('input[name="loc"]')
       if geo_input.length > 0
@@ -34,17 +34,17 @@ module.exports = class HomeController extends SearchController
       if field != 'loc'
         @visibleFields().find("input[name='#{field}']").val(value)
 
-  initializeQueryField: (queryField)->
-    queryField.bind 'focus', (event) =>
+  initializeQueryField: (queryField) ->
+    queryField.bind 'focus', (event) ->
       input = $(event.target)
       if input.val() is input.data('placeholder')
         input.val('')
       true
 
-    queryField.bind 'blur', (event) =>
+    queryField.bind 'blur', (event) ->
       input = $(event.target)
       if input.val().length < 1 and input.data('placeholder')?
-        _.defer(=>input.val(input.data('placeholder')))
+        _.defer(-> input.val(input.data('placeholder')))
       true
 
     # when submitting the form without clicking on autocomplete, we need to check if the field's value has been changed to update lat/lon and address components.

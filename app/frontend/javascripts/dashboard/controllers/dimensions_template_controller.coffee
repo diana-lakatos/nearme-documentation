@@ -11,7 +11,7 @@ module.exports = class DimensionsTemplateController
     @shipping_profile.on 'change', (e) =>
       @toggleFields($(e.target))
 
-  toggleFields: (element)->
+  toggleFields: (element) ->
     state = element.data('shipping-type') == 'predefined'
     if state
       @dimensions_template_fields.hide()

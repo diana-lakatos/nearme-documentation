@@ -1,4 +1,4 @@
-DatepickerModel = require('./model');
+DatepickerModel = require('./model')
 
 # A special case of the datepicker backing model that only allows the selection of
 # a single date.

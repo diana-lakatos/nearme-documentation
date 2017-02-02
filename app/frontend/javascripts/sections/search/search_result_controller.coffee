@@ -1,4 +1,4 @@
-SmartGoogleMap = require('../../components/smart_google_map');
+SmartGoogleMap = require('../../components/smart_google_map')
 
 # Controller for Adding JS for each search result in 'list' view
 #
@@ -27,27 +27,27 @@ module.exports = class SearchResultController
         $(event.target).closest('article.listing').find(@googleMapContainerWrapperClass).hide()
 
   @bindToolTip: (result) ->
-      result.find('.connections').tooltip(html: true, placement: 'top')
+    result.find('.connections').tooltip(html: true, placement: 'top')
 
   @initializeGoogleMap: (result) ->
-      mapContainer = result.find(@googleMapContainerClass).eq(0)
-      # .get(0) is to get antive dom element instead of jquery object, otherwise error will be raised
-      map = SmartGoogleMap.createMap(mapContainer.get(0), {
-        zoom: 14,
-        zoomControl: true,
-        mapTypeControl: false,
-        streetViewControl: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      })
+    mapContainer = result.find(@googleMapContainerClass).eq(0)
+    # .get(0) is to get antive dom element instead of jquery object, otherwise error will be raised
+    map = SmartGoogleMap.createMap(mapContainer.get(0), {
+      zoom: 14,
+      zoomControl: true,
+      mapTypeControl: false,
+      streetViewControl: false,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    })
 
-      map.marker = new google.maps.Marker({
-        map: map,
-        icon: mapContainer.attr("data-marker"),
-        draggable: false
-      })
+    map.marker = new google.maps.Marker({
+      map: map,
+      icon: mapContainer.attr("data-marker"),
+      draggable: false
+    })
 
-      latlng = new google.maps.LatLng(result.data('latitude'), result.data('longitude'))
-      map.marker.setPosition(latlng)
-      map.setCenter(map.marker.getPosition())
+    latlng = new google.maps.LatLng(result.data('latitude'), result.data('longitude'))
+    map.marker.setPosition(latlng)
+    map.setCenter(map.marker.getPosition())
 
-      map
+    map

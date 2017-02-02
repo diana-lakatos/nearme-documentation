@@ -22,6 +22,6 @@ module.exports = class StripeConnectController
         companyFields.addClass('hidden')
 
 
-    @container.on 'cocoon:after-insert', (e, fields)=>
+    @container.on 'cocoon:after-insert', (e, fields) ->
       Datepickers(fields)
       new AddressController(fields)

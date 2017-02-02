@@ -1,5 +1,5 @@
 module.exports = class Collaborators
-  constructor: (form)->
+  constructor: (form) ->
 
     @form = $(form)
     @transactableCollaboratorActions = @form.find("[data-transactable-collaborator]")
@@ -29,7 +29,7 @@ module.exports = class Collaborators
         success: (data) -> that.handle_success(data, request_method, event)
         complete: (data) -> that.handle_success(data, request_method, event)
 
-  handle_success: (data, request_method, event) =>
+  handle_success: (data, request_method, event) ->
     if request_method == "DELETE"
       $(event.target).parents("tr").hide("slow")
     else

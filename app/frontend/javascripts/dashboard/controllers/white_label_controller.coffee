@@ -11,7 +11,7 @@ module.exports = class WhiteLabelController
     @synchronize()
 
   resetLinksInit: ->
-    @form.find('input[type="color"]').each (index, item)->
+    @form.find('input[type="color"]').each (index, item) ->
       input = $(item)
       button = $('<button type="button" data-reset class="action--remove" title="Reset to default">Reset</button>')
       button.data('input', input)
@@ -21,7 +21,7 @@ module.exports = class WhiteLabelController
     @whiteLabelSettingsEnabler.on 'change', =>
       @synchronize()
 
-    @form.on 'click', '[data-reset]', (e) =>
+    @form.on 'click', '[data-reset]', (e) ->
       input = $(e.target).closest('[data-reset]').data('input')
       input.val(input.data('default')) unless input.prop('disabled')
 

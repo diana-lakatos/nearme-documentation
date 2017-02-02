@@ -7,5 +7,5 @@ module.exports = class SyncEnabledFields
     @bindEvents()
 
   bindEvents: =>
-    @fields.on 'change', (e)=>
+    @fields.on 'change', (e) =>
       @fields.prop('checked',$(e.target).is(':checked'))

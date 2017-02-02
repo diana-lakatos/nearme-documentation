@@ -2,7 +2,7 @@ module.exports = class SearchGeocoder
 
   class ResultSet
     constructor: (results) ->
-      @results = _.map results, (result)->
+      @results = _.map results, (result) ->
         new Result(result)
 
     getBestResult: ->
@@ -67,7 +67,7 @@ module.exports = class SearchGeocoder
       for c in @result.address_components
         t = c.types
         match = true
-        match = match && _.contains(t, type) for type in types
+        match = (match && _.contains(t, type)) for type in types
         component = c if match
       component
 

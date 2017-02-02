@@ -72,7 +72,7 @@ module.exports = class InstanceAdminRatingSystemsController
       else
         parent.remove()
 
-      self.updateQuestionNumbers(questions);
+      self.updateQuestionNumbers(questions)
 
 
   keyDownEvents: ->
@@ -90,7 +90,7 @@ module.exports = class InstanceAdminRatingSystemsController
         newQuestion = $(@).parent().clone()
         newQuestion.appendTo(questions)
 
-        newQuestion.find('input').each ()->
+        newQuestion.find('input').each ->
           $(@).attr('id', $(@).attr('id').replace(/attributes\_\d+/, "attributes_#{questionsCount}"))
           $(@).attr('name', $(@).attr('name').replace(/attributes\]\[\d+/, "attributes][#{questionsCount}"))
           $(@).val('')
@@ -102,6 +102,6 @@ module.exports = class InstanceAdminRatingSystemsController
 
   updateQuestionNumbers: (questions) ->
     index = 1
-    questions.find('.number:visible').each ()->
+    questions.find('.number:visible').each ->
       $(@).text("#{index}.")
       index += 1

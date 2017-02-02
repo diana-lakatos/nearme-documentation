@@ -1,4 +1,4 @@
-require('./../../../vendor/jquery-ui-datepicker');
+require('./../../../vendor/jquery-ui-datepicker')
 
 module.exports = class SearchTimeAndDatepickers
   constructor: (@dateInput) ->
@@ -19,7 +19,7 @@ module.exports = class SearchTimeAndDatepickers
           @disableHours(date_string)
         @dateInput.trigger('change')
 
-  disableHours: (date_string)->
+  disableHours: (date_string) ->
     date = new Date(date_string)
 
     opts = $.merge(@timeFromInput.find('option'), @timeToInput.find('option'))

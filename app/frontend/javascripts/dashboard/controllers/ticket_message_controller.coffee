@@ -1,6 +1,6 @@
 module.exports = class TicketMessageController
 
-  constructor: (el)->
+  constructor: (el) ->
     @container = $(el)
     @form = @container.find('[data-rfq-attachment-form]')
     @input = @form.find('input[data-file]')
@@ -35,7 +35,7 @@ module.exports = class TicketMessageController
       error: (xhr) =>
         alert @input.data('destroy-error')
 
-  updateTag: (e)=>
+  updateTag: (e) ->
     data =
       "_method": "put",
       "support_ticket_message_attachment[tag]": $(e.target).val()
@@ -44,11 +44,11 @@ module.exports = class TicketMessageController
       type: 'POST'
       url: $(e.target).closest('[data-update-url]').data('update-url')
       data: data
-      error: (xhr) =>
+      error: (xhr) ->
         alert 'Unable to change attachment tag'
 
   submitForm: =>
-    $.each @input.get(0).files, (key, file)=>
+    $.each @input.get(0).files, (key, file) =>
       data = new FormData()
       data.append('support_ticket_message_attachment[file]', file)
       data.append('form_name', @input.data('form-name'))
@@ -65,7 +65,7 @@ module.exports = class TicketMessageController
         processData: false
         contentType: false
         success: (data) =>
-          @label.removeClass('uploading');
+          @label.removeClass('uploading')
           @labelTextHolder.text(@labelText.default)
 
           new_item = $(data.attachment_content)

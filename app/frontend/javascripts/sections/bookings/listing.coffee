@@ -78,7 +78,7 @@ module.exports = class BookingListing
   # If the listing is an overnight booking we only want to let the user
   # select contiguous blocks of 2 days
   minimumBookingDays: ->
-   if @isOvernightBooking() && @data.minimum_booking_days <=1 then 2 else @data.minimum_booking_days
+    if @isOvernightBooking() && @data.minimum_booking_days <=1 then 2 else @data.minimum_booking_days
 
   onlyRfqAction: ->
     @possibleUnits.length == 0 && @data.action_rfq
@@ -160,7 +160,7 @@ module.exports = class BookingListing
     @data.exclusive_price_cents > 0
 
   bookItOutAvailableForDate: ->
-     @bookItOutAvailable() && @fixedAvailability() >= @data.book_it_out_minimum_qty
+    @bookItOutAvailable() && @fixedAvailability() >= @data.book_it_out_minimum_qty
 
   fixedAvailability: ->
     @bookedDateAvailability
