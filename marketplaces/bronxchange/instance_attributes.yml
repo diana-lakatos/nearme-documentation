@@ -10,7 +10,7 @@ skip_company: true
 wish_lists_enabled: true
 default_currency: USD
 default_country: United States
-time_zone: 'New York'
+time_zone: 'Eastern Time (US & Canada)'
 force_accepting_tos: true
 user_blogs_enabled: true
 force_fill_in_wizard_form: false

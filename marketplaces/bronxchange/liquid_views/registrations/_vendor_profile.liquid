@@ -121,18 +121,21 @@
         {% endif %}
       </div>
 
+      {% assign languages = user.formatted_buyer_categories["Language"] %}
+      {% if languages.children.size > 0 %}
       <div class="languages">
         <h3>Languages</h3>
         <ul>
-          <li>English</li>
-          <li>Italian</li>
+          {% for language in languages.children %}
+          <li>{{ language }}</li>
+          {% endfor %}
         </ul>
+
+        <p><a href="{{ user.user_profile_url }}" class="more-a">View more</a></p>
       </div>
-
-
+      {% endif %}
 
       {% if user.tag_list.size > 0 %}
-
       <div class="tags-a tags-short-list">
         <h4>Tags</h4>
         <ul>
@@ -141,11 +144,10 @@
           {% endfor %}
         </ul>
       </div>
-
       {% endif %}
 
-
       <hr>
+
       <a class="button-b action-flag" href="#" data-href="{{ user.inappropriate_report_path }}" data-modal="true">{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
     </div>
   </div>

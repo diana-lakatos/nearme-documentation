@@ -8,71 +8,50 @@
       <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
       <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
       <input type="hidden" name="sort">
-      <input type="hidden" name="search_type" value="{{ params['search_type'] }}">
 
       <div class="form-action">
         <button type="submit" class="button-a">Search</button>
       </div>
     </div>
-
-    <fieldset class="filters" data-search-filters-container>
-      <legend class="struct-label">Filter</legend>
-
-      <div class="filters-wrapper">
-        <div class="filter">
-          <label for="filter-service">Service / Product</label>
-          <span class="select-a">
-            <select id="filter-service" class="unstyled-select" data-category-filter>
-              <option value="">Please select --</option>
-              <option value="Food and Beverages">Food and Beverages</option>
-              <option value="Baked Goods">&nbsp;&nbsp;Baked Goods</option>
-              <option value="Catering">&nbsp;&nbsp;Catering</option>
-              <option value="Building Services">Building Services</option>
-              <option value="Janitorial">&nbsp;&nbsp;Janitorial</option>
-              <option value="HVAC">&nbsp;&nbsp;HVAC</option>
-            </select>
-          </span>
-        </div>
-
-        <div class="filter">
-          <label for="filter-language">Language</label>
-          <span class="select-a">
-            <select name="lg_customizations[language]" id="filter-language" class="unstyled-select">
-              <option value="">Please select --</option>
-              <option value="English (default)">English (default)</option>
-              <option value="Albanian">Albanian</option>
-              <option value="Arabic">Arabic</option>
-              <option value="Bengali">Bengali</option>
-              <option value="Chinese">Chinese</option>
-              <option value="Ewe">Ewe</option>
-              <option value="French">French</option>
-              <option value="French Creole">French Creole</option>
-              <option value="Fulani">Fulani</option>
-              <option value="German">German</option>
-              <option value="Greek">Greek</option>
-              <option value="Ibo">Ibo</option>
-              <option value="Italian">Italian</option>
-              <option value="Japanese">Japanese</option>
-              <option value="Khmer">Khmer</option>
-              <option value="Korean">Korean</option>
-              <option value="Korean">Korean</option>
-              <option value="Kru">Kru</option>
-              <option value="Mande">Mande</option>
-              <option value="Polish">Polish</option>
-              <option value="Russian">Russian</option>
-              <option value="Spanish">Spanish</option>
-              <option value="Tagalog">Tagalog</option>
-              <option value="Urdu">Urdu</option>
-              <option value="Vietnamese">Vietnamese</option>
-              <option value="Wolof">Wolof</option>
-              <option value="Yoruba">Yoruba</option>
-            </select>
-          </span>
-        </div>
-      </div>
-    </fieldset>
   </form>
 
+  <fieldset class="filters" data-search-filters-container>
+    <legend class="struct-label">Filter</legend>
+
+    <div class="filters-wrapper">
+      <div class="filter">
+        <label for="filter-service">Service / Product</label>
+        <span class="select-a">
+          <select id="filter-service" class="unstyled-select" name="category_ids[]" data-category-filter>
+            <option value="">Please select --</option>
+            {% assign industries = searcher.searchable_categories | detect: name: 'Industry' %}
+            {% for category in industries.children %}
+              <option value="{{ category.id }}"{% if searcher.category_ids contains category.id %} selected{% endif %}>{{ category.name }}</option>
+              {% for subcat in category.children %}
+                <option value="{{ subcat.id }}"{% if searcher.category_ids contains subcat.id %} selected{% endif %}>&nbsp;&nbsp;&nbsp;&rsaquo; {{ subcat.name }}</option>
+                {% for subcat2 in subcat.children %}
+                  <option value="{{ subcat2.id }}"{% if searcher.category_ids contains subcat2.id %} selected{% endif %}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rsaquo; {{ subcat2.name }}</option>
+                {% endfor %}
+              {% endfor %}
+            {% endfor %}
+          </select>
+        </span>
+      </div>
+
+      <div class="filter">
+        <label for="filter-language">Language</label>
+        <span class="select-a">
+          <select name="category_ids[]" id="filter-language" class="unstyled-select" data-category-filter>
+            <option value="">Please select --</option>
+            {% assign languages = searcher.searchable_categories | detect: name: 'Language' %}
+            {% for category in languages.children %}
+              <option value="{{ category.id }}"{% if searcher.category_ids contains category.id %} selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </span>
+      </div>
+    </div>
+  </fieldset>
 </div>
 
 <main id="results">
@@ -91,8 +70,8 @@
         <span class="select-a">
           <select id="search-order" name="sort" class="unstyled-select">
             <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Please Select</option>
-            <option {% if params['sort'] == 'user.number_of_completed_orders_user_desc'  %}selected{% endif %} value='user.number_of_completed_orders_user_desc'>Number of Bookings</option>
-            <option {% if params['sort'] == 'user.buyer_average_rating_desc' %}selected{% endif %} value='user.buyer_average_rating_desc'>Rating</option>
+            <option>Relevance</option>
+            <option>Company Name</option>
           </select>
         </span>
       </div>
@@ -109,15 +88,14 @@
     </div>
 
     {% if searcher.next_page %}
-    <p class="search-results-more-trigger">
-      <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
-    </p>
+      <p class="search-results-more-trigger">
+        <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
+      </p>
     {% endif %}
-
   </section>
 
 </main>
 
 {% content_for 'domready' %}
-$(document).trigger('init:list:searchresults.nearme');
+  $(document).trigger('init:list:searchresults.nearme');
 {% endcontent_for %}

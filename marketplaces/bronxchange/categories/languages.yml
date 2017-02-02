@@ -1,10 +1,11 @@
 name: "Language"
 instance_profile_types:
   - Buyer
+multiple_root_categories: true
 transactable_types:
   - Order
 children:
-  - name: 'English (default)'
+  - name: 'English'
   - name: 'Albanian'
   - name: 'Arabic'
   - name: 'Bengali'

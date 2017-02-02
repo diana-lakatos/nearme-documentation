@@ -2,123 +2,127 @@
   <header class="user-profile-a-header">
     <a href="{{ user.user_profile_url }}">
       <div class="branding">
-        <img src="{{user.avatar_url_big}}" alt="{{ user.company }}" itemprop="logo">
-        <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+        {% comment %}
+        THESE TWO IMAGES BELOW ARE INCORRECT. WAITING FOR DAREK TO PROVIDE A WAY TO FETCH THEM FROM ES
+        {% endcomment %}
+        <img src="{{ user.avatar_url_big }}" alt="{{ user.company }}" itemprop="logo">
+        <img src="{{ user.avatar_url_big }}" alt="{{ user.name }}">
       </div>
 
       <div class="desc">
-        <h2 itemprop="name">Spring Bank</h2>
+        <h2 itemprop="name">{{ user.buyer_properties.company_name }}</h2>
 
         <p class="address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-          <span itemprop="streetAddress">69 E 167th St.</span><br>
-          <span itemprop="addressLocality">Bronx</span>, <span itemprop="addressRegion">NY</span> <span itemprop="postalCode">10452</span>
-          <span class="neighborhood">Concourse</span>
+          <span itemprop="streetAddress">{{ user.current_address.street }}</span><br>
+          <span itemprop="addressLocality">{{ user.current_address.suburb }}</span>, <span itemprop="addressRegion">{{ user.current_address.state }}</span> <span itemprop="postalCode">{{ user.current_address.postcode }}</span>
+          <span class="neighborhood">{{ user.buyer_properties.neighborhood }}</span>
         </p>
-
       </div>
     </a>
   </header>
 
 
   <div class="user-profile-a-options">
-    {% comment %}
-    {% if current_user.id != user.id %}{% endif %}
-    {% endcomment %}
-    <ul>
-      {% comment %}
-      {% if current_user != blank and current_user.has_seller_profile? %}{% endif %}
-      {% endcomment %}
-      <li class="begin-collaboration">
-        {% if current_user.seller_profile.onboarding_at == blank %}
-        <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Request Proposal</a>
-        {% else %}
-        <a href="#collaboration-{{ user.id }}" class="button-a" data-collaborations-trigger>Request Proposal</a>
+    {% if current_user.id != user.id %}
+      <ul>
+        {% if current_user != blank and current_user.has_seller_profile? %}
+          <li class="begin-collaboration">
+            {% if current_user.seller_profile.onboarding_at == blank %}
+              <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Request Proposal</a>
+            {% else %}
+              <a href="#collaboration-{{ user.id }}" class="button-a" data-collaborations-trigger>Request Proposal</a>
+            {% endif %}
+          </li>
         {% endif %}
-      </li>
-      {% comment %}
-      {% if true %}{% endif %}
-      {% endcomment %}
-
-      <li>
-        <a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Send Message</a>
-      </li>
-
-      {% comment %}
-      {% if current_user.has_seller_profile? %}{% endif %}
-      {% endcomment %}
-      <li>
-        {% include 'shared/components/wish_list_button_injection.html', object: user %}
-      </li>
-      {% comment %}
-      {% if true %}{% endif %}
-      {% endcomment %}
-    </ul>
-  {% comment %}
-  {% if true %}{% endif %}
-  {% endcomment %}
+          <li>
+            <a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Send Message</a>
+          </li>
+        {% if current_user.has_seller_profile? %}
+          <li>
+            {% include 'shared/components/wish_list_button_injection.html', object: user %}
+          </li>
+        {% endif %}
+      </ul>
+    {% endif %}
   </div>
 
 
   <div class="user-profile-a-description">
 
-    {% include 'registrations/badges', user: user, full: false %}
+    {% if user.buyer_properties.community_wealth or user.buyer_properties.workplace or user.buyer_properties.environment_and_health %}
+      <ul class="badges-a">
+        {% if user.buyer_properties.workplace %}
+          <li class="workplace"><h3>Workplace</h3></li>
+        {% endif %}
 
+        {% if user.buyer_properties.community_wealth %}
+          <li class="commmunity-wealth"><h3>Community Wealth</h3></li>
+        {% endif %}
+
+        {% if user.buyer_properties.environment_and_health %}
+          <li class="environment-health"><h3>Environment &amp; Health</h3></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+
+    {% assign products = user.buyer_profile.customizations_by_type['Product / Service listing item'] %}
+    {% if products.size > 0 %}
     <div class="products-services">
       <h3>Products &amp; Services</h3>
       <ul>
-        <li>Borrow &amp; Save Loan Program</li>
-        <li>Employee Opportunity Loan Program</li>
-        <li>Nonprofit Banking</li>
-        <li>Small Business Loan</li>
+        {% for product in products %}
+        <li>{{ product.title }}</li>
+        {% endfor %}
       </ul>
 
       <p><a href="{{ user.user_profile_url }}" class="more-a">View more</a></p>
     </div>
+    {% endif %}
 
+    {% assign languages = user.formatted_buyer_categories["Language"] %}
+    {% if languages.children.size > 0 %}
     <div class="languages">
       <h3>Languages</h3>
       <ul>
-        <li>English</li>
-        <li>Italian</li>
+        {% for language in languages.children %}
+        <li>{{ language }}</li>
+        {% endfor %}
       </ul>
 
       <p><a href="{{ user.user_profile_url }}" class="more-a">View more</a></p>
     </div>
+    {% endif %}
 
     <div class="availability">
-      <h3>Hours / Days of Operation</h3>
-      <p>M-F  9:00 AM - 5:30 PM<br>
-      S-S   10:00 AM - 12:00 PM</p>
+      {% if user.buyer_properties.hours_days_of_operation != blank %}
+        <h3>Hours / Days of Operation</h3>
+        <p>{{ user.buyer_properties.hours_days_of_operation | nl2br }}</p>
+      {% endif %}
 
+      {% if user.buyer_properties.availability != blank %}
       <h3>Availability</h3>
-      <p>We are closed the first Monday in the month</p>
+      <p>{{ user.buyer_properties.availability | nl2br }}</p>
+      {% endif %}
     </div>
 
+    {% if user.buyer_properties.company_description != blank %}
     <div class="company-description" itemprop="description">
       <h3>Company Description</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio. <a href="{{ user.user_profile_url }}" class="more-a">Show More</a></p>
+      <p>{{ user.buyer_properties.company_description | nl2br }} <a href="{{ user.user_profile_url }}" class="more-a">Show More</a></p>
     </div>
+    {% endif %}
 
-    {% comment %}
-    {% if user.tag_list.size > 0 %}{% endif %}
-    {% endcomment %}
+    {% if user.tag_list.size > 0 %}
     <div class="tags-a tags-short-list">
       <h4>Tags</h4>
       <ul>
-        <li><a href="?query_fields=tags&amp;query={{ tag }}">Tag 1</a></li>
-        <li><a href="?query_fields=tags&amp;query={{ tag }}">Tag 2</a></li>
-        <li><a href="?query_fields=tags&amp;query={{ tag }}">Tag 3</a></li>
-        <li><a href="?query_fields=tags&amp;query={{ tag }}">Tag 4</a></li>
         {% for tag in user.tag_list %}
          <li><a href="?query_fields=tags&amp;query={{ tag }}">{{ tag }}</a></li>
         {% endfor %}
       </ul>
     </div>
-    {% comment %}
-    {% if true %}{% endif %}
-    {% endcomment %}
+    {% endif %}
   </div>
-
   <script>
     $(function(){
       $(document).trigger('user:loaded', 'user-{{user.id}}')
