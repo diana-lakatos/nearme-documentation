@@ -11,7 +11,6 @@ class AnalyticsFacade::AnalyticsBase
     chart_type: 'revenue',
     period: 'last_7_days',
     page: 1,
-    currency: 'USD'
   }.freeze
 
   attr_reader :scope, :options
