@@ -1,4 +1,4 @@
-DatepickerModel = require('../../../components/datepicker/model');
+DatepickerModel = require('../../../components/datepicker/model')
 dateUtil = require('../../../lib/utils/date')
 
 # Custom backing model for datepicker date selection

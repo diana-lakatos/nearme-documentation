@@ -5,5 +5,5 @@ module.exports = class ApprovalRequestAttachmentsController
     @bindEvents()
 
   bindEvents: =>
-    @container.on 'ajax:success', 'a[data-delete-attachment]', (event) =>
+    @container.on 'ajax:success', 'a[data-delete-attachment]', (event) ->
       $(event.target).parent().html('')

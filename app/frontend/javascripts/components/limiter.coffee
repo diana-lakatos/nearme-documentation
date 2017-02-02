@@ -1,7 +1,7 @@
-require('../../vendor/jquery.limiter');
+require('../../vendor/jquery.limiter')
 
 module.exports = class Limiter
-  constructor: (el)->
+  constructor: (el) ->
     @el = $(el)
     @intialize()
 

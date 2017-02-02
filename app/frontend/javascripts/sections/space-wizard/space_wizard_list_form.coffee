@@ -1,6 +1,6 @@
-CustomInputs = require('../../components/custom_inputs');
-CustomSelects = require('../../components/custom_selects');
-jstz = require('exports?jstz!jstimezonedetect/dist/jstz');
+CustomInputs = require('../../components/custom_inputs')
+CustomSelects = require('../../components/custom_selects')
+jstz = require('exports?jstz!jstimezonedetect/dist/jstz')
 
 module.exports = class SpaceWizardSpaceForm
 
@@ -34,7 +34,7 @@ module.exports = class SpaceWizardSpaceForm
     if @input_number < @input_length
       input = @container.find('> .control-group').eq(@input_number).removeClass('input-disabled').find(':input').removeAttr("disabled").eq(0)
       if with_focus
-       input.focus()
+        input.focus()
       # hack to ignore currency chosen - just unlock the next field after chosen
       if @container.find('> .control-group').eq(@input_number).find('.custom-select').length > 0
         @container.find('> .control-group').eq(@input_number).find('.custom-select').trigger("liszt:updated")
@@ -43,17 +43,17 @@ module.exports = class SpaceWizardSpaceForm
 
   bindEvents: =>
     # Progress to the next form field when a selection is made from select elements
-    @container.on 'change', 'select', (event) =>
+    @container.on 'change', 'select', (event) ->
       $(event.target).closest('.control-group').next().removeClass('input-disabled').find(':input').removeAttr('disabled').focus()
 
   bindCocoonEvents: =>
-    @container.find('.custom-availability-rules').on 'cocoon:before-remove', (e,fields)->
+    @container.find('.custom-availability-rules').on 'cocoon:before-remove', (e,fields) ->
       $(fields).closest('.nested-container').find('.transactable_availability_template_availability_rules__destroy input').val('true')
 
-    @container.find('.custom-availability-rules').on 'cocoon:after-insert', (e,fields)->
+    @container.find('.custom-availability-rules').on 'cocoon:after-insert', (e,fields) ->
       $(fields).each ->
-        new CustomInputs(@);
-        new CustomSelects(@);
+        new CustomInputs(@)
+        new CustomSelects(@)
 
   successfulValidationHandler: (element) =>
     index = element.closest('.control-group').index()
@@ -67,7 +67,7 @@ module.exports = class SpaceWizardSpaceForm
   allValid: ->
     @container.find('.error-block').length == 0
 
-  setDefaultTimezone: =>
+  setDefaultTimezone: ->
     tz = jstz.determine().name()
     if tz.length > 0 && $("select.time_zone").length > 0 && $("select.time_zone").val().length == 0
       timezone = tz.split('/').pop()

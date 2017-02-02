@@ -1,5 +1,5 @@
 module.exports = class Tutorial
-  constructor: (el)->
+  constructor: (el) ->
     @root = $(el)
     @body = $('body')
     @slides = @root.find('.slide')
@@ -10,10 +10,10 @@ module.exports = class Tutorial
 
     setTimeout(@init.bind(this), 10)
 
-  init: ()->
+  init: ->
     @open() if @root.is('.is-active')
 
-  show: (index)->
+  show: (index) ->
     @slides.removeClass 'is-active'
 
     $next = @slides.eq(index)
@@ -35,16 +35,16 @@ module.exports = class Tutorial
     @mask.css 'border-width', top + 'px ' + right + 'px ' + bottom + 'px ' + left + 'px'
     @current = index
 
-  open: ()->
+  open: ->
     @root.addClass 'is-active'
     @body.addClass 'is-tutorial'
     @show(@current)
 
-  close: ()->
+  close: ->
     @root.removeClass 'is-active'
     @body.removeClass 'is-tutorial'
 
-  initializeEvents: ()->
+  initializeEvents: ->
     $(window).on 'resize.tutorial', $.proxy ((event) ->
       return unless trueResize()
       @show(@current)
@@ -60,6 +60,6 @@ module.exports = class Tutorial
       @close()
     ), this
 
-  @initialize: ()->
-    $('.tutorial-a').each ()->
+  @initialize: ->
+    $('.tutorial-a').each ->
       new Tutorial(this)

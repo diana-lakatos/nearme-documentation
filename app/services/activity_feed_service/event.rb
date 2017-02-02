@@ -59,7 +59,11 @@ class ActivityFeedService::Event
 
   def user_added_photos_to_transactable
     transactable = @event.followed
-    user_record = @event.event_source.creator rescue transactable.creator
+    if @event.event_source.try(:creator).present?
+      user_record = @event.event_source.creator
+    else
+      user_record = transactable.creator
+    end
     user = link_if_not_deleted(user_record, :secret_name)
     self.image = image_or_placeholder(user_record.avatar)
     self.text = I18n.t(@event.i18n_key, user: user, transactable: link_if_not_deleted(transactable, :name)).html_safe
@@ -99,7 +103,11 @@ class ActivityFeedService::Event
 
   def user_added_photos_to_group
     group = @event.followed
-    user_record = @event.event_source.creator rescue group.creator
+    if @event.event_source.try(:creator).present?
+      user_record = @event.event_source.creator
+    else
+      user_record = group.creator
+    end
     user = link_if_not_deleted(user_record, :secret_name)
     self.image = image_or_placeholder(user_record.avatar)
     self.text = I18n.t(@event.i18n_key, user: user, group: link_if_not_deleted(group, :name)).html_safe
@@ -107,7 +115,11 @@ class ActivityFeedService::Event
 
   def user_added_links_to_group
     group = @event.followed
-    user_record = @event.event_source.creator rescue group.creator
+    if @event.event_source.try(:creator).present?
+      user_record = @event.event_source.creator
+    else
+      user_record = group.creator
+    end
     user = link_if_not_deleted(user_record, :secret_name)
     self.image = image_or_placeholder(user_record.avatar)
     self.text = I18n.t(@event.i18n_key, user: user, group: link_if_not_deleted(group, :name)).html_safe

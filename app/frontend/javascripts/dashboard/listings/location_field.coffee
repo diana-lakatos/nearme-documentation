@@ -5,7 +5,7 @@ module.exports = class LocationField
 
   constructor: (field) ->
     @field = $(field)
-    @options ||= => $('[data-location-actions] [data-location-id]')
+    @options ||= -> $('[data-location-actions] [data-location-id]')
     @bindEvents()
     @locationChanged()
 
@@ -14,7 +14,7 @@ module.exports = class LocationField
       @locationChanged()
 
     $('html').on 'loaded:dialog.nearme', ->
-      $('.dialog--loaded [data-counter-limit]').each (index, item)=>
+      $('.dialog--loaded [data-counter-limit]').each (index, item) ->
         new Limiter(item)
       new AvailabilityRules('.dialog .listing-availability')
 

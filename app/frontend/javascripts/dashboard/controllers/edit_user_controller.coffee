@@ -5,7 +5,7 @@ module.exports = class EditUserController
     @bindEvents()
 
   bindEvents: ->
-    @container.on 'click', '.provider-not-disconnectable', (event) =>
-        $('#user_password').effect("highlight", {}, 3000).focus()
-        $('#fill-password-request').removeClass('hidden')
-        false
+    @container.on 'click', '.provider-not-disconnectable', (event) ->
+      $('#user_password').effect("highlight", {}, 3000).focus()
+      $('#fill-password-request').removeClass('hidden')
+      false

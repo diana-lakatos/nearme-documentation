@@ -21,7 +21,7 @@ module.exports = class Modal
   # Modalized links are anchor elements with rel="modal"
   # A custom class can be specified on the modal:
   #   <a href="modalurl" rel="modal.my-class">link</a>
-  @listen : ->
+  @listen: ->
     $('body').delegate 'a[data-modal], button[data-modal]', 'click', (e) =>
       @modalClicked(e)
       false
@@ -30,7 +30,7 @@ module.exports = class Modal
       @modalClickedLegacy(e)
       false
 
-    $('body').delegate 'form[data-modal]', 'submit', (e) =>
+    $('body').delegate 'form[data-modal]', 'submit', (e) ->
       e.preventDefault()
       form = $(e.currentTarget)
 
@@ -45,10 +45,10 @@ module.exports = class Modal
     $(document).on 'ajaxSend', '.modal-content form', =>
       @showLoading()
 
-    $(document).on 'ajaxSuccess', '.modal-content form', (event, data) =>
+    $(document).on 'ajaxSuccess', '.modal-content form', (event, data) ->
       Modal.showContent(data)
 
-  @modalClickedLegacy : (e) ->
+  @modalClickedLegacy: (e) ->
     e.preventDefault()
     target = $(e.currentTarget)
     modalClass = matches[1] if matches = target.attr("rel").match(/modal\.([^\s]+)/)
@@ -56,7 +56,7 @@ module.exports = class Modal
     @load(ajaxOptions, modalClass)
     false
 
-  @modalClicked : (e) ->
+  @modalClicked: (e) ->
     e.preventDefault()
     target = $(e.currentTarget)
     modalClass = null
@@ -66,19 +66,15 @@ module.exports = class Modal
     @load(ajaxOptions, modalClass)
 
   # Show the loading status on the modal
-  @showLoading : ->
+  @showLoading: ->
     @instance().showLoading()
 
   # Show the content on the modal
-  @showContent : (content) ->
+  @showContent: (content) ->
     @instance().showContent(content)
 
   # Trigger laoding of the URL within the modal via AJAX
-  @load : (ajaxOptions, modalClass = null) ->
-    @instance().setClass(modalClass)
-    @instance().load(ajaxOptions)
-
-  @load : (ajaxOptions, modalClass = null, callback = null) ->
+  @load: (ajaxOptions, modalClass = null, callback = null) ->
     @instance().setClass(modalClass)
     @instance().load(ajaxOptions)
     @instance().setCallback(callback)
@@ -108,16 +104,16 @@ module.exports = class Modal
     @overlay.bind 'click', (e) =>
       @hide()
 
-  setCallback : (callback) ->
+  setCallback: (callback) ->
     @callback = callback
 
-  setClass : (klass) ->
+  setClass: (klass) ->
     @container.removeClass(@customClass) if @customClass
 
     @customClass = klass
     @container.addClass(klass) if klass
 
-  showContent : (content) ->
+  showContent: (content) ->
     @_show()
     @container.removeClass('loading')
     @loading.hide()
@@ -132,7 +128,7 @@ module.exports = class Modal
       @content.addClass('visible')
     , 20
 
-  showLoading : ->
+  showLoading: ->
     @container.addClass('loading')
     @content.hide()
     @loading.show()
@@ -176,13 +172,13 @@ module.exports = class Modal
     , 20
 
     # start listening to Esc key
-    $('body').on 'keydown.modal', (e)=>
+    $('body').on 'keydown.modal', (e) =>
       @hide() if e.which == 27
 
   # Load the given URL in the modal
   # Displays the modal, shows the loading status, fires an AJAX request and
   # displays the content
-  load : (ajaxOptions) ->
+  load: (ajaxOptions) ->
     @_show()
     @showLoading()
 
@@ -215,6 +211,6 @@ module.exports = class Modal
     $(window).scrollTop(@_scrollTopWas)
 
   # Get the instance of the Modal object
-  @instance : ->
+  @instance: ->
     window.modal ||= new Modal()
 

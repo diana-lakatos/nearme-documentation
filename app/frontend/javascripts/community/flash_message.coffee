@@ -1,5 +1,5 @@
 module.exports = class FlashMessage
-  constructor: (el)->
+  constructor: (el) ->
     @message = $(el)
     @initStructure()
     @addEventListeners()

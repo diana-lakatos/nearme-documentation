@@ -140,7 +140,7 @@ module.exports = class DashboardReviewsController
         starOn: urlUtil.assetUrl('raty/star-on-big.png')
         readOnly: true
         score: ->
-          return $(@).data('score');
+          return $(@).data('score')
 
   disableRatingStarts: (form) =>
     score = form.find('input[name=score]').val()

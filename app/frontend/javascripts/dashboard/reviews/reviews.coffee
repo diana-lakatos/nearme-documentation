@@ -11,7 +11,7 @@ module.exports = class Reviews
   bindEvents: ->
     @periodSelector.on 'change', @updatePeriod
 
-  updatePeriod: ()=>
+  updatePeriod: =>
     periodSearchString = "period=#{@periodSelector.val()}"
     searchString = window.location.search
     if searchString

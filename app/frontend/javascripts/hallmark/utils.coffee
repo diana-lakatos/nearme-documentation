@@ -1,22 +1,22 @@
 module.exports = class Utils
-  constructor: ()->
+  constructor: ->
 
   # Opens links marked as external in a new browser window
-  @links: ()->
-    $('body').on 'click', 'a[rel*="external"]', (e)->
+  @links: ->
+    $('body').on 'click', 'a[rel*="external"]', (e) ->
       e.preventDefault()
       window.open $(e.target).closest('a').attr('href')
 
   # Simple spam prevention by changing example/at/example.com to proper email string
-  @mails: ()->
-    $('a[href^="mailto:"]').each (index, el)->
+  @mails: ->
+    $('a[href^="mailto:"]').each (index, el) ->
       mail = el.href.replace('mailto:','')
       replaced = mail.replace('/at/','@')
       el.href = 'mailto:' + replaced
       el.innerHTML = replaced if el.innerHTML == mail
 
   # Extra classes on <html> element helping with styling
-  @mobile: ()->
+  @mobile: ->
     ua = navigator.userAgent.toLowerCase()
     classes = []
 
@@ -31,7 +31,7 @@ module.exports = class Utils
     document.documentElement.className += ' ' + classes.join(' ')
 
 
-  @initialize: ()->
+  @initialize: ->
     @links()
     @mails()
     @mobile()

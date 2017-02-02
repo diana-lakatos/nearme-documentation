@@ -1,4 +1,4 @@
-require('bootstrap-colorpicker/dist/js/bootstrap-colorpicker');
+require('bootstrap-colorpicker/dist/js/bootstrap-colorpicker')
 
 module.exports = class InstanceAdminThemeController
 

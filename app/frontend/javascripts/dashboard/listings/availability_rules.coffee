@@ -23,7 +23,7 @@ module.exports = class AvailabilityRules
     @customFields.find('.disabled').removeClass('disabled')
     @customFields.show()
 
-  hideCustom: (selector)->
+  hideCustom: (selector) ->
     @customFields.hide()
     @customFields.find('input, select').prop('disabled', true)
 
@@ -32,11 +32,11 @@ module.exports = class AvailabilityRules
     @selector.change (event) =>
       @updateCustomState($(event.target))
 
-    @customFields.on 'cocoon:before-remove', (e,fields)->
+    @customFields.on 'cocoon:before-remove', (e,fields) ->
       parent = $(fields).closest('.nested-container')
       parent.find('.transactable_availability_template_availability_rules__destroy input').val('true')
       parent.hide()
       parent.prependTo(parent.closest('form'))
 
-    @customFields.on 'cocoon:after-insert', (e, insertedItem)=>
-      $('html').trigger('timepickers.init.forms', [insertedItem]);
+    @customFields.on 'cocoon:after-insert', (e, insertedItem) ->
+      $('html').trigger('timepickers.init.forms', [insertedItem])

@@ -2,7 +2,7 @@
 module.exports = class ScreenLockLoader
   lockerClass: 'screen-locker'
 
-  constructor: (@containerCallback)->
+  constructor: (@containerCallback) ->
     @showed = false
 
   show: ->

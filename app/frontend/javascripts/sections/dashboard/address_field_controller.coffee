@@ -1,4 +1,4 @@
-AddressField = require('../../components/address_autocomplete');
+AddressField = require('../../components/address_autocomplete')
 SmartGoogleMap = require('../../components/smart_google_map')
 
 module.exports = class AddressFieldController

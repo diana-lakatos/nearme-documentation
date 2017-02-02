@@ -3,7 +3,7 @@ require('jquery.cookie/jquery.cookie')
 module.exports = class Navigation
   cookie_name: 'navigation_visible'
 
-  constructor: ()->
+  constructor: ->
     @body = $(document.body)
     @main = $('main')
 
@@ -14,42 +14,42 @@ module.exports = class Navigation
       $('body').addClass('navigation-toggle-initialized')
     ), 50
 
-  createToggler: ()->
+  createToggler: ->
     @toggler = $('button.nav-toggler')
 
-    togglerClick = (e)->
+    togglerClick = (e) ->
       e.preventDefault()
       e.stopPropagation()
       @toggleNavigation()
 
     @toggler.on 'click', $.proxy(togglerClick, this)
 
-    $('.page-header-wrapper').prepend(@toggler);
+    $('.page-header-wrapper').prepend(@toggler)
 
 
-  saveState: (state)->
+  saveState: (state) ->
     $.cookie(@cookie_name, state, { expires: 14, path: '/dashboard/' })
 
-  readState: ()->
+  readState: ->
     return $.cookie(@cookie_name)
 
-  showNavigation: ()->
+  showNavigation: ->
     @body.addClass('navigation-visible')
     @saveState(true)
 
-    @main.on 'click.hidenavigation', (e)=>
+    @main.on 'click.hidenavigation', (e) =>
       e.preventDefault()
       @hideNavigation()
 
-  hideNavigation: ()->
+  hideNavigation: ->
     @body.removeClass('navigation-visible')
     @saveState(false)
     @main.off('click.hidenavigation')
 
-  toggleNavigation: ()->
+  toggleNavigation: ->
     return @hideNavigation() if @body.hasClass('navigation-visible')
     @showNavigation()
 
   subnavigationItems: ->
-    $('.nav-primary').on 'click', 'li > span', (e)->
+    $('.nav-primary').on 'click', 'li > span', (e) ->
       $(e.target).closest('li').toggleClass('selected')

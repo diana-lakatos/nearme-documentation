@@ -5,4 +5,4 @@ module.exports = class UserBlogPostForm
     @initialize()
 
   initialize: ->
-    $('#user_blog_post_published_at').datepicker({ showOtherMonths: true, selectOtherMonths: false, dateFormat: 'yy-mm-dd'});
+    $('#user_blog_post_published_at').datepicker({ showOtherMonths: true, selectOtherMonths: false, dateFormat: 'yy-mm-dd'})
