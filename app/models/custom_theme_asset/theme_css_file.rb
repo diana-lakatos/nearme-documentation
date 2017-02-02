@@ -5,4 +5,8 @@ class CustomThemeAsset::ThemeCssFile < CustomThemeAsset
   def supports_body?
     true
   end
+
+  def asset_type
+    'css'
+  end
 end

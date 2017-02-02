@@ -19,7 +19,7 @@ module.exports = class PhoneNumbers
     @findFields()
     @bindEvents()
 
-    interval = window.setInterval(()=>
+    interval = window.setInterval(=>
       if @countryNameField[0].selectize
         window.clearInterval(interval)
         @updateCountryCallingCode()
@@ -36,16 +36,16 @@ module.exports = class PhoneNumbers
     @ctcTrigger        = @container.find(@ctcTriggerSelector)
 
   bindEvents: ->
-    @container.on 'change', @countrySelector, ()=>
+    @container.on 'change', @countrySelector, =>
       @updateCountryCallingCode()
 
-    @container.on 'change keyup', "[type='tel']", ()=>
+    @container.on 'change keyup', "[type='tel']", =>
       @updatePhoneNumber()
 
-    @container.on 'change', @sameAsSelector, ()=>
+    @container.on 'change', @sameAsSelector, =>
       @updatePhoneNumber()
 
-    @ctcTrigger.on 'click', (e)=>
+    @ctcTrigger.on 'click', (e) =>
       e.preventDefault()
       $(document).trigger 'load:dialog.nearme', [{ url: @ctcTrigger.attr('href'), data: @ctcTrigger.data('ajax-options') }, null, {
         onHide: @updateCtcTriggerState
@@ -103,7 +103,7 @@ module.exports = class PhoneNumbers
     @ctcTrigger.data('ajax-options', { phone: @mobileNumberField.val(), country_name: @countryNameField[0].selectize.items[0] })
 
   updateCtcTriggerState: =>
-    $.get @ctcTrigger.data('verify-url'), (data)=>
+    $.get @ctcTrigger.data('verify-url'), (data) =>
       if data.status
         @ctcTrigger.html('Number verified!')
       else

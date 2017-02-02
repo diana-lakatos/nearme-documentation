@@ -6,7 +6,7 @@ module.exports = class InstanceAdminSearchSettings
   bindEvents: ->
     $("ul.sortable").sortable({axis: "y", cursor: "move", stop: @updateIndex, opacity: 0.7 })
 
-  updateIndex: (e, ui) =>
+  updateIndex: (e, ui) ->
     $.ajax
       type: 'PUT'
       url: ui.item.closest('ul').data('update-url')

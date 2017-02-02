@@ -1,6 +1,13 @@
+- options ||= { class: 'button-a small' }
+- if current_user.nil?
+  - path = '/users/sign_in?wizard=onboarding'
+- else
+  - path = [group, :group_members]
+  - options.merge!(method: :post, remote: true)
+
 - if membership.blank?
   - unless group.secret?
-    = link_to group.button_join_name, [group, :group_members], class: 'button-a small', method: :post, remote: true
+    = link_to group.button_join_name, path, options
 - elsif membership.waiting_for_owner_response?
   %span.button-a.small.gray
     = t('group.request_sent')

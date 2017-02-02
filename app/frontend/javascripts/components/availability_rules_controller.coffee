@@ -31,5 +31,5 @@ module.exports = class AvailabilityRulesController
     @selector.change (event) =>
       @updateCustomState()
 
-    @customFields.on 'cocoon:before-remove', (e,fields)->
+    @customFields.on 'cocoon:before-remove', (e,fields) ->
       $(fields).closest('.nested-container').find('.transactable_availability_template_availability_rules__destroy input').val('true')

@@ -8,6 +8,7 @@ class Link < ActiveRecord::Base
   attr_accessor :skip_activity_feed_event
 
   belongs_to :linkable, polymorphic: true
+  belongs_to :creator, class_name: 'User'
 
   validates_url :url, no_local: true, schemes: %w(http https)
   validate :text_or_image_present
@@ -17,6 +18,8 @@ class Link < ActiveRecord::Base
   after_commit :user_added_links_event, on: [:create, :update], if: -> { %w(Group Transactable).include?(linkable_type) }
 
   def user_added_links_event
+    return if paranoia_destroyed?
+
     if linkable.present? && !linkable.draft? && !skip_activity_feed_event
       event = ['user_added_links_to', linkable_type.downcase].join('_').to_sym
       ActivityFeedService.create_event(event, linkable, [linkable.creator], self)

@@ -1,10 +1,10 @@
 require 'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker'
 
 module.exports = class DatepickerInitializer
-  constructor: (context)->
+  constructor: (context) ->
     @initialize()
 
-  initialize: (context = 'body')->
+  initialize: (context = 'body') ->
     $(context).find('.datetimepicker').datetimepicker({
       allowInputToggle: true,
       icons: {

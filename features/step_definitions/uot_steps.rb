@@ -75,38 +75,46 @@ And /^I invite enquirer to my project$/ do
   assert Transactable.last.transactable_collaborators.any?
 end
 
-And /^I wait for modal with credit card fields to render$/ do
+When /^I accept the offer$/ do
+  page.should have_css('.accept-link')
+  page.execute_script("$('.accept-link').eq(0).click()")
   page.should have_css(".nm-new-credit-card-form-name-container")
 end
 
 Then /^I fill credit card payment subscription form$/ do
   # I submit empty form to check validation
-  find('.dialog__actions button').trigger('click')
-  page.should have_content('required')
+  work_in_modal do
+    find('.dialog__actions button').trigger('click')
+    page.should have_content('required')
 
-  fill_in 'payment_subscription_credit_card_attributes_first_name', with: 'FirstName'
-  fill_in 'payment_subscription_credit_card_attributes_last_name', with: 'LastName'
-  fill_in 'payment_subscription_credit_card_attributes_number', :with => "4242424242424242"
-  find('.payment_subscription_credit_card_month').find("option[value='12']").select_option
-  find('.payment_subscription_credit_card_year').find("option[value='2024']").select_option
-  fill_in 'payment_subscription_credit_card_attributes_verification_value', :with => '411'
+    fill_in 'payment_subscription_credit_card_attributes_first_name', with: 'FirstName'
+    fill_in 'payment_subscription_credit_card_attributes_last_name', with: 'LastName'
+    # note we provide invalid credit card number on purpose - payment.js should validate the input and remove unnecessary 555
+    page.execute_script("$('#payment_subscription_credit_card_attributes_number').val('42 42424 24242 4242 555').trigger('change')")
+    find('.payment_subscription_credit_card_month').find("option[value='12']").select_option
+    find('.payment_subscription_credit_card_year').find("option[value='2024']").select_option
+    fill_in 'payment_subscription_credit_card_attributes_verification_value', :with => '411'
 
-  find('.dialog__actions button').trigger('click')
+    find('.dialog__actions button').trigger('click')
+  end
 end
 
 Then /^I fill credit card payment form$/ do
   # I submit empty form to check validation
-  find('.dialog__actions button').trigger('click')
-  page.should have_content('required')
+  work_in_modal do
+    find('.dialog__actions button').trigger('click')
+    page.should have_content('required')
 
-  fill_in 'payment_credit_card_attributes_first_name', with: 'FirstName'
-  fill_in 'payment_credit_card_attributes_last_name', with: 'LastName'
-  fill_in 'payment_credit_card_attributes_number', :with => "4242424242424242"
-  find('.payment_credit_card_month').find("option[value='12']").select_option
-  find('.payment_credit_card_year').find("option[value='2024']").select_option
-  fill_in 'payment_credit_card_attributes_verification_value', :with => '411'
+    fill_in 'payment_credit_card_attributes_first_name', with: 'FirstName'
+    fill_in 'payment_credit_card_attributes_last_name', with: 'LastName'
+    # note we provide invalid credit card number on purpose - payment.js should validate the input and remove unnecessary 555
+    page.execute_script("$('#payment_credit_card_attributes_number').val('42 42424 24242 4242 555').trigger('change')")
+    find('.payment_credit_card_month').find("option[value='12']").select_option
+    find('.payment_credit_card_year').find("option[value='2024']").select_option
+    fill_in 'payment_credit_card_attributes_verification_value', :with => '411'
 
-  find('.dialog__actions button').trigger('click')
+    find('.dialog__actions button').trigger('click')
+  end
 end
 
 Then /^offer is confirmed$/ do

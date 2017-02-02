@@ -1,4 +1,4 @@
-Modal = require('./modal');
+Modal = require('./modal')
 
 module.exports = class ModalForm
 

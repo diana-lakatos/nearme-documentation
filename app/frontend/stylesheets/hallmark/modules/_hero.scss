@@ -101,7 +101,39 @@
 .benefits-section {
   padding-top: 50px;
 
-  img {
+  .hx {
+    font-size: 35px;
+
+    span {
+      display: block;
+    }
+  }
+
+  p {
+    font-size: 22px;
+    margin-right: 300px;
+  }
+
+  img.alignright {
     height: initial;
+  }
+
+  @include bp($screen-tablet-vertical) {
+    img.alignright {
+      margin-left: auto;
+    }
+
+    .hx {
+      font-size: 24px;
+
+      span {
+        display: inline;
+      }
+    }
+
+    p {
+      font-size: 18px;
+      margin-right: 0;
+    }
   }
 }

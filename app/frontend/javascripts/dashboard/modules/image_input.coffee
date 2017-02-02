@@ -7,7 +7,7 @@ require '../../vendor/jquery-dragster'
 
 module.exports = class ImageInput
 
-  constructor : (input) ->
+  constructor: (input) ->
     @fileInput = $(input)
     @container = @fileInput.closest('.form-group')
     @form = @fileInput.closest('form')
@@ -57,12 +57,12 @@ module.exports = class ImageInput
     @preview = $('<div class="form-images__preview"><figure><img src=""></figure><span class="form-images__preview__close">Close preview</span></div>')
     @preview.appendTo('body')
 
-  showPreview: (url)->
+  showPreview: (url) ->
     @preview.find('figure').html("<img src='#{url}'>")
     @preview.addClass('preview--active')
 
     # close on ESC
-    $('body').on 'keydown.preview', (e)=>
+    $('body').on 'keydown.preview', (e) =>
       @hidePreview() if e.which is 27
 
   hidePreview: ->
@@ -74,14 +74,14 @@ module.exports = class ImageInput
     @preview.on 'click', =>
       @hidePreview()
 
-    @container.on 'click', '.action--preview', (e)=>
+    @container.on 'click', '.action--preview', (e) =>
       e.preventDefault()
       e.stopPropagation()
       url = $(e.target).closest('a').attr('href')
       @showPreview(url)
 
-  validateFileType: (file)->
-    types = $.map @allowedFileTypes, (item)->
+  validateFileType: (file) ->
+    types = $.map @allowedFileTypes, (item) ->
       "image/#{item}"
 
     return $.inArray(file.type, types) > -1
@@ -97,8 +97,8 @@ module.exports = class ImageInput
       drop: =>
         @fieldWrapper.removeClass('drag-active')
 
-  listenToDataUrlPreview: ()->
-    @container.on 'click', 'action--dataurl-preview', (e)=>
+  listenToDataUrlPreview: ->
+    @container.on 'click', 'action--dataurl-preview', (e) ->
       src = $(e.target).closest('a').find('img').attr('src')
       showPreview()
 
@@ -163,15 +163,15 @@ module.exports = class ImageInput
 
         @rebindEvents()
 
-      fail: (e, data) =>
+      fail: (e, data) ->
         window.alert('Unable to process this request, please try again.')
         window.Raygun.send(data.errorThrown, data.textStatus) if window.Raygun
 
-      always: (e, data)=>
+      always: (e, data) =>
         @updateProcessing(-1)
         @updateLabel()
 
-  updatePreview: (data)->
+  updatePreview: (data) ->
     preview = @fieldWrapper.find('.preview').empty()
 
     if preview.length is 0
@@ -216,7 +216,7 @@ module.exports = class ImageInput
   rebindEvents: ->
     @collection.find('.action--preview').swipebox()
 
-  createCollectionItem: (data)->
+  createCollectionItem: (data) ->
     container = $('<li data-photo-item/>')
     container.append("<a href=\"#{data.sizes.full.url}\" class='action--preview'><img src=\"#{data.sizes.space_listing.url}\"></a>")
     options = $('<div class="form-images__options">').appendTo(container)
@@ -255,7 +255,7 @@ module.exports = class ImageInput
         @reorderSortableList()
 
   listenToEditPhoto: ->
-    @container.on 'click', '[data-edit]', (e) =>
+    @container.on 'click', '[data-edit]', (e) ->
       e.preventDefault()
       trigger = $(e.target).closest('[data-edit]')
       url = trigger.data("url")
@@ -269,12 +269,12 @@ module.exports = class ImageInput
 
     @uploadLabelContainer.html text
 
-  updateProcessing: (change)=>
+  updateProcessing: (change) =>
     @processing = @processing + change
     @form.data('processing', @processing > 0)
 
   preventEarlySubmission: ->
-    @form.on 'submit', (e)=>
+    @form.on 'submit', (e) =>
       if @form.data('processing')
         alert 'Please wait until all files are uploaded before submitting.'
         e.preventDefault()
@@ -284,5 +284,5 @@ module.exports = class ImageInput
     return unless @isSortable
 
     @collection.sortable('refresh')
-    @collection.find('li').each (index, el)=>
+    @collection.find('li').each (index, el) ->
       $(el).find('.photo-position-input').val(index)

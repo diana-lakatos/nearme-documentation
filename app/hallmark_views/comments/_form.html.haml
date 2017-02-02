@@ -1,7 +1,9 @@
-= simple_form_for comment, url: url_to_comment(comment.commentable, comment), remote: true  do |f|
-  - data = comment.persisted? ? nil : {'new-comment-for': comment.commentable.id }
+= simple_form_for comment, url: url_to_comment(comment.commentable, comment), remote: !comment.persisted?  do |f|
+  - data = { auto_resize: '' }
+  - data['new-comment-for'] = comment.commentable.id if comment.commentable.persisted?
 
   = f.input :body, label: false, input_html: { maxlength: 5000, data: data, cols: 40, rows: 3 }
 
   %p.action
+    %button.button-a.tiny.light{ type: 'button', data: { cancel_edit: '' }} Cancel
     = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'

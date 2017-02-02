@@ -1,4 +1,0 @@
-var container = document.getElementById('status-content-<%= @user_status_update.id %>');
-
-container.classList.remove('is-active');
-container.innerHTML = '<%= escape_javascript( render "user_status_updates/content", user_status_update: @user_status_update ) %>';

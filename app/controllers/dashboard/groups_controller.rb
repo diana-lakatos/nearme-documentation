@@ -1,4 +1,6 @@
 class Dashboard::GroupsController < Dashboard::BaseController
+  include LinksHelper
+
   before_filter :find_group, only: [:edit, :update, :destroy]
   before_filter :can_moderate?, only: [:edit, :update, :destroy]
 
@@ -15,6 +17,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
   def create
     @group = current_user.groups.build(group_params)
     @group.draft_at = Time.now if params[:save_for_later]
+    set_links_creator_id(@group)
 
     if @group.save
       @group.memberships.create(user: current_user, email: current_user.email, moderator: true, approved_by_user_at: Time.now, approved_by_owner_at: Time.now)
@@ -35,6 +38,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
     @group.assign_attributes(group_params)
     draft = @group.draft_at
     @group.draft_at = nil if params[:submit]
+    set_links_creator_id(@group)
 
     respond_to do |format|
       format.html do

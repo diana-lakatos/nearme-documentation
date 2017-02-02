@@ -24,7 +24,7 @@ module.exports = class OverlappingReservationsController
 
     @displayMessage(warning)
 
-  clearWarnings: () ->
+  clearWarnings: ->
     @visibleDateField.siblings('.warning').remove()
 
   displayMessage: (warning) ->

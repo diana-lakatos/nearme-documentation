@@ -26,17 +26,17 @@ module.exports = class MessagesController
     @form.find('.form-group.has-error').removeClass('has-error')
 
   bindEvents: ->
-    @form.on 'submit', (e)=>
+    @form.on 'submit', (e) =>
       @resetValidationUI()
       is_valid = @validate()
       return is_valid
 
-    @form.on 'ajax:beforeSend', (e, xhr, settings)=>
+    @form.on 'ajax:beforeSend', (e, xhr, settings) =>
       @submit_button.attr('disabled', 'disabled').val('Sending...')
 
-    @form.on 'ajax:success', (e, data, status, xhr)=>
+    @form.on 'ajax:success', (e, data, status, xhr) =>
       @thread.append(data)
 
-    @form.on 'ajax:complete', (e, xhr, status)=>
+    @form.on 'ajax:complete', (e, xhr, status) =>
       @submit_button.removeAttr('disabled').val('Send')
       @message_field.val('')

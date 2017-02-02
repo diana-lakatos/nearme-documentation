@@ -2,7 +2,7 @@ require 'jstree/dist/jstree.min.js'
 
 module.exports = class CategoryTreeInput
 
-  constructor: (el)->
+  constructor: (el) ->
     @container = $(el)
     @input = @container.find('[data-category-id]')
     @categoryId = @input.data('category-id')
@@ -28,7 +28,7 @@ module.exports = class CategoryTreeInput
         category_ids: @selectedCategories,
       success: @initTree
 
-  initTree: (data)=>
+  initTree: (data) =>
     conf =
       core:
         data: data.categories
@@ -70,7 +70,7 @@ module.exports = class CategoryTreeInput
     ids = _.uniq(ids)
     @valueInputsContainer.empty()
     if ids.length > 0
-      $.each ids, (index, id)=>
+      $.each ids, (index, id) =>
         @valueInputsContainer.append("<input type='hidden' name='#{@attrName}' value='#{id}'>")
     else
       @valueInputsContainer.append("<input type='hidden' name='#{@attrName}' value=''>")

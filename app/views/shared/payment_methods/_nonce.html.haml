@@ -8,12 +8,21 @@
           .ico-lock= t 'payments.heading'
         .span7.credit-card-images
           = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
-          // TODO: move that to payment scope after merge with payment refactor
-          = f.hidden_field(:payment_method_nonce, id: 'paypal-nonce')
         .clearfix
 
     = f.error :cc
     #paypal-button
+
+
+    = f.simple_fields_for :payment_source_attributes, f.object.payment_source || f.object.new_payment_source(payment_method) do |form|
+      .has-error.errors
+        = form.error :base
+        = f.error :base
+
+      = form.hidden_field :id
+      = form.hidden_field(:payment_method_nonce, id: 'paypal-nonce')
+      = form.hidden_field(:email, id: 'paypal-email')
+
 
 = render 'listings/reservations/confirm_reservations', f: f
 
@@ -28,6 +37,7 @@
             container: 'paypal-button',
             paymentMethodNonceInputField: $("#paypal-nonce"),
             onPaymentMethodReceived: function (payload) {
+              $("#paypal-email").val(payload.details.email);
               $(".submit-payment").show()
             },
             onCancelled: function (payload) {

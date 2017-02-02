@@ -2,7 +2,7 @@ require('jquery.cookie/jquery.cookie')
 
 module.exports = class IntroVideo
 
-  constructor: (container)->
+  constructor: (container) ->
     @loadApi()
 
     @container = $(container)
@@ -11,14 +11,14 @@ module.exports = class IntroVideo
     @overlay = @container.find('.intro-video-overlay')
     @closeButton = @container.find('.intro-video-close')
     @cookieName = 'hide_intro_video'
-    @videoAspectRatio = 1280/720;
+    @videoAspectRatio = 1280/720
 
     @initStructure()
     @bindEvents()
 
   loadApi: ->
     tag = document.createElement('script')
-    tag.src = "https://www.youtube.com/iframe_api";
+    tag.src = "https://www.youtube.com/iframe_api"
     firstScriptTag = document.getElementsByTagName('script')[0]
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
 
@@ -27,13 +27,13 @@ module.exports = class IntroVideo
     @trigger.appendTo('body')
 
   bindEvents: ->
-    @trigger.on 'click', (e)=>
+    @trigger.on 'click', (e) =>
       e.preventDefault()
       e.stopPropagation()
 
       @showVideo()
 
-    @overlay.add(@closeButton).add(@videoWrap).on 'click.introvideo', (e)=>
+    @overlay.add(@closeButton).add(@videoWrap).on 'click.introvideo', (e) =>
       @hideVideo()
 
     $(window).on 'resize', =>
@@ -53,12 +53,12 @@ module.exports = class IntroVideo
       }
 
   bindOnShow: ->
-    $('body').on 'keydown.introvideo', (e)=>
+    $('body').on 'keydown.introvideo', (e) =>
       if e.which == 27 # Hitting escape
         @hideVideo()
 
 
-  onPlayerStateChange: (event)=>
+  onPlayerStateChange: (event) =>
     if event.data == YT.PlayerState.ENDED
       @hideVideo()
 

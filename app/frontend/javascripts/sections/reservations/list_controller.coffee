@@ -9,5 +9,5 @@ module.exports = class ReservationListController
       window.q = reservation_container
       $('html, body').animate
         scrollTop: reservation_container.position().top
-        () =>
+        ->
           reservation_container.effect('highlight')

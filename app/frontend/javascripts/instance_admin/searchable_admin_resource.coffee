@@ -3,7 +3,7 @@ module.exports = SearchableAdminResource =
   commonBindEvents: ->
     @container.find('#to, #from').datepicker()
 
-    @container.on 'click', '#to, #from', (e) =>
+    @container.on 'click', '#to, #from', (e) ->
       e.stopPropagation()
 
     @container.find('.date-dropdown').on 'click', 'li:not(.date-range)', ->

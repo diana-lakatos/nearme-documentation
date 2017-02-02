@@ -1,6 +1,6 @@
 module.exports = class CkfileCollection
 
-  constructor : (container) ->
+  constructor: (container) ->
     @container = container
     @currentIndex = -1
 

@@ -115,14 +115,14 @@ module.exports = class SearchProductsSearchController extends SearchController
         history: false,
         thresholdMargin: -90,
         loader: '<div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>',
-        onRenderComplete: (items) =>
+        onRenderComplete: (items) ->
           # when there are no more resuls, add special div element which tells us, that we need to reinitialize ias - it disables itself on the last page...
           if !$('#results .pagination .next_page').attr('href')
             $('#results').append('<div id="reinitialize"></div>')
             reinitialize = $('#reinitialize')
       })
 
-      ias.on 'rendered', (items)->
+      ias.on 'rendered', (items) ->
         $(document).trigger('rendered-search:ias.nearme', [items])
 
 

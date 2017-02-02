@@ -51,13 +51,13 @@ module.exports = class DashboardListingController
         else
           @enableAjaxUpdate = true
 
-  setupTooltips: () =>
+  setupTooltips: ->
     if $('.no_trust_explanation_needed').length > 0
       $('.no_trust_explanation_needed .bootstrap-switch-wrapper').attr('data-original-title', $('.no_trust_explanation_needed').attr('data-explanation'))
       $('.no_trust_explanation_needed .bootstrap-switch-wrapper').tooltip
         trigger: 'hover'
 
-  updateCurrency: () =>
+  updateCurrency: =>
     @currencyHolders.html($('#currency_'+ (@currencySelect.val() || @defalt_currency)).text())
     @currencyLocationHolders.html($('#currency_'+ (@currencySelect.val() || @defalt_currency)).text())
 

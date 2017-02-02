@@ -20,8 +20,6 @@ require('../vendor/cocoon');
 
 NM.on('ready', ()=>{
   require('initializers/shared/ckeditor.initializer');
-
-  require('hallmark/initializers/activity_feed.initializer');
   require('hallmark/initializers/fileupload.initializer');
   require('hallmark/initializers/flash_message.initializer');
   require('hallmark/initializers/general.initializer');
@@ -36,4 +34,6 @@ NM.on('ready', ()=>{
   require('hallmark/initializers/tabs.initializer');
   require('hallmark/initializers/tutorial.initializer');
   require('hallmark/initializers/gallery.initializer');
+  require('hallmark/initializers/actionable_entries.initializer');
+  require('hallmark/initializers/autoresize_textareas.initializer');
 });

@@ -12,7 +12,7 @@ module.exports = ShippoDimensionableAdmin =
         select_element.empty()
         new_elements = @getOptionsTextByUnitType(form_unit, item)
         for new_element in new_elements
-          select_element.append($("<option></option>").attr("value", new_element).text(new_element));
+          select_element.append($("<option></option>").attr("value", new_element).text(new_element))
 
   getOptionsTextByUnitType: (unit_type, unit_name) ->
     result = []

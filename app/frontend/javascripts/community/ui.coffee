@@ -1,56 +1,56 @@
-require('./vendor/vequalize');
-require('imports?this=>window!./vendor/tinynav');
+require('./vendor/vequalize')
+require('imports?this=>window!./vendor/tinynav')
 
 module.exports = class UI
-  constructor: ()->
+  constructor: ->
 
   # makes elements with data-equalize attribute the same height
-  @equalize: ()->
+  @equalize: ->
     prop = if !document.addEventListener then 'height' else 'outerHeight'
     $('[data-equalize]').vEqualize(height: prop)
 
   # toggle navigation visibility
-  @nav: ()->
+  @nav: ->
     body = $('body')
     $('[data-nav]').on 'click', (event) ->
       event.preventDefault()
       body.toggleClass 'is-nav'
 
   # expand read more sections
-  @readmore: ()->
+  @readmore: ->
     $('body').on 'click', '.readmore-a', (event) ->
       event.preventDefault()
       $(this).addClass 'is-active'
 
   # toggles visibility of the comment form
-  @toggleCommentForm: ()->
+  @toggleCommentForm: ->
     $('body').on 'click', '[data-comment]', (event) ->
       event.preventDefault()
       $(this).closest('footer').find('> .comment').toggleClass 'is-active'
 
 
   # init tinyNav for tabs navigation
-  @tabsStatic: ()->
+  @tabsStatic: ->
     $('.tabs-a ul:not(.nav-tabs)').tinyNav active: 'is-active'
 
-  @tabsDynamic: ()->
-    $('.tabs-a ul.nav-tabs').each ()->
+  @tabsDynamic: ->
+    $('.tabs-a ul.nav-tabs').each ->
       list = $(this)
       tabs = list.find('[role="tab"]')
 
       select = $('<select/>')
-      tabs.each ()->
+      tabs.each ->
         option = $('<option>',{
           value: $(this).attr('href')
           text: $(this).text()
         })
         option.appendTo(select)
 
-      select.on 'change', (e)->
+      select.on 'change', (e) ->
         href = $(this).val()
         tabs.filter('[href="' + href + '"]').tab('show')
 
-      tabs.on 'click', (e)->
+      tabs.on 'click', (e) ->
         href = $(this).attr('href')
         select.val(href)
 
@@ -64,10 +64,10 @@ module.exports = class UI
     else
       tab = $("[data-toggle=tab]:first")
     if tab.length > 0
-        tab.click()
+      tab.click()
 
 
-  @initialize: ()->
+  @initialize: ->
     @equalize()
     @nav()
     @readmore()

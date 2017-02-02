@@ -16,8 +16,8 @@ module.exports = class InstanceAdminPaymentGatewayForm
       field = form.find(field_data)
       if field.val() == field_value
         $(this).parents('.input-container').show()
-        $(this).prop('disabled', false);
+        $(this).prop('disabled', false)
       else
         $(this).parents('.input-container').hide()
-        $(this).prop('disabled', true);
+        $(this).prop('disabled', true)
       return

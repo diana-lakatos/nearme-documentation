@@ -1,8 +1,8 @@
 module.exports = class PhotoUploadVersions
-  constructor: ()->
+  constructor: ->
     @initialize()
 
-  initialize: () ->
+  initialize: ->
     @versions = $("[data-photo-uploader-versions]").data('photo-uploader-versions')
     @select_photo_uploader = $('select.photo_uploader')
     @select_versions = $('select.uploader_versions')
@@ -12,7 +12,7 @@ module.exports = class PhotoUploadVersions
 
     @updateVersions()
 
-  updateVersions: () ->
+  updateVersions: ->
     photo_uploader = @select_photo_uploader.val()
     current_versions = @versions[photo_uploader]
     @select_versions.empty()

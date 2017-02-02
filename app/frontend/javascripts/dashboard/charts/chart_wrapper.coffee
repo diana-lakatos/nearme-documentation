@@ -26,8 +26,8 @@ module.exports = class ChartWrapper
     @titles = titles
 
     @data = {
-        labels : labels,
-        datasets : @parseData(data)
+      labels : labels,
+      datasets : @parseData(data)
     }
     @bindEvents()
     if @titles.length > 0
@@ -64,8 +64,8 @@ module.exports = class ChartWrapper
     @ctx = @canvas.get(0).getContext("2d")
 
   drawLegend: ->
-      legend = $('<div class="legend"></div>')
-      @canvas.parent().append(legend)
-      for dataset in @data.datasets
-        title = $("<span class='title' style='border-color: #{dataset.strokeColor};border-style: solid;'>#{dataset.title}</span>")
-        legend.append(title)
+    legend = $('<div class="legend"></div>')
+    @canvas.parent().append(legend)
+    for dataset in @data.datasets
+      title = $("<span class='title' style='border-color: #{dataset.strokeColor};border-style: solid;'>#{dataset.title}</span>")
+      legend.append(title)
