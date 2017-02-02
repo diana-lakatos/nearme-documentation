@@ -1,0 +1,175 @@
+@import "pure-css-loader/src/loader-default";
+
+.user-entry-form {
+  position: relative;
+  padding: 20px;
+  background: #f5f6f8;
+
+  .user-entry-form-content {
+    @include clear;
+
+    position: relative;
+    margin: 0 0 10px;
+
+    figure {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      figure {
+        display: block;
+        float: left;
+        width: 34px;
+        margin: 1px;
+
+        img {
+          height: auto;
+          display: block;
+          background: $avatar-background;
+        }
+      }
+
+      figure ~ * {
+        margin: 0;
+        margin-left: 50px;
+      }
+    }
+
+    .control-group {
+      margin-bottom: 0;
+
+      label {
+        @include sr-only;
+      }
+
+      textarea {
+        resize: none;
+        padding-right: 45px;
+      }
+    }
+
+    .image-upload-input {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 38px;
+      width: 38px;
+      overflow: hidden;
+
+      &::before {
+        position: absolute;
+        z-index: 5;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        line-height: 38px;
+        text-align: center;
+        font-size: 16px;
+        color: #999;
+        font-family: FontAwesome;
+        content: $fa-var-camera-retro;
+      }
+
+      input {
+        position: relative;
+        z-index: 10;
+        opacity: 0;
+        font-size: 120px;
+      }
+    }
+  }
+
+  .user-entry-form-images {
+    @include clear;
+  }
+
+  .submit-hint {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: -18px;
+    text-align: right;
+    color: #999;
+    font-size: 12px;
+    margin: 0;
+
+    @media (min-width: 768px) {
+      display: block;
+    }
+  }
+
+  .user-entry-form-image {
+    position: relative;
+    padding-top: 61%;
+    width: 100%;
+    margin: 10px 0 0;
+    overflow: hidden;
+    background: #fff;
+    border: 2px solid #dde1ea;
+
+    &.hidden {
+      display: none;
+    }
+
+    img {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .remove {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      text-align: center;
+
+      // border-radius: 100%;
+      background: $color-red-2;
+      border: none;
+      font-size: 0;
+
+      &::before {
+        font-family: FontAwesome;
+        content: $fa-var-remove;
+        font-size: 12px;
+        font-weight: normal;
+        line-height: 20px;
+        color: #fff;
+      }
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .user-entry-form-image {
+      width: 32%;
+      padding-top: 19%;
+    }
+  }
+
+  .action {
+    text-align: right;
+    margin-bottom: 0;
+  }
+
+  .action .button-a {
+    padding: 0 20px;
+  }
+
+  .loader {
+    position: absolute;
+
+    &.is-active {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    &::after {
+      position: absolute;
+    }
+  }
+}

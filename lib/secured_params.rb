@@ -620,7 +620,7 @@ class SecuredParams
       :account_id,
       :express_token,
       :payment_method_nonce,
-      :email,
+      :email
     ]
   end
 
@@ -802,7 +802,8 @@ class SecuredParams
       :body,
       :title,
       :creator_id,
-      :report_as_spam
+      :report_as_spam,
+      activity_feed_images_attributes: nested(activity_feed_image)
     ]
   end
 
@@ -1180,6 +1181,13 @@ class SecuredParams
     ]
   end
 
+  def activity_feed_image
+    [
+      :id,
+      :image
+    ]
+  end
+
   def photo
     [
       :id,
@@ -1275,7 +1283,7 @@ class SecuredParams
       category_ids: [],
       customizations_attributes: nested(customization(PlatformContext.current.instance.seller_profile_type)),
       availability_template_attributes: nested(availability_template),
-      custom_images_attributes: nested(custom_image),
+      custom_images_attributes: nested(custom_image)
     ]
   end
 
@@ -1743,7 +1751,8 @@ class SecuredParams
       :instance_id,
       :topic_ids,
       :updateable_id,
-      :updateable_type
+      :updateable_type,
+      activity_feed_images_attributes: nested(activity_feed_image)
     ]
   end
 

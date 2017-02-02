@@ -2,20 +2,40 @@
 - remote = (local_assigns[:remote].presence || false)
 - no_avatar = (local_assigns[:no_avatar].presence || false)
 
-= simple_form_for user_status_update, remote: remote do |f|
-  - unless no_avatar
-    - image = current_user.try(:avatar).try(:url, :medium)
-    %figure= image_tag(image || space_listing_placeholder_path(width: 80, height: 80))
+- data = { user_entry_form: '' }
 
-  = f.input :text, label: false, placeholder: I18n.t('activity_feed.user_status_text'), input_html: { maxlength: 5000, cols: 40, rows: 3, required: true, data: { auto_resize: '' } }
+- if user_status_update.persisted?
+  - data['user_entry_form_remote'] = ''
+  - data['user_entry_edit_mode'] = ''
+  - data['user_entry_form_target'] = "#entry-content-#{user_status_update.id}"
 
-  - unless no_topic_select
-    = f.association :topics, as: :select, collection: Topic.all, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }
-
+= simple_form_for user_status_update, html: { class: 'user-entry-form', data: data } do |f|
   - if feed
     = f.input :updateable_id, as: :hidden, input_html: { value: feed.owner_id }
     = f.input :updateable_type, as: :hidden, input_html: { value: feed.owner_type }
 
+  .user-entry-form-content
+    - image = current_user.try(:avatar).try(:url, :thumb)
+    %figure= image_tag(image || space_listing_placeholder_path(width: 30, height: 30))
+
+    = f.input :text, label: I18n.t('activity_feed.user_status_text'), placeholder: I18n.t('activity_feed.user_status_text'), input_html: { maxlength: 5000, cols: 40, rows: 1, data: { user_entry_form_content: '' } }
+
+    - # When implementing multiple images, new image form should be moved outside of the images area, thumbs in their own container
+    = f.simple_fields_for :activity_feed_images, collection_or_new_object(f.object.activity_feed_images) do |afi|
+      .image-upload-input
+        = afi.input :image, wrapper: false, label: false do
+          = afi.file_field :image, data: { user_entry_form_file: '' }, accept: 'image/*', capture: 'camera'
+
+      .user-entry-form-images{ data: { user_entry_form_images: '' } }
+        - if afi.object.image.present?
+          .user-entry-form-image{ data: { user_entry_form_image: '' } }
+            %img{ src: afi.object.image.url(:space_listing), data: { user_entry_form_thumbnail: '' } }
+            = afi.input :_destroy, as: :hidden, input_html: { data: { user_entry_form_remove_input: '' }, value: '' }
+
+  - unless no_topic_select
+    = f.association :topics, as: :select, collection: Topic.all, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }
+
   %p.action
-    %button.button-a.tiny.light{ type: 'button', data: { cancel_edit: '' }} Cancel
+    - if user_status_update.persisted?
+      %button.button-a.tiny.light{ type: 'button', data: { cancel_edit: '' }} Cancel
     = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'

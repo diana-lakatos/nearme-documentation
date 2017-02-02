@@ -17,8 +17,16 @@
     display: none;
   }
 
+  .image {
+    clear: both;
+
+    img {
+      float: left;
+    }
+  }
+
   &.is-active {
-    .entry-body {
+    .entry-body, .entry-images {
       display: none;
     }
 
@@ -33,6 +41,21 @@
     font-weight: normal;
     text-transform: lowercase;
   }
+
+  .entry-images {
+    @include clear;
+
+    > a {
+      display: block;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      border: 2px solid #dde1ea;
+      margin-bottom: 10px !important;
+    }
+  }
 }
 
 $entry-actions-border-radius: 2px;
@@ -44,7 +67,7 @@ $entry-actions-border-color: #e3e3e3;
   top: 0;
   z-index: 100;
 
-  .comment-a + .comment-a & {
+  .comment-a & {
     top: 30px;
   }
 
@@ -138,7 +161,7 @@ $entry-actions-border-color: #e3e3e3;
   }
 }
 
-[data-actionable-entry] {
+[data-user-entry] {
   .entry-actions-a {
     .edit-action, .remove-action {
       display: none;

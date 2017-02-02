@@ -53,7 +53,8 @@
 @import "hallmark/modules/user-session-forms";
 @import "hallmark/modules/faq";
 @import "hallmark/modules/intro-video";
-@import "hallmark/modules/actionable-entry";
+@import "hallmark/modules/user-entries/user-entry";
+@import "hallmark/modules/user-entries/user-entry-form";
 
 // Defaults
 @import "hallmark/defaults/buttons";

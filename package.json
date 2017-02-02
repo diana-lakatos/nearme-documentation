@@ -126,6 +126,7 @@
     "normalize-scss": "^6.0.0",
     "nouislider": "^7.0.10",
     "photoswipe": "^4.1.1",
+    "pure-css-loader": "^2.1.0",
     "raty-js": "^2.7.1",
     "raw-loader": "^0.5.1",
     "raygun4js": "^2.5.1",

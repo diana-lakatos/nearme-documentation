@@ -1,4 +1,4 @@
-class ActionableEntryRemoveAction {
+class UserEntryRemoveAction {
   constructor(trigger, container) {
     this.ui = {};
     this.ui.trigger = trigger;
@@ -10,9 +10,9 @@ class ActionableEntryRemoveAction {
   }
 
   bindEvents() {
-    this.ui.trigger.addEventListener('click', (e)=>{
+    this.ui.trigger.addEventListener('click', (e) => {
       e.preventDefault();
-      if (this.confirm()){
+      if (this.confirm()) {
         this.removeContainer();
       }
     });
@@ -22,7 +22,7 @@ class ActionableEntryRemoveAction {
     return confirm(this.confirmLabel);
   }
 
-  removeContainer(){
+  removeContainer() {
     this.ui.container.classList.add('hidden');
 
     $.ajax({
@@ -39,4 +39,4 @@ class ActionableEntryRemoveAction {
   }
 }
 
-module.exports = ActionableEntryRemoveAction;
+module.exports = UserEntryRemoveAction;

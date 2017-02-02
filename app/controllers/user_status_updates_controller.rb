@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class UserStatusUpdatesController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   def create
     current_user.user_status_updates.create(permitted_params)
@@ -9,7 +9,12 @@ class UserStatusUpdatesController < ApplicationController
 
   def update
     @user_status_update = UserStatusUpdate.find(params[:id])
-    return render nothing: true unless @user_status_update.can_edit?(current_user) && @user_status_update.update(permitted_params)
+    return render nothing: true unless @user_status_update.can_edit?(current_user)
+    @user_status_update.update(permitted_params)
+    respond_to do |format|
+      format.js
+      format.html
+    end
   end
 
   def destroy

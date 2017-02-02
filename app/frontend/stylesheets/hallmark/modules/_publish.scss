@@ -1,72 +1,27 @@
 /* publish */
 
 .publish-a {
-    margin: 0 0 40px;
-    padding: 20px;
-    background: #f5f6f8;
+  margin: 0 0 40px;
 
-    figure {
-        float: left;
-        width: 80px;
-        margin: 0;
+  .topics {
+    margin-left: 50px;
+    margin-top: 15px;
+  }
 
-        img {
-            height: auto;
-            display: block;
-            background: $avatar-background;
-        }
+  .topics label {
+    display: block;
+    margin: 0 0 5px;
+  }
+
+  .no-touch & .topics label {
+    display: none;
+  }
+
+  @include bp($screen-xs) {
+    margin: 0 -20px 30px;
+
+    .topics {
+      margin-left: 0;
     }
-
-    figure ~ * {
-        margin-bottom: 15px;
-        margin-left: 100px;
-    }
-
-    .topics label {
-        display: block;
-        margin: 0 0 5px;
-    }
-
-    .no-touch & .topics label {
-        display: none;
-    }
-
-    .action {
-        text-align: right;
-    }
-
-    .action .button-a {
-        padding: 0 29px;
-    }
-
-    @include bp($screen-mobile) {
-
-        figure {
-            width: 40px;
-        }
-
-        figure ~ * {
-            margin-left: 60px;
-        }
-    }
-
-    @include bp($screen-xs) {
-        margin: 0 -20px 30px;
-        position: relative;
-
-        figure {
-            position: absolute;
-            right: 30px;
-            top: 30px;
-            width: 30px;
-        }
-
-        figure ~ * {
-            margin-left: 0;
-        }
-
-        textarea {
-            padding-right: 50px;
-        }
-    }
+  }
 }

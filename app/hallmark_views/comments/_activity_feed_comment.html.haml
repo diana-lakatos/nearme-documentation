@@ -2,7 +2,7 @@
 - target = local_assigns[:target].presence || "_self"
 - own_comment = commented_own_thread?(comment)
 
-.comment-a{ class: ('commented-own-thread' if own_comment), data: { comment_id: comment.id, creator_id: comment.creator_id, commentable_creator_id: comment.commentable.try(:creator_id), actionable_entry: '' } }
+.comment-a{ id: "comment-#{comment.id}", class: ('commented-own-thread' if own_comment), data: { comment_id: comment.id, creator_id: comment.creator_id, commentable_creator_id: comment.commentable.try(:creator_id), user_entry: '' } }
   - unless own_comment
     %figure
       = image_tag comment.creator.avatar.url(:thumb)

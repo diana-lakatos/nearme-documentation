@@ -210,6 +210,7 @@ en:
     validation:
       question_quantity: "Only %{number} questions or less for one rating system"
   general:
+    respond: 'Respond'
     verify: "Verify"
     remove: "Remove"
     reply: 'Reply'
@@ -3155,7 +3156,7 @@ en:
         italian: 'Parlo italiano'
         polish: 'Mówię po polsku'
 
-  actionable_entry:
+  user_entry:
     toggle_actions: 'Toggle Actions'
     edit: 'Edit'
     remove: 'Remove'
