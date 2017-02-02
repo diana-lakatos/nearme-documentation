@@ -1,12 +1,10 @@
-require('imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.iframe-transport.js');
-require('imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.fileupload.js');
+require('imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.iframe-transport.js')
+require('imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.fileupload.js')
 
 PhotoCollection = require('./photo/collection')
 
 module.exports = class Fileupload
-
-
-  constructor : (fileInputWrapper) ->
+  constructor: (fileInputWrapper) ->
     @fileInputWrapper = $(fileInputWrapper)
     @fileInput = @fileInputWrapper.find('input[type="file"]')
     @file_types = @fileInput.attr('data-file-types')
@@ -32,7 +30,7 @@ module.exports = class Fileupload
       add: (e, data) =>
         @processing += 1
         if @file_types && @file_types != ''
-          types = new RegExp(@file_types, 'i');
+          types = new RegExp(@file_types, 'i')
         else
           types = /(\.|\/)(gif|jpe?g|png)$/i
         file = data.files[0]
@@ -51,11 +49,11 @@ module.exports = class Fileupload
           fileIndex = @fileCollection.add()
           @fileCollection.update(fileIndex, data.result)
 
-      fail: (e, data) =>
+      fail: (e, data) ->
         window.alert('Unable to process this request, please try again.')
         window.Raygun.send(data.errorThrown, data.textStatus) if window.Raygun
 
-      always: (e, data)=>
+      always: (e, data) =>
         @processing -= 1
         @updateLabel()
 

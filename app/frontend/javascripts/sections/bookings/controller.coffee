@@ -6,7 +6,7 @@
 BookingsListing = require('./listing')
 BookingsDatepicker = require('./datepicker')
 require('jquery.customSelect/jquery.customSelect')
-require('select2/select2');
+require('select2/select2')
 Modal = require('../../components/modal')
 UtilUrl = require('../../lib/utils/url')
 
@@ -190,7 +190,7 @@ module.exports = class BookingsController
       @bookButton.tooltip('destroy')
 
 
-  quantityWasChanged: (quantity = @quantityField.val())->
+  quantityWasChanged: (quantity = @quantityField.val()) ->
     quantity = quantity.replace(',', '.') if quantity.replace
     @listing.setDefaultQuantity(parseFloat(quantity, 10))
     @updateQuantityField() unless @listing.isPerUnitBooking()

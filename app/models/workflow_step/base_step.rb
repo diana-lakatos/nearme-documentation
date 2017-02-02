@@ -62,6 +62,6 @@ class WorkflowStep::BaseStep
     # this config will be set to true in production and test environment, false in application.rb
     return true if Rails.application.config.force_sending_all_workflow_alerts
     return true unless %w(sms api_call).include?(alert.alert_type)
-    PlatformContext.current.instance.enable_sms_and_api_workflow_alerts_on_staging? ? true : false
+    PlatformContext.current.instance.enable_sms_and_api_workflow_alerts_on_staging?
   end
 end

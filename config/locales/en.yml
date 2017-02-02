@@ -3140,3 +3140,14 @@ en:
         arabic: 'اتحدث العربية'
         italian: 'Parlo italiano'
         polish: 'Mówię po polsku'
+
+  actionable_entry:
+    toggle_actions: 'Toggle Actions'
+    edit: 'Edit'
+    remove: 'Remove'
+    report_as_spam: 'Report as spam'
+    cancel_spam_report: 'Cancel spam report'
+    confirm:
+      remove_status_update: 'Are you sure you want to remove this status update?'
+      remove_comment: 'Are you sure you want to remove this comment?'
+

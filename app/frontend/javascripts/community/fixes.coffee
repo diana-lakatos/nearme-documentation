@@ -1,8 +1,8 @@
 module.exports = class Fixes
-  constructor: ()->
+  constructor: ->
 
   # rewrites <img> src attributes from *.svg to *.png on browsers with lacking support
-  @svg: ()->
+  @svg: ->
     return unless !Modernizr.svg or document.querySelectorAll('html.android.native').length > 0
 
     imgs = document.getElementsByTagName('img')
@@ -14,13 +14,13 @@ module.exports = class Fixes
         imgs[i].src = imgs[i].src.slice(0, -3) + 'png'
       ++i
 
-  @enhancements: ()->
+  @enhancements: ->
     # Add class .last-child to all relevant elements in older browsers
     if !document.addEventListener
       $('*:last-child').addClass('last-child')
 
 
-  @initialize: ()->
+  @initialize: ->
     @svg()
     @enhancements()
 

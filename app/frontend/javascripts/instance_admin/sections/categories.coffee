@@ -1,4 +1,4 @@
-require('../../../vendor/jquery.jstree');
+require('../../../vendor/jquery.jstree')
 
 module.exports = class InstanceAdminCategoriesController
 
@@ -27,7 +27,7 @@ module.exports = class InstanceAdminCategoriesController
             json_data:
               data: category,
               ajax:
-                url: (e) =>
+                url: (e) ->
                   (categories_path + '/' + e.prop('id') + '/jstree').toString()
             themes:
               theme: "apple",

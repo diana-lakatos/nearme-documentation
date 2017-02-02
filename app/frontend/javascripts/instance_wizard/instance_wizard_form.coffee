@@ -1,5 +1,5 @@
 module.exports = class InstanceWizardForm
-  constructor: (el)->
+  constructor: (el) ->
     @form = $(el)
     @domainInput = @form.find("input[data-domain-name]")
 

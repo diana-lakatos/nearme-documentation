@@ -9,12 +9,12 @@ node[:deploy].each do |application, deploy|
   #     only_if     { node["opsworks"]["instance"]["layers"].include?('rails-app') }
   #   end
 
-  execute 'Invoke npm install ' do
+  execute 'Invoke yarn ' do
     cwd deploy[:current_path]
     user deploy[:user]
     group deploy[:group]
     environment ({ 'HOME' => '/home/deploy', 'USER' => 'deploy', 'PATH' => '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/deploy/.local/bin:/home/deploy/bin' })
-    command 'npm install'
+    command 'yarn install --force'
     action :run
     only_if     { node['opsworks']['instance']['layers'].include?('rails-app') || node['opsworks']['instance']['layers'].include?('utility') }
   end

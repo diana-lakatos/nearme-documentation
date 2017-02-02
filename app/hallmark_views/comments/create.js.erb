@@ -1,6 +1,6 @@
 (function(){
     'use strict';
-    var commentField = $('[data-new-comment-for="<%= @comment.commentable.id  %>"]');
+    var commentField = $('[data-new-comment-for="<%= @comment.commentable.id  %>"]:first');
     var comments = $('[data-comments-for="<%= @comment.commentable.id  %>"]');
 
     <% if @comment.errors.present? %>
@@ -14,8 +14,7 @@
         else {
             comments.prepend('<%= escape_javascript( render @comment ) %>');
         }
-        comments.find('[data-remove-comment]:first').show()
-        comments.find('.action--edit-comment:first').show()
+        $(document).trigger('new-comment');
     <% end %>
 
 }());

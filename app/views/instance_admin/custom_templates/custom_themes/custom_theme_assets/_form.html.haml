@@ -9,7 +9,7 @@
     - if f.object.new_record?
       .row
         .input-container.col-xs-12
-          = f.input :type, collection: [['css', CustomThemeAsset::ThemeCssFile], ['font', CustomThemeAsset::ThemeFontFile], ['image', CustomThemeAsset::ThemeImageFile], ['js', CustomThemeAsset::ThemeJsFile]], input_html: { class: 'form-control' }
+          = f.input :type, collection: [['css', CustomThemeAsset::ThemeCssFile], ['font', CustomThemeAsset::ThemeFontFile], ['image', CustomThemeAsset::ThemeImageFile], ['js', CustomThemeAsset::ThemeJsFile], ['other file', CustomThemeAsset::ThemeFile]], input_html: { class: 'form-control' }
 
     .row
       .input-container.col-xs-12

@@ -1,6 +1,7 @@
 /* comment */
 
 .comment-a {
+  position: relative;
   margin: 0 0 30px;
 
   & + .comment-a {
@@ -73,61 +74,6 @@
   }
 }
 
-.comment-content-a {
-  .comment-editor {
-    textarea {
-      margin-top: 10px;
-    }
-
-    .action {
-      text-align: right;
-    }
-  }
-
-  .comment-body {
-    display: block;
-  }
-
-  .comment-editor {
-    display: none;
-  }
-
-  &.is-active {
-    .comment-body {
-      display: none;
-    }
-
-    .comment-editor {
-      display: block;
-    }
-  }
-
-  .comment-body.edited > *:last-child::after {
-    content: " (edited)";
-    opacity: 0.5;
-    font-weight: normal;
-    text-transform: lowercase;
-  }
-}
-
-.edit-link-a {
-  float: right;
-}
-
-/* Enable action links */
-.comment-a {
-  > .author .action--edit-comment,
-  > .meta .action--remove-comment {
-    display: none;
-  }
-
-  &.is-current-user {
-    > .author .action--edit-comment {
-      display: block;
-    }
-
-    > .meta .action--remove-comment {
-      display: inline;
-    }
-  }
+.new_comment .action [data-cancel-edit] {
+  display: none;
 }

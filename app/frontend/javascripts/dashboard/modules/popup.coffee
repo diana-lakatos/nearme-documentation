@@ -1,12 +1,12 @@
 module.exports = class Popup
-  constructor: (link)->
+  constructor: (link) ->
     @link = $(link)
     @url = @link.attr('href')
     @height = @link.data('popup').height || 440
     @width = @link.data('popup').width || 600
     @bindEvents()
 
-  bindEvents: ()->
+  bindEvents: ->
     @link.on 'click', @openPopup
 
   openPopup: =>

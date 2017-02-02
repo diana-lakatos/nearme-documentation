@@ -1,4 +1,4 @@
-Modal = require('../../components/modal');
+Modal = require('../../components/modal')
 
 module.exports = class SupportTicketMessageController
 

@@ -1,5 +1,5 @@
 module.exports = class LocationField
-  constructor: (el)->
+  constructor: (el) ->
     @root = $(el)
     @input = @root.find('input')
     @map = @root.find('.map')
@@ -8,23 +8,23 @@ module.exports = class LocationField
 
     @getCurrentPosition() if !@input.val()
 
-  onFindPositionSuccess: (position)->
+  onFindPositionSuccess: (position) ->
     latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
 
     input = @input
-    geocoder = new google.maps.Geocoder;
-    geocoder.geocode {'location': latlng}, (results, status)->
+    geocoder = new google.maps.Geocoder
+    geocoder.geocode {'location': latlng}, (results, status) ->
       return unless status == google.maps.GeocoderStatus.OK and results[1]
       input.geocomplete('find', results[1].formatted_address)
 
-  onFindPositionError: (msg)->
+  onFindPositionError: (msg) ->
     console.log(msg)
 
-  getCurrentPosition: ()->
+  getCurrentPosition: ->
     return unless navigator.geolocation
     navigator.geolocation.getCurrentPosition @onFindPositionSuccess.bind(this), @onFindPositionError
 
-  init: ()->
+  init: ->
     @input.geocomplete(
       map: @map.get(0)
       mapOptions:
@@ -45,9 +45,9 @@ module.exports = class LocationField
 
     @input.trigger('geocode') if @input.val()
 
-  @initialize: ()->
+  @initialize: ->
     return unless window.google and window.google.maps
 
-    $('.form-a .location').each ()->
+    $('.form-a .location').each ->
       new LocationField(this)
 

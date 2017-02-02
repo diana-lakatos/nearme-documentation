@@ -258,6 +258,7 @@ Then /^the reservation total should show \$?([0-9\.,]+)$/ do |cost|
 end
 
 When /^I click to review the bookings?$/ do
+  sleep(1) # :)) I gope this will fix randomly failing tests ;)
   click_button 'Book'
 end
 
@@ -265,7 +266,8 @@ When /^I provide reservation credit card details$/ do
   mock_billing_gateway
   fill_in 'order_payment_attributes_credit_card_attributes_first_name', with: 'FirstName', visible: false
   fill_in 'order_payment_attributes_credit_card_attributes_last_name', with: 'LastName', visible: false
-  fill_in 'order_payment_attributes_credit_card_attributes_number', with: '4242424242424242', visible: false
+  # note we provide invalid credit card number on purpose - payment.js should validate the input and remove unnecessary 555
+  page.execute_script("$('#order_payment_attributes_credit_card_attributes_number').val('42 42424 24242 4242 555').trigger('change')")
   select '12', from: 'order_payment_attributes_credit_card_attributes_month', visible: false
   select '2020', from: 'order_payment_attributes_credit_card_attributes_year', visible: false
   fill_in 'order_payment_attributes_credit_card_attributes_verification_value', with: '411', visible: false

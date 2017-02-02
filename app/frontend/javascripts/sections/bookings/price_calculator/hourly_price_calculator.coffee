@@ -1,4 +1,4 @@
-AdditionalChargesCalculator = require('../additional_charges');
+AdditionalChargesCalculator = require('../additional_charges')
 
 module.exports = class HourlyPriceCalculator
   constructor: (@listing) ->

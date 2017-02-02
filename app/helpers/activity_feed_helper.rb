@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ActivityFeedHelper
   def feed_data
     return {} unless current_user
@@ -19,10 +20,19 @@ module ActivityFeedHelper
     end
   end
 
-  def status_update?(event_name)
+  def status_update_event?(event_name)
     [
       :user_updated_group_status,
-      :user_updated_user_status
+      :user_updated_user_status,
+      :user_updated_transactable_status
+    ].include?(event_name.to_sym)
+  end
+
+  def comment_event?(event_name)
+    [
+      :user_commented_on_user_activity,
+      :user_commented_on_transactable,
+      :user_commented
     ].include?(event_name.to_sym)
   end
 

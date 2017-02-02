@@ -618,7 +618,9 @@ class SecuredParams
     [
       :public_token,
       :account_id,
-      :express_token
+      :express_token,
+      :payment_method_nonce,
+      :email,
     ]
   end
 

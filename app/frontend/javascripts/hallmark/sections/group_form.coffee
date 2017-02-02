@@ -4,8 +4,8 @@ module.exports = class GroupForm
   constructor: (@form) ->
     @coverImageWrapper = $('.media-group.cover-image')
     @videoUploadWrapper = $('.media-group.group-videos')
-    @addressFieldController = new AddressController($('.address-form')).addressFieldController;
-    @autocomplete = @addressFieldController.address.autocomplete;
+    @addressFieldController = new AddressController($('.address-form')).addressFieldController
+    @autocomplete = @addressFieldController.address.autocomplete
 
     @bindEvents()
 
@@ -24,7 +24,7 @@ module.exports = class GroupForm
 
   initAddressField: ->
     $locationForm = $('.address-form')
-    $map = $('.map', $locationForm);
+    $map = $('.map', $locationForm)
     $markedToDeleteField = $('.marked-to-delete', $locationForm)
     $addressField = $('[data-behavior=address-autocomplete]', $locationForm)
     $removeAddress = $('.remove-address')
@@ -43,11 +43,11 @@ module.exports = class GroupForm
       $markedToDeleteField.val(true)
       $locationForm.addClass('no-address')
 
-    google.maps.event.addListener @autocomplete, 'place_changed', =>
+    google.maps.event.addListener @autocomplete, 'place_changed', ->
       $markedToDeleteField.val(false)
       $locationForm.removeClass('no-address')
 
-      setTimeout (=>
+      setTimeout (->
         google.maps.event.trigger(map.map, 'resize')
         map.map.setCenter(map.marker.getPosition())
       ), 0
@@ -57,16 +57,16 @@ module.exports = class GroupForm
     $groupDescriptions = $('.group-type-description p')
     selected = $('option:selected', $groupTypeSelect).text().toLowerCase()
 
-    $groupTypeSelect.on 'change', (event) =>
-      $groupDescriptions.removeClass('active');
-      selected = $(event.target).text().toLowerCase();
+    $groupTypeSelect.on 'change', (event) ->
+      $groupDescriptions.removeClass('active')
+      selected = $(event.target).text().toLowerCase()
       $('.' + selected).addClass('active')
 
   initCoverImage: ->
     $label = @coverImageWrapper.find('label')
     $input = @coverImageWrapper.find('input')
 
-    $input.on 'change', (event) =>
+    $input.on 'change', (event) ->
       str =  $input.val().replace('C:\\fakepath\\','')
       $label.text(str)
 
@@ -82,7 +82,7 @@ module.exports = class GroupForm
       $input.prop('disabled', true)
 
     requestDone = ->
-      $input.val('');
+      $input.val('')
       $submit.text(i18nButtonText)
       $input.prop('disabled', false)
 
@@ -91,11 +91,11 @@ module.exports = class GroupForm
       $(this).parent().remove()
 
     $videoGallery
-      .on 'mouseover', 'li', (event) => $('li').addClass('active');
-      .on 'mouseout', 'li', (event) => $('li').removeClass('active');
+      .on 'mouseover', 'li', (event) -> $('li').addClass('active')
+      .on 'mouseout', 'li', (event) -> $('li').removeClass('active')
 
     $submit.on 'click', (event) =>
-      event.preventDefault();
+      event.preventDefault()
       requestInProgress()
       @videoUploadWrapper.find('.error-block').remove()
 
@@ -119,8 +119,8 @@ module.exports = class GroupForm
     $input = $('#search-for-member')
     $submit = $('#search-for-member-submit')
 
-    $submit.on 'click', (event) =>
-      event.preventDefault();
+    $submit.on 'click', (event) ->
+      event.preventDefault()
       $.ajax
         type: 'GET',
         url: $submit.data('href'),
@@ -151,7 +151,7 @@ module.exports = class GroupForm
       triggerRequest()
 
 
-  handle_success: (data, request_method, event) =>
+  handle_success: (data, request_method, event) ->
     if request_method == "DELETE"
       $(event.target).parents("tr").hide("slow")
     else

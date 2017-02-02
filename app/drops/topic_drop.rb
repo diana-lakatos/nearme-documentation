@@ -44,6 +44,11 @@ class TopicDrop < BaseDrop
     end
   end
 
+  # @return [String] returns url for image used on listing pages
+  def listing_image_url
+    @topic.image.url(:medium)
+  end
+
   # @return [String] generates a background-image style of the form 'background-image: url(...)'
   #   for the 'medium' sized cover image if present, returns an empty string otherwise
   # @todo -- lets use some kind of ImageDrop/tag/filter with images and lets return pure url not css

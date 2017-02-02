@@ -1,8 +1,8 @@
 require '../../vendor/bootstrap-select'
 
 module.exports = class SelectpickerInitializer
-  constructor: ()->
+  constructor: ->
     @initialize()
 
-  initialize: ()->
-    $('.selectpicker').selectpicker();
+  initialize: ->
+    $('.selectpicker').selectpicker()

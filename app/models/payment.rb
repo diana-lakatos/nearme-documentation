@@ -7,7 +7,7 @@ class Payment < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  attr_accessor :express_checkout_redirect_url, :payment_response_params, :payment_method_nonce, :customer,
+  attr_accessor :express_checkout_redirect_url, :payment_response_params, :customer,
                 :recurring, :rejection_form, :chosen_credit_card_id, :public_token, :account_id, :redirect_to_gateway
 
   # === Associations
@@ -484,11 +484,6 @@ class Payment < ActiveRecord::Base
     payment_method.try(:capturable?)
   end
 
-  def payment_method_nonce=(token)
-    return false if token.blank?
-    @payment_method_nonce = token
-  end
-
   def payment_method_id=(payment_method_id)
     self.payment_method = PaymentMethod.find(payment_method_id)
   end
@@ -534,6 +529,9 @@ class Payment < ActiveRecord::Base
     options.merge!({ mns_params: payment_response_params }) if payment_response_params
     options.merge!({ application_fee: total_service_amount_cents }) if merchant_account.try(:verified?)
     options.merge!({ token: express_token }) if express_token
+    if payment_source.respond_to?(:payment_method_nonce) && payment_source.payment_method_nonce.present?
+      options.merge!({ payment_method_nonce: payment_source.payment_method_nonce })
+    end
 
     options = payment_gateway.translate_option_keys(options)
     options.with_indifferent_access

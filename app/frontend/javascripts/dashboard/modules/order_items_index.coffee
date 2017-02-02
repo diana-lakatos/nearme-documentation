@@ -1,6 +1,6 @@
 module.exports = class OrderItemsIndex
 
-  constructor : (context = 'body') ->
+  constructor: (context = 'body') ->
     @transactableSelect = $(context)
     if @transactableSelect.find('option:selected').length > 0
       $("#transactable_#{@transactableSelect.find('option:selected').val()}").show()
@@ -9,6 +9,6 @@ module.exports = class OrderItemsIndex
     @bindEvents()
 
   bindEvents: ->
-    @transactableSelect.on 'change', (e)=>
+    @transactableSelect.on 'change', (e) ->
       $('.panel').hide()
       $("#transactable_#{$(e.target).val()}").show()

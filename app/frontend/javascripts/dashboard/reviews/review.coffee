@@ -1,7 +1,7 @@
 require 'raty-js/lib/jquery.raty'
 
 module.exports = class Review
-  constructor: (form)->
+  constructor: (form) ->
     @form = $(form)
     @mode = @form.data('review-form')
     @ratings = @form.find('.rating')
@@ -27,7 +27,7 @@ module.exports = class Review
     @initialize()
 
   bindEvents: ->
-    @form.on 'click', '[data-edit-toggle]', (e)=>
+    @form.on 'click', '[data-edit-toggle]', (e) =>
       e.preventDefault()
       @toggleEdit(!@isEditable)
 
@@ -79,7 +79,7 @@ module.exports = class Review
   updateCommentFieldFromContent: ->
     @commentField.val(@commentContent.html())
 
-  submitRating: (e)=>
+  submitRating: (e) =>
     e.preventDefault()
 
     @form.find('.thanks').remove()
@@ -114,7 +114,7 @@ module.exports = class Review
           {rating_question_id: $(questionRating).data('question-id'), rating: $(questionRating).raty('score') || ''}
     }
 
-  updateRatingData: (e)=>
+  updateRatingData: (e) =>
     return {
       review:
         rating: @ratings.eq(0).raty('score') || 0

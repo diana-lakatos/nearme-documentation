@@ -39,7 +39,6 @@ class Gallery {
   }
 
   bindEvents() {
-    console.log('binnnding');
     Array.prototype.forEach.call(this.photoElements, (photo, index)=> {
       photo.addEventListener('click', (e)=>{
         if (e.defaultPrevented) {

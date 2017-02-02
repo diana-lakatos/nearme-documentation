@@ -70,6 +70,8 @@ class UserDrop < BaseDrop
   #   @return [Integer] Number of transactables created by this user
   # @!method has_active_credit_cards?
   #   @return [Boolean] whether the user has any active credit cards
+  # @!method has_active_bank_accounts?
+  #   @return [Boolean] whether the user has any active bank accounts
   # @!method communication
   #   @return [CommunicationDrop] Communication object defining a method for this user to perform a voice call
   # @!method created_at
@@ -104,6 +106,8 @@ class UserDrop < BaseDrop
   #   @return [Integer] number of user followers
   # @!method following_count
   #   @return [Integer] number of follows given by this user
+  # @!method tag_list
+  #   @return [Array] search tags
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends,
            :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
@@ -111,7 +115,8 @@ class UserDrop < BaseDrop
            :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
            :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
            :buyer_average_rating,
-           :tags, :tag_list, :has_friends, :transactables_count, :completed_transactables_count, :has_active_credit_cards?,
+           :tags, :tag_list, :has_friends, :transactables_count, :completed_transactables_count,
+           :has_active_credit_cards?, :has_active_bank_accounts?,
            :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
            :company_name, :instance_admins_metadata, :total_reviews_count, :reviews_counter, :companies, :instance_admin?,
            :instance_admin?, :user_messages_received, :valid?, :last_sign_in_at, :left_by_seller_average_rating,

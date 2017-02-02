@@ -1,4 +1,4 @@
-require('jquery-jcrop/js/jquery.Jcrop');
+require('jquery-jcrop/js/jquery.Jcrop')
 Modal = require('../modal')
 
 module.exports = class PhotoManipulator
@@ -37,7 +37,7 @@ module.exports = class PhotoManipulator
 
   bindRotationHandler: =>
     @angle = @image.data('rotate') or 0
-    $('.rotate-photo, [data-rotate-photo]').on 'click', (e)=>
+    $('.rotate-photo, [data-rotate-photo]').on 'click', (e) =>
       @angle = (@angle + 90) % 360
       @form.find('.jcrop-holder img').rotate(@angle)
       e.preventDefault()

@@ -9,7 +9,7 @@ module.exports = class DashboardSavedSearchController
     @bindEditLinks()
     @bindTitleSubmits()
 
-  bindAlertsFrequency: =>
+  bindAlertsFrequency: ->
     $('select[data-alerts-frequency]').on 'change', (event) ->
       input = $(event.target)
       $.ajax
@@ -17,7 +17,7 @@ module.exports = class DashboardSavedSearchController
         type: 'PATCH'
         data: {alerts_frequency: input.val()}
 
-  bindEditLinks: =>
+  bindEditLinks: ->
     $('a[data-saved-search-edit-id]').on 'click', (event) ->
       event.preventDefault()
 
@@ -57,7 +57,7 @@ module.exports = class DashboardSavedSearchController
           @showNewTitle(container, false)
 
 
-  showNewTitle: (container, success, title = null) =>
+  showNewTitle: (container, success, title = null) ->
     link = container.find('a')
     link.text(title) if success
     link.show()

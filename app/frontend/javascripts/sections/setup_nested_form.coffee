@@ -2,7 +2,7 @@ module.exports = class SetupNestedForm
   constructor: (@form) ->
 
   setup: (removeLink, hiddenField, removeField, wrapper, newLink, setupUploadObligation = false) ->
-    @form.find(removeLink).removeClass('hidden');
+    @form.find(removeLink).removeClass('hidden')
 
     for hiddenElement in @form.find(hiddenField)
       if $(hiddenElement).prop("checked")

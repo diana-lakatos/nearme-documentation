@@ -1,4 +1,0 @@
-var container = document.getElementById('comment-content-<%= @comment.id %>');
-
-container.classList.remove('is-active');
-container.innerHTML = '<%= escape_javascript( render "comments/comment_content", comment: @comment ) %>';

@@ -20,7 +20,7 @@ module.exports = class PriceFields
     @inputWrapper.find('input:not(:disabled)').addClass('hide-disabled').prop('disabled', true)
 
   bindEvents: ->
-    @container.closest('form').on 'submit', (event) =>
+    @container.closest('form').on 'submit', (event) ->
       # this is related to image uploading prevening form submission when upload is in progress
       # having this here is less than optimal but I don't have better idea on how to decouple these modules better
       # it should probably by tied in into client validation if we ever get to implement it
@@ -50,16 +50,16 @@ module.exports = class PriceFields
       else
         @changePriceState($(event.target), false)
 
-    @priceFields.on 'blur', (event) =>
+    @priceFields.on 'blur', (event) ->
       if $(event.target).val() == '' || $(event.target).val()=='0.00'
         price_enabler = $(event.target).parents(".row").find('input[data-price-enabler]')
         if price_enabler.length > 0
           price_enabler.prop('checked', false).trigger('change')
 
-    @priceFields.on 'change', (event) =>
+    @priceFields.on 'change', (event) ->
       price = $(event.target)
       price.val(price.val().replace(/[^0-9\.]/, ""))
 
-  changePriceState: (target, state) =>
+  changePriceState: (target, state) ->
     target.parents(".row").find('input[data-price-field]').attr('readonly', state)
 

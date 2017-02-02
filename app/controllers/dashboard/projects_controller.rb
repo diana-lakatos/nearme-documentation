@@ -1,4 +1,6 @@
 class Dashboard::ProjectsController < Dashboard::BaseController
+  include LinksHelper
+
   before_filter :find_transactable_type
   before_filter :find_transactable, except: [:index, :new, :create]
   before_filter :set_form_components, only: [:new, :create, :edit, :update]
@@ -24,6 +26,7 @@ class Dashboard::ProjectsController < Dashboard::BaseController
     @transactable.build_action_type
     @transactable.action_type.transactable_type_action_type = @transactable_type.action_types.first
     @transactable.topics_required = true
+    set_links_creator_id(@transactable)
     validate = true
     validate = false if params[:save_for_later]
 
@@ -51,6 +54,7 @@ class Dashboard::ProjectsController < Dashboard::BaseController
     @transactable.topics_required = true
     draft = @transactable.draft
     @transactable.draft = nil if params[:submit]
+    set_links_creator_id(@transactable)
     validate = true
     validate = false if @transactable.draft
     respond_to do |format|

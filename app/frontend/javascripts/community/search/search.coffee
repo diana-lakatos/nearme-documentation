@@ -1,21 +1,21 @@
-require('history.js/history.js');
-require('history.js/history.adapter.ender.js');
+require('history.js/history.js')
+require('history.js/history.adapter.ender.js')
 
 Forms = require('../forms')
 
 module.exports = class Search
   constructor: (@form) ->
-    @queryInput ||= => $('input#_query');
-    @pageInput ||= => @form.find('input#_page');
+    @queryInput ||= -> $('input#_query')
+    @pageInput ||= => @form.find('input#_page')
     @topnavForm = $('form#search_topnav')
     @topnavFormQuery = $('#topnav_query')
     @searchTabNav = $('nav.search-types')
     @searchTabs = $('nav.search-types li a')
     @actionButtons = $('nav.search-types .actions a')
     @paginationContainer = $('.pagination-more-a')
-    @seeMoreLink ||= => @paginationContainer.find('p.more-a');
-    @searchContainer ||= =>  $('.search-container')
-    @searchResults ||= =>  $('.search-results')
+    @seeMoreLink ||= => @paginationContainer.find('p.more-a')
+    @searchContainer ||= -> $('.search-container')
+    @searchResults ||= -> $('.search-results')
     @bindEvents()
 
   bindEvents: ->

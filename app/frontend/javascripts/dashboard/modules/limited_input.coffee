@@ -1,5 +1,5 @@
 module.exports = class Limiter
-  constructor: (el)->
+  constructor: (el) ->
     @input = $(el)
     @limit = @input.data('counter-limit')
     @info = @input.next('[data-counter-for]')

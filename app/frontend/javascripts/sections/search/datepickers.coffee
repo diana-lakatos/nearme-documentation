@@ -29,7 +29,7 @@ module.exports = class SearchDatepickers
         if selectedDate > new Date(@end_date.val()) || selectedDate > new Date(@container.find('[name="fake_end_date"]').val())
           newEndDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() + 1)
           @container.find('[name="end_date"], [name="fake_end_date"]').datepicker('setDate', newEndDate)
-    }));
+    }))
 
     dateEndFormat = 'mm/dd/yy'
     if @container.find('[name="end_date"]').attr('data-date-format')
@@ -48,4 +48,4 @@ module.exports = class SearchDatepickers
         if selectedDate < new Date(@start_date.val()) || selectedDate < new Date(@container.find('[name="fake_start_date"]').val())
           newStartDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1)
           @container.find('[name="start_date"], [name="fake_start_date"]').datepicker('setDate', newStartDate)
-    }));
+    }))

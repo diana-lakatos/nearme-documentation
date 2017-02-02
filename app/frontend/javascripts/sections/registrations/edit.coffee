@@ -8,10 +8,10 @@ module.exports = class EditUserForm
     new DashboardAddressController($('#edit_user'))
 
   bindEvents: ->
-    $('.services_list').on 'click', '.provider-not-disconnectable', (event) =>
-        $('#user_password').effect("highlight", {}, 3000).focus()
-        $('#fill-password-request').removeClass('hidden')
-        false
+    $('.services_list').on 'click', '.provider-not-disconnectable', (event) ->
+      $('#user_password').effect("highlight", {}, 3000).focus()
+      $('#fill-password-request').removeClass('hidden')
+      false
 
     @container.find("input").on "change paste keyup", ->
 
