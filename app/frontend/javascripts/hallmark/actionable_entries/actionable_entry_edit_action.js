@@ -53,9 +53,12 @@ class ActionableEntryEditAction {
 
     $.ajax({
       url: form.action,
-      method: form.method,
-      data: $(form).serialize(),
-      dataType: 'html'
+      method: 'PUT',
+      data: new FormData(form),
+      dataType: 'html',
+      contentType: false,
+      cache: false,
+      processData: false
     }).done((html)=>{
       target.classList.remove('is-active');
       target.innerHTML = html;

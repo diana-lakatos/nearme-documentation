@@ -36,6 +36,22 @@ ActiveRecord::Schema.define(version: 20170203151843) do
   add_index "activity_feed_events", ["event"], name: "index_activity_feed_events_on_event", using: :btree
   add_index "activity_feed_events", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_events_instance_followed", using: :btree
 
+  create_table "activity_feed_images", force: :cascade do |t|
+    t.integer  "instance_id",                 null: false
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "uploader_id"
+    t.string   "caption"
+    t.string   "image"
+    t.text     "image_transformation_data"
+    t.integer  "image_original_width"
+    t.integer  "image_original_height"
+    t.datetime "image_versions_generated_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
   create_table "activity_feed_subscriptions", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "follower_id"

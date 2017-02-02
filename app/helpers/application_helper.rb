@@ -491,4 +491,16 @@ module ApplicationHelper
     markdown = Redcarpet::Markdown.new(HtmlWithVideos.new({ escape_html: true }, embed_options), autolink: true, tables: true, fenced_code_blocks: true)
     markdown.render(text.to_s).html_safe
   end
+
+  def object_updated?(object)
+    if object && object.try(:updated_at) && object.try(:created_at)
+      (object.updated_at - object.created_at) > 1
+    end
+  end
+
+  def collection_with_new_object(association)
+    association.new
+    association
+  end
+
 end

@@ -6,10 +6,18 @@ class CommentsController < ApplicationController
     @comments = @commentable.comments.order('created_at DESC').paginate(page: params[:page], per_page: 10)
   end
 
+  def show
+    @comment = @commentable.comments.find(params[:id])
+  end
+
   def create
     @comment = @commentable.comments.new(comment_params)
     @comment.creator = current_user
-    @comment.save
+    return render nothing: true unless @comment.save
+    respond_to do |format|
+      format.html { render action: :show }
+      format.js
+    end
   end
 
   def update

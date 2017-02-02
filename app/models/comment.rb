@@ -11,6 +11,7 @@ class Comment < ActiveRecord::Base
   belongs_to :creator, -> { with_deleted }, class_name: 'User', inverse_of: :comments
 
   has_many :spam_reports, as: :spamable, dependent: :destroy
+  has_many :activity_feed_images, as: :owner
 
   validates :body, presence: true, length: { maximum: 5000 }
 
@@ -18,6 +19,8 @@ class Comment < ActiveRecord::Base
 
   after_commit :user_commented_event, on: :create
   after_create :trigger_workflow_alert_for_new_comment
+
+  accepts_nested_attributes_for :activity_feed_images, allow_destroy: true
 
   def user_commented_event
     case commentable_type

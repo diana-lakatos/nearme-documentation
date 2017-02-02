@@ -7,7 +7,12 @@ class UserStatusUpdatesController < ApplicationController
 
   def update
     @user_status_update = UserStatusUpdate.find(params[:id])
-    return render nothing: true unless @user_status_update.can_edit?(current_user) && @user_status_update.update(permitted_params)
+    return render nothing: true unless @user_status_update.can_edit?(current_user)
+    @user_status_update.update(permitted_params)
+    respond_to do |format|
+      format.js
+      format.html
+    end
   end
 
   def destroy
@@ -18,6 +23,22 @@ class UserStatusUpdatesController < ApplicationController
   private
 
   def permitted_params
-    params[:user_status_update].permit!
+    fix_multiple_images(params[:user_status_update]).permit!
+  end
+
+  def fix_multiple_images(user_status_params)
+    if user_status_params["activity_feed_images_attributes"]
+      feed_images = user_status_params["activity_feed_images_attributes"].dup
+      feed_images.each_pair do |image_idx, afi|
+        if afi["image"].present? && afi["id"].nil?
+          afi["image"].each_with_index do |img, file_idx|
+            idx = image_idx.to_i + file_idx
+            user_status_params["activity_feed_images_attributes"][idx.to_s] ||= {}
+            user_status_params["activity_feed_images_attributes"][idx.to_s]["image"] = img
+          end
+        end
+      end
+    end
+    user_status_params
   end
 end
