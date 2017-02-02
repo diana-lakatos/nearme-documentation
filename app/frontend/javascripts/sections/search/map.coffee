@@ -1,6 +1,6 @@
-asEvented = require('asevented');
-MarkerClusterer = require('../../../vendor/markerclusterer');
-SmartGoogleMap = require('../../components/smart_google_map');
+asEvented = require('asevented')
+MarkerClusterer = require('../../../vendor/markerclusterer')
+SmartGoogleMap = require('../../components/smart_google_map')
 GoogleMapPopover = require('../../components/google_map_popover')
 
 # Encapsulates the map behaviour for the serach results
@@ -72,14 +72,14 @@ module.exports = class SearchMap
       @clusterer.setZoomOnClick(@googleMap.getZoom() < GOOGLE_MAP_OPTIONS.maxZoom)
       @popover.close()
 
-    google.maps.event.addListener @googleMap, 'click', (e)=>
+    google.maps.event.addListener @googleMap, 'click', (e) =>
       @popover.close()
       @trigger 'click'
 
-    @clusterer.addListener 'mouseover', (cluster)=>
+    @clusterer.addListener 'mouseover', (cluster) =>
       _.defer => @showInfoWindowForCluster(cluster) # Clashes with map.click on some devices, need to add small delay to show
 
-    @clusterer.addListener 'click', (cluster)=>
+    @clusterer.addListener 'click', (cluster) =>
       return if @googleMap.getZoom() < GOOGLE_MAP_OPTIONS.maxZoom
       _.defer => @showInfoWindowForCluster(cluster) # Clashes with map.click on some devices, need to add small delay to show
 

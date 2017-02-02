@@ -1,7 +1,7 @@
 require('bootstrap-switch/src/coffee/bootstrap-switch')
 
 module.exports = class BootstrapSwitchInitializer
-  constructor: (el)->
+  constructor: (el) ->
     @el = $(el)
 
     @bindEvents()

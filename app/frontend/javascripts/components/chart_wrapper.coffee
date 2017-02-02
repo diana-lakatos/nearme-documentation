@@ -3,16 +3,16 @@ module.exports = class ChartWrapper
   defaultColors: ->
     [
       {
-        fillColor : "rgba(220,220,220,0.5)",
-        strokeColor : "rgba(220,220,220,1)",
-        pointColor : "rgba(220,220,220,1)",
-        pointStrokeColor : "#fff",
+        fillColor: "rgba(220,220,220,0.5)",
+        strokeColor: "rgba(220,220,220,1)",
+        pointColor: "rgba(220,220,220,1)",
+        pointStrokeColor: "#fff",
       },
       {
-        fillColor : "rgba(151,187,205,0.5)",
-        strokeColor : "rgba(151,187,205,1)",
-        pointColor : "rgba(151,187,205,1)",
-        pointStrokeColor : "#fff",
+        fillColor: "rgba(151,187,205,0.5)",
+        strokeColor: "rgba(151,187,205,1)",
+        pointColor: "rgba(151,187,205,1)",
+        pointStrokeColor: "#fff",
       }
     ]
 
@@ -26,15 +26,15 @@ module.exports = class ChartWrapper
     return if canvas.length == 0
     @canvas = canvas
     @globalGraphSettings = {
-      animation : canvasSupported(),
-      scaleFontFamily : "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-      scaleFontSize : 18
+      animation: canvasSupported(),
+      scaleFontFamily: "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+      scaleFontSize: 18
     }
     @titles = titles
 
     @data = {
-        labels : labels,
-        datasets : @parseData(data)
+      labels: labels,
+      datasets: @parseData(data)
     }
     @bindEvents()
     if @titles.length > 0
@@ -48,7 +48,7 @@ module.exports = class ChartWrapper
   parseData: (data) ->
     result = []
     for index, values of data
-      result.push $.extend({ data : values }, @defaultColors()[index])
+      result.push $.extend({ data: values }, @defaultColors()[index])
       if @titles[index]
         result[index]['title'] = @titles[index]
     result
@@ -71,8 +71,8 @@ module.exports = class ChartWrapper
     @ctx = @canvas.get(0).getContext("2d")
 
   drawLegend: ->
-      legend = $('<div class="legend"></div>')
-      @canvas.parent().append(legend)
-      for dataset in @data.datasets
-        title = $("<span class='title' style='border-color: #{dataset.strokeColor};border-style: solid;'>#{dataset.title}</span>")
-        legend.append(title)
+    legend = $('<div class="legend"></div>')
+    @canvas.parent().append(legend)
+    for dataset in @data.datasets
+      title = $("<span class='title' style='border-color: #{dataset.strokeColor};border-style: solid;'>#{dataset.title}</span>")
+      legend.append(title)

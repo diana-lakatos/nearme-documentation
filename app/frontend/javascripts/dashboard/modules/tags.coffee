@@ -1,7 +1,7 @@
 require 'selectize/dist/js/selectize'
 
 module.exports = class Tags
-  constructor: (el)->
+  constructor: (el) ->
     @tagList = $(el)
     @queryUrl = @tagList.data('tags').url + '?q='
     @initSelectize()
@@ -13,13 +13,13 @@ module.exports = class Tags
       labelField: 'name',
       searchField: 'name',
       create: true,
-      load: (query, callback)=>
+      load: (query, callback) =>
         return callback() unless query
 
-        onSuccess = (res)->
+        onSuccess = (res) ->
           callback(res)
 
-        onError = ()->
+        onError = ->
           callback()
 
         $.ajax {

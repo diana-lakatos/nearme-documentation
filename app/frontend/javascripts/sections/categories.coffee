@@ -1,5 +1,5 @@
 require('select2/select2')
-require('../../vendor/jquery.jstree');
+require('../../vendor/jquery.jstree')
 
 module.exports = class CategoriesController
 
@@ -57,8 +57,8 @@ module.exports = class CategoriesController
               if selected_categories.length > 0
                 $.jstree._reference(category_tree).open_all(category_tree.jstree('get_checked', null, true))
                 for category_id, i in selected_categories
-                  category_tree.jstree('check_node', $('#' + category_id));
-                  category_tree.jstree('open_node', $('#' + category_id));
+                  category_tree.jstree('check_node', $('#' + category_id))
+                  category_tree.jstree('open_node', $('#' + category_id))
 
             .bind "check_node.jstree uncheck_node.jstree ", ->
               that.setChecboxesValues(tree_container)
@@ -81,14 +81,14 @@ module.exports = class CategoriesController
               data.inst.open_node(data.rslt.obj, true)
 
             .bind 'uncheck_node.jstree', (e, data) ->
-              data.inst.close_all(data.rslt.obj, true);
+              data.inst.close_all(data.rslt.obj, true)
               data.rslt.obj.find('li.jstree-checked').removeClass('jstree-checked').addClass('jstree-unchecked')
 
   bindClickEvent: (category_tree) ->
     category_tree.find("a").unbind "click"
     category_tree.find("a").on "click", (e) ->
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault()
+      e.stopPropagation()
       if category_tree.jstree("is_checked", this)
         category_tree.jstree("uncheck_node", this)
       else
@@ -105,11 +105,11 @@ module.exports = class CategoriesController
     category_tree_inputs = tree_container.find(".category_tree_inputs")
     category_tree_inputs.html('')
     category_tree.jstree('get_checked', null, true).each ->
-      $('<input name="'+ tree_container.find('.category_ids').attr('name') + '">').attr('type','hidden').val(@id).appendTo(category_tree_inputs);
+      $('<input name="'+ tree_container.find('.category_ids').attr('name') + '">').attr('type','hidden').val(@id).appendTo(category_tree_inputs)
       return
     return
 
-  autocomplete: () ->
+  autocomplete: ->
     if @container.find("input[data-category-autocomplete]").length > 0
       $.each @container.find("input[data-category-autocomplete]"), (index, select) ->
 
@@ -142,5 +142,5 @@ module.exports = class CategoriesController
         # select2 will not call initSelection if the input has an empty value
         # (which is always the case with :array_input the way we built it)
         # This is a workaround to trigger the initial value readout
-        $(select).select2('val', []);
+        $(select).select2('val', [])
 

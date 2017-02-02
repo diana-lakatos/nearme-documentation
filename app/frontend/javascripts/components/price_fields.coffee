@@ -34,19 +34,19 @@ module.exports = class PriceFields
       @enablingPriceCheckboxes.prop('checked', !@freeCheckbox.is(':checked'))
       @enablingPriceCheckboxes.trigger('change')
 
-    @priceFields.on 'click', (event) =>
+    @priceFields.on 'click', (event) ->
       checkbox = $(event.target).parents(".price-containter").find('label').find('input[data-behavior*=enable-price]')
       checkbox.prop('checked', true)
       checkbox.trigger('change')
       # yeah well.. otherwise IE will think that input is readable, even though we have just changed this...
       $(event.target).select()
 
-    @priceFields.on 'blur', (event) =>
+    @priceFields.on 'blur', (event) ->
       if $(event.target).val()==''
         checkbox = $(event.target).siblings('label').find('input[data-behavior*=enable-price]')
         checkbox.prop('checked', false)
         checkbox.trigger('change')
 
-    @priceFields.on 'change', (event) =>
+    @priceFields.on 'change', (event) ->
       price = $(event.target)
       price.val(price.val().replace(/[^0-9\.]/, ""))

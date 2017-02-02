@@ -1,4 +1,4 @@
-DahboardAddressController = require('./dashboard/address_controller');
+DahboardAddressController = require('./dashboard/address_controller')
 
 module.exports = class CompanyForm
 

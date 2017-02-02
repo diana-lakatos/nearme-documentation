@@ -2,13 +2,13 @@ require('history.js/history')
 require('history.js/history.adapter.ender')
 
 SearchController = require('./controller')
-SearchScreenLockLoader = require('./screen_lock_loader');
+SearchScreenLockLoader = require('./screen_lock_loader')
 SearchResultsGoogleMapController = require('./search_results_google_map_controller')
 SearchRangeDatePickerFilter = require('./range_datepicker_filter')
 SearchRedoSearchMapControl = require('./redo_search_map_control')
 SearchListing = require('./listing')
 SearchMap = require('./map')
-urlUtil = require('../../lib/utils/url');
+urlUtil = require('../../lib/utils/url')
 window.IASCallbacks = require('exports?IASCallbacks!../../vendor/jquery-ias/callbacks')
 require('../../vendor/jquery-ias/jquery-ias')
 
@@ -34,7 +34,7 @@ module.exports = class SearchSearchController extends SearchController
     @filters_container = $('[data-search-filters-container]')
     @movableGoogleMap = $('#search-result-movable-google-map')
     if @movableGoogleMap.length > 0
-      new SearchResultsGoogleMapController(@resultsContainer(), @movableGoogleMap);
+      new SearchResultsGoogleMapController(@resultsContainer(), @movableGoogleMap)
     @processingResults = true
     @initializeMap()
     @bindEvents()
@@ -148,7 +148,7 @@ module.exports = class SearchSearchController extends SearchController
         @initializeConnectionsTooltip()
     })
 
-    ias.on 'rendered', (items)->
+    ias.on 'rendered', (items) ->
       $(document).trigger('rendered-search:ias.nearme', [items])
 
   initializeMap: ->
@@ -171,7 +171,7 @@ module.exports = class SearchSearchController extends SearchController
     wrap = $('<div>' + html + '</div>')
     html = wrap.find('#results')
     @resultsContainer().replaceWith(html)
-    @resultsContainer().find("input[data-authenticity-token]").val($('meta[name="authenticity_token"]').attr('content'));
+    @resultsContainer().find("input[data-authenticity-token]").val($('meta[name="authenticity_token"]').attr('content'))
     $('.pagination').hide()
     @updateResultsCount()
 
@@ -278,7 +278,6 @@ module.exports = class SearchSearchController extends SearchController
       'price[max]': price_max
       time_from: @container.find('select[name="time_from"]').val()
       time_to: @container.find('select[name="time_to"]').val()
-      time_to: @container.find('select[name="time_to"]').val()
       sort: @container.find('select[name="sort"]').val()
       ignore_search_event: 0
       category_ids: all_categories.join(',')
@@ -320,7 +319,7 @@ module.exports = class SearchSearchController extends SearchController
       callback() if callback
       _.defer => @processingResults = false
 
-      $(document).trigger('load:searchResults.nearme');
+      $(document).trigger('load:searchResults.nearme')
 
   # Trigger the API request for search
   #
@@ -336,19 +335,19 @@ module.exports = class SearchSearchController extends SearchController
     )
 
   updateListings: (listings, callback, error_callback = ->) ->
-    @triggerListingsRequest(listings).success (html) =>
+    @triggerListingsRequest(listings).success (html) ->
       html = "<div>" + html + "</div>"
       listing.setHtml($('article[data-id="' + listing.id() + '"]', html)) for listing in listings
       callback() if callback
-    .error () =>
+    .error ->
       error_callback() if error_callback
 
   updateListing: (listing, callback) ->
-    @triggerListingsRequest([listing]).success (html) =>
+    @triggerListingsRequest([listing]).success (html) ->
       listing.setHtml(html)
       callback() if callback
 
-  triggerListingsRequest: (listings) =>
+  triggerListingsRequest: (listings) ->
     listing_ids = (listing.id() for listing in listings).toString()
     $.ajax(
       url  : '/search/show/' + listing_ids + '?v=map'
@@ -384,7 +383,7 @@ module.exports = class SearchSearchController extends SearchController
 
   updateLinks: ->
     if @date_range.length > 1
-      $("div.locations a:not(.carousel-control)").each (index, link)=>
+      $("div.locations a:not(.carousel-control)").each (index, link) =>
         return if $(link).closest('.pagination').length > 0
         href = link.href.replace(/\?.*$/, "")
         href += "?start_date=#{@date_range[0].value}&end_date=#{@date_range[1].value}"

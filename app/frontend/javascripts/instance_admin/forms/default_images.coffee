@@ -1,8 +1,8 @@
 module.exports = class DefaultImages
-  constructor: ()->
+  constructor: ->
     @initialize()
 
-  initialize: () ->
+  initialize: ->
     @versions = $("[data-photo-uploaders]").data('photo-uploaders')
     @select_photo_uploader = $('select.photo-uploader')
     @select_versions = $('select.photo-uploader-versions')
@@ -12,7 +12,7 @@ module.exports = class DefaultImages
 
     @updateVersions()
 
-  updateVersions: () ->
+  updateVersions: ->
     photo_uploader = @select_photo_uploader.val()
     if photo_uploader
       current_versions = @versions[photo_uploader]

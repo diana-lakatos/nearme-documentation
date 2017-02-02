@@ -74,7 +74,7 @@ module.exports = class SearchMixedController extends SearchSearchController
       res = /page=(\d+)/gm.exec(link.attr('href'))
       @triggerSearchFromQuery(res[1]) if res[1]
 
-    $(document).on 'click', '.list .locations .location .listing', (e) =>
+    $(document).on 'click', '.list .locations .location .listing', (e) ->
       unless $(e.target).hasClass('truncated-ellipsis')
         if $(e.target).hasClass('listing')
           window.location.href = $(e.target).find('.reserve-listing a').attr('href')
@@ -130,7 +130,7 @@ module.exports = class SearchMixedController extends SearchSearchController
       animate_position = location_container.position().top + @list_container().offset().top + @list_container().find('.filters').height() - 55
       @list_container().animate
         scrollTop: animate_position
-        () =>
+        =>
           @unmarkAllLocations()
           location_container.addClass('active')
           @processingResults = false
@@ -184,7 +184,7 @@ module.exports = class SearchMixedController extends SearchSearchController
     )
     super
 
-  renderChildCategories: (params_category_ids = [])->
+  renderChildCategories: (params_category_ids = []) ->
     category_ids = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val()))
     Array::push.apply category_ids, params_category_ids
     category_ids = category_ids.join(',')
@@ -199,7 +199,7 @@ module.exports = class SearchMixedController extends SearchSearchController
         @container.find('#categories-children').hide().html(data)
         subcategories_parents = []
         @container.find('.categories-children').html('')
-        @container.find('#categories-children').find('.search-mixed-filter').each (index, elem) =>
+        @container.find('#categories-children').find('.search-mixed-filter').each (index, elem) ->
           subcat = $(elem).clone()
           category_id = parseInt(subcat.attr('data-category-id'))
           filter = container.find('input[name="category_ids[]"][value="' + category_id + '"]').closest('.search-mixed-filter')
@@ -243,8 +243,8 @@ module.exports = class SearchMixedController extends SearchSearchController
       bounds = new google.maps.LatLngBounds()
       bounds.extend(listing.latLng()) for listing in listings
 
-      lat = @form.find('input[name=lat]').val();
-      lng = @form.find('input[name=lng]').val();
+      lat = @form.find('input[name=lat]').val()
+      lng = @form.find('input[name=lng]').val()
 
       if lat.length and lng.length
         bounds.extend(new google.maps.LatLng(@form.find('input[name=lat]').val(), @form.find('input[name=lng]').val()))
@@ -294,7 +294,7 @@ module.exports = class SearchMixedController extends SearchSearchController
     @renderChildCategories()
     @triggerSearchFromQuery()
 
-  autocompleteCategories: () ->
+  autocompleteCategories: ->
     self = this
     if @container.find("input[data-category-autocomplete]").length > 0
       $.each @container.find("input[data-category-autocomplete]"), (index, select) ->
@@ -345,7 +345,7 @@ module.exports = class SearchMixedController extends SearchSearchController
 
   bindLocationsEvents: ->
 
-    @resultsContainer().find('article.location').on 'mouseleave', (event)=>
+    @resultsContainer().find('article.location').on 'mouseleave', (event) =>
       location = $(event.target).closest('article.location')
       @unmarkAllLocations()
       location_id = location.data('id')
@@ -354,7 +354,7 @@ module.exports = class SearchMixedController extends SearchSearchController
         marker.setIcon(SearchResultsGoogleMapMarker.getMarkerOptions().default.image)
         marker.setZIndex(google.maps.Marker.MAX_ZINDEX)
 
-    @resultsContainer().find('article.location').on 'mouseenter',(event)=>
+    @resultsContainer().find('article.location').on 'mouseenter',(event) =>
       location = $(event.target).closest('article.location')
       @unmarkAllLocations()
       location.addClass('active')

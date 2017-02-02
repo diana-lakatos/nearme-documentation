@@ -1,11 +1,11 @@
-dateUtil = require('../../lib/utils/date');
-Datepicker = require('../../components/datepicker');
-DatepickerModelSingle = require('../../components/datepicker/single');
-SearchRangeDatepickerView = require('./search_range_datepicker_view');
+dateUtil = require('../../lib/utils/date')
+Datepicker = require('../../components/datepicker')
+DatepickerModelSingle = require('../../components/datepicker/single')
+SearchRangeDatepickerView = require('./search_range_datepicker_view')
 
 module.exports = class SearchRangeDatePickerFilter
 
-  constructor: (@start, @end, @updateCallback)->
+  constructor: (@start, @end, @updateCallback) ->
     @initDatepickers()
     @setInitialDates()
     @addEventHandlers()
@@ -41,13 +41,13 @@ module.exports = class SearchRangeDatePickerFilter
 
     @updateDateFields()
 
-  endInput: ()->
+  endInput: ->
     @end.find('input')
 
-  startInput: ()->
+  startInput: ->
     @start.find('input')
 
-  initDatepickers: ()->
+  initDatepickers: ->
     @startDatepicker = new Datepicker(
       trigger: @start,
       positionTarget: @startInput(),
@@ -72,7 +72,7 @@ module.exports = class SearchRangeDatePickerFilter
       )
     )
 
-  setInitialDates: ()->
+  setInitialDates: ->
     return unless @startDatepicker and @endDatepicker
     date = new Date()
     if @startInput().data('value')
@@ -82,7 +82,7 @@ module.exports = class SearchRangeDatePickerFilter
       date.setTime(Date.parse(@endInput().data('value')))
       @endDatepicker.addDate(date)
 
-  addEventHandlers: ()->
+  addEventHandlers: ->
     @startDatepicker.on 'datesChanged', =>
       @startDatepickerChanged()
 

@@ -66,7 +66,7 @@ module.exports = class Geocoder
       for c in @result.address_components
         t = c.types
         match = true
-        match = match && _.contains(t, type) for type in types
+        match = (match && _.contains(t, type)) for type in types
         component = c if match
       component
 

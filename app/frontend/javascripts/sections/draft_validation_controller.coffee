@@ -36,7 +36,7 @@ module.exports = class DraftValidationController
       true
 
 
-  handleAjaxSuccess: (field) =>
+  handleAjaxSuccess: (field) ->
     icon = $('<span class="fa fa-check" style="color:green; position:absolute; right: 1px" aria-hidden="true"></span>')
     field.parents('.control-group, .form-group').append(icon).css('position', 'relative')
     icon.delay(1000).fadeOut()

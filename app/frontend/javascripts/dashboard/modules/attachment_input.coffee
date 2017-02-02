@@ -3,7 +3,7 @@ require 'imports?define=>false&exports=>false!blueimp-file-upload/js/jquery.file
 
 module.exports = class AttachmentInput
 
-  constructor : (input) ->
+  constructor: (input) ->
     @fileInput = $(input)
     @container = @fileInput.closest('.form-group')
     @isMultiple = !!@fileInput.attr('multiple')
@@ -22,10 +22,10 @@ module.exports = class AttachmentInput
     @listenToParamsChange()
 
   listenToParamsChange: =>
-    @collection.on 'change', 'select[data-attachment-property]', (e)=>
+    @collection.on 'change', 'select[data-attachment-property]', (e) =>
       @updateAttachmentProperty(e.target)
 
-    @collection.on 'blur', 'input[data-attachment-property]', (e)=>
+    @collection.on 'blur', 'input[data-attachment-property]', (e) =>
       @updateAttachmentProperty(e.target)
 
   updateAttachmentProperty: (control) ->
@@ -59,7 +59,7 @@ module.exports = class AttachmentInput
         params.serializeArray()
       add: (e, data) =>
         if @isMultiple == false
-          @collection.find('[data-attachment]').each (index, item)=>
+          @collection.find('[data-attachment]').each (index, item) =>
             @removeItem(item)
         @processing += 1
         @updateLabel()
@@ -67,20 +67,20 @@ module.exports = class AttachmentInput
       done: (e, data) =>
         @createItem(data.result)
 
-      fail: (e, data) =>
+      fail: (e, data) ->
         window.alert('Unable to process this request, please try again.')
         window.Raygun.send(data.errorThrown, data.textStatus) if window.Raygun
 
-      always: (e, data)=>
+      always: (e, data) =>
         @processing -= 1
         @updateLabel()
 
-  createItem: (html)->
+  createItem: (html) ->
     item = $(html)
     @collection.append(item)
     $('html').trigger('selects.init.forms', [item])
 
-  removeItem: (item)->
+  removeItem: (item) ->
     item = $(item)
     trigger = item.find('[data-delete]')
     url = trigger.data('url')
@@ -103,10 +103,10 @@ module.exports = class AttachmentInput
       labelConfirm = trigger.data('label-confirm')
       return unless confirm(labelConfirm)
 
-      @removeItem(trigger.closest('[data-attachment]'));
+      @removeItem(trigger.closest('[data-attachment]'))
 
   listenToFormSubmit: ->
-    @container.parents('form').on 'submit', (e)=>
+    @container.parents('form').on 'submit', (e) =>
       e.preventDefault() if @processingFiles > 0
 
   updateLabel: ->
@@ -115,7 +115,7 @@ module.exports = class AttachmentInput
   updateLabelStatic: ->
     if @fileInput.get(0).files
       output = []
-      _.each @fileInput.get(0).files, (item)->
+      _.each @fileInput.get(0).files, (item) ->
         output.push(item.name)
 
       output = output.join(', ')

@@ -11,12 +11,12 @@ module.exports = class ReservationUserReservationController
     @bindEvents()
 
   tooltip: ->
-    @times.each (idx, el) =>
+    @times.each (idx, el) ->
       text = $(el).data('reservation-hours')
       $(el).tooltip(title: text, html: true)
 
   datepicker: ->
-    @dates.each (idx, date)=>
+    @dates.each (idx, date) ->
       dates = $.each $(date).data('dates'), (_, d) -> new Date(d)
       datepicker = new Datepicker
         trigger: $(date)
@@ -25,8 +25,8 @@ module.exports = class ReservationUserReservationController
       datepicker.model.setDates(dates)
 
   bindEvents: ->
-    @dates.on 'click', () ->
+    @dates.on 'click', ->
       false
-    @times.on 'click', () ->
+    @times.on 'click', ->
       false
 

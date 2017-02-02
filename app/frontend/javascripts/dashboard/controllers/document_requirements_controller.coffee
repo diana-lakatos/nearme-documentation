@@ -11,7 +11,7 @@ module.exports = class DocumentRequirementsController
     @selector.on 'change', =>
       @updateState()
 
-    @documentFields.on 'cocoon:before-remove', (e,fields)->
+    @documentFields.on 'cocoon:before-remove', (e,fields) ->
       parent = $(fields).closest('.nested-container')
       parent.find('input[data-destroy-input]').val('true')
       parent.hide()

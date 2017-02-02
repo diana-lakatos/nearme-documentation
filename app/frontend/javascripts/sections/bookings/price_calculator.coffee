@@ -1,5 +1,5 @@
-AdditionalChargesCalculator = require('./additional_charges');
-dateUtil = require('../../lib/utils/date');
+AdditionalChargesCalculator = require('./additional_charges')
+dateUtil = require('../../lib/utils/date')
 
 # Object encapsulating our pricing calculation logic.
 #
@@ -12,7 +12,6 @@ module.exports = class BookingsPriceCalculator
     @additionalCharges = new AdditionalChargesCalculator($("#additional-charges-#{@listing.id}"), @listing.data.subunit_to_unit_rate)
 
   getPrice: ->
-
     contiguousBlocks = @contiguousBlocks()
 
     total = _.inject(contiguousBlocks, (sum, block) =>

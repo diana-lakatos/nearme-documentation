@@ -10,21 +10,20 @@ module.exports = class ShippingProfilesController
     @modalSuccessActions()
 
   bindEvents: ->
-
-    @form.on 'change', '[data-shippo-for-price]', (e) =>
+    @form.on 'change', '[data-shippo-for-price]', (e) ->
       if $(e.target).is(':checked')
         $(e.target).closest('.shipping-form').find('[data-price-field]').prop('disabled', true)
       else
         $(e.target).closest('.shipping-form').find('[data-price-field]').prop('disabled', false)
 
-    @form.on 'change', '[data-worldwide]', (e) =>
+    @form.on 'change', '[data-worldwide]', (e) ->
       if $(e.target).is(':checked')
         $(e.target).closest('.shipping-form').find('select')[0].selectize.disable()
       else
         $(e.target).closest('.shipping-form').find('select')[0].selectize.enable()
 
     $(document).on 'cocoon:after-insert', (e,insertedItem) =>
-      @initializeSelectize(insertedItem);
+      @initializeSelectize(insertedItem)
 
   initializeSelectize: (container) ->
     $(container).find('select[multiple=multiple]').selectize()
