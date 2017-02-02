@@ -126,6 +126,12 @@ class ActivityFeedEvent < ActiveRecord::Base
     creator.try(:id)
   end
 
+  def can_remove?(current_user)
+    creator == current_user
+  end
+
+  alias can_edit? can_remove?
+
   def reported_by(user, ip)
     if user
       spam_reports.where(user: user).first

@@ -34,7 +34,7 @@ class CommentsController < ApplicationController
 
   def find_commentable
     params.each do |name, value|
-      next unless name =~ /(.+)_id$/ && %w(transactable_id listing_id activity_feed_event_id).include?(name)
+      next unless name =~ /(.+)_id$/ && %w(transactable_id listing_id activity_feed_event_id comment_id).include?(name)
       @commentable = if Regexp.last_match(1) == 'listing' || Regexp.last_match(1) == 'transactable'
                        Transactable.find(value)
                      else

@@ -14,5 +14,12 @@
 
   = render 'comments/comment_content', comment: comment
 
-  %p.meta
+  %footer
     %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :long)
+    - if comment.can_be_commented?
+      - if user_signed_in?
+        = link_to t('general.respond'), '#', data: { comment: '' }
+      - else
+        = link_to t('general.respond'), new_user_session_path(return_to: request.path)
+    - if comment.can_be_commented?
+      = render 'comments/activity_feed_comments', comment: comment.comments.build

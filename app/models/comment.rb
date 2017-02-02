@@ -11,7 +11,10 @@ class Comment < ActiveRecord::Base
   belongs_to :creator, -> { with_deleted }, class_name: 'User', inverse_of: :comments
 
   has_many :spam_reports, as: :spamable, dependent: :destroy
+  has_many :activity_feed_events, as: :event_source, dependent: :destroy
+
   has_many :activity_feed_images, as: :owner
+  has_many :comments, as: :commentable
 
   validates :body, presence: true, length: { maximum: 5000 }
 
@@ -75,6 +78,10 @@ class Comment < ActiveRecord::Base
 
   def event
     body
+  end
+
+  def can_be_commented?
+    commentable_type != 'Comment'
   end
 
   private

@@ -9,6 +9,7 @@ class UserStatusUpdate < ActiveRecord::Base
   has_and_belongs_to_many :topics
   has_and_belongs_to_many :transactables
   has_many :activity_feed_images, as: :owner
+  has_many :activity_feed_events, as: :event_source, dependent: :destroy
 
   validates :text, :updateable_type, :updateable_id, presence: true
   validates :text, length: { maximum: 5000 }
