@@ -94,14 +94,8 @@ custom_attributes:
     html_tag: input
     validation:
       required: false
-  - name: order_title
-    label: 'Order Title'
-    attribute_type: string
-    html_tag: input
-    validation:
-      required: true
   - name: order_description
-    label: 'Order Description'
+    label: 'Describe your order'
     attribute_type: string
     html_tag: textarea
     validation:
@@ -111,13 +105,12 @@ validation:
   - field_name: name
     required: true
 
-
 form_components:
   - type: transactable_attributes
     name: Details
     fields:
+      - transactable: name
       - transactable: how_pay_for_order
-      - transactable: order_title
       - transactable: purchase_order_number
       - transactable: about_organization
       - transactable: order_contact
@@ -138,7 +131,7 @@ form_components:
     name: Tell us a little about your order
     fields:
       - transactable: how_pay_for_order
-      - transactable: order_title
+      - transactable: name
       - transactable: purchase_order_number
       - transactable: about_organization
       - transactable: order_contact

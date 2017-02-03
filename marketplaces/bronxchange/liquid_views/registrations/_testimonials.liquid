@@ -1,26 +1,17 @@
+{% assign testimonials = user.buyer_profile.customizations_by_type['Testimonial'] %}
+{% if testimonials.size > 0 %}
 <section class="testimonials-a">
   <h3>Testimonials</h3>
 
   <div class="items">
-    <blockquote class="home-grid-item">
-      <p>“Aliquam vicis et ad enim utinam ad. Modo facilisi capto mara. Iustum macto singularis feugait vel plaga damnum feugait consequat eum lobortis.”</p>
-      <footer>
-        <cite>Juan J.</cite>
-      </footer>
-    </blockquote>
-
-    <blockquote class="home-grid-item">
-      <p>“Aliquam vicis et ad enim utinam ad. Modo facilisi capto mara. Iustum macto singularis feugait vel plaga damnum feugait consequat eum lobortis.”</p>
-      <footer>
-        <cite>Rosa Z.</cite>
-      </footer>
-    </blockquote>
-
-    <blockquote class="home-grid-item">
-      <p>“Aliquam vicis et ad enim utinam ad. Modo facilisi capto mara. Iustum macto singularis feugait vel plaga damnum feugait consequat eum lobortis.”</p>
-      <footer>
-        <cite>Carlos M.</cite>
-      </footer>
-    </blockquote>
+    {% for testimonial in testimonials %}
+      <blockquote>
+        <p>“{{ testimonial.testimonial }}”</p>
+        <footer>
+          <cite>{{ testimonial.author }}{% if testimonial.organization != blank %}, {{ testimonial.organization }}{% endif %}</cite>
+        </footer>
+      </blockquote>
+    {% endfor %}
   </div>
 </section>
+{% endif %}
