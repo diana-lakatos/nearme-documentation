@@ -540,6 +540,9 @@ class InstanceView < ActiveRecord::Base
     },
     'dashboard/user_messages/dashboard_form' => {
       is_partial: true
+    },
+    'dashboard/company/transactables/index' => {
+      is_partial: false
     }
 
   }.sort.to_h.freeze
