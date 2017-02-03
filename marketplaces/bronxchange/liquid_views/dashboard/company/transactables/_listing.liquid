@@ -2,9 +2,9 @@
   <div class='panel-body'>
     {% if transactables.size > 0 %}
       {% if is_client == "true" %}
-        {% include 'dashboard/company/transactables/passenger_listing.html' %}
+        {% include 'dashboard/company/transactables/lister_listing.html' %}
       {% else %}
-        {% include 'dashboard/company/transactables/driver_listing.html' %}
+        {% include 'dashboard/company/transactables/enquirer_listing.html' %}
       {% endif %}
     {% else %}
       <p class='empty-resultset'>

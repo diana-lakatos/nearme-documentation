@@ -21,31 +21,7 @@
     </a>
   </header>
 
-
-  <div class="user-profile-a-options">
-    {% if current_user.id != user.id %}
-      <ul>
-        {% if current_user != blank and current_user.has_seller_profile? %}
-          <li class="begin-collaboration">
-            {% if current_user.seller_profile.onboarding_at == blank %}
-              <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Request Proposal</a>
-            {% else %}
-              <a href="#collaboration-{{ user.id }}" class="button-a" data-collaborations-trigger>Request Proposal</a>
-            {% endif %}
-          </li>
-        {% endif %}
-          <li>
-            <a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Send Message</a>
-          </li>
-        {% if current_user.has_seller_profile? %}
-          <li>
-            {% include 'shared/components/wish_list_button_injection.html', object: user %}
-          </li>
-        {% endif %}
-      </ul>
-    {% endif %}
-  </div>
-
+  {% include "registrations/lister_actions", user: user %}
 
   <div class="user-profile-a-description">
 
