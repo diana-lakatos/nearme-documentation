@@ -1,0 +1,18 @@
+db:
+  image: aidanlister/postgres-hstore
+  ports:
+    - "5433:5432"
+  environment:
+    POSTGRES_PASSWORD: nearme
+    POSTGRES_USER: nearme
+    POSTGRES_DB: desksnearme_development
+  # volumes_from:
+  #   - dbdata
+
+es:
+  image: elasticsearch:2.4
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+  environment:
+    ES_JAVA_OPTS: '-Des.script.engine.groovy.inline.search=on -Des.script.inline=on -Des.script.indexed=on'
