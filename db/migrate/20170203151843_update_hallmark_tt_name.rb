@@ -9,6 +9,10 @@ class UpdateHallmarkTtName < ActiveRecord::Migration
       t.update_attribute(:value, new_value)
     end
 
+    t = Translation.where(locale: :en, key: 'featured_projects', instance_id: 5011).first_or_initialize
+    t.value = 'Latest from the Community'
+    t.save!
+
     Dir.glob(Rails.root.join('marketplaces', 'hallmark', 'translations', '*.yml')).each do |yml_filename|
       en_locales = YAML.load_file(yml_filename)
       en_locales_hash = convert_hash_to_dot_notation(en_locales['en'])
