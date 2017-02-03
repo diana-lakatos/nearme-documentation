@@ -120,12 +120,12 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
           first_name: owner.first_name,
           last_name:  owner.last_name,
           address: {
-            country:     owner.address_country,
-            state:       owner.address_state,
-            city:        owner.address_city,
-            postal_code: owner.address_postal_code,
-            line1:       owner.address_line1,
-            line2:       owner.address_line2
+            country:     iso_country_code,
+            state:       owner.current_address.state_code || owner.current_address.state,
+            city:        owner.current_address.city,
+            postal_code: owner.current_address.postcode,
+            line1:       owner.current_address.address || owner.current_address.street,
+            line2:       owner.current_address.address2
           },
           dob: {
             day:   dob.day,
