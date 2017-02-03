@@ -1,182 +1,186 @@
+{% query_graph 'get_user', result_name: g, userId: listing.creator.id %}
+
 {% assign collaborator = current_user | find_collaborator: listing %}
 {% assign title = platform_context.name | append: ' - ' | append: listing.name %}
 {% title title %}
 <main id="main">
-  <div class="wrapper-a">
-    <div class="back-to-search-results back-to-listings">
-      <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: listing.transactable_type.slug }}">Back to My Bookings</a>
-    </div>
 
-    <article class="box-a booking-a">
-      <h1>{{ listing.name }}</h1>
-      <div class="content">
-        <div class="booking-properties">
-          <div class="overview">
-            <div class="state-{{ listing.state }}"><span>{{ listing.state | humanize }}</span></div>
-            <div class="meta">
-              Posted <b>{{ listing.created_at | time_ago_in_words }}</b> ago
-            </div>
-          </div>
+  <div class="back-to-search-results back-to-listings">
+    <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: listing.transactable_type.slug }}">Back to My Orders</a>
+  </div>
 
-          <div class="properties">
-            <dl>
-              <dt>Passenger Name:</dt>
-              <dd>{{ listing.creator.name }}</dd>
-
-              {% if collaborator != blank %}
-              <dt>Invite Sent:</dt>
-              <dd><time datetime="{{ collaborator.approved_by_owner_at }}">{{ collaborator.approved_by_owner_at | l: 'short'}}</time></dd>
-              {% endif %}
-
-              <dt>City:</dt>
-              <dd>{{ listing.properties.city_name }}</dd>
-
-              {% for language in listing.customizations_by_type['Languages'] %}
-                {% capture langs %}{{ langs }}{% unless langs == blank %}, {% endunless %}{{ language.language }} ({{ language.fluency }}){% endcapture %}
-              {% endfor %}
-
-              {% if langs != blank %}
-                <dt>Languages Spoken:</dt>
-                <dd>{{ langs }}</dd>
-              {% endif %}
-
-              {% if listing.properties.number_of_passengers != blank %}
-              <dt>Passengers:</dt>
-              <dd>{{ listing.properties.number_of_passengers }}</dd>
-              {% endif %}
-
-              {% if listing.categories["Extras"]["children"].size > 0 %}
-              <dt>Extras:</dt>
-              <dd>{{ listing.categories["Extras"]["children"] | join: ', ' }}</dd>
-              {% endif %}
-              {% if listing.transactable_collaborators[0] != blank %}
-                <dt>Price:</dt>
-                {% assign total = listing.transactable_collaborators[0].user.buyer_properties.hourly_price | times: listing.properties.duration %}
-                <dd data-convert-price="{{ total }}">{{ total | pricify }}</dd>
-              {% endif %}
-            </dl>
-
-            <dl>
-              {% if listing.properties.trip_start_date != blank %}
-              <dt>Date:</dt>
-              <dd>{{ listing.properties.trip_start_date }}</dd>
-              {% endif %}
-
-              {% if listing.properties.trip_start_time != blank %}
-              <dt>Start Time:</dt>
-              <dd>{{ listing.properties.trip_start_time }}</dd>
-              {% endif %}
-
-
-              {% if transactable.properties.duration != blank %}
-                {% assign duration = transactable.properties.duration %}
-                <dt>Length: </dt>
-                <dd>{{ duration }} {% if duration == 1 %}hour{% else %}hours{% endif %}</dd>
-              {% endif %}
-
-              {% if transactable.properties.pickup_location != blank %}
-              <dt>Pickup Location:</dt>
-              <dd>{{ transactable.properties.pickup_location }}</dd>
-              {% endif %}
-
-            </dl>
+  <article class="order-a">
+    <h1>{{ listing.name }}</h1>
+    <div class="content">
+      <div class="order-properties">
+        <div class="overview">
+          <div class="state-{{ listing.state }}"><span>{{ listing.state | humanize }}</span></div>
+          <div class="meta">
+            Posted <b>{{ listing.created_at | time_ago_in_words }}</b> ago
           </div>
         </div>
 
-        <div class="booking-description">
-          {% if listing.description != blank %}
-          <h3>Trip Description:</h3>
-          <p>{{ listing.description | nl2br }}</p>
-          {% endif %}
+        <div class="properties">
+          <dl>
+            <dt>Purchaser Name:</dt>
+            <dd>{{ listing.creator.name }}</dd>
 
-          {% if listing.categories["Categories of Interest"]["children"].size > 0 %}
-            <h3>Categories of Interest:</h3>
-            <ul>
-              {% for category in listing.categories["Categories of Interest"]["children"] %}
-              <li>{{ category }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
+            <dt>Organization:</dt>
+            <dd>{{ listing.creator.seller_properties.organization_name }}</dd>
 
-          {% if listing.properties.special_requests != blank %}
-          <h3>Special Requests:</h3>
-          <p>{{ listing.properties.special_requests }}</p>
-          {% endif %}
+            {% if collaborator != blank %}
+            <dt>Offer Requested:</dt>
+            <dd><time datetime="{{ collaborator.approved_by_owner_at }}">{{ collaborator.approved_by_owner_at | l: 'short'}}</time></dd>
+            {% endif %}
+
+            {% if listing.properties.order_contact %}
+            <dt>Contact person:</dt>
+            <dd>{{ listing.properties.order_contact }}</dd>
+            {% endif %}
+
+            {% if listing.categories["Language"]["children"].size > 0 %}
+            <dt>Required language proficiency:</dt>
+            <dd>{{ listing.categories["Language"]["children"] | join: ', ' }}</dd>
+            {% endif %}
+          </dl>
+
+          <dl>
+            {% if listing.properties.approximate_budget != blank %}
+            <dt>Approximate budget:</dt>
+            <dd>{{ listing.properties.approximate_budget }}</dd>
+            {% endif %}
+
+            {% if listing.properties.how_pay_for_order != blank %}
+            <dt>Payment method:</dt>
+            <dd>{{ listing.properties.how_pay_for_order }}</dd>
+            {% endif %}
+
+            {% if listing.properties.how_pay_for_order != blank %}
+            <dt>Purchase order number:</dt>
+            <dd>{{ listing.properties.purchase_order_number }}</dd>
+            {% endif %}
+
+            {% if listing.properties.delivery_date != blank %}
+            <dt>Delivery date:</dt>
+            <dd><time datetime="{{ listing.properties.delivery_date }}">{{ listing.properties.delivery_date | l: 'short'}}</time></dd>
+            {% endif %}
+
+            {% if listing.properties.delivery_address != blank %}
+            <dt>Delivery address:</dt>
+            <dd>{{ listing.properties.delivery_address }}</dd>
+            {% endif %}
+          </dl>
         </div>
       </div>
 
+      <div class="order-description">
+        <h3>Order description</h3>
+        {{ listing.properties.order_description | markdownify }}
 
-      <aside class="sidebar">
-        <ul class="actions-a">
-          {% assign orders = current_user | get_enquirer_orders: listing %}
-          {% assign can_make_offer = false %}
-          {% if current_status == 'pending' %}
-            {% if orders == empty %}
-              {% assign can_make_offer = true %}
-            {% else %}
-              {% assign can_make_offer = true %}
-              {% for order in orders %}
-                {% if order.state == 'unconfirmed' %}
-                  {% assign can_make_offer = false %}
-                {% endif %}
-              {% endfor %}
-            {% endif  %}
+        {% if listing.properties.other_requirements != blank %}
+        <h4>Other requirements</h4>
+        {{ listing.properties.other_requirements | markdownify }}
+        {% endif %}
+
+        {% if listing.attachments.size > 0 %}
+        <div class="documents-a">
+          <h4>Additional documents</h4>
+          <ul>
+            {% for attachment in listing.attachments %}
+            <li><a href="{{ attachment.attachment_url }}" download>{{ attachment.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if listing.creator.seller_properties.organization_description != blank or listing.creator.seller_properties.organization_mission != blank %}
+        <div class="order-description">
+          <h3>More about {{ listing.creator.seller_properties.organization_name }}</h3>
+
+          {% if listing.creator.seller_properties.organization_description != blank %}
+          <h4>About</h4>
+          {{ listing.creator.seller_properties.organization_description | markdownify }}
           {% endif %}
 
-          {% if can_make_offer == true %}
-            <li>
-              {% if current_user.has_verified_merchant_account == true -%}
-                {% assign pricing = listing.action_type.pricings | detect: number_of_units: current_user.buyer_properties.driver_type_unit -%}
-                {% assign url = 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration, transactable_pricing_id: pricing.id -%}
-                <a class="button-a" data-href="{{ url }}" href="{{ url }}" data-modal="true">Accept</a>
-              {% else -%}
-                {% assign url = 'required_modal_dashboard_company_payouts_path' | generate_url -%}
-                <a class="button-a" data-modal="true" href="{{ url }}" data-href="{{ url }}">Accept</a>
-              {% endif -%}
-            </li>
-            {% if current_status == 'pending' -%}
-              {% assign transactable_collaborator = current_user | find_collaborator: listing -%}
-              <li>
-                <a class="button-b" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this booking?">Decline</a>
-              </li>
+          {% if listing.creator.seller_properties.organization_mission != blank %}
+          <h4>Our mission</h4>
+          {{ listing.creator.seller_properties.organization_mission | markdownify }}
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <aside class="sidebar">
+      <ul class="actions-a">
+        {% assign orders = current_user | get_enquirer_orders: listing %}
+        {% assign can_make_offer = false %}
+        {% if current_status == 'pending' %}
+          {% if orders == empty %}
+            {% assign can_make_offer = true %}
+          {% else %}
+            {% assign can_make_offer = true %}
+            {% for order in orders %}
+              {% if order.state == 'unconfirmed' %}
+                {% assign can_make_offer = false %}
+              {% endif %}
+            {% endfor %}
+          {% endif  %}
+        {% endif %}
+
+        {% if can_make_offer == true %}
+          <li>
+            {% if current_user.has_verified_merchant_account == true -%}
+              {% assign pricing = listing.action_type.pricings | detect: number_of_units: current_user.buyer_properties.driver_type_unit -%}
+              {% assign url = 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration, transactable_pricing_id: pricing.id -%}
+              <a class="button-a" data-href="{{ url }}" href="{{ url }}" data-modal="true">Accept</a>
+            {% else -%}
+              {% assign url = 'required_modal_dashboard_company_payouts_path' | generate_url -%}
+              <a class="button-a" data-modal="true" href="{{ url }}" data-href="{{ url }}">Accept</a>
             {% endif -%}
-          {% endif %}
-
-          {% if collaborator != blank %}
-            <li><a class="button-b action-message" data-modal="true" data-href="{{ listing.creator.user_message_path }}">Send Message</a></li>
-          {% endif %}
-        </ul>
-
-        <figure class="avatar">
-          <img src="{{ listing.creator.avatar_url_big }}" alt="{{ listing.creator.name }}">
-        </figure>
-
-        <h3 class="name">{{ listing.creator.name }}</h3>
-
-        {% if listing.creator.properties.about %}
-          {{ listing.creator.properties.about | nl2br }}
+          </li>
+          {% if current_status == 'pending' -%}
+            {% assign transactable_collaborator = current_user | find_collaborator: listing -%}
+            <li>
+              <a class="button-b" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this order?">Decline</a>
+            </li>
+          {% endif -%}
         {% endif %}
 
-        {% if listing.creator.seller_avarage_rating > 0 %}
-        <div class="rating-a" data-rating="{{ listing.creator.seller_avarage_rating | default: 0 }}">{{ listing.creator.seller_avarage_rating | default: 0 }} out of 5 stars</div>
+        {% if collaborator != blank %}
+          <li><a class="button-b action-message" data-modal="true" data-href="{{ listing.creator.user_message_path }}">Send Message</a></li>
         {% endif %}
+      </ul>
 
-        <ul class="user-properties">
-          <li><b>{{ listing.creator.transactables_count }}</b> Bookings Requested</li>
-          <li><b>{{ listing.creator.completed_transactables_count }}</b> Bookings Completed</li>
-          <li>{{ 'registrations.member_since' | translate }} {{ listing.creator.created_at | to_date | l: 'short' }}</li>
-        </ul>
+      {% if g.user.logo[0] != blank %}
+      <figure class="avatar">
+        <img src="{{ g.user.logo[0].mini }}" alt="{{ user.buyer_properties.company_name }}" itemprop="logo">
+      </figure>
+      {% endif %}
 
-        {% if listing.creator.has_active_credit_cards? %}
-        <p class="payment-verified">
-          <strong>Payment Method Verified</strong>
-        </p>
-        {% endif %}
+      {% if g.user.owner_photo[0] != blank %}
+      <figure class="avatar">
+        <img src="{{ g.user.owner_photo[0].mini }}" alt="{{ user.full_name }}">
+      </figure>
+      {% endif %}
 
-        <ul class="actions-a">
-          <li><a data-href="{{ listing.inappropriate_report_path }}" data-modal="true" class="button-c action-flag mini">Flag as inappropriate</a></li>
-        </ul>
-      </aside>
-    </article>
-  </div>
+      <h3 class="name">{{ listing.creator.name }} <span class="organization">{{ listing.creator.seller_properties.organization_name }}</span></h3>
+
+      <ul class="user-properties">
+        <li><b>{{ listing.creator.transactables_count }}</b> Total Orders</li>
+        <li><b>{{ listing.creator.completed_transactables_count }}</b> Orders Completed</li>
+        <li>{{ 'registrations.member_since' | translate }} {{ listing.creator.created_at | to_date | l: 'short' }}</li>
+      </ul>
+
+      {% if listing.creator.has_active_credit_cards? %}
+      <p class="payment-verified">
+        <strong>Payment Method Verified</strong>
+      </p>
+      {% endif %}
+
+      <ul class="actions-a">
+        <li><a data-href="{{ listing.inappropriate_report_path }}" data-modal="true" class="button-c action-flag mini">Flag as inappropriate</a></li>
+      </ul>
+    </aside>
+  </article>
 </main>

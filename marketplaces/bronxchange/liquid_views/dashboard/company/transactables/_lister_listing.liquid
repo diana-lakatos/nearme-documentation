@@ -6,7 +6,7 @@
       <h2>{{ transactable.name }}</h2>
 
       {% if current_status != 'archived' -%}
-        <a href="{{ transactable.show_path }}" class="btn btn-primary btn-sm" rel="external">Visit booking page</a>
+        <a href="{{ transactable.show_path }}" class="btn btn-primary btn-sm" rel="external">Visit order page</a>
       {% endif -%}
 
       {% if transactable.state == 'completed' -%}
@@ -19,15 +19,14 @@
     <div class="listing-b-inner">
       <div class="listing-b-booking-details">
         <dl class="properties">
-          <dt>When:</dt>
-          <dd>{{ transactable.properties.trip_start_date | to_date | l: 'short' }} at {{ transactable.properties.trip_start_time }}</dd>
+          <dt>Contact person:</dt>
+          <dd>{{ transactable.properties.order_contact }}</dd>
 
-          <dt>How long:</dt>
-          {% assign duration = transactable.properties.duration -%}
-          <dd>{{ duration }} {% if duration == 1 -%}hour{% else -%}hours{% endif -%}</dd>
+          <dt>Purchase Number:</dt>
+          <dd>{{ transactable.properties.purchase_order_number }}</dd>
 
-          <dt>Pickup at:</dt>
-          <dd>{{ transactable.properties.pickup_location }}</dd>
+          <dt>Budget:</dt>
+          <dd>{{ transactable.properties.approximate_budget }}</dd>
         </dl>
 
         <div class="actions">
@@ -36,24 +35,25 @@
           {% endif -%}
 
           {% if current_status == 'in progress' %}
-            <a href="{{ offer.order_complete_url }}" data-method="post" class="btn btn-default btn-sm" data-confirm="Are you sure you want to mark this booking as completed?">Mark as completed</a>
+            <a href="{{ offer.order_complete_url }}" data-method="post" class="btn btn-default btn-sm" data-confirm="Are you sure you want to mark this order as completed?">Mark as completed</a>
           {% endif %}
 
           {% if current_status != 'archived' -%}
-              <a href='{{ transactable.cancel_path | append: "?status=" | append: current_status }}' data-confirm="Are you sure you want to cancel this booking?" class="btn btn-default btn-sm">Cancel Booking</a>
+              <a href='{{ transactable.cancel_path | append: "?status=" | append: current_status }}' data-confirm="Are you sure you want to cancel this order?" class="btn btn-default btn-sm">Cancel Order</a>
           {% endif -%}
         </div>
       </div>
 
       <div class="listing-b-user-details">
         {% if collaborator == blank -%}
-          <h3 class="no-driver-selected">You have not selected a driver for this booking yet.</h3>
+          <h3 class="no-collaborator-selected">You have not selected a vendor for this order yet.</h3>
         {% else -%}
-          {% assign driver = collaborator.user -%}
+          {% assign enquirer = collaborator.user -%}
           <div class="user-profile">
 
             <figure class="avatar">
-              <a href="{{ driver.user_profile_url }}" rel="external"><img src="{{ driver.avatar_url_big }}" alt="{{ driver.name }}"></a>
+              {% comment %}TODO - CHANGE PHOTO TO CUSTOM ATTRIBUTE{% endcomment %}
+              <a href="{{ enquirer.user_profile_url }}" rel="external"><img src="{{ enquirer.avatar_url_big }}" alt="{{ enquirer.name }}"></a>
 
               {% if collaborator.transactable_user_messages.size == 0 -%}
                 <a data-modal="true" class="action-message" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, user_id: collaborator.user.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
@@ -62,29 +62,29 @@
               {% endif -%}
             </figure>
 
-            <h3><a href="{{ driver.user_profile_url }}" rel="external">{{ driver.name }}</a></h3>
-            <p class="driver-category driver-category-{{ driver.buyer_properties.driver_category | downcase }}">Category: <b>{{ driver.buyer_properties.driver_category }}</b></p>
+            <h3><a href="{{ enquirer.user_profile_url }}" rel="external">{{ enquirer.seller_properties.company_name }}</a></h3>
+            <p class="enquirer-category enquirer-category-{{ enquirer.buyer_properties.enquirer_category | downcase }}">Category: <b>{{ enquirer.buyer_properties.enquirer_category }}</b></p>
             <p class="price">Price:
               {% if offer != blank -%}
               <span data-convert-price="{{ offer.total_amount_money.to_i }}">{{ offer.total_amount_money | pricify }}</span>
               {% else -%}
-              {% assign total = driver.buyer_properties.hourly_price | times: transactable.properties.duration -%}
+              {% assign total = enquirer.buyer_properties.hourly_price | times: transactable.properties.duration -%}
               <span data-convert-price="{{ total }}">{{ total | pricify }}</span>
               {% endif -%}
             </p>
 
-            {% if driver.buyer_properties.short_bio != blank -%}
-            <p class="bio">{{ driver.buyer_properties.short_bio | nl2br }}</p>
+            {% if enquirer.buyer_properties.short_bio != blank -%}
+            <p class="bio">{{ enquirer.buyer_properties.short_bio | nl2br }}</p>
             {% endif -%}
           </div>
 
           {% if transactable.state == 'pending' and collaborator != blank -%}
             {% if offer != blank and offer.unconfirmed? -%}
-              <div class="alert alert-info">Approved by Driver, waiting for your payment</div>
+              <div class="alert alert-info">Approved by enquirer, waiting for your payment</div>
             {% elsif offer != blank and offer.rejected? -%}
-              <div class="alert alert-warning">Approved by Driver, waiting for your payment</div>
+              <div class="alert alert-warning">Approved by enquirer, waiting for your payment</div>
             {% else -%}
-              <div class="alert alert-info">Waiting for Driver to approve</div>
+              <div class="alert alert-info">Waiting for enquirer to approve</div>
             {% endif -%}
           {% endif -%}
 
@@ -102,7 +102,7 @@
           {% endif -%}
 
 
-            {% for language in driver.buyer_profile.customizations_by_type['Languages'] -%}
+            {% for language in enquirer.buyer_profile.customizations_by_type['Languages'] -%}
               {% capture langs -%}{{ langs }}{% unless langs == blank -%}, {% endunless -%}{{ language.language }} ({{ language.fluency }}){% endcapture -%}
             {% endfor -%}
             <dl class="properties">
@@ -112,14 +112,14 @@
               {% endif -%}
 
               <dt>Vehicle</dt>
-              <dd>{{ driver.buyer_properties.vehicle_type }} {{ driver.buyer_properties.vehicle_model }} ({{ driver.buyer_properties.vehicle_year }})</dd>
+              <dd>{{ enquirer.buyer_properties.vehicle_type }} {{ enquirer.buyer_properties.vehicle_model }} ({{ enquirer.buyer_properties.vehicle_year }})</dd>
 
               <dt>Capacity</dt>
-              <dd>{{ 'passengers_count' | t: count: driver.buyer_properties.vehicle_capacity }}</dd>
+              <dd>{{ 'passengers_count' | t: count: enquirer.buyer_properties.vehicle_capacity }}</dd>
 
-              {% if driver.formatted_buyer_categories['Extras']['children'].size > 0 -%}
+              {% if enquirer.formatted_buyer_categories['Extras']['children'].size > 0 -%}
                 <dt>Extras</dt>
-                <dd>{{ driver.formatted_buyer_categories['Extras']['children'] | join: ', ' }}</dd>
+                <dd>{{ enquirer.formatted_buyer_categories['Extras']['children'] | join: ', ' }}</dd>
               {% endif -%}
             </dl>
 

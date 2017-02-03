@@ -43,7 +43,7 @@ action_types:
 
 custom_attributes:
   - name: how_pay_for_order
-    label: 'How are you paying for this order'
+    label: 'How are you going to pay for this order?'
     attribute_type: string
     html_tag: select
     validation:
@@ -58,14 +58,8 @@ custom_attributes:
     html_tag: input
     validation:
       required: true
-  - name: about_organization
-    label: 'About Organization'
-    attribute_type: string
-    html_tag: textarea
-    validation:
-      required: false
   - name: order_contact
-    label: 'Order Contact'
+    label: 'Contact person for this order'
     attribute_type: string
     html_tag: input
     validation:
@@ -96,6 +90,7 @@ custom_attributes:
       required: false
   - name: order_description
     label: 'Describe your order'
+    input_html_options_string: "class=>large"
     attribute_type: string
     html_tag: textarea
     validation:
@@ -107,39 +102,49 @@ validation:
 
 form_components:
   - type: transactable_attributes
-    name: Details
+    name: General
     fields:
       - transactable: name
-      - transactable: how_pay_for_order
-      - transactable: purchase_order_number
-      - transactable: about_organization
       - transactable: order_contact
       - transactable: order_description
       - transactable: other_requirements
-      - transactable: delivery_date
-      - transactable: delivery_address
       - transactable: Category - Language
       - transactable: approximate_budget
       - transactable: seller_attachments
 
-  - type: space_wizard
-    name: Tell us a little about yourself
-    fields:
-      - user: name
-
-  - type: space_wizard
-    name: Tell us a little about your order
+  - type: transactable_attributes
+    name: Payment and Delivery
     fields:
       - transactable: how_pay_for_order
-      - transactable: name
       - transactable: purchase_order_number
-      - transactable: about_organization
-      - transactable: order_contact
-      - transactable: order_description
-      - transactable: other_requirements
       - transactable: delivery_date
       - transactable: delivery_address
+
+
+  - type: space_wizard
+    name: Tell us a little about your organization
+    fields:
+      - seller: organization_name
+      - seller: organization_description
+
+  - type: space_wizard
+    name: Describe your order
+    fields:
+      - transactable: name
+      - transactable: order_description
+      - transactable: order_contact
       - transactable: Category - Language
+      - transactable: other_requirements
       - transactable: approximate_budget
       - transactable: seller_attachments
+
+  - type: space_wizard
+    name: Delivery and payment
+    fields:
+      - transactable: how_pay_for_order
+      - transactable: purchase_order_number
+      - transactable: delivery_date
+      - transactable: delivery_address
+
+
 

@@ -3,27 +3,21 @@
     {% if user.buyer_properties.workplace %}
     <li class="workplace">
       <h3>Workplace</h3>
-      {% unless workplace_text == blank %}
-      {{ workplace_text | markdownify }}
-      {% endunless %}
+      {{ user.buyer_properties.workplace_text | markdownify }}
     </li>
     {% endif %}
 
     {% if user.buyer_properties.community_wealth %}
     <li class="commmunity-wealth">
       <h3>Community Wealth</h3>
-      {% unless community_wealth_text == blank %}
-      {{ community_wealth_text | markdownify }}
-      {% endunless %}
+      {{ user.buyer_properties.community_wealth_text | markdownify }}
     </li>
     {% endif %}
 
     {% if user.buyer_properties.environment_and_health %}
     <li class="environment-health">
       <h3>Environment &amp; Health</h3>
-      {% unless environment_and_health_text == blank %}
-      {{ environment_and_health_text | markdownify  }}
-      {% endunless %}
+      {{ user.buyer_properties.environment_and_health_text | markdownify  }}
       </li>
     {% endif %}
   </ul>
