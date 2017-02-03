@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module Api
-  class V3::TransactableCollaboratorsController < BaseController
-    skip_before_filter :require_authorization
-    before_filter :find_transactable
+  class V4::TransactableCollaboratorsController < BaseController
+    skip_before_action :require_authorization
+    before_action :find_transactable
 
     def create
       @transactable_collaborator = @transactable.transactable_collaborators.build

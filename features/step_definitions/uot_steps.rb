@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require Rails.root.join('lib', 'tasks', 'uot', 'uot_setup.rb')
 
 def click_accept_button
@@ -53,7 +54,7 @@ Given /^someone created unconfirmed_offer for registered_lister$/ do
   FactoryGirl.create(:company, creator: enquirer)
   offer = FactoryGirl.create(:unconfirmed_offer, user: @instance.buyer_profile_type.users.first)
   lister = offer.transactable.creator
-  company = lister.companies.build(name: "Test Company", completed_at: Time.current)
+  company = lister.companies.build(name: 'Test Company', completed_at: Time.current)
   lister.get_seller_profile
   lister.seller_profile.mark_as_onboarded!
   lister.save!

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::Company::UsersController < Dashboard::Company::BaseController
   def collaborations_for_current_user
     @user = User.find(params[:id])

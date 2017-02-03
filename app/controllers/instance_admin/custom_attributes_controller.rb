@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceController
   before_action :find_target
   before_action :normalize_valid_values, only: [:create, :update]

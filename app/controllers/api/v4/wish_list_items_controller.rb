@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Api
-  class V3::WishListItemsController < BaseController
+  class V4::WishListItemsController < BaseController
     include WishListItemsHelper
 
     before_action :check_wish_lists_enabled

@@ -10,13 +10,9 @@ class BaseForm < Reform::Form
     @form_builder_drop ||= FormDrop.new(self)
   end
 
-  def new_record?
-    model.new_record?
-  end
+  delegate :new_record?, to: :model
 
-  def marked_for_destruction?
-    model.marked_for_destruction?
-  end
+  delegate :marked_for_destruction?, to: :model
 
   # Ideally this method should not exist, forms should be clever enough to use translations automatically
   # Not that simple though:

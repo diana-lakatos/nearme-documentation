@@ -16,7 +16,7 @@ class Photo < ActiveRecord::Base
   ranks :position, with_same: [:owner_id, :owner_type, :creator_id]
 
   inherits_columns_from_association([:creator_id], :owner)
-  #validates :owner_type, inclusion: { in: VALID_OWNER_TYPES }, presence: true
+  # validates :owner_type, inclusion: { in: VALID_OWNER_TYPES }, presence: true
 
   belongs_to :owner, -> { with_deleted }, polymorphic: true, touch: true
   belongs_to :creator, -> { with_deleted }, class_name: 'User'
@@ -45,7 +45,7 @@ class Photo < ActiveRecord::Base
   after_commit :user_added_photos_to_group_event, on: [:create, :update]
   def user_added_photos_to_project_event
     return if paranoia_destroyed?
-    return if !PlatformContext.current.instance.is_community?
+    return unless PlatformContext.current.instance.is_community?
 
     if owner_type == 'Transactable' && owner.present? && !owner.draft? && !skip_activity_feed_event
       event = :user_added_photos_to_transactable

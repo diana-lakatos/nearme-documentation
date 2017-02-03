@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 When /^(?:|I )follow "([^"]*)" bookable noun$/ do |link|
   click_link "#{link} #{TransactableType.first.translated_bookable_noun}"
 end

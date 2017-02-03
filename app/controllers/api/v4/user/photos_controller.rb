@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-class Api
-  class V4
+module Api
+  module V4
     class User
       class PhotosController < Api::V4::User::BaseController
         before_action :validate_owner_type
@@ -26,7 +26,6 @@ class Api
         def find_owner
 
           @owner = params[:owner_type].constantize.find_by(id: params[:owner_id])
-         end
         end
       end
     end

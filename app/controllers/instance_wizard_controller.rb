@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceWizardController < ActionController::Base
   protect_from_forgery
   layout 'instance_wizard'

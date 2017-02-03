@@ -10,7 +10,7 @@ module Devise
             # update form does not need to have email, but if it has, it can't be blank
             errors.add(:email, :blank) if model.email.blank? && email.blank?
           end
-          validates_with PasswordValidator, if: -> (form) { form.model.password.present? && !(form.model.new_record? && form.model.authentications.size.positive?) }
+          validates_with PasswordValidator, if: ->(form) { form.model.password.present? && !(form.model.new_record? && form.model.authentications.size.positive?) }
         end
       end
     end

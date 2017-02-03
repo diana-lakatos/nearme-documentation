@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given /^Alerts for sign up exist$/ do
   Utils::DefaultAlertsCreator::SignUpCreator.new.create_email_verification_email!
 end
@@ -23,6 +24,5 @@ Given /^form configuration includes custom attribute$/ do
 end
 
 Then /^(?:|I )should see "([^"]*)" platform name$/ do |text|
-  page.should have_content("#{text} #{model!("instance").name}")
+  page.should have_content("#{text} #{model!('instance').name}")
 end
-

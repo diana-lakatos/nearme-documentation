@@ -175,7 +175,7 @@ ActiveSupport::TestCase.class_eval do
     PaymentGateway.any_instance.stubs(:gateway_purchase).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
     PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:find_balance).returns(
-      OpenStruct.new({ id: '1', status: 'succeeded', fee_details: [OpenStruct.new(type: 'stripe_fee', amount: 10)] })
+      OpenStruct.new(id: '1', status: 'succeeded', fee_details: [OpenStruct.new(type: 'stripe_fee', amount: 10)])
     )
     PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: 'COMPLETED')))
 

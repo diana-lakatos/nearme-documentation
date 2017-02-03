@@ -52,7 +52,7 @@ Before do
   %w(default lister enquirer).each do |role|
     FactoryGirl.create(:"form_configuration_#{role}_signup")
   end
-  FactoryGirl.create(:"form_configuration_default_update_minimum")
+  FactoryGirl.create(:form_configuration_default_update_minimum)
 end
 
 After do

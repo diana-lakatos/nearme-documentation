@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 module Api
-  class V3::TransactablesController < BaseController
-    before_filter :find_transactable_type
-    skip_before_filter :require_authentication
-    skip_before_filter :require_authorization
+  class V4::TransactablesController < BaseController
+    before_action :find_transactable_type
+    skip_before_action :require_authentication
+    skip_before_action :require_authorization
 
     def index
       params[:v] = 'listing_mixed'

@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module Api
-  class V3::ReverseProxyLinksController < BaseController
-    skip_before_filter :require_authentication
-    skip_before_filter :require_authorization, only: [:index]
+  class V4::ReverseProxyLinksController < BaseController
+    skip_before_action :require_authentication
+    skip_before_action :require_authorization, only: [:index]
 
     def index
       @scope = ReverseProxyLink.all
@@ -21,7 +22,7 @@ module Api
             end
           end
         end
-        fail ActiveRecord::Rollback if @error_reverse_proxy_link.errors.any?
+        raise ActiveRecord::Rollback if @error_reverse_proxy_link.errors.any?
       end
 
       if @error_reverse_proxy_link.errors.any?

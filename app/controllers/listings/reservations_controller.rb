@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Listings::ReservationsController < ApplicationController
   skip_before_action :filter_out_token, only: [:return_express_checkout, :cancel_express_checkout]
   skip_before_action :log_out_if_token_exists, only: [:return_express_checkout, :cancel_express_checkout]

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CategoryTreeInput < SimpleForm::Inputs::StringInput
   def input(wrapper_options = nil)
     category = options[:category]

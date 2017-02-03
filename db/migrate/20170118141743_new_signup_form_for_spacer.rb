@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class NewSignupFormForSpacer < ActiveRecord::Migration
   def up
     instance = Instance.find_by(id: 130)
@@ -11,7 +12,7 @@ class NewSignupFormForSpacer < ActiveRecord::Migration
                                                                      valid_values: 'No other rules than the standard Spacer rules,Only store car or motorbike,Please let me know 24hours before visting the space,Suitable for parking only,Suitable for storage only,Access infrequently only'.split(','))
 
       tt.custom_attributes.where(name: 'additional_rules').first_or_create!(html_tag: 'textarea', attribute_type: 'string')
-      Page.where(slug: 'new-signup').first_or_create!(path: 'new-signup').update_attributes(html_content: %Q(
+      Page.where(slug: 'new-signup').first_or_create!(path: 'new-signup').update_attributes(html_content: %(
 {% content_for 'head_bottom' %}
 <!-- <link rel="stylesheet" href="https://rawgit.com/mdyd-dev/marketplaces/master/spacer/signup.v02/dist/signup_form.css"> -->
 <link href="http://localhost:4000/css/signup_form.css" rel="stylesheet">
@@ -27,100 +28,104 @@ class NewSignupFormForSpacer < ActiveRecord::Migration
 
       CustomAttributes::CustomAttribute.find(4523).update_attribute(:valid_values, '$50 Deposit,$100 Deposit,$150 Deposit,$200 Deposit'.split(','))
       fc = FormConfiguration.where(name: 'New Lister Signup Form', base_form: 'UserSignup::ListerUserSignup').first_or_create!.update_attributes(
-configuration: {
-        name: {
-          validation: {
-            'presence' => {}
-          }
-        },
-        :seller_profile => {
-          'enabled' => {},
-          validation: {
-            presence: true
-          }
-        },
-        :companies => {
+        configuration: {
           name: {
             validation: {
               'presence' => {}
             }
           },
-          locations: {
-            location_address: {
-              raw_address: {},
-              address: {
-                validation: {
-                  'presence': {}
-                }
+          seller_profile: {
+            'enabled' => {},
+            validation: {
+              presence: true
+            }
+          },
+          companies: {
+            name: {
+              validation: {
+                'presence' => {}
               }
             },
-            transactables: {
-              'Space' => {
-                name: {
+            locations: {
+              location_address: {
+                raw_address: {},
+                address: {
                   validation: {
-                    'presence' => {}
+                    'presence': {}
                   }
-                },
-                description: {
-                  validation: {
-                    'presence' => {}
-                  }
-                },
-                :categories => {
-                  'Storage Type' => {
+                }
+              },
+              transactables: {
+                'Space' => {
+                  name: {
                     validation: {
-                      presence: true
+                      'presence' => {}
                     }
                   },
-                  'Access' => {
+                  description: {
                     validation: {
-                      presence: true
+                      'presence' => {}
                     }
                   },
-                  'Security Features' => {
-                    validation: {
-                      presence: true
-                    }
-                  },
-                  validation: {
-                    presence: true
-                  }
-                },
-                photos: {},
-                properties: {
-                  size_of_space: {
-                    validation: {
-                      presence: {}
-                    }
-                  },
-                  space_suitability: {
-                    validation: {
-                      presence: {}
-                    }
-                  },
-                  other_space_details: {
-                    validation: {
-                      presence: {}
-                    }
-                  },
-                  use_google_street_photos: {
-                    validation: {
-                      presence: {}
-                    }
-                  },
-                  my_rules: {
-                    validation: {
-                      presence: {}
-                    }
-                  },
-                  additional_rules: {},
-                  bond_or_deposit: {}
-                },
-                action_types: {
-                  pricings: {
-                    price_cents: {
+                  categories: {
+                    'Storage Type' => {
                       validation: {
                         presence: true
+                      }
+                    },
+                    'Access' => {
+                      validation: {
+                        presence: true
+                      }
+                    },
+                    'Security Features' => {
+                      validation: {
+                        presence: true
+                      }
+                    },
+                    validation: {
+                      presence: true
+                    }
+                  },
+                  photos: {},
+                  properties: {
+                    size_of_space: {
+                      validation: {
+                        presence: {}
+                      }
+                    },
+                    space_suitability: {
+                      validation: {
+                        presence: {}
+                      }
+                    },
+                    other_space_details: {
+                      validation: {
+                        presence: {}
+                      }
+                    },
+                    use_google_street_photos: {
+                      validation: {
+                        presence: {}
+                      }
+                    },
+                    my_rules: {
+                      validation: {
+                        presence: {}
+                      }
+                    },
+                    additional_rules: {},
+                    bond_or_deposit: {}
+                  },
+                  action_types: {
+                    pricings: {
+                      price_cents: {
+                        validation: {
+                          presence: true
+                        }
+                      },
+                      validation: {
+                        length: { minimum: 1 }
                       }
                     },
                     validation: {
@@ -132,22 +137,18 @@ configuration: {
                   }
                 },
                 validation: {
-                  length: { minimum: 1 }
+                  presence: {}
                 }
               },
               validation: {
-                presence: {}
+                length: { minimum: 1 }
               }
             },
             validation: {
               length: { minimum: 1 }
             }
-          },
-          validation: {
-            length: { minimum: 1 }
           }
-        }
-      },
+        },
         liquid_body: <<-EOS
 <section class="multistep-signup" data-multistep-signup>
   {% if current_user == blank %}

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Listings::RecurringBookingsController < ApplicationController
   before_action :find_listing
   before_action :require_login_for_recurring_booking, only: [:review, :create]

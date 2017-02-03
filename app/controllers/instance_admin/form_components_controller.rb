@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class InstanceAdmin::FormComponentsController < InstanceAdmin::ResourceController
-  before_filter :find_form_componentable
-  before_filter :set_breadcrumbs_title
+  before_action :find_form_componentable
+  before_action :set_breadcrumbs_title
 
   def index
     @form_components = @form_componentable.form_components.rank(:rank).order('form_type')
@@ -77,7 +78,7 @@ class InstanceAdmin::FormComponentsController < InstanceAdmin::ResourceControlle
   private
 
   def resource_class
-    fail NotImplementedError
+    raise NotImplementedError
   end
 
   def find_form_componentable

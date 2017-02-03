@@ -8,28 +8,28 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
     CustomAttributes::CustomAttribute.destroy_all
     @transactable_type_boat = FactoryGirl.create(:transactable_type_subscription, name: 'Boat')
     FactoryGirl.create(:custom_attribute, name: 'boat_attr', target: @transactable_type_boat)
-    @boat_photo = FactoryGirl.create(:custom_attribute, attribute_type:  'photo', name: 'boat_photo', target: @transactable_type_boat)
+    @boat_photo = FactoryGirl.create(:custom_attribute, attribute_type: 'photo', name: 'boat_photo', target: @transactable_type_boat)
     category = FactoryGirl.create(:category, name: 'Boat Category',
-                                  multiple_root_categories: true,
-                                  transactable_types: [@transactable_type_boat])
+                                             multiple_root_categories: true,
+                                             transactable_types: [@transactable_type_boat])
     @boat_sub_cat = FactoryGirl.create(:category, name: 'Boat Sub Cat 1', parent: category)
     @boat_sub_cat2 = FactoryGirl.create(:category, name: 'Boat Sub Cat 2', parent: category)
     @boat_sub_cat3 = FactoryGirl.create(:category, name: 'Boat Sub Cat 3', parent: category)
     model = FactoryGirl.create(:custom_model_type, name: 'Boat Reviews', transactable_types: [@transactable_type_boat])
     FactoryGirl.create(:custom_attribute, name: 'author', target: model)
-    @boat_review_photo = FactoryGirl.create(:custom_attribute, attribute_type:  'photo', name: 'review_photo', target: model)
+    @boat_review_photo = FactoryGirl.create(:custom_attribute, attribute_type: 'photo', name: 'review_photo', target: model)
 
     buyer_profile_type = PlatformContext.current.instance.buyer_profile_type
     seller_profile_type = PlatformContext.current.instance.seller_profile_type
     default_profile_type = PlatformContext.current.instance.default_profile_type
 
     FactoryGirl.create(:custom_attribute, name: 'seller_attr', target: seller_profile_type)
-    @seller_photo = FactoryGirl.create(:custom_attribute, attribute_type:  'photo', name: 'seller_photo', target: seller_profile_type)
+    @seller_photo = FactoryGirl.create(:custom_attribute, attribute_type: 'photo', name: 'seller_photo', target: seller_profile_type)
     FactoryGirl.create(:custom_attribute, name: 'default_attr', target: default_profile_type)
 
     category = FactoryGirl.create(:category, name: 'Seller Category',
-                                  multiple_root_categories: true,
-                                  instance_profile_types: [seller_profile_type])
+                                             multiple_root_categories: true,
+                                             instance_profile_types: [seller_profile_type])
     @seller_sub_cat = FactoryGirl.create(:category, name: 'Seller Sub Cat 1', parent: category)
     @seller_sub_cat2 = FactoryGirl.create(:category, name: 'Seller Sub Cat 2', parent: category)
 
@@ -72,13 +72,13 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
     assert_equal [@default_sub_cat.id], @user.default_profile.categories.pluck(:id)
     assert_equal [{ 'default_model_attr' => 'my second value' },
                   { 'default_model_attr' => 'my first value' }],
-    @user.default_profile.customizations.map { |c| c.properties.to_h }
+                 @user.default_profile.customizations.map { |c| c.properties.to_h }
 
     assert @user.seller_profile.enabled
     assert_equal 'my seller value', @user.seller_profile.properties.seller_attr
     assert_equal [@seller_sub_cat.id, @seller_sub_cat2.id], @user.seller_profile.categories.pluck(:id).sort
     assert_equal [{ 'seller_model_attr' => 'my first value' }],
-    @user.seller_profile.customizations.map { |c| c.properties.to_h }
+                 @user.seller_profile.customizations.map { |c| c.properties.to_h }
     assert_equal ['bully.jpeg'], @user.seller_profile.custom_images.pluck(:image)
     assert_equal 1, @user.companies.count
     company = @user.companies.first
@@ -113,8 +113,8 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
     assert_equal [['bully.jpeg', @user.id]], transactable.custom_images.pluck(:image, :uploader_id)
     assert_equal [{ 'author' => 'Jane Doe', 'review_photo' => nil },
                   { 'author' => 'John Doe', 'review_photo' => nil }],
-                  transactable.customizations.map { |c| c.properties.to_h }
-    assert_equal ["bully.jpeg", "foobear.jpeg"], transactable.customizations.joins(:custom_images).pluck('custom_images.image').sort
+                 transactable.customizations.map { |c| c.properties.to_h }
+    assert_equal ['bully.jpeg', 'foobear.jpeg'], transactable.customizations.joins(:custom_images).pluck('custom_images.image').sort
   end
 
   protected
@@ -196,7 +196,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                           },
                           custom_images: {
                             :"#{@boat_review_photo.id}" => {
-                              image: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')),
+                              image: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
                             }
                           }
                         },
@@ -204,7 +204,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                           properties: { author: 'Jane Doe' },
                           custom_images: {
                             :"#{@boat_review_photo.id}" => {
-                              image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg')),
+                              image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
                             }
                           }
                         }
@@ -358,7 +358,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                       }
                     }
                   },
-                  :custom_images => {
+                  custom_images: {
                     "#{@boat_review_photo.id}": {
                       validation: {
                         'presence' => {}
@@ -367,7 +367,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                   }
                 }
               },
-              :custom_images => {
+              custom_images: {
                 "#{@boat_photo.id}": {
                   validation: {
                     'presence' => {}

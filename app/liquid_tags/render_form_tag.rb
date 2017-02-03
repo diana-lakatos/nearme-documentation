@@ -15,8 +15,8 @@ class RenderFormTag < Liquid::Tag
   end
 
   def render(context)
-    form_hash = (context["forms"][@form_name])
-    raise SyntaxError, "Invalid form name passed as argument: #{@form_name}. Valid names are: #{context["forms"].keys.join(', ')}" if form_hash.nil?
-    LiquidView.new(context.registers[:action_view]).render(form_hash[:configuration].liquid_body, { 'form' => form_hash[:form].to_liquid, 'configuration' => form_hash[:configuration].to_liquid })
+    form_hash = (context['forms'][@form_name])
+    raise SyntaxError, "Invalid form name passed as argument: #{@form_name}. Valid names are: #{context['forms'].keys.join(', ')}" if form_hash.nil?
+    LiquidView.new(context.registers[:action_view]).render(form_hash[:configuration].liquid_body, 'form' => form_hash[:form].to_liquid, 'configuration' => form_hash[:configuration].to_liquid)
   end
 end

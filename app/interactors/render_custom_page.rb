@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 class RenderCustomPage
-
   def initialize(controller)
     @controller = controller
   end

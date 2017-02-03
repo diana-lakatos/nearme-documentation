@@ -13,7 +13,7 @@ module UserHelper
     email ||= "#{provider.downcase}@example.com"
     try_to_sign_up_with_provider(provider)
     fill_in 'form_email', with: email.to_s
-    click_button "Sign up"
+    click_button 'Sign up'
   end
 
   def toggle_connection_with(provider)

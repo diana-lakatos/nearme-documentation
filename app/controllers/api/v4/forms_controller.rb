@@ -14,7 +14,7 @@ module Api
         else
           raise NotImplementedError if params[:page_id].blank?
           @page = Page.find(params[:page_id])
-        render :template => 'posts/show'
+          render template: 'posts/show'
 
         end
       end

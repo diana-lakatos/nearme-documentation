@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CustomAttributes
   module HasCustomAttributes
     extend ActiveSupport::Concern

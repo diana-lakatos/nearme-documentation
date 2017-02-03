@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'awesome_nested_set'
 
 class Category < ActiveRecord::Base
@@ -31,8 +32,8 @@ class Category < ActiveRecord::Base
   before_save :set_permalink
   after_save :children_update
   after_save :create_translation_key
-  after_save :touch_categories_categorizables, if: -> (category) { category.name_changed? }
-  after_save :rename_form_component, if: -> (category) { category.name_changed? }
+  after_save :touch_categories_categorizables, if: ->(category) { category.name_changed? }
+  after_save :rename_form_component, if: ->(category) { category.name_changed? }
   after_destroy :rename_form_component, :remove_translation_key
 
   # Scopes
@@ -50,12 +51,12 @@ class Category < ActiveRecord::Base
   end
 
   def to_s
-    # hack needed for form to work ;-)
+    # HACK: needed for form to work ;-)
     id
   end
 
   def child_index=(idx)
-    unless self.new_record?
+    unless new_record?
       if parent
         move_to_child_with_index(parent, idx.to_i)
       else
@@ -98,11 +99,11 @@ class Category < ActiveRecord::Base
   end
 
   def set_permalink
-    if parent.present?
-      self.permalink = [parent.permalink, name.to_url].join('/')
-    else
-      self.permalink = name.to_url
-    end
+    self.permalink = if parent.present?
+                       [parent.permalink, name.to_url].join('/')
+                     else
+                       name.to_url
+                     end
   end
 
   def children_update
@@ -135,14 +136,13 @@ class Category < ActiveRecord::Base
       if categorizable.try(:form_components)
         categorizable.form_components.each do |fc|
           old_field = fc.form_fields.select { |pair| pair.first[1] =~ /Category - #{name_was}$/ }
-          if old_field.present?
-            if deleted_at
-              fc.form_fields.delete(old_field[0])
-            else
-              old_field[0].values[0].gsub!(name_was, name)
-            end
-            fc.save!
+          next unless old_field.present?
+          if deleted_at
+            fc.form_fields.delete(old_field[0])
+          else
+            old_field[0].values[0].gsub!(name_was, name)
           end
+          fc.save!
         end
       end
     end

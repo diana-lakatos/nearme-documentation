@@ -12,7 +12,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
 
     FactoryGirl.create(:custom_attribute, name: 'buyer_attr', target: buyer_profile_type)
     FactoryGirl.create(:custom_attribute, name: 'seller_attr', target: seller_profile_type)
-    @seller_photo = FactoryGirl.create(:custom_attribute, attribute_type:  'photo', name: 'seller_photo', target: seller_profile_type)
+    @seller_photo = FactoryGirl.create(:custom_attribute, attribute_type: 'photo', name: 'seller_photo', target: seller_profile_type)
     FactoryGirl.create(:custom_attribute, name: 'default_attr', target: default_profile_type)
 
     category = FactoryGirl.create(:category, name: 'Buyer Category', instance_profile_types: [buyer_profile_type])
@@ -20,8 +20,8 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
     @buyer_sub_cat = FactoryGirl.create(:category, name: 'Buyer Sub Cat 2', parent: category)
 
     category = FactoryGirl.create(:category, name: 'Seller Category',
-                                  multiple_root_categories: true,
-                                  instance_profile_types: [seller_profile_type])
+                                             multiple_root_categories: true,
+                                             instance_profile_types: [seller_profile_type])
     @seller_sub_cat = FactoryGirl.create(:category, name: 'Seller Sub Cat 1', parent: category)
     @seller_sub_cat2 = FactoryGirl.create(:category, name: 'Seller Sub Cat 2', parent: category)
 
@@ -51,8 +51,8 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
     )
 
     @user_update_profile_form_builder = FormBuilder.new(base_form: UserUpdateProfileForm,
-                                                  configuration: configuration,
-                                                  object: @user).build
+                                                        configuration: configuration,
+                                                        object: @user).build
   end
 
   should 'correctly validate empty params' do
@@ -75,21 +75,21 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
                   { 'buyer_model_attr' => 'my first value', 'buyer_model_photo' => nil },
                   { 'body' => 'valid review despite lack of author', 'author' => nil },
                   { 'author' => 'Maciek', 'body' => 'hey hi hello' }],
-    @user.buyer_profile.customizations.map { |c| c.properties.to_h }
-    assert_equal ["bully.jpeg", "foobear.jpeg"], @user.buyer_profile.customizations.joins(:custom_images).pluck('custom_images.image').sort
+                 @user.buyer_profile.customizations.map { |c| c.properties.to_h }
+    assert_equal ['bully.jpeg', 'foobear.jpeg'], @user.buyer_profile.customizations.joins(:custom_images).pluck('custom_images.image').sort
 
     refute @user.default_profile.enabled
     assert_equal 'my default value', @user.default_profile.properties.default_attr
     assert_equal [@default_sub_cat.id], @user.default_profile.categories.pluck(:id)
     assert_equal [{ 'default_model_attr' => 'my second value' },
                   { 'default_model_attr' => 'my first value' }],
-    @user.default_profile.customizations.map { |c| c.properties.to_h }
+                 @user.default_profile.customizations.map { |c| c.properties.to_h }
 
     assert @user.seller_profile.enabled
     assert_equal 'my seller value', @user.seller_profile.properties.seller_attr
     assert_equal [@seller_sub_cat.id, @seller_sub_cat2.id], @user.seller_profile.categories.pluck(:id).sort
     assert_equal [{ 'seller_model_attr' => 'my first value' }],
-      @user.seller_profile.customizations.map { |c| c.properties.to_h }
+                 @user.seller_profile.customizations.map { |c| c.properties.to_h }
     assert_equal ['bully.jpeg'], @user.seller_profile.custom_images.pluck(:image)
   end
 
@@ -118,7 +118,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
               },
               custom_images: {
                 :"#{@buyer_model_photo.id}" => {
-                  image: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')),
+                  image: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
                 }
               }
             },
@@ -128,7 +128,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
               },
               custom_images: {
                 :"#{@buyer_model_photo.id}" => {
-                  image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg')),
+                  image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
                 }
               }
             }
@@ -210,7 +210,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
                 }
               }
             },
-            :custom_images => {
+            custom_images: {
               "#{@buyer_model_photo.id}": {
                 validation: {
                   'presence' => {}

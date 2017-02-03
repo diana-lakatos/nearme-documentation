@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 class Dashboard::SellersController < Dashboard::BaseController
-  before_filter :set_seller_profile
-  before_filter :set_form_components, only: [:edit, :update]
-  skip_before_filter :force_fill_in_wizard_form
+  before_action :set_seller_profile
+  before_action :set_form_components, only: [:edit, :update]
+  skip_before_action :force_fill_in_wizard_form
   before_action :build_user_update_profile_form, only: [:edit, :update]
 
   def edit

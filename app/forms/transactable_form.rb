@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class TransactableForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
-  POPULATOR = lambda do |collection:, fragment:, index:, **args|
+  POPULATOR = lambda do |collection:, fragment:, index:, **_args|
     if (action_type = collection[index]).present?
       action_type
     else

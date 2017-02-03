@@ -5,8 +5,8 @@ class CustomImagesForm < BaseForm
       Class.new(self) do
         configuration.each do |field, options|
           property :"#{field}", form: CustomImageForm.decorate(options),
-                                populate_if_empty: -> (as:, **) { CustomImage.new(custom_attribute: CustomAttributes::CustomAttribute.find(as)) },
-                                prepopulator: ->(*) { self.send(:"#{field}=", CustomImage.new(custom_attribute: CustomAttributes::CustomAttribute.find(field.to_s))) if send(:"#{field}").nil? }
+                                populate_if_empty: ->(as:, **) { CustomImage.new(custom_attribute: CustomAttributes::CustomAttribute.find(as)) },
+                                prepopulator: ->(*) { send(:"#{field}=", CustomImage.new(custom_attribute: CustomAttributes::CustomAttribute.find(field.to_s))) if send(:"#{field}").nil? }
 
           validates :"#{field}", options[:validation] if options[:validation].present?
         end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module TagListHelper
   def data_tags_options(object)
     {

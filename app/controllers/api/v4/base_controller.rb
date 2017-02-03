@@ -19,10 +19,11 @@ module Api
           result = respond_with(*namespaced_object, options) do |format|
             submitted_form ||= {}
             submitted_form = { @form_configuration.name => { form: namespaced_object.last, configuration: @form_configuration } } if @form_configuration.present?
-            format.html { RenderCustomPage.new(self).render(page: Page.find(params[:page_id]),
-                                                            params: params,
-                                                            submitted_form: submitted_form)
-            }
+            format.html do
+              RenderCustomPage.new(self).render(page: Page.find(params[:page_id]),
+                                                params: params,
+                                                submitted_form: submitted_form)
+            end
           end
         else
           result = respond_with(*namespaced_object, options)

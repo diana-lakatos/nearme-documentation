@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UpdateLinkToRegistrationInLiquidViews < ActiveRecord::Migration
   def up
     InstanceView.where('body ilike ?', '%new_user_registration%').find_each do |iv|

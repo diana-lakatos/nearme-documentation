@@ -647,6 +647,21 @@ ActiveRecord::Schema.define(version: 20170308095224) do
 
   add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
 
+  create_table "custom_attachments", force: :cascade do |t|
+    t.integer  "instance_id",         null: false
+    t.integer  "custom_attribute_id", null: false
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "uploader_id"
+    t.string   "file"
+    t.datetime "deleted_at"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+  end
+
+  add_index "custom_attachments", ["instance_id", "custom_attribute_id"], name: "index_custom_attachments_on_instance_id_and_custom_attribute_id", using: :btree
+  add_index "custom_attachments", ["owner_id", "owner_type"], name: "index_custom_attachments_on_owner_id_and_owner_type", using: :btree
+
   create_table "custom_attributes", force: :cascade do |t|
     t.string   "name",                      limit: 255
     t.integer  "instance_id"
@@ -1017,6 +1032,19 @@ ActiveRecord::Schema.define(version: 20170308095224) do
   end
 
   add_index "form_components", ["instance_id", "form_componentable_id", "form_type"], name: "ttfs_instance_tt_form_type", using: :btree
+
+  create_table "form_configurations", force: :cascade do |t|
+    t.integer  "instance_id",                        null: false
+    t.string   "base_form",                          null: false
+    t.string   "name",                               null: false
+    t.text     "liquid_body"
+    t.text     "configuration", default: "--- {}\n", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "form_configurations", ["instance_id"], name: "index_form_configurations_on_instance_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",           limit: 255, null: false
@@ -1725,6 +1753,16 @@ ActiveRecord::Schema.define(version: 20170308095224) do
   end
 
   add_index "page_data_source_contents", ["instance_id", "page_id", "data_source_content_id", "slug"], name: "pdsc_on_foreign_keys", using: :btree
+
+  create_table "page_forms", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "page_id"
+    t.integer  "form_configuration_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "page_forms", ["instance_id", "page_id", "form_configuration_id"], name: "index_page_forms_on_instance_id_and_fks", unique: true, using: :btree
 
   create_table "pages", force: :cascade do |t|
     t.string   "path",                      limit: 255,                         null: false

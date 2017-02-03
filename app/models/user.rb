@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects].freeze
   SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation).freeze
-  ACCOUNT_STANDINGS = [:active, :deleted, :banned]
+  ACCOUNT_STANDINGS = [:active, :deleted, :banned].freeze
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -29,11 +29,11 @@ class User < ActiveRecord::Base
 
   friendly_id :slug_candidates, use: [:slugged, :history, :finders, :scoped], scope: :instance
   def slug_candidates
-    if PlatformContext.current.instance.only_first_name_as_user_slug?
-      main_component = :first_name
-    else
-      main_component = :name
-    end
+    main_component = if PlatformContext.current.instance.only_first_name_as_user_slug?
+                       :first_name
+                     else
+                       :name
+                     end
 
     [
       main_component,
@@ -68,12 +68,12 @@ class User < ActiveRecord::Base
   validate :no_admin_with_such_email_exists, if: :email_changed?
   def no_admin_with_such_email_exists
     errors.add(:email, :taken) if User.admin.where(email: email).exists?
-    errors.add(:email, :taken) if User.where(email: email).exists? if external_id.blank?
+    errors.add(:email, :taken) if external_id.blank? && User.where(email: email).exists?
   end
   validates :email, email: true,
                     uniqueness: { scope: [:instance_id, :external_id] },
                     if: :email_changed?
-  validates_presence_of :email
+  validates :email, presence: true
 
   # strange bug, serialize stops to work if Taggable is included before it
   include Taggable

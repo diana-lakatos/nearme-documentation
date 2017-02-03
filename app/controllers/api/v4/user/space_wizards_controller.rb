@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 module Api
-  class V3::SpaceWizardsController < BaseController
+  class V4::SpaceWizardsController < BaseController
     skip_before_action :require_authorization
     before_action :find_transactable_type
     before_action :set_common_variables

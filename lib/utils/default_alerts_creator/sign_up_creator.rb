@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Utils::DefaultAlertsCreator::SignUpCreator < Utils::DefaultAlertsCreator::WorkflowCreator
   def create_all!
     create_email_verification_email!

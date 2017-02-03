@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UserProfile < ActiveRecord::Base
   include Categorizable
   include AvailabilityHelpers
@@ -21,16 +22,16 @@ class UserProfile < ActiveRecord::Base
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
   delegate :onboarding, :onboarding?, :has_fields?, :custom_attributes_custom_validators,
-    :default_availability_template, to: :instance_profile_type, allow_nil: true
+           :default_availability_template, to: :instance_profile_type, allow_nil: true
 
   delegate :time_zone, to: :user
   alias timezone time_zone
 
   after_create :create_company_if_needed
 
-  SELLER = 'seller'.freeze
-  BUYER = 'buyer'.freeze
-  DEFAULT = 'default'.freeze
+  SELLER = 'seller'
+  BUYER = 'buyer'
+  DEFAULT = 'default'
   PROFILE_TYPES = [SELLER, BUYER, DEFAULT].freeze
 
   validates :profile_type, inclusion: { in: PROFILE_TYPES }

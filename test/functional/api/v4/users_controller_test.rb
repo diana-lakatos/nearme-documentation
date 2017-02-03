@@ -211,9 +211,9 @@ module Api
               should 'not create user without required custom attribute' do
                 assert_no_difference('User.count') do
                   assert_no_difference('UserProfile.count') do
-                    post :create, role: FormBuilder::UserSignupBuilderFactory::ENQUIRER, form: user_attributes.
-                                                                                               merge(default_profile_attributes: { properties: {} },
-                                                                                                     buyer_profile_attributes: { properties: { } })
+                    post :create, role: FormBuilder::UserSignupBuilderFactory::ENQUIRER, form: user_attributes
+                      .merge(default_profile_attributes: { properties: {} },
+                             buyer_profile_attributes: { properties: {} })
                     assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'default_profile.properties.user_attr']
                     assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'buyer_profile.properties.enquirer_attr']
                   end

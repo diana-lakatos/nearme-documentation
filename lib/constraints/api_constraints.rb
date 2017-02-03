@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Constraints
   class ApiConstraints
     def initialize(options)

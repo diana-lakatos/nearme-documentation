@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 namespace :migrate do
   task form_configuration: :environment do
-    FormComponentToFormConfiguration.new(Instance.where(id: 211)).go!
+    FormComponentToFormConfiguration.new(Instance.all).go!
   end
 
   task longtail: :environment do

@@ -12,7 +12,6 @@ class CustomizationForm < BaseForm
     '1' if model.marked_for_destruction?
   end
 
-
   class << self
     def decorate(configuration)
       Class.new(self) do

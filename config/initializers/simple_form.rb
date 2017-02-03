@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Use this setup block to configure all options available in SimpleForm.
 SimpleForm.setup do |config|
   # Wrappers are used by the form builder to generate a
@@ -128,7 +129,7 @@ SimpleForm.setup do |config|
         label_container.use :label
       end
       input.wrapper tag: 'div', class: 'span9 input-container' do |append|
-        append.use :hint,  wrap_with: { tag: 'p' }
+        append.use :hint, wrap_with: { tag: 'p' }
         append.use :input
       end
       input.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
@@ -143,7 +144,7 @@ SimpleForm.setup do |config|
         label_container.use :label
       end
       input.wrapper tag: 'div', class: 'col-md-9 input-container' do |append|
-        append.use :hint,  wrap_with: { tag: 'p' }
+        append.use :hint, wrap_with: { tag: 'p' }
         append.use :input
       end
       input.use :error, wrap_with: { tag: 'col-md-9', class: 'help-inline' }

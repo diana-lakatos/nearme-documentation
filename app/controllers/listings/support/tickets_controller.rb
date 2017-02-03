@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 class Listings::Support::TicketsController < ApplicationController
-  before_filter :find_listing
-  before_filter :force_log_in
-  before_filter :set_presenters
+  before_action :find_listing
+  before_action :force_log_in
+  before_action :set_presenters
 
   def new
     @ticket = ::Support::Ticket.new
@@ -23,11 +24,11 @@ class Listings::Support::TicketsController < ApplicationController
     if @ticket.valid?
       @ticket.save!
       WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Created, @message.id)
-      if @listing.action_free_booking?
-        flash[:success] = t('flash_messages.support.rfq_ticket.created')
-      else
-        flash[:success] = t('flash_messages.support.offer_ticket.created')
-      end
+      flash[:success] = if @listing.action_free_booking?
+                          t('flash_messages.support.rfq_ticket.created')
+                        else
+                          t('flash_messages.support.offer_ticket.created')
+                        end
       redirect_to support_ticket_path(@ticket)
       render_redirect_url_as_json if request.xhr?
     else
@@ -73,12 +74,12 @@ class Listings::Support::TicketsController < ApplicationController
   end
 
   def subject
-    if @listing.action_free_booking?
-      sub = "Quote Request: #{@listing.name} - "
-    else
-      sub = "Offer: #{@listing.name} - "
-    end
-    sub += "#{@ticket.reservation_details['quantity']}" # x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{I18n.t('hour', count: @hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
+    sub = if @listing.action_free_booking?
+            "Quote Request: #{@listing.name} - "
+          else
+            "Offer: #{@listing.name} - "
+          end
+    sub += @ticket.reservation_details['quantity'].to_s # x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{I18n.t('hour', count: @hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
     sub
   end
 

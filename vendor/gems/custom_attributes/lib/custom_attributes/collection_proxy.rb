@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'forwardable'
 
 module CustomAttributes
@@ -67,7 +68,7 @@ module CustomAttributes
     end
 
     def to_liquid
-      @casted_hash ||= @model.custom_attributes.inject({}) do |results, custom_attributes_array|
+      @casted_hash ||= @model.custom_attributes.each_with_object({}) do |custom_attributes_array, results|
         key = custom_attributes_array[CustomAttribute::NAME]
         type = custom_attributes_array[CustomAttribute::ATTRIBUTE_TYPE].to_sym
 

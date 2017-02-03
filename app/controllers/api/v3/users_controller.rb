@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class V3::UsersController < BaseController
     skip_before_action :require_authentication, only: [:create, :show]

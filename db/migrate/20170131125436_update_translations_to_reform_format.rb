@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UpdateTranslationsToReformFormat < ActiveRecord::Migration
   def up
     Translation.where('key ilike ?', 'activerecord.attributes.user.buyer_properties.').each do |t|

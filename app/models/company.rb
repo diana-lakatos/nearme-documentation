@@ -106,7 +106,7 @@ class Company < ActiveRecord::Base
     self.created_payment_transfers = []
     transaction do
       charges_without_payment_transfer = payments.needs_payment_transfer
-      charges_without_payment_transfer.group_by(&:currency).each do |currency, all_charges|
+      charges_without_payment_transfer.group_by(&:currency).each do |_currency, all_charges|
         all_charges.group_by(&:payment_gateway_mode).each do |mode, charges|
           payment_transfer = payment_transfers.create!(payments: charges, payment_gateway_mode: mode)
           created_payment_transfers << payment_transfer if possible_payout_not_configured?(payout_payment_gateway)

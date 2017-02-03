@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreatePageForms < ActiveRecord::Migration
   def change
     create_table :page_forms do |t|

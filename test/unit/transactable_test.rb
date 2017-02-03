@@ -275,9 +275,9 @@ class TransactableTest < ActiveSupport::TestCase
     end
 
     should 'clear transactable opened_on_days if moved to event based booking' do
-      @listing.update_column(:opened_on_days, [0,1,2,3])
+      @listing.update_column(:opened_on_days, [0, 1, 2, 3])
       @listing.reload
-      assert_equal [0,1,2,3], @listing.opened_on_days
+      assert_equal [0, 1, 2, 3], @listing.opened_on_days
 
       @listing.save
       assert_equal [], @listing.opened_on_days

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Api::V3::InstancesController < Api::BaseController
   skip_before_action :verified_api_request?
   skip_before_action :require_authorization

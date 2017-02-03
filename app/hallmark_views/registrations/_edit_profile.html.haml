@@ -1,6 +1,6 @@
 / white box
 .box-a
-  = simple_form_for resource, url: registration_path(resource_name), html: { class: 'form-a' } do |f|
+  = simple_form_for @user_update_profile_form, :as => :user, url: registration_path(resource_name), html: { class: 'form-a' } do |f|
     .fields
       = f.input :name
 
@@ -8,8 +8,8 @@
       = f.input :password_confirmation, :label => t('general.password_confirmation'), input_html: { autocomplete: 'off' }
 
       = f.simple_fields_for :default_profile do |default_profile_form|
-        = default_profile_form.simple_fields_for :properties, default_profile_form.object.properties do |properties_form|
-          - (default_profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+        = default_profile_form.simple_fields_for :properties do |properties_form|
+          - (default_profile_form.object.model.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
             = draw_attribute_for_form(attribute, properties_form)
       %p
         = t :more_info, scope: [:onboarding]
@@ -24,10 +24,10 @@
             "Upload Photo",
             "no-multiple" => true,
             :error => f.object.errors.include?(:cover_image).present? ? "Please upload cover image." : nil) do
-            - if current_user.attributes['cover_image']
+            - if f.object.cover_image.present?
 
               .photo-item{:id => "cover-photo-thumbnail"}
-                = image_tag resource.cover_image_url
+                = image_tag f.object.cover_image.url
                 .media-actions
                   %button.button-a.small.action--edit.icon-only{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_cover_image_path }, :title => t('forms.photos.collection.rotate_and_crop')}
                     = t('forms.photos.collection.rotate_and_crop')
@@ -50,10 +50,10 @@
             "Upload Photo",
             "no-multiple" => true,
             :error => f.object.errors.include?(:avatar).present? ? "Please upload avatar." : nil) do
-            - if current_user.attributes['avatar']
+            - if f.object.avatar.present?
 
               .photo-item{:id => "cover-photo-thumbnail"}
-                = image_tag resource.avatar_url(:medium)
+                = image_tag f.object.avatar.url(:medium)
                 .media-actions
                   %button.button-a.small.action--edit.icon-only{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_avatar_path }, :title => t('forms.photos.collection.rotate_and_crop')}
                     = t('forms.photos.collection.rotate_and_crop')
@@ -66,7 +66,7 @@
             = t('simple_form.hints.profile.avatar')
 
 
-    = f.simple_fields_for :current_address, (f.object.current_address.presence || f.object.build_current_address) do |address_form|
+    = f.simple_fields_for :current_address do |address_form|
       .fields.location
         = render :partial => 'addresses/form', locals: { f: address_form, label: "Location"}
 
