@@ -151,7 +151,11 @@ class Order < ActiveRecord::Base
 
   def process!
     return false unless valid?
-    return false unless skip_payment_authorization || payment_processor.blank? || payment_processor.process!
+    if skip_payment_authorization
+       return false unless payment_processor.blank? || payment_processor.payment_source.try(:process!)
+    else
+      return false unless payment_processor.blank? || payment_processor.process!
+    end
     activate! if inactive? && can_activate?
     save
   end
