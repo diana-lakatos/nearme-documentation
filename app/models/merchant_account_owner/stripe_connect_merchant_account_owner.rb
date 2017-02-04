@@ -7,7 +7,9 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
 
   include MerchantAccount::Concerns::DataAttributes
   has_one :current_address, class_name: 'Address', as: :entity, validate: false
+  has_many :attachements, class_name: '::Attachable::MerchantAccountOwnerAttachement', validate: true, as: :attachable
   accepts_nested_attributes_for :current_address
+  accepts_nested_attributes_for :attachements
 
   belongs_to :merchant_account, class_name: 'MerchantAccount::StripeConnectMerchantAccount'
   delegate :iso_country_code, :account_type, to: :merchant_account, allow_nil: true
@@ -16,13 +18,6 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
   validate :validate_dob_formated
   validates :personal_id_number, presence: { if: proc { |m| m.iso_country_code == 'US' } }
   validates :business_tax_id, presence: { if: proc { |m| m.iso_country_code == 'US' && m.account_type == 'company' } }
-  validate :validate_document, if: -> { false } # quick hack for UoT to charge them
-
-  def validate_document
-    if (attributes['document'] || document.file.try(:path)).blank?
-      errors.add(:document, :blank)
-    end
-  end
 
   validate :validate_current_address
 
@@ -53,15 +48,21 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
   end
 
   def upload_document(stripe_account_id)
-    if attributes['document'] || document.file.try(:path)
-      # If it's a SanitizedFile it's local, most likely not yet uploaded, and we use SanitizedFile#path instead
-      file_path = document.file.is_a?(CarrierWave::SanitizedFile) ? document.file.path : document.proper_file_path
-
-      Stripe::FileUpload.create(
-        { purpose: 'identity_document', file: File.new(open(file_path)) },
+    if attachements.any?
+      response = Stripe::FileUpload.create(
+        { purpose: 'identity_document', file: File.new(File.open(photo_id_file.path)) },
         stripe_account: stripe_account_id
       )
+      response
     end
+  end
+
+  def photo_id_file
+    @photo_id_file ||= CombinedImage.new(attachements.map(&:path)).file
+  end
+
+  def tmp_attachement_path
+    File.join(Rails.root, 'tmp', "owner_#{id}_photo_id.jpg")
   end
 
   def dob_date

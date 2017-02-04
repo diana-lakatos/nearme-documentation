@@ -18,7 +18,8 @@ When(/^I update Stripe merchant form$/) do
   fill_in 'merchant_account_owners_attributes_0_current_address_attributes_state', with: 'CA'
   fill_in 'merchant_account_owners_attributes_0_personal_id_number', with: '694-07-7618'
 
-  attach_file('merchant_account_owners_attributes_0_document', File.absolute_path('./public/favicon.png'))
+  attach_file('merchant_account_owners_attributes_0_attachements_attributes_0_file', File.absolute_path('./public/favicon.png'))
+  attach_file('merchant_account_owners_attributes_0_attachements_attributes_1_file', File.absolute_path('./public/favicon.png'))
   page.check('merchant_account_tos')
   find('input[type="submit"]').click
 end
