@@ -1934,6 +1934,9 @@ en:
       address_line2: 'Address line 2 (Apartment/Suite/Building)'
       additional_owners: 'Additional owners'
       additional_owner: 'Additional owner'
+      photo_id_1: 'Front side photo ID'
+      photo_id_2: 'Back side photo ID'
+
 
     reservations:
       purchase_was_successful: Your purchase was successful!
@@ -3169,4 +3172,3 @@ en:
     confirm:
       remove_status_update: 'Are you sure you want to remove this status update?'
       remove_comment: 'Are you sure you want to remove this comment?'
-

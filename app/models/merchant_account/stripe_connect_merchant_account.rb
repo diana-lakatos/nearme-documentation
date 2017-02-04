@@ -34,6 +34,14 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     owners.first || owners.build
   end
 
+  def build_owners
+    owners.build unless owners.present?
+
+    owners.each do |owner|
+      (2 - owner.attachements.size).times { owner.attachements.build }
+    end
+  end
+
   def onboard!
     result = payment_gateway.onboard!(create_params)
     handle_result(result)
