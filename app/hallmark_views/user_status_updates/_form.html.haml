@@ -17,15 +17,12 @@
     = f.input :updateable_type, as: :hidden, input_html: { value: feed.owner_type }
 
   %p.action
-    = f.simple_fields_for :activity_feed_images, collection_with_new_object(f.object.activity_feed_images) do |afi|
+    = f.simple_fields_for :activity_feed_images, collection_or_new_object(f.object.activity_feed_images) do |afi|
       - if afi.object.image.present?
-        .image
-          %img{ src: afi.object.image.url(:space_listing)}
+        %img{ src: afi.object.image.url(:space_listing)}
           .delete-photo
             = afi.input :_destroy, as: :boolean, inline_label: true, label: false
-      - else
-        .image
-          = afi.input :image, required: false, input_html: { multiple: true }
+      = afi.input :image, required: false
     - if f.object.persisted?
       %button.button-a.tiny.light{ type: 'button', data: { cancel_edit: '' }} Cancel
     = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'
