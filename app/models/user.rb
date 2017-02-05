@@ -107,6 +107,7 @@ class User < ActiveRecord::Base
   has_many :companies, foreign_key: 'creator_id', inverse_of: :creator
   has_many :comments, inverse_of: :creator
   has_many :custom_images, foreign_key: 'uploader_id', inverse_of: :uploader
+  has_many :custom_attachments, foreign_key: 'uploader_id', inverse_of: :uploader
   has_many :feed_followers, through: :activity_feed_subscriptions_as_followed, source: :follower
   has_many :feed_followed_transactables, through: :activity_feed_subscriptions, source: :followed, source_type: 'Transactable'
   has_many :feed_followed_topics, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'

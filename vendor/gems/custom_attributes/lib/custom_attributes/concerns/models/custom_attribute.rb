@@ -21,7 +21,7 @@ module CustomAttributes
           SEARCHABLE = 6 unless defined?(SEARCHABLE)
           SEARCH_IN_QUERY = 7 unless defined?(SEARCH_IN_QUERY)
 
-          ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean photo).freeze unless defined?(ATTRIBUTE_TYPES)
+          ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean photo file).freeze unless defined?(ATTRIBUTE_TYPES)
           HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list range hidden).freeze unless defined?(HTML_TAGS)
           MULTIPLE_ARRAY_TAGS = %w(check_box_list select).freeze unless defined?(MULTIPLE_ARRAY_TAGS)
 

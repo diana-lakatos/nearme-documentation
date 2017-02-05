@@ -3,6 +3,7 @@ class UserProfile < ActiveRecord::Base
   include Categorizable
   include AvailabilityHelpers
   include CustomImagesOwnerable
+  include CustomAttachmentsOwnerable
   include CustomizationsOwnerable
   include CategoriesOwnerable
 

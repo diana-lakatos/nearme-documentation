@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class Customization < ActiveRecord::Base
   include CustomImagesOwnerable
+  include CustomAttachmentsOwnerable
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context

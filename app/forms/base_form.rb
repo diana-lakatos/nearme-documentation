@@ -24,4 +24,8 @@ class BaseForm < Reform::Form
   def pretty_errors_string(separator: "\n")
     ErrorsSummary.new(self).summary(separator: separator)
   end
+
+  def required?(attr)
+    self.class.validators_on(attr).any? { |v| v.kind == :presence }
+  end
 end

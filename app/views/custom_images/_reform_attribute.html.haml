@@ -1,5 +1,8 @@
 - options = { label: ca.label, as: :image }
 - if f.object.model.persisted?
   - options[:edit_url] = edit_dashboard_custom_image_path(f.object.model)
+  - unless f.object.required?(:image)
+    - options[:delete_url] = api_user_custom_image_path(f.object.model)
   - options[:thumb] = :mini
+
 = f.input :image, options

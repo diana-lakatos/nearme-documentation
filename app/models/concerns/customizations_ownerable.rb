@@ -23,7 +23,7 @@ module CustomizationsOwnerable
         # submits a form which allows to update only B, then A should stay
         ids_hash[custom_model_name] = open_struct[custom_model_name]&.reject(&:marked_for_destruction?) || values
       end
-      self.customizations = hash.values.flatten
+      self.customizations = hash.values.flatten.compact
     end
   end
 end

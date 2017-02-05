@@ -85,7 +85,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   end
 
   def uploadable?
-    attribute_type == 'photo'
+    %w(photo file).include?(attribute_type)
   end
 
   private

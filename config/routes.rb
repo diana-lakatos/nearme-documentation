@@ -1213,15 +1213,38 @@ DesksnearMe::Application.routes.draw do
           resources :assets, as: 'custom_theme_assets', controller: 'custom_themes/custom_theme_assets', concerns: :versionable
         end
       end
-      resources :graph, via: [:post, :options]
       scope module: :v4, constraints: Constraints::ApiConstraints.new(version: 4, default: true) do
+        namespace :user do
+          resource :space_wizard, only: [:create]
+          resources :transactables, only: [:index]
+          resources :custom_attachments, only: [:destroy]
+          resources :custom_images, only: [:destroy]
+          resources :transactable_collaborators, only: [:create, :destroy] do
+            member do
+              put :accept
+            end
+          end
+        end
+        resources :sessions, only: [:create]
         resources :forms, only: [:create]
-        resources :users, only: [:new, :create] do
+        resources :users, only: [:new, :create, :show] do
           member do
             get :verify
           end
         end
+        resources :photos, only: [:create]
+        resources :reverse_proxy_links, only: [:index, :create]
+        resources :wish_list_items, only: [:index, :create, :destroy]
+        resources :instances, only: [:index, :create]
+
+        resources :instance_views, only: [:show, :create, :update, :destroy], concerns: :versionable
+
+        resources :themes, as: 'custom_themes', controller: 'custom_themes', only: [:show, :create, :update, :destroy] do
+          resources :instance_views, controller: 'custom_themes/instance_views', concerns: :versionable
+          resources :assets, as: 'custom_theme_assets', controller: 'custom_themes/custom_theme_assets', concerns: :versionable
+        end
       end
+      resources :graph, via: [:post, :options]
     end
 
     resources :users do

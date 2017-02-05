@@ -28,14 +28,7 @@
     - f.object.model.instance_profile_type.try(:custom_attributes).try(:each) do |ca|
       - next unless only_inputs.empty? || only_inputs.include?(ca.name.to_sym)
       - if ca.uploadable?
-        - if f.object.custom_images.respond_to?(:where)
-          - # should be able to remve this branch after removing form components
-          = f.simple_fields_for :custom_images, f.object.custom_images.where(custom_attribute_id: ca.id).first_or_initialize do |custom_images_form|
-            = render 'custom_images/attribute', f: custom_images_form, ca: ca
-        - else
-          = f.simple_fields_for :custom_images do |custom_images_form|
-            = custom_images_form.simple_fields_for :"#{ca.id}" do |custom_image_form|
-              = render 'custom_images/reform_attribute', f: custom_image_form, ca: ca
+        = render 'custom_attributes/uploadable', f: f, ca: ca
       - else
         = f.simple_fields_for :properties do |properties_form|
           = draw_attribute_for_form(ca, properties_form)

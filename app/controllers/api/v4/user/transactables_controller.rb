@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Api
-  class V4::TransactablesController < BaseController
+  class V4::User::TransactablesController < BaseController
     before_action :find_transactable_type
     skip_before_action :require_authentication
     skip_before_action :require_authorization

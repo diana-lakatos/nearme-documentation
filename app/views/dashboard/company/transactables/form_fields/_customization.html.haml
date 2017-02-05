@@ -2,24 +2,7 @@
   %hr
   - custom_model.custom_attributes.order('updated_at DESC').each_with_index do |ca, index|
     - if ca.uploadable?
-      - if f.object.custom_images.respond_to?(:where)
-        = f.simple_fields_for :custom_images, f.object.custom_images.where(custom_attribute_id: ca.id).first_or_initialize  do |custom_images_form|
-          .col-xs-11
-            = render 'custom_images/attribute', f: custom_images_form, ca: ca
-          - if index.zero?
-            .col-xs-1
-              = link_to_remove_association f, class: 'remove_fields' do
-                %button.action--remove
-      - else
-        = f.simple_fields_for :custom_images do |custom_images_form|
-          = custom_images_form.simple_fields_for :"#{ca.id}" do |custom_image_form|
-            .col-xs-11
-              = render 'custom_images/reform_attribute', f: custom_image_form, ca: ca
-            - if index.zero?
-              .col-xs-1
-                = link_to_remove_association f, class: 'remove_fields' do
-                  %button.action--remove
-
+      = render 'custom_attributes/uploadable', f: f, ca: ca, index: index
     - else
       = f.simple_fields_for :properties do |customization_properties_form|
         .col-xs-11

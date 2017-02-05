@@ -21,9 +21,9 @@ module CustomImagesOwnerable
         # if form does not include all custom images, we don't want to nullify them.
         # i.e. if there are custom images A and B, user has both filled, but then
         # submits a form which allows to update only B, then A should stay
-        ids_hash[ca_id] = open_struct[ca_id].tap { |i| i.owner = self if i.new_record? } || custom_image
+        ids_hash[ca_id] = open_struct[ca_id].tap { |i| i.owner = self if i&.new_record? } || custom_image
       end
-      self.custom_images = hash.values.flatten
+      self.custom_images = hash.values.flatten.compact
     end
   end
 end

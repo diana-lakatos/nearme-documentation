@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Api
-  class V4::ReverseProxyLinksController < BaseController
+  class V4::InstanceAdmin::ReverseProxyLinksController < BaseController
     skip_before_action :require_authentication
     skip_before_action :require_authorization, only: [:index]
 

@@ -3,6 +3,7 @@ require_dependency 'line_item/transactable'
 # frozen_string_literal: true
 class Transactable < ActiveRecord::Base
   include CustomImagesOwnerable
+  include CustomAttachmentsOwnerable
   include CustomizationsOwnerable
   include CategoriesOwnerable
   has_paper_trail

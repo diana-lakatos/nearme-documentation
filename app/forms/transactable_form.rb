@@ -36,6 +36,12 @@ class TransactableForm < BaseForm
           property :custom_images, form: CustomImagesForm.decorate(custom_images_configuration),
                                    from: :custom_images_open_struct
         end
+        if (custom_attachments_configuration = configuration.delete(:custom_attachments)).present?
+          validation = custom_attachments_configuration.delete(:validation)
+          validates :custom_attachments, validation if validation.present?
+          property :custom_attachments, form: CustomAttachmentsForm.decorate(custom_attachments_configuration),
+                                   from: :custom_attachments_open_struct
+        end
         if (categories_configuration = configuration.delete(:categories)).present?
           validation = categories_configuration.delete(:validation)
           validates :categories, validation if validation.present?

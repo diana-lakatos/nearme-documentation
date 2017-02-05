@@ -9,6 +9,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
     @transactable_type_boat = FactoryGirl.create(:transactable_type_subscription, name: 'Boat')
     FactoryGirl.create(:custom_attribute, name: 'boat_attr', target: @transactable_type_boat)
     @boat_photo = FactoryGirl.create(:custom_attribute, attribute_type: 'photo', name: 'boat_photo', target: @transactable_type_boat)
+    @boat_attachment = FactoryGirl.create(:custom_attribute, attribute_type: 'file', name: 'boat_attachment', target: @transactable_type_boat)
     category = FactoryGirl.create(:category, name: 'Boat Category',
                                              multiple_root_categories: true,
                                              transactable_types: [@transactable_type_boat])
@@ -18,6 +19,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
     model = FactoryGirl.create(:custom_model_type, name: 'Boat Reviews', transactable_types: [@transactable_type_boat])
     FactoryGirl.create(:custom_attribute, name: 'author', target: model)
     @boat_review_photo = FactoryGirl.create(:custom_attribute, attribute_type: 'photo', name: 'review_photo', target: model)
+    @boat_review_attachment = FactoryGirl.create(:custom_attribute, attribute_type: 'file', name: 'review_attachment', target: model)
 
     buyer_profile_type = PlatformContext.current.instance.buyer_profile_type
     seller_profile_type = PlatformContext.current.instance.seller_profile_type
@@ -25,6 +27,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
 
     FactoryGirl.create(:custom_attribute, name: 'seller_attr', target: seller_profile_type)
     @seller_photo = FactoryGirl.create(:custom_attribute, attribute_type: 'photo', name: 'seller_photo', target: seller_profile_type)
+    @seller_attachment = FactoryGirl.create(:custom_attribute, attribute_type: 'file', name: 'seller_attachment', target: seller_profile_type)
     FactoryGirl.create(:custom_attribute, name: 'default_attr', target: default_profile_type)
 
     category = FactoryGirl.create(:category, name: 'Seller Category',
@@ -55,7 +58,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
   should 'correctly validate empty params' do
     @lister_user_signup_builder.prepopulate!
     refute @lister_user_signup_builder.validate({})
-    assert_equal "Email can't be blank, Password can't be blank, Avatar can't be blank, Seller profile properties seller attr can't be blank, Seller profile custom images #{@seller_photo.id} image can't be blank, Seller profile categories seller category can't be blank, Default profile properties default attr can't be blank, Default profile categories default category can't be blank, Companies name can't be blank, Companies locations name can't be blank, Companies locations transactables boat photos is too short (minimum is 1 character), Companies locations transactables boat action types is too short (minimum is 1 character), Companies locations transactables boat name can't be blank, Companies locations transactables boat properties boat attr can't be blank, Companies locations transactables boat custom images #{@boat_photo.id} image can't be blank, Companies locations transactables boat categories boat category can't be blank, Companies locations location address address can't be blank", @lister_user_signup_builder.errors.full_messages.join(', ')
+    assert_equal "Email can't be blank, Password can't be blank, Avatar can't be blank, Seller profile properties seller attr can't be blank, Seller profile custom images #{@seller_photo.id} image can't be blank, Seller profile custom attachments #{@seller_attachment.id} file can't be blank, Seller profile categories seller category can't be blank, Default profile properties default attr can't be blank, Default profile categories default category can't be blank, Companies name can't be blank, Companies locations name can't be blank, Companies locations transactables boat photos is too short (minimum is 1 character), Companies locations transactables boat action types is too short (minimum is 1 character), Companies locations transactables boat name can't be blank, Companies locations transactables boat properties boat attr can't be blank, Companies locations transactables boat custom images #{@boat_photo.id} image can't be blank, Companies locations transactables boat custom attachments #{@boat_attachment.id} file can't be blank, Companies locations transactables boat categories boat category can't be blank, Companies locations location address address can't be blank", @lister_user_signup_builder.errors.full_messages.join(', ')
   end
 
   should 'be able to save all parameters' do
@@ -111,10 +114,12 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
     assert_equal @user.id, transactable.creator_id
     assert_equal [@boat_sub_cat.id, @boat_sub_cat2.id], transactable.categories.pluck(:id).sort
     assert_equal [['bully.jpeg', @user.id]], transactable.custom_images.pluck(:image, :uploader_id)
-    assert_equal [{ 'author' => 'Jane Doe', 'review_photo' => nil },
-                  { 'author' => 'John Doe', 'review_photo' => nil }],
+    assert_equal [['foobear.jpeg', @user.id]], transactable.custom_attachments.pluck(:file, :uploader_id)
+    assert_equal [{ 'author' => 'Jane Doe', 'review_photo' => nil, 'review_attachment' => nil },
+                  { 'author' => 'John Doe', 'review_photo' => nil, 'review_attachment' => nil }],
                  transactable.customizations.map { |c| c.properties.to_h }
     assert_equal ['bully.jpeg', 'foobear.jpeg'], transactable.customizations.joins(:custom_images).pluck('custom_images.image').sort
+    assert_equal ['bully.jpeg', 'hello.pdf'], transactable.customizations.joins(:custom_attachments).pluck('custom_attachments.file').sort
   end
 
   protected
@@ -152,6 +157,11 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
             image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
           }
         },
+        custom_attachments: {
+          :"#{@seller_attachment.id}" => {
+            file: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
+          }
+        },
         :categories => {
           'Seller Category' => [@seller_sub_cat.id, @seller_sub_cat2.id]
         },
@@ -180,6 +190,11 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                         image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
                       }
                     },
+                    custom_attachments: {
+                      :"#{@boat_attachment.id}" => {
+                        file: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
+                      }
+                    },
                     'photos_attributes' => {
                       '0' => {
                         image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
@@ -198,6 +213,11 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                             :"#{@boat_review_photo.id}" => {
                               image: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
                             }
+                          },
+                          custom_attachments: {
+                            :"#{@boat_review_attachment.id}" => {
+                              file: File.open(File.join(Rails.root, 'test', 'assets', 'hello.pdf'))
+                            }
                           }
                         },
                         '1' => {
@@ -205,6 +225,11 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                           custom_images: {
                             :"#{@boat_review_photo.id}" => {
                               image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
+                            }
+                          },
+                          custom_attachments: {
+                            :"#{@boat_review_attachment.id}" => {
+                              file: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
                             }
                           }
                         }
@@ -292,6 +317,13 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
             }
           }
         },
+        :custom_attachments => {
+          "#{@seller_attachment.id}": {
+            validation: {
+              'presence' => {}
+            }
+          }
+        },
         :categories => {
           'Seller Category' => {
             validation: {
@@ -364,11 +396,25 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                         'presence' => {}
                       }
                     }
+                  },
+                  custom_attachments: {
+                    "#{@boat_review_attachment.id}": {
+                      validation: {
+                        'presence' => {}
+                      }
+                    }
                   }
                 }
               },
               custom_images: {
                 "#{@boat_photo.id}": {
+                  validation: {
+                    'presence' => {}
+                  }
+                }
+              },
+              custom_attachments: {
+                "#{@boat_attachment.id}": {
                   validation: {
                     'presence' => {}
                   }

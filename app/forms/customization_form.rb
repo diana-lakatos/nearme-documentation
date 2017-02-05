@@ -22,6 +22,13 @@ class CustomizationForm < BaseForm
                                    from: :custom_images_open_struct
 
         end
+        if (custom_attachments_configuration = configuration.delete(:custom_attachments)).present?
+          validation = custom_attachments_configuration.delete(:validation)
+          validates :custom_attachments, validation if validation.present?
+          property :custom_attachments, form: CustomAttachmentsForm.decorate(custom_attachments_configuration),
+                                        from: :custom_attachments_open_struct
+
+        end
         if (properties_configuration = configuration.delete(:properties)).present?
           validation = properties_configuration.delete(:validation)
           validates :properties, validation if validation.present?
