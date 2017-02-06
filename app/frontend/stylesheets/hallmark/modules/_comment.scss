@@ -31,6 +31,44 @@
       margin-left: 70px;
     }
   }
+  footer {
+    margin-left: 80px !important;
+
+    > .comments {
+      margin-top: 10px;
+      padding-top: 15px;
+
+      > .comment-a {
+        border-top: 1px solid #e5e5e5;
+        padding-top: 10px;
+      }
+
+      &:empty {
+        display: none;
+      }
+
+      > .comment {
+        display: none;
+        margin-top: 15px;
+      }
+
+      > .comment.is-active {
+        display: block;
+      }
+
+      > .comment p {
+        margin-bottom: 15px;
+      }
+
+      > .comment .action {
+        text-align: right;
+      }
+
+      > .comment .button-a {
+        padding: 0 29px;
+      }
+    }
+  }
 
   .author {
     @include clear;

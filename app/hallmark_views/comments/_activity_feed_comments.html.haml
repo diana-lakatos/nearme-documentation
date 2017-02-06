@@ -1,11 +1,11 @@
 - css_class = local_assigns[:is_active].present? ? "is-active" : ""
 
-%div.comment{:class => css_class}
-  - if current_user
-    = render "comments/form", comment: comment
-
 - comments =  comment.commentable.comments.order("created_at DESC").includes(:creator).paginate(page: 1, per_page: 10)
-.comments{ "data-comments-for": comment.commentable.id}<
+.comments{ "data-comments-for": comment.commentable.id, "data-creatable-container": true, "data-trigger-event": 'new-comment' }<
+  %div.comment{:class => css_class, "data-creatable-form": true}
+    - if current_user
+      = render "comments/form", comment: comment
+
   - comments.each do |sub_comment|
     - cache [user_signed_in?, current_instance.context_cache_key, sub_comment] do
       = render 'comments/activity_feed_comment', comment: sub_comment
