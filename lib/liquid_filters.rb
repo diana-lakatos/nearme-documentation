@@ -344,7 +344,7 @@ module LiquidFilters
   # @param html [String] HTML string to be sanitized
   def custom_sanitize(html = '')
     return '' if html.blank?
-
+    html = html.to_s
     html = nl2br(html)
 
     if PlatformContext.current.instance.custom_sanitize_config.present?
@@ -360,6 +360,7 @@ module LiquidFilters
   # @param html [String] HTML string to be sanitized
   def strip_tags(html = '')
     return '' if html.blank?
+    html = html.to_s
     @custom_sanitizer ||= CustomSanitizer.new
     @custom_sanitizer.strip_tags(html).html_safe
   end
@@ -368,6 +369,7 @@ module LiquidFilters
   # @param html [String] HTML string to be processed
   def nl2br(html = '')
     return '' if html.blank?
+    html = html.to_s
     html.gsub!("\r\n", '<br />')
     html
   end
