@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170201140226) do
+ActiveRecord::Schema.define(version: 20170203151843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -667,19 +667,15 @@ ActiveRecord::Schema.define(version: 20170201140226) do
   add_index "custom_attributes", ["target_id", "target_type"], name: "index_custom_attributes_on_target_id_and_target_type", using: :btree
 
   create_table "custom_images", force: :cascade do |t|
-    t.integer  "instance_id",                 null: false
-    t.integer  "custom_attribute_id",         null: false
+    t.integer  "instance_id",         null: false
+    t.integer  "custom_attribute_id", null: false
     t.integer  "owner_id"
     t.string   "owner_type"
     t.integer  "uploader_id"
     t.string   "image"
-    t.text     "image_transformation_data"
-    t.integer  "image_original_width"
-    t.integer  "image_original_height"
-    t.datetime "image_versions_generated_at"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.datetime "deleted_at"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
   end
 
   add_index "custom_images", ["instance_id", "custom_attribute_id"], name: "index_custom_images_on_instance_id_and_custom_attribute_id", using: :btree
@@ -776,7 +772,7 @@ ActiveRecord::Schema.define(version: 20170201140226) do
     t.datetime "updated_at"
     t.json     "json_content",          default: {}
     t.text     "fields",                default: [],    array: true
-    t.boolean  "mark_for_deletion",     default: false
+    t.boolean  "mark_for_destruction",  default: false
   end
 
   add_index "data_source_contents", ["instance_id", "data_source_id"], name: "index_data_source_contents_on_instance_id_and_data_source_id", using: :btree
@@ -999,6 +995,19 @@ ActiveRecord::Schema.define(version: 20170201140226) do
   end
 
   add_index "form_components", ["instance_id", "form_componentable_id", "form_type"], name: "ttfs_instance_tt_form_type", using: :btree
+
+  create_table "form_configurations", force: :cascade do |t|
+    t.integer  "instance_id",                        null: false
+    t.string   "base_form",                          null: false
+    t.string   "name",                               null: false
+    t.text     "liquid_body"
+    t.text     "configuration", default: "--- {}\n", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "form_configurations", ["instance_id"], name: "index_form_configurations_on_instance_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",           limit: 255, null: false
@@ -1260,23 +1269,6 @@ ActiveRecord::Schema.define(version: 20170201140226) do
 
   add_index "instance_views", ["instance_id", "path", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
 
-  create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.integer  "instance_type_id"
-    t.integer  "instance_id"
-    t.text     "body"
-    t.string   "path",                 limit: 255
-    t.string   "locale",               limit: 255
-    t.string   "format",               limit: 255
-    t.string   "handler",              limit: 255
-    t.boolean  "partial"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "view_type",            limit: 255
-    t.integer  "transactable_type_id"
-    t.integer  "custom_theme_id"
-  end
-
   create_table "instances", force: :cascade do |t|
     t.string   "name",                                          limit: 255
     t.datetime "created_at",                                                                                                                   null: false
@@ -1349,9 +1341,9 @@ ActiveRecord::Schema.define(version: 20170201140226) do
     t.string   "encrypted_google_consumer_secret",              limit: 255
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                          default: true
-    t.string   "time_zone"
     t.string   "seller_attachments_access_level",               limit: 255,                         default: "disabled",                       null: false
     t.integer  "seller_attachments_documents_num",                                                  default: 10,                               null: false
+    t.string   "time_zone"
     t.boolean  "enable_language_selector",                                                          default: false,                            null: false
     t.boolean  "click_to_call",                                                                     default: false
     t.boolean  "enable_reply_button_on_host_reservations",                                          default: false
@@ -1362,9 +1354,9 @@ ActiveRecord::Schema.define(version: 20170201140226) do
     t.boolean  "lister_blogs_enabled",                                                              default: false
     t.boolean  "tax_included_in_price",                                                             default: true
     t.boolean  "skip_meta_tags",                                                                    default: false
+    t.boolean  "use_cart",                                                                          default: false
     t.string   "test_email"
     t.boolean  "enable_sms_and_api_workflow_alerts_on_staging",                                     default: false,                            null: false
-    t.boolean  "use_cart",                                                                          default: false
     t.boolean  "expand_orders_list",                                                                default: true
     t.string   "orders_received_tabs"
     t.string   "my_orders_tabs"
@@ -1374,12 +1366,12 @@ ActiveRecord::Schema.define(version: 20170201140226) do
     t.boolean  "show_currency_name",                                                                default: false,                            null: false
     t.boolean  "no_cents_if_whole",                                                                 default: true,                             null: false
     t.string   "encrypted_google_maps_api_key",                                                     default: "",                               null: false
-    t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
-    t.string   "twilio_ring_tone"
+    t.boolean  "debugging_mode_for_admins",                                                         default: true
     t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
+    t.string   "twilio_ring_tone"
     t.boolean  "only_first_name_as_user_slug",                                                      default: false,                            null: false
   end
 
@@ -1707,6 +1699,16 @@ ActiveRecord::Schema.define(version: 20170201140226) do
 
   add_index "page_data_source_contents", ["instance_id", "page_id", "data_source_content_id", "slug"], name: "pdsc_on_foreign_keys", using: :btree
 
+  create_table "page_forms", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "page_id"
+    t.integer  "form_configuration_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "page_forms", ["instance_id", "page_id", "form_configuration_id"], name: "index_page_forms_on_instance_id_and_fks", unique: true, using: :btree
+
   create_table "pages", force: :cascade do |t|
     t.string   "path",                      limit: 255,                         null: false
     t.text     "content"
@@ -1995,6 +1997,63 @@ ActiveRecord::Schema.define(version: 20170201140226) do
   add_index "photos", ["instance_id", "owner_id", "owner_type"], name: "index_photos_on_owner", using: :btree
   add_index "photos", ["instance_id"], name: "index_photos_on_instance_id", using: :btree
   add_index "photos", ["transactable_id"], name: "index_photos_on_listing_id", using: :btree
+
+  create_table "project_collaborators", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.datetime "approved_by_owner_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.datetime "approved_by_user_at"
+    t.string   "email"
+  end
+
+  add_index "project_collaborators", ["instance_id"], name: "index_project_collaborators_on_instance_id", using: :btree
+  add_index "project_collaborators", ["project_id"], name: "index_project_collaborators_on_project_id", using: :btree
+  add_index "project_collaborators", ["user_id", "project_id"], name: "index_project_collaborators_on_user_id_and_project_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
+  add_index "project_collaborators", ["user_id"], name: "index_project_collaborators_on_user_id", using: :btree
+
+  create_table "project_topics", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "project_id"
+    t.integer  "topic_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "project_topics", ["instance_id", "project_id", "topic_id"], name: "index_project_topics_on_instance_id_and_project_id_and_topic_id", using: :btree
+
+  create_table "projects", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.hstore   "properties"
+    t.datetime "deleted_at"
+    t.integer  "transactable_type_id"
+    t.integer  "wish_list_items_count", default: 0
+    t.string   "name"
+    t.text     "description"
+    t.string   "external_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "seek_collaborators",    default: false
+    t.text     "summary"
+    t.boolean  "featured",              default: false
+    t.datetime "draft_at"
+    t.integer  "followers_count",       default: 0,     null: false
+    t.integer  "transactable_id"
+  end
+
+  add_index "projects", ["instance_id", "creator_id"], name: "index_projects_on_instance_id_and_creator_id", using: :btree
+  add_index "projects", ["transactable_id"], name: "index_projects_on_transactable_id", using: :btree
+
+  create_table "projects_user_status_updates", force: :cascade do |t|
+    t.integer "project_id"
+    t.integer "user_status_update_id"
+  end
+
+  add_index "projects_user_status_updates", ["project_id", "user_status_update_id"], name: "project_usu_id", using: :btree
 
   create_table "rating_answers", force: :cascade do |t|
     t.integer  "rating"
@@ -2856,8 +2915,8 @@ ActiveRecord::Schema.define(version: 20170201140226) do
     t.boolean  "searchable",                                                                     default: true
     t.boolean  "action_regular_booking",                                                         default: true
     t.boolean  "action_continuous_dates_booking",                                                default: false
-    t.boolean  "rental_shipping",                                                                default: false
     t.boolean  "search_location_type_filter",                                                    default: true
+    t.boolean  "rental_shipping",                                                                default: false
     t.boolean  "show_company_name",                                                              default: true
     t.string   "slug"
     t.string   "default_search_view"
@@ -2884,8 +2943,8 @@ ActiveRecord::Schema.define(version: 20170201140226) do
     t.boolean  "single_transactable",                                                            default: false
     t.decimal  "cancellation_policy_penalty_hours",                      precision: 8, scale: 2, default: 0.0
     t.boolean  "display_additional_charges",                                                     default: true
-    t.boolean  "single_location",                                                                default: false,      null: false
     t.boolean  "hide_additional_charges_on_listing_page",                                        default: false,      null: false
+    t.boolean  "single_location",                                                                default: false,      null: false
     t.hstore   "custom_settings",                                                                default: {},         null: false
     t.boolean  "auto_accept_invitation_as_collaborator",                                         default: false
     t.boolean  "require_transactable_during_onboarding",                                         default: true
@@ -3205,6 +3264,7 @@ ActiveRecord::Schema.define(version: 20170201140226) do
     t.integer  "followers_count",                                    default: 0,                                                                                   null: false
     t.integer  "following_count",                                    default: 0,                                                                                   null: false
     t.string   "external_id"
+    t.integer  "projects_count",                                     default: 0,                                                                                   null: false
     t.integer  "project_collborations_count",                        default: 0,                                                                                   null: false
     t.boolean  "click_to_call",                                      default: false
     t.integer  "orders_count",                                       default: 0
@@ -3384,38 +3444,6 @@ ActiveRecord::Schema.define(version: 20170201140226) do
 
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
   add_index "workflow_alerts", ["template_path", "workflow_step_id", "recipient_type", "alert_type", "deleted_at"], name: "index_workflows_alerts_on_templ_step_recipient_alert_and_del", unique: true, using: :btree
-
-  create_table "workflow_alerts_backup_20160926", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.string   "name",                      limit: 255
-    t.string   "alert_type",                limit: 255
-    t.string   "recipient_type",            limit: 255
-    t.string   "template_path",             limit: 255
-    t.integer  "workflow_step_id"
-    t.integer  "instance_id"
-    t.text     "options"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "delay"
-    t.text     "subject"
-    t.string   "layout_path",               limit: 255
-    t.text     "custom_options"
-    t.string   "from",                      limit: 255
-    t.string   "reply_to",                  limit: 255
-    t.string   "cc",                        limit: 255
-    t.string   "bcc",                       limit: 255
-    t.string   "recipient",                 limit: 255
-    t.string   "from_type",                 limit: 255
-    t.string   "reply_to_type",             limit: 255
-    t.text     "endpoint"
-    t.string   "request_type"
-    t.boolean  "use_ssl"
-    t.text     "payload_data"
-    t.text     "headers"
-    t.text     "prevent_trigger_condition"
-    t.string   "bcc_type"
-  end
 
   create_table "workflow_steps", force: :cascade do |t|
     t.string   "name",             limit: 255

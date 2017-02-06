@@ -36,7 +36,7 @@
             = "#{t(:groups_and_clubs)} <em>3</em>".html_safe
 
       %li.diy
-        = link_to search_url(search_type: :diys), accesskey: 4 do
+        = link_to search_url(search_type: :shares), accesskey: 4 do
           %span.text
             = "#{t(:projects)} <em>4</em>".html_safe
 
@@ -50,7 +50,9 @@
         %ul
           %li{ class: (controller_name == 'registrations' && action_name == 'show' ? 'active' : '') }
             = link_to t(:profile), user_path(current_user.slug)
-          - if (project_type = TransactableType.where(name: 'DIY').first).present?
+          %li{ class: (controller_name == 'registrations' && action_name == 'show' ? 'active' : '') }
+            = link_to 'Get Started', '/faq'
+          - if (project_type = TransactableType.find_by(name: 'Share')).present?
             %li{ class: (controller_name == 'projects' ? 'active' : '') }
               = link_to t(:my_projects), dashboard_project_type_projects_path(project_type)
           - if (group_type = GroupType.first).present?
