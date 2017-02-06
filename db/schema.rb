@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170208143326) do
+ActiveRecord::Schema.define(version: 20170209114935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -728,6 +728,8 @@ ActiveRecord::Schema.define(version: 20170208143326) do
     t.boolean  "in_use",                     default: false
     t.datetime "deleted_at"
     t.boolean  "in_use_for_instance_admins"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "custom_themes", ["instance_id", "themeable_id", "themeable_type"], name: "instance_id_and_themeable", using: :btree
