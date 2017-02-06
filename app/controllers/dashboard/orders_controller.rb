@@ -47,7 +47,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
           @order.reload
           @order.update_payment_attributes
         end
-        @order.payment.authorize unless @order.payment.authorized?
+        @order.payment.authorize! unless @order.payment.authorized?
         @order.payment.capture!
       end
 
