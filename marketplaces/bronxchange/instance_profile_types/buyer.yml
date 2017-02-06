@@ -191,24 +191,6 @@ custom_attributes:
         height: 880
         transform: resize_to_fit
 
-  - name: avatar
-    label: 'Owner Portrait'
-    attribute_type: photo
-    html_tag: input
-    versions_configuration:
-      mini:
-        width: 200
-        height: 200
-        transform: resize_to_fill
-      thumb:
-        width: 70
-        height: 70
-        transform: resize_to_fill
-      normal:
-        width: 1280
-        height: 880
-        transform: resize_to_fit
-
   - name: workplace_team_image
     label: 'Workplace/Team Image'
     attribute_type: photo
@@ -260,13 +242,13 @@ form_components:
       - buyer: company_name
       - buyer: company_description
       - buyer: logo
+      - user: avatar
       - buyer: Category - Industry
       - buyer: Category - Language
       - buyer: hours_days_of_operation
       - buyer: availability
       - buyer: certifications
       - buyer: other_certifications
-      - buyer: avatar
       - buyer: workplace_team_image
       - buyer: our_story
       - buyer: awards

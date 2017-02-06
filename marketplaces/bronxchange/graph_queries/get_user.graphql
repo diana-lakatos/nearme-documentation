@@ -8,13 +8,6 @@ query get_user($userId: ID!){
       width: image_original_width
       height: image_original_height
     }
-    avatar: custom_attribute_photos(name: "avatar"){
-      thumb: url(version: "thumb")
-      mini: url(version: "mini")
-      url: url
-      width: image_original_width
-      height: image_original_height
-    }
     workplace_photo: custom_attribute_photos(name: "workplace_team_image"){
       thumb: url(version: "thumb")
       mini: url(version: "mini")
