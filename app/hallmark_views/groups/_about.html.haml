@@ -1,0 +1,93 @@
+.page-a.group
+  .primary
+    .box-a
+      = image_tag @group.cover_image.url(:large)
+
+      %h2
+        = @group.name
+
+      - if @group.current_address.present?
+        %p.group-location
+          %span Group location:
+          = @group.current_address.address
+
+      .owner-card
+        %figure
+          = image_tag @group.creator.avatar.url(:thumb), width: 80
+        %p<
+          = link_to @group.creator.name, @group.creator
+          , Owner
+
+        - if @group.creator.current_address.try(:address).present?
+          %p.location
+            = @group.creator.current_address.try(:address)
+
+      %h4
+        = t('group.description')
+
+      %p
+        = @group.description
+
+      - if @group.gallery_photos.any?
+        %section.gallery
+          %h4
+            = t('group.gallery')
+
+          %ul.gallery-a{ :"data-gallery" => '' }
+            - @group.gallery_photos.each do |p|
+              %li
+                %a{ href: p.image_url, data: { "original-width": p.image_original_width, "original-height": p.image_original_height } }
+                  = image_tag p.image_url(:thumb), width: 200, height: 175
+
+      - if @group.properties.try(:videos).present?
+        %section.videos
+          %h4
+            = t('group.videos')
+
+          %ul.gallery-a
+            - @group.properties[:videos].each do |video_url|
+              %li
+                = VideoEmbedder.new(video_url).html.html_safe
+
+      - if @group.links.any?
+        %section.links
+          %h4
+            = t('group.links')
+
+          %ul.gallery-a
+            - @group.links.each do |link|
+              %li
+                - if link.image.present?
+                  = link_to image_tag(link.image.url(:standard)), link.url
+                - else
+                  = link_to link.text, link.url
+
+  - if !@group.confidential? || current_user.try(:is_member_of?, @group)
+    .secondary
+      .box-a
+        .header-a
+          %h2.hx
+            = t(:members)
+            = "(#{group.approved_members.count})"
+
+        .featured
+          - @group.approved_members.limit(10).each do |member|
+            %article.card-a
+              = link_to member do
+                %figure
+                  = image_tag member.avatar.url(:big)
+
+              %ul.numbers
+                %li
+                  = t(:projects)
+                  %span
+                    = member.transactables_collaborated.count + member.created_listings.active.count
+
+              %p
+                = link_to member.name, member
+
+              %p{class: "location #{'missing-address' if member.current_address.blank? }"}
+                = member.current_address.try(:address)
+
+          %p.more-b
+            = link_to t(:view_all), '#members', role: 'tab', :'data-force-toggle-tab' => '#members' , class: 'button-a small light'
