@@ -10,7 +10,7 @@ var
 
 module.exports = function(gulp, config) {
 
-  gulp.task('clean', ['fonts:prepare'], del.bind(null, [config.paths.output, config.paths.tmp]));
+  gulp.task('clean', [], del.bind(null, [config.paths.output, config.paths.tmp]));
 
   /* Dev environment */
   gulp.task('build', ['clean'], function(){

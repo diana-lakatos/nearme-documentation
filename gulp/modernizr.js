@@ -40,7 +40,7 @@ function buildModernizr(output, environment, optimize) {
           return gutil.beep();
         }
 
-        gutil.log(gutil.colors.yellow('[modernizr] ' + environment + ' build created successfuly'));
+        gutil.log(`modernizr: ${environment} build created successfuly`);
       });
     });
   });
