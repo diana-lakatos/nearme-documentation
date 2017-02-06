@@ -24,6 +24,15 @@ yarn install
 gulp build
 ```
 
+#### And for ubuntu
+
+```
+sudo apt-get install libqtwebkit-dev
+sudo apt-get install libcurl4-openssl-dev
+sudo apt-get install libpq-dev
+sudo apt-get install libicu-dev
+```
+
 ### Credentials setup
 
 Add to bash, for example ~/.bash_profile :
@@ -46,6 +55,17 @@ to make ES search work locally you have to enable scripting queries in your loca
     script.inline: on
     script.indexed: on
     script.disable_dynamic: false
+
+### Index ElasticSearch
+
+After you install ES you need to create indexes and aliases
+  - `rake elastic:indices:create_all`
+  - `rake elastic:aliases:create_all `
+
+### Install ES and PostgreSQL on Docker
+
+Alternatively you can install ES and PostgreSQL on Docker. There is docker-compose.yml file.
+Once you install docker and docker-compose run `docker-compose up`. Later you can just run `docker-compose start`
 
 ### Assets on local
 
@@ -139,7 +159,7 @@ If you have xcode 8.0+ and get an error:
 
 Look into this solution [https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#xcode-80](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#xcode-80)
 
-If you have Sierra, you wont be able to install Qt55 normally, to work around this look into this solution: [https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#macos-sierra-1012](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#macos-sierra-1012) 
+If you have Sierra, you wont be able to install Qt55 normally, to work around this look into this solution: [https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#macos-sierra-1012](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#macos-sierra-1012)
 
 More on [capybara-webkit troubleshooting.](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit)
 
