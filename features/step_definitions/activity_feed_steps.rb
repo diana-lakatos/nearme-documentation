@@ -103,6 +103,121 @@ Then(/^I should see the event on the followed topic's Activity Feed$/) do
   page.body.should have_content(@event)
 end
 
+When(/^I'm on Hallmark marketplace$/) do
+  instance = PlatformContext.current.instance
+  instance.is_community = true
+  instance.prepend_view_path = 'hallmark'
+  instance.save!
+end
+
+Then(/^I can fill status update and add picture and submit it$/) do
+  @text = "This is a status update for #{@resource.class.name}!"
+  page.find("#user_status_update_text").set(@text)
+  attach_file find('#new_user_status_update input[type="file"]')[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
+  click_button I18n.t('activity_feed.user_status_submit')
+end
+
+Then(/^I can create a new comment and add picture and submit it$/) do
+  @text = "This is a comment"
+  within("article[data-activity-feed-event-id='#{ActivityFeedEvent.last.id}']") do
+    page.find("a[data-comment]").click
+    page.find("textarea").set(@text)
+    attach_file 'Image', File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
+    page.find("input[type=submit]").click
+  end
+end
+
+Then(/^I can see the comment on the Activity Feed with picture$/) do
+  page.should have_content(@text)
+  page.should have_css("#entry-content-#{Comment.last.id} div.entry-images img")
+  assert_equal 1, Comment.last.activity_feed_images.count
+end
+
+Then(/^I can see the event on the Activity Feed with picture$/) do
+  i18n_key = "activity_feed.events.user_updated_#{@resource.class.name.downcase}_status"
+  @resource = "" if @resource == @user
+  @event = I18n.t(i18n_key, user: @user, updated: @resource)
+
+  page.should have_content(@event)
+  page.should have_css("#entry-content-#{UserStatusUpdate.last.id} div.entry-images img")
+  page.should have_content(@text)
+  assert_equal 1, UserStatusUpdate.last.activity_feed_images.count
+end
+
+Then(/^I can see the edited event on the Activity Feed (with|without) picture/) do |picture_presence|
+  page.should have_content(@new_text)
+  page.should_not have_content(@text)
+  if picture_presence == 'with'
+    page.should have_css("#entry-content-#{UserStatusUpdate.last.id} div.entry-images img")
+    assert_equal 1, UserStatusUpdate.last.activity_feed_images.count
+    assert ActivityFeedImage.last.image.to_s.include?('bully.jpeg')
+  else
+    page.should_not have_css("#entry-content-#{UserStatusUpdate.last.id} div.entry-images img")
+    assert_equal 0, UserStatusUpdate.last.activity_feed_images.count
+  end
+end
+
+Then(/^I can see the edited comment on the Activity Feed (with|without) picture/) do |picture_presence|
+  page.should have_content(@new_text)
+  page.should_not have_content(@text)
+  if picture_presence == 'with'
+    page.should have_css("#entry-content-#{Comment.last.id} div.entry-images img")
+    assert_equal 1, Comment.last.activity_feed_images.count
+    assert ActivityFeedImage.last.image.to_s.include?('bully.jpeg')
+  else
+    page.should_not have_css("#entry-content-#{Comment.last.id} div.entry-images img")
+    assert_equal 0, Comment.last.activity_feed_images.count
+  end
+end
+
+Then(/^I can edit the event and add new image$/) do
+  @status_update = UserStatusUpdate.last
+  page.find("#status-update-actions-#{@status_update.id} > button").click
+  page.find("#status-update-actions-#{@status_update.id} > ul > li.edit-action > a").click
+  @new_text = "New text of status"
+  page.find("#edit_user_status_update_#{@status_update.id} textarea").set(@new_text)
+  within("#edit_user_status_update_#{@status_update.id}") do
+    attach_file "Image", File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
+  end
+  page.find("#edit_user_status_update_#{@status_update.id} > input[type=submit]").click
+end
+
+Then(/^I can edit the comment and add new image$/) do
+  @comment = Comment.last
+  page.find("#comment-actions-#{@comment.id} > button").click
+  page.find("#comment-actions-#{@comment.id} > ul > li.edit-action > a").click
+  @new_text = "New text of comment"
+  page.find("#edit_comment_#{@comment.id} textarea").set(@new_text)
+  within("#edit_comment_#{@comment.id}") do
+    attach_file "Image", File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
+  end
+  page.find("#edit_comment_#{@comment.id} input[type=submit]").click
+end
+
+Then(/I edit the event and delete image$/) do
+  status_update = UserStatusUpdate.last
+  page.find("#status-update-actions-#{@status_update.id} > button").click
+  page.find("#status-update-actions-#{@status_update.id} > ul > li.edit-action > a").click
+  within("#edit_user_status_update_#{@status_update.id}") do
+    page.find("#user_status_update_activity_feed_images_attributes_0__destroy").click
+  end
+  page.find("#edit_user_status_update_#{@status_update.id} > input[type=submit]").click
+end
+
+Then(/I edit the comment and delete image$/) do
+  @comment = Comment.last
+  page.find("#comment-actions-#{@comment.id} > button").click
+  page.find("#comment-actions-#{@comment.id} > ul > li.edit-action > a").click
+  within("#edit_comment_#{@comment.id}") do
+    page.find("#comment_activity_feed_images_attributes_0__destroy").click
+  end
+  page.find("#edit_comment_#{@comment.id} input[type=submit]").click
+end
+
+When(/^I have status update created$/) do
+  UserStatusUpdate.create!(user: @user, text: 'Text of status update', updateable: @user)
+end
+
 When(/^I visit my page$/) do
   @resource = @user
   visit user_path(@user)
