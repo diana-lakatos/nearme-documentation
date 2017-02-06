@@ -27,14 +27,6 @@ class LiquidViewService
 
   def liquid_valid?
     @liquid_view.validate
-    validate_liquid_syntax
-
     @liquid_view.errors.empty?
-  end
-
-  def validate_liquid_syntax
-    Liquid::Template.parse(@liquid_view.body)
-  rescue Liquid::SyntaxError => e
-    @liquid_view.errors[:body] << "syntax is invalid (#{e.message})"
   end
 end
