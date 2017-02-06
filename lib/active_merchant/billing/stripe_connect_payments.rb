@@ -53,13 +53,11 @@ module ActiveMerchant
         raise_error(e)
       end
 
-      def find_balance(balance_id, merchant_account_id)
+      # @balance_id [String]
+      # @options [Hash] with one of the keys: :stripe_account, :destination. Can be nil
+      def find_balance(balance_id, options)
         PaymentGateway::Response::Stripe::Balance.new(
-          if merchant_account_id.present?
-            Stripe::BalanceTransaction.retrieve({ id: balance_id }, stripe_account: merchant_account_id)
-          else
-            Stripe::BalanceTransaction.retrieve(balance_id)
-          end
+          Stripe::BalanceTransaction.retrieve({ id: balance_id }, options)
         )
       rescue => e
         raise_error(e)

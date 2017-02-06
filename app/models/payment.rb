@@ -192,7 +192,7 @@ class Payment < ActiveRecord::Base
 
   # There are few scenarios for PaymentSource to be authorized/captured
   # - direct_token - is usued only for Stripe PaymentGateway in Direct mode.
-  #     Customer in that scenario is Stored in MPO account not Merchant, because of that 
+  #     Customer in that scenario is Stored in MPO account not Merchant, because of that
   #     we have to generate token that will allow to authorize this card in Merchant Account
   # - token - when card is saved and charged again MPO account
   # - active_merchant_card - card details send to PG
@@ -231,7 +231,7 @@ class Payment < ActiveRecord::Base
     response = yield
 
     create_transfer(response) if response.try(:success?) && immediate_payout?
-    set_pg_fee(response)
+    apply_pg_fee(response)
     self.external_id ||= response.params.try("[]", 'id')
     charges.create!(charge_attributes(response))
     errors.add(:base, response.message) if response.try(:message)
@@ -559,15 +559,14 @@ class Payment < ActiveRecord::Base
     )
   end
 
-  # set_pg_fee
+  # apply_pg_fee
   # - sets payment_gateway_fee_cents based on balance response, this currently works only for Stripe
-
-  def set_pg_fee(response)
+  def apply_pg_fee(response)
     return unless payment_gateway.direct_charge?
     return unless payment_gateway.respond_to?(:find_balance)
     return if response.blank? || response.params.blank? || (balance_id = response.params['balance_transaction']).blank?
 
-    balance_response = payment_gateway.find_balance(balance_id, merchant_account.try(:external_id))
+    balance_response = payment_gateway.find_balance(balance_id, merchant_account.try(:custom_options))
     self.payment_gateway_fee_cents = balance_response.payment_gateway_fee_cents
   end
 
