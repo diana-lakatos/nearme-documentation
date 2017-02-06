@@ -55,11 +55,11 @@
           <div class="filter">
             <label for="filter-second-language">Second Language</label>
             <span class="select-a">
-              <select name="lg_customizations[language]" id="filter-second-language" class="unstyled-select">
+              <select name="lg_customizations[properties.language]" id="filter-second-language" class="unstyled-select">
                 <option value="">Please select --</option>
                 {% assign languages = "English | Chinese (Mandarin) | Spanish | German | French | Italian | Japanese | Korean | Arabic | Russian" | split: " | " %}
                 {% for l in languages %}
-                <option value="{{ l }}"{% if params["lg_customizations"]["language"] == l %} selected{% endif %}>{{ l }}</option>
+                <option value="{{ l }}"{% if params["lg_customizations"]["properties.language"] == l %} selected{% endif %}>{{ l }}</option>
                 {% endfor %}
               </select>
             </span>
@@ -114,8 +114,7 @@
         <article class="box-a user-a" id="user-{{ user.id }}">
           <figure class="avatar">
             <a href="{{ user.user_profile_url }}">
-              <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
-              <span class="verified">Verified</span>
+              <img src="{{user.avatar.big.url}}" alt="{{ user.name }}">
             </a>
           </figure>
 
@@ -124,13 +123,13 @@
               <h2><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h2>
               <div class="summary">
                 <div class="rating-a" data-rating="{{ user.buyer_average_rating }}">{{ user.buyer_average_rating }} out of 5 stars</div>
-                <div class="price" data-convert-price="{{ user.buyer_properties.hourly_price }}"><strong>AUD {{ user.buyer_properties.hourly_price | price_with_cents_with_currency }}</strong> / hr</div>
+                <div class="price" data-convert-price="{{ user.profiles.buyer.properties['hourly_price'] }}"><strong>AUD {{ user.profiles.buyer.properties['hourly_price'] | price_with_cents_with_currency }}</strong> / hr</div>
               </div>
             </header>
             <dl class="properties">
-              {% if user.buyer_properties.driver_category %}
+              {% if user.profiles.buyer.properties['driver_category'] %}
               <dt>Driver Type:</dt>
-              <dd>{{ user.buyer_properties.driver_category }}
+              <dd>{{ user.profiles.buyer.properties['driver_category'] }}
                 <div class="driver-types-description" tabindex="0">
                   <ul>
                     <li>
@@ -151,27 +150,27 @@
               <dd>{{ user.created_at | to_date | l: 'long' }}</dd>
 
               <dt>Number of Bookings:</dt>
-              <dd>{{ user.completed_orders_count }}</dd>
+              <dd>{{ user.number_of_completed_orders_user }}</dd>
 
               <dt>Number of Ratings:</dt>
               <dd>{{ user.reviews_counter.about_buyer }}</dd>
 
               <dt>Capacity:</dt>
-              <dd>{{ 'passengers_count' | t: count: user.buyer_properties.vehicle_capacity }}</dd>
+              <dd>{{ 'passengers_count' | t: count: user.profiles.buyer.properties['vehicle_capacity'] }}</dd>
             </dl>
 
-            {% if user.buyer_properties.short_bio != blank %}
+            {% if user.profiles.buyer.properties['short_bio'] != blank %}
             <h3>About {{ user.first_name }}</h3>
-            <p>{{ user.buyer_properties.short_bio | nl2br }}</p>
+            <p>{{ user.profiles.buyer.properties['short_bio'] | nl2br }}</p>
             {% endif %}
 
-            {% assign languages = user.buyer_profile.customizations_by_type['Languages'] %}
+            {% assign languages = user.profiles.buyer.grouped_customizations['Languages'] %}
             {% if languages.size > 0 %}
             <h3>Languages</h3>
             <dl class="languages-proficiency short-list">
               {% for language in languages %}
-                <dt>{{ language.language }}</dt>
-                <dd>{{ language.fluency }}</dd>
+                <dt>{{ language.properties.language }}</dt>
+                <dd>{{ language.properties.fluency }}</dd>
               {% endfor %}
             </dl>
             {% endif %}

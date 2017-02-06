@@ -16,10 +16,10 @@ module CoercionHelpers
       params
     end
 
-    def self.to_positive_integer(value, default)
-      number = value.to_i rescue default
-
-      number < 1 ? default : number
+    def self.to_positive_integer(param, default)
+      Integer(param).tap { |i_value| raise ArgumentError unless i_value.positive? }
+    rescue ArgumentError, TypeError
+      default
     end
   end
 end

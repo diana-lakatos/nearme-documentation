@@ -14,9 +14,24 @@ module UsersIndex
         indexes :first_name, type: 'string'
         indexes :last_name, type: 'string'
         indexes :name, type: 'string'
+        indexes :slug, type: 'string'
+        indexes :created_at, type: 'date'
 
         indexes :country_name, type: 'string'
         indexes :company_name, type: 'string'
+
+        indexes :blog, type: 'object' do
+          indexes :name
+          indexes :enabled, type: 'boolean'
+        end
+
+        indexes :avatar, type: 'object' do
+          indexes :url
+        end
+
+        indexes :communication do
+          indexes :verified, type: 'boolean'
+        end
 
         indexes :tags, type: 'string'
 
@@ -32,11 +47,20 @@ module UsersIndex
           indexes :availability_exceptions, type: 'date'
           indexes :profile_type, type: 'string'
           indexes :category_ids, type: 'integer'
-          indexes :customizations, type: 'object' do
-            CustomAttributes::CustomAttribute.custom_attributes_mapper(CustomModelType, CustomModelType.user_profiles) do |attribute_name, type|
-              indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
-            end
+          indexes :categories, type: 'nested' do
+            indexes :id, type: 'integer'
+            indexes :name, type: 'string'
+            indexes :permalink, type: 'string', index: 'not_analyzed'
+            indexes :root, type: 'string'
+            indexes :position, type: 'integer'
           end
+
+          # TODO: add _nested_ mapping for custom-models
+          # indexes :customizations, type: 'object' do
+          #   CustomAttributes::CustomAttribute.custom_attributes_mapper(CustomModelType, CustomModelType.user_profiles) do |attribute_name, type|
+          #     indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
+          #   end
+          # end
           indexes :properties, type: 'object' do
             CustomAttributes::CustomAttribute.custom_attributes_mapper(InstanceProfileType, InstanceProfileType.where(instance: instance)) do |attribute_name, type|
               indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
@@ -47,31 +71,7 @@ module UsersIndex
     end
 
     def as_indexed_json(_options = {})
-      profiles = user_profiles.map do |user_profile|
-
-        customizations_attributes = user_profile.customizations.map do |customization|
-          CustomAttributes::CustomAttribute.custom_attributes_indexer(CustomModelType, customization)
-        end
-
-        Time.use_zone(time_zone) do
-          @availability_exceptions = user_profile.availability_exceptions ? user_profile.availability_exceptions.map(&:all_dates).flatten : nil
-        end
-
-        user_profile.slice(:instance_profile_type_id, :profile_type, :enabled).merge(
-          availability_exceptions: @availability_exceptions,
-          properties: CustomAttributes::CustomAttribute.custom_attributes_indexer(InstanceProfileType, user_profile),
-          category_ids: user_profile.categories.map(&:id),
-          customizations: customizations_attributes
-        )
-      end
-
-      as_json(only: User.mappings.to_hash[:user][:properties].keys).merge(
-        instance_profile_type_ids: user_profiles.map(&:instance_profile_type_id),
-        tags: tags_as_comma_string,
-        user_profiles: profiles,
-        number_of_completed_orders_creator: listing_orders.reviewable.count,
-        number_of_completed_orders_user: orders.reviewable.count
-      )
+      ElasticIndexer::UserSerializer.new(self).as_json
     end
 
     def self.esearch(query)

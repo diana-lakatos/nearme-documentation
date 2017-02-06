@@ -4,7 +4,7 @@ module ClickToCallButtonHelper
   def build_click_to_call_button_for_transactable(transactable)
     return unless PlatformContext.current.instance.click_to_call? && transactable.administrator.click_to_call? && transactable.administrator.communication.try(:verified)
 
-    path_to_call = Rails.application.routes.url_helpers.new_user_phone_call_path(transactable.administrator)
+    path_to_call = routes.new_user_phone_call_path(transactable.administrator)
     if transactable.time_based_booking?
       closest_availability = transactable.first_available_date.try(:to_datetime).try(:in_time_zone, transactable.timezone)
 
@@ -22,7 +22,7 @@ module ClickToCallButtonHelper
   def build_click_to_call_button_for_user(user, options = {})
     return unless PlatformContext.current.instance.click_to_call? && user.click_to_call? && user.communication.try(:verified)
 
-    path_to_call = Rails.application.routes.url_helpers.new_user_phone_call_path(user)
+    path_to_call = routes.new_user_phone_call_path(user)
     if options[:first_name]
       user_name = user.first_name
     else
