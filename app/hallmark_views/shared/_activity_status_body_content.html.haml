@@ -1,10 +1,11 @@
 .entry-content-a{ id: "entry-content-#{event.event_source.id}" }
-  .entry-body{ class: ('edited' if event.event_source.respond_to?(:created_at) && event.event_source.created_at != event.event_source.updated_at) }
+  .entry-body{ class: ('edited' if object_updated?(event.event_source)) }
     - if body.present?
       - if event.is_text_update? || event.event.to_sym == :user_created_transactable
         = videoify_and_parse_with_markdown(body)
       - else
         = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' })
+    = render 'shared/activity_feed_images', images: images
 
   - if status_update_event?(event.event)
     .entry-editor
@@ -13,4 +14,3 @@
   - elsif comment_event?(event.event)
     .entry-editor
       = render "comments/form", comment: event.event_source
-

@@ -17,8 +17,15 @@
     display: none;
   }
 
+  .image {
+    clear: both;
+    img {
+      float: left;
+    }
+  }
+
   &.is-active {
-    .entry-body {
+    .entry-body, .entry-images {
       display: none;
     }
 
