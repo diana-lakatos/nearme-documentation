@@ -16,6 +16,11 @@ module.exports = SearchableAdminResource =
       parentContainer.find('.dropdown-trigger input[type="hidden"]').attr('value', dateValue)
       $(@).parents('form').submit()
 
+    @container.find('.filter-value-dropdown').on 'click', 'li', ->
+      filterValue = $(@).find('a').data('value')
+      $(@).closest('.filter').find('.dropdown-trigger input[type="hidden"]').attr('value', filterValue)
+      $(@).parents('form').submit()
+
     @container.find('.date-dropdown').on 'click', '.apply-filter', ->
       parentContainer = $(@).closest('.filter')
       startDate = parentContainer.find('#from').val()

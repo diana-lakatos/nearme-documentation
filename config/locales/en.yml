@@ -752,6 +752,11 @@ en:
         order_amount: Amount
         details: Details
         no_details: "This order has no details to display at this time."
+        listing_name: 'Listing name'
+        listing_url: 'Listing URL'
+        order_total_amount: 'Order total amount'
+        order_amount_from_order_items: 'Order amount from order items'
+        order_amount_from_payment: 'Order amount from payment'
       instance_profile_types:
         instance_profile_types: 'User Profiles'
         manage: 'Manage User Profiles'

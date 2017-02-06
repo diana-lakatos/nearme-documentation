@@ -134,6 +134,47 @@ class OrderDecorator < Draper::Decorator
     current_user != company.creator && approved_at.present? && paid? && shipped?
   end
 
+  def self.column_headings_for_report
+    values = []
+
+    values << I18n.t('instance_admin.manage.orders.number')
+    values << I18n.t('instance_admin.manage.orders.listing_name')
+    values << I18n.t('instance_admin.manage.orders.listing_url')
+    values << I18n.t('instance_admin.manage.orders.user')
+    values << I18n.t('instance_admin.manage.orders.lister')
+    values << I18n.t('instance_admin.manage.orders.payment')
+    values << I18n.t('instance_admin.manage.orders.state')
+    values << I18n.t('instance_admin.manage.orders.pro_bono')
+    values << I18n.t('instance_admin.manage.orders.created_at')
+    values << I18n.t('instance_admin.manage.orders.order_total_amount')
+    values << I18n.t('instance_admin.manage.orders.order_amount_from_order_items')
+    values << I18n.t('instance_admin.manage.orders.order_amount_from_payment')
+    values << I18n.t('instance_admin.manage.orders.details')
+
+    values
+  end
+
+  def column_values_for_report
+    values = []
+
+    values << object.id
+    values << object.transactable.name
+    values << object.transactable.decorate.show_url
+    values << object.user.name
+    values << object.transactable.creator.try(:name)
+    values << object.payment.try(:id)
+    values << object.state
+    values << object.is_free_booking?
+    values << object.created_at
+    values << object.total_amount
+    values << order.order_items.paid.map(&:total_amount).sum
+    values << object.payment.try(:total_amount)
+    values << instance_admin_manage_order_url(order)
+
+    values
+  end
+  
+
   private
 
   def status_info(text)
@@ -156,4 +197,5 @@ class OrderDecorator < Draper::Decorator
 
     address
   end
+
 end
