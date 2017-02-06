@@ -121,6 +121,7 @@
   @include bp($screen-tablet-vertical) {
     img.alignright {
       margin-left: auto;
+      margin-top: 0.7em;
     }
 
     .hx {
