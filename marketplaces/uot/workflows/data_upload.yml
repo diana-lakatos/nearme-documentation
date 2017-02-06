@@ -1,0 +1,31 @@
+---
+name: Data upload
+workflow_type: data_upload
+events_metadata: {}
+workflow_steps:
+- name: Failed
+  associated_class: WorkflowStep::DataUploadWorkflow::Failed
+  workflow_alerts:
+  - name: Notify uploader of failed import email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: data_upload_mailer/notify_uploader_of_failed_import
+    delay: 0
+    subject: "[{{platform_context.name}}] Importing '{{data_upload.csv_file_identifier}}'
+      has failed"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Finished
+  associated_class: WorkflowStep::DataUploadWorkflow::Finished
+  workflow_alerts:
+  - name: Notify uploader of finished import email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: data_upload_mailer/notify_uploader_of_finished_import
+    delay: 0
+    subject: "[{{platform_context.name}}] Importing '{{data_upload.csv_file_identifier}}'
+      has finished"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

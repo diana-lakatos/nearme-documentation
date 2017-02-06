@@ -11,7 +11,7 @@
   .signup-provider
     .inner-box.connected-provider
       - if request.xhr?
-        = link_to t('sign_up_form.buttons.close'), clear_authentications_url, :method => :post, :remote => true, :class => "close-button"
+        = link_to t('sign_up_form.buttons.close'), clear_authentications_url, method: :post, remote: true, class: "close-button"
       .avatar
         = image_tag user_auth_provider.avatar_url
       %h3= user_auth_provider.name

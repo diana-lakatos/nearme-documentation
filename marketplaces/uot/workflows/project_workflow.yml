@@ -1,0 +1,66 @@
+---
+name: Project workflow
+workflow_type: project_workflow
+events_metadata: {}
+workflow_steps:
+- name: Collaborator Added By Project Owner
+  associated_class: WorkflowStep::ProjectWorkflow::CollaboratorAddedByProjectOwner
+  workflow_alerts:
+  - name: Project owner added collaborator email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: project_mailer/project_owner_added_collaborator_email
+    delay: 0
+    subject: You're invited to join {{ project.name }}
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Collaborator Pending Approval
+  associated_class: WorkflowStep::ProjectWorkflow::CollaboratorPendingApproval
+  workflow_alerts:
+  - name: Notify project owner of pending request
+    alert_type: email
+    recipient_type: lister
+    template_path: project_mailer/pending_approval
+    delay: 2
+    subject: New request to join your {{ project.name }} project
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Collaborator Approved
+  associated_class: WorkflowStep::ProjectWorkflow::CollaboratorApproved
+  workflow_alerts:
+  - name: Collaborator approved email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: project_mailer/collaborator_approved
+    delay: 0
+    subject: You've been approved as a collaborator on {{ project.name }}
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Collaborator Declined
+  associated_class: WorkflowStep::ProjectWorkflow::CollaboratorDeclined
+  workflow_alerts:
+  - name: Collaborator declined email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: project_mailer/collaborator_declined
+    delay: 0
+    subject: Your request to collaborate on {{ project.name }} has been declined
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Collaborator Has Quit
+  associated_class: WorkflowStep::ProjectWorkflow::CollaboratorHasQuit
+  workflow_alerts:
+  - name: Collaborator has quitted email
+    alert_type: email
+    recipient_type: lister
+    template_path: project_mailer/collaborator_has_quit
+    delay: 0
+    subject: "{{owner.first_name}}, {{ user.first_name }} decided to be no longer
+      collaborator on {{ project.name }}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

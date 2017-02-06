@@ -51,7 +51,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   def settings_for_version(version)
     version_settings = (versions_configuration || {}).fetch(version.to_s,
-                                                    DEFAULT_VERSION_SETTINGS[version.to_sym]).with_indifferent_access
+                                                            DEFAULT_VERSION_SETTINGS[version.to_sym]).with_indifferent_access
     [version_settings[:transform], version_settings[:width], version_settings[:height]]
   end
 

@@ -6,6 +6,10 @@ class CategoriesForm < BaseForm
         configuration.each do |field, options|
           property :"#{field}"
           validates :"#{field}", options[:validation] if options[:validation].present?
+
+          define_method("#{field}=") do |value|
+            super(value.is_a?(Array) ? value.reject(&:blank?) : value)
+          end
         end
       end
     end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceProfileType < ActiveRecord::Base
   include SearchableType
 
@@ -25,9 +26,9 @@ class InstanceProfileType < ActiveRecord::Base
   delegate :translated_bookable_noun, :create_translations!, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
            :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
-  DEFAULT = 'default'.freeze
-  SELLER = 'seller'.freeze
-  BUYER = 'buyer'.freeze
+  DEFAULT = 'default'
+  SELLER = 'seller'
+  BUYER = 'buyer'
   PROFILE_TYPES = [DEFAULT, SELLER, BUYER].freeze
 
   validates :profile_type, inclusion: { in: PROFILE_TYPES }
@@ -78,8 +79,6 @@ class InstanceProfileType < ActiveRecord::Base
   private
 
   def es_users_reindex
-    if admin_approval_changed?
-      ElasticIndexerUsersByProfileTypeJob.perform(self.id)
-    end
+    ElasticIndexerUsersByProfileTypeJob.perform(id) if admin_approval_changed?
   end
 end

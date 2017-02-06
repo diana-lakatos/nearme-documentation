@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableType < ActiveRecord::Base
   include SearchableType
 
@@ -74,10 +75,10 @@ class TransactableType < ActiveRecord::Base
     names_decorated = names.each_with_index.map { |tt, i| "WHEN transactable_types.name='#{tt}' THEN #{i}" }
     order("CASE #{names_decorated.join(' ')} END") if names.present?
   }
-  scope :found_and_sorted_by_names, -> (names) { where(name: names).order_by_array_of_names(names) }
+  scope :found_and_sorted_by_names, ->(names) { where(name: names).order_by_array_of_names(names) }
 
   validates :name, :default_search_view, :searcher_type, presence: true
-  validates :category_search_type, presence: true, if: -> (transactable_type) { transactable_type.show_categories }
+  validates :category_search_type, presence: true, if: ->(transactable_type) { transactable_type.show_categories }
   validates :show_path_format, inclusion: { in: AVAILABLE_SHOW_PATH_FORMATS, allow_nil: true }
   validates_associated :action_types
 

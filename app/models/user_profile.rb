@@ -19,6 +19,7 @@ class UserProfile < ActiveRecord::Base
   has_many :availability_templates, as: :parent
 
   accepts_nested_attributes_for :availability_template
+  accepts_nested_attributes_for :customizations, allow_destroy: true
 
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 

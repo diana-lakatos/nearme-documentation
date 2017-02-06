@@ -1,0 +1,29 @@
+---
+name: Line item
+workflow_type: line_item
+events_metadata: {}
+workflow_steps:
+- name: Guest Rating Requested
+  associated_class: WorkflowStep::LineItemWorkflow::EnquirerRatingRequested
+  workflow_alerts:
+  - name: Request rating of guest from host email
+    alert_type: email
+    recipient_type: lister
+    template_path: rating_mailer/line_items/request_rating_of_host_and_product_from_guest
+    delay: 0
+    subject: "[{{platform_context.name}}] How was your buyer of '{{line_item.product_name}}'?"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Host And Product Rating Requested
+  associated_class: WorkflowStep::LineItemWorkflow::ListerAndProductRatingRequested
+  workflow_alerts:
+  - name: Request rating of host and product from guest email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: rating_mailer/line_items/request_rating_of_host_and_product_from_guest
+    delay: 0
+    subject: "[{{platform_context.name}}] How was your order of '{{line_item.product_name}}'?"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

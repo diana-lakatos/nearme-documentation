@@ -1,0 +1,50 @@
+---
+slug: dashboard/knowledge-files
+name: Knowledge Files
+layout: dashboard
+---
+{% content_for 'page_header' %}
+  <h1>Knowledgebase Docs</h1>
+{% endcontent_for %}
+
+
+<div class="panel">
+  <div class="panel-body">
+    {% if current_user.has_buyer_profile? %}
+      {% assign files = 'enquirers'  | get_ckeditor_assets: page: params.page, query: params.query, per_page: params.per_page %}
+    {% else %}
+      {% assign files = 'listers'  | get_ckeditor_assets: page: params.page, query: params.query, per_page: params.per_page %}
+    {% endif %}
+
+<form class="simple_form search" action="/dashboard/knowledge-files" accept-charset="UTF-8" method="get">
+  <input name="utf8" type="hidden" value="✓">
+  <div class="form-group search required query">
+    <label class="search required control-label sr-only control-label" for="query">
+    <abbr title="required">*</abbr> Search file</label>
+    <input name="query" class="string search required form-control" type="search" id="query" value="{{ params.query }}"></div>
+    <input type="submit" name="commit" value="Search" class="hidden-xs hidden-sm btn btn-default">
+</form>
+
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>File Name</th>
+        <th>Date</th>
+        <th>File Size</th>
+      </tr>
+    </thead>
+    <tbody>
+     {% for file in files %}
+       <tr>
+         <td><a href="{{ file.attachment_url }}" target="_blank">{{ file.title }}</a></td>
+         <td>{{ file.created_at | to_date | l: 'short' }}</td>
+         <td>{{ file.data_file_size }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% will_paginate collection: files, inner_window: 1, outer_window: 0, class: '', renderer: dashboard %}
+</div>
+</div>

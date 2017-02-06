@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'open-uri'
 
 module MarketplaceBuilder
@@ -22,7 +23,7 @@ module MarketplaceBuilder
 
       Serializers::GraphQuerySerializer  => 'graphql',
       Serializers::CustomThemeSerializer => 'theme_with_assets'
-    }
+    }.freeze
 
     def initialize(instance_id, destination_path)
       @instance_id = instance_id

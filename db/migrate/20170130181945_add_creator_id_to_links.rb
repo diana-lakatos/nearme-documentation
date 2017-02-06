@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddCreatorIdToLinks < ActiveRecord::Migration
   def change
     add_column :links, :creator_id, :integer

@@ -359,7 +359,7 @@ class RegistrationsController < Devise::RegistrationsController
                    secured_params.user
                  else
                    []
-                           end
+                 end
     devise_parameter_sanitizer.permit(:sign_up, keys: [arguments])
   end
 
@@ -407,6 +407,14 @@ class RegistrationsController < Devise::RegistrationsController
 
   def build_user_update_profile_form
     @form_configuration = FormConfiguration.find_by(id: params[:form_configuration_id])
-    @user_update_profile_form = @form_configuration&.build(current_user) || FormConfiguration.where(base_form: 'UserUpdateProfileForm').first.build(current_user)
+    @user_update_profile_form = @form_configuration&.build(current_user)
+    return true if @user_update_profile_form.present?
+    @user_update_profile_form = if current_user.buyer_profile.present? && current_user.seller_profile.blank?
+                                  FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'Enquirer Update')
+                                elsif current_user.seller_profile.present? && current_user.buyer_profile.blank?
+                                  FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'Lister Update')
+                                else
+                                  FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'Default Update')
+                                end.first.build(current_user)
   end
 end

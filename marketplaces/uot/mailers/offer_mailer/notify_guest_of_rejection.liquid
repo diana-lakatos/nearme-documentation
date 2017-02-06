@@ -1,0 +1,12 @@
+Offer Rejected
+
+Unfortunately, your offer for {{ transactable.name }} has been rejected. Rejection could be based on many factors such as: availability, budget, timeline, experience, etc.
+
+{% if offer.rejection_reason != blank %}
+  Client said: "{{ offer.rejection_reason }}"
+{% endif %}
+
+Feel free to reach out to {{ lister.name }} for more details.
+
+You are able to submit another offer with updated details at your convenience.
+

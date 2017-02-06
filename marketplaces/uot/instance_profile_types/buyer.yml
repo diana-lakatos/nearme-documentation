@@ -1,0 +1,137 @@
+---
+name: Buyer
+profile_type: buyer
+custom_attributes:
+- name: bio
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: true
+  label: Bio
+  validation:
+  - required: true
+    field_name: bio
+    validation_only_on_update: true
+    regex: ''
+- name: travel
+  attribute_type: string
+  html_tag: radio_buttons
+  search_in_query: false
+  label: Travel
+  validation:
+  - required: false
+    field_name: travel
+    valid_values:
+    - 'yes'
+    - 'no'
+    validation_only_on_update: false
+  - required: true
+    field_name: travel
+    validation_only_on_update: true
+- name: linkedin_url
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: LinkedIn URL
+  validation:
+  - required: true
+    field_name: linkedin_url
+    validation_only_on_update: true
+- name: hourly_rate_decimal
+  attribute_type: decimal
+  html_tag: input
+  search_in_query: false
+  label: Hourly rate
+  validation:
+  - required: true
+    field_name: hourly_rate_decimal
+    validation_only_on_update: true
+    regex: ''
+- name: education
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: Education, Certifications and Training
+- name: awards
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: Awards and Honors
+- name: teaching
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: Teaching, Writing and Publishing
+- name: employers
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: Prior Employers or Clients
+- name: accomplishments
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: 'Special Projects and Accomplishments '
+- name: giving_back
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: Community and Giving Back Interests
+- name: hobbies
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: Brief Personal Details (Family and Hobbies)
+- name: workplace_type
+  attribute_type: array
+  html_tag: check_box_list
+  search_in_query: false
+  label: Workplace Type
+  validation:
+  - required: false
+    field_name: workplace_type
+    valid_values:
+    - Online
+    - On Site
+    validation_only_on_update: false
+- name: discounts_available
+  attribute_type: string
+  html_tag: radio_buttons
+  search_in_query: false
+  label: Discounts available
+  validation:
+  - required: false
+    field_name: discounts_available
+    valid_values:
+    - Available
+    - Not Available
+    validation_only_on_update: false
+- name: hourly_rate
+  attribute_type: integer
+  html_tag: input
+  search_in_query: false
+  label: Hourly rate
+- name: discounts_description
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: What kind of discounts do you offer?
+- name: availability
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: Availability
+- name: cities
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: In what cities you are willing to work?
+- name: pro_service
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: Consulting Services Offered
+- name: referred_by_sme
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: 'Referred by:'

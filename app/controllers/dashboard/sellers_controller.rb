@@ -22,6 +22,7 @@ class Dashboard::SellersController < Dashboard::BaseController
       end
     else
       flash.now[:error] = @user_update_profile_form.pretty_errors_string
+      @user_update_profile_form.prepopulate!
       render :edit, layout: dashboard_or_community_layout
     end
   end
@@ -43,6 +44,6 @@ class Dashboard::SellersController < Dashboard::BaseController
 
   def build_user_update_profile_form
     @form_configuration = FormConfiguration.find_by(id: params[:form_configuration_id])
-    @user_update_profile_form = @form_configuration&.build(current_user) || FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'Enquirer Update').first.build(current_user)
+    @user_update_profile_form = @form_configuration&.build(current_user) || FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'Lister Update').first.build(current_user)
   end
 end

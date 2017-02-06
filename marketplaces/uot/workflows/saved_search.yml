@@ -1,0 +1,29 @@
+---
+name: Saved search
+workflow_type: saved_search
+events_metadata: {}
+workflow_steps:
+- name: Daily
+  associated_class: WorkflowStep::SavedSearchWorkflow::Daily
+  workflow_alerts:
+  - name: Notify user of daily results
+    alert_type: email
+    recipient_type: enquirer
+    template_path: saved_search_mailer/notify_user_of_daily_results
+    delay: 0
+    subject: "[{{platform_context.name}}] New search results for {{saved_searches_titles}}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Weekly
+  associated_class: WorkflowStep::SavedSearchWorkflow::Weekly
+  workflow_alerts:
+  - name: Notify user of weekly results
+    alert_type: email
+    recipient_type: enquirer
+    template_path: saved_search_mailer/notify_user_of_weekly_results
+    delay: 0
+    subject: "[{{platform_context.name}}] New search results for {{saved_searches_titles}}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

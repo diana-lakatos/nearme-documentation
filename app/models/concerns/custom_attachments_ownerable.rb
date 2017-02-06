@@ -23,13 +23,13 @@ module CustomAttachmentsOwnerable
     def custom_attachments_open_struct=(open_struct)
       open_struct.to_h.each do |ca_id, ci|
         custom_attachment = if ci.id.present? && ci.owner.blank?
-          CustomAttachment.where(id: ci.id, owner_type: nil, owner_id: nil, uploader_id: nil).first
-        elsif ci.id.blank? && ci.owner.blank?
-          CustomAttachment.where(custom_attribute_id: ca_id.to_s, owner_type: nil, owner_id: nil, uploader_id: nil, created_at: ci.created_at, file: ci.read_attribute(:file)).first
+                              CustomAttachment.where(id: ci.id, owner_type: nil, owner_id: nil, uploader_id: nil).first
+                            elsif ci.id.blank? && ci.owner.blank?
+                              CustomAttachment.where(custom_attribute_id: ca_id.to_s, owner_type: nil, owner_id: nil, uploader_id: nil, created_at: ci.created_at, file: ci.read_attribute(:file)).first
         end
-        self.custom_attachments << custom_attachment if custom_attachment.present?
+        custom_attachments << custom_attachment if custom_attachment.present?
       end
-      self.custom_attachments
+      custom_attachments
     end
   end
 end

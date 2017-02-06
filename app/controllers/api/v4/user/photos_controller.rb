@@ -21,8 +21,8 @@ module Api
     def validate_owner_type
       raise NotImplementedError if Photo::VALID_OWNER_TYPES.include?(params[:owner_type])
     end
-    def find_owner
 
+    def find_owner
       @owner = params[:owner_type].constantize.find_by(id: params[:owner_id])
     end
   end

@@ -29,9 +29,9 @@ module CustomImagesOwnerable
                        elsif ci.id.blank? && ci.owner.blank?
                          CustomImage.where(custom_attribute_id: ca_id.to_s, owner_type: nil, owner_id: nil, uploader_id: nil, created_at: ci.created_at, image: ci.read_attribute(:image)).first
                        end
-        self.custom_images <<  custom_image if custom_image.present?
+        custom_images << custom_image if custom_image.present?
       end
-      self.custom_images
+      custom_images
     end
   end
 end

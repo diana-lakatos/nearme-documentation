@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
   lister = User.find_by(name: lister)
   reserver = User.find_by(name: reserver)

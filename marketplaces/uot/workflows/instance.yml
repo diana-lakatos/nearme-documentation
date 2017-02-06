@@ -1,0 +1,17 @@
+---
+name: Instance
+workflow_type: instance
+events_metadata: {}
+workflow_steps:
+- name: Created
+  associated_class: WorkflowStep::InstanceWorkflow::Created
+  workflow_alerts:
+  - name: Instance created
+    alert_type: email
+    recipient_type: enquirer
+    template_path: post_action_mailer/instance_created
+    delay: 0
+    subject: Instance created
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

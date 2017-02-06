@@ -57,7 +57,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
 
   should 'correctly validate empty params' do
     refute @user_update_profile_form_builder.validate({})
-    assert_equal "Avatar can't be blank, Buyer profile properties buyer attr can't be blank, Default profile categories default category can't be blank, Default profile properties default attr can't be blank, Seller profile categories seller category can't be blank, Seller profile custom images #{@seller_photo.id} can't be blank, Seller profile properties seller attr can't be blank", @user_update_profile_form_builder.errors.full_messages.sort.join(', ')
+    assert_equal "Avatar can't be blank, Buyer profile properties buyer attr can't be blank, Default profile categories default category can't be blank, Default profile properties default attr can't be blank, Seller profile categories seller category can't be blank, Seller profile custom images can't be blank, Seller profile properties seller attr can't be blank", @user_update_profile_form_builder.errors.full_messages.sort.join(', ')
   end
 
   should 'be able to save all parameters' do
@@ -272,6 +272,9 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
             validation: {
               'presence' => {}
             }
+          },
+          validation: {
+            'presence' => {}
           }
         },
         :categories => {

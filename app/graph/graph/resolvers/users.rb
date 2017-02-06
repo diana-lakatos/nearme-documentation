@@ -61,7 +61,7 @@ module Graph
           profile_images = attribute_images.where(owner: user.user_profiles)
           customization_images = attribute_images.where(
             owner_type: ::Customization.to_s,
-            owner_id: user.user_profiles.map{ |up| up.customizations.pluck(:id) }.flatten
+            owner_id: user.user_profiles.map { |up| up.customizations.pluck(:id) }.flatten
           )
           profile_images.pluck(:id) + customization_images.pluck(:id)
         end

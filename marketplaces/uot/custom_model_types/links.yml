@@ -1,0 +1,14 @@
+---
+name: Links
+custom_attributes:
+- name: url_link
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: URL
+  validation:
+  - required: true
+    field_name: url_link
+    validation_only_on_update: false
+instance_profile_types:
+- Buyer

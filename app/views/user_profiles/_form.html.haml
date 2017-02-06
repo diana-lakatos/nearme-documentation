@@ -1,4 +1,4 @@
-- if f.object.respond_to?(:model)
+- if f.object.is_a?(BaseForm)
 
   - only_inputs ||= []
 
@@ -54,8 +54,7 @@
 
   - elsif only_inputs.empty? || f.object.instance_profile_type.custom_model_types.map { |c| "Custom Model - #{c.name}".to_sym }.include?(only_inputs.first)
     - custom_model = f.object.instance_profile_type.custom_model_types.find_by(name: only_inputs.first.to_s.split(" - ")[1])
-    = f.simple_fields_for :customizations do |customizations_form|
-      = render 'registrations/attributes/custom_model_fields', custom_model: custom_model, f: customizations_form
+    = render 'registrations/attributes/custom_model_fields', custom_model: custom_model, f: f
   - elsif (f.object.instance_profile_type.try(:custom_attributes).map { |a| a.name.to_sym } & only_inputs).any?
     - f.object.instance_profile_type.try(:custom_attributes).try(:each) do |ca|
       - next unless only_inputs.empty? || only_inputs.include?(ca.name.to_sym)

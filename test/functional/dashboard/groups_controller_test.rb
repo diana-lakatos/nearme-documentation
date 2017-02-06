@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class Dashboard::GroupsControllerTest < ActionController::TestCase
@@ -26,11 +27,10 @@ class Dashboard::GroupsControllerTest < ActionController::TestCase
 
   def check_activity_feed_event_created_on_new_link_added
     assert_difference 'ActivityFeedEvent.count' do
-      put :update, group: {"name"=>"Test", "links_attributes"=>{"1485874485257"=>{"url"=>"http://newlinky.com", "text"=>"NewLinky", "_destroy"=>"false"}}, "cover_photo_attributes"=>{"id"=>@group.cover_photo.id, "photo_role"=>"cover"}}, id: @group.id
+      put :update, group: { 'name' => 'Test', 'links_attributes' => { '1485874485257' => { 'url' => 'http://newlinky.com', 'text' => 'NewLinky', '_destroy' => 'false' } }, 'cover_photo_attributes' => { 'id' => @group.cover_photo.id, 'photo_role' => 'cover' } }, id: @group.id
     end
 
     last_afe = ActivityFeedEvent.last
     assert_equal 'user_added_links_to_group', last_afe.event
   end
-
 end

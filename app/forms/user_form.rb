@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class UserForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
+  include Sync::SkipUnchanged
   class << self
     def decorate(configuration)
       Class.new(self) do
@@ -54,7 +55,6 @@ class UserForm < BaseForm
   property :email
   property :external_id, virtual: true
   property :password
-  property :password_confirmation
 
   validate :base_email_validation, if: :email_changed?
   def base_email_validation

@@ -1,0 +1,118 @@
+---
+partial: true
+---
+{% assign form_object = f %}
+<input type='hidden' value='{{ params.edit_mode}}' name='edit_mode' />
+
+{% if merchant_account.persisted? %}
+  <div class="alert alert-warning">
+    {{ "dashboard.merchant_account." | append:merchant_account.state | translate }}
+  </div>
+  {% input id, as: hidden %}
+{% endif %}
+
+{% if merchant_account.due_by %}
+  <div class="alert alert-warning">
+    {{ "dashboard.merchant_account.account_valid_until" | translate: due_by:merchant_account.due_by }}
+  </div>
+{% endif %}
+
+{% if merchant_account.all_errors %}
+  <div class="errors-global">
+    <ul>
+      {% for error in merchant_account.all_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{% if merchant_account.verified? and merchant_account.complete? and params.edit_mode == blank %}
+
+ <h3>{{ 'dashboard.merchant_account.' | append: merchant_account.state | translate }}</h3>
+    <div class='btn-group pull-right'>
+      <a href='?edit_mode=true' class='btn btn-blue'>Edit</a>
+    </div>
+
+  <table class='table table-simple'>
+    <tr>
+      <td>{{'dashboard.merchant_account.account_type' | translate }}</td>
+      <td>{{ merchant_account.account_type | capitalize }}</td>
+    </tr>
+    <tr>
+      <td>{{'dashboard.merchant_account.first_name' | translate }}</td>
+      <td>{{ merchant_account.first_name }}</td>
+    </tr>
+    <tr>
+      <td>{{'dashboard.merchant_account.last_name' | translate }}</td>
+      <td>{{ merchant_account.last_name }}</td>
+    </tr>
+    <tr>
+      <td>{{'dashboard.merchant_account.bank_account_number' | translate }}</td>
+      <td>{{ merchant_account.bank_account_number }}</td>
+    </tr>
+    <tr>
+      <td>{{'dashboard.merchant_account.dob' | translate }}</td>
+      <td>{{ merchant_account.owners.first.dob_date }}</td>
+    </tr>
+  </table>
+
+{% else %}
+  <h2>{{ 'dashboard.merchant_account.header' | translate }}</h2>
+  {% if merchant_account.persisted? %}
+    <h3>{{ "dashboard.merchant_account." | append: merchant_account.state | translate }}</h3>
+  {% endif %}
+
+  {% input :account_type, prompt: 'translate', required: true,  input_html-data-account-type: 'true', collection: @merchant_account.account_types %}
+  {% if merchant_account.supported_currencies.size > 1 %}
+    {% input currency, required: true, collection: @merchant_account.supported_currencies, prompt: 'translate' %}
+  {% endif %}
+
+  {% input bank_routing_number, required: true %}
+  {% input bank_account_number, required: true %}
+
+  <div class='nested-fields-set'>
+    {% fields_for owners %}
+      {% assign stripe_connect_owner_fields_count = 0 %}
+      {% include 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', merchant_account: merchant_account %}
+    {% endfields_for %}
+  </div>
+
+  {% if merchant_account.fields_needed contains 'legal_entity.additional_owners' %}
+    <div class='owners'>
+      <div class='links'>
+        {% assign link_label = 'dashboard.merchant_account.add_owner' | translate %}
+        {% link_to_add_association label: @link_label, form: f, class: 'btn btn-danger', asocciation: owners, partial: dashboard/company/merchant_accounts/stripe_connect_owner_fields, render_options-locals: merchant_account %}
+      </div>
+    </div>
+    <br />
+  {% endif %}
+
+  <div>
+    <p>
+      <label>Upsideoftalent.com is PCI Level 1-compliant through our integration with Stripe.</label>
+      <a style="cursor: pointer;" onclick="$('#read-more-cpi').toggle();">Read More</a>
+      
+    </p>
+    <p id="read-more-cpi" style="display: none;">
+      UoT uses Stripe Connect for our payment gateway like other marketplaces including Lyft, Kickstarter, Shopify, Foursquare, Evite, Squarespace and others at <a href="https://stripe.com/customers" target="_blank">https://stripe.com/customers</a>. We selected Stripe based on their security approach because the credit card data entered into your profile is never stored on an UoT server. Instead, the data is sent to Stripe. Why is this so important? UoT is automatically PCI Level 1-compliant through Stripe, which is the highest level of certification, since we don't store any sensitive credit card data on our servers and instead leverage the Stripe infrastructure. This business practice is more secure because a breach of our servers will not result in any stolen credit card data. Our integration with Stripe is seamless through their Stripe Connect API so this means no redirection to another page to fill in your information. This leads to a much smoother and secure user experience
+    </p>
+  </div>
+  
+  <div class="{% if merchant_account.tos_error %}has-error{%endif%}">
+    <label>
+      <input name="merchant_account[tos]" type="hidden" value="0">
+      <input type="checkbox" value="1" name="merchant_account[tos]" id="merchant_account_tos" {% if params.merchant_account.tos == '1' %}checked='checked'{%endif%}>
+      Payment processing services for {{ platform_context.lessee }} on {{ platform_context.name }} are provided by Stripe and are subject to the <a href="https://stripe.com/connect/account-terms" target="_blank">Stripe Connected Account Agreement</a>, which includes the <a href="https://stripe.com/us/terms" target="_blank">Stripe Terms of Service</a> (collectively, the “Stripe Services Agreement”). By agreeing to [this agreement / these terms / etc.] or continuing to operate as a guest on Upside of Talent, you agree to be bound by the Stripe Services Agreement, as the same may be modified by Stripe from time to time. As a condition of {{ platform_context.name }} enabling payment processing services through Stripe, you agree to provide {{ platform_context.name }} accurate and complete information about you and your business, and you authorize {{ platform_context.name }}  to share it and transaction information related to your use of the payment processing services provided by Stripe.
+    </label>
+    <span class="help-block">{{ merchant_account.tos_error }}</span>
+  </div>
+  <div class="panel form-actions">
+    <div class="panel-body">
+      <input type="submit" name="commit" value="{{'payouts.buttons.save' | translate }}">
+    </div>
+  </div>
+  <div style="text-align: center;"><img src="https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/images/ckeditor/picture/data/3608/powered_by_stripe.png"/></div>
+
+{% endif %}
+

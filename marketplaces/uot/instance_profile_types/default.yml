@@ -1,0 +1,7 @@
+---
+name: Default
+profile_type: default
+validation:
+- required: true
+  field_name: avatar
+  validation_only_on_update: true

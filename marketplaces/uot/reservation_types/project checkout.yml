@@ -1,0 +1,9 @@
+---
+name: Project checkout
+form_components:
+- name: Make an Offer
+  fields:
+  - reservation: payment_documents
+  type: reservation_attributes
+transactable_types:
+- Project

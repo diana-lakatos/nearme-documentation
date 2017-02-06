@@ -19,7 +19,7 @@ module MarketplaceBuilder
       Creators::GraphQueriesCreator,
       Creators::CustomThemesCreator,
       Creators::RatingSystemCreator
-    ]
+    ].freeze
 
     def self.load(source, options = {})
       default_options = {
@@ -50,7 +50,7 @@ module MarketplaceBuilder
 
       config = JSON.parse(File.read(config_file))
 
-      instance_id = config['instance_id']
+      instance_id = options[:instance_id].presence || config['instance_id']
       mode = config['mode'] || MarketplaceBuilder::MODE_APPEND
 
       Instance.transaction do

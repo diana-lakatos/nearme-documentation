@@ -53,19 +53,27 @@ class FormComponentToFormConfiguration
         # hardcode fields for devmesh / hallmark :)
         configuration = community_configuration
       else
-        role = case fc_role
+        case fc_role
         when :Default
-          'default'
+          create_form_configuration(base_form: UserUpdateProfileForm, name: "Default Update", configuration: build_configuration_based_on_form_components(el.values.first, 'default'))
+          create_form_configuration(base_form: UserUpdateProfileForm, name: "Lister Update", configuration: build_configuration_based_on_form_components(el.values.first, 'seller'))
+          create_form_configuration(base_form: UserUpdateProfileForm, name: "Enquirer Update", configuration: build_configuration_based_on_form_components(el.values.first, 'buyer'))
         when :Enquirer
-          'buyer'
+          create_form_configuration(base_form: UserUpdateProfileForm, name: "Enquirer Update", configuration: build_configuration_based_on_form_components(el.values.first, 'buyer'))
         when :Lister
-          'seller'
+          create_form_configuration(base_form: UserUpdateProfileForm, name: "Lister Update", configuration: build_configuration_based_on_form_components(el.values.first, 'seller'))
         end
-        configuration = build_configuration_based_on_form_components(el.values.first, role)
       end
-      fc = FormConfiguration.where(base_form: UserUpdateProfileForm, name: "#{fc_role} Update").first_or_create!
-      fc.update_attribute(:configuration, configuration)
+    end
+  end
 
+  def create_form_configuration(base_form:, name:, configuration:)
+    if  configuration.present?
+      fc = FormConfiguration.where(base_form: base_form, name: name).first_or_initialize
+      fc.configuration = configuration
+      fc.save!
+    else
+      puts "Skipping #{base_form} -> #{name}"
     end
   end
 
@@ -79,6 +87,8 @@ class FormComponentToFormConfiguration
         model = k.keys.first
         field = k.values.last
         # puts "\tProcessing: #{model}: #{field}"
+        next if model == 'buyer' && role == 'seller'
+        next if model == 'seller' && role == 'buyer'
         next if %w(email password).include?(field)
         if model == 'user' && user_attributes.include?(field) || (model == 'buyer' && field == 'tags') || field == 'company_name'
           field = 'tag_list' if field == 'tags'
@@ -172,7 +182,6 @@ class FormComponentToFormConfiguration
       }
     }
   end
-
 
   def signup_forms!
     puts "\tUpdating Signup Forms"

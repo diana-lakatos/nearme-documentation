@@ -1,0 +1,8 @@
+---
+name: Business Services checkout
+form_components:
+- name: Review
+  fields:
+  - !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+    reservation: payments
+  type: reservation_attributes

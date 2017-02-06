@@ -1,0 +1,18 @@
+---
+name: Upside of Talent
+is_community: false
+require_verified_user: false
+bookable_noun: Business Services
+wish_lists_enabled: true
+enable_reply_button_on_host_reservations: true
+force_accepting_tos: true
+default_country: United States
+default_currency: USD
+skip_company: true
+split_registration: true
+hidden_ui_controls: !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+  main_menu/cta: 1
+  dashboard/offers: 1
+  dashboard/user_bids: 1
+  dashboard/host_reservations: 1
+  main_menu/my_bookings: 1

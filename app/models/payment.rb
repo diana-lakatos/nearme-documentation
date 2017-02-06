@@ -46,7 +46,7 @@ class Payment < ActiveRecord::Base
   scope :refunded, -> { where("#{table_name}.state = 'refunded'") }
   scope :not_refunded, -> { where("#{table_name}.state IS NOT 'refunded'") }
   scope :last_x_days, ->(days_in_past) { where('DATE(payments.created_at) >= ? ', days_in_past.days.ago) }
-  scope :needs_payment_transfer, -> {paid_or_refunded.where(payment_transfer_id: nil, offline: false, exclude_from_payout: false).migrated_payment }
+  scope :needs_payment_transfer, -> { paid_or_refunded.where(payment_transfer_id: nil, offline: false, exclude_from_payout: false).migrated_payment }
   scope :transferred, -> { where.not(payment_transfer_id: nil) }
 
   scope :total_by_currency, lambda {
@@ -61,7 +61,7 @@ class Payment < ActiveRecord::Base
 
   accepts_nested_attributes_for :payment_source
 
-  before_validation do |p|
+  before_validation do |_p|
     self.payer ||= payable.try(:owner)
     true
   end
@@ -225,7 +225,7 @@ class Payment < ActiveRecord::Base
   # pay_with!
   # - capture (needs prior authorization) or purchase
 
-  def pay_with!(&block)
+  def pay_with!
     return false unless block_given?
     return mark_as_paid! if manual_payment? || total_amount_cents.zero?
     return false unless active_merchant_payment?
@@ -383,8 +383,8 @@ class Payment < ActiveRecord::Base
   def payment_source_attributes=(source_attributes)
     return unless payment_method.respond_to?(:payment_sources)
 
-    source = self.payment_source || payment_method.payment_sources.new
-    source.attributes = source_attributes.merge({ payment_method: payment_method, payer: payer })
+    source = payment_source || payment_method.payment_sources.new
+    source.attributes = source_attributes.merge(payment_method: payment_method, payer: payer)
     self.payment_source = source
   end
 
@@ -392,11 +392,11 @@ class Payment < ActiveRecord::Base
   alias credit_card= payment_source=
 
   def credit_card
-    self.payment_source if self.payment_source_type == 'CreditCard'
+    payment_source if payment_source_type == 'CreditCard'
   end
 
   def bank_account
-    self.payment_source if self.payment_source_type == 'BankAccount'
+    payment_source if payment_source_type == 'BankAccount'
   end
 
   def bank_account_id=attribute_id
@@ -556,12 +556,12 @@ class Payment < ActiveRecord::Base
     options = { currency: currency, payment_gateway_mode: payment_gateway_mode }
 
     options.merge!(merchant_account.try(:custom_options) || {}) if merchant_account.try(:verified?)
-    options.merge!({ customer: payment_source.customer_id }) if direct_token.blank?
-    options.merge!({ mns_params: payment_response_params }) if payment_response_params
-    options.merge!({ application_fee: total_service_amount_cents }) if merchant_account.try(:verified?)
-    options.merge!({ token: express_token }) if express_token
+    options[:customer] = payment_source.customer_id if direct_token.blank?
+    options[:mns_params] = payment_response_params if payment_response_params
+    options[:application_fee] = total_service_amount_cents if merchant_account.try(:verified?)
+    options[:token] = express_token if express_token
     if payment_source.respond_to?(:payment_method_nonce) && payment_source.payment_method_nonce.present?
-      options.merge!({ payment_method_nonce: payment_source.payment_method_nonce })
+      options[:payment_method_nonce] = payment_source.payment_method_nonce
     end
 
     options = payment_gateway.translate_option_keys(options)
@@ -638,7 +638,7 @@ class Payment < ActiveRecord::Base
     response = payment_gateway.gateway.setup_authorization(total_amount.cents, payable.setup_authorization_options)
     if response.success?
       payable.restore_cached_step!
-      # TODO token should be passed to PaypalAccount
+      # TODO: token should be passed to PaypalAccount
       self.express_token = response.token
       self.redirect_to_gateway = payment_gateway.gateway.redirect_url_for(express_token)
       true

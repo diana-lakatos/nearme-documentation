@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'yaml'
 module PaperTrail
   module Serializers
@@ -27,8 +28,8 @@ module PaperTrail
         # for the value 12 doesn't yield false positives when the value is
         # 123.
         if value.is_a? Numeric
-          arel_field.matches("%\"#{field}\":#{json_value},%").
-            or(arel_field.matches("%\"#{field}\":#{json_value}}%"))
+          arel_field.matches("%\"#{field}\":#{json_value},%")
+                    .or(arel_field.matches("%\"#{field}\":#{json_value}}%"))
         else
           arel_field.matches("%\"#{field}\":#{json_value}%")
         end
@@ -41,8 +42,8 @@ module PaperTrail
         json_value = value.to_json
 
         # Need to check first (before) and secondary (after) fields
-        arel_field.matches("%\"#{field}\":[#{json_value},%").
-          or(arel_field.matches("%\"#{field}\":[%,#{json_value}]%"))
+        arel_field.matches("%\"#{field}\":[#{json_value},%")
+                  .or(arel_field.matches("%\"#{field}\":[%,#{json_value}]%"))
       end
     end
   end

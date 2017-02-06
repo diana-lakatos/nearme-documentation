@@ -28,11 +28,11 @@ module MarketplaceBuilder
 
       def type_by_file_path(asset_file_path)
         case File.extname(asset_file_path).downcase
-          when '.css' then 'CustomThemeAsset::ThemeCssFile'
-          when '.js' then 'CustomThemeAsset::ThemeJsFile'
-          when /.jpg|.png|.jpeg|.gif|.svg/ then 'CustomThemeAsset::ThemeImageFile'
-          when /.eot|.ttf|.woff|.woff2/ then 'CustomThemeAsset::ThemeFontFile'
-          else 'CustomThemeAsset::ThemeFile'
+        when '.css' then 'CustomThemeAsset::ThemeCssFile'
+        when '.js' then 'CustomThemeAsset::ThemeJsFile'
+        when /.jpg|.png|.jpeg|.gif|.svg/ then 'CustomThemeAsset::ThemeImageFile'
+        when /.eot|.ttf|.woff|.woff2/ then 'CustomThemeAsset::ThemeFontFile'
+        else 'CustomThemeAsset::ThemeFile'
         end
       end
 

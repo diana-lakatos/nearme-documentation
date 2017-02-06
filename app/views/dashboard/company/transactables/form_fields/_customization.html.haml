@@ -1,14 +1,38 @@
-.row.nested-fields
-  %hr
-  - custom_model.custom_attributes.order('updated_at DESC').each_with_index do |ca, index|
-    - if ca.uploadable?
-      = render 'custom_attributes/uploadable', f: f, ca: ca, index: index
-    - else
-      = f.simple_fields_for :properties do |customization_properties_form|
-        .col-xs-11
-          = draw_attribute_for_form(ca, customization_properties_form)
-        - if index.zero?
-          .col-xs-1
-            = link_to_remove_association f, class: 'remove_fields' do
-              %button.action--remove
+- if f.object.is_a?(BaseForm)
+  .row.nested-fields
+    %hr
+    - custom_model.custom_attributes.order('updated_at DESC').each_with_index do |ca, index|
+      - if ca.uploadable?
+        = render 'custom_attributes/uploadable', f: f, ca: ca, index: index
+      - else
+        = f.simple_fields_for :properties do |customization_properties_form|
+          .col-xs-11
+            = draw_attribute_for_form(ca, customization_properties_form)
+          - if index.zero?
+            .col-xs-1
+              = link_to_remove_association f, class: 'remove_fields' do
+                %button.action--remove
 
+- else
+  - f.object.custom_model_type ||= custom_model
+
+  .row.nested-fields
+    %hr
+    = f.hidden_field :custom_model_type_id, value: custom_model.id
+    - custom_model.custom_attributes.order('updated_at DESC').each_with_index do |ca, index|
+      - if ca.uploadable?
+        = f.simple_fields_for :custom_images, f.object.custom_images.where(custom_attribute_id: ca.id).first_or_initialize  do |custom_images_form|
+          .col-xs-11
+            = render 'custom_images/attribute', f: custom_images_form, ca: ca
+          - if index.zero?
+            .col-xs-1
+              = link_to_remove_association f, class: 'remove_fields' do
+                %button.action--remove
+      - else
+        = f.simple_fields_for :properties, f.object.properties do |customization_properties_form|
+          .col-xs-11
+            = draw_attribute_for_form(ca, customization_properties_form)
+          - if index.zero?
+            .col-xs-1
+              = link_to_remove_association f, class: 'remove_fields' do
+                %button.action--remove

@@ -21,7 +21,7 @@ class CustomizationForm < BaseForm
           property :custom_images, form: CustomImagesForm.decorate(custom_images_configuration),
                                    from: :custom_images_open_struct,
                                    populate_if_empty: :custom_images_open_struct!,
-                                   prepopulator: -> (options) { self.custom_images ||= model.default_images_open_struct }
+                                   prepopulator: ->(_options) { self.custom_images ||= model.default_images_open_struct }
 
         end
         if (custom_attachments_configuration = configuration.delete(:custom_attachments)).present?
@@ -30,7 +30,7 @@ class CustomizationForm < BaseForm
           property :custom_attachments, form: CustomAttachmentsForm.decorate(custom_attachments_configuration),
                                         from: :custom_attachments_open_struct,
                                         populate_if_empty: :custom_attachments_open_struct!,
-                                        prepopulator: -> (options) { self.custom_attachments ||= model.default_custom_attachments_open_struct }
+                                        prepopulator: ->(_options) { self.custom_attachments ||= model.default_custom_attachments_open_struct }
 
         end
         if (properties_configuration = configuration.delete(:properties)).present?

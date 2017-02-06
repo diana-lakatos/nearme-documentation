@@ -635,7 +635,7 @@ class InstanceView < ActiveRecord::Base
   end
 
   validates :body, presence: true
-  validates :body, liquid: true, if: -> (i) { i.handler == 'liquid' }
+  validates :body, liquid: true, if: ->(i) { i.handler == 'liquid' }
   validates :path, presence: true
 
   validates :locales, length: { minimum: 1 }

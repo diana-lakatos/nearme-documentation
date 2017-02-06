@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CustomModelType < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
