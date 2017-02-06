@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 class CustomizationsForm < BaseForm
-  POPULATOR = lambda do |collection:, index:, **args|
+  POPULATOR = lambda do |collection:, fragment:, index:, as:, **_args|
     name_to_custom_model_type_hash ||= {}
-    custom_model_type = name_to_custom_model_type_hash[args[:as]] ||= CustomModelType.find_by(name: args[:as])
-    if (customization = collection[index]).present?
-      customization
-    else
-      collection.insert(index, custom_model_type.customizations.build)
+    custom_model_type = name_to_custom_model_type_hash[as] ||= CustomModelType.find_by(name: as)
+    item = send(custom_model_type.name).find { |c| c.id.to_s == fragment['id'].to_s && fragment['id'].present? }
+    if fragment['_destroy'] == '1'
+      send(custom_model_type.name).delete(item)
+      return skip!
     end
+    item ? item : send(custom_model_type.name).append(custom_model_type.customizations.build)
   end.freeze
 
   class << self

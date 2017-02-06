@@ -8,3 +8,5 @@ class PaperTrail::Version < ActiveRecord::Base
     PaperTrail.whodunnit = "#{`whoami`.strip}: rake #{ARGV.join ' '}"
   end
 end
+
+PaperTrail.serializer = PaperTrail::Serializers::MixedJsonAndYamlSerializer

@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
                            :unlock_token, :locked_at, :browser, :browser_version, :platform,
                            :avatar_versions_generated_at, :last_geolocated_location_longitude,
                            :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out,
-                           :avatar_transformation_data, :metadata]
+                           :avatar_transformation_data, :metadata, :avatar]
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context allow_admin: :admin

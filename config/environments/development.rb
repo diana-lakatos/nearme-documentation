@@ -54,6 +54,19 @@ DesksnearMe::Application.configure do
 
   config.middleware.use NewRelic::Rack::DeveloperMode if ENV['ENABLE_PROFILER']
 
+  CarrierWave.configure do |config|
+    config.fog_credentials = {
+      provider: 'AWS',
+      aws_access_key_id: 'AKIAJC37Z6XCOCR245YA',
+      aws_secret_access_key: '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',
+      region: 'us-west-1',
+      path_style: true
+    }
+    config.fog_directory        = 'near-me-maciek-test'
+    config.asset_host           = 'https://s3-us-west-1.amazonaws.com/near-me-maciek-test'
+    config.storage              = :fog
+  end
+
   if defined?(Bullet)
     config.after_initialize do
       Bullet.enable = true

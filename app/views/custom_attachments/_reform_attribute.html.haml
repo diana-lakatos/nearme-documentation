@@ -1,1 +1,5 @@
+= f.input :id, as: :hidden
 = f.input :file, as: :attachment, collection: f.object.file.present? ? [f.object] : [], upload_url: nil, label: ca.label, attachment_template: "custom_attachments/attachment", accept: PrivateFileUploader.new.extension_white_list, upload_name: 'file', multiple: false
+
+.has-error.errors
+  = parent_form.error :"#{ca.id}"

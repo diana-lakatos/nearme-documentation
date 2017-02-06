@@ -4,8 +4,8 @@ class CustomImagesForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         configuration.each do |field, options|
-          property :"#{field}", form: CustomImageForm.decorate(options),
-                                populate_if_empty: ->(as:, **) { CustomImage.new(custom_attribute: CustomAttributes::CustomAttribute.find(as)) },
+          property :"#{field}", form: CustomImageForm.decorate(options, human_attribute_name(field)),
+            populate_if_empty: ->(as:, **options) { CustomImage.new(custom_attribute: CustomAttributes::CustomAttribute.find(as)) },
                                 prepopulator: ->(*) { send(:"#{field}=", CustomImage.new(custom_attribute: CustomAttributes::CustomAttribute.find(field.to_s))) if send(:"#{field}").nil? }
 
           validates :"#{field}", options[:validation] if options[:validation].present?
@@ -15,7 +15,7 @@ class CustomImagesForm < BaseForm
 
     def human_attribute_name(attr)
       # we might want to cache this, but will need to invalidate when name changes
-      CustomAttributes::CustomAttribute.find(attr).label
+      CustomAttributes::CustomAttribute.find(attr.to_s).label
     end
   end
 end

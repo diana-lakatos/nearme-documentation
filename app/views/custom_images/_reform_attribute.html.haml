@@ -2,7 +2,10 @@
 - if f.object.model.persisted?
   - options[:edit_url] = edit_dashboard_custom_image_path(f.object.model)
   - unless f.object.required?(:image)
-    - options[:delete_url] = api_user_custom_image_path(f.object.model)
+    - options[:delete_url] = api_user_custom_image_path(f.object.model) if f.object.model.uploader_id.present?
   - options[:thumb] = :mini
 
+= f.input :id, as: :hidden
 = f.input :image, options
+.has-error.errors
+  = parent_form.error :"#{ca.id}"

@@ -7,7 +7,7 @@ module CustomAttributes
     include Enumerable
     include ::CustomAttributes::Concerns::Models::Castable
 
-    delegate :each, to: :@hash
+    delegate :each, :with_indifferent_access, to: :@hash
 
     def initialize(model, store_accessor_name)
       @model = model

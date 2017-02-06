@@ -13,13 +13,17 @@ class UserProfileForm < BaseForm
           validation = custom_images_configuration.delete(:validation)
           validates :custom_images, validation if validation.present?
           property :custom_images, form: CustomImagesForm.decorate(custom_images_configuration),
-                                   from: :custom_images_open_struct
+                                   from: :custom_images_open_struct,
+                                   populate_if_empty: :custom_images_open_struct!,
+                                   prepopulator: -> (options) { self.custom_images ||= model.default_images_open_struct }
         end
         if (custom_attachments_configuration = configuration.delete(:custom_attachments)).present?
           validation = custom_attachments_configuration.delete(:validation)
           validates :custom_attachments, validation if validation.present?
           property :custom_attachments, form: CustomAttachmentsForm.decorate(custom_attachments_configuration),
-                                   from: :custom_attachments_open_struct
+                                        from: :custom_attachments_open_struct,
+                                        populate_if_empty: :custom_attachments_open_struct!,
+                                        prepopulator: -> (options) { self.custom_attachments ||= model.default_custom_attachments_open_struct }
         end
         if (categories_configuration = configuration.delete(:categories)).present?
           validation = categories_configuration.delete(:validation)
@@ -46,5 +50,23 @@ class UserProfileForm < BaseForm
         end
       end
     end
+  end
+
+  def custom_images_open_struct!(fragment:, **_args)
+    hash = {}
+    custom_images ||= model.custom_images + CustomImage.where(id: fragment.values.map { |h| h[:id] }, uploader_id: nil)
+    model.custom_attribute_target.custom_attributes.where(attribute_type: 'photo').pluck(:id).each do |id|
+      hash[id.to_s] = custom_images.detect { |ci| ci.custom_attribute_id == id }
+    end
+    OpenStruct.new(hash)
+  end
+
+  def custom_attachments_open_struct!(fragment:, **_args)
+    hash = {}
+    custom_attachments ||= model.custom_attachments + CustomAttachment.where(id: fragment.values.map { |h| h[:id] }, uploader_id: nil)
+    model.custom_attribute_target.custom_attributes.where(attribute_type: 'file').pluck(:id).each do |id|
+      hash[id.to_s] = custom_attachments.detect { |ci| ci.custom_attribute_id == id }
+    end
+    OpenStruct.new(hash)
   end
 end

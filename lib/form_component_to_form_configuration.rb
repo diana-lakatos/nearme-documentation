@@ -53,7 +53,15 @@ class FormComponentToFormConfiguration
         # hardcode fields for devmesh / hallmark :)
         configuration = community_configuration
       else
-        configuration = build_configuration_based_on_form_components(el.values.first)
+        role = case fc_role
+        when :Default
+          'default'
+        when :Enquirer
+          'buyer'
+        when :Lister
+          'seller'
+        end
+        configuration = build_configuration_based_on_form_components(el.values.first, role)
       end
       fc = FormConfiguration.where(base_form: UserUpdateProfileForm, name: "#{fc_role} Update").first_or_create!
       fc.update_attribute(:configuration, configuration)
@@ -61,7 +69,7 @@ class FormComponentToFormConfiguration
     end
   end
 
-  def build_configuration_based_on_form_components(form_component)
+  def build_configuration_based_on_form_components(form_component, role)
     configuration = {}
     if form_component.nil?
       puts "\t\tError: can't find form component"
@@ -79,7 +87,7 @@ class FormComponentToFormConfiguration
           else
             configuration['country_name'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'country_name').build if field == 'mobile_number' || field == 'phone' || field == 'mobile_phone'
             configuration['mobile_number'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'mobile_number').build if field == 'phone' || field == 'mobile_phone'
-            configuration[field] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, field).build unless field == 'mobile_phone'
+            configuration[field] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, field).build.merge(ValidationBuilder.new(PlatformContext.current.instance.send("#{role}_profile_type"), field).build) unless field == 'mobile_phone'
           end
           if %w(name first_name email).include?(field)
             configuration[field][:validation] ||= {}

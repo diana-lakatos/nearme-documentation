@@ -31,7 +31,7 @@ class TransactableType < ActiveRecord::Base
   has_many :action_types, -> { enabled }, dependent: :destroy
   has_many :all_action_types, dependent: :destroy, class_name: 'TransactableType::ActionType'
 
-  has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
+  has_many :custom_attributes_custom_validators, -> { where.not(custom_attributes: { attribute_type: %w(photo file) }) }, through: :custom_attributes, source: :custom_validators
   has_one :event_booking
   has_one :time_based_booking
   has_one :subscription_booking

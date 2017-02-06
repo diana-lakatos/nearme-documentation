@@ -7,6 +7,10 @@ module CustomAttachmentsOwnerable
     # FIXME: nead a cleaner solution - for now it's used by Form Object
     # to populate inputs
     def custom_attachments_open_struct
+      nil
+    end
+
+    def default_custom_attachments_open_struct
       hash = {}
       custom_attribute_target.custom_attributes.where(attribute_type: 'file').pluck(:id).each do |id|
         hash[id.to_s] = custom_attachments.detect { |ci| ci.custom_attribute_id == id }
@@ -17,13 +21,15 @@ module CustomAttachmentsOwnerable
     # FIXME: nead a cleaner solution - for now it's used by Form Object
     # to sync model with form after validation passes
     def custom_attachments_open_struct=(open_struct)
-      hash = custom_attachments_open_struct.to_h.each_with_object({}) do |(ca_id, custom_attachment), ids_hash|
-        # if form does not include all custom attachments, we don't want to nullify them.
-        # i.e. if there are custom attachments A and B, user has both filled, but then
-        # submits a form which allows to update only B, then A should stay
-        ids_hash[ca_id] = open_struct[ca_id].tap { |i| i.owner = self if i&.new_record? } || custom_attachment
+      open_struct.to_h.each do |ca_id, ci|
+        custom_attachment = if ci.id.present? && ci.owner.blank?
+          CustomAttachment.where(id: ci.id, owner_type: nil, owner_id: nil, uploader_id: nil).first
+        elsif ci.id.blank? && ci.owner.blank?
+          CustomAttachment.where(custom_attribute_id: ca_id.to_s, owner_type: nil, owner_id: nil, uploader_id: nil, created_at: ci.created_at, file: ci.read_attribute(:file)).first
+        end
+        self.custom_attachments << custom_attachment if custom_attachment.present?
       end
-      self.custom_attachments = hash.values.flatten.compact
+      self.custom_attachments
     end
   end
 end
