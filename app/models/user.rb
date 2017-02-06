@@ -121,7 +121,7 @@ class User < ActiveRecord::Base
   has_many :transactables, foreign_key: 'creator_id', inverse_of: :creator
   has_many :transactables_collaborated, through: :transactable_collaborators, source: :transactable
   has_many :approved_transactables_collaborated, through: :transactable_collaborators, source: :transactable
-  has_many :transactable_collaborators
+  has_many :transactable_collaborators, dependent: :destroy
   has_many :approved_transactable_collaborations, -> { approved }, class_name: 'TransactableCollaborator'
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   has_many :recurring_bookings, foreign_key: 'owner_id'

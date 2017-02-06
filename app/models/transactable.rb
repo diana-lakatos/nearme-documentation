@@ -702,7 +702,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def collaborators_email_recipients
-    approved_transactable_collaborators.includes(user: :notification_preference).select { |tc| u = tc.user; u.notification_preference.blank? || (u.notification_preference.email_frequency.eql?('immediately') && u.notification_preference.project_updates_enabled?) }
+    approved_transactable_collaborators.includes(user: :notification_preference).select { |tc| u = tc.user; u.present? && (u.notification_preference.blank? || (u.notification_preference.email_frequency.eql?('immediately') && u.notification_preference.project_updates_enabled?)) }
   end
 
   def attachments_visible_for(user)
