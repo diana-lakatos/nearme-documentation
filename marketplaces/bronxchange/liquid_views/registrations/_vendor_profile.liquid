@@ -7,9 +7,7 @@
       <img src="{{ g.user.logo[0].mini }}" alt="{{ user.buyer_properties.company_name }}" itemprop="logo">
       {% endif %}
 
-      {% if g.user.avatar[0] != blank %}
-      <img src="{{ g.user.avatar[0].mini }}" alt="{{ user.full_name }}">
-      {% endif %}
+      <img src="{{ user.avatar_url_big }}" alt="{{ user.name }}">
     </div>
 
     <div class="desc">
