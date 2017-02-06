@@ -52,29 +52,21 @@
           <div class="user-profile">
 
             <figure class="avatar">
-              {% comment %}TODO - CHANGE PHOTO TO CUSTOM ATTRIBUTE{% endcomment %}
               <a href="{{ enquirer.user_profile_url }}" rel="external"><img src="{{ enquirer.avatar_url_big }}" alt="{{ enquirer.name }}"></a>
 
               {% if collaborator.transactable_user_messages.size == 0 -%}
-                <a data-modal="true" class="action-message" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, user_id: collaborator.user.id, skip: true }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+                {% assign message_url = 'new_listing_user_message_path' | generate_url: transactable.id, user_id: collaborator.user.id, skip: true -%}
               {% else -%}
-                <a data-modal="true"  class="action-message" href="{{ 'dashboard_user_message_path' | generate_url: collaborator.transactable_user_messages.first.id }}">{{ 'dashboard.user_reservations.send_message' | t}}</a>
+                {% assign message_url = 'dashboard_user_message_path' | generate_url: collaborator.transactable_user_messages.first.id -%}
               {% endif -%}
+
+              <a data-modal="true" class="action-message" href="{{ message_url }}">Message</a>
             </figure>
 
-            <h3><a href="{{ enquirer.user_profile_url }}" rel="external">{{ enquirer.seller_properties.company_name }}</a></h3>
-            <p class="enquirer-category enquirer-category-{{ enquirer.buyer_properties.enquirer_category | downcase }}">Category: <b>{{ enquirer.buyer_properties.enquirer_category }}</b></p>
-            <p class="price">Price:
-              {% if offer != blank -%}
-              <span data-convert-price="{{ offer.total_amount_money.to_i }}">{{ offer.total_amount_money | pricify }}</span>
-              {% else -%}
-              {% assign total = enquirer.buyer_properties.hourly_price | times: transactable.properties.duration -%}
-              <span data-convert-price="{{ total }}">{{ total | pricify }}</span>
-              {% endif -%}
-            </p>
-
-            {% if enquirer.buyer_properties.short_bio != blank -%}
-            <p class="bio">{{ enquirer.buyer_properties.short_bio | nl2br }}</p>
+            <h3><a href="{{ enquirer.user_profile_url }}" rel="external">{{ enquirer.name }}</a></h3>
+            <h4>{{ enquirer.buyer_properties.company_name }}</h3>
+            {% if enquirer.buyer_properties.company_description != blank -%}
+            <p class="bio">{{ enquirer.buyer_properties.company_description | slice: 0, 100 | nl2br }}&hellip; <a href="{{ enquirer.user_profile_url }}" rel="external">More</a></p>
             {% endif -%}
           </div>
 
@@ -97,34 +89,11 @@
 
           {% if offer == blank -%}
           <p class="actions">
-            <a class="btn btn-default btn-sm" href="{{ collaborator.destroy_path }}" data-method="delete" data-confirm="Are you sure you want to remove this invite?">Remove invite</a>
+            <a class="btn btn-default btn-sm" href="{{ collaborator.destroy_path }}" data-method="delete" data-confirm="Are you sure you want to cancel this offer request?">Cancel request</a>
           </p>
           {% endif -%}
 
-
-            {% for language in enquirer.buyer_profile.customizations_by_type['Languages'] -%}
-              {% capture langs -%}{{ langs }}{% unless langs == blank -%}, {% endunless -%}{{ language.language }} ({{ language.fluency }}){% endcapture -%}
-            {% endfor -%}
-            <dl class="properties">
-              {% if langs != blank -%}
-                <dt>Languages</dt>
-                <dd>{{ langs }}</dd>
-              {% endif -%}
-
-              <dt>Vehicle</dt>
-              <dd>{{ enquirer.buyer_properties.vehicle_type }} {{ enquirer.buyer_properties.vehicle_model }} ({{ enquirer.buyer_properties.vehicle_year }})</dd>
-
-              <dt>Capacity</dt>
-              <dd>{{ 'passengers_count' | t: count: enquirer.buyer_properties.vehicle_capacity }}</dd>
-
-              {% if enquirer.formatted_buyer_categories['Extras']['children'].size > 0 -%}
-                <dt>Extras</dt>
-                <dd>{{ enquirer.formatted_buyer_categories['Extras']['children'] | join: ', ' }}</dd>
-              {% endif -%}
-            </dl>
-
-            <p class="invite-sent"><small>Invite Sent: {{ collaborator.created_at | to_date | l: 'short' }}</small></p>
-          </div>
+          <p class="invite-sent"><small>Invite Sent: {{ collaborator.created_at | to_date | l: 'short' }}</small></p>
         {% endif -%}
       </div>
     </div>
