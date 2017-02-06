@@ -6,23 +6,6 @@ custom_attributes:
   # We use custom attributes for some fields that are in user to avoid
   # messing with the translations (as fields may have a different title
   # for seller)
-  - name: avatar
-    label: 'Profile Photo'
-    attribute_type: photo
-    html_tag: input
-    versions_configuration:
-      mini:
-        width: 200
-        height: 200
-        transform: resize_to_fill
-      thumb:
-        width: 70
-        height: 70
-        transform: resize_to_fill
-      normal:
-        width: 1280
-        height: 880
-        transform: resize_to_fit
   - name: logo
     label: 'Logo'
     attribute_type: photo
@@ -77,7 +60,7 @@ form_components:
     name: General
     fields:
       - user: name
-      - seller: avatar
+      - user: avatar
       - seller: logo
       - user: email
       - user: current_address
