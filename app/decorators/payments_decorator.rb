@@ -17,9 +17,11 @@ class PaymentDecorator < Draper::Decorator
   end
 
   def payment_sources_collection(payment_method)
-    (all_payment_sources(payment_method).try(:map) do |payment_source|
-      [payment_source.name, payment_source.id]
-    end || []) << [I18n.t("payments.#{payment_method.payment_method_type}.add_new"), 'new_' + payment_method.payment_method_type]
+    all_payment_sources_collection(payment_method) << new_payment_source_for_collection(payment_method)
+  end
+
+  def default_payment_source(payment_method)
+    all_payment_sources_collection(payment_method).last
   end
 
   def all_payment_sources(payment_method)
@@ -58,5 +60,17 @@ class PaymentDecorator < Draper::Decorator
 
   def self.collection_decorator_class
     PaginatingDecorator
+  end
+
+  private
+
+  def all_payment_sources_collection(payment_method)
+    (all_payment_sources(payment_method).try(:map) do |payment_source|
+      [payment_source.name, payment_source.id]
+    end || [])
+  end
+
+  def new_payment_source_for_collection(payment_method)
+    [I18n.t("payments.#{payment_method.payment_method_type}.add_new"), 'new_' + payment_method.payment_method_type]
   end
 end

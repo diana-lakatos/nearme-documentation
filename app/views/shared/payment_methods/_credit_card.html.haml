@@ -3,8 +3,8 @@
   - if f.object.respond_to?(:authorized?) && f.object.authorized?
     = t 'payments.already_authorized'
   - else
-    - payment_soruces_collection = f.object.decorate.payment_sources_collection(payment_method)
-    = f.input :payment_source_id, as: :radio_buttons, collection: payment_soruces_collection, label: false, checked: :first, wrapper_html: { class: 'payment-source-option-select' }, checked: payment_soruces_collection.last
+    - payment_drop = f.object.decorate
+    = f.input :payment_source_id, as: :radio_buttons, collection: payment_drop.payment_sources_collection(payment_method), label: false, wrapper_html: { class: 'payment-source-option-select' }, checked: payment_drop.default_payment_source(payment_method)
     = f.input :payment_source_type, as: :hidden, input_html: { value: 'CreditCard' }
 
     - new_cc_klass = 'payment-source-form'
