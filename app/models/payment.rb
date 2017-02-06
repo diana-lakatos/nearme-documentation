@@ -365,7 +365,7 @@ class Payment < ActiveRecord::Base
   # @return [Boolean] whether the payment has been made with the payment gateway
   #   in test mode
   def test_mode?
-    payment_gateway.test_mode? if payment_gateway_mode.blank?
+    return (payment_gateway || instance).test_mode? if payment_gateway_mode.blank?
     payment_gateway_mode == PaymentGateway::TEST_MODE
   end
 
