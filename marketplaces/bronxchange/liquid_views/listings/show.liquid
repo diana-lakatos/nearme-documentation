@@ -4,7 +4,6 @@
 {% assign title = platform_context.name | append: ' - ' | append: listing.name %}
 {% title title %}
 <main id="main">
-
   <div class="back-to-search-results back-to-listings">
     <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: listing.transactable_type.slug }}">Back to My Orders</a>
   </div>
@@ -158,11 +157,9 @@
       </figure>
       {% endif %}
 
-      {% if g.user.owner_photo[0] != blank %}
       <figure class="avatar">
-        <img src="{{ g.user.owner_photo[0].mini }}" alt="{{ user.full_name }}">
+        <img src="{{ listing.creator.avatar_url_big }}" alt="{{ listing.creator.name }}">
       </figure>
-      {% endif %}
 
       <h3 class="name">{{ listing.creator.name }} <span class="organization">{{ listing.creator.seller_properties.organization_name }}</span></h3>
 

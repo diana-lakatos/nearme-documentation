@@ -17,11 +17,13 @@
     {% endif  -%}
   {% endif -%}
 
+  {% assign transactable_path = transactable.show_path -%}
+
   <article class="listing-b" id="transactable_{{transactable.id}}">
     <header>
       <h2>{{ transactable.name }}</h2>
       {% if current_status != 'archived' -%}
-        <a href="{{ transactable.show_path }}" class="btn btn-primary btn-sm" rel="external">Visit order page</a>
+        <a href="{{ transactable_path }}" class="btn btn-primary btn-sm" rel="external">Visit order page</a>
       {% endif -%}
 
       {% if transactable.state == 'in progress' -%}
@@ -47,7 +49,7 @@
           <dd>{{ transactable.properties.purchase_order_number }}</dd>
 
           <dt>Budget:</dt>
-          <dd>{{ approximate_budget }}</dd>
+          <dd>{{ transactable.properties.approximate_budget }}</dd>
         </dl>
       </div>
 
@@ -55,18 +57,23 @@
         {% assign lister = transactable.creator -%}
         <div class="user-profile">
           <figure class="avatar">
-            <img src="{{ lister.avatar_url_big }}" alt="{{ lister.name }}"></a>
+            <a href="{{ transactable_path }}" rel="external"><img src="{{ lister.avatar_url_big }}" alt="{{ lister.name }}"></a>
 
             {% if order != blank and order.transactable_user_messages.size > 0 -%}
-              <a class="action-message" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: order.transactable_user_messages.first.id }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+              {% assign message_url = 'dashboard_user_message_path' | generate_url: order.transactable_user_messages.first.id -%}
             {% else -%}
-              <a class="action-message" data-modal="true" href="{{ 'new_listing_user_message_path' | generate_url: transactable.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+              {% assign message_url = 'new_listing_user_message_path' | generate_url: transactable.id, skip: true -%}
             {% endif -%}
+
+            <a data-modal="true" class="action-message" href="{{ message_url }}">Message</a>
           </figure>
 
-          <h3>{{ lister.name }}</h3>
+          <h3><a href="{{ transactable_path }}">{{ lister.name }}</a></h3>
 
-          <p class="organization">Organization: <span>{{ lister.organization_name }}</span></p>
+          <h4>{{ lister.seller_properties.organization_name }}</h4>
+          {% if lister.seller_properties.organization_description != blank -%}
+            <p class="bio">{{ lister.seller_properties.organization_description | slice: 0, 100 | nl2br }}&hellip;</p>
+          {% endif %}
         </div>
 
         {% if transactable.state == 'pending' and collaborator != blank -%}
@@ -80,8 +87,7 @@
         <p class="actions">
           {% if can_make_offer == true -%}
             {% if current_user.has_verified_merchant_account == true -%}
-              {% assign pricing = transactable.action_type.pricings | detect: number_of_units: current_user.buyer_properties.driver_type_unit -%}
-              <a class="btn btn-primary" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration, transactable_pricing_id: pricing.id }}" data-modal="true">Accept order</a>
+              <a class="btn btn-primary btn-sm" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}" data-modal="true">Accept order</a>
             {% else -%}
               <a class="btn btn-primary btn-sm" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Accept order</a>
             {% endif -%}
@@ -89,7 +95,7 @@
 
           {% if current_status == 'pending' -%}
             {% assign transactable_collaborator = current_user | find_collaborator: transactable -%}
-              <a class="btn btn-default btnms-m" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this order?">Decline order</a>
+              <a class="btn btn-default btn-sm" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this order?">Decline order</a>
           {% endif -%}
         </p>
 
