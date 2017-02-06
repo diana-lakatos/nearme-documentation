@@ -563,6 +563,7 @@ class Payment < ActiveRecord::Base
   # - sets payment_gateway_fee_cents based on balance response, this currently works only for Stripe
 
   def set_pg_fee(response)
+    return unless payment_gateway.direct_charge?
     return unless payment_gateway.respond_to?(:find_balance)
     return if response.blank? || response.params.blank? || (balance_id = response.params['balance_transaction']).blank?
 
