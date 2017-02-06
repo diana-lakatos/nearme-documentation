@@ -56,6 +56,12 @@ module.exports = class UI
 
       list.after(select)
 
+  @tabsClickSetHashOverride: ->
+    $(document).on 'click.hallmark.tabs', '[data-toggle="tab"]', ->
+      # By default, hash is not set when clicking tabs
+      # We need hashes set but without scrolling to that area of the page
+      history.replaceState({}, '', $(this).attr('href'))
+
   @activeTabFromAnchor: ->
     anchor = window.location.hash.substring(1)
     tab = ''
@@ -75,5 +81,6 @@ module.exports = class UI
     @tabsStatic()
     @tabsDynamic()
     @activeTabFromAnchor()
+    @tabsClickSetHashOverride()
 
 
