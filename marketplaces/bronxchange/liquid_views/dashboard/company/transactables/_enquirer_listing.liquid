@@ -1,43 +1,43 @@
-{% for transactable in transactables -%}
-  {% assign collaborator = transactable.transactable_collaborators[0] -%}
-  {% assign offer = transactable.not_cancelled_orders | detect: user_id: current_user.id -%}
+{% for transactable in transactables %}
+  {% assign collaborator = transactable.transactable_collaborators[0] %}
+  {% assign offer = transactable.not_cancelled_orders | detect: user_id: current_user.id %}
 
-  {% assign orders = current_user | get_enquirer_orders: transactable -%}
-  {% assign can_make_offer = false -%}
-  {% if current_status == 'pending' -%}
-    {% if orders == empty -%}
-      {% assign can_make_offer = true -%}
-    {% else -%}
-      {% assign can_make_offer = true -%}
-      {% for order in orders -%}
-        {% if order.state == 'unconfirmed' -%}
-          {% assign can_make_offer = false -%}
-        {% endif -%}
-      {% endfor -%}
-    {% endif  -%}
-  {% endif -%}
+  {% assign orders = current_user | get_enquirer_orders: transactable %}
+  {% assign can_make_offer = false %}
+  {% if current_status == 'pending' %}
+    {% if orders == empty %}
+      {% assign can_make_offer = true %}
+    {% else %}
+      {% assign can_make_offer = true %}
+      {% for order in orders %}
+        {% if order.state == 'unconfirmed' %}
+          {% assign can_make_offer = false %}
+        {% endif %}
+      {% endfor %}
+    {% endif  %}
+  {% endif %}
 
-  {% assign transactable_path = transactable.show_path -%}
+  {% assign transactable_path = transactable.show_path %}
 
   <article class="listing-b" id="transactable_{{transactable.id}}">
     <header>
       <h2>{{ transactable.name }}</h2>
-      {% if current_status != 'archived' -%}
+      {% if current_status != 'archived' %}
         <a href="{{ transactable_path }}" class="btn btn-primary btn-sm" rel="external">Visit order page</a>
-      {% endif -%}
+      {% endif %}
 
-      {% if transactable.state == 'in progress' -%}
+      {% if transactable.state == 'in progress' %}
         <span class="label label-info">In Progress</span>
-      {% elsif transactable.state == 'completed' -%}
+      {% elsif transactable.state == 'completed' %}
         <span class="label label-success">Completed</span>
-      {% elsif transactable.state == 'cancelled' -%}
+      {% elsif transactable.state == 'cancelled' %}
         <span class="label label-warning">Cancelled</span>
-      {% endif -%}
+      {% endif %}
     </header>
 
-    {% unless current_user.has_verified_merchant_account == true -%}
+    {% unless current_user.has_verified_merchant_account == true %}
       <div class='alert alert-warning'>Before making any offer, you need to set up your <a href="{{ 'edit_dashboard_company_payouts_path' | generate_url: company.id }}">merchant account</a>.</div>
-    {% endunless -%}
+    {% endunless %}
 
     <div class="listing-b-inner">
       <div class="listing-b-booking-details">
@@ -54,16 +54,16 @@
       </div>
 
       <div class="listing-b-user-details">
-        {% assign lister = transactable.creator -%}
+        {% assign lister = transactable.creator %}
         <div class="user-profile">
           <figure class="avatar">
             <a href="{{ transactable_path }}" rel="external"><img src="{{ lister.avatar_url_big }}" alt="{{ lister.name }}"></a>
 
-            {% if order != blank and order.transactable_user_messages.size > 0 -%}
-              {% assign message_url = 'dashboard_user_message_path' | generate_url: order.transactable_user_messages.first.id -%}
-            {% else -%}
-              {% assign message_url = 'new_listing_user_message_path' | generate_url: transactable.id, skip: true -%}
-            {% endif -%}
+            {% if order != blank and order.transactable_user_messages.size > 0 %}
+              {% assign message_url = 'dashboard_user_message_path' | generate_url: order.transactable_user_messages.first.id %}
+            {% else %}
+              {% assign message_url = 'new_listing_user_message_path' | generate_url: transactable.id, skip: true %}
+            {% endif %}
 
             <a data-modal="true" class="action-message" href="{{ message_url }}">Message</a>
           </figure>
@@ -71,36 +71,36 @@
           <h3><a href="{{ transactable_path }}">{{ lister.name }}</a></h3>
 
           <h4>{{ lister.seller_properties.organization_name }}</h4>
-          {% if lister.seller_properties.organization_description != blank -%}
+          {% if lister.seller_properties.organization_description != blank %}
             <p class="bio">{{ lister.seller_properties.organization_description | slice: 0, 100 | nl2br }}&hellip;</p>
           {% endif %}
         </div>
 
-        {% if transactable.state == 'pending' and collaborator != blank -%}
-          {% if offer != blank -%}
+        {% if transactable.state == 'pending' and collaborator != blank %}
+          {% if offer != blank %}
             <div class="alert alert-info">Waiting for payment from Purchaser</div>
-          {% else -%}
+          {% else %}
             <div class="alert alert-info">Waiting for your approval</div>
-          {% endif -%}
-        {% endif -%}
+          {% endif %}
+        {% endif %}
 
         <p class="actions">
-          {% if can_make_offer == true -%}
-            {% if current_user.has_verified_merchant_account == true -%}
+          {% if can_make_offer == true %}
+            {% if current_user.has_verified_merchant_account == true %}
               <a class="btn btn-primary btn-sm" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}" data-modal="true">Accept order</a>
-            {% else -%}
+            {% else %}
               <a class="btn btn-primary btn-sm" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Accept order</a>
-            {% endif -%}
-          {% endif -%}
+            {% endif %}
+          {% endif %}
 
-          {% if current_status == 'pending' -%}
-            {% assign transactable_collaborator = current_user | find_collaborator: transactable -%}
+          {% if current_status == 'pending' %}
+            {% assign transactable_collaborator = current_user | find_collaborator: transactable %}
               <a class="btn btn-default btn-sm" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this order?">Decline order</a>
-          {% endif -%}
+          {% endif %}
         </p>
 
         <p class="invite-sent"><small>Request received: {{ collaborator.created_at | to_date | l: 'short' }}</small></p>
       </div>
     </div>
   </article>
-{% endfor -%}
+{% endfor %}
