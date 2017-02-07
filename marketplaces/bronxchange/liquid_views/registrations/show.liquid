@@ -3,12 +3,12 @@
 {% title title %}
 
 <main id="main" class="registrations-show">
-  {% if user.has_buyer_profile? == false -%}
+  {% if user.has_buyer_profile? == false %}
     <div class="back-to-search-results">
       <a href="/">Back to home page</a>
     </div>
     {% include "registrations/purchaser_profile", user: user %}
-  {% else -%}
+  {% else %}
 
     <div class="back-to-search-results">
       <a data-back-to-search-results-link href="/search">Back to search results</a>
@@ -20,5 +20,5 @@
       {% include "registrations/vendor_profile", user: user %}
     {% endif %}
 
-  {% endif -%}
+  {% endif %}
 </main>
