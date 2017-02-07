@@ -314,6 +314,7 @@ module LiquidFilters
   # @return [String] filtered version of the input text using the marketplace global text filters
   # @param text [String] text to be filtered
   def filter_text(text = '')
+    return text unless text.is_a?(String)
     return '' if text.blank?
     if PlatformContext.current.instance.apply_text_filters
       @text_filters ||= TextFilter.pluck(:regexp, :replacement_text, :flags)
