@@ -26,8 +26,8 @@ class ListingsControllerTest < ActionController::TestCase
     end
 
     should 'display two content holders' do
-      holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: '{{ @listing.street }} and whatever'
-      holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: 'This is an id of listing: {{ @listing.id }}'
+      holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: '{{ listing.street }} and whatever'
+      holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: 'This is an id of listing: {{ listing.id }}'
       get :show, id: @listing
       assert response.body.include?("This is an id of listing: #{ @listing.id }")
       assert response.body.include?("#{@listing.location.street} and whatever")

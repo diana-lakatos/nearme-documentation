@@ -56,7 +56,7 @@
       </div>
     </form>
 
-  {% elsif current_user.has_pending_transactables? && user.pending_transactables.size == 0 %}
+  {% elsif current_user.has_pending_transactables? and user.pending_transactables.size == 0 %}
 
     <p>There are no other projects to invite {{ user.name }} to. Would you can create another project right now?</p>
 

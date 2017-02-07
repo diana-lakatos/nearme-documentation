@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    {%  yield 'meta' }}
+    {%  yield 'meta' %}
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
   </head>
@@ -13,26 +13,10 @@
           <div class="inner">
             <div class="contain">
               <h1 class="logo">
-                <a href="/">
-                  <img src='{{ "community/logo-white.png" | image_path }}' width="59" height="39" alt=" {{ platform_context.name }}"  />
-                  {{ 'developer_mesh' | t }}
-                <% end %>
+                <a href="/"><img src='{{ "community/logo-white.png" | image_path }}' width="59" height="39" alt="{{ platform_context.name }}"/>{{ 'developer_mesh' | t }}</a>
               </h1>
 
               {% unless omit_topnav %}
-                <nav class="skips">
-                  <ul>
-                    <li>
-                      <%= link_to "#{t(:skip_to_navigation)} [n]".html_safe, '#nav', accesskey: 'n' %>
-                    </li>
-                    <li>
-                      <%= link_to "#{t(:skip_to_content)} [c]".html_safe, '#content', accesskey: 'c' %>
-                    </li>
-                    <li>
-                      <%= link_to "#{t(:skip_to_footer)} [f]".html_safe, '#footer', accesskey: 'f' %>
-                    </li>
-                  </ul>
-                </nav>
                 <h2 class="toggler" data-nav="true">
                   <span>Menu</span>
                 </h2>
@@ -53,9 +37,7 @@
                   <div class="corner">
                     {% if current_user %}
                       <div class="user">
-                        <p class="name">
-                          <%= current_user.first_name %>
-                        </p>
+                        <p class="name">{{ current_user.first_name }}</p>
                       </div>
                     {% else %}
                       <p class="actions">
@@ -69,14 +51,14 @@
           </div>
         </header>
 
-        {% assigns keys = "notice,success,warning,error,deleted" | split: ',' %}
+        {% assign keys = "notice,success,warning,error,deleted" | split: ',' %}
         {% for key in keys %}
           {% if flash[key] != blank %}
             <div class="alert {{key}}" data-flash-message data-close-label="{{ 'flash_messages.close_label' | t }}">
               <div class="contain">{{ flash.key | nl2br }}</div>
             </div>
           {% endif %}
-        {% endif %}
+        {% endfor %}
 
         <section class="content-a" id="content">
           {{ content_for_layout }}

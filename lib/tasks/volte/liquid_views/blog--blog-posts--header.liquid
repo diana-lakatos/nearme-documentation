@@ -1,28 +1,28 @@
-{% if @blog_post != nil and @blog_post.header_present? %}
-  {% assign header_url = @blog_post.header_url %}
+{% if blog_post != nil and blog_post.header_present? %}
+  {% assign header_url = blog_post.header_url %}
 {% else %}
-  {% assign header_url = @blog_instance.header_url %}
+  {% assign header_url = blog_instance.header_url %}
 {% endif %}
 
 <div class="header">
-  <a href='{{ @blog_instance.blog_posts_path }}'>
+  <a href='{{ blog_instance.blog_posts_path }}'>
     <div class='header-text-and-logo' style='background-image: url({{ header_url }});'>
       <div class='v-wrap'>
         <div class='v-box'>
-          {% if @blog_instance.header_logo_present? %}
-          <img src='{{ @blog_instance.header_logo_url }}' class='blog-logo' />
+          {% if blog_instance.header_logo_present? %}
+          <img src='{{ blog_instance.header_logo_url }}' class='blog-logo' />
           {% endif %}
-          {% if @blog_instance.header_icon_present? %}
-          <img src='{{ @blog_instance.header_icon_url }}' class='blog-icon' />
+          {% if blog_instance.header_icon_present? %}
+          <img src='{{ blog_instance.header_icon_url }}' class='blog-icon' />
           {% endif %}
-          {% if @blog_instance.header_text_present? %}
-          <span class='header-text {% if @blog_instance.header_logo_present? %} with-border {% endif %}'>
-            {{ @blog_instance.header_text }}
+          {% if blog_instance.header_text_present? %}
+          <span class='header-text {% if blog_instance.header_logo_present? %} with-border {% endif %}'>
+            {{ blog_instance.header_text }}
           </span>
           {% endif %}
-          {% if @blog_instance.header_motto_present? %}
+          {% if blog_instance.header_motto_present? %}
           <p class='header-motto'>
-            {{ @blog_instance.header_motto }}
+            {{ blog_instance.header_motto }}
           </p>
           {% endif %}
         </div>
