@@ -543,6 +543,9 @@ class InstanceView < ActiveRecord::Base
     },
     'dashboard/company/transactables/index' => {
       is_partial: false
+    },
+    'shared/social_meta_tags_for_listing' => {
+      is_partial: true
     }
 
   }.sort.to_h.freeze

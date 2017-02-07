@@ -1,7 +1,3 @@
-{% content_for 'social_meta_tags' %}
-  {% include 'shared/social_meta_for_object', object: listing, url: listing.show_path %}
-{% endcontent_for %}
-
 {% if listing.transactable_type.show_page_enabled? %}
   {% assign photos = listing.photos %}
 {% else %}
