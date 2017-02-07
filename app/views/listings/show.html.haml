@@ -8,6 +8,8 @@
   - cache i18n_cache_key('listings_show', @listing, @listing.location, @listing.company, @listing.administrator, [@listing_siblings.maximum(:updated_at), @listing_siblings.count], cache_params_string) do
     = render 'show'
 
+= render 'shared/social_meta_tags_for_listing', object: @listing, url: @listing.show_url
+
 - content_for :domready do
   - if @listing && params[:action] == 'ask_a_question'
     $(document).trigger('load:modal.nearme', ['#{new_listing_user_message_path(@listing)}']);
