@@ -1,0 +1,25 @@
+
+- if @searcher.result_count > 0
+  %section#results.list.clearfix{ class: @transactable_type.show_price_slider ? 'with_slider' : '' }
+    .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price }
+    - @searcher.results.each do |result|
+      - if result.is_a?(User)
+        = render partial: 'search/list/user', locals: { user: result, current_user: current_user, user_has_firends: current_user.try(:has_friends) }
+      - else
+        - cache i18n_cache_key('list', result, result.company, (current_user.try(:has_friends) ? current_user : nil)) do
+          = render partial: 'search/list/listing', locals: { listing: result, current_user: current_user, user_has_firends: current_user.try(:has_friends) }
+    = will_paginate @searcher.results
+    = render 'search/footer'
+    = render 'shared/loading_spinner'
+- else
+  %section#results.no_results{ class: @transactable_type.show_price_slider ? 'with_slider' : '' }
+    .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price }
+    = render 'shared/loading_spinner'
+    .text-center
+      %br/
+      %br/
+      %br/
+      %br/
+      %br/
+      %h1.tk-adelle.fat No results found
+

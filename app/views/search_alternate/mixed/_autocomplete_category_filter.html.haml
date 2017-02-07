@@ -1,0 +1,12 @@
+.search-mixed-filter
+  .container-fluid
+    .row-fluid
+      .span2
+        %h4
+          = category.translated_name
+      .span10
+        %input{ class: "text optional", 'data-selected-categories' => params[:category_ids].to_s,
+                'data-category-autocomplete' => true, 'data-category-id' => category.id,
+                'data-api-category-path' => dashboard_api_category_path(category),
+                name: "categories_ids[]", type: "text", autocomplete: "off" }
+

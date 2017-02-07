@@ -1,0 +1,44 @@
+  <article class='listing' data-id="{{listing.id}}" data-name="{{listing.name}}" data-latitude="{{listing.latitude}}" data-longitude="{{listing.longitude}}">
+    <a href="{{ listing.url }}">
+      <div class="heading">
+        <h3 class="name">{{ listing.name | filter_text | custom_sanitize }}</h3>
+        <div class="company row-fluid">
+          <div class="span10">
+            {{ listing.company.name | filter_text | custom_sanitize }}
+          </div>
+          {% if current_user.has_friends %}
+            {% assign connections = listing | connections_for: current_user %}
+            {% if connections.size > 0 %}
+              <div class="span2 connections" rel='tooltip' title="{{ connections | connections_tooltip: 5 }}">
+                <span class="ico-group">{{ connections.size }}</span>
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </a>
+    {% if listing.has_photos? %}
+      {% assign photo_class = '' %}
+    {% else %}
+      {% assign photo_class = 'without-photos' %}
+    {% endif %}
+    <div class="photo-container {{photo_class}}">
+      <div class="photo">
+        <img src="{{ listing.photo_url }}" title="{{ listing.name }}" alt="{{ listing.name }}" />
+      </div>
+      <div class="info">
+        <div class="price">
+          {% assign price_info = listing | lowest_price_without_cents_with_currency %}
+          {% if price_info.price %}
+            <span>{{ 'search.price_from' | translate }} {{ price_info.price}} / {{ price_info.period }}</span>
+          {% elsif price_info.free %}
+            <span>{{ 'search.free_listing' | translate }}</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="listing-google-map-wrapper">
+        <a href="{{ listing.url }}" class="btn btn-green btn-medium">{{ 'search.list.view_listing' | translate }}</a>
+        <div class="listing-google-map"></div>
+      </div>
+    </div>
+  </article>

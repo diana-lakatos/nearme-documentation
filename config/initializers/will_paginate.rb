@@ -24,5 +24,16 @@ if defined?(WillPaginate)
         current_page >= total_pages
       end
     end
+    module ActionView
+      def will_paginate(collection = nil, options = {}) #:nodoc:
+        # options, collection = collection, nil if collection.is_a? Hash
+        collection ||= infer_collection_from_controller
+
+        options = options.symbolize_keys
+        options[:renderer] ||= LinkRenderer
+
+        super(collection, options)
+      end
+    end
   end
 end

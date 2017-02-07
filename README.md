@@ -49,12 +49,17 @@ data using `rake backup:restore` in your console.
 
 ### ElasticSearch on local
 
-to make ES search work locally you have to enable scripting queries in your local ES instance. to do so please edit ES config file in ES installation path (for example /usr/local/Cellar/elasticsearch/2.4.0/libexec/config/elasticsearch.yml) and add:
+To make ES search work locally you have to enable scripting queries in your local ES instance. to do so please edit ES config file in ES installation path (for example /usr/local/Cellar/elasticsearch/2.4.0/libexec/config/elasticsearch.yml) and add:
 
     script.engine.groovy.inline.search: on
     script.inline: on
     script.indexed: on
     script.disable_dynamic: false
+
+After installing ES you load need to create indecies
+
+    rake elastic:indices:create_all
+    rake "elastic:indices:rebuild:all_for_instance[1]"
 
 ### Index ElasticSearch
 
