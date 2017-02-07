@@ -9,6 +9,15 @@ db:
   # volumes_from:
   #   - dbdata
 
+db-test:
+  image: aidanlister/postgres-hstore
+  ports:
+    - "5431:5432"
+  environment:
+    POSTGRES_PASSWORD: nearme
+    POSTGRES_USER: nearme
+    POSTGRES_DB: desksnearme_test
+
 es:
   image: elasticsearch:2.4
   ports:
