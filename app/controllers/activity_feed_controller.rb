@@ -101,12 +101,12 @@ class ActivityFeedController < ApplicationController
     end
   end
 
-  def projects
+  def transactables
     @container = params[:container].presence || '#projects'
 
-    @partial = 'shared/project'
-    @as = :project
-    @collection = @object.all_projects.enabled.custom_order(params[:sort]).paginate(pagination_params)
+    @partial = 'shared/transactable'
+    @as = :transactable
+    @collection = @object.all_transactables.searchable.custom_order(params[:sort]).paginate(pagination_params)
 
     respond_to do |format|
       format.js { render :see_more }

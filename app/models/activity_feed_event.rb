@@ -25,11 +25,6 @@ class ActivityFeedEvent < ActiveRecord::Base
     topic_created
   ).freeze
 
-  EVENT_BLACKLIST_FOR_USER = %w(
-    user_commented
-    user_commented_on_user_activity
-  ).freeze
-
   attr_accessor :affected_objects
 
   include CreationFilter
@@ -49,17 +44,6 @@ class ActivityFeedEvent < ActiveRecord::Base
   scope :exclude_events, lambda {
     where('event NOT IN (?)', %w(user_followed_user user_followed_transactable user_followed_topic))
   }
-
-  # We filter out user_commented events except for those where this user
-  # commented something on another object (we filter out comments on his own
-  # wall, that is, where followed = him)
-  scope :exclude_this_user_comments, -> (object) do
-    where("
-      event not in (:blacklist) OR
-      (event in (:blacklist) AND (followed_id != :user_id OR followed_type != 'User'))",
-      blacklist: EVENT_BLACKLIST_FOR_USER, user_id: object.id
-    ) if object.is_a?(User)
-  end
 
   before_create :update_affected_objects
   def update_affected_objects
@@ -125,12 +109,6 @@ class ActivityFeedEvent < ActiveRecord::Base
   def creator_id
     creator.try(:id)
   end
-
-  def can_remove?(current_user)
-    creator == current_user
-  end
-
-  alias can_edit? can_remove?
 
   def reported_by(user, ip)
     if user

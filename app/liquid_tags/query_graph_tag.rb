@@ -31,7 +31,11 @@ class QueryGraphTag < Liquid::Tag
   def execute_query(context)
     response = ::Graph::Schema.execute(
       query_string,
-      variables: variables(context)
+      variables: variables(context),
+      context: {
+        current_user: current_user(context),
+        liquid_context: context
+      }
     )
     response.key?('data') ? response.fetch('data') : throw(ArgumentError.new(response.pretty_inspect))
   end
@@ -46,5 +50,9 @@ class QueryGraphTag < Liquid::Tag
 
   def variables(context)
     Hash[@params.map { |key, variable_name| [key, context[variable_name]] }]
+  end
+
+  def current_user(context)
+    context['current_user']
   end
 end

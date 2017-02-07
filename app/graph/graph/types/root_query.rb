@@ -38,7 +38,7 @@ module Graph
         type Types::User
         argument :id, types.ID
 
-        resolve -> (_obj, args, _ctx) { UserDrop.new(::User.find(args[:id])) }
+          resolve -> (_obj, args, _ctx) { UserDrop.new(::User.find(args[:id])) }
       end
 
       field :topics do
@@ -53,6 +53,14 @@ module Graph
       field :feed do
         type !Types::Feed
         resolve Resolvers::Feed
+      end
+
+      field :searcher do
+        type !Types::Search::Searcher
+        argument :transactable_type_id, !types.ID
+        argument :result_view, !types.String
+        argument :search_params, Types::Search::Params
+        resolve Resolvers::Searcher.new
       end
     end
   end

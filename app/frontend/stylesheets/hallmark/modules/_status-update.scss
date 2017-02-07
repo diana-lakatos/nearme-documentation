@@ -91,6 +91,27 @@
       padding: 0 2px;
     }
 
+    > .comment {
+      display: none;
+      margin-top: 25px;
+    }
+
+    > .comment.is-active {
+      display: block;
+    }
+
+    > .comment p {
+      margin-bottom: 15px;
+    }
+
+    > .comment .action {
+      text-align: right;
+    }
+
+    > .comment .button-a {
+      padding: 0 29px;
+    }
+
     > .comments {
       margin-top: 20px;
       padding-top: 25px;
@@ -98,27 +119,6 @@
 
       &:empty {
         display: none;
-      }
-
-      > .comment {
-        display: none;
-        margin-top: 25px;
-      }
-
-      > .comment.is-active {
-        display: block;
-      }
-
-      > .comment p {
-        margin-bottom: 15px;
-      }
-
-      > .comment .action {
-        text-align: right;
-      }
-
-      > .comment .button-a {
-        padding: 0 29px;
       }
     }
 

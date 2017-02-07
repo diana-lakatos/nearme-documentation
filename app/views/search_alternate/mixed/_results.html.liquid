@@ -1,0 +1,12 @@
+{% include 'search/meta_tags', locals: { searcher: searcher } %}
+
+{% for location in searcher.results %}
+  {% comment %}
+  - cache i18n_cache_key('mixed', location, location.company, @searcher.search.lgpricing_filters) do
+  {% endcomment %}
+  {% include 'search/mixed/location.html', locals: {
+    location: location,
+    transactable_type: searcher.transactable_type,
+    lgpricing_filters: searcher.search.lgpricing_filters}
+  %}
+{% endfor %}

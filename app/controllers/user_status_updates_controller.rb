@@ -7,12 +7,7 @@ class UserStatusUpdatesController < ApplicationController
 
   def update
     @user_status_update = UserStatusUpdate.find(params[:id])
-    return render nothing: true unless @user_status_update.can_edit?(current_user)
-    @user_status_update.update(permitted_params)
-    respond_to do |format|
-      format.js
-      format.html
-    end
+    return render nothing: true unless @user_status_update.can_edit?(current_user) && @user_status_update.update(permitted_params)
   end
 
   def destroy
@@ -25,5 +20,4 @@ class UserStatusUpdatesController < ApplicationController
   def permitted_params
     params[:user_status_update].permit!
   end
-
 end

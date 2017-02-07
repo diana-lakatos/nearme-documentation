@@ -67,7 +67,7 @@ class BaseDrop < Liquid::Drop
   end
 
   def asset_url(source)
-    if @context.registers[:action_view].respond_to?(:asset_url)
+    if @context && @context.registers[:action_view].respond_to?(:asset_url)
       @context.registers[:action_view].asset_url(source)
     else
       ActionController::Base.helpers.asset_url(source)

@@ -15,14 +15,14 @@
           <th>{{ 'instance_admin.manage.orders.details' | translate }}</th>
         </tr>
       </thead>
-      {% for order in @orders %}
+      {% for order in orders %}
         <tr>
           <td>{{ order.number }}</td>
           <td><a href="{{ order.transactable.show_path }}">{{ order.transactable.name}}</a></td>
-          <td><a href='{{ 'edit_instance_admin_manage_user_path' | generate_url: @order.user.id }}'>{{ order.user.name }}<a></td>
+          <td><a href='{{ 'edit_instance_admin_manage_user_path' | generate_url: order.user.id }}'>{{ order.user.name }}<a></td>
           <td>
             {% if order.transactable.creator %}
-              <a href='{{ 'edit_instance_admin_manage_user_path' | generate_url: @order.transactable.creator.id }}'>{{ order.transactable.creator.name }}<a>
+              <a href='{{ 'edit_instance_admin_manage_user_path' | generate_url: order.transactable.creator.id }}'>{{ order.transactable.creator.name }}<a>
             {% endif %}
           </td>
           <td>{{ order.state }}</td>
@@ -46,7 +46,7 @@
 <div class="row">
   <div class="text-container">
     <div class="pull-right">
-      {% will_paginate collection: @orders %}
+      {% will_paginate collection: orders %}
     </div>
   </div>
 </div>

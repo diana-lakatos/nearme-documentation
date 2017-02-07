@@ -10,8 +10,6 @@
   - body = event.description
   - header_image = header_image_for_event(event)
   - title = link_to_activity_feed_object event.name, followed, target: target
-- if event.event_source_type.in? ['Comment', 'UserStatusUpdate']
-  - images = event.event_source.activity_feed_images
 
 %section
   %article.status-a{ class: ('status-update' if status_update_event?(event.event)) }
@@ -29,6 +27,6 @@
       %section
         - if title.present?
           %h3.hx= title
-        = render 'shared/activity_status_body_content', event: event, title: title, body: body, images: images
+        = render 'shared/activity_status_body_content', event: event, title: title, body: body
 
       = render 'shared/activity_status_footer', event: event

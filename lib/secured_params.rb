@@ -802,8 +802,7 @@ class SecuredParams
       :body,
       :title,
       :creator_id,
-      :report_as_spam,
-      activity_feed_images_attributes: nested(activity_feed_image)
+      :report_as_spam
     ]
   end
 
@@ -1178,13 +1177,6 @@ class SecuredParams
       :id,
       :image,
       :custom_attribute_id
-    ]
-  end
-
-  def activity_feed_image
-    [
-      :id,
-      :image
     ]
   end
 
@@ -1751,8 +1743,7 @@ class SecuredParams
       :instance_id,
       :topic_ids,
       :updateable_id,
-      :updateable_type,
-      activity_feed_images_attributes: nested(activity_feed_image)
+      :updateable_type
     ]
   end
 

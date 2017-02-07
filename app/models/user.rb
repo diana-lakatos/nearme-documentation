@@ -300,7 +300,9 @@ class User < ActiveRecord::Base
     end
 
     def find_for_database_authentication(warden_conditions)
-      where(warden_conditions.to_h).order('external_id NULLS FIRST').first
+      conditions = warden_conditions.dup
+      conditions[:email] = conditions[:email].downcase if conditions[:email]
+      where(conditions.to_h).order('external_id NULLS FIRST').first
     end
 
     # Build a new user, taking into account session information such as Provider

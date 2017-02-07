@@ -52,7 +52,7 @@
       </div>
     </form>
 
-  {% elsif current_user.has_pending_transactables? && user.pending_transactables.size == 0 %}
+  {% elsif current_user.has_pending_transactables? and user.pending_transactables.size == 0 %}
 
     <p>This user has been invited to all of your cases already.</p>
 

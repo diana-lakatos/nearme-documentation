@@ -53,15 +53,12 @@ class ActionableEntryEditAction {
 
     $.ajax({
       url: form.action,
-      method: 'PUT',
-      data: new FormData(form),
-      dataType: 'html',
-      contentType: false,
-      cache: false,
-      processData: false
+      method: form.method,
+      data: $(form).serialize(),
+      dataType: 'html'
     }).done((html)=>{
       target.classList.remove('is-active');
-      target.innerHTML = $(html).filter('.entry-content-a').html();
+      target.innerHTML = html;
     }).fail(()=>{
       alert('We couldn’t update content of this entry. Please try again');
       throw new Error(`Unable to edit comment at ${form.action}`);

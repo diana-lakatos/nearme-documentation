@@ -73,8 +73,15 @@ class LocationDrop < BaseDrop
 
   # @return [String] path to the first listing in the location
   def url
+    path
+  end
+
+  # @return [String] path to the first listing in the location
+  def path
     @location.listings.first.try(:decorate).try(:show_path)
   end
+
+
 
   # @return [String] url to the first listing in the location
   # @todo -- remove
