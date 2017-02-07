@@ -129,21 +129,21 @@
 
         {% if can_make_offer == true %}
           <li>
-            {% if current_user.has_verified_merchant_account == true -%}
-              {% assign pricing = listing.action_type.pricings | detect: number_of_units: current_user.buyer_properties.driver_type_unit -%}
-              {% assign url = 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration, transactable_pricing_id: pricing.id -%}
+            {% if current_user.has_verified_merchant_account == true %}
+              {% assign pricing = listing.action_type.pricings | detect: number_of_units: current_user.buyer_properties.driver_type_unit %}
+              {% assign url = 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration, transactable_pricing_id: pricing.id %}
               <a class="button-a" data-href="{{ url }}" href="{{ url }}" data-modal="true">Accept</a>
-            {% else -%}
-              {% assign url = 'required_modal_dashboard_company_payouts_path' | generate_url -%}
+            {% else %}
+              {% assign url = 'required_modal_dashboard_company_payouts_path' | generate_url %}
               <a class="button-a" data-modal="true" href="{{ url }}" data-href="{{ url }}">Accept</a>
-            {% endif -%}
+            {% endif %}
           </li>
-          {% if current_status == 'pending' -%}
-            {% assign transactable_collaborator = current_user | find_collaborator: listing -%}
+          {% if current_status == 'pending' %}
+            {% assign transactable_collaborator = current_user | find_collaborator: listing %}
             <li>
               <a class="button-b" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this order?">Decline</a>
             </li>
-          {% endif -%}
+          {% endif %}
         {% endif %}
 
         {% if collaborator != blank %}
