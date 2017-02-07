@@ -1,0 +1,31 @@
+query search($transactable_type_id: ID!, $result_view: String!, $search_params: SearchParams) {
+  searcher(transactable_type_id: $transactable_type_id, result_view: $result_view, search_params: $search_params){
+     results{
+       id, name, longitude, latitude, street, path,
+       company{
+         name
+       },
+       listings{
+         name, location_id, latitude, longitude, photo_url, description, url
+       },
+       photos{
+         space_listing
+       }
+     },
+    searchable_categories{
+      category_options, translated_name, path, id
+    },
+    filterable_custom_attributes{
+      name, lg_custom_attribute, label_key, valid_values_translated, any_valid_values_translated
+    },
+    filterable_location_types{
+      name, id
+    }
+    display_dates{ start, end },
+    start_date, end_date, keyword,
+    category_ids,
+    filterable_pricing,
+    lgpricing_filters, meta_title, min_price, max_price
+     per_page, current_page, total_entries, total_pages, result_count, offset
+  }
+}

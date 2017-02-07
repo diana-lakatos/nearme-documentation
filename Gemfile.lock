@@ -462,7 +462,7 @@ GEM
     google_plus (0.2.4)
       json
       rest-client (~> 1.6)
-    graphql (1.2.4)
+    graphql (1.4.1)
     haml (4.0.7)
       tilt
     has_scope (0.6.0)
@@ -845,7 +845,8 @@ GEM
       thin (~> 1.5.0)
     slack-notifier (1.5.1)
     slop (3.6.0)
-    spring (1.7.1)
+    spring (2.0.0)
+      activesupport (>= 4.2)
     spring-commands-cucumber (1.0.1)
       spring (>= 0.9.1)
     sprockets (2.11.0)

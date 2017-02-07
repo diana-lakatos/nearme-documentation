@@ -1,0 +1,12 @@
+<article class='listing user' data-id="{{user.id}}" data-name="{{user.name}}" data-latitude="{{user.latitude}}" data-longitude="{{user.longitude}}">
+  <a href="{{ user.profile_url_for_search }}">
+    <div class="heading">
+      <h3 class="name">{{ user.name | filter_text | custom_sanitize }}</h3>
+    </div>
+    <div class="photo-container {{photo_class}}">
+      <div class="photo">
+        <img src="{{ user.avatar_url_big }}" title="{{ user.name }}" alt="{{ user.name }}" />
+      </div>
+    </div>
+  </a>
+</article>
