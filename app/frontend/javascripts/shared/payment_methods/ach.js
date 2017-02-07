@@ -110,9 +110,7 @@ class PaymentMethodAch {
     });
   }
 
-  _submitFormHandler(event) {
-    event.preventDefault();
-
+  _submitFormHandler() {
     var $form = $(this.form),
       that = this;
 
@@ -133,6 +131,8 @@ class PaymentMethodAch {
         account_holder_type: $('[data-account-holder-type]').val()
       }, that._stripeResponseHandler.bind(that));
     });
+
+    return false;
   }
 
   _stripeResponseHandler(status, response) {
