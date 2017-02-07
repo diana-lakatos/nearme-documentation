@@ -57,6 +57,7 @@ class PaymentTest < ActiveSupport::TestCase
   end
 
   SUCCESS_RESPONSE = { 'paid_amount' => '10.00' }.freeze
+  SUCCESS_RESPONSE_WITH_TRANSACTION = { 'paid_amount' => '10.00', 'balance_transaction' => '1234' }.freeze
   FAILURE_RESPONSE = { 'paid_amount' => '10.00', 'error' => 'fail' }.freeze
 
   context 'authorized payment' do
@@ -70,6 +71,25 @@ class PaymentTest < ActiveSupport::TestCase
       @payment.update_attribute(:paid_at, nil)
       @payment.refund!
       refute @payment.reload.refunded?
+    end
+
+    should 'charge when payment gateway worked' do
+      stub_active_merchant_interaction(success?: true, params: SUCCESS_RESPONSE)
+      assert @payment.capture!
+      assert @payment.paid?
+      charge = Charge.last
+      assert charge.success?
+      assert_equal SUCCESS_RESPONSE, charge.response.params
+    end
+
+    should 'charge when payment gateway with direct_charge' do
+      PaymentGateway.any_instance.stubs(:direct_charge?).returns(true)
+      stub_active_merchant_interaction(success?: true, params: SUCCESS_RESPONSE_WITH_TRANSACTION)
+      assert @payment.capture!
+      assert @payment.paid?
+      charge = Charge.last
+      assert charge.success?
+      assert_equal SUCCESS_RESPONSE_WITH_TRANSACTION, charge.response.params
     end
 
     should 'not charge when payment gateway fails' do
