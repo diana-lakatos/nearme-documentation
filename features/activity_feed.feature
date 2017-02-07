@@ -39,27 +39,6 @@ Feature: A user can interact with activity feeds
     Then I can fill status update and submit it
     And I can see the event on the Activity Feed
 
-  Scenario: A user can update his status with picture for Hallmark
-    When I'm on Hallmark marketplace
-    When I visit my page
-    Then I can fill status update and add picture and submit it
-    And I can see the event on the Activity Feed with picture
-    And I can edit the event and add new image
-    And I can see the edited event on the Activity Feed with picture
-    And I edit the event and delete image
-    Then I can see the edited event on the Activity Feed without picture
-
-  Scenario: A user can comment with picture for Hallmark
-    When I'm on Hallmark marketplace
-    When I have status update created
-    When I visit my page
-    Then I can create a new comment and add picture and submit it
-    And I can see the comment on the Activity Feed with picture
-    And I can edit the comment and add new image
-    And I can see the edited comment on the Activity Feed with picture
-    And I edit the comment and delete image
-    Then I can see the edited comment on the Activity Feed without picture
-
   Scenario: User created project event exists
     When I visit project page
     Then I can see user created project event

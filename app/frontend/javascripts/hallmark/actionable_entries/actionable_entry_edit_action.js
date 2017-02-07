@@ -61,7 +61,7 @@ class ActionableEntryEditAction {
       processData: false
     }).done((html)=>{
       target.classList.remove('is-active');
-      target.innerHTML = $(html).filter('.entry-content-a').html();
+      target.innerHTML = html;
     }).fail(()=>{
       alert('We couldn’t update content of this entry. Please try again');
       throw new Error(`Unable to edit comment at ${form.action}`);

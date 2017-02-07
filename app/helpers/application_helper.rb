@@ -503,8 +503,4 @@ module ApplicationHelper
     association
   end
 
-  def collection_or_new_object(association)
-    association.presence || association.new
-  end
-
 end
