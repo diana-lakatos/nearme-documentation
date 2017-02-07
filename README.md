@@ -27,7 +27,7 @@ gulp build
 #### And for ubuntu
 
 ```
-sudo apt-get install libqtwebkit-dev
+sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
 sudo apt-get install libcurl4-openssl-dev
 sudo apt-get install libpq-dev
 sudo apt-get install libicu-dev
@@ -94,6 +94,19 @@ Note - if you want to run cucumber tests on local, please compile assets for tes
 If you are directly working with assets, to avoiding having to compile assets after each change, just use:
 
     gulp serve
+
+### Run tests
+
+Unit tests:
+
+    bundle exec rake db:create db:schema:load
+    bundle exec rake db:test:prepare
+    bundle exec rake test
+
+Feature test:
+
+    gulp build:test
+    bundle exec rake cucumber:verbose
 
 ### Payments Configuration
 
