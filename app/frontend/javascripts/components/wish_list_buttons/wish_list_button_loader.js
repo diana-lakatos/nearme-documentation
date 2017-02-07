@@ -18,7 +18,12 @@ class WishListButtonLoader {
     /* For signed out user just redirect to login form */
     if (this._checkUserSignin() === false) {
       const signinUrl = elements[0].getAttribute('data-path-signin');
-      Array.prototype.forEach.call(elements, (el) => el.querySelector('a').setAttribute('href', signinUrl));
+      Array.prototype.forEach.call(elements, (el) => {
+        let link = el.querySelector('a');
+        if (link) {
+          link.setAttribute('href', signinUrl);
+        }
+      });
       return;
     }
 
@@ -59,7 +64,7 @@ class WishListButtonLoader {
 
         res.wish_list_items.map( (item) => item.wishlistable_id ).forEach(callback);
       } else {
-        throw new Error('Unable to parse wish list buttons response');
+        throw new Error(`Unable to parse wish list buttons response. ${JSON.stringify(request)}`);
       }
     };
 
