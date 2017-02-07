@@ -24,6 +24,7 @@ class ActionableEntryCreateAction {
     event.preventDefault();
 
     let form = event.target;
+    let target = this.target;
     let trigger = this.trigger;
 
     $.ajax({
@@ -41,7 +42,7 @@ class ActionableEntryCreateAction {
         $(document).trigger(trigger);
       }
     }).fail(()=>{
-      alert('We couldn’t create this content. Please try again');
+      alert(`We couldn’t create this content. Please try again`);
       throw new Error(`Unable to create content ${form.action}`);
     });
   }

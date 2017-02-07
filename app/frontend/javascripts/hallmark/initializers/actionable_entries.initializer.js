@@ -24,4 +24,4 @@ function run() {
 
 run();
 
-$(document).on('activity-feed-next-page next-page new-comment', run);
+$(document).on('activity-feed-next-page new-comment', run);

@@ -658,16 +658,6 @@ DesksnearMe::Application.routes.draw do
 
     resources :topics, only: [:show]
 
-    resources :comments do
-      resources :comments, only: [:update, :create, :index, :destroy] do
-        resources :spam_reports, only: [:create, :destroy] do
-          collection do
-            delete :cancel
-          end
-        end
-      end
-    end
-
     resources :groups, only: [:show] do
       resources :group_members, only: [:create, :destroy] do
         patch :accept, on: :member
