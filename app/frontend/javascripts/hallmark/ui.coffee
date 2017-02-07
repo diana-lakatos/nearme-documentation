@@ -26,7 +26,7 @@ module.exports = class UI
   @toggleCommentForm: ->
     $('body').on 'click', '[data-comment]', (event) ->
       event.preventDefault()
-      $(this).closest('footer').find('.comments > .comment').toggleClass 'is-active'
+      $(this).closest('footer').find('> .comment').toggleClass 'is-active'
 
 
   # init tinyNav for tabs navigation

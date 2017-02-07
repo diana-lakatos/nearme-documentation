@@ -8,7 +8,6 @@ class UserStatusUpdate < ActiveRecord::Base
 
   has_and_belongs_to_many :topics
   has_and_belongs_to_many :transactables
-  has_many :activity_feed_images, as: :owner
 
   validates :text, :updateable_type, :updateable_id, presence: true
   validates :text, length: { maximum: 5000 }
@@ -18,8 +17,6 @@ class UserStatusUpdate < ActiveRecord::Base
   after_commit :create_activity_feed_event, on: :create
 
   alias_attribute :creator_id, :user_id
-
-  accepts_nested_attributes_for :activity_feed_images, allow_destroy: true
 
   def create_activity_feed_event
     event = "user_updated_#{updateable_type.to_s.downcase}_status".to_sym

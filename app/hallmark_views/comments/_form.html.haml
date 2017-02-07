@@ -1,17 +1,9 @@
-= simple_form_for comment, url: url_to_comment(comment.commentable, comment), html: { multipart: true }  do |f|
+= simple_form_for comment, url: url_to_comment(comment.commentable, comment), remote: !comment.persisted?  do |f|
   - data = { auto_resize: '' }
   - data['new-comment-for'] = comment.commentable.id if comment.commentable.persisted?
 
   = f.input :body, label: false, input_html: { maxlength: 5000, data: data, cols: 40, rows: 3 }
-  = f.simple_fields_for :activity_feed_images, collection_with_new_object(f.object.activity_feed_images) do |afi|
-    - if afi.object.image.present?
-      .image
-        %img{ src: afi.object.image.url(:space_listing)}
-        .delete-photo
-          = afi.input :_destroy, as: :boolean, inline_label: true, label: false
-    - else
-      .image
-        = afi.input :image, required: false
+
   %p.action
     %button.button-a.tiny.light{ type: 'button', data: { cancel_edit: '' }} Cancel
     = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'

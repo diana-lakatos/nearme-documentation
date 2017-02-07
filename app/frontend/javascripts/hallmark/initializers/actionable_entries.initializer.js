@@ -9,17 +9,6 @@ function run() {
       });
     });
   }
-
-  let elsCreatable = document.querySelectorAll('[data-creatable-container]');
-  if (elsCreatable.length > 0) {
-    require.ensure('../actionable_entries/actionable_entry_create_action',(require) => {
-      const ActionableEntryCreateAction = require('../actionable_entries/actionable_entry_create_action');
-      Array.prototype.forEach.call(elsCreatable, (entry) => {
-        return new ActionableEntryCreateAction(entry);
-      });
-    });
-  }
-
 }
 
 run();
