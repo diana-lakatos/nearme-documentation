@@ -121,7 +121,6 @@ class PaymentMethodAch {
     }
 
     $form.off('submit').on('submit', (event) => {
-      event.stopPropagation();
       event.preventDefault();
       $form = $(event.target);
       Stripe.setPublishableKey(that._publishableToken);
