@@ -64,11 +64,20 @@ module.exports = class UI
 
   @activeTabFromAnchor: ->
     anchor = window.location.hash.substring(1)
+    parent_tab = ''
     tab = ''
+
     if anchor.length > 0
+      parent_match = anchor.match(/([a-z]+)-([a-z]+)/i)
+      if parent_match
+        parent_tab = $("[href='##{parent_match[1]}'][data-toggle=tab]")
+
       tab = $("[href='##{anchor}'][data-toggle=tab]")
     else
       tab = $("[data-toggle=tab]:first")
+
+    if parent_tab.length > 0
+      parent_tab.click()
     if tab.length > 0
       tab.click()
 
