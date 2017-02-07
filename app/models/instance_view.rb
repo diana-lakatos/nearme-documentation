@@ -540,6 +540,9 @@ class InstanceView < ActiveRecord::Base
     },
     'dashboard/user_messages/dashboard_form' => {
       is_partial: true
+    },
+    'dashboard/company/transactables/index' => {
+      is_partial: false
     }
 
   }.sort.to_h.freeze
@@ -627,6 +630,7 @@ class InstanceView < ActiveRecord::Base
   end
 
   validates :body, presence: true
+  validates :body, liquid: true, if: -> (i) { i.handler == 'liquid' }
   validates :path, presence: true
 
   validates :locales, length: { minimum: 1 }

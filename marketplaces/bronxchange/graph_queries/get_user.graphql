@@ -1,14 +1,7 @@
 query get_user($userId: ID!){
   user(id: $userId){
     name
-    logo: custom_attribute_photos(name: "company_logo"){
-      thumb: url(version: "thumb")
-      mini: url(version: "mini")
-      url: url
-      width: image_original_width
-      height: image_original_height
-    }
-    owner_photo: custom_attribute_photos(name: "owner_image"){
+    logo: custom_attribute_photos(name: "logo"){
       thumb: url(version: "thumb")
       mini: url(version: "mini")
       url: url

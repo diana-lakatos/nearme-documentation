@@ -24,8 +24,8 @@
 
       {% comment %} Reviews menu {% endcomment %}
       {% assign visible = 'dashboard/reviews' | is_visible %}
-      {% assign show = platform_context.active_rating_systems_present? and visible %}
-      {% if show %}
+      {% assign show = platform_context.active_rating_systems_present? %}
+      {% if show and visible %}
         {% assign reviews_rate_show = 'dashboard/reviews_rate' | is_visible %}
         {% assign reviews_rate_path = 'rate_dashboard_reviews_path' | generate_url %}
         {% assign reviews_rate_selected = current_path | matches: reviews_rate_path %}

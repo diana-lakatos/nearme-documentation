@@ -1,0 +1,6 @@
+- size ||= :space_listing
+- if images.present?
+  .entry-images
+    - images.each do |image|
+      %a{ href: image.image.url }
+        %img{ src: image.image.url(size) }

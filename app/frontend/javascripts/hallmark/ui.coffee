@@ -26,7 +26,7 @@ module.exports = class UI
   @toggleCommentForm: ->
     $('body').on 'click', '[data-comment]', (event) ->
       event.preventDefault()
-      $(this).closest('footer').find('> .comment').toggleClass 'is-active'
+      $(this).closest('footer').find('.comments > .comment').toggleClass 'is-active'
 
 
   # init tinyNav for tabs navigation
@@ -56,6 +56,12 @@ module.exports = class UI
 
       list.after(select)
 
+  @tabsClickSetHashOverride: ->
+    $(document).on 'click.hallmark.tabs', '[data-toggle="tab"]', ->
+      # By default, hash is not set when clicking tabs
+      # We need hashes set but without scrolling to that area of the page
+      history.replaceState({}, '', $(this).attr('href'))
+
   @activeTabFromAnchor: ->
     anchor = window.location.hash.substring(1)
     tab = ''
@@ -75,5 +81,6 @@ module.exports = class UI
     @tabsStatic()
     @tabsDynamic()
     @activeTabFromAnchor()
+    @tabsClickSetHashOverride()
 
 

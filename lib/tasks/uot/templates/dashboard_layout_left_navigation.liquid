@@ -24,8 +24,8 @@
 
       {% comment %} Reviews menu {% endcomment %}
       {% assign visible = 'dashboard/reviews' | is_visible %}
-      {% assign show = platform_context.active_rating_systems_present? and visible %}
-      {% if show %}
+      {% assign show = platform_context.active_rating_systems_present? %}
+      {% if show and visible %}
         {% assign reviews_rate_show = 'dashboard/reviews_rate' | is_visible %}
         {% assign reviews_rate_path = 'rate_dashboard_reviews_path' | generate_url %}
         {% assign reviews_rate_selected = current_path | matches: reviews_rate_path %}
@@ -74,15 +74,19 @@
 
       {% comment %} Projects menu {% endcomment %}
       {% if platform_context.transactable_types.first.name %}
-        {% assign projects_path = {{ platform_context.project_space_wizard_path }} %}
+        {% assign projects_path = platform_context.project_space_wizard_path %}
         {% assign projects_selected = current_path | matches: path %}
         {% assign projects_visible = 'dashboard/projects' | is_visible %}
-        {% assign projects_show = platform_context.projectable? and projects_visible %}
+        {% if projects_visible %}
+          {% assign projects_show = platform_context.projectable? %}
+        {% endif %}
         {% assign transactables_path = 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id %}
         {% assign transactables_selected = current_path | matches: '/transactables(?!/new)' %}
         {% assign new_transactable_selected = current_path | matches: '/transactables/new' %}
         {% assign transactables_visible = 'dashboard/transactables' | is_visible %}
-        {% assign transactables_show = current_user.registration_completed? and transactables_visible %}
+        {% if transactables_visible %}
+          {% assign transactables_show = current_user.registration_completed? %}
+        {% endif %}
         {% if current_user.buyer_profile == blank %}
           {% assign order_items_path = 'dashboard_company_order_items_path' | generate_url %}
         {% else %}

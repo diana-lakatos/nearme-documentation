@@ -7,6 +7,10 @@ namespace :mpbuilder do
     MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'])
   end
 
+  task all: :environment do
+    MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'])
+  end
+
   task liquid_views: :environment do
     creators = [
       MarketplaceBuilder::Creators::LiquidViewsCreator

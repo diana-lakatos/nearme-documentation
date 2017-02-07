@@ -314,6 +314,7 @@ module LiquidFilters
   # @return [String] filtered version of the input text using the marketplace global text filters
   # @param text [String] text to be filtered
   def filter_text(text = '')
+    return text unless text.is_a?(String)
     return '' if text.blank?
     if PlatformContext.current.instance.apply_text_filters
       @text_filters ||= TextFilter.pluck(:regexp, :replacement_text, :flags)
@@ -344,7 +345,7 @@ module LiquidFilters
   # @param html [String] HTML string to be sanitized
   def custom_sanitize(html = '')
     return '' if html.blank?
-
+    html = html.to_s
     html = nl2br(html)
 
     if PlatformContext.current.instance.custom_sanitize_config.present?
@@ -360,6 +361,7 @@ module LiquidFilters
   # @param html [String] HTML string to be sanitized
   def strip_tags(html = '')
     return '' if html.blank?
+    html = html.to_s
     @custom_sanitizer ||= CustomSanitizer.new
     @custom_sanitizer.strip_tags(html).html_safe
   end
@@ -368,6 +370,7 @@ module LiquidFilters
   # @param html [String] HTML string to be processed
   def nl2br(html = '')
     return '' if html.blank?
+    html = html.to_s
     html.gsub!("\r\n", '<br />')
     html
   end

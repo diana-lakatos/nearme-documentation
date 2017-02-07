@@ -120,6 +120,46 @@ class Order < ActiveRecord::Base
     where(created_at: start_date..end_date)
   }
 
+  scope :by_buyer_name, -> (name) { joins('inner join users on users.id = orders.owner_id').where('users.name like ?', "%#{name}%") }
+
+  scope :by_seller_name, -> (name) { joins('inner join users on users.id = orders.creator_id').where('users.name like ?', "%#{name}%") }
+
+  scope :by_order_state, -> (state) { where('state = ?', state) }
+
+  scope :non_free_orders, -> { where('is_free_booking = ?', false) }
+
+  scope :free_orders, -> { where('is_free_booking = ?', true) }
+
+  scope :sorted_by_date, ->(value) { if ['asc', 'desc'].include?(value)
+                                       direction = value
+                                     else
+                                       direction = 'desc'
+                                     end
+                                     order("created_at #{direction}")
+                                   }
+
+  scope :sorted_by_total_paid, ->(value) { if ['asc', 'desc'].include?(value)
+                                       direction = value
+                                     else
+                                       direction = 'desc'
+                                     end
+                                     joins("left join (
+                                                       select sum(li.unit_price_cents * li.quantity) as paid, rbp.order_id as order_id 
+                                                       from recurring_booking_periods rbp 
+                                                       inner join line_items li on li.line_itemable_id = rbp.id AND li.line_itemable_type = 'RecurringBookingPeriod'
+                                                       where rbp.paid_at is not null group by rbp.order_id
+                                                      ) order_info ON order_info.order_id = orders.id
+                                            left join (
+                                                       select sum(line_items.unit_price_cents * line_items.quantity) as paid, line_itemable_id, line_itemable_type
+                                                       from line_items group by line_itemable_id, line_itemable_type
+                                                      ) line_items ON line_items.line_itemable_id = orders.id AND line_items.line_itemable_type = orders.type
+                                            left join (
+                                                       select sum(total_amount_cents) as sum_amount, payable_id, payable_type
+                                                       from payments group by payable_id, payable_type
+                                                      ) payments_info ON payments_info.payable_id = orders.id and payments_info.payable_type = orders.type")
+                                     .order("coalesce(nullif(payments_info.sum_amount, 0), nullif(order_info.paid, 0), line_items.paid, 0) #{direction}, created_at DESC")
+                                   }
+
   delegate :action, to: :transactable_pricing
   delegate :service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents, to: :action
   delegate :photos, :confirm_reservations?, to: :transactable, allow_nil: true
@@ -151,7 +191,11 @@ class Order < ActiveRecord::Base
 
   def process!
     return false unless valid?
-    return false unless skip_payment_authorization || payment_processor.blank? || payment_processor.process!
+    if skip_payment_authorization
+       return false unless payment_processor.blank? || payment_processor.payment_source.try(:process!)
+    else
+      return false unless payment_processor.blank? || payment_processor.process!
+    end
     activate! if inactive? && can_activate?
     save
   end

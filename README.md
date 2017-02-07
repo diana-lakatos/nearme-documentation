@@ -24,6 +24,15 @@ yarn install
 gulp build
 ```
 
+#### And for ubuntu
+
+```
+sudo apt-get install libqtwebkit-dev
+sudo apt-get install libcurl4-openssl-dev
+sudo apt-get install libpq-dev
+sudo apt-get install libicu-dev
+```
+
 ### Credentials setup
 
 Add to bash, for example ~/.bash_profile :
@@ -51,6 +60,17 @@ After installing ES you load need to create indecies
 
     rake elastic:indices:create_all
     rake "elastic:indices:rebuild:all_for_instance[1]"
+
+### Index ElasticSearch
+
+After you install ES you need to create indexes and aliases
+  - `rake elastic:indices:create_all`
+  - `rake elastic:aliases:create_all `
+
+### Install ES and PostgreSQL on Docker
+
+Alternatively you can install ES and PostgreSQL on Docker. There is docker-compose.yml file.
+Once you install docker and docker-compose run `docker-compose up`. Later you can just run `docker-compose start`
 
 ### Assets on local
 

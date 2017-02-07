@@ -21,6 +21,7 @@ class ContentHolder < ActiveRecord::Base
   after_destroy :expire_cache
 
   validates :name, presence: true
+  validates :content, liquid: true
 
   def expire_cache
     [name, name_was].each do |field|

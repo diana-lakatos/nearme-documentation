@@ -365,7 +365,7 @@ class Payment < ActiveRecord::Base
   # @return [Boolean] whether the payment has been made with the payment gateway
   #   in test mode
   def test_mode?
-    payment_gateway.test_mode? if payment_gateway_mode.blank?
+    return (payment_gateway || instance).test_mode? if payment_gateway_mode.blank?
     payment_gateway_mode == PaymentGateway::TEST_MODE
   end
 
@@ -563,6 +563,7 @@ class Payment < ActiveRecord::Base
   # - sets payment_gateway_fee_cents based on balance response, this currently works only for Stripe
 
   def set_pg_fee(response)
+    return unless payment_gateway.direct_charge?
     return unless payment_gateway.respond_to?(:find_balance)
     return if response.blank? || response.params.blank? || (balance_id = response.params['balance_transaction']).blank?
 

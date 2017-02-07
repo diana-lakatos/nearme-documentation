@@ -98,7 +98,7 @@
                             {% assign industry_categories = user.fetch_buyer_categories["industry"] %}
                             {% assign languages = user.fetch_buyer_categories["languages"] %}
 
-                            {% if aoe_categories.size > 0 || industry_categories.size > 0 || languages.size > 0 || user.buyer_properties.bio != blank %}
+                            {% if aoe_categories.size > 0 or industry_categories.size > 0 or languages.size > 0 or user.buyer_properties.bio != blank %}
                                 <div class="content">
                                     <div class="props">
                                     {% if industry_categories.size > 0 %}

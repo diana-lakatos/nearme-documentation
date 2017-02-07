@@ -692,6 +692,7 @@ en:
         bank_account_number: "Please enter your bank account number. It should consist of digits only"
         owners:
           dob_formated: 'Valid format: MM-DD-YYYY'
+          document: 'The file upload must include a clear view of both the front and back of your ID to be authorized'
       page:
         slug: 'Used as a part of URL'
         no_layout: 'When enabled only content of the page will be displayed, without any additional HTML'

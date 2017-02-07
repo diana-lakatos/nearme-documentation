@@ -60,18 +60,31 @@ custom_attributes:
     html_tag: check_box_list
     hint: 'Select all that apply'
     attribute_type: array
+    wrapper_html_options_string: ' '
     validation:
       required: false
       valid_values: ['Minority and Women-owned Business Enterprise (M/WBE)', 'Locally-Based Enterprise (LBE)', 'Emerging Business Enterprise (EBE)', 'Small Disadvantaged Business (SDB)', 'Service-Disabled Veteran-Owned Small Business (SDV)', 'B Corporation (B Corp)', 'Other']
 
-  - name: company_description
-    label: "Company Description"
-    html_tag: textarea
-    attribute_type: string
+  - name: other_certifications
+    label: Other Certifications
     input_html_options_string: >-
       data-markdown-editor => ''
+    html_tag: textarea
+    attribute_type: string
     validation:
       required: false
+
+
+  - name: company_description
+    label: "Company Description"
+    hint: Displayed on search listing page
+    html_tag: textarea
+    attribute_type: string
+    input_html_options_string: "data-counter-limit=>500,class=>large"
+    validation:
+      required: false
+      max_length: 500
+      validation_only_on_update: true
 
   - name: our_story
     label: "Our Story"
@@ -160,16 +173,7 @@ custom_attributes:
       data-markdown-editor => ''
     wrapper_html_options_string: ''
 
-  - name: other_certifications
-    label: Other Certifications
-    input_html_options_string: >-
-      data-markdown-editor => ''
-    html_tag: textarea
-    attribute_type: string
-    validation:
-      required: false
-
-  - name: company_logo
+  - name: logo
     label: 'Company Logo'
     attribute_type: photo
     html_tag: input
@@ -178,24 +182,6 @@ custom_attributes:
         width: 200
         height: 200
         transform: resize_to_fit
-      thumb:
-        width: 70
-        height: 70
-        transform: resize_to_fill
-      normal:
-        width: 1280
-        height: 880
-        transform: resize_to_fit
-
-  - name: owner_image
-    label: 'Owner Portrait'
-    attribute_type: photo
-    html_tag: input
-    versions_configuration:
-      mini:
-        width: 200
-        height: 200
-        transform: resize_to_fill
       thumb:
         width: 70
         height: 70
@@ -214,7 +200,7 @@ custom_attributes:
       mini:
         width: 700
         height: 200
-        transform: resize_to_fit
+        transform: resize_to_fill
       thumb:
         width: 100
         height: 100
@@ -255,14 +241,14 @@ form_components:
     fields:
       - buyer: company_name
       - buyer: company_description
-      - buyer: company_logo
+      - buyer: logo
+      - user: avatar
       - buyer: Category - Industry
       - buyer: Category - Language
       - buyer: hours_days_of_operation
       - buyer: availability
       - buyer: certifications
       - buyer: other_certifications
-      - buyer: owner_image
       - buyer: workplace_team_image
       - buyer: our_story
       - buyer: awards

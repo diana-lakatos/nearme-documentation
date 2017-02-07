@@ -70,9 +70,10 @@
   {% input bank_account_number, required: true %}
 
   <div class='nested-fields-set'>
+    {% assign master_owner = true %}
     {% fields_for owners %}
-      {% assign stripe_connect_owner_fields_count = 0 %}
       {% include 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', merchant_account: merchant_account %}
+      {% assign master_owner = false %}
     {% endfields_for %}
   </div>
 

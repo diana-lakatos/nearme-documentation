@@ -86,8 +86,13 @@ en:
         bookings: '%{total} offers'
 
     transactables:
+      manage: 'Manage Orders'
+
+      edit: 'Edit your Order'
+      list_new_item: 'Create a new Order'
       view_html: View Order
       title:
+        manage: Manage
         listings: My Orders
 
     manage_listings:
@@ -102,14 +107,13 @@ en:
       full_text: General search...
 
   transactable_type:
-    project:
+    order:
       labels:
         name: Order Title
-        description: Vignette of a Scope (describe the project)
+        order_description: Vignette of a Scope (describe your order)
       placeholders:
         name: Enter Title
-        description: Description, format of delivery, any other requirements
-
+        order_description: Description, format of delivery, any other requirements
 
   general:
     generic_lessee_term: purchaser
@@ -124,6 +128,9 @@ en:
           pricings:
             is_free_booking: 'Please define project type?'
     hints:
+      shared:
+        categories:
+          language: 'Select relevant languages proficiency'
       user:
         verify_number: 'Verifying your mobile number allows you to take advantage of Click to Call functionality. This allows you to communicate with vendors without sharing your private number information.'
       buyer_profile:

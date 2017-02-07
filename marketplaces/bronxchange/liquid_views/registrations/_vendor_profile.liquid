@@ -7,9 +7,7 @@
       <img src="{{ g.user.logo[0].mini }}" alt="{{ user.buyer_properties.company_name }}" itemprop="logo">
       {% endif %}
 
-      {% if g.user.owner_photo[0] != blank %}
-      <img src="{{ g.user.owner_photo[0].mini }}" alt="{{ user.full_name }}">
-      {% endif %}
+      <img src="{{ user.avatar_url_big }}" alt="{{ user.name }}">
     </div>
 
     <div class="desc">
@@ -35,30 +33,7 @@
     </div>
   </header>
 
-
-  <div class="user-profile-a-options">
-      {% if current_user.id != user.id %}
-      <ul>
-        {% if current_user != blank and current_user.has_seller_profile? %}
-        <li class="begin-collaboration">
-          {% if current_user.seller_profile.onboarding_at == blank %}
-            <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Request Proposal</a>
-          {% else %}
-            <a href="#collaboration-{{ user.id }}" class="button-a" data-collaborations-trigger>Request Proposal</a>
-          {% endif %}
-        </li>
-        {% endif %}
-
-        <li><a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Send Message</a></li>
-
-        {% if current_user.has_seller_profile? %}
-          <li>{% include 'shared/components/wish_list_button_injection.html', object: user %}</li>
-        {% endif %}
-
-      </ul>
-    {% endif %}
-  </div>
-
+  {% include "registrations/lister_actions", user: user %}
 
   <div class="user-profile-a-full-description">
     <div class="main">
@@ -81,8 +56,16 @@
 
         {% if user.buyer_properties.certifications != blank %}
         <h3>Certifications</h3>
-        {{ user.buyer_properties.certifications }}
         {% assign certs = user.buyer_properties.certifications  %}
+        <ul class="certifications-a">
+        {% for cert in certs %}
+          <li>
+            {% if cert == 'Other' %}
+            {{ user.buyer_properties.other_certifications }}
+            {% else %}{{ cert }}{% endif %}
+          </li>
+        {% endfor %}
+        </ul>
         {% endif %}
 
         {% if user.buyer_properties.awards != blank %}
@@ -90,10 +73,7 @@
         {{ user.buyer_properties.awards | markdownify }}
         {% endif %}
 
-        {% if user.buyer_properties.media != blank %}
-        <h3>Media</h3>
-        {{ user.buyer_properties.media | markdownify }}
-        {% endif %}
+        {% include "registrations/media", user: user %}
 
         {% if user.buyer_properties.clients != blank %}
         <h3>Clients</h3>
@@ -121,18 +101,21 @@
         {% endif %}
       </div>
 
+      {% assign languages = user.formatted_buyer_categories["Language"] %}
+      {% if languages.children.size > 0 %}
       <div class="languages">
         <h3>Languages</h3>
         <ul>
-          <li>English</li>
-          <li>Italian</li>
+          {% for language in languages.children %}
+          <li>{{ language }}</li>
+          {% endfor %}
         </ul>
+
+        <p><a href="{{ user.user_profile_url }}" class="more-a">View more</a></p>
       </div>
-
-
+      {% endif %}
 
       {% if user.tag_list.size > 0 %}
-
       <div class="tags-a tags-short-list">
         <h4>Tags</h4>
         <ul>
@@ -141,11 +124,10 @@
           {% endfor %}
         </ul>
       </div>
-
       {% endif %}
 
-
       <hr>
+
       <a class="button-b action-flag" href="#" data-href="{{ user.inappropriate_report_path }}" data-modal="true">{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
     </div>
   </div>

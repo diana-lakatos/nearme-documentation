@@ -20,7 +20,8 @@ module MarketplaceBuilder
       def default_template_options
         {
           inject_pages: 'any_page',
-          position: 'head_bottom'
+          position: 'head_bottom',
+          enabled: true
         }
       end
 

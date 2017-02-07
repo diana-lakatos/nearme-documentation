@@ -130,6 +130,18 @@
       }
     }
 
+    .filter.multiline {
+      margin-top: 20px;
+    }
+
+    .filter.download-export {
+      margin-top: 20px;
+    }
+
+    .filter.download-export.multiline {
+      margin-top: 40px;
+    }
+
     .search {
       position: relative;
       width: 320px;
@@ -145,6 +157,10 @@
         right: 7px;
 
       }
+    }
+
+    .search.smaller {
+      width: 160px;
     }
   }
 

@@ -6,32 +6,15 @@ custom_attributes:
   # We use custom attributes for some fields that are in user to avoid
   # messing with the translations (as fields may have a different title
   # for seller)
-  - name: profile_photo
-    label: 'Profile Photo'
-    attribute_type: photo
-    html_tag: input
-    versions_configuration:
-      mini:
-        width: 640
-        height: 440
-        transform: resize_to_fill
-      thumb:
-        width: 70
-        height: 70
-        transform: resize_to_fill
-      normal:
-        width: 1280
-        height: 880
-        transform: resize_to_fit
-  - name: user_logo
+  - name: logo
     label: 'Logo'
     attribute_type: photo
     html_tag: input
     versions_configuration:
       mini:
-        width: 640
-        height: 440
-        transform: resize_to_fill
+        width: 200
+        height: 200
+        transform: resize_to_fit
       thumb:
         width: 70
         height: 70
@@ -41,13 +24,25 @@ custom_attributes:
         height: 880
         transform: resize_to_fit
   - name: organization_name
-    label: 'Organization Name'
+    label: 'What is the name of your organization?'
     html_tag: input
     attribute_type: string
     validation:
-      required: false
-  - name: organizational_mission
-    label: 'Organizational Mission'
+      required: true
+      validation_only_on_update: true
+
+  - name: organization_description
+    label: 'Organization Description'
+    hint: 'Tell the potential vendors a bit about your company or organization.'
+    html_tag: textarea
+    attribute_type: string
+    input_html_options_string: "class=>large"
+    validation:
+      required: true
+      validation_only_on_update: true
+
+  - name: organization_mission
+    label: 'Organization Mission'
     html_tag: textarea
     attribute_type: string
     validation:
@@ -65,8 +60,8 @@ form_components:
     name: General
     fields:
       - user: name
-      - seller: profile_photo
-      - seller: user_logo
+      - user: avatar
+      - seller: logo
       - user: email
       - user: current_address
       - user: phone
@@ -75,7 +70,8 @@ form_components:
     name: Organization
     fields:
       - seller: organization_name
-      - seller: organizational_mission
+      - seller: organization_description
+      - seller: organization_mission
 
   - type: seller_profile_types
     name: Password

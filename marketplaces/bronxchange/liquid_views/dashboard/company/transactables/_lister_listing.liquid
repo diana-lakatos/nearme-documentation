@@ -1,0 +1,101 @@
+{% for transactable in transactables -%}
+  {% assign collaborator = transactable.transactable_collaborators[0] -%}
+  {% assign offer = transactable.not_cancelled_orders | detect: user_id: collaborator.user.id -%}
+  <article class="listing-b" id="transactable_{{transactable.id}}">
+    <header>
+      <h2>{{ transactable.name }}</h2>
+
+      {% if current_status != 'archived' -%}
+        <a href="{{ transactable.show_path }}" class="btn btn-primary btn-sm" rel="external">Visit order page</a>
+      {% endif -%}
+
+      {% if transactable.state == 'completed' -%}
+        <span class="label label-success">Completed</span>
+      {% elsif transactable.state == 'cancelled' -%}
+        <span class="label label-warning">Cancelled</span>
+      {% endif -%}
+    </header>
+
+    <div class="listing-b-inner">
+      <div class="listing-b-booking-details">
+        <dl class="properties">
+          <dt>Contact person:</dt>
+          <dd>{{ transactable.properties.order_contact }}</dd>
+
+          <dt>Purchase Number:</dt>
+          <dd>{{ transactable.properties.purchase_order_number }}</dd>
+
+          <dt>Budget:</dt>
+          <dd>{{ transactable.properties.approximate_budget }}</dd>
+        </dl>
+
+        <div class="actions">
+          {% if current_status == 'pending' -%}
+            <a href='{{ transactable.edit_path }}' class="btn btn-default btn-sm">Edit details</a>
+          {% endif -%}
+
+          {% if current_status == 'in progress' %}
+            <a href="{{ offer.order_complete_url }}" data-method="post" class="btn btn-default btn-sm" data-confirm="Are you sure you want to mark this order as completed?">Mark as completed</a>
+          {% endif %}
+
+          {% if current_status != 'archived' -%}
+              <a href='{{ transactable.cancel_path | append: "?status=" | append: current_status }}' data-confirm="Are you sure you want to cancel this order?" class="btn btn-default btn-sm">Cancel Order</a>
+          {% endif -%}
+        </div>
+      </div>
+
+      <div class="listing-b-user-details">
+        {% if collaborator == blank -%}
+          <h3 class="no-collaborator-selected">You have not selected a vendor for this order yet.</h3>
+        {% else -%}
+          {% assign enquirer = collaborator.user -%}
+          <div class="user-profile">
+
+            <figure class="avatar">
+              <a href="{{ enquirer.user_profile_url }}" rel="external"><img src="{{ enquirer.avatar_url_big }}" alt="{{ enquirer.name }}"></a>
+
+              {% if collaborator.transactable_user_messages.size == 0 -%}
+                {% assign message_url = 'new_listing_user_message_path' | generate_url: transactable.id, user_id: collaborator.user.id, skip: true -%}
+              {% else -%}
+                {% assign message_url = 'dashboard_user_message_path' | generate_url: collaborator.transactable_user_messages.first.id -%}
+              {% endif -%}
+
+              <a data-modal="true" class="action-message" href="{{ message_url }}">Message</a>
+            </figure>
+
+            <h3><a href="{{ enquirer.user_profile_url }}" rel="external">{{ enquirer.name }}</a></h3>
+            <h4>{{ enquirer.buyer_properties.company_name }}</h3>
+            {% if enquirer.buyer_properties.company_description != blank -%}
+            <p class="bio">{{ enquirer.buyer_properties.company_description | slice: 0, 100 | nl2br }}&hellip; <a href="{{ enquirer.user_profile_url }}" rel="external">More</a></p>
+            {% endif -%}
+          </div>
+
+          {% if transactable.state == 'pending' and collaborator != blank -%}
+            {% if offer != blank and offer.unconfirmed? -%}
+              <div class="alert alert-info">Approved by enquirer, waiting for your payment</div>
+            {% elsif offer != blank and offer.rejected? -%}
+              <div class="alert alert-warning">Approved by enquirer, waiting for your payment</div>
+            {% else -%}
+              <div class="alert alert-info">Waiting for enquirer to approve</div>
+            {% endif -%}
+          {% endif -%}
+
+          {% if offer != blank and current_status == 'pending' and offer.unconfirmed? -%}
+          <p class="actions">
+            <a class="btn btn-primary btn-sm" data-modal="true" href="{{ 'new_dashboard_company_orders_received_payment_path' | generate_url: offer.id }}">Pay now</a>
+            <a class="btn btn-default btn-sm" data-modal="true" href="{{ 'rejection_form_dashboard_company_orders_received_path' | generate_url: offer.id, listing_id: transactable.id }}">Reject Offer</a>
+          </p>
+          {% endif -%}
+
+          {% if offer == blank -%}
+          <p class="actions">
+            <a class="btn btn-default btn-sm" href="{{ collaborator.destroy_path }}" data-method="delete" data-confirm="Are you sure you want to cancel this offer request?">Cancel request</a>
+          </p>
+          {% endif -%}
+
+          <p class="invite-sent"><small>Invite Sent: {{ collaborator.created_at | to_date | l: 'short' }}</small></p>
+        {% endif -%}
+      </div>
+    </div>
+  </article>
+{% endfor -%}

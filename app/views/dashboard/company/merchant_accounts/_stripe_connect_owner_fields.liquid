@@ -4,13 +4,12 @@
 {% endunless %}
 
 <div class='panel nested-fields with-border'>
-  {% unless stripe_connect_owner_fields_count == 0 %}
+  {% unless master_owner %}
     <h3>{{ 'dashboard.merchant_account.additional_owners' | translate }}</h3>
   {% endunless %}
 
   {% input first_name, form: owners, required: true %}
   {% input last_name, form: owners, required: true %}
-
   {% if 'US CA' contains  merchant_account.iso_country_code %}
     {% input personal_id_number, form: owners, required: true, wrapper_html-data-account-type: 'individual' %}
     {% input business_tax_id, form: owners, required: true, wrapper_html-data-account-type: 'company' %}
