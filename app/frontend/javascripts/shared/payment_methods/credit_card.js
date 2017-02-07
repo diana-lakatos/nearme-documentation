@@ -84,6 +84,7 @@ class PaymentMethodCreditCard {
       that = this;
 
     $form.off('submit').on('submit', (event) => {
+      event.stopPropagation();
       event.preventDefault();
 
       var CCFormVisible = $(that._ui.container).find('.payment-source-form.hidden').size() === 0;
