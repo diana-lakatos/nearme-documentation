@@ -12,6 +12,7 @@ module MarketplaceBuilder
       Serializers::TopicSerializer               => 'yml',
       Serializers::CustomModelTypeSerializer     => 'yml',
       Serializers::WorkflowSerializer            => 'yml',
+      Serializers::RatingSystemSerializer        => 'yml',
 
       Serializers::PageSerializer          => 'liquid',
       Serializers::ContentHolderSerializer => 'liquid',

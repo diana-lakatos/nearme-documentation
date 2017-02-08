@@ -253,6 +253,22 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal js_content, 'js content'
   end
 
+  def setup_rating_system
+    rating_system = @instance.rating_systems.create! subject: 'host', transactable_type: @instance.transactable_types.first, active: true
+    rating_system.rating_questions.create! text: 'Example question?'
+
+    rating_system.rating_hints.create! value: 1, description: 'Bad'
+    rating_system.rating_hints.create! value: 2, description: 'Good'
+  end
+
+  def should_export_rating_systems
+    yaml_content = read_exported_file('rating_systems/host.yml')
+    assert_equal yaml_content, {"subject"=>"host", "active"=>true, 
+                                "rating_questions"=>[{"text"=>"Example question?"}],
+                                "rating_hints"=>[{"value"=>"2", "description"=>"Good"}, {"value"=>"1", "description"=>"Bad"}], 
+                                "transactable_type"=>"Car"}
+  end
+
   private
 
   def read_exported_file(path, reader = :yml)
