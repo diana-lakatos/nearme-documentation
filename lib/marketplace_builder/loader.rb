@@ -18,6 +18,7 @@ module MarketplaceBuilder
       Creators::CustomModelTypesCreator,
       Creators::GraphQueriesCreator,
       Creators::CustomThemesCreator,
+      Creators::RatingSystemCreator
     ]
 
     def self.load(source, options = {})

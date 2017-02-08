@@ -143,6 +143,24 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
     assert_includes custom_asset.file.read, 'h1 { font-size: 100px }'
   end
 
+  def should_import_rating_system
+    assert_equal 1, @instance.rating_systems.count
+    rating_system = @instance.rating_systems.first
+
+    assert_equal rating_system.subject, 'host'
+    assert_equal rating_system.active, true
+    assert_equal rating_system.transactable_type.name, 'Car'
+
+    rating_question = rating_system.rating_questions.first
+    assert_equal rating_question.text, 'Example question?'
+
+    rating_hints = rating_system.rating_hints
+    assert_equal rating_hints.first.value, '2'
+    assert_equal rating_hints.first.description, 'Good'
+    assert_equal rating_hints.last.value, '1'
+    assert_equal rating_hints.last.description, 'Bad'
+  end
+
   private
 
   def run_all_should_import_methods
