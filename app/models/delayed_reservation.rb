@@ -68,7 +68,7 @@ class DelayedReservation < Reservation
   def rebuild_first_line_item
     if transactable_line_items.any?
       transactable_line_items.destroy_all
-      transactable_line_items.build(
+      transactable_line_items.create!(
         user: user,
         name: transactable.name,
         quantity: self.quantity,
