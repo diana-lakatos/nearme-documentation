@@ -257,6 +257,7 @@ en:
     deleting: "Deleting..."
     banning: "Banning..."
     unbanning: "Unbanning..."
+    details: 'Details'
   transactable_types:
     locations:
       listings:

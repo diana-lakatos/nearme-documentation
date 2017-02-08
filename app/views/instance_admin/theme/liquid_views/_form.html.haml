@@ -2,7 +2,9 @@
   .content-container
     %h4
       = link_to 'Manage liquid view', instance_admin_theme_liquid_views_url
-      =  "> #{pretty_path(@liquid_view.path)}" if @liquid_view.path
+      - if @liquid_view.path
+        &rsaquo;
+        = pretty_path(@liquid_view.path)
 
     .row
       .input-container.col-xs-12
