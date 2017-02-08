@@ -9,6 +9,17 @@ db:
   # volumes_from:
   #   - dbdata
 
+db-oregon:
+  image: aidanlister/postgres-hstore
+  ports:
+    - "5433:5432"
+  environment:
+    POSTGRES_PASSWORD: nearme
+    POSTGRES_USER: nearme
+    POSTGRES_DB: desksnearme_development
+  # volumes_from:
+  #   - dbdata
+
 db-test:
   image: aidanlister/postgres-hstore
   ports:

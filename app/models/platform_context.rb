@@ -44,6 +44,11 @@ class PlatformContext
     after_setting_current_callback(platform_context) if platform_context.present?
   end
 
+  def self.set(object)
+    instance = object.is_a?(Integer) ? Instance.find(object) : object
+    self.current = PlatformContext.new(instance)
+  end
+
   def self.after_setting_current_callback(platform_context)
     return unless platform_context.instance
     ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.instance.db_connection_string.present?
