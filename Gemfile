@@ -4,6 +4,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '4.2.7.1'
 gem 'pg'
+gem 'will_paginate'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'patron'
@@ -79,7 +80,6 @@ gem 'state_machine', '~> 1.2.0'
 gem 'state_machines-activerecord'
 gem 'awesome_nested_set', require: false
 gem 'font-awesome-rails'
-gem 'will_paginate'
 
 gem 'delayed_job_active_record'
 gem 'delayed_job_recurring'
@@ -156,6 +156,8 @@ end
 
 group :development, :test, :staging do
   gem 'byebug', require: 'byebug'
+  gem 'pry-rails'
+  gem 'awesome_print'
 end
 
 group :development, :staging do
@@ -220,8 +222,6 @@ gem 'figaro'
 gem 'wicked'
 gem 'carmen'
 
-gem 'pry-rails'
-gem 'awesome_print'
 gem 'i18n_data'
 
 gem 'parser', require: false

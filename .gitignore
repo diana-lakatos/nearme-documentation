@@ -54,3 +54,4 @@ vendor/assets/bower_components
 *.sublime-workspace
 *.org
 .vscode
+.pryrc

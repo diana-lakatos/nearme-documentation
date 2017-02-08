@@ -16,8 +16,6 @@ module Elastic
       @filters = profiles_filters
 
       {
-        size: query_limit,
-        from: query_offset,
         sort: sorting_options,
         query: match_query,
         filter: {
@@ -180,7 +178,7 @@ module Elastic
         user_profiles_filters <<
           {
             match: {
-              "user_profiles.customizations.#{key}.raw" => value.to_s.split(',').join(' OR ')
+              "user_profiles.customizations.#{key}" => value.to_s.split(',').join(' OR ')
             }
           }
       end

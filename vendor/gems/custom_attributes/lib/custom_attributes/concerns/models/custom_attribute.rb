@@ -150,9 +150,7 @@ module CustomAttributes
 
           def self.custom_attributes_mapper(_klass, targets)
             if _klass.table_exists?
-              all_custom_attributes = self
-                                      .where(target: targets)
-                                      .pluck(:name, :attribute_type).uniq
+              all_custom_attributes = self.where(target: targets).pluck(:name, :attribute_type).uniq
 
               all_custom_attributes.map do |name, type|
                 yield [name, attribute_type_to_es_type(type)]
@@ -180,7 +178,7 @@ module CustomAttributes
               val = object.properties.send(name)
               val = Array(val).map { |v| coerce(v, type) }
               if custom_attributes[name].present?
-                (Array(custom_attributes[name]) + val).flatten
+                custom_attributes[name].concat val
               else
                 custom_attributes[name] = (val.size == 1 ? val.first : val)
               end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class ReviewAggregator
+  include ActiveModel::SerializerSupport
   attr_reader :user
 
   def initialize(user)

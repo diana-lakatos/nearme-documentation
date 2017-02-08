@@ -56,17 +56,17 @@
                         <div class="wrapper">
                             <header class="header">
                                 <figure>
-                                    <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+                                    <img src="{{ user.avatar.big.url | asset_url }}" alt="{{ user.name }}">
                                 </figure>
                                 <h2><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h2>
 
                                 <div class="properties">
                                     <p class="price">
-                                        <strong>{{ user.buyer_properties.hourly_rate_decimal | price_with_cents_with_currency }} USD / hr</strong>
+                                        <strong>{{ user.profiles.buyer.properties.hourly_rate_decimal | price_with_cents_with_currency }} USD / hr</strong>
                                     </p>
                                     <dl class="property">
                                         <dt>Discounts:</dt>
-                                        <dd>{{ user.buyer_properties.discounts_available | humanize }}</dd>
+                                        <dd>{{ user.profiles.buyer.properties.discounts_available | humanize }}</dd>
                                     </dl>
                                 </div>
 
@@ -86,19 +86,22 @@
                                 {% include 'shared/components/wish_list_button_injection', object: user, link_to_classes: 'button-b action-favorite' %}
                               {% endif %}
                             </li>
-                            {% if user.has_active_blog? %}
+
+                            {% if user.blog.enabled %}
                               <li><a href="{{ user.user_blog_posts_list_path }}" class="button-b action-blog">View Blog</a></li>
                             {% endif %}
-                            {% if user.buyer_properties['linkedin_url'] != blank %}
-                              <li><a href="{{ user.buyer_properties['linkedin_url'] }}" class="button-b action-linkedin" target="_blank">LinkedIn Bio</a></li>
+
+
+                            {% if user.profiles.buyer.properties['linkedin_url'] != blank %}
+                              <li><a href="{{ user.profiles.buyer.properties['linkedin_url'] }}" class="button-b action-linkedin" target="_blank">LinkedIn Bio</a></li>
                             {% endif %}
                             </ul>
 
-                            {% assign aoe_categories = user.fetch_buyer_categories["area-of-expertise"] %}
-                            {% assign industry_categories = user.fetch_buyer_categories["industry"] %}
-                            {% assign languages = user.fetch_buyer_categories["languages"] %}
+                            {% assign aoe_categories = user.category_tree["Area Of Expertise"] %}
+                            {% assign industry_categories = user.category_tree["Industry"] %}
+                            {% assign languages = user.category_tree["Languages"] %}
 
-                            {% if aoe_categories.size > 0 or industry_categories.size > 0 or languages.size > 0 or user.buyer_properties.bio != blank %}
+                            {% if aoe_categories.size > 0 or industry_categories.size > 0 or languages.size > 0 or user.profiles.buyer.properties['bio'] != blank %}
                                 <div class="content">
                                     <div class="props">
                                     {% if industry_categories.size > 0 %}
@@ -106,7 +109,7 @@
                                             <h3>Industry</h3>
                                             <ul class="short-list">
                                                 {% for industry in industry_categories %}
-                                                <li>{{ industry }}</li>
+                                                <li>{{ industry.name }}</li>
                                                 {% endfor %}
                                             </ul>
                                         </div>
@@ -117,7 +120,7 @@
                                             <h3>Area of Expertise</h3>
                                             <ul class="short-list">
                                                 {% for expertise in aoe_categories %}
-                                                <li>{{ expertise }}</li>
+                                                <li>{{ expertise.name }}</li>
                                                 {% endfor %}
                                             </ul>
                                         </div>
@@ -126,21 +129,21 @@
                                     {% if languages.size > 0 %}
                                         <div class="prop">
                                             <h3>Languages</h3>
-                                            <p>{{ languages | join: ', ' }}</p>
+                                            <p>{{ languages | map: 'name' | join: ', ' }}</p>
                                         </div>
                                     {% endif %}
 
                                     </div>
 
-                                    {% if user.buyer_properties.bio != blank %}
+                                    {% if user.profiles.buyer.properties['bio'] != blank %}
                                         <h3>Bio</h3>
-                                        {% if user.buyer_properties.bio.size > 350 %}
+                                        {% if user.profiles.buyer.properties['bio'].size > 350 %}
                                            <div data-shorten-description>
-                                            <p data-description>{{ user.buyer_properties.bio | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
-                                            <div style='display: none;'  class="rest_of_text">{{ user.buyer_properties.bio | slice: 350, user.buyer_properties.bio.size | nl2br }}</div>
+                                            <p data-description>{{ user.profiles.buyer.properties['bio'] | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+                                            <div style='display: none;'  class="rest_of_text">{{ user.profiles.buyer.properties['bio'] | slice: 350, user.profiles.buyer.properties['bio'].size | nl2br }}</div>
                                           </div>
                                         {% else %}
-                                          <p>{{ user.buyer_properties.bio }}</p>
+                                          <p>{{ user.profiles.buyer.properties['bio'] }}</p>
                                         {% endif %}
                                     {% endif %}
                               </div>

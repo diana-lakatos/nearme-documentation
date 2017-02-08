@@ -64,7 +64,7 @@ class Domain < ActiveRecord::Base
 
   def self.where_hostname(hostname)
     domain_lookup(hostname).each do |host|
-      break if @domain = where('name ilike ?', host).first
+      break if @domain = find_by(name: host)
     end
     @domain
   end

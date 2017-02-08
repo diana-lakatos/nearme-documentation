@@ -1,8 +1,6 @@
 # frozen_string_literal: true
-class UserDrop < BaseDrop
-  include ActionView::Helpers::AssetUrlHelper
+class UserDrop < UserBaseDrop
   include CategoriesHelper
-  include ClickToCallButtonHelper
   include ReservationsHelper
 
   # @!method id
@@ -119,6 +117,7 @@ class UserDrop < BaseDrop
            :has_active_credit_cards?, :has_active_bank_accounts?,
            :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
            :company_name, :instance_admins_metadata, :total_reviews_count, :reviews_counter, :companies, :instance_admin?,
+           :avatar,
            :instance_admin?, :user_messages_received, :valid?, :last_sign_in_at, :left_by_seller_average_rating,
            :left_by_buyer_average_rating, :followers_count, :following_count, to: :source
 
@@ -417,38 +416,19 @@ class UserDrop < BaseDrop
   # @return [String] url to the "big" version of a user's avatar image
   # @todo -- depracate url for filter
   def avatar_url_big
-    ActionController::Base.helpers.asset_url(@source.avatar_url(:big))
+    asset_url(@source.avatar_url(:big))
   end
 
   # @return [String] url to the "thumb" version of a user's avatar image
   # @todo -- depracate url for filter
   def avatar_url_thumb
-    ActionController::Base.helpers.asset_url(@source.avatar_url(:thumb))
+    asset_url(@source.avatar_url(:thumb))
   end
 
   # @return [String] url to the "bigger" version of a user's avatar image
   # @todo -- depracate url for filter
   def avatar_url_bigger
-    ActionController::Base.helpers.asset_url(@source.avatar_url(:bigger))
-  end
-
-  # @return [String] path to a user's public profile
-  # @todo -- depracate url for filter
-  def profile_path
-    routes.profile_path(@source.slug)
-  end
-
-  # @return [String] path to the section in the application for sending a message to this user using the
-  #   marketplace's internal messaging system
-  # @todo -- depracate url for filter
-  def user_message_path
-    routes.new_user_user_message_path(user_id: @source.slug)
-  end
-
-  # @return [String] path to the user's blog
-  # @todo -- depracate url for filter
-  def user_blog_posts_list_path
-    routes.user_blog_posts_list_path(@source.slug)
+    asset_url(@source.avatar_url(:bigger))
   end
 
   # @return [Boolean] whether the marketplace has blogging enabled and the user has a blog enabled for his account
@@ -493,8 +473,8 @@ class UserDrop < BaseDrop
   # @return [Hash{String => Array}] returns hash of categories !{ "name" => [array with category names] } }
   #   for this user's buyer profile
   # @todo -- investigate if its possible to leave formatting for users (DIY)
-  def fetch_buyer_categories
-    @user_categories ||= CategoryRepository.paths @source.category_ids
+  def buyer_category_tree
+    @source.category_tree
   end
 
   # @return [Hash{String => Hash{String => String, Array}}] returns hash of categories !{ "name" => { "name" => 'translated_name', "children" => [array with children] } }
@@ -589,13 +569,6 @@ class UserDrop < BaseDrop
   # @return [Integer] total count of reviewable orders (confirmed and archived)
   def completed_orders_count
     @source.orders.reviewable.count
-  end
-
-  # @return [String, nil] click to call button for this user if enabled for this
-  #   marketplace
-  # @todo -- depracate in favor of DIY - especially looking at logic in this helper, this will be very hard to document at all
-  def click_to_call_button
-    build_click_to_call_button_for_user(@source)
   end
 
   # @return [String, nil] click to call button for this user if enabled for this
@@ -776,5 +749,9 @@ class UserDrop < BaseDrop
   #   sites for this user (Twitter, Facebook etc.)
   def social_connections
     @social_connections_cache ||= @source.social_connections
+  end
+
+  def asset_url(*args)
+    ActionController::Base.helpers.asset_url(*args)
   end
 end
