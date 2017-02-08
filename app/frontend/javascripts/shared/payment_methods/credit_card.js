@@ -174,9 +174,10 @@ class PaymentMethodCreditCard {
 
   _successResponse(response) {
     var $form = $('#checkout-form, #new_payment');
-    if (response.saved) {
-      if ($form.attr('data-redirect-to')) {
-        window.location.replace($form.attr('data-redirect-to'));
+    if (response.saved || response.redirect) {
+      const redirectUrl = $form.attr('data-redirect-to') || response.redirect;
+      if (redirectUrl) {
+        window.location.replace(redirectUrl);
       } else {
         window.location.reload();
       }
