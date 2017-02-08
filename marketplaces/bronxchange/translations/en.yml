@@ -199,28 +199,89 @@ en:
       unselected_state: Add to Favorites
 
   flash_messages:
-    space_wizard:
-      space_listed: You have successfully completed profile!
-    listings:
-      no_longer_have_access: "You no longer have an access to this project."
+    buy_sell:
+      no_payment_gateway: "This purchaser does not support payments for the selected country."
     dashboard:
-      locations:
-        add_your_company: Please complete your Order first.
-      add_your_company: Please complete your Order first.
-      order_items:
-        updated: 'Expenses have been updated.'
-        approved: 'Expenses have been approved.'
-        rejected: 'Expenses have been rejected'
-        approve_failed: 'Your Credit Card could not be charged.'
-        reject_failed: 'Expenses could not be rejected'
-        can_not_edit_accepted_order_item: "You can\'t edit accepted expenses."
-        recently_edited: "Looks like total amount of expenses has changed. Please verify total price and reaccept."
-    manage:
-      order:
-        can_not_approve: "Can't approve offer with pending expenses. Please approve or reject all pending expenses."
-
+      add_your_company: "Please complete your profile and create the order first."
+      buyer:
+        updated: "Vendor profile has been updated"
       listings:
-        listing_cancelled: "Your project has been canceled."
+        listing_cancelled: "Your order has been archived."
+        listing_deleted: "Your order has been deleted."
+        listing_updated: "Great, your order's details have been updated."
+      locations:
+        add_your_company: "Please complete your profile and create the order first."
+      no_bookings: "You haven't made any orders yet!"
+      offer:
+        accepted: "You have successfuly paid and accepted an offer."
+      order:
+        approved: "Your order has been moved to archive"
+        canceled: "Your order is now archived."
+      order_items:
+        approve_failed: "Your Credit Card could not be charged."
+        approved: "Expenses have been approved."
+        can_not_edit_accepted_order_item: "You can't edit accepted expenses."
+        recently_edited: "Looks like total amount of expenses has changed. Please verify total price and reaccept."
+        reject_failed: "Expenses could not be rejected"
+        rejected: "Expenses have been rejected"
+        updated: "Expenses have been updated."
+      reservations:
+        lender_confirmed_both_side_confirmation: "You have confirmed the order!"
+        reservation_already_confirmed: "This order has already been confirmed."
+        reservation_cancelled: "You have cancelled this order."
+        reservation_confirmed: "You have confirmed the order!"
+        reservation_not_confirmed: "Your order could not be confirmed."
+        reservation_rejected: "You have rejected the order. Maybe next time!"
+      seller:
+        updated: "Purchaser profile has been updated"
+    instance_admin:
+      manage:
+        reservation_types:
+          created: "Order Type created"
+          deleted: "Order Type deleted"
+          updated: "Order Type updated"
+      reports:
+        listings:
+          successfully_deleted: "The order has been successfully deleted."
+      settings:
+        listing_type_added: "New Order type added."
+        listing_type_not_added: "Could not add new Order type."
+    listings:
+      listing_disabled: "Your order has been temporarily disabled by the owner. Displaying other orders in this location."
+      listing_disabled_but_admin: "Your order has been temporarily disabled by the owner. Other users will not be able to browse it."
+      listing_inactive: "Your order is inactive. Displaying other orders in this location."
+      no_longer_have_access: "You no longer have an access to this order."
+    manage:
+      listings:
+        listing_cancelled: "Your order has been marked as completed."
+        listing_deleted: "Your order has been deleted."
+        listing_updated: "Great, your order's details have been updated."
+      order:
+        approved: "Your order has been moved to archive."
+        can_not_approve: "Can't approve offer with pending expenses. Please approve or reject all pending expenses."
+        canceled: "Your order is now archived."
+      reservations:
+        reservation_already_confirmed: "This order has already been confirmed."
+        reservation_cancelled: "You have cancelled this order."
+        reservation_confirmed: "You have confirmed the order!"
+        reservation_confirmed_but_not_charged: "You have confirmed the order, however we were not able to capture payment. We have reached out to driver to notify him about the issue."
+        reservation_not_confirmed: "Your order could not be confirmed."
+        reservation_rejected: "You have rejected the order. Maybe next time!"
+    reservations:
+      credit_card_will_be_charged: "Your credit card will be charged when your order is confirmed by the purchaser."
+      invalid_operation: "Not a valid order operation."
+      reservation_cancelled: "You have cancelled your order."
+      reservation_made: "Your order has been made! %{message}"
+      reservation_not_cancellable: "This order can not be canceled anymore."
+      reservation_not_confirmed: "Your order could not be confirmed."
+    space_wizard:
+      item_listed: "You have successfully completed profile and created the order!"
+      space_listed: "You have successfully completed profile and created the order!"
+    support:
+      offer_ticket:
+        created: "Offer has been sent. Purchaser will be in touch shortly."
+      rfq_ticket:
+        created: "Your request has been sent. Purchaser will be in touch shortly."
 
   transactable_collaborator:
     collaboration_cancelled: User has been removed from project.

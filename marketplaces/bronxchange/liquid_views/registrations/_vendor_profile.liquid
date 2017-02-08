@@ -4,10 +4,13 @@
   <header class="user-profile-a-header">
     <div class="branding">
       {% if g.user.logo[0] != blank %}
-      <img src="{{ g.user.logo[0].mini }}" alt="{{ user.buyer_properties.company_name }}" itemprop="logo">
+      <div class="logo">
+        <img src="{{ g.user.logo[0].mini }}" alt="{{ user.buyer_properties.company_name }}" itemprop="logo">
+      </div>
       {% endif %}
-
-      <img src="{{ user.avatar_url_big }}" alt="{{ user.name }}">
+      <div class="avatar">
+        <img src="{{ user.avatar_url_big }}" alt="{{ user.name }}">
+      </div>
     </div>
 
     <div class="desc">
@@ -27,7 +30,7 @@
         <li class="googleplus"><a href="{{ user.buyer_properties.google_plus_url }}" itemprop="sameAs" rel="external">Google+</a></li>
         {% endif %}
         {% if user.buyer_properties.twitter_url != blank %}
-        <li class="twitter"><a href="{{ user.buyer_properties.twitter }}" itemprop="sameAs" rel="external">Twitter</a></li>
+        <li class="twitter"><a href="{{ user.buyer_properties.twitter_url }}" itemprop="sameAs" rel="external">Twitter</a></li>
         {% endif %}
       </ul>
     </div>
@@ -110,8 +113,6 @@
           <li>{{ language }}</li>
           {% endfor %}
         </ul>
-
-        <p><a href="{{ user.user_profile_url }}" class="more-a">View more</a></p>
       </div>
       {% endif %}
 
@@ -128,7 +129,7 @@
 
       <hr>
 
-      <a class="button-b action-flag" href="#" data-href="{{ user.inappropriate_report_path }}" data-modal="true">{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
+      <a class="button-b action-flag" href="{{ user.inappropriate_report_path }}" data-href="{{ user.inappropriate_report_path }}" data-modal>{{ 'inappropriate_reports.flag_as_inappropriate' | translate }}</a>
     </div>
   </div>
 
