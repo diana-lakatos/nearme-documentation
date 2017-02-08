@@ -14,9 +14,9 @@ class DelayedReservation < Reservation
     Reservation
   end
 
-  # archived_at should not be set based on ends_at for this Order
   def set_archived_at
-    true
+    return true unless paid?
+    super
   end
 
   def add_line_item!(attrs)

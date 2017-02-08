@@ -144,8 +144,8 @@ class Order < ActiveRecord::Base
                                        direction = 'desc'
                                      end
                                      joins("left join (
-                                                       select sum(li.unit_price_cents * li.quantity) as paid, rbp.order_id as order_id 
-                                                       from recurring_booking_periods rbp 
+                                                       select sum(li.unit_price_cents * li.quantity) as paid, rbp.order_id as order_id
+                                                       from recurring_booking_periods rbp
                                                        inner join line_items li on li.line_itemable_id = rbp.id AND li.line_itemable_type = 'RecurringBookingPeriod'
                                                        where rbp.paid_at is not null group by rbp.order_id
                                                       ) order_info ON order_info.order_id = orders.id
