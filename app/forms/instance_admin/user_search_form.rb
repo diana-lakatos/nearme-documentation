@@ -4,6 +4,7 @@ class InstanceAdmin::UserSearchForm < SearchForm
   property :filters, virtual: true
   property :item_type_id, virtual: true
   property :state, virtual: true
+  property :profile_type, virtual: true
 
   def initialize
     super Object.new
@@ -17,6 +18,12 @@ class InstanceAdmin::UserSearchForm < SearchForm
     result[:with_date] = [date_from_params] if date.present?
 
     result[:by_profile_type] = [item_type_id] if item_type_id.present?
+
+    if profile_type == 'buyer'
+      result[:buyers] = nil
+    elsif profile_type == 'seller'
+      result[:sellers] = nil
+    end
 
     result[:is_guest] = nil if filters.try(:include?, 'guest')
 
