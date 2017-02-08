@@ -2,20 +2,17 @@
   <header class="user-profile-a-header">
     <a href="{{ user.user_profile_url }}">
       <div class="branding">
-        {% comment %}
-        THESE TWO IMAGES BELOW ARE INCORRECT. WAITING FOR DAREK TO PROVIDE A WAY TO FETCH THEM FROM ES
-        {% endcomment %}
-        <img src="{{ user.avatar_url_big }}" alt="{{ user.company }}" itemprop="logo">
-        <img src="{{ user.avatar_url_big }}" alt="{{ user.name }}">
+        <img src="{{ user.profiles.buyer.grouped_custom_images.logo.versions.normal.url }}" alt="{{ user.profiles.buyer.properties.company_name }}" itemprop="logo">
+        <img src="{{ user.avatar.big.url }}" alt="{{ user.name }}">
       </div>
 
       <div class="desc">
-        <h2 itemprop="name">{{ user.buyer_properties.company_name }}</h2>
+        <h2 itemprop="name">{{ user.profiles.buyer.properties.company_name }}</h2>
 
         <p class="address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
           <span itemprop="streetAddress">{{ user.current_address.street }}</span><br>
           <span itemprop="addressLocality">{{ user.current_address.suburb }}</span>, <span itemprop="addressRegion">{{ user.current_address.state }}</span> <span itemprop="postalCode">{{ user.current_address.postcode }}</span>
-          <span class="neighborhood">{{ user.buyer_properties.neighborhood }}</span>
+          <span class="neighborhood">{{ user.profiles.buyer.properties.neighborhood }}</span>
         </p>
       </div>
     </a>
@@ -25,29 +22,29 @@
 
   <div class="user-profile-a-description">
 
-    {% if user.buyer_properties.community_wealth or user.buyer_properties.workplace or user.buyer_properties.environment_and_health %}
+    {% if user.profiles.buyer.properties.community_wealth or user.profiles.buyer.properties.workplace or user.profiles.buyer.properties.environment_and_health %}
       <ul class="badges-a">
-        {% if user.buyer_properties.workplace %}
+        {% if user.profiles.buyer.properties.workplace %}
           <li class="workplace"><h3>Workplace</h3></li>
         {% endif %}
 
-        {% if user.buyer_properties.community_wealth %}
-          <li class="community-wealth"><h3>Community Wealth</h3></li>
+        {% if user.profiles.buyer.properties.community_wealth %}
+          <li class="commmunity-wealth"><h3>Community Wealth</h3></li>
         {% endif %}
 
-        {% if user.buyer_properties.environment_and_health %}
+        {% if user.profiles.buyer.properties.environment_and_health %}
           <li class="environment-health"><h3>Environment &amp; Health</h3></li>
         {% endif %}
       </ul>
     {% endif %}
 
-    {% assign products = user.buyer_profile.customizations_by_type['Product / Service listing item'] %}
+    {% assign products = user.profiles.buyer.grouped_customizations['Product / Service listing item'] %}
     {% if products.size > 0 %}
     <div class="products-services">
       <h3>Products &amp; Services</h3>
       <ul>
         {% for product in products %}
-        <li>{{ product.title }}</li>
+        <li>{{ product.properties.title }}</li>
         {% endfor %}
       </ul>
 
@@ -55,13 +52,13 @@
     </div>
     {% endif %}
 
-    {% assign languages = user.formatted_buyer_categories["Language"] %}
-    {% if languages.children.size > 0 %}
+    {% assign languages = user.category_tree["Language"] %}
+    {% if languages.size > 0 %}
     <div class="languages">
       <h3>Languages</h3>
       <ul>
-        {% for language in languages.children %}
-        <li>{{ language }}</li>
+        {% for language in languages %}
+        <li>{{ language.name }}</li>
         {% endfor %}
       </ul>
 
@@ -70,21 +67,21 @@
     {% endif %}
 
     <div class="availability">
-      {% if user.buyer_properties.hours_days_of_operation != blank %}
+      {% if user.profiles.buyer.properties.hours_days_of_operation != blank %}
         <h3>Hours / Days of Operation</h3>
-        <p>{{ user.buyer_properties.hours_days_of_operation | nl2br }}</p>
+        <p>{{ user.profiles.buyer.properties.hours_days_of_operation | nl2br }}</p>
       {% endif %}
 
-      {% if user.buyer_properties.availability != blank %}
+      {% if user.profiles.buyer.properties.availability != blank %}
       <h3>Availability</h3>
-      <p>{{ user.buyer_properties.availability | nl2br }}</p>
+      <p>{{ user.profiles.buyer.properties.availability | nl2br }}</p>
       {% endif %}
     </div>
 
-    {% if user.buyer_properties.company_description != blank %}
+    {% if user.profiles.buyer.properties.company_description != blank %}
     <div class="company-description" itemprop="description">
       <h3>Company Description</h3>
-      <p>{{ user.buyer_properties.company_description | nl2br }} <a href="{{ user.user_profile_url }}" class="more-a">Show More</a></p>
+      <p>{{ user.profiles.buyer.properties.company_description | nl2br }} <a href="{{ user.user_profile_url }}" class="more-a">Show More</a></p>
     </div>
     {% endif %}
 
