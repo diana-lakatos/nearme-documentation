@@ -83,7 +83,7 @@ class PaymentMethodCreditCard {
     var $form = $(this.form),
       that = this;
 
-    $form.off('submit').on('submit', (event) => {
+    $form.unbind('submit').submit(function(event) {
       event.stopPropagation();
       event.preventDefault();
 

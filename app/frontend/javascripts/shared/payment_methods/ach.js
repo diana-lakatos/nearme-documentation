@@ -118,7 +118,7 @@ class PaymentMethodAch {
       return true;
     }
 
-    $form.off('submit').on('submit', (event) => {
+    $form.unbind('submit').submit(function(event) {
       event.stopPropagation();
       event.preventDefault();
       $form = $(event.target);
