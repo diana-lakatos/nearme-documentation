@@ -40,6 +40,7 @@ class PaymentMethodCreditCard {
   }
 
   _bindEvents() {
+    console.log('PaymentMethodCreditCard :: Binding events');
     Array.prototype.forEach.call(this._ui.creditCardSwitcher.querySelectorAll('input[type=radio]'), (el) => {
       el.addEventListener('change', (event) => this._toggleByValue(event.target.value));
     });
@@ -84,6 +85,8 @@ class PaymentMethodCreditCard {
       that = this;
 
     $form.unbind('submit').submit(function(event) {
+      console.log('PaymentMethodCreditCard :: Binding events: $form.submit');
+
       event.stopPropagation();
       event.preventDefault();
 
@@ -177,11 +180,14 @@ class PaymentMethodCreditCard {
     if (response.saved || response.redirect) {
       const redirectUrl = $form.attr('data-redirect-to') || response.redirect;
       if (redirectUrl) {
+        console.log('PaymentMethodCreditCard :: Form submitted. Redirecting to ', redirectUrl);
         window.location.replace(redirectUrl);
       } else {
+        console.log('PaymentMethodCreditCard :: Form submitted. Reloading...');
         window.location.reload();
       }
     } else {
+      console.log('PaymentMethodCreditCard :: Form submitted. Updating content');
       $('.dialog__content').html(response.html);
     }
   }
@@ -192,6 +198,8 @@ class PaymentMethodCreditCard {
 
     // Send form via ajax if its in a modalbox (ie. when accepting offer in UOT)
     if ($form.parents('.dialog__content').length > 0) {
+      console.log('PaymentMethodCreditCard :: Form submitted. Submitting checkout form using AJAX. Data: ', $form.serialize());
+
       $.ajax({
         url: $form.attr('action'),
         method: 'POST',
@@ -202,6 +210,8 @@ class PaymentMethodCreditCard {
       .always(Loader.hide);
 
     } else {
+      console.log('PaymentMethodCreditCard :: Submitting checkout form.');
+
       // Submit form while going through standard checkout process
       $form.get(0).submit();
     }
@@ -214,6 +224,7 @@ class PaymentMethodCreditCard {
 
   _stripeResponseHandler(status, response) {
     if (response.error) {
+      console.log('PaymentMethodCreditCard :: Stripe :: Responded with errors: ', response.error.message);
       $(this._ui.container).find('.has-error').text(response.error.message);
 
       Loader.hide();
@@ -223,6 +234,7 @@ class PaymentMethodCreditCard {
       var token = response.id;
       var $form = $('#checkout-form, #new_payment');
 
+      console.log('PaymentMethodCreditCard :: Stripe :: Received token: ', token);
       // Insert the token ID into the form so it gets submitted to the server:
       this._updateCCToken($form, token);
 

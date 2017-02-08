@@ -19,7 +19,7 @@ module.exports = class Dialog
     $('body').append(@dialog)
 
   bindEvents: ->
-
+    console.log('Dialog :: Binding events')
     @resetCallbacks()
 
     @dialog.on 'click', '[data-modal-close]', (e) =>
@@ -33,10 +33,12 @@ module.exports = class Dialog
       e.stopPropagation()
       target = $(e.currentTarget)
       ajaxOptions = { url: target.attr("href"), data: target.data('ajax-options') }
+      console.log('Dialog :: Loading modal content. AjaxOptions: ', ajaxOptions)
       @load(ajaxOptions, target.data('modal-class'))
 
     # submit form via button
     $('body').on 'submit.nearme', 'form[data-modal]', (e) =>
+      console.log('Dialog :: Submitting form[data-modal]. Url: ', form.attr("action"))
       e.preventDefault()
       form = $(e.currentTarget)
       ajaxOptions = { type: form.attr('method'), url: form.attr("action"), data: new FormData(e.currentTarget), processData: false, contentType: false }
@@ -66,10 +68,13 @@ module.exports = class Dialog
 
     $.ajax(ajaxOptions).success (data) =>
       if data.redirect
+        console.log('Dialog :: Form submitted. Redirecting to ', data.redirect)
         window.location = data.redirect
       else if data.hide
+        console.log('Dialog :: Form submitted. Hiding dialog.')
         @hide()
       else
+        console.log('Dialog :: Form submitted. Updating content.')
         @showContent(data)
 
   show: =>

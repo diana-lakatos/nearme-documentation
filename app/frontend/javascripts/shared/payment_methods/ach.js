@@ -82,6 +82,7 @@ class PaymentMethodAch {
   }
 
   _bindEvents() {
+    console.log('PaymentMethodAch :: Binding events (actually, just calling _submitFormHandler)');
     this._submitFormHandler();
   }
 
@@ -119,6 +120,8 @@ class PaymentMethodAch {
     }
 
     $form.unbind('submit').submit(function(event) {
+      console.log('PaymentMethodAch :: Submitting form');
+
       event.stopPropagation();
       event.preventDefault();
       $form = $(event.target);
@@ -145,14 +148,17 @@ class PaymentMethodAch {
       // Show the errors on the form:
       $(this._ui.container).find('.has-error').text(response.error.message);
       // $form.find('button').prop('disabled', false); // Re-enable submission
+      console.log('PaymentMethodCreditCard :: Stripe :: Responded with errors: ', response.error.message);
 
     } else { // Token created!
 
       // Get the token ID:
       var token = response.id;
+      console.log('PaymentMethodCreditCard :: Stripe :: Received token: ', token);
 
       // Insert the token into the form so it gets submitted to the server:
       this._ui.container.querySelector('#stripe_plaid_public_token').value = token;
+
 
       // Submit the form:
       $form.get(0).submit();
