@@ -5,6 +5,7 @@ module.exports = class PaymentModalController
     @bindEvents()
 
   bindEvents: ->
+    console.log('PaymentModalController :: Binding events')
     @ajaxForm()
 
   ajaxForm: ->
@@ -17,8 +18,10 @@ module.exports = class PaymentModalController
         data: @paymentForm.serialize()
         success: (response) =>
           if response.saved
+            console.log('PaymentModalController :: Form submitted. Redirecting to ', @paymentForm.attr('data-redirect-to'))
             window.location.replace(@paymentForm.attr('data-redirect-to'))
           else
+            console.log('PaymentModalController :: Form submitted. Updating dialog content.')
             @container.find('.dialog__content').html(response.html)
 
       return false
