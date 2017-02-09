@@ -122,11 +122,11 @@
                 <dt>Style:</dt> <dd>{{ listing.properties.item_style_milinery | split: ',' | join: ', ' }}</dd>
               {% endif %}
               <dt>Size:</dt> <dd>{{ listing.properties.milinery_size }}</dd>
-            {% elsif listing.properties.item_type == 'Outerwear' %}
-              {% if listing.properties.item_style_outerwear != blank %}
-                <dt>Style:</dt> <dd>{{ listing.properties.item_style_outerwear | split: ',' | join: ', ' }}</dd>
+            {% elsif listing.properties.item_type == 'Menswear' %}
+              {% if listing.properties.item_style_menswear != blank %}
+                <dt>Style:</dt> <dd>{{ listing.properties.item_style_menswear | split: ',' | join: ', ' }}</dd>
               {% endif %}
-              <dt>Size:</dt> <dd>{{ listing.properties.outerwear_size }}</dd>
+              <dt>Size:</dt> <dd>{{ listing.properties.menswear_size }}</dd>
             {% elsif listing.properties.item_type == 'Accessories' %}
               {% if listing.properties.item_style_accessories != blank %}
                 <dt>Style:</dt> <dd>{{ listing.properties.item_style_accessories | split: ',' | join: ', ' }}</dd>
