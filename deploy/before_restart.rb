@@ -14,7 +14,7 @@ node[:deploy].each do |application, deploy|
     user deploy[:user]
     group deploy[:group]
     environment ({ 'HOME' => '/home/deploy', 'USER' => 'deploy', 'PATH' => '/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/deploy/.local/bin:/home/deploy/bin' })
-    command 'yarn install --force'
+    command 'yarn install --force --frozen-lockfile'
     action :run
     only_if     { node['opsworks']['instance']['layers'].include?('rails-app') || node['opsworks']['instance']['layers'].include?('utility') }
   end
