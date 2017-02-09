@@ -44,14 +44,14 @@
         <tr>
           <td>Size:</td> <td>{{ listing.properties.milinery_size }}</td>
         </tr>
-      {% elsif listing.properties.item_type == 'Outerwear' %}
-        {% if listing.properties.item_style_outerwear != blank %}
+      {% elsif listing.properties.item_type == 'Menswear' %}
+        {% if listing.properties.item_style_menswear != blank %}
           <tr>
-            <td>Style:</td> <td>{{ listing.properties.item_style_outerwear | split: ',' | join: ', ' }}</td>
+            <td>Style:</td> <td>{{ listing.properties.item_style_menswear | split: ',' | join: ', ' }}</td>
           </tr>
         {% endif %}
         <tr>
-          <td>Size:</td> <td>{{ listing.properties.outerwear_size }}</td>
+          <td>Size:</td> <td>{{ listing.properties.menswear_size }}</td>
         </tr>
       {% elsif listing.properties.item_type == 'Accessories' %}
         {% if listing.properties.item_style_accessories != blank %}
