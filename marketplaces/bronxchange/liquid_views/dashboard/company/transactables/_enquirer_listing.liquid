@@ -1,6 +1,5 @@
 {% for transactable in transactables %}
   {% assign collaborator = transactable.transactable_collaborators[0] %}
-  {% assign offer = transactable.not_cancelled_orders | detect: user_id: current_user.id %}
 
   {% assign orders = current_user | get_enquirer_orders: transactable %}
   {% assign can_make_offer = false %}
@@ -16,6 +15,7 @@
       {% endfor %}
     {% endif  %}
   {% endif %}
+
 
   {% assign transactable_path = transactable.show_path %}
 
@@ -76,20 +76,12 @@
           {% endif %}
         </div>
 
-        {% if transactable.state == 'pending' and collaborator != blank %}
-          {% if offer != blank %}
-            <div class="alert alert-info">Waiting for payment from Purchaser</div>
-          {% else %}
-            <div class="alert alert-info">Waiting for your approval</div>
-          {% endif %}
-        {% endif %}
-
         <p class="actions">
           {% if can_make_offer == true %}
             {% if current_user.has_verified_merchant_account == true %}
-              <a class="btn btn-primary btn-sm" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}" data-modal="true">Accept order</a>
+              <a class="btn btn-primary btn-sm" href="{{ 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id }}" data-modal="true">Make an Offer</a>
             {% else %}
-              <a class="btn btn-primary btn-sm" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Accept order</a>
+              <a class="btn btn-primary btn-sm" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">Make an Offer</a>
             {% endif %}
           {% endif %}
 
@@ -102,5 +94,68 @@
         <p class="invite-sent"><small>Request received: {{ collaborator.created_at | to_date | l: 'short' }}</small></p>
       </div>
     </div>
+
+    {% if order != blank and transactable.completed? == true %}
+      <p><a href="{{ 'dashboard_order_order_items_path' | generate_url: order_id: order.id, transactable_id: transactable.id }}" class="btn btn-default">View Time &amp; Expenses</a></p>
+    {% endif %}
+
+    {% if orders != empty %}
+      {% assign order = orders.last %}
+      <h3>Offer</h3>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Offer Made:</th>
+              <th>Offer Status:</th>
+              {% if order.unconfirmed? %}
+                <th>Offer Action:</th>
+              {% else %}
+                <th>Date</th>
+              {% endif %}
+              {% if order.confirmed? %}
+                <th>View offer</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ order.created_at | to_date | l: 'short' }}</td>
+              <td>
+                {% if order.archived_at != blank and order.transactable.pending? == false %}
+                  Archived
+                {% else %}
+                  {{ 'reservations.states.' | append: order.state | t }}
+                {% endif %}
+              </td>
+              {% if order.unconfirmed? %}
+                <td>
+                  {% if order.unconfirmed? %}
+                    <a class="btn btn-success" href="{{ order.payment_documents[0].file_url }}" download="{{ order.payment_documents[0].file_name }}" target="_blank">View</a>
+                    <a class="btn btn-info" href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
+                    <a class="btn btn-danger" href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure you want to cancel?">{{ 'general.cancel' | t }}</a>
+                  {% endif %}
+                </td>
+              {% elsif order.confirmed? %}
+                <td>{{ order.confirmed_at | l: 'long' }}</td>
+              {% else %}
+                <td>{{ order.archived_at | l: 'long' }}</td>
+              {% endif %}
+              {% if order.confirmed? %}
+                <td><a href="{{ order.payment_documents[0].file_url }}" target="_blank">{{  order.payment_documents[0].file_name }}</a></td>
+              {% endif %}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+    {% assign order = transactable.last_accepted_order %}
+    {% if order.confirmed? %}
+      {% if current_user.has_verified_merchant_account == true %}
+        <a class="btn btn-info" href="{{ order.new_order_item_path }}">{{ 'dashboard.user_reservations.track_time' | t}}</a>
+      {% else %}
+        <a class="btn btn-info" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">{{ 'dashboard.user_reservations.track_time' | t}}r</a>
+      {% endif %}
+    {% endif %}
   </article>
 {% endfor %}
