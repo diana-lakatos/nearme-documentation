@@ -11,6 +11,15 @@ en:
       labels:
         summary: "Overall Rating:"
 
+  activerecord:
+    attributes:
+      "user/companies":
+        name: 'Law Firm'
+      "user/companies/company_address":
+        address: 'Law Firm Address'
+      user:
+        company_name: "Law Firm"
+
   transactable_collaborator:
     collaboration_cancelled: Case details request cancelled
 
