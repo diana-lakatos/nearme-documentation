@@ -1,0 +1,44 @@
+{% unless form_object_owners %}
+  {% assign form_object_owners = owners %}
+  {% assign owner = owners.object %}
+{% endunless %}
+
+<div class='panel nested-fields with-border'>
+  {% unless stripe_connect_owner_fields_count == 0 %}
+    <h3>{{ 'dashboard.merchant_account.additional_owners' | translate }}</h3>
+  {% endunless %}
+
+  {% input first_name, form: owners, required: true %}
+  {% input last_name, form: owners, required: true %}
+
+  {% if 'US CA' contains  merchant_account.iso_country_code %}
+    {% input personal_id_number, form: owners, required: true, wrapper_html-data-account-type: 'individual' %}
+    {% input business_tax_id, form: owners, required: true, wrapper_html-data-account-type: 'company' %}
+  {% endif %}
+
+  <div class='datetimepicker' style='position: relative'>
+    {% assign date_format = owner.date_format_readable %}
+    {% input dob_formated, form: owners, required: true, input_html-data-date-picker: 'true', input_html-data-date-format: @date_format %}
+  </div>
+
+  {% input document, form: owners, required: false, hint: "Optional: Validation security check by Stripe Connect for your account may request Photo ID in some cases.  Please note if you don't upload these details now, you may be asked to upload photo ID later." %}
+
+  {% fields_for current_address, form: owners %}
+    <div class='fields location' data-address-field>
+      {% input address, form: current_address, input_html-data-address-input: 'true', input_html-data-behavior: 'address-autocomplete', required: true %}
+      <div class="map">
+        <div class="map-container"></div>
+      </div>
+    </div>
+  {% endfields_for %}
+
+  {% unless stripe_connect_owner_fields_count == 0 %}
+    {% assign link_label = 'dashboard.merchant_account.remove_owner' | translate %}
+    <div class='pull-right'>
+      {% link_to_remove_association label: @link_label, form: owners %}
+    </div>
+  {% endunless %}
+</div>
+
+{% assign stripe_connect_owner_fields_count = stripe_connect_owner_fields_count | plus: 1 %}
+
