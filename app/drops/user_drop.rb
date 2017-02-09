@@ -715,7 +715,7 @@ class UserDrop < UserBaseDrop
   #   otherwise
   # @todo - deprecate -- DIY and/or move to transactable drop
   def seller_pending_transactables_count
-    @source.transactables.with_state(:pending).count if has_seller_profile?
+    @source.transactables.with_state(:pending).where(draft: nil).count if has_seller_profile?
   end
 
   # @return [Integer, nil] count of transactables to which this user is a collaborator, in the 'pending' state
