@@ -86,7 +86,7 @@
     "bootstrap": "^4.0.0-alpha.5",
     "bootstrap-colorpicker": "^2.5.1",
     "bootstrap-sass": "^3.3.7",
-    "bootstrap-switch": "^3.3.3",
+    "bootstrap-switch": "^3.3.2",
     "brace": "^0.9.1",
     "chart.js": "^1.0.2",
     "chosen-js": "^1.6.2",
