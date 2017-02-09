@@ -2,8 +2,13 @@
   <header class="user-profile-a-header">
     <a href="{{ user.user_profile_url }}">
       <div class="branding">
-        <img src="{{ user.profiles.buyer.grouped_custom_images.logo.versions.normal.url }}" alt="{{ user.profiles.buyer.properties.company_name }}" itemprop="logo">
-        <img src="{{ user.avatar.big.url }}" alt="{{ user.name }}">
+        <div class="logo">
+          <img src="{{ user.profiles.buyer.grouped_custom_images.logo.versions.normal.url }}" alt="{{ user.profiles.buyer.properties.company_name }}" itemprop="logo">
+        </div>
+
+        <div class="avatar">
+          <img src="{{ user.avatar.big.url }}" alt="{{ user.name }}">
+        </div>
       </div>
 
       <div class="desc">
@@ -29,7 +34,7 @@
         {% endif %}
 
         {% if user.profiles.buyer.properties.community_wealth %}
-          <li class="commmunity-wealth"><h3>Community Wealth</h3></li>
+          <li class="community-wealth"><h3>Community Wealth</h3></li>
         {% endif %}
 
         {% if user.profiles.buyer.properties.environment_and_health %}
