@@ -16,7 +16,7 @@
   .book {
     width: 100%;
 
-    .btn.disabled{
+    .btn.disabled, input:disabled{
       opacity: 0.5;
     }
 

@@ -64,7 +64,6 @@
             - rfq_label = (false ?  t('reservations.rfq') : t('reservations.offer'))
           .book
             = simple_form_for :order, form_options do |f|
-
               = render 'listings/hidden_fields', f: f, listing: @listing
               = f.hidden_field :transactable_pricing_id, value: @first_pricing_id
               = f.hidden_field :dates
@@ -84,4 +83,3 @@
 
 %script
   $(document).trigger('init:bookingscontroller.nearme', ["#booking-module-#{@listing.id}"]);
-
