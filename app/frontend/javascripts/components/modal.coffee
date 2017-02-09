@@ -96,6 +96,8 @@ module.exports = class Modal
   # ===
 
   constructor: (@options) ->
+    console.log('Modal :: Initializing')
+
     @container = $('.modal-container')
     @content = @container.find('.modal-content')
     @loading = @container.find('.modal-loading')

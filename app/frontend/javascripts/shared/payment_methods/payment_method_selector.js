@@ -12,7 +12,7 @@ class PaymentMethodSelector {
       el.addEventListener('click', (event) => this._switchPaymentMethod(event.target));
     });
 
-    this._switchPaymentMethod(this._ui.container.querySelector('.accordion-heading input:checked').previousElementSibling );
+    this._switchPaymentMethod(this._ui.container.querySelector('.accordion-heading input:checked').previousElementSibling);
   }
 
   _switchPaymentMethod(element) {
