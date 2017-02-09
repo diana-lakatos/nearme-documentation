@@ -1,0 +1,33 @@
+{% assign i18n_title = 'dashboard.orders.track_time_and_expenses' | translate %}
+{% title i18n_title %}
+
+{% content_for 'page_header' %}
+  <h1>
+    <span class='hidden-xs'>My Orders &gt;</span>
+    {{ 'dashboard.orders.track_time_and_expenses' | t }}
+  </h1>
+  {% if for_transactable != blank %}
+    <div class="options">
+      <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: for_transactable.transactable_type_id, status: 'in progress' }}">{{ 'dashboard.order_items.back_to_projects_html' | t }}</a>
+    </div>
+  {% endif %}
+{% endcontent_for %}
+
+<div class="sort-filter-a sort-filter-project-filter">
+  <div class="form-group">
+    <label for="select-project" class="control-label">Select Order:</label>
+    <select id="select-project" data-expenses-overview>
+      {% for transactable in transactables %}
+        <option value="{{ transactable.id }}" {% if transactable.id == for_transactable.id %}selected{% endif %}>{{ transactable.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+{% for transactable in transactables %}
+<div class="panel" id="transactable_{{transactable.id}}" style="display: none">
+  <div class="panel-body">
+    {% include 'dashboard/company/order_items/show', order: transactable.confirmed_or_archived_order %}
+  </div>
+</div>
+{% endfor %}

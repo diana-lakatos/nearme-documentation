@@ -13,6 +13,7 @@
           <figcaption>
             <form action="" accept-charset="UTF-8" method="get">
               <input name="utf8" type="hidden" value="✓"><input type="hidden" name="chart_type" id="chart_type" value="{{ params.chart_type }}">
+              <input name="utf8" type="hidden" value="✓"><input type="hidden" name="analytics_mode" id="analytics_mode" value="{{ params.analytics_mode }}">
               {% if analytics.money? and currencies.size > 1 %}
                 <label for="currency">{{ 'dashboard.analytics.currency' | translate }}</label>
                 <select name="currency" id="currency" onchange="this.form.submit()">
@@ -45,7 +46,7 @@
           <tr>
             <th>{{ 'dashboard.analytics.columns.amount' | t }}</th>
             <th>{{ 'dashboard.analytics.columns.date' | t }}</th>
-            <th>Booking</th>
+            <th>Project</th>
             <th></th>
           </tr>
         </thead>
