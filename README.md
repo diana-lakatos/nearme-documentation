@@ -72,6 +72,10 @@ After you install ES you need to create indexes and aliases
 Alternatively you can install ES and PostgreSQL on Docker. There is docker-compose.yml file.
 Once you install docker and docker-compose run `docker-compose up`. Later you can just run `docker-compose start`
 
+You can have many databases in docker. Just start them explicitly.
+    docker-compose start db es
+    docker-compose start db-oregon es
+
 ### Assets on local
 
 You have to install gulp on local - use
@@ -128,6 +132,14 @@ To access the Instance you need locally, find its domain with the 'lvh.me' part 
 For easy find, use: `Domain.where('name like ?', "%lvh.me").pluck(:name)`
 
 Remember about port in url address: `<mp>.lvh.me:3000`
+
+### Assets for marketplaces
+
+Some marketplaces require assets from `marketplaces` repo.
+
+* Clone this repo in same directory as desksnearme.
+* Install foreman `gem install foreman`
+* Run assets for given marketplace with `foreman run volte`
 
 ### DEPLOY Procedure
 
