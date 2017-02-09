@@ -16,7 +16,7 @@ module AggregationsFixtures
       { 'doc_count_error_upper_bound' => 0,
         'sum_other_doc_count' => 0,
         'buckets' => [{ 'key' => '', 'doc_count' => 41 }] },
-       'item_style_outerwear' =>
+       'item_style_menswear' =>
       { 'doc_count_error_upper_bound' => 0,
         'sum_other_doc_count' => 0,
         'buckets' => [{ 'key' => '', 'doc_count' => 40 }] },
@@ -84,7 +84,7 @@ module AggregationsFixtures
         { 'key' => 'self portrait', 'doc_count' => 1 },
         { 'key' => 'willow', 'doc_count' => 1 },
         { 'key' => 'zimmerman', 'doc_count' => 1 }] },
-       'outerwear_size' =>
+       'menswear_size' =>
       { 'doc_count_error_upper_bound' => 0,
         'sum_other_doc_count' => 0,
         'buckets' => [{ 'key' => '', 'doc_count' => 11 }] },
@@ -137,7 +137,7 @@ module AggregationsFixtures
       { 'doc_count_error_upper_bound' => 0,
         'sum_other_doc_count' => 0,
         'buckets' => [{ 'key' => '', 'doc_count' => 41 }] },
-       'item_style_outerwear' =>
+       'item_style_menswear' =>
       { 'doc_count_error_upper_bound' => 0,
         'sum_other_doc_count' => 0,
         'buckets' => [{ 'key' => '', 'doc_count' => 40 }] },
@@ -186,7 +186,7 @@ module AggregationsFixtures
         { 'key' => 'amelie pichard', 'doc_count' => 4 },
         { 'key' => 'willow', 'doc_count' => 1 },
         { 'key' => 'zimmerman', 'doc_count' => 1 }] },
-       'outerwear_size' =>
+       'menswear_size' =>
       { 'doc_count_error_upper_bound' => 0,
         'sum_other_doc_count' => 0,
         'buckets' => [{ 'key' => '', 'doc_count' => 11 }] },

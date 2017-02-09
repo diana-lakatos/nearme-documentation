@@ -104,12 +104,12 @@ partial: false
             </fieldset>
           </li>
 
-          <li {{ attributes.outerwear_size.wrapper_html_options }}>
+          <li {{ attributes.menswear_size.wrapper_html_options }}>
             <fieldset>
-              <legend>{{ attributes.outerwear_size.label }}</legend>
-              <select {{ attributes.outerwear_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.outerwear_size.name }}][]" id="">
+              <legend>{{ attributes.menswear_size.label }}</legend>
+              <select {{ attributes.menswear_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.menswear_size.name }}][]" id="">
                 <optgroup disabled hidden></optgroup>
-                {{ searcher.options_for_select.outerwear_size | options_from_collection_for_select: params['lg_custom_attributes']['outerwear_size'][0], reset_filter_label  }}
+                {{ searcher.options_for_select.menswear_size | options_from_collection_for_select: params['lg_custom_attributes']['menswear_size'][0], reset_filter_label  }}
               </select>
             </fieldset>
           </li>
@@ -124,12 +124,12 @@ partial: false
             </fieldset>
           </li>
 
-          <li {{ attributes.item_style_outerwear.wrapper_html_options }}>
+          <li {{ attributes.item_style_menswear.wrapper_html_options }}>
             <fieldset>
-              <legend>{{ attributes.item_style_outerwear.label }}</legend>
-              <select {{ attributes.item_style_outerwear.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_outerwear.name }}][]" id="">
+              <legend>{{ attributes.item_style_menswear.label }}</legend>
+              <select {{ attributes.item_style_menswear.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_menswear.name }}][]" id="">
                 <optgroup disabled hidden></optgroup>
-                {{ searcher.options_for_select.item_style_outerwear | options_from_collection_for_select: params['lg_custom_attributes']['item_style_outerwear'][0], reset_filter_label  }}
+                {{ searcher.options_for_select.item_style_menswear | options_from_collection_for_select: params['lg_custom_attributes']['item_style_menswear'][0], reset_filter_label  }}
               </select>
             </fieldset>
           </li>
