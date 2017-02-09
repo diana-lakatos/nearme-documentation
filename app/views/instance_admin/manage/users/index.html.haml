@@ -27,6 +27,7 @@
       = form_tag instance_admin_manage_users_path, method: :get, enforce_utf8: :false do
         .filters
           .filter.period
+            = t('instance_admin.manage.admin_searchable.user.search_types.date_created')
             .dropdown.date-dropdown
               %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
                 - if params[:date].present?
@@ -58,6 +59,7 @@
                     = t('instance_admin.manage.admin_searchable.apply_filter')
 
           .filter.state
+            = t('instance_admin.manage.admin_searchable.user.search_types.account_standing')
             .dropdown.date-dropdown
               %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
                 - if params[:state].present?
@@ -76,10 +78,32 @@
                     %a{data: {date: value}}
                       = value.capitalize
 
+          .filter.value
+            = t('instance_admin.manage.admin_searchable.user.search_types.profile_type')
+            .dropdown.filter-value-dropdown
+              %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
+                - if params[:profile_type].present?
+                  %span.current= selected_profile_type(params[:profile_type])
+                - else
+                  %span.current
+                    = t('instance_admin.manage.admin_searchable.title_all')
+                %span.caret
+                = hidden_field_tag 'profile_type', params[:profile_type]
+              %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
+                %li
+                  %a{data: {value: ''}}
+                    = t('instance_admin.manage.admin_searchable.title_all')
+                - [:buyer, :seller].each do |value|
+                  %li
+                    %a{data: {value: value}}
+                      = t("instance_admin.manage.admin_searchable.user.profile_types.#{value}")
+
           .filter.search
-            %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
-            %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}
-            =fa_icon "search", class: 'fa-action-icon-submit'
+            = t('instance_admin.manage.admin_searchable.user.search_types.search')
+            %div{style: "position: relative;"}
+              %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
+              %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}
+              =fa_icon "search", class: 'fa-action-icon-submit'
 
   .row
     .table-container.col-xs-12

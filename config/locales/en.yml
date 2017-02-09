@@ -775,9 +775,17 @@ en:
         apply_filter: "Apply filter"
         search_by_keyword: "Search by keyword"
         user:
+          search_types:
+            date_created: 'Date created'
+            account_standing: 'Account standing'
+            profile_type: 'Profile type'
+            search: 'Search'
           banned: "Banned"
           active: "Active"
           deleted: "Deleted"
+          profile_types:
+            buyer: 'Buyer'
+            seller: 'Seller'
       reviews:
         index:
           missing: "Missing object"
