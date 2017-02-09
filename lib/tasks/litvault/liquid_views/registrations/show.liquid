@@ -57,7 +57,11 @@
           <div class="user-properties">
             <dl>
               <dt>States Licensed to Practice Law:</dt>
-              <dd>{{ user.properties.states | split: ',' | compact | join: ', ' }}</dd>
+              {% if user.has_buyer_profile? %}
+                <dd>{{ user.buyer_profile.properties.states | split: ',' | join: ', ' }}</dd>
+              {% elsif user.has_seller_profile? %}
+                <dd>{{ user.seller_profile.properties.states | split: ',' | join: ', ' }}</dd>
+              {% endif %}
 
               {% if user.buyer_properties.number_of_jury_trials != blank %}
               <dt>Number of Jury Trials:</dt>

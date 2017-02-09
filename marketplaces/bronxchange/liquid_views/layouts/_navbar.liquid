@@ -59,6 +59,15 @@
                 </a>
               </li>
 
+              {% if current_user.buyer_profile == blank %}
+                {% assign order_items_path = 'dashboard_company_order_items_path' | generate_url %}
+              {% else %}
+                {% assign order_items_path = 'dashboard_order_items_path' | generate_url %}
+              {% endif %}
+              <li>
+                <a href="{{ order_items_path }}">{{ 'dashboard.nav.order_items' | t }}</a>
+              </li>
+
 
               {% if current_user.has_buyer_profile? %}
                 <li><a href="{{ 'user_path' | generate_url: current_user.id }}">View Profile</a></li>
