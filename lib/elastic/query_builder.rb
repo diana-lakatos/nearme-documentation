@@ -84,6 +84,7 @@ module Elastic
           }
         }
       }.merge(aggregations)
+
       if @not_filters.present?
         query[:query][:filtered].merge(
           filter: {

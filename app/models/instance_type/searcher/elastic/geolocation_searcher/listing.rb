@@ -6,7 +6,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing < Searching:
 
   def invoke
     set_options_for_filters
-    @filters = { date_range: search.available_dates }
+    @filters = { date_range: search_form.available_dates }
 
     listing_ids = fetcher.map(&:id)
 
@@ -31,12 +31,12 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing < Searching:
   end
 
   def search_params
-    @search_params ||= params.merge date_range: search.available_dates,
-                                    custom_attributes: search.lg_custom_attributes,
-                                    location_types_ids: search.location_types_ids,
-                                    listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
+    @search_params ||= params.merge date_range: search_form.available_dates,
+                                    custom_attributes: search_form.lg_custom_attributes,
+                                    location_types_ids: search_form.location_types_ids,
+                                    listing_pricing: search_form.lgpricing.blank? ? [] : search_form.lgpricing_filters,
                                     category_ids: category_ids,
-                                    sort: search.sort
+                                    sort: search_form.sort
   end
 
   def filters

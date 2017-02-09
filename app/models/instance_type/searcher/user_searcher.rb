@@ -1,6 +1,6 @@
 class InstanceType::Searcher::UserSearcher
   include InstanceType::Searcher
-  attr_reader :filterable_custom_attributes, :search
+  attr_reader :filterable_custom_attributes, :search, :params
   ALLOWED_QUERY_FIELDS = [:first_name, :last_name, :name, :country_name, :company_name, :tags].freeze
 
   def initialize(params, current_user, transactable_type)
@@ -83,5 +83,9 @@ class InstanceType::Searcher::UserSearcher
 
   def set_options_for_filters
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable
+  end
+
+  def result_view
+    'community'
   end
 end

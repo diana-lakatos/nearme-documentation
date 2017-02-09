@@ -7,7 +7,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
     @fetcher ||= invoke_search
   end
 
-  def search
+  def search_form
     @search ||= ::Listing::Search::Params::Web.new(params, @transactable_type)
   end
 

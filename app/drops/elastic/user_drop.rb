@@ -7,13 +7,7 @@ module Elastic
              :reviews_counter, :current_address,
              to: :source
 
-    def category_tree
-      profiles['buyer']
-        .categories
-        .sort(&:position)
-        .group_by(&:root)
-    end
-
+    # TODO: breaking changes - migrate liquids
     def profiles
       @__profiles ||= source.user_profiles.each_with_object({}) do |profile, profiles|
         profiles[profile.profile_type] = Elastic::ProfileDrop.new(profile)

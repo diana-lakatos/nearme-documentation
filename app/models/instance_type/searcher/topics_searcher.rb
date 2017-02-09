@@ -19,4 +19,8 @@ class InstanceType::Searcher::TopicsSearcher
       query: @params[:query]
     }
   end
+
+  def result_view
+    'community'
+  end
 end

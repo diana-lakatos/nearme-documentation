@@ -58,7 +58,7 @@
                     - current_instance.transactable_types.searchable.each do |transactable_type|
                       %li.filter-option
                         %label.radio.small-radio
-                          %input{type: 'radio', name: 'transactable_type_id', value: transactable_type.id, checked: @transactable_type.id == transactable_type.id}
+                          %input{type: 'radio', name: 'transactable_type_id', value: transactable_type.id, checked: @searcher.transactable_type.id == transactable_type.id}
                           %span.filter-label-text
                             = transactable_type.translated_bookable_noun
 
@@ -74,13 +74,13 @@
         - @searcher.filterable_custom_attributes.each do |ca|
           - if ca.valid_values_translated.any?
             = render partial: 'search/mixed/filter', locals: { header_name: t(ca.label_key), selected_values: @searcher.search.lg_custom_attributes[ca.name.to_sym] || [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated.map { |pair| [pair[1], pair[0]] }, name: ca.name }
-        - if @transactable_type.search_price_types_filter
+        - if @searcher.transactable_type.search_price_types_filter
           = render partial: 'search/mixed/filter', locals: { header_name: 'Pricing', selected_values: @searcher.search.lgpricing_filters || [], input_name: 'listing_pricing[]', options: @searcher.filterable_pricing }
         - if @searcher.transactable_type.display_location_type_filter?
           = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => @searcher.search.location_types_ids || [], :input_name => 'location_types_ids[]', :options => @searcher.filterable_location_types.map { |lt| [lt.id, lt.name ] } }
 
 
-        - if @transactable_type.show_price_slider
+        - if @searcher.transactable_type.show_price_slider
           = render partial: 'search/shared/price_slider'
 
       .sort

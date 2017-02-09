@@ -6,11 +6,10 @@ require 'pry'
 require 'ostruct'
 
 class Elastic::AggregationsTest < ActiveSupport::TestCase
-
   test 'require default aggregations' do
     fixtures = AggregationsFixtures.load
 
-    assert_equal fixtures.keys, ['global','filtered_aggregations', 'custom_attributes']
+    assert_equal fixtures.keys, ['global', 'filtered_aggregations', 'custom_attributes']
 
     options = Elastic::Aggregations::OptionsForSelect.prepare(fixtures)
 

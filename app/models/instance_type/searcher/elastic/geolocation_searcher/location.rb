@@ -4,7 +4,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location < Searching
   def initialize(transactable_type, params)
     super(transactable_type, params)
     set_options_for_filters
-    @filters = { date_range: search.available_dates }
+    @filters = { date_range: search_form.available_dates }
     locations = {}
 
     fetcher.each do |f|
@@ -37,12 +37,12 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location < Searching
   end
 
   def search_params
-    @search_params ||= params.merge date_range: search.available_dates,
-                                    custom_attributes: search.lg_custom_attributes,
-                                    location_types_ids: search.location_types_ids,
-                                    listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
+    @search_params ||= params.merge date_range: search_form.available_dates,
+                                    custom_attributes: search_form.lg_custom_attributes,
+                                    location_types_ids: search_form.location_types_ids,
+                                    listing_pricing: search_form.lgpricing.blank? ? [] : search_form.lgpricing_filters,
                                     category_ids: category_ids,
-                                    sort: search.sort,
+                                    sort: search_form.sort,
                                     page: 1,
                                     limit: LOAD_ALL_ITEMS
   end
@@ -55,8 +55,8 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location < Searching
 
   def filters
     search_filters = {}
-    search_filters[:location_type_filter] = search.location_types_ids if search.location_types_ids && !search.location_types_ids.empty?
-    search_filters[:listing_pricing_filter] = search.lgpricing_filters unless search.lgpricing_filters.empty?
+    search_filters[:location_type_filter] = search_form.location_types_ids if search_form.location_types_ids && !search_form.location_types_ids.empty?
+    search_filters[:listing_pricing_filter] = search_form.lgpricing_filters unless search_form.lgpricing_filters.empty?
     search_filters[:custom_attributes] = @params[:lg_custom_attributes] unless @params[:lg_custom_attributes].blank?
     search_filters
   end

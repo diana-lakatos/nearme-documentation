@@ -278,12 +278,12 @@ class SearchControllerTest < ActionController::TestCase
     end
 
     should 'fallback to "projects" when param is unknown' do
-      get :index, { search_type: 'something' }
+      get :index, search_type: 'something'
       assert_equal assigns(:search_type), 'projects'
     end
 
     should 'prepare view variables when param is known' do
-      get :index, { search_type: 'people' }
+      get :index, search_type: 'people'
       assert_equal assigns(:search_type), 'people'
     end
 

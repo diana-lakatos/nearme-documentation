@@ -4,6 +4,8 @@ module ElasticIndexer
 
     attributes :url, :version_name, :dimensions
 
+    private
+
     def url
       object.url.presence || default_url
     end

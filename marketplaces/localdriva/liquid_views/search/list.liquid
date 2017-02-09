@@ -55,17 +55,17 @@
           <div class="filter">
             <label for="filter-second-language">Second Language</label>
             <span class="select-a">
-              <select name="lg_customizations[properties.language]" id="filter-second-language" class="unstyled-select">
+              <select name="lg_customizations[language]" id="filter-second-language" class="unstyled-select">
                 <option value="">Please select --</option>
                 {% assign languages = "English | Chinese (Mandarin) | Spanish | German | French | Italian | Japanese | Korean | Arabic | Russian" | split: " | " %}
                 {% for l in languages %}
-                <option value="{{ l }}"{% if params["lg_customizations"]["properties.language"] == l %} selected{% endif %}>{{ l }}</option>
+                <option value="{{ l }}"{% if params["lg_customizations"]["language"] == l %} selected{% endif %}>{{ l }}</option>
                 {% endfor %}
               </select>
             </span>
           </div>
 
-          {% assign extras_category = searcher.searchable_categories | detect: name: 'Extras' %}
+          {% assign extras_category = searcher.searchable_categories | detect: name: 'Extra Requests' %}
           {% assign root_category = extras_category.children | sort: 'name' %}
           <fieldset class="filter filter-extras">
             <legend>Extras</legend>
@@ -92,7 +92,12 @@
     <section class="search-results">
       <header class="search-results-header">
         <div class="search-results-query-info">
-          <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
+          {% comment %}
+            <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found {% if params.lg_custom_attributes.city != blank %}in {{ params.lg_custom_attributes.city }}{% endif %}</span>
+            <!-- Since it doesnt work anyway, im hardcoding per LD-4 -->
+          {% endcomment %}
+
+          <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found in Sydney</span>
 
           <button type="button" class="button-c small" id="search-form-reset">Reset Filters</button>
         </div>
@@ -114,32 +119,37 @@
         <article class="box-a user-a" id="user-{{ user.id }}">
           <figure class="avatar">
             <a href="{{ user.user_profile_url }}">
-              <img src="{{user.avatar.big.url}}" alt="{{ user.name }}">
+              <img src="{{user.avatar_url_big}}" alt="{{ user.first_name }}">
+              <!--<span class="verified">Verified</span>-->
             </a>
           </figure>
 
           <div class="description">
             <header>
-              <h2><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h2>
+              <h2><a href="{{ user.user_profile_url }}">{{ user.first_name }}</a></h2>
               <div class="summary">
+                {% if user.reviews_counter.about_buyer > 0 %}
+                  <div class="rating-a" data-rating="{{ user.buyer_average_rating | round }}">{{ user.buyer_average_rating }} out of 5 stars</div>
+                {% endif %}
+
                 <div class="rating-a" data-rating="{{ user.buyer_average_rating }}">{{ user.buyer_average_rating }} out of 5 stars</div>
-                <div class="price" data-convert-price="{{ user.profiles.buyer.properties['hourly_price'] }}"><strong>AUD {{ user.profiles.buyer.properties['hourly_price'] | price_with_cents_with_currency }}</strong> / hr</div>
+                <div class="price" data-convert-price="{{ user.buyer_properties.hourly_price }}"><strong>AUD {{ user.buyer_properties.hourly_price | pricify }}</strong> / hr</div>
               </div>
             </header>
             <dl class="properties">
-              {% if user.profiles.buyer.properties['driver_category'] %}
+              {% if user.buyer_properties.driver_category %}
               <dt>Driver Type:</dt>
-              <dd>{{ user.profiles.buyer.properties['driver_category'] }}
+              <dd>{{ user.buyer_properties.driver_category }}
                 <div class="driver-types-description" tabindex="0">
                   <ul>
                     <li>
-                      <b>Standard</b> - {{ 'driver_categories.descriptions.standard' | t }}
+                      <b>Standard</b> - Locals who know their city well but are not professional tour guides to show you around their city using their vehicle.
                     </li>
                     <li>
-                      <b>Pro</b> - {{ 'driver_categories.descriptions.pro' | t }}
+                      <b>Pro</b> - Drivers who have formal qualifications and recognised experience as a tour guide in the city they are providing the service.
                     </li>
                     <li>
-                      <b>Plus</b> - {{ 'driver_categories.descriptions.plus' | t }}
+                      <b>Plus</b> - Drivers with a luxury car providing a service for business travellers and other users seeking a luxury vehicle.
                     </li>
                   </ul>
                 </div>
@@ -150,27 +160,27 @@
               <dd>{{ user.created_at | to_date | l: 'long' }}</dd>
 
               <dt>Number of Bookings:</dt>
-              <dd>{{ user.number_of_completed_orders_user }}</dd>
+              <dd>{{ user.completed_host_reservations_count }}</dd>
 
               <dt>Number of Ratings:</dt>
               <dd>{{ user.reviews_counter.about_buyer }}</dd>
 
               <dt>Capacity:</dt>
-              <dd>{{ 'passengers_count' | t: count: user.profiles.buyer.properties['vehicle_capacity'] }}</dd>
+              <dd>{{ 'passengers_count' | t: count: user.buyer_properties.vehicle_capacity }}</dd>
             </dl>
 
-            {% if user.profiles.buyer.properties['short_bio'] != blank %}
+            {% if user.buyer_properties.short_bio != blank %}
             <h3>About {{ user.first_name }}</h3>
-            <p>{{ user.profiles.buyer.properties['short_bio'] | nl2br }}</p>
+            <p>{{ user.buyer_properties.short_bio | nl2br }}</p>
             {% endif %}
 
-            {% assign languages = user.profiles.buyer.grouped_customizations['Languages'] %}
+            {% assign languages = user.buyer_profile.customizations_by_type['Languages'] %}
             {% if languages.size > 0 %}
             <h3>Languages</h3>
             <dl class="languages-proficiency short-list">
               {% for language in languages %}
-                <dt>{{ language.properties.language }}</dt>
-                <dd>{{ language.properties.fluency }}</dd>
+                <dt>{{ language.language }}</dt>
+                <dd>{{ language.fluency }}</dd>
               {% endfor %}
             </dl>
             {% endif %}
@@ -181,17 +191,21 @@
             <ul>
               {% if current_user != blank and current_user.has_seller_profile? %}
                 <li class="ask-to-book">
-                  {% if current_user.transactables_count == 0 %}
-                  <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Ask to Book</a>
+                  {% if current_user.seller_profile.onboarded_at == blank %}
+                  <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Invite Driver</a>
                   {% else %}
-                  <a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Ask to Book</a>
+                  <a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Invite Driver</a>
                   {% endif %}
                 </li>
               {% endif %}
 
-              <li>
-                <a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Message Me</a>
-              </li>
+              {% if current_user != blank %}
+              {% if current_user.has_seller_profile? or user.has_seller_profile? %}
+                <li>
+                  <a href="{{ user.user_message_path }}?skip=true" type="button" data-href="{{ user.user_message_path }}?skip=true" class="button-b" data-modal='true'>Message Me</a>
+                </li>
+              {% endif %}
+              {% endif %}
 
               {% if current_user.has_seller_profile? %}
               <li>
