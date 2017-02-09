@@ -4,7 +4,7 @@
       %h3.hx
         = t(:filter_by)
 
-      - group_type_collection = [GroupType.new(id: '_blank_', name: t('group.placeholders.all_groups')), GroupType.not_secret].flatten
+      - group_type_collection = GroupType.not_secret
       = f.input :query, as: :hidden, input_html: { value: params[:query] }
       = f.input :group_type_id, as: :select, collection: group_type_collection, value_method: :id, label_method: :name, selected: params[:group_type_id], include_blank: t('group.placeholders.all_groups') , required: false, wrapper_html: { class: 'drop role' }, input_html: { class: 'selectize' }
       = f.input :page, as: :hidden, input_html: { value: params[:page] }
