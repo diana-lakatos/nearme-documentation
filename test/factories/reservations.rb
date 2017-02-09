@@ -57,6 +57,8 @@ FactoryGirl.define do
           reservation.save!
         end
       end
+      factory :unconfirmed_delayed_reservation, class: DelayedReservation do
+      end
     end
 
     factory :confirmed_reservation do
