@@ -72,8 +72,10 @@ class RecurringBooking < Order
   end
 
   def set_dates
-    self.starts_at = @dates ? Date.parse(@dates) : Date.current
-    self.next_charge_date = start_on
+    Time.use_zone(time_zone) do
+      self.starts_at = @dates ? Date.parse(@dates) : Date.current
+      self.next_charge_date = start_on
+    end
   end
 
   def billing_address_required?
@@ -91,7 +93,15 @@ class RecurringBooking < Order
 
   # Temporary work around, change when there's time for it
   def start_on
-    starts_at.try(:utc).try(:to_date)
+    Time.use_zone(time_zone) do
+      starts_at&.to_date
+    end
+  end
+
+  def next_charge_date
+    Time.use_zone(time_zone) do
+      super
+    end
   end
 
   def end_on
