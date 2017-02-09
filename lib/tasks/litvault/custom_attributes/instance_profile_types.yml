@@ -7,12 +7,15 @@
     label: 'Law Firm Phone Number'
   company_website_address:
     label: 'Law Firm Website Address'
+    placeholder: "Please enter https:// before the URL"
+    hint: 'Please use the following format "https://www.website.com"'
   company_about:
     label: 'About Law Firm'
     html_tag: 'textarea'
   linkedin_url:
     label: "LinkedIn URL"
-    placeholder: 'http://'
+    placeholder: "Please enter https:// before the URL"
+    hint: 'Please use the following format "https://www.website.com"'
     custom_validators_attributes:
       "[0]":
         regex_expression: '^https?\:\/\/.*'
@@ -20,7 +23,8 @@
         field_name: 'linkedin_url'
   googleplus_url:
     label: "Google Plus URL"
-    placeholder: 'http://'
+    placeholder: "Please enter https:// before the URL"
+    hint: 'Please use the following format "https://www.website.com"'
     custom_validators_attributes:
       "[0]":
         field_name: 'googleplus_url'
@@ -28,7 +32,8 @@
         regex_validation: true
   twitter_url:
     label: "Twitter URL"
-    placeholder: 'http://'
+    placeholder: "Please enter https:// before the URL"
+    hint: 'Please use the following format "https://www.website.com"'
     custom_validators_attributes:
       "[0]":
         field_name: 'twitter_url'
