@@ -74,6 +74,8 @@ custom_attributes:
     label: 'Delivery Date'
     attribute_type: date
     html_tag: input
+    input_html_options_string: "data-datepicker=>true"
+    wrapper_html_options_string: ""
     validation:
       required: true
   - name: delivery_address
