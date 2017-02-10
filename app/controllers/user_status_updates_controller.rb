@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class UserStatusUpdatesController < ApplicationController
+  before_filter :authenticate_user!
+
   def create
     current_user.user_status_updates.create(permitted_params)
     redirect_to request.referer
