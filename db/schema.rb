@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170217170817) do
+ActiveRecord::Schema.define(version: 20170210123804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1274,9 +1274,27 @@ ActiveRecord::Schema.define(version: 20170217170817) do
     t.string   "view_type",            limit: 255
     t.integer  "transactable_type_id"
     t.integer  "custom_theme_id"
+    t.boolean  "draft",                            default: false
   end
 
-  add_index "instance_views", ["instance_id", "path", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
+  add_index "instance_views", ["instance_id", "path", "format", "handler", "draft"], name: "instance_path_with_format_and_handler", using: :btree
+
+  create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "instance_type_id"
+    t.integer  "instance_id"
+    t.text     "body"
+    t.string   "path",                 limit: 255
+    t.string   "locale",               limit: 255
+    t.string   "format",               limit: 255
+    t.string   "handler",              limit: 255
+    t.boolean  "partial"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "view_type",            limit: 255
+    t.integer  "transactable_type_id"
+    t.integer  "custom_theme_id"
+  end
 
   create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
     t.integer  "id"

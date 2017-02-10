@@ -210,6 +210,7 @@ class SecuredParams
       :body,
       :path,
       :partial,
+      :draft,
       locale_ids: [],
       transactable_type_ids: []
     ]

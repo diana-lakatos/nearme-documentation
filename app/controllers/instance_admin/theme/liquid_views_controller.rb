@@ -41,8 +41,7 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   end
 
   def create
-    @liquid_view = InstanceAdmin::LiquidViewService.new.create template_params
-
+    @liquid_view = InstanceAdmin::LiquidViewService::Create.new(template_params).call
     if @liquid_view.errors.empty?
       if request.xhr?
         render json: { status: 'success', data: { message: t('flash_messages.instance_admin.manage.liquid_views.created') } }
@@ -61,8 +60,7 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   end
 
   def update
-    @liquid_view = InstanceAdmin::LiquidViewService.new.update @liquid_view, template_params
-
+    @liquid_view = InstanceAdmin::LiquidViewService::Builder.new(@liquid_view).call template_params
     if @liquid_view.errors.empty?
       if request.xhr?
         render json: { status: 'success' }

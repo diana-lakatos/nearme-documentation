@@ -1317,7 +1317,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :content_holders, only: [:index, :new, :create, :edit, :update, :destroy]
-      resources :liquid_views, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :versionable
+      resources :instance_views, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :versionable
       resources :file_uploads do
         collection do
           get :search

@@ -64,4 +64,11 @@ class InstanceViewResolverTest < ActiveSupport::TestCase
     template = @resolver.find_all('index', 'public', false, @details).first
     assert_equal 'other', template.source
   end
+
+  should 'choose published template when draft coexists xx' do
+    @instance_view = FactoryGirl.create(:instance_view, body: 'concrete', instance_id: @instance.id)
+    FactoryGirl.create(:instance_view, body: 'drafted', instance_id: @instance.id, draft: true)
+    template = @resolver.find_all('index', 'public', false, @details).first
+    assert_equal 'concrete', template.source
+  end
 end
