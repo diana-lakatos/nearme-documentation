@@ -5,9 +5,9 @@ class WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate < WorkflowStep:
 
   def data
     {
-      user: @user,
-      commenter: @user,
-      commented_user: lister
+      commenter: enquirer,
+      commented_user: lister,
+      comment_contexts: @commentable.event_source.topics.map(&:name)
     }
   end
 end
