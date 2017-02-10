@@ -332,7 +332,9 @@ class DataImporter::XmlFile < DataImporter::File
       http.use_ssl = (url.scheme == 'https')
 
       http.start do |http|
-        return http.head(url.request_uri).content_type.start_with? 'image'
+        response = http.head(url.request_uri)
+        return remote_file_exists?(response.header['Location']) if response.code == "301"
+        return response.content_type.start_with? 'image'
       end
     else
       false
