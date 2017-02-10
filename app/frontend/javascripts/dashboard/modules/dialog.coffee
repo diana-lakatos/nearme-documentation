@@ -32,7 +32,7 @@ module.exports = class Dialog
       e.preventDefault()
       e.stopPropagation()
       target = $(e.currentTarget)
-      ajaxOptions = { url: target.attr("href"), data: target.data('ajax-options') }
+      ajaxOptions = { url: target.attr('href'), data: target.data('ajax-options') }
       console.log('Dialog :: Loading modal content. AjaxOptions: ', ajaxOptions)
       @load(ajaxOptions, target.data('modal-class'))
 
@@ -40,8 +40,8 @@ module.exports = class Dialog
     $('body').on 'submit.nearme', 'form[data-modal]', (e) =>
       e.preventDefault()
       form = $(e.currentTarget)
-      console.log('Dialog :: Submitting form[data-modal]. Url: ', form.attr("action"))
-      ajaxOptions = { type: form.attr('method'), url: form.attr("action"), data: new FormData(e.currentTarget), processData: false, contentType: false }
+      console.log('Dialog :: Submitting form[data-modal]. Url: ', form.attr('action'))
+      ajaxOptions = { type: form.attr('method'), url: form.attr('action'), data: new FormData(e.currentTarget), processData: false, contentType: false }
       @load(ajaxOptions, form.data('modal-class'))
 
     $(document).on 'hide:dialog.nearme', =>

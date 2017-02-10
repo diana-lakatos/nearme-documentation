@@ -1,3 +1,4 @@
 Hi,
 
-{{ user.name}} ({{ user.profile_url }}) commented on your update ({{ user_commented.profile_url }}). Click the link to read and respond.
+{{ commenter.name}} ({{ commenter.profile_url }}) commented on your update ({{ commented_user.profile_url }}) {% if comment_contexts %} in the {{ comment_contexts | join: ', ' }} {% endif %}.
+Click the link {{ commenter.profile_url}}#activity to read and respond.

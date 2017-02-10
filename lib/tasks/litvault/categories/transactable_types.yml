@@ -1,6 +1,7 @@
 "Group Case":
   "Group Case Categories":
     mandatory: true
+    multiple_root_categories: true
     assign_to_buyer_profile: true
     children:
       - name: 'Group (Mass Torts)'
@@ -25,6 +26,7 @@
 "Individual Case":
   "Individual Case Categories":
     mandatory: true
+    multiple_root_categories: true
     assign_to_buyer_profile: true
     children:
       - name: 'Individual Injury'

@@ -74,15 +74,23 @@
 
       {% comment %} Projects menu {% endcomment %}
       {% if platform_context.transactable_types.first.name %}
-        {% assign projects_path = {{ platform_context.project_space_wizard_path }} %}
+        {% assign projects_path = platform_context.project_space_wizard_path %}
         {% assign projects_selected = current_path | matches: path %}
         {% assign projects_visible = 'dashboard/projects' | is_visible %}
-        {% assign projects_show = platform_context.projectable? and projects_visible %}
+        {% if platform_context.projectable? and projects_visible %}
+          {% assign projects_show = true %}
+        {% else %}
+          {% assign projects_show = false %}
+        {% endif %}
         {% assign transactables_path = 'dashboard_company_transactables_path' | generate_url %}
         {% assign transactables_selected = current_path | matches: '/transactables(?!/new)' %}
         {% assign new_transactable_selected = current_path | matches: '/transactables/new' %}
         {% assign transactables_visible = 'dashboard/transactables' | is_visible %}
-        {% assign transactables_show = current_user.registration_completed? and transactables_visible %}
+        {% if current_user.registration_completed? and transactables_visible %}
+          {% assign transactables_show = true %}
+        {% else %}
+          {% assign transactables_show = false %}
+        {% endif %}
         {% assign offers_path = '/dashboard/company/offers' %}
 
         {% assign orders_selected = current_path | matches: 'dashboard/company/offers' %}
