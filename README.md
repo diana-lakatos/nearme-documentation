@@ -56,16 +56,14 @@ To make ES search work locally you have to enable scripting queries in your loca
     script.indexed: on
     script.disable_dynamic: false
 
-After installing ES you load need to create indecies
+After installing ES you load need to create indicies
 
     rake elastic:indices:create_all
     rake "elastic:indices:rebuild:all_for_instance[1]"
 
-### Index ElasticSearch
-
-After you install ES you need to create indexes and aliases
-  - `rake elastic:indices:create_all`
-  - `rake elastic:aliases:create_all `
+where 1 is id of MP you want to re build. Shall you encounter any difficulties with rebuild:all_for_instance (like for example
+error that there is alias with this name), you might want to delete everything via `curl -XDELETE "localhost:9200/*"` and
+try again. Of course, do not do this on production by any means.
 
 ### Install ES and PostgreSQL on Docker
 

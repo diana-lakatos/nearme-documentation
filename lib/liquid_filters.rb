@@ -644,6 +644,7 @@ module LiquidFilters
   # @param regexp [String] string representing a regular expression pattern against which
   #   we try to match the first parameter
   def matches(string, regexp)
+    return false if regexp.blank?
     !!(string =~ Regexp.new(regexp))
   end
 

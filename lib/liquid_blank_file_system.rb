@@ -12,7 +12,7 @@ module Liquid
         formats: [format],
         locale: [::I18n.locale]
       }.merge(context.registers[:controller].send(:details_for_lookup))
-      begin
+      result = begin
         context.registers[:controller].lookup_context.find_template(path, '', true, details).source
       rescue
         # our UI is not great, MPO might not check 'partial' - this is why this rescue
@@ -23,6 +23,8 @@ module Liquid
           ''
         end
       end
+      result = LiquidView::WrappedLiquidPartialBody.new(partial: path).wrapped_body(result) if LiquidView::CommentWrapperGuard.authorized?(context.registers[:action_view])
+      result
     end
   end
 end

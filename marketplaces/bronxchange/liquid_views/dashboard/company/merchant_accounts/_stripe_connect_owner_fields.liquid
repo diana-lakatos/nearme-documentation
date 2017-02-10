@@ -21,7 +21,7 @@
     {% input dob_formated, form: owners, required: true, input_html-data-date-picker: 'true', input_html-data-date-format: @date_format %}
   </div>
 
-  {% input document, form: owners, required: false, hint: "Optional: Validation security check by Stripe Connect for your account may request Photo ID in some cases.  Please note if you don't upload these details now, you may be asked to upload photo ID later." %}
+  {% input document, form: owners, required: true %}
 
   {% fields_for current_address, form: owners %}
     <div class='fields location' data-address-field>

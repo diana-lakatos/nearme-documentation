@@ -1,4 +1,5 @@
 class PaymentMethod < ActiveRecord::Base
+  include Encryptable
   PAYMENT_METHOD_TYPES = %w(credit_card nonce express_checkout manual remote free ach).freeze
 
   auto_set_platform_context
@@ -29,7 +30,7 @@ class PaymentMethod < ActiveRecord::Base
   end
 
   serialize :settings, Hash
-  attr_encrypted :settings, marshal: true, key: DesksnearMe::Application.config.secret_token
+  attr_encrypted :settings, marshal: true
 
   def self.settings
     {}

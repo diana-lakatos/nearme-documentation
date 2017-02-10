@@ -24,7 +24,7 @@ class CkeditorAssetDrop < BaseDrop
   # @return [String] URL to the attachment
   # @todo -- depracate url filter
   def attachment_url
-    urlify(routes.custom_asset_path(@source))
+    routes.custom_asset_url(@source)
   end
 
   # @return [String] path to destroy the attachment

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 class PaymentTransfer < ActiveRecord::Base
+  include Encryptable
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
 
-  attr_encrypted :token, key: DesksnearMe::Application.config.secret_token
+  attr_encrypted :token
 
   FREQUENCIES = %w(monthly fortnightly weekly semiweekly daily manually).freeze
   DEFAULT_FREQUENCY = 'fortnightly'
