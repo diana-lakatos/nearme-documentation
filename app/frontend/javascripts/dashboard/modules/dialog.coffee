@@ -38,9 +38,9 @@ module.exports = class Dialog
 
     # submit form via button
     $('body').on 'submit.nearme', 'form[data-modal]', (e) =>
-      console.log('Dialog :: Submitting form[data-modal]. Url: ', form.attr("action"))
       e.preventDefault()
       form = $(e.currentTarget)
+      console.log('Dialog :: Submitting form[data-modal]. Url: ', form.attr("action"))
       ajaxOptions = { type: form.attr('method'), url: form.attr("action"), data: new FormData(e.currentTarget), processData: false, contentType: false }
       @load(ajaxOptions, form.data('modal-class'))
 
