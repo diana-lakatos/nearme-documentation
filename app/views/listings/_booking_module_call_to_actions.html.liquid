@@ -9,12 +9,12 @@
   {% endif %}
   <div class="row-fluid booking-submit-row">
     {% if listing.action_free_booking? %}
-      <div class="hidden"><input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ action_translation | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}></div>
+      <div class="hidden"><input type="submit" disabled="disabled" data-disable-with="{{ 'general.processing' | translate }}" value="{{ action_translation | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}></div>
     {% else %}
-      <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ action_translation | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}>
+      <input type="submit" disabled="disabled" data-disable-with="{{ 'general.processing' | translate }}" value="{{ action_translation | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}>
     {% endif %}
-    <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" id="rfq-{{listing.id}}" class="{{rfq_class}}" data-behavior="RFQ" data-modal-method="GET" data-modal-url="{% if current_user %}{{ listing.new_ticket_url }}{% else %}{{ 'new_user_registration_path' | generate_url: return_to: listing.show_path }}{% endif %}" value="{{ rfq_label }}">
+    <input type="submit" disabled="disabled"  data-disable-with="{{ 'general.processing' | translate }}" id="rfq-{{listing.id}}" class="{{rfq_class}}" data-behavior="RFQ" data-modal-method="GET" data-modal-url="{% if current_user %}{{ listing.new_ticket_url }}{% else %}{{ 'new_user_registration_path' | generate_url: return_to: listing.show_path }}{% endif %}" value="{{ rfq_label }}">
   </div>
 {% else %}
-  <input type="submit" data-disable-with="{{ 'general.processing' | translate }}" value="{{ action_translation | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}>
+  <input type="submit" disabled="disabled" data-disable-with="{{ 'general.processing' | translate }}" value="{{ action_translation | translate }}" {% for prop in book_hash %} {{prop[0]}}="{{prop[1]}}"{% endfor %}>
 {% endif %}
