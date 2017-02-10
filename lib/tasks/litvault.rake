@@ -728,6 +728,7 @@ namespace :litvault do
           category.transactable_types = category.transactable_types.push(tt) if !category.transactable_types.include?(tt)
           category.instance_profile_types = category.instance_profile_types.push(InstanceProfileType.buyer.first) if hash.delete(:assign_to_buyer_profile) && !category.instance_profile_types.include?(InstanceProfileType.buyer.first)
           category.search_options = 'include'
+          category.multiple_root_categories = hash[:multiple_root_categories]
           category.save!
 
           puts "\t    - #{name}"

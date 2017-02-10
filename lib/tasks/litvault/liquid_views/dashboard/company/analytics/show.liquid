@@ -16,7 +16,7 @@
               {% if analytics.money? and currencies.size > 1 %}
                 <label for="currency">{{ 'dashboard.analytics.currency' | translate }}</label>
                 <select name="currency" id="currency" onchange="this.form.submit()">
-                  {% for currency in @currencies %}
+                  {% for currency in currencies %}
                     <option  {% if params.currency == currency %} selected="selected" {% endif %} value="{{ currency }}">{{currency}}</option>
                   {% endfor %}
                 </select>
