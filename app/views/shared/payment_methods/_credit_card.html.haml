@@ -32,7 +32,7 @@
 
           = form.input :year, as: :select, label: t('payments.cc_fields.expiration_date_year_html'), required: true, collection: credit_card_date[:year], input_html: {class: 'customSelect', 'data-stripe': :exp_year, prompt: false, placeholder: 'Select year' }
 
-          = form.input :verification_value, label: t('payments.cc_fields.security_code'), required: true, input_html: {'data-stripe': :cvc, placeholder: 'CVV', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true, size: 3 }
+          = form.input :verification_value, label: t('payments.cc_fields.security_code'), required: true, input_html: {'data-stripe': :cvc, placeholder: 'CVC', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true, size: 3 }
 
         .errors
 
