@@ -30,6 +30,14 @@ en:
         transactable_pricing_id: 'Rental period'
       defaults:
         bank_routing_number: 'BSB number'
+    hints:
+      merchant_account:
+        owners:
+          dob_formated: 'Valid format: DD-MM-YYYY'
+    placeholders:
+      merchant_account:
+        owners:
+          dob_formated: 'DD-MM-YYYY'
   devise:
     registrations:
       signed_up: 'You have successfully registered. <a href="/dashboard/edit_profile">Click here</a> to complete your profile.'

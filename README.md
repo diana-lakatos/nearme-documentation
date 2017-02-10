@@ -117,7 +117,7 @@ Go to the Payments Settings in instance_admin in your Application `/instance_adm
 
 If there is no "Stripe" Payment Gateway, just create it.
 
-For payments use any Security Code (CVV), Expiration date that is in future and card numbers from: `https://stripe.com/docs/testing#cards`
+For payments use any Security Code (CVC), Expiration date that is in future and card numbers from: `https://stripe.com/docs/testing#cards`
 
 ### Different Instances (Market Places [MP])
 
