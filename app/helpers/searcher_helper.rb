@@ -1,6 +1,5 @@
 module SearcherHelper
   def result_view
-    return @result_view = 'index' if PlatformContext.current.custom_theme.present?
     return @result_view = 'community' if PlatformContext.current.instance.is_community?
     @result_view = params[:v].presence
     @result_view = @result_view.in?(@transactable_type.available_search_views) ? @result_view : @transactable_type.default_search_view
