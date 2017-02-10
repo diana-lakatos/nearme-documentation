@@ -14,10 +14,10 @@
 ActiveRecord::Schema.define(version: 20170208143326) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "hstore"
   enable_extension "plpgsql"
   enable_extension "btree_gin"
   enable_extension "btree_gist"
+  enable_extension "hstore"
 
   create_table "activity_feed_events", force: :cascade do |t|
     t.integer  "instance_id"
@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(version: 20170208143326) do
     t.boolean  "raw_address",                    default: false, null: false
   end
 
-  add_index "addresses", ["instance_id", "entity_id", "entity_type", "address"], name: "index_addresses_on_entity_id_and_entity_type_and_address", unique: true, using: :btree
+  add_index "addresses", ["instance_id", "entity_id", "entity_type", "address"], name: "index_addresses_on_entity_id_and_entity_type_and_address", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "amenities", force: :cascade do |t|
     t.string   "name",            limit: 255
@@ -667,15 +667,19 @@ ActiveRecord::Schema.define(version: 20170208143326) do
   add_index "custom_attributes", ["target_id", "target_type"], name: "index_custom_attributes_on_target_id_and_target_type", using: :btree
 
   create_table "custom_images", force: :cascade do |t|
-    t.integer  "instance_id",         null: false
-    t.integer  "custom_attribute_id", null: false
+    t.integer  "instance_id",                 null: false
+    t.integer  "custom_attribute_id",         null: false
     t.integer  "owner_id"
     t.string   "owner_type"
     t.integer  "uploader_id"
     t.string   "image"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.text     "image_transformation_data"
+    t.integer  "image_original_width"
+    t.integer  "image_original_height"
+    t.datetime "image_versions_generated_at"
     t.datetime "deleted_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_index "custom_images", ["instance_id", "custom_attribute_id"], name: "index_custom_images_on_instance_id_and_custom_attribute_id", using: :btree
@@ -772,7 +776,7 @@ ActiveRecord::Schema.define(version: 20170208143326) do
     t.datetime "updated_at"
     t.json     "json_content",          default: {}
     t.text     "fields",                default: [],    array: true
-    t.boolean  "mark_for_destruction",  default: false
+    t.boolean  "mark_for_deletion",     default: false
   end
 
   add_index "data_source_contents", ["instance_id", "data_source_id"], name: "index_data_source_contents_on_instance_id_and_data_source_id", using: :btree
@@ -995,19 +999,6 @@ ActiveRecord::Schema.define(version: 20170208143326) do
   end
 
   add_index "form_components", ["instance_id", "form_componentable_id", "form_type"], name: "ttfs_instance_tt_form_type", using: :btree
-
-  create_table "form_configurations", force: :cascade do |t|
-    t.integer  "instance_id",                        null: false
-    t.string   "base_form",                          null: false
-    t.string   "name",                               null: false
-    t.text     "liquid_body"
-    t.text     "configuration", default: "--- {}\n", null: false
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "form_configurations", ["instance_id"], name: "index_form_configurations_on_instance_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",           limit: 255, null: false
@@ -1369,9 +1360,9 @@ ActiveRecord::Schema.define(version: 20170208143326) do
     t.integer  "timeout_in_minutes",                                                                default: 0,                                null: false
     t.text     "password_validation_rules",                                                         default: "---\n:min_password_length: 6\n"
     t.boolean  "debugging_mode_for_admins",                                                         default: true
+    t.string   "twilio_ring_tone"
     t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
-    t.string   "twilio_ring_tone"
     t.boolean  "only_first_name_as_user_slug",                                                      default: false,                            null: false
   end
 
@@ -1698,16 +1689,6 @@ ActiveRecord::Schema.define(version: 20170208143326) do
   end
 
   add_index "page_data_source_contents", ["instance_id", "page_id", "data_source_content_id", "slug"], name: "pdsc_on_foreign_keys", using: :btree
-
-  create_table "page_forms", force: :cascade do |t|
-    t.integer  "instance_id"
-    t.integer  "page_id"
-    t.integer  "form_configuration_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-  end
-
-  add_index "page_forms", ["instance_id", "page_id", "form_configuration_id"], name: "index_page_forms_on_instance_id_and_fks", unique: true, using: :btree
 
   create_table "pages", force: :cascade do |t|
     t.string   "path",                      limit: 255,                         null: false

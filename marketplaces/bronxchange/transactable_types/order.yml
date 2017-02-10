@@ -37,7 +37,7 @@ action_types:
         unit: 'item'
         min_price_cents: 5000
         max_price_cents: 15000
-        allow_free_booking: true
+        allow_free_booking: false
         order_class_name: 'Offer'
         allow_nil_price_cents: true
 

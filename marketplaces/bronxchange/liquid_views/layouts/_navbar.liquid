@@ -182,6 +182,12 @@
                 </li>
               {% endif %}
 
+              {% if current_user.has_buyer_profile? or current_user.has_seller_profile? %}
+                <li class="{% if current_path == '/dashboard/knowledge-files' %}selected{% endif %}">
+                  <a href="/dashboard/knowledge-files">Helpful Resources</a>
+                </li>
+              {% endif %}
+
               <li><a data-user="{{ current_user.first_name }}" rel="nofollow" data-method="delete" href="{{ 'destroy_user_session_path' | generate_url }}" class="nav-link">Log Out</a></li>
             </ul>
           </li>

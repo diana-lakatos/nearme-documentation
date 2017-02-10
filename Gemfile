@@ -183,6 +183,7 @@ group :development do
   gem 'yardstick', require: false
   gem 'fasterer', require: false # Fasterer will suggest some speed improvements
   gem 'rubocop', require: false
+  gem 'foreman', require: false
 end
 
 group :test do
