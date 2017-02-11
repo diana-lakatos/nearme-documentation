@@ -3,7 +3,7 @@
     <figure class="chart-a">
       <figcaption>
         <form action="" accept-charset="UTF-8" method="get">
-          <input name="utf8" type="hidden" value="✓"><input type="hidden" name="chart_type" id="chart_type" value="{{ params.chart_type }}">
+          <input type="hidden" name="chart_type" id="chart_type" value="{{ params.chart_type }}">
           {% if analytics.money? and analytics.currencies.size > 1 %}
           <label for="currency">{{ 'dashboard.analytics.currency' | translate }}</label>
           <select name="currency" id="currency" onchange="this.form.submit()">
@@ -36,4 +36,3 @@
 {% content_for 'domready' %}
   $(document).trigger('line:chart.nearme', ['#chart', {{ analytics.values}} , {{ analytics.labels }} ]);
 {% endcontent_for %}
-
