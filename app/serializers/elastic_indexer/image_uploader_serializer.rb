@@ -2,7 +2,7 @@ module ElasticIndexer
   class ImageSerializer < ActiveModel::Serializer
     self.root = false
 
-    attributes :url, :size, :image
+    attributes :url, :size
   end
 
   class ImageUploaderSerializer < ActiveModel::Serializer
