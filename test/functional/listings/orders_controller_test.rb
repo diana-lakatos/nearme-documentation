@@ -79,6 +79,14 @@ class Listings::OrdersControllerTest < ActionController::TestCase
       assert_response 302
       assert assigns(:order).errors.full_messages.include?(I18n.t('reservations_review.errors.book_it_out_not_available'))
     end
+
+    should 'create reservation without dates' do
+      @transactable = FactoryGirl.create(:subscription_transactable)
+
+      post :create, order_params_invalid_for(@transactable).deep_merge(order: { book_it_out: 'true' })
+
+      assert_redirected_to @transactable.decorate.show_path
+    end
   end
 
   context 'Exclusive Price' do
@@ -134,6 +142,18 @@ class Listings::OrdersControllerTest < ActionController::TestCase
         transactable_id: transactable.id,
         dates: [Chronic.parse('Monday')],
         quantity: '1',
+        transactable_pricing_id: transactable.action_type.pricings.first.id
+      }
+    }
+  end
+
+  def order_params_invalid_for(transactable)
+    {
+      listing_id: transactable.id,
+      order: {
+        transactable_id: transactable.id,
+        dates: '',
+        quantity: '',
         transactable_pricing_id: transactable.action_type.pricings.first.id
       }
     }

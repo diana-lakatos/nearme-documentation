@@ -64,11 +64,12 @@ class LiquidView
     assigns['flash'] = @view.try(:flash).try(:to_hash) if ApplicationController === @view.try(:controller)
     assigns['form_authenticity_token'] = @view.try(:controller).try(:form_authenticity_token)
 
-    # this will need to be cached for performance reason
-    if PlatformContext.current.custom_theme.present?
-      assigns['asset_url'] = PlatformContext.current.custom_theme.custom_theme_assets.each_with_object({}) do |custom_theme_asset, hash|
-        hash[custom_theme_asset.name] = custom_theme_asset.file.url
-        hash
+    custom_theme = PlatformContext.current.custom_theme
+    if custom_theme.present?
+      assigns['asset_url'] = Rails.cache.fetch("custom_themes.#{custom_theme.id}.#{custom_theme.updated_at}") do
+        custom_theme.custom_theme_assets.each_with_object({}) do |custom_theme_asset, hash|
+          hash[custom_theme_asset.name] = custom_theme_asset.file.url
+        end
       end
     end
 

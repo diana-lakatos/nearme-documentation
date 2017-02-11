@@ -33,6 +33,7 @@ module.exports = class BookingsController
     if !@listing.withCalendars() && @fixedPriceSelect.length > 0
       @initializeInfiniScroll()
     @updateQuantityField()
+    @initializeCtaButton()
 
     if @listingData.initial_bookings and @submitFormImmediately
       if @submitFormImmediately == 'RFQ'
@@ -344,3 +345,6 @@ module.exports = class BookingsController
     @container.find(".select2-chosen").text(@fixedPriceSelectInit.text)
     @fixedPriceSelect.val(@fixedPriceSelectInit.id)
     @fixedPriceSelect.trigger('change')
+
+  initializeCtaButton: ->
+    @bookButton.add(@rfqButton).attr('disabled', false)

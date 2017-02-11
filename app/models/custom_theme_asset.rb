@@ -5,7 +5,7 @@ class CustomThemeAsset < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  belongs_to :custom_theme
+  belongs_to :custom_theme, touch: true
   belongs_to :instance
 
   mount_uploader :file, CustomThemeAssetUploader
