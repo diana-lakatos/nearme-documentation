@@ -12,7 +12,7 @@ class PaymentMethod < ActiveRecord::Base
   scope :free, -> { where(payment_method_type: 'free') }
   scope :except_free, -> { where.not(payment_method_type: 'free') }
   scope :ach, -> { where(payment_method_type: 'ach') }
-  scope :recurring, -> { where(payment_method_type: ['ach', 'credit_card']) }
+  scope :recurring, -> { where(payment_method_type: ['ach', 'credit_card', 'manual']) }
 
   belongs_to :payment_gateway, -> { with_deleted }
 

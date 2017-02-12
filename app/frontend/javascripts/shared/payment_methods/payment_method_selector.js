@@ -1,5 +1,6 @@
 const PaymentMethodCreditCard = require('credit_card');
 const PaymentMethodAch = require('ach');
+const PaymentMethodManual = require('manual');
 
 class PaymentMethodSelector {
 
@@ -26,7 +27,8 @@ class PaymentMethodSelector {
     }
     var paymentMethodProcessors = {
       'credit_card': PaymentMethodCreditCard,
-      'ach': PaymentMethodAch
+      'ach': PaymentMethodAch,
+      'manual': PaymentMethodManual
     };
 
     this.lastActiveFieldset = this._ui.currentPaymentMethodContainer.querySelector('fieldset');
