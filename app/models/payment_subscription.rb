@@ -24,7 +24,7 @@ class PaymentSubscription < ActiveRecord::Base
   accepts_nested_attributes_for :payment_source
 
   validates_associated :payment_source
-  validates :payment_source, presence: true, if: proc { |p| p.new_record? }
+  validates :payment_source, presence: true, if: proc { |p| p.new_record? && !p.payment_method.manual? }
   validates :payer, presence: true
 
   def payment_source_attributes=(source_attributes)
@@ -51,6 +51,7 @@ class PaymentSubscription < ActiveRecord::Base
 
   def process!
     return false unless valid?
+    return true if payment_method.try(:manual?)
     return false if payment_source.blank?
     return false unless payment_source.process!
 

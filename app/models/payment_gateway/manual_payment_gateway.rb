@@ -1,5 +1,5 @@
 class PaymentGateway::ManualPaymentGateway < PaymentGateway
-  supported :multiple_currency, :any_currency, :any_country, :manual_payment, :free_payment
+  supported :multiple_currency, :any_currency, :any_country, :manual_payment, :free_payment, :payment_source_store
 
   def self.settings
     {}

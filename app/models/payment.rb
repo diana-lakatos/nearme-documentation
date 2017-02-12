@@ -69,7 +69,7 @@ class Payment < ActiveRecord::Base
   end
 
   validates :currency, presence: true
-  validates :payment_source, presence: true, if: proc { |p| p.payment_gateway.supports_payment_source_store? && p.new_record? }
+  validates :payment_source, presence: true, if: proc { |p| p.payment_gateway.supports_payment_source_store? && p.new_record? && !p.payment_method.manual? }
   validates :payer, presence: true
   validates :payment_gateway, presence: true
   validates :payment_method, presence: true
@@ -224,7 +224,7 @@ class Payment < ActiveRecord::Base
 
   def pay_with!(&block)
     return false unless block_given?
-    return true if manual_payment? || total_amount_cents.zero?
+    return mark_as_paid! if manual_payment? || total_amount_cents.zero?
     return false unless active_merchant_payment?
     return false unless valid?
 
