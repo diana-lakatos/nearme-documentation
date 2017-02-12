@@ -1,12 +1,25 @@
 /* comment */
+@keyframes notifyNewComment {
+  from {
+    background: rgba(#fff5cc, 1);
+  }
+
+  to {
+    background-color: rgba(#fff5cc, 0);
+  }
+}
 
 .comment-a {
   position: relative;
-  margin: 0 0 30px;
+  border-top: 1px solid #e5e5e5;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin: 0;
 
-  & + .comment-a {
-    border-top: 1px solid #e5e5e5;
-    padding-top: 30px;
+  &.new-entry {
+    animation-name: notifyNewComment;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
   }
 
   figure {
@@ -29,6 +42,45 @@
 
     @include bp($screen-tablet-vertical) {
       margin-left: 70px;
+    }
+  }
+
+  footer {
+    margin-left: 80px !important;
+
+    > .comments {
+      margin-top: 10px;
+      padding-top: 15px;
+
+      > .comment-a {
+        border-top: 1px solid #e5e5e5;
+        padding-top: 10px;
+      }
+
+      &:empty {
+        display: none;
+      }
+
+      > .comment {
+        display: none;
+        margin-top: 15px;
+      }
+
+      > .comment.is-active {
+        display: block;
+      }
+
+      > .comment p {
+        margin-bottom: 15px;
+      }
+
+      > .comment .action {
+        text-align: right;
+      }
+
+      > .comment .button-a {
+        padding: 0 29px;
+      }
     }
   }
 
@@ -57,15 +109,15 @@
     }
   }
 
-  @include bp($screen-mobile) {
+  @include bp($screen-tablet-vertical) {
     margin-bottom: 15px;
 
     figure {
-      width: 30px;
+      display: none;
     }
 
     figure ~ * {
-      margin-left: 45px;
+      margin: 0;
     }
 
     .meta {
@@ -75,5 +127,9 @@
 }
 
 .new_comment .action [data-cancel-edit] {
+  display: none;
+}
+
+#new_comment .action {
   display: none;
 }

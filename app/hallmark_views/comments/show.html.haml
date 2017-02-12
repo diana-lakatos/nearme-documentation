@@ -1,0 +1,4 @@
+- if params['comment_view']
+  = render "comments/comment", comment: @comment
+- else
+  = render "comments/activity_feed_comment", comment: @comment

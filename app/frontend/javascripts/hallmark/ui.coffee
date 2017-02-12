@@ -22,13 +22,6 @@ module.exports = class UI
       event.preventDefault()
       $(this).addClass 'is-active'
 
-  # toggles visibility of the comment form
-  @toggleCommentForm: ->
-    $('body').on 'click', '[data-comment]', (event) ->
-      event.preventDefault()
-      $(this).closest('footer').find('> .comment').toggleClass 'is-active'
-
-
   # init tinyNav for tabs navigation
   @tabsStatic: ->
     $('.tabs-a ul:not(.nav-tabs)').tinyNav active: 'is-active'
@@ -86,7 +79,6 @@ module.exports = class UI
     @equalize()
     @nav()
     @readmore()
-    @toggleCommentForm()
     @tabsStatic()
     @tabsDynamic()
     @activeTabFromAnchor()

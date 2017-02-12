@@ -1,13 +1,13 @@
 .entry-actions-a{ id: "comment-actions-#{comment.id}"}
-  %button{ type: 'button' }= t('actionable_entry.toggle_actions')
+  %button{ type: 'button' }= t('user_entry.toggle_actions')
   %ul
-    %li.edit-action= link_to t('actionable_entry.edit'), "#entry-content-#{comment.id}", 'data-edit-entry': ''
-    %li.remove-action= link_to t('actionable_entry.remove'), url_to_comment(comment.commentable, comment), 'data-remove-entry': '', 'data-confirm-label': t('actionable_entry.confirm.remove_comment')
+    %li.edit-action= link_to t('user_entry.edit'), "#entry-content-comment-#{comment.id}", 'data-edit-entry': ''
+    %li.remove-action= link_to t('user_entry.remove'), url_to_comment(comment.commentable, comment), 'data-remove-entry': '', 'data-confirm-label': t('user_entry.confirm.remove_comment')
     %li.report-spam-action
       - if user_signed_in?
         - data = { report_spam: '' }
         - data[:cancel_report_url] = url_to_cancel_spam_report(comment.commentable, comment, comment.spam_reports.build)
-        - data[:cancel_report_label] = t('actionable_entry.cancel_spam_report')
-        = link_to t('actionable_entry.report_as_spam'), url_to_spam_report(comment.commentable, comment, comment.spam_reports.build), data: data
+        - data[:cancel_report_label] = t('user_entry.cancel_spam_report')
+        = link_to t('user_entry.report_as_spam'), url_to_spam_report(comment.commentable, comment, comment.spam_reports.build), data: data
       - else
         = link_to t(:report_as_spam), new_user_session_path(return_to: request.path)

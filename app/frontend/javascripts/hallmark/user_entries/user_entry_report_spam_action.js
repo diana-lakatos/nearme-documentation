@@ -1,6 +1,6 @@
 let resolver = require('./spam_report_resolver');
 
-class ActionableEntryReportSpamAction {
+class UserEntryReportSpamAction {
   constructor(trigger, container) {
     this.trigger = trigger;
     this.raportExists = false;
@@ -40,7 +40,7 @@ class ActionableEntryReportSpamAction {
   }
 
   bindEvents() {
-    this.trigger.addEventListener('click', (e)=>{
+    this.trigger.addEventListener('click', (e) => {
       e.preventDefault();
       this.updateState();
     });
@@ -58,11 +58,11 @@ class ActionableEntryReportSpamAction {
       url: action.url,
       method: action.method,
       dataType: 'json'
-    }).done(()=>{
+    }).done(() => {
       this.processing = false;
       this.raportExists = !this.raportExists;
       this.updateTrigger();
-    }).fail(()=>{
+    }).fail(() => {
       this.processing = false;
       alert('We were unable to modify this spam report');
       throw new Error(`Unable to update spam report for ${action.url} ${action.method}`);
@@ -78,4 +78,4 @@ class ActionableEntryReportSpamAction {
   }
 }
 
-module.exports = ActionableEntryReportSpamAction;
+module.exports = UserEntryReportSpamAction;

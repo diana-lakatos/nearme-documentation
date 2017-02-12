@@ -337,7 +337,7 @@ en:
         topics: 'Select topics'
 
       comment:
-        body: 'Please, leave a comment'
+        body: 'Leave a comment'
 
       search_filter:
         sort: 'Sort by:'

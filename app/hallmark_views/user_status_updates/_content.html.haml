@@ -1,6 +1,6 @@
-.entry-content-a{ id: "entry-content-#{@user_status_update.id}" }
+.entry-content-a{ id: "entry-content-user-status-#{@user_status_update.id}" }
   .entry-body{ class: ('edited' if @user_status_update.created_at != @user_status_update.updated_at) }
     = videoify_and_parse_with_markdown(@user_status_update.text , { iframe_width: 400, iframe_height: 225 })
-
+  = render 'shared/activity_feed_images', images: @user_status_update.activity_feed_images
   .entry-editor
     = render "user_status_updates/form", user_status_update: @user_status_update, no_topic_select: true, remote: false, no_avatar: true

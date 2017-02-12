@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'sanitize'
 
 module ApplicationHelper
@@ -45,7 +46,7 @@ module ApplicationHelper
   end
 
   def meta_attr(content)
-    Sanitize.fragment(content).gsub(/\s+/, ' ').strip.html_safe
+    Sanitize.fragment(content.dup).gsub(/\s+/, ' ').strip.html_safe if content.present?
   end
 
   def meta_description(description)
@@ -339,7 +340,7 @@ module ApplicationHelper
   end
 
   def cache_params_string
-    request.query_parameters.to_a.sort_by { |el| el[0] }.map { |k,v| "#{k}=#{v}" }.join(',')
+    request.query_parameters.to_a.sort_by { |el| el[0] }.map { |k, v| "#{k}=#{v}" }.join(',')
   end
 
   def is_i18n_set?(key)
@@ -490,5 +491,18 @@ module ApplicationHelper
   def videoify_and_parse_with_markdown(text, embed_options = {})
     markdown = Redcarpet::Markdown.new(HtmlWithVideos.new({ escape_html: true }, embed_options), autolink: true, tables: true, fenced_code_blocks: true)
     markdown.render(text.to_s).html_safe
+  end
+
+  def object_updated?(object)
+    (object.updated_at - object.created_at) > 1 if object && object.try(:updated_at) && object.try(:created_at)
+  end
+
+  def collection_with_new_object(association)
+    association.new
+    association
+  end
+
+  def collection_or_new_object(association)
+    association.presence || association.new
   end
 end
