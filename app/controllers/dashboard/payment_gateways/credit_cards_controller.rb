@@ -14,8 +14,8 @@ class Dashboard::PaymentGateways::CreditCardsController < Dashboard::BaseControl
 
   def create
     @credit_card = @instance_client.credit_cards.build(credit_card_params)
-    @credit_card.payment_gateway = @payment_gateway
-    if @credit_card.save
+    @credit_card.payment_method = @payment_gateway.payment_methods.credit_card.last
+    if @credit_card.process! && @credit_card.save
       flash[:success] = t('flash_messages.manage.credit_cards.added')
       redirect_to dashboard_payment_gateway_credit_cards_path(@payment_gateway)
     else
