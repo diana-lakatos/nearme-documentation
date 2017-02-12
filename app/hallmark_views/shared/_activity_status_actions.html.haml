@@ -1,7 +1,7 @@
 .entry-actions-a{ id: "status-update-actions-#{event.event_source.id}"}
   %button{ type: 'button' }= t('user_entry.toggle_actions')
   %ul
-    %li.edit-action= link_to t('user_entry.edit'), "#entry-content-#{event.event_source.id}", 'data-edit-entry': ''
+    %li.edit-action= link_to t('user_entry.edit'), "#entry-content-user-status-#{event.event_source.id}", 'data-edit-entry': ''
     %li.remove-action= link_to t('user_entry.remove'), url_for([event.event_source]), 'data-remove-entry': '', 'data-confirm-label': t('user_entry.confirm.remove_status_update')
     - if event.is_reportable?
       %li.report-spam-action

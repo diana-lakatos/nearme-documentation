@@ -7,7 +7,7 @@
 - if user_status_update.persisted?
   - data['user_entry_form_remote'] = ''
   - data['user_entry_edit_mode'] = ''
-  - data['user_entry_form_target'] = "#entry-content-#{user_status_update.id}"
+  - data['user_entry_form_target'] = "#entry-content-user-status-#{user_status_update.id}"
 
 = simple_form_for user_status_update, html: { class: 'user-entry-form', data: data } do |f|
   - if feed

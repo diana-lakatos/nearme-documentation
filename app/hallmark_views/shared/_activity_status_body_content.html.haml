@@ -1,4 +1,4 @@
-.entry-content-a{ id: "entry-content-#{event.event_source.id}" }
+.entry-content-a{ id: "entry-content-user-status-#{event.event_source.id}" }
   .entry-body{ class: ('edited' if object_updated?(event.event_source)) }
     - if body.present?
       - if event.is_text_update? || event.event.to_sym == :user_created_transactable

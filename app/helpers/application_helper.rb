@@ -46,7 +46,7 @@ module ApplicationHelper
   end
 
   def meta_attr(content)
-    Sanitize.fragment(content).gsub(/\s+/, ' ').strip.html_safe
+    Sanitize.fragment(content.dup).gsub(/\s+/, ' ').strip.html_safe if content.present?
   end
 
   def meta_description(description)

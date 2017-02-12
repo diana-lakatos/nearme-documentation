@@ -77,6 +77,21 @@
         opacity: 0;
         font-size: 120px;
       }
+
+      .env-test & {
+        height: auto;
+        width: auto;
+        position: relative;
+        overflow: visible;
+
+        &::before {
+          display: none;
+        }
+
+        input {
+          opacity: 1;
+        }
+      }
     }
   }
 

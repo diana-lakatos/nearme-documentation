@@ -1,7 +1,7 @@
 .entry-actions-a{ id: "comment-actions-#{comment.id}"}
   %button{ type: 'button' }= t('user_entry.toggle_actions')
   %ul
-    %li.edit-action= link_to t('user_entry.edit'), "#entry-content-#{comment.id}", 'data-edit-entry': ''
+    %li.edit-action= link_to t('user_entry.edit'), "#entry-content-comment-#{comment.id}", 'data-edit-entry': ''
     %li.remove-action= link_to t('user_entry.remove'), url_to_comment(comment.commentable, comment), 'data-remove-entry': '', 'data-confirm-label': t('user_entry.confirm.remove_comment')
     %li.report-spam-action
       - if user_signed_in?

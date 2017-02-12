@@ -79,7 +79,7 @@ class UserEntryForm {
 
   process(html) {
     if (this.mode === 'edit') {
-      this.ui.target.innerHTML = html;
+      this.ui.target.innerHTML = $(html).html();
       this.ui.target.classList.remove('is-active');
       $(this.ui.target).closest('[data-user-entry]').trigger('update');
     } else {

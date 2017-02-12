@@ -8,7 +8,7 @@
   - data['user_entry_edit_mode'] = ''
 
 - if comment.persisted?
-  - data['user_entry_form_target'] = "#entry-content-#{comment.id}"
+  - data['user_entry_form_target'] = "#entry-content-comment-#{comment.id}"
 - else
   - data['user_entry_form_target'] = "#comments-feed-#{comment.commentable.id}"
 
