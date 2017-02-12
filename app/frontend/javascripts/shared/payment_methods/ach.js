@@ -1,11 +1,12 @@
 /* global Stripe */
 /* global Plaid */
 
+const plaidOptions = window.plaid_options;
+
 class PaymentMethodAch {
 
   constructor(container) {
     this.form = $('#checkout-form, #new_payment');
-    this.__plaid_options = window.plaid_options;
 
     this._publishableToken = this.form.find('#ach_manual_payment_form').data('publishable');
     this._ui = {};
@@ -87,20 +88,20 @@ class PaymentMethodAch {
   }
 
   _setupPlaid() {
-    if (this.__plaid_options.key.length < 1) {
+    if (plaidOptions.key.length < 1) {
       return true;
     }
 
     var linkHandler = Plaid.create({
-      env: this.__plaid_options.env,
-      clientName: this.__plaid_options.name,
-      key: this.__plaid_options.key,
+      env: plaidOptions.env,
+      clientName: plaidOptions.name,
+      key: plaidOptions.key,
       product: 'auth',
       selectAccount: true,
       onSuccess: function(public_token, metadata) {
         $('#stripe_plaid_public_token').val(public_token);
         $('#stripe_plaid_account_id').val(metadata.account_id);
-        $('#plaid_institution').text(this.__plaid_options.auth_with + metadata.institution.name);
+        $('#plaid_institution').text(plaidOptions.auth_with + metadata.institution.name);
       },
     });
 
