@@ -33,6 +33,10 @@
       </div>
     </div>
 
+    {% if transactable_collaborator.approved_by_owner? %}
+      {% include 'dashboard/company/transactables/attachments.html', attachments: transactable.attachments %}
+    {% endif %}
+
     <h3>Request To View Case Details:</h3>
     <div class="table-responsive">
       <table class="table table-transactable-details">

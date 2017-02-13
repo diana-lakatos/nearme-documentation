@@ -18,7 +18,10 @@
       <div class="col-md-3">
         {% include 'dashboard/company/transactables/lister_actions.html', order: accepted_order %}
       </div>
-  </div>
+    </div>
+
+    {% include 'dashboard/company/transactables/attachments.html', attachments: transactable.attachments %}
+
     {% if current_status == 'pending' %}
 
       {% assign transactable_collaborators = transactable.transactable_collaborators %}

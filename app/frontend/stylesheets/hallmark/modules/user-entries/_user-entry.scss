@@ -51,9 +51,9 @@
 
     img {
       display: block;
-      width: 100%;
+      max-width: 100%;
+      margin: 0 0 10px !important;
       border: 2px solid #dde1ea;
-      margin-bottom: 10px !important;
     }
   }
 }

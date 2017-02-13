@@ -1,0 +1,26 @@
+<h3>Files</h3>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>File Name</th>
+        <th>File By</th>
+        <th>Date</th>
+        <th>File Size</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for attachment in attachments %}
+        <tr>
+          <td><a href="{{ attachment.attachment_url }}">{{ attachment.title }}</a></td>
+          <td>{{ attachment.user.name }}</td>
+          <td>{{ attachment.created_at | to_date | l: 'short' }}</td>
+          <td>{{ attachment.data_file_size }}</td>
+          <td>{% if attachment.user.id == current_user.id %}<a class="btn btn-warning" href="/dashboard/seller_attachments/{{ attachment.id}}" data-method="delete" data-confirm="Are you sure?">Delete</a>{% endif %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a class="btn btn-info pull-right" data-modal="true" href="{{ 'new_dashboard_seller_attachment_path' | generate_url: transactable_id: transactable.id }}">Upload File</a>
+</div>
