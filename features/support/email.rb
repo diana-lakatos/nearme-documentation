@@ -28,6 +28,9 @@ module EmailHelpers
     last_email
   end
 
+  def last_email_with_subject(email, text)
+    emails_for(email).select { |e| e.subject.include?(text) }.empty?.should be_true
+  end
 end
 
 World(EmailHelpers)

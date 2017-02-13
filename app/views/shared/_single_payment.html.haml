@@ -19,4 +19,6 @@
     %button{type: "submit", data: { disable_with: t('general.processing') } }= t "dashboard.host_reservations.actions.accept"
 
 :javascript
-  $(document).trigger('init:paymentmodal.nearme');
+  $(document)
+    .trigger('init:paymentmodal.nearme')
+    .trigger('init:creditcardform.nearme');

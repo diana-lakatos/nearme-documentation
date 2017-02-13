@@ -17,14 +17,8 @@ class PaymentMethodAch {
       $(this._ui.container.querySelector('input[type=radio]')).trigger('click');
       this._ui.container.querySelector('input[type=radio]').checked = true;
     }
-    this._ui.newCreditCard = this._ui.container.querySelector('.payment-source-form');
-    this._ui.creditCardSwitcher = this._ui.container.querySelector('.payment-source-option-select');
 
     var that = this;
-
-    Array.prototype.forEach.call(this._ui.creditCardSwitcher.querySelectorAll('input[type=radio]'), (el) => {
-      el.addEventListener('change', (event) => this._toggleByValue(event.target.value));
-    });
 
     if (!window.Stripe) {
       let s = document.createElement('script');
@@ -51,40 +45,10 @@ class PaymentMethodAch {
     }
   }
 
-  _init() {
-    let current = this._ui.creditCardSwitcher.querySelector('input:checked');
-    if (current) {
-      this._toggleByValue(current.value);
-    }
-  }
-
-  _setFormFieldDisabledAttribute(elements, value) {
-    Array.prototype.forEach.call(elements, (element) => element.disabled = value);
-  }
-
-  _toggleByValue(value) {
-    let $form = $(this.form);
-    let inputs = this._ui.newCreditCard.querySelectorAll('input');
-    let selects = this._ui.newCreditCard.querySelectorAll('select');
-
-    if (value === 'new_ach') {
-      this._ui.newCreditCard.classList.remove('hidden');
-      this._setFormFieldDisabledAttribute(inputs, false);
-      this._setFormFieldDisabledAttribute(selects, false);
-      return this._submitFormHandler();
-    }
-
-    this._ui.newCreditCard.classList.add('hidden');
-
-    this._setFormFieldDisabledAttribute(inputs, true);
-    this._setFormFieldDisabledAttribute(selects, false);
-
-    $form.unbind('submit');
-  }
-
   _bindEvents() {
     console.log('PaymentMethodAch :: Binding events (actually, just calling _submitFormHandler)');
     this._submitFormHandler();
+    $(document).trigger('init:creditcardform.nearme');
   }
 
   _setupPlaid() {

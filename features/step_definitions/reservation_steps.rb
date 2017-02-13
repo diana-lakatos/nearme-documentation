@@ -71,10 +71,8 @@ When /^I book space for with extra fields:$/ do |table|
   step 'I click to review the booking'
   step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
-  # page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
   fill_in 'order_user_attributes_mobile_number', with: '123123412345'
-  # fill_in 'order_user_attributes_last_name', with: 'Aaa'
   fill_in 'order_user_attributes_phone', with: '12312341'
   step 'I click to confirm the booking'
 end
@@ -98,7 +96,6 @@ When /^I fail to book space for without extra fields:$/ do |table|
 
   step 'I provide reservation credit card details'
   page.should have_css('input#order_user_attributes_mobile_number')
-  # page.should have_css('input#order_user_attributes_last_name')
   page.should have_css('input#order_user_attributes_phone')
   step 'I click and fail to confirm the booking'
 end
@@ -204,7 +201,7 @@ When /^I select to book( and review)? space for:$/ do |and_review, table|
 
   if bookings.first[:start_minute]
     page.find('.booking-price [data-unit="hour"]').click
-    # Hourly bookgs
+    # Hourly bookings
     ensure_datepicker_open('.date-start')
     select_datepicker_date(bookings.first[:date])
 
@@ -258,20 +255,14 @@ Then /^the reservation total should show \$?([0-9\.,]+)$/ do |cost|
 end
 
 When /^I click to review the bookings?$/ do
-  sleep(1) # :)) I gope this will fix randomly failing tests ;)
+  sleep(1) # :)) I gope this will fix randomly failing tests ;) -- I gope that too :(
   click_button 'Book'
 end
 
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
-  page.should_not have_css('.nm-new-credit-card-form.hidden')
-  fill_in 'order_payment_attributes_credit_card_attributes_first_name', with: 'FirstName'
-  fill_in 'order_payment_attributes_credit_card_attributes_last_name', with: 'LastName'
-  # note we provide invalid credit card number on purpose - payment.js should validate the input and remove unnecessary 555
-  page.execute_script("$('#order_payment_attributes_credit_card_attributes_number').val('42 42424 24242 4242 555').trigger('change')")
-  select '12', from: 'order_payment_attributes_credit_card_attributes_month'
-  select '2020', from: 'order_payment_attributes_credit_card_attributes_year'
-  fill_in 'order_payment_attributes_credit_card_attributes_verification_value', with: '411'
+  select_add_new_cc
+  fill_new_credit_card_fields
   @credit_card_reservation = true
 end
 

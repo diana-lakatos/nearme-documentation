@@ -1,5 +1,5 @@
-require('history.js/history.js')
-require('history.js/history.adapter.ender.js')
+require('history.js/history')
+require('history.js/history.adapter.ender')
 
 Forms = require('../forms')
 
