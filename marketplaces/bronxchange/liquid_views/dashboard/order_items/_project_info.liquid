@@ -2,36 +2,26 @@
 <div class="row">
   <div class="col-md-6">
     <dl class="transactable-properties">
-      {% if transactable.properties.project_contact != blank %}
+      {% if transactable.properties.order_contact != blank %}
         <dt>Contact</dt>
-        <dd>{{ transactable.properties.project_contact }}</dd>
+        <dd>{{ transactable.properties.order_contact }}</dd>
       {% endif %}
 
-      {% if transactable.properties.company_name != blank %}
+      {% if transactable.owner.organization_name != blank %}
         <dt>Company</dt>
-        <dd>{{ transactable.properties.company_name }}</dd>
+        <dd>{{ transactable.owner.organization_name }}</dd>
       {% endif %}
 
-      {% if transactable.properties.workplace_type != blank %}
-        <dt>Workplace</dt>
-        <dd>{{ transactable.properties.workplace_type }}</dd>
-      {% endif %}
-
-      {% if transactable.properties.workplace_type == 'On Site' and transactable.properties.office_location != blank %}
-        <dt>Office</dt>
-        <dd>{{ transactable.properties.office_location }}</dd>
+      {% if transactable.properties.purchase_order_number != blank %}
+        <dt>Purchase Order Number</dt>
+        <dd>{{ transactable.properties.purchase_order_number }}</dd>
       {% endif %}
 
       <dt>Approx. Budget</dt>
-      <dd>{{ transactable.properties.budget | pricify }}</dd>
+      <dd>{{ transactable.properties.approximate_budget }}</dd>
 
-      <dt>Deadline</dt>
-      <dd>{{ transactable.properties.deadline | to_date | l: 'short' }}</dd>
-
-      {% if transactable.properties.estimation != blank %}
-        <dt>Approx. Time to Complete</dt>
-        <dd>{{ transactable.properties.estimation }}</dd>
-      {% endif %}
+      <dt>Delivery date</dt>
+      <dd>{{ transactable.properties.delivery_date | to_date | l: 'short' }}</dd>
     </dl>
   </div>
   <div class="col-md-6">

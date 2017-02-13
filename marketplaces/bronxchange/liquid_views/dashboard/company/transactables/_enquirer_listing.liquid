@@ -151,10 +151,11 @@
     {% endif %}
     {% assign order = transactable.last_accepted_order %}
     {% if order.confirmed? %}
+      <hr>
       {% if current_user.has_verified_merchant_account == true %}
-        <a class="btn btn-info" href="{{ order.new_order_item_path }}">{{ 'dashboard.user_reservations.track_time' | t}}</a>
+        <a class="btn btn-default" href="{{ order.new_order_item_path }}">{{ 'dashboard.user_reservations.track_time' | t}}</a>
       {% else %}
-        <a class="btn btn-info" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">{{ 'dashboard.user_reservations.track_time' | t}}r</a>
+        <a class="btn btn-default" data-modal="true" href="{{ 'required_modal_dashboard_company_payouts_path' | generate_url }}">{{ 'dashboard.user_reservations.track_time' | t}}r</a>
       {% endif %}
     {% endif %}
   </article>
