@@ -21,6 +21,8 @@ class ElasticIndexerJob < Job
       return
     end
 
+    Rails.logger.info format('Started reindexing ES: %s#%s', @klass, @record_id)
+
     begin
       case @operation.to_s
       when /index|update/
