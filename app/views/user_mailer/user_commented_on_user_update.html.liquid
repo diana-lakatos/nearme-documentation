@@ -2,7 +2,7 @@
 
 <p>
   <a href="{{ commenter.profile_url }}">{{ commenter.name }}</a> commented on
-  <a href="{{ commented_user.profile_url }}">your Update</a>
+  <a href="{{ commented_user.profile_url }}#entry-content-{{ comment_id }}">your Update</a>
   {% if comment_contexts %}
     in the {{ comment_contexts | join: ', '  }}
   {% endif %}.
