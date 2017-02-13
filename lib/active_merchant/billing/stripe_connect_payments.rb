@@ -57,7 +57,7 @@ module ActiveMerchant
       # @options [Hash] with one of the keys: :stripe_account, :destination. Can be nil
       def find_balance(balance_id, options)
         PaymentGateway::Response::Stripe::Balance.new(
-          Stripe::BalanceTransaction.retrieve({ id: balance_id }, options)
+          Stripe::BalanceTransaction.retrieve({ id: balance_id }, options || {})
         )
       rescue => e
         raise_error(e)
