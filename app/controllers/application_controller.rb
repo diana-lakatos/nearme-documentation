@@ -16,7 +16,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   layout :layout_for_request_type
 
-  before_action :redirect_unverified_user, if: -> { platform_context.instance.require_verified_user? }
   before_action :set_i18n_locale
   before_action :set_locale
   before_action :log_out_if_token_exists
@@ -29,6 +28,7 @@ class ApplicationController < ActionController::Base
   before_action :redirect_if_marketplace_password_protected
   before_action :set_raygun_custom_data
   before_action :filter_out_token
+  before_action :redirect_unverified_user, if: -> { platform_context.instance.require_verified_user? }
   before_action :sign_out_if_signed_out_from_intel_sso, if: -> { should_log_out_from_intel? }
   before_action :set_paper_trail_whodunnit
   before_action :force_fill_in_wizard_form
