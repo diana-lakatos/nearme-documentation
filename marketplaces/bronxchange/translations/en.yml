@@ -198,6 +198,7 @@ en:
   time:
     formats:
       short: '%l:%M %p'
+      day_month_year: '%m/%d/%Y'
 
   wish_lists:
     buttons:

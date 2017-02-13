@@ -5,7 +5,7 @@
       = link_to attachment.filename, attachment.url_content, download: attachment.filename
     %span.meta
       %time{ datetime: attachment.created_at}
-        = attachment.format_created_at
+        = l(attachment.created_at, format: :day_month_year)
 
       - if attachment.size
         %span.size= number_to_human_size(attachment.size)
