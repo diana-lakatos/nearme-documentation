@@ -2069,6 +2069,7 @@ en:
       bookings: 'Bookings'
       orders: 'Orders'
       location_views: 'Location Views'
+      listing_views: "Listing Views"
       product_views: 'Product Views'
       no_reservations_yet: "Your locations haven't got any reservations yet."
       no_purchases_yet: 'Your products have not received any orders.'
