@@ -35,7 +35,7 @@ class TransactableCollaboratorDrop < BaseDrop
   # @return [String] url for the enquirer to cancel its collaboration request
   #   (must be used with the delete HTTP method)
   # @todo -- deprecate - url filter
-  def enquirerer_destroy_path
+  def enquirer_destroy_path
     routes.listing_transactable_collaborator_path(transactable, @source)
   end
 
