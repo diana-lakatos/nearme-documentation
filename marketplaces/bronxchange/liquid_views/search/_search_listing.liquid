@@ -7,7 +7,9 @@
         </div>
 
         <div class="avatar">
-          <img src="{{ user.avatar.big.url }}" alt="{{ user.name }}">
+          {% assign default_avatar = 'default-user-avatar.svg' | image_url %}
+          {% assign avatar = user.avatar.big.url | default: default_avatar %}
+          <img src="{{ avatar }}" alt="{{ user.name }}">
         </div>
       </div>
 
