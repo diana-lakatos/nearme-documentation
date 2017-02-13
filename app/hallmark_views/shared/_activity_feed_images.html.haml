@@ -3,4 +3,4 @@
   .entry-images{ data: { entry_images: '' }}
     - images.each do |image|
       %a{ href: image.image.url, data: { "original-width": image.image_original_width, "original-height": image.image_original_height } }
-        %img{ src: image.image.url(size), width: 410, height: 254 }
+        %img{ src: image.image.url(size) }
