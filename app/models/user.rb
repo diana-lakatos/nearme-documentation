@@ -869,9 +869,18 @@ class User < ActiveRecord::Base
   end
 
   def perform_cleanup!
-    created_companies.destroy_all
-    orders.unconfirmed.find_each(&:user_cancel!)
-    created_listings_orders.unconfirmed.find_each(&:reject!)
+    # Record was soft deleted
+    if self.persisted?
+      created_companies.destroy_all
+      orders.unconfirmed.find_each(&:user_cancel!)
+      created_listings_orders.unconfirmed.find_each(&:reject!)
+    else
+      # Record is hard deleted
+      transactables.each { |t| t.really_destroy! }
+      created_companies.each { |c| c.really_destroy! }
+      orders.each { |o| o.really_destroy! }
+      created_listings_orders.each { |o| o.really_destroy! }
+    end
   end
 
   def recover_companies

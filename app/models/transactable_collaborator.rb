@@ -98,7 +98,7 @@ class TransactableCollaborator < ActiveRecord::Base
   end
 
   def trigger_workflow_alert_on_destroy!
-    if actor == transactable.creator
+    if transactable && actor == transactable.creator
       WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined, transactable_id, user_id)
     elsif actor == user
       WorkflowStepJob.perform(WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit, transactable_id, user_id)
