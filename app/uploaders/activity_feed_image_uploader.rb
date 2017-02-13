@@ -9,7 +9,7 @@ class ActivityFeedImageUploader < BaseUploader
 
   self.dimensions = {
     medium: { width: 144, height: 144, transform: :resize_to_fill },
-    space_listing: { width: 410, height: 254, transform: :resize_to_fill }
+    space_listing: { width: 500, height: 300, transform: :resize_to_fit }
   }
 
   version :medium, from_version: :transformed do
