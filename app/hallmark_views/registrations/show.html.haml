@@ -50,7 +50,7 @@
       %p= t 'user_profile.labels.admin_profile'
 
 .tab-content
-  #activity.tab-pane.fade{:role => "tabpanel"}
+  #activity.tab-pane.active.fade{:role => "tabpanel"}
     = render 'show_activity', object: @user, feed: @feed
 
   #transactables.tab-pane.fade{:role => "tabpanel"}
