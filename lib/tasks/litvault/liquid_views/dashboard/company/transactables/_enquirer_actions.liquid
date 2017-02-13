@@ -4,7 +4,7 @@
   {% if transactable_collaborator.approved_by_owner? %}
     <a href="{{ transactable.show_path }}" class="btn btn-default">View Case Details</a>
   {% else %}
-    <a href="{{ transactable_collaborator.enquirerer_destroy_path }}" data-method="delete" data-confirm="Are you sure?" class="btn btn-default">Cancel Request</a>
+    <a href="{{ transactable_collaborator.enquirer_destroy_path }}" data-method="delete" data-confirm="Are you sure?" class="btn btn-default">Cancel Request</a>
   {% endif %}
   </li>
 

@@ -834,6 +834,7 @@ en:
           lessor: Lessor
           lister: Lister
           paid_at: "Paid at"
+          enquirer: "Enquirer"
         resource:
           plural:
             payment_transfer: "Payment tranfers"
@@ -2391,6 +2392,7 @@ en:
       authorized: "Payment authorized"
       voided: "Payment voided"
     checkout:
+      summary: "Order Summary"
       item: "Item"
       net: "Net"
       tax: "Tax"
@@ -2842,6 +2844,7 @@ en:
     shipping_address: 'Shipping address'
     heading: 'Review your booking'
     summary: 'Order summary'
+    review: 'Review'
     subtotal: 'Subtotal'
     service_fee: 'Service fee'
     total: 'Total'
