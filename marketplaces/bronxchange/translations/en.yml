@@ -127,6 +127,9 @@ en:
         action_types:
           pricings:
             is_free_booking: 'Please define project type?'
+    payment_documents:
+      file: Your offer file
+
     hints:
       shared:
         categories:
@@ -298,5 +301,11 @@ en:
         user: "SME"
         lister: "Purchaser"
         pro_bono: "ProBono"
+
+
+  upload_documents:
+    file:
+      default:
+        label: Offer file
 
 

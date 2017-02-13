@@ -132,7 +132,7 @@
                 <td>
                   {% if order.unconfirmed? %}
                     <a class="btn btn-success" href="{{ order.payment_documents[0].file_url }}" download="{{ order.payment_documents[0].file_name }}" target="_blank">View</a>
-                    <a class="btn btn-info" href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
+                    <a class="btn btn-info" data-modal href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
                     <a class="btn btn-danger" href="{{ 'enquirer_cancel_dashboard_order_path' | generate_url: order.id }}" data-method="post" data-confirm="Are you sure you want to cancel?">{{ 'general.cancel' | t }}</a>
                   {% endif %}
                 </td>
