@@ -13,9 +13,19 @@ module MarketplaceBuilder
       end
 
       def whitelisted_properties
-        [:name, :withdraw_invitation_when_reject, :transactable_types, :reverse_immediate_payment]
+        [
+          :name,
+          :withdraw_invitation_when_reject,
+          :transactable_types,
+          :reverse_immediate_payment,
+          :edit_unconfirmed,
+          :check_overlapping_dates,
+          :skip_payment_authorization,
+          :validate_on_adding_to_cart,
+          :step_checkout,
+          :require_merchant_account
+        ]
       end
-
     end
   end
 end

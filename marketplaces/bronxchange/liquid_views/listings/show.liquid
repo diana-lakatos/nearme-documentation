@@ -114,7 +114,7 @@
       <ul class="actions-a">
         {% assign orders = current_user | get_enquirer_orders: listing %}
         {% assign can_make_offer = false %}
-        {% if current_status == 'pending' %}
+        {% if listing.state == 'pending' %}
           {% if orders == empty %}
             {% assign can_make_offer = true %}
           {% else %}

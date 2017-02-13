@@ -40,4 +40,11 @@ namespace :mpbuilder do
     ]
     MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
   end
+
+  task translations: :environment do
+    creators = [
+      MarketplaceBuilder::Creators::TranslationsCreator
+    ]
+    MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
+  end
 end

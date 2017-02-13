@@ -24,7 +24,7 @@ module MarketplaceBuilder
           form_components = hash.delete(:form_components) || []
 
           hash.each do |key, _value|
-            logger.fatal("#{key} is not allowed in #{object_class_name} settings") unless whitelisted_properties.include?(key)
+            raise MarketplaceBuilder::Error, "#{key} is not allowed in #{object_class_name} settings" unless whitelisted_properties.include?(key)
           end
 
           hash = parse_params(hash)

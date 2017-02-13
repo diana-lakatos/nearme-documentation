@@ -41,6 +41,9 @@ en:
       reject: "What's wrong?"
       reject_placeholder: 'Please let us know what is the reason of declining expenses'
       free_unit_price: 'Pro bono projects don’t allow hourly rate to be set as project time is free.'
+      back_to_projects: "Go Back to Orders In Progress"
+      back_to_projects_html: "Go Back<span class='hidden-xs'> to Orders In Progress</span>"
+
     payments:
       merchant_fee_charge: '<b>Important Note:</b> Pro bono projects will not charge any hourly time expenses due to the nature of the project. However, there is a one time "%{name}" of %{price} due. Also, system will track any expense items required for the project.'
     nav:
@@ -127,6 +130,9 @@ en:
         action_types:
           pricings:
             is_free_booking: 'Please define project type?'
+    payment_documents:
+      file: Your offer file
+
     hints:
       shared:
         categories:
@@ -298,5 +304,11 @@ en:
         user: "SME"
         lister: "Purchaser"
         pro_bono: "ProBono"
+
+
+  upload_documents:
+    file:
+      default:
+        label: Offer file
 
 
