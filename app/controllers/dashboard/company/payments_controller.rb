@@ -45,9 +45,10 @@ class Dashboard::Company::PaymentsController < Dashboard::Company::BaseControlle
     @payment = @order.build_payment(@order.shared_payment_attributes.merge(payment_attributes)).decorate
     if @payment.payable.charge_and_confirm!
       flash[:notice] = t('flash_messages.payments.capture_success')
-      render json: { saved: true }.to_json
+      redirect_to params[:redirect_to] || dashboard_company_transactable_type_transactables_path(@payment.payable.transactable.transactable_type, status: 'in progress')
+      render_redirect_url_as_json if request.xhr?
     else
-      render json: { saved: false, html: render_to_string(partial: 'form', layout: false) }.to_json
+      render partial: 'form', layout: false
     end
   end
 
