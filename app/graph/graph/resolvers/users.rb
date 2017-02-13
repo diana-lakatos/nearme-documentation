@@ -41,16 +41,16 @@ module Graph
       class CustomAttributePhotos
         def call(obj, arg, _ctx)
           user = obj.source
-          custom_attribute = ::CustomAttributes::CustomAttribute.find_by(name: arg[:name])
-          custom_images = ::CustomImage.where(id: custom_images_ids(custom_attribute, user))
+          custom_attributes = ::CustomAttributes::CustomAttribute.where(name: arg[:name])
+          custom_images = ::CustomImage.where(id: custom_images_ids(custom_attributes, user))
                                        .order(order(arg) => order_direction(arg))
           custom_images.map(&:image)
         end
 
         private
 
-        def custom_images_ids(custom_attribute, user)
-          attribute_images = ::CustomImage.where(custom_attribute: custom_attribute)
+        def custom_images_ids(custom_attributes, user)
+          attribute_images = ::CustomImage.where(custom_attribute: custom_attributes)
           profile_images = attribute_images.where(owner: user.user_profiles)
           customization_images = attribute_images.where(
             owner_type: ::Customization.to_s,
