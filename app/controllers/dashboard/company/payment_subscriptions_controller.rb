@@ -3,7 +3,7 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
   before_action :find_order
   before_action :find_countries
   before_action :find_payment_subscription, except: [:new, :create]
-  before_action :get_payment_gateway_data
+  before_action :find_payment_gateway_data
   before_action :build_payment_subscription, only: [:new, :create]
 
   def new
@@ -17,9 +17,9 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
 
     if @payment_subscription.process! && @payment_subscription.save! && @order.charge_and_confirm!
       flash[:notice] = I18n.t('flash_messages.dashboard.offer.accepted')
-      render json: { saved: true }.to_json
+      handle_redirect(@redirect_to)
     else
-      render json: { saved: false, html: render_to_string(partial: 'form', layout: false) }.to_json
+      render_form
     end
   end
 
@@ -33,9 +33,9 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
     @payment_subscription.attributes = payment_subscription_params
     if @payment_subscription.process! && @payment_subscription.save!
       flash[:notice] = t('flash_messages.dashboard.payment_subscription.updated')
-      render json: { saved: true }.to_json
+      handle_redirect(@redirect_to)
     else
-      render json: { saved: false, html: render_to_string(partial: 'form', layout: false) }.to_json
+      render_form
     end
   end
 
@@ -48,11 +48,15 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
     ).decorate
   end
 
-  def get_payment_gateway_data
-    @payment_gateways = if current_instance.skip_company?
-                          current_user.payout_payment_gateways
-                        else
-                          @order.company.payout_payment_gateways
+  def find_payment_gateway_data
+    @payment_gateways = payment_gateway_data
+  end
+
+  def payment_gateway_data
+    if current_instance.skip_company?
+      current_user.payout_payment_gateways
+    else
+      @order.company.payout_payment_gateways
     end
   end
 
@@ -70,5 +74,14 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
 
   def find_payment_subscription
     @payment_subscription = @order.payment_subscription.decorate
+  end
+
+  def handle_redirect(redirect_url)
+    redirect_to redirect_url
+    render_redirect_url_as_json if request.xhr?
+  end
+
+  def render_form
+    render partial: 'form', layout: false
   end
 end
