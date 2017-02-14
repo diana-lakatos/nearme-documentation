@@ -101,7 +101,7 @@ class UserEntryForm {
     this.images.removeAll();
 
     if (imageData.dataUrl) {
-      this.images.add(imageData.dataUrl);
+      this.images.add(imageData);
     }
 
     this.textarea.focus();

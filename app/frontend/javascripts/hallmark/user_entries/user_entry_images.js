@@ -21,9 +21,13 @@ class UserEntryImages {
     });
   }
 
-  add(dataUrl) {
+  add({ dataUrl, orientation }) {
     let image = new UserEntryImage();
     image.setSource(dataUrl);
+    if (orientation > 0) {
+      image.setOrientation(orientation);
+    }
+
     image.build();
     this.bindImageEvents(image);
     this.images.push(image);

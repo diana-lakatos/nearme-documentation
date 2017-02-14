@@ -10,6 +10,8 @@ class UserEntryImage {
     this.options = Object.assign({}, defaults, options);
     this.source = '';
     this.ui = {};
+    this.orientation = 1;
+    this.fileType = 'image/jpg';
   }
 
   getContainer() {
@@ -31,6 +33,30 @@ class UserEntryImage {
     }
   }
 
+  setFileType(fileType) {
+    this.fileType = fileType;
+  }
+
+  setOrientation(orientation) {
+    if (orientation < 1 || orientation > 8) {
+      throw new Error(`Invalid orientation value: ${orientation}`);
+    }
+    this.orientation = orientation;
+    if (this.ui.image) {
+      this.applyOrientation();
+    }
+  }
+
+  applyOrientation() {
+    /* iOS seems to use the orientation data correctly when loading as base64 */
+    let iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (iOS) {
+      return;
+    }
+
+    this.ui.image.className = `orientation-${this.orientation}`;
+  }
+
   build() {
     let container = document.createElement('div');
     container.classList.add('user-entry-form-image');
@@ -40,6 +66,7 @@ class UserEntryImage {
     let image = document.createElement('img');
     image.setAttribute('src', this.source);
     this.ui.image = image;
+    this.applyOrientation();
 
     this.ui.container.appendChild(this.ui.image);
 
