@@ -121,11 +121,6 @@ class UserDrop < UserBaseDrop
            :instance_admin?, :user_messages_received, :valid?, :last_sign_in_at, :left_by_seller_average_rating,
            :left_by_buyer_average_rating, :followers_count, :following_count, to: :source
 
-  # @return [String] class name, i.e. 'User'
-  def class_name
-    'User'
-  end
-
   # @return [String] path to the wishlisting this user
   # @todo -- depracate to url filter
   def wish_list_path
@@ -469,7 +464,6 @@ class UserDrop < UserBaseDrop
     build_categories_to_array(@source.buyer_profile.categories) if @source.buyer_profile
   end
 
-
   # @return [Hash{String => Array}] returns hash of categories !{ "name" => [array with category names] } }
   #   for this user's buyer profile
   # @todo -- investigate if its possible to leave formatting for users (DIY)
@@ -644,7 +638,7 @@ class UserDrop < UserBaseDrop
   #   (in the pending state, and with no collaborators)
   def transactables_without_collaborators
     @source.transactables.with_state(:pending)
-      .where(TransactableCollaborator.where("transactable_collaborators.transactable_id = transactables.id").exists.not)
+           .where(TransactableCollaborator.where('transactable_collaborators.transactable_id = transactables.id').exists.not)
   end
 
   # @return [Array<TransactableDrop>] array of pending transactables for the user to which the user is a collaborator

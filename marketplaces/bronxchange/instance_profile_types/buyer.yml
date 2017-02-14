@@ -199,8 +199,8 @@ custom_attributes:
     versions_configuration:
       mini:
         width: 700
-        height: 200
-        transform: resize_to_fill
+        height: 300
+        transform: resize_to_fit
       thumb:
         width: 100
         height: 100
