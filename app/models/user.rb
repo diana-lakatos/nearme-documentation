@@ -880,6 +880,10 @@ class User < ActiveRecord::Base
       created_companies.each { |c| c.really_destroy! }
       orders.each { |o| o.really_destroy! }
       created_listings_orders.each { |o| o.really_destroy! }
+      # Slugs need to be hard deleted otherwise friendly_id
+      # will not find it as the user is gone (uses an inner join)
+      # and will decide it's available
+      slugs.each { |s| s.really_destroy! }
     end
   end
 
