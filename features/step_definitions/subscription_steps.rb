@@ -22,12 +22,6 @@ end
 
 When /^I provide recurring reservation credit card details$/ do
   mock_billing_gateway
-  fill_in 'order_payment_subscription_attributes_credit_card_attributes_first_name', with: 'FirstName'
-  fill_in 'order_payment_subscription_attributes_credit_card_attributes_last_name', with: 'LastName'
-  # note we provide invalid credit card number on purpose - payment.js should validate the input and remove unnecessary 555
-  page.execute_script("$('#order_payment_subscription_attributes_credit_card_attributes_number').val('42 42424 24242 4242 555').trigger('change')")
-  select '12', from: 'order_payment_subscription_attributes_credit_card_attributes_month', visible: false
-  select '2020', from: 'order_payment_subscription_attributes_credit_card_attributes_year', visible: false
-  fill_in 'order_payment_subscription_attributes_credit_card_attributes_verification_value', :with => '411'
+  fill_new_credit_card_fields
   @credit_card_reservation = true
 end

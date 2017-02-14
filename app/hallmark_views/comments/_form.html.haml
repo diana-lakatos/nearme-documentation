@@ -33,7 +33,7 @@
 
       .image-upload-input
         = afi.input :image, wrapper: false, label: false do
-          = afi.file_field :image, data: { user_entry_form_file: '' }, accept: 'image/*', capture: 'camera'
+          = afi.file_field :image, data: { user_entry_form_file: '' }, accept: 'image/gif, image/jpeg, image/jpg, image/png', capture: 'camera'
 
       .user-entry-form-images{ data: { user_entry_form_images: '' } }
         - if afi.object.image.present?

@@ -1,7 +1,4 @@
-const Loader = {
-  show: () => { $('.spinner-overlay').show(); },
-  hide: () => { $('.spinner-overlay').hide(); }
-};
+const Loader = require('./modules/loader');
 
 class PaymentMethodManual {
 

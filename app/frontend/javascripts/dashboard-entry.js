@@ -9,7 +9,8 @@ require('../vendor/cocoon');
 NM.on('ready', () => {
   require('initializers/shared/ckeditor.initializer');
   require('initializers/shared/colorpicker.initializer');
-  require('initializers/shared/credit_card_formatter.initializer');
+  require('initializers/shared/credit_card_form.initializer');
+  require('initializers/shared/custom_inputs.initializer');
   require('initializers/shared/payment_method_selector.initializer');
   require('initializers/shared/timeago.initializer');
 

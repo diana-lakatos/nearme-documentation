@@ -24,7 +24,8 @@ NM.on('ready', () => {
   require('initializers/shared/bootstrap_tooltip.initializer');
   require('initializers/shared/ckeditor.initializer');
   require('initializers/shared/colorpicker.initializer');
-  require('initializers/shared/credit_card_formatter.initializer');
+  require('initializers/shared/credit_card_form.initializer');
+  require('initializers/shared/custom_inputs.initializer');
   require('initializers/shared/fileupload.initializer');
   require('initializers/shared/icui.initializer');
   require('initializers/shared/modal.initializer');
@@ -42,7 +43,6 @@ NM.on('ready', () => {
   require('initializers/application/cart.initializer');
   require('initializers/application/categories.initializer');
   require('initializers/application/center_search_box.initializer');
-  require('initializers/application/custom_inputs.initializer');
   require('initializers/application/custom_selects.initializer');
   require('initializers/application/delivery.initializer');
   require('initializers/application/edit_user.initializer');

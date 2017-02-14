@@ -1,4 +1,4 @@
-require 'chosen-js/chosen.jquery.js'
+require 'chosen-js/chosen.jquery'
 
 module.exports = class ChosenInitializer
   constructor: (context) ->

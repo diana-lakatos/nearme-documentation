@@ -1,6 +1,6 @@
 const Events = require('minivents/dist/minivents.commonjs');
 
-const CodeMirror = require('codemirror/lib/codemirror.js');
+const CodeMirror = require('codemirror/lib/codemirror');
 const editorDefaults = require('./codemirror/defaults');
 
 class CodeEditor {
