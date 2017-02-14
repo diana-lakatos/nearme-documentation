@@ -45,9 +45,12 @@
 
         {% include 'registrations/badges', user: user, full: true %}
 
-        {% if g.user.workplace_photo[0] != blank %}
-        <figure class="team-photo">
-          <img src="{{ g.user.workplace_photo[0].mini }}" alt="Workplace / Team Image">
+        {% assign team_photo = g.user.workplace_photo.first %}
+        {% if team_photo != blank %}
+        <figure class="team-photo" data-photos-gallery>
+          <a href="{{ team_photo.url }}" data-photo data-photo-width="{{ team_photo.width }}"  data-photo-height="{{ team_photo.height }}">
+            <img src="{{ team_photo.mini }}" alt="Workplace / Team Image">
+          </a>
         </figure>
         {% endif %}
 

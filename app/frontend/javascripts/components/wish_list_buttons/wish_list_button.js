@@ -62,14 +62,13 @@ class WishListButton {
   _setState(state) {
     if (state) {
       this.setActive();
-    }
-    else {
+    } else {
       this.setInactive();
     }
   }
 
   _bindEvents() {
-    this.ui.link.addEventListener('click', (e)=>{
+    this.ui.link.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       this._rollbackState = this.state;
@@ -99,14 +98,14 @@ class WishListButton {
     request.setRequestHeader('Accept', 'application/json');
     request.responseType = 'json';
 
-    request.onload = ()=> {
+    request.onload = () => {
       if (request.status < 200 || request.status >= 400) {
         this._rollback();
         throw new Error('Unable to change wish list item state');
       }
     };
 
-    request.onerror = ()=>{
+    request.onerror = () => {
       this._rollback();
       throw new Error('Unable to reach server to change wish list item state');
     };
