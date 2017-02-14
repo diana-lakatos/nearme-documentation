@@ -50,6 +50,14 @@ class SavedSearch < ActiveRecord::Base
     @saved_search_drop ||= SavedSearchDrop.new(self)
   end
 
+  def query=(val)
+    if val.present?
+      val = '?' + val unless val.start_with?('?')
+    end
+
+    super
+  end
+
   private
 
   def set_last_viewed_at
