@@ -153,7 +153,7 @@ namespace :hallmark do
     MEMBER_SINCE = 7
     EXPIRES_AT = 8
     MEMBER_YEAR = 9
-    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_Data_07Feb.txt')
+    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_14Feb.txt')
     emails = []
     CSV.foreach(path, col_sep: '|') do |array|
       unless array[FIRST_NAME] == 'CNSMR_FIRST_NM'
@@ -183,7 +183,6 @@ namespace :hallmark do
           u.mobile_number = array[PHONE]
           u.first_name = array[FIRST_NAME].humanize
           u.last_name = array[LAST_NAME].humanize
-          u.verified_at = Time.zone.now
           u.save!
           if u.metadata['verification_email_sent_at'].blank?
             puts "\tSending email to: #{u.email}"
@@ -196,7 +195,7 @@ namespace :hallmark do
         end
       end
     end
-    puts "Imported in total: #{email.count} users"
-    #puts User.not_admin.where.not(email: emails).where('email like ?', '%@hallmark%').count
+    puts "Imported in total: #{emails.count} users"
+    #puts "Invalidating #{User.not_admin.where.not(email: emails).where('email like ?', '%@hallmark%').update_all(expires_at: nil)} users - setting expires at to nil"
   end
 end
