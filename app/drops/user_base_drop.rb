@@ -1,6 +1,12 @@
+# frozen_string_literal: true
 class UserBaseDrop < BaseDrop
   include ActionView::Helpers::AssetUrlHelper
   include ClickToCallButtonHelper
+
+  # @return [String] class name, i.e. 'User'
+  def class_name
+    'User'
+  end
 
   # @return [String] path to a user's public profile
   # @todo -- depracate url for filter
