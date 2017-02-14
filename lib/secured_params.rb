@@ -559,6 +559,7 @@ class SecuredParams
       :allow_free_booking,
       :allow_nil_price_cents,
       :order_class_name,
+      :fixed_price,
       :fixed_price_cents
     ]
  end

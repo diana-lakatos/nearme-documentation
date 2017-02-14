@@ -70,6 +70,10 @@ class TransactableType::Pricing < ActiveRecord::Base
     fixed_price_cents && fixed_price_cents > 0
   end
 
+  def to_liquid
+    TransactableType::PricingDrop.new(self)
+  end
+
   private
 
   def check_pricing_uniqueness

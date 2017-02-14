@@ -76,6 +76,14 @@ module LiquidFilters
     array.in_groups_of(integer)
   end
 
+  # @return [Hash<MethodResult => Array<Object>>] the original array grouped by method
+  #   specified by the second parameter
+  # @param objects [Array<Object>] array to be grouped
+  # @param method [String] method name to be used to group Objects
+  def group_by(objects, method)
+    objects.group_by(&method.to_sym)
+  end
+
   # @return [String] pluralized version of the input string
   # @param string [String] string to be pluralized
   def pluralize(string)
