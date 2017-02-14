@@ -5,7 +5,7 @@ class CustomImage < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  belongs_to :owner, polymorphic: true, touch: true
+  belongs_to :owner, polymorphic: true
   belongs_to :custom_attribute, -> { with_deleted }, class_name: 'CustomAttributes::CustomAttribute'
   belongs_to :uploader, class_name: 'User'
   belongs_to :instance
