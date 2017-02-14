@@ -1,4 +1,4 @@
-require 'jstree/dist/jstree.min.js'
+require 'jstree/dist/jstree.min'
 
 module.exports = class CategoryTreeInput
 

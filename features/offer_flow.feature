@@ -41,7 +41,7 @@ Feature: Offer like end to end flow
     And I follow "My Listings"
     Then I should see "SMEs Invited (1)"
     When I accept the offer
-     And I fill credit card payment subscription form
+    And I fill credit card payment subscription form
     Then offer is confirmed
     And my credit card is saved
 
@@ -55,7 +55,7 @@ Feature: Offer like end to end flow
     And I follow "My Listings"
     Then I should see "SMEs Invited (1)"
     When I accept the offer
-     And I fill credit card payment form
+    And I fill credit card payment form
     Then offer is confirmed
     And my credit card is saved
     And payment for 100$ was created

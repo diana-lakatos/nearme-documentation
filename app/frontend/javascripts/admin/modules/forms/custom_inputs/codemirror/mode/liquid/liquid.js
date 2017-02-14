@@ -1,6 +1,6 @@
 'use strict';
 
-let CodeMirror = require('codemirror/lib/codemirror.js');
+let CodeMirror = require('codemirror/lib/codemirror');
 require('codemirror/addon/mode/overlay');
 
 CodeMirror.defineMode('liquid', function(config, parserConfig) {

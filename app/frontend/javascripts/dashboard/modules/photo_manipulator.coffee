@@ -1,4 +1,4 @@
-require 'cropper/dist/cropper.js'
+require 'cropper/dist/cropper'
 
 module.exports = class PhotoManipulator
 

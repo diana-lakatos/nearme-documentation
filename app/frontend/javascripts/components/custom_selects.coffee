@@ -1,5 +1,5 @@
 require('jquery.customSelect/jquery.customSelect')
-require('chosen-js/chosen.jquery.js')
+require('chosen-js/chosen.jquery')
 require('select2/select2')
 
 module.exports = class CustomSelects

@@ -15,11 +15,13 @@ require 'capybara-screenshot/cucumber'
 Capybara::Screenshot.autosave_on_failure = true
 Capybara::Screenshot.webkit_options = { width: 1824, height: 1368 }
 
+# Keep only the screenshots generated from the last failing test suite
+Capybara::Screenshot.prune_strategy = :keep_last_run
 
 require 'rack/utils'
 Capybara.app = Rack::ShowExceptions.new(DesksnearMe::Application)
 
-Capybara.default_wait_time = 10
+Capybara.default_max_wait_time = 10
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
