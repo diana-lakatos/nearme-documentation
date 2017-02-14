@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 class OrderItemDrop < BaseDrop
+  # @!method order
+  #   @return [OrderDrop] Order for this OrderItem
+  delegate :order, :order_id, to: :source
+
   # @return [String] '/order_items'
   # @todo Investigate, depracate and destroy this, path is invalid and hardcoded
   def show_url
