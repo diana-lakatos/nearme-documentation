@@ -14,10 +14,10 @@
 
       %span &bull;
       - if report = comment.reported_by(current_user, request.remote_ip)
-        = link_to t(:cancel_spam_report), url_to_spam_report(comment.commentable, comment, report), remote: true, method: :delete
+        = link_to t(:cancel_spam_report), url_for([comment.commentable, comment, report]), remote: true, method: :delete
       - elsif current_user
-        = link_to t(:report_as_spam), url_to_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :post
+        = link_to t(:report_as_spam), url_for([comment.commentable, comment, comment.spam_reports.build]), remote: true, method: :post
 
       - if comment.can_remove?(current_user)
         %span &bull;
-        = link_to t(:remove_comment), url_to_comment(comment.commentable, comment), remote: true, method: :delete
+        = link_to t(:remove_comment), url_for([comment.commentable, comment]), remote: true, method: :delete

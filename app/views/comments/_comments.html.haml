@@ -3,7 +3,7 @@
 %div.comment{:class => css_class}
   - if current_user
     .publish-a
-      = simple_form_for comment, url: url_to_comment(comment.commentable, comment), remote: true  do |f|
+      = simple_form_for comment, url: url_for([comment.commentable, comment]), remote: true  do |f|
         %figure
           = image_tag current_user.avatar.url(:thumb)
 
