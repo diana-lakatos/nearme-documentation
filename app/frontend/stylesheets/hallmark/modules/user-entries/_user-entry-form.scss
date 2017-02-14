@@ -132,7 +132,40 @@
       left: 0;
       right: 0;
       top: 50%;
+      transform-origin: 50% 50%;
       transform: translateY(-50%);
+    }
+
+    .orientation-1 {
+      transform: translateY(-50%);
+    }
+
+    .orientation-2 {
+      transform: translateY(-50%) scaleX(-1);
+    }
+
+    .orientation-3 {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    .orientation-4 {
+      transform: translateY(-50%) scaleX(-1) rotate(180deg);
+    }
+
+    .orientation-5 {
+      transform: translateY(-50%) scaleX(-1) rotate(90deg);
+    }
+
+    .orientation-6 {
+      transform: translateY(-50%) rotate(90deg);
+    }
+
+    .orientation-7 {
+      transform: translateY(-50%) rotateX(-1) rotate(270deg);
+    }
+
+    .orientation-8 {
+      transform: translateY(-50%) rotate(270deg);
     }
 
     .remove {
