@@ -2,7 +2,7 @@
 class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseController
   before_action :find_order
   before_action :find_countries
-  before_action :find_payment_subscription, except: [:new, :create]
+  before_action :find_payment_subscription, only: [:edit, :update]
   before_action :find_payment_gateway_data
   before_action :build_payment_subscription, only: [:new, :create]
 
