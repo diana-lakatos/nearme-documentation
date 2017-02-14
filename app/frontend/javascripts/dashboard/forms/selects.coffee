@@ -24,6 +24,6 @@ selects = (context = 'body') ->
     $(document).trigger('plugin:loaded.selectize')
 
     selectizeInstance = $(this).selectize(options)[0].selectize
-    selectizeInstance.enable();
+    selectizeInstance.enable()
 
 module.exports = selects
