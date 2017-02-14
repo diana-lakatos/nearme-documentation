@@ -4,37 +4,14 @@
     = t 'payments.already_authorized'
   - else
     - payment_drop = f.object.decorate
-    = f.input :payment_source_id, as: :radio_buttons, collection: payment_drop.payment_sources_collection(payment_method), label: false, wrapper_html: { class: 'payment-source-option-select' }, checked: payment_drop.default_payment_source(payment_method)
+    = f.input :payment_source_id,
+      as: :radio_buttons,
+      collection: payment_drop.payment_sources_collection(payment_method),
+      checked: payment_drop.default_payment_source(payment_method),
+      label: false,
+      wrapper_html: { class: 'payment-source-option-select' }
     = f.input :payment_source_type, as: :hidden, input_html: { value: 'CreditCard' }
 
-    - new_cc_klass = 'payment-source-form'
-    - new_cc_klass += ' hidden' unless f.object.payment_source_id.to_i.zero?
-
-    %div{ class: new_cc_klass }
-      = f.simple_fields_for :credit_card_attributes, credit_card do |form|
-
-        .has-error.errors
-          = f.error :base
-          = form.error :base
-
-        .nm-new-credit-card-form-header
-          %h3= t 'payments.heading'
-          = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
-        .nm-new-credit-card-form-name-container
-          = form.input :first_name, required: true, label: t('payments.cc_fields.first_name'), input_html: {'data-stripe': :first_name, value: (form.object.first_name.presence || current_user.first_name), autocomplete: :off }
-
-          = form.input :last_name, required: true, label: t('payments.cc_fields.last_name'), input_html: {'data-stripe': :last_name, value: (form.object.last_name.presence || current_user.last_name), autocomplete: :off }
-
-        = form.input :number, required: true, label:  t('payments.cc_fields.card_number'), input_html: {'data-stripe': :number, placeholder: '•••• •••• •••• ••••', pattern: "[0-9]*", autocomplete: :off, 'data-card-number' => true }
-
-        .nm-new-credit-card-form-exp-date-container
-          = form.input :month, as: :select, label: t('payments.cc_fields.expiration_date_month_html'), required: true, collection: credit_card_date[:month], input_html: {class: 'customSelect', 'data-stripe': :exp_month, prompt: false, placeholder: 'Select month'}
-
-          = form.input :year, as: :select, label: t('payments.cc_fields.expiration_date_year_html'), required: true, collection: credit_card_date[:year], input_html: {class: 'customSelect', 'data-stripe': :exp_year, prompt: false, placeholder: 'Select year' }
-
-          = form.input :verification_value, label: t('payments.cc_fields.security_code'), required: true, input_html: {'data-stripe': :cvc, placeholder: 'CVC', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true, size: 3 }
-
-        .errors
-
+    = render 'shared/payment_methods/new_credit_card', f: f, credit_card: credit_card
     = render 'listings/reservations/confirm_reservations', f: f
     = render 'shared/components/spinkit'
