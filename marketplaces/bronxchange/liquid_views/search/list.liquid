@@ -69,9 +69,8 @@
         <label for="search-order">Sort by:</label>
         <span class="select-a">
           <select id="search-order" name="sort" class="unstyled-select">
-            <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Please Select</option>
-            <option>Relevance</option>
-            <option>Company Name</option>
+            <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Relevance</option>
+            <option {% if params['sort'] == 'custom_attributes.company_name_asc' %}selected{% endif %} value='custom_attributes.company_name_asc'>Company name</option>
           </select>
         </span>
       </div>

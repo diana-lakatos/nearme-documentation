@@ -5,12 +5,19 @@
     }
 
     #service_buttons {
+        &::after { /* Copied from community/_mixins.scss:15 */
+          content: '';
+          display: table;
+          width: 100%;
+          clear: both;
+        }
         .btn {
             border-radius: 0;
             margin: 0;
             width: 33.3%;
             font-size: 22px;
             text-align: center;
+            float: left;
 
             @each $service in twitter, facebook, linkedin {
                 i.icon-#{$service} {
