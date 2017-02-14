@@ -93,7 +93,7 @@ namespace :hallmark do
         u.last_name = array[mapping.fetch(:last_name)].strip
         u.external_id = external_id
         begin
-        u.created_at = Date.parse(array[mapping.fetch(:created_at)])
+          u.created_at = Date.parse(array[mapping.fetch(:created_at)])
         rescue
         end
         expires_at = array[mapping.fetch(:expires_at)]
@@ -114,7 +114,7 @@ namespace :hallmark do
         end
         member_since = array[mapping.fetch(:member_since)]
         begin
-        u.default_profile.properties[:member_since] = Date.parse("#{member_since[0..3]}/#{member_since[4..5]}")
+          u.default_profile.properties[:member_since] = Date.parse("#{member_since[0..3]}/#{member_since[4..5]}")
         rescue
         end
         u.default_profile.properties[:member_year] = array[mapping.fetch(:member_year)]
@@ -138,5 +138,65 @@ namespace :hallmark do
     puts errors.each do |i, errors|
       puts "##{i}: #{errors.join(';')}"
     end
+  end
+
+  task update_users: [:environment] do
+    instance = Instance.find(5011)
+    instance.set_context!
+    EXTERNAL_ID = 0
+    FIRST_NAME = 1
+    LAST_NAME = 2
+    EMAIL = 3
+    DOB = 4
+    PHONE = 5
+    DT_ADDED = 6
+    MEMBER_SINCE = 7
+    EXPIRES_AT = 8
+    MEMBER_YEAR = 9
+    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_Data_07Feb.txt')
+    emails = []
+    CSV.foreach(path, col_sep: '|') do |array|
+      unless array[FIRST_NAME] == 'CNSMR_FIRST_NM'
+        email = array[EMAIL].downcase.strip
+        if email.include?('@')
+          emails << email
+          puts "importing: #{email}"
+          u = User.where('email ilike ?', email).first_or_initialize
+          u.email = email
+          u.password = SecureRandom.hex(12) unless u.encrypted_password.present?
+          u.external_id = array[EXTERNAL_ID]
+          u.expires_at = Date.strptime(array[EXPIRES_AT], '%Y%m').end_of_month
+          u.get_default_profile
+          u.properties.date_of_birth = begin
+                                         Date.strptime(array[DOB], '%m%d%Y')
+                                       rescue
+                                         puts "\tInvalid DOB: #{array[DOB]}"
+                                         nil
+                                       end
+          u.properties.member_since = begin
+                                        Date.strptime(array[MEMBER_SINCE], '%Y%m')
+                                      rescue
+                                       puts "\tInvalid MEMBER_SINCE: #{array[MEMBER_SINCE]}"
+                                        nil
+                                      end
+          u.properties.member_year = array[MEMBER_YEAR]
+          u.mobile_number = array[PHONE]
+          u.first_name = array[FIRST_NAME].humanize
+          u.last_name = array[LAST_NAME].humanize
+          u.verified_at = Time.zone.now
+          u.save!
+          if u.metadata['verification_email_sent_at'].blank?
+            puts "\tSending email to: #{u.email}"
+            WorkflowAlert::InvokerFactory.get_invoker(WorkflowAlert.find(133_65)).invoke!(WorkflowStep::SignUpWorkflow::AccountCreated.new(u.id))
+            u.metadata['verification_email_sent_at'] = Time.zone.now
+            u.save!
+          end
+        else
+          puts "Skipping due to email: #{email}"
+        end
+      end
+    end
+    puts "Imported in total: #{email.count} users"
+    #puts User.not_admin.where.not(email: emails).where('email like ?', '%@hallmark%').count
   end
 end
