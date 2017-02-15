@@ -28,7 +28,6 @@ config/elasticsearch.yml
 config/unicorn.conf
 log
 node_modules
-vendor/assets/bower_components
 tmp
 *.swo
 *.swp
@@ -46,10 +45,8 @@ dump.rdb
 .ruby-gemset
 .envrc
 .vimrc
-.pryrc
 npm-debug.log
 work_files
-vendor/assets/bower_components
 *.sublime-project
 *.sublime-workspace
 *.org

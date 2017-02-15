@@ -15,7 +15,10 @@ class NewCreditCardFormToggle {
   }
 
   _initialize() {
-    const initialValue = $creditCardSwitcher().find('input:checked');
+    /*
+      Need to duplicate this initialization part with initial value because firefox ignores trigger on body for some reason
+    */
+    const initialValue = $creditCardSwitcher().find('input:checked').val();
     this.update(initialValue);
     this._attachEventHandlers();
 
