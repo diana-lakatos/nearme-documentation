@@ -82,6 +82,7 @@ end
 When /^I accept the offer$/ do
   page.should have_css('.accept-link')
   page.execute_script("$('.accept-link').eq(0).click()")
+  wait_modal_loaded('.dialog[aria-hidden="false"]')
   page.should have_css('.nm-credit-card-fields')
 end
 
