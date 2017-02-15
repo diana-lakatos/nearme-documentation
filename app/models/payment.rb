@@ -69,7 +69,7 @@ class Payment < ActiveRecord::Base
   end
 
   validates :currency, presence: true
-  validates :payment_source, presence: true, if: proc { |p| p.payment_gateway.supports_payment_source_store? && p.new_record? && !p.payment_method.manual? }
+  validates :payment_source, presence: true, if: :require_payment_source?
   validates :payer, presence: true
   validates :payment_gateway, presence: true
   validates :payment_method, presence: true
@@ -616,5 +616,9 @@ class Payment < ActiveRecord::Base
       errors.add(:base, response.params['Errors']['LongMessage'])
       false
     end
+  end
+
+  def require_payment_source?
+    payment_gateway && payment_gateway.supports_payment_source_store? && new_record? && !payment_method.manual?
   end
 end
