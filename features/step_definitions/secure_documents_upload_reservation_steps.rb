@@ -33,6 +33,8 @@ end
 
 And (/^I enter data in the credit card form$/) do
   page.should_not have_css('.nm-new-credit-card-form.hidden')
+  open_cc_accordion
+  select_add_new_cc
   fill_new_credit_card_fields
 end
 

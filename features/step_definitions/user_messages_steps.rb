@@ -128,7 +128,7 @@ end
 
 Given /^I send a message to reservation owner$/ do
   click_link "Contact #{@reservation.owner.name}"
-  work_in_modal do
+  work_in_modal('.dialog[aria-hidden="false"]') do
     fill_in 'user_message_body', with: 'Short one'
     click_button 'Send'
   end

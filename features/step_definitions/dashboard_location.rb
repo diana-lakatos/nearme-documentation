@@ -18,7 +18,7 @@ When /^I upload csv file with locations and transactables$/ do
   click_link 'Bulk upload'
   stub_image_url('http://www.example.com/image1.jpg')
   stub_image_url('http://www.example.com/image2.jpg')
-  work_in_modal do
+  work_in_modal('.dialog[aria-hidden="false"]') do
     page.should have_css('#new_data_upload')
     attach_file('data_upload_csv_file', File.join(Rails.root, *%w[test assets data_importer current_data.csv]))
     click_button 'Import'

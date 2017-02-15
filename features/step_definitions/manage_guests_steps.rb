@@ -6,7 +6,7 @@ end
 
 When(/^I reject reservation with reason$/) do
   click_on 'Decline'
-  work_in_modal do
+  work_in_modal('.dialog[aria-hidden="false"]') do
     fill_in 'reservation_rejection_reason', with: 'The only room available is the studio meeting room.'
     within('.dialog__content') do
       click_on 'Decline'

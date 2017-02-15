@@ -82,9 +82,7 @@ end
 When /^I accept the offer$/ do
   page.should have_css('.accept-link')
   page.execute_script("$('.accept-link').eq(0).click()")
-  work_in_modal do
-    page.should have_css('.nm-credit-card-fields')
-  end
+  page.should have_css('.nm-credit-card-fields')
 end
 
 Then /^I fill credit card payment subscription form$/ do
