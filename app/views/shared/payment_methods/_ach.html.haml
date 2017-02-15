@@ -5,7 +5,7 @@
     = f.input :payment_source_id, as: :radio_buttons, collection: payment_soruces_collection, label: false, checked: :first, wrapper_html: { class: 'payment-source-option-select' }, checked:  payment_soruces_collection.last
     = f.input :payment_source_type, as: :hidden, input_html: { value: 'BankAccount' }
 
-    %div{ class: 'payment-source-form' }
+    %div{ class: 'super-payment-source-form' }
       = f.simple_fields_for :payment_source_attributes, bank_account do |form|
         .has-error.errors
           = f.error :base
