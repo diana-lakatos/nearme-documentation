@@ -80,7 +80,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'track and redirect a host to the Manage Guests page when they confirm a booking' do
-      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id, as: @user)
       post :confirm, { id: @reservation.id }
       assert_redirected_to dashboard_company_orders_received_index_path
     end
@@ -93,7 +93,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'track and redirect a host to the Manage Guests page when they cancel a booking' do
-      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id)
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id, as: @user)
 
       @reservation.confirm # Must be confirmed before can be cancelled
       Reservation.any_instance.stubs(:schedule_refund).returns(true)

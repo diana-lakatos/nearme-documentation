@@ -15,9 +15,9 @@ ActiveRecord::Schema.define(version: 20170309140018) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
   enable_extension "btree_gin"
   enable_extension "btree_gist"
-  enable_extension "hstore"
 
   create_table "activity_feed_events", force: :cascade do |t|
     t.integer  "instance_id"
@@ -991,6 +991,18 @@ ActiveRecord::Schema.define(version: 20170309140018) do
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
   add_index "domains", ["name"], name: "index_domains_on_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "domains", ["target_id", "target_type"], name: "index_domains_on_target_id_and_target_type", using: :btree
+
+  create_table "event_store_events", force: :cascade do |t|
+    t.integer  "instance_id",     null: false
+    t.integer  "triggered_by_id"
+    t.string   "event_type",      null: false
+    t.string   "topic_name"
+    t.text     "payload"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "event_store_events", ["instance_id", "event_type"], name: "index_event_store_events_on_instance_id_and_event_type", using: :btree
 
   create_table "external_api_requests", force: :cascade do |t|
     t.integer  "context_id"

@@ -16,9 +16,9 @@ class InstanceAdmin::Manage::ApprovalRequestsController < InstanceAdmin::Manage:
       if @approval_request.approved?
         case @approval_request.owner
         when User
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::Approved, @approval_request.owner_id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::Approved, @approval_request.owner_id, as: current_user)
         when Transactable
-          WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Approved, @approval_request.owner_id)
+          WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Approved, @approval_request.owner_id, as: current_user)
         end
       end
       flash[:success] = t 'flash_messages.instance_admin.manage.approval_request.updated'

@@ -19,4 +19,8 @@ class WorkflowStep::SignUpWorkflow::CreatedViaBulkUploader < WorkflowStep::SignU
   def data
     { user: @user, user_password: @password }
   end
+
+  def workflow_triggered_by
+    nil
+  end
 end

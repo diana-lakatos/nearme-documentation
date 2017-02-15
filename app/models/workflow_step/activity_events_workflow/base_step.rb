@@ -24,4 +24,8 @@ class WorkflowStep::ActivityEventsWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @user.present?
   end
+
+  def workflow_triggered_by
+    @user
+  end
 end

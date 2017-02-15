@@ -31,7 +31,7 @@ module Api
         if @user.first_listing.new_record?
           @user.save(validate: false)
           fix_availability_templates
-          WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.id)
+          WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.id, as: current_user)
         else
           @user.save(validate: false)
         end
@@ -40,8 +40,8 @@ module Api
         @user.listings.first.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
         @user.companies.first.update_metadata(draft_at: nil, completed_at: Time.now)
 
-        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @user.first_listing.id) unless @user.first_listing.is_trusted?
-        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.id)
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @user.first_listing.id, as: current_user) unless @user.first_listing.is_trusted?
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.id, as: current_user)
         render json: ApiSerializer.serialize_object(@user.first_listing)
       else
         render json: ApiSerializer.serialize_errors(@user.errors)

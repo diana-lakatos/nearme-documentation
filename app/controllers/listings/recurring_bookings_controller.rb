@@ -32,9 +32,9 @@ class Listings::RecurringBookingsController < ApplicationController
     @recurring_booking = @recurring_booking_request.recurring_booking
     if @recurring_booking_request.process
       if @recurring_booking_request.confirm_reservations?
-        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, @recurring_booking.id)
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, @recurring_booking.id, as: current_user)
       else
-        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, @recurring_booking_request.recurring_booking.id)
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, @recurring_booking_request.recurring_booking.id, as: current_user)
       end
       card_message = t('flash_messages.reservations.credit_card_will_be_charged')
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)

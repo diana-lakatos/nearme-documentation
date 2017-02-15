@@ -16,4 +16,8 @@ class WorkflowStep::UserWorkflow::BaseStep < WorkflowStep::BaseStep
   def data
     { user: @user }
   end
+
+  def workflow_triggered_by
+    @user
+  end
 end

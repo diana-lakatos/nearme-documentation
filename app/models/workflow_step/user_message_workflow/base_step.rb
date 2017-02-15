@@ -34,4 +34,8 @@ class WorkflowStep::UserMessageWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @user_message.present?
   end
+
+  def workflow_triggered_by
+    @user_message.author
+  end
 end

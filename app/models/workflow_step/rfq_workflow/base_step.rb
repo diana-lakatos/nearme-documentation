@@ -34,4 +34,8 @@ class WorkflowStep::RfqWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @message.present?
   end
+
+  def workflow_triggered_by
+    enquirer
+  end
 end

@@ -23,7 +23,7 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     else
       if @recurring_booking.confirm
-        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed, @recurring_booking.id)
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed, @recurring_booking.id, as: current_user)
         if @recurring_booking.reload.paid_until.present?
           flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
         else

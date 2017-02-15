@@ -11,7 +11,7 @@ class InstanceAdmin::Manage::AdminsController < InstanceAdmin::Manage::BaseContr
     @user.skip_password = true
     if @user.save
       InstanceAdmin.create(user_id: @user.id)
-      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedByAdmin, @user.id, current_user.id)
+      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedByAdmin, @user.id, current_user.id, as: current_user)
       flash[:success] = 'Admin has been successfully created'
       redirect_to instance_admin_manage_admins_path
     else

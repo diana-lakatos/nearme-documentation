@@ -41,9 +41,9 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
     if @transactable.save
       @transactable.action_type.try(:schedule).try(:create_schedule_from_schedule_rules)
-      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @transactable.id) unless @transactable.is_trusted?
+      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @transactable.id, as: current_user) unless @transactable.is_trusted?
       if !@transactable.transactable_type.require_transactable_during_onboarding? && current_user.transactables.with_deleted.count == 1
-        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @transactable.id)
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @transactable.id, as: current_user)
       end
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       flash[:error] = t('manage.listings.no_trust_explanation') unless @transactable.is_trusted?
