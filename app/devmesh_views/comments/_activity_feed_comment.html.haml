@@ -14,10 +14,10 @@
       - if comment.can_be_reported?
         %span &bull;
         - if user_signed_in?
-          = link_to t(:report_as_spam), url_to_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :post, 'data-report-spam': true
-          = link_to t(:cancel_spam_report), url_to_cancel_spam_report(comment.commentable, comment, comment.spam_reports.build), remote: true, method: :delete, 'data-cancel-report': true, style: "display: none"
+          = link_to t(:report_as_spam), url_for([comment.commentable, comment, comment.spam_reports.build]), remote: true, method: :post, 'data-report-spam': true
+          = link_to t(:cancel_spam_report), url_for([:cancel, comment.commentable, comment, comment.spam_reports.build]), remote: true, method: :delete, 'data-cancel-report': true, style: "display: none"
         - else
           = link_to t(:report_as_spam), new_user_session_path(return_to: request.path)
       %span.remove-link{ 'data-remove-comment': true, style: comment.can_remove?(current_user) ? '' : 'display: none' }
         %span &bull;
-        = link_to t(:remove_comment), url_to_comment(comment.commentable, comment), remote: true, method: :delete
+        = link_to t(:remove_comment), url_for([comment.commentable, comment]), remote: true, method: :delete

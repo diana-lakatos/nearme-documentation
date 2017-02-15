@@ -12,7 +12,7 @@
 - else
   - data['user_entry_form_target'] = "#comments-feed-#{comment.commentable.id}"
 
-= simple_form_for comment, url: url_to_comment(comment.commentable, comment), html: { multipart: true, data: data, class: 'user-entry-form' }  do |f|
+= simple_form_for comment, url: url_for([comment.commentable, comment]), html: { multipart: true, data: data, class: 'user-entry-form' }  do |f|
   - if comment_view
     %input{:type => "hidden", name: "comment_view", value: 1 }/
 

@@ -680,6 +680,9 @@ DesksnearMe::Application.routes.draw do
           get :accept
         end
       end
+    end
+
+    resources :listings, only: [], as: :transactable do
       resources :comments, only: [:update, :create, :index, :destroy] do
         resources :spam_reports, only: [:create, :destroy] do
           collection do
