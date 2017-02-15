@@ -1,20 +1,10 @@
 module ModalHelper
   def wait_modal_loaded(overlay_class)
-    begin
-      page.has_selector?(overlay_class)
-    rescue Capybara::Webkit::InvalidResponseError => e
-      puts e.inspect
-      #screenshot_and_open_image
-    end
+    page.should have_css(overlay_class)
   end
 
   def wait_modal_closed(overlay_class)
-    begin
-      page.has_no_selector?(overlay_class)
-    rescue Capybara::Webkit::InvalidResponseError => e
-      puts e.inspect
-      #screenshot_and_open_image
-    end
+    page.should_not have_css(overlay_class)
   end
 
   def work_in_modal(overlay_class = '.modal-overlay.visible')
