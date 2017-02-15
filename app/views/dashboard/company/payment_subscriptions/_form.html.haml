@@ -1,4 +1,4 @@
-= dashboard_simple_form_for ['dashboard', 'company', @order.routing_object, @payment_subscription], data: { modal: true, "redirect-to" => @redirect_to }, html: {id: 'new_payment'} do |f|
+= dashboard_simple_form_for ['dashboard', 'company', @order.routing_object, @payment_subscription], data: { modal: true, "redirect-to" => @redirect_to }, html: { id: 'new_payment' } do |f|
 
   = render 'shared/payment_form', f: f
 

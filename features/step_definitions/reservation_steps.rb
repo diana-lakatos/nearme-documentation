@@ -261,6 +261,8 @@ end
 
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
+  # TODO: Read credit_card_helper:3
+  open_cc_accordion
   select_add_new_cc
   fill_new_credit_card_fields
   @credit_card_reservation = true
