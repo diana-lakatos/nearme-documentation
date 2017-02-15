@@ -12,6 +12,7 @@ module AvailabilityHelpers
     def availability_template_attributes=(template_attributes)
       if template_attributes.present?
         if template_attributes['id'].present?
+          self.availability_template_id = template_attributes['id']
           availability_template.assign_attributes template_attributes
         else
           template_attributes[:name] = 'Custom transactable availability'
