@@ -152,8 +152,6 @@ namespace :fix do
     )
   end
 
-  Instance.where.not(id: [194, 130, 211]).find_each { |i| begin; i.destroy; rescue; end; }
-
   task destroy_marketplace: [:environment] do
     instance.set_context!
     [Payment, PaymentTransfer, Charge, Payout, Refund, Webhook,
