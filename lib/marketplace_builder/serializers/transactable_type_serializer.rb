@@ -10,6 +10,7 @@ module MarketplaceBuilder
       serialize :validation, using: CustomValidationSerializer
       serialize :action_types, using: ActionTypeSerializer
       serialize :custom_attributes, using: CustomAttributeSerializer
+      serialize :form_components, using: FormComponentSerializer
 
       def scope
         @model.transactable_types

@@ -51,9 +51,9 @@ class CompanyTest < ActiveSupport::TestCase
       end
 
       should 'notify host via sms and email if company has no payout option and instance supports payouts' do
-        @created_payment_transfers = [mock]
+        @created_payment_transfers = [mock(id: 1)]
         @company.stubs(:created_payment_transfers).returns(@created_payment_transfers)
-        WorkflowStepJob.expects(:perform).with(::WorkflowStep::PayoutWorkflow::NoPayoutOption, @company.id, @created_payment_transfers).once
+        WorkflowStepJob.expects(:perform).with(::WorkflowStep::PayoutWorkflow::NoPayoutOption, @company.id, [1]).once
         @company.schedule_payment_transfer
       end
 
