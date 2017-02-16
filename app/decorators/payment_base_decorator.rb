@@ -8,11 +8,13 @@ class PaymentBaseDecorator < Draper::Decorator
   end
 
   def default_payment_source(payment_method)
-    payment_source ? to_option(payment_source) : all_payment_sources_collection(payment_method).last
+    return to_option(payment_source) if payment_source && payment_source.payment_method == payment_method 
+
+    all_payment_sources_collection(payment_method).first || to_option(new_payment_source(payment_method) )
   end
 
   def all_payment_sources(payment_method)
-    payment_method.payment_sources.where(instance_client: instance_clients(payment_method.payment_gateway_id), test_mode: instance.test_mode?)
+    payment_method.payment_sources.where(instance_client: instance_clients(payment_method.payment_gateway_id), test_mode: instance.test_mode?).reverse
   end
 
   def instance_clients(pg_id)
@@ -36,6 +38,7 @@ class PaymentBaseDecorator < Draper::Decorator
   end
 
   def to_option(model)
+    return ['new_' + model.payment_method.payment_method_type] unless model.persisted?
     [model.name, model.id]
   end
 end

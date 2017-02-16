@@ -4,13 +4,13 @@
     = t 'payments.already_authorized'
   - else
     - payment_drop = f.object.decorate
-    = f.input :payment_source_id,
+
+    = f.input :credit_card_id,
       as: :radio_buttons,
       collection: payment_drop.payment_sources_collection(payment_method),
       checked: payment_drop.default_payment_source(payment_method),
       label: false,
       wrapper_html: { class: 'payment-source-option-select' }
-    = f.input :payment_source_type, as: :hidden, input_html: { value: 'CreditCard' }
 
     = render 'shared/payment_methods/new_credit_card', f: f, credit_card: credit_card
     = render 'listings/reservations/confirm_reservations', f: f
