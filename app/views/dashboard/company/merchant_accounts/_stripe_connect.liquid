@@ -1,4 +1,6 @@
 {% assign form_object = f %}
+{% assign stripe_connect_owner_fields_count = 0 %}
+
 <input type='hidden' value='{{ params.edit_mode}}' name='edit_mode' />
 
 {% if merchant_account.persisted? %}

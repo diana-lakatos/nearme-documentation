@@ -35,10 +35,10 @@ module HostedZoneRepository
     HostedZone.new(find_one_by_name(name))
   end
 
-  #TODO can search using sdk?
+  # TODO: can search using sdk?
   def self.find_one_by_name(name)
-    all.find( -> {Aws::Route53::Types::HostedZone.new}) do |zone|
-      name && zone.name =~ /^#{name}/
+    all.find(-> { Aws::Route53::Types::HostedZone.new }) do |zone|
+      name && zone.name =~ /\A#{name}\.\Z/
     end
   end
 

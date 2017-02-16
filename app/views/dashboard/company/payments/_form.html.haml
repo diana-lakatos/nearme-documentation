@@ -1,6 +1,9 @@
 = dashboard_simple_form_for @payment, url: dashboard_company_orders_received_payments_path, data: {"redirect-to" => params[:redirect_to] || dashboard_company_transactable_type_transactables_path(@payment.payable.transactable.transactable_type, status: 'in progress') } , html: {id: 'new_payment'} do |f|
 
   .dialog__body#payment-modal-box
+    - f.object.payable.host_line_items.each do |hli|
+      .alert.alert-info= t('dashboard.payments.merchant_fee_charge', name: hli.name, price: render_money(hli.unit_price)).html_safe
+
     = render 'shared/payment_form', f: f
 
   .dialog__actions
