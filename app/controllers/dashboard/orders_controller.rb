@@ -124,6 +124,8 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def success
+    @order = @order.decorate
+
     render action: :show
   end
 
