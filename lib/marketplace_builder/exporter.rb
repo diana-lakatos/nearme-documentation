@@ -34,6 +34,8 @@ module MarketplaceBuilder
         results = serializer_class.new(instance).export
         create_exported_files results, file_extension
       end
+
+      create_mpbuilderrc_file
     end
 
     private
@@ -89,6 +91,12 @@ module MarketplaceBuilder
       puts "Error while downloading #{asset['remote_url']} status: #{e.io.status}"
     rescue Exception => e
       puts "Error: #{e.message}"
+    end
+
+    def create_mpbuilderrc_file
+      File.open("#{@destination_path}/#{@instance.name}/.mpbuilderrc", "w") do |f|
+        f.write(JSON.pretty_generate({instance_id: @instance_id, mode: 'replace'}))
+      end
     end
 
     def instance
