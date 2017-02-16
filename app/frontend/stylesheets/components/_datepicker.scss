@@ -1,7 +1,12 @@
 // Custom datepicker
 @keyframes opacity-fadein {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .dnm-datepicker {
@@ -12,7 +17,7 @@
   width: 280px;
   background: $black;
   border-radius: $border-radius-default;
-  box-shadow:  0 0 40px black;
+  box-shadow: 0 0 40px black;
   background-clip: border-box;
   overflow: hidden;
 
@@ -30,7 +35,7 @@
     width: 16px;
     height: 20px;
     color: $gray220;
-    font-size:20px;
+    font-size: 20px;
     line-height: 20px;
     cursor: pointer;
     opacity: .4;
@@ -46,7 +51,7 @@
 
   .datepicker-header {
     margin: 0 40px;
-    padding-bottom: $padding-small /2;
+    padding-bottom: $padding-small / 2;
     color: $gray240;
     text-align: center;
 
@@ -77,7 +82,8 @@
   }
 
   .datepicker-days {
-    border-bottom-left-radius: $border-radius-default; border-bottom-right-radius: $border-radius-default;
+    border-bottom-left-radius: $border-radius-default;
+    border-bottom-right-radius: $border-radius-default;
     background-clip: border-box;
   }
 
@@ -93,16 +99,17 @@
     background-color: $gray240;
     padding: 0 5px;
     -webkit-animation-name: opacity-fadein;
-       -moz-animation-name: opacity-fadein;
-            animation-name: opacity-fadein;
+    -moz-animation-name: opacity-fadein;
+    animation-name: opacity-fadein;
     -webkit-animation-duration: 0.4s;
-       -moz-animation-duration: 0.4s;
-            animation-duration: 0.4s;
+    -moz-animation-duration: 0.4s;
+    animation-duration: 0.4s;
   }
 
   .datepicker-days-wrapper, .time-wrapper {
     position: relative;
-    border-bottom-left-radius: $border-radius-default; border-bottom-right-radius: $border-radius-default;
+    border-bottom-left-radius: $border-radius-default;
+    border-bottom-right-radius: $border-radius-default;
     background-clip: border-box;
     background: $gray240;
 
@@ -118,7 +125,6 @@
   }
 
   .datepicker-days {
-
     .datepicker-day {
       color: $gray80;
       font-weight: bold;
@@ -150,7 +156,6 @@
         opacity: 0.75;
       }
 
-
       // Past dates
 
       &.closed,
@@ -159,10 +164,13 @@
       &.datepicker-day-past.disabled {
         color: $gray160;
       }
+
+      &.datepicker-booking-end-only {
+        background: linear-gradient(135deg, rgba($gray204, 0) 0%, rgba($gray204, 0) 50%, $gray204 50%, $gray204 100%);
+      }
     }
   }
 }
-
 
 // Special style for the timepicker
 
@@ -192,8 +200,7 @@
       display: block;
       padding: 0 6px;
 
-      label {
-      }
+      label {}
 
       i {
         float: right;
@@ -205,7 +212,7 @@
     select {
       position: absolute;
       top: 0;
-      bottom:0;
+      bottom: 0;
       left: 0;
       right: 0;
       border: 1px solid transparent;
@@ -219,4 +226,3 @@
     }
   }
 }
-
