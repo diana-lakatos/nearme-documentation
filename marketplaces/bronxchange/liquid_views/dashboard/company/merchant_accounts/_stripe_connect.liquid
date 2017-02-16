@@ -1,4 +1,6 @@
 {% assign form_object = f %}
+{% assign stripe_connect_owner_fields_count = 0 %}
+
 <input type='hidden' value='{{ params.edit_mode}}' name='edit_mode' />
 
 {% if merchant_account.persisted? %}
@@ -70,7 +72,6 @@
 
   <div class='nested-fields-set'>
     {% fields_for owners %}
-      {% assign stripe_connect_owner_fields_count = 0 %}
       {% include 'dashboard/company/merchant_accounts/stripe_connect_owner_fields', merchant_account: merchant_account %}
     {% endfields_for %}
   </div>
