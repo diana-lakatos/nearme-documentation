@@ -13,7 +13,7 @@ class Utils::DefaultAlertsCreator::PayoutTest < ActionDispatch::IntegrationTest
     @company.update_column(:instance_id, @instance.id)
     @company.creator.update_column(:instance_id, @instance.id)
     PlatformContext.current = PlatformContext.new(@company)
-    @company.stubs(:created_payment_transfers).returns([
+    Company.any_instance.stubs(:created_payment_transfers).returns([
       PaymentTransfer.new(amount_cents: 7887, currency: 'USD'),
       PaymentTransfer.new(amount_cents: 4650, currency: 'EUR')
     ])
