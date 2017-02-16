@@ -30,7 +30,7 @@ DesksnearMe::Application.configure do
   config.assets.compile = false
   config.assets.prefix = '/assets'
 
-  config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w('/ping')
+  config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w(/ping)
 
   # Clould services credentials
   CarrierWave.configure do |config|

@@ -29,7 +29,7 @@ DesksnearMe::Application.configure do
   Rails.application.routes.default_url_options[:host] = 'staging.near-me.com'
   config.test_email = 'notifications-staging@desksnear.me'
 
-  config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w('/ping')
+  config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w(/ping)
 
   # Clould services credentials
   CarrierWave.configure do |config|
