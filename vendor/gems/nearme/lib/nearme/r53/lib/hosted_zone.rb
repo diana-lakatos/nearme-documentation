@@ -38,7 +38,7 @@ module HostedZoneRepository
   # TODO: can search using sdk?
   def self.find_one_by_name(name)
     all.find(-> { Aws::Route53::Types::HostedZone.new }) do |zone|
-      name && zone.name =~ /\A#{name}\.\Z/
+      name && zone.name =~ /\A#{name}\.?\Z/
     end
   end
 
