@@ -1,10 +1,10 @@
 namespace :utils do
-  def prompt(*args)
-    print(*args)
-    STDIN.gets.chomp
-  end
-
   task :delete_test_users, [:instance_id, :users_file] => [:environment] do |_t, args|
+    def prompt(*args)
+      print(*args)
+      STDIN.gets.chomp
+    end
+
     instance_id = args[:instance_id]
     users_file = args[:users_file].to_s
 
