@@ -1,0 +1,152 @@
+name: Order
+slug: 'order'
+show_path_format: '/:transactable_type_id/:id'
+searchable: false
+skip_payment_authorization: true
+hours_for_guest_to_confirm_payment: 24
+single_transactable: false
+skip_location: true
+bookable_noun: 'Order'
+enable_photo_required: false
+lessor: 'Purchaser'
+lessee: 'Vendor'
+enable_reviews: true
+auto_accept_invitation_as_collaborator: true
+require_transactable_during_onboarding: true
+access_restricted_to_invited: true
+
+action_types:
+  - enabled: true
+    service_fee_guest_percent: 0
+    service_fee_host_percent: 12
+    minimum_booking_minutes: 60
+    hours_to_expiration: 24
+    cancellation_policy_enabled: '1'
+    cancellation_policy_hours_for_cancellation: 24
+    cancellation_policy_penalty_percentage: 0
+    cancellation_policy_penalty_hours: 1
+    confirm_reservations: true
+    send_alert_hours_before_expiry: false
+    send_alert_hours_before_expiry_hours: 0
+    minimum_lister_service_fee_cents: 0
+    both_side_confirmation: false
+    allow_drafts: false
+    type: TransactableType::OfferAction
+    pricings:
+      - number_of_units: 1
+        unit: 'item'
+        min_price_cents: 5000
+        max_price_cents: 15000
+        allow_free_booking: false
+        order_class_name: 'Offer'
+        allow_nil_price_cents: true
+
+custom_attributes:
+  - name: how_pay_for_order
+    label: 'How are you going to pay for this order?'
+    attribute_type: string
+    html_tag: select
+    validation:
+      required: true
+      valid_values:
+        - 'Credit Card'
+        - 'ACH'
+        - 'Check'
+  - name: purchase_order_number
+    label: 'Purchase Order Number'
+    attribute_type: string
+    html_tag: input
+    validation:
+      required: true
+  - name: order_contact
+    label: 'Contact person for this order'
+    attribute_type: string
+    html_tag: input
+    validation:
+      required: false
+  - name: other_requirements
+    label: 'Other Requirements'
+    attribute_type: string
+    html_tag: textarea
+    validation:
+      required: false
+  - name: delivery_date
+    label: 'Delivery Date'
+    attribute_type: date
+    html_tag: input
+    input_html_options_string: "data-datepicker=>true"
+    wrapper_html_options_string: ""
+    validation:
+      required: true
+  - name: delivery_address
+    label: 'Delivery Address'
+    attribute_type: string
+    html_tag: textarea
+    validation:
+      required: false
+  - name: approximate_budget
+    label: 'Approximate Budget'
+    attribute_type: string
+    html_tag: input
+    validation:
+      required: false
+  - name: order_description
+    label: 'Describe your order'
+    input_html_options_string: "class=>large"
+    attribute_type: string
+    html_tag: textarea
+    validation:
+      required: true
+
+validation:
+  - field_name: name
+    required: true
+
+form_components:
+  - type: transactable_attributes
+    name: General
+    fields:
+      - transactable: name
+      - transactable: order_contact
+      - transactable: order_description
+      - transactable: other_requirements
+      - transactable: Category - Language
+      - transactable: approximate_budget
+      - transactable: seller_attachments
+
+  - type: transactable_attributes
+    name: Payment and Delivery
+    fields:
+      - transactable: how_pay_for_order
+      - transactable: purchase_order_number
+      - transactable: delivery_date
+      - transactable: delivery_address
+
+
+  - type: space_wizard
+    name: Tell us a little about your organization
+    fields:
+      - seller: organization_name
+      - seller: organization_description
+
+  - type: space_wizard
+    name: Describe your order
+    fields:
+      - transactable: name
+      - transactable: order_description
+      - transactable: order_contact
+      - transactable: Category - Language
+      - transactable: other_requirements
+      - transactable: approximate_budget
+      - transactable: seller_attachments
+
+  - type: space_wizard
+    name: Delivery and payment
+    fields:
+      - transactable: how_pay_for_order
+      - transactable: purchase_order_number
+      - transactable: delivery_date
+      - transactable: delivery_address
+
+
+

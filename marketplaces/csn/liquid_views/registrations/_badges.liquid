@@ -1,0 +1,24 @@
+{% if user.buyer_properties.community_wealth or user.buyer_properties.workplace or user.buyer_properties.environment_and_health %}
+  <ul class="badges-a badges-a-full">
+    {% if user.buyer_properties.workplace %}
+    <li class="workplace">
+      <h3>Workplace</h3>
+      {{ user.buyer_properties.workplace_text | markdownify }}
+    </li>
+    {% endif %}
+
+    {% if user.buyer_properties.community_wealth %}
+    <li class="community-wealth">
+      <h3>Community Wealth</h3>
+      {{ user.buyer_properties.community_wealth_text | markdownify }}
+    </li>
+    {% endif %}
+
+    {% if user.buyer_properties.environment_and_health %}
+    <li class="environment-health">
+      <h3>Environment &amp; Health</h3>
+      {{ user.buyer_properties.environment_and_health_text | markdownify  }}
+    </li>
+    {% endif %}
+  </ul>
+{% endif %}

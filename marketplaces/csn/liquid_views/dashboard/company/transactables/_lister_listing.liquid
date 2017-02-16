@@ -1,0 +1,171 @@
+{% for transactable in transactables %}
+  {% assign accepted_order = transactable.first_accepted_order %}
+
+  <article class="listing-b" id="transactable_{{transactable.id}}">
+    <header>
+      <h2>{{ transactable.name }}</h2>
+
+      {% if current_status != 'archived' %}
+        <a href="{{ transactable.show_path }}" class="btn btn-primary btn-sm" rel="external">Visit order page</a>
+      {% endif %}
+
+      {% if transactable.state == 'completed' %}
+        <span class="label label-success">Completed</span>
+      {% elsif transactable.state == 'cancelled' %}
+        <span class="label label-warning">Cancelled</span>
+      {% endif %}
+    </header>
+
+    <div class="listing-b-inner">
+      <div class="listing-b-booking-details">
+        <dl class="properties">
+          <dt>Contact person:</dt>
+          <dd>{{ transactable.properties.order_contact }}</dd>
+
+          <dt>Purchase Number:</dt>
+          <dd>{{ transactable.properties.purchase_order_number }}</dd>
+
+          <dt>Budget:</dt>
+          <dd>{{ transactable.properties.approximate_budget }}</dd>
+        </dl>
+
+        <div class="actions">
+          {% if current_status == 'pending' %}
+            <a href='{{ transactable.edit_path }}' class="btn btn-default btn-sm">Edit details</a>
+          {% endif %}
+
+          {% if current_status == 'in progress' %}
+            <a href="{{ accepted_order.order_complete_url }}" data-method="post" class="btn btn-default btn-sm" data-confirm="Are you sure you want to mark this order as completed?">Mark as completed</a>
+          {% endif %}
+
+          {% if current_status != 'archived' %}
+              <a href='{{ transactable.cancel_path | append: "?status=" | append: current_status }}' data-confirm="Are you sure you want to cancel this order?" class="btn btn-default btn-sm">Cancel Order</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="listing-b-user-details">
+        {% if current_status == "in progress" or current_status == "archived" and accepted_order != blank %}
+          {% assign enquirer = accepted_order.user %}
+          <h3>Selected offer</h3>
+
+          <div class="user-profile">
+
+            <figure class="avatar">
+              <a href="{{ enquirer.user_profile_url }}" rel="external"><img src="{{ enquirer.avatar_url_big }}" alt="{{ enquirer.name }}"></a>
+
+              {% if accepted_order.transactable_user_messages.size == 0 %}
+                {% assign message_url = 'new_listing_user_message_path' | generate_url: transactable.id, user_id: accepted_order.user.id, skip: true %}
+              {% else %}
+                {% assign message_url = 'dashboard_user_message_path' | generate_url: accepted_order.transactable_user_messages.first.id %}
+              {% endif %}
+
+              <a data-modal="true" class="action-message" href="{{ message_url }}">Message</a>
+            </figure>
+
+            <h3><a href="{{ enquirer.user_profile_url }}" rel="external">{{ enquirer.name }}</a></h3>
+            <h4>{{ enquirer.buyer_properties.company_name }}</h3>
+            {% if enquirer.buyer_properties.company_description != blank %}
+            <p class="bio">{{ enquirer.buyer_properties.company_description | slice: 0, 100 | nl2br }}&hellip; <a href="{{ enquirer.user_profile_url }}" rel="external">More</a></p>
+            {% endif %}
+          </div>
+
+          <p><a class="btn btn-primary" href="{{ accepted_order.payment_documents[0].file_url }}" download="{{ accepted_order.payment_documents[0].file_name }}">Download offer file</a></p>
+
+          {% if current_status != 'in progress' and !accepted_order.is_free_booking %}
+            <p>Total Paid: <b>{{ accepted_order.total_order_items_amount_formatted }}</b></p>
+          {% endif %}
+
+          <p class="invite-sent">
+            <small>
+              Created: {{ accepted_order.created_at | to_date | l: 'short' }} |
+              Accepted: {{ accepted_order.confirmed_at | to_date | l: 'short' }}
+            </small>
+          </p>
+        {% else %}
+          <h3 class="no-collaborator-selected">You have not selected a vendor for this order yet.</h3>
+        {% endif %}
+      </div>
+    </div>
+
+
+    <hr>
+
+    {% include 'dashboard/company/transactables/attachments.html', is_client: 'true', attachments: transactable.attachments %}
+
+    <hr>
+
+    {% if current_status == "pending" %}
+      {% assign transactable_collaborators = transactable.approved_transactable_collaborators %}
+      {% if transactable_collaborators != empty %}
+        <h3>Vendors Invited ({{ transactable_collaborators.size }})</h3>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Vendor:</th>
+                <th>Invite Date:</th>
+                <th>Invite Action:</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for transactable_collaborator in transactable_collaborators %}
+                <tr>
+                  <td>{{ transactable_collaborator.user.buyer_properties.company_name }}</td>
+                  <td>{{ transactable_collaborator.approved_by_owner_at | to_date | l: 'short' }}</td>
+                  <td>
+                    {% if order != blank and order.transactable_user_messages.size > 0 %}
+                      <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: order.transactable_user_messages.first.id }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+                    {% else %}
+                       <a class="btn btn-info" data-modal="true" href="{{ 'new_transactable_collaborator_user_message_path' | generate_url: transactable_collaborator.id, skip: true }}">{{ 'dashboard.order_items.send_message' | t}}</a>
+                    {% endif %}
+
+                    <a class="btn btn-danger" href="{{ transactable_collaborator.destroy_path }}" data-method="delete" data-confirm="Are you sure?">Remove invite</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+
+      {% assign orders = transactable.orders %}
+      {% if orders != empty %}
+        <h3>Offers ({{ orders.size }})</h3>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Vendors:</th>
+                <th>Offer Date:</th>
+                <th>Offer Status:</th>
+                <th>Offer Action:</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+                <tr>
+                  <td>{{ order.user.name }}</td>
+                  <td>{{ order.created_at | to_date | l: 'short' }}</td>
+                  <td>{{ 'reservations.states.' | append: order.state | t }}</td>
+                  <td>
+                    {% if order.unconfirmed? %}
+                      <a href="{{ order.payment_documents[0].file_url }}" target="_blank" class="btn btn-info">Review</a>
+                      <a href="{{ order.rejection_form_path }}" data-modal="true" class="btn btn-danger">Reject</a>
+                      <a href="{{ order.confirmation_form_path }}" class="btn btn-success" data-modal="true">Accept</a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    {% endif %}
+
+    {% if transactable.pending? == false and accepted_order != blank %}
+      <p><a href="{{ 'dashboard_company_order_order_items_path' | generate_url: order_id: accepted_order.id, transactable_id: transactable.id }}" class="btn btn-default">View Time &amp; Expenses</a></p>
+    {% endif %}
+
+  </article>
+{% endfor %}

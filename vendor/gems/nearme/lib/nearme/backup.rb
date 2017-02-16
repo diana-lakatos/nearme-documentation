@@ -52,6 +52,7 @@ module NearMe
       {
         'nm-production' => 'california-utility1',
         'nm-oregon' => 'oregon-rails-app1',
+        'nm-sydney' => 'sydney-rails-app1',
         'nm-staging' => 'rails-app1',
         'nm-qa-1' => 'rails-app1',
         'nm-qa-2' => 'rails-qa2',
@@ -62,6 +63,7 @@ module NearMe
     def stack_name_to_jump_stack_name(stack_name)
       case stack_name
       when 'nm-oregon' then 'nm-jump-oregon'
+      when 'nm-sydney' then 'nm-jump-sydney'
       else
         'nm-jump'
       end
@@ -72,6 +74,7 @@ module NearMe
       {
         'nm-production' => 'production',
         'nm-oregon' => 'production',
+        'nm-sydney' => 'production',
         'nm-staging' => 'staging',
         'nm-qa-1' => 'staging',
         'nm-qa-2' => 'staging',
