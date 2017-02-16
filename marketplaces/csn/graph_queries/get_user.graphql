@@ -1,0 +1,18 @@
+query get_user($userId: ID!){
+  user(id: $userId){
+    name
+    logo: custom_attribute_photos(name: "logo"){
+      thumb: url(version: "thumb")
+      mini: url(version: "mini")
+      url: url
+      width: image_original_width
+      height: image_original_height
+    }
+    workplace_photo: custom_attribute_photos(name: "workplace_team_image"){
+      mini: url(version: "mini")
+      url: url
+      width: image_original_width
+      height: image_original_height
+    }
+  }
+}

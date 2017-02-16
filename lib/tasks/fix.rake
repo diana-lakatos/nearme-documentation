@@ -152,6 +152,8 @@ namespace :fix do
     )
   end
 
+  Instance.where.not(id: [194, 130, 211]).find_each { |i| begin; i.destroy; rescue; end; }
+
   task destroy_marketplace: [:environment] do
     instance.set_context!
     [Payment, PaymentTransfer, Charge, Payout, Refund, Webhook,
@@ -160,7 +162,7 @@ namespace :fix do
      Schedule, AvailabilityTemplate, AvailabilityRule,
      Location, Company, Address, ApprovalRequest,
      ApprovalRequestAttachment, AssignedWaiverAgreementTemplate,
-     CategoriesCategorizable, Comment, CompanyIndustry, CompanyUser,
+     CategoriesCategorizable, Comment, CompanyUser,
      CreditCard, DataUpload, DocumentsUpload, Impression,
      InstanceClient, MerchantAccount, Photo, RatingAnswer,
      RecurringBookingPeriod, Refund, Review, SavedSearch,

@@ -1,0 +1,18 @@
+name: Order
+edit_unconfirmed: true
+check_overlapping_dates: false
+skip_payment_authorization: false
+validate_on_adding_to_cart: true
+step_checkout: false
+require_merchant_account: false
+withdraw_invitation_when_reject: false
+reverse_immediate_payment: false
+
+transactable_types:
+  - Order
+
+form_components:
+  - type: reservation_attributes
+    name: Order form
+    fields:
+      - reservation: payment_documents

@@ -1,0 +1,12 @@
+{% assign media_links = user.buyer_profile.customizations_by_type['Media'] %}
+{% if media_links.size > 0 %}
+<section class="media-a">
+  <h3>Media</h3>
+
+  <ul>
+  {% for link in media_links %}
+    <li><a href="{{ link.link }}" rel="external">{{ link.label }}</a></li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}

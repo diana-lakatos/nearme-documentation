@@ -1,0 +1,17 @@
+{% assign testimonial_entries = user.buyer_profile.customizations_by_type['Testimonial'] %}
+{% if testimonial_entries.size > 0 %}
+<section class="testimonials-a">
+  <h3>Testimonials</h3>
+
+  <div class="items">
+    {% for testimonial in testimonial_entries %}
+      <blockquote>
+        <p>“{{ testimonial.testimonial }}”</p>
+        <footer>
+          <cite>{{ testimonial.author }}{% if testimonial.organization != blank %}, {{ testimonial.organization }}{% endif %}</cite>
+        </footer>
+      </blockquote>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

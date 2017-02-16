@@ -1,0 +1,5 @@
+<p>Order Canceled</p>
+
+<p>{{ transactable.name }} has been cancelled by {{ transactable.creator.name }}. This order will be available, for your reference, in the Archived Orders section {{ 'dashboard_company_transactable_type_transactables_path' | generate_url: transactable.transactable_type | append: "?status=archived" }} in your dashboard. Don't worry - more opportunities will be listed soon.</p>
+
+<p>The BronXchange team is interested in your success and is always here to help. If you would like help from our support team, just email or call us. Send us a message at <a href="mailto:support@bronXchange.com">support@bronXchange.com</a> or call {{ platform_context.phone_number }} and we'll take care of you right away.</p>
