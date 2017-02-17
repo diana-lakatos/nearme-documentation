@@ -83,7 +83,7 @@ class CheckoutControllerTest < ActionController::TestCase
           put :update, order_params_for(@transactable)
         end
         assert @response.body.include?('redirect')
-        assert_redirected_to dashboard_order_path(Reservation.last)
+        assert_redirected_to success_dashboard_order_path(Reservation.last)
       end
     end
   end
