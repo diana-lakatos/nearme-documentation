@@ -21,7 +21,7 @@
             <td>{{ attachment.user.name }}</td>
             <td>{{ attachment.created_at | to_date | l: 'short' }}</td>
             <td>{{ attachment.data_file_size }}</td>
-            <td>{% if is_client == 'true' %}<a class="btn btn-warning" href="/dashboard/seller_attachments/{{ attachment.id}}" data-method="delete" data-confirm="Are you sure?">Delete</a>{% endif %}</td>
+            <td class="table-actions">{% if is_client == 'true' %}<a class="btn btn-danger" href="/dashboard/seller_attachments/{{ attachment.id}}" data-method="delete" data-confirm="Are you sure?">Delete</a>{% endif %}</td>
           </tr>
           {% endfor %}
         </tbody>
