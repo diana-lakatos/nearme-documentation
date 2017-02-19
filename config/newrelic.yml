@@ -21,7 +21,7 @@ common: &default_settings
   error_collector:
     enabled: true
     capture_source: true
-    ignore_errors: "ActiveRecord::RecordNotFound,ActionController::RoutingError,ActionController::InvalidAuthenticityToken,ActionDispatch::ParamsParser::ParseError,CGI::Session::CookieStore::TamperedWithCookie,ActionController::UnknownAction,AbstractController::ActionNotFound,Transactable::NotFound,Location::NotFound,Page::NotFound,Reservation::NotFound,RecurringBooking::NotFound,UserBlog::NotFound,MarketplaceErrorLogger::Error,ActionController::UnknownFormat,OAuth::Unauthorized,RequestParametersValidator::InvalidParameterError"
+    ignore_errors: "ActiveRecord::RecordNotFound,ActionController::RoutingError,ActionController::InvalidAuthenticityToken,ActionDispatch::ParamsParser::ParseError,CGI::Session::CookieStore::TamperedWithCookie,ActionController::UnknownAction,AbstractController::ActionNotFound,Transactable::NotFound,Location::NotFound,Page::NotFound,Reservation::NotFound,RecurringBooking::NotFound,UserBlog::NotFound,MarketplaceErrorLogger::Error,ActionController::UnknownFormat,OAuth::Unauthorized,RequestParametersValidator::InvalidParameterError,ActionController::BadRequest,ActionController::UnknownHttpMethod"
   rules:
     ignore_url_regexes: ["/assets/", "/ping"]
 
