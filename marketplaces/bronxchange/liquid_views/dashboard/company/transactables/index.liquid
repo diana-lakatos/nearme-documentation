@@ -20,21 +20,23 @@
     <span class='hidden-xs'>&gt; {{ current_status | humanize }}</span>
   </h1>
 
-  {% if is_client == "true" %}
-    <div class='options visible-sm visible-xs'>
+  <div class='options'>
+    {% if is_client == "true" %}
       <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary'>
         <span class='fa fa-plus'></span>
-        New
+        Create a new order
       </a>
-    </div>
-  {% endif %}
-{% endcontent_for %}
+    {% endif %}
+    {% if current_user.has_seller_profile? %}
+      <a href="/search" class="btn btn-primary">Find a Vendor</a>
+    {% endif %}
+  </div>
 
-{% assign form_url = transactable_type.transactable_types_path %}
+{% endcontent_for %}
 
 <div class="sort-filter-search-wrapper">
     <div class="sort-filter-a">
-      {% form_for :transactable, url: form_url, method: 'get', form_for_type: 'dashboard' %}
+      <form novalidate="novalidate" class="simple_form transactable" action="{{ form_url }}" accept-charset="UTF-8" method="get">
         <input type="hidden" name="status" value="{{ current_status }}">
         <div class="form-group">
           <label for="filter-order-by" class="control-label">Order</label>
@@ -46,12 +48,8 @@
         <div class="form-action">
           <button type="submit" class="btn btn-primary">Apply filter</button>
         </div>
-      {% endform_for %}
+      </form>
     </div>
-
-    {% if current_user.has_seller_profile? %}
-    <p class="find-expert-link"><a href="/search" class="btn btn-primary">Find a Vendor</a></p>
-    {% endif %}
 </div>
 
 {% content_for 'panel_navigation_links' %}
@@ -66,16 +64,6 @@
     </li>
 {% endcontent_for %}
 
-{% if is_client == 'true' %}
-  {% content_for 'panel_options' %}
-  <div class='pull-right options {% if transactables.size > 0 %} additional-listing-options {% endif %}'>
-    <a href='{{ transactable_type.new_transactable_path }}' class='btn btn-primary navbar-btn'>
-      <span class='fa fa-plus'></span>
-      Create a new Order
-    </a>
-  </div>
-  {% endcontent_for %}
-{% endif %}
 
 <nav class='panel-nav-mobile' role='navigation'>
   {% if current_status == 'pending' %}

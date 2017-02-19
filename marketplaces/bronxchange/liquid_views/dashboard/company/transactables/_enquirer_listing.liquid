@@ -129,7 +129,7 @@
                 {% endif %}
               </td>
               {% if order.unconfirmed? %}
-                <td>
+                <td class="table-actions">
                   {% if order.unconfirmed? %}
                     <a class="btn btn-success" href="{{ order.payment_documents[0].file_url }}" download="{{ order.payment_documents[0].file_name }}" target="_blank">View</a>
                     <a class="btn btn-info" data-modal href="{{ 'edit_dashboard_order_path' | generate_url: order.id }}">{{ 'general.edit' | t }}</a>
