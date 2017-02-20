@@ -1,7 +1,8 @@
 class AddHistorySlugsForExistingUsers < ActiveRecord::Migration
   def self.up
     index = 0
-    User.with_deleted.find_each do |user|
+    # We use unscoped as we don't set a context and the context remains set from the previous migration
+    User.unscoped.find_each do |user|
       index += 1
       puts "At index: #{index}" if index % 1000 == 0
       existing = FriendlyId::Slug.where(slug: user.slug, sluggable: user, scope: "instance_id:#{user.instance_id}")
