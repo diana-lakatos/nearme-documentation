@@ -1838,6 +1838,7 @@ ActiveRecord::Schema.define(version: 20170217170817) do
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.integer  "payer_id"
+    t.integer  "credit_card_id"
     t.datetime "expired_at"
     t.string   "payment_source_type"
     t.integer  "payment_source_id"
@@ -1911,6 +1912,7 @@ ActiveRecord::Schema.define(version: 20170217170817) do
     t.integer  "payment_gateway_fee_cents",                                                      default: 0
     t.integer  "payment_source_id"
     t.string   "payment_source_type"
+    t.integer  "credit_card_id"
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
