@@ -19,7 +19,7 @@ class PaypalAccount < ActiveRecord::Base
   delegate :plaid_configured?, to: :payment_method
 
   def name
-    I18n.t('payment_source.masked_number_with_bank_name', last4: last_4, bank: bank_name)
+    ''
   end
 
   def authorizable?

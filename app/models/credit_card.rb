@@ -11,7 +11,7 @@ class CreditCard < ActiveRecord::Base
   has_one :payment_gateway, through: :payment_method
   belongs_to :payment_method, -> { with_deleted }
   has_many :payments, as: :payment_source
-  has_many :authorized_payments, -> { authorized }, class_name: 'Payment'
+  has_many :authorized_payments, -> { authorized }, class_name: 'Payment', as: :payment_source
   has_many :reservations
 
   before_validation :set_instance_client

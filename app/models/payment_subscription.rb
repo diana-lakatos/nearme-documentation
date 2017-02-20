@@ -34,6 +34,7 @@ class PaymentSubscription < ActiveRecord::Base
     source.attributes = source_attributes.merge({ payment_method: payment_method, payer: payer })
     self.payment_source = source
   end
+
   alias credit_card_attributes= payment_source_attributes=
   alias credit_card= payment_source=
 
@@ -43,6 +44,24 @@ class PaymentSubscription < ActiveRecord::Base
 
   def bank_account
     self.payment_source if self.payment_source_type == 'BankAccount'
+  end
+
+  def bank_account_id
+    bank_account.try(:id)
+  end
+
+  def credit_card_id
+    credit_card.try(:id)
+  end
+
+  def bank_account_id=attribute_id
+    self.payment_source_id = attribute_id
+    self.payment_source_type = 'BankAccount'
+  end
+
+  def credit_card_id=attribute_id
+    self.payment_source_id = attribute_id
+    self.payment_source_type = 'CreditCard'
   end
 
   def can_activate?

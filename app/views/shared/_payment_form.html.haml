@@ -4,19 +4,16 @@
   %p= t 'recurring_reservations_review.prorated_info'
 
 - if payment_methods.any?
-  #accordion2.accordion{"data-payment-methods": true}
-    .accordion-group
-      - payment_methods.each_with_index do |payment_method, index|
-        - selected_payment_method = f.object.payment_method_id == payment_method.id || (index.zero? && f.object.payment_method_id.blank? && payment_methods.count == 1)
-        .accordion-heading
-          %a.accordion-toggle{"data-payment-method-link": true, "data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapse_#{payment_method.id}", "data-target": "#collapse_#{payment_method.id}"}
-            - if payment_methods.count > 1
-              = payment_method.name
-          = f.radio_button :payment_method_id, payment_method.id, hidden: true, checked: selected_payment_method
-        .accordion-body.collapse{id: "collapse_#{payment_method.id}", class: (selected_payment_method ? "in" : ''), "data-payment-method-type": payment_method.payment_method_type}
-          .accordion-inner
-            %fieldset{disabled: true}
-              = render partial: "shared/payment_methods/" + payment_method.payment_method_type, locals: {f: f, payment_method: payment_method}
+  .payment-methods{"data-payment-methods": true}
+    = f.input :payment_method_id, as: :hidden, input_html: { data: {payment_method_id: true} }
+
+    - payment_methods.each_with_index do |payment_method, index|
+      - selected_payment_method = (f.object.payment_method_id == payment_method.id) || (index.zero? && f.object.payment_method_id.blank?)
+      .payment-method{"data-payment-method-active": selected_payment_method, "data-payment-method-id": payment_method.id, "data-payment-method-type": payment_method.payment_method_type, "data-payment-method": true }
+        .payment-method-header{'data-payment-method-header': true}
+          = payment_method.name
+        %fieldset.payment-method-body
+          = render partial: "shared/payment_methods/" + payment_method.payment_method_type, locals: {f: f, payment_method: payment_method}
 
 - else
   .alert.alert-danger

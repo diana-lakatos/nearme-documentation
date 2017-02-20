@@ -1,11 +1,15 @@
 - bank_account =  f.object.bank_account || f.object.new_payment_source(payment_method)
 .nm-ach-fields
   .row-fluid.nm-payment-subscription-fields
-    - payment_soruces_collection = f.object.payment_sources_collection(payment_method)
-    = f.input :payment_source_id, as: :radio_buttons, collection: payment_soruces_collection, label: false, checked: :first, wrapper_html: { class: 'payment-source-option-select' }, checked:  payment_soruces_collection.last
-    = f.input :payment_source_type, as: :hidden, input_html: { value: 'BankAccount' }
+    - payment_drop = f.object.decorate
+    = f.input :bank_account_id,
+      as: :radio_buttons,
+      collection: payment_drop.payment_sources_collection(payment_method),
+      checked: payment_drop.default_payment_source(payment_method),
+      label: false,
+      wrapper_html: { class: 'payment-source-option-select' }
 
-    %div{ class: 'super-payment-source-form' }
+    %div{ class: 'payment-source-form' }
       = f.simple_fields_for :payment_source_attributes, bank_account do |form|
         .has-error.errors
           = f.error :base
