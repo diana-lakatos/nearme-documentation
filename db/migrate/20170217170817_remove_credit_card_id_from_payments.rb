@@ -1,6 +1,6 @@
 class RemoveCreditCardIdFromPayments < ActiveRecord::Migration
   def change
-    remove_column :payments, :credit_card_id, :integer
-    remove_column :payment_subscriptions, :credit_card_id, :integer
+    rename_column :payments, :credit_card_id, :credit_card_id_old
+    rename_column :payment_subscriptions, :credit_card_id, :credit_card_id_old
   end
 end
