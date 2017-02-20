@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 require 'codeclimate-test-reporter'
 require 'simplecov'
 
@@ -7,7 +6,7 @@ require 'simplecov'
 # newer version of cucumber-rails. Consider adding your own code to a new file
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
-SimpleCov.start
+CodeClimate::TestReporter.start
 
 require 'json_spec/cucumber'
 require 'cucumber/rails'

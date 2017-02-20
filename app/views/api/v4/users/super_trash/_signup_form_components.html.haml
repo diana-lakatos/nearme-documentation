@@ -1,4 +1,4 @@
-= simple_form_for resource, as: :form, url: '/api/users.html', html: { class: form_classes, id: :new_user } do |f|
+= simple_form_for resource, as: :form, url: '/api/users.html', method: :post, html: { class: form_classes, id: :new_user } do |f|
   = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
   = hidden_field_tag 'return_to', params[:return_to] if params[:return_to]
   = hidden_field_tag 'role', @role

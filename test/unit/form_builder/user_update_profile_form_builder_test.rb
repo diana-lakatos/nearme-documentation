@@ -49,6 +49,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
       default_profile: UserProfile.new(instance_profile_type: default_profile_type, profile_type: 'default'),
       seller_profile: UserProfile.new(instance_profile_type: seller_profile_type, profile_type: 'seller')
     )
+    @user.password = nil
 
     @user_update_profile_form_builder = FormBuilder.new(base_form: UserUpdateProfileForm,
                                                         configuration: configuration,

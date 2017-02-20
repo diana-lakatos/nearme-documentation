@@ -247,6 +247,8 @@ class FormComponentToFormConfiguration
         else
           [OpenStruct.new(validation_rules: {})]
         end
+      elsif @validatable.nil?
+        [OpenStruct.new(validation_rules: {})]
       else
         (@validatable.custom_attributes.where(name: @field).first || @validatable).custom_validators.where(field_name: @field)
       end

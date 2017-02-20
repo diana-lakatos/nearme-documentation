@@ -637,9 +637,9 @@ class NewSignupFormForSpacer < ActiveRecord::Migration
 </section>
 EOS
       )
+      p = Page.where(slug: 'new-signup').first_or_create!(path: 'new-signup', content: 'Hello')
+      p.page_forms.where(form_configuration: fc).first_or_create!
     end
-    p = Page.where(slug: 'new-signup').first_or_create!(path: 'new-signup', content: 'Hello')
-    p.page_forms.where(form_configuration: fc).first_or_create!
   end
 
   def down

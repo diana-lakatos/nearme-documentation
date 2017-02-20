@@ -20,7 +20,7 @@ module Api
         end
         respond(@user_signup, notice: I18n.t('devise.registrations.signed_up'),
                               alert: false,
-                              location: session.delete(:user_return_to).presence || root_path)
+                              location: session.delete(:user_return_to).presence || params[:return_to].presence || root_path)
       end
 
       def verify
