@@ -13,6 +13,8 @@ Capybara::Webkit.configure do |config|
   config.allow_url('http://csi.gstatic.com/*')
   config.allow_url('https://rawgit.com/mdyd-dev/marketplaces/*')
   config.allow_url('https://*.cloudfront.net/*')
+  config.allow_url('https://js.stripe.com/v2/*')
+  config.allow_url('https://api.stripe.com/v1/tokens')
   config.block_unknown_urls
   # Uncomment if you want to debug JavaScript
   # config.debug = true
@@ -44,8 +46,16 @@ Before do
   FactoryGirl.create(:primary_locale)
   FactoryGirl.create(:instance)
 
-  ActiveMerchant::Billing::Base.mode = :test
+  I18N_DNM_BACKEND.update_cache(instance.id) if defined? I18N_DNM_BACKEND
+  InstanceViewResolver.instance.clear_cache
+end
 
+After do
+  ::CustomAttributes::CustomAttribute::CacheDataHolder.clear_all_cache!
+end
+
+Before('@fake_payments') do
+  ActiveMerchant::Billing::Base.mode = :test
   response = { success?: true }
   PaymentGateway.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(response.reverse_merge(authorization: 'token ')))
   PaymentGateway.any_instance.stubs(:gateway_void).returns(OpenStruct.new(response.reverse_merge(authorization: '54533')))
@@ -54,8 +64,8 @@ Before do
   PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
   PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: 'COMPLETED')))
   PaymentGateway::StripePaymentGateway.any_instance.stubs(:find_balance).returns(
-      OpenStruct.new({ id: '1', status: 'succeeded', fee_details: [OpenStruct.new(type: 'stripe_fee', amount: 10)] })
-    )
+    OpenStruct.new({ id: '1', status: 'succeeded', fee_details: [OpenStruct.new(type: 'stripe_fee', amount: 10)] })
+  )
   stub = OpenStruct.new(success?: true, params: {
                           'object' => 'customer',
                           'id' => 'customer_1',
@@ -69,13 +79,6 @@ Before do
 
   FactoryGirl.create(:stripe_payment_gateway)
   FactoryGirl.create(:paypal_adaptive_payment_gateway)
-
-  I18N_DNM_BACKEND.update_cache(instance.id) if defined? I18N_DNM_BACKEND
-  InstanceViewResolver.instance.clear_cache
-end
-
-After do
-  ::CustomAttributes::CustomAttribute::CacheDataHolder.clear_all_cache!
 end
 
 Before('@elasticsearch') do

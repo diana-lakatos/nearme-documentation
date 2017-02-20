@@ -20,5 +20,22 @@ FactoryGirl.define do
     factory :unconfirmed_offer do
       state 'unconfirmed'
     end
+
+    factory :confirmed_offer do
+      state 'confirmed'
+      after(:build) do |offer, _|
+        offer.payment_subscription = build(:payment_subscription, payer: offer.user)
+      end
+
+      after(:create) do |offer, _|
+        offer.transactable.update_attribute(:state, 'in_progress')
+      end
+
+      factory :offer_with_expenses do
+        after(:build) do |offer, _|
+          offer.order_items = build_list(:order_item, 2, order: offer)
+        end
+      end
+    end
   end
 end

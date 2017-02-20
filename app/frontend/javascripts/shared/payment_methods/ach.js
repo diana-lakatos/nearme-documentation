@@ -7,7 +7,6 @@ class PaymentMethodAch {
 
   constructor(container) {
     this.form = $('#checkout-form, #new_payment');
-
     this._publishableToken = this.form.find('#ach_manual_payment_form').data('publishable');
     this._ui = {};
     this._ui.container = container;
@@ -126,25 +125,26 @@ class PaymentMethodAch {
       // Show the errors on the form:
       $(this._ui.container).find('.has-error').text(response.error.message);
       // $form.find('button').prop('disabled', false); // Re-enable submission
-      console.log('PaymentMethodCreditCard :: Stripe :: Responded with errors: ', response.error.message);
+      console.log('PaymentMethodACH :: Stripe :: Responded with errors: ', response.error.message);
 
     } else { // Token created!
 
       // Get the token ID:
       var token = response.id;
-      console.log('PaymentMethodCreditCard :: Stripe :: Received token: ', token);
+
+      console.log('PaymentMethodAch :: Stripe :: Received token: ', token);
 
       // Insert the token into the form so it gets submitted to the server:
       this._ui.container.querySelector('#stripe_plaid_public_token').value = token;
 
       if ($form.parents('.dialog__content').length > 0) {
-        console.log('PaymentMethodCreditCard :: Form submitted. Submitting checkout form using AJAX. Data: ', $form.serialize());
+        console.log('PaymentMethodAch :: Form submitted. Submitting checkout form using AJAX. Data: ', $form.serialize());
 
         var ajaxOptions = { url: $form.attr('action'), data: $form.serialize(), method: 'POST' };
         $(document).trigger('load:dialog.nearme', ajaxOptions);
 
       } else {
-        console.log('PaymentMethodCreditCard :: Submitting checkout form.');
+        console.log('PaymentMethodAch :: Submitting checkout form.');
         // Submit form while going through standard checkout process
         $form.get(0).submit();
       }

@@ -71,6 +71,10 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     data[:secret_key] = result.keys.secret if result.keys.is_a?(Stripe::StripeObject)
   end
 
+  def tos_acceptance_timestamp
+    Time.now.to_i
+  end
+
   def create_params
     update_params.deep_merge(
       managed: true,
@@ -78,7 +82,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       email: merchantable.creator.email,
       tos_acceptance: {
         ip: merchantable.creator.current_sign_in_ip,
-        date: Time.now.to_i
+        date: tos_acceptance_timestamp
       },
       legal_entity: {
         address: address_hash,

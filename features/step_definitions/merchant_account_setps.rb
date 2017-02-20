@@ -33,8 +33,13 @@ And(/^(.*) merchant account should be created$/) do |state|
 end
 
 And(/^I set Stripe to respond with (.*)$/) do |error|
-  stub_request(:post, /https:\/\/api.stripe.com\/v1\/accounts*/).to_return(status: 200, body: account_create_respone_with_error(error))
-  stub_request(:post, 'https://uploads.stripe.com/v1/files').to_return(status: 200, body: file_response_body)
+  @stub_accounts = stub_request(:post, /https:\/\/api.stripe.com\/v1\/accounts*/).to_return(status: 200, body: account_create_respone_with_error(error))
+  @stub_files = stub_request(:post, 'https://uploads.stripe.com/v1/files').to_return(status: 200, body: file_response_body)
+end
+
+Then(/I remove stubed requests/) do
+  remove_request_stub(@stub_accounts)
+  remove_request_stub(@stub_files)
 end
 
 def account_create_respone_with_error(error)

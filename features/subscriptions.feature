@@ -1,4 +1,4 @@
-@javascript
+@javascript @fake_payments
 Feature: A user can subscribe to a service
   In order to become subscriber
   As a user

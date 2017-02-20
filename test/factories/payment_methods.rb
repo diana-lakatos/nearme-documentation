@@ -1,5 +1,11 @@
 FactoryGirl.define do
   factory :payment_method do
+    factory :ach_payment_method, class: 'PaymentMethod::AchPaymentMethod' do
+      payment_gateway { FactoryGirl.create(:stripe_payment_gateway) }
+      payment_method_type 'ach'
+      type 'PaymentMethod::AchPaymentMethod'
+    end
+
     factory :credit_card_payment_method, class: 'PaymentMethod::CreditCardPaymentMethod' do
       payment_gateway { FactoryGirl.create(:stripe_payment_gateway) }
       payment_method_type 'credit_card'

@@ -1,0 +1,1743 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2760/favicon.png
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - image/png
+      Content-Length:
+      - '1767'
+      Connection:
+      - keep-alive
+      Date:
+      - Sun, 12 Feb 2017 21:21:44 GMT
+      Last-Modified:
+      - Fri, 26 Aug 2016 08:51:35 GMT
+      Etag:
+      - '"35a6d5da30e8c1e2ee2ba1ed40363406"'
+      Cache-Control:
+      - max-age=315576000, public
+      Accept-Ranges:
+      - bytes
+      Server:
+      - AmazonS3
+      Age:
+      - '1880618'
+      X-Cache:
+      - Hit from cloudfront
+      Via:
+      - 1.1 ff3ce960a0ccc4e856d99aad27febf7d.cloudfront.net (CloudFront)
+      X-Amz-Cf-Id:
+      - "-cgQuJDYgQkCWhFl9SDjZwH5fl91KJRrvHpSMucKDFCx7QshpVW7Tw=="
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAGrklEQVRYhbWX
+        eXBVZxnGf+fec5fkkgQIWQgJJAECBGiA0okOiISCdGA6rYMoiKjQsSqo09Ja
+        mFo7U0droSwdWYVOh1bpQFGhC1hLU5KGQqCQEi4GshII2S9J7pK7nnte/wjb
+        zQIpwvPnOe/3Pr/zzPed8x5FROqBGPqh8x1hChwapc4wZe4wl706YYG0aAPZ
+        A4xMjDMyI17lkXhjf9oBuBURkbtV7agOsLEiQGVdEAICVgVsBogyYFQg7BPw
+        6uDTQVVITDGxKsvCyiwrAwx37q2IiIs+EihsCbHkWCf1tUEYovLEaAtPpph4
+        KM5Ihs3AIJMCgEsTrnh1zrt0PmoKsacyAE0hlKEmtuXa+EWGuc8EEBGXdFM4
+        rIvmdsuck35hQ7Ossfuk0ad3L+tTrpAur1f4hT1twsZmmX3ULY2hXte7egB0
+        uH0yddFaqfhvjXzkFDnSqvXbuLtagyJPHvMI65pkwL42udjzISIBNC0sOd97
+        VUhfJhfrHPds3F2vlfuFzS1i29smzcEICFfEFnl24wFKP7czNDsNlbvuzX5r
+        dZaF9fNi6bwcZG6RJ+LeTYDC01VsfusIMeOGg67fN/Mbei7TwsJZMZwt8bKh
+        NtgT4Fev/xOiLURZTNz9YN6b3psajW24mecL3Tg1uQWw9+MSzp8oIzEh9sE4
+        36Y3Z8SAI8yai4FbAOv3FTIoI5nRQ+NxewMPFGBRssrI8VZ22H2EBNTy2mbO
+        FNh56fkFeP1BvjhTSZzN0utib1i40qmDcu8AZoPC3GEmtlUHONSkoRacqQKv
+        n/nTs9n/WSl32gDHroWZ+7ETLIbbdk8fUgDlOqkItx8q1aRAlMJ/WkKo56oa
+        IXEQ4zKSaHd5by3qRbrRCFEDIMoIoRC4vGA1Q5wNzAYIC3j84PF1AVqVLnOf
+        REBoBgVCQn6LhmqvaiQlPZG42Gg6fcE+zQEmmjW2ZzoBwRplJmdMPC4PnDpf
+        R7vLS5TVRPbkZLLTB7PtgsaWkx1gM7L+GzbGxxjRboshPclEogJqzZUWRmYm
+        dZGF73z+68pr2fHiTnzeACsXfZuxsd/kp6/s4cjJCjxeP2aTSnZ6Eu/+9nHy
+        Hp7GFoMJdJ0laWaSrZHJ2r+0c6SqGVXTwqhq1/db9K6YjEYDZpPaA8CrQ2mD
+        B1NMNMUNHtY+tZ2GegdPL57NyNQhXHN6eefQKUYv3sQPXg4QO2kWrivt1Hp1
+        kq2RM8LyrZ9y+oOTqGkp8dQ1dgAQ0sNgVOjsDGCzmnoA2KLMoENu9nACQY2G
+        C3Xk73+RWblZN2vW/uZxYnKfoa6omMycaZyV3oeTgTYr8VMyMUwclUJVZT0A
+        4zOSwe0jENR4buOBrkSuS3Rh/d/ysUabae3w4Gj3gMVETb0jonH1lVYC/iBG
+        sxnNYIA+vikllfWMHZGEOi4jCa620nzNzbNL8tj096P4Wp3sfuczzlU3MfPh
+        UQAcPV3JV8fLwGAgekwqq36UR3VjGz/7+WYOFNrJGp5Ah9vP7v1FGJztpOUt
+        pShoAj2M3o2hrrGdtooGch6dhDpjcibosOv9Yl5aPoev9q3mT7s+wV7TSEn5
+        VUqOX+haFR/DI9+ayPSH0lm1dBapSQNJTRrEC28c5HCBncOdflCNjB6bxlvP
+        PEXp+Km8+347RPXM4Itzl6Clg5lTRnWNZIlzfx9jMRqoO/zKzaJgUKPB4cTd
+        2fVqjrVZGZEyuNc4m1qddLh9WCwmMobFA9AhcKk1iGIykhVrINp46xTMWLGV
+        oqIynCc2dI1kr+3+VGCeHD5+4b4NIX2prKZJiP6uLP/jXpEbE5G70y+WiStk
+        xJzfPXCA6cvfEBJ/KJfrr90CEBHZ9cFJgcfkhS0fPjDz7QdPCDwmq7cfunEp
+        ciacvmyToMyXD4+V3Xfzkop6YeD3ZfjsiJQjARocTonJWSkMWyoHj567b+bF
+        9loxTVghpCyV0qqGvgFERM7XNos64ZeC+Ql5edsh+X+1de/nwpDFQspSyS+p
+        6n67J4CISE1Dm0xa+KrAPJmw8M9y5MTFr21cfO6S5D39F0GZL8l5a+RUWV1v
+        Zb0D3NAfdv5bSF8mDFgguT/ZKDv/dVzKLzWLpoV7FusiNVcdsufQl/KdFVuF
+        +EVCwmL59bp/SLC3+usAd/05rbnqYN3b+fz1vSKoaYKEWIaOSWXymFRSE+Iw
+        KAqNbW7OltdzufwqNLZBymAWL5jG6h8/Ss7Y1Du1R5F+/p472jx8UnyRgpIq
+        SsrrKa9txuPsBMBqiyIrPZGc0SnMnDKKObljSBs66G4tAdz/Ayn5EhK6afei
+        AAAAAElFTkSuQmCC
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:45:21 GMT
+- request:
+    method: get
+    uri: https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2761/apple-touch-icon-60_2x.png
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - image/png
+      Content-Length:
+      - '7776'
+      Connection:
+      - keep-alive
+      Date:
+      - Mon, 06 Mar 2017 15:09:21 GMT
+      Last-Modified:
+      - Fri, 26 Aug 2016 08:51:46 GMT
+      Etag:
+      - '"b10cd3b0c5b5fd0bc54b232d50992117"'
+      Cache-Control:
+      - max-age=315576000, public
+      Accept-Ranges:
+      - bytes
+      Server:
+      - AmazonS3
+      Age:
+      - '2161'
+      X-Cache:
+      - Hit from cloudfront
+      Via:
+      - 1.1 c95065ab41713dafc52549b6a4744fd4.cloudfront.net (CloudFront)
+      X-Amz-Cf-Id:
+      - qFeEHh9as5yO176a49-YX2LSYB8Q4LrJiAOUH8NQFW70lJxVAS-1TA==
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:45:21 GMT
+- request:
+    method: post
+    uri: https://api.stripe.com/v1/customers
+    body:
+      encoding: UTF-8
+      string: description=lister%40near-me.com&source=btok_AErlDunj2YJRNs
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Stripe/v1 RubyBindings/1.57.0
+      Authorization:
+      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Stripe-Version:
+      - '2016-07-06'
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Mon Jan  9 23:07:29 PST 2017;
+        root:xnu-3248.60.11.2.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+      Content-Length:
+      - '59'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 15:45:34 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1143'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AErltWowpZGj37
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "cus_AErlTvkWvicBxe",
+          "object": "customer",
+          "account_balance": 0,
+          "created": 1488815134,
+          "currency": null,
+          "default_source": "ba_19uO1gK2MWM5GsITTEsZsfxD",
+          "delinquent": false,
+          "description": "lister@near-me.com",
+          "discount": null,
+          "email": null,
+          "livemode": false,
+          "metadata": {},
+          "shipping": null,
+          "sources": {
+            "object": "list",
+            "data": [
+              {
+                "id": "ba_19uO1gK2MWM5GsITTEsZsfxD",
+                "object": "bank_account",
+                "account_holder_name": "Adam Brodway",
+                "account_holder_type": "individual",
+                "bank_name": "STRIPE TEST BANK",
+                "country": "US",
+                "currency": "usd",
+                "customer": "cus_AErlTvkWvicBxe",
+                "fingerprint": "2Q888aHv8NHOnI3k",
+                "last4": "6789",
+                "metadata": {},
+                "routing_number": "110000000",
+                "status": "new"
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/customers/cus_AErlTvkWvicBxe/sources"
+          },
+          "subscriptions": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/customers/cus_AErlTvkWvicBxe/subscriptions"
+          }
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:45:34 GMT
+- request:
+    method: post
+    uri: https://api.stripe.com/v1/accounts
+    body:
+      encoding: UTF-8
+      string: bank_account[country]=US&bank_account[currency]=USD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=company&legal_entity[business_name]=NearMe&legal_entity[address][country]=US&legal_entity[personal_address][country]=US&legal_entity[dob][day]=24&legal_entity[dob][month]=2&legal_entity[dob][year]=1997&legal_entity[business_tax_id]=440-94-3290&legal_entity[personal_id_number]=440-94-3290&legal_entity[first_name]=John&legal_entity[last_name]=Rambo&legal_entity[additional_owners]=&managed=true&country=US&email=tomek%40near-me.com&tos_acceptance[ip]=1.1.1.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Stripe/v1 RubyBindings/1.57.0
+      Authorization:
+      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Stripe-Version:
+      - '2016-07-06'
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Mon Jan  9 23:07:29 PST 2017;
+        root:xnu-3248.60.11.2.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+      Content-Length:
+      - '678'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 15:45:45 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2682'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AErlOLsrGgE1BT
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "acct_19uO1sEWnQBhv608",
+          "object": "account",
+          "business_logo": null,
+          "business_name": "NearMe",
+          "business_url": null,
+          "charges_enabled": true,
+          "country": "US",
+          "debit_negative_balances": false,
+          "decline_charge_on": {
+            "avs_failure": false,
+            "cvc_failure": true
+          },
+          "default_currency": "usd",
+          "details_submitted": true,
+          "display_name": null,
+          "email": "tomek@near-me.com",
+          "external_accounts": {
+            "object": "list",
+            "data": [
+              {
+                "id": "ba_19uO1sEWnQBhv608djXz4GUJ",
+                "object": "bank_account",
+                "account": "acct_19uO1sEWnQBhv608",
+                "account_holder_name": null,
+                "account_holder_type": null,
+                "bank_name": "STRIPE TEST BANK",
+                "country": "US",
+                "currency": "usd",
+                "default_for_currency": true,
+                "fingerprint": "JIObBLG53eIEgwtU",
+                "last4": "6789",
+                "metadata": {},
+                "routing_number": "110000000",
+                "status": "new"
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/accounts/acct_19uO1sEWnQBhv608/external_accounts"
+          },
+          "keys": {
+            "secret": "sk_test_RsHhImeTcZwCB4BW8hGpSD3h",
+            "publishable": "pk_test_mJLOPrhtiMl8g3WJQm6Td7UM"
+          },
+          "legal_entity": {
+            "additional_owners": [],
+            "address": {
+              "city": null,
+              "country": "US",
+              "line1": null,
+              "line2": null,
+              "postal_code": null,
+              "state": null
+            },
+            "business_name": "NearMe",
+            "business_tax_id_provided": true,
+            "dob": {
+              "day": 24,
+              "month": 2,
+              "year": 1997
+            },
+            "first_name": "John",
+            "last_name": "Rambo",
+            "personal_address": {
+              "city": null,
+              "country": "US",
+              "line1": null,
+              "line2": null,
+              "postal_code": null,
+              "state": null
+            },
+            "personal_id_number_provided": true,
+            "ssn_last_4_provided": true,
+            "type": "company",
+            "verification": {
+              "details": null,
+              "details_code": null,
+              "document": null,
+              "status": "unverified"
+            }
+          },
+          "managed": true,
+          "metadata": {},
+          "product_description": null,
+          "statement_descriptor": null,
+          "support_email": null,
+          "support_phone": null,
+          "timezone": "Etc/UTC",
+          "tos_acceptance": {
+            "date": 1487963976,
+            "ip": "1.1.1.1",
+            "user_agent": null
+          },
+          "transfer_schedule": {
+            "delay_days": 2,
+            "interval": "daily"
+          },
+          "transfer_statement_descriptor": null,
+          "transfers_enabled": true,
+          "verification": {
+            "disabled_reason": null,
+            "due_by": null,
+            "fields_needed": [
+              "legal_entity.address.city",
+              "legal_entity.address.line1",
+              "legal_entity.address.postal_code",
+              "legal_entity.address.state"
+            ]
+          }
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:45:45 GMT
+- request:
+    method: post
+    uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/customers
+    body:
+      encoding: UTF-8
+      string: email=lister%40near-me.com&card=tok_19uO1wK2MWM5GsITXzfSe9Ry
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Stripe/v1 ActiveMerchantBindings/1.47.0
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.47.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","publisher":"active_merchant"}'
+      X-Stripe-Client-User-Metadata:
+      - '{"ip":null}'
+      Stripe-Version:
+      - '2016-07-06'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 15:45:49 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1396'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AErl3dlfdzrnuf
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "cus_AErl1phbgKSBX4",
+          "object": "customer",
+          "account_balance": 0,
+          "created": 1488815149,
+          "currency": null,
+          "default_source": "card_19uO1wK2MWM5GsITibH07F6j",
+          "delinquent": false,
+          "description": null,
+          "discount": null,
+          "email": "lister@near-me.com",
+          "livemode": false,
+          "metadata": {},
+          "shipping": null,
+          "sources": {
+            "object": "list",
+            "data": [
+              {
+                "id": "card_19uO1wK2MWM5GsITibH07F6j",
+                "object": "card",
+                "address_city": null,
+                "address_country": null,
+                "address_line1": null,
+                "address_line1_check": null,
+                "address_line2": null,
+                "address_state": null,
+                "address_zip": null,
+                "address_zip_check": null,
+                "brand": "Visa",
+                "country": "US",
+                "customer": "cus_AErl1phbgKSBX4",
+                "cvc_check": "pass",
+                "dynamic_last4": null,
+                "exp_month": 12,
+                "exp_year": 2024,
+                "fingerprint": "YyTrsnXvwWee0MJ8",
+                "funding": "credit",
+                "last4": "4242",
+                "metadata": {},
+                "name": null,
+                "tokenization_method": null
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/customers/cus_AErl1phbgKSBX4/sources"
+          },
+          "subscriptions": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/customers/cus_AErl1phbgKSBX4/subscriptions"
+          }
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:45:49 GMT
+- request:
+    method: post
+    uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/charges
+    body:
+      encoding: UTF-8
+      string: amount=5500&currency=usd&card=card_19uO1wK2MWM5GsITibH07F6j&customer=cus_AErl1phbgKSBX4&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Stripe/v1 ActiveMerchantBindings/1.47.0
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.47.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","publisher":"active_merchant"}'
+      X-Stripe-Client-User-Metadata:
+      - '{"ip":null}'
+      Stripe-Version:
+      - '2016-07-06'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 15:45:50 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1773'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AErlo9jFzac1cZ
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "ch_19uO1yK2MWM5GsITZxGJBA8a",
+          "object": "charge",
+          "amount": 5500,
+          "amount_refunded": 0,
+          "application": null,
+          "application_fee": null,
+          "balance_transaction": "txn_19uO1yK2MWM5GsITNi9HF5Bg",
+          "captured": true,
+          "created": 1488815150,
+          "currency": "usd",
+          "customer": "cus_AErl1phbgKSBX4",
+          "description": null,
+          "destination": null,
+          "dispute": null,
+          "failure_code": null,
+          "failure_message": null,
+          "fraud_details": {},
+          "invoice": null,
+          "livemode": false,
+          "metadata": {},
+          "on_behalf_of": null,
+          "order": null,
+          "outcome": {
+            "network_status": "approved_by_network",
+            "reason": null,
+            "risk_level": "normal",
+            "seller_message": "Payment complete.",
+            "type": "authorized"
+          },
+          "paid": true,
+          "receipt_email": null,
+          "receipt_number": null,
+          "refunded": false,
+          "refunds": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/charges/ch_19uO1yK2MWM5GsITZxGJBA8a/refunds"
+          },
+          "review": null,
+          "shipping": null,
+          "source": {
+            "id": "card_19uO1wK2MWM5GsITibH07F6j",
+            "object": "card",
+            "address_city": null,
+            "address_country": null,
+            "address_line1": null,
+            "address_line1_check": null,
+            "address_line2": null,
+            "address_state": null,
+            "address_zip": null,
+            "address_zip_check": null,
+            "brand": "Visa",
+            "country": "US",
+            "customer": "cus_AErl1phbgKSBX4",
+            "cvc_check": "pass",
+            "dynamic_last4": null,
+            "exp_month": 12,
+            "exp_year": 2024,
+            "fingerprint": "YyTrsnXvwWee0MJ8",
+            "funding": "credit",
+            "last4": "4242",
+            "metadata": {},
+            "name": null,
+            "tokenization_method": null
+          },
+          "source_transfer": null,
+          "statement_descriptor": null,
+          "status": "succeeded",
+          "transfer_group": null
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:45:50 GMT
+- request:
+    method: get
+    uri: https://api.stripe.com/v1/balance/history/txn_19uO1yK2MWM5GsITNi9HF5Bg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Stripe/v1 RubyBindings/1.57.0
+      Authorization:
+      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Stripe-Version:
+      - '2016-07-06'
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Mon Jan  9 23:07:29 PST 2017;
+        root:xnu-3248.60.11.2.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 15:45:51 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '680'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AErlwk1hXp0YD5
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "txn_19uO1yK2MWM5GsITNi9HF5Bg",
+          "object": "balance_transaction",
+          "amount": 5500,
+          "available_on": 1489363200,
+          "created": 1488815150,
+          "currency": "usd",
+          "description": null,
+          "fee": 190,
+          "fee_details": [
+            {
+              "amount": 190,
+              "application": null,
+              "currency": "usd",
+              "description": "Stripe processing fees",
+              "type": "stripe_fee"
+            }
+          ],
+          "net": 5310,
+          "source": "ch_19uO1yK2MWM5GsITZxGJBA8a",
+          "sourced_transfers": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/transfers?source_transaction=ch_19uO1yK2MWM5GsITZxGJBA8a"
+          },
+          "status": "pending",
+          "type": "charge"
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:45:51 GMT
+- request:
+    method: post
+    uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/customers
+    body:
+      encoding: UTF-8
+      string: email=lister%40near-me.com&card[number]=4242424242424242&card[exp_month]=12&card[exp_year]=2024&card[cvc]=411&card[name]=FirstName+LastName
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Stripe/v1 ActiveMerchantBindings/1.47.0
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.47.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","publisher":"active_merchant"}'
+      X-Stripe-Client-User-Metadata:
+      - '{"ip":null}'
+      Stripe-Version:
+      - '2016-07-06'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 15:46:04 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1412'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AErlmS0PCUVeBf
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "cus_AErlrJvmLiKBcY",
+          "object": "customer",
+          "account_balance": 0,
+          "created": 1488815164,
+          "currency": null,
+          "default_source": "card_19uO2CK2MWM5GsITQnB8G4ae",
+          "delinquent": false,
+          "description": null,
+          "discount": null,
+          "email": "lister@near-me.com",
+          "livemode": false,
+          "metadata": {},
+          "shipping": null,
+          "sources": {
+            "object": "list",
+            "data": [
+              {
+                "id": "card_19uO2CK2MWM5GsITQnB8G4ae",
+                "object": "card",
+                "address_city": null,
+                "address_country": null,
+                "address_line1": null,
+                "address_line1_check": null,
+                "address_line2": null,
+                "address_state": null,
+                "address_zip": null,
+                "address_zip_check": null,
+                "brand": "Visa",
+                "country": "US",
+                "customer": "cus_AErlrJvmLiKBcY",
+                "cvc_check": "pass",
+                "dynamic_last4": null,
+                "exp_month": 12,
+                "exp_year": 2024,
+                "fingerprint": "YyTrsnXvwWee0MJ8",
+                "funding": "credit",
+                "last4": "4242",
+                "metadata": {},
+                "name": "FirstName LastName",
+                "tokenization_method": null
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/customers/cus_AErlrJvmLiKBcY/sources"
+          },
+          "subscriptions": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/customers/cus_AErlrJvmLiKBcY/subscriptions"
+          }
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:46:04 GMT
+- request:
+    method: post
+    uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/charges
+    body:
+      encoding: UTF-8
+      string: amount=10000&currency=usd&card=card_19uO2CK2MWM5GsITQnB8G4ae&customer=cus_AErlrJvmLiKBcY&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Stripe/v1 ActiveMerchantBindings/1.47.0
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.47.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","publisher":"active_merchant"}'
+      X-Stripe-Client-User-Metadata:
+      - '{"ip":null}'
+      Stripe-Version:
+      - '2016-07-06'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 15:46:30 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1790'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AErmLr62z76WGI
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "ch_19uO2cK2MWM5GsIT9ZDusxJk",
+          "object": "charge",
+          "amount": 10000,
+          "amount_refunded": 0,
+          "application": null,
+          "application_fee": null,
+          "balance_transaction": "txn_19uO2cK2MWM5GsIT9qauvjXn",
+          "captured": true,
+          "created": 1488815190,
+          "currency": "usd",
+          "customer": "cus_AErlrJvmLiKBcY",
+          "description": null,
+          "destination": null,
+          "dispute": null,
+          "failure_code": null,
+          "failure_message": null,
+          "fraud_details": {},
+          "invoice": null,
+          "livemode": false,
+          "metadata": {},
+          "on_behalf_of": null,
+          "order": null,
+          "outcome": {
+            "network_status": "approved_by_network",
+            "reason": null,
+            "risk_level": "normal",
+            "seller_message": "Payment complete.",
+            "type": "authorized"
+          },
+          "paid": true,
+          "receipt_email": null,
+          "receipt_number": null,
+          "refunded": false,
+          "refunds": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/charges/ch_19uO2cK2MWM5GsIT9ZDusxJk/refunds"
+          },
+          "review": null,
+          "shipping": null,
+          "source": {
+            "id": "card_19uO2CK2MWM5GsITQnB8G4ae",
+            "object": "card",
+            "address_city": null,
+            "address_country": null,
+            "address_line1": null,
+            "address_line1_check": null,
+            "address_line2": null,
+            "address_state": null,
+            "address_zip": null,
+            "address_zip_check": null,
+            "brand": "Visa",
+            "country": "US",
+            "customer": "cus_AErlrJvmLiKBcY",
+            "cvc_check": "pass",
+            "dynamic_last4": null,
+            "exp_month": 12,
+            "exp_year": 2024,
+            "fingerprint": "YyTrsnXvwWee0MJ8",
+            "funding": "credit",
+            "last4": "4242",
+            "metadata": {},
+            "name": "FirstName LastName",
+            "tokenization_method": null
+          },
+          "source_transfer": null,
+          "statement_descriptor": null,
+          "status": "succeeded",
+          "transfer_group": null
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:46:30 GMT
+- request:
+    method: post
+    uri: https://api.stripe.com/v1/accounts
+    body:
+      encoding: UTF-8
+      string: bank_account[country]=US&bank_account[currency]=USD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=individual&legal_entity[business_name]=My+Company&legal_entity[address][country]=US&legal_entity[address][state]=CA&legal_entity[address][city]=Mountain+View&legal_entity[address][postal_code]=94043&legal_entity[address][line1]=1600+Amphitheatre+Parkway&legal_entity[personal_address][country]=US&legal_entity[personal_address][state]=CA&legal_entity[personal_address][city]=Mountain+View&legal_entity[personal_address][postal_code]=94043&legal_entity[personal_address][line1]=1600+Amphitheatre+Parkway&legal_entity[dob][day]=22&legal_entity[dob][month]=1&legal_entity[dob][year]=1990&legal_entity[business_tax_id]=&legal_entity[personal_id_number]=694-07-7618&legal_entity[first_name]=Tomasz&legal_entity[last_name]=Lemkowski&legal_entity[additional_owners]=&managed=true&country=US&email=enquirer%40near-me.com&tos_acceptance[ip]=127.0.0.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Stripe/v1 RubyBindings/1.57.0
+      Authorization:
+      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Stripe-Version:
+      - '2016-07-06'
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Mon Jan  9 23:07:29 PST 2017;
+        root:xnu-3248.60.11.2.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+      Content-Length:
+      - '1061'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 15:46:46 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2645'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AErmvVJpDP47zH
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "acct_19uO2rD4xWgwTrAb",
+          "object": "account",
+          "business_logo": null,
+          "business_name": "My Company",
+          "business_url": null,
+          "charges_enabled": true,
+          "country": "US",
+          "debit_negative_balances": false,
+          "decline_charge_on": {
+            "avs_failure": false,
+            "cvc_failure": true
+          },
+          "default_currency": "usd",
+          "details_submitted": true,
+          "display_name": null,
+          "email": "enquirer@near-me.com",
+          "external_accounts": {
+            "object": "list",
+            "data": [
+              {
+                "id": "ba_19uO2rD4xWgwTrAbTeviA5M1",
+                "object": "bank_account",
+                "account": "acct_19uO2rD4xWgwTrAb",
+                "account_holder_name": null,
+                "account_holder_type": null,
+                "bank_name": "STRIPE TEST BANK",
+                "country": "US",
+                "currency": "usd",
+                "default_for_currency": true,
+                "fingerprint": "oRtxH5uqhOIYnstb",
+                "last4": "6789",
+                "metadata": {},
+                "routing_number": "110000000",
+                "status": "new"
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/accounts/acct_19uO2rD4xWgwTrAb/external_accounts"
+          },
+          "keys": {
+            "secret": "sk_test_2ITEkRGoAi0srbgoDyQkp9bK",
+            "publishable": "pk_test_XeCJ5Ds5gms3fTq1NWCceZbW"
+          },
+          "legal_entity": {
+            "address": {
+              "city": "Mountain View",
+              "country": "US",
+              "line1": "1600 Amphitheatre Parkway",
+              "line2": null,
+              "postal_code": "94043",
+              "state": "CA"
+            },
+            "business_name": "My Company",
+            "business_tax_id_provided": false,
+            "dob": {
+              "day": 22,
+              "month": 1,
+              "year": 1990
+            },
+            "first_name": "Tomasz",
+            "last_name": "Lemkowski",
+            "personal_address": {
+              "city": "Mountain View",
+              "country": "US",
+              "line1": "1600 Amphitheatre Parkway",
+              "line2": null,
+              "postal_code": "94043",
+              "state": "CA"
+            },
+            "personal_id_number_provided": true,
+            "ssn_last_4_provided": true,
+            "type": "individual",
+            "verification": {
+              "details": null,
+              "details_code": null,
+              "document": null,
+              "status": "unverified"
+            }
+          },
+          "managed": true,
+          "metadata": {},
+          "product_description": null,
+          "statement_descriptor": null,
+          "support_email": null,
+          "support_phone": null,
+          "timezone": "Etc/UTC",
+          "tos_acceptance": {
+            "date": 1487963976,
+            "ip": "127.0.0.1",
+            "user_agent": null
+          },
+          "transfer_schedule": {
+            "delay_days": 2,
+            "interval": "daily"
+          },
+          "transfer_statement_descriptor": null,
+          "transfers_enabled": true,
+          "verification": {
+            "disabled_reason": null,
+            "due_by": null,
+            "fields_needed": [
+              "legal_entity.verification.document"
+            ]
+          }
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:46:46 GMT
+- request:
+    method: post
+    uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/customers
+    body:
+      encoding: UTF-8
+      string: email=enquirer%40near-me.com&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2019&card[cvc]=111&card[name]=Rowan+Atkinson
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Stripe/v1 ActiveMerchantBindings/1.47.0
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.47.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","publisher":"active_merchant"}'
+      X-Stripe-Client-User-Metadata:
+      - '{"ip":null}'
+      Stripe-Version:
+      - '2016-07-06'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 15:47:00 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1410'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AErmwdZMvb7qzG
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "cus_AErmCQNXzfvGnn",
+          "object": "customer",
+          "account_balance": 0,
+          "created": 1488815219,
+          "currency": null,
+          "default_source": "card_19uO35K2MWM5GsITP1gPJ9wh",
+          "delinquent": false,
+          "description": null,
+          "discount": null,
+          "email": "enquirer@near-me.com",
+          "livemode": false,
+          "metadata": {},
+          "shipping": null,
+          "sources": {
+            "object": "list",
+            "data": [
+              {
+                "id": "card_19uO35K2MWM5GsITP1gPJ9wh",
+                "object": "card",
+                "address_city": null,
+                "address_country": null,
+                "address_line1": null,
+                "address_line1_check": null,
+                "address_line2": null,
+                "address_state": null,
+                "address_zip": null,
+                "address_zip_check": null,
+                "brand": "Visa",
+                "country": "US",
+                "customer": "cus_AErmCQNXzfvGnn",
+                "cvc_check": "pass",
+                "dynamic_last4": null,
+                "exp_month": 1,
+                "exp_year": 2019,
+                "fingerprint": "CtVQWwJF8UOWYf83",
+                "funding": "unknown",
+                "last4": "1111",
+                "metadata": {},
+                "name": "Rowan Atkinson",
+                "tokenization_method": null
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/customers/cus_AErmCQNXzfvGnn/sources"
+          },
+          "subscriptions": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/customers/cus_AErmCQNXzfvGnn/subscriptions"
+          }
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:47:00 GMT
+- request:
+    method: post
+    uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/charges
+    body:
+      encoding: UTF-8
+      string: amount=30000&currency=usd&card=card_19uO35K2MWM5GsITP1gPJ9wh&customer=cus_AErmCQNXzfvGnn&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Stripe/v1 ActiveMerchantBindings/1.47.0
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.47.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","publisher":"active_merchant"}'
+      X-Stripe-Client-User-Metadata:
+      - '{"ip":null}'
+      Stripe-Version:
+      - '2016-07-06'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 15:47:07 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1786'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AErmwdV1k7ECZf
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "ch_19uO3DK2MWM5GsITRpCMRFrd",
+          "object": "charge",
+          "amount": 30000,
+          "amount_refunded": 0,
+          "application": null,
+          "application_fee": null,
+          "balance_transaction": "txn_19uO3DK2MWM5GsIT075KeEHS",
+          "captured": true,
+          "created": 1488815227,
+          "currency": "usd",
+          "customer": "cus_AErmCQNXzfvGnn",
+          "description": null,
+          "destination": null,
+          "dispute": null,
+          "failure_code": null,
+          "failure_message": null,
+          "fraud_details": {},
+          "invoice": null,
+          "livemode": false,
+          "metadata": {},
+          "on_behalf_of": null,
+          "order": null,
+          "outcome": {
+            "network_status": "approved_by_network",
+            "reason": null,
+            "risk_level": "normal",
+            "seller_message": "Payment complete.",
+            "type": "authorized"
+          },
+          "paid": true,
+          "receipt_email": null,
+          "receipt_number": null,
+          "refunded": false,
+          "refunds": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/charges/ch_19uO3DK2MWM5GsITRpCMRFrd/refunds"
+          },
+          "review": null,
+          "shipping": null,
+          "source": {
+            "id": "card_19uO35K2MWM5GsITP1gPJ9wh",
+            "object": "card",
+            "address_city": null,
+            "address_country": null,
+            "address_line1": null,
+            "address_line1_check": null,
+            "address_line2": null,
+            "address_state": null,
+            "address_zip": null,
+            "address_zip_check": null,
+            "brand": "Visa",
+            "country": "US",
+            "customer": "cus_AErmCQNXzfvGnn",
+            "cvc_check": "pass",
+            "dynamic_last4": null,
+            "exp_month": 1,
+            "exp_year": 2019,
+            "fingerprint": "CtVQWwJF8UOWYf83",
+            "funding": "unknown",
+            "last4": "1111",
+            "metadata": {},
+            "name": "Rowan Atkinson",
+            "tokenization_method": null
+          },
+          "source_transfer": null,
+          "statement_descriptor": null,
+          "status": "succeeded",
+          "transfer_group": null
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 15:47:07 GMT
+- request:
+    method: post
+    uri: https://api.stripe.com/v1/accounts
+    body:
+      encoding: UTF-8
+      string: bank_account[country]=US&bank_account[currency]=USD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=individual&legal_entity[business_name]=Enquirer+Company&legal_entity[address][country]=US&legal_entity[address][state]=CA&legal_entity[address][city]=Mountain+View&legal_entity[address][postal_code]=94043&legal_entity[address][line1]=1600+Amphitheatre+Parkway&legal_entity[personal_address][country]=US&legal_entity[personal_address][state]=CA&legal_entity[personal_address][city]=Mountain+View&legal_entity[personal_address][postal_code]=94043&legal_entity[personal_address][line1]=1600+Amphitheatre+Parkway&legal_entity[dob][day]=22&legal_entity[dob][month]=1&legal_entity[dob][year]=1990&legal_entity[business_tax_id]=&legal_entity[personal_id_number]=694-07-7618&legal_entity[first_name]=Tomasz&legal_entity[last_name]=Lemkowski&legal_entity[additional_owners]=&managed=true&country=US&email=enquirer%40near-me.com&tos_acceptance[ip]=127.0.0.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Stripe/v1 RubyBindings/1.57.0
+      Authorization:
+      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Stripe-Version:
+      - '2016-07-06'
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Mon Jan  9 23:07:29 PST 2017;
+        root:xnu-3248.60.11.2.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+      Content-Length:
+      - '1067'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 17:47:03 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2657'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AEtiLuZwVMyzbQ
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "acct_19uPvGBgcsYPfdYm",
+          "object": "account",
+          "business_logo": null,
+          "business_name": "Enquirer Company",
+          "business_url": null,
+          "charges_enabled": true,
+          "country": "US",
+          "debit_negative_balances": false,
+          "decline_charge_on": {
+            "avs_failure": false,
+            "cvc_failure": true
+          },
+          "default_currency": "usd",
+          "details_submitted": true,
+          "display_name": null,
+          "email": "enquirer@near-me.com",
+          "external_accounts": {
+            "object": "list",
+            "data": [
+              {
+                "id": "ba_19uPvGBgcsYPfdYmiGnUvga8",
+                "object": "bank_account",
+                "account": "acct_19uPvGBgcsYPfdYm",
+                "account_holder_name": null,
+                "account_holder_type": null,
+                "bank_name": "STRIPE TEST BANK",
+                "country": "US",
+                "currency": "usd",
+                "default_for_currency": true,
+                "fingerprint": "oHun3AITybklmYHR",
+                "last4": "6789",
+                "metadata": {},
+                "routing_number": "110000000",
+                "status": "new"
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/accounts/acct_19uPvGBgcsYPfdYm/external_accounts"
+          },
+          "keys": {
+            "secret": "sk_test_H3GBMhaXDo6JNrXvw6P9SdsT",
+            "publishable": "pk_test_EzfEXanpPMLWOHCBh3tT7GkD"
+          },
+          "legal_entity": {
+            "address": {
+              "city": "Mountain View",
+              "country": "US",
+              "line1": "1600 Amphitheatre Parkway",
+              "line2": null,
+              "postal_code": "94043",
+              "state": "CA"
+            },
+            "business_name": "Enquirer Company",
+            "business_tax_id_provided": false,
+            "dob": {
+              "day": 22,
+              "month": 1,
+              "year": 1990
+            },
+            "first_name": "Tomasz",
+            "last_name": "Lemkowski",
+            "personal_address": {
+              "city": "Mountain View",
+              "country": "US",
+              "line1": "1600 Amphitheatre Parkway",
+              "line2": null,
+              "postal_code": "94043",
+              "state": "CA"
+            },
+            "personal_id_number_provided": true,
+            "ssn_last_4_provided": true,
+            "type": "individual",
+            "verification": {
+              "details": null,
+              "details_code": null,
+              "document": null,
+              "status": "unverified"
+            }
+          },
+          "managed": true,
+          "metadata": {},
+          "product_description": null,
+          "statement_descriptor": null,
+          "support_email": null,
+          "support_phone": null,
+          "timezone": "Etc/UTC",
+          "tos_acceptance": {
+            "date": 1487963976,
+            "ip": "127.0.0.1",
+            "user_agent": null
+          },
+          "transfer_schedule": {
+            "delay_days": 2,
+            "interval": "daily"
+          },
+          "transfer_statement_descriptor": null,
+          "transfers_enabled": true,
+          "verification": {
+            "disabled_reason": null,
+            "due_by": null,
+            "fields_needed": [
+              "legal_entity.verification.document"
+            ]
+          }
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 17:47:03 GMT
+recorded_with: VCR 3.0.3
