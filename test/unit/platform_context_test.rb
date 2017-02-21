@@ -139,9 +139,9 @@ class PlatformContextTest < ActiveSupport::TestCase
 
     should 'no instance if domain is unknown' do
       rq = PlatformContext.new('something.weird.com')
-      assert_equal nil, rq.instance
-      assert_equal nil, rq.theme
-      assert_equal nil, rq.platform_context_detail
+      assert_nil rq.instance
+      assert_nil rq.theme
+      assert_nil rq.platform_context_detail
     end
 
     should 'First instance if domain is desksnearme.com' do
@@ -176,9 +176,9 @@ class PlatformContextTest < ActiveSupport::TestCase
       should 'nil instance if company linked to domain that matches request.host has white label disabled' do
         @example_company.update_attribute(:white_label_enabled, false)
         rq = PlatformContext.new(@host)
-        assert_equal nil, rq.instance
-        assert_equal nil, rq.theme
-        assert_equal nil, rq.platform_context_detail
+        assert_nil rq.instance
+        assert_nil rq.theme
+        assert_nil rq.platform_context_detail
       end
 
       should 'company linked to domain that matches request.host without white label enabled but with partner' do

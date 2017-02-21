@@ -5,7 +5,6 @@ class PhotoTest < ActiveSupport::TestCase
   # TODO: why?
   # should validate_presence_of(:image)
   should allow_value(nil).for(:caption)
-  should ensure_length_of(:caption).is_at_most(120)
 
   context 'metadata' do
     setup do

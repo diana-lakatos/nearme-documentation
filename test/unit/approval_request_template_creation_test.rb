@@ -29,7 +29,7 @@ class ApprovalRequestTemplateCreationTest < ActiveSupport::TestCase
     0.upto(2) do |index|
       form_components = @transactable_types[index].form_components.where(params)
       assert_equal 1, form_components.length
-      assert_equal true, form_components[0].is_approval_request_surfacing
+      assert form_components[0].is_approval_request_surfacing
       all_form_fields = form_components.first.form_fields
       assert_equal 4, all_form_fields.length
       assert_equal 4, ApprovalRequestTemplate::OWNER_TYPES.collect { |owner_type| all_form_fields.detect { |form_field| form_field[owner_type.to_s.underscore] == 'approval_requests' } }.compact.length

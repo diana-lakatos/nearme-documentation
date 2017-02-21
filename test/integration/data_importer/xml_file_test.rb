@@ -73,7 +73,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
             should 'create the right details for location at Ursynowska' do
               assert_equal 'Ursynowska 1, 02-605 Warsaw, Poland', @location.address
-              assert_equal nil, @location.address2
+              assert_nil @location.address2
               assert_equal 'Warsaw', @location.city
               assert_equal 'Masovian Voivodeship', @location.state
               assert_equal '02-605', @location.postcode
@@ -89,23 +89,23 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
               should 'have the right details (listing1)' do
                 @listing = @location.listings.find_by(external_id: '1')
-                assert_equal true, @listing.confirm_reservations
+                assert @listing.confirm_reservations
                 assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                 assert_equal 10, @listing.action_type.price_cents_for('1_day')
                 assert_equal 15, @listing.action_type.price_cents_for('7_day')
                 assert_equal 30, @listing.action_type.price_cents_for('30_day')
-                assert_equal true, @listing.enabled
+                assert @listing.enabled
                 assert_equal 'my attrs! 1', @listing.properties.my_attribute
               end
 
               should 'have the right details (listing2)' do
                 @listing = @location.listings.find_by(external_id: '2')
-                assert_equal true, @listing.confirm_reservations
+                assert @listing.confirm_reservations
                 assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                 assert_equal 10, @listing.action_type.price_cents_for('1_day')
                 assert_equal 15, @listing.action_type.price_cents_for('7_day')
                 assert_equal 30, @listing.action_type.price_cents_for('30_day')
-                assert_equal true, @listing.enabled
+                assert @listing.enabled
                 assert_equal 'my attrs! 2', @listing.properties.my_attribute
               end
 
@@ -125,7 +125,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
             should 'create the right details for location at Pulawska' do
               assert_equal 'Puławska 34, Warsaw, Poland', @location.address
-              assert_equal nil, @location.address2
+              assert_nil @location.address2
               assert_equal 'Warsaw', @location.city
               assert_equal 'Masovian Voivodeship', @location.state
               assert_nil @location.postcode
@@ -141,12 +141,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
               should 'have the right details (listing3)' do
                 @listing = @location.listings.find_by(external_id: '3')
-                assert_equal true, @listing.confirm_reservations
+                assert @listing.confirm_reservations
                 assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                 assert_equal 10, @listing.action_type.price_cents_for('1_day')
                 assert_equal 15, @listing.action_type.price_cents_for('7_day')
                 assert_equal 30, @listing.action_type.price_cents_for('30_day')
-                assert_equal true, @listing.enabled
+                assert @listing.enabled
                 assert_equal 'my attrs! 3', @listing.properties.my_attribute
               end
 
@@ -227,7 +227,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
               should 'create the right details for location at Ursynowska' do
                 assert_equal 'Ursynowska 1, 02-605 Warsaw, Poland', @location.address
-                assert_equal nil, @location.address2
+                assert_nil @location.address2
                 assert_equal 'Warsaw', @location.city
                 assert_equal 'Masovian Voivodeship', @location.state
                 assert_equal '02-605', @location.postcode
@@ -243,23 +243,23 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
                 should 'have the right details (listing1)' do
                   @listing = @location.listings.find_by(external_id: '1')
-                  assert_equal true, @listing.confirm_reservations
+                  assert @listing.confirm_reservations
                   assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                   assert_equal 10, @listing.action_type.price_cents_for('1_day')
                   assert_equal 15, @listing.action_type.price_cents_for('7_day')
                   assert_equal 30, @listing.action_type.price_cents_for('30_day')
-                  assert_equal true, @listing.enabled
+                  assert @listing.enabled
                   assert_equal 'my attrs! 1', @listing.properties.my_attribute
                 end
 
                 should 'have the right details (listing2)' do
                   @listing = @location.listings.find_by(external_id: '2')
-                  assert_equal true, @listing.confirm_reservations
+                  assert @listing.confirm_reservations
                   assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                   assert_equal 10, @listing.action_type.price_cents_for('1_day')
                   assert_equal 15, @listing.action_type.price_cents_for('7_day')
                   assert_equal 30, @listing.action_type.price_cents_for('30_day')
-                  assert_equal true, @listing.enabled
+                  assert @listing.enabled
                   assert_equal 'my attrs! 2', @listing.properties.my_attribute
                 end
 
@@ -279,7 +279,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
               should 'create the right details for location at Pulawska' do
                 assert_equal 'Puławska 34, Warsaw, Poland', @location.address
-                assert_equal nil, @location.address2
+                assert_nil @location.address2
                 assert_equal 'Warsaw', @location.city
                 assert_equal 'Masovian Voivodeship', @location.state
                 assert_nil @location.postcode
@@ -295,12 +295,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
                 should 'have the right details (listing3)' do
                   @listing = @location.listings.find_by(external_id: '3')
-                  assert_equal true, @listing.confirm_reservations
+                  assert @listing.confirm_reservations
                   assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                   assert_equal 10, @listing.action_type.price_cents_for('1_day')
                   assert_equal 15, @listing.action_type.price_cents_for('7_day')
                   assert_equal 30, @listing.action_type.price_cents_for('30_day')
-                  assert_equal true, @listing.enabled
+                  assert @listing.enabled
                   assert_equal 'my attrs! 3', @listing.properties.my_attribute
                 end
 
@@ -310,12 +310,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
                 should 'have the right details (listing4)' do
                   @listing = @location.listings.find_by(external_id: '4')
-                  assert_equal true, @listing.confirm_reservations
+                  assert @listing.confirm_reservations
                   assert_equal 4, @listing.action_type.price_cents_for('1_hour')
                   assert_equal 10, @listing.action_type.price_cents_for('1_day')
                   assert_equal 15, @listing.action_type.price_cents_for('7_day')
                   assert_equal 30, @listing.action_type.price_cents_for('30_day')
-                  assert_equal true, @listing.enabled
+                  assert @listing.enabled
                   assert_equal 'my attrs! 4', @listing.properties.my_attribute
                 end
               end

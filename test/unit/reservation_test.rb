@@ -159,7 +159,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'set reason and update status' do
-        assert_equal true, @reservation.reject('Reason')
+        assert @reservation.reject('Reason')
         assert_equal 'Reason', @reservation.reload.rejection_reason
         assert_equal 'rejected', @reservation.state
       end

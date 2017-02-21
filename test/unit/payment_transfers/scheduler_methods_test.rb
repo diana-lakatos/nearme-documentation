@@ -9,20 +9,20 @@ class PaymentTransfers::SchedulerMethodsTest < ActiveSupport::TestCase
     should 'return correct date of next payment transfers' do
       @instance.payment_transfers_frequency = 'daily'
       travel_to(Time.zone.now.next_week) do
-        assert_equal true, PaymentTransfers::SchedulerMethods.new(@instance).next_payment_transfers_date.tuesday?
+        assert PaymentTransfers::SchedulerMethods.new(@instance).next_payment_transfers_date.tuesday?
       end
 
       @instance.payment_transfers_frequency = 'semiweekly'
       obj = PaymentTransfers::SchedulerMethods.new(@instance)
       travel_to(Time.zone.now.next_week) do
         next_date = obj.next_payment_transfers_date
-        assert_equal true, next_date.thursday?
+        assert next_date.thursday?
         next_date = obj.next_payment_transfers_date(Time.zone.now - 1.day)
-        assert_equal true, next_date.monday?
+        assert next_date.monday?
       end
 
       @instance.payment_transfers_frequency = 'weekly'
-      assert_equal true, PaymentTransfers::SchedulerMethods.new(@instance).next_payment_transfers_date.monday?
+      assert PaymentTransfers::SchedulerMethods.new(@instance).next_payment_transfers_date.monday?
 
       @instance.payment_transfers_frequency = 'fortnightly'
       obj = PaymentTransfers::SchedulerMethods.new(@instance)
