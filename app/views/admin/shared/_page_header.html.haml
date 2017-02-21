@@ -18,4 +18,6 @@
     = image_tag current_user.avatar_url(:thumb), width: 64, height: 64, alt: current_user.name
     %ul
       %li.nav-user-profile= link_to t('admin.site_header.your_profile'), admin_path(page: 'profile')
-      %li.nav-user-log-out= link_to t('admin.site_header.log_out'), admin_path(page: 'logout')
+      %li.nav-user-log-out
+        = button_to  "#{destroy_user_session_path}", :method => :delete do
+          = t('admin.site_header.log_out')

@@ -1,0 +1,13 @@
+.login-form
+  %h3 Sign into your NearMe account
+
+  = admin_simple_form_for resource, :as => resource_name, :url => session_path(resource_name), html: { data: { login_form: '' }} do |f|
+    = f.input :email, :placeholder => "Your email address", :input_html => { :tabindex => 1, data: { login_form_email: '' } }
+
+    = f.input :password, :placeholder => "Password", :input_html => { :tabindex => 2, data: { login_form_password: '' } }
+
+    .actions
+      = f.submit t('admin.login.submit'), class: 'btn'
+
+      .forgot-password
+        = link_to t('admin.login.forgot_password'), new_user_password_url(return_to: params[:return_to])
