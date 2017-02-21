@@ -170,6 +170,13 @@
                 </li>
               {% endif %}
 
+              {% if current_user.has_active_bank_accounts? %}
+                {% assign bank_accounts_path = 'dashboard_bank_accounts_path' | generate_url %}
+                <li id="dashboard-nav-bank-accounts" class="{% if credit_cards_selected %}selected{% endif %}">
+                <a href="{{ bank_accounts_path }}">{{ 'dashboard.nav.bank_accounts' | t }}</a>
+                </li>
+              {% endif %}
+
               {% if notification_preferences_show %}
                 <li class="{% if notification_preferences_selected %}selected{% endif %}">
                   <a href="{{ notification_preferences_path }}">{{ 'dashboard.nav.notification_preferences' | t }}</a>

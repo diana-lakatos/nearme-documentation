@@ -225,7 +225,7 @@ en:
         approved: "Your order has been moved to archive"
         canceled: "Your order is now archived."
       order_items:
-        approve_failed: "Your Credit Card could not be charged."
+        approve_failed: "We can't process that payment."
         approved: "Expenses have been approved."
         can_not_edit_accepted_order_item: "You can't edit accepted expenses."
         recently_edited: "Looks like total amount of expenses has changed. Please verify total price and reaccept."

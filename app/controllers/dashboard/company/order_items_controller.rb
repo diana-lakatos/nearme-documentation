@@ -20,6 +20,7 @@ class Dashboard::Company::OrderItemsController < Dashboard::Company::BaseControl
         flash[:notice] = t('flash_messages.dashboard.order_items.approved')
       else
         flash[:error] = t('flash_messages.dashboard.order_items.approve_failed')
+        flash[:error] << ' ' +  @order_item.payment.errors.full_messages.join(', ')
       end
     end
 
