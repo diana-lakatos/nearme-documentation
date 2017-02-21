@@ -22,7 +22,7 @@ class FormComponentToFormConfiguration
 
   def go!
     @instances.find_each do |i|
-      puts "Instance: #{i.name}"
+      logger.debug "Instance: #{i.name}"
       i.set_context!
       signup_forms!
       update_profile_form!
@@ -40,28 +40,47 @@ class FormComponentToFormConfiguration
   end
 
   def update_profile_form!
-    puts "\tUpdating Update Profile Forms"
+    logger.debug "\tUpdating Update Profile Forms"
     [
-      { Default: FormComponent.where(form_type: 'instance_profile_types', form_componentable: PlatformContext.current.instance.default_profile_type).first },
-      { Enquirer: FormComponent.where(form_type: 'buyer_profile_types', form_componentable: PlatformContext.current.instance.buyer_profile_type).first },
-      { Lister: FormComponent.where(form_type: 'seller_profile_types', form_componentable: PlatformContext.current.instance.seller_profile_type).first }
+      { Default: FormComponent.where(form_type: 'instance_profile_types', form_componentable: PlatformContext.current.instance.default_profile_type) },
+      { Enquirer: FormComponent.where(form_type: 'buyer_profile_types', form_componentable: PlatformContext.current.instance.buyer_profile_type) },
+      { Lister: FormComponent.where(form_type: 'seller_profile_types', form_componentable: PlatformContext.current.instance.seller_profile_type) }
     ].each do |el|
       fc_role = el.keys.first
 
+      configuration = {}
+      el.values.first.each do |form_component|
+        if [5011, 132].include?(PlatformContext.current.instance.id)
+          logger.debug "Configuration for devmesh/hallmark (#{PlatformContext.current.instance.id})"
+          # hardcode fields for devmesh / hallmark :)
+          configuration.merge!(community_configuration)
+        else
+          case fc_role
+          when :Default
+            configuration.deep_merge!(build_configuration_based_on_form_components(form_component, 'default'))
+            configuration.deep_merge!(build_configuration_based_on_form_components(form_component, 'seller'))
+            configuration.deep_merge!(build_configuration_based_on_form_components(form_component, 'buyer'))
+          when :Enquirer
+            configuration.deep_merge!(build_configuration_based_on_form_components(form_component, 'buyer'))
+          when :Lister
+            configuration.deep_merge!(build_configuration_based_on_form_components(form_component, 'seller'))
+          end
+        end
+      end
       if [5011, 132].include?(PlatformContext.current.instance.id)
-        puts "Configuration for devmesh/hallmark (#{PlatformContext.current.instance.id})"
+        logger.debug "Configuration for devmesh/hallmark (#{PlatformContext.current.instance.id})"
         # hardcode fields for devmesh / hallmark :)
         configuration = community_configuration
       else
         case fc_role
         when :Default
-          create_form_configuration(base_form: UserUpdateProfileForm, name: "Default Update", configuration: build_configuration_based_on_form_components(el.values.first, 'default'))
-          create_form_configuration(base_form: UserUpdateProfileForm, name: "Lister Update", configuration: build_configuration_based_on_form_components(el.values.first, 'seller'))
-          create_form_configuration(base_form: UserUpdateProfileForm, name: "Enquirer Update", configuration: build_configuration_based_on_form_components(el.values.first, 'buyer'))
+          create_form_configuration(base_form: UserUpdateProfileForm, name: "Default Update", configuration: configuration)
+          create_form_configuration(base_form: UserUpdateProfileForm, name: "Lister Update", configuration: configuration)
+          create_form_configuration(base_form: UserUpdateProfileForm, name: "Enquirer Update", configuration: configuration)
         when :Enquirer
-          create_form_configuration(base_form: UserUpdateProfileForm, name: "Enquirer Update", configuration: build_configuration_based_on_form_components(el.values.first, 'buyer'))
+          create_form_configuration(base_form: UserUpdateProfileForm, name: "Enquirer Update", configuration: configuration)
         when :Lister
-          create_form_configuration(base_form: UserUpdateProfileForm, name: "Lister Update", configuration: build_configuration_based_on_form_components(el.values.first, 'seller'))
+          create_form_configuration(base_form: UserUpdateProfileForm, name: "Lister Update", configuration: configuration)
         end
       end
     end
@@ -73,20 +92,20 @@ class FormComponentToFormConfiguration
       fc.configuration = configuration
       fc.save!
     else
-      puts "Skipping #{base_form} -> #{name}"
+      logger.debug "Skipping #{base_form} -> #{name}"
     end
   end
 
   def build_configuration_based_on_form_components(form_component, role)
     configuration = {}
     if form_component.nil?
-      puts "\t\tError: can't find form component"
+      logger.debug "\t\tError: can't find form component"
     else
-      puts "\tForm component: #{form_component.form_type}"
+      logger.debug "\tForm component: #{form_component.form_type}"
       form_component.form_fields.each do |k|
         model = k.keys.first
         field = k.values.last
-        # puts "\tProcessing: #{model}: #{field}"
+        # logger.debug "\tProcessing: #{model}: #{field}"
         next if model == 'buyer' && role == 'seller'
         next if model == 'seller' && role == 'buyer'
         next if %w(email password).include?(field)
@@ -159,7 +178,7 @@ class FormComponentToFormConfiguration
               configuration[:"#{model}_profile"][:properties][field] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), field).build
             end
           else
-            puts "\t\tSkipping field - #{field}, can't find it"
+            logger.debug "\t\tSkipping field - #{field}, can't find it"
           end
         end
       end
@@ -184,12 +203,12 @@ class FormComponentToFormConfiguration
   end
 
   def signup_forms!
-    puts "\tUpdating Signup Forms"
+    logger.debug "\tUpdating Signup Forms"
     { seller: 'Lister', buyer: 'Enquirer', default: 'Default' }.each do |role, conf_role|
-      puts "\tform for: #{role}"
+      logger.debug "\tform for: #{role}"
       form_component = FormComponent.find_by(form_type: "FormComponent::#{role.upcase}_REGISTRATION".constantize)
       if form_component.nil?
-        puts "\t\tError: can't find form component for #{role}"
+        logger.debug "\t\tError: can't find form component for #{role}"
         next
       end
       configuration = {}
@@ -198,26 +217,34 @@ class FormComponentToFormConfiguration
         field = k.values.last
         field = 'mobile_number' if field == 'phone' || field == 'mobile_phone'
         if model != 'user'
-          puts "\t\tWarning: undefined model: #{model}"
+          logger.debug "\t\tWarning: undefined model: #{model}"
           next
         end
         next if %w(email password).include?(field)
         configuration[field] = { validation: { presence: true } }
-        puts "\t\tAdding: #{field} (for #{model})"
+        logger.debug "\t\tAdding: #{field} (for #{model})"
       end
 
       base_form = case conf_role
                   when 'Enquirer'
-                    UserSignup::DefaultUserSignup
+                    UserSignup::EnquirerUserSignup
                   when 'Lister'
                     UserSignup::ListerUserSignup
                   when 'Default'
-                    UserSignup::EnquirerUserSignup
+                    UserSignup::DefaultUserSignup
                   end
       fc = FormConfiguration.where(base_form: base_form, name: "#{conf_role} Signup")
         .first_or_create!
       fc.update_attribute(:configuration, configuration)
     end
+  end
+
+  def logger
+      @logger ||= if Rails.env.test?
+                    Logger.new('/dev/null')
+                  else
+                    Logger.new($stdout)
+                  end
   end
 
   class ValidationBuilder

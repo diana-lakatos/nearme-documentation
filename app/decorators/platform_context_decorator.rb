@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class PlatformContextDecorator
   delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?, :project_space_wizard_path,
-           :platform_context_detail, :secured_constraint, to: :platform_context
+           :platform_context_detail, :secured_constraint, :to_h, to: :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :instagram_url,
            :youtube_url, :rss_url, :linkedin_url, :address, :phone_number, :phone_number_noformat, :site_name, :description, :support_email, :meta_title, :pages,

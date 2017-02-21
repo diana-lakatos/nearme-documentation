@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Api
   module V4
-    class UsersController < Api::V4::BaseController
+    class FormsController < Api::V4::BaseController
       skip_before_action :require_authentication
       skip_before_action :require_authorization
       skip_before_action :redirect_unverified_user, only: [:verify]

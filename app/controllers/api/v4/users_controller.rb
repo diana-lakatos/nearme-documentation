@@ -16,6 +16,10 @@ module Api
       def create
         if @user_signup.validate(params[:form] || {})
           @user_signup.save
+          # tmp safety check - we still have validation in User model itself
+          # so if model is invalid, it won't be saved and user won't be able to
+          # sign up - we want to be notified
+          raise "Sign up failed due to configuration issue: #{@user_signup.model.errors.full_messages.join(', ')}" unless @user_signup.model.valid?
           sign_in(@user_signup.model)
         end
         respond(@user_signup, notice: I18n.t('devise.registrations.signed_up'),
@@ -38,12 +42,12 @@ module Api
       protected
 
       def build_signup_form
-        @form_configuration = FormConfiguration.find_by(id: params[:form_configuration_id])
+        @form_configuration = FormConfiguration.find_by(id: params[:form_configuration_id]) if params[:form_configuration_id].present?
         @user_signup = @form_configuration&.build(new_user) || FormBuilder::UserSignupBuilderFactory.builder(params[:role]).build(new_user)
       end
 
       def new_user
-        User.new_with_session({}, session)
+        ::User.new_with_session({}, session)
       end
 
       def build_verification_form
