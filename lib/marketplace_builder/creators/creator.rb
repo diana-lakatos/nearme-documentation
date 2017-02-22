@@ -25,8 +25,13 @@ module MarketplaceBuilder
         logger.warn "cleanup! method not implemented for #{self.class}"
       end
 
+      # FIXME: this is duplicated code from builder - builder should be passing logger to creators :|
       def logger
-        Loggers::ConsoleLogger.instance
+        @logger ||= if Rails.env.test?
+                      Logger.new('/dev/null')
+                    else
+                      Loggers::ConsoleLogger.instance
+                    end
       end
     end
   end
