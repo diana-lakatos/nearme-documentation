@@ -112,6 +112,8 @@ module.exports = class DatepickerView extends PositionedView
 
   # Render all state again
   refresh: ->
+    @activeDate = null
+    @firstUnavailable = null
     @renderMonth(@model.getCurrentMonth())
     @hasRendered = true
 
@@ -129,6 +131,8 @@ module.exports = class DatepickerView extends PositionedView
   # Render a month from a Date object
   renderMonth: (monthDate) ->
     # Set month heading
+    @firstUnavailable = null
+
     @monthHeader.text(dateUtil.monthName(monthDate))
     @yearHeader.text(monthDate.getFullYear())
 

@@ -8,6 +8,11 @@ module.exports = class Availability
   availableFor: (date) ->
     @_value(date) or 0
 
+  firstUnavailableDay: (date) ->
+    prevDay = new Date(date)
+    prevDay.setDate(date.getDate() - 1)
+    !@_value(date) and @_value(prevDay)
+
   _value: (date) ->
     if month = @data["#{date.getFullYear()}-#{date.getMonth()+1}"]
       month[date.getDate()-1]

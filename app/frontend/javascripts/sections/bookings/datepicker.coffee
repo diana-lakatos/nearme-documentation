@@ -111,7 +111,8 @@ module.exports = class BookingsDatepicker
       view: new AvailabilityView(@listing,
         trigger: @endElement,
         text: @TEXT_END_RANGE,
-        isContinous: !!@listing.data.continuous_dates
+        isContinous: !!@listing.data.continuous_dates,
+        endDatepicker: true
       ),
 
       # Custom backing model to handle logic of range and constraints

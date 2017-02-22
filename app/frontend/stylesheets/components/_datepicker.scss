@@ -147,11 +147,6 @@
         color: $pure-white;
       }
 
-      &.disabled {
-        color: $red;
-        background: none;
-      }
-
       &.active.implicit {
         opacity: 0.75;
       }
@@ -159,6 +154,11 @@
       // Past dates
 
       &.closed,
+      &.not-available,
+      &.datepicker-day-other-month.not-available,
+      &.before-start-date,
+      &.datepicker-day-other-month.before-start-date,
+      &.disabled,
       &.disabled.closed,
       &.datepicker-day-past,
       &.datepicker-day-past.disabled {
@@ -167,6 +167,17 @@
 
       &.datepicker-booking-end-only {
         background: linear-gradient(135deg, rgba($gray204, 0) 0%, rgba($gray204, 0) 50%, $gray204 50%, $gray204 100%);
+
+        &.active {
+          background: linear-gradient(225deg, rgba(204, 204, 204, 0) 0%, rgba(204, 204, 204, 0) 50%, #157a49 50%, #157a49 100%);
+          text-shadow: 1px 1px #157a49;
+        }
+
+        &.disabled,
+        &.not-available,
+        &.before-start-date {
+          background: none;
+        }
       }
     }
   }
