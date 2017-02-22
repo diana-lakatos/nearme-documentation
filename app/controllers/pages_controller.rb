@@ -12,7 +12,7 @@ class PagesController < ApplicationController
     @data_source_contents_scope = DataSourceContent.joins(:page_data_source_contents).where(page_data_source_contents: { page: @page, slug: [nil, [params[:slug], params[:slug2], params[:slug3]].compact.join('/')] })
     @data_source_last_update = @data_source_contents_scope.maximum(:updated_at)
     @data_source_contents = @data_source_contents_scope.paginate(page: params[:page].to_i.zero? ? 1 : params[:page].to_i, per_page: 20)
-
+    @seo_params = SeoParams.create(params)
     if @page.redirect?
       redirect_to @page.redirect_url, status: @page.redirect_code
     elsif params[:simple]

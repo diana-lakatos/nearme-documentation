@@ -37,7 +37,7 @@ class QueryGraphTag < Liquid::Tag
         liquid_context: context
       }
     )
-    response.key?('data') ? response.fetch('data') : throw(ArgumentError.new(response.pretty_inspect))
+    response.key?('data') ? response.fetch('data') : throw(ArgumentError.new(response.pretty_inspect + query_string))
   end
 
   def query_string

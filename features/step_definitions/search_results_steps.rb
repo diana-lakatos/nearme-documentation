@@ -16,7 +16,7 @@ end
 
 Given(/^enough listings in Auckland exists to paginate$/) do
   2.times { FactoryGirl.create(:listing_in_auckland) }
-  sleep 2 #wait_for_index
+  wait_for_elastic_index
 end
 
 Then(/^I click to go to next page$/) do
