@@ -1,0 +1,6 @@
+<div class="options">
+  <button type="button" class="btn btn-default hidden-xs" data-submit-form="form.simple_form">Save</button>
+  {% if current_user.has_buyer_profile? %}
+    <a class='profile-link' href="{{ current_user.user_profile_url }}" target="_blank">View <span class="hidden-xs">Profile</span></a>
+  {% endif %}
+</div>

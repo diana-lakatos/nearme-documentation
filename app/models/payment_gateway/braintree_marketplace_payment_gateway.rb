@@ -6,7 +6,7 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
             :partial_refunds, :host_subscription, :multiple_currency, :payment_source_store
 
   delegate :verify_webhook, :parse_webhook, :find_payment, :find_merchant, :onboard!, :update_onboard!,
-           :client_token, :payment_settled?, to: :gateway
+           :client_token, :payment_settled?, :find_credit_card, to: :gateway
 
   has_many :webhooks, class_name: 'Webhook::BraintreeMarketplaceWebhook', foreign_key: 'payment_gateway_id'
 

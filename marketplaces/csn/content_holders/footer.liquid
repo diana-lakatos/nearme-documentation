@@ -1,0 +1,84 @@
+---
+name: Footer
+inject_pages: any_page
+position: body_bottom
+---
+<footer class="mastfoot">
+  <div class="about-nav"  itemscope itemtype="http://schema.org/Organization">
+    <div class="container-fluid">
+      <div class="about-a">
+        <h2 class="struct-label" itemprop="name"><a href="https://bronxchange.com/" itemprop="url">BronXchange</a></h2>
+
+        <div class="branding"><img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5014/uploads/ckeditor/attachment_file/data/1401/logo.svg" width="163" height="22" itemprop="logo" alt="BronXchange logo"></div>
+
+        <p itemprop="description">Seamless access for all your purchasing needs through an online marketplace connecting Bronx institutions with local high-road businesses.</p>
+
+        <p class="slogan">
+          <span>Good for business.</span>
+          <span>Good for the Bronx.</span>
+        </p>
+      </div>
+
+      <nav class="nav-secondary">
+        <h2 class="struct-label">Secondary Navigation</h2>
+        <div class="section">
+          <h3>General</h3>
+          <ul>
+            <li><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+            <li><a href='/vendor-benefits'>Vendor Benefits</a></li>
+            <li><a href='/purchaser-benefits'>Purchaser Benefits</a></li>
+            <li><a href='/community-benefits'>Community Benefits</a></li>
+            <li><a href='/join-community'>Join Community</a></li>
+          </ul>
+        </div>
+        <div class="section">
+          <h3>More</h3>
+          <ul>
+            <li><a href='/terms-of-use'>Terms of Use</a></li>
+            <li><a href='/privacy-policy'>Privacy Policy</a></li>
+            <li><a href='/faq'>FAQ</a></li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h3>Connect</h3>
+          <ul class="social-b">
+            <li><a href="https://facebook.com" class="facebook" itemprop="sameAs" rel="external">Facebook</a></li>
+            <li><a href="https://twitter.com" class="twitter" itemprop="sameAs" rel="external">Twitter</a></li>
+            <li><a href="https://www.youtube.com" class="youtube" itemprop="sameAs" rel="external">YouTube</a></li>
+            {% if platform_context.blog_url != blank %}
+            <li><a href="{{ platform_context.blog_url }}" class="feed">Blog</a></li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <div class="section">
+          <h3>Contact</h3>
+          <p class="contact-option">
+            <span class="contact-label">Telephone</span>
+            <a href="tel:188855555555" itemprop="telephone">1-888-555-55555</a>
+          </p>
+          <p class="contact-option">
+            <span class="contact-label">Email</span>
+            <a href="mailto:info@bronxchange.com" itemprop="email">info@bronxchange.com</a>
+          </p>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <div class="contentinfo" role="contentinfo">
+    <div class="container-fluid">
+      <p>This is a project of CommonWise Education, Inc. and the Bronx Cooperative Development Initiative (BCDI).</p>
+      <p class="slogan">Building an equitable, sustainable, and democratic Bronx economy.</p>
+
+      <p class="copyright" itemprop="copyrightHolder">© The BronXchange. All rights reserved.</p>
+
+      <p class="powered-by">
+        <a href="http://near-me.com">Powered by Near Me
+        <img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5014/uploads/images/ckeditor/picture/data/1413/near-me-logo.png" alt="NearMe logo" width="30" height="29"></a>
+      </p>
+    </div>
+  </div>
+</footer>

@@ -11,12 +11,6 @@ class PaymentMethodAch {
     this._publishableToken = this.form.find('#ach_manual_payment_form').data('publishable');
     this._ui = {};
     this._ui.container = container;
-    this._ui.container.querySelector('fieldset').disabled = false;
-
-    if (this._ui.container.querySelectorAll('input[type=radio]:checked').length == 0) {
-      $(this._ui.container.querySelector('input[type=radio]')).trigger('click');
-      this._ui.container.querySelector('input[type=radio]').checked = true;
-    }
 
     var that = this;
 
@@ -24,24 +18,24 @@ class PaymentMethodAch {
       let s = document.createElement('script');
       s.src = 'https://js.stripe.com/v2/';
       s.addEventListener('load', function() {
-        that._init();
+        that._bindEvents();
       });
       document.head.appendChild(s);
     } else {
-      that._init();
+      that._bindEvents();
     }
 
     if (!window.Plaid) {
       let s = document.createElement('script');
       s.src = 'https://cdn.plaid.com/link/stable/link-initialize.js';
       s.addEventListener('load', function() {
+        that._bindEvents();
         that._setupPlaid();
-        that._init();
       });
       document.head.appendChild(s);
     } else {
+      that._bindEvents();
       that._setupPlaid();
-      that._init();
     }
   }
 
@@ -85,23 +79,30 @@ class PaymentMethodAch {
     }
 
     $form.unbind('submit').submit(function(event) {
-      console.log('PaymentMethodAch :: Submitting form');
+      var AchFormVisible = $(that._ui.container).find('.payment-source-form.hidden').size() === 0;
+     
+      if (AchFormVisible) {
+        console.log('PaymentMethodAch :: Submitting form');
 
-      event.stopPropagation();
-      event.preventDefault();
-      $form = $(event.target);
-      Stripe.setPublishableKey(that._publishableToken);
-      Stripe.bankAccount.createToken({
-        country: $('[data-country]').val(),
-        currency: $('[data-currency]').val(),
-        routing_number: $('[data-routing-number]').val(),
-        account_number: $('[data-account-number]').val(),
-        account_holder_name: $('[data-account-holder-name]').val(),
-        account_holder_type: $('[data-account-holder-type]').val()
-      }, that._stripeResponseHandler.bind(that));
+        event.stopPropagation();
+        event.preventDefault();
+        $form = $(event.target);
+        Stripe.setPublishableKey(that._publishableToken);
+        Stripe.bankAccount.createToken({
+          country: $('[data-country]').val(),
+          currency: $('[data-currency]').val(),
+          routing_number: $('[data-routing-number]').val(),
+          account_number: $('[data-account-number]').val(),
+          account_holder_name: $('[data-account-holder-name]').val(),
+          account_holder_type: $('[data-account-holder-type]').val()
+        }, that._stripeResponseHandler.bind(that));
+
+        return false;
+      } else {
+        return true;
+      }
     });
 
-    return false;
   }
 
   _stripeResponseHandler(status, response) {

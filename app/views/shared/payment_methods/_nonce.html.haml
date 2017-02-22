@@ -2,19 +2,11 @@
   - if f.object.nonce_payment? && f.object.authorized?
     = t 'payments.already_authorized'
   - else
-    .padding-bottom
-      .row-fluid
-        .span5.text
-          .ico-lock= t 'payments.heading'
-        .span7.credit-card-images
-          = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
-        .clearfix
-
     = f.error :cc
     #paypal-button
 
 
-    = f.simple_fields_for :payment_source_attributes, f.object.payment_source || f.object.new_payment_source(payment_method) do |form|
+    = f.simple_fields_for :payment_source_attributes, f.object.paypal_account || f.object.new_payment_source(payment_method) do |form|
       .has-error.errors
         = form.error :base
         = f.error :base
@@ -28,32 +20,5 @@
 
 
 - if payment_method.payment_gateway.client_token.present?
-  = javascript_include_tag "https://js.braintreegateway.com/v2/braintree.js"
-  - content_for :script do
-    :javascript
-      $(function() {
-        if('braintree' in window) {
-          braintree.setup("#{payment_method.payment_gateway.client_token}", 'paypal', {
-            container: 'paypal-button',
-            paymentMethodNonceInputField: $("#paypal-nonce"),
-            onPaymentMethodReceived: function (payload) {
-              $("#paypal-email").val(payload.details.email);
-              $(".submit-payment").show()
-            },
-            onCancelled: function (payload) {
-              if ($('#paypal-button').parents('.accordion-body').hasClass('in')) {
-                $(".submit-payment").hide();
-              }
-            },
-          });
-        }
-      });
-      $('.accordion').on('show.bs.collapse', function (e) {
-        if ($(e.target).find(".accordion-inner #paypal-button").length) {
-          if ($("#paypal-nonce").val().length == 0) {
-            $(".submit-payment").hide()
-          }
-        } else {
-          $(".submit-payment").show()
-        }
-      });
+  :javascript
+    var braintree_client_token = "#{payment_method.payment_gateway.client_token}"

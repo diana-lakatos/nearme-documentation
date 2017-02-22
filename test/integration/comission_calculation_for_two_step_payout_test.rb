@@ -116,7 +116,7 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     payout_gateway = FactoryGirl.create(:paypal_adaptive_payment_gateway)
     currency = Currency.find_by_iso_code(currency) || FactoryGirl.create(:currency, iso_code: currency)
     payout_gateway.payment_currencies << currency unless payout_gateway.payment_currencies.include?(currency)
-    @payment_method = payment_gateway.payment_methods.first
+    @payment_method = payment_gateway.payment_methods.credit_card.first
 
     FactoryGirl.create(:paypal_adaptive_merchant_account, payment_gateway: payout_gateway, merchantable: @transactable.company)
     Company.any_instance.stubs(:payout_payment_gateway).returns(payout_gateway)

@@ -160,7 +160,7 @@ namespace :fix do
      Schedule, AvailabilityTemplate, AvailabilityRule,
      Location, Company, Address, ApprovalRequest,
      ApprovalRequestAttachment, AssignedWaiverAgreementTemplate,
-     CategoriesCategorizable, Comment, CompanyIndustry, CompanyUser,
+     CategoriesCategorizable, Comment, CompanyUser,
      CreditCard, DataUpload, DocumentsUpload, Impression,
      InstanceClient, MerchantAccount, Photo, RatingAnswer,
      RecurringBookingPeriod, Refund, Review, SavedSearch,

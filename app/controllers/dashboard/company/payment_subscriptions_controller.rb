@@ -8,7 +8,7 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
 
   def new
     @redirect_to = dashboard_company_transactable_type_transactables_path(@order.transactable.transactable_type, status: 'in progress')
-    render layout: false
+    render layout: !request.xhr?
   end
 
   def create
@@ -25,7 +25,7 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
 
   def edit
     @redirect_to = dashboard_company_order_order_items_path(@order, transactable_id: @order.transactable.id)
-    render :new, layout: false
+    render :new, layout: !request.xhr?
   end
 
   def update

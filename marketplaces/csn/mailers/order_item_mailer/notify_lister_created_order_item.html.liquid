@@ -1,0 +1,7 @@
+<h2>Invoice Submitted</h2>
+
+<p>{{ enquirer.name }} has been working on your order {{ order_item.order.transactable.properties.order_title }}. They have recently submitted an invoice for your approval.</p>
+
+<p>Click <a href="{{ platform_context.host | append: order_item_url }}">here</a> to review invoice details.</p>
+
+<p>Remember, we're always here to help. If you would like help from our support team, just email or call us. Send us a message at <a href="mailto:support@bronXchange.com">support@bronXchange.com</a> or call {{ platform_context.phone_number }}, and we'll take care of you right away.</p>

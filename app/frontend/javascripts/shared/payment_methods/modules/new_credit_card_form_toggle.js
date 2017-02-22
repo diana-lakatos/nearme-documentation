@@ -5,21 +5,17 @@ const $formFields = () => { return $newCreditCardForm().find('select, input'); }
 
 class NewCreditCardFormToggle {
   constructor() {
-    if (!this._isInitialized()) {
-      this._initialize();
-    }
-  }
-
-  _isInitialized() {
-    return $newCreditCardForm().data('NewCreditCardFormToggleInitialized');
+    this._initialize();
   }
 
   _initialize() {
     /*
       Need to duplicate this initialization part with initial value because firefox ignores trigger on body for some reason
     */
-    const initialValue = $creditCardSwitcher().find('input:checked').val();
-    this.update(initialValue);
+    var that = this;
+    $creditCardSwitcher().find('input:checked').each(function() {
+      that.update(this);
+    });
     this._attachEventHandlers();
 
     $newCreditCardForm().data('NewCreditCardFormToggleInitialized', true);
@@ -28,16 +24,19 @@ class NewCreditCardFormToggle {
 
   _attachEventHandlers() {
     $('body').on('change', CREDIT_CARD_SWITCHER_SELECTOR, (event) => {
-      this.update(event.target.value); /* event.target is pointing to changed input, not div from selector */
+      this.update(event.target); /* event.target is pointing to changed input, not div from selector */
     });
   }
 
-  update(value) {
-    console.log('NewCreditCardFormToggle value: ', value);
+  update(checkbox) {
+    var $checkbox = $(checkbox);
+    var $checboxFieldset = $checkbox.parents('fieldset');
 
-    const showOrHide = value === 'new_credit_card';
+    console.log('NewCreditCardFormToggle value: ', $checkbox.val());
 
-    $newCreditCardForm().toggleClass('hidden', !showOrHide); // Hide/show new cc form
+    const showOrHide = $checkbox.val() === 'new_credit_card' || $checkbox.val() == 'new_ach';
+
+    $checboxFieldset.find('.nm-credit-card-option-select, .payment-source-form').toggleClass('hidden', !showOrHide); // Hide/show new cc form
     $formFields().each(() => $(this).attr('disabled', showOrHide)); // Disable/enable inputs/selects inside of it
   }
 }

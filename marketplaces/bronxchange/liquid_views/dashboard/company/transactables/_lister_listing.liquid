@@ -93,11 +93,10 @@
 
     {% include 'dashboard/company/transactables/attachments.html', is_client: 'true', attachments: transactable.attachments %}
 
-    <hr>
-
     {% if current_status == "pending" %}
       {% assign transactable_collaborators = transactable.approved_transactable_collaborators %}
       {% if transactable_collaborators != empty %}
+        <hr>
         <h3>Vendors Invited ({{ transactable_collaborators.size }})</h3>
         <div class="table-responsive">
           <table class="table">
@@ -105,7 +104,7 @@
               <tr>
                 <th>Vendor:</th>
                 <th>Invite Date:</th>
-                <th>Invite Action:</th>
+                <th class="table-actions">Invite Action:</th>
               </tr>
             </thead>
             <tbody>
@@ -113,7 +112,7 @@
                 <tr>
                   <td>{{ transactable_collaborator.user.buyer_properties.company_name }}</td>
                   <td>{{ transactable_collaborator.approved_by_owner_at | to_date | l: 'short' }}</td>
-                  <td>
+                  <td class="table-actions">
                     {% if order != blank and order.transactable_user_messages.size > 0 %}
                       <a class="btn btn-info" data-modal="true" href="{{ 'dashboard_user_message_path' | generate_url: order.transactable_user_messages.first.id }}">{{ 'dashboard.order_items.send_message' | t}}</a>
                     {% else %}
@@ -131,6 +130,7 @@
 
       {% assign orders = transactable.orders %}
       {% if orders != empty %}
+        <hr>
         <h3>Offers ({{ orders.size }})</h3>
         <div class="table-responsive">
           <table class="table">
@@ -139,7 +139,7 @@
                 <th>Vendors:</th>
                 <th>Offer Date:</th>
                 <th>Offer Status:</th>
-                <th>Offer Action:</th>
+                <th class="table-actions">Offer Action:</th>
               </tr>
             </thead>
             <tbody>
@@ -148,7 +148,7 @@
                   <td>{{ order.user.name }}</td>
                   <td>{{ order.created_at | to_date | l: 'short' }}</td>
                   <td>{{ 'reservations.states.' | append: order.state | t }}</td>
-                  <td>
+                  <td class="table-actions">
                     {% if order.unconfirmed? %}
                       <a href="{{ order.payment_documents[0].file_url }}" target="_blank" class="btn btn-info">Review</a>
                       <a href="{{ order.rejection_form_path }}" data-modal="true" class="btn btn-danger">Reject</a>
@@ -167,5 +167,8 @@
       <p><a href="{{ 'dashboard_company_order_order_items_path' | generate_url: order_id: accepted_order.id, transactable_id: transactable.id }}" class="btn btn-default">View Time &amp; Expenses</a></p>
     {% endif %}
 
+    <p class="transactable-created">
+      <small>Created: {{ transactable.created_at | to_date | l: 'short' }}</small>
+    </p>
   </article>
 {% endfor %}

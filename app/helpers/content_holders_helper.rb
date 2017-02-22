@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module ContentHoldersHelper
   INJECT_PAGES = {
+    'checkout#show' => 'checkout',
     'listings/reservations#review' => 'checkout',
     'dashboard/user_reservations#booking_successful' => 'checkout_success',
     'dashboard/orders#success' => 'checkout_success',

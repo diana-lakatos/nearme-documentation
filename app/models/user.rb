@@ -270,7 +270,7 @@ class User < ActiveRecord::Base
   scope :sellers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::SELLER])) }
 
   scope :banned, -> { where('banned_at is not null') }
-  scope :active_users, -> { where('banned_at is null AND deleted_at is null') }
+  scope :active_users, -> { where('users.banned_at is null AND users.deleted_at is null') }
 
   validates_with CustomValidators
 

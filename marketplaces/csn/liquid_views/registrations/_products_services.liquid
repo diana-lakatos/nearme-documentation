@@ -1,0 +1,17 @@
+{% assign products = user.buyer_profile.customizations_by_type['Product / Service listing item'] %}
+{% if products.size > 0 %}
+<section class="products-services-a">
+  <h3>Products &amp; Services</h3>
+
+  {% for product in products %}
+  <article>
+    <h4>{{ product.title }}</h4>
+    {{ product.description | markdownify }}
+
+    <ul class="files">
+      <li><a href="./">Brochure-Sample-1.PDF (download)</a></li>
+    </ul>
+  </article>
+  {% endfor %}
+</section>
+{% endif %}
