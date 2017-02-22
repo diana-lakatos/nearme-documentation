@@ -32,7 +32,7 @@ class InstanceAdmin::Manage::Users::UserBansControllerTest < ActionController::T
       assert_no_difference 'UserBan.count' do
         delete :destroy, id: @existing_user_ban.id, user_id: @existing_user_ban.user.id
       end
-      assert_equal @existing_user_ban.user.reload.banned_at, nil
+      assert_nil @existing_user_ban.user.reload.banned_at
     end
   end
 end

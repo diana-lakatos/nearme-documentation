@@ -500,6 +500,12 @@ module LiquidFilters
     BaseDrop::RoutesProxy.public_send(url_name, *args)
   end
 
+  # @return [String] returns a url for the given url helper name and the given arguments with the user temporary token;
+  # e.g: 'user_path' | generate_url_with_user_token: current_user, id: 1 generates /users/1?temporary_token=TOKEN_HERE
+  def generate_url_with_user_token(url_name, user, args = {})
+    generate_url url_name, args.merge(TemporaryTokenAuthenticatable::PARAMETER_NAME => user.source.temporary_token)
+  end
+
   # @return [Time] a time object created from parsing the string representation of time given as input
   # @param time [String] a string representation of time for example 'today', '3 days ago' etc.
   def parse_time(time)

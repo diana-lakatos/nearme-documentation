@@ -9,7 +9,6 @@ class CompanyTest < ActiveSupport::TestCase
   should_not allow_value('not a url!').for(:url)
   should allow_value('http://a-url.com').for(:url)
   should allow_value('a-url.com').for(:url)
-  should ensure_length_of(:description).is_at_most(250)
 
   setup do
     @company = FactoryGirl.create(:company)
@@ -82,7 +81,7 @@ class CompanyTest < ActiveSupport::TestCase
 
     context 'without default on instance' do
       should 'return nil if company has no address' do
-        assert_equal nil, @company.iso_country_code
+        assert_nil @company.iso_country_code
       end
     end
 

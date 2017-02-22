@@ -24,7 +24,7 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
     assert @reservation.paid?
     assert_equal Payment.last, @reservation.payment
     assert_equal Charge.last, @charge = @reservation.payment.charges.last
-    assert_equal true, @charge.success
+    assert @charge.success
     assert_equal OpenStruct.new(success?: true, message: parse_params(SUCCESS_FETCH_RESPONSE)), @charge.response
   end
 

@@ -2,6 +2,7 @@ require 'test_helper'
 
 class InstanceAdmin::SessionsControllerTest < ActionController::TestCase
   setup do
+    @controller = ::InstanceAdmin::SessionsController.new
     @user = FactoryGirl.create(:user)
     @request.env['devise.mapping'] = Devise.mappings[:user]
   end

@@ -49,7 +49,7 @@ class AddressTest < ActiveSupport::TestCase
       @address.address_components = { 0 => { 'does' => 'not', 'exist' => ', but', 'should' => 'work' } }
       @address.save!
       @address.reload
-      assert_equal nil, @address.city
+      assert_nil @address.city
     end
 
     should 'should update all address components fields based on address_components' do

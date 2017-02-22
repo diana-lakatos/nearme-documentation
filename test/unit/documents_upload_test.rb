@@ -13,18 +13,18 @@ class DocumentsUploadTest < ActiveSupport::TestCase
     should 'return true' do
       documents_upload = FactoryGirl.create(:enabled_documents_upload)
 
-      assert_equal true, documents_upload.is_enabled?
+      assert documents_upload.is_enabled?
     end
 
     should 'return false' do
-      assert_equal false, @documents_upload.is_enabled?
+      refute @documents_upload.is_enabled?
     end
 
     should 'return true with errors' do
       @documents_upload.requirement = ''
       @documents_upload.save
 
-      assert_equal true, @documents_upload.is_enabled?
+      assert @documents_upload.is_enabled?
     end
   end
 end
