@@ -1,0 +1,34 @@
+$brand-primary: $theme_blue !default;
+$panel-inner-border: $gray240 !default;
+
+.payment-methods {}
+
+.payment-method + .payment-method {
+  margin-top: 20px;
+}
+
+.payment-method-header {
+  font-size: 20px;
+  font-weight: normal;
+  color: $brand-primary;
+  cursor: pointer;
+  padding-left: 20px;
+  position: relative;
+
+  &::before {
+    position: absolute;
+    content: $fa-var-chevron-right;
+    font-family: FontAwesome;
+    font-size: 12px;
+    top: 50%;
+    left: 0;
+    transform: translateY(calc(-50%));
+  }
+}
+
+.payment-method-body {
+  padding: 20px;
+  border: 1px solid $panel-inner-border;
+  border-radius: 3px;
+  margin: 10px 0 0 20px;
+}

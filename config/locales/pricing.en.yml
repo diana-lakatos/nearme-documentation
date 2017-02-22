@@ -44,14 +44,14 @@ en:
         one: 'month'
         other: 'months'
       night_month:
-        one: 'overnight for month'
-        other: 'overnight for months'
+        one: 'overnight month'
+        other: 'overnight months'
       hour:
         one: 'hour'
         other: 'hours'
       night:
-        one: 'night'
-        other: 'nights'
+        one: 'overnight'
+        other: 'overnights'
       subscription_month:
         one: 'calendar month'
         other: 'calendar months'
@@ -74,14 +74,14 @@ en:
       one: 'month'
       other: 'months'
     night_month:
-      one: 'month'
-      other: 'months'
+      one: 'overnight month'
+      other: 'overnight months'
     hour:
       one: 'hour'
       other: 'hours'
     night:
-      one: 'night'
-      other: 'nights'
+      one: 'overnight'
+      other: 'overnights'
     subscription_month:
       one: 'calendar month'
       other: 'calendar months'

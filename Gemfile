@@ -188,7 +188,7 @@ end
 
 group :test do
   gem 'rspec', '2.14.1'
-  gem 'codeclimate-test-reporter', require: false
+  gem 'codeclimate-test-reporter', '~> 0.4.4', require: false
   gem 'capybara'
   gem 'launchy'
   gem 'capybara-webkit'

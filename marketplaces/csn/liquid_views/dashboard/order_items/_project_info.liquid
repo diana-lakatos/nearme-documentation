@@ -1,0 +1,32 @@
+<h2>To: <span>{{ transactable.name }}</span></h2>
+<div class="row">
+  <div class="col-md-6">
+    <dl class="transactable-properties">
+      {% if transactable.properties.order_contact != blank %}
+        <dt>Contact</dt>
+        <dd>{{ transactable.properties.order_contact }}</dd>
+      {% endif %}
+
+      {% if transactable.owner.organization_name != blank %}
+        <dt>Company</dt>
+        <dd>{{ transactable.owner.organization_name }}</dd>
+      {% endif %}
+
+      {% if transactable.properties.purchase_order_number != blank %}
+        <dt>Purchase Order Number</dt>
+        <dd>{{ transactable.properties.purchase_order_number }}</dd>
+      {% endif %}
+
+      <dt>Approx. Budget</dt>
+      <dd>{{ transactable.properties.approximate_budget }}</dd>
+
+      <dt>Delivery date</dt>
+      <dd>{{ transactable.properties.delivery_date | to_date | l: 'short' }}</dd>
+    </dl>
+  </div>
+  <div class="col-md-6">
+    <div class="alert alert-warning">
+      <strong>Note:</strong> If you are adding an expense item, make sure to add 3% as payment gateway will charge an approximate 3% fee.
+    </div>
+  </div>
+</div>

@@ -137,7 +137,7 @@ DESC
         stack = options[:stack]
         environment = options[:environment].to_s
 
-        return true unless stack.include?('production') || stack == 'nm-oregon'
+        return true unless stack.include?('production') || stack == 'nm-oregon' || stack == 'nm-sydney'
 
         if !environment.empty? && environment != 'production'
           puts 'ERROR: You cannot use this environment for production stack'

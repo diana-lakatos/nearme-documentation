@@ -1,7 +1,8 @@
 [ignore]
-
+.*/node_modules/.*
 [include]
 
 [libs]
+./flow_declarations
 
 [options]

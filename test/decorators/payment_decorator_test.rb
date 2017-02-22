@@ -9,6 +9,8 @@ class PaymentDecoratorTest < Draper::TestCase
     cc = FactoryGirl.create(:credit_card, instance_client: instance_client, payment_gateway_id: payment_gateway.id)
     payment_method.payment_sources << cc
     payment = FactoryGirl.create(:pending_payment, payment_gateway: payment_gateway)
+    payment.payment_source.payment_method = payment_method
+    payment.save
     payment_decorator = PaymentDecorator.new(payment)
 
     assert_equal payment_decorator.default_payment_source(payment_method), ['**** **** **** ', payment.payment_source.id]

@@ -1,0 +1,287 @@
+name: Buyer
+profile_type: buyer
+onboarding: true
+searchable: true
+search_engine: 'elasticsearch'
+search_only_enabled_profiles: true
+category_search_type: 'AND'
+create_company_on_sign_up: true
+admin_approval: true
+default_availability_template: '24/7'
+custom_attributes:
+  # We use custom attributes for some fields that are in user to avoid
+  # messing with the translations (as fields may have a different title
+  # for seller)
+  - name: company_name
+    label: 'Company Name'
+    html_tag: 'input'
+    attribute_type: string
+    validation:
+      required: false
+
+  - name: facebook_url
+    label: 'Facebook URL'
+    html_tag: 'input'
+    attribute_type: string
+    validation:
+      required: false
+
+  - name: google_plus_url
+    label: 'Google+ URL'
+    html_tag: 'input'
+    attribute_type: string
+    validation:
+      required: false
+
+  - name: twitter_url
+    label: 'Twitter URL'
+    html_tag: 'input'
+    attribute_type: string
+    validation:
+      required: false
+
+  - name: hours_days_of_operation
+    label: 'Hours / Days of Operation'
+    html_tag: textarea
+    attribute_type: string
+    validation:
+      required: false
+
+  - name: neighborhood
+    label: Neighborhood
+    html_tag: select
+    attribute_type: string
+    validation:
+      required: false
+      valid_values: ['Allerton', 'Baychester', 'Bedford Park', 'Belmont / Arthur Ave', 'Bronx River', 'Bronxdale', 'Castle Hill', 'City Island', 'City Island', 'Clason Point', 'Country Club', 'Courthouse', 'Yankee Stadium', 'Concourse', 'East Tremont', 'Eastchester', 'Edenwald', 'Edgewater Park', 'Fordham', 'Highbridge', 'Indian Village', 'Kingsbridge', 'Longwood', 'Marble Hill', 'Melrose', 'Morris Heights', 'Morris Park', 'Mott Haven', 'Mount Eden', 'Mount Hope', 'Norwood', 'Olinville', 'Parkchester', 'Pelham Bay', 'Pelham Gardens', 'Pelham Parkway', 'Riverdale', 'Soundview', 'The Hub', 'Throggs Neck', 'University Heights', 'Van Nest', 'Wakefield', 'West Farms', 'Westchester Square', 'Williamsbridge', 'Woodlawn']
+
+  - name: certifications
+    label: Certifications
+    html_tag: check_box_list
+    hint: 'Select all that apply'
+    attribute_type: array
+    wrapper_html_options_string: ' '
+    validation:
+      required: false
+      valid_values: ['Minority and Women-owned Business Enterprise (M/WBE)', 'Locally-Based Enterprise (LBE)', 'Emerging Business Enterprise (EBE)', 'Small Disadvantaged Business (SDB)', 'Service-Disabled Veteran-Owned Small Business (SDV)', 'B Corporation (B Corp)', 'Other']
+
+  - name: other_certifications
+    label: Other Certifications
+    input_html_options_string: >-
+      data-markdown-editor => ''
+    html_tag: textarea
+    attribute_type: string
+    validation:
+      required: false
+
+
+  - name: company_description
+    label: "Company Description"
+    hint: Displayed on search listing page
+    html_tag: textarea
+    attribute_type: string
+    input_html_options_string: "data-counter-limit=>500,class=>large"
+    validation:
+      required: false
+      max_length: 500
+      validation_only_on_update: true
+
+  - name: our_story
+    label: "Our Story"
+    html_tag: textarea
+    attribute_type: string
+    input_html_options_string: >-
+      data-markdown-editor => ''
+    validation:
+      required: false
+
+  - name: awards
+    label: Awards
+    html_tag: textarea
+    attribute_type: string
+    input_html_options_string: >-
+      data-markdown-editor => ''
+    validation:
+      required: false
+
+  - name: clients
+    label: Clients
+    html_tag: textarea
+    attribute_type: string
+    input_html_options_string: >-
+      data-markdown-editor => ''
+    validation:
+      required: false
+
+  - name: community_involvement
+    label: Community Involvement
+    html_tag: textarea
+    attribute_type: string
+    input_html_options_string: >-
+      data-markdown-editor => ''
+    validation:
+      required: false
+
+  - name: availability
+    label: Availability
+    html_tag: textarea
+    hint: 'Let others know if there are certain days when your business is closed'
+    attribute_type: string
+    validation:
+      required: false
+
+  - name: community_wealth
+    label: Show Community Wealth badge?
+    html_tag: check_box
+    attribute_type: boolean
+    wrapper_html_options_string: >-
+      data-condition-field => '{"1": {"show": [".user_buyer_profile_properties_community_wealth_text"], "hide": [] }, "": {"show": [], "hide": [".user_buyer_profile_properties_community_wealth_text"] }, "default": {"show": [], "hide": [".user_buyer_profile_properties_community_wealth_text"] } }'
+
+  - name: community_wealth_text
+    label: Describe your Community Wealth contribution
+    html_tag: textarea
+    attribute_type: string
+    input_html_options_string: >-
+      data-markdown-editor => ''
+
+  - name: workplace
+    label: Show Workplace badge?
+    html_tag: check_box
+    attribute_type: boolean
+    wrapper_html_options_string: >-
+      data-condition-field => '{"1": {"show": [".user_buyer_profile_properties_workplace_text"], "hide": [] }, "": {"show": [], "hide": [".user_buyer_profile_properties_workplace_text"] }, "default": {"show": [], "hide": [".user_buyer_profile_properties_workplace_text"] } }'
+
+  - name: workplace_text
+    label: Describe your Workplace
+    html_tag: textarea
+    attribute_type: string
+    input_html_options_string: >-
+      data-markdown-editor => ''
+
+  - name: environment_and_health
+    label: 'Show Environment & Health badge?'
+    html_tag: check_box
+    attribute_type: boolean
+    wrapper_html_options_string: >-
+      data-condition-field => '{"1": {"show": [".user_buyer_profile_properties_environment_and_health_text"], "hide": [] }, "": {"show": [], "hide": [".user_buyer_profile_properties_environment_and_health_text"] }, "default": {"show": [], "hide": [".user_buyer_profile_properties_environment_and_health_text"] } }'
+
+  - name: environment_and_health_text
+    label: 'Describe your Environment & Health contribution'
+    html_tag: textarea
+    attribute_type: string
+    input_html_options_string: >-
+      data-markdown-editor => ''
+    wrapper_html_options_string: ''
+
+  - name: logo
+    label: 'Company Logo'
+    attribute_type: photo
+    html_tag: input
+    versions_configuration:
+      mini:
+        width: 200
+        height: 200
+        transform: resize_to_fit
+      thumb:
+        width: 70
+        height: 70
+        transform: resize_to_fill
+      normal:
+        width: 1280
+        height: 880
+        transform: resize_to_fit
+
+  - name: workplace_team_image
+    label: 'Workplace/Team Image'
+    attribute_type: photo
+    hint: 'Displayed on the profile page'
+    html_tag: input
+    versions_configuration:
+      mini:
+        width: 700
+        height: 300
+        transform: resize_to_fit
+      thumb:
+        width: 100
+        height: 100
+        transform: resize_to_fill
+      normal:
+        width: 1280
+        height: 880
+        transform: resize_to_fit
+
+form_components:
+  - type: buyer_registration
+    name: Buyer
+    fields:
+      - user: name
+      - user: email
+      - user: password
+
+  - type: buyer_profile_types
+    name: General
+    fields:
+      - buyer: enabled
+      - user: name
+      - user: email
+      - user: current_address
+      - buyer: neighborhood
+      - user: phone
+      - user: tags
+
+  - type: buyer_profile_types
+    name: Social media
+    fields:
+      - buyer: facebook_url
+      - buyer: google_plus_url
+      - buyer: twitter_url
+
+  - type: buyer_profile_types
+    name: Company
+    fields:
+      - buyer: company_name
+      - buyer: company_description
+      - buyer: logo
+      - user: avatar
+      - buyer: Category - Industry
+      - buyer: Category - Language
+      - buyer: hours_days_of_operation
+      - buyer: availability
+      - buyer: certifications
+      - buyer: other_certifications
+      - buyer: workplace_team_image
+      - buyer: our_story
+      - buyer: awards
+      - buyer: clients
+      - buyer: community_involvement
+
+  - type: buyer_profile_types
+    name: Media
+    fields:
+      - buyer: Custom Model - Media
+
+  - type: buyer_profile_types
+    name: Badges
+    fields:
+      - buyer: community_wealth
+      - buyer: community_wealth_text
+      - buyer: workplace
+      - buyer: workplace_text
+      - buyer: environment_and_health
+      - buyer: environment_and_health_text
+
+  - type: buyer_profile_types
+    name: Products / Services
+    fields:
+      - buyer: Custom Model - Product / Service listing item
+
+  - type: buyer_profile_types
+    name: Testimonials
+    fields:
+      - buyer: Custom Model - Testimonial
+
+  - type: buyer_profile_types
+    name: Password
+    fields:
+      - user: password
+

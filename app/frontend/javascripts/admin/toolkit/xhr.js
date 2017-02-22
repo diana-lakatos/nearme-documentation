@@ -3,25 +3,31 @@ const defaults = {
   contentType: 'html'
 };
 
-let csrfToken, authToken;
+let csrfToken: string, authToken :string;
 
-function getCSRFToken(){
+function getCSRFToken(): string {
   if (!csrfToken) {
-    csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    let el = document.querySelector('meta[name="csrf-token"]');
+    if (el) {
+      csrfToken = el.getAttribute('content');
+    }
   }
   return csrfToken;
 }
 
-function getAuthToken(){
+function getAuthToken(): string {
   if (!authToken) {
-    authToken = document.querySelector('meta[name="authorization-token"]').content;
+    let el = document.querySelector('meta[name="authorization-token"]');
+    if (el) {
+      authToken = el.getAttribute('content');
+    }
   }
   return authToken;
 }
 
 
-function parseResponse(response) {
-  let p;
+function parseResponse(response: Response): Promise<string | { [key: string]: string }> {
+  let p: Promise<*>;
 
   if (response.headers.get('Content-Type').toLowerCase().indexOf('json') > -1) {
     p = response.json();
@@ -34,7 +40,7 @@ function parseResponse(response) {
     return p;
   }
 
-  return p.then((data)=>{
+  return p.then((data: mixed)=>{
     var error = new Error(response.statusText);
     error.data = data;
     throw error;
@@ -42,7 +48,7 @@ function parseResponse(response) {
 }
 
 
-function getContentTypeString(contentType) {
+function getContentTypeString(contentType: string): string {
   switch(contentType.toLowerCase()) {
 
   case 'html':
@@ -59,7 +65,7 @@ function getContentTypeString(contentType) {
   }
 }
 
-function parseRequestMethod(options) {
+function parseRequestMethod(options: { method: string, data: FormData | { [key: string]: string } }): { [key: string]: string } {
   options.method = options.method.toLowerCase();
   if (['get', 'post'].indexOf(options.method) > -1) {
     return options;
@@ -93,7 +99,7 @@ function parseRequestMethod(options) {
  * @param {Object} options ex. {contentType: 'application/vnd.api+json', data: JSON.stringify({foo: bar}), method: 'post'}
  * @return {Promise} result
  */
-function xhr(url, options = {}) {
+function xhr(url: string, options: { method: string, contentType: string, data: mixed } = {}): Promise<any> {
   options = Object.assign({}, defaults, options);
   options = parseRequestMethod(options);
 
@@ -104,20 +110,38 @@ function xhr(url, options = {}) {
       'Accept': getContentTypeString(options.contentType),
       'Content-Type': getContentTypeString(options.contentType),
       'X-CSRF-Token': getCSRFToken(),
-      'UserAuthorization': getAuthToken(),
+
       'X-Requested-With': 'XMLHttpRequest'
     }
   };
 
-  if (options.data) {
-    xhrOptions.body = options.data;
+  if (getAuthToken()) {
+    xhrOptions.headers.UserAuthorization = getAuthToken();
   }
 
-  return new Promise((resolve, reject)=>{
+
+  if (options.data) {
+    /* in order to allow setting correct content-type boundry by the client we need to remove content type */
+    delete xhrOptions.headers['Content-Type'];
+
+    if (options.data instanceof FormData) {
+      xhrOptions.body = options.data;
+    } else {
+      let data = new FormData();
+      for (let prop in options.data) {
+        if (options.data.hasOwnProperty(prop)) {
+          data.append(prop, options.data[prop]);
+        }
+      }
+      xhrOptions.body = data;
+    }
+  }
+
+  return new Promise((resolve: Promise, reject: Promise)=>{
     fetch(url, xhrOptions)
             .then(parseResponse)
-            .then( data => resolve(data) )
-            .catch((error)=>{
+            .then( (data: any): Promise => resolve(data) )
+            .catch((error: any): Promise =>{
               if (error.data) {
                 return reject(error.data);
               }

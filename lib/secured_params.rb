@@ -1569,6 +1569,8 @@ class SecuredParams
       :payment_method_nonce,
       :chosen_credit_card_id,
       :payment_source_id,
+      :credit_card_id,
+      :bank_account_id,
       :payment_source_type,
       credit_card_attributes: nested(credit_card),
       payment_source_attributes: nested(payment_source)
@@ -1586,6 +1588,7 @@ class SecuredParams
       :payer_id,
       :payment_method_id,
       :credit_card_id,
+      :bank_account_id,
       :payment_source_id,
       :payment_source_type,
       :chosen_credit_card_id,

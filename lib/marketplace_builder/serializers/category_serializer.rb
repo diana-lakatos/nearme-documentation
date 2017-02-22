@@ -3,7 +3,7 @@ module MarketplaceBuilder
     class CategorySerializer < BaseSerializer
       resource_name -> (t) { "categories/#{t.name.underscore}" }
 
-      properties :name, :multiple_root_categories, :shared_with_users
+      properties :name, :multiple_root_categories, :shared_with_users, :search_options
 
       property :transactable_types
       property :instance_profile_types

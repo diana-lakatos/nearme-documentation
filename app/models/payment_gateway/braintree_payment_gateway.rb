@@ -10,7 +10,7 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
             :credit_card_payment, :partial_refunds, :multiple_currency
 
   delegate :verify_webhook, :parse_webhook, :find_payment, :find_merchant, :onboard!, :update_onboard!,
-           :client_token, :payment_settled?, to: :gateway
+           :client_token, :payment_settled?, :find_credit_card, to: :gateway
 
   def self.supported_countries
     ['US']

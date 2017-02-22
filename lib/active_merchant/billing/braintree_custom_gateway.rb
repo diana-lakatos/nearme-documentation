@@ -55,6 +55,10 @@ module ActiveMerchant
         Braintree::Transaction.find(token)
       end
 
+      def find_credit_card(token)
+        Braintree::CreditCard.find(token)
+      end
+
       def payment_settled?(token)
         find_payment(token).paid?
       end
