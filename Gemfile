@@ -207,7 +207,6 @@ group :test do
   gem 'vcr'
   gem 'test_after_commit'
   gem 'rails-perftest'
-  gem 'selenium-webdriver'
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'ffaker', '~> 1.16'
 end
