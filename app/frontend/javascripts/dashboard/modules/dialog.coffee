@@ -35,7 +35,6 @@ module.exports = class Dialog
 
     # submit form via button
     $('body').on 'submit.nearme', 'form[data-modal]', (e) =>
-      alert("Submit")
       e.preventDefault()
       form = $(e.currentTarget)
       ajaxOptions = { type: form.attr('method'), url: form.attr('action'), data: new FormData(e.currentTarget), processData: false, contentType: false }
