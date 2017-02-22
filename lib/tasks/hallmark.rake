@@ -144,31 +144,34 @@ namespace :hallmark do
     instance = Instance.find(5011)
     instance.set_context!
     EXTERNAL_ID = 0
-    FIRST_NAME = 1
-    LAST_NAME = 2
+    FIRST_NAME = 2
+    LAST_NAME = 1
     EMAIL = 3
     DOB = 4
     PHONE = 5
-    DT_ADDED = 6
-    MEMBER_SINCE = 7
-    EXPIRES_AT = 8
-    MEMBER_YEAR = 9
-    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_14Feb.txt')
+    MEMBER_SINCE = 6
+    EXPIRES_AT = 7
+    MEMBER_YEAR = 8
+    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_20Feb.txt')
     emails = []
     CSV.foreach(path, col_sep: '|') do |array|
       unless array[FIRST_NAME] == 'CNSMR_FIRST_NM'
         email = array[EMAIL].downcase.strip
         if email.include?('@')
           emails << email
-          puts "importing: #{email}"
           u = User.where('email ilike ?', email).first_or_initialize
+          if u.persisted?
+            puts "skipping #{email} - already added"
+            next
+          end
+          puts "importing: #{email}"
           u.email = email
           u.password = SecureRandom.hex(12) unless u.encrypted_password.present?
           u.external_id = array[EXTERNAL_ID]
           u.expires_at = Date.strptime(array[EXPIRES_AT], '%Y%m').end_of_month
           u.get_default_profile
           u.properties.date_of_birth = begin
-                                         Date.strptime(array[DOB], '%m%d%Y')
+                                         Date.strptime(array[DOB], '%m/%d/%Y')
                                        rescue
                                          puts "\tInvalid DOB: #{array[DOB]}"
                                          nil
