@@ -6,7 +6,10 @@ module MarketplaceBuilder
         custom_themes = get_data
 
         custom_themes.each do |_key, custom_theme_attributes|
-          custom_theme = CustomTheme.create! custom_theme_attributes.merge(themeable: @instance)
+          custom_theme = CustomTheme.where(name: custom_theme_attributes['name']).first_or_initialize
+          custom_theme.assign_attributes custom_theme_attributes.merge(themeable: @instance)
+          custom_theme.save!
+
           import_assets(custom_theme)
         end
       end
@@ -16,7 +19,7 @@ module MarketplaceBuilder
       def import_assets(custom_theme)
         Dir.glob("#{File.join(@theme_path, source)}/#{custom_theme.name.underscore}_custom_theme_assets/*.*") do |asset_file|
           File.open(asset_file) do |file|
-            custom_theme.custom_theme_assets.create! type: type_by_file_path(asset_file), name: File.basename(asset_file), file: file
+            custom_theme.custom_theme_assets.where(type: type_by_file_path(asset_file), name: File.basename(asset_file)).first_or_create(file: file)
           end
         end
       end
