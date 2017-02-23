@@ -71,5 +71,5 @@
               = t('onboarding.no_suggestions_at_this_time')
 
       %p.action
-        %button.button-a{:type => "submit"}
+        %button.button-a{:type => "submit", "data-disable-with" => t('general.processing')}
           = t :continue
