@@ -43,13 +43,4 @@ class MarketplacePasswordTest < ActionDispatch::IntegrationTest
     assert_equal marketplace_sessions_path, path
     assert_equal flash[:error], 'Wrong password!'
   end
-
-  should 'not redirect to marketplace password page if requesting instance_admin' do
-    @instance.password_protected = true
-    @instance.marketplace_password = '123'
-    @instance.save
-
-    get_via_redirect instance_admin_path
-    assert_equal instance_admin_login_path, path
-  end
 end
