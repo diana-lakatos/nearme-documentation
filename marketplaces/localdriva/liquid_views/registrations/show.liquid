@@ -1,5 +1,5 @@
 {{ platform_context.set_blank_theme_name }}
-{% assign title = platform_context.name | append: ' - ' | append: user.name %}
+{% assign title = platform_context.name | append: ' - ' | append: user.first_name %}
 {% title title %}
 
 {% query_graph 'get_user', result_name: g, userId: user.id %}
@@ -8,7 +8,7 @@
 <div class="user-cover" style="background-image: url({{ g.user.cover_images[0].url }});"></div>
 {% endif %}
 
-{% if user.has_buyer_profile? == false -%}
+{% if user.has_buyer_profile? == false %}
 <main id="main">
   <div class="wrapper-a">
     <div class="back-to-search-results">
@@ -17,14 +17,14 @@
 
     <div class="box-a incomplete-profile">
       <figure class="avatar">
-        <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+        <img src="{{user.avatar_url_big}}" alt="{{ user.first_name }}">
       </figure>
       <h1>Passenger profiles are coming soon!</h1>
-      <p>We are going to introduce passenger profiles in early 2017. Come back later to find out more about <strong>{{ user.name }}.</strong></p>
+      <p>We are going to introduce passenger profiles in early 2017. Come back later to find out more about <strong>{{ user.first_name }}.</strong></p>
     </div>
   </div>
 </main>
-{% else -%}
+{% else %}
 <main id="main">
   <div class="wrapper-a">
     <div class="back-to-search-results">
@@ -34,35 +34,37 @@
     {% if user.buyer_properties.driver_category == blank %}
       <div class="box-a incomplete-profile">
         <figure class="avatar">
-          <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+          <img src="{{user.avatar_url_big}}" alt="{{ user.first_name }}">
         </figure>
         <h1>Driver profile not finished!</h1>
-        <p>It looks like this driver hasn’t updated their profile yet. Come back later to find out more about <strong>{{ user.name }}.</strong></p>
+        <p>It looks like this driver hasn’t updated their profile yet. Come back later to find out more about <strong>{{ user.first_name }}.</p>
       </div>
     {% else %}
 
       <article class="box-a user-a" id="user-{{ user.id }}">
         <figure class="avatar">
-          <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
-          <span class="verified">Verified</span>
+          <img src="{{user.avatar_url_big}}" alt="{{ user.first_name }}">
+          <!--<span class="verified">Verified</span>-->
         </figure>
 
         <div class="description">
 
           <header>
-            <h1>{{ user.name }}</h1>
+            <h1>{{ user.first_name }}</h1>
             <div class="summary">
-              <div class="rating-a" data-rating="{{ user.buyer_average_rating }}">{{ user.buyer_average_rating }} out of 5 stars</div>
+              {% if reviews_counter.about_buyer > 0 %}
+              <div class="rating-a" data-rating="{{ user.buyer_average_rating | floor }}">{{ user.buyer_average_rating }} out of 5 stars</div>
+              {% endif %}
               <div class="price" data-convert-price="{{ user.buyer_properties.hourly_price }}"><strong>AUD {{ user.buyer_properties.hourly_price | price_with_cents_with_currency }}</strong> / hr</div>
 
               <div class="share-a">
                 <span>Share</span>
-                {% assign share_url = user.profile_url | url_encode -%}
+                {% assign share_url = user.profile_url | url_encode %}
                 <ul>
                   <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}" class="facebook">Facebook</a></li>
                   <li><a href="https://twitter.com/home?status={{ share_url }}" class="twitter" data-height="253">Twitter</a></li>
                   <li><a href="https://plus.google.com/share?url={{ share_url }}" class="googleplus" data-height="453" data-width="397">Google+</a></li>
-                  <li><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ share_url }}&amp;title={{ user.name | url_encode }}" class="linkedin">LinkedIn</a></li>
+                  <li><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ share_url }}&amp;title={{ user.first_name | url_encode }}" class="linkedin">LinkedIn</a></li>
                 </ul>
               </div>
             </div>
@@ -75,13 +77,13 @@
               <div class="driver-types-description" tabindex="0">
                 <ul>
                   <li>
-                    <b>Standard</b> - Locals who know their city well but are not professional tour guides to show you around their city using their vehicle.
+                    <b>Standard</b> - {{ 'driver_categories.descriptions.standard' | t }}
                   </li>
                   <li>
-                    <b>Pro</b> - Drivers who have formal qualifications and recognised experience as a tour guide in the city they are providing the service.
+                    <b>Pro</b> - {{ 'driver_categories.descriptions.pro' | t }}
                   </li>
                   <li>
-                    <b>Plus</b> - Drivers with a luxury car providing a service for business travellers and other users seeking a luxury vehicle.
+                    <b>Plus</b> - {{ 'driver_categories.descriptions.plus' | t }}
                   </li>
                 </ul>
               </div>
@@ -92,7 +94,7 @@
             <dd>{{ user.created_at | to_date | l: 'long' }}</dd>
 
             <dt>Number of Bookings:</dt>
-            <dd>{{ user.completed_orders_count }}</dd>
+            <dd>{{ user.completed_host_reservations_count }}</dd>
 
             <dt>Number of Ratings:</dt>
             <dd>{{ user.reviews_counter.about_buyer | default: 0 }}</dd>
@@ -127,18 +129,22 @@
             {% if current_user != blank and current_user.has_seller_profile? %}
 
             <li class="ask-to-book">
-              {% if current_user.transactables_count == 0 %}
-              <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Ask to Book</a>
+              {% if current_user.seller_profile.onboarded_at == blank %}
+              <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}" class="button-a">Invite Drive</a>
               {% else %}
-              <a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Ask to Book</a>
+              <a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Invite Driver</a>
               {% endif %}
             </li>
 
             {% endif %}
 
-            <li>
-              <a href="{{ user.user_message_path }}" type="button" data-href="{{ user.user_message_path }}" class="button-b" data-modal='true'>Message Me</a>
-            </li>
+            {% if current_user != blank %}
+            {% if current_user.has_seller_profile? or user.has_seller_profile? %}
+              <li>
+                <a href="{{ user.user_message_path }}?skip=true" type="button" data-href="{{ user.user_message_path }}?skip=true" class="button-b" data-modal='true'>Message Me</a>
+              </li>
+            {% endif %}
+            {% endif %}
 
             {% if current_user.has_seller_profile? %}
             <li>
@@ -169,16 +175,23 @@
             <dd>{{ 'passengers_count' | t: count: capacity }}</dd>
           </dl>
 
-          {% for root_category in user.formatted_buyer_categories %}
-          {% if root_category[1]['children'].size > 0 %}
-          <h3>{{ root_category[1]['name'] }}</h3>
+          {% if user.formatted_buyer_categories['Vehicle Features']['children'].size > 0 %}
+          <h3>{{ user.formatted_buyer_categories['Vehicle Features']['name'] }}</h3>
           <ul class="props-list">
-            {% for category in root_category[1]['children'] %}
+            {% for category in user.formatted_buyer_categories['Vehicle Features']['children'] %}
               <li>{{ category }}</li>
             {% endfor %}
           </ul>
           {% endif %}
-          {% endfor %}
+
+         {% if user.formatted_buyer_categories['Extra Requests']['children'].size > 0 %}
+          <h3>{{ user.formatted_buyer_categories['Extra Requests']['name'] }}</h3>
+          <ul class="props-list">
+            {% for category in user.formatted_buyer_categories['Extra Requests']['children'] %}
+              <li>{{ category }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
         </div>
 
         <div class="gallery-description">
@@ -199,11 +212,6 @@
               {% endif %}
             </div>
           {% endif %}
-
-          <div class="description">
-            <h3>Vehicle Description</h3>
-            <p>{{ user.buyer_properties.vehicle_description | nl2br }}</p>
-          </div>
         </div>
       </div>
 
@@ -215,9 +223,10 @@
         </div>
       </section>
 
+
       <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
 
     {% endif %}
   </div>
 </main>
-{% endif -%}
+{% endif %}
