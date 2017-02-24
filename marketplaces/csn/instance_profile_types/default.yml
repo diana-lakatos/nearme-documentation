@@ -1,3 +1,46 @@
 # default profile
 name: Default
 profile_type: default
+
+custom_attributes:
+  # We use custom attributes for some fields that are in user to avoid
+  # messing with the translations (as fields may have a different title
+  # for seller)
+  - name: accept_newsletter
+    label: 'Newsletter'
+    html_tag: 'check_box'
+    attribute_type: boolean
+    validation:
+      required: false
+  - name: landline
+    label: 'Landline'
+    html_tag: 'input'
+    attribute_type: string
+    validation:
+      required: false
+  - name: how_did_you_hear
+    label: 'How did you hear about us?'
+    html_tag: 'select'
+    attribute_type: string
+    valid_values:
+      - Facebook
+      - Google
+      - TV
+      - Friend
+      - Other
+    validation:
+      required: false
+
+form_components:
+  - type: default_registration
+    name: Default Registration
+    fields:
+      - user: first_name
+      - user: last_name
+      - user: email
+      - user: password
+      - user: password_confirmation
+      - user: mobile_phone
+      - user: how_did_you_hear
+      - user: landline
+      - user: accept_newsletter

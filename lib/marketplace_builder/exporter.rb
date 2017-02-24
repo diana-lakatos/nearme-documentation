@@ -95,8 +95,8 @@ module MarketplaceBuilder
     end
 
     def create_mpbuilderrc_file
-      File.open("#{@destination_path}/#{@instance.name}/.mpbuilderrc", "w") do |f|
-        f.write(JSON.pretty_generate({instance_id: @instance_id, mode: 'append'}))
+      File.open("#{@destination_path}/#{@instance.name}/.mpbuilderrc", 'w') do |f|
+        f.write(JSON.pretty_generate(instance_id: @instance_id, mode: 'append'))
       end
     end
 

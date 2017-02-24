@@ -46,6 +46,7 @@ Before do
   FactoryGirl.create(:primary_locale)
   FactoryGirl.create(:instance)
 
+  ActiveMerchant::Billing::Base.mode = :test
   I18N_DNM_BACKEND.update_cache(instance.id) if defined? I18N_DNM_BACKEND
   InstanceViewResolver.instance.clear_cache
 

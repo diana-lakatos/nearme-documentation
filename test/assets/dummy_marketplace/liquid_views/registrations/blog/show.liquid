@@ -1,0 +1,89 @@
+---
+partial: false
+---
+{% include 'registrations/blog/header.html'%}
+
+{% content_for 'title' %}
+  {{ blog_post.title }}
+{% endcontent_for %}
+
+{% content_for 'social_site_name' %}
+  {{ blog_post.user.blog.name }}
+{% endcontent_for %}
+
+{% content_for 'social_description' %}
+  {{ blog_post.excerpt }}
+{% endcontent_for %}
+
+{% content_for 'social_site_title' %}
+  {{ blog_post.title }}
+{% endcontent_for %}
+
+{% content_for 'social_site_image_url' %}
+  {{ blog_post.hero_image_url }}
+{% endcontent_for %}
+
+
+<div class='blog-container'>
+  <div class='blog-post-detail'>
+    <div class='hero-image'>
+      {% if blog_post.hero_image_present? %}
+        <img src='{{ blog_post.medium_hero_image_url }}' />
+      {% endif %}
+    </div>
+
+    <h1>{{blog_post.title}}</h1>
+    
+
+    {% include 'registrations/blog/social_buttons.html' %}
+
+    <div class='content'>
+      <p> Tagged as: {{ tags | join:", " }}.</p>
+      {{ blog_post.content }}
+    </div>
+
+    <div class='info row-fluid'>
+      <div class='date span5'>
+        Published {{ blog_post.published_at | to_date | localize: 'long' }}
+      </div>
+      <div class='social col-sm-7 clearfix'>
+        {% include 'registrations/blog/social_buttons.html' %}
+      </div>
+    </div>
+    <div class='author row-fluid'>
+      {% if blog_post.show_author_avatar? %}
+        <div class='avatar span2'>
+          <a {% if blog_post.user.has_buyer_profile? %} href='{{ blog_post.user_path  }}' {% endif %}>
+            <div class='avatar-container' style="background-image: url({{ blog_post.author_avatar_url }});"></div>
+          </a>
+        </div>
+      {% endif %}
+      <div class="biography {% if blog_post.show_author_avatar? %} span10 {% else %} span12 {% endif %}">
+        <h3>
+          <a {% if blog_post.user.has_buyer_profile? %} href='{{ blog_post.user_path  }}' onMouseOver="this.style.color='#05caf9'" onMouseOut="this.style.color='#000000'" {% endif %}>
+            {{ blog_post.author_name }}
+          </a>
+        </h3>
+        <p>{{ blog_post.author_biography }}</p>
+      </div>
+    </div>
+    <div class='container-fluid'>
+      <div class='links row-fluid'>
+        {% if blog_post.previous_blog_post != nil %}
+          <div class='span6'>
+            <a class='previous-blog-post' href='{{ blog_post.previous_post_path }}'>
+              {{ 'user_blog.buttons.prev_post' | translate }}
+            </a>
+          </div>
+        {% endif%}
+        {% if blog_post.next_blog_post != nil %}
+          <div class='span6'>
+            <a class='next-blog-post' href='{{ blog_post.next_post_path }}'>
+              {{ 'user_blog.buttons.next_post' | translate }}
+            </a>
+          </div>
+        {% endif%}
+      </div>
+    </div>
+  </div>
+</div>

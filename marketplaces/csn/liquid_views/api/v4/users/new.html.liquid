@@ -1,0 +1,76 @@
+<div id="signup" class="signup-form">
+  <div class="row-fluid">
+    <div class="span8 offset2">
+      <div class="box">
+        <header>
+          <h2>Sign Up</h2>
+        </header>
+
+        <div class="signup-no-provider">
+
+          {% if platform_context.available_providers.size > 0 %}
+            <span id="service_buttons">
+              {% for provider in platform_context.available_providers %}
+                <a href="/auth/{{ provider }}?role={{ params.role }}" class="btn btn-large {{ provider }} submit" id="{{ provider }}">
+                  <i class='icon ico-{{ provider }}'/>
+                </a>
+              {% endfor %}
+            </span>
+
+            <div class="hr divider">
+              <span>{{ 'sign_up_form.or' | translate }}</span>
+            </div>
+          {% endif %}
+
+          {% form_for user_signup, url: '/api/users.html', as: user, method: post %}
+            <input type="hidden" name="role" value="{{ params.role }}">
+            {% input first_name, placeholder: 'First Name', input_html-tabindex: 1 %}
+            {% input last_name, placeholder: 'Last Name', input_html-tabindex: 2 %}
+            {% input email, input_html-tabindex: 3 %}
+
+           {% fields_for default_profile %}
+             {% fields_for properties, form: default_profile  %}
+               {% input landline, input_html-tabindex: 4, form: properties %}
+             {% endfields_for %}
+           {% endfields_for %}
+
+            {% input mobile_number, input_html-tabindex: 5  %}
+            {% input password, input_html-tabindex: 6 %}
+            {% input password_confirmation, placeholder: 'Confirm Password', input_html-tabindex: 7 %}
+
+           {% fields_for default_profile %}
+             {% fields_for properties, form: default_profile  %}
+               {% include 'forms/how_did_you_hear', form: properties, tabindex: 8 %}
+             {% endfields_for %}
+           {% endfields_for %}
+
+           {% assign label =  'registrations.accept_terms_of_service' | translate %}
+           {% input accept_terms_of_service, as: boolean, inline_label: @label, label: false, input_html-tabindex: 9 %}
+
+           {% fields_for default_profile %}
+             {% fields_for properties, form: default_profile  %}
+               {% input accept_newsletter, form: properties, as: boolean, inline_label: 'I would like to subscribe to the newsletter', label: false, input_html-tabindex: 10 %}
+             {% endfields_for %}
+           {% endfields_for %}
+
+            <div class='actions'>
+              {% assign submit_text = 'sign_up_form.buttons.sign_up' | t %}
+              {% submit @submit_text, class: 'desksnearme submit btn btn-green', data-disable_with: 'Signing up...', tabindex: 11  %}
+            </div>
+          {% endform_for %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if request_xhr %}
+  <script>
+$(function() {
+  $(document).trigger('setclass:modal.nearme', ['sign-up-modal']);
+  $(document).trigger('init:signupform.nearme');
+  $(document).trigger('init:custominputs.nearme');
+});
+  </script>
+{% endif %}

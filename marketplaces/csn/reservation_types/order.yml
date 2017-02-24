@@ -1,6 +1,6 @@
-name: Order
-edit_unconfirmed: true
-check_overlapping_dates: false
+name: Reservation
+edit_unconfirmed: false
+check_overlapping_dates: true
 skip_payment_authorization: false
 validate_on_adding_to_cart: true
 step_checkout: false
@@ -9,10 +9,10 @@ withdraw_invitation_when_reject: false
 reverse_immediate_payment: false
 
 transactable_types:
-  - Order
+  - Service
 
 form_components:
   - type: reservation_attributes
-    name: Order form
+    name: Checkout
     fields:
       - reservation: payment_documents

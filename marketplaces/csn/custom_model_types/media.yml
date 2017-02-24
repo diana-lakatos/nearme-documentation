@@ -1,5 +1,5 @@
 name: Media
-instance_profile_types: [Buyer]
+instance_profile_types: [Individual]
 
 custom_attributes:
   - name: label

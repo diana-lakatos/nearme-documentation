@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 class PropertiesForm < BaseForm
   class << self
+    # method implementation taken directly from reform-rails gem
+    # bundle open reform-rails and check
+    # lib/reform/form/active_model/model_reflections.rb
+    # Alternative would be to include Reform::Form::ActiveModel::ModelReflections
+    # like we do in other models, but then we would implement bunch of other methods
+    def validators_on(*args)
+      validation_groups.collect { |_k, group| group.instance_variable_get(:@validations).validators_on(*args) }.flatten
+    end
+
     def decorate(configuration)
       Class.new(self) do
         configuration.each do |field, options|
@@ -22,5 +31,11 @@ class PropertiesForm < BaseForm
         end
       end
     end
+  end
+
+  # required by simple_form - bundle open simple_form
+  # and check lib/simple_form/helpers/validators.rb
+  def has_validators?
+    true
   end
 end

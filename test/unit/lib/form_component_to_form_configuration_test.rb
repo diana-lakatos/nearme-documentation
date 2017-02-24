@@ -2,7 +2,6 @@
 require 'test_helper'
 
 class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
-
   should 'generate proper configuration for UoT' do
     load_uot
     form_component = FormComponent.new(form_fields: form_component_fields)
@@ -30,217 +29,218 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
     {
       :buyer_profile => {
         :validation => {
-          :presence => {}
+          presence: {}
         },
-        "enabled" => {},
+        'enabled' => {},
         :properties => {
           :validation => {
-            :presence => {}
+            presence: {}
           },
-          "referred_by_sme" => {},
-          "linkedin_url" => {
-            :validation => {
-              :presence => {}
+          'referred_by_sme' => {},
+          'linkedin_url' => {
+            validation: {
+              presence: {}
             }
           },
-          "hourly_rate_decimal" => {
-            :validation => {
-              :presence => {}
+          'hourly_rate_decimal' => {
+            validation: {
+              presence: {}
             }
           },
-          "workplace_type" => {
-            :validation => {}
+          'workplace_type' => {
+            validation: {}
           },
-          "discounts_available" => {
-            :validation => {}
+          'discounts_available' => {
+            validation: {}
           },
-          "discounts_description" => {},
-          "travel" => {
-            :validation => {}
+          'discounts_description' => {},
+          'travel' => {
+            validation: {}
           },
-          "cities" => {},
-          "bio" => {
-            :validation => {
-              :presence => {}
+          'cities' => {},
+          'bio' => {
+            validation: {
+              presence: {}
             }
           },
-          "education" => {},
-          "awards" => {},
-          "pro_service" => {},
-          "teaching" => {},
-          "employers" => {},
-          "accomplishments" => {},
-          "giving_back" => {},
-          "hobbies" => {},
-          "availability" => {}
+          'education' => {},
+          'awards' => {},
+          'pro_service' => {},
+          'teaching' => {},
+          'employers' => {},
+          'accomplishments' => {},
+          'giving_back' => {},
+          'hobbies' => {},
+          'availability' => {}
         },
         :categories => {
           :validation => {
-            :presence => {}
+            presence: {}
           },
-          "Area Of Expertise" => {
-            :validation => {}
+          'Area Of Expertise' => {
+            validation: {}
           },
-          "Industry" => {
-            :validation => {}
+          'Industry' => {
+            validation: {}
           },
-          "Languages" => {
-            :validation => {}
+          'Languages' => {
+            validation: {}
           }
         },
         :customizations => {
           :validation => {
-            :presence => {}
+            presence: {}
           },
-          "Links" => {
-            :properties => {
-              "url_link" => {
-                :validation => {
-                  :presence => {}
+          'Links' => {
+            properties: {
+              'url_link' => {
+                validation: {
+                  presence: {}
                 }
               }
             }
           },
-          "Recommendations" => {
-            :properties => {
-              "author" => {
-                :validation => {
-                  :presence => {}
+          'Recommendations' => {
+            properties: {
+              'author' => {
+                validation: {
+                  presence: {}
                 }
               },
-              "recommendation" => {
-                :validation => {
-                  :presence => {}
+              'recommendation' => {
+                validation: {
+                  presence: {}
                 }
               }
             }
           }
         }
       },
-      "name" => {
-        :validation => {
-          :presence => {}
+      'name' => {
+        validation: {
+          presence: {}
         }
       },
-      "avatar" => {
-        :validation => {
-          :presence => {}
+      'avatar' => {
+        validation: {
+          presence: {}
         }
       },
       :current_address => {
-        :address => {},
-        :should_check_address => {},
-        :local_geocoding => {},
-        :latitude => {},
-        :longitude => {},
-        :formatted_addres => {},
-        :street => {},
-        :suburb => {},
-        :city => {},
-        :state => {},
-        :country => {},
-        :postcode => {},
-        :address_components => {}
+        address: {},
+        should_check_address: {},
+        local_geocoding: {},
+        latitude: {},
+        longitude: {},
+        formatted_addres: {},
+        street: {},
+        suburb: {},
+        city: {},
+        state: {},
+        country: {},
+        postcode: {},
+        address_components: {}
       },
-      "country_name" => {},
-      "mobile_number" => {},
+      'country_name' => {},
+      'mobile_number' => {},
       :default_profile => {
-        :validation => {
-          :presence => {}
+        validation: {
+          presence: {}
         }
       },
-      "tag_list" => {},
+      'tag_list' => {}
     }
   end
 
   def seller_form_configuration
     {
-      "name" => {
-        :validation => {
-          :presence => {}
+      'name' => {
+        validation: {
+          presence: {}
         }
       },
-      "avatar" => {
-        :validation => {
-          :presence => {}
+      'avatar' => {
+        validation: {
+          presence: {}
         }
       },
       :current_address => {
-        :address => {},
-        :should_check_address => {},
-        :local_geocoding => {},
-        :latitude => {},
-        :longitude => {},
-        :formatted_addres => {},
-        :street => {},
-        :suburb => {},
-        :city => {},
-        :state => {},
-        :country => {},
-        :postcode => {},
-        :address_components => {}
+        address: {},
+        should_check_address: {},
+        local_geocoding: {},
+        latitude: {},
+        longitude: {},
+        formatted_addres: {},
+        street: {},
+        suburb: {},
+        city: {},
+        state: {},
+        country: {},
+        postcode: {},
+        address_components: {}
       },
-      "country_name" => {},
-      "mobile_number" => {},
+      'country_name' => {},
+      'mobile_number' => {},
       :default_profile => {
-        :validation => {
-          :presence => {}
+        validation: {
+          presence: {}
         }
       },
       :seller_profile => {
-        :validation => {
-          :presence => {}
+        validation: {
+          presence: {}
         },
-        :properties => {
+        properties: {
           :validation => {
-            :presence => {}
+            presence: {}
           },
-          "linkedin_url" => {
-            :validation => {
-              :presence => {}
+          'linkedin_url' => {
+            validation: {
+              presence: {}
             }
           }
         }
       },
-      "company_name" => {}
+      'company_name' => {}
     }
   end
 
   def form_component_fields
     [
-      { "buyer" => "enabled" },
-      { "user" => "name" },
-      { "user" => "avatar" },
-      { "user" => "email" },
-      { "user" => "current_address" },
-      { "user" => "mobile_phone" },
-      { "buyer" => "referred_by_sme" },
-      { "buyer" => "linkedin_url" },
-      { "buyer" => "hourly_rate_decimal" },
-      { "user" => "buyer_hourly_rate_decimal" },
-      { "buyer" => "workplace_type" },
-      { "buyer" => "discounts_available" },
-      { "buyer" => "discounts_description" },
-      { "buyer" => "travel" },
-      { "buyer" => "cities" },
-      { "buyer" => "Category - Area Of Expertise" },
-      { "buyer" => "Category - Industry" },
-      { "buyer" => "Category - Languages" },
-      { "buyer" => "bio" },
-      { "buyer" => "education" },
-      { "buyer" => "awards" },
-      { "buyer" => "pro_service" },
-      { "buyer" => "teaching" },
-      { "buyer" => "Custom Model - Links" },
-      { "buyer" => "employers" },
-      { "buyer" => "accomplishments" },
-      { "buyer" => "giving_back" },
-      { "buyer" => "hobbies" },
-      { "buyer" => "availability" },
-      { "buyer" => "tags" },
-      { "buyer" => "Custom Model - Recommendations" },
-      { "seller" => "linkedin_url" },
-      { "seller" => "company_name" },
-      { "user" => "password" }]
+      { 'buyer' => 'enabled' },
+      { 'user' => 'name' },
+      { 'user' => 'avatar' },
+      { 'user' => 'email' },
+      { 'user' => 'current_address' },
+      { 'user' => 'mobile_phone' },
+      { 'buyer' => 'referred_by_sme' },
+      { 'buyer' => 'linkedin_url' },
+      { 'buyer' => 'hourly_rate_decimal' },
+      { 'user' => 'buyer_hourly_rate_decimal' },
+      { 'buyer' => 'workplace_type' },
+      { 'buyer' => 'discounts_available' },
+      { 'buyer' => 'discounts_description' },
+      { 'buyer' => 'travel' },
+      { 'buyer' => 'cities' },
+      { 'buyer' => 'Category - Area Of Expertise' },
+      { 'buyer' => 'Category - Industry' },
+      { 'buyer' => 'Category - Languages' },
+      { 'buyer' => 'bio' },
+      { 'buyer' => 'education' },
+      { 'buyer' => 'awards' },
+      { 'buyer' => 'pro_service' },
+      { 'buyer' => 'teaching' },
+      { 'buyer' => 'Custom Model - Links' },
+      { 'buyer' => 'employers' },
+      { 'buyer' => 'accomplishments' },
+      { 'buyer' => 'giving_back' },
+      { 'buyer' => 'hobbies' },
+      { 'buyer' => 'availability' },
+      { 'buyer' => 'tags' },
+      { 'buyer' => 'Custom Model - Recommendations' },
+      { 'seller' => 'linkedin_url' },
+      { 'seller' => 'company_name' },
+      { 'user' => 'password' }
+    ]
   end
 end

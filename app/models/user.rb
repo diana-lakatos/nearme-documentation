@@ -866,20 +866,20 @@ class User < ActiveRecord::Base
 
   def perform_cleanup!
     # Record was soft deleted
-    if self.persisted?
+    if persisted?
       companies.destroy_all
       orders.unconfirmed.find_each(&:user_cancel!)
       created_listings_orders.unconfirmed.find_each(&:reject!)
     else
       # Record is hard deleted
-      transactables.each { |t| t.really_destroy! }
-      companies.each { |c| c.really_destroy! }
-      orders.each { |o| o.really_destroy! }
-      created_listings_orders.each { |o| o.really_destroy! }
+      transactables.each(&:really_destroy!)
+      companies.each(&:really_destroy!)
+      orders.each(&:really_destroy!)
+      created_listings_orders.each(&:really_destroy!)
       # Slugs need to be hard deleted otherwise friendly_id
       # will not find it as the user is gone (uses an inner join)
       # and will decide it's available
-      slugs.each { |s| s.really_destroy! }
+      slugs.each(&:really_destroy!)
     end
   end
 

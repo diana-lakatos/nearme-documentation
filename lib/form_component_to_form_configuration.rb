@@ -48,46 +48,59 @@ class FormComponentToFormConfiguration
     ].each do |el|
       fc_role = el.keys.first
 
-      configuration = {}
+      default_configuration = {}
+      enquirer_configuration = {}
+      lister_configuration = {}
       el.values.first.each do |form_component|
         if [5011, 132].include?(PlatformContext.current.instance.id)
           logger.debug "Configuration for devmesh/hallmark (#{PlatformContext.current.instance.id})"
           # hardcode fields for devmesh / hallmark :)
-          configuration.merge!(community_configuration)
+          default_configuration.merge!(community_configuration)
         else
           case fc_role
           when :Default
-            configuration.deep_merge!(build_configuration_based_on_form_components(form_component, 'default'))
-            configuration.deep_merge!(build_configuration_based_on_form_components(form_component, 'seller'))
-            configuration.deep_merge!(build_configuration_based_on_form_components(form_component, 'buyer'))
+            dc = build_configuration_based_on_form_components(form_component, 'default')
+            ec = build_configuration_based_on_form_components(form_component, 'buyer')
+            lc = build_configuration_based_on_form_components(form_component, 'seller')
+            default_configuration.deep_merge!(dc)
+            default_configuration.deep_merge!(ec)
+            default_configuration.deep_merge!(lc)
+
+            enquirer_configuration.deep_merge!(ec)
+
+            lister_configuration.deep_merge!(lc)
           when :Enquirer
-            configuration.deep_merge!(build_configuration_based_on_form_components(form_component, 'buyer'))
+            dc = build_configuration_based_on_form_components(form_component, 'buyer')
+            enquirer_configuration.deep_merge!(dc)
           when :Lister
-            configuration.deep_merge!(build_configuration_based_on_form_components(form_component, 'seller'))
+            dc = build_configuration_based_on_form_components(form_component, 'seller')
+            lister_configuration.deep_merge!(dc)
           end
         end
       end
       if [5011, 132].include?(PlatformContext.current.instance.id)
         logger.debug "Configuration for devmesh/hallmark (#{PlatformContext.current.instance.id})"
         # hardcode fields for devmesh / hallmark :)
-        configuration = community_configuration
+        create_form_configuration(base_form: UserUpdateProfileForm, name: 'Default Update', configuration: default_configuration)
+        create_form_configuration(base_form: UserUpdateProfileForm, name: 'Lister Update', configuration: default_configuration)
+        create_form_configuration(base_form: UserUpdateProfileForm, name: 'Enquirer Update', configuration: default_configuration)
       else
         case fc_role
         when :Default
-          create_form_configuration(base_form: UserUpdateProfileForm, name: "Default Update", configuration: configuration)
-          create_form_configuration(base_form: UserUpdateProfileForm, name: "Lister Update", configuration: configuration)
-          create_form_configuration(base_form: UserUpdateProfileForm, name: "Enquirer Update", configuration: configuration)
+          create_form_configuration(base_form: UserUpdateProfileForm, name: 'Default Update', configuration: default_configuration)
+          create_form_configuration(base_form: UserUpdateProfileForm, name: 'Lister Update', configuration: lister_configuration)
+          create_form_configuration(base_form: UserUpdateProfileForm, name: 'Enquirer Update', configuration: enquirer_configuration)
         when :Enquirer
-          create_form_configuration(base_form: UserUpdateProfileForm, name: "Enquirer Update", configuration: configuration)
+          create_form_configuration(base_form: UserUpdateProfileForm, name: 'Enquirer Update', configuration: enquirer_configuration)
         when :Lister
-          create_form_configuration(base_form: UserUpdateProfileForm, name: "Lister Update", configuration: configuration)
+          create_form_configuration(base_form: UserUpdateProfileForm, name: 'Lister Update', configuration: lister_configuration)
         end
       end
     end
   end
 
   def create_form_configuration(base_form:, name:, configuration:)
-    if  configuration.present?
+    if configuration.present?
       fc = FormConfiguration.where(base_form: base_form, name: name).first_or_initialize
       fc.configuration = configuration
       fc.save!
@@ -138,7 +151,7 @@ class FormComponentToFormConfiguration
             configuration[:"#{model}_profile"][:customizations] ||= { validation: { presence: {} } }
             configuration[:"#{model}_profile"][:customizations][field] ||= {}
             custom_model_type = CustomModelType.find_by(name: field)
-            custom_model_type.custom_attributes.each do |ca|
+            custom_model_type&.custom_attributes&.each do |ca|
               if ca.uploadable?
                 if ca.attribute_type == 'photo'
                   configuration[:"#{model}_profile"][:customizations][field][:custom_images] ||= {}
@@ -211,19 +224,6 @@ class FormComponentToFormConfiguration
         logger.debug "\t\tError: can't find form component for #{role}"
         next
       end
-      configuration = {}
-      form_component.form_fields.each do |k|
-        model = k.keys.first
-        field = k.values.last
-        field = 'mobile_number' if field == 'phone' || field == 'mobile_phone'
-        if model != 'user'
-          logger.debug "\t\tWarning: undefined model: #{model}"
-          next
-        end
-        next if %w(email password).include?(field)
-        configuration[field] = { validation: { presence: true } }
-        logger.debug "\t\tAdding: #{field} (for #{model})"
-      end
 
       base_form = case conf_role
                   when 'Enquirer'
@@ -234,17 +234,17 @@ class FormComponentToFormConfiguration
                     UserSignup::DefaultUserSignup
                   end
       fc = FormConfiguration.where(base_form: base_form, name: "#{conf_role} Signup")
-        .first_or_create!
-      fc.update_attribute(:configuration, configuration)
+                            .first_or_create!
+      fc.update_attribute(:configuration, build_configuration_based_on_form_components(form_component, role))
     end
   end
 
   def logger
-      @logger ||= if Rails.env.test?
-                    Logger.new('/dev/null')
-                  else
-                    Logger.new($stdout)
-                  end
+    @logger ||= if Rails.env.test?
+                  Logger.new('/dev/null')
+                else
+                  Logger.new($stdout)
+                end
   end
 
   class ValidationBuilder

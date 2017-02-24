@@ -203,6 +203,7 @@ class Payment < ActiveRecord::Base
   end
 
   def direct_token
+    return unless payment_gateway.direct_charge?
     @direct_token ||= generate_direct_token
   end
 
@@ -399,13 +400,13 @@ class Payment < ActiveRecord::Base
     payment_source if payment_source_type == 'BankAccount'
   end
 
-  def bank_account_id=attribute_id
+  def bank_account_id=(attribute_id)
     self.payment_source_id = attribute_id
     self.payment_source_type = 'BankAccount'
   end
 
   def paypal_account
-    self.payment_source if self.payment_source_type == 'PaypalAccount'
+    payment_source if payment_source_type == 'PaypalAccount'
   end
 
   def bank_account_id
@@ -416,7 +417,7 @@ class Payment < ActiveRecord::Base
     credit_card.try(:id)
   end
 
-  def credit_card_id=attribute_id
+  def credit_card_id=(attribute_id)
     self.payment_source_id = attribute_id
     self.payment_source_type = 'CreditCard'
   end

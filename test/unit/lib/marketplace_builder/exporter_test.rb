@@ -70,8 +70,8 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_same_elements yaml_content['validation'], [{ 'required' => false, 'field_name' => 'name', 'validation_only_on_update' => false, 'regex' => '^\\d{10}$' },
                                                       { 'required' => false, 'field_name' => 'name', 'max_length' => 140, 'validation_only_on_update' => false }]
 
-    assert_same_elements yaml_content['action_types'], [{"enabled"=>true, "type"=>"TransactableType::SubscriptionBooking", "allow_no_action"=>true, "pricings"=>[{"number_of_units"=>30, "unit"=>"day", "min_price_cents"=>0, "max_price_cents"=>0, "order_class_name"=>"RecurringBooking", "allow_nil_price_cents"=>false}]}, {"enabled"=>true, "type"=>"TransactableType::NoActionBooking", "allow_no_action"=>true}]
-    assert_same_elements yaml_content['custom_attributes'], [{"name"=>"description", "attribute_type"=>"text", "html_tag"=>"textarea", "search_in_query"=>true, "searchable"=>false, "input_html_options"=>{}, "validation"=>[{"required"=>false, "field_name"=>"description", "validation_only_on_update"=>false, "regex"=>"^\\d{10}$"}]}]
+    assert_same_elements yaml_content['action_types'], [{ 'enabled' => true, 'type' => 'TransactableType::SubscriptionBooking', 'allow_no_action' => true, 'pricings' => [{ 'number_of_units' => 30, 'unit' => 'day', 'min_price_cents' => 0, 'max_price_cents' => 0, 'order_class_name' => 'RecurringBooking', 'allow_nil_price_cents' => false }] }, { 'enabled' => true, 'type' => 'TransactableType::NoActionBooking', 'allow_no_action' => true }]
+    assert_same_elements yaml_content['custom_attributes'], [{ 'name' => 'description', 'attribute_type' => 'text', 'html_tag' => 'textarea', 'search_in_query' => true, 'searchable' => false, 'input_html_options' => {}, 'validation' => [{ 'required' => false, 'field_name' => 'description', 'validation_only_on_update' => false, 'regex' => '^\\d{10}$' }] }]
 
     yaml_content = read_exported_file('transactable_types/bike.yml')
     assert_equal yaml_content['name'], 'Bike'
@@ -90,8 +90,8 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     yaml_content = read_exported_file('instance_profile_types/default.yml')
 
     assert_equal yaml_content['name'], 'Default'
-    assert_same_elements yaml_content['validation'], [{"required" => false, "field_name"=>"name", 'validation_only_on_update' => false, "regex"=>"^\\d{10}$"}, {"required" => false, "field_name"=>"name", "max_length"=>140, 'validation_only_on_update' => false}]
-    assert_same_elements yaml_content['custom_attributes'], [{"name"=>"description", "attribute_type"=>"text", "html_tag"=>"textarea", "search_in_query"=>true, "searchable"=>false, "input_html_options"=>{}, "validation"=>[{"required"=>false, "field_name"=>"description", "validation_only_on_update"=>false, "min_length"=>5}]}]
+    assert_same_elements yaml_content['validation'], [{ 'required' => false, 'field_name' => 'name', 'validation_only_on_update' => false, 'regex' => '^\\d{10}$' }, { 'required' => false, 'field_name' => 'name', 'max_length' => 140, 'validation_only_on_update' => false }]
+    assert_same_elements yaml_content['custom_attributes'], [{ 'name' => 'description', 'attribute_type' => 'text', 'html_tag' => 'textarea', 'search_in_query' => true, 'searchable' => false, 'input_html_options' => {}, 'validation' => [{ 'required' => false, 'field_name' => 'description', 'validation_only_on_update' => false, 'min_length' => 5 }] }]
   end
 
   def setup_reservation_types
@@ -216,20 +216,21 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
   def should_export_custom_model_types
     yaml_content = read_exported_file('custom_model_types/test.yml')
 
-    assert_equal yaml_content, {"name"=>"Test", "custom_attributes"=>[
-      {"name"=>"description",
-       "attribute_type"=>"text",
-       "html_tag"=>"textarea",
-       "search_in_query"=>true,
-       "searchable"=>false,
-       "input_html_options"=>{},
-       "validation"=>[
-         {"required"=>false,
-          "field_name"=>"description",
-          "min_length"=>5,
-          "validation_only_on_update"=>false
-       }]}],
-       "instance_profile_types"=>["Default"], "transactable_types"=>["Bike"]}
+    assert_equal yaml_content, 'name' => 'Test', 'custom_attributes' => [
+      { 'name' => 'description',
+        'attribute_type' => 'text',
+        'html_tag' => 'textarea',
+        'search_in_query' => true,
+        'searchable' => false,
+        'input_html_options' => {},
+        'validation' => [
+          { 'required' => false,
+            'field_name' => 'description',
+            'min_length' => 5,
+            'validation_only_on_update' => false }
+        ] }
+    ],
+                               'instance_profile_types' => ['Default'], 'transactable_types' => ['Bike']
   end
 
   def setup_graph_queries
@@ -267,15 +268,15 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
 
   def should_export_rating_systems
     yaml_content = read_exported_file('rating_systems/host.yml')
-    assert_equal yaml_content, {"subject"=>"host", "active"=>true,
-                                "rating_questions"=>[{"text"=>"Example question?"}],
-                                "rating_hints"=>[{"value"=>"2", "description"=>"Good"}, {"value"=>"1", "description"=>"Bad"}],
-                                "transactable_type"=>"Car"}
+    assert_equal yaml_content, 'subject' => 'host', 'active' => true,
+                               'rating_questions' => [{ 'text' => 'Example question?' }],
+                               'rating_hints' => [{ 'value' => '2', 'description' => 'Good' }, { 'value' => '1', 'description' => 'Bad' }],
+                               'transactable_type' => 'Car'
   end
 
   def should_export_mpbuilderrc_file
     hash_content = read_exported_file('.mpbuilderrc')
-    assert_equal hash_content, { 'instance_id' => @instance.id, 'mode' => 'append' }
+    assert_equal hash_content, 'instance_id' => @instance.id, 'mode' => 'append'
   end
 
   private

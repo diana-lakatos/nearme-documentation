@@ -11,15 +11,16 @@ module Api
       before_action :set_return_to, only: :new
 
       def new
+        @user_signup.prepopulate!
       end
 
       def create
-        if @user_signup.validate(params[:form] || {})
+        if @user_signup.validate(params[:form].presence || params[:user] || {})
           @user_signup.save
           # tmp safety check - we still have validation in User model itself
           # so if model is invalid, it won't be saved and user won't be able to
           # sign up - we want to be notified
-          raise "Sign up failed due to configuration issue: #{@user_signup.model.errors.full_messages.join(', ')}" unless @user_signup.model.valid?
+          raise "Sign up failed due to configuration issue: #{@user_signup.model.errors.full_messages.join(', ')}" unless @user_signup.model.persisted?
           sign_in(@user_signup.model)
         end
         respond(@user_signup, notice: I18n.t('devise.registrations.signed_up'),

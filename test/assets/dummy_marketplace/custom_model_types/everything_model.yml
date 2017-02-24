@@ -1,0 +1,32 @@
+---
+name: Everything Model
+custom_attributes:
+- name: name
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: Model Name
+  validation:
+  - required: true
+    field_name: name
+    validation_only_on_update: false
+- name: att
+  attribute_type: file
+  html_tag: input
+  search_in_query: false
+  label: Att
+  validation:
+  - required: true
+    field_name: att
+    validation_only_on_update: false
+- name: phot
+  attribute_type: photo
+  html_tag: input
+  search_in_query: false
+  label: Phot
+  validation:
+  - required: true
+    field_name: phot
+    validation_only_on_update: false
+instance_profile_types:
+- Buyer

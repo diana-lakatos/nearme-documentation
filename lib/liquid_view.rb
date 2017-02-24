@@ -59,6 +59,7 @@ class LiquidView
     assigns['is_xhr_request'] = @view.try(:controller).try(:request).try(:xhr?)
     assigns['current_path'] = @view.try(:controller).try(:request).try(:path)
     assigns['request_referer'] = @view.try(:controller).try(:request).try(:referer)
+    assigns['request_xhr'] = @view.try(:controller).try(:request).try(:xhr?)
     assigns['current_full_path'] = @view.try(:controller).try(:request).try(:original_fullpath)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
     assigns['flash'] = @view.try(:flash).try(:to_hash) if ApplicationController === @view.try(:controller)

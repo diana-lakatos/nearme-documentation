@@ -1,0 +1,125 @@
+---
+name: Default
+profile_type: default
+validation:
+- required: true
+  field_name: avatar
+  validation_only_on_update: true
+form_components:
+- name: Registration
+  fields:
+  - !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+    user: name
+  - !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+    user: email
+  - !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+    user: password
+  type: default_registration
+- name: Profile
+  fields:
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: enabled
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      user: name
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      user: avatar
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      user: email
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      user: current_address
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      user: mobile_phone
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: textarea_field
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: radio_button_fields
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: string_field
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: decimal_field
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: array_checkboxes
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: boolean_checkbox
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: photo_input
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: attachment_input
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: Category - Area Of Expertise
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: Category - Industry
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: Category - Languages
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: Custom Model - Everything Model
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: availability
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      buyer: tags
+    ivars:
+      :@permitted: false
+  - !ruby/hash-with-ivars:ActionController::Parameters
+    elements:
+      user: password
+    ivars:
+      :@permitted: false
+  type: instance_profile_types
