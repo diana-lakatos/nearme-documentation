@@ -1,9 +1,5 @@
 'use strict';
 
-if (!Modernizr.promises) {
-  require.ensure('es6-promise', (require) => require('es6-promise').polyfill());
-}
-
 if (!Modernizr.fetch) {
   require.ensure('whatwg-fetch', (require) => require('whatwg-fetch'));
 }

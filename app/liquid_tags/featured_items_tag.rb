@@ -37,12 +37,7 @@ class FeaturedItemsTag < Liquid::Tag
     params[:type] = @attributes[:type] if @attributes[:type].present?
     route = routes.featured_items_path(params)
 
-    uuid = SecureRandom.uuid
-
-    html = @view.content_tag(:div, '', class: "featured-items-#{uuid}")
-    script = "<script>window.onload = function () { $.get('#{route}', function (data) { $('.featured-items-#{uuid}').html(data) }); } </script>"
-
-    [html, script].join.html_safe
+    @view.content_tag(:span, '', class: 'featured-items-loader', data: { url: route })
   end
 end
 
