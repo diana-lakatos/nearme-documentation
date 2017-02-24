@@ -1,9 +1,0 @@
-declare type ApiError = {
-  errors<array>: string
-}
-
-declare type ApiSuccess = {
-  data<array>: string
-}
-
-declare type ApiResponse = ApiError | ApiSuccess
