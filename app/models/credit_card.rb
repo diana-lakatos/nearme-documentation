@@ -139,7 +139,7 @@ class CreditCard < ActiveRecord::Base
   end
 
   def validate_card
-    return true if success? || active_merchant_card.valid?
+    return true if success? || credit_card_token || active_merchant_card.valid?
 
     errors.add(:base, I18n.t('buy_sell_market.checkout.invalid_cc'))
     active_merchant_card.errors.each do |key, value|

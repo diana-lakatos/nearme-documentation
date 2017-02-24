@@ -129,7 +129,13 @@ class PaymentMethodCreditCard {
   }
 
   _updateCCToken($form, token) {
-    const $input = $('<input type="hidden" name="order[payment_attributes][credit_card_attributes][credit_card_token]">');
+    $form.find('[data-stripe="number"]').attr('name');
+    var $input = $('<input type="hidden">');
+
+    $input = $input.attr('name', $('form').find('[data-stripe="number"]').attr('name').replace('number', 'credit_card_token'));
+
+    $('[data-stripe]').attr('disabled', true);
+
     return $form.append($input.val(token));
   }
 
