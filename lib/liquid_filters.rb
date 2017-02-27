@@ -548,12 +548,18 @@ module LiquidFilters
     hash.to_query
   end
 
-  # @return [Array<ReverseProxyLinkDrop>] array of ReverseProxyLink objects to be used on the path given as a parameter;
-  #   they define target destinations for the given path
-  # @param path [String] source path for the ReverseProxyLink objects
-  def widget_links(path)
-    return [] unless path.present?
-    ReverseProxyLink.where(use_on_path: ::CGI.unescapeHTML(path.to_str))
+  # @return [Array<ReverseProxyLinkDrop>] array of ReverseProxyLink objects to be used on the url given as a parameter;
+  #   they define target destinations for the given url, eg: { current_url | widget_links } or { current_url | widget_links: 'per_page,loc' }
+  # @param url [String] url for the ReverseProxyLink objects
+  # @param valid_params [String] query params separated by comma used to search proper ReverseProxyLink
+  def widget_links(url, valid_params = '')
+    return [] unless url.present?
+    uri = URI.parse(::CGI.unescapeHTML(url.to_str))
+
+    whitelisted_query = Rack::Utils.parse_nested_query(uri.query).slice(*valid_params.split(',')).to_query
+    whitelisted_query.prepend('?') if whitelisted_query.present?
+
+    ReverseProxyLink.where(use_on_path: uri.path + whitelisted_query)
   end
 
   # @return [String] replaces special characters in a string so that it may be used as part of a 'pretty' URL;
