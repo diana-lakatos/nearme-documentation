@@ -641,6 +641,7 @@ class Payment < ActiveRecord::Base
   end
 
   def require_payment_source?
-    payment_gateway && payment_gateway.supports_payment_source_store? && new_record? && !payment_method.manual?
+    payment_gateway && payment_gateway.supports_payment_source_store? &&
+      new_record? && !payment_method.manual? && !payment_method.free?
   end
 end

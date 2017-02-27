@@ -2,7 +2,7 @@
 
 <h2>{{ @order.total_units_text | titleize }}</h2>
 
-{% if @order.action_hourly_booking? %}
+{% if @order.transactable_pricing.unit == 'hour' %}
   <p>{{ @order.hourly_summary }}</p>
 {% else %}
   <div class='selected-dates-summary'>
