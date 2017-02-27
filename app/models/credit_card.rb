@@ -14,9 +14,9 @@ class CreditCard < ActiveRecord::Base
   has_many :authorized_payments, -> { authorized }, class_name: 'Payment', as: :payment_source
   has_many :reservations
 
+  before_validation :set_mode
   before_validation :set_instance_client
   before_create :set_as_default
-  before_create :set_mode
 
   scope :default, -> { where(default_card: true).limit(1) }
 

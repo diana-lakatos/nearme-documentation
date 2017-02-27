@@ -52,7 +52,7 @@ class SessionsController < Devise::SessionsController
     if provider.present? && !login_from_instance_admin?
       path = "/auth/#{provider}"
       p = params.except(:action, :controller)
-      path << "?#{p.to_query}" if p.present?
+      path = path + "?#{p.to_query}" if p.present?
       redirect_to path
     end
   end
