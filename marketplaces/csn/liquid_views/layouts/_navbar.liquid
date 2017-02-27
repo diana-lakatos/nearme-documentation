@@ -1,198 +1,45 @@
 <header class="masthead">
-  <div class="container-fluid">
-    <div class="branding">
-      <a href="/">
-        <img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5014/uploads/ckeditor/attachment_file/data/1401/logo.svg" alt="BronXchange" width="324" height="44">
+  <div class="wrapper-a">
+    <h1 class="brand-a">
+      <a href="/"><img src="http://lvh.me:8080/assets/logo.png" alt="Care Support Network - Logo" width="210" height="84">
       </a>
-    </div>
+    </h1>
 
-    <nav class="nav-main">
-      <h2 class="struct-label">Main navigation</h2>
-      <ul>
-        <li{% if current_path == '/' %} class="selected"{% endif %}><a href="/">Home</a></li>
-        {% assign is_active = current_path | matches: '/about' %}
-        <li{% if is_active %} class="selected"{% endif %}><a href="/about">About</a></li>
-        {% if current_user == blank %}
-          {% assign is_active = current_path | matches: '/join-community' %}
-          <li{% if is_active %} class="selected"{% endif %}><a href="/join-community">Join Community</a></li>
-          <li><a href="/users/sign_in?return_to=/">Login</a></li>
-        {% else %}
-          {% if current_user.has_seller_profile? %}
-          <li><a href="{{ 'new_dashboard_company_transactable_type_transactable_path' | generate_url: platform_context.transactable_types.first.id }}">Create a new Order</a></li>
-          {% endif %}
-
-          {% assign messages_url = 'dashboard_user_messages_path' | generate_url %}
-          {% assign is_active = current_path | matches: messages_url %}
-          <li{% if is_active %} class="selected"{% endif %}>
-            <a href="{{ messages_url }}">
-            Messages
-            {% assign unread_messages_count = current_user.unread_messages_count %}
-            {% if unread_messages_count > 0 %}
-              <span class="count">{{ unread_messages_count }}</span>
-            {% endif %}
-            </a>
-          </li>
-
-          {% assign pending_transactables_count = current_user.pending_transactables_count %}
-
+    {% if current_user == blank %}
+      <div class="nav user-nav">
+        <ul>
+          <li><a href="/users?role=buyer" data-href="/users?role=buyer" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" class="button-a">BECOME A MEMBER</a></li>
+          <li><a href="/users?role=seller" data-href="/users?role=seller" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled"  class="button-a">BECOME A CARE WORKER</a></li>
+          <li><a href="/users/sign_in?return_to=/" class="button-b">LOG IN</a></li>
+        </ul>
+      </div>
+    {% else %}
+      <div class="nav user-nav">
+        <ul>
           <li>
+            Logged in as
             <span tabindex="0">
               {{ current_user.first_name }}
               {% if pending_transactables_count > 0 %}
-              <span class="count">{{ pending_transactables_count }}</span>
+                <span class="count">{{ pending_transactables_count }}</span>
               {% endif %}
             </span>
-
-            <ul>
-              {% if current_user.instance_admins_metadata %}
-                <li>
-                  <a href="{{ current_user.user_menu_instance_admin_path}}" rel="external">{{ 'top_navbar.marketplace_admin' | t }}</a>
-                </li>
-              {% endif %}
-
-              <li>
-                <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id }}">
-                  My Orders
-                  {% if pending_transactables_count > 0 %}
-                  <span class="count">{{ pending_transactables_count }}</span>
-                  {% endif %}
-                </a>
-              </li>
-
-              {% if current_user.buyer_profile == blank %}
-                {% assign order_items_path = 'dashboard_company_order_items_path' | generate_url %}
-              {% else %}
-                {% assign order_items_path = 'dashboard_order_items_path' | generate_url %}
-              {% endif %}
-              <li>
-                <a href="{{ order_items_path }}">{{ 'dashboard.nav.order_items' | t }}</a>
-              </li>
-
-
-              {% if current_user.has_buyer_profile? %}
-                <li><a href="{{ 'user_path' | generate_url: current_user.id }}">View Profile</a></li>
-              {% endif %}
-
-              {% comment %} Reviews menu {% endcomment %}
-              {% assign visible = 'dashboard/reviews' | is_visible %}
-              {% assign show = platform_context.active_rating_systems_present? %}
-              {% if show and visible %}
-                {% assign reviews_rate_show = 'dashboard/reviews_rate' | is_visible %}
-                {% assign reviews_rate_path = 'rate_dashboard_reviews_path' | generate_url %}
-                {% assign reviews_rate_selected = current_path | matches: reviews_rate_path %}
-                {% assign reviews_completed_show = 'dashboard/reviews_completed' | is_visible %}
-                {% assign reviews_completed_path = 'completed_dashboard_reviews_path' | generate_url %}
-                {% assign reviews_completed_selected = current_path | matches: reviews_completed_path %}
-
-                {% if reviews_rate_show %}
-                  <li class="{% if reviews_rate_selected %}selected{% endif %}">
-                    <a href="{{ reviews_rate_path }}">{{ 'dashboard.nav.reviews_rate' | t }}</a>
-                  </li>
-                {% endif %}
-
-                {% if reviews_completed_show %}
-                  <li class="{% if reviews_completed_selected %}selected{% endif %}">
-                    <a href="{{ reviews_completed_path }}">{{ 'dashboard.nav.reviews_completed' | t }}</a>
-                  </li>
-                {% endif %}
-              {% endif %}
-
-              {% if platform_context.wish_lists_enabled? and current_user.has_seller_profile? %}
-                {% comment %} Favorites menu {% endcomment %}
-                {% assign show = 'dashboard/wish_list_items' | is_visible %}
-                {% if show %}
-                  {% assign path = 'dashboard_wish_list_items_path' | generate_url %}
-                  {% assign selected = current_path | matches: path %}
-                  <li class="{% if selected %}selected{% endif %}">
-                    <a href="{{ path }}">{{ 'wish_lists.name' | t }}</a>
-                  </li>
-                {% endif %}
-              {% endif %}
-
-              {% if platform_context.instance.action_rfq? %}
-                {% comment %} User requests for quotes menu. {% endcomment %}
-                {% assign path = 'dashboard_user_requests_for_quotes_path' | generate_url %}
-                {% assign selected = current_path | matches: path %}
-                <li id="dashboard-nav-my_rfq" class="{% if selected %}selected{% endif %}">
-                  <a href="{{ path }}">{{ 'dashboard.nav.my_rfq' | t }}</a>
-                </li>
-              {% endif %}
-
-              {% if current_user.registration_completed? %}
-                {% assign payouts_show = 'dashboard/payouts' | is_visible %}
-                {% assign payouts_path = 'edit_dashboard_company_payouts_path' | generate_url %}
-                {% assign payouts_selected = current_path | matches: payouts_path %}
-                {% assign transfers_show = 'dashboard/transfers' | is_visible %}
-                {% assign transfers_path = 'dashboard_company_transfers_path' | generate_url %}
-                {% assign transfers_selected = current_path | matches: transfers_path %}
-                {% assign analytics_show = 'dashboard/analytics' | is_visible %}
-                {% assign analytics_path = '/dashboard/company/analytics/expenses' %}
-                {% assign analytics_selected = current_path | matches: analytics_path %}
-
-                {% if payouts_show and current_user.has_buyer_profile? %}
-                  <li class="{% if payouts_selected %}selected{% endif %}">
-                    <a href="{{ payouts_path }}">{{ 'dashboard.nav.payouts' | t }}</a>
-                  </li>
-                {% endif %}
-
-                {% if transfers_show and current_user.has_buyer_profile? %}
-                  <li class="{% if transfers_selected %}selected{% endif %}">
-                    <a href="{{ transfers_path }}">{{ 'dashboard.nav.transfers' | t }}</a>
-                  </li>
-                {% endif %}
-
-                {% if analytics_show and current_user.has_seller_profile? %}
-                  <li class="{% if analytics_selected %}selected{% endif %}">
-                    <a href="{{ analytics_path }}">{{ 'dashboard.nav.analytics' | t }}</a>
-                  </li>
-                {% endif %}
-              {% endif %}
-
-              {% comment %} Account menu {% endcomment %}
-              {% assign profile_edit_selected = current_path | matches: '(users/edit|dashboard/seller/edit|dashboard/buyer/edit|dashboard/edit_profile)' %}
-              {% assign credit_cards_selected = current_path | matches: '/dashboard/payment_gateways/[0-9]+/credit_card/' %}
-              {% assign notification_preferences_show = 'dashboard/notification_preferences' | is_visible %}
-              {% assign notification_preferences_path = 'edit_dashboard_notification_preferences_path' | generate_url %}
-              {% assign notification_preferences_selected = current_path | matches: notification_preferences_path %}
-              {% assign social_accounts_show = 'dashboard/social_accounts' | is_visible %}
-              {% assign social_accounts_path = 'social_accounts_path' | generate_url %}
-              {% assign social_accounts_selected = current_path | matches: social_accounts_path %}
-
-              <li class="{% if profile_edit_selected %}selected{% endif %}">
-                <a href="{{ 'dashboard_profile_path' | generate_url }}">{{ 'dashboard.nav.edit' | t }}</a>
-              </li>
-
-              {% if current_user.has_active_credit_cards? %}
-                {% assign payment_gateway_id = '' | get_payment_gateway_id %}
-                {% assign credit_cards_path = 'dashboard_payment_gateway_credit_cards_path' | generate_url: payment_gateway_id %}
-                <li class="{% if credit_cards_selected %}selected{% endif %}">
-                  <a href="{{ credit_cards_path }}">{{ 'dashboard.nav.credit_cards' | t }}</a>
-                </li>
-              {% endif %}
-
-              {% if notification_preferences_show %}
-                <li class="{% if notification_preferences_selected %}selected{% endif %}">
-                  <a href="{{ notification_preferences_path }}">{{ 'dashboard.nav.notification_preferences' | t }}</a>
-                </li>
-              {% endif %}
-
-              {% if social_accounts_show %}
-                <li class="{% if social_accounts_selected %}selected{% endif %}">
-                  <a href="{{ social_accounts_path }}">{{ 'dashboard.nav.social_accounts' | t }}</a>
-                </li>
-              {% endif %}
-
-              {% if current_user.has_buyer_profile? or current_user.has_seller_profile? %}
-                <li class="{% if current_path == '/dashboard/knowledge-files' %}selected{% endif %}">
-                  <a href="/dashboard/knowledge-files">Helpful Resources</a>
-                </li>
-              {% endif %}
-
-              <li><a data-user="{{ current_user.first_name }}" rel="nofollow" data-method="delete" href="{{ 'destroy_user_session_path' | generate_url }}" class="nav-link">Log Out</a></li>
-            </ul>
           </li>
-        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="nav main-nav">
+    <div class="wrapper-a">
+      <ul>
+        <li><a href="/home">HOME</a></li>
+        <li><a href="/how-it-works">HOW IT WORKS</a></li>
+        <li><a href="/about">ABOUT</a></li>
+        <li><a href="/services">SERVICES</a></li>
+        <li><a href="/testimonials">TESTIMONIALS</a></li>
+        <li><a href="/faqs">FAQS</a></li>
+        <li><a href="/contact-us">CONTACT US</a></li>
       </ul>
-    </nav>
+    </div>
   </div>
 </header>
