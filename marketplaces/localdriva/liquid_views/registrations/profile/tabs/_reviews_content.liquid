@@ -1,8 +1,8 @@
-{% if reviews.size == 0 -%}
+{% if reviews.size == 0 %}
   <p class="empty-resultset">There are no ratings to show at the moment.</p>
-{% else -%}
-  {% for review in reviews -%}
-    {% assign user = review.seller -%}
+{% else %}
+  {% for review in reviews %}
+    {% assign user = review.seller %}
     <article class="user-rating">
       <header>
         <figure>
@@ -20,14 +20,14 @@
         {% endif %}
 
         <dl class="compound-ratings">
-          {% for question in review.questions -%}
+          {% for question in review.questions %}
           <dt>{{ question.text }}</dt>
           <dd><span class="rating-b" data-rating="{{ question.rating }}">{{ question.rating }} out of {{ review.max_rating }}</span></dd>
-          {% endfor -%}
+          {% endfor %}
         </dl>
       </div>
     </article>
-  {% endfor -%}
+  {% endfor %}
 
-  {{ reviews | pagination_links, class: '', param_name: 'reviews_page' }}
-{% endif -%}
+  {{ reviews | pagination_links: class: '', param_name: 'reviews_page' }}
+{% endif %}
