@@ -25,8 +25,8 @@ module MarketplaceBuilder
       end
 
       custom_validator.assign_attributes(hash)
-      custom_validator.save!
       logger.debug "Creating custom validator for: #{field_name}"
+      custom_validator.save!
       custom_validator
     end
 

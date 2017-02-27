@@ -29,7 +29,7 @@ module MarketplaceBuilder
           end
         end
 
-        attribute[:valid_values] = validator_hash[:valid_values].presence || []
+        attribute[:valid_values] = validator_hash[:valid_values] if validator_hash[:valid_values].present?
 
         custom_attribute = create_custom_attribute(object, name, default_attribute_properties.merge(attribute))
         logger.debug "Creating custom attribute: #{name}"
@@ -61,7 +61,7 @@ module MarketplaceBuilder
     end
 
     def validator_properties
-      %w(required regex valid_values max_length min_length validation_only_on_update)
+      %w(required regex valid_values max_length min_length validation_only_on_update field_name)
     end
   end
 end

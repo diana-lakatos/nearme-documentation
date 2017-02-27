@@ -14,9 +14,9 @@ class CreditCard < ActiveRecord::Base
   has_many :authorized_payments, -> { authorized }, class_name: 'Payment', as: :payment_source
   has_many :reservations
 
+  before_validation :set_mode
   before_validation :set_instance_client
   before_create :set_as_default
-  before_create :set_mode
 
   scope :default, -> { where(default_card: true).limit(1) }
 
@@ -139,7 +139,7 @@ class CreditCard < ActiveRecord::Base
   end
 
   def validate_card
-    return true if success? || active_merchant_card.valid?
+    return true if success? || credit_card_token || active_merchant_card.valid?
 
     errors.add(:base, I18n.t('buy_sell_market.checkout.invalid_cc'))
     active_merchant_card.errors.each do |key, value|
