@@ -453,9 +453,9 @@ class ApplicationController < ActionController::Base
   helper_method :ckeditor_toolbar_creator, :enable_ckeditor_for_field?
 
   def prepend_view_paths
-    prepend_view_path(ENV['MARKETPLACE_VIEW']) if ENV['MARKETPLACE_VIEW'].present? && Rails.env.development?
     prepend_view_path("app/#{custom_view_path}_views") if custom_view_path.present?
     prepend_view_path InstanceViewResolver.instance
+    prepend_view_path(ENV['MARKETPLACE_VIEW']) if ENV['MARKETPLACE_VIEW'].present? && Rails.env.development?
   end
 
   def custom_view_path
