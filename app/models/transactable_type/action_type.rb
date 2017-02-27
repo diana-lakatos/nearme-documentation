@@ -71,4 +71,8 @@ class TransactableType::ActionType < ActiveRecord::Base
       'Reservation'
     end
   end
+
+  def to_liquid
+    TransactableType::ActionTypeDrop.new(self)
+  end
 end

@@ -29,9 +29,12 @@ class TransactableTypeDrop < BaseDrop
   #   @return [Boolean] whether specifying a location can be skipped for this TransactableType
   # @!method to_param
   #   @return [String] string that will be used in the URLs referring to items of this type
+  # @!method action_types
+  #   @return [Array<TransactableType::ActionTypeDrop>] array of active action types for this TransactableType
   delegate :id, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun,
            :translation_key_suffix, :translation_namespace, :show_date_pickers, :searcher_type, :slug,
-           :search_input_name, :search_field_placeholder, :skip_location?, :to_param, to: :source
+           :search_input_name, :search_field_placeholder, :skip_location?, :to_param,
+           :action_types, to: :source
 
   # @return [String] name for the bookable item this transactable type represents (e.g. desk, room etc.)
   def name
