@@ -204,8 +204,7 @@ class Payment < ActiveRecord::Base
 
   def direct_token
     return unless payment_gateway.direct_charge?
-
-    @direct_token ||=  (payment_source.respond_to?(:credit_card_token) ? payment_source.credit_card_token : nil) || generate_direct_token
+    @direct_token ||=  generate_direct_token
   end
 
   def generate_direct_token

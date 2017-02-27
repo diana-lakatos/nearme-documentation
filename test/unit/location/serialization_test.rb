@@ -39,14 +39,6 @@ class Location::SerializationTest < ActiveSupport::TestCase
       assert_equal @location.location_type_id, @json[:location_type_id]
     end
 
-    should 'have a special_notes' do
-      assert_equal @location.special_notes, @json[:special_notes]
-    end
-
-    should 'have a formatted_address' do
-      assert_equal @location.formatted_address, @json[:formatted_address]
-    end
-
     should 'have an availability_template_id' do
       assert_equal @location.availability_template_id, @json[:availability_template_id]
     end

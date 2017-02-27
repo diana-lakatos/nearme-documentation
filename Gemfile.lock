@@ -814,10 +814,6 @@ GEM
       crass (~> 1.0.1)
       nokogiri (>= 1.4.4)
       nokogumbo (= 1.2.0)
-    selenium-webdriver (3.1.0)
-      childprocess (~> 0.5)
-      rubyzip (~> 1.0)
-      websocket (~> 1.0)
     sexp_processor (4.7.0)
     shippo (1.0.3)
       json (~> 1.8.1)
@@ -931,7 +927,6 @@ GEM
     webmock (1.17.4)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
-    websocket (1.2.4)
     wicked (1.1.0)
       rails (>= 3.0.7)
     will_paginate (3.1.5)
@@ -1084,7 +1079,6 @@ DEPENDENCIES
   rubocop
   ruby-prof
   sanitize
-  selenium-webdriver
   sendle_api!
   shippo
   shoulda

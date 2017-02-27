@@ -20,7 +20,6 @@ module.exports = class Dialog
 
   bindEvents: ->
     @resetCallbacks()
-
     @dialog.on 'click', '[data-modal-close]', (e) =>
       e.preventDefault()
       @hide()

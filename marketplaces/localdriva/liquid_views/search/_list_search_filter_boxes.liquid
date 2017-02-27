@@ -6,7 +6,7 @@
         <h1>{{ custom_attribute.name }}</h1>
         {% for value in custom_attribute.valid_values %}
           <label>
-            <input {% if cattr_param == {{value}} %}checked{% endif %} name='lg_custom_attributes[workplace_type][]' type='checkbox' value='{{value}}'>
+            <input {% if cattr_param == value %}checked{% endif %} name='lg_custom_attributes[workplace_type][]' type='checkbox' value='{{value}}'>
             <span>{{ value }}</span>
           </label>
         {% endfor %}
@@ -19,7 +19,7 @@
         <h1>{{ custom_attribute.name }}</h1>
         {% for value in custom_attribute.valid_values %}
           <label>
-            <input {% if cattr_param == {{value}} %}checked{% endif %} name='lg_custom_attributes[travel][]' type='radio' value='{{value}}'>
+            <input {% if cattr_param == value %}checked{% endif %} name='lg_custom_attributes[travel][]' type='radio' value='{{value}}'>
             <span>{{ value }}</span>
           </label>
         {% endfor %}

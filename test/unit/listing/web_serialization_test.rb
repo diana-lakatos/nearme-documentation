@@ -9,7 +9,7 @@ class Listing::WebSerializationTest < ActiveSupport::TestCase
     end
 
     should 'be serialized correctly ' do
-      assert_equal @listing.id, @json[:id]
+      assert_nil @json[:id]
       assert_equal @listing.name, @json[:name]
       assert_equal @listing.description, @json[:description]
       assert_equal @listing.location_id, @json[:location_id]

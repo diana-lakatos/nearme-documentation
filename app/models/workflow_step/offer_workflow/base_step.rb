@@ -4,9 +4,9 @@ class WorkflowStep::OfferWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def initialize(offer_id)
-    @offer = Order.find_by_id(offer_id)
-    @lister = @offer.host
-    @enquirer = @offer.owner
+    @offer = Order.find_by(id: offer_id)
+    @lister = @offer&.host
+    @enquirer = @offer&.owner
   end
 
   def workflow_type

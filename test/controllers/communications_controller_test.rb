@@ -148,7 +148,7 @@ class CommunicationsControllerTest < ActionController::TestCase
 
     get :verified, user_id: @user.id
 
-    assert_equal true, json_response['status']
+    assert json_response['status']
     assert_equal '+1111', json_response['phone']
   end
 
@@ -159,7 +159,7 @@ class CommunicationsControllerTest < ActionController::TestCase
 
     get :verified, user_id: @user.id
 
-    assert_equal false, json_response['status']
+    refute json_response['status']
   end
 
   private

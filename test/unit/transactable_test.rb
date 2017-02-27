@@ -25,8 +25,6 @@ class TransactableTest < ActiveSupport::TestCase
     should validate_presence_of(:quantity)
     should allow_value(10).for(:quantity)
     should_not allow_value(-10).for(:quantity)
-    should ensure_length_of(:description).is_at_most(250)
-    should ensure_length_of(:name).is_at_most(50)
   end
 
   setup do

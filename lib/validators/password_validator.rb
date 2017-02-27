@@ -14,7 +14,6 @@ class PasswordValidator < ActiveModel::Validator
 
     validate_length(record)
 
-    puts @errors_msgs
     record.errors.add(:password, error_full_message) if @errors_counter > 0
   end
 
