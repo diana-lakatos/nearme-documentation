@@ -51,7 +51,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'custom_models'             => { controller: '/instance_admin/manage/custom_model_types', default_action: 'index', title: 'Custom Models' },
     'upsell_addons'             => { controller: '/instance_admin/manage/additional_charge_types', default_action: 'index', title: 'Upsell & Add-ons' },
     'search'                    => { controller: '/instance_admin/manage/search', default_action: 'show', title: 'Search' },
-    'inappropriate_reports'     => { controller: '/instance_admin/manage/inappropriate_reports', default_action: 'index', title: 'Inappropriate Reports' }
+    'inappropriate_reports'     => { controller: '/instance_admin/manage/inappropriate_reports', default_action: 'index', title: 'Inappropriate Reports' },
+    'marketplace_builder'       => { controller: '/instance_admin/manage/marketplace_builder', default_action: 'index', title: 'Marketplace Builder' }
   }.freeze
 
   MANAGE_BLOG_CONTROLLERS = {

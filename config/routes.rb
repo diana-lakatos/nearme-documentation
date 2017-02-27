@@ -564,6 +564,12 @@ DesksnearMe::Application.routes.draw do
         end
 
         resources :inappropriate_reports
+
+        namespace :marketplace_builder do
+          get :index
+          get :download_export
+          put :import
+        end
       end
 
       namespace :manage_blog do
