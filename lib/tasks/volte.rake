@@ -701,13 +701,17 @@ namespace :volte do
         instance_id: @instance.id,
         path: path
       ).first_or_initialize
-      iv.update!(transactable_types: TransactableType.all,
-                 body: body,
-                 format: 'html',
-                 handler: 'liquid',
-                 partial: partial,
-                 view_type: 'view',
-                 locales: Locale.all)
+      begin
+        iv.update!(transactable_types: TransactableType.all,
+                   body: body,
+                   format: 'html',
+                   handler: 'liquid',
+                   partial: partial,
+                   view_type: 'view',
+                   locales: Locale.all)
+      rescue Exception => e
+        raise "#{e.message} in #{path}"
+      end
     end
 
     def load_file_with_yaml_front_matter(path, config = {})

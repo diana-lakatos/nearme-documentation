@@ -174,7 +174,7 @@
     {% if reservation.cancelable? and reservation.lister_confirmed_at == blank %}
       {% if reservation.penalty_charge_apply? %}
         <div class="cc-error">
-          {{ 'dashboard.user_reservations.penalty_charge_will_apply' | t: penalty_hours: reservation.cancellation_policy_penalty_hours, penalty_fee: reservation.formatted_penalty_fee, hours_for_cancellation: reservation.cancellation_policy_hours_for_cancellation) }}
+          {{ 'dashboard.user_reservations.penalty_charge_will_apply' | t: penalty_hours: reservation.cancellation_policy_penalty_hours, penalty_fee: reservation.formatted_penalty_fee, hours_for_cancellation: reservation.cancellation_policy_hours_for_cancellation }}
         </div>
       {% endif %}
     {% endif %}

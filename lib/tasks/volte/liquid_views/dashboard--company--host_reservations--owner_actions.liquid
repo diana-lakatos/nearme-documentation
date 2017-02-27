@@ -16,7 +16,7 @@
   {% endif %}
 {% endif %}
 
-{% if reservation.paid? == false and (reservation.unconfirmed? or reservation.confirmed?) %}
+{% if reservation.paid? == false and reservation.unconfirmed? or reservation.confirmed? %}
   {% if reservation.remote_payment? %}
     <a class="button button-default" data-modal="true" href="{{ 'request_payment_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id:reservation.transactable }}" data-confirm="{{ 'dashboard.host_reservations.confirmations.request_payment' | t }}">{{ 'dashboard.host_reservations.actions.request_payment' | t | upcase }}</a>
 

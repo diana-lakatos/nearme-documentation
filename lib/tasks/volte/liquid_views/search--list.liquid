@@ -7,7 +7,7 @@ partial: false
     <form class="search-form" action="/search" method="GET" data-search-form="filters" data-search-form-container>
       <input type="hidden" name="per_page" value="{{ searcher.per_page }}" id="input-per-page">
       <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
-      <input type="text" name="query" placeholder="Enter keywords to search for items" data-search-form="query" autofocus="autofocus" value="{{ params['query'] }}" />
+      <input type="text" name="query" placeholder="Enter keywords to search for items" data-search-form="query" value="{{ params['query'] }}" />
       <button class="button button-default" data-search-form="submit">SEARCH</button>
     </form>
   </div>
@@ -39,7 +39,7 @@ partial: false
               <legend>{{ attributes.item_style_bag.label }}</legend>
               <select {{ attributes.item_style_bag.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_bag.name }}][]" id="">
                 <optgroup disabled hidden></optgroup>
-                {{ searcher.options_for_select.item_style_bag | options_from_collection_for_select: params['lg_custom_attributes']['item_style_bag'][0], reset_filter_label  }}
+                {{ searcher.options_for_select.item_style_bag | options_from_collection_for_select: params['lg_custom_attributes']['item_style_bag'][0], reset_filter_label }}
               </select>
             </fieldset>
           </li>
@@ -49,7 +49,7 @@ partial: false
               <legend>{{ attributes.item_style_milinery.label }}</legend>
               <select {{ attributes.item_style_milinery.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_milinery.name }}][]" id="">
                 <optgroup disabled hidden></optgroup>
-                {{ searcher.options_for_select.item_style_milinery | options_from_collection_for_select: params['lg_custom_attributes']['item_style_milinery'][0], reset_filter_label  }}
+                {{ searcher.options_for_select.item_style_milinery | options_from_collection_for_select: params['lg_custom_attributes']['item_style_milinery'][0], reset_filter_label }}
               </select>
             </fieldset>
           </li>
@@ -59,7 +59,7 @@ partial: false
               <legend>{{ attributes.milinery_size.label }}</legend>
               <select {{ attributes.milinery_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.milinery_size.name }}][]" id="">
                 <optgroup disabled hidden></optgroup>
-                {{ searcher.options_for_select.milinery_size | options_from_collection_for_select: params['lg_custom_attributes']['milinery_size'][0], reset_filter_label  }}
+                {{ searcher.options_for_select.milinery_size | options_from_collection_for_select: params['lg_custom_attributes']['milinery_size'][0], reset_filter_label }}
               </select>
             </fieldset>
           </li>
@@ -69,7 +69,7 @@ partial: false
               <legend>{{ attributes.dress_size.label }}</legend>
               <select {{ attributes.dress_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.dress_size.name }}][]" id="">
                 <optgroup disabled hidden></optgroup>
-                {{ searcher.options_for_select.dress_size | options_from_collection_for_select: params['lg_custom_attributes']['dress_size'][0], reset_filter_label  }}
+                {{ searcher.options_for_select.dress_size | options_from_collection_for_select: params['lg_custom_attributes']['dress_size'][0], reset_filter_label }}
               </select>
             </fieldset>
           </li>
@@ -79,7 +79,7 @@ partial: false
               <legend>{{ attributes.designer_name.label }}</legend>
               <select {{ attributes.designer_name.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.designer_name.name }}][]" id="">
                 <optgroup disabled hidden></optgroup>
-                {{ searcher.options_for_select.designer_name | options_from_collection_for_select: params['lg_custom_attributes']['designer_name'][0], reset_filter_label  }}
+                {{ searcher.options_for_select.designer_name | options_from_collection_for_select: params['lg_custom_attributes']['designer_name'][0], reset_filter_label }}
               </select>
             </fieldset>
           </li>
@@ -88,8 +88,8 @@ partial: false
             <fieldset>
               <legend>{{ attributes.color.label }}</legend>
               <select {{ attributes.color.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.color.name }}][]" id="">
-                {{ searcher.options_for_select.color | options_from_collection_for_select: params['lg_custom_attributes']['color']  }}
                 <optgroup disabled hidden></optgroup>
+                {{ searcher.options_for_select.color | options_from_collection_for_select: params['lg_custom_attributes']['color'] }}
               </select>
             </fieldset>
           </li>
@@ -99,7 +99,7 @@ partial: false
               <legend>{{ attributes.dress_length.label }}</legend>
               <select {{ attributes.dress_length.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.dress_length.name }}][]" id="">
                 <optgroup disabled hidden></optgroup>
-                {{ searcher.options_for_select.dress_length | options_from_collection_for_select: params['lg_custom_attributes']['dress_length'][0], reset_filter_label  }}
+                {{ searcher.options_for_select.dress_length | options_from_collection_for_select: params['lg_custom_attributes']['dress_length'][0], reset_filter_label }}
               </select>
             </fieldset>
           </li>
@@ -109,7 +109,7 @@ partial: false
               <legend>{{ attributes.menswear_size.label }}</legend>
               <select {{ attributes.menswear_size.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.menswear_size.name }}][]" id="">
                 <optgroup disabled hidden></optgroup>
-                {{ searcher.options_for_select.menswear_size | options_from_collection_for_select: params['lg_custom_attributes']['menswear_size'][0], reset_filter_label  }}
+                {{ searcher.options_for_select.menswear_size | options_from_collection_for_select: params['lg_custom_attributes']['menswear_size'][0], reset_filter_label }}
               </select>
             </fieldset>
           </li>
@@ -129,37 +129,39 @@ partial: false
               <legend>{{ attributes.item_style_menswear.label }}</legend>
               <select {{ attributes.item_style_menswear.input_html_options }} class="form-control custom-select" name="lg_custom_attributes[{{ attributes.item_style_menswear.name }}][]" id="">
                 <optgroup disabled hidden></optgroup>
-                {{ searcher.options_for_select.item_style_menswear | options_from_collection_for_select: params['lg_custom_attributes']['item_style_menswear'][0], reset_filter_label  }}
+                {{ searcher.options_for_select.item_style_menswear | options_from_collection_for_select: params['lg_custom_attributes']['item_style_menswear'][0], reset_filter_label }}
               </select>
             </fieldset>
           </li>
         {% endcache_for %}
-        <!--
-        <li>
-          <fieldset>
-            <legend>Item Location</legend>
-            <input type="text" name="item_location_city" id="item_location_city" placeholder="City" />
-          </fieldset>
-        </li>
-        -->
         <li>
           <fieldset>
             <legend>Item Availability</legend>
             <ul>
               <li>
+                {% assign fromDate = params['availability_exceptions']['from'] %}
+                {% if fromDate != blank %}
+                  {% assign t = fromDate | split: '-' %}
+                  {% capture datepickerFromDate %}{{ t[2] }}/{{ t[1] }}/{{ t[0] }}{% endcapture %}
+                {% endif %}
                 <label class="availability-filter datetimepicker">
                   <i class="fa fa-calendar"></i>
                   From:
-                  <input type="text" name="availability_exceptions[fromDatetimepicker]" class="form-control" data-availability-filter="from" value="{{ params['availability_exceptions']['fromDatetimepicker'] }}" />
-                  <input type="hidden" name="availability_exceptions[from]" value="{{ params['availability_exceptions']['from'] }}" />
+                  <input type="text" class="form-control" data-availability-filter="from" value="{{ datepickerFromDate }}" />
+                  <input type="hidden" name="availability_exceptions[from]" value="{{ fromDate }}" />
                 </label>
               </li>
               <li>
+                {% assign toDate = params['availability_exceptions']['to'] %}
+                {% if toDate != blank %}
+                  {% assign t = toDate | split: '-' %}
+                  {% capture datepickerToDate %}{{ t[2] }}/{{ t[1] }}/{{ t[0] }}{% endcapture %}
+                {% endif %}
                 <label class="availability-filter datetimepicker">
                   <i class="fa fa-calendar"></i>
                   To:
-                  <input type="text" name="availability_exceptions[toDatetimepicker]" class="form-control" data-availability-filter="to" value="{{ params['availability_exceptions']['toDatetimepicker'] }}" />
-                  <input type="hidden" name="availability_exceptions[to]" value="{{ params['availability_exceptions']['to'] }}" />
+                  <input type="text" class="form-control" data-availability-filter="to" value="{{ datepickerToDate }}" />
+                  <input type="hidden" name="availability_exceptions[to]" value="{{ toDate }}" />
                 </label>
               </li>
             </ul>
