@@ -10,7 +10,7 @@ partial: false
 {{ waiver_agreement_template.content }}
 
 <ul>
-  <li>For Item: <strong>{{ @transactable.name }}</strong></li>
-  <li>Bond Value: <strong>{% if @transactable.properties.bond_value == blank %}N/A{% else %}{{ @transactable.properties.bond_value | price_with_cents_with_currency }} AUD{% endif %}</strong></li>
-  <li>Retail Value: <strong>{% if @transactable.properties.retail_value == blank %}N/A{% else %}{{ @transactable.properties.retail_value | price_with_cents_with_currency }} AUD{% endif %}</strong></li>
+  <li>For Item: <strong>{{ transactable.name }}</strong></li>
+  <li>Bond Value: <strong>{% if transactable.properties.bond_value == blank %}N/A{% else %}{{ transactable.properties.bond_value | price_with_cents_with_currency }} AUD{% endif %}</strong></li>
+  <li>Retail Value: <strong>{% if transactable.properties.retail_value == blank %}N/A{% else %}{{ transactable.properties.retail_value | price_with_cents_with_currency }} AUD{% endif %}</strong></li>
 </ul>
