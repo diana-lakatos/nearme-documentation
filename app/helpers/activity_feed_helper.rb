@@ -6,18 +6,36 @@ module ActivityFeedHelper
       current_user_id: current_user.id,
       comments_spam_reports: current_user.spam_reports.where(spamable_type: 'Comment').pluck(:spamable_id),
       events_spam_reports: current_user.spam_reports.where(spamable_type: 'ActivityFeedEvent').pluck(:spamable_id)
-    }
+    }.stringify_keys
+  end
+
+  def self.commented_own_thread?(comment)
+    creator_id = if comment.commentable.is_a?(ActivityFeedEvent)
+                   event = comment.commentable
+                   event.event_source.try(:creator_id) || event.followed.try(:creator_id)
+                 else
+                   comment.commentable.try(:creator_id)
+                 end
+    creator_id == comment.creator_id
   end
 
   def commented_own_thread?(comment)
-    if comment.commentable.is_a?(ActivityFeedEvent)
-      event = comment.commentable
-      creator_id = event.event_source.try(:creator_id) || event.followed.try(:creator_id)
-      creator_id == comment.creator_id
+    ActivityFeedHelper.commented_own_thread?(comment)
+  end
+
+  def self.header_image_for_event(event)
+    if event.event_source.is_a?(Link) && event.event_source.try(:image).try(:file).present?
+      event.event_source.image.url(:medium)
     else
-      creator_id = comment.commentable.try(:creator_id)
-      creator_id == comment.creator_id
+      followed = event.event_source.is_a?(Photo) ? event.event_source : event.followed
+      image = followed.try(:cover_image).try(:url, :medium) if followed.is_a?(Group)
+      image ||= (followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium)
+      image.present? ? image : followed.try(:cover_photo).try(:image).try(:url, :medium)
     end
+  end
+
+  def header_image_for_event(event)
+    ActivityFeedHelper.header_image_for_event(event)
   end
 
   def status_update_event?(event_name)

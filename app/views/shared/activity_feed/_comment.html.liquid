@@ -1,0 +1,27 @@
+{% assign target = target | default '_self' %}
+{% assign own_comment = comment_object.commented_own_thread %}
+
+<div class="comment-a {% if own_comment %}commented-own-thread{% endif %}" id="comment-{{ comment_object.id }}"
+  data-comment-id="{{ comment_object.id }}"
+  data-creator-id="{{ comment_object.creator.id }}"
+  data-commentable-creator-id="{{ comment_object.commentable.creator_id }}"
+  data-user-entry="" >
+  {% unless own_comment %}
+    <figure>
+      <img src="{{ comment_object.creator.avatar_url_thumb }}" />
+    </figure>
+  {% endunless %}
+
+  <p class="author">
+    <a href="{{ comment_object.creator.profile_path }}" target="{{ target }}">
+      {{ comment_object.creator.name }}
+    </a>
+  </p>
+  {% include 'shared/activity_feed/comment_actions', comment_object: comment_object %}
+  {% include 'shared/activity_feed/comment_content', comment_object: comment_object, event: event %}
+  <p class="meta">
+    <time datetime="{{ comment_object.created_at }}">
+      {{ comment_object.created_at | to_time_from_str | l: 'long' }}
+    </time>
+  </p>
+</div>

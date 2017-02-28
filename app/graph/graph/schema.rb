@@ -2,6 +2,18 @@
 module Graph
   Schema = GraphQL::Schema.define do
     query Types::RootQuery
+     resolve_type ->(record, ctx) {
+       case record
+       when Comment
+         Types::ActivityFeed::Comment
+       when Photo
+         Types::ActivityFeed::Photo
+       when UserStatusUpdate
+         Types::ActivityFeed::UserStatusUpdate
+       else
+         Types::ActivityFeed::Generic
+       end
+     }
   end
 
   def self.execute_query(*args)

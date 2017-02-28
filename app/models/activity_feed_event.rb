@@ -111,9 +111,11 @@ class ActivityFeedEvent < ActiveRecord::Base
       user_commented_on_user_activity
     ).include?(event)
   end
+  alias has_body has_body?
 
   # Since both restrictions are the same
   alias is_reportable? has_body?
+  alias is_reportable has_body?
 
   def i18n_key
     "activity_feed.events.#{event}"

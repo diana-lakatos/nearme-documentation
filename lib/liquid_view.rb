@@ -39,6 +39,7 @@ class LiquidView
   Liquid::Template.register_tag('meta_description', MetaDescriptionTag)
   Liquid::Template.register_tag('query_graph', QueryGraphTag)
   Liquid::Template.register_tag('render_form', RenderFormTag)
+  Liquid::Template.register_tag('placeholder', PlaceholderTag)
 
   def self.call(template)
     "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"

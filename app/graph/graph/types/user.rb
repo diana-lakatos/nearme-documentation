@@ -17,7 +17,7 @@ module Graph
       field :email, !types.String
       field :slug, !types.String
       field :custom_attribute,
-            !types.String,
+            types.String,
             'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
         argument :name, !types.String
         resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
@@ -43,7 +43,7 @@ module Graph
       field :avatar_url_thumb, !types.String
       field :avatar_url_bigger, !types.String
       field :name_with_affiliation, !types.String
-      field :display_location, !types.String
+      field :display_location, types.String
       field :current_address, Types::Address
       field :collaborations, types[Types::Collaboration] do
         argument :filters, types[Resolvers::Collaborations::FilterEnum]
