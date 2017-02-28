@@ -19,7 +19,9 @@ module MarketplaceBuilder
       def import_assets(custom_theme)
         Dir.glob("#{File.join(@theme_path, source)}/#{custom_theme.name.underscore}_custom_theme_assets/*.*") do |asset_file|
           File.open(asset_file) do |file|
-            custom_theme.custom_theme_assets.where(type: type_by_file_path(asset_file), name: File.basename(asset_file)).first_or_create(file: file)
+            custom_theme_asset = custom_theme.custom_theme_assets.where(type: type_by_file_path(asset_file), name: File.basename(asset_file)).first_or_initialize
+            custom_theme_asset.file = file
+            custom_theme_asset.save!
           end
         end
       end
