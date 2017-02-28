@@ -33,33 +33,11 @@
         {% if current_user == blank %}
           <li><a href="/users/sign_in?return_to=/">LOGIN</a></li>
           <li><a href="/api/users/new?return_to=/choose-role" class="button-a">SIGN UP</a></li>
+        {% else %}
+          <li><a href="/dashboard/edit_profile" class="user-name">{{ current_user.first_name | upcase }}</a></li>
         {% endif %}
       </ul>
     </div>
-
-{% comment %}
-    {% if current_user == blank %}
-      <li class="nav user-nav">
-        <ul>
-          <li><a href="/users?role=buyer" data-href="/users?role=buyer" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" class="button-a">BECOME A MEMBER</a></li>
-          <li><a href="/users?role=seller" data-href="/users?role=seller" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled"  class="button-a">BECOME A CARE WORKER</a></li>
-          <li><a href="/users/sign_in?return_to=/" class="button-b">LOG IN</a></li>
-        </ul>
-      </li>
-    {% else %}
-      <li class="nav user-nav">
-        <ul>
-          <li>
-            Logged in as
-            <span tabindex="0">
-              {{ current_user.first_name }}
-              {% if pending_transactables_count > 0 %}
-                <span class="count">{{ pending_transactables_count }}</span>
-              {% endif %}
-            </span>
-          </li>
-      </li>
-    {% endif %}{% endcomment %}
   </div>
 
 </header>
