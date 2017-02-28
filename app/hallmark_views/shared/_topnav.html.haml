@@ -52,6 +52,8 @@
             = link_to t(:profile), user_path(current_user.slug)
           %li{ class: (controller_name == 'registrations' && action_name == 'show' ? 'active' : '') }
             = link_to 'Get Started', '/faq'
+          %li{ class: (controller_name == 'home' && action_name == 'index' ? 'active' : '') }
+            = link_to t('user_menu.latest_activity'), root_path
           - if (project_type = TransactableType.find_by(name: 'Share')).present?
             %li{ class: (controller_name == 'projects' ? 'active' : '') }
               = link_to t(:my_projects), dashboard_project_type_projects_path(project_type)

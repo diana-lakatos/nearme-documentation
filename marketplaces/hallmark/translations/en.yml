@@ -73,6 +73,9 @@ en:
   connect_with_influencers_description: "Find and connect with your and fellow Keepsake Ornament Club members nationwide and favorite Keepsake Ornament Artists."
   featured_topics_description: 'Follow the topics that interest you and discover the groups and Club members related to them.'
 
+  user_menu:
+    latest_activity: 'Latest Activity'
+
   # user activity
   featured_user: 'Featured Member'
   activity: 'Activity'
@@ -212,7 +215,7 @@ en:
   # activity feed
   activity_feed:
     title: "Activity Feed"
-    user_status_text: "What are you working on?"
+    user_status_text: "What do you want to share?"
     user_status_submit: "Post"
     no_interactions_yet: "There were no interactions yet."
     verbs:
