@@ -2,18 +2,19 @@
 module Graph
   module Resolvers
     class Topics
-      def call(_, arguments, _)
+      def call(_, arguments, ctx)
+        @variables = ctx.query.variables
         decorate(resolve_by(arguments))
       end
 
       def resolve_by(arguments)
-        arguments.keys.sort.reduce(::Topic.all) do |relation, argument_key|
+        arguments.keys.sort.reduce(main_scope) do |relation, argument_key|
           public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])
         end
       end
 
       def decorate(relation)
-        relation.map { |topic| TopicDrop.new(topic) }
+        relation.map { |topic| TopicDrop.new(topic.decorate) }
       end
 
       def resolve_by_filters(relation, filters)
@@ -34,6 +35,12 @@ module Graph
       end
 
       private
+
+      def main_scope
+        return ::Topic.all unless @variables['follower_id']
+        ::Topic.all
+          .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::Topic))
+      end
 
       def arbitrary_order_clause(values)
         values.map { |value| "name = '#{value}' DESC" }.join(', ')
