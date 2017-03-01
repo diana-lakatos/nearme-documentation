@@ -1,45 +1,45 @@
 <header class="masthead">
-  <div class="wrapper-a">
-    <h1 class="brand-a">
-      <a href="/"><img src="http://lvh.me:8080/assets/logo.png" alt="Care Support Network - Logo" width="210" height="84">
-      </a>
-    </h1>
-
-    {% if current_user == blank %}
-      <div class="nav user-nav">
-        <ul>
-          <li><a href="/users?role=buyer" data-href="/users?role=buyer" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled" class="button-a">BECOME A MEMBER</a></li>
-          <li><a href="/users?role=seller" data-href="/users?role=seller" data-modal="true" data-modal-class="sign-up-modal" data-modal-overlay-close="disabled"  class="button-a">BECOME A CARE WORKER</a></li>
-          <li><a href="/users/sign_in?return_to=/" class="button-b">LOG IN</a></li>
-        </ul>
-      </div>
-    {% else %}
-      <div class="nav user-nav">
-        <ul>
-          <li>
-            Logged in as
-            <span tabindex="0">
-              {{ current_user.first_name }}
-              {% if pending_transactables_count > 0 %}
-                <span class="count">{{ pending_transactables_count }}</span>
-              {% endif %}
-            </span>
-          </li>
-      </div>
-    {% endif %}
+  <div class="contact-bar">
+    <div class="wrapper-a">
+      <p class="contact-bar__phone">1300 177 577</p>
+      <p class="contact-bar__email"><a href="mailto:help@mycsn.com.au">help@mycsn.com.au</a></p>
+    </div>
   </div>
 
-  <div class="nav main-nav">
+  <a href="#main" class="skip-to-content" data-skip-to-content>Skip to main content</a>
+
+  <div class="main-bar">
     <div class="wrapper-a">
-      <ul>
+      <h1 class="brand-a">
+        <a href="/"><img src="http://lvh.me:8080/assets/logo.png" alt="Care Support Network - Logo" width="210" height="84">
+        </a>
+      </h1>
+
+      <ul class="nav">
         <li><a href="/home">HOME</a></li>
-        <li><a href="/how-it-works">HOW IT WORKS</a></li>
+        <li class="dropdown">
+          <a href="/services" data-toggle="dropdown" class="dropdown-toggle">
+            SERVICES
+            <span class="caret"></span>
+          </a>
+
+          <ul class="dropdown-menu">
+            <li><a href="#">Aged Care at Home</a></li>
+            <li><a href="#">Disability Support</a></li>
+          </ul>
+        </li>
         <li><a href="/about">ABOUT</a></li>
-        <li><a href="/services">SERVICES</a></li>
         <li><a href="/testimonials">TESTIMONIALS</a></li>
-        <li><a href="/faqs">FAQS</a></li>
-        <li><a href="/contact-us">CONTACT US</a></li>
+        <li><a href="/blog">BLOG</a></li>
+        <li><a href="/contact">CONTACT</a></li>
+        {% if current_user == blank %}
+          <li><a href="/users/sign_in?return_to=/">LOGIN</a></li>
+          <li><a href="/api/users/new?return_to=/choose-role" class="button-a">SIGN UP</a></li>
+        {% else %}
+          <li><a href="/dashboard/edit_profile" class="user-name">{{ current_user.first_name | upcase }}</a></li>
+        {% endif %}
       </ul>
     </div>
   </div>
+
 </header>
