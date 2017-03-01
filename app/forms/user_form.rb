@@ -2,6 +2,7 @@
 class UserForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
   include Sync::SkipUnchanged
+  include Devise::Models::UserValidatable
   class << self
     def decorate(configuration)
       Class.new(self) do
@@ -37,9 +38,15 @@ class UserForm < BaseForm
                                  populate_if_empty: Company,
                                  prepopulator: ->(*) { companies << Company.new if companies.size.zero? }
         end
-        if (current_address_configuration = configuration.delete(:current_address)).present?
+        if (current_address_configuration = configuration.delete(:current_address))
+          validation = (current_address_configuration || {}).delete(:validation)
+          validates :current_address, validation if validation.present?
           property :current_address, form: AddressForm.decorate(current_address_configuration),
-                                     populate_if_empty: Address,
+                                     populator: ->(model:, fragment:, **) do
+                                       fragment = fragment.with_indifferent_access
+                                       return skip! if fragment[:address].blank? && model.nil?
+                                       model || self.current_address = Address.new
+                                     end,
                                      prepopulator: ->(*) { self.current_address ||= Address.new }
         end
         configuration.each do |field, options|
@@ -50,7 +57,6 @@ class UserForm < BaseForm
     end
   end
 
-  include Devise::Models::UserValidatable
   property :tag_list
   property :email
   property :external_id, virtual: true

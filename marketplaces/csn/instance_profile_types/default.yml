@@ -39,7 +39,6 @@ form_components:
       - user: last_name
       - user: email
       - user: password
-      - user: password_confirmation
       - user: mobile_phone
       - user: how_did_you_hear
       - user: landline

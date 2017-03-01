@@ -2,7 +2,7 @@
 class AddressForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
   class << self
-    def decorate(configuration)
+    def decorate(configuration = {})
       Class.new(self) do
         configuration.each do |field, options|
           validates :"#{field}", options[:validation] if options[:validation].present?

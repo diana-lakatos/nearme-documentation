@@ -1,2 +1,2 @@
 {% assign valid_values = 'Facebook,Google,Friend,Other' | split: ',' %}
-{% input how_did_you_hear, collection: @valid_values, input_html-tabindex: @tabindex, form: properties %}
+{% input how_did_you_hear, collection: @valid_values, label: 'How did you hear about us?', prompt: 'Please select', input_html-tabindex: @tabindex, form: properties %}

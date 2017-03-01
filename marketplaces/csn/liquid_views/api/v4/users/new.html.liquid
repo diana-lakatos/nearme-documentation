@@ -44,7 +44,7 @@
              {% endfields_for %}
            {% endfields_for %}
 
-           {% assign label =  'registrations.accept_terms_of_service' | translate %}
+           {% assign label = 'registrations.accept_terms_of_service' | translate %}
            {% input accept_terms_of_service, as: boolean, inline_label: @label, label: false, input_html-tabindex: 9 %}
 
            {% fields_for default_profile %}

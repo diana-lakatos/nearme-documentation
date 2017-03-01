@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class FormComponentToFormConfiguration
   ADDRESS_HASH = {
-    address: {},
+    address: { validation: { presence: {} } },
     should_check_address: {},
     local_geocoding: {},
     latitude: {},
@@ -32,7 +32,7 @@ class FormComponentToFormConfiguration
   protected
 
   def user_attributes
-    @user_attributes ||= (User.columns.map(&:name) + %w(current_address tags mobile_phone))
+    @user_attributes ||= (User.columns.map(&:name) + %w(current_address tags mobile_phone password))
   end
 
   def user_profile_attributes
@@ -121,11 +121,16 @@ class FormComponentToFormConfiguration
         # logger.debug "\tProcessing: #{model}: #{field}"
         next if model == 'buyer' && role == 'seller'
         next if model == 'seller' && role == 'buyer'
-        next if %w(email password).include?(field)
+        next if %w(email).include?(field)
         if model == 'user' && user_attributes.include?(field) || (model == 'buyer' && field == 'tags') || field == 'company_name'
           field = 'tag_list' if field == 'tags'
           if field == 'current_address'
             configuration[field.to_sym] = ADDRESS_HASH
+          elsif field == 'password'
+            configuration[:password_confirmation] ||= {}
+            configuration[:password_confirmation][:property_options] ||= { virtual: true }
+            configuration[:password_confirmation][:validation] ||= {}
+            configuration[:password_confirmation][:validation][:confirm] = {}
           else
             configuration['country_name'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'country_name').build if field == 'mobile_number' || field == 'phone' || field == 'mobile_phone'
             configuration['mobile_number'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'mobile_number').build if field == 'phone' || field == 'mobile_phone'
@@ -235,7 +240,9 @@ class FormComponentToFormConfiguration
                   end
       fc = FormConfiguration.where(base_form: base_form, name: "#{conf_role} Signup")
                             .first_or_create!
-      fc.update_attribute(:configuration, build_configuration_based_on_form_components(form_component, role))
+      configuration = build_configuration_based_on_form_components(form_component, role)
+      configuration.delete([:email, :password])
+      fc.update_attribute(:configuration, configuration)
     end
   end
 
