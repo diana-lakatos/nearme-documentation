@@ -55,7 +55,7 @@ class FormComponentToFormConfiguration
         if [5011, 132].include?(PlatformContext.current.instance.id)
           logger.debug "Configuration for devmesh/hallmark (#{PlatformContext.current.instance.id})"
           # hardcode fields for devmesh / hallmark :)
-          default_configuration.merge!(community_configuration)
+          default_configuration.deep_merge!(community_configuration)
         else
           case fc_role
           when :Default
@@ -126,15 +126,15 @@ class FormComponentToFormConfiguration
           field = 'tag_list' if field == 'tags'
           if field == 'current_address'
             configuration[field.to_sym] = ADDRESS_HASH
-          elsif field == 'password'
+          elsif field == 'password' && !form_component.form_type.include?('_registration')
             configuration[:password_confirmation] ||= {}
             configuration[:password_confirmation][:property_options] ||= { virtual: true }
             configuration[:password_confirmation][:validation] ||= {}
             configuration[:password_confirmation][:validation][:confirm] = {}
           else
-            configuration['country_name'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'country_name').build if field == 'mobile_number' || field == 'phone' || field == 'mobile_phone'
-            configuration['mobile_number'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'mobile_number').build if field == 'phone' || field == 'mobile_phone'
-            configuration[field] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, field).build.merge(ValidationBuilder.new(PlatformContext.current.instance.send("#{role}_profile_type"), field).build) unless field == 'mobile_phone'
+            configuration['country_name'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'country_name').build.deep_merge(ValidationBuilder.new(PlatformContext.current.instance.send("#{role}_profile_type"), 'country_name').build) if field == 'mobile_number' || field == 'phone' || field == 'mobile_phone'
+            configuration['mobile_number'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'mobile_number').build.deep_merge(ValidationBuilder.new(PlatformContext.current.instance.send("#{role}_profile_type"), 'mobile_number').build) if field == 'phone' || field == 'mobile_phone'
+            configuration[field] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, field).build.deep_merge(ValidationBuilder.new(PlatformContext.current.instance.send("#{role}_profile_type"), field).build) unless field == 'mobile_phone'
           end
           if %w(name first_name email).include?(field)
             configuration[field][:validation] ||= {}
@@ -264,7 +264,7 @@ class FormComponentToFormConfiguration
       if custom_validators.any?
         {
           validation: custom_validators.each_with_object({}) do |cv, validation|
-            validation.merge!(cv.validation_rules.deep_symbolize_keys)
+            validation.deep_merge!(cv.validation_rules.deep_symbolize_keys)
           end
         }
       else
