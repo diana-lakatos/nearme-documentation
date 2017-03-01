@@ -26,9 +26,10 @@
       %section
         %h3.hx= title if title.present?
         - if body.present?
-          - if event.is_text_update? || event.event.to_sym == :user_created_transactable
-            = videoify_and_parse_with_markdown(body)
-          - else
-            = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' })
+          %div.entry-text
+            - if event.is_text_update? || event.event.to_sym == :user_created_transactable
+              = videoify_and_parse_with_markdown(body)
+            - else
+              = simple_format auto_link(body, html: { target: '_blank', ref: 'nofollow' })
 
       = render 'shared/activity_status_footer', event: event

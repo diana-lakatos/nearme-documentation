@@ -182,4 +182,8 @@
       padding-top: 20px;
     }
   }
+
+  > section > .entry-text {
+    word-wrap: break-word;
+  }
 }
