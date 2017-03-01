@@ -144,15 +144,15 @@ namespace :hallmark do
     instance = Instance.find(5011)
     instance.set_context!
     EXTERNAL_ID = 0
-    FIRST_NAME = 2
-    LAST_NAME = 1
+    FIRST_NAME = 1
+    LAST_NAME = 2
     EMAIL = 3
     DOB = 4
     PHONE = 5
     MEMBER_SINCE = 6
     EXPIRES_AT = 7
     MEMBER_YEAR = 8
-    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_20Feb.txt')
+    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_27Feb.txt')
     emails = []
     CSV.foreach(path, col_sep: '|') do |array|
       unless array[FIRST_NAME] == 'CNSMR_FIRST_NM'
@@ -199,6 +199,6 @@ namespace :hallmark do
       end
     end
     puts "Imported in total: #{emails.count} users"
-    #puts "Invalidating #{User.not_admin.where.not(email: emails).where('email like ?', '%@hallmark%').update_all(expires_at: nil)} users - setting expires at to nil"
+    puts "Invalidating #{User.not_admin.where.not(email: emails).where('email ilike ?', '%@hallmark.com').update_all(expires_at: nil)} users - setting expires at to nil"
   end
 end
