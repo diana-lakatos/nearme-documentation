@@ -26,6 +26,7 @@ config/application.yml
 config/database.yml
 config/elasticsearch.yml
 config/unicorn.conf
+docker-compose.yml
 log
 node_modules
 tmp
@@ -52,3 +53,4 @@ work_files
 *.org
 .vscode
 .pryrc
+.byebug_history
