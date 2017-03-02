@@ -11,7 +11,7 @@ class AddPgFeeToPayments < ActiveRecord::Migration
     Payment.update_all('payment_gateway_fee_cents = total_amount_cents * 0.029 + 30')
     PaymentTransfer.find_each do |pt|
       pt.payment_gateway_fee_cents = pt.payments.inject(0) { |sum, rc| sum += rc.payment_gateway_fee_cents }
-      pt.amount_cents = pt.payments.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - pt.service_fee_amount_host_cents - pt.payment_gateway_fee_cents
+      pt.amount_cents = pt.payments.all.inject(0) { |sum, rc| sum += rc.transfer_amount_cents } - pt.service_fee_amount_host_cents - pt.payment_gateway_fee_cents
       pt.save!
     end
   end

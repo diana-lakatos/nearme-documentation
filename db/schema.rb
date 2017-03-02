@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20170210123804) do
+ActiveRecord::Schema.define(version: 20170302182145) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1932,6 +1931,7 @@ ActiveRecord::Schema.define(version: 20170210123804) do
     t.integer  "payment_gateway_fee_cents",                                                      default: 0
     t.integer  "payment_source_id"
     t.string   "payment_source_type"
+    t.boolean  "direct_charge",                                                                  default: false
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
