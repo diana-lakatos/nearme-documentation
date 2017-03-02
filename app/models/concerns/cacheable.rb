@@ -8,7 +8,7 @@ module Cacheable
     after_commit :expire_cache_key, unless: -> (translation) { translation.skip_expire_cache }
 
     def expire_cache_key(opts = expire_cache_options)
-      instance.fast_recalculate_cache_key! if instance && instance.respond_to?(:context_cache_key)
+      instance.fast_recalculate_cache_key! if instance && instance.respond_to?(:context_cache_key) && !instance.destroyed?
       opts = { cache_type: self.class.name.demodulize, timestamp: Time.now.to_f }.merge(opts)
       opts.merge!(instance_id: PlatformContext.current.instance.id) if PlatformContext.current
 

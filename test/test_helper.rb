@@ -187,6 +187,10 @@ ActiveSupport::TestCase.class_eval do
   #   pricings = options.map{|o| stub(o)}
   #   transactable.action_type.stubs(:pricings).returns(pricings)
   # end
+
+  def wait_for_elastic_index
+    sleep 2
+  end
 end
 
 ActionController::TestCase.class_eval do

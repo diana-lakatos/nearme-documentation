@@ -37,13 +37,13 @@ module AdminHelper
     end
   end
 
-  def admin_versions_link(url, apiEndpoint)
-    apiEndpoint = apiEndpoint.is_a?(String) ? apiEndpoint : url_for(apiEndpoint)
+  def admin_versions_link(url, api_endpoint)
+    api_endpoint = api_endpoint.is_a?(String) ? api_endpoint : url_for(api_endpoint)
 
     link_to t('admin.versions.trigger.label'), url,
             title: t('admin.versions.trigger.title'),
             class: 'btn btn-flat btn-versions',
-            data: { 'versions-modal': true, 'editor-selector': '[data-main-editor]', 'api-endpoint': apiEndpoint }
+            data: { 'versions-modal': true, 'editor-selector': '[data-main-editor]', 'api-endpoint': api_endpoint }
   end
 
   def admin_side_navigation(context)

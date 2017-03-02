@@ -4,11 +4,12 @@ module Graph
     class Searcher
       def call(_, arguments, ctx)
         @ctx = ctx
-        resolve_by(arguments)
+        @arguments = arguments
+        resolve_by
       end
 
-      def resolve_by(arguments)
-        drop = create_searcher(arguments).to_liquid
+      def resolve_by
+        drop = searcher.to_liquid
         drop.context = liquid_context
         drop
       end
@@ -23,24 +24,18 @@ module Graph
         @ctx[:liquid_context]
       end
 
-      def create_searcher(arguments)
-        result_view = arguments[:result_view]
-        transactable_type = TransactableType.find(arguments[:transactable_type_id])
-        search_params = arguments[:search_params].to_h.symbolize_keys
+      def searcher
+        result_view = nil # we don't want this. We want hit directly to specific searcher
         InstanceType::SearcherFactory.new(transactable_type, search_params, result_view, current_user)
                                      .get_searcher
       end
 
       def search_params
-        @arguments[:search_params]
+        @arguments[:params].to_h.symbolize_keys
       end
 
-      def page
-        search_params[:page]
-      end
-
-      def per_page
-        search_params[:per_page]
+      def transactable_type
+        TransactableType.find_by!(name: @arguments[:kind])
       end
     end
   end

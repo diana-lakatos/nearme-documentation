@@ -163,11 +163,40 @@ namespace :fix do
      CategoriesCategorizable, Comment, CompanyUser,
      CreditCard, DataUpload, DocumentsUpload, Impression,
      InstanceClient, MerchantAccount, Photo, RatingAnswer,
-     RecurringBookingPeriod, Refund, Review, SavedSearch,
+     RecurringBookingPeriod, Review, SavedSearch,
      SavedSearchAlertLog, ScheduleExceptionRule, ScheduleRule,
      Shipment, UserMessage, Support::Ticket, WaiverAgreement,
      BillingAuthorization, PaymentGateway, Authentication,
-     UserRelationship
+     UserRelationship, Locale,
+     ActivityFeedEvent, ApprovalRequestAttachmentTemplate,
+     AwsCertificate, Category, CategoryLinking, ContentHolder,
+     CustomImage, CustomModelTypeLinking, CustomModelType,
+     CustomValidator, Customization, FormComponent,
+     GraphQuery, HostFeeLineItem, InstanceAdmin, InstanceProfileType,
+     InstanceView, LineItem, LocaleInstanceView, LocationType,
+     MarketplaceErrorGroup, MerchantAccountOwner, Order,
+     Page, PaymentGatewaysCountry, PaymentGatewaysCurrency,
+     PaymentMethod, PaymentSubscription, ReservationType,
+     TransactableCollaborator, TransactableTypeInstanceView,
+     TransactableType, UserBan, UserBlog, UserProfile,
+     WishListItem, WishList, WorkflowAlertLog,
+     WorkflowAlertMonthlyAggregatedLog, WorkflowAlertWeeklyAggregatedLog,
+     WorkflowAlert, WorkflowStep, Workflow,
+     ActivityFeedImage, ActivityFeedSubscription, AdditionalCharge,
+     ApiKey, ApprovalRequestTemplate, BankAccount, ChargeType,
+     CommunityReportingAggregate, CustomThemeAsset, CustomTheme,
+     DataSourceContent, DataSource, DefaultImage, Delivery,
+     Deposit, DimensionsTemplate, DocumentRequirement, ExternalApiRequest,
+     GroupMember, GroupTransactable, Group, HostLineItem, InappropriateReport,
+     InstanceAdminRole, InstanceBillingGateway, InstanceCreator, Link,
+     MarketplaceError, NotificationPreference, OrderAddress, PageDataSourceContent,
+     Partner, PaypalAccount, PhotoUploadVersion, RatingHint, RatingQuestion,
+     RatingSystem, ReverseProxy, ReverseProxyLink, ScheduledUploadersRegeneration,
+     ShippingProfile, ShippingRule, SpamReport, ActsAsTaggableOn::Tagging,
+     ActsAsTaggableOn::Tag, TaxRate, TaxRegion, TextFilter,
+     ThirdPartyIntegration, Topic, TransactableDimensionsTemplate, TransactableTopic,
+     Translation, UploadObligation, UserBlogPost, UserStatusUpdate,
+     UserTopic, WaiverAgreementTemplate
     ].each do |klass|
       puts "Deleting: #{klass} for #{instance.name}"
       puts "Before count: #{klass.count}"
@@ -175,6 +204,7 @@ namespace :fix do
       puts "Removed: #{klass.where(instance_id: instance.id).delete_all}"
       puts "After count: #{klass.count}"
     end
+    User.with_deleted.where('admin = ? OR admin is null', false).where(instance_id: instance.id).delete_all
     Domain.with_deleted.where(target: instance).delete_all
     Theme.with_deleted.where(owner: instance).delete_all
     instance.destroy

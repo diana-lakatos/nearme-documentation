@@ -13,6 +13,8 @@
   = f.input :path, readonly: @instance_view.persisted?
 
   .row
+    .col-sm-12
+      = f.input :draft, as: :radio_buttons, collection: [['Published', false], ['Draft', true]], label: 'Publication'
     .col-sm-4
       = f.association :transactable_types, as: :check_boxes
 
@@ -26,4 +28,3 @@
         = f.input :partial
 
   = f.input :body, as: :code_editor, syntax: 'liquid', input_html: { :"data-main-editor" => true }
-

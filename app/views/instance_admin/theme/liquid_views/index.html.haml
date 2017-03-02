@@ -8,6 +8,7 @@
               = t('instance_admin.liquid_views.template')
             %th Transactable Types
             %th Locales
+            %th Publication
             %th
             %th
             %th
@@ -17,6 +18,7 @@
               %td= pretty_path liquid_view.path
               %td= liquid_view.transactable_types.pluck(:name).join(', ')
               %td= liquid_view.locales.map(&:display_name).join(', ')
+              %td= t(liquid_view.draft? ? 'instance_admin.liquid_views.draft' : 'instance_admin.liquid_views.published')
               %td
                 .pull-right{style: 'margin-left: 10px'}
                   = link_to t('instance_admin.destroy'), instance_admin_theme_liquid_view_path(liquid_view), method: :delete,
@@ -46,4 +48,3 @@
 
 = content_for :header_buttons do
   = link_to t('instance_admin.liquid_views.add_liquid_view'), new_instance_admin_theme_liquid_view_path, class: 'pull-right btn btn-blue'
-
