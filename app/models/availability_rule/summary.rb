@@ -74,10 +74,16 @@ class AvailabilityRule::Summary
     @days_open ||= @rules.map(&:days).flatten.compact.uniq
   end
 
+  # Returns a sorted array of days that the listing is open for
+  # Days are 0..6, where 0 is Sunday and 6 is Saturday
+  def sorted_days_open
+    @sorted_days_open ||= @days_open.sort
+  end
+
   def consecutive_days_open?
     return true if days_open.size >= 4
-    days_open.sort.each_with_index do |day, i|
-      return true if day + 1 == days_open[i + 1]
+    sorted_days_open.each_with_index do |day, i|
+      return true if day + 1 == sorted_days_open[i + 1] || (day + 1 == 7 && sorted_days_open[i + 1] == 0)
     end
     false
   end
