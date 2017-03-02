@@ -81,7 +81,11 @@ module MarketplaceBuilder
     end
 
     def logger
-      Loggers::ConsoleLogger.instance
+      @logger ||= if Rails.env.test?
+                    Logger.new('/dev/null')
+                  else
+                    Loggers::ConsoleLogger.instance
+                  end
     end
   end
 end

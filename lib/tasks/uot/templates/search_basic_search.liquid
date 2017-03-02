@@ -18,10 +18,10 @@
                             <option {% if searcher.category_ids contains subcat.id %}selected{% endif %} value='{{category.id}}'>{{ category.name }}</option>
                             {% if category.children.size > 0 %}
                               {% for subcat in category.children %}
-                                <option {% if searcher.category_ids contains subcat.id %}selected{% endif %} value='{{subcat.id}}'>{{ subcat.name }}</option>
+                                <option {% if searcher.category_ids contains subcat.id %}selected{% endif %} value='{{subcat.id}}'>&nbsp;&nbsp;&nbsp;{{ subcat.name }}</option>
                                 {% if subcat.children.size > 0 %}
                                   {% for subcat2 in subcat.children %}
-                                    <option {% if searcher.category_ids contains subcat2.id %}selected{% endif %} value='{{subcat2.id}}'>{{ subcat2.name }}</option>
+                                    <option {% if searcher.category_ids contains subcat2.id %}selected{% endif %} value='{{subcat2.id}}'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ subcat2.name }}</option>
                                   {% endfor %}
                                 {% endif %}
                               {% endfor %}

@@ -839,13 +839,13 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'return nil for unset setting' do
-      assert_equal nil, @user.get_ui_setting(:key)
+      assert_nil @user.get_ui_setting(:key)
     end
 
     should 'should persist a value when saving new ui setting' do
       @user.set_ui_setting('help-is-visible', 'true')
       assert_equal '{"help-is-visible":true}', @user.ui_settings
-      assert_equal true, @user.get_ui_setting('help-is-visible')
+      assert @user.get_ui_setting('help-is-visible')
     end
   end
 

@@ -6,10 +6,12 @@
   .nested-container
     .row.nested-fields
       .col-md-2
-        = pricing.input :allow_nil_price_cents, as: :hidden, input_html: { value: 1}
-        = pricing.input :number_of_units, as: :hidden, input_html: { value: 1}
-        = pricing.input :unit, as: :hidden, input_html: { value: 'item'}
+        = pricing.input :allow_nil_price_cents, as: :hidden, input_html: { value: 1 }
+        = pricing.input :number_of_units, as: :hidden, input_html: { value: pricing.object.number_of_units || 1 }
+        = pricing.input :unit, as: :hidden, input_html: { value: pricing.object.unit || 'item' }
         = pricing.input :order_class_name, as: :select, collection: Order::ORDER_TYPES
+      .col-md-2
+        = pricing.input :fixed_price, as: :numeric
   %h4= t('instance_admin.manage.transactable_types.offer_settings')
   .row
     .input-container.col-xs-12

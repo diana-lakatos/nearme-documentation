@@ -27,7 +27,6 @@ class PartnerTest < ActiveSupport::TestCase
 
       should "return parent instance's values if does not exist" do
         assert_equal @instance_theme.site_name, @partner_theme.site_name
-        assert_equal @instance_theme.description, @partner_theme.description
       end
     end
   end

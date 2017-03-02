@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SessionsController < Devise::SessionsController
   skip_before_action :redirect_unverified_user
   skip_before_action :force_fill_in_wizard_form
@@ -45,21 +46,19 @@ class SessionsController < Devise::SessionsController
   private
 
   def omniauth_login
-    if request.referer && !request.referer.include?('instance_admin')
-      session[:user_return_to] = nil
-    end
+    session[:user_return_to] = nil if request.referer && !request.referer.include?('instance_admin')
 
     provider = PlatformContext.current.instance.default_oauth_signin_provider
     if provider.present? && !login_from_instance_admin?
       path = "/auth/#{provider}"
       p = params.except(:action, :controller)
-      path << "?#{p.to_query}" if p.present?
+      path = path + "?#{p.to_query}" if p.present?
       redirect_to path
     end
   end
 
   def sso_logout
-    current_user.log_out! if current_user
+    current_user&.log_out!
   end
 
   def set_return_to
@@ -108,8 +107,12 @@ class SessionsController < Devise::SessionsController
   def after_sign_out_path_for(_resource_or_scope)
     if PlatformContext.current.instance.id == 132
       'https://signin.intel.com/Logout'
+    elsif request.referer && request.referer.include?('instance_admin')
+      instance_admin_login_path
+    elsif request.referer && request.referer.include?('/admin/')
+      admin_login_path
     else
-      request.referer && request.referer.include?('instance_admin') ? instance_admin_login_path : root_path
+      root_path
     end
   end
 end

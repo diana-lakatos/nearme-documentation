@@ -70,9 +70,7 @@ config.module = {
       exclude: /(node_modules|vendor)/,
       loader: 'babel',
       query: {
-        cacheDirectory: true,
-        presets: ['react', 'es2015'],
-        plugins: ['transform-runtime']
+        cacheDirectory: true
       }
     },
     { test: /\.css$/, loader: 'style-loader!css-loader' },

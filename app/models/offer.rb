@@ -93,8 +93,7 @@ class Offer < Order
   def charge_and_confirm!
     return true if confirmed?
     return false unless valid?
-
-    if ((payment_subscription.present? && !reservation_type.reverse_immediate_payment?) || payment.save! && payment.purchase!) && confirm!
+    if ((payment_subscription.present? && !reservation_type.reverse_immediate_payment?) || payment.payment_source.process! && payment.save! && payment.purchase!) && confirm!
       create_payment_subscription! if payment_subscription.blank?
       transactable.start!
       reject_related_offers!

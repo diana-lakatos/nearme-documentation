@@ -54,12 +54,12 @@ partial: false
 
           <ul class="AvailabilityFilters">
             <li class="datetimepicker">
-              <input type="text" name="availability_exceptions[fromDatetimepicker]" data-availability-filter="from" value="{{ params['availability_exceptions']['fromDatetimepicker'] }}" placeholder="&#xf073; From" />
+              <input type="text" data-availability-filter="from" value="{{ params['availability_exceptions']['fromDatetimepicker'] }}" placeholder="&#xf073; From" />
               <input type="hidden" name="availability_exceptions[from]" value="{{ params['availability_exceptions']['from'] }}" />
             </li>
 
             <li class="datetimepicker">
-              <input type="text" name="availability_exceptions[toDatetimepicker]" data-availability-filter="to" value="{{ params['availability_exceptions']['toDatetimepicker'] }}" placeholder="&#xf073; To" />
+              <input type="text" data-availability-filter="to" value="{{ params['availability_exceptions']['toDatetimepicker'] }}" placeholder="&#xf073; To" />
               <input type="hidden" name="availability_exceptions[to]" value="{{ params['availability_exceptions']['to'] }}" />
             </li>
           </ul>

@@ -8,5 +8,5 @@
         = render :partial => 'addresses/form', locals: { f: address_form, placeholder: I18n.t('simple_form.placeholders.address.address') }
 
       %p.action
-        %button.button-a{:type => "submit"}
+        %button.button-a{:type => "submit", "data-disable-with" => t('general.processing') }
           = t :continue

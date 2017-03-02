@@ -564,6 +564,12 @@ DesksnearMe::Application.routes.draw do
         end
 
         resources :inappropriate_reports
+
+        namespace :marketplace_builder do
+          get :index
+          get :download_export
+          put :import
+        end
       end
 
       namespace :manage_blog do
@@ -730,6 +736,10 @@ DesksnearMe::Application.routes.draw do
       get '/instance_admin/sessions/new', to: 'instance_admin/sessions#new', as: 'instance_admin_login'
       post '/instance_admin/sessions', to: 'instance_admin/sessions#create'
       delete '/instance_admin/sessions', to: 'instance_admin/sessions#destroy'
+
+      get '/admin/sessions/new', to: 'admin/sessions#new', as: 'admin_login'
+      post '/admin/sessions', to: 'admin/sessions#create'
+      delete '/admin/sessions', to: 'admin/sessions#destroy'
     end
 
     get 'users/:id/reviews_collections', to: 'user_reviews#reviews_collections', as: 'reviews_collections'
@@ -1260,9 +1270,6 @@ DesksnearMe::Application.routes.draw do
   get '/dynamic_theme/:stylesheet-:theme_id-:updated_at.css', to: 'dynamic_themes#show', as: :dynamic_theme, format: 'css', constraints: { stylesheet: /(application|dashboard)/ }
 
   namespace :admin do
-    get '/register', to: 'pages#register'
-    get '/login', to: 'pages#login'
-
     get '/ui_settings', to: 'ui_settings#index', as: :get_all_ui_settings
     get '/ui_settings/get/:id', to: 'ui_settings#get', as: :get_ui_setting
     patch '/ui_settings', to: 'ui_settings#set', as: :set_ui_setting

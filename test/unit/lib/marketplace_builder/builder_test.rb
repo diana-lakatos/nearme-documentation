@@ -19,7 +19,7 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
 
   def should_set_instance_basic_attributes
     assert_equal 'example_marketplace', @instance.name
-    assert_equal true, @instance.is_community
+    assert @instance.is_community
     assert_equal false, @instance.require_verified_user
   end
 
@@ -50,7 +50,7 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
 
     assert_equal 2, transactable_type.action_types.count
     assert_equal 'TransactableType::NoActionBooking', transactable_type.action_types.first.type
-    assert_equal true, transactable_type.action_types.first.allow_no_action
+    assert transactable_type.action_types.first.allow_no_action
   end
 
   def should_import_transactable_type_custom_attributes

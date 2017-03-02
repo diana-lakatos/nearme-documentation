@@ -265,7 +265,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
 
   def should_export_rating_systems
     yaml_content = read_exported_file('rating_systems/host.yml')
-    assert_equal yaml_content, {"subject"=>"host", "active"=>true, 
+    assert_equal yaml_content, {"subject"=>"host", "active"=>true,
                                 "rating_questions"=>[{"text"=>"Example question?"}],
                                 "rating_hints"=>[{"value"=>"2", "description"=>"Good"}, {"value"=>"1", "description"=>"Bad"}], 
                                 "transactable_type"=>"Car"}
@@ -273,7 +273,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
 
   def should_export_mpbuilderrc_file
     hash_content = read_exported_file('.mpbuilderrc')
-    assert_equal hash_content, { 'instance_id' => @instance.id, 'mode' => 'replace' }
+    assert_equal hash_content, { 'instance_id' => @instance.id, 'mode' => 'append' }
   end
 
   private

@@ -32,7 +32,7 @@ class InstanceAdmin::Manage::CategoriesControllerTest < ActionController::TestCa
         post :create, category: { name: nil }
       end
       assert_response :success
-      assert_equal nil, assigns(:category).name
+      assert_nil assigns(:category).name
     end
   end
 

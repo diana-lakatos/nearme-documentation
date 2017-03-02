@@ -16,9 +16,9 @@ class Support::TicketMessageTest < ActiveSupport::TestCase
       ticket = FactoryGirl.create(:support_ticket, messages_count: 0)
       message = ticket.messages.new(message: 'test')
       message.populate_data
-      assert_equal nil, message.full_name
-      assert_equal nil, message.email
-      assert_equal nil, message.subject
+      assert_nil message.full_name
+      assert_nil message.email
+      assert_nil message.subject
     end
   end
 end

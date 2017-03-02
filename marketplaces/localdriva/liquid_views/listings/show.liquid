@@ -1,4 +1,11 @@
+{% content_for 'social_meta_tags' %}
+  {% include 'shared/social_meta_for_object', object: listing, url: listing.show_path %}
+{% endcontent_for %}
+
 {% assign collaborator = current_user | find_collaborator: listing %}
+{% if collaborator != blank %}
+  {% assign offer = listing.not_cancelled_orders | detect: user_id: collaborator.user.id %}
+{% endif %}
 {% assign title = platform_context.name | append: ' - ' | append: listing.name %}
 {% title title %}
 <main id="main">
@@ -21,7 +28,7 @@
           <div class="properties">
             <dl>
               <dt>Passenger Name:</dt>
-              <dd>{{ listing.creator.name }}</dd>
+              <dd>{{ listing.creator.first_name }}</dd>
 
               {% if collaborator != blank %}
               <dt>Invite Sent:</dt>
@@ -74,9 +81,9 @@
                 <dd>{{ duration }} {% if duration == 1 %}hour{% else %}hours{% endif %}</dd>
               {% endif %}
 
-              {% if transactable.properties.pickup_location != blank %}
+              {% if transactable.properties.unknown_location == blank %}
               <dt>Pickup Location:</dt>
-              <dd>{{ transactable.properties.pickup_location }}</dd>
+              <dd><a href="https://www.google.com/maps/place/{{ transactable.location.address }}">{{ transactable.location.address }}</a></dd>
               {% endif %}
 
             </dl>
@@ -108,41 +115,26 @@
 
       <aside class="sidebar">
         <ul class="actions-a">
-          {% assign orders = current_user | get_enquirer_orders: listing %}
-          {% assign can_make_offer = false %}
-          {% if current_status == 'pending' %}
-            {% if orders == empty %}
-              {% assign can_make_offer = true %}
-            {% else %}
-              {% assign can_make_offer = true %}
-              {% for order in orders %}
-                {% if order.state == 'unconfirmed' %}
-                  {% assign can_make_offer = false %}
-                {% endif %}
-              {% endfor %}
-            {% endif  %}
-          {% endif %}
 
-          {% if can_make_offer == true %}
+          {% if current_user.id == collaborator.user.id and offer == blank %}
             <li>
-              {% if current_user.has_verified_merchant_account == true -%}
-                {% assign pricing = listing.action_type.pricings | detect: number_of_units: current_user.buyer_properties.driver_type_unit -%}
-                {% assign url = 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration, transactable_pricing_id: pricing.id -%}
+              {% if current_user.has_verified_merchant_account == true %}
+                {% assign pricing = listing.action_type.pricings | detect: number_of_units: current_user.buyer_properties.driver_type_unit %}
+                {% assign url = 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration, transactable_pricing_id: pricing.id %}
                 <a class="button-a" data-href="{{ url }}" href="{{ url }}" data-modal="true">Accept</a>
-              {% else -%}
-                {% assign url = 'required_modal_dashboard_company_payouts_path' | generate_url -%}
+                {% else %}
+                {% assign url = 'required_modal_dashboard_company_payouts_path' | generate_url %}
                 <a class="button-a" data-modal="true" href="{{ url }}" data-href="{{ url }}">Accept</a>
-              {% endif -%}
+              {% endif %}
             </li>
-            {% if current_status == 'pending' -%}
-              {% assign transactable_collaborator = current_user | find_collaborator: listing -%}
+            {% if current_user.id == collaborator.user.id and offer == blank %}
               <li>
-                <a class="button-b" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this booking?">Decline</a>
+                <a class="button-b" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this booking?">Decline</a>
               </li>
-            {% endif -%}
+            {% endif %}
           {% endif %}
 
-          {% if collaborator != blank %}
+          {% if collaborator != blank and collaborator.user.id == current_user.id %}
             <li><a class="button-b action-message" data-modal="true" data-href="{{ listing.creator.user_message_path }}">Send Message</a></li>
           {% endif %}
         </ul>

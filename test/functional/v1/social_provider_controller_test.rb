@@ -37,7 +37,7 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
     assert_response :success
 
     json = JSON.parse response.body
-    assert_equal true, json['facebook']['linked']
+    assert json['facebook']['linked']
   end
 
   test 'should delete facebook data' do
@@ -47,7 +47,7 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
     assert_response :success
 
     json = JSON.parse response.body
-    assert_equal false, json['facebook']['linked']
+    refute json['facebook']['linked']
   end
 
   test 'should get twitter data' do
@@ -72,7 +72,7 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
     assert_response :success
 
     json = JSON.parse response.body
-    assert_equal true, json['twitter']['linked']
+    assert json['twitter']['linked']
   end
 
   test 'should delete twitter data' do
@@ -82,7 +82,7 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
     assert_response :success
 
     json = JSON.parse response.body
-    assert_equal false, json['twitter']['linked']
+    refute json['twitter']['linked']
   end
 
   test 'should get linkedin data' do
@@ -104,7 +104,7 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
     assert_response :success
 
     json = JSON.parse response.body
-    assert_equal true, json['linkedin']['linked']
+    assert json['linkedin']['linked']
   end
 
   test 'should delete linkedin data' do
@@ -114,6 +114,6 @@ class V1::SocialProviderControllerTest < ActionController::TestCase
     assert_response :success
 
     json = JSON.parse response.body
-    assert_equal false, json['linkedin']['linked']
+    refute json['linkedin']['linked']
   end
 end

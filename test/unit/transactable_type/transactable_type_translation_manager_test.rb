@@ -59,7 +59,7 @@ class TransactableType::TransactableTypeTranslationManagerTest < ActiveSupport::
     assert_equal(options[:lessor], translation_manager.find_key('lessor'))
     assert_equal(options[:lessee], translation_manager.find_key('lessee'))
     assert_equal(options[:label], I18n.t(@custom_attribute.label_key, default: '').presence)
-    assert_equal(options[:hint], I18n.t(@custom_attribute.hint_key, default: '').presence)
+    assert_equal(options[:hint], I18n.t(@custom_attribute.hint_key, default: '').presence) if options[:hint].present?
     @translation_manager = nil
   end
 

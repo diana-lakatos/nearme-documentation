@@ -14,29 +14,40 @@ class PaymentMethodAch {
 
     var that = this;
 
+    that.shouldBindEvents = false;
+    that.shouldSetupPlaid = false;
+
     if (!window.Stripe) {
       let s = document.createElement('script');
       s.src = 'https://js.stripe.com/v2/';
       s.addEventListener('load', function() {
-        that._bindEvents();
+        that.shouldBindEvents = true;
       });
       document.head.appendChild(s);
     } else {
-      that._bindEvents();
+      that.shouldBindEvents = true;
     }
 
     if (!window.Plaid) {
       let s = document.createElement('script');
       s.src = 'https://cdn.plaid.com/link/stable/link-initialize.js';
       s.addEventListener('load', function() {
-        that._bindEvents();
-        that._setupPlaid();
+        that.shouldBindEvents = true;
+        that.shouldSetupPlaid = true;
       });
       document.head.appendChild(s);
     } else {
-      that._bindEvents();
+      that.shouldBindEvents = true;
+      that.shouldSetupPlaid = true;
+    }
+
+    if (that.shouldSetupPlaid) {
       that._setupPlaid();
     }
+    if (that.shouldBindEvents) {
+      that._bindEvents();
+    }
+
   }
 
   _bindEvents() {
@@ -74,13 +85,14 @@ class PaymentMethodAch {
     var $form = $(this.form),
       that = this;
 
-    if (that._publishableToken == undefined) {
-      return true;
-    }
-
-    $form.unbind('submit').submit(function(event) {
+    $form.submit(function(event) {
       var AchFormVisible = $(that._ui.container).find('.payment-source-form.hidden').size() === 0;
-     
+
+      if (that._publishableToken.length === 0) {
+        $(that._ui.container).find('.has-error').text('Publishable token not set.');
+        return false;
+      }
+
       if (AchFormVisible) {
         console.log('PaymentMethodAch :: Submitting form');
 
@@ -125,9 +137,17 @@ class PaymentMethodAch {
       // Insert the token into the form so it gets submitted to the server:
       this._ui.container.querySelector('#stripe_plaid_public_token').value = token;
 
+      if ($form.parents('.dialog__content').length > 0) {
+        console.log('PaymentMethodCreditCard :: Form submitted. Submitting checkout form using AJAX. Data: ', $form.serialize());
 
-      // Submit the form:
-      $form.get(0).submit();
+        var ajaxOptions = { url: $form.attr('action'), data: $form.serialize(), method: 'POST' };
+        $(document).trigger('load:dialog.nearme', ajaxOptions);
+
+      } else {
+        console.log('PaymentMethodCreditCard :: Submitting checkout form.');
+        // Submit form while going through standard checkout process
+        $form.get(0).submit();
+      }
     }
   }
 }

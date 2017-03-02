@@ -1,5 +1,9 @@
 'use strict';
 
+if (!Modernizr.promises) {
+  require.ensure('es6-promise', (require) => require('es6-promise').polyfill());
+}
+
 const Events = require('minivents/dist/minivents.commonjs');
 
 class NM {

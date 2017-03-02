@@ -24,7 +24,7 @@ class Admin::UiSettingsControllerTest < ActionController::TestCase
       get :get, id: 'help-is-visible'
 
       assert_equal 'success', json_response['result']
-      assert_equal nil, json_response['data']
+      assert_nil json_response['data']
     end
 
     should 'get value for set setting' do
@@ -33,14 +33,14 @@ class Admin::UiSettingsControllerTest < ActionController::TestCase
       get :get, id: 'help-is-visible'
 
       assert_equal 'success', json_response['result']
-      assert_equal true, json_response['data']
+      assert json_response['data']
     end
   end
 
   context '#set' do
     should 'update ui setting' do
       post :set, id: 'help-is-visible', value: 'true'
-      assert_equal true, @user.get_ui_setting('help-is-visible')
+      assert @user.get_ui_setting('help-is-visible')
     end
   end
 

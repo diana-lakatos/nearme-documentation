@@ -22,7 +22,7 @@ class CreditCardTest < ActiveSupport::TestCase
       assert card.save && card.process!
       assert card.success?
       assert_equal customer_params['default_source'], card.token
-      assert_equal false, card.test_mode
+      refute card.test_mode
     end
 
     should 'persist card if valid and successful multi response with correct mode' do
@@ -32,7 +32,7 @@ class CreditCardTest < ActiveSupport::TestCase
       assert card.success?
       assert_equal customer_params['default_source'], card.token
       assert_equal customer_params['id'], card.instance_client.customer_id
-      assert_equal true, card.test_mode
+      assert card.test_mode
     end
 
     should 'find instance_client when deleted' do

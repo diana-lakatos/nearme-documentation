@@ -11,6 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20170210123804) do
 
   # These are extensions that must be enabled in order to support this database
@@ -1847,6 +1848,7 @@ ActiveRecord::Schema.define(version: 20170210123804) do
   create_table "payment_subscriptions", force: :cascade do |t|
     t.integer  "payment_method_id"
     t.integer  "payment_gateway_id"
+    t.integer  "credit_card_id"
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "subscriber_id"
@@ -1856,7 +1858,6 @@ ActiveRecord::Schema.define(version: 20170210123804) do
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.integer  "payer_id"
-    t.integer  "credit_card_id"
     t.datetime "expired_at"
     t.string   "payment_source_type"
     t.integer  "payment_source_id"
@@ -1923,6 +1924,7 @@ ActiveRecord::Schema.define(version: 20170210123804) do
     t.string   "express_token"
     t.integer  "merchant_account_id"
     t.boolean  "offline",                                                                        default: false
+    t.integer  "credit_card_id"
     t.integer  "payer_id"
     t.integer  "total_amount_cents",                                                             default: 0
     t.boolean  "exclude_from_payout",                                                            default: false
@@ -1930,10 +1932,10 @@ ActiveRecord::Schema.define(version: 20170210123804) do
     t.integer  "payment_gateway_fee_cents",                                                      default: 0
     t.integer  "payment_source_id"
     t.string   "payment_source_type"
-    t.integer  "credit_card_id"
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
+  add_index "payments", ["credit_card_id"], name: "index_payments_on_credit_card_id", using: :btree
   add_index "payments", ["instance_id"], name: "index_payments_on_instance_id", using: :btree
   add_index "payments", ["partner_id"], name: "index_payments_on_partner_id", using: :btree
   add_index "payments", ["payable_id", "payable_type"], name: "index_payments_on_payable_id_and_payable_type", using: :btree

@@ -41,7 +41,7 @@ class PaymentTest < ActiveSupport::TestCase
       @payment.credit_card_attributes = FactoryGirl.attributes_for(:credit_card_attributes)
       refute @payment.authorize!
       billing_authorization = @payment.billing_authorizations.last
-      assert_equal true, @payment.errors.present?
+      assert @payment.errors.present?
       assert_equal @payment.payment_gateway, billing_authorization.payment_gateway
       assert_equal billing_authorization.success?, false
       assert_equal(billing_authorization.response, OpenStruct.new(authorization: '54533', success?: false, message: 'fail'))
