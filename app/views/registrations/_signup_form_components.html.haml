@@ -1,4 +1,4 @@
-= simple_form_for resource, as: :user, url: registration_path(resource_name), html: { class: form_classes } do |f|
+= simple_form_for resource, as: :user, url: registration_path(resource_name), html: { class: form_classes }, namespace: namespace do |f|
   = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
   = hidden_field_tag 'role', @role
 
@@ -17,7 +17,7 @@
         - if model == 'user'
           - if lookup_context.template_exists?("#{field}_component.html.haml", "registrations/signup_form_components/#{model}", true)
             = render partial: "registrations/signup_form_components/#{model}/#{field}_component",
-              locals: { form: f, tab_index: tab_index, hide_password: hide_password, profile_form: profile_form, properties_form: properties_form }
+              locals: { form: f, tab_index: tab_index, hide_password: hide_password, profile_form: profile_form, properties_form: properties_form, namespace: namespace }
 
         - (profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
           = draw_attribute_for_form(attribute, properties_form, nil, { placeholder: attribute.label,
@@ -25,7 +25,7 @@
 
       - if platform_context.instance.force_accepting_tos
         = render 'registrations/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '),
-          checked: !f.object.errors[:accept_terms_of_service].present?
+          checked: !f.object.errors[:accept_terms_of_service].present?, namespace: namespace
       - else
         - if @legal_page_present
           %p.notice.text-center.legal

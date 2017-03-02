@@ -2,7 +2,7 @@
 
   = render 'authentications/services'
 
-  = render 'registrations/signup_form_components', resource: resource, resource_name: resource_name, form_classes: "", hide_password: false
+  = render 'registrations/signup_form_components', resource: resource, resource_name: resource_name, form_classes: "", hide_password: false, namespace: 'no_auth_provider'
 
 - if !user_auth_provider
   .text-center.already-a-user= link_to(t('sign_up_form.buttons.already_user'), '#', data: { modal: true, href: new_user_session_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } )
@@ -10,8 +10,7 @@
 - if user_auth_provider
   .signup-provider
     .inner-box.connected-provider
-      - if request.xhr?
-        = link_to t('sign_up_form.buttons.close'), clear_authentications_url, :method => :post, :remote => true, :class => "close-button"
+      = link_to t('sign_up_form.buttons.close'), clear_authentications_url, :method => :post, :remote => true, :class => "close-button"
       .avatar
         = image_tag user_auth_provider.avatar_url
       %h3= user_auth_provider.name
@@ -20,7 +19,7 @@
     %p.intro
       = t 'sign_up_form.more_details'
 
-    = render 'registrations/signup_form_components', resource: resource, resource_name: resource_name, form_classes: "", hide_password: true
+    = render 'registrations/signup_form_components', resource: resource, resource_name: resource_name, form_classes: "", hide_password: true, namespace: 'with_auth_provider'
 
 - if request.xhr?
   :javascript
@@ -28,3 +27,6 @@
       $(document).trigger('init:signupform.nearme');
       $(document).trigger('init:custominputs.nearme');
     });
+- else
+  - content_for :domready do
+    $(document).trigger('init:signupform.nearme');
