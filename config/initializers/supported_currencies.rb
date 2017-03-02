@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Loads the list of supported currencies, which is used by the Currency input
 # and validators.
 #
@@ -7,9 +8,13 @@
 DesksnearMe::Application.config.supported_currencies = []
 require 'csv'
 
-module SupportedCurrenciesHelper 
+module SupportedCurrenciesHelper
   def self.get_currency_symbol_from_code(currency)
-    symbol = Money::Currency.new(currency).symbol rescue currency
+    symbol = begin
+               Money::Currency.new(currency).symbol
+             rescue
+               currency
+             end
     symbol = currency if symbol.blank?
     symbol
   end

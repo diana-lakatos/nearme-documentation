@@ -167,7 +167,6 @@ class NewSignupFormForSpacer < ActiveRecord::Migration
     {% assign action_types_prefix = transactable_prefix | append: '[action_types_attributes][0]' %}
     {% assign pricing_prefix = action_types_prefix | append: '[pricings_attributes][0]' %}
 
-    {% assign form = @forms['New Lister Signup Form'].form %}
     {% form_for form, url: '/api/users.html', as: user, method: 'post' %}
       {% if form.errors %}
         <ul>
@@ -176,7 +175,7 @@ class NewSignupFormForSpacer < ActiveRecord::Migration
         {% endfor %}
         </ul>
       {% endif %}
-      <input value="{{ @forms['New Lister Signup Form'].configuration.id }}" type="hidden" name="form_configuration_id" />
+      <input value="{{ form_configuration.id }}" type="hidden" name="form_configuration_id" />
       <input value="{{ @page.id }}" type="hidden" name="page_id" />
       <input value="/dashboard" type="hidden" name="return_to" />
       <input type="hidden" name="form[seller_profile_attributes][enabled]" value="1">

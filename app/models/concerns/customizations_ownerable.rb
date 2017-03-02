@@ -8,7 +8,7 @@ module CustomizationsOwnerable
     # to populate inputs
     def customizations_open_struct
       hash = {}
-      custom_attribute_target.custom_model_types.pluck(:name, :id).each do |custom_model_type_array|
+      custom_attribute_target.custom_model_types.pluck(:parameterized_name, :id).each do |custom_model_type_array|
         hash[custom_model_type_array[0]] = customizations.select { |c| c.custom_model_type_id == custom_model_type_array[1] }
       end
       OpenStruct.new(hash)

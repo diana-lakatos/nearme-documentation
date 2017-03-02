@@ -21,6 +21,7 @@ class CustomModelType < ActiveRecord::Base
 
   after_update :destroy_translations!, if: ->(model_type) { model_type.name_changed? }
   after_create :create_translations!
+  before_save :generate_parameterized_name, if: -> (model_type){ model_type.name_changed? }
 
   validates :name, uniqueness: { scope: [:instance_id, :deleted_at] }
 
@@ -29,9 +30,19 @@ class CustomModelType < ActiveRecord::Base
   scope :sellers,       -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable: PlatformContext.current.instance.seller_profile_type }) }
   scope :buyers,        -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable: PlatformContext.current.instance.buyer_profile_type }) }
   scope :user_profiles, -> { joins(:custom_model_type_linkings).where(custom_model_type_linkings: { linkable_type: 'InstanceProfileType' }) }
+  scope :with_parameterized_name, -> (name) { where(parameterized_name: parameterize_name(name)).limit(1) }
 
+  class << self
+    def parameterize_name(name)
+      name.to_s.downcase.tr(' ', '_')
+    end
+  end
   def translation_manager
     @translation_manager ||= CustomModelType::CustomModelTypeTranslationManager.new(self)
+  end
+
+  def generate_parameterized_name
+    self.parameterized_name = self.class.parameterize_name(name)
   end
 
   def to_liquid

@@ -203,7 +203,6 @@ class Payment < ActiveRecord::Base
   end
 
   def direct_token
-    return unless payment_gateway.direct_charge?
     @direct_token ||= generate_direct_token
   end
 
@@ -236,7 +235,7 @@ class Payment < ActiveRecord::Base
 
     apply_pg_fee(response)
     create_transfer(response) if response.try(:success?) && immediate_payout?
-    self.external_id ||= response.params.try("[]", 'id')
+    self.external_id ||= response.params.try('[]', 'id')
     charges.create!(charge_attributes(response))
     errors.add(:base, response.message) if response.try(:message)
     response.success? ? mark_as_paid! : touch(:failed_at) && false
@@ -432,7 +431,7 @@ class Payment < ActiveRecord::Base
              else
                subtotal_amount.cents + host_additional_charges.cents - refunds.guest.successful.sum(:amount_cents)
              end
-    result = result - payment_gateway_fee_cents unless mpo_pays_payment_gateway_fees?
+    result -= payment_gateway_fee_cents unless mpo_pays_payment_gateway_fees?
     result
   end
 

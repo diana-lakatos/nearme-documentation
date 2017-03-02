@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Graph
   module Types
     FeedQueryType = GraphQL::ObjectType.define do

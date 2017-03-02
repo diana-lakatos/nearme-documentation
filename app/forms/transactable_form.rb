@@ -9,11 +9,18 @@ class TransactableForm < BaseForm
     end
   end.freeze
   property :currency
+  validates :currency, presence: true, allow_nil: false, currency: true
   property :location
   property :action_type
+  property :_destroy, virtual: true
 
-  validates :currency, presence: true, allow_nil: false, currency: true
-  validates :name, length: { maximum: 255 }, allow_blank: true
+  def _destroy=(value)
+    model.mark_for_destruction if value == '1'
+  end
+
+  def _destroy
+    '1' if model.marked_for_destruction?
+  end
 
   # FIXME: uncomment
   # validates :location, presence: true, unless: ->(record) { record.location_not_required }

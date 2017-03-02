@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 # Test search that build into Page with Graphql

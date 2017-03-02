@@ -24,5 +24,5 @@ class AddressForm < BaseForm
   property :state
   property :country
   property :postcode
-  property :address_components, field: :hash
+  collection :address_components
 end

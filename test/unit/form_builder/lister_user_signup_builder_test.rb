@@ -141,7 +141,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
           'Default Category' => @default_sub_cat.id
         },
         :customizations => {
-          'Default Model_attributes' => {
+          'default_model_attributes' => {
             '0' => { properties: { default_model_attr: 'my first value' } },
             '1' => { properties: { default_model_attr: 'my second value' } }
           }
@@ -166,7 +166,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
           'Seller Category' => [@seller_sub_cat.id, @seller_sub_cat2.id]
         },
         :customizations => {
-          'Seller Model_attributes' => {
+          'seller_model_attributes' => {
             '0' => { properties: { seller_model_attr: 'my first value' } }
           }
         }
@@ -181,7 +181,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                 address: 'adelaide'
               },
               transactables: {
-                'Boat_attributes' => {
+                'boat_attributes' => {
                   '0' => {
                     name: 'My first boat',
                     currency: 'PLN',
@@ -204,7 +204,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                       'Boat Category' => [@boat_sub_cat.id, @boat_sub_cat2.id]
                     },
                     :customizations => {
-                      'Boat Reviews_attributes' => {
+                      'boat_reviews_attributes' => {
                         '0' => {
                           properties: {
                             author: 'John Doe'
@@ -290,7 +290,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
           }
         },
         :customizations => {
-          'Default Model' => {
+          'default_model' => {
             properties: {
               'default_model_attr' => {
                 validation: {
@@ -332,7 +332,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
           }
         },
         :customizations => {
-          'Seller Model' => {
+          'seller_model' => {
             properties: {
               'seller_model_attr' => {
                 validation: {
@@ -363,7 +363,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
             }
           },
           transactables: {
-            'Boat' => {
+            'boat' => {
               name: {
                 validation: {
                   'presence' => {}
@@ -382,7 +382,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                 }
               },
               customizations: {
-                'Boat Reviews' => {
+                'boat_reviews' => {
                   properties: {
                     'author' => {
                       validation: {

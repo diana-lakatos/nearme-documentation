@@ -12,7 +12,13 @@ class RenderCustomPage
     # fc.build(User.new) needs to be updated - we should do some sort of mapping - i.e. know that
     # form 'Update Transactable' should be initialize with current_user.transactables.where(id: params[:transactable_id])
     # etc.
-    forms = page.form_configurations.each_with_object({}) { |fc, hash| hash[fc.name] = { form: fc.build(User.new).tap(&:prepopulate!), configuration: fc } }
+
+
+
+    forms = page.form_configurations.each_with_object({}) do |fc, hash|
+      object = fc.base_form == 'UserUpdateProfileForm' ? @controller.current_user : User.new
+      hash[fc.name] = { form: nil, configuration: fc }
+    end
     forms.merge!(submitted_form) if submitted_form.present?
     forms = forms.with_indifferent_access
     @controller.instance_variable_set(:'@forms', forms)

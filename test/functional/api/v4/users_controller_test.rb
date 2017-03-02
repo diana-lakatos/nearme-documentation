@@ -28,24 +28,6 @@ module Api
           end
 
           context 'extra configuration' do # rubocop:disable Metrics/BlockLength
-            context 'terms of service' do
-              setup do
-                PlatformContext.current.instance.update_attribute(:force_accepting_tos, true)
-              end
-
-              should 'not sign up without accepting terms if required' do
-                assert_no_difference('User.count') do
-                  post :create, form: user_attributes
-                end
-              end
-
-              should 'sign up after accepting ToS' do
-                assert_difference('User.count') do
-                  post :create, form: user_attributes.merge(accept_terms_of_service: '1')
-                end
-              end
-            end
-
             context 'default profile' do
               setup do
                 FactoryGirl.create(:user_custom_attribute, name: 'user_attr')

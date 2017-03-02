@@ -42,44 +42,15 @@ action_types:
         allow_nil_price_cents: false
 
 custom_attributes:
+  - name: ndis_category
+    label: 'NDIS Category'
+    html_tag: 'input'
+    attribute_type: string
+    validation:
+      required: false
 
 validation:
   - field_name: name
     required: false
 
 form_components:
-  - type: transactable_attributes
-    name: General
-    fields:
-      - transactable: Category - NDIS
-      - transactable: location
-      - transactable: availability
-      - transactable: price
-
-  - type: space_wizard
-    name: Tell us a little about your organization
-    fields:
-      - seller: organization_name
-      - seller: organization_description
-
-  - type: space_wizard
-    name: Describe your order
-    fields:
-      - transactable: name
-      - transactable: order_description
-      - transactable: order_contact
-      - transactable: Category - Language
-      - transactable: other_requirements
-      - transactable: approximate_budget
-      - transactable: seller_attachments
-
-  - type: space_wizard
-    name: Delivery and payment
-    fields:
-      - transactable: how_pay_for_order
-      - transactable: purchase_order_number
-      - transactable: delivery_date
-      - transactable: delivery_address
-
-
-

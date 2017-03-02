@@ -34,9 +34,16 @@
         <li><a href="/contact">CONTACT</a></li>
         {% if current_user == blank %}
           <li><a href="/users/sign_in?return_to=/">LOGIN</a></li>
-          <li><a href="/api/users/new?return_to=/choose-role" class="button-a">SIGN UP</a></li>
+          <li><a href="/api/users/new" class="button-a">SIGN UP</a></li>
         {% else %}
-          <li><a href="/dashboard/edit_profile" class="user-name">{{ current_user.first_name | upcase }}</a></li>
+          {% if current_user.has_buyer_profile? %}
+            {% assign edit_profile_path = '/dashboard/consumer/general' %}
+          {% elsif current_user.has_seller_profile? %}
+            {% assign edit_profile_path = '/dashboard/individual/general' %}
+          {% else %}
+            {% assign edit_profile_path = '/choose-role' %}
+          {% endif %}
+          <li><a href="{{ edit_profile_path }}" class="user-name">{{ current_user.first_name | upcase }}</a></li>
         {% endif %}
       </ul>
     </div>

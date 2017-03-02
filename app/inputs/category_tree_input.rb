@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 class CategoryTreeInput < SimpleForm::Inputs::StringInput
   def input(wrapper_options = nil)
-    category = options[:category]
+    category = options[:category].presence || Category.roots.find_by(name: @attribute_name).tap do |c|
+      raise "Could not find category with name: #{@attribute_name}. Valid category names: #{Category.roots.pluck(:name)}" if c.nil?
+    end
 
     input_html_options['data-category-id'] = category.id
     input_html_options['data-category-api-url'] = Rails.application.routes.url_helpers.tree_new_ui_dashboard_api_category_path(category.id)

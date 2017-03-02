@@ -1,0 +1,16 @@
+---
+name: Enquirer Emergency Contact
+slug: dashboard/consumer/emergency-contacts
+layout_name: dashboard
+---
+<h1>Manage your profile</h1>
+<div class="panel">
+  <div class="panel-body">
+    {% include 'shared/profile_navigation', active: 'emergency-contacts' %}
+
+    <div class='form-component-wrapper form-component-default'>
+      {% assign current_user_id = current_user.id %}
+      {% render_form enquirer_emergency_contacts, object_class: User, object_id: @current_user_id %}
+    </div>
+  </div>
+</div>

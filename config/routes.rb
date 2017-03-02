@@ -1214,6 +1214,11 @@ DesksnearMe::Application.routes.draw do
         end
       end
       scope module: :v4, constraints: Constraints::ApiConstraints.new(version: 4, default: true) do
+        resources :users, only: [:new, :create, :show, :update, :destroy] do
+          member do
+            get :verify
+          end
+        end
         namespace :user do
           resource :space_wizard, only: [:create]
           resources :transactables, only: [:index]
@@ -1227,11 +1232,6 @@ DesksnearMe::Application.routes.draw do
         end
         resources :sessions, only: [:create]
         resources :forms, only: [:create]
-        resources :users, only: [:new, :create, :show] do
-          member do
-            get :verify
-          end
-        end
         resources :photos, only: [:create]
         resources :reverse_proxy_links, only: [:index, :create]
         resources :wish_list_items, only: [:index, :create, :destroy]

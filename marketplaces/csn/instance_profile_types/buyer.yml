@@ -1,4 +1,4 @@
-name: Individual
+name: Buyer
 profile_type: buyer
 onboarding: true
 searchable: false
@@ -12,7 +12,210 @@ custom_attributes:
   # We use custom attributes for some fields that are in user to avoid
   # messing with the translations (as fields may have a different title
   # for seller)
-
+  - name: languages
+    label: 'Languages'
+    html_tag: 'select'
+    attribute_type: array
+    valid_values:
+      - 'Arabic'
+      - 'Auslan (Australian sign language)'
+      - 'Azerbaijani'
+      - 'Bengali'
+      - 'Burmese'
+      - 'Cantonese'
+      - 'Croatian'
+      - 'Dutch'
+      - 'English'
+      - 'Filipino'
+      - 'French'
+      - 'German'
+      - 'Greek'
+      - 'Hebrew'
+      - 'Hindi'
+      - 'Hungarian'
+      - 'Indonesian'
+      - 'Italian'
+      - 'Japanese'
+      - 'Javanese'
+      - 'Korean'
+      - 'Macedonian'
+      - 'Malayalam'
+      - 'Maltese'
+      - 'Mandarin'
+      - 'Mirathi'
+      - 'Panjabi'
+      - 'Persian'
+      - 'Polish'
+      - 'Portugese'
+      - 'Romanian'
+      - 'Russian'
+      - 'Serbian'
+      - 'Sindhi'
+      - 'Sinhalese'
+      - 'Somoan'
+      - 'Spanish'
+      - 'Sunda'
+      - 'Tamil'
+      - 'Telugu'
+      - 'Thai'
+      - 'Turkish'
+      - 'Ukranian'
+      - 'Urdu'
+      - 'Vietnamese'
+    validation:
+      required: false
+  - name: religion
+    label: 'religion'
+    html_tag: 'select'
+    attribute_type: string
+    valid_values:
+      - 'Anglican'
+      - 'Buddhist'
+      - 'Catholic'
+      - 'Christian - other'
+      - 'Greek Orthodox'
+      - 'Hindu'
+      - 'Islamic'
+      - 'Jewish'
+      - 'None'
+      - 'Presbyterian'
+      - 'Russian Orthodox'
+      - 'Sikh'
+      - 'Spiritual'
+      - 'Uniting Church'
+      - 'Other'
+    validation:
+      required: false
+  - name: ethnicity
+    label: Ethnicity
+    html_tag: 'select'
+    attribute_type: string
+    valid_values:
+      - 'Australian'
+      - 'Australian Aboriginal'
+      - 'Torres Strait Islander'
+      - 'New Zealander'
+      - 'Maori'
+      - 'Polynesian'
+      - 'Other Oceanian'
+      - 'Western European'
+      - 'Northern European'
+      - 'Southern & Eastern European'
+      - 'Middle Eastern'
+      - 'Jewish'
+      - 'Asian'
+      - 'North American'
+      - 'South American'
+      - 'Central American'
+      - 'Carribbean Islander'
+      - 'South African'
+      - 'Other African'
+    validation:
+      required: false
+  - name: allergies
+    label: 'Allergies'
+    html_tag: 'select'
+    attribute_type: array
+    valid_values:
+      - 'Alergy 1'
+      - 'Alergy 2'
+      - 'Other'
+    validation:
+      required: false
+  - name: allergies_other
+    label: 'Other Allergies'
+    html_tag: 'input'
+    attribute_type: string
+    validation:
+      required: false
+  - name: date_of_birth
+    attribute_type: date
+    html_tag: input
+    search_in_query: false
+    label: Date of Birth
+  - name: gender
+    attribute_type: string
+    html_tag: select
+    search_in_query: false
+    label: Gender
+  - name: aboriginal
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: Aboriginal
+  - name: torres_strait_islander
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: Torres Strait Islander
+  - name: smoker
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: Smoker
+  - name: have_pets
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: Have pets
+  - name: pets
+    attribute_type: string
+    html_tag: input
+    search_in_query: false
+    label: Pets
+  - name: my_peference_gender
+    attribute_type: array
+    html_tag: select
+    search_in_query: false
+    label: Gender
+  - name: my_peference_ethnicitiy
+    attribute_type: array
+    html_tag: select
+    search_in_query: false
+    label: Ethnicity
+  - name: my_peference_language
+    attribute_type: array
+    html_tag: select
+    search_in_query: false
+    label: Language
+  - name: my_preference_smoker
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: Smoker
+  - name: my_preference_pet_friendly
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: Pet Friendly
+  - name: my_preference_lgbti_friendly
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: LGBTI Friendly
+  - name: my_preference_days
+    attribute_type: boolean
+    html_tag: select
+    valid_values:
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
+    search_in_query: false
+    label: Preferred Days
+  - name: my_preference_times
+    attribute_type: boolean
+    html_tag: select
+    valid_values:
+      - Morning
+      - Day
+      - Evening
+      - Overnight
+    search_in_query: false
+    label: Preferred Times
 
 form_components:
   - type: buyer_profile_types

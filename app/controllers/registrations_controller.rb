@@ -410,11 +410,11 @@ class RegistrationsController < Devise::RegistrationsController
     @user_update_profile_form = @form_configuration&.build(current_user)
     return true if @user_update_profile_form.present?
     @user_update_profile_form = if current_user.buyer_profile.present? && current_user.seller_profile.blank?
-                                  FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'Enquirer Update')
+                                  FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'enquirer_update')
                                 elsif current_user.seller_profile.present? && current_user.buyer_profile.blank?
-                                  FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'Lister Update')
+                                  FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'lister_update')
                                 else
-                                  FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'Default Update')
+                                  FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'default_update')
                                 end.first.build(current_user)
   end
 end

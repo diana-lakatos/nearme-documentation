@@ -82,7 +82,7 @@ partial: true
     <div class='owners'>
       <div class='links'>
         {% assign link_label = 'dashboard.merchant_account.add_owner' | translate %}
-        {% link_to_add_association label: @link_label, form: f, class: 'btn btn-danger', asocciation: owners, partial: dashboard/company/merchant_accounts/stripe_connect_owner_fields, render_options-locals: merchant_account %}
+        {% link_to_add_association label: @link_label, form: f, class: 'btn btn-danger', association: owners, partial: dashboard/company/merchant_accounts/stripe_connect_owner_fields, render_options-locals: merchant_account %}
       </div>
     </div>
     <br />
@@ -92,13 +92,13 @@ partial: true
     <p>
       <label>Upsideoftalent.com is PCI Level 1-compliant through our integration with Stripe.</label>
       <a style="cursor: pointer;" onclick="$('#read-more-cpi').toggle();">Read More</a>
-      
+
     </p>
     <p id="read-more-cpi" style="display: none;">
       UoT uses Stripe Connect for our payment gateway like other marketplaces including Lyft, Kickstarter, Shopify, Foursquare, Evite, Squarespace and others at <a href="https://stripe.com/customers" target="_blank">https://stripe.com/customers</a>. We selected Stripe based on their security approach because the credit card data entered into your profile is never stored on an UoT server. Instead, the data is sent to Stripe. Why is this so important? UoT is automatically PCI Level 1-compliant through Stripe, which is the highest level of certification, since we don't store any sensitive credit card data on our servers and instead leverage the Stripe infrastructure. This business practice is more secure because a breach of our servers will not result in any stolen credit card data. Our integration with Stripe is seamless through their Stripe Connect API so this means no redirection to another page to fill in your information. This leads to a much smoother and secure user experience
     </p>
   </div>
-  
+
   <div class="{% if merchant_account.tos_error %}has-error{%endif%}">
     <label>
       <input name="merchant_account[tos]" type="hidden" value="0">

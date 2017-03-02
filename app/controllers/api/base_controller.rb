@@ -24,6 +24,15 @@ module Api
     rescue_from ::DNM::Error, with: :nm_error
     rescue_from ::DNM::Unauthorized, with: :nm_unauthorized
 
+    # Return the current user
+    def current_user
+      if auth_token.present?
+        @current_user ||= User.find_by(authentication_token: auth_token)
+      else
+        super
+      end
+    end
+
     protected
 
     def layout_for_request_type
@@ -57,8 +66,6 @@ module Api
       render json: ApiSerializer.serialize_errors(errors), status: status
     end
 
-    private
-
     # Ensure the user is authenticated
     def require_authentication
       raise DNM::Unauthorized unless current_user
@@ -67,15 +74,6 @@ module Api
     def require_authorization
       return true if verified_api_request? || valid_api_token? # we assume api token is secret
       current_user.instance_admin? # for now no role distinguish - we assume MPO won't be hacking :)
-    end
-
-    # Return the current user
-    def current_user
-      if auth_token.present?
-        @current_user ||= User.find_by(authentication_token: auth_token)
-      else
-        super
-      end
     end
 
     # Retrieve the current authorization token

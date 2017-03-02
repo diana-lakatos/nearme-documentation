@@ -1,11 +1,177 @@
 # default profile
-name: Carer
+name: Seller
 profile_type: seller
 onboarding: false
 custom_attributes:
   # We use custom attributes for some fields that are in user to avoid
   # messing with the translations (as fields may have a different title
   # for seller)
+  - name: languages
+    label: 'Languages'
+    html_tag: 'select'
+    attribute_type: array
+    valid_values:
+      - 'Arabic'
+      - 'Auslan (Australian sign language)'
+      - 'Azerbaijani'
+      - 'Bengali'
+      - 'Burmese'
+      - 'Cantonese'
+      - 'Croatian'
+      - 'Dutch'
+      - 'English'
+      - 'Filipino'
+      - 'French'
+      - 'German'
+      - 'Greek'
+      - 'Hebrew'
+      - 'Hindi'
+      - 'Hungarian'
+      - 'Indonesian'
+      - 'Italian'
+      - 'Japanese'
+      - 'Javanese'
+      - 'Korean'
+      - 'Macedonian'
+      - 'Malayalam'
+      - 'Maltese'
+      - 'Mandarin'
+      - 'Mirathi'
+      - 'Panjabi'
+      - 'Persian'
+      - 'Polish'
+      - 'Portugese'
+      - 'Romanian'
+      - 'Russian'
+      - 'Serbian'
+      - 'Sindhi'
+      - 'Sinhalese'
+      - 'Somoan'
+      - 'Spanish'
+      - 'Sunda'
+      - 'Tamil'
+      - 'Telugu'
+      - 'Thai'
+      - 'Turkish'
+      - 'Ukranian'
+      - 'Urdu'
+      - 'Vietnamese'
+    validation:
+      required: false
+  - name: religion
+    label: 'religion'
+    html_tag: 'select'
+    attribute_type: string
+    valid_values:
+      - 'Anglican'
+      - 'Buddhist'
+      - 'Catholic'
+      - 'Christian - other'
+      - 'Greek Orthodox'
+      - 'Hindu'
+      - 'Islamic'
+      - 'Jewish'
+      - 'None'
+      - 'Presbyterian'
+      - 'Russian Orthodox'
+      - 'Sikh'
+      - 'Spiritual'
+      - 'Uniting Church'
+      - 'Other'
+    validation:
+      required: false
+  - name: ethnicity
+    label: Ethnicity
+    html_tag: 'select'
+    attribute_type: string
+    valid_values:
+      - 'Australian'
+      - 'Australian Aboriginal'
+      - 'Torres Strait Islander'
+      - 'New Zealander'
+      - 'Maori'
+      - 'Polynesian'
+      - 'Other Oceanian'
+      - 'Western European'
+      - 'Northern European'
+      - 'Southern & Eastern European'
+      - 'Middle Eastern'
+      - 'Jewish'
+      - 'Asian'
+      - 'North American'
+      - 'South American'
+      - 'Central American'
+      - 'Carribbean Islander'
+      - 'South African'
+      - 'Other African'
+    validation:
+      required: false
+  - name: allergies
+    label: 'Allergies'
+    html_tag: 'select'
+    attribute_type: array
+    valid_values:
+      - 'Alergy 1'
+      - 'Alergy 2'
+      - 'Other'
+    validation:
+      required: false
+  - name: allergies_other
+    label: 'Other Allergies'
+    html_tag: 'input'
+    attribute_type: string
+    validation:
+      required: false
+  - name: web_summary
+    attribute_type: string
+    html_tag: input
+    search_in_query: false
+    label: Web Summary
+  - name: web_profile
+    attribute_type: string
+    html_tag: input
+    search_in_query: false
+    label: Web Profile
+  - name: picture
+    attribute_type: photo
+    html_tag: input
+    search_in_query: false
+    label: Picture
+  - name: date_of_birth
+    attribute_type: date
+    html_tag: input
+    search_in_query: false
+    label: Date of Birth
+  - name: gender
+    attribute_type: string
+    html_tag: select
+    search_in_query: false
+    label: Gender
+  - name: picture
+    attribute_type: photo
+    html_tag: input
+    search_in_query: false
+    label: Picture
+  - name: aboriginal
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: Aboriginal
+  - name: torres_strait_islander
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: Torres Strait Islander
+  - name: smoker
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: Smoker
+  - name: have_pets
+    attribute_type: boolean
+    html_tag: check_box
+    search_in_query: false
+    label: Have pets
 
 form_components:
   - type: seller_profile_types

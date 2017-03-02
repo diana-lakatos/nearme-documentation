@@ -18,7 +18,7 @@ module Api
         if params[:page_id].present? && @form_configuration.present? && namespaced_object.last.errors.present?
           result = respond_with(*namespaced_object, options) do |format|
             submitted_form ||= {}
-            submitted_form = { @form_configuration.name => { form: namespaced_object.last, configuration: @form_configuration } } if @form_configuration.present?
+            submitted_form = { @form_configuration.name => { form: namespaced_object.last.tap(&:prepopulate!), configuration: @form_configuration } } if @form_configuration.present?
             format.html do
               RenderCustomPage.new(self).render(page: Page.find(params[:page_id]),
                                                 params: params,

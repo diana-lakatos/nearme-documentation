@@ -1,5 +1,9 @@
 en:
   flash_messages:
+    api:
+      users:
+        update:
+          notice: 'Changes has been successfuly saved.'
     need_verification_html: 'You need to be a verified user in order to browse the website.'
     account_expired_html: 'Unfortunately, your account has expired on %{expires_at}. Please contact support at KOCCommunity@hallmark.com'
     orders:

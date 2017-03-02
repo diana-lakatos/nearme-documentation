@@ -91,7 +91,7 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
           :validation => {
             presence: {}
           },
-          'Links' => {
+          'links' => {
             properties: {
               'url_link' => {
                 validation: {
@@ -100,7 +100,7 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
               }
             }
           },
-          'Recommendations' => {
+          'recommendations' => {
             properties: {
               'author' => {
                 validation: {
@@ -127,7 +127,7 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
         }
       },
       :current_address => {
-        address: {},
+        address: { validation: { presence: {} } },
         should_check_address: {},
         local_geocoding: {},
         latitude: {},
@@ -148,7 +148,8 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
           presence: {}
         }
       },
-      'tag_list' => {}
+      'tag_list' => {},
+      password_confirmation: { property_options: { virtual: true }, validation: { confirm: {} } }
     }
   end
 
@@ -165,7 +166,7 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
         }
       },
       :current_address => {
-        address: {},
+        address: { validation: { presence: {} } },
         should_check_address: {},
         local_geocoding: {},
         latitude: {},
@@ -180,7 +181,7 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
         address_components: {}
       },
       'country_name' => {},
-      'mobile_number' => {},
+      'mobile_number' => { validation: { presence: {} } },
       :default_profile => {
         validation: {
           presence: {}
@@ -201,7 +202,8 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
           }
         }
       },
-      'company_name' => {}
+      'company_name' => {},
+      password_confirmation: { property_options: { virtual: true }, validation: { confirm: {} } }
     }
   end
 

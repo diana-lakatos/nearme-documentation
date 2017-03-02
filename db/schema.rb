@@ -732,8 +732,9 @@ ActiveRecord::Schema.define(version: 20170308095224) do
     t.string   "name"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "parameterized_name"
   end
 
   add_index "custom_model_types", ["deleted_at", "instance_id"], name: "index_custom_model_types_on_deleted_at_and_instance_id", using: :btree
@@ -1306,23 +1307,6 @@ ActiveRecord::Schema.define(version: 20170308095224) do
   end
 
   add_index "instance_views", ["instance_id", "path", "format", "handler", "draft"], name: "instance_path_with_format_and_handler", using: :btree
-
-  create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.integer  "instance_type_id"
-    t.integer  "instance_id"
-    t.text     "body"
-    t.string   "path",                 limit: 255
-    t.string   "locale",               limit: 255
-    t.string   "format",               limit: 255
-    t.string   "handler",              limit: 255
-    t.boolean  "partial"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "view_type",            limit: 255
-    t.integer  "transactable_type_id"
-    t.integer  "custom_theme_id"
-  end
 
   create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
     t.integer  "id"
@@ -2969,6 +2953,7 @@ ActiveRecord::Schema.define(version: 20170308095224) do
     t.boolean  "access_restricted_to_invited"
     t.boolean  "auto_seek_collaborators",                                                        default: false
     t.string   "default_sort_by"
+    t.string   "parameterized_name"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

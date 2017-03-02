@@ -39,6 +39,7 @@ class Instance < ActiveRecord::Base
   has_many :api_keys
   has_many :custom_themes, as: :themeable
   has_many :companies, inverse_of: :instance
+  has_many :form_configurations, dependent: :destroy
   has_many :locations, inverse_of: :instance
   has_many :locations_impressions, through: :locations, source: :impressions, class_name: 'Impression'
   has_many :location_types, inverse_of: :instance
@@ -421,9 +422,8 @@ class Instance < ActiveRecord::Base
 
   def searchable_classes
     SEARCHABLE_CLASSES.map do |searchable_class|
-      _klass =searchable_class.constantize
+      _klass = searchable_class.constantize
       _klass::DEPENDENT_CLASS if _klass.searchable.any?
     end.compact
   end
-
 end

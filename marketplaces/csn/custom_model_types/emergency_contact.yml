@@ -1,0 +1,20 @@
+name: Emergency Contacts
+instance_profile_types: [Buyer, Seller]
+
+custom_attributes:
+  - name: contact_name
+    label: Name
+    attribute_type: string
+    html_tag: input
+  - name: contact_phone
+    label: Phone
+    attribute_type: string
+    html_tag: input
+  - name: contact_email
+    label: Email
+    attribute_type: string
+    html_tag: input
+  - name: contact_address
+    label: Address
+    attribute_type: string
+    html_tag: input

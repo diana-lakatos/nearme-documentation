@@ -10,11 +10,19 @@ When(/^Form builder configuration is in place$/) do
                                     MarketplaceBuilder::Creators::CategoriesCreator,
                                     MarketplaceBuilder::Creators::CustomModelTypesCreator
                                   ])
+  Country.create!("iso_name" => "UNITED STATES",
+                  "iso" => "US",
+                  "iso3" => "USA",
+                  "name" => "United States",
+                  "numcode" => 840,
+                  "states_required" => true,
+                  "calling_code" => "1"
+                 )
   FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).go!
 end
 
 When(/^I update my profile and trigger all validation errors$/) do
-  page.find('a[data-association="Everything Model"]').click
+  page.find('a[data-association="everything_model"]').click
   click_button 'Save'
 end
 
@@ -44,26 +52,26 @@ Then(/^All error messages for the form are correctly displayed$/) do
    '.user_buyer_profile_custom_attachments__file',
    '.user_buyer_profile_categories_Area',
    '.user_buyer_profile_categories_Languages',
-   '.user_buyer_profile_customizations_Everything_Model_custom_images__image',
-   '.user_buyer_profile_customizations_Everything_Model_custom_attachments__file',
-   '.user_buyer_profile_customizations_Everything_Model_properties_name'].each do |input_wrapper_klass|
-    within(input_wrapper_klass) do
-      page.should have_content "can't be blank"
-    end
-  end
+   '.user_buyer_profile_customizations_everything_model_custom_images__image',
+   '.user_buyer_profile_customizations_everything_model_custom_attachments__file',
+   '.user_buyer_profile_customizations_everything_model_properties_name'].each do |input_wrapper_klass|
+     within(input_wrapper_klass) do
+       page.should have_content "can't be blank"
+     end
+   end
 
-  # this is optional category - no validation here
-  within('.user_buyer_profile_categories_Industry') do
-    page.should_not have_content "can't be blank"
-  end
+   # this is optional category - no validation here
+   within('.user_buyer_profile_categories_Industry') do
+     page.should_not have_content "can't be blank"
+   end
 end
 
 When(/^I upload images and attachments without filling rest of the form$/) do
   attach_file find('.user_buyer_profile_custom_attachments__file input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'hello.pdf')
   attach_file find('.user_buyer_profile_custom_images__image input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
 
-  attach_file find('.user_buyer_profile_customizations_Everything_Model_custom_images__image input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
-  attach_file find('.user_buyer_profile_customizations_Everything_Model_custom_attachments__file input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
+  attach_file find('.user_buyer_profile_customizations_everything_model_custom_images__image input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
+  attach_file find('.user_buyer_profile_customizations_everything_model_custom_attachments__file input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
   click_button 'Save'
 end
 
@@ -75,10 +83,10 @@ Then(/^All images and attachments are properly stored and persisted$/) do
     page.should have_content('840 Bytes')
     assert page.find('a[download]')[:href].include?('hello.pdf')
   end
-  within('.user_buyer_profile_customizations_Everything_Model_custom_images__image') do
+  within('.user_buyer_profile_customizations_everything_model_custom_images__image') do
     assert page.find('a.action--preview')[:href].include?('foobear.jpeg')
   end
-  within('.user_buyer_profile_customizations_Everything_Model_custom_attachments__file') do
+  within('.user_buyer_profile_customizations_everything_model_custom_attachments__file') do
     assert page.find('a[download]')[:href].include?('bully.jpeg')
     page.should have_content('33.9 KB')
   end
@@ -87,19 +95,19 @@ Then(/^All images and attachments are properly stored and persisted$/) do
 end
 
 When(/^I add two and remove one customization and submit form again to see what happens$/) do
-  page.find('a[data-association="Everything Model"]').click
+  page.find('a[data-association="everything_model"]').click
 
   within('.nested-fields-set > .nested-fields') do
-    attach_file find('.user_buyer_profile_customizations_Everything_Model_new_Everything_Model_custom_attachments__file input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
-    attach_file find('.user_buyer_profile_customizations_Everything_Model_new_Everything_Model_custom_images__image input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
+    attach_file find('input[type="file"].attachment', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
+    attach_file find('input[type="file"].image', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
     find('a.remove_fields').click
   end
 
-  page.find('a[data-association="Everything Model"]').click
+  page.find('a[data-association="everything_model"]').click
   within('.nested-fields-set > .nested-fields') do
-    attach_file find('.user_buyer_profile_customizations_Everything_Model_new_Everything_Model_custom_attachments__file input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
-    attach_file find('.user_buyer_profile_customizations_Everything_Model_new_Everything_Model_custom_images__image input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
-    fill_in find('#user_buyer_profile_attributes_customizations_attributes_Everything_Model_attributes_new_Everything_Model_properties_attributes_name')[:name], with: 'my name'
+    attach_file find('input[type="file"].attachment', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
+    attach_file find('input[type="file"].image', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
+    fill_in find('input.string')[:name], with: 'my name'
   end
   click_button 'Save'
 end
@@ -112,18 +120,18 @@ Then(/^The previously uploaded images and attachments stay untouched and new one
     page.should have_content('840 Bytes')
     assert page.find('a[download]')[:href].include?('hello.pdf')
   end
-  within('.nested-container:first-child .user_buyer_profile_customizations_Everything_Model_custom_images__image') do
+  within('.nested-container:first-child .user_buyer_profile_customizations_everything_model_custom_images__image') do
     assert page.find('a.action--preview')[:href].include?('foobear.jpeg')
   end
-  within('.nested-container:first-child .user_buyer_profile_customizations_Everything_Model_custom_attachments__file') do
+  within('.nested-container:first-child .user_buyer_profile_customizations_everything_model_custom_attachments__file') do
     assert page.find('a[download]')[:href].include?('bully.jpeg')
     page.should have_content('33.9 KB')
   end
   within('.nested-container:nth-of-type(2)') do
-    within('.user_buyer_profile_customizations_Everything_Model_custom_images__image') do
+    within('.user_buyer_profile_customizations_everything_model_custom_images__image') do
       assert page.find('a.action--preview')[:href].include?('bully.jpeg')
     end
-    within('.user_buyer_profile_customizations_Everything_Model_custom_attachments__file') do
+    within('.user_buyer_profile_customizations_everything_model_custom_attachments__file') do
       assert page.find('a[download]')[:href].include?('foobear.jpeg')
       page.should have_content('50.1 KB')
     end
@@ -138,11 +146,11 @@ When(/^I remove first set of images and swap the other$/) do
   end
   # swap image with attachment to check if update work despite validation error :)
   within('.nested-container:nth-of-type(2)') do
-    attach_file find('.user_buyer_profile_customizations_Everything_Model_custom_images__image input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
+    attach_file find('.user_buyer_profile_customizations_everything_model_custom_images__image input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
     # unfortunately image hides the attachment input field, so we need to use some js hack to make it visible
-    page.execute_script("$('.nested-container:nth-of-type(2) .user_buyer_profile_customizations_Everything_Model_custom_images__image .file-upload').hide()")
-    attach_file find('.user_buyer_profile_customizations_Everything_Model_custom_attachments__file input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
-    fill_in find('.user_buyer_profile_customizations_Everything_Model_properties_name input')[:name], with: 'my name'
+    page.execute_script("$('.nested-container:nth-of-type(2) .user_buyer_profile_customizations_everything_model_custom_images__image .file-upload').hide()")
+    attach_file find('.user_buyer_profile_customizations_everything_model_custom_attachments__file input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
+    fill_in find('.user_buyer_profile_customizations_everything_model_properties_name input')[:name], with: 'my name'
   end
   click_button 'Save'
 end
@@ -157,14 +165,14 @@ Then(/^The first set is removed and other is swappped$/) do
   end
   page.should have_css('.customizations .nested-container', count: 1)
   within('.nested-container') do
-    within('.user_buyer_profile_customizations_Everything_Model_custom_images__image') do
+    within('.user_buyer_profile_customizations_everything_model_custom_images__image') do
       assert page.find('a.action--preview')[:href].include?('foobear.jpeg')
     end
-    within('.user_buyer_profile_customizations_Everything_Model_custom_attachments__file') do
+    within('.user_buyer_profile_customizations_everything_model_custom_attachments__file') do
       assert page.find('a[download]')[:href].include?('bully.jpeg')
       page.should have_content('33.9 KB')
     end
-    assert_equal 'my name', find('.user_buyer_profile_customizations_Everything_Model_properties_name input').value
+    assert_equal 'my name', find('.user_buyer_profile_customizations_everything_model_properties_name input').value
   end
   assert_equal ['bully.jpeg', 'foobear.jpeg', 'foobear.jpeg'], CustomImage.where(owner_type: nil, owner_id: nil).order('image').pluck(:image)
   assert_equal ['bully.jpeg', 'bully.jpeg', 'hello.pdf'], CustomAttachment.where(owner_type: nil, owner_id: nil).order('file').pluck(:file)
@@ -209,14 +217,14 @@ Then(/^all data is properly stored in DB and the form is re\-rendered with those
   end
   page.should have_css('.customizations .nested-container', count: 1)
   within('.nested-container') do
-    within('.user_buyer_profile_customizations_Everything_Model_custom_images__image') do
+    within('.user_buyer_profile_customizations_everything_model_custom_images__image') do
       assert page.find('a.action--preview')[:href].include?('foobear.jpeg')
     end
-    within('.user_buyer_profile_customizations_Everything_Model_custom_attachments__file') do
+    within('.user_buyer_profile_customizations_everything_model_custom_attachments__file') do
       assert page.find('a[download]')[:href].include?('bully.jpeg')
       page.should have_content('33.9 KB')
     end
-    assert_equal 'my name', find('.user_buyer_profile_customizations_Everything_Model_properties_name input').value
+    assert_equal 'my name', find('.user_buyer_profile_customizations_everything_model_properties_name input').value
   end
 
   assert_equal 'Adelaide SA, Australia', find('#user_current_address_attributes_address').value

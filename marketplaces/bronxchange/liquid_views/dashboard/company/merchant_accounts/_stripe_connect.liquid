@@ -80,7 +80,7 @@
     <div class='owners'>
       <div class='links'>
         {% assign link_label = 'dashboard.merchant_account.add_owner' | translate %}
-        {% link_to_add_association label: @link_label, form: f, class: 'btn btn-danger', asocciation: owners, partial: dashboard/company/merchant_accounts/stripe_connect_owner_fields, render_options-locals: merchant_account %}
+        {% link_to_add_association label: @link_label, form: f, class: 'btn btn-danger', association: owners, partial: dashboard/company/merchant_accounts/stripe_connect_owner_fields, render_options-locals: merchant_account %}
       </div>
     </div>
     <br />

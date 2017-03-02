@@ -1,0 +1,16 @@
+---
+name: Lister Services List
+slug: dashboard/carer/services-list
+layout_name: dashboard
+---
+<h1>Manage your profile</h1>
+<div class="panel">
+  <div class="panel-body">
+    {% include 'shared/carer_navigation', active: 'services-list' %}
+
+    <div class='form-component-wrapper form-component-default'>
+      {% assign current_user_id = current_user.id %}
+      {% render_form lister_services_list, object_class: User, object_id: @current_user_id %}
+    </div>
+  </div>
+</div>

@@ -6,7 +6,7 @@ module TransactablesOwnerable
     # to populate inputs
     def transactables_open_struct
       hash = {}
-      TransactableType.pluck(:name, :id).each do |transactable_types_array|
+      TransactableType.pluck(:parameterized_name, :id).each do |transactable_types_array|
         hash[transactable_types_array[0]] = transactables.select { |c| c.transactable_type_id == transactable_types_array[1] }
       end
       OpenStruct.new(hash)

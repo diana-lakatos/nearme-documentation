@@ -1,0 +1,35 @@
+---
+name: default_signup
+base_form: UserSignup::DefaultUserSignup
+configuration:
+  first_name:
+    validation:
+      presence: {}
+  last_name: {}
+  password: {}
+  password_confirmation:
+    property_options:
+      virtual: true
+    validation:
+      confirm: true
+  country_name: {}
+  mobile_number: {}
+  default_profile:
+    validation:
+      presence: {}
+    properties:
+      validation:
+          presence: {}
+      how_did_you_hear:
+        validation: {}
+      landline:
+        validation: {}
+      accept_newsletter:
+        validation: {}
+  accept_terms_of_service:
+    property_options:
+      virtual: true
+    validation:
+      acceptance:
+        allow_nil: false
+---

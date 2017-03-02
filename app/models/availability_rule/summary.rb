@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # A summary wrapper for AvailabilityRule collections which provides an interface to the availability rules in aggregate.
 class AvailabilityRule::Summary
   def initialize(rules)
@@ -38,11 +39,11 @@ class AvailabilityRule::Summary
   #           :start_minute - Start minute of the day
   #           :end_minute - End minute of the day
   def open_on?(options)
-    fail ArgumentError.new('Options must be a hash') unless options.is_a?(Hash)
+    raise ArgumentError, 'Options must be a hash' unless options.is_a?(Hash)
 
     day = options[:day]
     day ||= options[:date] && options[:date].wday
-    fail ArgumentError.new('Must provide day of week') unless day
+    raise ArgumentError, 'Must provide day of week' unless day
 
     rules = rules_for_day(day)
     return false if rules.empty?
@@ -101,7 +102,7 @@ class AvailabilityRule::Summary
   end
 
   def days_with_ranges
-    days_open.inject({}) do |results, day|
+    days_open.each_with_object({}) do |day, results|
       results[day] = rules_for_day(day).map do |rule|
         ["#{rule.open_hour}%.2d" % rule.open_minute, "#{rule.close_hour}%.2d" % rule.close_minute]
       end

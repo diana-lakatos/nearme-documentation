@@ -126,7 +126,7 @@ class FormComponentToFormConfiguration
           field = 'tag_list' if field == 'tags'
           if field == 'current_address'
             configuration[field.to_sym] = ADDRESS_HASH
-          elsif field == 'password' && !form_component.form_type.include?('_registration')
+          elsif field == 'password' && !form_component.form_type&.include?('_registration')
             configuration[:password_confirmation] ||= {}
             configuration[:password_confirmation][:property_options] ||= { virtual: true }
             configuration[:password_confirmation][:validation] ||= {}
@@ -152,10 +152,10 @@ class FormComponentToFormConfiguration
             configuration[:"#{model}_profile"][:categories] ||= { validation: { presence: {} } }
             configuration[:"#{model}_profile"][:categories][field] = ValidationBuilder.new(Category.find_by(name: field), field).build
           elsif field.include?('Custom Model -')
-            field = field.sub('Custom Model - ', '')
+            field = CustomModelType.parameterize_name(field.sub('Custom Model - ', ''))
             configuration[:"#{model}_profile"][:customizations] ||= { validation: { presence: {} } }
             configuration[:"#{model}_profile"][:customizations][field] ||= {}
-            custom_model_type = CustomModelType.find_by(name: field)
+            custom_model_type = CustomModelType.find_by(parameterized_name: field)
             custom_model_type&.custom_attributes&.each do |ca|
               if ca.uploadable?
                 if ca.attribute_type == 'photo'
@@ -241,6 +241,10 @@ class FormComponentToFormConfiguration
       fc = FormConfiguration.where(base_form: base_form, name: "#{conf_role} Signup")
                             .first_or_create!
       configuration = build_configuration_based_on_form_components(form_component, role)
+      if PlatformContext.current.instance.force_accepting_tos?
+        configuration[:accept_terms_of_service] = { property_options: { virtual: true },
+                                                    validation: { acceptance: { allow_nil: false } } }
+      end
       configuration.delete([:email, :password])
       fc.update_attribute(:configuration, configuration)
     end

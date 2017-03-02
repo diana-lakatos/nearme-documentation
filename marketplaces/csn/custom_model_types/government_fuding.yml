@@ -1,0 +1,19 @@
+name: Government funding details
+instance_profile_types: [Buyer]
+
+custom_attributes:
+  - name: registration_type
+    label: Registration Type
+    attribute_type: string
+    html_tag: select
+    valid_values:
+      - registration type 1
+      - registration type 2
+  - name: registration_number
+    label: Registration Number
+    attribute_type: string
+    html_tag: input
+  - name: allocated_budget
+    label: Allocated Budget
+    attribute_type: decimal
+    html_tag: input

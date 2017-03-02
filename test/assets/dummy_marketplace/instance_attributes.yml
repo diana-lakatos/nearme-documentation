@@ -6,6 +6,8 @@ bookable_noun: Business Services
 wish_lists_enabled: true
 enable_reply_button_on_host_reservations: true
 force_accepting_tos: true
+allowed_countries:
+  - United States
 default_country: United States
 default_currency: USD
 skip_company: true

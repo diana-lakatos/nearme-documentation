@@ -18,7 +18,8 @@ module MarketplaceBuilder
       Creators::CustomModelTypesCreator,
       Creators::GraphQueriesCreator,
       Creators::CustomThemesCreator,
-      Creators::RatingSystemCreator
+      Creators::RatingSystemCreator,
+      Creators::FormConfigurationsCreator
     ].freeze
 
     def self.load(source, options = {})

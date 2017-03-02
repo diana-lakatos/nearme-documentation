@@ -14,6 +14,7 @@ class CustomImageForm < BaseForm
   end
   property :id, virtual: true
   property :image, virtual: true
+  property :url, virtual: true
 
   def id
     super.presence || model.id

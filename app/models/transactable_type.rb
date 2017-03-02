@@ -108,6 +108,18 @@ class TransactableType < ActiveRecord::Base
     ]
   end
 
+  scope :with_parameterized_name, -> (name) { where(parameterized_name: parameterize_name(name)).limit(1) }
+  before_save :generate_parameterized_name, if: -> (transactable_type){ transactable_type.name_changed? }
+  class << self
+    def parameterize_name(name)
+      name.to_s.downcase.tr(' ', '_')
+    end
+  end
+
+  def generate_parameterized_name
+    self.parameterized_name = self.class.parameterize_name(name)
+  end
+
   def any_rating_system_active?
     rating_systems.any?(&:active)
   end

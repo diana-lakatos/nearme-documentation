@@ -1,0 +1,76 @@
+---
+name: enquirer_general
+base_form: UserUpdateProfileForm
+pages:
+  - dashboard/consumer/general
+configuration:
+  name:
+    validation:
+      presence: {}
+  current_address: {}
+  buyer_profile:
+    validation:
+      presence: {}
+    properties:
+      validation:
+        presence: {}
+      date_of_birth:
+        validation: {}
+      gender:
+        validation: {}
+      languages:
+        validation: {}
+  default_profile:
+    properties:
+      accept_newsletter:
+        validation: {}
+---
+{% assign form_url = "/api/users/" | append: current_user.id " %}
+{% form_for form, url: @form_url, as: user, form_for_type: 'dashboard' %}
+  <input value="{{ form_configuration.id }}" type="hidden" name="form_configuration_id" />
+  <input value="{{ page.id }}" type="hidden" name="page_id" />
+  {% comment %}To control where to redirect{%endcomment %}
+  <input value="/dashboard/consumer/general" disabled data-action='Save' type="hidden" name="return_to" />
+  <input value="/dashboard/consumer/government-fundings" data-action='Save & Next' type="hidden" name="return_to" />
+  {% input name, input_html-tabindex: 1 %}
+  {% fields_for current_address %}
+    <div data-address-field>
+      {% input address, input_html-tabindex: 1, input_html-data-behavior: address-autocomplete, form: current_address %}
+      {% input latitude, as: hidden, input_html-data-latitude: true, form: current_address %}
+      {% input longitude, as: hidden, input_html-data-longitude: true, form: current_address %}
+      {% input formatted_address, as: hidden, input_html-data-formatted-address: true, form: current_address %}
+      {% input street, as: hidden, input_html-data-street: true, form: current_address %}
+      {% input suburb, as: hidden, input_html-data-suburb: true, form: current_address %}
+      {% input city, as: hidden, input_html-data-city: true, form: current_address %}
+      {% input state, as: hidden, input_html-data-state: true, form: current_address %}
+      {% input country, as: hidden, input_html-data-country: true, form: current_address %}
+      {% input postcode, as: hidden, input_html-data-postcode: true, form: current_address %}
+      <div class="map">
+        <div class="map-container"></div>
+      </div>
+    </div>
+  {% endfields_for %}
+
+  {% fields_for buyer_profile %}
+    {% fields_for properties, form: buyer_profile  %}
+      {% input date_of_birth, as: date, input_html-tabindex: 4, form: properties %}
+
+      {% assign gender_collection = 'Male,Female,Other' | split: ',' %}
+      {% input gender, collection: @gender_collection, input_html-tabindex: 4, prompt: 'Choose your gender', form: properties %}
+      {% include 'forms/languages' %}
+
+      {% input languages, collection: @languages, label: 'Language', prompt: 'Please select', input_html-multiple: true, input_html-tabindex: @tabindex, form: properties %}
+    {% endfields_for %}
+  {% endfields_for %}
+
+  {% fields_for default_profile %}
+    {% fields_for properties, form: default_profile  %}
+      {% input accept_newsletter, form: properties, as: boolean, inline_label: 'I would like to subscribe to the newsletter', label: false, input_html-tabindex: 10 %}
+    {% endfields_for %}
+  {% endfields_for %}
+
+  <div class='actions'>
+    {% submit 'Save', class: 'desksnearme submit btn btn-green', data-disable_with: 'Saving...', tabindex: 11  %}
+    {% submit "Save & Next", class: 'desksnearme submit btn btn-green', data-disable_with: 'Saving...', tabindex: 11  %}
+  </div>
+{% endform_for %}

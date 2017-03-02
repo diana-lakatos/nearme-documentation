@@ -28,6 +28,8 @@ class UserForm < BaseForm
                                      prepopulator: ->(_options) { self.default_profile ||= model.build_default_profile(instance_profile_type: PlatformContext.current.instance.default_profile_type) }
         end
         if (transactables_configuration = configuration.delete(:transactables)).present?
+          validation = transactables_configuration.delete(:transactables)
+          validates :transactables, validation if validation.present?
           property :transactables, form: TransactablesForm.decorate(transactables_configuration),
                                    from: :transactables_open_struct
         end

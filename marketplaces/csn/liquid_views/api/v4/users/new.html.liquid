@@ -23,10 +23,10 @@
           {% endif %}
 
           {% form_for user_signup, url: '/api/users.html', as: user, method: post %}
-            <input type="hidden" name="role" value="{{ params.role }}">
-            {% input first_name, placeholder: 'First Name', input_html-tabindex: 1 %}
-            {% input last_name, placeholder: 'Last Name', input_html-tabindex: 2 %}
-            {% input email, input_html-tabindex: 3 %}
+            <input name='return_to' value='/choose-role' type='hidden'/>
+            {% input first_name, input_html-tabindex: 1 %}
+            {% input last_name, input_html-tabindex: 2 %}
+            {% input email, placeholder: false, input_html-tabindex: 3 %}
 
            {% fields_for default_profile %}
              {% fields_for properties, form: default_profile  %}
@@ -36,7 +36,7 @@
 
             {% input mobile_number, input_html-tabindex: 5  %}
             {% input password, input_html-tabindex: 6 %}
-            {% input password_confirmation, placeholder: 'Confirm Password', input_html-tabindex: 7 %}
+            {% input password_confirmation, required: true, placeholder: 'Confirm Password', input_html-tabindex: 7 %}
 
            {% fields_for default_profile %}
              {% fields_for properties, form: default_profile  %}
