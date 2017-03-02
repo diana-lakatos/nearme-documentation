@@ -42,11 +42,9 @@ class Admin::Design::InstanceViewsController < Admin::Design::BaseController
   end
 
   def create
-    @instance_view = platform_context.instance.instance_views.build(instance_view_params)
-    @instance_view.format = 'html'
-    @instance_view.handler = 'liquid'
-    @instance_view.view_type = InstanceView::VIEW_VIEW
-    if @instance_view.save
+    @instance_view = InstanceAdmin::LiquidViewService::Create.new(instance_view_params).call
+
+    if @instance_view.errors.empty?
       flash[:success] = t 'admin.flash_messages.manage.liquid_views.created'
       redirect_to [:edit, :admin, :design, @instance_view]
     else
@@ -56,9 +54,8 @@ class Admin::Design::InstanceViewsController < Admin::Design::BaseController
   end
 
   def update
-    # do not allow to change path for now
-    params[:instance_view][:path] = @instance_view.path
-    if @instance_view.update_attributes(instance_view_params)
+    @instance_view = InstanceAdmin::LiquidViewService::Update.new(@instance_view).call instance_view_params
+    if @instance_view.errors.empty?
       flash[:success] = t 'admin.flash_messages.manage.liquid_views.updated'
       redirect_to [:edit, :admin, :design, @instance_view]
     else

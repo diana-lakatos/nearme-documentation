@@ -93,6 +93,10 @@ Note - if you want to run cucumber tests on local, please compile assets for tes
 
     gulp build:test
 
+In case of problems with no assets in cucumber tests try this:
+
+    rm -rf node_modules tmp/* public/assets; yarn --force; gulp build:test
+
 If you are directly working with assets, to avoiding having to compile assets after each change, just use:
 
     gulp serve

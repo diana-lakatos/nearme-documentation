@@ -586,6 +586,8 @@ class InstanceView < ActiveRecord::Base
     where(view_type: EMAIL_LAYOUT_VIEW, format: %w(text html), handler: 'liquid').order('path')
   }
 
+  scope :published, -> { where(draft: false) }
+
   def self.all_email_templates_paths
     (DEFAULT_EMAIL_TEMPLATES_PATHS + for_instance_id(PlatformContext.current.instance.id).custom_emails.pluck(:path)).uniq
   end
@@ -642,20 +644,37 @@ class InstanceView < ActiveRecord::Base
 
   validate :does_not_duplicate_locale_and_transactable_type
 
-  def does_not_duplicate_locale_and_transactable_type
-    if (ids = InstanceView.distinct.where.not(id: id).where(instance_id: instance_id, path: path, partial: partial, view_type: view_type, format: format, custom_theme_id: custom_theme_id).for_locale(locales.map(&:code)).for_transactable_type_id(transactable_types.map(&:id)).pluck(:id)).present?
-      ids = ids.join(', ')
-      locales_names = Locale.distinct.where(id: locale_ids).joins(:locale_instance_views).where(locale_instance_views: { instance_view: ids }).map(&:name).join(', ')
-      transactable_type_names = TransactableType.distinct.where(id: transactable_type_ids).joins(:transactable_type_instance_views).where(transactable_type_instance_views: { instance_view_id: ids }).pluck(:name).join(', ')
-      errors.add(:locales, I18n.t('activerecord.errors.models.instance_view.attributes.locales_and_transactable_types.already_exists', ids: ids, locales: locales_names, transactable_types: transactable_type_names))
-    end
-  end
-
   def expire_cache_options
     { path: path }
   end
 
   def jsonapi_serializer_class_name
     'InstanceViewJsonSerializer'
+  end
+
+  def published_version
+    duplicated_instance_views.first
+  end
+
+  private
+
+  def does_not_duplicate_locale_and_transactable_type
+    return if draft?
+    ids = duplicated_instance_views.pluck(:id)
+    return unless ids.present?
+
+    ids = ids.join(', ')
+    locales_names = Locale.distinct.where(id: locale_ids).joins(:locale_instance_views).where(locale_instance_views: { instance_view: ids }).map(&:name).join(', ')
+    transactable_type_names = TransactableType.distinct.where(id: transactable_type_ids).joins(:transactable_type_instance_views).where(transactable_type_instance_views: { instance_view_id: ids }).pluck(:name).join(', ')
+    errors.add(:locales, I18n.t('activerecord.errors.models.instance_view.attributes.locales_and_transactable_types.already_exists', ids: ids, locales: locales_names, transactable_types: transactable_type_names))
+  end
+
+  def duplicated_instance_views
+    InstanceView.distinct
+                .published
+                .where.not(id: id)
+                .where(instance_id: instance_id, path: path, partial: partial, view_type: view_type, format: format, custom_theme_id: custom_theme_id)
+                .for_locale(locales.map(&:code))
+                .for_transactable_type_id(transactable_types.map(&:id))
   end
 end

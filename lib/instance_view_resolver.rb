@@ -49,12 +49,6 @@ class InstanceViewResolver < DbViewResolver
   private
 
   def _find_templates(name, prefix, partial, details)
-    get_templates(name, prefix, partial, details).map do |record|
-      initialize_template(record, record.format)
-    end
-  end
-
-  def get_templates(name, prefix, partial, details)
     conditions = {
       path: normalize_path(name, prefix),
       format: normalize_array(details[:formats]),
@@ -62,9 +56,20 @@ class InstanceViewResolver < DbViewResolver
       partial: partial || false,
       custom_theme_id: details[:custom_theme_id]
     }
+    get_templates(conditions, details).map do |record|
+      initialize_template(record, record.format)
+    end
+  end
+
+  def get_templates(conditions, details)
     locale = normalize_array(details[:locale]).first
-    scope = ::InstanceView.for_instance_id(details[:instance_id]).for_locale(locale)
-    scope = scope.for_transactable_type_id(details[:transactable_type_id]) if details[:transactable_type_id].present?
-    scope.where(conditions).order('instance_id')
+    transactable_type_id = details[:transactable_type_id]
+
+    scope = ::InstanceView.published
+                          .for_instance_id(details[:instance_id])
+                          .for_locale(locale)
+                          .where(conditions).order('instance_id')
+    scope = scope.for_transactable_type_id(transactable_type_id) if transactable_type_id.present?
+    scope
   end
 end
