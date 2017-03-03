@@ -1,100 +1,51 @@
-<div class="search-form" id="listing_search">
+<main id="main">
+  <div class="wrapper-a">
+    <form action="/search" method="get" class="search-form no_inheritance">
+      <fieldset class="search-form__query">
+        {% include "search/query" %}
+      </fieldset>
 
-  <form action="/search" method="get" id="search-form" class="no_inheritance">
-    <div class="query">
-      <label for="field-q" class="struct-label">Search keyword</label>
-      <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
-      <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
-      <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
-      <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
-      <input type="hidden" name="sort">
+      <fieldset class="search-form__filters" data-search-container="filters">
+        {% include "search/basic_filters" %}
+      </fieldset>
 
-      <div class="form-action">
-        <button type="submit" class="button-a">Search</button>
-      </div>
-    </div>
-  </form>
+        {% comment %}
+        <div class="search-sort-order">
+          <label for="search-order">Sort by:</label>
+          <span class="select-a">
+            <select id="search-order" name="sort" class="unstyled-select">
+              <option {% if params['sort'] == blank %}selected{% endif %} value=''>Relevance</option>
+              <option {% if params['sort'] == 'custom_attributes.company_name_asc' %}selected{% endif %} value='custom_attributes.company_name_asc'>Company name</option>
+            </select>
+          </span>
+        </div>
+        {% endcomment %}
 
-  <fieldset class="filters" data-search-filters-container>
-    <legend class="struct-label">Filter</legend>
+      <div class="search-form__results" data-search-container="results">
+        {% comment %}
+        <header class="search-results-header">
+          <div class="search-results-query-info">
+            <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
+          </div>
+        </header>
+        {% endcomment %}
 
-    <div class="filters-wrapper">
-      <div class="filter">
-        <label for="filter-service">Service / Product</label>
-        <span class="select-a">
-          <select id="filter-service" class="unstyled-select" name="category_ids[]" data-category-filter>
-            <option value="">Please select --</option>
-            {% assign industries = searcher.searchable_categories | detect: name: 'Industry' %}
-            {% for category in industries.children %}
-              <option value="{{ category.id }}"{% if searcher.category_ids contains category.id %} selected{% endif %}>{{ category.name }}</option>
-              {% for subcat in category.children %}
-                <option value="{{ subcat.id }}"{% if searcher.category_ids contains subcat.id %} selected{% endif %}>&nbsp;&nbsp;&nbsp;&rsaquo; {{ subcat.name }}</option>
-                {% for subcat2 in subcat.children %}
-                  <option value="{{ subcat2.id }}"{% if searcher.category_ids contains subcat2.id %} selected{% endif %}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rsaquo; {{ subcat2.name }}</option>
-                {% endfor %}
-              {% endfor %}
+        <div class="search-form__results-items">
+          {% if searcher.result_count == 0 %}
+            <p class="empty-resultset">There are no results to show for your current query.</p>
+          {% else %}
+            {% for user in searcher.results %}
+              {% include "search/search_listing", user: user %}
             {% endfor %}
-          </select>
-        </span>
+          {% endif %}
+        </div>
+
+        {% if searcher.next_page %}
+          <p class="search-form__results-more-trigger">
+            <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
+          </p>
+        {% endif %}
       </div>
-
-      <div class="filter">
-        <label for="filter-language">Language</label>
-        <span class="select-a">
-          <select name="category_ids[]" id="filter-language" class="unstyled-select" data-category-filter>
-            <option value="">Please select --</option>
-            {% assign languages = searcher.searchable_categories | detect: name: 'Language' %}
-            {% for category in languages.children %}
-              <option value="{{ category.id }}"{% if searcher.category_ids contains category.id %} selected{% endif %}>{{ category.name }}</option>
-            {% endfor %}
-          </select>
-        </span>
-      </div>
-    </div>
-  </fieldset>
-</div>
-
-<main id="results">
-
-  <h1 class="struct-label">Search results</h1>
-  <section class="search-results">
-    <header class="search-results-header">
-      <div class="search-results-query-info">
-        <span class="results-count"><b>{{ searcher.result_count }}</b> Result(s) Found</span>
-
-        <button type="button" class="button-c small" id="search-form-reset">Reset Filters</button>
-      </div>
-
-      <div class="search-sort-order">
-        <label for="search-order">Sort by:</label>
-        <span class="select-a">
-          <select id="search-order" name="sort" class="unstyled-select">
-            <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Relevance</option>
-            <option {% if params['sort'] == 'custom_attributes.company_name_asc' %}selected{% endif %} value='custom_attributes.company_name_asc'>Company name</option>
-          </select>
-        </span>
-      </div>
-    </header>
-
-    <div class="search-results-items">
-      {% if searcher.result_count == 0 %}
-        <p class="empty-resultset">There are no results to show for your current query.</p>
-      {% else %}
-        {% for user in searcher.results %}
-          {% include "search/search_listing", user: user %}
-        {% endfor %}
-      {% endif %}
-    </div>
-
-    {% if searcher.next_page %}
-      <p class="search-results-more-trigger">
-        <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
-      </p>
-    {% endif %}
-  </section>
-
+    </form>
+  </div>
 </main>
-
-{% content_for 'domready' %}
-  $(document).trigger('init:list:searchresults.nearme');
-{% endcontent_for %}
