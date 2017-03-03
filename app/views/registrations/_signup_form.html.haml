@@ -23,10 +23,8 @@
 
 - if request.xhr?
   :javascript
-    $(function() {
-      $(document).trigger('init:signupform.nearme');
-      $(document).trigger('init:custominputs.nearme');
-    });
+    $(document).trigger('init:signupform.nearme');
+    $(document).trigger('init:custominputs.nearme');
 - else
   - content_for :domready do
     $(document).trigger('init:signupform.nearme');
