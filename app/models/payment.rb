@@ -203,19 +203,23 @@ class Payment < ActiveRecord::Base
   end
 
   def direct_token
-    return unless payment_gateway.direct_charge?
-    @direct_token ||=  generate_direct_token
+    @direct_token ||= generate_direct_token
   end
 
   def generate_direct_token
+    return unless payment_gateway.direct_charge?
     return unless payment_source.token && payment_source.customer_id && merchant_id
 
-    payment_gateway.create_token(
+    new_direct_token = payment_gateway.create_token(
       payment_source.token,
       payment_source.customer_id,
       merchant_id,
       payment_gateway_mode
     ).try('[]', :id)
+
+    self.direct_charge = true if new_direct_token.present?
+
+    new_direct_token
   end
 
   # pay_with!
@@ -229,8 +233,8 @@ class Payment < ActiveRecord::Base
 
     response = yield
 
-    create_transfer(response) if response.try(:success?) && immediate_payout?
     apply_pg_fee(response)
+    create_transfer(response) if response.try(:success?) && immediate_payout?
     self.external_id ||= response.params.try("[]", 'id')
     charges.create!(charge_attributes(response))
     errors.add(:base, response.message) if response.try(:message)
@@ -421,16 +425,20 @@ class Payment < ActiveRecord::Base
     service_additional_charges_cents + host_additional_charges_cents
   end
 
-  def subtotal_amount_cents_after_refund
-    result = nil
-
+  def transfer_amount_cents
     result = if cancelled_by_host?
                0
              else
                subtotal_amount.cents + host_additional_charges.cents - refunds.guest.successful.sum(:amount_cents)
              end
-
+    result = result - payment_gateway_fee_cents unless mpo_pays_payment_gateway_fees?
     result
+  end
+
+  # currently MPO is not obligated to pay PG Fee only
+  # when we used direct payment with Stripe Connect
+  def mpo_pays_payment_gateway_fees?
+    !direct_charge?
   end
 
   def final_service_fee_amount_host_cents
@@ -584,7 +592,6 @@ class Payment < ActiveRecord::Base
   # apply_pg_fee
   # - sets payment_gateway_fee_cents based on balance response, this currently works only for Stripe
   def apply_pg_fee(response)
-    return unless payment_gateway.direct_charge?
     return unless payment_gateway.respond_to?(:find_balance)
     return if response.blank? || response.params.blank? || (balance_id = response.params['balance_transaction']).blank?
 
