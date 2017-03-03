@@ -128,7 +128,7 @@ class Payment < ActiveRecord::Base
   def authorize!
     response = payment_gateway.gateway_authorize(total_amount.cents, source, payment_options)
 
-    billing_authorizations.build(
+    billing_authorization = billing_authorizations.build(
       received_response: response,
       payment_gateway: payment_gateway,
       reference: payable,
@@ -136,6 +136,7 @@ class Payment < ActiveRecord::Base
     )
 
     if response.success?
+      self.external_id ||= billing_authorization.token
       mark_as_authorized!
     else
       errors.add(:base, response.message)

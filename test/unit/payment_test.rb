@@ -34,6 +34,7 @@ class PaymentTest < ActiveSupport::TestCase
         OpenStruct.new(authorization: '54533', success?: true),
         @payment.successful_billing_authorization.response
       )
+      assert_equal '54533', @payment.external_id
     end
 
     should 'not authorize when authorization response is not success' do
