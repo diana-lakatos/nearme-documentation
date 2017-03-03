@@ -67,6 +67,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def generate_payment!
     return true if paid?
+
     payment_object = payment || build_payment
 
     payment_object.attributes = shared_payment_attributes.merge(payment_source: payment_subscription.payment_source,
@@ -138,6 +139,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def send_update_alert!
     WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Updated, id)
+  end
+
+  def penalty_charge_apply?
+    false
   end
 
   private

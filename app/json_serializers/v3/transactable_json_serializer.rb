@@ -13,7 +13,7 @@ class V3::TransactableJsonSerializer
   attribute :state
 
   attribute :location_address do
-    object.location_address.attributes.slice('address', 'postcode', 'street', 'suburb', 'state', 'city', 'country')
+    object.location_address.attributes.slice('address', 'postcode', 'street', 'suburb', 'state', 'city', 'country', 'address_components')
   end
 
   attribute :path do

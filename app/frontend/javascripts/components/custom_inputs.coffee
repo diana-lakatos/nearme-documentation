@@ -6,22 +6,19 @@ module.exports = class CustomInputs
     @context = $(context)
     @body = $('body')
 
-    unless @body.data('custom-inputs-initialized')
-      @initialize()
-
-  initialize: ->
-    console.log('CustomInputs :: Initializing in context: ', @context)
     @buildElements()
-    @bindEvents()
     @updateControls()
 
-    @body.data('custom-inputs-initialized', true)
+    unless @context.data('custom-inputs-initialized')
+      @bindEvents()
+
+    @context.data('custom-inputs-initialized', true)
 
   buildElements: ->
     console.log('CustomInputs :: buildElements')
 
-    @context.find('.checkbox').each (index, element) -> $(element).prepend(CHECKBOX_HTML)
-    @context.find('.radio').each (index, element) -> $(element).prepend(RADIO_HTML)
+    @context.find('.checkbox').not('[data-custom-input-initialized]').attr('data-custom-input-initialized', 'true').each (index, element) -> $(element).prepend(CHECKBOX_HTML)
+    @context.find('.radio').not('[data-custom-input-initialized]').attr('data-custom-input-initialized', 'true').each (index, element) -> $(element).prepend(RADIO_HTML)
 
   bindEvents: ->
     @body.on 'change.customInputs.nearme', '.checkbox, .radio, .checkbox input, .radio input', @updateControls
