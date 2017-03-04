@@ -6,9 +6,19 @@
 
 DesksnearMe::Application.config.supported_currencies = []
 require 'csv'
+
+module SupportedCurrenciesHelper 
+  def self.get_currency_symbol_from_code(currency)
+    symbol = Money::Currency.new(currency).symbol rescue currency
+    symbol = currency if symbol.blank?
+    symbol
+  end
+end
+
 CSV.foreach(Rails.root.join('config', 'supported_currencies.csv'), headers: :first_row, return_headers: false) do |row|
   DesksnearMe::Application.config.supported_currencies << {
     name: row[0],
-    iso_code: row[1]
+    iso_code: row[1],
+    symbol: SupportedCurrenciesHelper.get_currency_symbol_from_code(row[1])
   }
 end
