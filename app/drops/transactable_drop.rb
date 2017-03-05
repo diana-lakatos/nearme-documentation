@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 class TransactableDrop < BaseDrop
   include AvailabilityRulesHelper
@@ -382,7 +383,8 @@ class TransactableDrop < BaseDrop
   #   listing_name: name_of_listing,
   #   some_size_type: url_to_image_of_size_some_size_type,
   def photos
-    @source.photos_metadata
+    # TODO: remove after moving transactable data to ES
+    @source.photos.map { |x| x.to_listing_metadata.stringify_keys }
   end
 
   # @return [Boolean] whether price per unit is enabled for this listing
