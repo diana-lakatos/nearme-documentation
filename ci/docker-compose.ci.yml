@@ -1,0 +1,7 @@
+es:
+  image: elasticsearch:2.4
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+  environment:
+    ES_JAVA_OPTS: '-Des.script.engine.groovy.inline.search=on -Des.script.inline=on -Des.script.indexed=on'
