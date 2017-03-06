@@ -132,6 +132,14 @@ DESC
       puts 'Restore done.'
     end
 
+
+    desc 'update_ssh_config', 'update ~/.ssh/config'
+    def update_ssh_config
+      puts 'Updating ssh config file'
+      NearMe::SshConfig.new.update
+      puts 'done.'
+    end
+
     no_commands do
       def deployment_check
         stack = options[:stack]
