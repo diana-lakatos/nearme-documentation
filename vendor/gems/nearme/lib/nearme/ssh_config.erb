@@ -1,0 +1,10 @@
+Host <%= jump.hostname %>
+  HostName <%= jump.public_ip %>
+
+Host <%= instances.map(&:hostname).join(' ')  %>
+  ProxyCommand ssh <%= jump.hostname %> -W %h:%p
+
+<% instances.each do |instance| %>
+Host <%= instance.hostname %>
+  Hostname <%= instance.private_ip %>
+<% end %>
