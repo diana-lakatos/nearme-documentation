@@ -5,6 +5,8 @@ class RecurringBooking::NextDateFactory
       NextChargeDateMonthlyCalculator
     when 'subscription_day'
       NextChargeDateDailyCalculator
+    when 'subscription_month_pro_rated'
+      NextChargeDateMonthlyCalculator
     else
       fail NotImplementedError
     end.new(pricing, previous_date)

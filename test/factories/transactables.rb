@@ -84,6 +84,15 @@ FactoryGirl.define do
         quantity 10
       end
 
+      factory :subscription_pro_rated_transactable do
+        after(:build) do |listing|
+          listing.action_types.destroy_all
+          listing.transactable_type.subscription_booking ||= FactoryGirl.build(:transactable_type_subscription_pro_rated_action, transactable_type: listing.transactable_type)
+          listing.action_type = FactoryGirl.build(:subscription_pro_rated_booking, transactable: listing, transactable_type_action_type: listing.transactable_type.subscription_booking)
+        end
+        quantity 10
+      end
+
       factory :always_open_listing do
         after(:build) do |listing|
           listing.action_type.availability_template = AvailabilityTemplate.find_by(name: '24/7')
