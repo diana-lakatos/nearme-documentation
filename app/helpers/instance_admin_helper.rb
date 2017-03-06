@@ -126,4 +126,5 @@ module InstanceAdminHelper
     return I18n.t("instance_admin.manage.admin_searchable.user.profile_types.#{profile_type}") if [:buyer, :seller].include?(profile_type.to_sym)
     profile_type
   end
+
 end
