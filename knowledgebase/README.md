@@ -14,6 +14,9 @@
   * password:  plaid_good
   * "You say tomato, I say ?": tomato
 
+## NearMe payments
+  * various payments accounts: https://near-me.atlassian.net/wiki/pages/viewpage.action?spaceKey=ENGINEERING&title=Test+Payments
+  * flow explained: https://docs.google.com/document/d/1vvRU46FMPVebDxzONeXUfMHWEtXgi5SBQ6_ZCkUxwT4/pub
 
 ## Capture backup from production
 
