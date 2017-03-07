@@ -563,6 +563,8 @@ DesksnearMe::Application.routes.draw do
           end
         end
 
+        resource :categories_positions
+
         resources :inappropriate_reports
 
         namespace :marketplace_builder do

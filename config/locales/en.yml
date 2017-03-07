@@ -1080,6 +1080,7 @@ en:
         add_validator: 'Add Validator'
         valid_values_separate_with_comma: 'Valid values (separate with comma)'
       categories:
+        you_may_reorder: 'You may drag and drop the top categories below to reorder them.'
         right_click_a_child_in_the_tree: "Right click a child in the tree to access the menu for adding, deleting or sorting a child."
         categories: 'Categories'
         are_you_sure_delete_category_group: 'Are you sure you want to delete this category group?'
