@@ -3,7 +3,7 @@ FactoryGirl.define do
     association :user
     owner { user }
     association :transactable, factory: :subscription_transactable
-    company { transactable.try(:company) || Factory.build(:company) }
+    company { transactable.try(:company) || FactoryGirl.build(:company) }
     creator { transactable.creator }
 
     payment_subscription { FactoryGirl.build(:payment_subscription, company: company) }

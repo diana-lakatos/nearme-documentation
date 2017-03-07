@@ -212,7 +212,11 @@ class RecurringBooking < Order
   alias price_calculator total_amount_calculator
 
   def monthly?
-    transactable_pricing.unit == 'subscription_month'
+    ['subscription_month', 'subscription_month_pro_rated'].include?(transactable_pricing.unit)
+  end
+
+  def pro_rated_monthly?
+    'subscription_month_pro_rated' == transactable_pricing.unit
   end
 
   def first_transactable_line_item

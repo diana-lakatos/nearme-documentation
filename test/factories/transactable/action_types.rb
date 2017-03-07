@@ -108,5 +108,19 @@ FactoryGirl.define do
         )]
       end
     end
+
+    factory :subscription_pro_rated_booking, class: Transactable::SubscriptionBooking do
+      association :transactable, strategy: :build
+      association :transactable_type_action_type, factory: :transactable_type_subscription_pro_rated_action, strategy: :build
+      type 'Transactable::SubscriptionBooking'
+
+      after(:build) do |at|
+        at.pricings = [FactoryGirl.build(
+          :subscription_pro_rated_pricing,
+          action: at,
+          transactable_type_pricing: at.transactable_type_action_type.pricing_for('1_subscription_month_pro_rated')
+        )]
+      end
+    end
   end
 end
