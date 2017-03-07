@@ -172,7 +172,7 @@ namespace :hallmark do
           u.expires_at = Date.strptime(array[EXPIRES_AT], '%Y%m').end_of_month
           u.get_default_profile
           u.properties.date_of_birth = begin
-                                         Date.strptime(array[DOB], '%m/%d/%Y')
+                                         Date.strptime(array[DOB], '%m%d%Y')
                                        rescue
                                          puts "\tInvalid DOB: #{array[DOB]}"
                                          nil
