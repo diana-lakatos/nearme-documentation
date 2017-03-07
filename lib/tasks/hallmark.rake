@@ -152,7 +152,8 @@ namespace :hallmark do
     MEMBER_SINCE = 6
     EXPIRES_AT = 7
     MEMBER_YEAR = 8
-    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_27Feb.txt')
+    KOC_EMAILS = ['abbeyeco@msn.com', 'aimeestairs@yahoo.com', 'highlandqueen@comcast.net', 'smileyajd@yahoo.com', 'tmcolletti@optonline.net', 'pattersog002@hawaii.rr.com', 'rbhall74@aol.com', 'bettypeach@msn.com', 'b_spottek@hotmail.com', 'lilpouters@aol.com', 'hallmarktoys1@cox.net', 'dodgersfan12345@yahoo.com', 'squirrel7@mindspring.com', 'ahlborn4843@comcast.net', 'cheryl.cochran@hctnschools.com', 'doxiedub@gmail.com', 'chrisr05@sbcglobal.net', 'currec405@gmail.com', 'dakcmo@gmail.com', 'dporter82700@hotmail.com', 'dschultz56@cox.net', 'dthomeunit@suddenlink.net', 'ddstikes@hotmail.com', 'hallmark1231@hotmail.com', 'maxysdad@hotmail.com', 'drice2@hallmark.com', 'saintj@caltech.edu', 'dyza10@aol.com', 'ddmurch@aol.com', 'daday@fuse.net', 'doris@sti.net', 'edward_pease@comcast.net', 'elaynabenton@yahoo.com', 'hallmarketeer@hotmail.com', 'lrupert@comcast.net', 'franwoodside@sbcglobal.net', 'fmhogg2004@yahoo.com', 'irgail2@yahoo.com', 'gvickery@tx.rr.com', 'geraldlalmquist@aol.com', 'geritoberman@gmail.com', 'collector@cableone.net', 'hartman_k@atlanticbb.net', 'heathermj@mindspring.com', 'purplepink711@comcast.net', 'hallmarkholly@yahoo.com', 'talariconc@yahoo.com', 'mi3boyz@hotmail.com', 'flanagan55@charter.net', 'jeanie@cox.net', 'jmrudy74@yahoo.com', 'ljandy@yahoo.com', 'jjcburroughs@yahoo.com', 'jwlak@mindspring.com', 'jbro@comcast.net', 'jerrydetimmerman1@gmail.com', 'jhorton100@aol.com', 'jedeyo@hotmail.com', 'jodiemarxlolly@cox.net', 'cjp@everestkc.net', 'jhiles@fuse.net', 'jdree@verizon.net', 'kholthe@aol.com', 'goulddk@embarqmail.com', 'kbrindley1@comcast.net', 'bnkdel@yahoo.com', 'kbware@sw.rr.com', 'alanprenger@embarqmail.com', 'hallmark@rainbowbrite.net', 'kaylamichele9@yahoo.com', 'khkingrey@hotmail.com', 'lindafay@cableone.net', 'ldcampbe@umich.edu', 'dayl@valornet.com', 'ljd4686@gmail.com', 'lindag87124@yahoo.com', 'huntt1961@gmail.com', 'jlkearns439@centurylink.net', 'sweetpeasmom52@yahoo.com', 'lindrobinson@yahoo.com', 'mlssmith510@gmail.com', 'lrw@triad.rr.com', 'arkroom@centurylink.net', 'lzeller@frontiernet.net', 'lkmax1@frontier.com', 'lynetteboyd01@gmail.com', 'mjjelsma@gmail.com', 'marciammatthews@gmail.com', 'johnson224@comcast.net', 'heartland@eastex.net', 'mchart2000@aol.com', 'd.laing@att.net', 'pmyoung@hughes.net', 'kmegsbug@gmail.com', 'oceanview17mm@gmail.com', 'thejohnsons929@att.net', 'lissaandjojo@yahoo.com', 'mlwinter77@gmail.com', 'mypoohmail@yahoo.com', 'micheleneff@hotmail.com', 'missesimpson@sc.rr.com', 'nancy.m.erle@gmail.com', 'nancyg@netease.net', 'nphil316@aol.com', 'jdreasor@charter.net', 'nancy@scvhallmark.com', 'gmom1953@suddenlink.net', 'njcook48@att.net', 'lgorday@centurytel.net', 'cgpgdoyle@cox.net', 'paulaf4958@aol.com', 'peggyavellar@att.net', 'hallmarkfanatic@yahoo.com', 'rphilips122@verizon.net', 'ramicallef@gmail.com', 'rickyhedrick@yahoo.com', 'rderga@gmail.com', 'bubbles_52_us@yahoo.com', 'wolferob@yahoo.com', 'tadrjd@woh.rr.com', 'rose_edgar_1999@yahoo.com', 'rpalmer2002@aol.com', 'kingtutan@aol.com', 'greeneggsforsam@msn.com', 'sre2srl@yahoo.com', 'onehecticmom@hotmail.com', 'kmh4844@gmail.com', 'princessk070@yahoo.com', 'sarahmorin502@gmail.com', 'sean.burks@gmail.com', 'seanmccully@me.com', 'bsbitting@cox.net', 'sizzyyick@hotmail.com' 'stacey.e.schwab@gmail.com', 'sfjm@verizon.net', 'olensven@hotmail.com', 'hallmarkqueen16@yahoo.com', 'hazelstovey@hotmail.com', 'tdavis3412@aol.com', 'teresa@cjbryan.com', 'weber37027@comcast.net', 'teri7837@sbcglobal.net', 'tjnip@tds.net', 'tplga@comcast.net', 'shaddzz@yahoo.com', 'vezz.email@gmail.com', 'jpfeife@hotmail.com', 'wcubes@me.com', 'wernst40@yahoo.com', 'yvonnehanks@anbtx.com']
+    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_06Mar.txt')
     emails = []
     CSV.foreach(path, col_sep: '|') do |array|
       unless array[FIRST_NAME] == 'CNSMR_FIRST_NM'
@@ -171,7 +172,7 @@ namespace :hallmark do
           u.expires_at = Date.strptime(array[EXPIRES_AT], '%Y%m').end_of_month
           u.get_default_profile
           u.properties.date_of_birth = begin
-                                         Date.strptime(array[DOB], '%m/%d/%Y')
+                                         Date.strptime(array[DOB], '%m%d%Y')
                                        rescue
                                          puts "\tInvalid DOB: #{array[DOB]}"
                                          nil
@@ -199,6 +200,10 @@ namespace :hallmark do
       end
     end
     puts "Imported in total: #{emails.count} users"
-    puts "Invalidating #{User.not_admin.where.not(email: emails).where('email ilike ?', '%@hallmark.com').update_all(expires_at: nil)} users - setting expires at to nil"
+    users_invalidated = User.not_admin.
+                             where.not(email: emails + KOC_EMAILS).
+                             where.not('email ilike ?', '%@hallmark.com').
+                             update_all(expires_at: nil)
+    puts "Invalidating #{users_invalidated} users - setting expires at to nil"
   end
 end
