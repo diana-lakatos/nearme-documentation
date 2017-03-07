@@ -7,7 +7,8 @@
       </header>
 
       <p>Your request is pending approval.</p>
-    {% else %}
+
+    {% elsif current_user.seller_profile != blank %}
 
       <header>
         <h2>Request Case Details</h2>
@@ -30,6 +31,25 @@
           <button type="button" class="button-b" data-close>Cancel</button>
         </div>
       </form>
+
+    {% elsif current_user != blank %}
+
+      <header>
+        <h2>Request Case Details</h2>
+        <button type="button" data-close>Cancel</button>
+      </header>
+
+      <p>Only handling lawyers are allow to request access to case details.</p>
+
+    {% else %}
+
+      <header>
+        <h2>Request Case Details</h2>
+        <button type="button" data-close>Cancel</button>
+      </header>
+
+      <p>Only handling lawyers are allow to request access to case details.</p>
+      <p><a href="/users?role=buyer" class="button-a inverted rounded">Register now</a></p>
     {% endif %}
   </div>
 </div>
