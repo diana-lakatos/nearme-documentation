@@ -3,44 +3,54 @@
   %hr/
   %h3
     = title ||= t(:title, scope: [:pricing, :availability])
+  - if f.object.is_a?(Transactable::TimeBasedBooking) && f.object.only_night_booking?
+    = f.simple_fields_for :availability_template, get_availability_template_object(f.object) do |at|
+      = f.input :availability_template_id, as: :hidden, input_html: { value: at.object.id }
+      = at.input :id, as: :hidden, input_html: { value: at.object.id }
+      .nested-fields-set
+        = at.simple_fields_for(:availability_rules) do |af|
+          .nested-container
+            = render 'dashboard/company/transactables/form_fields/time_availability', f: af, index: 1, for_night_booking: true
+      .unavailability= render 'schedules/unavailability', f: at
 
-  = f.input :availability_template_id, label: false do
-    %ul.box-options
-      - availability_choices(f.object, id_prefix).each do |template_id, label_text, options|
-        %li
-          = f.radio_button :availability_template_id, template_id, options
-          = label_tag options[:id] do
-            %h5
-              = label_text
-            %p
-              = options[:description]
+  - else
+    = f.input :availability_template_id, label: false do
+      %ul.box-options
+        - availability_choices(f.object, id_prefix).each do |template_id, label_text, options|
+          %li
+            = f.radio_button :availability_template_id, template_id, options
+            = label_tag options[:id] do
+              %h5
+                = label_text
+              %p
+                = options[:description]
 
-    .custom-availability{:style => ('display: none' unless availability_custom?(f.object))}
-      %h4.control-label
-        = t(:available_from, scope: [:pricing, :availability])
-      = f.simple_fields_for :availability_template, get_availability_template_object(f.object) do |at|
-        = at.input :id, as: :hidden, input_html: { value: at.object.id }
-        .nested-fields-set
-          = at.simple_fields_for(:availability_rules) do |af|
-            .nested-container
-              = render 'dashboard/company/transactables/form_fields/time_availability', f: af, index: 1
+      .custom-availability{:style => ('display: none' unless availability_custom?(f.object))}
+        %h4.control-label
+          = t(:available_from, scope: [:pricing, :availability])
+        = f.simple_fields_for :availability_template, get_availability_template_object(f.object) do |at|
+          = at.input :id, as: :hidden, input_html: { value: at.object.id }
+          .nested-fields-set
+            = at.simple_fields_for(:availability_rules) do |af|
+              .nested-container
+                = render 'dashboard/company/transactables/form_fields/time_availability', f: af, index: 1, for_night_booking: false
 
-        %p
-          = t(:different_availability_info, scope: [:pricing, :availability])
+          %p
+            = t(:different_availability_info, scope: [:pricing, :availability])
 
-        %p
-          - association_insertion_node_selector = id_prefix.empty? ? ".custom-availability .nested-fields-set" : ".#{id_prefix} .custom-availability .nested-fields-set"
-          = link_to_add_association t(:add_availability, scope: [:pricing, :availability]) , at, :availability_rules, partial: 'dashboard/company/transactables/form_fields/time_availability', class: 'btn btn-primary', data: { association_insertion_node: association_insertion_node_selector, association_insertion_method: :append }, render_options: { locals: { index: 2} }
+          %p
+            - association_insertion_node_selector = id_prefix.empty? ? ".custom-availability .nested-fields-set" : ".#{id_prefix} .custom-availability .nested-fields-set"
+            = link_to_add_association t(:add_availability, scope: [:pricing, :availability]) , at, :availability_rules, partial: 'dashboard/company/transactables/form_fields/time_availability', class: 'btn btn-primary', data: { association_insertion_node: association_insertion_node_selector, association_insertion_method: :append }, render_options: { locals: { index: 2} }
 
 
-        .unavailability= render 'schedules/unavailability', f: at
+          .unavailability= render 'schedules/unavailability', f: at
 
-      /
-        %p
-          = t(:preset_info, scope: [:pricing, :availability])
+        /
+          %p
+            = t(:preset_info, scope: [:pricing, :availability])
 
-        %p
-          %button.btn.btn-default{:type => "button"}
-            = t(:save_preset, scope: [:pricing, :availability])
+          %p
+            %button.btn.btn-default{:type => "button"}
+              = t(:save_preset, scope: [:pricing, :availability])
 
   %hr/

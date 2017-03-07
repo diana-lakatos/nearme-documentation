@@ -75,6 +75,10 @@ class Transactable::ActionType < ActiveRecord::Base
     define_method("#{u}_pricings") { pricings.select(&:"#{u}_booking?") }
   end
 
+  def only_night_booking?
+    pricings.all?(&:night_booking?)
+  end
+
   def validate_all_dates_available(order)
     invalid_dates = order.periods.reject(&:bookable?)
     if invalid_dates.any?
