@@ -9,7 +9,16 @@ module CurrencyHelper
 
   def currency_symbol_from_code(currency = nil)
     currency ||= PlatformContext.current.instance.default_currency
-    Money::Currency.new(currency).symbol
+    currency_hash = DesksnearMe::Application.config.supported_currencies.find { |c| c[:iso_code] == currency }
+    currency_hash.blank? ? currency : currency_hash[:symbol]
+  end
+
+  def currency_symbols_associations(currencies)
+    currencies.each_with_object({}) { |currency, hash| hash[currency[:iso_code]] = currency[:symbol] }
+  end
+
+  def all_currency_symbols_associations
+    currency_symbols_associations(DesksnearMe::Application.config.supported_currencies)
   end
 
   def currency_content_tag(currency, price = '0.00', el = :span, currency_options = {}, content_tag_options = {})

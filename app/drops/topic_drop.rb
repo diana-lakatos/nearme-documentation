@@ -9,7 +9,7 @@ class TopicDrop < BaseDrop
   #   @return [String] Name for this topic
   # @!method data_source_contents
   #   @return [Array<DataSourceContentDrop>] Data source contents for this topic
-  delegate :id, :name, :data_source_contents, to: :topic
+  delegate :id, :name, :data_source_contents, :is_followed, to: :topic
 
   def initialize(topic)
     @topic = topic

@@ -8,6 +8,7 @@ module.exports = class PriceFields
     @freeCheckboxes = @container.find('input[data-free-booking]')
     @inputWrapper = @container.find('.price-options')
     @priceFields  = @container.find('input[data-price-field]')
+    @currencySelect = @container.closest('form').find('select[data-currency-symbols]')
     @bindEvents()
     @enablingPriceCheckboxes.trigger('change')
 
@@ -59,6 +60,13 @@ module.exports = class PriceFields
     @priceFields.on 'change', (event) ->
       price = $(event.target)
       price.val(price.val().replace(/[^0-9\.]/, ""))
+
+    @currencySelect.on 'change', (event) =>
+      value = $(event.target).val()
+      symbols = $(event.target).data('currency-symbols')
+      if value and symbols[value]
+        @priceFields.closest('.input-group').find('.input-group-addon').html(symbols[value])
+
 
   changePriceState: (target, state) ->
     target.parents(".row").find('input[data-price-field]').attr('readonly', state)

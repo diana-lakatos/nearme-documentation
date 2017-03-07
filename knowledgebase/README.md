@@ -14,6 +14,9 @@
   * password:  plaid_good
   * "You say tomato, I say ?": tomato
 
+## NearMe payments
+  * various payments accounts: https://near-me.atlassian.net/wiki/pages/viewpage.action?spaceKey=ENGINEERING&title=Test+Payments
+  * flow explained: https://docs.google.com/document/d/1vvRU46FMPVebDxzONeXUfMHWEtXgi5SBQ6_ZCkUxwT4/pub
 
 ## Capture backup from production
 
@@ -25,6 +28,6 @@
 
 ## Ssh to staging/production
 
-1. Copy https://gist.githubusercontent.com/godot/128ea15d74e2308d0f21fe5464b0f220/raw/3e1f633e456c5d29d31929abac840046414d01a4/.ssh--config into `~/.ssh/config`
-2. Change NM-USERNAME in `~/.ssh/config`, usually first and last name
-3. Test it `ssh nm-staging-app-1`
+1. `bin/nearme update_ssh_config` will append updated settings to USER_HOME/.ssh/config file
+2. test it `ssh nm-production-california-app-2`
+3. use bash|zsh with enabled autocomplete for quicker hostname access

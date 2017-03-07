@@ -153,11 +153,15 @@ class PaymentTransfer < ActiveRecord::Base
 
   def assign_amounts_and_currency
     self.currency = payments.first.try(:currency)
-    self.payment_gateway_fee_cents = payments.inject(0) { |sum, rc| sum += rc.payment_gateway_fee_cents }
-    self.service_fee_amount_host_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_host_cents }
-    self.amount_cents = payments.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - service_fee_amount_host_cents - payment_gateway_fee_cents
-    self.service_fee_amount_guest_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_guest_cents }
+    self.payment_gateway_fee_cents = sum_payments(:payment_gateway_fee_cents)
+    self.service_fee_amount_host_cents = sum_payments(:final_service_fee_amount_host_cents)
+    self.service_fee_amount_guest_cents = sum_payments(:final_service_fee_amount_guest_cents)
+    self.amount_cents = sum_payments(:transfer_amount_cents) - service_fee_amount_host_cents
     save!
+  end
+
+  def sum_payments(field)
+    payments.inject(0) { |sum, rc| sum += rc.send(field) }
   end
 
   def validate_all_charges_in_currency

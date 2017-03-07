@@ -1,24 +1,30 @@
+- for_night_booking ||= false
 .row.nested-fields{ :"data-junction-label" => t('pricing.availability.available_and')}
   = f.input :_destroy, as: :hidden
   .col-xs-11
     .form-inline
-      = f.input :open_time, as: :time_picker, label: false, input_html: { value: f.object.try(:open_time_with_default) }, wrapper_html: { class: 'form-control-sm' }
+      - if for_night_booking
+        = f.input :open_time, as: :hidden, input_html: { value: f.object.try(:open_time_with_default) }
+        = f.input :close_time, as: :hidden, input_html: { value: f.object.try(:close_time_with_default) }
+      - else
+        = f.input :open_time, as: :time_picker, label: false, input_html: { value: f.object.try(:open_time_with_default) }, wrapper_html: { class: 'form-control-sm' }
 
-      .form-unit
-        = t(:available_to, scope: [:pricing, :availability])
+        .form-unit
+          = t(:available_to, scope: [:pricing, :availability])
 
-      = f.input :close_time, as: :time_picker, label: false, input_html: { value: f.object.try(:close_time_with_default) }, wrapper_html: { class: 'form-control-sm' }
+        = f.input :close_time, as: :time_picker, label: false, input_html: { value: f.object.try(:close_time_with_default) }, wrapper_html: { class: 'form-control-sm' }
 
-      .form-unit
-        %b
-          = t(:available_on, scope: [:pricing, :availability])
+        .form-unit
+          %b
+            = t(:available_on, scope: [:pricing, :availability])
 
       = f.input :days, as: :week_days, label: false, wrapper: :vertical_radio_and_checkboxes, checked: f.object.try(:days).presence || (0..6).to_a
       - if f.object.errors[:base]
         .form-group.has-error
           = f.error :base
-  .col-xs-1
-    .form-action
-      = link_to_remove_association f, class: 'remove_fields' do
-        %button.action--remove
+  - unless for_night_booking
+    .col-xs-1
+      .form-action
+        = link_to_remove_association f, class: 'remove_fields' do
+          %button.action--remove
 

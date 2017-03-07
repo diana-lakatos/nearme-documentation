@@ -150,9 +150,7 @@
           {% endif %}
         </article>
 
-        {% if role == 'enquirer'  %}
-          <div class="case-invite" id="case-permission-request-{{ case.id }}" data-collaborations-url="{{ case.url }}"></div>
-        {% endif %}
+        <div class="case-invite" id="case-permission-request-{{ case.id }}" data-collaborations-url="{{ case.url }}"></div>
 
         <script>
           $(function(){

@@ -158,7 +158,7 @@ class PaymentTest < ActiveSupport::TestCase
         assert @payment.reload.refunded?
         assert_equal 0, @payment.final_service_fee_amount_host_cents
         assert_equal 100, @payment.final_service_fee_amount_guest_cents
-        assert_equal 600, @payment.subtotal_amount_cents_after_refund
+        assert_equal 600, @payment.transfer_amount_cents
         assert_equal 400, @payment.refunds.last.amount_cents
       end
 
@@ -171,7 +171,7 @@ class PaymentTest < ActiveSupport::TestCase
         assert @payment.reload.refunded?
         assert_equal 0, @payment.final_service_fee_amount_host_cents
         assert_equal 0, @payment.final_service_fee_amount_guest_cents
-        assert_equal 0, @payment.subtotal_amount_cents_after_refund
+        assert_equal 0, @payment.transfer_amount_cents
         assert_equal 1100, @payment.refunds.last.amount_cents
       end
 
@@ -193,7 +193,7 @@ class PaymentTest < ActiveSupport::TestCase
       end
 
       should 'return have subtotal amount after refund equal to subtotal amount if no refund has been made' do
-        assert_equal 10_000, @payment.subtotal_amount_cents_after_refund
+        assert_equal 10_000, @payment.transfer_amount_cents
       end
 
       should 'calculate proper number for amount_to_be_refunded if cancelled by guest' do
@@ -226,7 +226,7 @@ class PaymentTest < ActiveSupport::TestCase
 
       should 'calculate proper subtotal amount cents after refund once refund has been issued' do
         @refund = FactoryGirl.create(:refund, payment: @payment, amount_cents: 3000)
-        assert_equal @payment.subtotal_amount_cents - 3000, @payment.subtotal_amount_cents_after_refund
+        assert_equal @payment.subtotal_amount_cents - 3000, @payment.transfer_amount_cents
       end
     end
   end

@@ -142,10 +142,13 @@ module.exports = class BookingListing
     if (period_starts.getTime() < clt.getTime())
       return false
 
-    @availabilityFor(date, min) >= @defaultQuantity
+    @availabilityFor(date, min) >= @defaultQuantity || (@isOvernightBooking() && @firstUnavailableDay(date, min))
 
   availabilityFor: (date, minute = null) ->
     @availability.availableFor(date, minute)
+
+  firstUnavailableDay: (date, minute = null) ->
+    @availability.firstUnavailableDay(date, minute)
 
   bookItOutMin: ->
     @data.book_it_out_minimum_qty

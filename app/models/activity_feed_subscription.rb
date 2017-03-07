@@ -9,6 +9,17 @@ class ActivityFeedSubscription < ActiveRecord::Base
     where(follower: follower, followed: followed)
   }
 
+  scope :with_user_id_as_follower, lambda { |user_id, klass|
+    klass
+      .joins(
+        ActiveRecord::Base.send(
+          :sanitize_sql_array,
+          ["LEFT JOIN activity_feed_subscriptions afs ON afs.followed_id = #{klass.table_name}.id AND afs.followed_type = '#{klass.name}' AND follower_id = ?", user_id]
+        )
+      )
+      .select("#{klass.table_name}.*, afs.id IS NOT NULL as is_followed")
+  }
+
   validates_uniqueness_of :followed_identifier, scope: [:follower_id]
   validates_uniqueness_of :follower_id, scope: [:followed_id, :followed_type]
   validates_inclusion_of :followed_type, in: ActivityFeedService::Helpers::FOLLOWED_WHITELIST

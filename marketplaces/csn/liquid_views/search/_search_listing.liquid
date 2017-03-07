@@ -1,4 +1,7 @@
-<article class="user-profile-a search-listing-a" id="user-{{ user.id }}" itemscope itemtype="http://schema.org/Organization">
+
+
+
+{% comment %}<article class="user-profile-a search-listing-a" id="user-{{ user.id }}" itemscope itemtype="http://schema.org/Organization">
   <header class="user-profile-a-header">
     <a href="{{ user.user_profile_url }}">
       <div class="branding">
@@ -103,12 +106,7 @@
     </div>
     {% endif %}
   </div>
-  <script>
-    $(function(){
-      $(document).trigger('user:loaded', 'user-{{user.id}}')
-    });
-  </script>
 
   <div class="collaborations-a" id="collaboration-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}" data-collaborations-container></div>
-
 </article>
+{% endcomment %}
