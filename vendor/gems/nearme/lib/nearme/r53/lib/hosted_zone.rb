@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class HostedZone
   extend Forwardable
 
@@ -30,7 +31,6 @@ class HostedZone
 end
 
 module HostedZoneRepository
-
   def self.find_by_name(name)
     HostedZone.new(find_one_by_name(name))
   end
@@ -113,12 +113,12 @@ end
 
 module ResourceRecordDecorator
   def id
-    [name.gsub('.','_'), type].join('-')
+    [name.tr('.', '_'), type].join('-')
   end
 end
 
 class ResourceRecordRepository
-  TYPE = ['A', 'ALIAS', 'CNAME', 'MX', 'TXT', 'SPF']
+  TYPE = %w(A ALIAS CNAME MX TXT SPF SRV).freeze
 
   def self.find_by_zone_and_name_and_type(zone, name, type)
     zone.records.find { |record| record.name == name && record.type == type }
@@ -136,7 +136,7 @@ class ResourceRecordRepository
     apply_change ChangeRecordBuilder.add_alias_record(zone, target)
   end
 
-  private
+  # private
 
   def self.apply_change(change)
     client.change_resource_record_sets change
