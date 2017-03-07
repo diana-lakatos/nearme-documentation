@@ -4,11 +4,12 @@ module Graph
     class Users
       def call(_, arguments, ctx)
         @ctx = ctx
+        @variables = ctx.query.variables
         decorate(resolve_by(arguments))
       end
 
       def resolve_by(arguments)
-        arguments.keys.reduce(::User.all) do |relation, argument_key|
+        arguments.keys.reduce(main_scope) do |relation, argument_key|
           public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])
         end
       end
@@ -36,6 +37,12 @@ module Graph
 
       def current_user
         @ctx[:current_user].source
+      end
+
+      def main_scope
+        return ::User.all unless @variables['follower_id']
+        ::User.all
+          .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::User))
       end
 
       class CustomAttributePhotos
