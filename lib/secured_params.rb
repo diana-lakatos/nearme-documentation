@@ -555,6 +555,7 @@ class SecuredParams
       :max_price_cents,
       :number_of_units,
       :unit,
+      :pro_rated,
       :allow_exclusive_price,
       :allow_book_it_out_discount,
       :allow_free_booking,
