@@ -1,4 +1,4 @@
-<div class="search-form__filters-wrapper">
+<div class="two-columns-aside-inner">
   <div class="search-form__filters-section search-form__filters-section--mode">
     <a href="./#" data-search-filters-mode="basic" class="button-a button-small">BASIC</a>
     <a href="./#" data-search-filters-mode="advanced" class="button-a button-small button-grey">ADVANCED</a>
@@ -64,7 +64,7 @@
       </li>
       <li>
         <label for="ndis_category_5" class="csn-control csn-control--checkbox">
-          Assistance with Social & Community Participation
+          Assistance with Social &amp; Community Participation
           <input type="checkbox" value="5" id="ndis_category_5" />
           <div class="csn-control__indicator"></div>
 
@@ -78,14 +78,14 @@
     <ul>
       <li>
         <label for="services_category_1" class="csn-control csn-control--checkbox">
-          Companionship & Social Support
+          Companionship &amp; Social Support
           <input type="checkbox" value="1" id="services_category_1" />
           <div class="csn-control__indicator"></div>
         </label>
       </li>
       <li>
         <label for="services_category_2" class="csn-control csn-control--checkbox">
-          Community Participation, Sports & Activities
+          Community Participation, Sports &amp; Activities
           <input type="checkbox" value="2" id="services_category_2" />
           <div class="csn-control__indicator"></div>
         </label>
@@ -99,14 +99,14 @@
       </li>
       <li>
         <label for="services_category_4" class="csn-control csn-control--checkbox">
-          Meal Preparation & Shopping
+          Meal Preparation &amp; Shopping
           <input type="checkbox" value="4" id="services_category_4" />
           <div class="csn-control__indicator"></div>
         </label>
       </li>
       <li>
         <label for="services_category_5" class="csn-control csn-control--checkbox">
-          Showering, Toileting & Dressing
+          Showering, Toileting &amp; Dressing
           <input type="checkbox" value="5" id="services_category_5" />
           <div class="csn-control__indicator"></div>
         </label>
@@ -117,46 +117,4 @@
   <div class="search-form__filters-section search-form__filters-section--action">
     <button class="button-a button-block button-lg">UPDATE YOUR RESULTS</button>
   </div>
-
- </div>
-
-
-
-
-  {% comment %}
-  <div class="search-form__filters-filter">
-    <label for="filter-service">Service / Product</label>
-    <span class="select-a">
-      <select id="filter-service" class="unstyled-select" name="category_ids[]" data-category-filter>
-        <option value="">Please select --</option>
-
-        {% assign industries = searcher.searchable_categories | detect: name: 'Industry' %}
-        {% for category in industries.children %}
-          <option value="{{ category.id }}"{% if searcher.category_ids contains category.id %} selected{% endif %}>{{ category.name }}</option>
-          {% for subcat in category.children %}
-            <option value="{{ subcat.id }}"{% if searcher.category_ids contains subcat.id %} selected{% endif %}>&nbsp;&nbsp;&nbsp;&rsaquo; {{ subcat.name }}</option>
-            {% for subcat2 in subcat.children %}
-              <option value="{{ subcat2.id }}"{% if searcher.category_ids contains subcat2.id %} selected{% endif %}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rsaquo; {{ subcat2.name }}</option>
-            {% endfor %}
-          {% endfor %}
-        {% endfor %}
-      </select>
-    </span>
-  </div>
-  {% endcomment %}
-
-  {% comment %}
-  <div class="search-form__filters-filter">
-    <label for="filter-language">Language</label>
-
-    <span class="select-a">
-      <select name="category_ids[]" id="filter-language" class="unstyled-select" data-category-filter>
-        <option value="">Please select --</option>
-        {% assign languages = searcher.searchable_categories | detect: name: 'Language' %}
-        {% for category in languages.children %}
-          <option value="{{ category.id }}"{% if searcher.category_ids contains category.id %} selected{% endif %}>{{ category.name }}</option>
-        {% endfor %}
-      </select>
-    </span>
-  </div>
-  {% endcomment %}
+</div>

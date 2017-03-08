@@ -1,7 +1,4 @@
-<input type="text" name="query" class="search-form__query-input" id="field-q" placeholder=""
-{% comment %}value="{{ params['query'] }}"{% endcomment %}
-value="{{ current_full_path }}"
-/>
+<input type="text" name="query" class="search-form__query-input" id="field-q" placeholder="" value="{{ params['query'] }}" />
 <button type="submit" class="button-a search-form__query-submit">
   <i class="fa fa-search" aria-hidden="true"></i>
   Search
@@ -9,5 +6,5 @@ value="{{ current_full_path }}"
 
 <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}" />
 <input type="hidden" name="per_page" value="{{ searcher.per_page }}" />
-<input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page" />
+<input type="hidden" name="page" value="{{ searcher.current_page }}" />
 <input type="hidden" name="sort" />
