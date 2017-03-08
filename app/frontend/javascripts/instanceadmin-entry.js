@@ -27,6 +27,7 @@ NM.on('ready', ()=>{
   require('initializers/instance_admin/approval_requests.initializer');
   require('initializers/instance_admin/bootstrap_switch.initializer');
   require('initializers/instance_admin/categories.initializer');
+  require('initializers/instance_admin/root_categories.initializer');
   require('initializers/instance_admin/chosen.initializer');
   require('initializers/instance_admin/default_images.initializer');
   require('initializers/instance_admin/dimension_templates.initializer');
