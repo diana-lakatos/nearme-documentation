@@ -7,6 +7,10 @@ module Graph
         decorate(resolve_by(arguments))
       end
 
+      def self.decorate(transactable)
+        TransactableDrop.new(transactable.decorate)
+      end
+
       def resolve_by(arguments)
         arguments.keys.reduce(main_scope) do |relation, argument_key|
           public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])
@@ -14,7 +18,7 @@ module Graph
       end
 
       def decorate(relation)
-        relation.map { |transactable| TransactableDrop.new(transactable.decorate) }
+        relation.map { |transactable|  self.class.decorate(transactable)}
       end
 
       def resolve_by_ids(relation, ids)
