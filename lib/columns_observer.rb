@@ -61,7 +61,7 @@ module ColumnsObserver
       return unless self.table_exists?
       inherits_columns_from_association_string = "#{callback_name}(on: :create) do \n"
       [columns].flatten.each do |column|
-        fail ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{name} does not contain column #{column}") unless column_names.include?(column.to_s)
+        next unless column_names.include?(column.to_s)
         [associations].flatten.each do |association|
           inherits_columns_from_association_string += "self.#{column} ||= #{association}.#{column} if #{association}\n"
         end
