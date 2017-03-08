@@ -1,6 +1,6 @@
 - payment_methods = f.object.decorate.payment_methods
 
-- if @order.respond_to?(:monthly?) && @order.monthly?
+- if @order.respond_to?(:monthly?) && @order.monthly? && @order.pro_rated?
   %p= t 'recurring_reservations_review.prorated_info'
 
 - if payment_methods.any?

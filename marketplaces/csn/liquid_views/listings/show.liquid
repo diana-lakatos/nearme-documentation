@@ -1,184 +1,272 @@
-{% query_graph 'get_user', result_name: g, userId: listing.creator.id %}
-
-{% assign collaborator = current_user | find_collaborator: listing %}
-{% assign title = platform_context.name | append: ' - ' | append: listing.name %}
-{% title title %}
 <main id="main">
-  <div class="back-to-search-results back-to-listings">
-    <a href="{{ 'dashboard_company_transactable_type_transactables_path' | generate_url: listing.transactable_type.slug }}">Back to My Orders</a>
-  </div>
+  <div class="wrapper-a">
 
-  <article class="order-a">
-    <h1>{{ listing.name }}</h1>
-    <div class="content">
-      <div class="order-properties">
-        <div class="overview">
-          <div class="state-{{ listing.state }}"><span>{{ listing.state | humanize }}</span></div>
-          <div class="meta">
-            Posted <b>{{ listing.created_at | time_ago_in_words }}</b> ago
+    <div class="detail-view__content two-columns-content">
+      <div class="detail-view__back">
+        {% if request_referer != blank %}
+          <a href="{{ request_referer }}">
+        {% else %}
+          <a href="/search">
+        {% endif %}
+          <i class="fa fa-chevron-left" aria-hidden="true"></i>
+          Back to search results
+        </a>
+      </div>
+
+      <div class="detail-view__user-info">
+        <div class="detail-view__avatar">
+          <div class="detail-view__avatar-inner">
+            <img src="http://localhost:8080/assets/tmp.jpg" alt="Emory image" />
           </div>
         </div>
 
-        <div class="properties">
-          <dl>
-            <dt>Purchaser Name:</dt>
-            <dd>{{ listing.creator.name }}</dd>
-
-            <dt>Organization:</dt>
-            <dd>{{ listing.creator.seller_properties.organization_name }}</dd>
-
-            {% if collaborator != blank %}
-            <dt>Offer Requested:</dt>
-            <dd><time datetime="{{ collaborator.approved_by_owner_at }}">{{ collaborator.approved_by_owner_at | l: 'short'}}</time></dd>
-            {% endif %}
-
-            {% if listing.properties.order_contact %}
-            <dt>Contact person:</dt>
-            <dd>{{ listing.properties.order_contact }}</dd>
-            {% endif %}
-
-            {% if listing.categories["Language"]["children"].size > 0 %}
-            <dt>Required language proficiency:</dt>
-            <dd>{{ listing.categories["Language"]["children"] | join: ', ' }}</dd>
-            {% endif %}
-          </dl>
-
-          <dl>
-            {% if listing.properties.approximate_budget != blank %}
-            <dt>Approximate budget:</dt>
-            <dd>{{ listing.properties.approximate_budget }}</dd>
-            {% endif %}
-
-            {% if listing.properties.how_pay_for_order != blank %}
-            <dt>Payment method:</dt>
-            <dd>{{ listing.properties.how_pay_for_order }}</dd>
-            {% endif %}
-
-            {% if listing.properties.how_pay_for_order != blank %}
-            <dt>Purchase order number:</dt>
-            <dd>{{ listing.properties.purchase_order_number }}</dd>
-            {% endif %}
-
-            {% if listing.properties.delivery_date != blank %}
-            <dt>Delivery date:</dt>
-            <dd><time datetime="{{ listing.properties.delivery_date }}">{{ listing.properties.delivery_date | l: 'short'}}</time></dd>
-            {% endif %}
-
-            {% if listing.properties.delivery_address != blank %}
-            <dt>Delivery address:</dt>
-            <dd>{{ listing.properties.delivery_address }}</dd>
-            {% endif %}
-          </dl>
-        </div>
-      </div>
-
-      <div class="order-description">
-        <h3>Order description</h3>
-        {{ listing.properties.order_description | markdownify }}
-
-        {% if listing.properties.other_requirements != blank %}
-        <h4>Other requirements</h4>
-        {{ listing.properties.other_requirements | markdownify }}
-        {% endif %}
-
-        {% if listing.attachments.size > 0 %}
-        <div class="documents-a">
-          <h4>Additional documents</h4>
-          <ul>
-            {% for attachment in listing.attachments %}
-            <li><a href="{{ attachment.attachment_url }}" download>{{ attachment.title }}</a></li>
-            {% endfor %}
+        <div class="detail-view__user-name">
+          <h2>Jake</h2>
+          <ul class="item-rating">
+            <li class="item-rating__active"><i class="fa fa-star"></i></li>
+            <li class="item-rating__active"><i class="fa fa-star"></i></li>
+            <li class="item-rating__active"><i class="fa fa-star"></i></li>
+            <li><i class="fa fa-star"></i></li>
+            <li><i class="fa fa-star"></i></li>
           </ul>
         </div>
-        {% endif %}
+
+        <div class="detail-view__user-location">
+          <p>Type: Individual</p>
+          <p>Location: <span itemprop="streetAddress">St. Helens Park</span>, <span itemprop="addressRegion">New South Wales</span>, <span itemprop="postalCode">2560</span> <i class="fa fa-map-marker"></i></p>
+        </div>
       </div>
 
-      {% if listing.creator.seller_properties.organization_description != blank or listing.creator.seller_properties.organization_mission != blank %}
-        <div class="order-description">
-          <h3>More about {{ listing.creator.seller_properties.organization_name }}</h3>
-
-          {% if listing.creator.seller_properties.organization_description != blank %}
-          <h4>About</h4>
-          {{ listing.creator.seller_properties.organization_description | markdownify }}
-          {% endif %}
-
-          {% if listing.creator.seller_properties.organization_mission != blank %}
-          <h4>Our mission</h4>
-          {{ listing.creator.seller_properties.organization_mission | markdownify }}
-          {% endif %}
+      <div class="detail-view__i-have">
+        <h3>I have:</h3>
+        <ul class="category-list category-list__circles">
+          <li data-toggle="tooltip" title="Assistance with Daily Life"><i class="csn-icon assistance-daily-life"></i></li>
+          <li data-toggle="tooltip" title="Transport"><i class="csn-icon transport"></i></li>
+          <li data-toggle="tooltip" title="Assistive Technology"><i class="csn-icon assistive-technology"></i></li>
+          <li data-toggle="tooltip" title="Home"><i class="csn-icon home"></i></li>
+          <li data-toggle="tooltip" title="Coordination of Supports"><i class="csn-icon coordination-supports"></i></li>
+          <li data-toggle="tooltip" title="Increased Social and Community Participation"><i class="csn-icon increased-social-community-participation"></i></li>
+          <li data-toggle="tooltip" title="Assistance with Social &amp; Community Participation"><i class="csn-icon assistance-social-community-participation"></i></li>
+          <li data-toggle="tooltip" title="Working with Children"><i class="csn-icon working-with-children"></i></li>
+          <li data-toggle="tooltip" title="Nursing Services"><i class="csn-icon nursing-services"></i></li>
+          <li data-toggle="tooltip" title="Showering, toileting &amp; Dressing"><i class="csn-icon showering-toileting-dressing"></i></li>
+          <li data-toggle="tooltip" title="Meal Preparation &amp; Shopping"><i class="csn-icon meal-preparation-shopping"></i></li>
+        </ul>
+        <div class="two-columns">
+          <div class="two-columns-half">
+            <h4>NDIS</h4>
+            <ol>
+              <li>Assistance with Daily Life</li>
+              <li>Transport</li>
+              <li>Assistance with Social &amp; Community Participation</li>
+              <li>Assistive Technology</li>
+              <li>Home</li>
+              <li>Coordination of Supports</li>
+            </ol>
+          </div>
+          <div class="two-columns-half">
+            <h4>Other</h4>
+            <ul class="list-bulleted">
+              <li>Meal Preparation &amp; Shopping</li>
+              <li>Showering, Toileting &amp; Dressing</li>
+              <li>Nursing Services</li>
+              <li>Working with Children</li>
+            </ul>
+          </div>
         </div>
-      {% endif %}
+      </div>
+
+      <div class="detail-view__description">
+        <h3>DESCRIPTION</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam, a explicabo reiciendis vitae nisi quae doloremque soluta architecto rerum? Hic a at tempore quis. Magnam laudantium voluptates expedita alias molestiae!</p>
+      </div>
+
+      <div class="detail-view__other-experiences">
+        <h3>OTHER EXPERIENCES</h3>
+
+        <ul>
+          <li>
+            <h4>Lorem ipsum</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam voluptas eum optio eos alias velit, mollitia nulla, esse facere et, adipisci. Enim, ratione, culpa ullam quo vero perferendis nisi tempora.</p>
+            <a href="#">
+              <i class="fa fa-file" aria-hidden="true"></i>
+              Certificate1.pdf
+            </a>
+          </li>
+          <li>
+            <h4>Lorem ipsum</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam voluptas eum optio eos alias velit, mollitia nulla, esse facere et, adipisci. Enim, ratione, culpa ullam quo vero perferendis nisi tempora.</p>
+            <a href="#">
+              <i class="fa fa-file" aria-hidden="true"></i>
+              Certificate2.pdf
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="detail-view__formal-training">
+        <h3>FORMAL TRAINING</h3>
+
+        <ul>
+          <li>
+            <h4>Formal Training Title 1</h4>
+            <p class="detail-view__meta-data">
+              <span>Jan 2017</span>
+              <a href="#">
+                <i class="fa fa-file" aria-hidden="true"></i>
+                Training Certificate1.pdf
+              </a>
+            </p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam voluptas eum optio eos alias velit, mollitia nulla, esse facere et, adipisci. Enim, ratione, culpa ullam quo vero perferendis nisi tempora.</p>
+          </li>
+          <li>
+            <h4>Formal Training Title 2</h4>
+            <p class="detail-view__meta-data">
+              <span>Jan 2017</span>
+              <a href="#">
+                <i class="fa fa-file" aria-hidden="true"></i>
+                Training Certificate2.pdf
+              </a>
+            </p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam voluptas eum optio eos alias velit, mollitia nulla, esse facere et, adipisci. Enim, ratione, culpa ullam quo vero perferendis nisi tempora.</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="detail-view__vehicle-available">
+        <h3>VEHICLE AVAILABLE FOR TRANSPORT</h3>
+        <div class="detail-view__gallery detail-view__gallery-preview" data-detail-view-gallery-preview>
+          <div><img src="http://localhost:8080/assets/vehicle/1.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/2.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/3.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/4.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/5.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/6.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/7.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/8.jpg" alt="Vehicle available for transport" /></div>
+        </div>
+
+        <div class="detail-view__gallery detail-view__gallery-thumbnails" data-detail-view-gallery-thumbnails>
+          <div><img src="http://localhost:8080/assets/vehicle/1.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/2.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/3.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/4.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/5.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/6.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/7.jpg" alt="Vehicle available for transport" /></div>
+          <div><img src="http://localhost:8080/assets/vehicle/8.jpg" alt="Vehicle available for transport" /></div>
+        </div>
+      </div>
+
+      <div class="detail-view__web-profile">
+        <h3>WEB PROFILE</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit perspiciatis, minima dignissimos quae numquam dolorum voluptate reprehenderit. Molestiae accusamus tenetur, sequi fugit similique, iure voluptatem voluptatum consequatur? Quasi, ipsa, vel.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit perspiciatis, minima dignissimos quae numquam dolorum voluptate reprehenderit. Molestiae accusamus tenetur, sequi fugit similique, iure voluptatem voluptatum consequatur? Quasi, ipsa, vel.</p>
+      </div>
+
+      <div class="detail-view__testimonials">
+        <h3>TESTIMONIALS</h3>
+        <div data-detail-view-testimonials-carousel>
+          <div>
+            <blockquote>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo qui tempora quaerat similique tempore ipsa. tenetur cumque, quae, repudiandae natus hic! Officia voluptate, numquam, autem adipisci sed facere illo modi. tenetur cumque, quae, repudiandae natus hic! Officia voluptate, numquam, autem adipisci sed facere illo modi.</p>
+              <span class="detail-view__testimonials-author">By Dario Gorzeba</span>
+            </blockquote>
+          </div>
+          <div>
+            <blockquote>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. ducimus, sequi. libero ratione earum, similique quo maxime dignissimos nisi, suscipit cupiditate in natus ea optio quos ipsa expedita dolorum fugiat nobis!</p>
+              <span class="detail-view__testimonials-author">By Paweł Kowalski</span>
+            </blockquote>
+          </div>
+          <div>
+            <blockquote>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo qui tempora quaerat similique tempore ipsa tenetur cumque, quae, repudiandae natus hic! Officia voluptate, numquam, autem adipisci sed facere illo modi. tenetur cumque, quae, repudiandae natus hic! Officia voluptate, numquam, autem adipisci sed facere illo modi. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo qui tempora quaerat similique tempore ipsa tenetur cumque, quae, repudiandae natus hic! Officia voluptate, numquam, autem adipisci sed facere illo modi.</p>
+              <span class="detail-view__testimonials-author">By Adam Broadway</span>
+            </blockquote>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <aside class="sidebar">
-      <ul class="actions-a">
-        {% assign orders = current_user | get_enquirer_orders: listing %}
-        {% assign can_make_offer = false %}
 
-        {% if listing.state == 'pending' and current_user.has_buyer_profile? %}
-          {% if orders == empty %}
-            {% assign can_make_offer = true %}
-          {% else %}
-            {% assign can_make_offer = true %}
-            {% for order in orders %}
-              {% if order.state == 'unconfirmed' %}
-                {% assign can_make_offer = false %}
-              {% endif %}
-            {% endfor %}
-          {% endif  %}
-        {% endif %}
 
-        {% if can_make_offer == true %}
-          <li>
-            {% if current_user.has_verified_merchant_account == true %}
-              {% assign pricing = listing.action_type.pricings | detect: number_of_units: current_user.buyer_properties.driver_type_unit %}
-              {% assign url = 'new_dashboard_order_path' | generate_url: transactable_id: transactable.id, quantity: transactable.properties.duration, transactable_pricing_id: pricing.id %}
-              <a class="button-a" data-href="{{ url }}" href="{{ url }}" data-modal="true">Accept</a>
-            {% else %}
-              {% assign url = 'required_modal_dashboard_company_payouts_path' | generate_url %}
-              <a class="button-a" data-modal="true" href="{{ url }}" data-href="{{ url }}">Accept</a>
-            {% endif %}
-          </li>
-          {% if current_status == 'pending' %}
-            {% assign transactable_collaborator = current_user | find_collaborator: listing %}
+    <div class="detail-view__aside two-columns-aside">
+      <div class="two-columns-aside-inner">
+        <div class="detail-view__aside-actions">
+          <a href="#" class="button-a button-lg button-block">BOOK ME</a>
+          <ul>
             <li>
-              <a class="button-b" href="{{ 'dashboard_transactable_collaborator_path' | generate_url: transactable_collaborator.id }}" data-method="delete" data-confirm="Are you sure you want to decline this order?">Decline</a>
+              <a href="#" class="button-c">
+                <i class="fa fa-commenting-o"></i>
+                MESSAGE
+              </a>
             </li>
-          {% endif %}
-        {% endif %}
+            <li>
+              <a href="#" class="button-c">
+                <i class="fa fa-heart"></i>
+                FAVORITE
+              </a>
+            </li>
+          </ul>
+        </div>
 
-        {% if collaborator != blank %}
-          <li><a class="button-b action-message" data-modal="true" data-href="{{ listing.creator.user_message_path }}">Send Message</a></li>
-        {% endif %}
-      </ul>
+        <div class="detail-view__aside-availability">
+          <h3>AVAILABILITY</h3>
+          <h4>Calendar:</h4>
+          <input type="hidden" value="" data-detail-view-availability />
+        </div>
 
-      {% if g.user.logo[0] != blank %}
-      <figure class="avatar">
-        <img src="{{ g.user.logo[0].mini }}" alt="{{ user.buyer_properties.company_name }}" itemprop="logo">
-      </figure>
-      {% endif %}
+        <div class="detail-view__aside-general-availability">
+          <h4>General Availability</h4>
+          <dl>
+            <dt>Monday:</dt>
+            <dd>8am &mdash; 5pm</dd>
 
-      <figure class="avatar">
-        <img src="{{ listing.creator.avatar_url_big }}" alt="{{ listing.creator.name }}">
-      </figure>
+            <dt>Tuesday:</dt>
+            <dd>8am &mdash; 5pm</dd>
 
-      <h3 class="name">{{ listing.creator.name }} <span class="organization">{{ listing.creator.seller_properties.organization_name }}</span></h3>
+            <dt>Wednesday:</dt>
+            <dd>8am &mdash; 5pm</dd>
 
-      <ul class="user-properties">
-        <li><b>{{ listing.creator.transactables_count }}</b> Total Orders</li>
-        <li><b>{{ listing.creator.completed_transactables_count }}</b> Orders Completed</li>
-        <li>{{ 'registrations.member_since' | translate }} {{ listing.creator.created_at | to_date | l: 'short' }}</li>
-      </ul>
+            <dt>Thursday:</dt>
+            <dd>8am &mdash; 5pm</dd>
 
-      {% if listing.creator.has_active_credit_cards? %}
-      <p class="payment-verified">
-        <strong>Payment Method Verified</strong>
-      </p>
-      {% endif %}
+            <dt>Sunday:</dt>
+            <dd>8am &mdash; 5pm</dd>
 
-      <ul class="actions-a">
-        <li><a data-href="{{ listing.inappropriate_report_path }}" data-modal="true" class="button-c action-flag mini">Flag as inappropriate</a></li>
-      </ul>
-    </aside>
-  </article>
+            <dt>Holidays:</dt>
+            <dd>Yes</dd>
+          </dl>
+        </div>
+
+        <div class="detail-view__aside-more-information">
+          <h3>MORE INFORMATION</h3>
+          <h4>Gender:</h4>
+          <div class="user-gender">
+            <i class="fa fa-female" aria-hidden="true"></i>
+          </div>
+
+          <h4>Languages Spoken:</h4>
+          <ul class="list-bulleted">
+            <li>English</li>
+            <li>Spanish</li>
+          </ul>
+        </div>
+
+        <div class="detail-view__aside-flag-listing">
+          <a href="#">
+            <i class="fa fa-flag" aria-hidden="true"></i>
+            Flag listing as inappropriate
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </main>
+
+
+
+
+

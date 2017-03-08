@@ -8,7 +8,7 @@ class RecurringBooking::AmountCalculatorFactory
   end
 
   def self.first_time_monthly_charge?(recurring_booking)
-    recurring_booking.recurring_booking_periods.count == 0 && recurring_booking.monthly?
+    recurring_booking.recurring_booking_periods.count == 0 && recurring_booking.pro_rated?
   end
 
   class BaseAmountCalculator
