@@ -44,5 +44,11 @@ FactoryGirl.define do
       unit 'subscription_month'
       price_cents 1670
     end
+
+    factory :subscription_pro_rated_pricing do
+      unit 'subscription_month'
+      pro_rated true
+      price_cents 1670
+    end
   end
 end

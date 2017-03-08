@@ -215,6 +215,10 @@ class RecurringBooking < Order
     transactable_pricing.unit == 'subscription_month'
   end
 
+  def pro_rated?
+    transactable_pricing.pro_rated?
+  end
+
   def first_transactable_line_item
     transactable_line_items.first
   end
