@@ -118,7 +118,7 @@ FactoryGirl.define do
         at.pricings = [FactoryGirl.build(
           :subscription_pro_rated_pricing,
           action: at,
-          transactable_type_pricing: at.transactable_type_action_type.pricing_for('1_subscription_month_pro_rated')
+          transactable_type_pricing: at.transactable_type_action_type.pricing_for('1_subscription_month')
         )]
       end
     end

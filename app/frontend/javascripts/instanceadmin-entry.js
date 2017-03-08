@@ -46,6 +46,7 @@ NM.on('ready', ()=>{
   require('initializers/instance_admin/payment_gateway.initializer');
   require('initializers/instance_admin/photo_manipulator.initializer');
   require('initializers/instance_admin/photo_upload_versions.initializer');
+  require('initializers/instance_admin/subscription_pricing.initializer');
   require('initializers/instance_admin/popover.initializer');
   require('initializers/instance_admin/preferences_checkbox_slider.initializer');
   require('initializers/instance_admin/search_settings.initializer');

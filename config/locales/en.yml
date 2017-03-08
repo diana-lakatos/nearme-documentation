@@ -2511,9 +2511,6 @@ en:
     subscription_month:
       one: 'calendar month'
       other: 'calendar months'
-    subscription_month_pro_rated:
-      one: 'calendar month pro rated'
-      other: 'calendar months pro rated'
     subscription_day:
       one: 'day'
       other: 'days'

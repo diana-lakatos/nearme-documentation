@@ -1,25 +1,67 @@
 ---
 name: Create a New Case
 ---
+{% assign massTortTT = platform_context.transactable_types | detect: name: 'Mass Tort' %}
+{% assign personalInjuryTT = platform_context.transactable_types | detect: name: 'Personal Injury' %}
+{% assign otherTT = platform_context.transactable_types | detect: name: 'Property Damage, Employment, Business and Other' %}
+{% if current_user.valid? %}
+  {% assign return_to = "dashboard_company_transactables_path" | generate_url %}
+{% else %}
+  {% assign return_to = "dashboard_profile_path" | generate_url %}
+{% endif %}
 
 <div class="new-case-selection">
   <h1>What kind of case do you want to create?</h1>
 
-  <p>
-    {% for transactable_type in platform_context.transactable_types %}
-      {% if current_user.registration_completed? %}
-        {% assign new_form_path = "new_dashboard_company_transactable_path" | generate_url: transactable_type_id: transactable_type.id %}
-      {% else %}
-        {% if current_user.valid? %}
-          {% assign return_to = "dashboard_company_transactables_path" | generate_url %}
-        {% else %}
-          {% assign return_to = "dashboard_profile_path" | generate_url %}
-        {% endif %}
+  <div class="case-types">
+    <div class="case-type-personal">
+      <h2><span>Individual Cases</span></h2>
+      <ul>
+        <li>
+          {% capture new_form_path %}
+            {% if current_user.registration_completed? %}
+              {{ "new_dashboard_company_transactable_path" | generate_url: transactable_type_id: personalInjuryTT.id }}
+            {% else %}
+              {{ "transactable_type_space_wizard_list_path" | generate_url: personalInjuryTT, return_to: return_to }}
+            {% endif %}
+          {% endcapture %}
 
-        {% assign new_form_path = "transactable_type_space_wizard_list_path" | generate_url: transactable_type, return_to: @return_to %}
-      {% endif %}
+          <a href="{{ new_form_path | trim }}" class="button-a">Personal Injury</a>
+        </li>
+        <li>
+          {% capture new_form_path %}
+            {% if current_user.registration_completed? %}
+              {{ "new_dashboard_company_transactable_path" | generate_url: transactable_type_id: otherTT.id }}
+            {% else %}
+              {{ "transactable_type_space_wizard_list_path" | generate_url: otherTT, return_to: return_to }}
+            {% endif %}
+          {% endcapture %}
 
-      <a href="{{ new_form_path }}" class="button-a">New {{ transactable_type.bookable_noun }}</a>
-    {% endfor %}
+          <a href="{{ new_form_path | trim }}" class="button-a">Other</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="case-type-group">
+      <h2><span>Group Cases</span></h2>
+      <ul>
+        <li>
+          {% capture new_form_path %}
+            {% if current_user.registration_completed? %}
+              {{ "new_dashboard_company_transactable_path" | generate_url: transactable_type_id: massTortTT.id }}
+            {% else %}
+              {{ "transactable_type_space_wizard_list_path" | generate_url: massTortTT, return_to: return_to }}
+            {% endif %}
+          {% endcapture %}
+
+          <a href="{{ new_form_path | trim }}" class="button-a">Mass Tort</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+  <p class="not-ready-to-create-case">
+    <a href="/dashboard" class="button-a">I'm not ready yet</a>
   </p>
 </div>

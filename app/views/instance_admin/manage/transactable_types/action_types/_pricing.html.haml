@@ -2,7 +2,10 @@
   .col-md-2
     = f.input :number_of_units, as: :numeric
   .col-md-2
-    = f.input :unit, as: :select, collection: f.object.action.decorate.availabile_units_with_i18n
+    = f.input :unit, as: :select, collection: f.object.action.decorate.availabile_units_with_i18n, input_html: { data: { subscription_unit: true } }
+  - if f.object.subscription?
+    .col-md-1
+      = f.input :pro_rated, as: :boolean, input_html: { data: { pro_rated: true } }
   - if f.object.action.can_be_free?
     .col-md-2
       = f.input :allow_free_booking

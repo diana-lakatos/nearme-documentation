@@ -32,15 +32,17 @@ class ReservationTest < ActiveSupport::TestCase
 
     context 'pro rated monthly calculator test' do
       setup do
-        @order = FactoryGirl.build(:recurring_booking,
+        @order = FactoryGirl.create(:recurring_booking,
           transactable: create(:subscription_pro_rated_transactable),
-          start_on: Time.parse('2025-06-03')
         )
+        @order.update_column(:starts_at, Time.zone.parse('2025-03-06'))
+
       end
 
       should 'confirm recurring_booking on autoconfirm mode' do
         Transactable.any_instance.stubs(:confirm_reservations?).returns(false)
         @order.payment_subscription = FactoryGirl.build(:payment_subscription, subscriber: @order)
+        assert_equal true, @order.pro_rated?
         assert_equal RecurringBooking::AmountCalculatorFactory::FirstTimeMonthlyAmountCalculator, @order.amount_calculator.class
         @order.process!
         assert @order.confirmed?

@@ -8,7 +8,7 @@ class Transactable::Pricing < ActiveRecord::Base
 
   attr_accessor :enabled
 
-  inherits_columns_from_association([:unit, :number_of_units], :transactable_type_pricing, :before_validation)
+  inherits_columns_from_association([:unit, :number_of_units, :pro_rated], :transactable_type_pricing, :before_validation)
 
   monetize :price_cents, with_model_currency: :currency, allow_nil: true
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true,
