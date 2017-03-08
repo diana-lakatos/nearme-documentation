@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170302182145) do
+ActiveRecord::Schema.define(version: 20170308095224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1278,23 +1278,6 @@ ActiveRecord::Schema.define(version: 20170302182145) do
   end
 
   add_index "instance_views", ["instance_id", "path", "format", "handler", "draft"], name: "instance_path_with_format_and_handler", using: :btree
-
-  create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.integer  "instance_type_id"
-    t.integer  "instance_id"
-    t.text     "body"
-    t.string   "path",                 limit: 255
-    t.string   "locale",               limit: 255
-    t.string   "format",               limit: 255
-    t.string   "handler",              limit: 255
-    t.boolean  "partial"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "view_type",            limit: 255
-    t.integer  "transactable_type_id"
-    t.integer  "custom_theme_id"
-  end
 
   create_table "instance_views_backup_20160926", id: false, force: :cascade do |t|
     t.integer  "id"
@@ -2757,6 +2740,7 @@ ActiveRecord::Schema.define(version: 20170302182145) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "pro_rated",                    default: false
   end
 
   add_index "transactable_pricings", ["instance_id", "action_type", "action_id"], name: "transactable_pricings_main_index", using: :btree
@@ -2830,6 +2814,7 @@ ActiveRecord::Schema.define(version: 20170302182145) do
     t.string   "order_class_name"
     t.boolean  "allow_nil_price_cents",      default: false
     t.integer  "fixed_price_cents"
+    t.boolean  "pro_rated",                  default: false
   end
 
   add_index "transactable_type_pricings", ["instance_id", "action_type", "action_id"], name: "action_type_pricings_main_index", using: :btree
