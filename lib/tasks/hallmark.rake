@@ -161,7 +161,9 @@ namespace :hallmark do
         if email.include?('@')
           emails << email
           u = User.where('email ilike ?', email).first_or_initialize
+          u.expires_at = Date.strptime(array[EXPIRES_AT], '%Y%m').end_of_month
           if u.persisted?
+            u.save!
             puts "skipping #{email} - already added"
             next
           end
@@ -169,7 +171,6 @@ namespace :hallmark do
           u.email = email
           u.password = SecureRandom.hex(12) unless u.encrypted_password.present?
           u.external_id = array[EXTERNAL_ID]
-          u.expires_at = Date.strptime(array[EXPIRES_AT], '%Y%m').end_of_month
           u.get_default_profile
           u.properties.date_of_birth = begin
                                          Date.strptime(array[DOB], '%m%d%Y')
@@ -202,8 +203,7 @@ namespace :hallmark do
     puts "Imported in total: #{emails.count} users"
     users_invalidated = User.not_admin.
                              where.not(email: emails + KOC_EMAILS).
-                             where.not('email ilike ?', '%@hallmark.com').
-                             update_all(expires_at: nil)
-    puts "Invalidating #{users_invalidated} users - setting expires at to nil"
+                             where('email not ilike ?', '%@hallmark.com').count
+    puts "Should invalidate #{users_invalidated} users - setting expires at to nil"
   end
 end
