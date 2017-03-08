@@ -136,7 +136,7 @@
         - if purchase.paid? && !purchase.completed?
           = link_to t('buy_sell_market.checkout.labels.actions.archive'), complete_dashboard_company_orders_received_path(purchase), data: { confirm: t('buy_sell_market.checkout.labels.actions.complete_approve') }, class: 'btn btn-primary', method: :post
 
-        - if purchase.cancelable? #&& !purchase.paid?
+        - if purchase.cancellable? #&& !purchase.paid?
           = link_to t('buy_sell_market.checkout.labels.actions.cancel'), cancel_dashboard_company_orders_received_path(purchase), data: { confirm: t('buy_sell_market.checkout.labels.actions.confirm_cancel') }, class: 'btn btn-warning', method: :post
 
         - if false #purchase.cancelled?

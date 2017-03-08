@@ -20,8 +20,6 @@ class Reservation < Order
   validate :address_in_radius?, if: -> { address_in_radius }
   validate :validate_order_for_action, on: :create, if: -> { transactable }
 
-  before_create :set_cancellation_policy
-
   alias seller_type_review_receiver creator
   alias buyer_type_review_receiver user
 
@@ -31,7 +29,6 @@ class Reservation < Order
   delegate :event_booking?, to: :transactable_pricing
 
   state_machine :state, initial: :inactive do
-    after_transition confirmed: [:cancelled_by_guest], do: [:charge_penalty!]
     after_transition unconfirmed: :confirmed, do: [:warn_user_of_expiration]
   end
 
@@ -94,21 +91,6 @@ class Reservation < Order
     self.end_minute = start_minute + minimum_booking_minutes
   end
 
-  def cancelable?
-    return false if can_approve_or_decline_checkout? || has_to_update_credit_card? || archived_at.present?
-    if confirmed? || unconfirmed?
-      # A reservation can be canceled if not already canceled and all of the dates are in the future
-      cancellation_policy.cancelable?
-    else
-      false
-    end
-  end
-  alias cancelable cancelable?
-
-  def cancellation_policy
-    @cancellation_policy ||= Reservation::CancellationPolicy.new(self)
-  end
-
   def invoke_confirmation!(&_block)
     errors.clear
     action.try(:validate_all_dates_available, self) unless skip_payment_authorization?
@@ -132,14 +114,6 @@ class Reservation < Order
     end
   end
 
-  def penalty_charge_apply?
-    if skip_payment_authorization? && (confirmed? || cancelled_by_guest?) && cancellation_policy_penalty_hours > 0 && time_to_cancelation_has_expired?
-      true
-    else
-      false
-    end
-  end
-
   def time_to_cancelation_has_expired?
     latest_time_to_cancel_without_fee = starts_at - cancellation_policy_hours_for_cancellation.to_i.hours
     if Time.zone.now > latest_time_to_cancel_without_fee
@@ -147,34 +121,6 @@ class Reservation < Order
     else
       false
     end
-  end
-
-  def charge_penalty!
-    if penalty_charge_apply?
-      raise('Charging penalty when there exist already authorized/paid payment!') if payment.present? && (payment.paid? || payment.authorized?)
-      line_items.where.not(id: transactable_line_item.id).destroy_all
-
-      transactable_line_item.update_columns(unit_price_cents: penalty_fee_subtotal.cents, quantity: 1, name: 'Cancellation Penalty')
-      reload
-      transactable_line_item.build_service_fee.try(:save!)
-      transactable_line_item.build_host_fee.try(:save!)
-      update_payment_attributes
-      payment.payment_transfer.try(:send, :assign_amounts_and_currency)
-      if payment.authorize && payment.capture!
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeSucceeded, id)
-      else
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeFailed, id)
-      end
-    end
-    true
-  end
-
-  def penalty_fee_subtotal
-    transactable_line_item.unit_price * cancellation_policy_penalty_hours
-  end
-
-  def penalty_fee
-    penalty_fee_subtotal + (penalty_fee_subtotal * service_fee_guest_percent.to_f / BigDecimal(100))
   end
 
   def perform_expiry!
@@ -318,13 +264,5 @@ class Reservation < Order
     end
   rescue
     false
-  end
-
-  def set_cancellation_policy
-    if transactable_pricing.action && transactable_pricing.action.cancellation_policy_enabled.present?
-      self.cancellation_policy_hours_for_cancellation = transactable_pricing.action.cancellation_policy_hours_for_cancellation
-      self.cancellation_policy_penalty_hours = transactable_pricing.action.cancellation_policy_penalty_hours
-      self.cancellation_policy_penalty_percentage = transactable_pricing.action.cancellation_policy_penalty_percentage
-    end
   end
 end

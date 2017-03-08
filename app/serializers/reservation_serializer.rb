@@ -2,7 +2,7 @@ class ReservationSerializer < ApplicationSerializer
   attribute :id
   attribute :owner_id,  key: :user_id
   attributes :listing_id, :state
-  attributes :cancelable, :total_cost
+  attributes :cancellable?, :total_cost
 
   attribute :periods, key: :times
 

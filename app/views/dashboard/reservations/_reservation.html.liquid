@@ -120,7 +120,7 @@
       {% endif %}
 
       {% unless reservation.archived? %}
-        {% if reservation.cancelable? %}
+        {% if reservation.cancellable? %}
           <form class="edit_reservation" action="{{ 'user_cancel_dashboard_user_reservation_path' | generate_url: reservation.id }}" accept-charset="UTF-8" method="post">
             <input name="utf8" type="hidden" value="&#x2713;" />
             <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />

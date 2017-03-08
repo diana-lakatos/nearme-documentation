@@ -18,7 +18,6 @@ class Payment < ActiveRecord::Base
   belongs_to :company, -> { with_deleted }
   belongs_to :instance
   belongs_to :payment_transfer
-  belongs_to :payment_gateway, -> { with_deleted }
   belongs_to :payment_method, -> { with_deleted }
   belongs_to :merchant_account
   belongs_to :payer, -> { with_deleted }, class_name: 'User'
@@ -29,11 +28,13 @@ class Payment < ActiveRecord::Base
   has_many :refunds
   has_many :line_items
 
+  has_one :payment_gateway, -> { with_deleted }, through: :payment_method
   has_one :successful_billing_authorization, -> { where(success: true) }, class_name: BillingAuthorization
   has_one :successful_charge, -> { where(success: true) }, class_name: Charge
 
   before_validation :set_offline, on: :create
   before_validation :set_merchant_account, on: :create
+  before_validation :set_payment_gateway_mode, on: :create
 
   # === Scopes
 
@@ -242,16 +243,16 @@ class Payment < ActiveRecord::Base
     response.success? ? mark_as_paid! : touch(:failed_at) && false
   end
 
-  # refund!
+  # refund!(amount)
   # - refund method is invoked by PaymentRefundJob that first call refund! method
   #   where 3 attempts are executed. Payment#amount_to_be_refunded method determines amount
   #   that is refunded.
   # - failed refund does not block Reservation status chage
 
-  def refund!
+  def refund!(amount_cents)
+    return false if amount_cents <= 0
     return false if refunded?
     return false if paid_at.nil? && !paid?
-    return false if amount_to_be_refunded <= 0
     return false unless active_merchant_payment?
 
     # This is special Braintree case, when transaction can't be refunded before
@@ -259,10 +260,10 @@ class Payment < ActiveRecord::Base
     return void! if !settled? && full_refund?
 
     # Refund payout takes back money from seller, break if failed.
-    return false unless refund_payout!
+    return false unless refund_payout!(host_refund_amount_cents(amount_cents))
     return false unless refund_service_fee!
 
-    refund = payment_gateway.refund(amount_to_be_refunded, currency, self, successful_charge)
+    refund = payment_gateway.refund(amount_cents, currency, self, successful_charge)
 
     if refund.success?
       mark_as_refuneded!
@@ -271,7 +272,7 @@ class Payment < ActiveRecord::Base
       touch(:failed_at)
 
       if should_retry_refund?
-        PaymentRefundJob.perform_later(retry_refund_at, id)
+        PaymentRefundJob.perform_later(retry_refund_at, id, amount_cents)
       else
         MarketplaceLogger.error('Refund failed', "Refund for Reservation id=#{id} failed #{refund_attempts} times, manual intervation needed.", raise: false)
       end
@@ -286,7 +287,7 @@ class Payment < ActiveRecord::Base
   # In case of PayPal Adaptive Payments we can alternatively ask host to grant
   # permissions to transfers from his PayPal account - future enhancement.
 
-  def refund_payout!
+  def refund_payout!(amount_cents)
     return true unless transferred_to_seller?
     return true if payment_gateway.supports_refund_from_host?
     return true if refunds.mpo.successful.any?
@@ -294,7 +295,7 @@ class Payment < ActiveRecord::Base
 
     refund = refunds.create(
       receiver: 'mpo',
-      amount_cents: host_refund_amount_cents,
+      amount_cents: amount_cents,
       currency: currency,
       payment_gateway: payment_gateway,
       payment_gateway_mode: payment_gateway_mode,
@@ -302,7 +303,7 @@ class Payment < ActiveRecord::Base
     )
 
     options = { currency: currency, customer_id: merchant_subscription_customer_id }
-    response = payment_gateway.gateway_purchase(host_refund_amount_cents, merchant_subscription_customer_id, options)
+    response = payment_gateway.gateway_purchase(amount_cents, merchant_subscription_customer_id, options)
 
     if response.success?
       refund.refund_successful(response)
@@ -472,26 +473,8 @@ class Payment < ActiveRecord::Base
     total_amount
   end
 
-  def amount_to_be_refunded
-    if cancelled_by_guest? && payment_gateway.supports_partial_refunds?
-      (subtotal_amount.cents * (1 - cancellation_policy_penalty_percentage.to_f / BigDecimal(100))).to_i
-    else
-      total_amount.cents
-    end
-  end
-
-  # Dirty hack for cancellation policies not set for payment
-  # Payment is built before cancelation policies are set
-  def cancellation_policy_penalty_percentage
-    if payable.respond_to?(:cancellation_policy_penalty_percentage) && super.zero?
-      payable.cancellation_policy_penalty_percentage
-    else
-      super
-    end
-  end
-
-  def host_refund_amount_cents
-    amount_to_be_refunded - service_fee_amount_host.cents
+  def host_refund_amount_cents(amount_cents)
+    amount_cents - service_fee_amount_host.cents
   end
 
   def full_refund?
@@ -513,18 +496,6 @@ class Payment < ActiveRecord::Base
   # @return [Boolean] whether the payment method is capturable
   def active_merchant_payment?
     payment_method.try(:capturable?)
-  end
-
-  def payment_method_id=(payment_method_id)
-    self.payment_method = PaymentMethod.find(payment_method_id)
-  end
-
-  def payment_method=(payment_method)
-    super
-    self.payment_gateway = payment_method.payment_gateway
-    self.payment_gateway_mode = payment_gateway.mode
-    self.merchant_account = payment_gateway.merchant_account(company)
-    payment_method
   end
 
   def authorization_token
@@ -635,6 +606,11 @@ class Payment < ActiveRecord::Base
   def set_merchant_account
     return unless payment_gateway
     self.merchant_account ||= payment_gateway.merchant_account(company)
+  end
+
+  def set_payment_gateway_mode
+    return unless payment_gateway
+    self.payment_gateway_mode ||= payment_gateway.mode
   end
 
   def generate_paypal_express_link!

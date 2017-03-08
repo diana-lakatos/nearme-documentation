@@ -139,6 +139,9 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     redirect_to url_for(controller_scope << 'transactables') + (params[:status] ? "?status=#{params[:status]}" : '')
   end
 
+  def cancel_form
+  end
+
   private
 
   def find_locations

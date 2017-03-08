@@ -15,25 +15,21 @@ class Listings::OrdersControllerTest < ActionController::TestCase
   end
 
   context 'cancellation policy' do
-    setup do
-      TransactableType::ActionType.update_all(cancellation_policy_enabled: Time.zone.now,
-                                              cancellation_policy_hours_for_cancellation: 24,
-                                              cancellation_policy_penalty_percentage: 60)
-    end
-
-    should 'store cancellation policy details if enabled' do
+    should 'store cancellation policy details if cancellation policy set' do
+      create_cancellation_policies(TransactableType::ActionType.last)
       post :create, order_params_for(@transactable)
       order = assigns(:order)
-      assert_equal 24, order.cancellation_policy_hours_for_cancellation
-      assert_equal 60, order.cancellation_policy_penalty_percentage
+      assert_equal 3, order.cancellation_policies.count
+      assert order.cancellable?
+      order.update_column(:starts_at, Chronic.parse('Last Friday'))
+      refute order.cancellable?
     end
 
     should 'not store cancellation policy details if disabled' do
-      TransactableType::ActionType.update_all(cancellation_policy_enabled: nil)
       post :create, order_params_for(@transactable)
       order = assigns(:order)
-      assert_equal 0, order.cancellation_policy_hours_for_cancellation
-      assert_equal 0, order.cancellation_policy_penalty_percentage
+      assert_equal 0, order.cancellation_policies.count
+      assert order.cancellable?
     end
   end
 

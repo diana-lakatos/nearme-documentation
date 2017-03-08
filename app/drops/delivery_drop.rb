@@ -23,4 +23,9 @@ class DeliveryDrop < BaseDrop
   def label_url
     routes.dashboard_delivery_package_label_path(delivery, :a4)
   end
+
+  # @return [Boolean] delivery cancellable true / false
+  def cancellable?
+    Deliveries::CancellationPolicy.new(delivery).allowed?
+  end
 end

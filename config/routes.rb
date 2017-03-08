@@ -930,6 +930,7 @@ DesksnearMe::Application.routes.draw do
             get :enable
             get :disable
             get :cancel
+            post :cancel
           end
 
           resources :transactable_collaborators
@@ -941,6 +942,7 @@ DesksnearMe::Application.routes.draw do
               get :enable
               get :disable
               get :cancel
+              get :cancel_form
             end
 
             resources :transactable_collaborators

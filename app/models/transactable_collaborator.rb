@@ -118,7 +118,7 @@ class TransactableCollaborator < ActiveRecord::Base
   def reject_related_offers
     return unless actor
     transactable.orders.where(user_id: user_id).find_each do |order|
-      order.user_cancel if order.user_id == actor.id && order.enquirer_cancelable?
+      order.user_cancel if order.user_id == actor.id && order.enquirer_cancellable?
     end
   end
 end

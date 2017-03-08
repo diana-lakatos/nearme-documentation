@@ -108,14 +108,12 @@ class PaymentTransferTest < ActiveSupport::TestCase
                                                                   total_amount_cents: 1150,
                                                                   subtotal_amount_cents: 1000,
                                                                   service_fee_amount_guest_cents: 150,
-                                                                  service_fee_amount_host_cents: 100,
-                                                                  cancellation_policy_penalty_percentage: 60)
+                                                                  service_fee_amount_host_cents: 100)
       @payments << @payment_2 = FactoryGirl.create(:paid_payment, company: @company,
                                                                   total_amount_cents: 1200,
                                                                   subtotal_amount_cents: 1000,
                                                                   service_fee_amount_guest_cents: 200,
-                                                                  service_fee_amount_host_cents: 150,
-                                                                  cancellation_policy_penalty_percentage: 50)
+                                                                  service_fee_amount_host_cents: 150)
 
       @payment_transfer = @company.payment_transfers.build
     end
@@ -130,24 +128,42 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should 'calculate correctly the total sum for transfers with refunds' do
+      @order_1 = @payment_1.payable
+      @order_2 = @payment_2.payable
+
+      @order_1.transactable_line_item.update_attributes(unit_price_cents: @payment_1.subtotal_amount_cents, service_fee_guest_percent: 15, service_fee_host_percent: 10 )
+      @order_2.transactable_line_item.update_attributes(unit_price_cents: @payment_2.subtotal_amount_cents, service_fee_guest_percent: 20, service_fee_host_percent: 15 )
+
+      @order_1.reload
+      @order_2.reload
+
+      @order_1.transactable_line_item.build_service_fee
+      @order_2.transactable_line_item.build_service_fee
+
+      @order_1.transactable_line_item.build_host_fee
+      @order_2.transactable_line_item.build_host_fee
+
+      FactoryGirl.create(:cancelled_by_guest_refund_cellation_policy, cancellable: @order_1, amount_rule: "{{ order.subtotal_amount_money.cents | times: 0.6 }}" )
+      FactoryGirl.create(:cancelled_by_host_refund_cellation_policy, cancellable: @order_2, amount_rule: "{{ order.total_amount_money.cents | times: 1 }}" )
+
       @payment_1.payable.user_cancel!
       @payment_2.payable.host_cancel!
 
-      # Payment_1 was for $10, $1,5 guest fee, $1 host fee
-      # when cancelled by guest we should refund $4 - 60% of subtotal amount
+      # Payment_1 was for $11,50, $1,5 guest fee, $1 host fee
+      # when cancelled by guest we should refund 60% of subtotal amount 10$ = 6$
       # Fees are not refunded
-      assert_equal 400, @payment_1.amount_to_be_refunded
+      assert_equal 600, @order_1.refund_amount_cents
 
-      # Payment_2 was for $10, $2 guest fee, $1,5 host fee
+      # Payment_2 was for $12, $2 guest fee, $1,5 host fee
       # when cancelled by host we should refund $10 and host_service_fee $2
-      assert_equal 1000 + 200, @payment_2.amount_to_be_refunded
+      assert_equal 1000 + 200, @order_2.refund_amount_cents
 
       @payment_transfer.payments = @payments
       @payment_transfer.save!
 
       # What we should transfer from cancelled reservation is:
       # Payment one is 4$ is returned to guest, 1$ is host fee and $5 we should transfer
-      assert_equal 600 + 0, @payment_transfer.amount_cents
+      assert_equal 400 + 0, @payment_transfer.amount_cents
       assert_equal 150 + 0, @payment_transfer.service_fee_amount_guest_cents
       assert_equal 0 + 0, @payment_transfer.service_fee_amount_host_cents
     end

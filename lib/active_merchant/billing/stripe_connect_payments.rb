@@ -108,7 +108,7 @@ module ActiveMerchant
 
         if update_params[:legal_entity]
           [:dob, :additional_owners, :address, :ssn_last_4, :business_tax_id, :business_vat_id,
-           :personal_id_number, :verification].each do |needed_field|
+           :personal_id_number, :verification, :type].each do |needed_field|
             if update_params[:legal_entity][needed_field.to_sym].present?
               account.legal_entity.send("#{needed_field}=", update_params[:legal_entity][needed_field.to_sym])
             end

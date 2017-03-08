@@ -171,13 +171,16 @@
   {% endif %}
 
   {% unless reservation.archived? %}
-    {% if reservation.cancelable? and reservation.lister_confirmed_at == blank %}
-      {% if reservation.penalty_charge_apply? %}
-        <div class="cc-error">
-          {{ 'dashboard.user_reservations.penalty_charge_will_apply' | t: penalty_hours: reservation.cancellation_policy_penalty_hours, penalty_fee: reservation.formatted_penalty_fee, hours_for_cancellation: reservation.cancellation_policy_hours_for_cancellation }}
-        </div>
+    {% comment %}
+      TODO discuss if needed
+      {% if reservation.cancellable? and reservation.lister_confirmed_at == blank %}
+        {% if reservation.penalty_charge_apply? %}
+          <div class="cc-error">
+            {{ 'dashboard.user_reservations.penalty_charge_will_apply' | t: penalty_hours: reservation.cancellation_policy_penalty_hours, penalty_fee: reservation.formatted_penalty_fee, hours_for_cancellation: reservation.cancellation_policy_hours_for_cancellation }}
+          </div>
+        {% endif %}
       {% endif %}
-    {% endif %}
+    {% endcomment %}
     {% if reservation.remote_payment? and reservation.paid? == false and reservation.archived? == false %}
       <a class="btn btn-default" href="{{ 'remote_payment_dashboard_user_reservation_path' | generate_url: reservation.id }}">
         {{ 'dashboard.user_reservations.pay_now' | t }}

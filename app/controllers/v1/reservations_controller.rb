@@ -73,7 +73,7 @@ class V1::ReservationsController < V1::BaseController
   def destroy
     @reservation = current_user.orders.reservations.find params[:id]
 
-    if @reservation.cancelable
+    if @reservation.cancellable?
 
       # Notify the host of the cancelation...
 
@@ -87,7 +87,7 @@ class V1::ReservationsController < V1::BaseController
       # Reservation can't be canceled...
       e = DNM::Error.new "Reservation can't be canceled'"
       e.errors << { resource: 'Reservation',
-                    field:    'cancelable',
+                    field:    'cancellable',
                     code:     'not true' }
       render json: e.to_hash, status: e.status
 

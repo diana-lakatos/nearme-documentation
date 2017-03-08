@@ -138,10 +138,6 @@ class RecurringBooking < Order
     end
   end
 
-  def cancelable?
-    true
-  end
-
   def client
     user
   end

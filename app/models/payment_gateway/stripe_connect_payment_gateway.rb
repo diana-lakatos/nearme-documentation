@@ -85,7 +85,7 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   end
 
   def refund_identification(charge)
-    charge.payment.successful_billing_authorization.token
+    charge.payment.external_id
   end
 
   def validate_config_hash

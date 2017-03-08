@@ -142,14 +142,6 @@ class Offer < Order
     WorkflowStepJob.perform(WorkflowStep::OfferWorkflow::CreatedWithoutAutoConfirmation, id)
   end
 
-  def cancelable?
-    true
-  end
-
-  def schedule_refund
-    true
-  end
-
   def can_reject?
     state == 'unconfirmed'
   end
@@ -161,10 +153,10 @@ class Offer < Order
     super
   end
 
-  def enquirer_cancelable
+  def enquirer_cancellable
     draft_at? || (state == 'unconfirmed')
   end
-  alias enquirer_cancelable? enquirer_cancelable
+  alias enquirer_cancellable? enquirer_cancellable
 
   def enquirer_editable
     editable_states = %w(inactive)

@@ -171,6 +171,6 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     return unless Shippings.enabled?(@order)
 
     Deliveries::SyncOrderDeliveries.new(@order).perform
-    redirect_to request.referer.presence, flash: { error: t('flash_messages.manager.reservations.could_not_be_cancelled') } unless Reservation::CancellationPolicy.new(@order).cancelable?
+    redirect_to request.referer.presence, flash: { error: t('flash_messages.manager.reservations.could_not_be_cancelled') } unless @order.cancellable?
   end
 end

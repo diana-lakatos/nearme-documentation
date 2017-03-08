@@ -87,7 +87,7 @@
           .cc-error= t('dashboard.user_reservations.must_change_credit_card')
 
         - unless reservation.archived?
-          - if reservation.cancelable?
+          - if reservation.cancellable?
             = form_for reservation, method: :post, url: user_cancel_dashboard_user_reservation_path(reservation) do |f|
               = f.submit I18n.t('general.cancel'), data: { confirm: t('dashboard.user_reservations.cancel_confirmation') }, class: 'btn btn-warning'
             - if reservation.penalty_charge_apply?

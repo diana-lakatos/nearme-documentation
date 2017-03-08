@@ -236,7 +236,7 @@ en:
       no_listings: "There aren't any Bookings at that location. Check out some other locations."
     manage:
       listings:
-        listing_cancelled: "Your Booking has been marked as completed."
+        listing_cancelled: "Your Booking has been marked as cancelled."
         listing_deleted: "Your Booking has been deleted."
         listing_updated: "Great, your Booking's details have been updated."
       reservations:

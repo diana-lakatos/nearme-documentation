@@ -6,4 +6,4 @@ module.exports = class ChosenInitializer
 
   initialize: (context = 'body') ->
     $(context).find('select.chosen').chosen()
-    $(context).find('select.select').chosen({width: '100%'})
+    $(context).find('select.select:not(.select2)').chosen({width: '100%'})

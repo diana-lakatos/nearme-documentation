@@ -39,13 +39,13 @@ class PaymentGateway < ActiveRecord::Base
   has_many :payouts
   has_many :instance_clients, dependent: :destroy
   has_many :merchant_accounts, dependent: :destroy
-  has_many :payments
   has_many :payment_transfers
   has_many :payment_gateways_countries, dependent: :destroy
   has_many :payment_countries, through: :payment_gateways_countries, source: 'country'
   has_many :payment_gateways_currencies, dependent: :destroy
   has_many :payment_currencies, through: :payment_gateways_currencies, source: 'currency'
   has_many :payment_methods, dependent: :destroy
+  has_many :payments, through: :payment_methods
   has_many :refunds
   has_many :webhooks, dependent: :destroy
 
@@ -362,7 +362,7 @@ class PaymentGateway < ActiveRecord::Base
   def store(credit_card, instance_client)
     force_mode(instance_client.test_mode? ? TEST_MODE : LIVE_MODE)
     options = { email: instance_client.client.email, default_card: true, customer: instance_client.customer_id }
-    
+
     gateway_store(credit_card, options)
   end
 

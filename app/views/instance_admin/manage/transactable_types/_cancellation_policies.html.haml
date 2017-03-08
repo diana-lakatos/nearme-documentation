@@ -1,0 +1,9 @@
+
+
+%h4= t('instance_admin.manage.transactable_types.cancellation_and_refund_policy')
+.nested-fields-set.cancellation_policy_form
+  = f.fields_for :cancellation_policies do |form|
+    .nested-container
+      = render 'cancellation_policy_fields', f: form
+  .fieldset-actions
+    = link_to_add_association t('instance_admin.manage.transactable_types.new_cancellation_policy'), f, :cancellation_policies, class: 'btn btn-primary'
