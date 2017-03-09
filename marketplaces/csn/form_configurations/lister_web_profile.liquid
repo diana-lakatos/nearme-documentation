@@ -12,7 +12,7 @@ configuration:
     validation:
       presence: {}
     custom_images:
-      5016:
+      4958:
         validation:
           presence: {}
     properties:
@@ -40,8 +40,8 @@ configuration:
   <input value="/dashboard/carer/services-list" data-action='Save & Next' type="hidden" name="return_to" />
   {% fields_for seller_profile %}
     {% fields_for custom_images, form: seller_profile  %}
-      {% fields_for 5016, form: custom_images %}
-        {% input image, as: image, form: 5016 %}
+      {% fields_for 4958, form: custom_images %}
+        {% input image, as: image, form: 4958 %}
       {% endfields_for %}
     {% endfields_for %}
     {% fields_for properties, form: seller_profile  %}
