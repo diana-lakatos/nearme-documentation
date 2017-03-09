@@ -70,8 +70,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
     payment_object = payment || build_payment
 
-    payment_object.attributes = shared_payment_attributes.merge(payment_source: payment_subscription.payment_source,
-                                                                payment_method: payment_subscription.payment_method)
+    payment_object.attributes = shared_payment_attributes.merge(
+      payment_source: payment_subscription.payment_source,
+      payment_method: payment_subscription.payment_method
+    )
 
     payment_object.save! && payment_object.purchase!
 

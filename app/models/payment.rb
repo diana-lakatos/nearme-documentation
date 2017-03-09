@@ -42,7 +42,6 @@ class Payment < ActiveRecord::Base
   scope :live, -> { where(payment_gateway_mode: 'live') }
   scope :authorized, -> { where(state: 'authorized') }
   scope :paid, -> { where("#{table_name}.state = 'paid'") }
-  scope :unapid, -> { where(paid_at: nil) }
   scope :paid_or_refunded, -> { where(state: %w(paid refunded)) }
   scope :refunded, -> { where("#{table_name}.state = 'refunded'") }
   scope :not_refunded, -> { where("#{table_name}.state IS NOT 'refunded'") }
@@ -186,6 +185,7 @@ class Payment < ActiveRecord::Base
 
   def purchase!
     pay_with! do
+      return false if source.blank?
       payment_gateway.gateway_purchase(total_amount.cents, source, payment_options)
     end
   end
@@ -519,10 +519,11 @@ class Payment < ActiveRecord::Base
   end
 
   def payment_method=(payment_method)
-    super(payment_method)
-    self.payment_gateway = self.payment_method.payment_gateway
+    super
+    self.payment_gateway = payment_method.payment_gateway
     self.payment_gateway_mode = payment_gateway.mode
     self.merchant_account = payment_gateway.merchant_account(company)
+    payment_method
   end
 
   def authorization_token
