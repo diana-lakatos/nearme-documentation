@@ -13,7 +13,7 @@ require 'cucumber/rails'
 
 require 'capybara-screenshot/cucumber'
 Capybara::Screenshot.autosave_on_failure = true
-Capybara::Screenshot.webkit_options = { width: 1824, height: 1368 }
+Capybara::Screenshot.webkit_options = { width: 1824, height: 2868 }
 
 # Keep only the screenshots generated from the last failing test suite
 Capybara::Screenshot.prune_strategy = :keep_last_run

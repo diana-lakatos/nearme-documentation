@@ -27,6 +27,7 @@ NM.on('ready', ()=>{
   require('initializers/instance_admin/approval_requests.initializer');
   require('initializers/instance_admin/bootstrap_switch.initializer');
   require('initializers/instance_admin/categories.initializer');
+  require('initializers/instance_admin/root_categories.initializer');
   require('initializers/instance_admin/chosen.initializer');
   require('initializers/instance_admin/default_images.initializer');
   require('initializers/instance_admin/dimension_templates.initializer');
@@ -45,6 +46,7 @@ NM.on('ready', ()=>{
   require('initializers/instance_admin/payment_gateway.initializer');
   require('initializers/instance_admin/photo_manipulator.initializer');
   require('initializers/instance_admin/photo_upload_versions.initializer');
+  require('initializers/instance_admin/subscription_pricing.initializer');
   require('initializers/instance_admin/popover.initializer');
   require('initializers/instance_admin/preferences_checkbox_slider.initializer');
   require('initializers/instance_admin/search_settings.initializer');

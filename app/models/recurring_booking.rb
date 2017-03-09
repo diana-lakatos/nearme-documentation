@@ -17,7 +17,8 @@ class RecurringBooking < Order
   scope :upcoming, -> { where('ends_at > ?', Time.zone.now) }
   scope :archived, -> { where('ends_at < ? OR state IN (?)', Time.zone.now, %w(rejected expired cancelled_by_host cancelled_by_guest)).uniq }
   scope :not_archived, -> { without_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired).uniq }
-  scope :needs_charge, ->(date) { with_state(:confirmed, :overdued).where('next_charge_date <= ?', date) }
+  scope :needs_charge, ->(date) { with_state(:confirmed, :overdued).where('next_charge_date <= ?', date).
+    includes(:recurring_booking_periods).where.not(recurring_booking_periods: { id: nil }) }
 
   before_validation :set_dates, on: :create
 
@@ -212,11 +213,11 @@ class RecurringBooking < Order
   alias price_calculator total_amount_calculator
 
   def monthly?
-    ['subscription_month', 'subscription_month_pro_rated'].include?(transactable_pricing.unit)
+    transactable_pricing.unit == 'subscription_month'
   end
 
-  def pro_rated_monthly?
-    'subscription_month_pro_rated' == transactable_pricing.unit
+  def pro_rated?
+    transactable_pricing.pro_rated?
   end
 
   def first_transactable_line_item

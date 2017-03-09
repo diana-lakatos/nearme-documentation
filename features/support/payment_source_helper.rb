@@ -1,4 +1,4 @@
-module CreditCardHelper
+module PaymentSourceHelper
   def open_cc_accordion
     # Accordion is present only if there is more than 1 payment method.
     # Would be nice to have different steps for those, but reservations_steps:262 is called
@@ -25,6 +25,20 @@ module CreditCardHelper
     # note we provide too long CC number on purpose - jquery.payment should validate the input and remove unnecessary 555
     page.execute_script("$('[data-stripe=number]').val('4242 4242 4242 4242 555').trigger('change').trigger('blur')")
   end
+
+  def fill_new_ach_fields
+    wait_for_stripe
+    find("div[data-payment-method-type='ach'] .payment-method-header").trigger('click')
+    page.should_not have_css('.nm-new-ach-form.hidden')
+
+    find(:xpath, "//*[contains(@id,'_account_holder_type-selectized')]").trigger('click')
+    page.should have_css('div[data-value="individual"]')
+    find('div[data-value="individual"]').click()
+
+    fill_in 'Routing number', with: '110000000'
+    fill_in 'Account number', with: '000123456789'
+    fill_in 'Account holder name', with: "Adam Brodway"
+  end
 end
 
-World(CreditCardHelper)
+World(PaymentSourceHelper)

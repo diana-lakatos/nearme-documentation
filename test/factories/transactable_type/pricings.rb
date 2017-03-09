@@ -32,7 +32,8 @@ FactoryGirl.define do
     end
 
     factory :transactable_type_subscription_pro_rated_pricing do
-      unit 'subscription_month_pro_rated'
+      unit 'subscription_month'
+      pro_rated true
     end
 
     factory :transactable_type_purchase_pricing do

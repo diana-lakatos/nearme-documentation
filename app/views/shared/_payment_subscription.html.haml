@@ -4,7 +4,7 @@
     %span= t("reservations_review.missing_payment_method_info")
   - else
     %h2= t 'reservations_review.payment_information'
-    - if form.object.subscriber.respond_to?(:monthly?) && form.object.subscriber.monthly?
+    - if form.object.subscriber.respond_to?(:monthly?) && form.object.subscriber.monthly? && form.object.subscriber.pro_rated?
       %p= t 'recurring_reservations_review.prorated_info'
 
     = form.error :base

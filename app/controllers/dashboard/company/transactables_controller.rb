@@ -221,7 +221,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     # For Litvault we want to show all transactables but we could make a setting
     # and display only approved ones:
     # "AND pc.approved_by_owner_at IS NOT NULL"
-
     Transactable
       .joins('LEFT JOIN transactable_collaborators pc ON pc.transactable_id = transactables.id AND pc.deleted_at IS NULL')
       .uniq

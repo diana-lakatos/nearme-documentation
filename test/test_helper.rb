@@ -156,8 +156,18 @@ ActiveSupport::TestCase.class_eval do
     FactoryGirl.create(:stripe_payment_gateway, instance_id: instance.id)
   end
 
+  def process_credit_card!(credit_card)
+    credit_card.response = nil
+    credit_card.instance_client.update_attribute(:encrypted_response, nil)
+    credit_card.instance_client.send(:clear_decorator)
+    credit_card.attributes = FactoryGirl.attributes_for(:credit_card_attributes).reject {|k,v| k == :response }
+    credit_card.process!
+    credit_card.save!
+  end
+
   def stub_active_merchant_interaction(response = { success?: true })
     PaymentGateway.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(response.reverse_merge(authorization: '54533')))
+    PaymentGateway.any_instance.stubs(:gateway_purchase).returns(OpenStruct.new(response.reverse_merge(authorization: '54533')))
     PaymentGateway.any_instance.stubs(:gateway_void).returns(OpenStruct.new(response.reverse_merge(authorization: '54533')))
     PaymentGateway.any_instance.stubs(:gateway_capture).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
     PaymentGateway.any_instance.stubs(:gateway_purchase).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
@@ -181,7 +191,7 @@ ActiveSupport::TestCase.class_eval do
                               ]
                             }
                           })
-    ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
+    PaymentGateway.any_instance.stubs(:gateway_store).returns(stub).at_least(0)
   end
 
   # def mock_transactable_prices(transactable, options = [])

@@ -3,7 +3,7 @@ class TransactableType::SubscriptionBooking < TransactableType::ActionType
   validates_associated :pricings
 
   def available_units
-    %w(subscription_day subscription_month subscription_month_pro_rated)
+    %w(subscription_day subscription_month)
   end
 
   def can_be_free?
