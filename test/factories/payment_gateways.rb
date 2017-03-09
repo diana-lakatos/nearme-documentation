@@ -113,8 +113,8 @@ FactoryGirl.define do
     end
 
     factory :stripe_payment_gateway, class: PaymentGateway::StripePaymentGateway do
-      test_settings { { login: 'sk_test_r0wxkPFASg9e45UIakAhgpru' } }
-      live_settings { { login: 'sk_test_r0wxkPFASg9e45UIakAhgpru' } }
+      test_settings { { login: 'sk_test_DoIom7ZOL848ziY39cC75lI0' } }
+      live_settings { { login: 'sk_test_DoIom7ZOL848ziY39cC75lI0' } }
     end
 
     factory :fetch_payment_gateway, class: PaymentGateway::FetchPaymentGateway do
@@ -143,6 +143,12 @@ FactoryGirl.define do
     factory :stripe_connect_payment_gateway, class: PaymentGateway::StripeConnectPaymentGateway do
       test_settings { { login: 'sk_test_DoIom7ZOL848ziY39cC75lI0' } }
       live_settings { { login: '123456789' } }
+    end
+
+    factory :direct_stripe_sconnect_payment_gateway, class: PaymentGateway::StripeConnectPaymentGateway do
+      test_settings { { login: 'sk_test_DoIom7ZOL848ziY39cC75lI0', publishable_key:  'pk_test_P54WUkDA1vryMRtw300Ajshi'} }
+      live_settings { { login: 'sk_test_DoIom7ZOL848ziY39cC75lI0', publishable_key: 'pk_test_P54WUkDA1vryMRtw300Ajshi' } }
+      config  { {'settings' => {"charge_type"=>"direct"}, "transfer_schedule"=>{"interval"=>"default"}} }
     end
 
     factory :manual_payment_gateway, class: PaymentGateway::ManualPaymentGateway do

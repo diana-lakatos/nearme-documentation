@@ -1,15 +1,15 @@
 @javascript
+
 Feature: Offer like end to end flow
   Background:
     Given UoT instance is loaded
-    And a enquirer exists
-    And a lister exists
-    And stripe_connect_payment_gateway exists
-    And only credit_card payment_method is set
 
   Scenario: 'Enquirer fills out profile'
-    Given I am logged in as enquirer
-    When I go to the payouts page
+    Given a enquirer exists
+    Given company exists with name: "Enquirer Company", email: "enquirer@near-me.com", creator: enquirer
+    And stripe_connect_payment_gateway exists
+    When I am logged in as enquirer
+    Then I go to the payouts page
     Then I should see "Please complete your profile first."
     When I fill all required buyer profile information
     And I press "Save"
@@ -18,6 +18,8 @@ Feature: Offer like end to end flow
     Then I should see "Merchant account details"
 
   Scenario: 'Lister fills out profile'
+    Given a lister exists
+    Given a enquirer exists
     Given I am logged in as lister
     When I go to the payouts page
     Then I should see "Please complete your profile first."
@@ -31,31 +33,3 @@ Feature: Offer like end to end flow
     And I should see "Great, your new Project has been added!"
     When I go to enquirer's page
     And I invite enquirer to my project
-
-  Scenario: 'Lister accepts an offer'
-    Given a registered_lister exists
-    And an unconfirmed_offer exists
-    When I am logged in as registered_lister
-    And I go to the dashboard page
-    And I click element with selector "#dashboard-nav-transactables"
-    And I follow "My Listings"
-    Then I should see "SMEs Invited (1)"
-    When I accept the offer
-    And I fill credit card payment subscription form
-    Then offer is confirmed
-    And my credit card is saved
-
-  Scenario: 'Lister accepts pro bono offer'
-    Given a registered_lister exists
-    And a free_transactable_offer exists
-    And an unconfirmed_offer exists
-    When I am logged in as registered_lister
-    And I go to the dashboard page
-    And I click element with selector "#dashboard-nav-transactables"
-    And I follow "My Listings"
-    Then I should see "SMEs Invited (1)"
-    When I accept the offer
-    And I fill credit card payment form
-    Then offer is confirmed
-    And my credit card is saved
-    And payment for 100$ was created

@@ -282,6 +282,7 @@ en:
         archived: 'Offer has been closed.'
         error_update: 'Order has not been updated.'
       order_items:
+        created: 'Order item has been created.'
         updated: 'Order item has been updated.'
         approved: 'Order item has been approved.'
         approve_failed: 'Order item could not be approved.'

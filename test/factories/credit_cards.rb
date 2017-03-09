@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :credit_card do
     association :instance_client
-    association :payment_gateway, factory: :stripe_payment_gateway
+    payment_method { PaymentMethod::CreditCardPaymentMethod.last || build(:credit_card_payment_method) }
     response { OpenStruct.new(token: 'token', success?: true, params: { "object": 'card', "id": 'card_1234' }).to_yaml }
 
     factory :credit_card_attributes do

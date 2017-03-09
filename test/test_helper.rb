@@ -181,7 +181,7 @@ ActiveSupport::TestCase.class_eval do
                               ]
                             }
                           })
-    ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
+    PaymentGateway.any_instance.stubs(:gateway_store).returns(stub).at_least(0)
   end
 
   # def mock_transactable_prices(transactable, options = [])

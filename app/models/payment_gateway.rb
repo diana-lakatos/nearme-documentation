@@ -362,6 +362,7 @@ class PaymentGateway < ActiveRecord::Base
   def store(credit_card, instance_client)
     force_mode(instance_client.test_mode? ? TEST_MODE : LIVE_MODE)
     options = { email: instance_client.client.email, default_card: true, customer: instance_client.customer_id }
+    
     gateway_store(credit_card, options)
   end
 
