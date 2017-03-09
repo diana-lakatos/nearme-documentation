@@ -68,17 +68,16 @@
     </div>
   </section>
 
-{% comment %}
+
   <section class="home-section section-about">
     <div class="wrapper-a">
-      <h2>ABOUT MYCSN.COM.AU</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+      <h2>ABOUT US</h2>
+      <p>Care Support Network (myCSN) is an online marketplace where older Australians and people with disability can connect directly with trusted CareSupport Providers. It’s a simple, flexible and transparent way that brings choice, freedom and quality of life for both recipients and CareSupport Providers.</p>
 
-      <!-- Need real video -->
-      <iframe src="https://player.vimeo.com/video/8733915" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+      <a href="/about" class="button-a button-lg button-secondary">LEARN MORE</a>
     </div>
   </section>
-{% endcomment %}
+
 
   <section class="home-section section-advantages">
     <div class="wrapper-a">
@@ -130,11 +129,11 @@
     </div>
   </section>
 
-  <section class="home-section section-testimonials">
+  {% comment %}<section class="home-section section-testimonials">
     <div class="wrapper-a">
       <h2>TESTIMONIALS</h2>
       <p>Here's what our customers have to say...</p>
-      <div class="testimonials-carousel">
+      <div class="testimonials-carousel" data-home-testimonials-carousel>
         <div class="testimonials-carousel__item">
           <img src="http://lvh.me:8080/assets/testimonials/person-1.jpg" alt="" />
           <h3>Finding my care heroes</h3>
@@ -164,13 +163,13 @@
         </div>
       </div>
     </div>
-  </section>
+  </section>{% endcomment %}
 
 {% comment %}
   <section class="home-section section-partners">
     <div class="wrapper-a">
       <h2>OUR PARTNERS</h2>
-      <ul class="partners-carousel">
+      <ul class="partners-carousel" data-home-partners-carousel>
         <li class="partners-carousel__item">
           <img src="http://lvh.me:8080/assets/partners/partner-1.png" width="211" alt="" />
         </li>
