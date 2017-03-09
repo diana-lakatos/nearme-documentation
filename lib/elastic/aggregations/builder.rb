@@ -8,8 +8,8 @@ module Elastic
         @body = {}
       end
 
-      def add(name:, filters:, fields:)
-        add_node Aggregator.new(name: name, filters: filters, fields: fields)
+      def add(name:, filters:, fields:, nested: false)
+        add_node Aggregator.new(name: name, filters: filters, fields: fields, nested: nested)
       end
 
       # get rid of

@@ -43,8 +43,8 @@ module SearchHelper
     title = title.present? && title.respond_to?(:gsub) ? title.gsub(',', ', ') : (location_types_names.empty? ? transactable_type_name : '')
     title += location_types_names.join(', ').to_s
     search_location = []
-    search_location << search.city
-    search_location << (search.is_united_states? ? search.state_short : search.state)
+    #search_location << search.city
+    #search_location << (search.is_united_states? ? search.state_short : search.state)
     search_location.reject!(&:blank?)
     title += %( in #{search_location.join(', ')}) unless search_location.empty?
     title += if title.empty?

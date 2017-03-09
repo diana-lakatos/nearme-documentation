@@ -3,7 +3,7 @@ class SearcherDrop < BaseDrop
   # @return [Array<Object>] results for the search
   attr_reader :original_results
   # @return [Listing::Search::Params::Web, Object] representation of the search
-  attr_reader :search
+  attr_reader :search_form
   # @return [Object] searcher object
   attr_reader :searcher
 
@@ -80,18 +80,18 @@ class SearcherDrop < BaseDrop
   # @!method sort
   #   @return [String] ordering rule (e.g. 'relevance')
   delegate :lgpricing_filters, :lntype, :category_ids, :lgpricing, :lg_custom_attributes, :display_dates,
-           :start_date, :end_date, :sort, to: :search
+           :start_date, :end_date, :sort, to: :search_form
 
   def initialize(searcher)
     @searcher = searcher
     @original_results = searcher.results
-    @search = searcher.search
+    @search_form = searcher.search_form
   end
 
   # @return [Hash{String => Array}] hash of custom attributes filtering the search
   #   of the form e.g. !{:attribute_name=>["Some Attribute Value"], :other_attribute_name=>[]}
   def lg_custom_attributes_hash
-    @search.lg_custom_attributes.stringify_keys
+    @search_form.lg_custom_attributes.stringify_keys
   end
 
   # @return [Array<BaseDrop>] result items as drops

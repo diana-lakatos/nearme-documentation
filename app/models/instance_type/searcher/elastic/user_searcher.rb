@@ -5,10 +5,10 @@ class InstanceType::Searcher::Elastic::UserSearcher
 
   attr_reader :filterable_custom_attributes, :search
 
-  def initialize(params, current_user, instance_profile_type)
+  def initialize(params, current_user)
     @current_user = current_user
     @params = params
-    @instance_profile_type = instance_profile_type
+    @instance_profile_type = PlatformContext.current.instance.instance_profile_types.searchable.first
   end
 
   def fetcher
@@ -17,22 +17,28 @@ class InstanceType::Searcher::Elastic::UserSearcher
                    .paginate(page: @params[:page], per_page: @params[:per_page])
   end
 
+  def object
+    @instance_profile_type
+  end
+
   def searchable_categories
     @instance_profile_type.categories.searchable.roots.includes(children: { children: :children })
   end
 
-  def search
-    @search ||= ::User::Search::Params::Web.new(@params, @instance_profile_type)
+  def search_form
+    @search ||= ::User::Search::Params::Web.new(@params, @instance_profile_type, fetcher.aggregations)
   end
 
   def search_query_values
     { query: @params[:query] }
   end
 
-  # page-page and page for ES and PG are not the same thing
-  # when paging PG results based on ES search we take only first page
   def results
     @results ||= ElasticCollectionProxy.new(fetcher.results)
+  end
+
+  def result_view
+    'list'
   end
 
   # we need this wrapper because of elasticsearch-model results immutable implementation
@@ -57,7 +63,6 @@ class InstanceType::Searcher::Elastic::UserSearcher
   end
 
   def default_search_params
-    @params.merge instance_id: PlatformContext.current.instance.id,
-                  instance_profile_type_id: @instance_profile_type.id
+    @params.merge instance_id: PlatformContext.current.instance.id
   end
 end

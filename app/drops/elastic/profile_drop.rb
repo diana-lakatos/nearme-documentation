@@ -12,5 +12,9 @@ module Elastic
         group[img.name] = img
       end
     end
+
+    def category_tree
+      source.categories.sort(&:position).group_by(&:root)
+    end
   end
 end

@@ -1,0 +1,2 @@
+module Elastic
+end

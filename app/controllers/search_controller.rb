@@ -1,12 +1,10 @@
 require 'will_paginate/array'
 class SearchController < ApplicationController
   include SearchHelper
-  include SearcherHelper
   include CoercionHelpers::Controller
 
-  before_action :ensure_valid_params
+  before_action :redirect_to_search
   before_action :coerce_pagination_params
-  before_action :find_transactable_type
   before_action :assign_transactable_type_id_to_lookup_context
   before_action :store_search
 
@@ -15,11 +13,25 @@ class SearchController < ApplicationController
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
+  rescue_from ActiveRecord::RecordNotFound do
+    redirect_back_or_default
+  end
+
+
+  # TODO: temporary - discuss better approach and remove
+  def redirect_to_search
+    return unless params[:transactable_type_class] == 'InstanceProfileType'
+
+    params.delete(:transactable_type_class)
+    redirect_to search_path(params.merge(search_type: 'people'))
+  end
+
   def index
-    @searcher = InstanceType::SearcherFactory.new(@transactable_type, search_params, result_view, current_user).get_searcher
+    @searcher = InstanceType::SearcherFactory.create(params, current_user)
+
     remember_search_query
 
-    render "search/#{result_view}", formats: [:html]
+    render "search/#{@searcher.result_view}", formats: [:html]
   end
 
   def categories
@@ -45,18 +57,7 @@ class SearchController < ApplicationController
     render text: @categories_html
   end
 
-  def ensure_valid_params
-    redirect_to :back unless is_valid_single_param?(params[:transactable_type_id])
-  rescue
-    # No referrer was present
-    redirect_to root_path
-  end
-
   private
-
-  def search_params
-    @search_params ||= params.merge(per_page: params[:per_page]).reverse_merge(sort: @transactable_type.default_sort_by)
-  end
 
   def remember_search_query
     cookies[:last_search_query] = {

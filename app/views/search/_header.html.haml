@@ -1,13 +1,13 @@
 - content_for :hero do
-  %header#listing_search.list.container-fluid{class: result_view == 'map' ? 'with-map' : ''}
+  %header#listing_search.list.container-fluid{class: @searcher.result_view == 'map' ? 'with-map' : ''}
     .header-inner
-      %form.search_results{:action => search_path(v: result_view), :method => "get"}
+      %form.search_results{:action => search_path(v: @searcher.result_view), :method => "get"}
         -unless @searcher.transactable_type.fulltext_search?
           - search_geofields.each do |geofield|
             = hidden_field_tag geofield, ''
-        = hidden_field_tag :v, result_view
-        = hidden_field_tag :transactable_type_id, @transactable_type.id
-        = hidden_field_tag :transactable_type_class, @transactable_type.class.name
+        = hidden_field_tag :v, @searcher.result_view
+        = hidden_field_tag :transactable_type_id, @searcher.transactable_type.id
+        = hidden_field_tag :transactable_type_class, @searcher.transactable_type.class.name
         = hidden_field_tag :lntype, @searcher.search.lntype
         = hidden_field_tag :ignore_search_event, 0
         = hidden_field_tag :page, 1
@@ -18,7 +18,7 @@
         = hidden_field_tag :time_from
         = hidden_field_tag :time_to
         = hidden_field_tag :sort
-        - if @transactable_type.show_date_pickers?
+        - if @searcher.transactable_type.show_date_pickers?
           = hidden_field_tag :start_date, @searcher.search.display_dates[:start]
           = hidden_field_tag :end_date, @searcher.search.display_dates[:end]
           = hidden_field_tag 'availability[dates][start]', @searcher.search.start_date
@@ -28,10 +28,10 @@
         .row-fluid
           .span12
             .list-map-toggle.span2
-              - unless @transactable_type.is_a?(InstanceProfileType)
-                %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: t('search.header.list'), data: { view: 'list' } }
+              - unless @searcher.transactable_type.is_a?(InstanceProfileType)
+                %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(@searcher.result_view, 'list'), title: t('search.header.list'), data: { view: 'list' } }
                   = t('search.header.list')
-                %a.map{ href: search_path(params.merge(v: @searcher.transactable_type.other_search_view)), class: active_class(result_view, @searcher.transactable_type.other_search_view), title: t('search.header.map'), data: { view: @searcher.transactable_type.other_search_view } }
+                %a.map{ href: search_path(params.merge(v: @searcher.transactable_type.other_search_view)), class: active_class(@searcher.result_view, @searcher.transactable_type.other_search_view), title: t('search.header.map'), data: { view: @searcher.transactable_type.other_search_view } }
                   = t('search.header.map')
             .geolocation-input{ :class => (@searcher.transactable_type.fulltext_geo_search? ? 'span3' : 'span6')}
               .geolocation
@@ -58,6 +58,6 @@
         = render partial: 'search/filter', locals: { header_name: t(ca.label_key), selected_values: params[:lg_custom_attributes] ? params[:lg_custom_attributes][ca.name] || [] : [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated.map { |pair| [pair[1], pair[0]] }, name: ca.name }
       - if @searcher.transactable_type.display_location_type_filter?
         = render partial: 'search/filter', locals: { header_name: 'Location Types', selected_values: params[:location_types_ids] || [], input_name: 'location_types_ids[]', options: @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
-      - if @transactable_type.show_price_slider
+      - if @searcher.transactable_type.show_price_slider
         .search-list-price-slider-container
           = render partial: 'search/shared/price_slider'

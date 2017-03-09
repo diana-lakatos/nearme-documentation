@@ -9,7 +9,7 @@ class InstanceType::Searcher::ProjectsSearcher
   end
 
   def fetcher
-    @fetcher  = Transactable.active.search_by_query([:name, :description, :properties], @params[:query])
+    @fetcher = Transactable.active.search_by_query([:name, :description, :properties], @params[:query])
     @fetcher = @fetcher.by_topic(selected_topic_ids).custom_order(@params[:sort])
     @fetcher = @fetcher.seek_collaborators if @params[:seek_collaborators] == '1'
     if @params[:sort] =~ /collaborators/i && selected_topic_ids.present?
@@ -31,5 +31,9 @@ class InstanceType::Searcher::ProjectsSearcher
     {
       query: @params[:query]
     }
+  end
+
+  def result_view
+    'community'
   end
 end

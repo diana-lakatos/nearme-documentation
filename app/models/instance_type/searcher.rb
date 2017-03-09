@@ -4,7 +4,7 @@ module InstanceType::Searcher
 
   # @return [Integer] total number of results returned
   def result_count
-    @search_results_count || @results.try(:total_entries) || @results.size
+    @search_results_count || results.try(:total_entries) || results.size
   end
 
   # @return [String, nil] query string or nil
@@ -95,6 +95,15 @@ module InstanceType::Searcher
   # @return [TransactableTypeDecorator] transactable type object associated with the query
   def transactable_type
     @transactable_type_decorator ||= @transactable_type.decorate
+  end
+
+  # alias for transactable_type
+  def object
+    transactable_type
+  end
+
+  def result_view
+    SearcherHelper::ResultView.new(@params, object)
   end
 
   def to_liquid

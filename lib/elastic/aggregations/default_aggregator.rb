@@ -12,6 +12,10 @@ module Elastic
           { label: :minimum_price, type: :min, field: :all_prices }
         ]
       end
+
+      def create_field(field)
+        Nodes::BasicNode.new(field)
+      end
     end
   end
 end

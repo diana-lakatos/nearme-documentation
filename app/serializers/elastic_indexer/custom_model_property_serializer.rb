@@ -4,6 +4,8 @@ module ElasticIndexer
 
     def attributes
       object.each_with_object({}) do |(name, value), props|
+        next unless value
+
         props.merge! PropertySerializer.new(name, value, definitions).as_json
       end
     end
@@ -28,6 +30,7 @@ module ElasticIndexer
       when 'integer' then @value.to_i
       when 'float', 'decimal' then @value.to_f
       when 'boolean' then ActiveRecord::Type::Boolean.new.type_cast_from_database(@value)
+      when 'array' then @value.split(',').map(&:strip)
       else
         @value
       end

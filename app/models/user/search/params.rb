@@ -1,12 +1,12 @@
 require 'active_support/core_ext'
 
 class User::Search::Params
-  def initialize(options, _instance_profile_type)
-    @options = options.respond_to?(:deep_symbolize_keys) ? options.deep_symbolize_keys : options.symbolize_keys
+  def initialize(options)
+    @options = options.deep_symbolize_keys
   end
 
   def query
-    (@options[:q] || @options[:query])
+    @options[:q] || @options[:query]
   end
 
   def keyword

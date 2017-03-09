@@ -33,6 +33,10 @@ module InstanceType::Searcher::GeolocationSearcher
     @search ||= ::Listing::Search::Params::Web.new(@params, @transactable_type)
   end
 
+  def search_form
+    search
+  end
+
   def search_query_values
     {
       loc: @params[:loc],

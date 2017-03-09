@@ -23,6 +23,10 @@ class InstanceType::Searcher::GroupsSearcher
     }
   end
 
+  def result_view
+    'community'
+  end
+
   private
 
   def sort_params
