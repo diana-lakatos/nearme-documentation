@@ -10,6 +10,7 @@ Feature: A user can interact with activity feeds
   Scenario: A user can follow another user
     When I visit another user page
     Then I can see and press "Follow" button
+    And I shouldn't see report as spam button
     Then I should be following it
     Then I can see and press "Unfollow" button
     And I shouldn't be following it anymore
@@ -27,12 +28,6 @@ Feature: A user can interact with activity feeds
     Then I should be following it
     Then I can see and press "Unfollow" button
     And I shouldn't be following it anymore
-
-  Scenario: A user can't report a follow event
-    When I visit another user page
-    Then I can see and press "Follow" button
-    Then I should be following it
-    And I shouldn't see report as spam button
 
   Scenario: A user can update his status
     When I visit my page
@@ -65,14 +60,23 @@ Feature: A user can interact with activity feeds
     Then I can see user created project event
 
   Scenario: User updated user status event exists
+    When I go to the home page
+    Then I should not see "This is the status update XYZ"
     When I visit another user page with status updates
     Then I should see the user status update This is the status update XYZ
+    Then I can see and press "Follow" button
+    When I go to the home page
+    Then I should see "This is the status update XYZ"
 
   Scenario: User updated project status event exists
+    When I go to the home page
+    Then I should not see "This is the project status XYZZ"
     When I visit project page with status
     Then I should see the project status update This is the project status XYZZ
+    Then I can see and press "Follow" button
+    When I go to the home page
+    Then I should see "This is the project status XYZZ"
 
   Scenario: Created topic status event exists
     When I visit topic page
     Then I should see the topic created event
-
