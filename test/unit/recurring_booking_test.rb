@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'test_helper'
+require 'vcr_setup'
 
 class ReservationTest < ActiveSupport::TestCase
   include ReservationsHelper
@@ -36,7 +37,6 @@ class ReservationTest < ActiveSupport::TestCase
           transactable: create(:subscription_pro_rated_transactable),
         )
         @order.update_column(:starts_at, Time.zone.parse('2025-03-06'))
-
       end
 
       should 'confirm recurring_booking on autoconfirm mode' do
@@ -51,6 +51,55 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal RecurringBooking::AmountCalculatorFactory::BaseAmountCalculator, @order.amount_calculator.class
         assert_equal (1670 * pro_rata).ceil, @order.order_items.first.payment.total_amount_cents
       end
+    end
+  end
+
+  context 'monthly subscription' do
+    setup do
+      # Uncoment if you want to record new VCR cassete
+      # WebMock.allow_net_connect!
+    end
+
+    should 'generate next period' do
+      FactoryGirl.create_list(:confirmed_recurring_booking, 2).each do |rb|
+        rb.update_column(:next_charge_date, Date.current.prev_month.end_of_month)
+        rb.generate_next_period!
+      end
+
+      assert_equal 2, RecurringBooking.needs_charge(Date.current).count
+
+      # VCR records Stripe responses to test/assets/vcr_cassettes/stripe_recurring_booking.yml
+      # - to check if real connection works - remove the file and rerun test
+      # - to add new connections uncomment WebMock.allow_net_connect! - those will be recorded.
+
+      VCR.use_cassette("stripe_recurring_booking", :record => :new_episodes) do
+        CreditCard.last.destroy
+        # As we are using real Stripe data we are storing CC within Stripe
+        CreditCard.all.each {|cc| process_credit_card!(cc) }
+
+        RecurringBooking.needs_charge(Date.current).find_each do |rb|
+          ScheduleChargeSubscriptionJob.perform(rb.id)
+        end
+      end
+
+      assert_equal 1, Payment.paid.count
+      assert_equal 4, RecurringBookingPeriod.count
+      assert_equal 1, RecurringBooking.with_state(:overdued).count
+      assert_equal 0, RecurringBooking.needs_charge(Date.current).count
+      assert_equal 1, RecurringBooking.confirmed.count
+    end
+
+    should 'not include RecurringBooking that was confirmed but period was not yet generated' do
+      rb = FactoryGirl.create(:confirmed_recurring_booking)
+      rb.update_column(:next_charge_date, Date.current.prev_month.end_of_month)
+      assert_equal 0, RecurringBooking.needs_charge(Date.current).count
+    end
+
+    should 'include properly confirmed recurring booking' do
+      rb = FactoryGirl.create(:recurring_booking, state: 'unconfirmed')
+      rb.update_column(:next_charge_date, Date.current.prev_month.end_of_month)
+      rb.confirm!
+      assert_equal 1, RecurringBooking.needs_charge(Date.current).count
     end
   end
 end

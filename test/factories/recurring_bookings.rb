@@ -24,6 +24,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_deleted_payment_source do
+      after(:create) do |booking|
+        booking.payment_subscription.payment_source.destroy
+      end
+    end
+
     factory :activated_recurring_booking, traits: [:activated]
 
     factory :confirmed_recurring_booking do

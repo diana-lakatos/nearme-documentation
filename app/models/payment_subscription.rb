@@ -17,7 +17,7 @@ class PaymentSubscription < ActiveRecord::Base
   belongs_to :payment_gateway
   belongs_to :payer, class_name: 'User'
   belongs_to :company, -> { with_deleted }
-  belongs_to :payment_source, polymorphic: true
+  belongs_to :payment_source, -> { with_deleted }, polymorphic: true
 
   attr_accessor :chosen_credit_card_id
 
@@ -110,7 +110,7 @@ class PaymentSubscription < ActiveRecord::Base
   end
 
   def payment_method_id=(payment_method_id)
-    self.payment_method = PaymentMethod.find(payment_method_id)
+    self.payment_method = PaymentMethod.find_by(id: payment_method_id)
   end
 
   def payment_method=(payment_method)
