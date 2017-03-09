@@ -2550,6 +2550,7 @@ en:
       not_purchasable: 'Out of stock'
       documents: 'Documents'
       not_available: '%{bookable_noun} is currently not available'
+      date_not_available_title: 'Choose date before first unavailable date'
     filters:
       open: 'Open'
       resolved: 'Resolved'
