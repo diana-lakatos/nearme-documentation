@@ -201,6 +201,7 @@ en:
         add_your_company: Please complete your Project first.
       add_your_company: Please complete your Project first.
       order_items:
+        created: 'Expenses have been created.'
         updated: 'Expenses have been updated.'
         approved: 'Expenses have been approved.'
         rejected: 'Expenses have been rejected'

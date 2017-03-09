@@ -1,4 +1,4 @@
-@javascript
+@javascript @fake_payments
 Feature: Secure documents upload
   Background:
     Given a user: "Admin" exists with name: "Admin User", admin: true

@@ -8,14 +8,14 @@
       = render 'transactable_line_item', f: transactable_line_item_form, readonly: readonly, free_hint: true
     - if readonly == false
       .add-link
-        = link_to_add_association t('dashboard.order_items.add_time_expenses') , f, :transactable_line_items, partial: 'transactable_line_item', id: "add_new_transactable_line_item", class: 'btn btn-primary', render_options: { locals: { free_hint: true } }
+        = link_to_add_association t('dashboard.order_items.add_time_expenses') , f, :transactable_line_items, partial: 'transactable_line_item', id: "add_new_time_transactable_line_item", class: 'btn btn-primary', render_options: { locals: { free_hint: true } }
 
   .transactable-line-items.nested-fields-set
     = f.simple_fields_for :additional_line_items do |additional_line_item_form|
       = render 'additional_line_item', f: additional_line_item_form, readonly: readonly
     - if readonly == false
       .add-link
-        = link_to_add_association t('dashboard.order_items.add_item_expenses') , f, :additional_line_items, partial: 'transactable_line_item', id: "add_new_transactable_line_item", class: 'btn btn-primary'
+        = link_to_add_association t('dashboard.order_items.add_item_expenses') , f, :additional_line_items, partial: 'transactable_line_item', id: "add_new_expense_transactable_line_item", class: 'btn btn-primary'
 
   .total
     - if @order_item.errors[:total_cost].present?

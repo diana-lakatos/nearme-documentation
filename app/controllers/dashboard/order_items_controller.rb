@@ -28,6 +28,7 @@ class Dashboard::OrderItemsController < Dashboard::Company::BaseController
     else
       @order_item.set_service_fees
       @order_item.schedule_approval!
+      flash[:notice] = t('flash_messages.dashboard.order_items.created')
 
       redirect_to(dashboard_order_order_items_path(@order, transactable_id: @order.transactable.id)) && return if @order_item.save
     end

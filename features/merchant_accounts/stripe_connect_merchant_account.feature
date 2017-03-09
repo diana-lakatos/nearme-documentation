@@ -26,6 +26,7 @@ Feature: Stripe Connect Merchant flow
     Then Stripe rejected.fraud error should be presented to user
     And verified merchant account should be created
     And due_by should be displayed
+    Then I remove stubed requests
 
   Scenario: Present errors to the user
     Given failed_stripe_connect_merchant_account is persisted
@@ -38,3 +39,4 @@ Feature: Stripe Connect Merchant flow
     And I update Stripe merchant form
     Then Stripe rejected.fraud error should be presented to user
     And pending merchant account should be created
+    Then I remove stubed requests

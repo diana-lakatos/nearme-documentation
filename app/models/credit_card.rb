@@ -99,6 +99,8 @@ class CreditCard < ActiveRecord::Base
   end
 
   def success?
+    return false if expired? || deleted?
+
     has_response = begin
                    response.present?
                  rescue
