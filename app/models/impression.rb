@@ -3,7 +3,7 @@ class Impression < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  belongs_to :impressionable, polymorphic: true
+  belongs_to :impressionable, counter_cache: true, polymorphic: true
   scope :last_x_days, ->(days_in_past) { where('DATE(impressions.created_at) >= ? ', days_in_past.days.ago) }
 
   # attr_accessible :impressionable_id, :impressionable_type, :ip_address
