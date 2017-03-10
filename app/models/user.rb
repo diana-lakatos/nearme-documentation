@@ -264,12 +264,13 @@ class User < ActiveRecord::Base
     user_ids_decorated = user_ids.each_with_index.map { |lid, i| "WHEN users.id=#{lid} THEN #{i}" }
     order("CASE #{user_ids_decorated.join(' ')} END") if user_ids.present?
   }
-  scope :searchable, -> {}
+  scope :searchable, -> { not_banned }
 
   scope :buyers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::BUYER])) }
   scope :sellers, -> { joins(sanitize_sql_array(['inner join user_profiles up ON up.user_id = users.id AND up.profile_type = ?', UserProfile::SELLER])) }
 
-  scope :banned, -> { where('banned_at is not null') }
+  scope :banned, -> { where('users.banned_at is not null') }
+  scope :not_banned, -> { where('users.banned_at is null') }
   scope :active_users, -> { where('users.banned_at is null AND users.deleted_at is null') }
 
   validates_with CustomValidators
