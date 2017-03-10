@@ -1,0 +1,12 @@
+{% assign has_error = form_object.object.errors[field_name] != blank %}
+{% assign label = 'How did you hear about us?' %}
+
+<div class="control-group {% if has_error %}error{% endif %}">
+  <!-- Placing control label outside to not interfere with select__arrow styling -->
+  <label class="control-label">{{ label }}</label>
+  <label class="csn-select">
+    {% input_field how_did_you_hear, collection: @valid_values, prompt: 'Please select', form_name: properties, class: 'unstyled-select' %}
+    {% input_field_error name, field_name: how_did_you_hear, form_name: properties %}
+    <div class="csn-select__arrow"></div>
+  </label>
+</div>
