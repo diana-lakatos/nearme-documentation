@@ -2,10 +2,18 @@
 <div class='panel nested-fields with-border'>
   {% fields_for properties, form: service %}
     {% assign ndis_collection = 'Category 1,Category 2,Category 3' | split: ',' %}
-    {% input ndis_category, collection: @ndis_collection, form: properties %}
-
-    <div class='pull-right'>
-      {% link_to_remove_association label: 'Remove', form: service %}
-    </div>
+    {% input ndis_category, collection: @ndis_collection, input_html-multiple: true, form: properties %}
   {% endfields_for %}
+  {% fields_for action_types, form: service %}
+    {% input transactable_type_action_type_id, as: hidden, form: action_types %}
+    {% input type, as: hidden, form: action_types %}
+    {% fields_for pricings, form: action_types %}
+      {% input transactable_type_pricing_id, as: hidden, form: pricings %}
+      {% input price_cents, as: numeric, wrapper: dashboard_addon, form: pricings %}
+    {% endfields_for %}
+  {% endfields_for %}
+
+  <div class='pull-right'>
+    {% link_to_remove_association label: 'Remove', form: service %}
+  </div>
 </div>

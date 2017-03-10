@@ -54,3 +54,50 @@ validation:
     required: false
 
 form_components:
+  - type: transactable_attributes
+    name: General
+    fields:
+      - transactable: name
+      - transactable: order_contact
+      - transactable: order_description
+      - transactable: other_requirements
+      - transactable: Category - Language
+      - transactable: approximate_budget
+      - transactable: seller_attachments
+
+  - type: transactable_attributes
+    name: Payment and Delivery
+    fields:
+      - transactable: how_pay_for_order
+      - transactable: purchase_order_number
+      - transactable: delivery_date
+      - transactable: delivery_address
+
+
+  - type: space_wizard
+    name: Tell us a little about your organization
+    fields:
+      - seller: organization_name
+      - seller: organization_description
+
+  - type: space_wizard
+    name: Describe your order
+    fields:
+      - transactable: name
+      - transactable: order_description
+      - transactable: order_contact
+      - transactable: Category - Language
+      - transactable: other_requirements
+      - transactable: approximate_budget
+      - transactable: seller_attachments
+
+  - type: space_wizard
+    name: Delivery and payment
+    fields:
+      - transactable: how_pay_for_order
+      - transactable: purchase_order_number
+      - transactable: delivery_date
+      - transactable: delivery_address
+
+
+

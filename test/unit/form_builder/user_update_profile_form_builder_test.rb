@@ -210,7 +210,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           'Buyer Category' => @buyer_sub_cat.id
         },
         :customizations => {
-          'Buyer Model_attributes' => {
+          'buyer_model_attributes' => {
             '0' => {
               properties: {
                 buyer_model_attr: 'my first value'
@@ -232,7 +232,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
               }
             }
           },
-          'Reviews_attributes' => {
+          'reviews_attributes' => {
             '0' => { properties: { author: 'Maciek', body: 'hey hi hello' } },
             '1' => { properties: { body: 'valid review despite lack of author' } }
           }
@@ -247,7 +247,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           'Default Category' => @default_sub_cat.id
         },
         :customizations => {
-          'Default Model_attributes' => {
+          'default_model_attributes' => {
             '0' => { properties: { default_model_attr: 'my first value' } },
             '1' => { properties: { default_model_attr: 'my second value' } }
           }
@@ -267,7 +267,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           'Seller Category' => [@seller_sub_cat.id, @seller_sub_cat2.id]
         },
         :customizations => {
-          'Seller Model_attributes' => {
+          'seller_model_attributes' => {
             '0' => { properties: { seller_model_attr: 'my first value' } }
           }
         }
@@ -301,7 +301,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           'Buyer Category' => {}
         },
         :customizations => {
-          'Buyer Model' => {
+          'buyer_model' => {
             properties: {
               'buyer_model_attr' => {
                 validation: {
@@ -317,7 +317,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
               }
             }
           },
-          'Reviews' => {
+          'reviews' => {
             properties: {
               'author' => {},
               'body' => {
@@ -346,7 +346,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           }
         },
         :customizations => {
-          'Default Model' => {
+          'default_model' => {
             properties: {
               'default_model_attr' => {
                 validation: {
@@ -384,7 +384,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           }
         },
         :customizations => {
-          'Seller Model' => {
+          'seller_model' => {
             properties: {
               'seller_model_attr' => {
                 validation: {

@@ -63,6 +63,7 @@ module CustomAttributes
           def normalize_html_options
             self.input_html_options = normalize_input_html_options unless input_html_options_string.nil?
             self.wrapper_html_options = normalize_wrapper_html_options unless wrapper_html_options_string.nil?
+            true
           end
 
           def normalize_input_html_options

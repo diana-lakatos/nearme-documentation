@@ -17,9 +17,11 @@ module MarketplaceBuilder
       private
 
       def import_assets(custom_theme)
-        Dir.glob("#{File.join(@theme_path, source)}/#{custom_theme.name.underscore}_custom_theme_assets/*.*") do |asset_file|
+        assets_directory_path = File.join(@theme_path, source, "#{custom_theme.name.underscore}_custom_theme_assets")
+        Dir.glob("#{assets_directory_path}/**/*.*") do |asset_file|
+          file_path = asset_file.sub("#{assets_directory_path}/", '')
           File.open(asset_file) do |file|
-            custom_theme_asset = custom_theme.custom_theme_assets.where(type: type_by_file_path(asset_file), name: File.basename(asset_file)).first_or_initialize
+            custom_theme_asset = custom_theme.custom_theme_assets.where(type: type_by_file_path(asset_file), name: file_path).first_or_initialize
             custom_theme_asset.file = file
             custom_theme_asset.save!
           end
