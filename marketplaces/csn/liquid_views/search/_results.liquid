@@ -22,7 +22,6 @@
 
 <div class="search-form__results-items">
   {% comment %}TODO: Remove after static html{% endcomment %}
-  {% include "search/result_item" %}
 
   {% if searcher.result_count > 0 %}
     {% for user in searcher.results %}

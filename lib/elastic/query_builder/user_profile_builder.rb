@@ -3,13 +3,14 @@ module Elastic
     class UserProfileBuilder
       attr_reader :type
 
-      def self.build(params, type:)
-        new(params, type: type).query
+      def self.build(params, profile:)
+        new(params, profile: profile).query
       end
 
-      def initialize(params, type:)
+      def initialize(params, profile:)
         @params = params
-        @type = type
+        @profile = profile
+        @type = profile.name.downcase
         @query = []
       end
 
@@ -28,6 +29,7 @@ module Elastic
         @query.concat Array(condition) if condition.present?
       end
 
+      # TODO: add profile-type categories only when there is related criteria
       def default
         [
           { match: { 'user_profiles.enabled': true } },
@@ -35,8 +37,12 @@ module Elastic
         ]
       end
 
+      def user_profile_enabled
+        @params.dig(:user_profiles, type, :enabled)
+      end
+
       def properties
-        @params.dig(:user_profiles, @type, :properties)&.flat_map do |key, value|
+        @params.dig(:user_profiles, type, :properties)&.flat_map do |key, value|
           next if value.blank?
 
           Array(value).reject(&:blank?).map do |single|
@@ -74,11 +80,11 @@ module Elastic
       end
 
       def availability_exceptions
-        AvailabilityExceptions.new(@params.dig(:user_profiles, @type, :availability_exceptions))
+        AvailabilityExceptions.new(@params.dig(:user_profiles, type, :availability_exceptions))
       end
 
       def config
-        InstanceProfileType.find_by(name: type.capitalize)
+        @profile
       end
     end
   end

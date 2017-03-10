@@ -111,6 +111,7 @@ module Elastic
         sorting_fields
       end
 
+      # TODO: rebuild and use new aggregation builder
       def aggregation_fields
         InstanceProfileType
           .all
@@ -122,11 +123,16 @@ module Elastic
             size: attr.valid_values.size + 1 # plus one extra for empty
           }
         end
-
-
       end
 
+      # TODO: query builder should rely on query params not some globals
       def profiles_filters
+        PlatformContext.current.instance.instance_profile_types.searchable.map do |profile|
+          build_profile_query(profile)
+        end
+      end
+
+      def default_profile_query
         user_profiles_filters = Elastic::QueryBuilder::UserProfileBuilder.build(@query, type: 'default')
 
         # legacy and deprecated
@@ -148,18 +154,13 @@ module Elastic
           user_profiles_filters << {match: {"user_profiles.customizations.#{key}" => value}}
         end
 
-        if @instance_profile_type.search_only_enabled_profiles?
-          [
-            {nested: {path: 'user_profiles', query: {bool: {must: user_profiles_filters}}}},
-            {nested: {path: 'user_profiles', query: {bool: {must: Elastic::QueryBuilder::UserProfileBuilder.build(@query, type: 'buyer')}}}}
-
-          ]
-        else
-          [
-            {term: {instance_profile_type_ids: @instance_profile_type.id}}
-          ]
-        end
+        {nested: {path: 'user_profiles', query: {bool: {must: user_profiles_filters}}}}
       end
+
+    end
+
+    def build_profile_query(profile)
+      {nested: {path: 'user_profiles', query: {bool: {must: Elastic::QueryBuilder::UserProfileBuilder.build(@query, profile: profile)}}}}
     end
   end
 end
