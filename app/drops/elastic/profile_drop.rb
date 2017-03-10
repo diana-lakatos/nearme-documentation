@@ -7,11 +7,12 @@ module Elastic
       source.customizations.group_by(&:name)
     end
 
-    def grouped_custom_images
+    def custom_images
       source.custom_images.each_with_object({}) do |img, group|
         group[img.name] = img
       end
     end
+    alias grouped_custom_images custom_images
 
     def category_tree
       source.categories.sort(&:position).group_by(&:root)
