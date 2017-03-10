@@ -18,7 +18,7 @@ module Graph
       end
 
       def decorate(relation)
-        relation.map { |transactable|  self.class.decorate(transactable)}
+        relation.map { |transactable| self.class.decorate(transactable) }
       end
 
       def resolve_by_ids(relation, ids)
@@ -45,7 +45,7 @@ module Graph
       def main_scope
         return ::Transactable.all unless @variables['follower_id']
         ::Transactable.all
-          .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::Transactable))
+                      .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::Transactable))
       end
     end
   end

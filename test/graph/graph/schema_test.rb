@@ -28,12 +28,16 @@ class Graph::SchemaTest < ActiveSupport::TestCase
     end
 
     should 'get user pending collaborations' do
-      collaborator = FactoryGirl.create(:transactable_collaborator, user: @user, transactable: FactoryGirl.create(:transactable, user: @user))
+      collaboration = FactoryGirl.create(
+        :transactable_collaborator,
+        user: @user, transactable:
+        FactoryGirl.create(:transactable, user: @user)
+      )
       User.where.not(id: @user.id).delete_all
 
       query = %({ users { collaborations(filters: [PENDING_RECEIVED_INVITATION]) { id } }})
 
-      assert_equal({"users" => [{"collaborations" => [{ "id"=>"1" }] }]}, result(query))
+      assert_equal({ 'users' => [{ 'collaborations' => [{ 'id' => collaboration.id.to_s }] }] }, result(query))
     end
   end
 

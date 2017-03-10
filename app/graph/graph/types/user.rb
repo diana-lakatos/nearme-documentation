@@ -10,7 +10,7 @@ module Graph
       field :id, !types.ID
       field :is_followed, !types.Boolean do
         argument :follower_id, types.ID
-        resolve ->(obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
+        resolve -> (obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
       end
 
       field :name, !types.String

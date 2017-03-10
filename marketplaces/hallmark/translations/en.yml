@@ -472,8 +472,10 @@ en:
     cant_remove_collaborator: "You can't remove user from this DIY"
 
   collaborator_invitations:
-    title_summary: "You have %{count} pending invitations"
-    invited_you_to: "invited you to"
-    confirm_accept: "Would you like to accept?"
+    title_summary: 'Pending collaboration invitations'
+    empty_resultset: 'At the moment you have no pending invitations to approve.'
+    invitations_count_html:
+      one: 'You have <b>one</b> pending invitation.'
+      other: 'You have <b>%{count}</b> pending invitations.'
 
   extras_are_coming_soon: You will be able to create your own DIYs soon!
