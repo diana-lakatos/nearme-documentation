@@ -332,7 +332,7 @@ class TransactableDrop < BaseDrop
   # @return [String] the url to the first image for this listing, or, if missing, the url to a placeholder image
   # @todo  -- depracate in favor of filter
   def photo_url
-    photos.try(:first).try(:[], :space_listing) || image_url(Placeholder.new(width: 410, height: 254).path).to_s
+    photos.try(:first).try(:[], 'space_listing') || image_url(Placeholder.new(width: 410, height: 254).path).to_s
   end
 
   # @return [String, nil] the url to the first 'medium'-sized image for this listing, nil if not present
