@@ -55,8 +55,8 @@ configuration:
     {% fields_for properties, form: buyer_profile  %}
       {% input date_of_birth, as: date, input_html-tabindex: 4, form: properties %}
 
-      {% assign gender_collection = 'Male,Female,Other' | split: ',' %}
-      {% input gender, collection: @gender_collection, input_html-tabindex: 4, prompt: 'Choose your gender', form: properties %}
+      {% include 'forms/genders' %}
+      {% input gender, collection: @genders, input_html-tabindex: 4, prompt: 'Choose your gender', form: properties %}
       {% include 'forms/languages' %}
 
       {% input languages, collection: @languages, label: 'Language', prompt: 'Please select', input_html-multiple: true, input_html-tabindex: @tabindex, form: properties %}
@@ -69,8 +69,5 @@ configuration:
     {% endfields_for %}
   {% endfields_for %}
 
-  <div class='actions'>
-    {% submit 'Save', class: 'desksnearme submit btn btn-green', data-disable_with: 'Saving...', tabindex: 11  %}
-    {% submit "Save & Next", class: 'desksnearme submit btn btn-green', data-disable_with: 'Saving...', tabindex: 11  %}
-  </div>
+  {% include 'forms/submit_buttons' %}
 {% endform_for %}

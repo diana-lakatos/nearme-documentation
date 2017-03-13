@@ -58,7 +58,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
   should 'correctly validate empty params' do
     @lister_user_signup_builder.prepopulate!
     refute @lister_user_signup_builder.validate({})
-    assert_equal "Email can't be blank, Password can't be blank, Avatar can't be blank, Seller profile properties seller attr can't be blank, Seller profile custom images #{@seller_photo.id} image can't be blank, Seller profile custom attachments #{@seller_attachment.id} file can't be blank, Seller profile categories seller category can't be blank, Default profile properties default attr can't be blank, Default profile categories default category can't be blank, Companies name can't be blank, Companies locations name can't be blank, Companies locations transactables boat photos is too short (minimum is 1 character), Companies locations transactables boat action types is too short (minimum is 1 character), Companies locations transactables boat name can't be blank, Companies locations transactables boat properties boat attr can't be blank, Companies locations transactables boat custom images #{@boat_photo.id} image can't be blank, Companies locations transactables boat custom attachments #{@boat_attachment.id} file can't be blank, Companies locations transactables boat categories boat category can't be blank, Companies locations location address address can't be blank", @lister_user_signup_builder.errors.full_messages.join(', ')
+    assert_equal "Email can't be blank, Password can't be blank, Avatar can't be blank, Seller profile properties seller attr can't be blank, Seller profile custom images #{@seller_photo.id} image can't be blank, Seller profile custom attachments #{@seller_attachment.id} file can't be blank, Seller profile categories seller category can't be blank, Default profile properties default attr can't be blank, Default profile categories default category can't be blank, Companies name can't be blank, Companies locations name can't be blank, Companies locations transactables boat photos is too short (minimum is 1 character), Companies locations transactables boat name can't be blank, Companies locations transactables boat properties boat attr can't be blank, Companies locations transactables boat custom images #{@boat_photo.id} image can't be blank, Companies locations transactables boat custom attachments #{@boat_attachment.id} file can't be blank, Companies locations transactables boat categories boat category can't be blank, Companies locations transactables boat action types pricings unit can't be blank, Companies locations location address address can't be blank", @lister_user_signup_builder.errors.full_messages.join(', ')
   end
 
   should 'be able to save all parameters' do
@@ -366,7 +366,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
             'boat' => {
               name: {
                 validation: {
-                  'presence' => {}
+                  presence: {}
                 }
               },
               photos: {

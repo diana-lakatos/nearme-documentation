@@ -1,0 +1,20 @@
+name: Qualifications
+instance_profile_types: [Seller]
+
+custom_attributes:
+  - name: qualification
+    label: Qualification
+    attribute_type: string
+    html_tag: input
+  - name: other_qualification
+    label: Other Qualification
+    attribute_type: string
+    html_tag: input
+  - name: year_completed
+    label: Year Completed
+    attribute_type: integer
+    html_tag: input
+  - name: certificate
+    label: Certificate
+    attribute_type: file
+    html_tag: input

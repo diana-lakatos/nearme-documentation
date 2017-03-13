@@ -172,6 +172,16 @@ custom_attributes:
     html_tag: check_box
     search_in_query: false
     label: Have pets
+  - name: skills
+    attribute_type: array
+    html_tag: select
+    search_in_query: false
+    label: Skills
+  - name: other_experiences
+    attribute_type: string
+    html_tag: select
+    search_in_query: false
+    label: Other Experiences
 
 form_components:
   - type: seller_profile_types
