@@ -2,11 +2,19 @@
   %h4= t 'instance_admin.locales.labels.keys', language: @locale.name
   .row
     .table-container
-      .filters
-        .filter.search
-          = form_tag edit_keys_instance_admin_settings_locale_path, method: :get do
-            %input{placeholder: t('instance_admin.manage.users.index.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
+      = form_tag edit_keys_instance_admin_settings_locale_path, method: :get do
+        .filters
+          .filter.search
+            %input{placeholder: t('instance_admin.locales.labels.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
             = fa_icon "search", class: 'fa-action-icon-submit'
+          .filter.value
+            %label
+              %input{type: 'checkbox', name: 'case_sensitive', checked: params[:case_sensitive].present?}
+              = t('instance_admin.locales.labels.case_sensitive')
+          .filter.value
+            %label
+              %input{type: 'checkbox', name: 'match_whole_words', checked: params[:match_whole_words].present?}
+              = t('instance_admin.locales.labels.match_whole_words')
       %table#translations-table
         = simple_nested_form_for @instance, url: instance_admin_settings_translations_path, html: { multipart: true, 'data-edit' => 'keys' } do |f|
           %thead
@@ -27,16 +35,12 @@
                       %input{type: 'hidden', name: "instance[translations_attributes][#{index}][instance_id]", value: @instance.id}
                       %input{type: 'hidden', name: "instance[translations_attributes][#{index}][locale]", value: @locale.code}
                       .translations-input-container
-                        .left
-                          - if instance_translation
-                            %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: instance_translation.value, class: 'locale-item-input'}
-                            %input{type: 'hidden', name: "instance[translations_attributes][#{index}][_destroy]", value: 'false'}
-                            %input{type: 'hidden', name: "instance[translations_attributes][#{index}][id]", value: instance_translation.id}
-                          - else
-                            %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: '', class: 'locale-item-input' }
-                        .right
-                          %input{type: 'button', value: t('instance_admin.locales.buttons.show_default'), class: 'translation-default-button'}
-                        .clear
+                        - if instance_translation
+                          %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: instance_translation.value, class: 'locale-item-input'}
+                          %input{type: 'hidden', name: "instance[translations_attributes][#{index}][_destroy]", value: 'false'}
+                          %input{type: 'hidden', name: "instance[translations_attributes][#{index}][id]", value: instance_translation.id}
+                        - else
+                          %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: '', class: 'locale-item-input' }
                         .default-text
                           = "#{t('instance_admin.locales.labels.default_text')}:"
                           -# In this loop for default_and_custom_translations we get either 1. default translations for
