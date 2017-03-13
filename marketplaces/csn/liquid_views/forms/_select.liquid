@@ -1,7 +1,5 @@
-{% assign has_error = form_object.object.errors[field_name] != blank %}
 {% assign label = 'How did you hear about us?' %}
-
-<div class="control-group {% if has_error %}error{% endif %}">
+<div class="control-group {% if form_object.object.errors[field_name] != blank %}error{% endif %}">
   <!-- Placing control label outside to not interfere with select__arrow styling -->
   <label class="control-label">{{ label }}</label>
   <label class="csn-select">

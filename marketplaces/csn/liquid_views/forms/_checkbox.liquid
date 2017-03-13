@@ -1,6 +1,4 @@
-{% assign has_error = form_object.object.errors[field_name] != blank %}
-
-<div class="control-group {% if has_error %}error{% endif %}">
+<div class="control-group {% if form_object.object.errors[field_name] != blank %}error{% endif %}">
   <label class="csn-control csn-control--checkbox">
     {% input_field name, field_name: @field_name, as: boolean, boolean_style: inline, form_name: @form_name %}
     <span class="control-label">{{ label }}</span>
