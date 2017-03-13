@@ -10,8 +10,8 @@
 
   {% input first_name, form: owners, required: true %}
   {% input last_name, form: owners, required: true %}
-  {% if 'US CA' contains  merchant_account.iso_country_code %}
-    {% input personal_id_number, form: owners, required: true, wrapper_html-data-account-type: 'individual' %}
+  {% if 'US CA NZ' contains  merchant_account.iso_country_code %}
+    {% input personal_id_number, form: owners, required: true %}
     {% input business_tax_id, form: owners, required: true, wrapper_html-data-account-type: 'company' %}
   {% endif %}
 

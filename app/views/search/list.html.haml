@@ -8,8 +8,8 @@
 - if !@searcher.transactable_type.display_taxonomy_tree? ||  request.xhr?
   = render 'search/list_results', searcher: @searcher
 - else
-  .category-container.span3{"data-search-filters-container" => true}
-    %section#category-tree.list-view-category-tree
+  .category-container.list-search-left{"data-search-filters-container" => true}
+    %section#category-tree.list-view-category-tree{ class: @transactable_type.show_price_slider ? 'with_slider' : '' }
       - cache i18n_cache_key(@searcher.transactable_type, @searcher.category_ids) do
         - @searcher.searchable_categories.each do |category|
           .nav-categories.collapse.in
@@ -24,7 +24,7 @@
               = category_tree(category, @category, 3, @searcher.category_ids)
   = render 'search/list/search_filters_boxes'
 
-  .listing-container.span9
+  .listing-container.list-search-right
     = render 'search/list_results', searcher: @searcher
     = render 'search/footer'
 

@@ -5,6 +5,9 @@ module WebhookService
 
       def parse_event!
         return false unless ALLOWED_EVENTS.map {|e| "account." + e }.include?(event.type)
+        # Stripe can send account.updated for main MPO account
+        # in that case user_id params is not set, we want to ignore those webhooks.
+        return false if merchant_account.blank?
 
         account_updated
       end

@@ -65,6 +65,7 @@ Feature: A user can login
     Then I should see "is already linked to an account"
     Then there should be no Facebook account
 
+  @fake_payments
   Scenario: User signed up with social provider can set up his password
     Given I signed up with LinkedIn without password
       And a transactable_type_listing exists with name: "Listing"

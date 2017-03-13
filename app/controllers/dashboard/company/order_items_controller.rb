@@ -30,9 +30,6 @@ class Dashboard::Company::OrderItemsController < Dashboard::Company::BaseControl
   def rejection_form
   end
 
-  def rejection_form
-  end
-
   def reject
     if @order_item.update_attribute(:rejection_reason, order_item_params[:rejection_reason])
       if @order_item.reject!
@@ -66,7 +63,7 @@ class Dashboard::Company::OrderItemsController < Dashboard::Company::BaseControl
   end
 
   def verfiy_merchant_account
-    if @order_item.user.default_company.possible_payout?
+    unless @order_item.user.default_company.merchant_accounts.verified.any?
       flash[:error] = t('flash_messages.dashboard.order_items.approve_failed')
       redirect_to dashboard_company_order_order_items_path(@order, transactable_id: @order.transactable.id)
     end

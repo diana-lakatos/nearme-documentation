@@ -52,6 +52,12 @@ module NavigationHelpers
     when /the bookings/
       dashboard_orders_path
 
+    when /the dahboard transactables (list|in progress list)/
+
+      status = Regexp.last_match(1).include?('in progress') ? 'in progress' : nil
+      listing = model('the transactable') || Transactable.last
+      dashboard_company_transactable_type_transactables_path(listing.transactable_type, status: status)
+
     when /the manage listing page/
       listing = model!('the transactable')
       edit_dashboard_company_transactable_type_transactable_path(listing.transactable_type, listing)
