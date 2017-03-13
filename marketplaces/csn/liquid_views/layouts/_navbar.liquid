@@ -43,7 +43,18 @@
           {% else %}
             {% assign edit_profile_path = '/choose-role' %}
           {% endif %}
-          <li><a href="{{ edit_profile_path }}" class="user-name">{{ current_user.first_name | upcase }}</a></li>
+
+          <li class="dropdown">
+            <a href="" class="user-name dropdown-toggle" data-toggle="dropdown">
+              {{ current_user.first_name | upcase }}
+              <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu">
+              <li><a href="{{ edit_profile_path }}">Edit my profile</a></li>
+              <li><a href="{{ 'destroy_user_session_path' | generate_url }}" data-method="delete">Logout</a></li>
+            </ul>
+          </li>
         {% endif %}
       </ul>
     </div>
