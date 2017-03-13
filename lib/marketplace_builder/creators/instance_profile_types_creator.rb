@@ -11,8 +11,8 @@ module MarketplaceBuilder
       def whitelisted_properties
         [
           :name, :profile_type, :onboarding, :searchable, :category_search_type,
-          :search_only_enabled_profiles, :search_engine, :default_availability_template,
-          :create_company_on_sign_up, :admin_approval
+          :searchable, :search_only_enabled_profiles, :search_engine,
+          :default_availability_template, :create_company_on_sign_up, :admin_approval
         ]
       end
 

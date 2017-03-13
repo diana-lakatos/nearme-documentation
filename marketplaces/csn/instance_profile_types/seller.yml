@@ -2,6 +2,7 @@
 name: Seller
 profile_type: seller
 onboarding: false
+searchable: true
 custom_attributes:
   # We use custom attributes for some fields that are in user to avoid
   # messing with the translations (as fields may have a different title
