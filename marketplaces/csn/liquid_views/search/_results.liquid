@@ -40,7 +40,7 @@
   {% endif %}
 
   {% comment %}TODO: Change condition: >{% endcomment %}
-  {% if searcher.next_page != 0 %}
+  {% if searcher.next_page %}
     <p class="search-form__results-more-trigger">
       <button type="button" class="button-a button-lg" data-page='{{ searcher.next_page }}'>SHOW MORE RESULTS</button>
     </p>
