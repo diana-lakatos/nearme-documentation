@@ -17,7 +17,10 @@ module Api
           links_data.each do |link_data|
             @reverse_proxy_link = ReverseProxyLink.new(use_on_path: use_on_path, destination_path: link_data[:url], name: link_data[:name])
             unless @reverse_proxy_link.save
-              @error_reverse_proxy_link.errors.add(use_on_path, @reverse_proxy_link.errors.full_messages.join(', '))
+              error_for = use_on_path
+              error_for = 'empty_path' if error_for.blank?
+
+              @error_reverse_proxy_link.errors.add(error_for, @reverse_proxy_link.errors.full_messages.join(', '))
             end
           end
         end
