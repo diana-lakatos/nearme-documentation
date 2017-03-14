@@ -154,23 +154,7 @@ module Bookable
       # at this point there should always be at least one date available for pickup
       # so if it fails something wrong is somewhere else but here
       def expires_at
-        @expires_at ||= range.possible_dates.last.in_time_zone(time_zone.name).advance(hours: 17)
-      end
-
-      def range
-        @range ||= Deliveries::Sendle::Validations::PossiblePickupDates.new(time_zone: time_zone, to: date.to_date)
-      end
-
-      def date
-        @order.date
-      end
-
-      def time_zone
-        @time_zone ||= Deliveries::Sendle::Validations::ItemLocationTimeZone.new(item_address)
-      end
-
-      def item_address
-        @order.transactable.location.location_address
+        @order.date.end_of_day
       end
     end
 

@@ -386,6 +386,10 @@ class OrderDrop < BaseDrop
     @order.state.humanize
   end
 
+  def providers
+    PlatformContext.current.instance.shipping_providers.map(&:shipping_provider_name)
+  end
+
   private
 
   # @return [LineItemDrop] returns the first line item for this order
