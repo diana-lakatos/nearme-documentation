@@ -153,10 +153,9 @@
         </table>
       </div>
 
-      {% if current_status != 'in progress' and !accepted_order.is_free_booking %}
+      {% if current_status != 'in progress' and accepted_order.is_free_booking == false %}
         <p>Total Paid {{ accepted_order.total_order_items_amount_formatted }}</p>
       {% endif %}
     {% endif %}
-
   </article>
 {% endfor %}
