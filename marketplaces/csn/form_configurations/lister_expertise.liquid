@@ -1,0 +1,80 @@
+---
+name: lister_expertise
+base_form: UserUpdateProfileForm
+pages:
+  - dashboard/carer/expertise
+configuration:
+  seller_profile:
+    validation:
+      presence: {}
+    properties:
+      validation:
+        presence: {}
+      skills:
+        validation: {}
+      languages:
+        validation: {}
+      gender:
+        validation: {}
+      ethnicity:
+        validation: {}
+      religion:
+        validation: {}
+      other_experiences:
+        validation:
+          length:
+            maximum: 200
+    customizations:
+      qualifications:
+        properties:
+          qualification:
+            validation:
+              presence: {}
+          year_completed:
+            validation: {}
+---
+{% assign form_url = "/api/users/" | append: current_user.id " %}
+{% form_for form, url: @form_url, as: user, form_for_type: 'dashboard' %}
+  <input value="{{ form_configuration.id }}" type="hidden" name="form_configuration_id" />
+  <input value="{{ page.id }}" type="hidden" name="page_id" />
+  {% comment %}To control where to redirect{%endcomment %}
+  <input value="/dashboard/carer/expertise" disable data-action='Save' type="hidden" name="return_to" />
+  <input value="/dashboard/carer/formal-training" data-action='Save & Next' type="hidden" name="return_to" />
+
+  {% fields_for seller_profile %}
+    {% fields_for properties, form: seller_profile  %}
+      {% include 'forms/skills' %}
+      {% input skills, collection: @skills, label: 'Skills', input_html-multiple: true, form: properties %}
+
+      {% include 'forms/languages' %}
+      {% input languages, collection: @languages, label: 'Language', input_html-multiple: true, form: properties %}
+
+      {% include 'forms/ethnicities' %}
+      {% input ethnicity, collection: @ethnicities, label: 'Ethnicity', prompt: 'Please select', form: properties %}
+
+      {% include 'forms/religions' %}
+      {% input religion, collection: @religions, label: 'Religion', prompt: 'Please select', form: properties %}
+
+      {% include 'forms/genders' %}
+      {% input gender, collection: @genders, input_html-tabindex: 4, prompt: 'Choose your gender', form: properties %}
+
+      {% input other_experiences, form: properties %}
+
+    {% endfields_for %}
+
+    {% fields_for customizations, form: seller_profile %}
+      <div class="customizations nested-fields-set">
+        {% fields_for qualifications, form: customizations %}
+          <div class="nested-container">
+            {% include 'forms/qualifications_fields', form_object_qualifications: form_object_qualifications %}
+          </div>
+        {% endfields_for %}
+        <div class="add-link">
+          {% link_to_add_association label: 'Add Qaulification', form: form_object_customizations, class: 'btn', association: qualifications, partial: forms/qualifications_fields %}
+        </div>
+      </div>
+    {% endfields_for %}
+  {% endfields_for %}
+
+  {% include 'forms/submit_buttons' %}
+{% endform_for %}

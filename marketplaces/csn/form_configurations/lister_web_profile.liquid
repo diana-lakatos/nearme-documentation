@@ -37,7 +37,7 @@ configuration:
   <input value="{{ page.id }}" type="hidden" name="page_id" />
   {% comment %}To control where to redirect{%endcomment %}
   <input value="/dashboard/carer/web-profile" disabled data-action='Save' type="hidden" name="return_to" />
-  <input value="/dashboard/carer/services-list" data-action='Save & Next' type="hidden" name="return_to" />
+  <input value="/dashboard/carer/expertise" data-action='Save & Next' type="hidden" name="return_to" />
   {% fields_for seller_profile %}
     {% fields_for custom_images, form: seller_profile  %}
       {% fields_for 4958, form: custom_images %}
@@ -50,8 +50,5 @@ configuration:
     {% endfields_for %}
   {% endfields_for %}
 
-  <div class='actions'>
-    {% submit 'Save', class: 'desksnearme submit btn btn-green', data-disable_with: 'Saving...', tabindex: 11  %}
-    {% submit "Save & Next", class: 'desksnearme submit btn btn-green', data-disable_with: 'Saving...', tabindex: 11  %}
-  </div>
+  {% include 'forms/submit_buttons' %}
 {% endform_for %}

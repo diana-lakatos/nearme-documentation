@@ -173,6 +173,135 @@ custom_attributes:
     html_tag: check_box
     search_in_query: false
     label: Have pets
+  - name: skills
+    attribute_type: array
+    html_tag: select
+    search_in_query: false
+    label: Skills
+  - name: other_experiences
+    attribute_type: string
+    html_tag: select
+    search_in_query: false
+    label: Other Experiences
+
+  - name: verification_police_check
+    attribute_type: boolean
+    html_tag: select
+    search_in_query: false
+    label: Police Check
+  - name: verification_police_check_certification_date
+    attribute_type: date
+    html_tag: input
+    search_in_query: false
+    label: Certification Date
+  - name: verification_police_check_reference
+    attribute_type: string
+    html_tag: input
+    search_in_query: false
+    label: Reference
+  - name: verification_police_check_expiry_date
+    attribute_type: date
+    html_tag: input
+    search_in_query: false
+    label: Expiry Date
+  - name: verification_police_check_certificate
+    attribute_type: file
+    html_tag: input
+    search_in_query: false
+    label: Attach Certificate
+  - name: verification_police_check_verified
+    attribute_type: boolean
+    html_tag: input
+    search_in_query: false
+    label: Verified
+
+  - name: verification_working_with_children
+    attribute_type: boolean
+    html_tag: select
+    search_in_query: false
+    label: Police Check
+  - name: verification_working_with_children_certification_date
+    attribute_type: date
+    html_tag: input
+    search_in_query: false
+    label: Certification Date
+  - name: verification_working_with_children_reference
+    attribute_type: string
+    html_tag: input
+    search_in_query: false
+    label: Reference
+  - name: verification_working_with_children_expiry_date
+    attribute_type: date
+    html_tag: input
+    search_in_query: false
+    label: Expiry Date
+  - name: verification_working_with_children_certificate
+    attribute_type: file
+    html_tag: input
+    search_in_query: false
+    label: Attach Certificate
+  - name: verification_working_with_children_verified
+    attribute_type: boolean
+    html_tag: input
+    search_in_query: false
+    label: Verified
+
+  - name: verification_first_aid
+    attribute_type: boolean
+    html_tag: select
+    search_in_query: false
+    label: Police Check
+  - name: verification_first_aid_certification_date
+    attribute_type: date
+    html_tag: input
+    search_in_query: false
+    label: Certification Date
+  - name: verification_first_aid_reference
+    attribute_type: string
+    html_tag: input
+    search_in_query: false
+    label: Reference
+  - name: verification_first_aid_expiry_date
+    attribute_type: date
+    html_tag: input
+    search_in_query: false
+    label: Expiry Date
+  - name: verification_first_aid_certificate
+    attribute_type: file
+    html_tag: input
+    search_in_query: false
+    label: Attach Certificate
+  - name: verification_first_aid_verified
+    attribute_type: boolean
+    html_tag: input
+    search_in_query: false
+    label: Verified
+
+  - name: verification_driver_license
+    attribute_type: boolean
+    html_tag: select
+    search_in_query: false
+    label: Police Check
+  - name: verification_driver_license_expiry_date
+    attribute_type: date
+    html_tag: input
+    search_in_query: false
+    label: Expiry Date
+  - name: verification_driver_license_image
+    attribute_type: file
+    html_tag: input
+    search_in_query: false
+    label: Driver License Image
+  - name: verification_driver_license_insurance_expiry_date
+    attribute_type: date
+    html_tag: input
+    search_in_query: false
+    label: Car Insurance Expiry Date
+  - name: verification_driver_license_insurance_image
+    attribute_type: file
+    html_tag: input
+    search_in_query: false
+    label: Car Insurance Image
 
 form_components:
   - type: seller_profile_types

@@ -19,12 +19,11 @@ class LinkToRemoveAssociationTag < Liquid::Tag
 
     form_name = @attributes.fetch(:form, nil)
     form = (context["form_object_#{form_name}"] || context[form_name] || context['form_object']).source
-    raise "form.object of name #{form_name} is nil." if form&.object.nil?
+    raise LinkToAssociation::HelpfulLinkToAssociationError.raise_form_is_nil('LinkToRemoveAssociation', form_name) if form.nil?
+    raise LinkToAssociation::HelpfulLinkToAssociationError.raise_form_object_is_nil('LinkToRemoveAssociation', form_name) if form&.object.nil?
     context.registers[:action_view].send(:link_to_remove_association,
       @attributes[:label],
       form
     )
-  rescue => e
-    raise SyntaxError, "LinkToRemoveAssociationTag error for #{form_name}. Maybe fields_for is missing proper 'form' argument? Original message: #{e.message}"
   end
 end
