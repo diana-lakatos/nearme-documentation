@@ -1,8 +1,8 @@
 <div class="search-form__results-summary">
-  {% if searcher.result_count > 0 %}
+  {% if searcher.results.size < 0 %}
     <p>There are no results to show for your current query.</p>
   {% else %}
-    <p>{{ searcher.result_count }} Results Found</p>
+    <p>{{ searcher.results.size }} Results Found</p>
     <div class="search-form__results-sort-by">
       <p>Sort by:</p>
       <ul class="dropdown">
@@ -12,8 +12,8 @@
         </span>
 
         <ul class="dropdown-menu">
-          <li><a href="#">Price</a></li>
-          <li><a href="#">Proximity</a></li>
+          <li><a href="?sort=price">Price</a></li>
+          <li><a href="?sort=proximity#">Proximity</a></li>
         </ul>
       </ul>
     </div>
@@ -23,7 +23,7 @@
 <div class="search-form__results-items">
   {% comment %}TODO: Remove after static html{% endcomment %}
 
-  {% if searcher.result_count > 0 %}
+  {% if searcher.results.size > 0 %}
     {% for user in searcher.results %}
       {% include "search/result_item", user: user %}
     {% endfor %}
@@ -39,7 +39,6 @@
     </script>
   {% endif %}
 
-  {% comment %}TODO: Change condition: >{% endcomment %}
   {% if searcher.next_page %}
     <p class="search-form__results-more-trigger">
       <button type="button" class="button-a button-lg" data-page='{{ searcher.next_page }}'>SHOW MORE RESULTS</button>

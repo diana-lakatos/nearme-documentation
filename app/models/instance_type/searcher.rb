@@ -3,6 +3,7 @@ module InstanceType::Searcher
   attr_reader :results
 
   # @return [Integer] total number of results returned
+  # DEPRECATED: use searcher.results.size
   def result_count
     @search_results_count || results.try(:total_entries) || results.size
   end
