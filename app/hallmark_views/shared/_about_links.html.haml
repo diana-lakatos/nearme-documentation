@@ -1,0 +1,14 @@
+- if links.any?
+  .about-links
+    %h4= t('about_tab.links')
+    - links.each do |l|
+
+      - if l.image.present?
+        %figure
+          = link_to l.url do
+            = image_tag(l.image_url(:standard), LinkImageUploader.dimensions[:standard].slice(:width, :height))
+            - if l.text.present?
+              %figcaption= l.text
+
+      - else
+        %p= link_to l.text, l.url, rel: 'external'
