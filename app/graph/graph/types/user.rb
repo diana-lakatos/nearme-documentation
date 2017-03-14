@@ -10,17 +10,18 @@ module Graph
       field :id, !types.ID
       field :is_followed, !types.Boolean do
         argument :follower_id, types.ID
-        resolve ->(obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
+        resolve -> (obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
       end
 
       field :name, !types.String
+      field :email, !types.String
+      field :slug, !types.String
       field :custom_attribute,
             !types.String,
             'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
         argument :name, !types.String
-        resolve -> (obj, arg, _ctx) { obj.properties[arg[:name]] }
+        resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
       end
-
       field :custom_attribute_photos,
             !types[Types::Image],
             'Fetch images for photo custom attribute by name,
@@ -38,6 +39,10 @@ module Graph
       field :name_with_affiliation, !types.String
       field :display_location, !types.String
       field :current_address, Types::Address
+      field :collaborations, types[Types::Collaboration] do
+        argument :filters, types[Resolvers::Collaborations::FilterEnum]
+        resolve Graph::Resolvers::Collaborations.new
+      end
     end
 
     CustomImageOrderEnum = GraphQL::EnumType.define do

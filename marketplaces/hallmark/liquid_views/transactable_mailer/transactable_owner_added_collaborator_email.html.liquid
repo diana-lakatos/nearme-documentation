@@ -1,0 +1,9 @@
+<h1>Hi {{ enquirer.first_name }},</h1>
+
+<p>
+  <a href="{{ lister.profile_url }}">{{ lister.name }}</a>  has invited you to become
+  a collaborator on <a href="{{ transactable.listing_url }}">{{ transactable.name }}</a>.
+  Join in on the conversation.
+</p>
+
+<p><a href="{{  'pages_path' | generate_url: slug: 'pending-received-invitations' }}">Click here to accept or decline the invitation</a></p>

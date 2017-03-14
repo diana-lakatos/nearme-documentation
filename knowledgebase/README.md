@@ -31,3 +31,9 @@
 1. `bin/nearme update_ssh_config` will append updated settings to USER_HOME/.ssh/config file
 2. test it `ssh nm-production-california-app-2`
 3. use bash|zsh with enabled autocomplete for quicker hostname access
+
+## MPBuilder
+
+Load changed config for particular marketplace
+
+    bin/rake mpbuilder:run source=marketplaces/hallmark

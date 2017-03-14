@@ -19,6 +19,6 @@
   topics(filters: [FEATURED], arbitrary_order: ["Tutorials", "Upcoming Events", "In the News", "Sneak Peeks", "Let’s Chat", "Artist Corner"], take: 6) {
     name
     show_url
-    listing_image
+    listing_image_url
   }
 }

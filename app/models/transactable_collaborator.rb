@@ -20,6 +20,8 @@ class TransactableCollaborator < ActiveRecord::Base
 
   scope :approved, -> { where.not(approved_by_owner_at: nil, approved_by_user_at: nil) }
   scope :for_user, -> (user) { user.present? ? where('transactable_collaborators.user_id = ? OR transactable_collaborators.email = ?', user.id, user.email) : [] }
+  scope :pending_received_invitation, -> { where(approved_by_user_at: nil) }
+  scope :pending_sent_invitation, -> { where(approved_by_owner_at: nil) }
 
   before_create :auto_confirm
   after_create :trigger_workflow_alert_on_create!
