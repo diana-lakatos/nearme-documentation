@@ -25,6 +25,8 @@ class TransactableType::ActionType < ActiveRecord::Base
             :cancellation_policy_penalty_hours, :minimum_lister_service_fee,
             numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
+  validates :send_alert_hours_before_expiry_hours, numericality: { greater_than_or_equal_to: 0, allow_nil: false }
+
   accepts_nested_attributes_for :pricings, allow_destroy: true, reject_if: ->(attrs) { attrs[:number_of_units].blank? && attrs[:unit].blank? }
 
   monetize :minimum_lister_service_fee_cents, with_model_currency: :default_currency
