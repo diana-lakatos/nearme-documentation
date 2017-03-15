@@ -16,6 +16,12 @@ class V3::TransactableJsonSerializer
     object.location_address.attributes.slice('address', 'postcode', 'street', 'suburb', 'state', 'city', 'country', 'address_components')
   end
 
+  attribute :pricings do
+    object.action_type.pricings.each_with_object({}) do |pricing, hash|
+      hash[pricing.unit] = pricing.price.to_s
+    end
+  end
+
   attribute :path do
     object.decorate.show_path
   end
