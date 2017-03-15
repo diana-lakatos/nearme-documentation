@@ -32,9 +32,8 @@ class InputFieldTag < Liquid::Tag
     attributes = normalize_liquid_tag_attributes(@attributes, context)
     attributes[:prompt] = :translate if attributes[:prompt] == 'translate'
     @field_name = attributes.delete(:field_name) if attributes[:field_name].present?
-    @attributes['form'] = attributes.delete(:form_name) if attributes[:form_name].present?
-    form = (context["form_object_#{@attributes.fetch('form', nil)}"] || context['form_object']).source
+    form = (context["form_object_#{@attributes.fetch(:form, nil)}"] || context['form_object']).source
     # drop for form_builder defined in form_builder_to_liquid_monkeypatch.rb
-    form.input_field(@field_name, attributes).html_safe
+    form.input_field(@field_name.to_s, attributes).html_safe
   end
 end

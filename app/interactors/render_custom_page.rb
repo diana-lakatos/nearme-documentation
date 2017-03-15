@@ -15,10 +15,7 @@ class RenderCustomPage
 
 
 
-    forms = page.form_configurations.each_with_object({}) do |fc, hash|
-      object = fc.base_form == 'UserUpdateProfileForm' ? @controller.current_user : User.new
-      hash[fc.name] = { form: nil, configuration: fc }
-    end
+    forms = {}
     forms.merge!(submitted_form) if submitted_form.present?
     forms = forms.with_indifferent_access
     @controller.instance_variable_set(:'@forms', forms)

@@ -21,9 +21,18 @@ class RenderFormTag < Liquid::Tag
   end
 
   def render(context)
-    form_hash = (context['forms'][@form_name])
-    raise SyntaxError, "Invalid form name passed as argument: #{@form_name}. Valid names are: #{context['forms'].keys.join(', ')}" if form_hash.nil?
-    form = form_hash[:form] || form_hash[:configuration].build(FormConfiguration::FormObjectFactory.object(normalize_liquid_tag_attributes(@attributes, context))).tap(&:prepopulate!)
-    LiquidView.new(context.registers[:action_view]).render(form_hash[:configuration].liquid_body, 'form' => form.to_liquid, 'form_configuration' => form_hash[:configuration].to_liquid)
+    form_configuration = FormConfiguration.find_by(name: @form_name)
+    raise SyntaxError, error_message if form_configuration.nil?
+    # this instance variable is set in RenderCustomPage interactor
+    # it's used to re-render form submitted by user in case of validation errors
+    form = context['forms'].dig(@form_name, :form)
+    form ||= form_configuration.build(FormConfiguration::FormObjectFactory.object(normalize_liquid_tag_attributes(@attributes, context))).tap(&:prepopulate!)
+    LiquidView.new(context.registers[:action_view]).render(form_configuration.liquid_body, 'form' => form, 'form_configuration' => form_configuration)
+  end
+
+  protected
+
+  def error_message
+    "Invalid form name passed as argument: #{@form_name}. Valid names are: #{FormConfiguration.pluck(:name)}"
   end
 end
