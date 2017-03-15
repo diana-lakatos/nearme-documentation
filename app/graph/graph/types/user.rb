@@ -21,6 +21,11 @@ module Graph
         resolve -> (obj, arg, _ctx) { obj.properties[arg[:name]] }
       end
 
+      field :profile, Types::Profile do
+        argument :profile_type, !types.String
+        resolve -> (obj, arg, _ctx) { obj.source.user_profiles.find_by(profile_type: arg[:name]) }
+      end
+
       field :custom_attribute_photos,
             !types[Types::Image],
             'Fetch images for photo custom attribute by name,
