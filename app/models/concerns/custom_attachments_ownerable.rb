@@ -22,6 +22,7 @@ module CustomAttachmentsOwnerable
     # to sync model with form after validation passes
     def custom_attachments_open_struct=(open_struct)
       open_struct.to_h.each do |ca_id, ci|
+        next if ci.nil?
         custom_attachment = if ci.id.present? && ci.owner.blank?
                               CustomAttachment.where(id: ci.id, owner_type: nil, owner_id: nil, uploader_id: nil).first
                             elsif ci.id.blank? && ci.owner.blank?

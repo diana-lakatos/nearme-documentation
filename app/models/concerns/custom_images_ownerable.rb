@@ -24,6 +24,7 @@ module CustomImagesOwnerable
     # to sync model with form after validation passes
     def custom_images_open_struct=(open_struct)
       open_struct.to_h.each do |ca_id, ci|
+        next if ci.nil?
         custom_image = if ci.id.present? && ci.owner.blank?
                          CustomImage.where(id: ci.id, owner_type: nil, owner_id: nil, uploader_id: nil).first
                        elsif ci.id.blank? && ci.owner.blank?
