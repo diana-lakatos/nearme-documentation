@@ -19,91 +19,22 @@
             - next unless user_profile.user
             = render 'index_row', :resource => user_profile.user
 
-.content-container
+.content-container.reports
   %h4= t('instance_admin.manage.users.manage_users')
 
   .row
     .text-container
       = form_tag instance_admin_manage_users_path, method: :get, enforce_utf8: :false do
         .filters
-          .filter.period
-            = t('instance_admin.manage.admin_searchable.user.search_types.date_created')
-            .dropdown.date-dropdown
-              %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
-                - if params[:date].present?
-                  %span.current= selected_date_value(params[:date])
-                - else
-                  %span.current
-                    = t('instance_admin.manage.admin_searchable.title_all')
-                %span.caret
-                = hidden_field_tag 'date', date_param_value
-              %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
-                %li
-                  %a{data: {date: ''}}
-                    = t('instance_admin.manage.admin_searchable.title_all')
-                - Review::DATE_VALUES.each do |value|
-                  %li
-                    %a{data: {date: value}}
-                      = selected_date_value(value)
-                %li.divider
-                %li.date-range
-                  .date-range-header
-                    = t('instance_admin.manage.admin_searchable.date_range')
-                  .from
-                    = t('instance_admin.manage.admin_searchable.from')
-                  %input#from{type: 'text'}
-                  .to
-                    = t('instance_admin.manage.admin_searchable.to')
-                  %input#to{type: 'text'}
-                  %button.apply-filter.btn.btn-blue
-                    = t('instance_admin.manage.admin_searchable.apply_filter')
+          = filter_searchable_dates label: t('instance_admin.manage.admin_searchable.user.search_types.date_created'), param_name: 'date'
 
-          .filter.state
-            = t('instance_admin.manage.admin_searchable.user.search_types.account_standing')
-            .dropdown.date-dropdown
-              %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
-                - if params[:state].present?
-                  %span.current= selected_account_standing(params[:state])
-                - else
-                  %span.current
-                    = t('instance_admin.manage.admin_searchable.title_all')
-                %span.caret
-                = hidden_field_tag 'state', params[:state]
-              %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
-                %li
-                  %a{data: {date: ''}}
-                    = t('instance_admin.manage.admin_searchable.title_all')
-                - User::ACCOUNT_STANDINGS.each do |value|
-                  %li
-                    %a{data: {date: value}}
-                      = value.capitalize
+          = filter_dropdown param_name: :state, label: t('instance_admin.manage.admin_searchable.user.search_types.account_standing'), allow_blank: true, blank_label: t('instance_admin.manage.admin_searchable.title_all'), all_values: User::ACCOUNT_STANDINGS.each_with_object({}) { |val, obj| obj[val.to_s] = val.capitalize }
 
-          .filter.value
-            = t('instance_admin.manage.admin_searchable.user.search_types.profile_type')
-            .dropdown.filter-value-dropdown
-              %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
-                - if params[:profile_type].present?
-                  %span.current= selected_profile_type(params[:profile_type])
-                - else
-                  %span.current
-                    = t('instance_admin.manage.admin_searchable.title_all')
-                %span.caret
-                = hidden_field_tag 'profile_type', params[:profile_type]
-              %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
-                %li
-                  %a{data: {value: ''}}
-                    = t('instance_admin.manage.admin_searchable.title_all')
-                - [:buyer, :seller].each do |value|
-                  %li
-                    %a{data: {value: value}}
-                      = t("instance_admin.manage.admin_searchable.user.profile_types.#{value}")
+          = filter_dropdown param_name: :profile_type, label: t('instance_admin.manage.admin_searchable.user.search_types.profile_type'), allow_blank: true, blank_label: t('instance_admin.manage.admin_searchable.title_all'), all_values: [:buyer, :seller].each_with_object({}) { |val, obj| obj[val.to_s] = t("instance_admin.manage.admin_searchable.user.profile_types.#{val}") }
 
-          .filter.search
-            = t('instance_admin.manage.admin_searchable.user.search_types.search')
-            %div{style: "position: relative;"}
-              %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
-              %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}
-              =fa_icon "search", class: 'fa-action-icon-submit'
+          = filter_query_text param_name: 'q', label: t('instance_admin.manage.admin_searchable.user.search_types.search'), placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword')
+
+          = filter_dropdown param_name: :per_page, label: t('instance_admin.manage.admin_searchable.per_page'), allow_blank: false, all_values: {'25' => '25', '50' => '50', '100' => '100' }
 
   .row
     .table-container.col-xs-12

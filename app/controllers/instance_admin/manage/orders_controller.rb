@@ -5,7 +5,7 @@ class InstanceAdmin::Manage::OrdersController < InstanceAdmin::Manage::BaseContr
 
   def index
     respond_to do |format|
-      format.html { @orders = get_orders_from_params.paginate(per_page: 10, page: params[:page]) }
+      format.html { @orders = get_orders_from_params.paginate(per_page: reports_per_page, page: params[:page]) }
       format.csv { send_data generate_csv(OrderDecorator.decorate_collection(get_orders_from_params)) }
     end
   end

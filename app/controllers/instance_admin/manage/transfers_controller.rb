@@ -5,10 +5,11 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
   def index
     respond_to do |format|
       format.html do
-        @payment_transfers = PaymentTransferDecorator.decorate_collection(get_transfers_from_params.paginate(page: params[:page]))
+        transfers = transfers_from_params.paginate(page: params[:page], per_page: reports_per_page)
+        @payment_transfers = PaymentTransferDecorator.decorate_collection(transfers)
       end
 
-      format.csv { send_data generate_csv(PaymentTransferDecorator.decorate_collection(get_transfers_from_params)) }
+      format.csv { send_data generate_csv(PaymentTransferDecorator.decorate_collection(transfers_from_params)) }
     end
   end
 
@@ -60,7 +61,7 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
 
   protected
 
-  def get_transfers_from_params
+  def transfers_from_params
     transfers_scope = PaymentTransfer.includes(:payout_attempts).order('created_at DESC')
     scope_search_form = InstanceAdmin::PaymentTransferSearchForm.new
     scope_search_form.validate(params)

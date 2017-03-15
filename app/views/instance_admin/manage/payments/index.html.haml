@@ -1,9 +1,9 @@
-.content-container
+.content-container.reports
   %h4
     = t("instance_admin.manage.payments.resource.plural.#{resource_class.name.underscore}")
   .row
     .text-container
-      - if['awaiting', nil].include?(params[:transferred] )
+      - if['awaiting', "", nil].include?(params[:transferred] )
         - if current_instance.manual_transfers?
           = t('instance_admin.manage.payments.here_you_can_see_all_payments_manual')
         - else

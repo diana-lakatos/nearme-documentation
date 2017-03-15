@@ -1,0 +1,25 @@
+- dropdown_width = 177
+- dropdown_width = width if defined?(width)
+.filter.value.multiline
+  = label
+  .dropdown.filter-value-dropdown
+    %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button", :style=>"width: #{dropdown_width}px"}
+      - if params[param_name].present?
+        %span.current= all_values[params[param_name]]
+      - else
+        %span.current
+          - if allow_blank
+            = blank_label
+          - else
+            = all_values[all_values.keys.first]
+      %span.caret
+      = hidden_field_tag param_name, params[param_name]
+    %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu", :style=>"width: #{dropdown_width}px"}
+      - if allow_blank
+        %li
+          %a{data: {value: ''}}
+            = blank_label
+      - all_values.each do |key, value|
+        %li
+          %a{data: {value: key}}
+            = value

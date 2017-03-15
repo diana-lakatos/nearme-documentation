@@ -89,7 +89,8 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
     if @users.blank?
       @user_search_form = InstanceAdmin::UserSearchForm.new
       @user_search_form.validate(params)
-      @users = SearchService.new(User.for_instance(PlatformContext.current.instance).order('created_at DESC').with_deleted).search(@user_search_form.to_search_params).paginate(page: params[:page])
+      users_scope = User.for_instance(PlatformContext.current.instance).order('created_at DESC').with_deleted
+      @users = SearchService.new(users_scope).search(@user_search_form.to_search_params).paginate(page: params[:page], per_page: reports_per_page)
     end
 
     @users

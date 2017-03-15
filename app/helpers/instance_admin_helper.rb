@@ -126,4 +126,17 @@ module InstanceAdminHelper
     return I18n.t("instance_admin.manage.admin_searchable.user.profile_types.#{profile_type}") if [:buyer, :seller].include?(profile_type.to_sym)
     profile_type
   end
+
+  def filter_dropdown(args)
+    render partial: 'shared/filter_dropdown', locals: args
+  end
+
+  def filter_query_text(args)
+    render partial: 'shared/filter_query_text', locals: args
+  end
+
+  def filter_searchable_dates(args)
+    render :partial => 'instance_admin/shared/admin_searchable_dates', locals: args
+  end
+
 end

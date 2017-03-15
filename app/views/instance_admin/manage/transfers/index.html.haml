@@ -6,22 +6,13 @@
     .text-container
       = form_tag [:instance_admin, :manage, :transfers], method: :get, enforce_utf8: :false do
         .filters
-          .filter.transactable
-            .dropdown.item-type-dropdown
-          .filter.period
-            = t('instance_admin.manage.transfers.created_at')
-            %div{ style: "position: relative;" }
-              = render :partial => 'instance_admin/shared/admin_searchable_dates', locals: { param_name: 'created_at_date' }
-          .filter.period
-            = t('instance_admin.manage.transfers.transferred_at')
-            %div{ style: "position: relative;" }
-              = render :partial => 'instance_admin/shared/admin_searchable_dates', locals: { param_name: 'transferred_at_date' }
-          .filter.search
-            = t('instance_admin.manage.transfers.company_name')
-            %div{ style: "position: relative;" }
-              %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
-              %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}
-              =fa_icon "search", class: 'fa-action-icon-submit'
+          = filter_searchable_dates param_name: 'created_at_date', label: t('instance_admin.manage.transfers.created_at')
+
+          = filter_searchable_dates param_name: 'transferred_at_date', label: t('instance_admin.manage.transfers.transferred_at')
+
+          = filter_query_text label: t('instance_admin.manage.transfers.company_name'), placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), param_name: 'q'
+
+          = filter_dropdown param_name: :per_page, label: t('instance_admin.manage.admin_searchable.per_page'), allow_blank: false, all_values: {'25' => '25', '50' => '50', '100' => '100' }
 
           .filter.download-export
             = link_to t('instance_admin.reports.download_report_as_csv'), '', data: { 'download-report' => 1, 'report-url' => polymorphic_path([:instance_admin, :manage, :transfers], format: 'csv') }

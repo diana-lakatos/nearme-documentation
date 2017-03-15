@@ -187,4 +187,9 @@ class InstanceAdmin::BaseController < ApplicationController
       @breadcrumbs_title = title
     end
   end
+
+  def reports_per_page
+    params[:per_page].presence || 25
+  end
+
 end

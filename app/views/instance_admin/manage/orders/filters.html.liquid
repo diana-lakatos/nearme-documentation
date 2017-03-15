@@ -2,8 +2,7 @@
   <div class="text-container">
     {% form_tag url: '/instance_admin/manage/orders', method: 'get' %}
       <div class="filters">
-        <div class="filter transactable">
-          <div class="dropdown item-type-dropdown"></div>
+        <div class="filter value">
         </div>
         <div class="filter multiline search ">
           Buyer name
@@ -140,6 +139,35 @@
                 </li>
                 <li>
                   <a data-value="desc">Descending</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="filter multiline value">
+          Per page
+          <div style="position: relative;">
+            <div class="dropdown filter-value-dropdown">
+              <a aria-expanded="false" aria-haspopup="true" class="dropdown-trigger" data-target="#" data-toggle="dropdown" id="dLabel" role="button">
+                <span class="current">
+                  {% if params.per_page == blank %}
+                    25
+                  {% else %}
+                    {{ params.per_page }}
+                  {% endif %}
+                </span>
+                <span class="caret"></span>
+                <input type="hidden" name="per_page" id="created_at_date" value="{{ params.per_page }}">
+              </a>
+              <ul aria-labelledby="dLabel" class="dropdown-menu" role="menu">
+                <li>
+                  <a data-value="25">25</a>
+                </li>
+                <li>
+                  <a data-value="50">50</a>
+                </li>
+                <li>
+                  <a data-value="100">100</a>
                 </li>
               </ul>
             </div>

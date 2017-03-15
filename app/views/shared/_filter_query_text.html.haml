@@ -1,0 +1,6 @@
+.filter.search.multiline
+  = label
+  %div.relative
+    %input{placeholder: placeholder, type: 'text', name: param_name, value: params[param_name]}
+    %input{type: 'submit', name: 'commit', value:'submit', class: 'hidden_form_element2'}
+    =fa_icon "search", class: 'fa-action-icon-submit'
