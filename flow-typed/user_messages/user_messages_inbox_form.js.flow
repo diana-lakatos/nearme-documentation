@@ -1,0 +1,10 @@
+declare class UserMessagesInboxForm mixins Events {
+  form: HTMLFormElement;
+  commentTextarea: CommentTextarea;
+  fileInput: UserMessagesInboxFileInput;
+  author: string;
+  bindEvents(): void;
+  onFileInputChange({ name: string, url: string }): void;
+  onFormSubmit(event: Event): void;
+  reset(): void;
+}

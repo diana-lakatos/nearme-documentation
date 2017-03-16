@@ -26,7 +26,8 @@ class UserEntryEditAction {
   toggleEditor() {
     this.emit('toggle');
     if (this.target.classList.contains('is-active')) {
-      return this.hideEditor();
+      this.hideEditor();
+      return;
     }
     this.showEditor();
   }

@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :user do
-    sequence(:name) { |n| "User-#{n}" }
+    sequence(:name) { |n| "User-#{n} User" }
     sequence(:email) { |n| "#{name.to_s.underscore.downcase.tr(' ', '_')}_#{n}@example.com" }
     password 'password'
     password_confirmation 'password'
@@ -11,7 +12,7 @@ FactoryGirl.define do
     company_name 'DesksNearMe'
     last_geolocated_location_longitude 14.437800
     last_geolocated_location_latitude 50.075538
-    sms_notifications_enabled true
+    sms_notifications_enabled false
     sms_preferences { Hash[%w(user_message reservation_state_changed new_reservation).map { |sp| [sp, '1'] }] }
     instance_unread_messages_threads_count { {} }
     instance_profile_type { InstanceProfileType.default.first || FactoryGirl.create(:instance_profile_type) }
@@ -27,16 +28,20 @@ FactoryGirl.define do
       country_name nil
     end
 
+    factory :user_with_sms_notifications_enabled do
+      sms_notifications_enabled true
+    end
+
     factory :admin do
       admin true
     end
 
     factory :creator do
-      sequence(:name) { |n| "Creator-#{n}" }
+      sequence(:name) { |n| "Creator-#{n} User" }
     end
 
     factory :authenticated_user do
-      sequence(:name) { |n| "Authenticated-User-#{n}" }
+      sequence(:name) { |n| "Authenticated-User-#{n} User" }
       authentication_token 'EZASABC123UANDME'
     end
 
@@ -57,21 +62,18 @@ FactoryGirl.define do
     end
 
     factory :enquirer do
-      after(:build) do |u|
-        u.get_buyer_profile
-      end
+      after(:build, &:get_buyer_profile)
 
       factory :registered_enquirer do
         after(:build) do |u|
-          u.buyer_profile.categories << Category.roots.map {|c| c.children.first }
+          u.buyer_profile.categories << Category.roots.map { |c| c.children.first }
         end
       end
     end
 
     factory :lister do
-      after(:build) do |u|
-        u.get_seller_profile
-      end
+      sms_notifications_enabled true
+      after(:build, &:get_seller_profile)
     end
   end
 end

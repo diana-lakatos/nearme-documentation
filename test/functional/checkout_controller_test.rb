@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require 'twilio-ruby'
 
@@ -8,12 +9,12 @@ class CheckoutControllerTest < ActionController::TestCase
     @payment_gateway = stub_billing_gateway(@transactable.instance)
     @payment_gateway.payment_methods.ach.first.update(active: false)
     @payment_method = @payment_gateway.payment_methods.credit_card.first
-
+    @reservation.creator.update_attribute(:sms_notifications_enabled, true)
     sign_in @reservation.user
   end
 
   should 'track booking review open' do
-    get :show, { order_id: @reservation.id }
+    get :show, order_id: @reservation.id
     assert_response 200
   end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 FactoryGirl.define do
   factory :reservation_without_payment, class: Reservation do
-    association :user
+    association :user, factory: :user_with_sms_notifications_enabled
     association :transactable
     company { transactable.try(:company) || FactoryGirl.build(:company) }
     creator { transactable.creator }

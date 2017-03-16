@@ -1,0 +1,37 @@
+{% query_graph 'user_message_conversation', result_name: conv , user_id: current_user.id, thread_id: params.id %}
+
+<div class="conversation" data-user-messages-inbox-conversation>
+  <header>
+    <h2 class="user-name"><span class="first-name">{{ conv.user.thread.participant.first_name }}</span> <span class="last-name">{{ conv.user.thread.participant.last_name }}</span></h2>
+
+    <a href="{{ 'profile_path' | generate_url: id: conv.user.thread.participant.id }}" class="profile-link">{{ 'user_messages.profile_link' | t }}</a>
+    <button type="button" class='contact-list-toggler' data-user-messages-contact-list-toggler>{{ 'user_messages.contact_list' | t }}</button>
+  </header>
+
+  {% assign messages = conv.user.thread.messages | reverse %}
+  <div class="entries" data-user-messages-inbox-entries>
+    {% for message in messages %}
+      {% assign author_id = message.author.id | plus: 0 %}
+      {% capture message_klass %}{% if author_id == current_user.id %}own-message{% endif %}{% endcapture %}
+      {% if message.attachments.size > 0 %}
+        {% for attachment in message.attachments %}
+          <p class="attachment {{ message_klass | trim }}">
+            <span class="meta" data-user-messages-meta>
+              <span data-user-messages-meta-author>{{ message.author.first_name }}</span> <time datetime="{{ message.created_at }}"></time>:
+            </span>
+            {{ 'user_messages.attachment' | t }}: <a href="{{ attachment.url }}" download>{{ attachment.name }}</a>
+          </p>
+        {% endfor %}
+      {% else %}
+        <p class="{{ message_klass | trim }}">
+          <span class="meta" data-user-messages-meta>
+            <span data-user-messages-meta-author>{{ message.author.first_name }}</span> <time datetime="{{ message.created_at }}"></time>:
+          </span>
+          {{ message.body }}
+        </p>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% include 'dashboard/user_messages/dashboard_form' %}
+</div>

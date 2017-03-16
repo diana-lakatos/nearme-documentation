@@ -16,13 +16,12 @@
           %span= transactable.transactable_collaborators.approved.count
         %li
           = t :followers
-          %span= transactable.feed_followers.count
-      %p.action
-        %p{:'data-follow-button' => true}
-          - if transactable.try(:pending_collaboration)
-            = render 'shared/collaboration_buttons', transactable: transactable, collaboration: transactable.transactable_collaborators.find(transactable.pending_collaboration)
-          - else
-            = render partial: 'shared/follow_button', locals: { object: transactable, css_class: 'tiny' }
+          %span{ data: { followers_count: "Transactable:#{transactable.id}" }}= transactable.feed_followers.count
+      .action
+        - if transactable.try(:pending_collaboration)
+          = render 'shared/collaboration_buttons', transactable: transactable, collaboration: transactable.transactable_collaborators.find(transactable.pending_collaboration)
+        - else
+          = render 'shared/follow_button', object: transactable, object_type: 'Transactable', css_class: 'tiny'
       %h3.hx
         = link_to transactable.name, transactable.decorate.show_path
       %p.user

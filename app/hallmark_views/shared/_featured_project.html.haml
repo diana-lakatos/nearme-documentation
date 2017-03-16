@@ -2,8 +2,8 @@
   %figure
     = link_to listing_path(project) do
       = image_tag project.cover_photo.image_url(:golden)
-  %p.action{:'data-follow-button' => true}
-    = render partial: 'shared/follow_button', locals: { object: project, css_class: 'tiny' }
+  .action
+    = render 'shared/follow_button',object: project, object_type: project.class.name, css_class: 'tiny'
   %h3.hx
     = link_to project.name, listing_path(project)
   %p.user

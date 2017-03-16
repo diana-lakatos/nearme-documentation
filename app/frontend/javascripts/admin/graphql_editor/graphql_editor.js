@@ -27,10 +27,11 @@ class GraphqlEditor {
   }
 
   _graphQLFetcher(graphQLParams) {
-    const url = window.location.origin + '/api/graph';
+    const url = `${window.location.origin}/api/graph`;
+
     return xhr(url, {
       method: 'post',
-      contentType: 'application/json',
+      contentType: 'json',
       data: graphQLParams,
     }).then(response => response);
   }
@@ -46,14 +47,6 @@ class GraphqlEditor {
   _disableSubmittingFormOnQueryButton() {
     let executeButton = this._ui.container.querySelector('button');
     executeButton.type = 'button';
-  }
-
-  _getCSRFToken(){
-    return document.querySelector('meta[name="csrf-token"]').content;
-  }
-
-  _getAuthToken(){
-    return document.querySelector('meta[name="authorization-token"]').content;
   }
 }
 

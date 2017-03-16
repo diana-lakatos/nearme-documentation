@@ -7,7 +7,7 @@
     .row.name
       = ticket_message.full_name
     .row.time
-      %abbr.timeago{:title => "#{ticket_message.created_at.to_time.iso8601}"}
+      %time.timeago{:datetime => ticket_message.created_at.to_time.iso8601 }
         =ticket_message.created_at
   .input-container.col-xs-8
     =simple_format(ticket_message.message)

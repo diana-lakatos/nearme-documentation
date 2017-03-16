@@ -286,7 +286,7 @@ class User < ActiveRecord::Base
                     if: ->(u) { u.phone.present? || u.validation_for(:phone).try(:is_required?) }
   validates :mobile_number, phone_number: true,
                             if: ->(u) { u.mobile_number.present? || u.validation_for(:mobile_number).try(:is_required?) }
-  validates :country_name, :mobile_number, presence: { if: ->(u) { u.validation_for(:phone).try(:is_required?) } }
+  validates :mobile_number, presence: { if: ->(u) { u.validation_for(:phone).try(:is_required?) || u.sms_notifications_enabled? } }
 
   validates :saved_searches_alerts_frequency, inclusion: { in: SavedSearch::ALERTS_FREQUENCIES }
 

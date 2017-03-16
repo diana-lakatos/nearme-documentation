@@ -7,7 +7,7 @@ module Graph
 
       global_id_field :id
 
-      field :id, !types.ID
+      field :id, !types.Int
       field :is_followed, !types.Boolean do
         argument :follower_id, types.ID
         resolve ->(obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }

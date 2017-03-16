@@ -17,6 +17,8 @@ require('../vendor/cocoon');
 
 NM.on('ready', () => {
   require('initializers/shared/ckeditor.initializer');
+  require('initializers/shared/notification_preferences_form');
+
   require('hallmark/initializers/fileupload.initializer');
   require('hallmark/initializers/flash_message.initializer');
   require('hallmark/initializers/general.initializer');
@@ -31,4 +33,7 @@ NM.on('ready', () => {
   require('hallmark/initializers/tutorial.initializer');
   require('hallmark/initializers/gallery.initializer');
   require('hallmark/initializers/user_entries.initializer');
+  require('hallmark/initializers/phone_numbers.initializer');
+  require('hallmark/initializers/follow_buttons.initializer');
+  require('hallmark/initializers/user_messages.initializer');
 });

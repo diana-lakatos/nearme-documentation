@@ -19,8 +19,8 @@
           = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
             = t :projects
             %small= "(#{@topic.transactables.active.count})"
-      %p{:'data-follow-button' => true}
-        = render partial: 'shared/follow_button', locals: { object: @topic }
+      %div
+        = render partial: 'shared/follow_button', object: @topic, object_type: 'Topic'
         - if current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
           = link_to t(:edit), edit_instance_admin_manage_topic_path(@topic), class: 'button-a small edit-action', rel: "modal"
 

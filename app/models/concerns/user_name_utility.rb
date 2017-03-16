@@ -19,11 +19,11 @@ module UserNameUtility
     end
 
     def first_name
-      self[:last_name].present? ? self[:first_name] : self[:name]&.split&.first
+      self[:first_name].presence || first_name_from_name
     end
 
     def last_name
-      self[:last_name].presence || self[:name]&.split&.last
+      self[:last_name].presence || last_name_from_name
     end
 
     def name_with_state
@@ -51,6 +51,14 @@ module UserNameUtility
     def prepare_name_fields
       self.first_name = name&.split&.first unless first_name.present?
       self.name = full_name_from_parts unless name.present?
+    end
+
+    def last_name_from_name
+      (self[:name] || '').split[1..-1]&.join(' ')
+    end
+
+    def first_name_from_name
+      self[:name]&.split&.first
     end
   end
 end

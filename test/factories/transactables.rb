@@ -160,7 +160,7 @@ FactoryGirl.define do
 
           factory :fully_booked_listing_in_cleveland do
             after(:create) do |listing|
-              user = FactoryGirl.create(:user)
+              user = FactoryGirl.create(:user_with_sms_notifications_enabled)
               dates = (4.days.from_now.to_date..10.days.from_now.to_date).reject { |d| listing.availability_for(d) == 0 }.to_a
               listing.reserve!(user, dates, listing.quantity)
             end

@@ -1,0 +1,9 @@
+declare class UserMessagesInbox {
+  container: HTMLElement;
+  contactList: UserMessagesInboxContactList;
+  form: UserMessagesInboxForm;
+  entries: UserMessagesInboxEntries;
+
+  constructor(container: HTMLElement): UserMessagesInbox;
+  bindEvents(): void;
+}

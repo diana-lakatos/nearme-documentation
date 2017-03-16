@@ -1,0 +1,23 @@
+type CommentTextareaOptionsType = {
+  submitOnEnter?: boolean,
+  form?: HTMLFormElement,
+  autoadjust?: boolean
+};
+
+declare class CommentTextarea {
+
+  options: CommentTextareaOptionsType;
+  textarea: HTMLTextAreaElement;
+  form: HTMLFormElement;
+  initValue: string;
+
+  constructor(textarea: HTMLTextAreaElement, options: CommentTextareaOptionsType): CommentTextarea;
+  bindEvents(): void;
+  adjust(): void;
+  submitOnEnter(event: KeyboardEvent): void;
+  empty(): void;
+  rollback(): void;
+  focus(): void;
+  getValue(): string;
+  setValue(value: string): void;
+}

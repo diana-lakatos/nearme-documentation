@@ -7,7 +7,7 @@ module Graph
 
       global_id_field :id
 
-      field :id, !types.ID
+      field :id, !types.Int
       field :city, !types.String
       field :state, !types.String
     end

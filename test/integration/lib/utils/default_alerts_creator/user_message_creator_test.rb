@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::IntegrationTest
@@ -23,7 +24,7 @@ class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::Inte
         WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::TransactableMessageFromLister, @user_message.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains "#{@user_message.author.first_name} wrote: \"#{ @user_message.body }\"", mail.html_part.body
+      assert_contains "#{@user_message.author.first_name} wrote: \"#{@user_message.body}\"", mail.html_part.body
       assert_equal [@user_message.recipient.email], mail.to
       assert_equal "[#{PlatformContext.current.decorate.name}] You received a message!", mail.subject
     end
@@ -34,7 +35,7 @@ class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::Inte
         WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::TransactableMessageFromEnquirer, @user_message.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains "#{@user_message.author.first_name} wrote: \"#{ @user_message.body }\"", mail.html_part.body
+      assert_contains "#{@user_message.author.first_name} wrote: \"#{@user_message.body}\"", mail.html_part.body
       assert_equal [@user_message.recipient.email], mail.to
       assert_equal "[#{PlatformContext.current.decorate.name}] You received a message!", mail.subject
       assert_not_contains 'Liquid error', mail.html_part.body
@@ -45,16 +46,15 @@ class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::Inte
         @instance = FactoryGirl.create(:instance, name: 'DesksNearMe')
         @domain = FactoryGirl.create(:domain, name: 'notifcations.com', target: @instance)
         PlatformContext.current = PlatformContext.new(@instance)
-        @author = FactoryGirl.create(:user, name: 'Krzysztof Test')
-        @recipient = FactoryGirl.create(:user, mobile_number: '124456789')
+        @author = FactoryGirl.create(:user_with_sms_notifications_enabled, name: 'Krzysztof Test')
+        @recipient = FactoryGirl.create(:user_with_sms_notifications_enabled, mobile_number: '124456789')
         @recipient.stubs(:temporary_token).returns('abc')
         @user_message = FactoryGirl.create(:user_message,
                                            thread_context: @recipient,
                                            thread_owner: @author,
                                            author: @author,
                                            thread_recipient: @recipient,
-                                           body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.'
-                                          )
+                                           body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.')
         Googl.stubs(:shorten).with("https://notifcations.com/users/#{@recipient.id}/user_messages/#{@user_message.id}?token=abc").returns(stub(short_url: 'http://goo.gl/abc324'))
         UserMessage.any_instance.stubs(:recipient).returns(@recipient)
       end
