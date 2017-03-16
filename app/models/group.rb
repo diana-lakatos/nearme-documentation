@@ -4,7 +4,8 @@ class Group < ActiveRecord::Base
   scoped_to_platform_context
 
   include QuerySearchable
-  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Near Me', 'Members']
+  SORT_OPTIONS_MAP = { all: 'All', featured: 'Featured', most_recent: 'Most Recent', near_me: 'Near Me', members: 'Members' }.freeze
+  SORT_OPTIONS = SORT_OPTIONS_MAP.values.freeze
 
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id', class_name: 'GroupType'
   belongs_to :group_type, -> { with_deleted }, foreign_key: 'transactable_type_id'

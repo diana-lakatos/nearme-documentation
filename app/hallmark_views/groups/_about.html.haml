@@ -22,22 +22,10 @@
           %p.location
             = @group.creator.current_address.try(:address)
 
-      %h4
-        = t('group.description')
+      %h4= t('group.description')
+      %p= @group.description
 
-      %p
-        = @group.description
-
-      - if @group.gallery_photos.any?
-        %section.gallery
-          %h4
-            = t('group.gallery')
-
-          %ul.gallery-a{ :"data-gallery" => '' }
-            - @group.gallery_photos.each do |p|
-              %li
-                %a{ href: p.image_url, data: { "original-width": p.image_original_width, "original-height": p.image_original_height } }
-                  = image_tag p.image_url(:thumb), width: 200, height: 175
+      = render 'shared/about_gallery', photos: @group.gallery_photos
 
       - if @group.properties.try(:videos).present?
         %section.videos
@@ -49,18 +37,7 @@
               %li
                 = VideoEmbedder.new(video_url).html.html_safe
 
-      - if @group.links.any?
-        %section.links
-          %h4
-            = t('group.links')
-
-          %ul.gallery-a
-            - @group.links.each do |link|
-              %li
-                - if link.image.present?
-                  = link_to image_tag(link.image.url(:standard)), link.url
-                - else
-                  = link_to link.text, link.url
+      = render 'shared/about_links', links: @group.links
 
   - if !@group.confidential? || current_user.try(:is_member_of?, @group)
     .secondary

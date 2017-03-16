@@ -3,7 +3,7 @@ DesksnearMe::Application.routes.draw do
   # favicon for scraping
   get '/favicon.ico', to: 'favicon#show'
 
-  get '/test_endpoint', to: 'webhooks/base#test'
+  get '/test_endpoint', to: 'webhooks/base#test', as: :webhooks_test_endpoints
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
 
   namespace :v1, defaults: { format: 'json' } do

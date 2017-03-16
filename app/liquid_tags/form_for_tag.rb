@@ -40,7 +40,7 @@ class FormForTag < Liquid::Block
     context.stack do
       context.registers[:action_view].simple_form_for(namespace, @attributes) do |f|
         context['form_object'] = f
-        render_all(@nodelist, context).html_safe
+        @body.render(context).html_safe
       end
     end
   end

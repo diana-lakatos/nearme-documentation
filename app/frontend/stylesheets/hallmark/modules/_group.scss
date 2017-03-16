@@ -67,37 +67,11 @@
     }
   }
 
-  section.gallery {
-    .gallery-a {
-      li {
-        width: (100% / 3);
-      }
-    }
-  }
-
   section.videos {
     .gallery-a {
       li {
         width: 50%;
       }
-    }
-  }
-
-  section.links {
-    .gallery-a {
-      li {
-        width: 100%;
-
-        img {
-          width: auto;
-        }
-      }
-    }
-  }
-
-  .gallery-a {
-    img {
-      width: 100%;
     }
   }
 
