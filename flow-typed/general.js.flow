@@ -1,0 +1,23 @@
+declare var require: {
+  (id: string): any;
+  ensure(ids: Array<string> | string, callback?: { (require: typeof require): void }, chunk?: string): void
+}
+
+declare class RadioNodeList extends NodeList {
+  value: string;
+}
+
+declare class HTMLFormControlsCollection extends HTMLCollection {
+  namedItem(): HTMLElement;
+}
+
+declare class HTMLFieldSetElement extends HTMLElement {
+  disabled: boolean;
+  elements: HTMLFormControlsCollection;
+  form: HTMLFormElement;
+  name: string;
+  type: string;
+  validationMessage: string;
+  validity: ValidityState;
+  willValidate: boolean;
+}

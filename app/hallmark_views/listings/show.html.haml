@@ -30,13 +30,13 @@
               %strong{:'data-collaborators-count' => true}= @transactable.transactable_collaborators.approved.count
               = t :collaborators
             %p{:'data-collaborators-button' => true}
-              = render partial: 'shared/collaborators_button', locals: { transactable: @transactable }
+              = render 'shared/collaborators_button', transactable: @transactable
           %li
             %span
-              %strong{:'data-followers-count' => true}= @followers.total_entries
+              %strong{:'data-followers-count' => "Transactable:#{@transactable.id}"}= @followers.total_entries
               = t :followers
-            %p{:'data-follow-button' => true}
-              = render partial: 'shared/follow_button', locals: { object: @transactable }
+            %div
+              = render 'shared/follow_button', object: @transactable, object_type: 'Transactable'
 
 / content wrapper
 .wrap-a.reduce-top

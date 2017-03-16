@@ -4,7 +4,7 @@ module Graph
     module ActivityFeed
       Followed = GraphQL::ObjectType.define do
         name 'ActivityFeedFollowed'
-        field :id, !types.ID
+        field :id, !types.Int
         field :class, !types.String
         field :path, types.String do
           resolve ->(followed, _args, _ctx) {

@@ -23,7 +23,9 @@ class UserEntryForm {
     this.isXhr = !!form.hasAttribute('data-user-entry-form-remote');
     this.mode = form.hasAttribute('data-user-entry-edit-mode') ? 'edit' : 'new';
     this.ui.target = document.querySelector(form.dataset.userEntryFormTarget);
-    this.textarea = new UserEntryTextarea(form.querySelector('[data-user-entry-form-content]'));
+
+    let textarea = form.querySelector('[data-user-entry-form-content]');
+    this.textarea = new UserEntryTextarea(textarea, { submitOnReturn: textarea.hasAttribute('data-user-entry-form-submit-on-return') });
     this.images = new UserEntryImages(form.querySelector('[data-user-entry-form-images]'));
     this.fileField = new UserEntryFileField(form.querySelector('[data-user-entry-form-file]'));
     this.ui.cancelButton = this.ui.form.querySelector('[data-cancel-edit]');

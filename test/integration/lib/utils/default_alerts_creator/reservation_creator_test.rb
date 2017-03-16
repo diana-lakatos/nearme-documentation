@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::IntegrationTest
@@ -36,7 +37,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
   context 'methods' do
     setup do
-      @user = FactoryGirl.create(:user)
+      @user = FactoryGirl.create(:user_with_sms_notifications_enabled)
       @reservation = FactoryGirl.create(:unconfirmed_reservation, user: @user)
       @reservation.periods = [ReservationPeriod.new(date: Date.parse('2012/12/12')), ReservationPeriod.new(date: Date.parse('2012/12/13'))]
       @reservation.save!
@@ -371,7 +372,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       end
       mail = ActionMailer::Base.deliveries.last
 
-      assert_contains "How was #{ @reservation.owner.first_name }, your recent #{ @platform_context.decorate.lessee }?", mail.html_part.body
+      assert_contains "How was #{@reservation.owner.first_name}, your recent #{@platform_context.decorate.lessee}?", mail.html_part.body
 
       assert_equal [@reservation.host.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] How was your experience hosting #{@reservation.owner.first_name}?", mail.subject
@@ -450,8 +451,8 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     context 'sms' do
       setup do
         Googl.stubs(:shorten).returns(stub(short_url: 'http://goo.gl/abf324'))
-        @reservation.owner.update_attribute(:mobile_number, '987654421')
-        @reservation.creator.update_attribute(:mobile_number, '124456789')
+        @reservation.owner.update_attributes(mobile_number: '987654421', sms_notifications_enabled: true)
+        @reservation.creator.update_attributes(mobile_number: '124456789', sms_notifications_enabled: true)
       end
 
       context '#notify_host_with_confirmation sms' do

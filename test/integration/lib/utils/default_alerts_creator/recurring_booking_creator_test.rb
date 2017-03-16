@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch::IntegrationTest
@@ -232,8 +233,8 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
     context 'sms' do
       setup do
         Googl.stubs(:shorten).returns(stub(short_url: 'http://goo.gl/abf324'))
-        @recurring_booking.owner.update_attribute(:mobile_number, '987654421')
-        @recurring_booking.creator.update_attribute(:mobile_number, '124456789')
+        @recurring_booking.owner.update_attributes(mobile_number: '987654421', sms_notifications_enabled: true)
+        @recurring_booking.creator.update_attributes(mobile_number: '124456789', sms_notifications_enabled: true)
       end
 
       context '#notify_host_with_confirmation sms' do

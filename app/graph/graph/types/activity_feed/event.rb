@@ -8,7 +8,7 @@ module Graph
 
         global_id_field :id
 
-        field :id, !types.ID
+        field :id, !types.Int
         field :creator_id, types.ID
         field :followed, Followed
         field :name, types.String

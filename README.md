@@ -214,3 +214,11 @@ More on [capybara-webkit troubleshooting.](https://github.com/thoughtbot/capybar
 Quick solution is to switch icu4c to previous working version:
 
     brew switch icu4c 56.1
+
+#### rugged (0.25.1.1) on OSX
+
+`rugged` requires cmake installed on OSX
+
+It can be installed via homebrew
+
+    brew install cmake

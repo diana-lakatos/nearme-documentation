@@ -1,0 +1,11 @@
+.sms-notifications-requirements {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}
+
+.sms-notifications-requirements-info {
+  margin-bottom: 1em;
+}

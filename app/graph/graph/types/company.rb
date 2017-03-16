@@ -7,7 +7,7 @@ module Graph
 
       global_id_field :id
 
-      field :id, !types.ID
+      field :id, !types.Int
       field :url, types.String
       field :name, !types.String
       field :description, types.String

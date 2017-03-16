@@ -1,0 +1,20 @@
+.user-message-form {
+  .form-group.text {
+    margin-bottom: 20px;
+
+    label {
+      @include sr-only;
+    }
+
+    textarea {
+      height: 200px;
+      box-sizing: border-box;
+    }
+  }
+
+  .error {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: $color-red-1;
+  }
+}

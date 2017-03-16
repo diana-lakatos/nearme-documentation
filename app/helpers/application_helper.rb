@@ -14,7 +14,7 @@ module ApplicationHelper
   include LoginLinksHelper
 
   def timeago(time)
-    content_tag(:abbr, time, title: time.to_time.iso8601, class: :timeago)
+    content_tag(:time, time, datetime: time.to_time.iso8601, class: :timeago)
   end
 
   def platform_context

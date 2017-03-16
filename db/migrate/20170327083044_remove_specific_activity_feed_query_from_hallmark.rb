@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class RemoveSpecificActivityFeedQueryFromHallmark < ActiveRecord::Migration
   def up
     Instances::InstanceFinder.get(:hallmark).each do |i|

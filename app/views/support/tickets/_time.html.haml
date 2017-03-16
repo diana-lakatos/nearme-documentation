@@ -1,6 +1,6 @@
 .time
   =ticket.verb
-  %abbr.timeago{:title => "#{ticket.updated_at.to_time.iso8601}"}
+  %time.timeago{:datetime => "#{ticket.updated_at.to_time.iso8601}"}
     =ticket.updated_at
 .link
   = link_to ticket.open_text, support_ticket_path(ticket), :class => 'view'

@@ -119,35 +119,25 @@ function xhr(url: string, options: { method: string, contentType: string, data: 
     xhrOptions.headers.UserAuthorization = getAuthToken();
   }
 
-
   if (options.data) {
-    /* in order to allow setting correct content-type boundry by the client we need to remove content type */
-    delete xhrOptions.headers['Content-Type'];
-
     if (options.data instanceof FormData) {
       xhrOptions.body = options.data;
     } else {
-      let data = new FormData();
-      for (let prop in options.data) {
-        if (options.data.hasOwnProperty(prop)) {
-          data.append(prop, options.data[prop]);
-        }
-      }
+      let data = JSON.stringify(options.data);
       xhrOptions.body = data;
     }
   }
 
-
   return new Promise((resolve: Promise, reject: Promise)=>{
     fetch(url, xhrOptions)
-            .then(parseResponse)
-            .then( (data: any): Promise => resolve(data) )
-            .catch((error: any): Promise =>{
-              if (error.data) {
-                return reject(error.data);
-              }
-              return reject(error);
-            });
+      .then(parseResponse)
+      .then( (data: any): Promise => resolve(data) )
+      .catch((error: any): Promise =>{
+        if (error.data) {
+          return reject(error.data);
+        }
+        return reject(error);
+      });
   });
 }
 

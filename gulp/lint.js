@@ -33,7 +33,7 @@ module.exports = function(gulp){
     }));
   });
 
-  gulp.task('lint', ['lint:javascript', 'lint:typecheck']);
+  gulp.task('lint', ['lint:javascript']);
 
 
   gulp.task('lint:javascript:cached', function() {
@@ -67,5 +67,5 @@ module.exports = function(gulp){
   });
 
 
-  gulp.task('watch:lint', ['watch:lint:javascript', 'watch:lint:typecheck']);
+  gulp.task('watch:lint', ['watch:lint:javascript']);
 };

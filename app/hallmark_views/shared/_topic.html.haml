@@ -13,9 +13,9 @@
     %ul.numbers
       %li
         = t :followers
-        %span= topic.followers_count
-    %p.action{:'data-follow-button' => true}
-      = render partial: 'shared/follow_button', locals: { object: topic }
+        %span{ data: { followers_count: "Topic:#{topic.id}" }}= topic.followers_count
+    .action
+      = render 'shared/follow_button', object: topic, object_type: 'Topic'
     %h3.hx
       = link_to topic.name, topic_path(topic)
     %p= topic.description.to_s.truncate(100)

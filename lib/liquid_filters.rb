@@ -738,7 +738,7 @@ module LiquidFilters
   #   e.g. <abbr class='timeago' title='2020-11-26T03:36:07+12:00'>3:35</abbr>
   # @param time [Time] time object
   def timeago(time)
-    "<abbr class='timeago' title='#{time.to_time.iso8601}'>#{l(time, 'short')}</abbr>".html_safe
+    "<time class='timeago' datetime='#{time.to_time.iso8601}'>#{l(time, 'short')}</time>".html_safe
   end
 
   # @return [Array<CkeditorAssetDrop>] seller attachments tied to the given transactable object
@@ -787,5 +787,13 @@ module LiquidFilters
   def markdownify(text)
     markdown = RDiscount.new(text)
     markdown.to_html
+  end
+
+  # @return [Boolean] checks if user is following events for activity stream
+  # @param user [User] user we are checking against
+  # @param object_id [Integer] object id we are checking for
+  # @param object_type [String] class name of the object we are checking for - User, Topic, Transactable
+  def is_user_following(user, object_id, object_type)
+    user.source.activity_feed_subscriptions.where(followed_id: object_id, followed_type: object_type).any?
   end
 end

@@ -7,7 +7,7 @@ module Graph
 
       global_id_field :id
 
-      field :id, !types.ID
+      field :id, !types.Int
       field :events, !types[Types::ActivityFeed::Event] do
         resolve ->(feed, _args, _ctx) { feed.events.map(&:decorate) }
       end
