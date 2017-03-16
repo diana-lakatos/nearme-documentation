@@ -149,11 +149,15 @@ en:
         first_name: "First name"
         current_address: "Additonal owners address"
         document: 'Photo ID'
+        personal_id_number: 'Social Security Number'
+        business_tax_id: 'Employer Identification Number'
       merchant_account/owners/current_address:
         address: "Additonal owners address"
       merchant_account_owner:
         document: 'Photo ID'
         dob_formated: 'Date of birth'
+        personal_id_number: 'Social Security Number'
+        business_tax_id: 'Employer Identification Number'
 
 
   connections:
@@ -1917,11 +1921,6 @@ en:
       company: 'Company'
       individual: 'Individual'
       ssn_last_4: 'Last 4 SSN digits'
-      business_tax_id:
-        us: 'Employer Identification Number'
-        ca: 'Business Number'
-        au: 'ACN / ABN'
-        euuk: 'Company Number'
       business_vat_id: 'VAT number'
       personal_id_number:
         us: 'Social Security Number'
@@ -2557,6 +2556,7 @@ en:
       not_purchasable: 'Out of stock'
       documents: 'Documents'
       not_available: '%{bookable_noun} is currently not available'
+      date_not_available_title: 'Choose date before first unavailable date'
     filters:
       open: 'Open'
       resolved: 'Resolved'

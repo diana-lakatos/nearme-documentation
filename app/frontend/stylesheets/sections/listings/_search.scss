@@ -758,6 +758,10 @@ header#listing_search {
 section.search section#category-tree {
   &.list-view-category-tree {
     margin-top: 145px;
+
+    &.with_slider {
+      margin-top: 190px;
+    }
   }
 
   .span2 & {
@@ -773,10 +777,68 @@ section.search section#category-tree {
     margin-left: 20px;
   }
 
-  @media (max-width: 750px) {
+  @media (max-width: $ipad-width) {
     &.list-view-category-tree {
       margin-top: 0;
+
+      &.with_slider {
+        margin-top: 0;
+      }
     }
+  }
+}
+
+.list-search-left {
+  width: 220px;
+  float: left;
+  min-height: 1px;
+  margin-left: 20px;
+}
+
+.list-search-right {
+  width: 665px;
+  float: left;
+  min-height: 1px;
+  margin-left: 20px;
+}
+
+@media (max-width: 767px) {
+  .list-search-right, .list-search-left {
+    float: none;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 980px) {
+  .list-search-left {
+    width: 166px;
+  }
+
+  .list-search-right {
+    width: 507px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1389px) {
+  .list-search-left {
+    width: 270px;
+  }
+
+  .list-search-right {
+    width: 815px;
+  }
+}
+
+@media (min-width: 1390px) {
+  .list-search-left {
+    width: 270px;
+  }
+
+  .list-search-right {
+    width: 1000px;
   }
 }
 
@@ -930,6 +992,10 @@ section.search section#results.list {
 
   @media (max-width: $ipad-width) {
     margin-top: 0;
+
+    &.with_slider {
+      margin-top: 0;
+    }
   }
 }
 

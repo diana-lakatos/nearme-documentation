@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170308095224) do
+ActiveRecord::Schema.define(version: 20170314140919) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1550,6 +1550,7 @@ ActiveRecord::Schema.define(version: 20170308095224) do
     t.integer  "opened_on_days",                             default: [],                 array: true
     t.string   "time_zone",                      limit: 255
     t.integer  "availability_template_id"
+    t.integer  "impressions_count",                          default: 0,     null: false
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
@@ -3011,6 +3012,7 @@ ActiveRecord::Schema.define(version: 20170308095224) do
     t.boolean  "seek_collaborators",                                                    default: false
     t.integer  "followers_count",                                                       default: 0,         null: false
     t.string   "state"
+    t.integer  "impressions_count",                                                     default: 0,         null: false
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

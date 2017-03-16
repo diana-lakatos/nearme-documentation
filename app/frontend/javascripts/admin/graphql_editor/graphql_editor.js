@@ -31,7 +31,7 @@ class GraphqlEditor {
     return xhr(url, {
       method: 'post',
       contentType: 'application/json',
-      data: JSON.stringify(graphQLParams),
+      data: graphQLParams,
     }).then(response => response);
   }
 

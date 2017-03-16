@@ -34,9 +34,11 @@ module.exports = class ModeAndConstraintModel extends DatepickerModel
   toggleDate: (date) ->
     return unless @canSelectDate(date)
 
+    startDate = @getDates().slice(0, 1)[0]
+    return if @listing.isOvernightBooking() && !@areConsecutiveDays(startDate, date)
+
     switch @mode
       when ModeAndConstraintModel.MODE_RANGE
-        startDate = @getDates().slice(0, 1)[0]
 
         # Return if there is no start date, or if date selected
         # is before the start date (can't select backwards)
@@ -217,3 +219,11 @@ module.exports = class ModeAndConstraintModel extends DatepickerModel
       current = dateUtil.next(current)
     count
 
+  # Checks whether range doesn't contain unavailable days
+  areConsecutiveDays: (startDate, endDate) ->
+    return false if endDate.getTime() < startDate.getTime()
+    current = startDate
+    while current.getTime() <= endDate.getTime()
+      return false unless @canSelectDate(current)
+      current = dateUtil.next(current)
+    true

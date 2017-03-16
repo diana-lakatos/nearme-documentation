@@ -31,12 +31,12 @@
             = "#{t(:topics)} <em>2</em>".html_safe
 
       %li.groups
-        = link_to search_url(search_type: :groups), accesskey: 3 do
+        = link_to search_url(search_type: :groups, sort: Group::SORT_OPTIONS_MAP.fetch(:most_recent)), accesskey: 3 do
           %span.text
             = "#{t(:groups_and_clubs)} <em>3</em>".html_safe
 
       %li.diy
-        = link_to search_url(search_type: :shares), accesskey: 4 do
+        = link_to search_url(search_type: :shares, sort: Transactable::SORT_OPTIONS_MAP.fetch(:most_recent)), accesskey: 4 do
           %span.text
             = "#{t(:projects)} <em>4</em>".html_safe
 

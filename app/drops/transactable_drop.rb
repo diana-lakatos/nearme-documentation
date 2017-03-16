@@ -114,6 +114,8 @@ class TransactableDrop < BaseDrop
   #   @return [Integer] Transactable type to which this object belongs
   # @!method tags
   #   @return [Array<TagDrop>] array of tags that this transactable has been tagged with
+  # @!method impressions_count
+  #   @return [Integer] number of impressions for this Transactable
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :creator_id, :administrator, :last_booked_days,
            :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?, :action_type,
            :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
@@ -121,7 +123,7 @@ class TransactableDrop < BaseDrop
            :to_key, :model_name, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
            :action_free_booking?, :average_rating, :time_based_booking?, :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators,
            :user_messages, :line_item_orders, :state, :created_at, :pending?, :completed?, :transactable_type_id, :tags,
-           :is_followed, to: :source
+           :is_followed, :impressions_count, to: :source
 
   # @!method action_price_per_unit
   #   @return [Boolean] whether there is a single unit available of the transactable item for a given time period
@@ -330,7 +332,7 @@ class TransactableDrop < BaseDrop
   # @return [String] the url to the first image for this listing, or, if missing, the url to a placeholder image
   # @todo  -- depracate in favor of filter
   def photo_url
-    photos.try(:first).try(:[], :space_listing) || image_url(Placeholder.new(width: 410, height: 254).path).to_s
+    photos.try(:first).try(:[], 'space_listing') || image_url(Placeholder.new(width: 410, height: 254).path).to_s
   end
 
   # @return [String, nil] the url to the first 'medium'-sized image for this listing, nil if not present

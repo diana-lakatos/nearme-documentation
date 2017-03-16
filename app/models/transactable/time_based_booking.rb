@@ -124,6 +124,7 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
                 prices_by_nights: prices_by_nights_cents,
                 minimum_booking_days: minimum_booking_days,
                 continuous_dates: action_continuous_dates_booking,
+                date_not_available_title: I18n.t('reservations.booking_module.date_not_available_title'),
                 action_daily_booking: day_booking?) if night_booking? || day_booking?
     hash.merge!(minimum_booking_minutes: minimum_booking_minutes,
                 earliest_open_minute: availability.earliest_open_minute,

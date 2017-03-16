@@ -40,7 +40,7 @@ class FieldsForTag < Liquid::Block
       form.simple_fields_for(@association_name) do |f|
         context["form_object_#{@association_name}"] = f
         context[@association_name.singularize.to_s] = f.object
-        render_all(@nodelist, context).html_safe
+        @body.render(context).html_safe
       end
     end
   end

@@ -19,7 +19,8 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   has_many :owners, -> { order(:id) }, class_name: 'MerchantAccountOwner::StripeConnectMerchantAccountOwner',
                                        foreign_key: 'merchant_account_id', dependent: :destroy
 
-  validates :bank_routing_number, :bank_account_number, presence: true
+  validates :bank_account_number, presence: true
+  validates :bank_routing_number, presence: true, if: :based_in_us
   validates :account_type, inclusion: { in: ACCOUNT_TYPES }
   validates :tos, acceptance: true
 
@@ -311,5 +312,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def localize_error(error_code)
     return if error_code.blank?
     I18n.t('activerecord.errors.models.merchant_account.error_codes.' + error_code.tr('.', '_'))
+  end
+
+  def based_in_us
+    iso_country_code == 'US'
   end
 end

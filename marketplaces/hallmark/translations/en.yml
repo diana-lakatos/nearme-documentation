@@ -471,4 +471,11 @@ en:
     user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} DIY"
     cant_remove_collaborator: "You can't remove user from this DIY"
 
+  collaborator_invitations:
+    title_summary: 'Pending collaboration invitations'
+    empty_resultset: 'At the moment you have no pending invitations to approve.'
+    invitations_count_html:
+      one: 'You have <b>one</b> pending invitation.'
+      other: 'You have <b>%{count}</b> pending invitations.'
+
   extras_are_coming_soon: You will be able to create your own DIYs soon!

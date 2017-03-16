@@ -1,3 +1,4 @@
+require 'graph/schema'
 # frozen_string_literal: true
 # Usage example:
 # ```
@@ -29,7 +30,7 @@ class QueryGraphTag < Liquid::Tag
   private
 
   def execute_query(context)
-    response = ::Graph::Schema.execute(
+    ::Graph.execute_query(
       query_string,
       variables: variables(context),
       context: {
@@ -37,7 +38,6 @@ class QueryGraphTag < Liquid::Tag
         liquid_context: context
       }
     )
-    response.key?('data') ? response.fetch('data') : throw(ArgumentError.new(response.pretty_inspect + query_string))
   end
 
   def query_string

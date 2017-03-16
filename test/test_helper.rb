@@ -289,7 +289,9 @@ def disable_elasticsearch!
   Instance.last.set_context! unless PlatformContext.current
   Transactable.__elasticsearch__.client.indices.delete_alias name: Transactable.alias_index_name, index: Transactable.base_index_name
   Transactable.__elasticsearch__.client.indices.delete index: Transactable.base_index_name
-  User.__elasticsearch__.client.indices.delete_alias name: User.alias_index_name, index: User.base_index_name
+  if User.__elasticsearch__.client.indices.exists_alias?(name: User.alias_index_name, index: User.base_index_name)
+    User.__elasticsearch__.client.indices.delete_alias(name: User.alias_index_name, index: User.base_index_name)
+  end
   User.__elasticsearch__.client.indices.delete index: User.base_index_name
   Rails.application.config.use_elastic_search = false
 end

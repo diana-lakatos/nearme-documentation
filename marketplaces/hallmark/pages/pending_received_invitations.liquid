@@ -1,0 +1,38 @@
+---
+name: Pending Received Invitations
+slug: pending-received-invitations
+layout: community
+---
+{% query_graph 'user_pending_received_collaborations', result_name: g, user_id: current_user.id %}
+
+
+<h1>{{ 'collaborator_invitations.title_summary' | translate: count: g.user.collaborations.size }}</h1>
+<ul>
+  {% for invitation in g.user.collaborations %}
+    <li>
+      <p>
+        <a href="{{ invitation.transactable.creator.profile_path }}">
+          <img src="{{ invitation.transactable.creator.avatar_url_thumb }}" width="30" height="30" />
+          {{ invitation.transactable.creator.name_with_affiliation }}
+        </a>
+        {{ 'collaborator_invitations.invited_you_to' | t }}
+        <a href="{{ invitation.transactable.show_path }}">
+          <strong>
+            {{ invitation.transactable.name }}
+            <img src="{{ invitation.transactable.cover_photo_thumbnail_url }}" width="30" height="30" />
+          </strong>
+        </a>
+      </p>
+      <p>
+        {{ 'collaborator_invitations.confirm_accept' | t }}
+        <a href="{{ 'accept_listing_transactable_collaborator_path' | generate_url: id: invitation.id, listing_id: invitation.transactable.id }}" class="button-a tiny">
+          {{ 'approve' | translate }}
+        </a>
+        <a href="{{ 'listing_transactable_collaborator_path' | generate_url: id: invitation.id, listing_id: invitation.transactable.id }}"
+           class="button-a tiny red" data-method="delete">
+          {{ 'decline' | translate }}
+        </a>
+      </p>
+    </li>
+  {% endfor %}
+</ul>

@@ -92,6 +92,7 @@ class Instance < ActiveRecord::Base
   has_many :form_components, as: :form_componentable, dependent: :destroy
   has_many :scheduled_uploaders_regenerations
   has_many :aws_certificates
+  has_many :pages
   has_many :graph_queries
 
   validates :id, uniqueness: true

@@ -55,6 +55,36 @@ class CategoryTest < ActiveSupport::TestCase
       assert_equal 4, Category.count
     end
 
+    should 'remove category proper linkings on category update' do
+      @transactable_types = FactoryGirl.create_list(:transactable_type, 4)
+      @transactable_types.each { |t| t.categories << @category }
+
+      @reservation_types = FactoryGirl.create_list(:reservation_type, 4)
+      @reservation_types.each { |t| t.categories << @category }
+
+      InstanceProfileType.all.each { |i| i.categories << @category }
+
+      assert_equal 4, @category.reservation_types.count
+      assert_equal 4, @category.transactable_types.count
+      assert_equal 3, @category.instance_profile_types.count
+
+      @transactable_type = @transactable_types.last
+      @reservation_type = @reservation_types.last
+      @instance_profile_type = InstanceProfileType.last
+
+      @category.attributes = {
+        transactable_type_ids: [@transactable_type.id],
+        reservation_type_ids: [@reservation_type.id],
+        instance_profile_type_ids: [@instance_profile_type.id]
+      }
+      @category.save!
+      assert_equal [@transactable_type], @category.transactable_types
+      assert_equal [@reservation_type], @category.reservation_types
+      assert_equal [@instance_profile_type], @category.instance_profile_types
+
+      assert_equal 3, @category.category_linkings.count
+    end
+
     should 'remove categories when transactable_type is removed' do
       @transactable_type = FactoryGirl.create(:transactable_type)
       @transactable_type.categories << Category.all

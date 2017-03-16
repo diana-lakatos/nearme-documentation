@@ -59,7 +59,7 @@ class Support::Ticket < ActiveRecord::Base
       ticket_message.email = from
       ticket_message.full_name = message[:from].display_names.first || 'Unknown'
       ticket_message.subject = message.subject.presence || '<no subject>'
-      ticket_message.message = self.class.body_for_message(message)
+      ticket_message.message = self.class.body_for_message(message).to_s.strip.presence || '(No message text)'
       ticket_message.instance_id = instance_id
       self.save!
       WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Created, ticket_message.id)

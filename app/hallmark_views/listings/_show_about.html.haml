@@ -3,22 +3,11 @@
     = t :description
   = videoify_and_parse_with_markdown(@transactable.description)
 
-- if @transactable.photos.except_cover.any?
-  %h4= t :gallery
-  %ul.gallery-a{ :"data-gallery" => '' }
-    - @transactable.photos.except_cover.each do |p|
-      %li
-        %a{ href: p.image_url, data: { "original-width": p.image_original_width, "original-height": p.image_original_height } }
-          = image_tag p.image_url(:thumb), width: 200, height: 175
+= render 'shared/about_gallery', photos: @transactable.photos
 
 - video_embed_code = project_video_embed_html(@transactable)
 - if video_embed_code.present?
   %h4= t :video
   = video_embed_code
 
-- if @transactable.links.any?
-  %h4= t :links
-  - @transactable.links.each do |l|
-    %p
-      = link_to l.url do
-        = l.image.present? ? (image_tag(l.image_url(:standard), width: LinkImageUploader.dimensions[:standard][:width], height: LinkImageUploader.dimensions[:standard][:height])) : l.text
+= render 'shared/about_links', links: @transactable.links
