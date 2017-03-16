@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 module SearcherHelper
   class ResultView
-    delegate  :==, to: :type
+    delegate :==, to: :type
 
     def initialize(params, object)
       @object = object
@@ -38,13 +39,13 @@ module SearcherHelper
     end
 
     unless @transactable_type
-      Instance::SEARCHABLE_CLASSES.each do|_klass|
+      Instance::SEARCHABLE_CLASSES.each do |_klass|
         @transactable_type ||= _klass.constantize.searchable.by_position.first
       end
     end
 
-      # flash[:error] = t('flash_messages.search.missing_transactable_type')
-      # return redirect_to root_path
+    # flash[:error] = t('flash_messages.search.missing_transactable_type')
+    # return redirect_to root_path
     raise ActiveRecord::RecordNotFound, 'could not find transactable_type' unless @transactable_type
 
     # TODO: as a lookup context we use TransactableType, but search can by for

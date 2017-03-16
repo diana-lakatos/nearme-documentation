@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper_lite'
 require 'ostruct'
 require './lib/elastic/aggregations'
@@ -46,7 +47,6 @@ class Elastic::AggregationsTest < ActiveSupport::TestCase
   end
 
   test 'prepare nested aggregations for user-profiles using fields' do
-
     builder = Elastic::Aggregations::Nodes::Node.new label: :aggregations
 
     nested = Elastic::Aggregations::Nodes::Nested.new(label: 'user_profiles', path: 'user_profiles')
@@ -57,18 +57,15 @@ class Elastic::AggregationsTest < ActiveSupport::TestCase
     nested.add_field profiles
     builder.add_field nested
 
-
     assert_equal builder.to_h.dig(:aggregations, 'user_profiles', :aggregations).keys, ['profile_type']
     assert_equal builder.to_h.dig(:aggregations, 'user_profiles', :nested), path: 'user_profiles'
     assert builder.to_h.dig(:aggregations, 'user_profiles', :aggregations, 'profile_type', :terms)
     assert builder.to_h.dig(:aggregations, 'user_profiles', :aggregations, 'profile_type', :aggregations)
     assert builder.to_h.dig(:aggregations, 'user_profiles', :aggregations, 'profile_type', :aggregations, 'states')
     assert builder.to_h.dig(:aggregations, 'user_profiles', :aggregations, 'profile_type', :aggregations, 'states', :terms, :field)
-
   end
 
   test 'prepare nested aggregations for user-profiles using fancy block method' do
-
     builder = Elastic::Aggregations::Nodes::Node.new label: :aggregations do |root|
       root.add :nested, label: 'user_profiles', path: 'user_profiles' do |nested|
         nested.add :terms, label: 'profile_type', field: 'user_profiles.profile_type' do |profiles|
@@ -93,7 +90,6 @@ class Elastic::AggregationsTest < ActiveSupport::TestCase
     #       }
     #     }
     #   }
-
 
     puts builder.to_h.to_json
     assert_equal builder.to_h.dig(:aggregations, 'user_profiles', :aggregations).keys, ['profile_type']

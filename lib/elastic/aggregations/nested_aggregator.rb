@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module Elastic
   module Aggregations
     class NestedAggregator < BaseAggregator
-      def initialize(**agrs)
+      def initialize(**_agrs)
         super(**args)
 
         @nested = nested

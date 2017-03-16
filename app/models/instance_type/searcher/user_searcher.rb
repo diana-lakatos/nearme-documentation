@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceType::Searcher::UserSearcher
   include InstanceType::Searcher
   attr_reader :filterable_custom_attributes, :search, :params
@@ -37,7 +38,7 @@ class InstanceType::Searcher::UserSearcher
       else
         @fetcher = @fetcher.joins("INNER JOIN categories_categorizables cc ON
           cc.categorizable_type = 'UserProfile' AND cc.categorizable_id = user_profiles.id")
-                   .where('cc.category_id in (?)', category_ids)
+                           .where('cc.category_id in (?)', category_ids)
       end
     end
 
@@ -50,7 +51,7 @@ class InstanceType::Searcher::UserSearcher
   end
 
   def selected_values(name)
-    @params[name].select(&:present?) if @params[name]
+    @params[name]&.select(&:present?)
   end
 
   def queried_fields

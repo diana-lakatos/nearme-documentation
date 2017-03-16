@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Elastic
   class UserDrop < UserBaseDrop
     delegate :id, :avatar, :name, :slug, :tags, :created_at,

@@ -22,8 +22,7 @@ class LinkToRemoveAssociationTag < Liquid::Tag
     raise LinkToAssociation::HelpfulLinkToAssociationError.raise_form_is_nil('LinkToRemoveAssociation', form_name) if form.nil?
     raise LinkToAssociation::HelpfulLinkToAssociationError.raise_form_object_is_nil('LinkToRemoveAssociation', form_name) if form&.object.nil?
     context.registers[:action_view].send(:link_to_remove_association,
-      @attributes[:label],
-      form
-    )
+                                         @attributes[:label],
+                                         form)
   end
 end

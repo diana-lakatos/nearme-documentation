@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Elastic
   # Builder.new.add name:, filters: {some: 'filters'}, fields: [{field: 'designer'}]
   module Aggregations

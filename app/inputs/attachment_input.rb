@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AttachmentInput < SimpleForm::Inputs::FileInput
   def input(wrapper_options = nil)
     accept_types = options[:accept] || Rails.application.config.attachment_upload_file_types

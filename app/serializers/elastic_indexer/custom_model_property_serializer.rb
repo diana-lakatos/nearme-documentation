@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ElasticIndexer
   class CustomModelPropertySerializer < ActiveModel::Serializer
     self.root = false

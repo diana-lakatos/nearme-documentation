@@ -19,7 +19,7 @@ module Elastic
         {
           sort: sorting_options,
           query: match_query,
-          filter: {bool: {must: @filters}}
+          filter: { bool: { must: @filters } }
         }.merge(aggregations)
       end
 
@@ -140,10 +140,10 @@ module Elastic
           next if value.blank?
           attribute = key.match(/([a-zA-Z\.\_\-]*)_(gte|lte|gt|lt)/)
           if attribute
-            user_profiles_filters << {range: {"user_profiles.properties.#{attribute[1]}.raw" => {attribute[2] => value.to_f}}}
+            user_profiles_filters << { range: { "user_profiles.properties.#{attribute[1]}.raw" => { attribute[2] => value.to_f } } }
           else
             Array(value).reject(&:blank?).each do |single|
-              user_profiles_filters << {match: {"user_profiles.properties.#{key}" => single}}
+              user_profiles_filters << { match: { "user_profiles.properties.#{key}" => single } }
             end
           end
         end
@@ -151,16 +151,15 @@ module Elastic
         # legacy and deprecated
         @query[:lg_customizations]&.each do |key, value|
           next if value.blank?
-          user_profiles_filters << {match: {"user_profiles.customizations.#{key}" => value}}
+          user_profiles_filters << { match: { "user_profiles.customizations.#{key}" => value } }
         end
 
-        {nested: {path: 'user_profiles', query: {bool: {must: user_profiles_filters}}}}
+        { nested: { path: 'user_profiles', query: { bool: { must: user_profiles_filters } } } }
       end
-
     end
 
     def build_profile_query(profile)
-      {nested: {path: 'user_profiles', query: {bool: {must: Elastic::QueryBuilder::UserProfileBuilder.build(@query, profile: profile)}}}}
+      { nested: { path: 'user_profiles', query: { bool: { must: Elastic::QueryBuilder::UserProfileBuilder.build(@query, profile: profile) } } } }
     end
   end
 end

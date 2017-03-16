@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper_lite'
 require './lib/elastic/aggregations'
 require './lib/elastic/aggregations/options_for_select'
@@ -9,7 +10,7 @@ class Elastic::AggregationsTest < ActiveSupport::TestCase
   test 'require default aggregations' do
     fixtures = AggregationsFixtures.load
 
-    assert_equal fixtures.keys, ['global', 'filtered_aggregations', 'custom_attributes']
+    assert_equal fixtures.keys, %w(global filtered_aggregations custom_attributes)
 
     options = Elastic::Aggregations::OptionsForSelect.prepare(fixtures)
 

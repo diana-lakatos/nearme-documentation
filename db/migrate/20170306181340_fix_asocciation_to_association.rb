@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class FixAsocciationToAssociation < ActiveRecord::Migration
   def up
     PlatformContext.current = nil

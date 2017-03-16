@@ -76,7 +76,7 @@ class TransactableForm < BaseForm
           validates :action_types, validation if validation.present?
           collection :action_types, form: ActionTypeForm.decorate(action_types_configuration),
                                     populator: POPULATOR,
-                                    prepopulator: ->(_options) { self.action_types = model.transactable_type.action_types.enabled.map { |at| at.transactable_action_types.build } if self.action_types.size.zero? }
+                                    prepopulator: ->(_options) { self.action_types = model.transactable_type.action_types.enabled.map { |at| at.transactable_action_types.build } if action_types.size.zero? }
         end
         configuration.each do |field, options|
           property :"#{field}"

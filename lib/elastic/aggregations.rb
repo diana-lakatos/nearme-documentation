@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Elastic
   module Aggregations
     def self.build(**options)

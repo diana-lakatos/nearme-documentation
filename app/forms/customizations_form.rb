@@ -4,7 +4,7 @@ class CustomizationsForm < BaseForm
     name_to_custom_model_type_hash ||= {}
     custom_model_type = name_to_custom_model_type_hash[as] ||= CustomModelType.with_parameterized_name(as).first
     raise ArgumentError, "Custom model #{as} does not exist. Did you mean one of: #{CustomModelType.pluck(:parameterized_name).join(',')} ?" if custom_model_type.nil?
-    raise ArgumentError, "Custom model #{as} is not associated with the object to which you try to add it."  if send(custom_model_type.parameterized_name).nil?
+    raise ArgumentError, "Custom model #{as} is not associated with the object to which you try to add it." if send(custom_model_type.parameterized_name).nil?
     item = send(custom_model_type.parameterized_name).find { |c| c.id.to_s == fragment['id'].to_s && fragment['id'].present? }
     if fragment['_destroy'] == '1'
       send(custom_model_type.parameterized_name).delete(item)

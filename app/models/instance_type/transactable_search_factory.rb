@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module InstanceType
   class TransactableSearchFactory
     attr_accessor :factory_type, :transactable_type, :params

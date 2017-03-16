@@ -22,9 +22,7 @@ class CustomAttachmentForm < BaseForm
     super.presence || model.id
   end
 
-  def uploader_id
-    model.uploader_id
-  end
+  delegate :uploader_id, to: :model
 
   def file_name
     File.basename(file.path.to_s).presence || file.filename
@@ -34,16 +32,16 @@ class CustomAttachmentForm < BaseForm
     File.extname(file.path.to_s.presence || file.filename)&.tr('.', '')
   end
 
-  def file_url
-    file.url
-  end
+  delegate :url, to: :file, prefix: true
 
   def file_time
     model.created_at || Time.zone.now
   end
 
   def file_size
-    file.size rescue nil
+    file.size
+  rescue
+    nil
   end
 
   def file

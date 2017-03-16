@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'will_paginate/array'
 class SearchController < ApplicationController
   include SearchHelper
@@ -16,7 +17,6 @@ class SearchController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound do
     redirect_back_or_default
   end
-
 
   # TODO: temporary - discuss better approach and remove
   def redirect_to_search

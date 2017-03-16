@@ -126,6 +126,6 @@ class SearcherDrop < BaseDrop
   # @return [Hash{String => Array<Array<String, String>>}] hash of the form !{ field_name => [[bucket_label, bucket_key], [bucket_label, bucket_key]]
   def options_for_select
     @options_for_select = Elastic::Aggregations::OptionsForSelect
-                            .prepare(@searcher.fetcher.aggregations)
+                          .prepare(@searcher.fetcher.aggregations)
   end
 end

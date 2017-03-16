@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CategoryLinking < ActiveRecord::Base
   scoped_to_platform_context
   auto_set_platform_context

@@ -10,7 +10,7 @@ module Graph
       field :id, !types.ID
       field :is_followed, !types.Boolean do
         argument :follower_id, types.ID
-        resolve -> (obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
+        resolve ->(obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
       end
 
       field :name, !types.String
@@ -25,7 +25,7 @@ module Graph
 
       field :profile, Types::Profile do
         argument :profile_type, !types.String
-        resolve -> (obj, arg, _ctx) { obj.source.user_profiles.find_by(profile_type: arg[:name]) }
+        resolve ->(obj, arg, _ctx) { obj.source.user_profiles.find_by(profile_type: arg[:name]) }
       end
 
       field :custom_attribute_photos,

@@ -13,8 +13,6 @@ class RenderCustomPage
     # form 'Update Transactable' should be initialize with current_user.transactables.where(id: params[:transactable_id])
     # etc.
 
-
-
     forms = {}
     forms.merge!(submitted_form) if submitted_form.present?
     forms = forms.with_indifferent_access

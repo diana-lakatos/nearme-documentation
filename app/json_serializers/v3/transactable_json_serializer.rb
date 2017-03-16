@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class V3::TransactableJsonSerializer
   include JSONAPI::Serializer
 

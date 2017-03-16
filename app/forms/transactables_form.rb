@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 class TransactablesForm < BaseForm
-  POPULATOR = lambda do |collection:, fragment:, as:, index:, **args|
+  POPULATOR = lambda do |collection:, fragment:, as:, index:, **_args|
     name_to_transactable_type_hash ||= {}
     transactable_type = name_to_transactable_type_hash[as] ||= TransactableType.with_parameterized_name(as).first
     raise ArgumentError, "Transactable Type #{as} does not exist. Did you mean one of: #{TransactableType.pluck(:parameterized_name).join(',')} ?" if transactable_type.nil?
-    raise ArgumentError, "Transactable Type #{as} is not associated with the object to which you try to add it."  if send(transactable_type.parameterized_name).nil?
+    raise ArgumentError, "Transactable Type #{as} is not associated with the object to which you try to add it." if send(transactable_type.parameterized_name).nil?
     item = send(transactable_type.parameterized_name).find { |c| c.id.to_s == fragment['id'].to_s && fragment['id'].present? }
     if fragment['_destroy'] == '1'
       send(transactable_type.parameterized_name).delete(item)

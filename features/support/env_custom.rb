@@ -70,7 +70,7 @@ Before('@fake_payments') do
   PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
   PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: 'COMPLETED')))
   PaymentGateway::StripePaymentGateway.any_instance.stubs(:find_balance).returns(
-    OpenStruct.new({ id: '1', status: 'succeeded', fee_details: [OpenStruct.new(type: 'stripe_fee', amount: 10)] })
+    OpenStruct.new(id: '1', status: 'succeeded', fee_details: [OpenStruct.new(type: 'stripe_fee', amount: 10)])
   )
   stub = OpenStruct.new(success?: true, params: {
                           'object' => 'customer',

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceType::Searcher::Elastic::UserSearcher
   ALLOWED_QUERY_FIELDS = [:first_name, :last_name, :name, :country_name, :company_name, :tags].freeze
 
@@ -13,8 +14,8 @@ class InstanceType::Searcher::Elastic::UserSearcher
 
   def fetcher
     @fetcher ||= User
-                   .regular_search(search_params, @instance_profile_type)
-                   .paginate(page: @params[:page], per_page: @params[:per_page])
+                 .regular_search(search_params, @instance_profile_type)
+                 .paginate(page: @params[:page], per_page: @params[:per_page])
   end
 
   def object

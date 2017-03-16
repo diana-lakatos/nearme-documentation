@@ -10,14 +10,13 @@ When(/^Form builder configuration is in place$/) do
                                     MarketplaceBuilder::Creators::CategoriesCreator,
                                     MarketplaceBuilder::Creators::CustomModelTypesCreator
                                   ])
-  Country.create!("iso_name" => "UNITED STATES",
-                  "iso" => "US",
-                  "iso3" => "USA",
-                  "name" => "United States",
-                  "numcode" => 840,
-                  "states_required" => true,
-                  "calling_code" => "1"
-                 )
+  Country.create!('iso_name' => 'UNITED STATES',
+                  'iso' => 'US',
+                  'iso3' => 'USA',
+                  'name' => 'United States',
+                  'numcode' => 840,
+                  'states_required' => true,
+                  'calling_code' => '1')
   FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).go!
 end
 
@@ -60,10 +59,10 @@ Then(/^All error messages for the form are correctly displayed$/) do
      end
    end
 
-   # this is optional category - no validation here
-   within('.user_buyer_profile_categories_Industry') do
-     page.should_not have_content "can't be blank"
-   end
+  # this is optional category - no validation here
+  within('.user_buyer_profile_categories_Industry') do
+    page.should_not have_content "can't be blank"
+  end
 end
 
 When(/^I upload images and attachments without filling rest of the form$/) do

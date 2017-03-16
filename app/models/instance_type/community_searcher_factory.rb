@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module InstanceType
   class CommunitySearcherFactory
     attr_accessor :params, :search_type

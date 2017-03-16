@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Elastic
   module Aggregations
     module Nodes
@@ -15,9 +16,7 @@ module Elastic
           attributes.each do |name, value|
             instance_variable_set("@#{name}", value)
 
-            unless respond_to? name
-              self.class.send :define_method, name, -> { instance_variable_get "@#{name}" }
-            end
+            self.class.send :define_method, name, -> { instance_variable_get "@#{name}" } unless respond_to? name
           end
 
           yield(self) if block_given?
@@ -31,9 +30,7 @@ module Elastic
           add_field Nodes.create_field(type).new(attributes, &block)
         end
 
-        def to_h
-          body.to_h
-        end
+        delegate :to_h, to: :body
 
         private
 
@@ -42,7 +39,7 @@ module Elastic
         end
 
         def node(attributes)
-          attributes.reject { |key, value| Array(value).empty? }
+          attributes.reject { |_key, value| Array(value).empty? }
         end
 
         def body

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # TODO: this might be converted into more generic range builder
 module Elastic
   class QueryBuilder
@@ -14,7 +15,7 @@ module Elastic
         query
       end
 
-      def as_json(*args)
+      def as_json(*_args)
         prepare
       end
 

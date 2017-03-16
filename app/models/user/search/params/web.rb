@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class User::Search::Params::Web < User::Search::Params
   attr_reader :sort, :order, :lg_custom_attributes, :lg_custom_attributes, :category_ids
 
@@ -23,9 +24,7 @@ class User::Search::Params::Web < User::Search::Params
       if @instance_profile_type.category_search_type == 'OR'
         parent_ids = categories.map(&:parent_id)
         categories.map do |category|
-          unless parent_ids.include?(category.id)
-            category.self_and_descendants.map(&:id)
-          end
+          category.self_and_descendants.map(&:id) unless parent_ids.include?(category.id)
         end.flatten.compact
       else
         categories.map(&:id)

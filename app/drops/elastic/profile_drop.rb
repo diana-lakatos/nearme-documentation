@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 module Elastic
   class ProfileDrop < BaseDrop
     delegate :properties, :categories, to: :source
 
-  # @return [Hash{String => Array}] hash of customizations grouped by custom model type name
+    # @return [Hash{String => Array}] hash of customizations grouped by custom model type name
     def grouped_customizations
       source.customizations.group_by(&:name)
     end

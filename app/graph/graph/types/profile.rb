@@ -13,7 +13,7 @@ module Graph
             !types.String,
             'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
         argument :name, !types.String
-        resolve -> (obj, arg, _ctx) { obj.properties[arg[:name]] }
+        resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
       end
     end
   end

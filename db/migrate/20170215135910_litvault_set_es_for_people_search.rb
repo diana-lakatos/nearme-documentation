@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class LitvaultSetEsForPeopleSearch < ActiveRecord::Migration
   def up
     update_user_profiles(search_engine: 'elasticsearch')

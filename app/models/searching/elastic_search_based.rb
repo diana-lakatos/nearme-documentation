@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Searching
   class ElasticSearchBased < Base
     include InstanceType::Searcher::Elastic::GeolocationSearcher

@@ -142,7 +142,7 @@ class Company < ActiveRecord::Base
     listings.select('DISTINCT currency').map(&:currency).presence || [instance.default_currency || 'USD']
   end
 
-  def possible_payout_not_configured?(payment_gateway=payout_payment_gateway)
+  def possible_payout_not_configured?(payment_gateway = payout_payment_gateway)
     payment_gateway.try(:supports_payout?) && verified_merchant_account_missing?(payment_gateway)
   end
 

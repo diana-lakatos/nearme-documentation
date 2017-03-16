@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module InstanceType::Searcher::GeolocationSearcher
   include InstanceType::Searcher
   attr_reader :filterable_location_types, :filterable_custom_attributes, :search
@@ -18,11 +19,9 @@ module InstanceType::Searcher::GeolocationSearcher
         radius = search.radius.to_i if radius.zero?
 
         if located || adjust_to_map
-          @search_params.merge!(midpoint: search.midpoint,
-                                radius: radius)
-          if search.country.present? && search.city.blank? || global_map
-            @search_params.merge!(bounding_box: search.bounding_box)
-          end
+          @search_params[:midpoint] = search.midpoint
+          @search_params[:radius] = radius
+          @search_params[:bounding_box] = search.bounding_box if search.country.present? && search.city.blank? || global_map
         end
 
         ::Listing::SearchFetcher.new(@search_params, @transactable_type)

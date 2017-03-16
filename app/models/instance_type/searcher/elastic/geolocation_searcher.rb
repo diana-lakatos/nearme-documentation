@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # TODO: promote module to class
 module InstanceType::Searcher::Elastic::GeolocationSearcher
   include InstanceType::Searcher
