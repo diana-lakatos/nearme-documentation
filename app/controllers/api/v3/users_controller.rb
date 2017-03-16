@@ -18,11 +18,11 @@ module Api
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role
         when 'default'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id, as: current_user)
         when 'seller'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerAccountCreated, @user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerAccountCreated, @user.id, as: current_user)
         when 'buyer'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, @user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, @user.id, as: current_user)
         end
         render json: ApiSerializer.serialize_object(@user, meta: { csrf_token: form_authenticity_token })
       else

@@ -17,7 +17,7 @@ class Support::TicketsController < Support::BaseController
     @message = @ticket.messages.first
     if @ticket.valid?
       @ticket.save!
-      WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Created, @message.id)
+      WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Created, @message.id, as: current_user)
       flash[:success] = t('flash_messages.support.ticket.created')
       if current_user
         redirect_to support_ticket_path(@ticket)

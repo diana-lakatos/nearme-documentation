@@ -38,4 +38,8 @@ class WorkflowStep::CollaboratorWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     @transactable_collaborator.present? && transactable.present? && enquirer.present?
   end
+
+  def workflow_triggered_by
+    enquirer
+  end
 end

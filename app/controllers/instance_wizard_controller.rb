@@ -119,7 +119,7 @@ class InstanceWizardController < ActionController::Base
 
     @instance.locales.create! code: @instance.primary_locale, primary: true
 
-    WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, @instance.id, @user.id, user_password || '[using existing account password]')
+    WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, @instance.id, @user.id, user_password || '[using existing account password]', as: current_user)
 
     redirect_to @instance.domains.first.url
   end

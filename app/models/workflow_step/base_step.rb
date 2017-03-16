@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 class WorkflowStep::BaseStep
-  attr_reader :lister, :enquirer, :transactable
+  attr_reader :lister, :enquirer, :transactable, :workflow_triggered_by
 
   def self.belongs_to_transactable_type?
     false
   end
 
-  def invoke!
+  def invoke!(triggered_by)
     alerts.enabled.each do |alert|
       WorkflowAlert::InvokerFactory.get_invoker(alert).invoke!(self) if invokable_alert?(alert)
     end
+    @workflow_triggered_by = triggered_by if triggered_by
+    publish_event
   end
 
   def should_be_processed?
@@ -36,6 +38,27 @@ class WorkflowStep::BaseStep
     nil
   end
 
+  def workflow_type
+    raise NotImplementedError, "#{self.class.name} must implemented workflow_type method"
+  end
+
+  def data
+    {}
+  end
+
+  def publish_event
+    EventStore.publish_event(to_event)
+  end
+
+  def to_event
+    EventStore::Event.new(
+      event_type: self.class,
+      payload: data,
+      triggered_by: workflow_triggered_by,
+      topic_name: workflow_type
+    )
+  end
+
   protected
 
   def alerts
@@ -48,14 +71,6 @@ class WorkflowStep::BaseStep
 
   def workflow_step
     workflow.try(:workflow_steps).try(:for_associated_class, self.class.to_s).try(:includes, :workflow_alerts).try(:first)
-  end
-
-  def workflow_type
-    raise NotImplementedError, "#{self.class.name} must implemented workflow_type method"
-  end
-
-  def data
-    {}
   end
 
   def invokable_alert?(alert)

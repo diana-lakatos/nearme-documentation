@@ -53,7 +53,7 @@ class Comment < ActiveRecord::Base
             when 'ActivityFeedEvent'
               WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate if commentable.event_source_type == 'UserStatusUpdate'
     end
-    WorkflowStepJob.perform(klass, id) if klass.present?
+    WorkflowStepJob.perform(klass, id, as: creator) if klass.present?
     true
   end
 

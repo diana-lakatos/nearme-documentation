@@ -23,7 +23,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
     if @order.enquirer_cancelable?
       if @order.user_cancel
         # we want to make generic workflows probably. Maybe even per TT [ many to many ]
-        WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::EnquirerCancelled".constantize, @order.id)
+        WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::EnquirerCancelled".constantize, @order.id, as: current_user)
         flash[:success] = t('flash_messages.reservations.reservation_cancelled')
       else
         flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')
@@ -53,12 +53,12 @@ class Dashboard::OrdersController < Dashboard::BaseController
 
       if @order.confirmed? && @order.payment.paid?
         flash[:notice] = t('flash_messages.payments.successful_approval')
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPayment, @order.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPayment, @order.id, as: current_user)
       else
         @order.touch(:pending_guest_confirmation)
         @order.update_attribute(:enquirer_confirmed_at, nil)
         @order.payment.void!
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPaymentButCaptureFailed, @order.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerApprovedPaymentButCaptureFailed, @order.id, as: current_user)
         flash[:warning] = t('flash_messages.payments.failed_to_approve')
       end
     end
