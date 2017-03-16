@@ -149,14 +149,18 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       end
     end
 
+    bank_account_hash.merge(legal_entity: legal_entity_hash).merge(payment_gateway_config)
+  end
+
+  def bank_account_hash
     {
       bank_account: {
         country: iso_country_code,
         currency: get_currency,
-        account_number: bank_account_number.to_s.scan(/\d+/).first,
-        routing_number: bank_routing_number.to_s.scan(/\d+/).first
+        account_number: bank_account_number.to_s.delete(' ').scan(/^\w{0,2}[\d\-]*$/).first,
+        routing_number: bank_routing_number.to_s.delete(' ').scan(/^[\d\-]*$/).first
       }
-    }.merge(legal_entity: legal_entity_hash).merge(payment_gateway_config)
+    }
   end
 
   def address_hash
