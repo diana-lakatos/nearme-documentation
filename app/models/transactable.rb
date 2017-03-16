@@ -83,12 +83,13 @@ class Transactable < ActiveRecord::Base
 
   has_one :location_address, through: :location
   has_one :upload_obligation, as: :item, dependent: :destroy
-  belongs_to :event_booking, foreign_key: :action_type_id
-  belongs_to :subscription_booking, foreign_key: :action_type_id
-  belongs_to :time_based_booking, foreign_key: :action_type_id
-  belongs_to :no_action_booking, foreign_key: :action_type_id
-  belongs_to :purchase_action, foreign_key: :action_type_id
-  belongs_to :action_type
+  has_one :event_booking, inverse_of: :transactable
+  has_one :subscription_booking, inverse_of: :transactable
+  has_one :time_based_booking, inverse_of: :transactable
+  has_one :no_action_booking, inverse_of: :transactable
+  has_one :purchase_action, inverse_of: :transactable
+  has_one :offer_action, inverse_of: :transactable
+  belongs_to :action_type, inverse_of: :transactable
 
   has_many :activity_feed_events, as: :followed, dependent: :destroy
   has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
@@ -122,6 +123,12 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :customizations, allow_destroy: true
   accepts_nested_attributes_for :action_types, allow_destroy: true
   accepts_nested_attributes_for :links, allow_destroy: true
+  accepts_nested_attributes_for :time_based_booking
+  accepts_nested_attributes_for :event_booking
+  accepts_nested_attributes_for :subscription_booking
+  accepts_nested_attributes_for :no_action_booking
+  accepts_nested_attributes_for :purchase_action
+  accepts_nested_attributes_for :offer_action
 
   # == Callbacks
 
@@ -132,7 +139,7 @@ class Transactable < ActiveRecord::Base
   before_validation :set_activated_at, :set_enabled, :set_confirm_reservations, :set_possible_payout, :set_action_type
   after_create :set_external_id
   after_save do
-    if availability.try(:days_open).present?
+    if time_based_booking? && availability.try(:days_open).present?
       update_column(:opened_on_days, availability.days_open.sort)
     else
       update_column(:opened_on_days, []) if opened_on_days.any?
@@ -638,6 +645,7 @@ class Transactable < ActiveRecord::Base
     define_method("#{class_name.underscore}?") { action_type.try(:type) == "Transactable::#{class_name}" }
   end
 
+  # TODO: remove after switch to FormConfiguration
   def initialize_action_types
     transactable_type.action_types.enabled.each do |tt_action_type|
       next if action_types.any? { |at| at.transactable_type_action_type == tt_action_type }
@@ -650,6 +658,7 @@ class Transactable < ActiveRecord::Base
     self.action_type.enabled = true
   end
 
+  # TODO: remove after switch to FormConfiguration
   def initialize_default_availability_template
     if transactable_type.try(:default_availability_template_id).present?
       action_types.each do |at|

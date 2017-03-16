@@ -1,8 +1,18 @@
-- if f.object.allow_exclusive_price
-  %hr/
+- if f.object.is_a?(BaseForm)
+  - if f.object.model.allow_exclusive_price
+    %hr/
 
-  .form-inline
-    = f.input :has_exclusive_price, as: :switch, label_html: { class: 'block-label' }, required: false,
-    label: t(:enable, scope: [:pricing, :schedule, :exclusive_price])
+    .form-inline
+      = f.input :has_exclusive_price, as: :switch, label_html: { class: 'block-label' }, required: false,
+      label: t(:enable, scope: [:pricing, :schedule, :exclusive_price])
 
-    = f.input :exclusive_price, as: :numeric, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), label_html: { class: 'block-label' }, required: false, label: t(:exclusive_price, scope: [:pricing, :schedule, :exclusive_price])
+      = f.input :exclusive_price, as: :numeric, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(f.object.model.transactable.try(:currency)), label_html: { class: 'block-label' }, required: false, label: t(:exclusive_price, scope: [:pricing, :schedule, :exclusive_price])
+- else
+  - if f.object.allow_exclusive_price
+    %hr/
+
+    .form-inline
+      = f.input :has_exclusive_price, as: :switch, label_html: { class: 'block-label' }, required: false,
+      label: t(:enable, scope: [:pricing, :schedule, :exclusive_price])
+
+      = f.input :exclusive_price, as: :numeric, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), label_html: { class: 'block-label' }, required: false, label: t(:exclusive_price, scope: [:pricing, :schedule, :exclusive_price])

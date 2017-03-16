@@ -6,7 +6,7 @@ class Transactable::ActionType < ActiveRecord::Base
   AVAILABILE_UNITS = %w(hour day day_month night night_month event subscription_day subscription_month item).freeze
 
   belongs_to :instance
-  belongs_to :transactable, -> { with_deleted }, touch: true
+  belongs_to :transactable, -> { with_deleted }, touch: true, inverse_of: :action_type
   belongs_to :transactable_type_action_type, class_name: '::TransactableType::ActionType'
   has_many :pricings, as: :action, inverse_of: :action
 
@@ -76,7 +76,7 @@ class Transactable::ActionType < ActiveRecord::Base
   end
 
   def only_night_booking?
-    pricings.all?(&:night_booking?)
+    pricings.any? && pricings.all?(&:night_booking?)
   end
 
   def validate_all_dates_available(order)

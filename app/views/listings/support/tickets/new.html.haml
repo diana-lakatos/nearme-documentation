@@ -8,7 +8,7 @@
         %h3
           - if @listing.event_booking?
             = @schedule_presenter.selected_date_summary
-          - elsif @listing.subscription_booking
+          - elsif @listing.subscription_booking?
             = t('support.new.subscription', period: @pricing.units_translation('search.per_unit_price').titleize, from: @date_presenter.get_date)
           -elsif params[:order][:quantity] && @listing.purchase_action?
             = "#{params[:order][:quantity]} #{@pricing.units_translation('search.per_unit_price').titleize}"

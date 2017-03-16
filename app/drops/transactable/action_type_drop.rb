@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class Transactable::ActionTypeDrop < BaseDrop
+  include AvailabilityRulesHelper
   # @return [Transactable::ActionTypeDrop]
   attr_reader :action_type
 
@@ -29,5 +30,10 @@ class Transactable::ActionTypeDrop < BaseDrop
   #   { 'day' => MoneyDrop }
   def pricings_hash
     @pricings_hash ||= pricings.each_with_object({}) { |pricing, hash| hash[pricing.unit] = pricing.price }
+  end
+
+  # @return [Array<Hash>] array containing all available templates that can be used for transacable
+  def availability_templates_choices
+    availability_choices(@action_type)
   end
 end

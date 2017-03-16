@@ -1,15 +1,32 @@
-.row.nested-fields
-  %hr
-  .col-md-2
-    = f.hidden_field :enabled, value: '1'
-    = f.input :number_of_units, as: :numeric
-  .col-md-2
-    = f.input :unit, as: :select, collection: f.object.action.decorate.availabile_units_with_i18n
-  .col-md-3
-    = f.input :price, as: :numeric, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true }
-  .col-md-4
-    .form-unit{ style: 'line-height: 96px;'}
-      = t :person, scope: [:pricing, :price_unit]
-  .col-md-1{ style: 'line-height: 96px;'}
-    = link_to_remove_association f, class: 'remove_fields' do
-      %button.action--remove
+- if f.object.is_a?(BaseForm)
+  .row.nested-fields
+    %hr
+    .col-md-2
+      = f.hidden_field :enabled, value: '1'
+      = f.input :number_of_units, as: :numeric
+    .col-md-2
+      = f.input :unit, as: :select, collection: f.object.model.action.decorate.availabile_units_with_i18n
+    .col-md-3
+      = f.input :price, as: :numeric, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(f.object.model.action.transactable.try(:currency)), input_html: { 'data-price-field' => true }
+    .col-md-4
+      .form-unit{ style: 'line-height: 96px;'}
+        = t :person, scope: [:pricing, :price_unit]
+    .col-md-1{ style: 'line-height: 96px;'}
+      = link_to_remove_association f, class: 'remove_fields' do
+        %button.action--remove
+- else
+  .row.nested-fields
+    %hr
+    .col-md-2
+      = f.hidden_field :enabled, value: '1'
+      = f.input :number_of_units, as: :numeric
+    .col-md-2
+      = f.input :unit, as: :select, collection: f.object.action.decorate.availabile_units_with_i18n
+    .col-md-3
+      = f.input :price, as: :numeric, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true }
+    .col-md-4
+      .form-unit{ style: 'line-height: 96px;'}
+        = t :person, scope: [:pricing, :price_unit]
+    .col-md-1{ style: 'line-height: 96px;'}
+      = link_to_remove_association f, class: 'remove_fields' do
+        %button.action--remove

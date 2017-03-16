@@ -27,7 +27,7 @@ class TransactableDecorator < Draper::Decorator
   # TODO: Refactor
   def lowest_price_with_currency(filter_pricing = [])
     return if action_type.is_free_booking?
-    if event_booking
+    if event_booking?
       if event_booking.pricing.price.to_f > 0
         "#{price_with_currency(event_booking.pricing.price)} <span>/ #{transactable_type.action_price_per_unit? ? t('simple_form.labels.transactable.price.per_unit') : t('simple_form.labels.transactable.price.fixed')}</span>".html_safe
       elsif event_booking.pricing.exclusive_price.to_f > 0

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class PlatformContextDrop < BaseDrop
+  include CurrencyHelper
   # @return [PlatformContextDecorator]
   attr_reader :platform_context_decorator
 
@@ -269,6 +270,7 @@ class PlatformContextDrop < BaseDrop
     @platform_context_decorator.instance.user_blog_posts.highlighted.by_date.limit(3)
   end
 
+  # @return [Array<String>] returns array of all supported login providers
   def available_login_providers
     @available_providers ||= (Authentication::PROVIDERS.select do |provider|
       @instance.authentication_supported?(provider)

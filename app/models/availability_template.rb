@@ -9,7 +9,7 @@ class AvailabilityTemplate < ActiveRecord::Base
   belongs_to :transactable_type
   belongs_to :instance
   has_many :transactables
-  belongs_to :parent, polymorphic: true, touch: true
+  belongs_to :parent, polymorphic: true, touch: true, inverse_of: :availability_templates
 
   # attr_accessible :transactable_type, :name, :description, :availability_rules, :availability_rules_attributes
 

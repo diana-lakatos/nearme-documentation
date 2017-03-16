@@ -99,8 +99,8 @@ module DashboardHelper
     caption
   end
 
-  def booking_types_active_toggle(transactable, action_type, _content = false)
-    'active' if transactable.action_type.try(:transactable_type_action_type) == action_type
+  def booking_types_active_toggle(transactable_action_type, action_type, _content = false)
+    'active' if transactable_action_type.try(:transactable_type_action_type) == action_type
   end
 
   # New Ux UI

@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 class TransactableForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
-  POPULATOR = lambda do |collection:, fragment:, index:, **_args|
-    if (action_type = collection[index]).present?
-      action_type
-    else
-      collection.insert(index, Transactable::ActionType.new(type: fragment[:type]))
-    end
-  end.freeze
+  AVAILABLE_ACTION_TYPES = [:time_based_booking, :event_booking,
+                            :subscription_booking, :purchase_action, :no_action_booking, :offer_action].freeze
+  model :transactable
+
   property :currency
   validates :currency, presence: true, allow_nil: false, currency: true
-  property :location
+  property :enabled
+  property :transactable_type
   property :action_type
+  property :company, populate_if_empty: -> { model.creator&.default_company },
+                     prepopulator: ->(_options) { self.company ||= model.creator&.default_company }
+  property :location, populate_if_empty: -> { model.company.locations.first if model.transactable_type.skip_location? }
+  property :photo_ids
   property :_destroy, virtual: true
 
   def _destroy=(value)
@@ -31,6 +33,7 @@ class TransactableForm < BaseForm
   # validates_associated :approval_requests, :action_type
   class << self
     def decorate(configuration)
+      configuration = configuration
       Class.new(self) do
         if (properties_configuration = configuration.delete(:properties)).present?
           validation = properties_configuration.delete(:validation)
@@ -71,12 +74,21 @@ class TransactableForm < BaseForm
           property :customizations, form: CustomizationsForm.decorate(customizations_configuration),
                                     from: :customizations_open_struct
         end
-        if (action_types_configuration = configuration.delete(:action_types)).present?
-          validation = action_types_configuration.delete(:validation)
-          validates :action_types, validation if validation.present?
-          collection :action_types, form: ActionTypeForm.decorate(action_types_configuration),
-                                    populator: POPULATOR,
-                                    prepopulator: ->(_options) { self.action_types = model.transactable_type.action_types.enabled.map { |at| at.transactable_action_types.build } if action_types.size.zero? }
+        AVAILABLE_ACTION_TYPES.select { |key| configuration.key?(key) }.each do |action|
+          next if (action_configuration = configuration.delete(action)).nil?
+          validation = action_configuration.delete(:validation)
+          validates action, validation if validation.present?
+          property action, form: "#{action.to_s.camelize}Form".constantize.decorate(action_configuration),
+                           populator: ->(fragment:, **) {
+                                        return skip! unless fragment[:enabled] == 'true'
+                                        send("#{action}=", model.send("build_#{action}", transactable: model)) if send(action).blank?
+                                        self.action_type = send(action).model if fragment[:enabled] == 'true'
+                                      },
+                           prepopulator: ->(_options) {
+                                           return if send(action).present?
+                                           send("#{action}=", "Transactable::#{action.to_s.camelize}".constantize.new(transactable: model, transactable_type_action_type: model.transactable_type.send(action))) if send(action).blank?
+                                           model.action_type ||= send(action).model
+                                         }
         end
         configuration.each do |field, options|
           property :"#{field}"

@@ -5,6 +5,8 @@ class CompanyDrop < BaseDrop
   # @return [CompanyDrop]
   attr_reader :company
 
+  # @!method locations
+  #   @return [Array<Location>] array of company's locations
   # @!method created_payment_transfers
   #   @return [Array<PaymentTransfer>] array of payment transfer objects
   # @!method creator
@@ -22,7 +24,7 @@ class CompanyDrop < BaseDrop
   # @!method merchant_accounts
   #   @return [Array<MerchantAccountDrop>] array of merchant accounts configured for the company
   delegate :created_payment_transfers, :creator, :url, :description, :company_address,
-           :name, :payments_mailing_address, :merchant_accounts, to: :company
+           :name, :payments_mailing_address, :merchant_accounts, :locations, to: :company
 
   def initialize(company)
     @company = company

@@ -1221,7 +1221,7 @@ DesksnearMe::Application.routes.draw do
         end
         namespace :user do
           resource :space_wizard, only: [:create]
-          resources :transactables, only: [:index]
+          resources :transactables, only: [:index, :create, :update]
           resources :custom_attachments, only: [:destroy]
           resources :custom_images, only: [:destroy]
           resources :transactable_collaborators, only: [:create, :destroy] do

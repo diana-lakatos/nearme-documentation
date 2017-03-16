@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 module Api
-  class V4::User::TransactablesController < BaseController
+  class V4::User::TransactablesController < V4::User::BaseController
     before_action :find_transactable_type
+    before_action :build_form, only: [:create, :update]
     skip_before_action :require_authentication
     skip_before_action :require_authorization
 
@@ -19,7 +20,41 @@ module Api
       )
     end
 
+    def create
+      if @transactable_form.validate(params[:form].presence || params[:transactable] || {})
+        @transactable_form.save
+        raise "Create failed due to configuration issue: #{@transactable_form.model.errors.full_messages.join(', ')}" unless @transactable_form.model.persisted?
+      end
+      respond(@transactable_form, alert: false,
+                                  location: session.delete(:user_return_to).presence || params[:return_to].presence || root_path)
+    end
+
+    def update
+      if @transactable_form.validate(params[:form].presence || params[:transactable] || {})
+        @transactable_form.save
+        # tmp safety check - we still have validation in Transactable model itself
+        # so if model is invalid, it won't be saved and user won't be able to
+        # sign up - we want to be notified
+        raise "Update failed due to configuration issue: #{@transactable_form.model.errors.full_messages.join(', ')}" if @transactable_form.errors.any?
+      end
+      respond(@transactable_form, notice: I18n.t('flash_messages.api.users.update.notice'),
+                                  alert: false)
+    end
+
     private
+
+    def build_form
+      @form_configuration = FormConfiguration.find_by(id: params[:form_configuration_id]) if params[:form_configuration_id].present?
+      @transactable_form = @form_configuration&.build(get_transactable)
+    end
+
+    def get_transactable
+      if params[:id]
+        current_user.transactables.find(params[:id])
+      else
+        @transactable_type.transactables.new
+      end
+    end
 
     def find_transactable_type
       @transactable_type = TransactableType.includes(:custom_attributes).friendly.find_by(id: params[:transactable_type_id]) || TransactableType.includes(:custom_attributes).first

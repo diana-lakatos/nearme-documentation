@@ -1,0 +1,13 @@
+{% assign form_object_availability_rules = availability_rules %}
+<div class="nested-fields">
+  {% assign from_value = form_object_availability_rules.object.model.open_time_with_default%}
+  {% assign to_value = form_object_availability_rules.object.model.close_time_with_default%}
+  {% input open_time, form: availability_rules, label: 'Available from', input_html-value:  @from_value %}
+  {% input close_time, form: availability_rules, label: 'to', input_html-value: @to_value %}
+  {% input days, form: availability_rules, as: week_days, label: 'on' %}
+  <p class="text-right">
+    <button class="btn btn-warning btn-small btn-gray remove_fields dynamic" type="button">
+      {{ 'pricing.availability.remove_period' | t }}
+    </button>
+  </p>
+</div>

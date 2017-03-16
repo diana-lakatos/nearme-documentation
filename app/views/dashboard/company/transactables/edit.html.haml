@@ -11,20 +11,36 @@
     - if @transactable.persisted? && @transactable.location.try(:persisted?) && @transactable.errors[:location].empty?
       = link_to t('dashboard.transactables.view_html'), @transactable.decorate.show_path, rel: :external
 
+- if @transactable_form
+  = dashboard_simple_form_for @transactable_form, url: @controller_scope + [@transactable], :html => { :multipart => true,  method: :put, id: 'listing-form' } do |f|
+    = render "dashboard/company/transactables/errors", f: f
 
-= dashboard_simple_form_for @controller_scope + [@transactable], :html => { :multipart => true,  method: :put, id: 'listing-form' } do |f|
+    = render "dashboard/company/transactables/form_panels_nav", f: f
 
-  = render "dashboard/company/transactables/errors", f: f
+    .panel
+      .panel-body
+        = render 'form', f: f
 
-  = render "dashboard/company/transactables/form_panels_nav", f: f
+    .panel.form-actions
+      .panel-body
+        = f.button :submit, t('dashboard.items.save')
 
-  .panel
-    .panel-body
-      = render 'form', f: f
+    .form-actions
+      = render 'dashboard/company/transactables/form_actions'
+- else
+  = dashboard_simple_form_for @controller_scope + [@transactable], :html => { :multipart => true,  method: :put, id: 'listing-form' } do |f|
 
-  .panel.form-actions
-    .panel-body
-      = f.button :submit, t('dashboard.items.save')
+    = render "dashboard/company/transactables/errors", f: f
 
-  .form-actions
-    = render 'dashboard/company/transactables/form_actions'
+    = render "dashboard/company/transactables/form_panels_nav", f: f
+
+    .panel
+      .panel-body
+        = render 'form', f: f
+
+    .panel.form-actions
+      .panel-body
+        = f.button :submit, t('dashboard.items.save')
+
+    .form-actions
+      = render 'dashboard/company/transactables/form_actions'

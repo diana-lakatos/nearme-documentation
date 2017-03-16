@@ -50,6 +50,7 @@ class TransactableType::Pricing < ActiveRecord::Base
     max_price_cents.to_i > 0 ? max_price_cents : MAX_PRICE
   end
 
+  # TODO remove after switch to FormConfiguration
   def build_transactable_pricing(action_type)
     action_type.pricings.new(
       slice(:number_of_units, :unit).merge(action: action_type,
