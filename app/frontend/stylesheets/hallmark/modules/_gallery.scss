@@ -1,22 +1,26 @@
 /* gallery */
 
 .gallery-a {
-    list-style: none;
-    margin: -10px -10px 10px;
-    padding: 0;
-    font-size: 0;
-    letter-spacing: -1em;
+  list-style: none;
+  margin: -10px -10px 10px;
+  padding: 0;
+  font-size: 0;
+  letter-spacing: -1em;
 
-    li {
-        display: inline-block;
-        border: 1px solid transparent;
-        border-width: 10px;
-        font-size: 14px;
-        letter-spacing: 0;
-        vertical-align: middle;
-    }
+  li {
+    display: inline-block;
+    border: 1px solid transparent;
+    border-width: 10px;
+    font-size: 14px;
+    letter-spacing: 0;
+    vertical-align: middle;
+  }
 
-    li:before {
-        display: none;
-    }
+  li:before {
+    display: none;
+  }
+
+  img {
+    width: 100%;
+  }
 }
