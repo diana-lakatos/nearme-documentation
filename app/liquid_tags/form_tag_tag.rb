@@ -29,7 +29,7 @@ class FormTagTag < Liquid::Block
     context.stack do
       context.registers[:action_view].form_tag(@attributes[:url], @attributes) do |f|
         context['form_tag_object'] = f
-        render_all(@nodelist, context).html_safe
+        @body.render(context).html_safe
       end
     end
   end

@@ -143,7 +143,7 @@ class OrderDrop < BaseDrop
 
   # @return [String] the total amount to be charged for this order
   def total_amount
-    @order.total_amount
+    @order.total_amount&.to_s
   end
 
   # @return [MoneyDrop] total amount to be charged for this order as a MoneyDrop
