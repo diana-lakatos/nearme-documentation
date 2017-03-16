@@ -19,6 +19,28 @@ class AddressTest < ActiveSupport::TestCase
     end
   end
 
+  context 'creating address components for Bronx address' do
+    setup do
+      @address = FactoryGirl.create(:address_bronx_address_components)
+    end
+
+    context 'creates address components for new record' do
+      should 'store address components' do
+        assert_equal(8, @address.address_components.count)
+      end
+
+      should 'be able to get city, suburb, state, country and postal code' do
+        assert_equal 'Coster Street', @address.street
+        assert_equal 'Bronx', @address.city
+        assert_equal 'Bronx', @address.suburb
+        assert_equal 'New York', @address.state
+        assert_equal 'United States', @address.country
+        assert_equal '10474', @address.postcode
+      end
+
+    end
+  end
+
   context 'creating address components' do
     setup do
       @address = FactoryGirl.create(:address_ursynowska_address_components)
