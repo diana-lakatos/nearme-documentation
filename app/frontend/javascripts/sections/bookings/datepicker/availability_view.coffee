@@ -20,6 +20,20 @@ module.exports = class AvailabilityView extends DatepickerView
     @lastDefaultQuantity = @listing.defaultQuantity
     super
 
+  renderDate: (date, monthDate) ->
+    klasses = @classForDate(date, monthDate)
+    title = null
+    if klasses.indexOf('not-available') >= 0
+      title = @listing.data.date_not_available_title
+    @_render(@dayTemplate,
+      title: title,
+      year:  date.getFullYear(),
+      month: date.getMonth(),
+      day:   date.getDate(),
+      dow:   date.getDay(),
+      klass: @classForDate(date, monthDate)
+    )
+
   # Extend the class generation method to add disabled state if the listing quantity selection
   # exceeds the availability for a given date.
   classForDate: (date, monthDate) ->

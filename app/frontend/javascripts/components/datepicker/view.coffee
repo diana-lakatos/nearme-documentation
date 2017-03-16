@@ -36,7 +36,7 @@ module.exports = class DatepickerView extends PositionedView
   '''
 
   dayTemplate: '''
-    <div class="<%= klass %>" data-year="<%= year %>" data-month="<%= month %>" data-day="<%= day %>"><%= day %></div>
+    <div title="<%= title %>" class="<%= klass %>" data-year="<%= year %>" data-month="<%= month %>" data-day="<%= day %>"><%= day %></div>
   '''
 
   defaultOptions: {
