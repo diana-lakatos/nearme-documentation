@@ -32,6 +32,15 @@ class Instance < ActiveRecord::Base
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }.freeze
   SEARCHABLE_CLASSES = %w(TransactableType InstanceProfileType).freeze
   CLASSES_WITH_ES_INDEX = [Transactable, User].freeze
+  INSTANCE_IDS = { # use them in data migrations
+    uot:         195,
+    local_drive: 211,
+    the_volter:  194,
+    lit_volte:   198,
+    hallmark:    5011,
+    bronxchange: 5014,
+    spacer:      5020
+  }.freeze
 
   has_one :theme, as: :owner
   has_one :custom_theme, -> { where(in_use: true) }, as: :themeable
