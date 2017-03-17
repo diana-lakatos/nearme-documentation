@@ -10,7 +10,7 @@ module Api
     def index
       params[:v] = 'listing_mixed'
       search_params = params
-      @searcher = InstanceType::SearcherFactory.new(@transactable_type, search_params, result_view, current_user).get_searcher
+      @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(@transactable_type, search_params).tap(&:invoke)
       render json: ApiSerializer.serialize_collection(
         @searcher.results.includes(categories: [:parent]),
         include: ['categories', 'action-type', 'action-type.pricings'],
