@@ -60,7 +60,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
         @user.save(validate: false)
         fix_action_types
         fix_availability_templates
-        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.try(:id))
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.try(:id), as: current_user)
       else
         @user.save(validate: false)
       end
@@ -75,8 +75,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       @user.listings.first.try(:action_type).try(:schedule).try(:create_schedule_from_schedule_rules)
       @user.companies.first.update_metadata(draft_at: nil, completed_at: Time.now)
       if @transactable_type.require_transactable_during_onboarding?
-        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @user.first_listing.try(:id)) unless @user.first_listing.try(:is_trusted?)
-        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.try(:id))
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @user.first_listing.try(:id), as: current_user) unless @user.first_listing.try(:is_trusted?)
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.try(:id), as: current_user)
       else
         @user.seller_profile.mark_as_onboarded!
       end

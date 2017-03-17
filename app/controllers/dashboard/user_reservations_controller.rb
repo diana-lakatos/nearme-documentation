@@ -11,7 +11,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
   def user_cancel
     if reservation.cancelable?
       if reservation.user_cancel
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, reservation.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, reservation.id, as: current_user)
         flash[:success] = t('flash_messages.reservations.reservation_cancelled')
       else
         flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')

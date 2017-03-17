@@ -64,11 +64,10 @@ EOQ
 
         views.each do |view|
           iv = InstanceView.find_or_initialize_by(
-            instance_id: i.id, locale: 'en', view_type: 'email', partial: false, handler: 'liquid',
+            instance_id: i.id, view_type: 'email', partial: false, handler: 'liquid',
             path: view[:path], format: view[:format]
           )
           iv.body = view[:body]
-          iv.locale_ids = [Locale.find_by(code: 'en').id]
           iv.save!
         end
 

@@ -8,6 +8,10 @@ class WorkflowStep::SavedSearchWorkflow::BaseStep < WorkflowStep::BaseStep
     'saved_search'
   end
 
+  def workflow_triggered_by
+    nil # Called from job
+  end
+
   def enquirer
     fail 'Saved searches should belong to the same user' unless @saved_searches.map(&:user_id).uniq.size == 1
     @saved_searches.first.user

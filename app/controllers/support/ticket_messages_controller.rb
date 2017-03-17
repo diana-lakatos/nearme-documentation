@@ -6,14 +6,14 @@ class Support::TicketMessagesController < Support::BaseController
     if message.valid?
       message.save!
       if ticket.target_rfq?
-        WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Updated, message.id)
+        WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Updated, message.id, as: current_user)
         if ticket.target.action_free_booking?
           flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
         else
           flash[:success] = t('flash_messages.support.offer_ticket_message.created')
         end
       else
-        WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Updated, message.id)
+        WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Updated, message.id, as: current_user)
         flash[:success] = t('flash_messages.support.ticket_message.created')
       end
     else

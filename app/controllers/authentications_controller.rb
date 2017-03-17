@@ -44,13 +44,13 @@ class AuthenticationsController < ApplicationController
       if @oauth.create_user(@role)
         case @role
         when 'default'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @oauth.authentication.user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @oauth.authentication.user.id, as: current_user)
           @onboarding = @oauth.authentication.user.default_profile.onboarding?
         when 'seller'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerAccountCreated, @oauth.authentication.user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerAccountCreated, @oauth.authentication.user.id, as: current_user)
           @onboarding = @oauth.authentication.user.seller_profile.onboarding?
         when 'buyer'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, @oauth.authentication.user.id)
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, @oauth.authentication.user.id, as: current_user)
           @onboarding = @oauth.authentication.user.buyer_profile.onboarding?
         end
         session[:user_return_to] = onboarding_index_url if @onboarding

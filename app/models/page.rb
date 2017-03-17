@@ -16,7 +16,7 @@ class Page < ActiveRecord::Base
   friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :theme
 
   validates :slug, uniqueness: { scope: :theme_id }
-  validates :layout_name, inclusion: { in: VALID_LAYOUTS, allow_blank: true }
+  validates :layout_name, inclusion: { in: ->(record) { record.valid_page_layouts }, allow_blank: true }
 
   # FIXME: disabled Sitemap updates. Needs to be optimized.
   # include SitemapService::Callbacks
@@ -59,6 +59,12 @@ class Page < ActiveRecord::Base
       '302 - Found' => 302,
       '307 - Temporary Redirect' => 307
     }
+  end
+
+  def valid_page_layouts
+    all_layouts = Page::VALID_LAYOUTS.dup
+    all_layouts.delete('community') if instance && !instance.is_community?
+    all_layouts
   end
 
   private

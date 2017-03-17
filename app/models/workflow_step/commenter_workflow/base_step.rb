@@ -23,4 +23,8 @@ class WorkflowStep::CommenterWorkflow::BaseStep < WorkflowStep::BaseStep
 
     @comment.present? && @commentable.present?
   end
+
+  def workflow_triggered_by
+    @user
+  end
 end
