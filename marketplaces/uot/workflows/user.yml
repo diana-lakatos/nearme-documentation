@@ -1,0 +1,41 @@
+---
+name: User
+workflow_type: user
+events_metadata: {}
+workflow_steps:
+- name: Unread Messages
+  associated_class: WorkflowStep::UserWorkflow::UnreadMessages
+  workflow_alerts:
+  - name: Unread messages for user
+    alert_type: email
+    recipient_type: enquirer
+    template_path: user_mailer/notify_about_unread_messages
+    delay: 0
+    subject: "{{'user_workflow.unread_messages.unread_messages_subject' | translate}}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Promoted To Admin
+  associated_class: WorkflowStep::UserWorkflow::PromotedToAdmin
+  workflow_alerts:
+  - name: User promoted to instance admin email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: user_mailer/user_promoted_to_instance_admin_email
+    delay: 0
+    subject: You've become an Admin of {{ platform_context.name }}
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Profile Approved
+  associated_class: WorkflowStep::UserWorkflow::ProfileApproved
+  workflow_alerts:
+  - name: Notify user of profile approved
+    alert_type: email
+    recipient_type: enquirer
+    template_path: user_mailer/profile_approved
+    delay: 0
+    subject: Your profile has been approved!
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

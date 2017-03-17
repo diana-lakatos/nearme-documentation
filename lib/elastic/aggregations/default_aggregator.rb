@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Elastic
   module Aggregations
     class DefaultAggregator < BaseAggregator
@@ -11,6 +12,10 @@ module Elastic
           { label: :maximum_price, type: :max, field: :all_prices },
           { label: :minimum_price, type: :min, field: :all_prices }
         ]
+      end
+
+      def create_field(field)
+        Nodes::BasicNode.new(field)
       end
     end
   end

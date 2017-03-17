@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 namespace :migrate do
+  task form_configuration: :environment do
+    FormComponentToFormConfiguration.new(Instance.all).go!
+  end
+
   task longtail: :environment do
     Instance.first.set_context!
     ThirdPartyIntegration::LongtailIntegration.create! do |longtail_integration|

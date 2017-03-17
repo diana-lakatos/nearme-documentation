@@ -1,0 +1,36 @@
+---
+name: Seller
+profile_type: seller
+validation:
+- required: true
+  field_name: mobile_number
+  validation_only_on_update: true
+custom_attributes:
+- name: linkedin_url
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: LinkedIn URL
+  searchable: false
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+  validation:
+  - required: true
+    field_name: linkedin_url
+    validation_only_on_update: true
+- name: referred_by
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: Referred By
+  searchable: false
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+form_components:
+- name: Registration
+  fields:
+  - !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+    user: name
+  - !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+    user: email
+  - !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+    user: password
+  type: seller_registration

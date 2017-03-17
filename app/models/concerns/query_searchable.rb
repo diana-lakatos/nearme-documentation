@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module QuerySearchable
   extend ActiveSupport::Concern
 
@@ -13,13 +14,13 @@ module QuerySearchable
               "tags.name ILIKE :#{word}"
             end
           else
-            if columns_hash[attrib.to_s].type == :hstore
-              attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
-            elsif columns_hash[attrib.to_s].type == :integer
-              attrib = "CAST(#{quoted_table_name}.\"#{attrib}\" AS text)"
-            else
-              attrib = "#{quoted_table_name}.\"#{attrib}\""
-            end
+            attrib = if columns_hash[attrib.to_s].type == :hstore
+                       "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
+                     elsif columns_hash[attrib.to_s].type == :integer
+                       "CAST(#{quoted_table_name}.\"#{attrib}\" AS text)"
+                     else
+                       "#{quoted_table_name}.\"#{attrib}\""
+                     end
             conditions += words_like.map do |word, _value|
               "#{attrib} ILIKE :#{word}"
             end
@@ -27,7 +28,7 @@ module QuerySearchable
         end
         if tags_conditions.any?
           conditions << Tagging.joins(:tag).where("taggings.taggable_id = users.id AND taggings.taggable_type = 'User'")
-            .where(tags_conditions.join(' OR ')).exists.to_sql
+                        .where(tags_conditions.join(' OR ')).exists.to_sql
         end
         sql = conditions.flatten.join(' OR ')
         result = where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words_like]))
@@ -47,7 +48,7 @@ module QuerySearchable
           when 'string'
             scope = scope.where("#{table_name}.properties @> ?", "\"#{definition[CustomAttributes::CustomAttribute::NAME]}\"=>\"#{value}\"")
           else
-            fail NotImplementedError.new("Cannot filter by attribute with type: #{definition[CustomAttributes::CustomAttribute::ATTRIBUTE_TYPE]}")
+            raise NotImplementedError, "Cannot filter by attribute with type: #{definition[CustomAttributes::CustomAttribute::ATTRIBUTE_TYPE]}"
           end
         end
       end

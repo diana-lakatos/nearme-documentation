@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Api::V3::InstancesController < Api::BaseController
   skip_before_action :verified_api_request?
   skip_before_action :require_authorization
@@ -182,6 +183,7 @@ class InstanceFactory
     instance.locales.create! code: instance.primary_locale, primary: true
 
     WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, instance.id, user.id, @password, as: user)
+    FormComponentToFormConfiguration.new(Instance.where(id: instance.id)).go!
     instance
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::SpamReportWorkflow::SummaryStep < WorkflowStep::BaseStep
   def initialize(spam_report_count)
     @spam_report_count = spam_report_count

@@ -84,6 +84,7 @@ module Elastic
           }
         }
       }.merge(aggregations)
+
       if @not_filters.present?
         query[:query][:filtered].merge(
           filter: {
@@ -122,7 +123,7 @@ module Elastic
 
     def geo_filters
       if @bounding_box && @bounding_box[:top_right][:lat] != @bounding_box[:bottom_left][:lat] &&
-        @bounding_box[:top_right][:lon] != @bounding_box[:bottom_left][:lon]
+         @bounding_box[:top_right][:lon] != @bounding_box[:bottom_left][:lon]
         [
           {
             geo_bounding_box: {

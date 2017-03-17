@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module EventStore
   class EventDataSerializer
     def initialize(data)

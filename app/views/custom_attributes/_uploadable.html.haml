@@ -1,0 +1,30 @@
+- if ca.attribute_type == 'photo'
+  - association = 'custom_images'
+- elsif ca.attribute_type == 'file'
+  - association = 'custom_attachments'
+- else
+  - raise NotImplementedError, "Unknown uploadable attribute type: #{ca.attribute_type}"
+- index ||= nil
+- # tmp hack to use this partial for both nested attribute and not nested
+- if index.present?
+  - div_klass = "col-xs-11"
+- else
+  - div_klass = ''
+
+- if f.object.kind_of?(BaseForm)
+  = f.simple_fields_for association do |associations_form|
+    = associations_form.simple_fields_for :"#{ca.id}" do |association_form|
+      %div{class: div_klass}
+        = render "#{association}/reform_attribute", f: association_form, ca: ca, parent_form: associations_form
+      - if index.present? && index.zero?
+        .col-xs-1
+          = link_to_remove_association f, class: 'remove_fields' do
+            %button.action--remove
+- else
+  = f.simple_fields_for association, f.object.custom_images.where(custom_attribute_id: ca.id).first_or_initialize  do |association_form|
+    %div{class: div_klass}
+      = render "#{association}/attribute", f: association_form, ca: ca
+    - if index.present? && index.zero?
+      .col-xs-1
+        = link_to_remove_association f, class: 'remove_fields' do
+          %button.action--remove

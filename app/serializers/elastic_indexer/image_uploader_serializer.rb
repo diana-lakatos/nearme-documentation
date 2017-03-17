@@ -1,8 +1,11 @@
+# frozen_string_literal: true
 module ElasticIndexer
   class ImageSerializer < ActiveModel::Serializer
     self.root = false
 
     attributes :url, :version_name, :dimensions
+
+    private
 
     def url
       object.url.presence || default_url

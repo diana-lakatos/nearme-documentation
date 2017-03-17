@@ -1,0 +1,34 @@
+= simple_form_for resource, as: :form, url: '/api/users.html', method: :post, html: { class: form_classes, id: :new_user } do |f|
+  = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
+  = hidden_field_tag 'return_to', params[:return_to] if params[:return_to]
+  = hidden_field_tag 'role', @role
+
+  - tab_index = 0
+
+  = f.simple_fields_for :"#{@role}_profile" do |profile_form|
+    = profile_form.simple_fields_for :properties do |properties_form|
+      - FormComponent.find_by(form_type: "FormComponent::#{@role.upcase}_REGISTRATION".constantize).form_fields.each_with_index do |form_field, index|
+        -# Tab index needs to start with 1
+        - tab_index += 1
+
+        - model = form_field.keys.first
+        - field = form_field[model]
+
+        - if model == 'user'
+          - if lookup_context.template_exists?("#{field}_component.html.haml", "registrations/signup_form_components/#{model}", true)
+            = render partial: "registrations/signup_form_components/#{model}/#{field}_component",
+              locals: { form: f, tab_index: tab_index, hide_password: hide_password, profile_form: profile_form, properties_form: properties_form }
+
+        - (InstanceProfileType.send(:"#{@role.downcase}").try(:custom_attributes) || []).each do |attribute|
+          = draw_attribute_for_form(attribute, properties_form, nil, { label: false, placeholder: attribute.label,
+            input_html: { tabindex: tab_index } }) if field == attribute.name
+
+      - if platform_context.instance.force_accepting_tos
+        = render 'api/v4/users/super_trash/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '),
+          checked: !f.object.errors[:accept_terms_of_service].present?
+      - else
+        - if @legal_page_present
+          %p.notice.text-center.legal
+            #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
+      .actions
+        = f.submit t('sign_up_form.buttons.sign_up'), class: 'desksnearme submit btn btn-green', data: { disable_with: t('sign_up_form.disabled_buttons.sign_up') }, tabindex: tab_index+1

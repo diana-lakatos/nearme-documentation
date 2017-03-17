@@ -1,0 +1,19 @@
+---
+name: Languages
+multiple_root_categories: true
+mandatory: true
+children:
+- name: Japanese
+- name: French
+- name: Other
+- name: Spanish
+- name: German
+- name: Italian
+- name: Polish
+- name: Korean
+- name: English
+- name: Russian
+transactable_types:
+- Project
+instance_profile_types:
+- Buyer

@@ -19,7 +19,7 @@ class TransactableCollaborator < ActiveRecord::Base
   validates :transactable, presence: true
 
   scope :approved, -> { where.not(approved_by_owner_at: nil, approved_by_user_at: nil) }
-  scope :for_user, -> (user) { user.present? ? where('transactable_collaborators.user_id = ? OR transactable_collaborators.email = ?', user.id, user.email) : [] }
+  scope :for_user, ->(user) { user.present? ? where('transactable_collaborators.user_id = ? OR transactable_collaborators.email = ?', user.id, user.email) : [] }
   scope :pending_received_invitation, -> { where(approved_by_user_at: nil) }
   scope :pending_sent_invitation, -> { where(approved_by_owner_at: nil) }
 
@@ -117,10 +117,8 @@ class TransactableCollaborator < ActiveRecord::Base
 
   def reject_related_offers
     return unless actor
-    transactable.orders.where(user_id: self.user_id).each do |order|
-      if order.user_id == actor.id && order.enquirer_cancelable?
-        order.user_cancel
-      end
+    transactable.orders.where(user_id: user_id).find_each do |order|
+      order.user_cancel if order.user_id == actor.id && order.enquirer_cancelable?
     end
   end
 end

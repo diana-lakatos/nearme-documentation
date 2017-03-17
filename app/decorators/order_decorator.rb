@@ -173,7 +173,6 @@ class OrderDecorator < Draper::Decorator
 
     values
   end
-  
 
   private
 
@@ -197,5 +196,4 @@ class OrderDecorator < Draper::Decorator
 
     address
   end
-
 end

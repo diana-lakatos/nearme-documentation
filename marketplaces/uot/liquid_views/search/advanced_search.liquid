@@ -1,0 +1,72 @@
+---
+partial: true
+---
+<div class="search-type-toggle">
+  <a class="button-b" href="/search?search_type=basic">Simple search</a>
+</div>
+
+<fieldset class="filters advanced" data-search-filters-container>
+    <legend class="struct-label">Filter</legend>
+
+    <div class="filters-wrapper">
+        <div class="filter-categories">
+            {% assign categories = searcher.searchable_categories | rotate: -1 %}
+
+            {% for root_category in categories %}
+                <div class="filter filter-{{ root_category.name | parameterize }}">
+                    <span class="filter-title">{{ root_category.name }}</span>
+                    <ul>
+                    {% for category in root_category.sorted_descendants %}
+                        <li>
+                            <span class="checkbox-a">
+                                <input type="checkbox" name="category_ids[]" {% if searcher.category_ids contains category.id %}checked{% endif %} value="{{category.id}}" id="category-{{category.id}}">
+                                <label for="category-{{category.id}}">{{ category.name }}</label>
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="filter-switches">
+            <fieldset class="filter" data-custom-attribute='workplace_type'>
+                <legend class="filter-title">By Workplace</legend>
+                <ul>
+                    <li>
+                        <span class="radio-a">
+                            <input type="radio" {% if searcher.lg_custom_attributes_hash['workplace_type'] contains 'Online' %}checked{% endif %} id="filter-workplace-online" name="lg_custom_attributes[workplace_type][]" value="Online">
+                            <label for="filter-workplace-online">Online</label>
+                        </span>
+                    </li>
+
+                    <li>
+                        <span class="radio-a">
+                            <input type="radio" {% if searcher.lg_custom_attributes_hash['workplace_type'] contains 'On Site' %}checked{% endif %} id="filter-workplace-onsite" name="lg_custom_attributes[workplace_type][]" value="On Site">
+                            <label for="filter-workplace-onsite">On Site</label>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <fieldset class="filter" data-custom-attribute='travel'>
+                <legend class="filter-title">By Travel</legend>
+                <ul>
+                    <li>
+                        <span class="radio-a">
+                            <input type="radio" {% if searcher.lg_custom_attributes_hash['travel'] contains 'yes' %}checked{% endif %} id="filter-travel-yes" name="lg_custom_attributes[travel][]" value="yes">
+                            <label for="filter-travel-yes">Yes</label>
+                        </span>
+                    </li>
+
+                    <li>
+                        <span class="radio-a">
+                            <input type="radio" {% if searcher.lg_custom_attributes_hash['travel'] contains'no' %}checked{% endif %} id="filter-travel-no" name="lg_custom_attributes[travel][]" value="no">
+                            <label for="filter-travel-no">No</label>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+    </div>
+</fieldset>

@@ -1,4 +1,10 @@
 en:
+  activemodel:
+    attributes:
+      "user/buyer_profile/properties": 'Property'
+      "user/seller_profile/properties": 'Property'
+  buyer_profile:
+    properties.: 'Property'
   activerecord:
     errors:
       models:

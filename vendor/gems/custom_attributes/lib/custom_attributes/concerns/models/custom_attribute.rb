@@ -21,14 +21,14 @@ module CustomAttributes
           SEARCHABLE = 6 unless defined?(SEARCHABLE)
           SEARCH_IN_QUERY = 7 unless defined?(SEARCH_IN_QUERY)
 
-          ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean photo).freeze unless defined?(ATTRIBUTE_TYPES)
+          ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean photo file).freeze unless defined?(ATTRIBUTE_TYPES)
           HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list range hidden).freeze unless defined?(HTML_TAGS)
           MULTIPLE_ARRAY_TAGS = %w(check_box_list select).freeze unless defined?(MULTIPLE_ARRAY_TAGS)
 
           scope :listable, -> { all }
           scope :not_internal, -> { where.not(internal: true) }
           scope :shared, -> { where(public: true) }
-          scope :with_changed_attributes, -> (target_id, target_type, updated_at) { where('target_id = ? AND target_type = ? AND updated_at > ?', target_id, target_type, updated_at) }
+          scope :with_changed_attributes, ->(target_id, target_type, updated_at) { where('target_id = ? AND target_type = ? AND updated_at > ?', target_id, target_type, updated_at) }
 
           validates_presence_of :name, :attribute_type
           validates_uniqueness_of :name, scope: [:target_id, :target_type, :deleted_at]
@@ -63,6 +63,7 @@ module CustomAttributes
           def normalize_html_options
             self.input_html_options = normalize_input_html_options unless input_html_options_string.nil?
             self.wrapper_html_options = normalize_wrapper_html_options unless wrapper_html_options_string.nil?
+            true
           end
 
           def normalize_input_html_options
@@ -150,8 +151,7 @@ module CustomAttributes
 
           def self.custom_attributes_mapper(_klass, targets)
             if _klass.table_exists?
-              all_custom_attributes = self.where(target: targets).pluck(:name, :attribute_type).uniq
-
+              all_custom_attributes = where(target: targets).pluck(:name, :attribute_type).uniq
               all_custom_attributes.map do |name, type|
                 yield [name, attribute_type_to_es_type(type)]
               end
@@ -168,9 +168,9 @@ module CustomAttributes
           end
 
           def self.custom_attributes_indexer(_klass, object)
-            custom_attributes_by_type = _klass.all.map do |obj|
+            custom_attributes_by_type = _klass.all.flat_map do |obj|
               obj.custom_attributes.pluck(:name, :attribute_type)
-            end.flatten(1).uniq
+            end.uniq
 
             custom_attributes = {}
             custom_attributes_by_type.each do |name, type|

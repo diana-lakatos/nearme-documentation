@@ -1,0 +1,17 @@
+---
+name: Payout
+workflow_type: payout
+events_metadata: {}
+workflow_steps:
+- name: No Payout Option
+  associated_class: WorkflowStep::PayoutWorkflow::NoPayoutOption
+  workflow_alerts:
+  - name: Notify host of no payout option
+    alert_type: email
+    recipient_type: lister
+    template_path: company_mailer/notify_host_of_no_payout_option
+    delay: 0
+    subject: No payout option
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

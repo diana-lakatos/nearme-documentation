@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 class InstanceAdmin::Support::TicketMessagesController < InstanceAdmin::Manage::BaseController
-  skip_before_filter :check_if_locked
+  skip_before_action :check_if_locked
   def create
     message = Support::TicketMessage.new(support_ticket_message_params)
     message.user = current_user

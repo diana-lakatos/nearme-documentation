@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Listings::ReservationsController < ApplicationController
   skip_before_action :filter_out_token, only: [:return_express_checkout, :cancel_express_checkout]
   skip_before_action :log_out_if_token_exists, only: [:return_express_checkout, :cancel_express_checkout]
@@ -157,7 +158,7 @@ class Listings::ReservationsController < ApplicationController
   def require_login_for_reservation
     unless user_signed_in?
       store_reservation_request
-      redirect_to new_user_registration_path(return_to: @listing.try(:decorate).try(:show_path, restore_reservations: @listing.id))
+      redirect_to new_api_user_path(return_to: @listing.try(:decorate).try(:show_path, restore_reservations: @listing.id))
     end
   end
 

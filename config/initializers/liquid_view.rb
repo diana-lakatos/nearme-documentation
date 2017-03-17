@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'liquid_view'
 require 'liquid_blank_file_system'
 require 'liquid_include'

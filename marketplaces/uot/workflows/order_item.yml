@@ -1,0 +1,53 @@
+---
+name: Order item
+workflow_type: order_item
+events_metadata: {}
+workflow_steps:
+- name: Approved
+  associated_class: WorkflowStep::OrderItemWorkflow::Approved
+  workflow_alerts:
+  - name: Notify enquirer approved order item
+    alert_type: email
+    recipient_type: enquirer
+    template_path: order_item_mailer/notify_enquirer_approved_order_item
+    delay: 0
+    subject: "[{{platform_context.name}}] {{lister.first_name}} has approved invoice!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Rejected
+  associated_class: WorkflowStep::OrderItemWorkflow::Rejected
+  workflow_alerts:
+  - name: Notify enquirer rejected order item
+    alert_type: email
+    recipient_type: enquirer
+    template_path: order_item_mailer/notify_enquirer_rejected_order_item
+    delay: 0
+    subject: "[{{platform_context.name}}] {{lister.first_name}} has rejected invoice!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Created
+  associated_class: WorkflowStep::OrderItemWorkflow::Created
+  workflow_alerts:
+  - name: Notify lister created order item
+    alert_type: email
+    recipient_type: lister
+    template_path: order_item_mailer/notify_lister_created_order_item
+    delay: 0
+    subject: "[{{platform_context.name}}] {{enquirer.first_name}} has submitted invoice!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Updated
+  associated_class: WorkflowStep::OrderItemWorkflow::Updated
+  workflow_alerts:
+  - name: Notify lister updated order item
+    alert_type: email
+    recipient_type: lister
+    template_path: order_item_mailer/notify_lister_updated_order_item
+    delay: 0
+    subject: "[{{platform_context.name}}] {{enquirer.first_name}} has updated invoice!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

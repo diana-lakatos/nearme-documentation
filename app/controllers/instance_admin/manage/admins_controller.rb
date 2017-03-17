@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 class InstanceAdmin::Manage::AdminsController < InstanceAdmin::Manage::BaseController
-  skip_before_filter :check_if_locked
+  skip_before_action :check_if_locked
 
   def index
     @user = User.new
@@ -8,7 +9,6 @@ class InstanceAdmin::Manage::AdminsController < InstanceAdmin::Manage::BaseContr
 
   def create
     @user = User.new(user_params)
-    @user.skip_password = true
     if @user.save
       InstanceAdmin.create(user_id: @user.id)
       WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedByAdmin, @user.id, current_user.id, as: current_user)

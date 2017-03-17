@@ -1,0 +1,84 @@
+---
+partial: false
+---
+{% assign i18n_title = 'dashboard.analytics.title' | translate %}
+{% title i18n_title %}
+
+{% content_for 'page_header' %}
+  <h1>{{ i18n_title }}</h1></h1>
+{% endcontent_for %}
+
+<div class="panel">
+  <div class="panel-body">
+    <div class="box">
+      <div class="chart">
+        <figure class="chart-a">
+          <figcaption>
+            <form action="" accept-charset="UTF-8" method="get">
+              <input name="utf8" type="hidden" value="✓"><input type="hidden" name="chart_type" id="chart_type" value="{{ params.chart_type }}">
+              <input name="utf8" type="hidden" value="✓"><input type="hidden" name="analytics_mode" id="analytics_mode" value="{{ params.analytics_mode }}">
+              {% if analytics.money? and currencies.size > 1 %}
+                <label for="currency">{{ 'dashboard.analytics.currency' | translate }}</label>
+                <select name="currency" id="currency" onchange="this.form.submit()">
+                  {% for currency in @currencies %}
+                    <option  {% if params.currency == currency %} selected="selected" {% endif %} value="{{ currency }}">{{currency}}</option>
+                  {% endfor %}
+                </select>
+              {% endif %}
+
+              <label for="period">{{ 'dashboard.analytics.period' | translate }}</label>
+              <select name="period" id="period" onchange="this.form.submit()">
+                <option {% if params.period == 'last_7_days' %} selected="selected" {% endif %} value="last_7_days">{{ 'dashboard.analytics.last_7_days' | translate }}</option>
+                <option {% if params.period == 'last_30_days' %} selected="selected" {% endif %}  value="last_30_days">{{ 'dashboard.analytics.last_30_days' | translate }}</option>
+              </select>
+            </form>
+          </figcaption>
+
+          {% if analytics.empty? %}
+            <p>{{ analytics.no_result }} <p>
+          {% else %}
+            <canvas id="chart"></canvas>
+          {% endif %}
+        </figure>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-simple">
+        <thead>
+          <tr>
+            <th>{{ 'dashboard.analytics.columns.amount') | t }}</th>
+            <th>{{ 'dashboard.analytics.columns.date' | t }}</th>
+            <th>Project</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for list_item in analytics.list %}
+          <tr>
+            <td>{{ list_item.amount | render_money }}</td>
+            <td>{{ list_item.created_at | l: 'long' }}</td>
+            <td>
+              {% if list_item.payable and list_item.payable.transactable %}
+                <a href='/dashboard/{% if current_user.buyer_profile == blank %}company/{%endif%}order_items?transactable_id={{ list_item.payable.transactable.id }}'>{{ list_item.payable.transactable.name }}</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+          <tr class="total-row">
+            <td>{{ analytics.total | render_money }}</td>
+            <td>{{ 'dashboard.analytics.total.all_time' | t }}</td>
+            <td></td>
+          </tr>
+        <tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% assign collection = analytics.list %}
+{% will_paginate collection: collection, renderer: dashboard %}
+
+{% content_for 'domready' %}
+  $(document).trigger('line:chart.nearme', ['#chart', {{ analytics.values}} , {{ analytics.labels }} ]);
+{% endcontent_for %}

@@ -1,0 +1,64 @@
+---
+name: Area Of Expertise
+multiple_root_categories: true
+mandatory: true
+children:
+- name: Management
+  children:
+  - name: Organization
+    children:
+    - name: Advisory
+    - name: Strategy
+    - name: Business Turnarounds
+    - name: Innovation
+    - name: M&A and Divestitures
+    - name: Leadership
+    - name: Small Business, Start-ups & Entrepreneurship
+    - name: Business Disruption and Digital Transformation
+  - name: Growth
+    children:
+    - name: Procurement, Government Contracting, Vehicles & RFPs
+    - name: Globalization, International & Emerging Markets
+    - name: Packaging and Pricing
+    - name: Business Development
+    - name: Marketing, Branding, Communications, Social Media & Digital Engagement
+    - name: Sales Forecasting and Execution
+  - name: Operations
+    children:
+    - name: Postmerger Integration
+    - name: Operations, Efficiency, People & Organization
+    - name: HR, Culture, Diversity and Inclusion
+    - name: Governance, Policy, and Standards
+    - name: Organizational Change Management
+    - name: Legal, Compliance & Regulatory
+    - name: Financial, Revenue Management & Tax
+- name: Information Technology
+  children:
+  - name: Management and Operations
+    children:
+    - name: Documentation and Technical Writing
+    - name: Quality and Testing
+    - name: CRM
+    - name: Operating Systems
+    - name: Programming & Assembly Languages
+    - name: Software Design, Development & Integration
+    - name: Operations and Productivity
+    - name: Program Management
+    - name: Supply Chain, PLM, Manufacturing & ERP
+    - name: Technology Infrastructure
+    - name: Rapid Prototyping
+    - name: Training
+    - name: Mainframe Environment
+    - name: Cloud & Hosting
+    - name: Usability and user experience
+    - name: Security, Privacy & Cyber Risk
+  - name: Oversight and Decision Support
+    children:
+    - name: Architecture and Methodologies
+    - name: Assessments
+    - name: IoT
+    - name: Analytics
+    - name: Big Data
+    - name: Database Analysis and Design
+instance_profile_types:
+- Buyer

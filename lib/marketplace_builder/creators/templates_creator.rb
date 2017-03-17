@@ -70,6 +70,8 @@ module MarketplaceBuilder
         config['view_type'] ||= 'view'
 
         OpenStruct.new(config)
+      rescue => e
+        raise ArgumentError, "Critical error in #{path}: #{e.message}"
       end
     end
   end

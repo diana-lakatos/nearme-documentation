@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class InstanceAdmin::FormComponentsController < InstanceAdmin::ResourceController
-  before_filter :find_form_componentable
-  before_filter :set_breadcrumbs_title
+  before_action :find_form_componentable
+  before_action :set_breadcrumbs_title
 
   def index
     @form_components = @form_componentable.form_components.rank(:rank).order('form_type')
@@ -14,6 +15,7 @@ class InstanceAdmin::FormComponentsController < InstanceAdmin::ResourceControlle
   def create
     @form_component = @form_componentable.form_components.build(form_component_params)
     if @form_component.save
+      FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).go!
       flash[:success] = t 'flash_messages.instance_admin.manage.form_component.created'
       redirect_to redirect_path
     else
@@ -43,6 +45,7 @@ class InstanceAdmin::FormComponentsController < InstanceAdmin::ResourceControlle
     @form_component = @form_componentable.form_components.find(params[:id])
 
     if @form_component.update_attributes(form_component_params)
+      FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).go!
       flash[:success] = t 'flash_messages.instance_admin.manage.form_component.updated'
       redirect_to redirect_path
     else
@@ -75,7 +78,7 @@ class InstanceAdmin::FormComponentsController < InstanceAdmin::ResourceControlle
   private
 
   def resource_class
-    fail NotImplementedError
+    raise NotImplementedError
   end
 
   def find_form_componentable

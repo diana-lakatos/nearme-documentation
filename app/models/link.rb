@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Link < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
@@ -27,7 +28,7 @@ class Link < ActiveRecord::Base
   end
 
   def valid_attribute?(attribute_name)
-    self.valid?
+    valid?
     errors[attribute_name].blank?
   end
 

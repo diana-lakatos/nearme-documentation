@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class CategoryTest < ActiveSupport::TestCase
@@ -94,7 +95,7 @@ class CategoryTest < ActiveSupport::TestCase
       end
     end
 
-    should 'maintain change descendants when category move around'  do
+    should 'maintain change descendants when category move around' do
       @category_sibling.update_attributes(parent_id: @category.id, child_index: 1)
       @category.reload
       assert @category.self_and_descendants.include?(@category_sibling)

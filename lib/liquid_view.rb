@@ -27,6 +27,8 @@ class LiquidView
   Liquid::Template.register_tag('form_tag', FormTagTag)
   Liquid::Template.register_tag('form_for', FormForTag)
   Liquid::Template.register_tag('input', InputTag)
+  Liquid::Template.register_tag('input_field', InputFieldTag)
+  Liquid::Template.register_tag('input_field_error', InputFieldErrorTag)
   Liquid::Template.register_tag('submit', SubmitTag)
   Liquid::Template.register_tag('fields_for', FieldsForTag)
   Liquid::Template.register_tag('dropdown_menu', DropdownMenuBlock)
@@ -36,6 +38,7 @@ class LiquidView
   Liquid::Template.register_tag('title', TitleTag)
   Liquid::Template.register_tag('meta_description', MetaDescriptionTag)
   Liquid::Template.register_tag('query_graph', QueryGraphTag)
+  Liquid::Template.register_tag('render_form', RenderFormTag)
 
   def self.call(template)
     "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"
@@ -58,9 +61,9 @@ class LiquidView
     assigns['is_xhr_request'] = @view.try(:controller).try(:request).try(:xhr?)
     assigns['current_path'] = @view.try(:controller).try(:request).try(:path)
     assigns['request_referer'] = @view.try(:controller).try(:request).try(:referer)
+    assigns['request_xhr'] = @view.try(:controller).try(:request).try(:xhr?)
     assigns['current_full_path'] = @view.try(:controller).try(:request).try(:original_fullpath)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
-    assigns['build_new_user'] = User.new.to_liquid
     assigns['flash'] = @view.try(:flash).try(:to_hash) if ApplicationController === @view.try(:controller)
     assigns['form_authenticity_token'] = @view.try(:controller).try(:form_authenticity_token)
 

@@ -10,7 +10,7 @@ class AnalyticsFacade::AnalyticsBase
     labels_max_count: 31,
     chart_type: 'revenue',
     period: 'last_7_days',
-    page: 1,
+    page: 1
   }.freeze
 
   attr_reader :scope, :options

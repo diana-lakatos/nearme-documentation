@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Graph
   module Types
     UserQueryType = GraphQL::ObjectType.define do
@@ -12,7 +13,7 @@ module Graph
       field :user do
         type Types::User
         argument :id, types.ID
-        resolve -> (_obj, args, _ctx) { UserDrop.new(::User.find(args[:id])) }
+        resolve ->(_obj, args, _ctx) { UserDrop.new(::User.find(args[:id])) }
       end
     end
   end

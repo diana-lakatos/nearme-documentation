@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class CustomThemeAsset::ThemeCssFile < CustomThemeAsset
   store :settings, accessors: %i(gzip)
-  validates_presence_of :body, if: -> (cta) { cta.file.blank? }
+  validates :body, presence: { if: ->(cta) { cta.file.blank? } }
 
   def supports_body?
     true

@@ -1,25 +1,29 @@
+# frozen_string_literal: true
 class Dashboard::BuyersController < Dashboard::BaseController
-  before_filter :set_buyer_profile
-  before_filter :set_form_components, only: [:edit, :update]
-  skip_before_filter :force_fill_in_wizard_form
+  before_action :set_buyer_profile
+  before_action :set_form_components, only: [:edit, :update]
+  skip_before_action :force_fill_in_wizard_form
+  before_action :build_user_update_profile_form, only: [:edit, :update]
 
   def edit
+    @user_update_profile_form.prepopulate!
   end
 
   def update
-    current_user.assign_attributes(user_params)
-    if current_user.save
-      current_user.buyer_profile.mark_as_onboarded!
+    if @user_update_profile_form.validate(params[:user] || params[:form] || {})
+      @user_update_profile_form.save
+      current_user.reload.buyer_profile.mark_as_onboarded!
       flash.now[:success] = t('flash_messages.dashboard.buyer.updated')
       if session[:after_onboarding_path].present?
         redirect_to session[:after_onboarding_path]
         session[:after_onboarding_path] = nil
       else
-        render :edit
+        redirect_to edit_dashboard_buyer_path
       end
     else
-      flash.now[:error] = current_user.errors.full_messages.join("\n")
-      render :edit
+      flash.now[:error] = @user_update_profile_form.pretty_errors_string
+      @user_update_profile_form.prepopulate!
+      render :edit, layout: dashboard_or_community_layout
     end
   end
 
@@ -36,5 +40,10 @@ class Dashboard::BuyersController < Dashboard::BaseController
 
   def user_params
     params.require(:user).permit(secured_params.user)
+  end
+
+  def build_user_update_profile_form
+    @form_configuration = FormConfiguration.find_by(id: params[:form_configuration_id])
+    @user_update_profile_form = @form_configuration&.build(current_user) || FormConfiguration.where(base_form: 'UserUpdateProfileForm', name: 'Enquirer Update').first.build(current_user)
   end
 end

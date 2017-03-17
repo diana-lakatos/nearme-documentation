@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class WorkflowStep::SignUpWorkflow::BaseStep < WorkflowStep::BaseStep
   def initialize(user_id)
-    @user = User.find_by_id(user_id)
+    @user = User.find_by(id: user_id)
   end
 
   def workflow_type

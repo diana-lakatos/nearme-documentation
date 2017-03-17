@@ -39,4 +39,8 @@ class PageDrop < BaseDrop
   def link_rel
     @page.redirect? && !@page.redirect_url_in_known_domain? ? 'nofollow' : ''
   end
+
+  def forms
+    @source.forms_hash
+  end
 end

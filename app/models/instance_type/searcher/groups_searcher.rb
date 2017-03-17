@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceType::Searcher::GroupsSearcher
   include InstanceType::Searcher
 
@@ -21,6 +22,10 @@ class InstanceType::Searcher::GroupsSearcher
     {
       query: @params[:query]
     }
+  end
+
+  def result_view
+    'community'
   end
 
   private

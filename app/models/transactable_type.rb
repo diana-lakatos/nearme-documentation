@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableType < ActiveRecord::Base
   include SearchableType
 
@@ -31,7 +32,7 @@ class TransactableType < ActiveRecord::Base
   has_many :action_types, -> { enabled }, dependent: :destroy
   has_many :all_action_types, dependent: :destroy, class_name: 'TransactableType::ActionType'
 
-  has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
+  has_many :custom_attributes_custom_validators, -> { where.not(custom_attributes: { attribute_type: %w(photo file) }) }, through: :custom_attributes, source: :custom_validators
   has_one :event_booking
   has_one :time_based_booking
   has_one :subscription_booking
@@ -74,10 +75,10 @@ class TransactableType < ActiveRecord::Base
     names_decorated = names.each_with_index.map { |tt, i| "WHEN transactable_types.name='#{tt}' THEN #{i}" }
     order("CASE #{names_decorated.join(' ')} END") if names.present?
   }
-  scope :found_and_sorted_by_names, -> (names) { where(name: names).order_by_array_of_names(names) }
+  scope :found_and_sorted_by_names, ->(names) { where(name: names).order_by_array_of_names(names) }
 
   validates :name, :default_search_view, :searcher_type, presence: true
-  validates :category_search_type, presence: true, if: -> (transactable_type) { transactable_type.show_categories }
+  validates :category_search_type, presence: true, if: ->(transactable_type) { transactable_type.show_categories }
   validates :show_path_format, inclusion: { in: AVAILABLE_SHOW_PATH_FORMATS, allow_nil: true }
   validates_associated :action_types
 
@@ -105,6 +106,18 @@ class TransactableType < ActiveRecord::Base
       [:name, self.class.last.try(:id).to_i + 1],
       [:name, rand(1_000_000)]
     ]
+  end
+
+  scope :with_parameterized_name, ->(name) { where(parameterized_name: parameterize_name(name)).limit(1) }
+  before_save :generate_parameterized_name, if: ->(transactable_type) { transactable_type.name_changed? }
+  class << self
+    def parameterize_name(name)
+      name.to_s.downcase.tr(' ', '_')
+    end
+  end
+
+  def generate_parameterized_name
+    self.parameterized_name = self.class.parameterize_name(name)
   end
 
   def any_rating_system_active?

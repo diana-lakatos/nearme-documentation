@@ -22,6 +22,10 @@ en:
           attributes:
             sub_total:
               must_be_positive: 'Total must be greater than 0'
+        schedule_exception_rule:
+          attributes:
+            user_duration_range_end:
+              after: 'must be later than start date'
   activerecord:
     attributes:
       listing_type:

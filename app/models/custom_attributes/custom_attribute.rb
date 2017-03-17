@@ -28,11 +28,6 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   before_save :update_custom_validators
   after_save :ensure_custom_validators_are_properly_setup!
 
-  attr_accessor :aggregate_in_search
-  def aggregate_in_search
-    true
-  end
-
   serialize :settings, Hash
   store :settings, accessors: %i(versions_configuration optimization_settings aspect_ratio), coder: Hash
 
@@ -51,7 +46,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   def settings_for_version(version)
     version_settings = (versions_configuration || {}).fetch(version.to_s,
-                                                    DEFAULT_VERSION_SETTINGS[version.to_sym]).with_indifferent_access
+                                                            DEFAULT_VERSION_SETTINGS[version.to_sym]).with_indifferent_access
     [version_settings[:transform], version_settings[:width], version_settings[:height]]
   end
 
@@ -85,7 +80,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   end
 
   def uploadable?
-    attribute_type == 'photo'
+    %w(photo file).include?(attribute_type)
   end
 
   private

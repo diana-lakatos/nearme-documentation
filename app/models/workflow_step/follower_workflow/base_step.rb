@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::FollowerWorkflow::BaseStep < WorkflowStep::BaseStep
   def initialize(activity_feed_subscription_id)
     @activity_feed_subscription = ActivityFeedSubscription.find_by(id: activity_feed_subscription_id)

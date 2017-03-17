@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::UserWorkflow::BaseStep < WorkflowStep::BaseStep
   def initialize(user_id)
     @user = User.find(user_id)

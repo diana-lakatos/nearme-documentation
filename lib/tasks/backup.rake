@@ -73,8 +73,7 @@ namespace :backup do
       dnm = Instance.first
       dnm.domains.where(name: "#{stack_name}.near-me.com", instance: dnm).first_or_create! do |domain|
         domain.use_as_default = true
-      end
-      dnm.update_column(secured: true)
+      end.update_column(:secured, true)
 
       puts 'Stack domains created.'
     end

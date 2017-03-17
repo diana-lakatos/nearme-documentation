@@ -20,7 +20,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     if current_user
       redirect_to transactable_type_space_wizard_list_path(@transactable_type)
     else
-      redirect_to new_user_registration_url(wizard: 'space', return_to: transactable_type_space_wizard_list_url(@transactable_type))
+      redirect_to new_api_user_path(return_to: transactable_type_space_wizard_list_url(@transactable_type))
     end
   end
 
@@ -71,7 +71,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
         end
         format.json { render json: nil, status: :ok }
       end
-    elsif @user.save
+    elsif User.transaction { raise ActiveRecord::Rollback unless @user.seller_profile.save && @user.save; true }
       @user.listings.first.try(:action_type).try(:schedule).try(:create_schedule_from_schedule_rules)
       @user.companies.first.update_metadata(draft_at: nil, completed_at: Time.now)
       if @transactable_type.require_transactable_during_onboarding?

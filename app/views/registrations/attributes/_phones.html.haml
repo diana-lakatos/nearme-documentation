@@ -1,19 +1,19 @@
 - if only_inputs.empty? || only_inputs.include?(:phone)
   %div{'data-phone-fields-container' => true}
-    = f.input :country_name, :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), input_html: { 'data-country-selector' => true, class: 'selectpicker', "data-live-search" => "true", autocomplete: false }, required: f.object.validation_for(:phone).any? { |cv| cv.try(:is_required?) }, include_blank: true
+    = f.input :country_name, :as => :select, :collection => user_country_name_options, :selected => user_country_default(f.object.try(:country_name) || @country), input_html: { 'data-country-selector' => true, class: 'selectpicker', "data-live-search" => "true", autocomplete: false }, required: f.object.try(:validation_for, :phone).try(:any?) { |cv| cv.try(:is_required?) }, include_blank: true
 
     - calling_code = '&nbsp;'
-    - calling_code = "+#{f.object.country.calling_code}" if f.object.country
+    - calling_code = "+#{f.object.country.calling_code}" if f.object.try(:country)
 
     %div{class: 'disabled-catch-container'}
-      = f.input :phone, as: :tel, required: f.object.validation_for(:phone).any? { |cv| cv.try(:is_required?) }, prefix: calling_code, input_html: { data: { 'phone': true, 'disabled-field-notice': I18n.t('dashboard.user_profile.phone_disabled_field_notice') }}
+      = f.input :phone, as: :tel, required: f.object.try(:validation_for, :phone).try(:any?) { |cv| cv.try(:is_required?) }, prefix: calling_code, input_html: { data: { 'phone': true, 'disabled-field-notice': I18n.t('dashboard.user_profile.phone_disabled_field_notice') }}
       %div{class: 'click-catcher'}
     %div{class: 'disabled-catch-container'}
-      = f.input :mobile_number, as: :tel, required: (f.object.validation_for(:phone).any? { |cv| cv.try(:is_required?) } || f.object.validation_for(:mobile_number).any? { |cv| cv.try(:is_required?) } ), input_html: { data: { 'mobile-number': true, 'disabled-field-notice': I18n.t('dashboard.user_profile.phone_disabled_field_notice') }}, prefix: calling_code
+      = f.input :mobile_number, as: :tel, required: (f.object.try(:validation_for, :phone).try(:any?) { |cv| cv.try(:is_required?) } || f.object.try(:validation_for, :mobile_number).try(:any?) { |cv| cv.try(:is_required?) } ), input_html: { data: { 'mobile-number': true, 'disabled-field-notice': I18n.t('dashboard.user_profile.phone_disabled_field_notice') }}, prefix: calling_code
       %div{class: 'click-catcher'}
 
     = label_tag do
-      = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
+      = check_box_tag "#{(f.object.class.name || f.object.model.class.name).underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
       = t 'general.same_as_phone'
 
     - if HiddenUiControls.find('registrations/click_to_call').visible?

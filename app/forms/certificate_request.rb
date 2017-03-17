@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CertificateRequest < Form
   attr_accessor :domain, :country, :state, :city, :organization, :department, :common_name, :email
 

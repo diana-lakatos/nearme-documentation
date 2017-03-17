@@ -1,0 +1,38 @@
+- title t('sign_up_form.title')
+
+.row-fluid
+  #signup.signin-form
+    .span8.offset2
+      .box
+        %header
+          %h2= t 'sign_up_form.log_in_to', marketplace_name: platform_context.instance.name
+
+        - if request.xhr?
+          = render 'shared/render_flash'
+
+        = render 'authentications/services'
+
+        = simple_form_for @user_session, :as => nil, url: api_sessions_path(format: :html) do |f|
+          .email-holder.input-icon-holder
+            = f.input :email, :label => false, placeholder: t('simple_form.placeholders.session.email'),
+              :input_html => { :tabindex => '1', name: :email }
+            %span.ico-mail
+          .password-holder.input-icon-holder
+            = f.input :password, :label => false, placeholder: t('simple_form.placeholders.session.password'),
+              :input_html => { :tabindex => '2', name: :password }
+            %span.ico-lock
+
+          %div.pnotice
+            =raw "#{t('sign_up_form.forgot')} #{link_to(t('sign_up_form.buttons.reset_password'), '#',
+              data: { modal:true, href: new_user_password_url(return_to: params[:return_to]),
+              'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } )}"
+
+          .actions
+            = f.submit t('sign_up_form.buttons.log_in'), :tabindex => '3', class: 'btn btn-green'
+
+        .text-center.already-a-user= link_to(t('sign_up_form.buttons.new_user'), '#', data: { modal: true, href: new_api_user_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' })
+
+- if request.xhr?
+  :javascript
+    $(document).trigger('setclass:modal.nearme', ['sign-up-modal']);
+    $(document).trigger('init:signinform.nearme');

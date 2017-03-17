@@ -5,30 +5,28 @@
 
   = render 'registrations/edit_options'
 
-
 = render 'dashboard/shared/profile_nav', active: :buyer
 
-= dashboard_simple_form_for [:dashboard, current_user], url: dashboard_buyer_path, method: :put, html: { class: "form-expandable user-profile-form" } do |f|
+= dashboard_simple_form_for @user_update_profile_form, as: :user, url: dashboard_buyer_path, method: :put, html: { class: "form-expandable user-profile-form" } do |f|
   %input{:type => "hidden", name: "current_tab", "data-current-tab-input": ""}
   = f.simple_fields_for :buyer_profile do |buyer_profile_form|
-    = buyer_profile_form.simple_fields_for :properties, @buyer_profile.properties do |buyer_properties_form|
-      .panel
-        .panel-body
-          - @form_components.each do |form_component|
-            - class_name = "form-component-wrapper form-component-buyer"
-            - form_component_identifier = form_component.name.parameterize
-            - class_name << " active" if params["current_tab"] == form_component_identifier
-            %div{ class: class_name, id: "form-component-#{form_component_identifier}", "data-tab-name": form_component_identifier  }
-              %h3.sr-only= form_component.name
+    .panel
+      .panel-body
+        - @form_components.each do |form_component|
+          - class_name = "form-component-wrapper form-component-buyer"
+          - form_component_identifier = form_component.name.parameterize
+          - class_name << " active" if params["current_tab"] == form_component_identifier
+          %div{ class: class_name, id: "form-component-#{form_component_identifier}", "data-tab-name": form_component_identifier  }
+            %h3.sr-only= form_component.name
 
-              - form_component.form_fields.each do |form_field|
-                - model = form_field.keys.first
-                - field = form_field[model]
-                - if model == 'buyer'
-                  = render :partial => 'buyers/buyer_form', :locals => { f: buyer_profile_form, only_inputs: [field.to_sym], properties_form: buyer_properties_form }
-                - elsif model == 'user'
-                  = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
+            - form_component.form_fields.each do |form_field|
+              - model = form_field.keys.first
+              - field = form_field[model]
+              - if model == 'buyer'
+                = render 'user_profiles/form', f: buyer_profile_form, user_form: f, only_inputs: [field.to_sym]
+              - elsif model == 'user'
+                = render 'registrations/new_attributes', f: f, only_inputs: [field.to_sym], country: @country
 
-      .panel.form-actions
-        .panel-body
-          = f.submit "Save"
+    .panel.form-actions
+      .panel-body
+        = f.submit "Save"

@@ -6,25 +6,22 @@
 
       <form action="{{  'search_path' | generate_url: search_type: 'people' }}" method="get" class="search-form">
         <div class="fields">
-          <input type="hidden" name="transactable_type_class" value="InstanceProfileType">
-          <input type="hidden" name="lg_custom_attributes[states][]" value="{{ searcher.lg_custom_attributes_hash['states'] }}">
           <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
           <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
           <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
-          <input type="hidden" name="query_fields" value="tags">
           <input type="hidden" name="sort">
 
           <div class="query-field">
             <label for="field-q" class="struct-label">Search keyword</label>
             <input type="text" name="query" id="field-q" placeholder="Enter keywords&hellip;" value="{{ params['query'] }}">
           </div>
+          {{ searcher.search_form.params.user_profiles.default.properties.states }}
           <div class="state-filter" data-search-filters-container>
             <label for="field-state" class="struct-label">Filter by state</label>
             <span class="select-a">
-              <select name="lg_custom_attributes[states][]" id="field-state" class="unstyled-select">
+              <select name="user_profiles[default][properties][states][]" id="field-state" class="unstyled-select">
                 <option value="">By State</option>
-                {% assign ca = platform_context.instance_profile_types_as_hash['buyer'].custom_attributes_as_hash %}
-                {% for value in ca['states'].valid_values %}
+                {% for value in searcher.search_form.dictionary.states %}
                   <option value='{{ value }}'{% if value == searcher.lg_custom_attributes_hash['states'].first %} selected{% endif %}>{{ value }}</option>
                 {% endfor %}
               </select>
@@ -44,7 +41,7 @@
     <section class="search-results">
 
       <div class="search-results-query-info">
-        <span id='search_results_count' class="results-count"><b>{{ searcher.result_count }}</b> result(s) </span>
+        <span id='search_results_count' class="results-count"><b>{{ searcher.total_entries }}</b> result(s) </span>
       </div>
 
       <div class="search-results-items" id="results">
@@ -53,18 +50,18 @@
 
             <div class="user-description">
               <div class="portrait-social">
-                <figure><img src="{{user.avatar_url_big}}" alt="{{ user.name }}"></figure>
+                <figure><img src="{{user.avatar.big.url}}" alt="{{ user.name }}"></figure>
                 <ul class="social-c">
-                  {% if user.properties['linkedin_url'] != blank %}
-                    <li class="linkedin"><a href="{{ user.properties['linkedin_url'] }}" target="_blank">LinkedIn</a></li>
+                  {% if user.profiles.default.properties['linkedin_url'] != blank %}
+                    <li class="linkedin"><a href="{{ user.profiles.default.properties['linkedin_url'] }}" target="_blank">LinkedIn</a></li>
                   {% endif %}
 
-                  {% if user.properties['googleplus_url'] != blank %}
-                    <li class="googleplus"><a href="{{ user.properties['googleplus_url'] }}" target="_blank">Google+</a></li>
+                  {% if user.profiles.default.properties['googleplus_url'] != blank %}
+                    <li class="googleplus"><a href="{{ user.profiles.default.properties['googleplus_url'] }}" target="_blank">Google+</a></li>
                   {% endif %}
 
-                  {% if user.properties['twitter_url'] != blank %}
-                    <li class="twitter"><a href="{{ user.properties['twitter_url'] }}" target="_blank">Twitter</a></li>
+                  {% if user.profiles.default.properties['twitter_url'] != blank %}
+                    <li class="twitter"><a href="{{ user.profiles.default.properties['twitter_url'] }}" target="_blank">Twitter</a></li>
                   {% endif %}
 
                   <li class="message"><a data-href='{{ user.user_message_path }}' data-modal='true'>Send Message</a>
@@ -75,33 +72,33 @@
                   {% endif %}
                 </ul>
               </div>
-              
+
               <div class="name-info">
                 <h3><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h3>
                 <h4>{{ user.company_name }}</h4>
-                
-                {% assign group_category = user.formatted_buyer_categories["Group Case Categories"] %}
-                {% assign individual_category = user.formatted_buyer_categories['Individual Case Categories'] %}
 
-                {% if group_category.children.size > 0 %}
+                {% assign group_category = user.profiles.buyer.category_tree["Mass Tort Case Categories"] %}
+                {% assign individual_category = user.profiles.buyer.category_tree['Individual Case Categories'] %}
+
+                {% if group_category.size > 0 %}
                   <h3>Group Cases</h3>
                   <ul class="short-list">
-                    {% for cat in group_category.children %}
-                    <li>{{ cat }}</li>
+                    {% for category in group_category %}
+                    <li>{{ category.name }}</li>
                     {% endfor %}
                   </ul>
                 {% endif %}
 
-                {% if individual_category.children.size > 0 %}
+                {% if individual_category.size > 0 %}
                   <h3>Individual Cases</h3>
                   <ul class="short-list">
-                    {% for cat in individual_category.children %}
-                    <li>{{ cat }}</li>
+                    {% for category in individual_category %}
+                    <li>{{ category.name }}</li>
                     {% endfor %}
                   </ul>
                 {% endif %}
               </div>
-              
+
               <div class="search-result-meta-action user-search">
                 {% if current_user != blank and current_user.has_seller_profile? %}
                   <a href="#case-invite-{{ user.id }}" class="button-a inverted" data-case-invite-trigger>Invite to Case</a>
@@ -111,33 +108,33 @@
                   {% if current_user.has_seller_profile? %}
                     {% include 'shared/components/wish_list_button_injection.html', object: user %}
                   {% endif %}
-                  
+
                   {% if user.has_active_blog? %}
                     <div class="blog"><a href="{{ user.user_blog_posts_list_path }}">View Blog</a></div>
                   {% endif %}
                 </div>
               </div>
             </div>
-            
+
             <div class="user-description-text">
-              {% if user.properties.bio != blank %}
-                {% if user.properties.bio.size > 350 %}
+              {% if user.profiles.default.properties.bio != blank %}
+                {% if user.profiles.default.properties.bio.size > 350 %}
                    <div data-shorten-description>
-                  <p data-description>{{ user.properties.bio | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
-                  <div style='display: none;'  class="rest_of_text">{{ user.properties.bio | slice: 350, user.properties.bio.size | nl2br }}</div>
+                  <p data-description>{{ user.profiles.default.properties.bio | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+                  <div style='display: none;'  class="rest_of_text">{{ user.profiles.default.properties.bio | slice: 350, user.profiles.default.properties.bio.size | nl2br }}</div>
                   </div>
                 {% else %}
-                  <p>{{ user.properties.bio | nl2br }}</p>
+                  <p>{{ user.profiles.default.properties.bio | nl2br }}</p>
                 {% endif %}
               {% endif %}
             </div>
 
-            {% if user.tags.size > 0 %}
+            {% if user.tag_list.size > 0 %}
             <div class="tags-a tags-short-list">
               <h4>Tags</h4>
               <ul>
-                {% for tag in user.tags %}
-                  <li><a href="?query_fields=tags&amp;query={{ tag.name }}">{{ tag.name }}</a></li>
+                {% for tag in user.tag_list %}
+                  <li><a href="?query_fields=tags&amp;query={{ tag }}">{{ tag }}</a></li>
                 {% endfor %}
               </ul>
             </div>
@@ -152,13 +149,14 @@
           });
           </script>
         {% endfor %}
+        {% if searcher.next_page %}
+          <p class="search-results-more-trigger">
+            <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
+          </p>
+        {% endif %}
       </div>
 
-      {% if searcher.next_page %}
-        <p class="search-results-more-trigger">
-          <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
-        </p>
-      {% endif %}
+
     </section>
 
     {% include 'search/filter_categories' %}

@@ -1,0 +1,257 @@
+---
+name: Offer
+workflow_type: offer
+events_metadata: {}
+workflow_steps:
+- name: Expired
+  associated_class: WorkflowStep::OfferWorkflow::Expired
+  workflow_alerts:
+  - name: Notify guest of expiration
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_expiration
+    delay: 0
+    subject: "[{{platform_context.name}}] Your offer for '{{transactable.name}}' at
+      {{offer.location.street}} has expired"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Notify host of expiration email
+    alert_type: email
+    recipient_type: lister
+    template_path: offer_mailer/notify_host_of_expiration
+    delay: 0
+    subject: "[{{platform_context.name}}] An offer at one of your projects has expired"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Enquirer Cancelled
+  associated_class: WorkflowStep::OfferWorkflow::EnquirerCancelled
+  workflow_alerts:
+  - name: Notify guest of guest cancellation
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_cancellation_by_guest
+    delay: 0
+    subject: "[{{platform_context.name}}] You just cancelled your offer"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Notify host of guest cancellation
+    alert_type: email
+    recipient_type: lister
+    template_path: offer_mailer/notify_host_of_cancellation_by_guest
+    delay: 0
+    subject: "[{{platform_context.name}}] {{enquirer.first_name }} cancelled their
+      offer for {{ transactable.name }}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Lister Cancelled
+  associated_class: WorkflowStep::OfferWorkflow::ListerCancelled
+  workflow_alerts:
+  - name: Notify guest of host cancellation
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_cancellation_by_host
+    delay: 0
+    subject: "[{{platform_context.name}}] Your offer has been cancelled"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Notify host of host cancellation
+    alert_type: email
+    recipient_type: lister
+    template_path: offer_mailer/notify_host_of_cancellation_by_host
+    delay: 0
+    subject: "[{{platform_context.name}}] You just declined an offer"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Created Without Auto Confirmation
+  associated_class: WorkflowStep::OfferWorkflow::CreatedWithoutAutoConfirmation
+  workflow_alerts:
+  - name: Ask host for confirmation email
+    alert_type: email
+    recipient_type: lister
+    template_path: offer_mailer/notify_host_with_confirmation
+    delay: 0
+    subject: "[{{platform_context.name}}] {{enquirer.first_name}} has just submitted
+      offer to your {{transactable.transactable_type.bookable_noun}}!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Inform guest about pending confirmation
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_with_confirmation
+    delay: 0
+    subject: "[{{platform_context.name}}] {{enquirer.first_name}}, your offer is pending
+      confirmation"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Manually Confirmed
+  associated_class: WorkflowStep::OfferWorkflow::ManuallyConfirmed
+  workflow_alerts:
+  - name: Notify host of confirmation
+    alert_type: email
+    recipient_type: lister
+    template_path: offer_mailer/notify_host_of_confirmation
+    delay: 0
+    subject: "[{{platform_context.name}}] Thanks for confirming!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Notify guest of confirmation
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_confirmation
+    delay: 0
+    subject: "[{{platform_context.name}}] {{enquirer.first_name}}, your offer has
+      been confirmed"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Rejected
+  associated_class: WorkflowStep::OfferWorkflow::Rejected
+  workflow_alerts:
+  - name: Notify guest of rejection
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_rejection
+    delay: 0
+    subject: "[{{platform_context.name}}] Your offer has been rejected."
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Payment Request
+  associated_class: WorkflowStep::OfferWorkflow::PaymentRequest
+  workflow_alerts:
+  - name: Notify guest of payment request email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_payment_request
+    delay: 0
+    subject: "[{{platform_context.name}}] Your offer for '{{transactable.name}}' at
+      {{offer.location.street}} requires payment"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Enquirer Rating Requested
+  associated_class: WorkflowStep::OfferWorkflow::EnquirerRatingRequested
+  workflow_alerts:
+  - name: Request rating of guest from host
+    alert_type: email
+    recipient_type: lister
+    template_path: rating_mailer/request_rating_of_guest_from_host
+    delay: 0
+    subject: "[{{platform_context.name}}] How was your experience hosting {{@enquirer.first_name}}?"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Lister Rating Requested
+  associated_class: WorkflowStep::OfferWorkflow::ListerRatingRequested
+  workflow_alerts:
+  - name: Request rating of host from guest
+    alert_type: email
+    recipient_type: enquirer
+    template_path: rating_mailer/request_rating_of_host_from_guest
+    delay: 0
+    subject: "[{{platform_context.name}}] How was your experience at '{{transactable.name}}'?"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Shipping Details
+  associated_class: WorkflowStep::OfferWorkflow::ShippingDetails
+  workflow_alerts:
+  - name: Notify host of shipping details
+    alert_type: email
+    recipient_type: lister
+    template_path: offer_mailer/notify_host_of_shipping_details
+    delay: 0
+    subject: "[{{platform_context.name}}] Here are your shipping details"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Notify guest of shipping details
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_shipping_details
+    delay: 0
+    subject: "[{{platform_context.name}}] Here are your shipping details"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Enquirer Approved Payment
+  associated_class: WorkflowStep::OfferWorkflow::EnquirerApprovedPayment
+  workflow_alerts:
+  - name: Notify host of approved payment
+    alert_type: email
+    recipient_type: lister
+    template_path: offer_mailer/notify_host_of_approved_payment
+    delay: 0
+    subject: "[{{platform_context.name}}] {{enquirer.first_name}} confirmed payment!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Enquirer Declined Payment
+  associated_class: WorkflowStep::OfferWorkflow::EnquirerDeclinedPayment
+  workflow_alerts:
+  - name: Notify host of declined payment
+    alert_type: email
+    recipient_type: lister
+    template_path: offer_mailer/notify_host_of_declined_payment
+    delay: 0
+    subject: "[{{platform_context.name}}] {{enquirer.first_name}} declined payment!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Lister Submitted Checkout
+  associated_class: WorkflowStep::OfferWorkflow::ListerSubmittedCheckout
+  workflow_alerts:
+  - name: Notify guest of submitted checkout
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_submitted_checkout
+    delay: 0
+    subject: "[{{platform_context.name}}] {{transactable.name}} submitted invoice"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Lister Submitted Checkout But Authorization Failed
+  associated_class: WorkflowStep::OfferWorkflow::ListerSubmittedCheckoutButAuthorizationFailed
+  workflow_alerts:
+  - name: Notify guest of submitted checkout with failed authorization
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_submitted_checkout_with_failed_authorization
+    delay: 0
+    subject: "[{{platform_context.name}}] {{transactable.name}} submitted invoice"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Penalty Charge Failed
+  associated_class: WorkflowStep::OfferWorkflow::PenaltyChargeFailed
+  workflow_alerts:
+  - name: Notify guest of penalty charge failed
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_penalty_charge_failed
+    delay: 0
+    subject: "[{{platform_context.name}}] Cancelation fee"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Penalty Charge Succeeded
+  associated_class: WorkflowStep::OfferWorkflow::PenaltyChargeSucceeded
+  workflow_alerts:
+  - name: Notify guest of penalty charge succeeded
+    alert_type: email
+    recipient_type: enquirer
+    template_path: offer_mailer/notify_guest_of_penalty_charge_succeeded
+    delay: 0
+    subject: "[{{platform_context.name}}] Cancelation fee"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

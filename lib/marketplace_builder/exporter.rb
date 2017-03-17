@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'open-uri'
 
 module MarketplaceBuilder
@@ -22,7 +23,7 @@ module MarketplaceBuilder
 
       Serializers::GraphQuerySerializer  => 'graphql',
       Serializers::CustomThemeSerializer => 'theme_with_assets'
-    }
+    }.freeze
 
     def initialize(instance_id, destination_path)
       @instance_id = instance_id
@@ -94,8 +95,8 @@ module MarketplaceBuilder
     end
 
     def create_mpbuilderrc_file
-      File.open("#{@destination_path}/#{@instance.name}/.mpbuilderrc", "w") do |f|
-        f.write(JSON.pretty_generate({instance_id: @instance_id, mode: 'append'}))
+      File.open("#{@destination_path}/#{@instance.name}/.mpbuilderrc", 'w') do |f|
+        f.write(JSON.pretty_generate(instance_id: @instance_id, mode: 'append'))
       end
     end
 

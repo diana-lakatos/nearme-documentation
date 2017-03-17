@@ -1,0 +1,96 @@
+---
+name: Project
+slug: project
+show_path_format: "/:transactable_type_id/:id"
+searchable: false
+skip_payment_authorization: true
+hours_for_guest_to_confirm_payment: 24
+single_transactable: false
+skip_location: true
+bookable_noun: Project
+enable_photo_required: false
+lessor: Client
+lessee: Expert
+enable_reviews: true
+auto_accept_invitation_as_collaborator: true
+require_transactable_during_onboarding: false
+access_restricted_to_invited: true
+action_types:
+- enabled: true
+  type: TransactableType::OfferAction
+  pricings:
+  - number_of_units: 1
+    unit: item
+    min_price_cents: 5000
+    max_price_cents: 15000
+    allow_free_booking: true
+    order_class_name: Offer
+    allow_nil_price_cents: true
+custom_attributes:
+- name: about_company
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: About Company (short description)
+  validation:
+  - required: true
+    field_name: about_company
+    validation_only_on_update: false
+- name: estimation
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: Approx. Time Required to Complete
+  validation:
+  - required: true
+    field_name: estimation
+    validation_only_on_update: false
+- name: workplace_type
+  attribute_type: string
+  html_tag: radio_buttons
+  search_in_query: false
+  label: Workplace Type
+  validation:
+  - required: false
+    field_name: workplace_type
+    valid_values:
+    - Online
+    - On Site
+    validation_only_on_update: false
+  - required: true
+    field_name: workplace_type
+    validation_only_on_update: false
+- name: deadline
+  attribute_type: date
+  html_tag: input
+  search_in_query: false
+  label: Deadline
+  validation:
+  - required: true
+    field_name: deadline
+    validation_only_on_update: false
+- name: office_location
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: Office Location
+- name: budget
+  attribute_type: float
+  html_tag: input
+  search_in_query: false
+  label: Approximate Value / Budget
+- name: type_of_deliverable
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: Type of Deliverable
+- name: other_requirements
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: Other Requirements
+- name: project_contact
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: Project Contact

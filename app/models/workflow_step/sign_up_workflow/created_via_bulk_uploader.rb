@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::SignUpWorkflow::CreatedViaBulkUploader < WorkflowStep::SignUpWorkflow::BaseStep
   def initialize(user_id, password)
     @user = User.find(user_id)

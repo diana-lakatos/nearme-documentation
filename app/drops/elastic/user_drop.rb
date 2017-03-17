@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Elastic
   class UserDrop < UserBaseDrop
     delegate :id, :avatar, :name, :slug, :tags, :created_at,
@@ -6,13 +7,6 @@ module Elastic
              :buyer_average_rating, :seller_average_rating,
              :reviews_counter, :current_address,
              to: :source
-
-    def category_tree
-      profiles['buyer']
-        .categories
-        .sort(&:position)
-        .group_by(&:root)
-    end
 
     def profiles
       @__profiles ||= source.user_profiles.each_with_object({}) do |profile, profiles|

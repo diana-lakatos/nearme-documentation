@@ -1,0 +1,57 @@
+---
+slug: contact
+name: Contact Upside of Talent
+layout: application
+---
+<div class="wrapper-a">
+    <main>
+        <header class="section-header">
+            <img src="https://upsideoftalent.sharepoint.com/UoT%20Intern%20Working%20Site/_layouts/15/guestaccess.aspx?docid=0754771b64f3044bcad4d9e14deba44c4&authkey=AQdZ99e73WiiwwIoj_t-jQk" style="width: 75%; height: 75%; margin: auto; display: block"></img>
+            <h1 class="hx-a">Contact Upside of Talent</h1>
+            <br>
+            <div style="width: 70%;  margin: auto; position: relative; text-align:center;">
+                Questions, comments, or concerns? Please feel free to contact us at any of our provided communication mediums or leave your information and concerns in the form below.
+            </div>
+        </header>
+        <div style="width: 70%; height: 500px;  margin: auto; position: relative; text-align:center;">
+            <div style="display:inline-block; height: 500px; width: 50%;   margin-right: 30px">
+                <form id="contact" text-align: left;" action="mailto:contactus@UpsideOfTalent.com" method="post" enctype="text/plain">
+                    <label>First Name*</label>
+                    <input type="text" oninput="checkForm()" name="first-name" id="fname" placeholder="Enter your first name" style="border-style:solid;border-color:gray;color:gray;border-width:thin">
+                    <label>Last Name*</label>
+                    <input type="text" oninput="checkForm()" name="last-name" id="lname" placeholder="Enter your last name" style="border-style:solid;border-color:gray;color:gray;border-width:thin">
+                    <label>Company*</label>
+                    <input type="text" oninput="checkForm()" name="company" id="cname" placeholder="Enter your company name" style="border-style:solid;border-color:gray;color:gray;border-width:thin">
+                    <label>E-mail*</label>
+                    <input type="text" oninput="checkForm()" name="email" id="ename" placeholder="Enter your E-mail address" style="border-style:solid;border-color:gray;color:gray;border-width:thin">
+                    <label>Phone*</label>
+                    <input type="text" oninput="checkForm()" name="phone" id="pnumb" placeholder="Enter your phone number" style="border-style:solid;border-color:gray;color:gray;border-width:thin">
+                    <label>Comments</label>
+                    <input type="text" oninput="checkForm()" name="comments" id="comment" placeholder="Enter comments" style="border-style:solid;border-color:gray;color:gray;border-width:thin"><br></br>
+                    <input type="submit" style="background-color: #05caf9" id="submitbutton" onmouseover="this.style.color='black'" onmouseout="this.style.color='white'" value="Send">
+                </form>
+                <script>
+                    function checkForm() {
+                        var formElements = document.getElementById("contact").elements;
+                        document.getElementById("submitbutton").disabled = false;
+                            for each ( var element in formElements) {
+                                if (element.value == "") {
+                                     document.getElementById("submitbutton").disabled= true;
+                                }
+                            }
+                    }
+                </script>
+            </div>
+            <div style="display:inline-block; text-align: left; height: 500px; ">
+                <p><b>Address:</b><br>
+                Upside of Talent<br>
+                684 Bayway Blvd<br>
+                Clearwater Fl 33767<br></p>
+                <p><b>Telephone:</b><br>
+                1-888-893-0705<br></p>
+                <p><b>Email:</b><br>
+                info@UpsideOfTalent.com<br></br></p>
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::OrderSearchForm < SearchForm
   property :user_type, virtual: true
   property :buyer_name, virtual: true

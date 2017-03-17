@@ -8,17 +8,18 @@ class User < ActiveRecord::Base
   include CreationFilter
   include QuerySearchable
   include UserNameUtility
+  include TransactablesOwnerable
 
   SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects].freeze
   SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation).freeze
-  ACCOUNT_STANDINGS = [:active, :deleted, :banned]
+  ACCOUNT_STANDINGS = [:active, :deleted, :banned].freeze
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
                            :unlock_token, :locked_at, :browser, :browser_version, :platform,
                            :avatar_versions_generated_at, :last_geolocated_location_longitude,
                            :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out,
-                           :avatar_transformation_data, :metadata]
+                           :avatar_transformation_data, :metadata, :avatar]
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context allow_admin: :admin
@@ -28,11 +29,11 @@ class User < ActiveRecord::Base
 
   friendly_id :slug_candidates, use: [:slugged, :history, :finders, :scoped], scope: :instance
   def slug_candidates
-    if PlatformContext.current.instance.only_first_name_as_user_slug?
-      main_component = :first_name
-    else
-      main_component = :name
-    end
+    main_component = if PlatformContext.current.instance.only_first_name_as_user_slug?
+                       :first_name
+                     else
+                       :name
+                     end
 
     [
       main_component,
@@ -47,7 +48,7 @@ class User < ActiveRecord::Base
   mount_uploader :cover_image, CoverImageUploader
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable,
-         :user_validatable, :token_authenticatable, :temporary_token_authenticatable, :timeoutable
+         :token_authenticatable, :temporary_token_authenticatable, :timeoutable
 
   skip_callback :commit, :after, :remove_avatar!
   skip_callback :commit, :after, :remove_cover_image!
@@ -55,15 +56,24 @@ class User < ActiveRecord::Base
   attr_readonly :following_count, :followers_count
   attr_accessor :custom_validation
   attr_accessor :must_have_verified_phone_number
-  attr_accessor :accept_terms_of_service
   attr_accessor :verify_associated
-  attr_accessor :skip_password, :verify_identity, :custom_validation, :accept_terms_of_service, :verify_associated,
+  attr_accessor :skip_password, :verify_identity, :custom_validation, :verify_associated,
                 :skip_validations_for
   attr_accessor :force_profile
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
   serialize :avatar_transformation_data, Hash
+
+  validate :no_admin_with_such_email_exists, if: :email_changed?
+  def no_admin_with_such_email_exists
+    errors.add(:email, :taken) if User.admin.where(email: email).exists?
+    errors.add(:email, :taken) if external_id.blank? && User.where(email: email).exists?
+  end
+  validates :email, email: true,
+                    uniqueness: { scope: [:instance_id, :external_id] },
+                    if: :email_changed?
+  validates :email, presence: true
 
   # strange bug, serialize stops to work if Taggable is included before it
   include Taggable
@@ -94,10 +104,10 @@ class User < ActiveRecord::Base
   has_many :categories_categorizable, as: :categorizable, through: :user_profiles
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
-  has_many :companies, through: :company_users
+  has_many :companies, foreign_key: 'creator_id', inverse_of: :creator
   has_many :comments, inverse_of: :creator
-  has_many :created_companies, class_name: 'Company', foreign_key: 'creator_id', inverse_of: :creator
   has_many :custom_images, foreign_key: 'uploader_id', inverse_of: :uploader
+  has_many :custom_attachments, foreign_key: 'uploader_id', inverse_of: :uploader
   has_many :feed_followers, through: :activity_feed_subscriptions_as_followed, source: :follower
   has_many :feed_followed_transactables, through: :activity_feed_subscriptions, source: :followed, source_type: 'Transactable'
   has_many :feed_followed_topics, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
@@ -291,7 +301,6 @@ class User < ActiveRecord::Base
   validates :saved_searches_alerts_frequency, inclusion: { in: SavedSearch::ALERTS_FREQUENCIES }
 
   validates_associated :companies, if: :verify_associated
-  validates :accept_terms_of_service, acceptance: { on: :create, allow_nil: false, if: ->(u) { PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation } }
 
   class << self
     def timeout_in
@@ -310,7 +319,10 @@ class User < ActiveRecord::Base
     # authentication.
     def new_with_session(attrs, session)
       user = super
-      user.apply_omniauth(session[:omniauth]) if session[:omniauth]
+      if session[:omniauth]
+        user.apply_omniauth(session[:omniauth])
+        user.password ||= SecureRandom.hex(16)
+      end
       user
     end
 
@@ -747,12 +759,6 @@ class User < ActiveRecord::Base
     update_attribute(:sso_log_out, false)
   end
 
-  def email_verification_token
-    Digest::SHA1.hexdigest(
-      "--dnm-token-#{id}-#{created_at.utc.strftime('%Y-%m-%d %H:%M:%S')}"
-    )
-  end
-
   def generate_payment_token
     new_token = SecureRandom.hex(32)
     update_attribute(:payment_token, new_token)
@@ -764,16 +770,6 @@ class User < ActiveRecord::Base
     current_token = payment_token
     update_attribute(:payment_token, nil)
     current_token == token
-  end
-
-  def verify_email_with_token(token)
-    if token.present? && email_verification_token == token && !verified_at
-      self.verified_at = Time.zone.now
-      save(validate: false)
-      true
-    else
-      false
-    end
   end
 
   def to_liquid
@@ -871,25 +867,25 @@ class User < ActiveRecord::Base
 
   def perform_cleanup!
     # Record was soft deleted
-    if self.persisted?
-      created_companies.destroy_all
+    if persisted?
+      companies.destroy_all
       orders.unconfirmed.find_each(&:user_cancel!)
       created_listings_orders.unconfirmed.find_each(&:reject!)
     else
       # Record is hard deleted
-      transactables.each { |t| t.really_destroy! }
-      created_companies.each { |c| c.really_destroy! }
-      orders.each { |o| o.really_destroy! }
-      created_listings_orders.each { |o| o.really_destroy! }
+      transactables.each(&:really_destroy!)
+      companies.each(&:really_destroy!)
+      orders.each(&:really_destroy!)
+      created_listings_orders.each(&:really_destroy!)
       # Slugs need to be hard deleted otherwise friendly_id
       # will not find it as the user is gone (uses an inner join)
       # and will decide it's available
-      slugs.each { |s| s.really_destroy! }
+      slugs.each(&:really_destroy!)
     end
   end
 
   def recover_companies
-    created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [deleted_at, banned_at].compact.first, [deleted_at, banned_at].compact.first + 30.seconds).find_each do |company|
+    companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [deleted_at, banned_at].compact.first, [deleted_at, banned_at].compact.first + 30.seconds).find_each do |company|
       begin
         company.restore(recursive: true)
       rescue
@@ -1183,7 +1179,7 @@ class User < ActiveRecord::Base
   end
 
   def time_zone
-    super || instance.time_zone.presence || 'Pacific Time (US & Canada)'
+    super || instance&.time_zone.presence || 'Pacific Time (US & Canada)'
   end
 
   private

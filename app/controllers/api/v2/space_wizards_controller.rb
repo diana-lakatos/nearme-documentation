@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class V2::SpaceWizardsController < BaseController
     skip_before_action :require_authorization

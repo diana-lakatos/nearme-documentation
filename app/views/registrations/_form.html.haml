@@ -1,7 +1,5 @@
-= dashboard_simple_form_for resource, :as => resource_name, :url => registration_path(resource_name), :html => { class: "form-expandable user-profile-form", :"data-includes-address-field" => true, autocomplete: 'off' } do |f|
-
+= dashboard_simple_form_for @user_update_profile_form, :as => :user, :url => registration_path(resource_name), :html => { class: "form-expandable user-profile-form", :"data-includes-address-field" => true, autocomplete: 'off' } do |f|
   %input{:type => "hidden", name: "current_tab", "data-current-tab-input": ""}
-
   .panel
     .panel-body
       - @form_components.each do |form_component|
@@ -14,16 +12,16 @@
           - form_component.form_fields.each do |form_field|
             - model = form_field.keys.first
             - field = form_field[model]
-
             - if model == 'user'
               = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
-            - elsif model == 'buyer' && @buyer_profile.try(:persisted?)
+            - elsif model == 'buyer'
               = f.simple_fields_for :buyer_profile do |buyer_profile_form|
-                = render :partial => 'buyers/buyer_form', :locals => { f: buyer_profile_form, user_form: f, only_inputs: [field.to_sym] }
-            - elsif model == 'seller' && @seller_profile.try(:persisted?)
+                - next if buyer_profile_form.object.nil?
+                = render :partial => 'user_profiles/form', :locals => { f: buyer_profile_form, user_form: f, only_inputs: [field.to_sym] }
+            - elsif model == 'seller'
               = f.simple_fields_for :seller_profile do |seller_profile_form|
-                = seller_profile_form.simple_fields_for :properties, @seller_profile.properties do |seller_properties_form|
-                  = render :partial => 'sellers/seller_form', :locals => { f: seller_profile_form, user_form: f, only_inputs: [field.to_sym], properties_form: seller_properties_form }
+                - next if seller_profile_form.object.nil?
+                = render :partial => 'user_profiles/form', :locals => { f: seller_profile_form, user_form: f, only_inputs: [field.to_sym] }
 
   .panel.form-actions
     .panel-body
