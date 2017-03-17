@@ -156,6 +156,7 @@ module Elastic
 
         { nested: { path: 'user_profiles', query: { bool: { must: user_profiles_filters } } } }
       end
+
     end
 
     def build_profile_query(profile)

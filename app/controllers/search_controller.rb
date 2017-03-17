@@ -4,7 +4,7 @@ class SearchController < ApplicationController
   include SearchHelper
   include CoercionHelpers::Controller
 
-  before_action :redirect_to_search
+  before_action :redirect_to_people_search
   before_action :coerce_pagination_params
   before_action :assign_transactable_type_id_to_lookup_context
   before_action :store_search
@@ -16,14 +16,6 @@ class SearchController < ApplicationController
 
   rescue_from ActiveRecord::RecordNotFound do
     redirect_back_or_default
-  end
-
-  # TODO: temporary - discuss better approach and remove
-  def redirect_to_search
-    return unless params[:transactable_type_class] == 'InstanceProfileType'
-
-    params.delete(:transactable_type_class)
-    redirect_to search_path(params.merge(search_type: 'people'))
   end
 
   def index
@@ -101,5 +93,14 @@ class SearchController < ApplicationController
     params[:search_type] = 'projects' unless %w(people projects topics groups).include?(params[:search_type])
     @search_type = params[:search_type]
     @transactable_type = InstanceProfileType.default.first
+  end
+
+  # TODO: temporary - discuss better approach and remove
+  # in case of shitty transactable_type_class=InstanceProfileType redirect to nice search/people
+  def redirect_to_people_search
+    return unless params[:transactable_type_class] == 'InstanceProfileType'
+
+    params.delete(:transactable_type_class)
+    redirect_to search_path(params.merge(search_type: 'people'))
   end
 end

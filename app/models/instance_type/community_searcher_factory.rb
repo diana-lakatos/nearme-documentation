@@ -9,9 +9,11 @@ module InstanceType
     end
 
     def create
-      return people_searcher if search_type == 'people'
-
-      community_searcher
+      case search_type
+      when 'people' then people_searcher
+      else
+        community_searcher
+      end
     end
 
     private

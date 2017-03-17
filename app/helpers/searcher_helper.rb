@@ -44,8 +44,6 @@ module SearcherHelper
       end
     end
 
-    # flash[:error] = t('flash_messages.search.missing_transactable_type')
-    # return redirect_to root_path
     raise ActiveRecord::RecordNotFound, 'could not find transactable_type' unless @transactable_type
 
     # TODO: as a lookup context we use TransactableType, but search can by for
