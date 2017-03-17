@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 class LongtailApi
   class KeywordListIterator
+    attr_reader :campaign
     class InvalidResponse < StandardError
     end
-    def initialize(endpoint)
+
+    def initialize(endpoint, campaign:)
+      @campaign = campaign
       @endpoint = endpoint
       fetch!
     end
@@ -28,7 +31,7 @@ class LongtailApi
     end
 
     def fetch!(url = nil)
-      url ||= '/keywords/seo'
+      url ||= "/keywords/#{@campaign}"
       response = @endpoint.call(url)
       begin
         @keywords = JSON.parse(response)

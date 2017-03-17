@@ -7,21 +7,21 @@ class LongtailApiKeywordTest < ActiveSupport::TestCase
     @endpoint.stubs(:call)
              .with('/search/seo/sublet-office-space-new-york')
              .returns(File.read(File.expand_path('../keyword_response.json', __FILE__)))
-    assert_equal %w(data included meta), LongtailApi::Keyword.new(endpoint: @endpoint, data: keyword_data).body.keys
+    assert_equal %w(data included meta), LongtailApi::Keyword.new(endpoint: @endpoint, data: keyword_data, campaign: 'seo').body.keys
   end
 
   should 'return slug' do
     assert_equal 'sublet-office-space-new-york',
-                 LongtailApi::Keyword.new(endpoint: nil, data: keyword_data).slug
+                 LongtailApi::Keyword.new(endpoint: nil, data: keyword_data, campaign: 'seo').slug
   end
 
   should 'return path' do
     assert_equal 'workspace/sublet-office-space-new-york',
-                 LongtailApi::Keyword.new(endpoint: nil, data: keyword_data).path
+                 LongtailApi::Keyword.new(endpoint: nil, data: keyword_data, campaign: 'seo').path
   end
 
   should 'return id'  do
-    assert_equal '1', LongtailApi::Keyword.new(endpoint: nil, data: keyword_data).id
+    assert_equal '1', LongtailApi::Keyword.new(endpoint: nil, data: keyword_data, campaign: 'seo').id
   end
 
   protected
