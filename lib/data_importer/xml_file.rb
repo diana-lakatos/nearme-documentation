@@ -48,6 +48,7 @@ class DataImporter::XmlFile < DataImporter::File
         @company = Company.new do |c|
           assign_attributes(c, company_node)
           c.external_id = external_id
+          c.completed_at = Time.zone.now
         end
       end
 

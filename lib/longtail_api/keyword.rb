@@ -8,9 +8,10 @@ class LongtailApi
     TOO_MANY_ATTEMPTS_ERROR = 'Too Many Attempts.'
     MAX_ATTEMPTS = 50
 
-    def initialize(endpoint:, data:)
+    def initialize(endpoint:, data:, campaign:)
       @endpoint = endpoint
       @data = data
+      @campaign = campaign
     end
 
     def body
@@ -34,7 +35,7 @@ class LongtailApi
     protected
 
     def endpoint_path
-      "/search/seo/#{slug}"
+      "/search/#{@campaign}/#{slug}"
     end
 
     def api_response
