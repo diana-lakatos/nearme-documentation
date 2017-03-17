@@ -45,7 +45,7 @@ EOQ
   Join in on the conversation.
 </p>
 
-<p><a href="{{ 'pages_path' | generate_url: slug: 'pending-received-invitations' }}">Click here to accept or decline the invitation</a></p>
+<p><a href="{{ 'pages_url' | generate_url: slug: 'pending-received-invitations' }}">Click here to accept or decline the invitation</a></p>
 EOQ
           },
           {
@@ -57,13 +57,12 @@ Hi {{ enquirer.first_name }},
 {{ lister.name }} ({{ lister.profile_url }})  has invited you to become a collaborator on {{ transactable.name }} ({{ transactable.listing_url }}).
 Join in on the conversation.
 
-Click here to accept or decline the invitation ({{ 'pages_path' | generate_url: slug: 'pending-received-invitations' }})
+Click here to accept or decline the invitation ({{ 'pages_url' | generate_url: slug: 'pending-received-invitations' }})
 EOQ
           }
         ]
-
         views.each do |view|
-          iv = InstanceView.find_or_initialize_by(
+          iv = InstanceView.find_by(
             instance_id: i.id, view_type: 'email', partial: false, handler: 'liquid',
             path: view[:path], format: view[:format]
           )
