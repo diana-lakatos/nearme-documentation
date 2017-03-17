@@ -67,6 +67,8 @@ class DelayedReservation < Reservation
 
   def rebuild_first_line_item
     if transactable_line_items.any?
+      host_fee_line_items.destroy_all
+      service_fee_line_items.destroy_all
       transactable_line_items.destroy_all
       transactable_line_items.create!(
         user: user,
