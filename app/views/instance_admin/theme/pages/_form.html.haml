@@ -11,7 +11,7 @@
 
   .row
     .input-container.col-xs-12
-      = f.input :layout_name, collection: Page::VALID_LAYOUTS, include_blank: true, prompt: 'Pick'
+      = f.input :layout_name, collection: resource.valid_page_layouts, include_blank: true, prompt: 'Pick'
   .row
     .input-container.col-xs-12
       = f.input :content, hint: "Insert HTML, Markdown or Plain text here", input_html: { class: 'form-control', rows: "20" }

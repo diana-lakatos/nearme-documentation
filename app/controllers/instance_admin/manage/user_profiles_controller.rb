@@ -5,7 +5,7 @@ class InstanceAdmin::Manage::UserProfilesController < InstanceAdmin::Manage::Bas
       resource.approved = true
       resource.enabled = true
       resource.save(validate: false)
-      WorkflowStepJob.perform(WorkflowStep::UserWorkflow::ProfileApproved, resource.user_id)
+      WorkflowStepJob.perform(WorkflowStep::UserWorkflow::ProfileApproved, resource.user_id, as: current_user)
     end
     redirect_to request.referer.presence || instance_admin_manage_users_path
   end

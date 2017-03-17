@@ -15,4 +15,8 @@ class WorkflowStep::SignUpWorkflow::CreatedByAdmin < WorkflowStep::SignUpWorkflo
   def data
     { new_user: @user, creator: @creator }
   end
+
+  def workflow_triggered_by
+    @creator
+  end
 end

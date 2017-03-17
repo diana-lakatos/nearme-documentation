@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 class BankAccount < ActiveRecord::Base
   include Encryptable
   include Modelable
 
-  FAILED_STATES = ['verification_failed', 'errored']
-  SUCCESS_STATES = ['new', 'verified', 'validated']
+  FAILED_STATES = %w(verification_failed errored).freeze
+  SUCCESS_STATES = %w(new verified validated).freeze
 
   attr_accessor :public_token, :account_id, :token, :payer
   attr_accessor :country, :currency, :routing_number, :account_number, :account_holder_name, :account_holder_type
@@ -72,14 +73,12 @@ class BankAccount < ActiveRecord::Base
   end
 
   def verify!
-    begin
-      response = find.verify(amounts: [verification_amount_1.to_i, verification_amount_2.to_i])
-      update_attribute(:status, response.status)
-      true
-    rescue => e
-      errors.add(:base, e.message)
-      false
-    end
+    response = find.verify(amounts: [verification_amount_1.to_i, verification_amount_2.to_i])
+    update_attribute(:status, response.status)
+    true
+  rescue => e
+    errors.add(:base, e.message)
+    false
   end
 
   def find
@@ -102,7 +101,7 @@ class BankAccount < ActiveRecord::Base
       errors.add(:base, :incrrect_account)
     end
 
-    self.external_id
+    external_id
   end
 
   def existing_instance_client
@@ -113,11 +112,8 @@ class BankAccount < ActiveRecord::Base
 
     # As PaymentGatway can be switched
     # at we need to verify if that customer exists withing confifured PaymentGateway
-    if existing_instance_client.try(:find)
-      self.instance_client = existing_instance_client
-    else
-      nil
-    end
+    return unless existing_instance_client.try(:find)
+    self.instance_client = existing_instance_client
   end
 
   def test_mode?
@@ -132,7 +128,7 @@ class BankAccount < ActiveRecord::Base
   def create_source(token)
     if token.present? && (customer_response = instance_client.try(:find))
       begin
-        bank_account_response = customer_response.sources.create({ :source => token })
+        bank_account_response = customer_response.sources.create(source: token)
       rescue => e
         errors.add(:base, e.message)
         return false
@@ -147,15 +143,15 @@ class BankAccount < ActiveRecord::Base
     set_attributes_from_customer_response(customer_response, bank_account_response)
   end
 
-  def set_attributes_from_customer_response(customer_response, bank_account_response=nil)
+  def set_attributes_from_customer_response(customer_response, bank_account_response = nil)
     self.response = bank_account_response || customer_response.bank_accounts.last.try(:response)
     self.last4 = response.last4
     self.status = response.status
     self.bank_name = response.bank_name
     self.external_id = response.id
-    self.save!
+    save!
 
-    send_workflow_for(self.state)
+    send_workflow_for(state)
   end
 
   def send_workflow_for(state)
@@ -166,5 +162,4 @@ class BankAccount < ActiveRecord::Base
       WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::BankAccountPending, id)
     end
   end
-
 end

@@ -13,7 +13,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::M
       else
         InstanceAdmin.create(user_id: @user.id)
         flash[:success] = "User with email #{@user.email} has been successfully added as admin"
-        WorkflowStepJob.perform(WorkflowStep::UserWorkflow::PromotedToAdmin, @user.id, current_user.id)
+        WorkflowStepJob.perform(WorkflowStep::UserWorkflow::PromotedToAdmin, @user.id, current_user.id, as: current_user)
       end
       redirect_to instance_admin_manage_admins_path
     else

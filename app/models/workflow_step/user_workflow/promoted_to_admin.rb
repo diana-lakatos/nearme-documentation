@@ -19,4 +19,8 @@ class WorkflowStep::UserWorkflow::PromotedToAdmin < WorkflowStep::UserWorkflow::
   def data
     { user_who_was_promoted: @user, user_who_promoted: @creator }
   end
+
+  def workflow_triggered_by
+    @creator
+  end
 end

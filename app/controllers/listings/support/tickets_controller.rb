@@ -22,7 +22,7 @@ class Listings::Support::TicketsController < ApplicationController
     @message.subject = subject
     if @ticket.valid?
       @ticket.save!
-      WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Created, @message.id)
+      WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Created, @message.id, as: current_user)
       if @listing.action_free_booking?
         flash[:success] = t('flash_messages.support.rfq_ticket.created')
       else

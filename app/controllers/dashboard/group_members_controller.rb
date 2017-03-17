@@ -18,16 +18,16 @@ class Dashboard::GroupMembersController < Dashboard::BaseController
   def destroy
     @membership.destroy
     if current_user.id == @membership.user_id
-      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberHasQuit, @membership.id)
+      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberHasQuit, @membership.id, as: current_user)
     else
-      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberDeclined, @membership.id)
+      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberDeclined, @membership.id, as: current_user)
     end
     render json: { result: 'OK' }
   end
 
   def approve
     @membership.update(approved_by_owner_at: Time.zone.now)
-    WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberApproved, @membership.id)
+    WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberApproved, @membership.id, as: current_user)
     render_membership
   end
 
