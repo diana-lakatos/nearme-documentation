@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseController
   before_action :find_reservation, except: [:index]
   before_action :check_if_pending_guest_confirmation, only: [:complete_reservation, :submit_complete_reservation]

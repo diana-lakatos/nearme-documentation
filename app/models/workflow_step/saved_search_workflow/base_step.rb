@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 class WorkflowStep::SavedSearchWorkflow::BaseStep < WorkflowStep::BaseStep
   def initialize(saved_searches_ids)
     @saved_searches = SavedSearch.where(id: saved_searches_ids)
-    fail 'There should be saved searches' if @saved_searches.empty?
+    raise 'There should be saved searches' if @saved_searches.empty?
   end
 
   def workflow_type
@@ -13,7 +14,7 @@ class WorkflowStep::SavedSearchWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def enquirer
-    fail 'Saved searches should belong to the same user' unless @saved_searches.map(&:user_id).uniq.size == 1
+    raise 'Saved searches should belong to the same user' unless @saved_searches.map(&:user_id).uniq.size == 1
     @saved_searches.first.user
   end
 

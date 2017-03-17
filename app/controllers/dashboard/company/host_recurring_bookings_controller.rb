@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::BaseController
   before_action :find_listing, except: [:show, :index]
   before_action :find_recurring_booking, except: [:show, :index]

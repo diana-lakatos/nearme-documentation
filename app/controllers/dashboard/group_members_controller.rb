@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 class Dashboard::GroupMembersController < Dashboard::BaseController
   rescue_from GroupMember::OwnerCannotLeaveGroup, with: :owner_cannot_leave_group
   rescue_from GroupMember::OwnerCannotLoseModerateRights, with: :owner_cannot_lose_moderate_rights
 
-  before_filter :find_group
-  before_filter :find_membership, except: [:index, :create]
+  before_action :find_group
+  before_action :find_membership, except: [:index, :create]
 
   def index
     @members = @group.memberships.by_phrase(params[:phrase])

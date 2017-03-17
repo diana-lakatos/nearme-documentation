@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::CollaboratorWorkflow::BaseStep < WorkflowStep::BaseStep
   def self.belongs_to_transactable_type?
     true
@@ -31,9 +32,7 @@ class WorkflowStep::CollaboratorWorkflow::BaseStep < WorkflowStep::BaseStep
     }
   end
 
-  def transactable_type_id
-    transactable.transactable_type_id
-  end
+  delegate :transactable_type_id, to: :transactable
 
   def should_be_processed?
     @transactable_collaborator.present? && transactable.present? && enquirer.present?

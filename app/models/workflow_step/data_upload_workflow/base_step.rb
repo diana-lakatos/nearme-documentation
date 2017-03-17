@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::DataUploadWorkflow::BaseStep < WorkflowStep::BaseStep
   def initialize(data_upload_id)
     @data_upload_id = data_upload_id
@@ -21,9 +22,7 @@ class WorkflowStep::DataUploadWorkflow::BaseStep < WorkflowStep::BaseStep
     { data_upload: data_upload }
   end
 
-  def importable_id
-    data_upload.importable_id
-  end
+  delegate :importable_id, to: :data_upload
 
   def should_be_processed?
     data_upload.present?

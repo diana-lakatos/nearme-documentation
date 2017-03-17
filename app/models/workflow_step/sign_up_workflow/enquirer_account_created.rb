@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::SignUpWorkflow::EnquirerAccountCreated < WorkflowStep::SignUpWorkflow::BaseStep
   # user:
   #  User object
@@ -5,5 +6,4 @@ class WorkflowStep::SignUpWorkflow::EnquirerAccountCreated < WorkflowStep::SignU
   def data
     { user: @user }
   end
-
 end

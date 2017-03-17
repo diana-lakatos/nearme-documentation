@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::Manage::BaseController
-  skip_before_filter :check_if_locked
+  skip_before_action :check_if_locked
 
   def index
     redirect_to instance_admin_manage_admins_path
@@ -34,9 +35,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::M
       @instance_admin.update_attribute(:instance_admin_role_id, InstanceAdminRole.find(params[:instance_admin_role_id]).id)
     end
 
-    if params[:mark_as_owner] && current_user.is_instance_owner?
-      @instance_admin.mark_as_instance_owner
-    end
+    @instance_admin.mark_as_instance_owner if params[:mark_as_owner] && current_user.is_instance_owner?
 
     if request.xhr?
       render nothing: true

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::ActivityEventsWorkflow::BaseStep < WorkflowStep::BaseStep
   attr_reader :summary_data
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class DelayedReservation < Reservation
   attr_accessor :dates_fake, :checkout_update
 
