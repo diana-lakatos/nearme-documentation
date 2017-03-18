@@ -295,3 +295,14 @@ def disable_elasticsearch!
   User.__elasticsearch__.client.indices.delete index: User.base_index_name
   Rails.application.config.use_elastic_search = false
 end
+
+# see https://github.com/rails/rails-dom-testing/issues/48
+# fixes frozen string literal in assert_select
+# can't upgrade gem because it would require upgrading
+# rails to 5.0
+class SubstitutionContext
+  def substitute_with_dup!(selector, *args)
+    substitute_without_dup!(selector.dup, *args)
+  end
+  alias_method_chain :substitute!, :dup
+end
