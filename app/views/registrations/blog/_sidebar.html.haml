@@ -4,9 +4,9 @@
       = image_tag @user.avatar.url(:big)
 
   .social.info.part
-    =render_social_connection(@user, @user.social_connections_for('facebook'))
-    =render_social_connection(@user, @user.social_connections_for('linkedin'))
-    =render_social_connection(@user, @user.social_connections_for('twitter'))
+    =render_social_connection(@user, @user.to_liquid.facebook_connections)
+    =render_social_connection(@user, @user.to_liquid.linkedin_connections))
+    =render_social_connection(@user, @user.to_liquid.twitter_connections)
 
     - if @user.social_url('instagram')
       = render '/registrations/social_connection', icon: 'ico-instagram', provider: 'instagram', count: false,
