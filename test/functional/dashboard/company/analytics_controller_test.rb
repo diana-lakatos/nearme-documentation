@@ -42,8 +42,8 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
 
         context 'date' do
           setup do
-            @charge_created_6_days_ago = create_payment(total_amount: 100, created_at: Time.zone.now - 6.days)
-            @charge_created_7_days_ago = create_payment(total_amount: 100, created_at: Time.zone.now - 7.days)
+            @charge_created_6_days_ago = create_payment(total_amount: 100, created_at: Time.zone.now - 5.days)
+            @charge_created_7_days_ago = create_payment(total_amount: 100, created_at: Time.zone.now - 6.days)
           end
 
           should '@last_week_payments includes only charges not older than 6 days' do

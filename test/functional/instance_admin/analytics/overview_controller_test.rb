@@ -15,9 +15,7 @@ class InstanceAdmin::Analytics::OverviewControllerTest < ActionController::TestC
       @old_transactable = FactoryGirl.create(:transactable).update_column(:created_at, 32.days.ago)
       get :show, chart_type: 'listings'
       assert_response :success
-      assert_equal(
-        '[[0,0,0,0,0,0,1]]',
-        assigns(:analytics).to_liquid.values
+      assert_equal('[[0,0,0,0,0,1,0]]', assigns(:analytics).to_liquid.values
       )
     end
   end
