@@ -41,19 +41,22 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
         end
 
         context 'date' do
-          setup do
-            @charge_created_6_days_ago = create_payment(total_amount: 100, created_at: Time.zone.now - 6.days)
-            @charge_created_7_days_ago = create_payment(total_amount: 100, created_at: Time.zone.now - 7.days)
-          end
-
           should '@last_week_payments includes only charges not older than 6 days' do
-            get :show
-            assert_equal [[100, 0, 0, 0, 0, 0, 0]], assigns(:analytics).values
+            travel_to 'next monday 5pm' do
+              @charge_created_6_days_ago = create_payment(total_amount: 100, created_at: Time.now - 6.days)
+              @charge_created_7_days_ago = create_payment(total_amount: 100, created_at: Time.now - 7.days)
+              get :show
+              assert_equal [[100, 0, 0, 0, 0, 0, 0]], assigns(:analytics).values
+            end
           end
 
           should '@payments includes all charges that belong to a user' do
-            get :show
-            assert_equal [@charge_created_6_days_ago, @charge_created_7_days_ago], assigns(:analytics).list
+            travel_to 'next monday 5pm' do
+              @charge_created_6_days_ago = create_payment(total_amount: 100, created_at: Time.now - 6.days)
+              @charge_created_7_days_ago = create_payment(total_amount: 100, created_at: Time.now - 7.days)
+              get :show
+              assert_equal [@charge_created_6_days_ago, @charge_created_7_days_ago], assigns(:analytics).list
+            end
           end
         end
       end
