@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   include CreationFilter
   include QuerySearchable
   include UserNameUtility
+  include UserProfilesOwnerable
   include TransactablesOwnerable
 
   SORT_OPTIONS = [:all, :featured, :people_i_know, :most_popular, :location, :number_of_projects].freeze
@@ -148,7 +149,6 @@ class User < ActiveRecord::Base
 
   # QUESTION: why we need this?
   # has_many :dimensions_templates, as: :entity
-  has_many :user_profiles
   has_many :inappropriate_reports, dependent: :destroy
   has_many :outgoing_phone_calls, foreign_key: :caller_id, class_name: 'PhoneCall'
   has_many :incoming_phone_calls, foreign_key: :receiver_id, class_name: 'PhoneCall'
@@ -164,9 +164,6 @@ class User < ActiveRecord::Base
   has_one :blog, class_name: 'UserBlog'
   has_one :current_address, class_name: 'Address', as: :entity
 
-  has_one :seller_profile, -> { seller }, class_name: 'UserProfile'
-  has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
-  has_one :default_profile, -> { default }, class_name: 'UserProfile'
   has_one :communication, ->(_user) { where(provider_key: PlatformContext.current.instance.twilio_config[:key]) }, dependent: :destroy
 
   has_one :notification_preference, dependent: :destroy
@@ -187,13 +184,19 @@ class User < ActiveRecord::Base
 
   store :required_fields
 
+  has_one :seller_profile, -> { seller }, class_name: 'UserProfile'
+  has_one :buyer_profile, -> { buyer }, class_name: 'UserProfile'
+  has_one :default_profile, -> { default }, class_name: 'UserProfile'
+  accepts_nested_attributes_for :seller_profile
+  accepts_nested_attributes_for :buyer_profile
+  accepts_nested_attributes_for :default_profile
+
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :transactables
   accepts_nested_attributes_for :current_address
-  accepts_nested_attributes_for :seller_profile
-  accepts_nested_attributes_for :buyer_profile
-  accepts_nested_attributes_for :default_profile
+  # need to save nested association automagicall :|
+  accepts_nested_attributes_for :user_profiles
 
   accepts_nested_attributes_for :notification_preference
 
@@ -410,15 +413,27 @@ class User < ActiveRecord::Base
   end
 
   def get_seller_profile
-    seller_profile || build_seller_profile(instance_profile_type: current_instance.try('seller_profile_type'))
+    seller_profile || user_profiles.build(profile_type: 'seller', instance_profile_type: current_instance.try('seller_profile_type'))
   end
 
   def get_buyer_profile
-    buyer_profile || build_buyer_profile(instance_profile_type: current_instance.try('buyer_profile_type'))
+    buyer_profile || user_profiles.build(profile_type: 'buyer', instance_profile_type: current_instance.try('buyer_profile_type'))
   end
 
   def get_default_profile
-    default_profile || build_default_profile(instance_profile_type: current_instance.try('default_profile_type'))
+    default_profile || user_profiles.build(profile_type: 'default', instance_profile_type: current_instance.try('default_profile_type'))
+  end
+
+  def seller_profile
+    user_profiles.detect { |pt| pt.profile_type == 'seller' }
+  end
+
+  def default_profile
+    user_profiles.detect { |pt| pt.profile_type == 'default' }
+  end
+
+  def buyer_profile
+    user_profiles.detect { |pt| pt.profile_type == 'buyer' }
   end
 
   def has_default_profile?

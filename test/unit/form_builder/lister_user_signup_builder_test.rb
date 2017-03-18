@@ -58,7 +58,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
   should 'correctly validate empty params' do
     @lister_user_signup_builder.prepopulate!
     refute @lister_user_signup_builder.validate({})
-    assert_equal "Email can't be blank, Password can't be blank, Avatar can't be blank, Seller profile properties seller attr can't be blank, Seller profile custom images #{@seller_photo.id} image can't be blank, Seller profile custom attachments #{@seller_attachment.id} file can't be blank, Seller profile categories seller category can't be blank, Default profile properties default attr can't be blank, Default profile categories default category can't be blank, Companies name can't be blank, Companies locations name can't be blank, Companies locations transactables boat photos is too short (minimum is 1 character), Companies locations transactables boat name can't be blank, Companies locations transactables boat properties boat attr can't be blank, Companies locations transactables boat custom images #{@boat_photo.id} image can't be blank, Companies locations transactables boat custom attachments #{@boat_attachment.id} file can't be blank, Companies locations transactables boat categories boat category can't be blank, Companies locations transactables boat action types pricings unit can't be blank, Companies locations location address address can't be blank", @lister_user_signup_builder.errors.full_messages.join(', ')
+    assert_equal "Email can't be blank, Password can't be blank, Avatar can't be blank, Profiles default properties default attr can't be blank, Profiles default categories default category can't be blank, Profiles seller properties seller attr can't be blank, Profiles seller custom images #{@seller_photo.id} image can't be blank, Profiles seller custom attachments #{@seller_attachment.id} file can't be blank, Profiles seller categories seller category can't be blank, Companies name can't be blank, Companies locations name can't be blank, Companies locations transactables boat photos is too short (minimum is 1 character), Companies locations transactables boat name can't be blank, Companies locations transactables boat properties boat attr can't be blank, Companies locations transactables boat custom images #{@boat_photo.id} image can't be blank, Companies locations transactables boat custom attachments #{@boat_attachment.id} file can't be blank, Companies locations transactables boat categories boat category can't be blank, Companies locations transactables boat action types pricings unit can't be blank, Companies locations location address address can't be blank", @lister_user_signup_builder.errors.full_messages.join(', ')
   end
 
   should 'be able to save all parameters' do
@@ -132,44 +132,46 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
       'avatar' => File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')),
       'mobile_number' => '604 103 204',
       'tag_list' => 'mac, iek',
-      :default_profile => {
-        'enabled' => '0',
-        :properties => {
-          'default_attr' => 'my default value'
-        },
-        :categories => {
-          'Default Category' => @default_sub_cat.id
-        },
-        :customizations => {
-          'default_model_attributes' => {
-            '0' => { properties: { default_model_attr: 'my first value' } },
-            '1' => { properties: { default_model_attr: 'my second value' } }
-          }
-        }
-      },
-      :seller_profile => {
-        'enabled' => '1',
-        :properties => {
-          'seller_attr' => 'my seller value'
-        },
-        custom_images: {
-          :"#{@seller_photo.id}" => {
-            image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
+      'profiles_attributes' => {
+        'default_attributes' => {
+          'enabled' => '0',
+          :properties => {
+            'default_attr' => 'my default value'
+          },
+          :categories => {
+            'Default Category' => @default_sub_cat.id
+          },
+          :customizations => {
+            'default_model_attributes' => {
+              '0' => { properties: { default_model_attr: 'my first value' } },
+              '1' => { properties: { default_model_attr: 'my second value' } }
+            }
           }
         },
-        custom_attachments: {
-          :"#{@seller_attachment.id}" => {
-            file: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
+        'seller_attributes' => {
+          'enabled' => '1',
+          :properties => {
+            'seller_attr' => 'my seller value'
+          },
+          custom_images: {
+            :"#{@seller_photo.id}" => {
+              image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
+            }
+          },
+          custom_attachments: {
+            :"#{@seller_attachment.id}" => {
+              file: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
+            }
+          },
+          :categories => {
+            'Seller Category' => [@seller_sub_cat.id, @seller_sub_cat2.id]
+          },
+          :customizations => {
+            'seller_model_attributes' => {
+              '0' => { properties: { seller_model_attr: 'my first value' } }
+            }
           }
         },
-        :categories => {
-          'Seller Category' => [@seller_sub_cat.id, @seller_sub_cat2.id]
-        },
-        :customizations => {
-          'seller_model_attributes' => {
-            '0' => { properties: { seller_model_attr: 'my first value' } }
-          }
-        }
       },
       'companies_attributes' => {
         '0' => {
@@ -273,75 +275,77 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
       'current_address' => {},
       'mobile_number' => {},
       'tags' => {},
-      :default_profile => {
-        'enabled' => {},
-        :properties => {
-          'default_attr' => {
-            validation: {
-              'presence' => {}
+      profiles: {
+        :default => {
+          'enabled' => {},
+          :properties => {
+            'default_attr' => {
+              validation: {
+                'presence' => {}
+              }
             }
-          }
-        },
-        :categories => {
-          'Default Category' => {
-            validation: {
-              presence: true
+          },
+          :categories => {
+            'Default Category' => {
+              validation: {
+                presence: true
+              }
             }
-          }
-        },
-        :customizations => {
-          'default_model' => {
-            properties: {
-              'default_model_attr' => {
-                validation: {
-                  'presence' => {}
+          },
+          :customizations => {
+            'default_model' => {
+              properties: {
+                'default_model_attr' => {
+                  validation: {
+                    'presence' => {}
+                  }
                 }
               }
             }
           }
-        }
-      },
-      :seller_profile => {
-        'enabled' => {},
-        :properties => {
-          'seller_attr' => {
-            validation: {
-              'presence' => {}
-            }
-          }
         },
-        :custom_images => {
-          "#{@seller_photo.id}": {
-            validation: {
-              'presence' => {}
+        :seller => {
+          'enabled' => {},
+          :properties => {
+            'seller_attr' => {
+              validation: {
+                'presence' => {}
+              }
             }
-          }
-        },
-        :custom_attachments => {
-          "#{@seller_attachment.id}": {
-            validation: {
-              'presence' => {}
+          },
+          :custom_images => {
+            "#{@seller_photo.id}": {
+              validation: {
+                'presence' => {}
+              }
             }
-          }
-        },
-        :categories => {
-          'Seller Category' => {
-            validation: {
-              presence: true
+          },
+          :custom_attachments => {
+            "#{@seller_attachment.id}": {
+              validation: {
+                'presence' => {}
+              }
             }
-          }
-        },
-        :customizations => {
-          'seller_model' => {
-            properties: {
-              'seller_model_attr' => {
-                validation: {
-                  'presence' => {}
+          },
+          :categories => {
+            'Seller Category' => {
+              validation: {
+                presence: true
+              }
+            }
+          },
+          :customizations => {
+            'seller_model' => {
+              properties: {
+                'seller_model_attr' => {
+                  validation: {
+                    'presence' => {}
+                  }
                 }
               }
             }
           }
-        }
+        },
       },
       :companies => {
         name: {

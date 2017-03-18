@@ -113,7 +113,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update
-    if @user_update_profile_form.validate(params[:user] || {})
+    if @user_update_profile_form.validate(params[:form].presence || params[:user] || {})
       @user_update_profile_form.save
       I18n.locale = current_user.reload.language&.to_sym || :en
       onboarded = current_user.buyer_profile.try(:mark_as_onboarded!) || current_user.seller_profile.try(:mark_as_onboarded!)

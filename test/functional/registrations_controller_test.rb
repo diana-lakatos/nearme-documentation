@@ -3,7 +3,9 @@ require 'test_helper'
 
 class RegistrationsControllerTest < ActionController::TestCase
   setup do
-    @user = FactoryGirl.create(:user, default_profile_attributes: { properties: { company_name: 'DesksNearMe', country_name: 'United States' } })
+    @user = FactoryGirl.create(:user)
+    @user.default_profile.properties = { company_name: 'DesksNearMe', country_name: 'United States' }
+    @user.save!
     @request.env['devise.mapping'] = Devise.mappings[:user]
   end
 

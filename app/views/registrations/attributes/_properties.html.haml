@@ -1,14 +1,17 @@
-- if f.object.respond_to?(:default_profile)
-  = f.simple_fields_for :default_profile do |default_profile_form|
-    - if default_profile_form.object.kind_of?(BaseForm)
-      - (default_profile_form.object.model.instance_profile_type.try(:custom_attributes) || []).each do |ca|
-        - next unless only_inputs.empty? || only_inputs.include?(ca.name.to_sym)
-        - if ca.uploadable?
-          = render 'custom_attributes/uploadable', f: default_profile_form, ca: ca
-        - else
-          = default_profile_form.simple_fields_for :properties do |properties_form|
-            = draw_attribute_for_form(ca, properties_form)
-    - else
+- if f.object.is_a?(BaseForm)
+  = f.simple_fields_for :profiles do |user_profiles_form|
+    - if user_profiles_form.object.respond_to?(:default)
+      = user_profiles_form.simple_fields_for :default do |default_profile_form|
+        - (default_profile_form.object.model.instance_profile_type.try(:custom_attributes) || []).each do |ca|
+          - next unless only_inputs.empty? || only_inputs.include?(ca.name.to_sym)
+          - if ca.uploadable?
+            = render 'custom_attributes/uploadable', f: default_profile_form, ca: ca
+          - else
+            = default_profile_form.simple_fields_for :properties do |properties_form|
+              = draw_attribute_for_form(ca, properties_form)
+- else
+  - if f.object.respond_to?(:default_profile)
+    = f.simple_fields_for :default_profile do |default_profile_form|
       - (default_profile_form.object.instance_profile_type.try(:custom_attributes) || []).each do |ca|
         - next unless only_inputs.empty? || only_inputs.include?(ca.name.to_sym)
         - if ca.uploadable?

@@ -36,9 +36,11 @@ module Api
                     name: {
                       validation: { presence: {} }
                     },
-                    default_profile: {
-                      properties: {
-                        user_attr: { validation: { presence: true } }
+                    profiles: {
+                      default: {
+                        properties: {
+                          user_attr: { validation: { presence: true } }
+                        }
                       }
                     }
                   }
@@ -48,7 +50,7 @@ module Api
               should 'not create user without required custom attribute' do
                 assert_no_difference('User.count') do
                   assert_no_difference('UserProfile.count') do
-                    post :create, form: user_attributes.merge(default_profile_attributes: { properties: {} })
+                    post :create, form: user_attributes.merge(profiles: { default: { properties: {} } })
                   end
                 end
               end
@@ -56,7 +58,7 @@ module Api
               should 'create user when all params sent' do
                 assert_difference('User.count') do
                   assert_difference('UserProfile.count') do
-                    post :create, form: user_attributes.merge(default_profile_attributes: { properties: { user_attr: 'my value' } })
+                    post :create, form: user_attributes.merge(profiles: { default: { properties: { user_attr: 'my value' } } })
                   end
                 end
                 assert_equal 'my value', User.last.default_profile.properties.user_attr
@@ -75,11 +77,13 @@ module Api
                 name: {
                   validation: { presence: {} }
                 },
-                seller_profile: {
-                  properties: {}
-                },
-                default_profile: {
-                  properties: {}
+                profiles: {
+                  seller: {
+                    properties: {}
+                  },
+                  default: {
+                    properties: {}
+                  }
                 }
               }
             )
@@ -103,14 +107,16 @@ module Api
                     name: {
                       validation: { presence: {} }
                     },
-                    seller_profile: {
-                      properties: {
-                        lister_attr: { validation: { presence: true } }
-                      }
-                    },
-                    default_profile: {
-                      properties: {
-                        user_attr: { validation: { presence: true } }
+                    profiles: {
+                      seller: {
+                        properties: {
+                          lister_attr: { validation: { presence: true } }
+                        }
+                      },
+                      default: {
+                        properties: {
+                          user_attr: { validation: { presence: true } }
+                        }
                       }
                     }
                   }
@@ -120,10 +126,10 @@ module Api
               should 'not create user without required custom attribute' do
                 assert_no_difference('User.count') do
                   assert_no_difference('UserProfile.count') do
-                    post :create, role: FormBuilder::UserSignupBuilderFactory::LISTER, form: user_attributes.merge(default_profile_attributes: { properties: {} },
-                                                                                                                   seller_profile_attributes: { properties: {} })
-                    assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'default_profile.properties.user_attr']
-                    assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'seller_profile.properties.lister_attr']
+                    post :create, role: FormBuilder::UserSignupBuilderFactory::LISTER, form: user_attributes.merge(profiles: { default: { properties: {} },
+                                                                                                                   seller: { properties: {} } })
+                    assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'profiles.default.properties.user_attr']
+                    assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'profiles.seller.properties.lister_attr']
                   end
                 end
               end
@@ -132,10 +138,10 @@ module Api
                 assert_difference('User.count') do
                   assert_difference('UserProfile.count', 2) do
                     post :create, role: FormBuilder::UserSignupBuilderFactory::LISTER,
-                                  form: user_attributes.merge(
-                                    default_profile_attributes: { properties: { user_attr: 'my value' } },
-                                    seller_profile_attributes: { properties: { lister_attr: 'other value' } }
-                                  )
+                      form: user_attributes.merge(profiles: {
+                        default: { properties: { user_attr: 'my value' } },
+                        seller: { properties: { lister_attr: 'other value' } }
+                    })
                   end
                 end
                 assert_equal 'other value', User.last.seller_profile.properties.lister_attr
@@ -155,11 +161,13 @@ module Api
                 name: {
                   validation: { presence: {} }
                 },
-                buyer_profile: {
-                  properties: {}
-                },
-                default_profile: {
-                  properties: {}
+                profiles: {
+                  buyer: {
+                    properties: {}
+                  },
+                  default: {
+                    properties: {}
+                  }
                 }
               }
             )
@@ -176,14 +184,16 @@ module Api
                     name: {
                       validation: { presence: {} }
                     },
-                    buyer_profile: {
-                      properties: {
-                        enquirer_attr: { validation: { presence: true } }
-                      }
-                    },
-                    default_profile: {
-                      properties: {
-                        user_attr: { validation: { presence: true } }
+                    profiles: {
+                      buyer: {
+                        properties: {
+                          enquirer_attr: { validation: { presence: true } }
+                        }
+                      },
+                      default: {
+                        properties: {
+                          user_attr: { validation: { presence: true } }
+                        }
                       }
                     }
                   }
@@ -194,10 +204,10 @@ module Api
                 assert_no_difference('User.count') do
                   assert_no_difference('UserProfile.count') do
                     post :create, role: FormBuilder::UserSignupBuilderFactory::ENQUIRER, form: user_attributes
-                      .merge(default_profile_attributes: { properties: {} },
-                             buyer_profile_attributes: { properties: {} })
-                    assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'default_profile.properties.user_attr']
-                    assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'buyer_profile.properties.enquirer_attr']
+                      .merge(profiles: { default: { properties: {} },
+                    buyer: { properties: {} } })
+                    assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'profiles.default.properties.user_attr']
+                    assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'profiles.buyer.properties.enquirer_attr']
                   end
                 end
               end
@@ -206,10 +216,10 @@ module Api
                 assert_difference('User.count') do
                   assert_difference('UserProfile.count', 2) do
                     post :create, role: FormBuilder::UserSignupBuilderFactory::ENQUIRER,
-                                  form: user_attributes.merge(
-                                    default_profile_attributes: { properties: { user_attr: 'my value' } },
-                                    buyer_profile_attributes: { properties: { enquirer_attr: 'other value' } }
-                                  )
+                      form: user_attributes.merge(profiles: {
+                        default: { properties: { user_attr: 'my value' } },
+                        buyer: { properties: { enquirer_attr: 'other value' } }
+                    })
                   end
                 end
                 assert_equal 'my value', User.last.default_profile.properties.user_attr

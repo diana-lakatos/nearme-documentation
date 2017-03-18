@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class InstanceProfileType < ActiveRecord::Base
   include SearchableType
+  include WithParameterizedName
 
   has_paper_trail
   acts_as_paranoid
@@ -30,8 +31,6 @@ class InstanceProfileType < ActiveRecord::Base
   SELLER = 'seller'
   BUYER = 'buyer'
   PROFILE_TYPES = [DEFAULT, SELLER, BUYER].freeze
-
-  validates :profile_type, inclusion: { in: PROFILE_TYPES }
 
   scope :default, -> { where(profile_type: DEFAULT) }
   scope :seller, -> { where(profile_type: SELLER) }

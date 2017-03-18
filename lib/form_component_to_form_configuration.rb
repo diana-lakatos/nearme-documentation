@@ -52,10 +52,14 @@ class FormComponentToFormConfiguration
       enquirer_configuration = {}
       lister_configuration = {}
       el.values.first.each do |form_component|
-        if [5011, 132].include?(PlatformContext.current.instance.id)
+        if [5011].include?(PlatformContext.current.instance.id)
           logger.debug "Configuration for devmesh/hallmark (#{PlatformContext.current.instance.id})"
           # hardcode fields for devmesh / hallmark :)
-          default_configuration.deep_merge!(community_configuration)
+          default_configuration.deep_merge!(hallmark_configuration)
+        elsif [132].include?(PlatformContext.current.instance.id)
+          logger.debug "Configuration for devmesh/hallmark (#{PlatformContext.current.instance.id})"
+          # hardcode fields for devmesh / hallmark :)
+          default_configuration.deep_merge!(intel_configuration)
         else
           case fc_role
           when :Default
@@ -101,7 +105,7 @@ class FormComponentToFormConfiguration
 
   def create_form_configuration(base_form:, name:, configuration:)
     if configuration.present?
-      fc = FormConfiguration.where(base_form: base_form, name: name).first_or_initialize
+      fc = FormConfiguration.where(base_form: base_form).with_parameterized_name(name).first_or_initialize
       fc.configuration = configuration
       fc.save!
     else
@@ -122,7 +126,7 @@ class FormComponentToFormConfiguration
         next if model == 'buyer' && role == 'seller'
         next if model == 'seller' && role == 'buyer'
         next if %w(email).include?(field)
-        if model == 'user' && user_attributes.include?(field) || (model == 'buyer' && field == 'tags') || field == 'company_name'
+        if model == 'user' && user_attributes.include?(field) || (model == 'buyer' && field == 'tags') || (model == 'user' && field == 'company_name')
           field = 'tag_list' if field == 'tags'
           if field == 'current_address'
             configuration[field.to_sym] = ADDRESS_HASH
@@ -142,58 +146,59 @@ class FormComponentToFormConfiguration
           end
         else
           model = 'default' if model == 'user'
-          configuration[:"#{model}_profile"] ||= { validation: { presence: {} } }
+          configuration[:profiles] ||= {}
+          configuration[:profiles][:"#{model}"] ||= { validation: { presence: {} } }
           if user_profile_attributes.include?(field)
-            configuration[:"#{model}_profile"][field] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), field).build
+            configuration[:profiles][:"#{model}"][field] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), field).build
           elsif field == 'unavailable_periods'
-            configuration[:"#{model}_profile"][:availability_template] = {}
+            configuration[:profiles][:"#{model}"][:availability_template] = {}
           elsif field.include?('Category -')
             field = field.sub('Category - ', '')
-            configuration[:"#{model}_profile"][:categories] ||= { validation: { presence: {} } }
-            configuration[:"#{model}_profile"][:categories][field] = ValidationBuilder.new(Category.find_by(name: field), field).build
+            configuration[:profiles][:"#{model}"][:categories] ||= { validation: { presence: {} } }
+            configuration[:profiles][:"#{model}"][:categories][field] = ValidationBuilder.new(Category.find_by(name: field), field).build
           elsif field.include?('Custom Model -')
             field = CustomModelType.parameterize_name(field.sub('Custom Model - ', ''))
-            configuration[:"#{model}_profile"][:customizations] ||= { validation: { presence: {} } }
-            configuration[:"#{model}_profile"][:customizations][field] ||= {}
+            configuration[:profiles][:"#{model}"][:customizations] ||= { validation: { presence: {} } }
+            configuration[:profiles][:"#{model}"][:customizations][field] ||= {}
             custom_model_type = CustomModelType.find_by(parameterized_name: field)
             custom_model_type&.custom_attributes&.each do |ca|
               if ca.uploadable?
                 if ca.attribute_type == 'photo'
-                  configuration[:"#{model}_profile"][:customizations][field][:custom_images] ||= {}
-                  configuration[:"#{model}_profile"][:customizations][field][:custom_images][ca.id.to_s] = ValidationBuilder.new(custom_model_type, ca.name).build
+                  configuration[:profiles][:"#{model}"][:customizations][field][:custom_images] ||= {}
+                  configuration[:profiles][:"#{model}"][:customizations][field][:custom_images][ca.id.to_s] = ValidationBuilder.new(custom_model_type, ca.name).build
                   # if at least one image is required, we need to add validation to custom_images, not only custom_images[<attr.id>]
-                  configuration[:"#{model}_profile"][:customizations][field][:custom_images][:validation] = { presence: {} } if configuration[:"#{model}_profile"][:customizations][field][:custom_images][ca.id.to_s][:validation].present?
+                  configuration[:profiles][:"#{model}"][:customizations][field][:custom_images][:validation] = { presence: {} } if configuration[:profiles][:"#{model}"][:customizations][field][:custom_images][ca.id.to_s][:validation].present?
                 elsif ca.attribute_type == 'file'
-                  configuration[:"#{model}_profile"][:customizations][field][:custom_attachments] ||= {}
-                  configuration[:"#{model}_profile"][:customizations][field][:custom_attachments][ca.id.to_s] = ValidationBuilder.new(custom_model_type, ca.name).build
+                  configuration[:profiles][:"#{model}"][:customizations][field][:custom_attachments] ||= {}
+                  configuration[:profiles][:"#{model}"][:customizations][field][:custom_attachments][ca.id.to_s] = ValidationBuilder.new(custom_model_type, ca.name).build
                   # if at least one attachment is required, we need to add validation to custom_attachments, not only custom_attachments[<attr.id>]
-                  configuration[:"#{model}_profile"][:customizations][field][:custom_attachments][:validation] = { presence: {} } if configuration[:"#{model}_profile"][:customizations][field][:custom_attachments][ca.id.to_s][:validation].present?
+                  configuration[:profiles][:"#{model}"][:customizations][field][:custom_attachments][:validation] = { presence: {} } if configuration[:profiles][:"#{model}"][:customizations][field][:custom_attachments][ca.id.to_s][:validation].present?
                 else
                   raise NotImplementedError, "Unknown uploadable attribute type: #{ca.attribute_type}"
                 end
               else
-                configuration[:"#{model}_profile"][:customizations][field][:properties] ||= {}
-                configuration[:"#{model}_profile"][:customizations][field][:properties][ca.name] = ValidationBuilder.new(custom_model_type, ca.name).build
+                configuration[:profiles][:"#{model}"][:customizations][field][:properties] ||= {}
+                configuration[:profiles][:"#{model}"][:customizations][field][:properties][ca.name] = ValidationBuilder.new(custom_model_type, ca.name).build
               end
             end
           elsif (ca = PlatformContext.current.instance.send(:"#{model}_profile_type").custom_attributes.where(name: field).first).present?
             if ca.uploadable?
               if ca.attribute_type == 'photo'
-                configuration[:"#{model}_profile"][:custom_images] ||= {}
-                configuration[:"#{model}_profile"][:custom_images][ca.id.to_s] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), ca.name).build
+                configuration[:profiles][:"#{model}"][:custom_images] ||= {}
+                configuration[:profiles][:"#{model}"][:custom_images][ca.id.to_s] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), ca.name).build
                 # if at least one image is required, we need to add validation to custom_images, not only custom_images[<attr.id>]
-                configuration[:"#{model}_profile"][:custom_images][:validation] = { presence: {} } if configuration[:"#{model}_profile"][:custom_images][ca.id.to_s][:validation].present?
+                configuration[:profiles][:"#{model}"][:custom_images][:validation] = { presence: {} } if configuration[:profiles][:"#{model}"][:custom_images][ca.id.to_s][:validation].present?
               elsif ca.attribute_type == 'file'
-                configuration[:"#{model}_profile"][:custom_attachments] ||= {}
-                configuration[:"#{model}_profile"][:custom_attachments][ca.id.to_s] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), ca.name).build
+                configuration[:profiles][:"#{model}"][:custom_attachments] ||= {}
+                configuration[:profiles][:"#{model}"][:custom_attachments][ca.id.to_s] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), ca.name).build
                 # if at least one attachment is required, we need to add validation to custom_attachments, not only custom_attachments[<attr.id>]
-                configuration[:"#{model}_profile"][:custom_attachments][:validation] = { presence: {} } if configuration[:"#{model}_profile"][:custom_attachments][ca.id.to_s][:validation].present?
+                configuration[:profiles][:"#{model}"][:custom_attachments][:validation] = { presence: {} } if configuration[:profiles][:"#{model}"][:custom_attachments][ca.id.to_s][:validation].present?
               else
                 raise NotImplementedError, "Unknown uploadable attribute type: #{ca.attribute_type}"
               end
             else
-              configuration[:"#{model}_profile"][:properties] ||= { validation: { presence: {} } }
-              configuration[:"#{model}_profile"][:properties][field] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), field).build
+              configuration[:profiles][:"#{model}"][:properties] ||= { validation: { presence: {} } }
+              configuration[:profiles][:"#{model}"][:properties][field] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), field).build
             end
           else
             logger.debug "\t\tSkipping field - #{field}, can't find it"
@@ -204,17 +209,36 @@ class FormComponentToFormConfiguration
     configuration
   end
 
-  def community_configuration
+  def intel_configuration
     {
       name: { validation: { presence: {} } },
       cover_image: { validation: {} },
       avatar: { validation: {} },
       current_address: ADDRESS_HASH,
-      default_profile: {
-        properties: {
-          video_url: { validation: {} },
-          short_bio: { validation: {} },
-          about_me: { validation: {} }
+      profiles: {
+        default: {
+          properties: {
+            video_url: { validation: {} },
+            short_bio: { validation: {} },
+            about_me: { validation: {} }
+          }
+        }
+      }
+    }
+  end
+
+  def hallmark_configuration
+    {
+      name: { validation: { presence: {} } },
+      cover_image: { validation: {} },
+      avatar: { validation: {} },
+      current_address: ADDRESS_HASH,
+      profiles: {
+        default: {
+          properties: {
+            short_bio: { validation: {} },
+            about_me: { validation: {} }
+          }
         }
       }
     }

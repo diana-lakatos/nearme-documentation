@@ -6,26 +6,12 @@ class UserForm < BaseForm
   class << self
     def decorate(configuration)
       Class.new(self) do
-        if (buyer_profile_configuration = configuration.delete(:buyer_profile)).present?
-          validation = buyer_profile_configuration.delete(:validation)
-          validates :buyer_profile, validation if validation.present?
-          property :buyer_profile, form: UserProfileForm.decorate(buyer_profile_configuration),
-                                   populate_if_empty: :populate_user_profile!,
-                                   prepopulator: ->(_options) { self.buyer_profile ||= model.build_buyer_profile(instance_profile_type: PlatformContext.current.instance.buyer_profile_type) }
-        end
-        if (seller_profile_configuration = configuration.delete(:seller_profile)).present?
-          validation = seller_profile_configuration.delete(:validation)
-          validates :seller_profile, validation if validation.present?
-          property :seller_profile, form: UserProfileForm.decorate(seller_profile_configuration),
-                                    populate_if_empty: :populate_user_profile!,
-                                    prepopulator: ->(_options) { self.seller_profile ||= model.build_seller_profile(instance_profile_type: PlatformContext.current.instance.seller_profile_type) }
-        end
-        if (default_profile_configuration = configuration.delete(:default_profile)).present?
-          validation = default_profile_configuration.delete(:validation)
-          validates :default_profile, validation if validation.present?
-          property :default_profile, form: UserProfileForm.decorate(default_profile_configuration),
-                                     populate_if_empty: :populate_user_profile!,
-                                     prepopulator: ->(_options) { self.default_profile ||= model.build_default_profile(instance_profile_type: PlatformContext.current.instance.default_profile_type) }
+
+        if (user_profiles_configuration = configuration.delete(:profiles)).present?
+          validation = user_profiles_configuration.delete(:validation)
+          validates :profiles, validation if validation.present?
+          property :profiles, form: UserProfilesForm.decorate(user_profiles_configuration),
+                              from: :profiles_open_struct
         end
         if (transactables_configuration = configuration.delete(:transactables)).present?
           validation = transactables_configuration.delete(:transactables)
@@ -69,10 +55,6 @@ class UserForm < BaseForm
     errors.add(:email, :blank) if email.blank?
     errors.add(:email, :taken) if User.admin.where(email: email).exists?
     errors.add(:email, :taken) if external_id.blank? && User.where(email: email).exists?
-  end
-
-  def populate_user_profile!(as:, **)
-    model.send(:"get_#{as}")
   end
 
   model :user

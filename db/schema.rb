@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170314140919) do
+ActiveRecord::Schema.define(version: 20170318095126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1297,6 +1297,7 @@ ActiveRecord::Schema.define(version: 20170314140919) do
     t.boolean  "admin_approval",                               default: false,        null: false
     t.string   "default_sort_by"
     t.integer  "default_availability_template_id"
+    t.string   "parameterized_name"
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree

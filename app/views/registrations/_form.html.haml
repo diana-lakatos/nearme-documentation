@@ -15,13 +15,15 @@
             - if model == 'user'
               = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
             - elsif model == 'buyer'
-              = f.simple_fields_for :buyer_profile do |buyer_profile_form|
-                - next if buyer_profile_form.object.nil?
-                = render :partial => 'user_profiles/form', :locals => { f: buyer_profile_form, user_form: f, only_inputs: [field.to_sym] }
+              = f.simple_fields_for :profiles do |profiles_form|
+                = profiles_form.simple_fields_for :buyer do |buyer_profile_form|
+                  - next if buyer_profile_form.object.nil?
+                  = render :partial => 'user_profiles/form', :locals => { f: buyer_profile_form, user_form: f, only_inputs: [field.to_sym] }
             - elsif model == 'seller'
-              = f.simple_fields_for :seller_profile do |seller_profile_form|
-                - next if seller_profile_form.object.nil?
-                = render :partial => 'user_profiles/form', :locals => { f: seller_profile_form, user_form: f, only_inputs: [field.to_sym] }
+              = f.simple_fields_for :profiles do |profiles_form|
+                = profiles_form.simple_fields_for :seller do |seller_profile_form|
+                  - next if seller_profile_form.object.nil?
+                  = render :partial => 'user_profiles/form', :locals => { f: seller_profile_form, user_form: f, only_inputs: [field.to_sym] }
 
   .panel.form-actions
     .panel-body

@@ -114,7 +114,7 @@ form_components:
       :@permitted: false
   - !ruby/hash-with-ivars:ActionController::Parameters
     elements:
-      buyer: tags
+      user: tags
     ivars:
       :@permitted: false
   - !ruby/hash-with-ivars:ActionController::Parameters

@@ -4,7 +4,7 @@ class UserSignup
     def save
       super
       WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, model.id)
-      model.default_profile ||= model.create_default_profile(instance_profile_type: PlatformContext.current.instance.default_profile_type)
+      model.default_profile ||= model.user_profiles.where(profile_type: 'default', instance_profile_type: PlatformContext.current.instance.default_profile_type).first_or_create!
     end
   end
 end

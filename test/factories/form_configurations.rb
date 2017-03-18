@@ -49,11 +49,13 @@ FactoryGirl.define do
       configuration do
         {
           'public_profile' => {},
-          :default_profile => {
-            properties: {
-              'job_title' => {},
-              'biography' => {}
-            }
+          profiles: {
+            :default => {
+              properties: {
+                'job_title' => {},
+                'biography' => {}
+              }
+            },
           },
           'mobile_number' => {},
           'avatar' => {},
@@ -77,22 +79,24 @@ FactoryGirl.define do
       configuration do
         {
           'public_profile' => {},
-          :default_profile => {
-            properties: {
-            }
+          profiles: {
+            :default => {
+              properties: {
+              }
+            },
           },
           'mobile_number' => {},
-          'country' => { property_options: { virtual: true } },
-          'phone' => {},
-          'avatar' => {},
-          'name' => {},
-          'first_name' => {},
-          'middle_name' => {},
-          'last_name' => {},
-          'language' => {},
-          'time_zone' => {},
-          'current_location' => {},
-          'company_name' => {}
+            'country' => { property_options: { virtual: true } },
+            'phone' => {},
+            'avatar' => {},
+            'name' => {},
+            'first_name' => {},
+            'middle_name' => {},
+            'last_name' => {},
+            'language' => {},
+            'time_zone' => {},
+            'current_location' => {},
+            'company_name' => {}
         }
       end
     end
