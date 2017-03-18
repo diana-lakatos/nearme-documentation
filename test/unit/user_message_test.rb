@@ -1,18 +1,22 @@
 require 'test_helper'
 
 class UserMessageTest < ActiveSupport::TestCase
+  def create_user_message
+    @transactable = FactoryGirl.create(:transactable)
+    @transactable_administrator = @transactable.administrator
+    @user = FactoryGirl.create(:user)
+
+    @user_message = FactoryGirl.create(:user_message,
+                                       thread_context: @transactable,
+                                       thread_owner: @user,
+                                       author: @user,
+                                       thread_recipient: @transactable_administrator
+                                      )
+  end
+
   context 'archived_for' do
     setup do
-      @transactable = FactoryGirl.create(:transactable)
-      @transactable_administrator = @transactable.administrator
-      @user = FactoryGirl.create(:user)
-
-      @user_message = FactoryGirl.create(:user_message,
-                                         thread_context: @transactable,
-                                         thread_owner: @user,
-                                         author: @user,
-                                         thread_recipient: @transactable_administrator
-                                        )
+      create_user_message
     end
 
     should 'choose write field to store information about archiving' do
@@ -25,16 +29,7 @@ class UserMessageTest < ActiveSupport::TestCase
 
   context 'mark as read' do
     setup do
-      @transactable = FactoryGirl.create(:transactable)
-      @transactable_administrator = @transactable.administrator
-      @user = FactoryGirl.create(:user)
-
-      @user_message = FactoryGirl.create(:user_message,
-                                         thread_context: @transactable,
-                                         thread_owner: @user,
-                                         author: @user,
-                                         thread_recipient: @transactable_administrator
-                                        )
+      create_user_message
     end
 
     should 'mark as read for thread owner' do
@@ -61,14 +56,23 @@ class UserMessageTest < ActiveSupport::TestCase
                                          thread_context: @transactable,
                                          thread_owner: @user,
                                          thread_recipient: @reservation.owner,
-                                         author: @user
-                                        )
+                                         author: @user)
 
       assert_nothing_raised do
         @user_message.author_has_access_to_message_context?
       end
 
       assert @user_message.author_has_access_to_message_context?
+    end
+  end
+
+  context 'update_unread_message_counter_for' do
+    setup do
+      create_user_message
+    end
+
+    should 'run' do
+      assert @user_message.update_unread_message_counter_for(@user)
     end
   end
 end

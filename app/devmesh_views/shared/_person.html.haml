@@ -20,6 +20,6 @@
     %p.action{:'data-follow-button' => true}
       = render partial: "shared/follow_button", locals: { object: user, css_class: "tiny" }
     %h3.hx
-      = link_to user.decorate.name_with_affiliation, user_path(user.slug)
+      = link_to user.to_liquid.name_with_affiliation, user_path(user.slug)
     %p= user.properties.try(:short_bio)
     = user.decorate.display_address

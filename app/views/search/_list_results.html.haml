@@ -4,10 +4,10 @@
     .search-max-price{:'data-max-price' => searcher.max_price, :'data-min-price' => searcher.min_price }
     - searcher.results.each do |result|
       - if result.is_a?(User)
-        = render partial: 'search/list/user', locals: { user: result, current_user: current_user, user_has_firends: current_user.try(:has_friends) }
+        = render partial: 'search/list/user', locals: { user: result, current_user: current_user, user_has_firends: current_user.try(:friends?) }
       - else
-        - cache i18n_cache_key('list', result, result.company, (current_user.try(:has_friends) ? current_user : nil)) do
-          = render partial: 'search/list/listing', locals: { listing: result, current_user: current_user, user_has_firends: current_user.try(:has_friends) }
+        - cache i18n_cache_key('list', result, result.company, (current_user.try(:friends?) ? current_user : nil)) do
+          = render partial: 'search/list/listing', locals: { listing: result, current_user: current_user, user_has_firends: current_user.try(:friends?) }
     = will_paginate searcher.results
     = render 'search/footer'
     = render 'shared/loading_spinner'
