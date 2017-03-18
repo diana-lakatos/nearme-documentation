@@ -11,12 +11,13 @@ class InstanceAdmin::Analytics::OverviewControllerTest < ActionController::TestC
 
   context 'GET #show' do
     should 'show listings from last 30 days' do
-      @fresh_transactable = FactoryGirl.create(:transactable)
-      @old_transactable = FactoryGirl.create(:transactable).update_column(:created_at, 32.days.ago)
-      get :show, chart_type: 'listings'
-      assert_response :success
-      assert_equal('[[0,0,0,0,0,1,0]]', assigns(:analytics).to_liquid.values
-      )
+      travel_to 'next monday 5pm' do
+        @fresh_transactable = FactoryGirl.create(:transactable)
+        @old_transactable = FactoryGirl.create(:transactable).update_column(:created_at, 32.days.ago)
+        get :show, chart_type: 'listings'
+        assert_response :success
+        assert_equal '[[0,0,0,0,0,0,1]]', assigns(:analytics).to_liquid.values
+      end
     end
   end
 end
