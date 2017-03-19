@@ -105,7 +105,6 @@ gem 'sanitize', require: false
 
 gem 'useragent', require: false
 
-gem 'jira-ruby', require: false
 gem 'daemons' # used by DelayedJob
 
 gem 'twilio-ruby', require: false
@@ -141,6 +140,8 @@ gem 'ansi', require: false
 gem 'yard', '~> 0.9.5', require: false
 gem 'yard-activerecord', '~> 0.0.16', require: false
 
+gem 'jira-ruby', require: false
+
 group :profiling, :development do
   gem 'rack-mini-profiler', require: false
   gem 'flamegraph', require: false
@@ -166,6 +167,15 @@ group :development, :staging do
   gem 'mail_view', '~>2'
 end
 
+group :development, :test do
+  gem 'pronto'
+  gem 'pronto-brakeman', require: false
+  gem 'pronto-fasterer', require: false
+  gem 'pronto-rails_best_practices', require: false
+  gem 'pronto-reek', require: false
+  gem 'pronto-rubocop', require: false
+end
+
 group :development do
   gem 'thin'
   gem 'rails-dev-boost', github: 'thedarkone/rails-dev-boost'
@@ -177,14 +187,12 @@ group :development do
   gem 'pry-stack_explorer'
   gem 'spring'
   gem 'spring-commands-cucumber'
-  gem 'parallel_tests'
   gem 'mailcatcher'
   gem 'active_record_query_trace'
+  gem 'parallel_tests', require: false
 
+  gem 'rubycritic', require: false
   gem 'overcommit', require: false
-  gem 'yardstick', require: false
-  gem 'fasterer', require: false # Fasterer will suggest some speed improvements
-  gem 'rubocop', require: false
   gem 'foreman', require: false
 end
 
