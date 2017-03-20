@@ -1,4 +1,4 @@
-if ENV['COVERAGE'] == 'on'
+if ENV['CI'] == true
   SimpleCov.start 'rails' do
     add_group 'Serializers', 'app/serializers'
     add_group 'Mailers', 'app/mailers'

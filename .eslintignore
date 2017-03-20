@@ -4,3 +4,5 @@ data_tables
 jquery.dataTables.min.js
 dataTables.bootstrap.js
 public/assets
+flow-typed
+svgxuse.js
