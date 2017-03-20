@@ -117,7 +117,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       @user.save!
       get :verify, { id: @user.id, token: @user.email_verification_token }
       @user.reload
-      assert_nil @controller.current_user
+      assert_equal @user.id,  @controller.current_user&.id
       assert @user.verified_at
     end
 
