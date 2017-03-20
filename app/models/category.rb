@@ -6,7 +6,7 @@ class Category < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  acts_as_nested_set dependent: :destroy, order_column: :position
+  acts_as_nested_set dependent: :destroy
 
   DISPLAY_OPTIONS = %w(tree autocomplete).freeze
   SEARCH_OPTIONS = [['Include in search', 'include'], ['Exclude from search', 'exclude']].freeze
@@ -56,13 +56,7 @@ class Category < ActiveRecord::Base
   end
 
   def child_index=(idx)
-    unless new_record?
-      if parent
-        move_to_child_with_index(parent, idx.to_i)
-      else
-        move_to_root
-      end
-    end
+    change_child_index!(idx)
   end
 
   def name=(name)
@@ -154,5 +148,15 @@ class Category < ActiveRecord::Base
 
   def jsonapi_serializer_class_name
     'CategoryJsonSerializer'
+  end
+
+  def change_child_index!(idx)
+    unless new_record?
+      if parent
+        move_to_child_with_index(parent, idx.to_i)
+      else
+        move_to_root
+      end
+    end
   end
 end
