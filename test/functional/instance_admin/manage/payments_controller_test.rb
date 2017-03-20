@@ -10,7 +10,7 @@ class InstanceAdmin::Manage::PaymentsControllerTest < ActionController::TestCase
 
   context 'index' do
     should 'not show pending payments' do
-      get :index, transferred: :all
+      get :index
 
       payment_scope = assigns(:payments)
       assert payment_scope.object.to_sql.include?("NOT IN ('pending'))")
