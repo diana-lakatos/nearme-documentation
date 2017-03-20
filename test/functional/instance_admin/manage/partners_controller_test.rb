@@ -2,8 +2,6 @@ require 'test_helper'
 
 class InstanceAdmin::Manage::PartnersControllerTest < ActionController::TestCase
   setup do
-    @instance = FactoryGirl.create(:instance)
-    PlatformContext.any_instance.stubs(:instance).returns(@instance)
     @user = FactoryGirl.create(:user)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
@@ -12,7 +10,7 @@ class InstanceAdmin::Manage::PartnersControllerTest < ActionController::TestCase
 
   context 'index' do
     should 'show a listing of partners associated with current instance' do
-      @partner = FactoryGirl.create(:partner, instance: @instance)
+      @partner = FactoryGirl.create(:partner)
       get :index
       assert_select 'tr', 'Super Partner'
     end
