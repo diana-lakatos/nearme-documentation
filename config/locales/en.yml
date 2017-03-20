@@ -785,6 +785,15 @@ en:
         to: "To:"
         apply_filter: "Apply filter"
         search_by_keyword: "Search by keyword"
+        per_page: "Per page"
+        base:
+          search_types:
+            instance_profile_types: "Profile Types"
+            transactable_types: "Transactable Types"
+        transactable:
+          search_types:
+            created_at: 'Created at'
+            search_by: 'Search by'
         user:
           search_types:
             date_created: 'Date created'
@@ -797,6 +806,27 @@ en:
           profile_types:
             buyer: 'Buyer'
             seller: 'Seller'
+        payments:
+          payment_gateways: 'Payment Gateways'
+          all_payment_gateways: 'All Payment Gateways'
+          transferred: 'Transferred'
+          state: 'State'
+          in_all_states: 'In all states'
+          mode: 'Mode'
+        webhooks:
+          query: 'Query'
+          event_id: 'Event ID'
+          payment_gateway: 'Payment Gateway'
+          all_payment_gateways: 'All Payment Gateways'
+          state: 'State'
+          in_all_states: 'In all states'
+          mode: 'Mode'
+        merchant_accounts:
+          payment_gateway: 'Payment Gateway'
+          all_payment_gateways: 'All Payment Gateways'
+          state: 'State'
+          in_all_states: 'In all states'
+          mode: 'Mode'
       reviews:
         index:
           missing: "Missing object"

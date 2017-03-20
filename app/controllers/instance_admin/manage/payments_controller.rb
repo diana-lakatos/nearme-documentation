@@ -14,18 +14,18 @@ class InstanceAdmin::Manage::PaymentsController < InstanceAdmin::Manage::BaseCon
     payments_scope = payments_scope.where(payer_id: params[:payer_id]) if params[:payer_id]
     if params[:payer_id].blank?
       payments_scope = case params[:transferred]
-                       when 'awaiting', nil
+                       when 'awaiting', '', nil
                          payments_scope.needs_payment_transfer
                        when 'transferred'
                          payments_scope.transferred
                        when 'excluded'
                          payments_scope.where(exclude_from_payout: true)
                        else
-                         payments_scope
+                         raise StandardError, 'Invalid value for transferred parameter'
       end
     end
 
-    @payments = PaymentDecorator.decorate_collection(payments_scope.paginate(per_page: 20, page: params[:page]))
+    @payments = PaymentDecorator.decorate_collection(payments_scope.paginate(per_page: reports_per_page, page: params[:page]))
   end
 
   def update

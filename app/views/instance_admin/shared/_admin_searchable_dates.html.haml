@@ -1,29 +1,31 @@
-.dropdown.date-dropdown
-  %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
-    - if params[param_name].present?
-      %span.current= selected_date_value(params[param_name])
-    - else
-      %span.current
-        = t('instance_admin.manage.admin_searchable.title_all')
-    %span.caret
-    = hidden_field_tag param_name, params[param_name]
-  %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
-    %li
-      %a{data: {date: ''}}
-        = t('instance_admin.manage.admin_searchable.title_all')
-    - Transactable::DATE_VALUES.each do |value|
+.filter.period.multiline
+  = label
+  .dropdown.date-dropdown
+    %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
+      - if params[param_name].present?
+        %span.current= selected_date_value(params[param_name])
+      - else
+        %span.current
+          = t('instance_admin.manage.admin_searchable.title_all')
+      %span.caret
+      = hidden_field_tag param_name, params[param_name]
+    %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
       %li
-        %a{data: {date: value}}
-          = selected_date_value(value)
-    %li.divider
-    %li.date-range
-      .date-range-header
-        = t('instance_admin.manage.admin_searchable.date_range')
-      .from
-        = t('instance_admin.manage.admin_searchable.from')
-      %input#from{type: 'text'}
-      .to
-        = t('instance_admin.manage.admin_searchable.to')
-      %input#to{type: 'text'}
-      %button.apply-filter.btn.btn-blue
-        = t('instance_admin.manage.admin_searchable.apply_filter')
+        %a{data: {date: ''}}
+          = t('instance_admin.manage.admin_searchable.title_all')
+      - Transactable::DATE_VALUES.each do |value|
+        %li
+          %a{data: {date: value}}
+            = selected_date_value(value)
+      %li.divider
+      %li.date-range
+        .date-range-header
+          = t('instance_admin.manage.admin_searchable.date_range')
+        .from
+          = t('instance_admin.manage.admin_searchable.from')
+        %input#from{type: 'text'}
+        .to
+          = t('instance_admin.manage.admin_searchable.to')
+        %input#to{type: 'text'}
+        %button.apply-filter.btn.btn-blue
+          = t('instance_admin.manage.admin_searchable.apply_filter')

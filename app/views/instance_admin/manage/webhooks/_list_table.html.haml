@@ -1,16 +1,18 @@
-.row
-  = form_tag '', :method => 'get', enforce_utf8: :false do
-    .row
-      .input-container
-        = text_field_tag :query, nil, placeholder: "Event ID", class: 'form-control'
-      .col-xs-3
-        = select_tag :payment_gateway_id, options_from_collection_for_select(@payment_gateways, "id", "name", params[:payment_gateway_id]), include_blank: "All Payment Gateways", class: "selectpicker"
-      .col-xs-2
-        = select_tag :state, options_for_select(Webhook.state_machine.states.map{|s| [s.name.capitalize, s.name] } , params[:state]), include_blank: "In all states", class: "selectpicker"
-      .col-xs-1
-        = select_tag :mode, options_for_select([["Live", 'live'], ["Test", 'test']], params[:mode]), class: "selectpicker"
-      .col-xs-2
-        = submit_tag "Search", :name => nil, class: 'btn btn-light'
+= form_tag '', :method => 'get', enforce_utf8: :false do
+  .row
+    .text-container
+      .filters
+        .filter.value
+
+        = filter_query_text label: t('instance_admin.manage.admin_searchable.webhooks.query'), 'placeholder': t('instance_admin.manage.admin_searchable.webhooks.event_id'), param_name: 'query'
+
+        = filter_dropdown param_name: :payment_gateway_id, label: t('instance_admin.manage.admin_searchable.webhooks.payment_gateway'), allow_blank: true, blank_label: t('instance_admin.manage.admin_searchable.webhooks.all_payment_gateways'), all_values: @payment_gateways.each_with_object({}) { |val, obj| obj[val.id.to_s] = val.name }, width: 270
+
+        = filter_dropdown param_name: 'state', label: t('instance_admin.manage.admin_searchable.webhooks.state'), allow_blank: true, blank_label: t('instance_admin.manage.admin_searchable.webhooks.in_all_states'), all_values: Webhook.state_machine.states.each_with_object({}) { |val, object| object[val.name.to_s] = val.name.capitalize.to_s }
+
+        = filter_dropdown param_name: 'mode', label: t('instance_admin.manage.admin_searchable.webhooks.mode'), allow_blank: false, all_values: { 'live' => "Live", 'test' => "Test" }
+        = filter_dropdown param_name: :per_page, label: t('instance_admin.manage.admin_searchable.per_page'), allow_blank: false, all_values: {'25' => '25', '50' => '50', '100' => '100' }
+
   .table-container.col-xs-12
     %table.table.table-striped.sortable
       %thead
