@@ -428,7 +428,10 @@ en:
         new_key: 'Add Translation Key'
         example_key: 'Example: home.welcome.label'
         default_en_value: 'Default English text'
-        default_text: "Default text"
+        search_by_keyword: 'Search by keyword'
+        default_text: 'Default text'
+        case_sensitive: 'Case sensitive'
+        match_whole_words: 'Match whole words'
 
       buttons:
         add: 'Add language'
