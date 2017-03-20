@@ -562,7 +562,7 @@ module LiquidFilters
   # @param valid_params [String] query params separated by comma used to search proper ReverseProxyLink
   def widget_links(url, valid_params = '')
     return [] unless url.present?
-    uri = URI.parse(::CGI.unescapeHTML(url.to_str))
+    uri = Addressable::URI.parse(::CGI.unescapeHTML(url.to_str))
 
     whitelisted_query = Rack::Utils.parse_nested_query(uri.query).slice(*valid_params.split(',')).to_query
     whitelisted_query.prepend('?') if whitelisted_query.present?
