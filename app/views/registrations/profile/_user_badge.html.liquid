@@ -13,7 +13,7 @@
 				<p> {{ user.country_name }} </p>
 			{% endif %}
 			{% if user.public_profile? %}
-				{% assign displayable_properties = "phone|mobile_number|company_name|job_title|skills_and_interests|biography|twitter_url|linkedin_url|facebook_url|google_plus_url" | split: "|" %}
+				{% assign displayable_properties = "phone|mobile_number|company_name|job_title|skills_and_interests|biography" | split: "|" %}
 				{% for property in displayable_properties %}
 					{% if user[property] != blank %}
 						<p>{{ user[property] | filter_text | custom_sanitize }}</p>

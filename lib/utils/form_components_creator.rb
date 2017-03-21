@@ -191,7 +191,7 @@ module Utils
       create_components!([
                            {
                              name: 'Profile',
-                             fields: [{ 'user' => 'public_profile' }, { 'user' => 'password' }, { 'user' => 'email' }, { 'user' => 'phone' }, { 'user' => 'job_title' }, { 'user' => 'avatar' }, { 'user' => 'biography' }, { 'user' => 'facebook_url' }, { 'user' => 'twitter_url' }, { 'user' => 'linkedin_url' }, { 'user' => 'instagram_url' }, { 'user' => 'skills_and_interests' }, { 'user' => 'name' }, { 'user' => 'first_name' }, { 'user' => 'middle_name' }, { 'user' => 'last_name' }, { 'user' => 'gender' }, { 'user' => 'drivers_licence_number' }, { 'user' => 'gov_number' }, { 'user' => 'approval_requests' }, { 'user' => 'google_plus_url' }, { 'user' => 'degree' }, { 'user' => 'language' }, { 'user' => 'time_zone' }, { 'user' => 'company_name' }]
+                             fields: [{ 'user' => 'public_profile' }, { 'user' => 'password' }, { 'user' => 'email' }, { 'user' => 'phone' }, { 'user' => 'job_title' }, { 'user' => 'avatar' }, { 'user' => 'biography' }, { 'user' => 'skills_and_interests' }, { 'user' => 'name' }, { 'user' => 'first_name' }, { 'user' => 'middle_name' }, { 'user' => 'last_name' }, { 'user' => 'gender' }, { 'user' => 'drivers_licence_number' }, { 'user' => 'gov_number' }, { 'user' => 'approval_requests' }, { 'user' => 'degree' }, { 'user' => 'language' }, { 'user' => 'time_zone' }, { 'user' => 'company_name' }]
                            }
                          ])
     end
