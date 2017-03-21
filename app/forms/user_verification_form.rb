@@ -6,7 +6,6 @@ class UserVerificationForm < BaseForm
   validate :token do
     errors.add(:token, :blank) if token.blank?
     errors.add(:token, :invalid) if token_invalid?
-    errors.add(:token, :already_verified) if verified_at.present?
   end
 
   def email_verification_token
@@ -17,7 +16,8 @@ class UserVerificationForm < BaseForm
 
   def sync
     super
-    model.verified_at = Time.zone.now
+    model.verified_at = Time.zone.now if model.verified_at.blank?
+    true
   end
 
   protected
