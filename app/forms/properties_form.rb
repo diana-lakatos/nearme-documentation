@@ -23,6 +23,7 @@ class PropertiesForm < BaseForm
           # Another scenario is having array (checkbox list) custom attribute - form sends
           # one blank element which prevents validation error from being displayed
           define_method("#{field}=") do |value|
+            value = value.reject(&:blank?) if value.is_a?(Array)
             old_value = model.send(field)
             model.send("#{field}=", value)
             super(model.send(field))

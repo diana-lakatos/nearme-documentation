@@ -16,6 +16,7 @@ module TransactablesOwnerable
     # to sync model with form after validation passes
     def transactables_open_struct=(open_struct)
       trs = open_struct.to_h.values.flatten
+      trs.each { |t| t.location_not_required = true }
       self.transactables = trs
     end
   end
