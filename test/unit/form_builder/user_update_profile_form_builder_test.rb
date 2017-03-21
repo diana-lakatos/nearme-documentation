@@ -46,9 +46,10 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
 
       @user = FactoryGirl.create(
         :user,
-        buyer_profile: UserProfile.new(instance_profile_type: buyer_profile_type, profile_type: 'buyer'),
-        default_profile: UserProfile.new(instance_profile_type: default_profile_type, profile_type: 'default'),
-        seller_profile: UserProfile.new(instance_profile_type: seller_profile_type, profile_type: 'seller')
+        user_profiles: [ UserProfile.new(instance_profile_type: buyer_profile_type, profile_type: 'buyer'),
+        UserProfile.new(instance_profile_type: default_profile_type, profile_type: 'default'),
+        UserProfile.new(instance_profile_type: seller_profile_type, profile_type: 'seller')
+      ]
       )
       @user.password = nil
 
@@ -59,7 +60,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
 
     should 'correctly validate empty params' do
       refute @user_update_profile_form_builder.validate({})
-      assert_equal "Avatar can't be blank, Buyer profile properties buyer attr can't be blank, Default profile categories default category can't be blank, Default profile properties default attr can't be blank, Seller profile categories seller category can't be blank, Seller profile custom images can't be blank, Seller profile properties seller attr can't be blank", @user_update_profile_form_builder.errors.full_messages.sort.join(', ')
+      assert_equal "Avatar can't be blank, Profiles buyer properties buyer attr can't be blank, Profiles default categories default category can't be blank, Profiles default properties default attr can't be blank, Profiles seller categories seller category can't be blank, Profiles seller custom images can't be blank, Profiles seller properties seller attr can't be blank", @user_update_profile_form_builder.errors.full_messages.sort.join(', ')
     end
 
     should 'be able to save all parameters' do
@@ -201,7 +202,8 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
       'current_address_attributes' => { address: 'adelaide' },
       'mobile_number' => '604 103 204',
       'tag_list' => 'mac, iek',
-      :buyer_profile => {
+      profiles: {
+      :buyer => {
         'enabled' => true,
         :properties => {
           'buyer_attr' => 'my buyer value'
@@ -238,7 +240,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           }
         }
       },
-      :default_profile => {
+      :default => {
         'enabled' => false,
         :properties => {
           'default_attr' => 'my default value'
@@ -253,7 +255,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           }
         }
       },
-      :seller_profile => {
+      :seller => {
         'enabled' => true,
         :properties => {
           'seller_attr' => 'my seller value'
@@ -272,6 +274,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           }
         }
       }
+      }
     }
   end
 
@@ -288,7 +291,8 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
       },
       'mobile_number' => {},
       'tags' => {},
-      :buyer_profile => {
+      profiles: {
+      :buyer => {
         'enabled' => {},
         :properties => {
           'buyer_attr' => {
@@ -329,7 +333,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           }
         }
       },
-      :default_profile => {
+      :default => {
         'enabled' => {},
         :properties => {
           'default_attr' => {
@@ -357,7 +361,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           }
         }
       },
-      :seller_profile => {
+      :seller => {
         'enabled' => {},
         :properties => {
           'seller_attr' => {
@@ -394,6 +398,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
             }
           }
         }
+      }
       }
     }
   end

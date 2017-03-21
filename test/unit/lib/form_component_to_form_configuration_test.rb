@@ -27,92 +27,99 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
 
   def buyer_form_configuration
     {
-      :buyer_profile => {
-        :validation => {
-          presence: {}
-        },
-        'enabled' => {},
-        :properties => {
+      profiles: {
+        :buyer => {
           :validation => {
             presence: {}
           },
-          'referred_by_sme' => {},
-          'linkedin_url' => {
-            validation: {
+          'enabled' => {},
+          :properties => {
+            :validation => {
               presence: {}
+            },
+            'referred_by_sme' => {},
+            'linkedin_url' => {
+              validation: {
+                presence: {}
+              }
+            },
+            'hourly_rate_decimal' => {
+              validation: {
+                presence: {}
+              }
+            },
+            'workplace_type' => {
+              validation: {}
+            },
+            'discounts_available' => {
+              validation: {}
+            },
+            'discounts_description' => {},
+            'travel' => {
+              validation: {}
+            },
+            'cities' => {},
+            'bio' => {
+              validation: {
+                presence: {}
+              }
+            },
+            'education' => {},
+            'awards' => {},
+            'pro_service' => {},
+            'teaching' => {},
+            'employers' => {},
+            'accomplishments' => {},
+            'giving_back' => {},
+            'hobbies' => {},
+            'availability' => {}
+          },
+          :categories => {
+            :validation => {
+              presence: {}
+            },
+            'Area Of Expertise' => {
+              validation: {}
+            },
+            'Industry' => {
+              validation: {}
+            },
+            'Languages' => {
+              validation: {}
             }
           },
-          'hourly_rate_decimal' => {
-            validation: {
+          :customizations => {
+            :validation => {
               presence: {}
+            },
+            'links' => {
+              properties: {
+                'url_link' => {
+                  validation: {
+                    presence: {}
+                  }
+                }
+              }
+            },
+            'recommendations' => {
+              properties: {
+                'author' => {
+                  validation: {
+                    presence: {}
+                  }
+                },
+                'recommendation' => {
+                  validation: {
+                    presence: {}
+                  }
+                }
+              }
             }
-          },
-          'workplace_type' => {
-            validation: {}
-          },
-          'discounts_available' => {
-            validation: {}
-          },
-          'discounts_description' => {},
-          'travel' => {
-            validation: {}
-          },
-          'cities' => {},
-          'bio' => {
-            validation: {
-              presence: {}
-            }
-          },
-          'education' => {},
-          'awards' => {},
-          'pro_service' => {},
-          'teaching' => {},
-          'employers' => {},
-          'accomplishments' => {},
-          'giving_back' => {},
-          'hobbies' => {},
-          'availability' => {}
-        },
-        :categories => {
-          :validation => {
-            presence: {}
-          },
-          'Area Of Expertise' => {
-            validation: {}
-          },
-          'Industry' => {
-            validation: {}
-          },
-          'Languages' => {
-            validation: {}
           }
         },
-        :customizations => {
-          :validation => {
+        :default => {
+          validation: {
             presence: {}
-          },
-          'links' => {
-            properties: {
-              'url_link' => {
-                validation: {
-                  presence: {}
-                }
-              }
-            }
-          },
-          'recommendations' => {
-            properties: {
-              'author' => {
-                validation: {
-                  presence: {}
-                }
-              },
-              'recommendation' => {
-                validation: {
-                  presence: {}
-                }
-              }
-            }
           }
         }
       },
@@ -143,11 +150,6 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
       },
       'country_name' => {},
       'mobile_number' => {},
-      :default_profile => {
-        validation: {
-          presence: {}
-        }
-      },
       'tag_list' => {},
       password_confirmation: { property_options: { virtual: true }, validation: { confirm: {} } }
     }
@@ -182,27 +184,28 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
       },
       'country_name' => {},
       'mobile_number' => { validation: { presence: {} } },
-      :default_profile => {
-        validation: {
-          presence: {}
-        }
-      },
-      :seller_profile => {
-        validation: {
-          presence: {}
+      profiles: {
+        :default => {
+          validation: {
+            presence: {}
+          }
         },
-        properties: {
-          :validation => {
+        :seller => {
+          validation: {
             presence: {}
           },
-          'linkedin_url' => {
-            validation: {
+          properties: {
+            :validation => {
               presence: {}
+            },
+            'linkedin_url' => {
+              validation: {
+                presence: {}
+              }
             }
           }
-        }
+        },
       },
-      'company_name' => {},
       password_confirmation: { property_options: { virtual: true }, validation: { confirm: {} } }
     }
   end

@@ -3,10 +3,11 @@
   = simple_form_for @user_update_profile_form, :as => :user, url: registration_path(resource_name), html: { class: 'form-a' } do |f|
     .fields
       = f.input :name
-      = f.simple_fields_for :default_profile do |default_profile_form|
-        = default_profile_form.simple_fields_for :properties do |properties_form|
-          - (default_profile_form.object.model.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
-            = draw_attribute_for_form(attribute, properties_form)
+      = f.simple_fields_for :profiles do |user_profiles_form|
+        = user_profiles_form.simple_fields_for :default do |default_profile_form|
+          = default_profile_form.simple_fields_for :properties do |properties_form|
+            - (default_profile_form.object.model.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+              = draw_attribute_for_form(attribute, properties_form)
       %p
         = t :more_info, scope: [:onboarding]
 

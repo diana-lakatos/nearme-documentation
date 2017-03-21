@@ -7,10 +7,11 @@
       = f.input :password, :label => (f.object.persisted? ? t('general.change_password') : t('general.password') ), input_html: { autocomplete: 'off' }
       = f.input :password_confirmation, :label => t('general.password_confirmation'), input_html: { autocomplete: 'off' }
 
-      = f.simple_fields_for :default_profile do |default_profile_form|
-        = default_profile_form.simple_fields_for :properties do |properties_form|
-          - (default_profile_form.object.model.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
-            = draw_attribute_for_form(attribute, properties_form)
+      = f.simple_fields_for :profiles do |user_profiles_form|
+        = user_profiles_form.simple_fields_for :default do |default_profile_form|
+          = default_profile_form.simple_fields_for :properties do |properties_form|
+            - (default_profile_form.object.model.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+              = draw_attribute_for_form(attribute, properties_form)
       %p
         = t :more_info, scope: [:onboarding]
 
