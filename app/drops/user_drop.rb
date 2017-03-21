@@ -51,7 +51,7 @@ class UserDrop < UserBaseDrop
   # @!method external_id
   #   @return [String] ID of a user in a third party system, used mainly by bulk upload
   # @!method seller_average_rating
-  #   @return [Integer] average rating of this user as a lister
+  #   @return [Float] average rating of this user as a lister
   # @!method buyer_average_rating
   #   @return [Integer] average rating of this user as a enquirer
   # @!method default_wish_list

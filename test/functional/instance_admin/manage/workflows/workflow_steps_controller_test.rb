@@ -2,8 +2,6 @@ require 'test_helper'
 
 class InstanceAdmin::Manage::Workflows::WorkflowStepsControllerTest < ActionController::TestCase
   setup do
-    @instance = FactoryGirl.create(:instance)
-    PlatformContext.any_instance.stubs(:instance).returns(@instance)
     @user = FactoryGirl.create(:user)
     @transactable_type = FactoryGirl.create(:transactable_type)
     FactoryGirl.create(:instance_admin, user: @user)

@@ -12,13 +12,13 @@ class Dashboard::Api::CategoriesController < Dashboard::Api::BaseController
   def tree
     @selected_categories = Category.where(id: params[:category_ids])
     @category = Category.find(params[:id])
-    @categories = @category.children.order(:position)
+    @categories = @category.children
   end
 
   def tree_new_ui
     @selected_categories = Category.where(id: params[:category_ids])
     @category = Category.find(params[:id])
-    @categories = @category.children.order(:position)
+    @categories = @category.children
 
     render json: build_children_categories(@category)
   end
@@ -30,7 +30,7 @@ class Dashboard::Api::CategoriesController < Dashboard::Api::BaseController
     # we probably want to use each_with_level or something like this
     # for now quick performance improvement for leafs.
     return [] if category.leaf?
-    category.children.order(:position).map { |child_category| build_category(child_category) }
+    category.children.map { |child_category| build_category(child_category) }
   end
 
   def build_category(category)

@@ -7,7 +7,7 @@ class InstanceAdmin::Manage::PaymentsController < InstanceAdmin::Manage::BaseCon
     params[:mode] ||= PlatformContext.current.instance.test_mode? ? PaymentGateway::TEST_MODE : PaymentGateway::LIVE_MODE
 
     @payment_gateways = PaymentGateway.all.sort_by(&:name)
-    payments_scope = Payment.order('created_at DESC')
+    payments_scope = Payment.order('created_at DESC').without_state(:pending)
     payments_scope = payments_scope.where(state: params[:state]) if params[:state].present?
     payments_scope = payments_scope.where(payment_gateway_id: params[:payment_gateway_id]) if params[:payment_gateway_id].present?
     payments_scope = payments_scope.where(payment_gateway_mode: params[:mode])
