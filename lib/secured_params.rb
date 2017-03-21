@@ -845,7 +845,14 @@ class SecuredParams
     attributes = [:id]
     attributes << [:document]
     attributes << { current_address_attributes: nested(address) }
+    attributes << { attachements_attributes: nested(merchant_account_owner_attachement) }
     attributes << MerchantAccountOwner::StripeConnectMerchantAccountOwner::ATTRIBUTES
+  end
+
+  def merchant_account_owner_attachement
+    [
+      :file
+    ]
   end
 
   def domain

@@ -39,8 +39,7 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
       )
 
       merchant_account.try(:initialize_defaults) if merchant_account.try(:new_record?)
-      merchant_account.owners.build if merchant_account.respond_to?(:owners) && !merchant_account.owners.present?
-
+      merchant_account.build_owners if merchant_account.respond_to?(:owners)
       if payment_gateway.supports_host_subscription? && merchant_account.payment_subscription.blank?
         merchant_account.build_payment_subscription(
           payer: current_user,
