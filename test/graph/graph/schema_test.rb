@@ -39,6 +39,25 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
       assert_equal({ 'users' => [{ 'collaborations' => [{ 'id' => collaboration.id.to_s }] }] }, result(query))
     end
+
+    should 'get user pending group collaborations' do
+      collaboration = FactoryGirl.create(
+        :group_member_pending,
+        user: @user
+      )
+      query = %({
+        user(id: #{@user.id}) {
+          group_collaborations(filters: [PENDING_RECEIVED_INVITATION]) {
+            id
+            group {
+              show_path cover_photo{ url(version: "thumb") }
+              creator{ avatar_url_thumb }
+            }
+          }
+        }})
+
+      assert_not_nil result(query)
+    end
   end
 
   def result(query)

@@ -49,6 +49,10 @@ module Graph
         argument :filters, types[Resolvers::Collaborations::FilterEnum]
         resolve Graph::Resolvers::Collaborations.new
       end
+      field :group_collaborations, types[Types::GroupCollaboration] do
+        argument :filters, types[Resolvers::GroupCollaborations::FilterEnum]
+        resolve Graph::Resolvers::GroupCollaborations.new
+      end
     end
 
     CustomImageOrderEnum = GraphQL::EnumType.define do
