@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170320112322) do
-
+ActiveRecord::Schema.define(version: 20170320141130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,6 +106,7 @@ ActiveRecord::Schema.define(version: 20170320112322) do
     t.datetime "updated_at"
     t.string   "iso_country_code",   limit: 2
     t.boolean  "raw_address",                    default: false, null: false
+    t.string   "street_number"
   end
 
   add_index "addresses", ["instance_id", "entity_id", "entity_type", "address"], name: "index_addresses_on_entity_id_and_entity_type_and_address", unique: true, where: "(deleted_at IS NULL)", using: :btree
