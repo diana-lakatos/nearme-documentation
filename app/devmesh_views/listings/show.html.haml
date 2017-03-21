@@ -16,9 +16,9 @@
         .user
           %figure
             = link_to user_path(@transactable.creator.slug) do
-              = image_tag @transactable.creator.avatar.url(:thumb), width: 40, height: 40, alt: @transactable.creator.decorate.name_with_affiliation(true)
+              = image_tag @transactable.creator.avatar.url(:thumb), width: 40, height: 40, alt: @transactable.creator.to_liquid.name_with_affiliation_plain
           %h3.hx
-            = link_to @transactable.creator.decorate.name_with_affiliation, user_path(@transactable.creator.slug)
+            = link_to @transactable.creator.to_liquid.name_with_affiliation, user_path(@transactable.creator.slug)
           %p.location= "#{@transactable.creator.current_address.try(:city)}, #{@transactable.creator.current_address.try(:state)}"
         %p.tx-a= nl2br(@transactable.properties.summary)
         %p.topics
@@ -63,4 +63,3 @@
           = render 'shared/show_followers', see_more_route: see_more_collaborators_path(id: @transactable.id, type: 'Transactable', container: '#collaborators'), collection: @collaborators, container: '#collaborators'
         #followers.tab-pane.fade{:role => "tabpanel"}
           = render 'shared/show_followers', see_more_route: see_more_followers_path(id: @transactable.id, type: 'Transactable', container: '#followers'), container: '#followers', collection: @followers
-

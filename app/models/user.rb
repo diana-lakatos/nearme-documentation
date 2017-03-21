@@ -686,6 +686,10 @@ class User < ActiveRecord::Base
     followed_users.without(self)
   end
 
+  def friends?
+    @count.nil? ? @count = !friends.count.zero? : @count
+  end
+
   def social_friends_ids
     authentications.collect do |a|
       begin

@@ -45,9 +45,6 @@ class UserDrop < UserBaseDrop
   #   @return [Hash] a hash of custom attributes for the seller profile
   # @!method buyer_properties
   #   @return [Hash] a hash of custom attributes for the buyer profile
-  # @!method name_with_affiliation
-  #   @return [String] formatted string containing the name and user's affiliation;
-  #     only applies to the Intel marketplace
   # @!method external_id
   #   @return [String] ID of a user in a third party system, used mainly by bulk upload
   # @!method seller_average_rating
@@ -62,8 +59,6 @@ class UserDrop < UserBaseDrop
   #   @return [UserProfileDrop] Seller profile for this user if present
   # @!method tags
   #   @return [TagDrop] array of tags that this user has been tagged with
-  # @!method has_friends
-  #   @return [Boolean] whether the user has any friends (followed users)
   # @!method transactables_count
   #   @return [Integer] Number of transactables created by this user
   # @!method has_active_credit_cards?
@@ -110,10 +105,10 @@ class UserDrop < UserBaseDrop
            :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
            :country_name, :phone, :current_address, :is_trusted?,
-           :has_published_posts?, :seller_properties, :buyer_properties, :name_with_affiliation,
+           :has_published_posts?, :seller_properties, :buyer_properties,
            :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,
            :buyer_average_rating,
-           :tags, :tag_list, :has_friends, :transactables_count, :completed_transactables_count,
+           :tags, :tag_list, :transactables_count, :completed_transactables_count,
            :has_active_credit_cards?, :has_active_bank_accounts?,
            :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
            :company_name, :instance_admins_metadata, :total_reviews_count, :reviews_counter, :companies, :instance_admin?,
@@ -130,7 +125,7 @@ class UserDrop < UserBaseDrop
   # @return [String] location of the user taken from its associated current_address {AddressDrop} object or, if not present,
   #   from the country_name basic user profile field
   def display_location
-    @source.decorate.display_location
+    @source.current_address ? @source.current_address.to_s : @source.country_name
   end
 
   # @!method name_pluralize
@@ -151,19 +146,19 @@ class UserDrop < UserBaseDrop
   # @return [Boolean] whether the user is authenticated with facebook
   # @todo -- rethink the naming. It doesnt suggest bool at all. Maybe add '?''
   def facebook_connections
-    @source.decorate.social_connections_for('facebook').present?
+    social_connections_for('facebook').present?
   end
 
   # @return [Boolean] whether the user is authenticated with linkedin
   # @todo -- rethink the naming. It doesnt suggest bool at all. Maybe add '?''
   def linkedin_connections
-    @source.decorate.social_connections_for('linkedin').present?
+    social_connections_for('linkedin').present?
   end
 
   # @return [Boolean] whether the user is authenticated with twitter
   # @todo -- rethink the naming. It doesnt suggest bool at all. Maybe add '?''
   def twitter_connections
-    @source.decorate.social_connections_for('twitter').present?
+    social_connections_for('twitter').present?
   end
 
   # @return [String] path to the search section in the application
@@ -737,6 +732,31 @@ class UserDrop < UserBaseDrop
       (has_seller_profile? && @source.instance.lister_blogs_enabled || has_buyer_profile? && @source.instance.enquirer_blogs_enabled)
   end
 
+  # @return [String] formatted string containing the name and user's affiliation;
+  #   only applies to the Intel marketplace
+  def name_with_affiliation
+    if properties.try(:is_intel) == true
+      "#{@source.name} <span>(Intel)</span>".html_safe
+    else
+      @source.name
+    end
+  end
+
+  # @return [String] formatted string containing the name and user's affiliation;
+  #   only applies to the Intel marketplace
+  def name_with_affiliation_plain
+    if properties.try(:is_intel) == true
+      "#{@source.name} (Intel)".html_safe
+    else
+      @source.name
+    end
+  end
+
+  # @return [Boolean] whether the user has any friends (followed users)
+  def has_friends
+    @source.friends?
+  end
+
   private
 
   # @return [Array<Authentication>] array of authentication objects representing authentications with 3rd party
@@ -747,5 +767,9 @@ class UserDrop < UserBaseDrop
 
   def asset_url(*args)
     ActionController::Base.helpers.asset_url(*args)
+  end
+
+  def social_connections_for(provider)
+    social_connections.find { |c| c.provider == provider }
   end
 end
