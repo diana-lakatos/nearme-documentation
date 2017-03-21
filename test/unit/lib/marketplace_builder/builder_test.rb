@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
@@ -5,7 +6,7 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
 
   context 'marketplace builder' do
     setup do
-      stub_request(:get, "https://example_url.jpg").to_return(status: 200)
+      stub_request(:get, 'https://example_url.jpg').to_return(status: 200)
       @instance = create(:instance)
 
       MarketplaceBuilder::Builder.new(@instance.id, EXAMPLE_MARKETPLACE_PATH, MarketplaceBuilder::Loader::AVAILABLE_CREATORS_LIST).execute!
@@ -25,16 +26,16 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
 
   def should_import_translations
     assert_includes @instance.translations.where(locale: :en).pluck(:key, :value),
-      ["first_test_key", "First test name"]
+                    ['first_test_key', 'First test name']
 
     assert_includes @instance.translations.where(locale: :en).pluck(:key, :value),
-      ["second_test_key", "Second test name"]
+                    ['second_test_key', 'Second test name']
 
     assert_includes @instance.translations.where(locale: :pl).pluck(:key, :value),
-      ["first_test_key", "Testowa nazwa"]
+                    ['first_test_key', 'Testowa nazwa']
 
     assert_includes @instance.translations.where(locale: :pl).pluck(:key, :value),
-      ["second_test_key", "Druga testowa nazwa"]
+                    ['second_test_key', 'Druga testowa nazwa']
   end
 
   def should_import_transacable_types
@@ -119,7 +120,7 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
 
   def should_import_action_type_with_pricing
     assert_equal 1, @instance.transactable_types.first.action_types.last.pricings.count
-    pricing =  @instance.transactable_types.first.action_types.last.pricings.first
+    pricing = @instance.transactable_types.first.action_types.last.pricings.first
 
     assert_equal pricing.number_of_units, 30
     assert_equal pricing.unit, 'day'
@@ -164,6 +165,6 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
   private
 
   def run_all_should_import_methods
-    self.class.instance_methods(false).grep(/should_import_/).each {|method_sym| self.send(method_sym) }
+    self.class.instance_methods(false).grep(/should_import_/).each { |method_sym| send(method_sym) }
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Group < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
@@ -20,7 +21,7 @@ class Group < ActiveRecord::Base
 
   has_many :group_transactables, dependent: :destroy
   has_many :transactables, through: :group_transactables
-  alias_method :all_transactables, :transactables
+  alias all_transactables transactables
 
   has_many :group_members, dependent: :destroy
   has_many :memberships, class_name: 'GroupMember', dependent: :destroy
@@ -136,16 +137,15 @@ class Group < ActiveRecord::Base
       user = User.find_by(email: group_member_email)
       next unless user.present?
 
-      if !group_members.for_user(user).exists? && user != creator
-        gm = group_members.build(
-          user: user,
-          email: group_member_email,
-          approved_by_owner_at: Time.zone.now
-        )
-        gm.save!
+      next unless !group_members.for_user(user).exists? && user != creator
+      gm = group_members.build(
+        user: user,
+        email: group_member_email,
+        approved_by_owner_at: Time.zone.now
+      )
+      gm.save!
 
-        WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberAddedByGroupOwner, gm.id)
-      end
+      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberAddedByGroupOwner, gm.id)
     end
   end
 

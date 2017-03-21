@@ -25,12 +25,12 @@ module Graph
       end
 
       def searcher
-        result_view = nil # we don't want this. We want hit directly to specific searcher
-        InstanceType::SearcherFactory.new(transactable_type, search_params, result_view, current_user)
-                                     .get_searcher
+        InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
+          .new(transactable_type, params)
+          .tap(&:invoke)
       end
 
-      def search_params
+      def params
         @arguments[:params].to_h.symbolize_keys
       end
 

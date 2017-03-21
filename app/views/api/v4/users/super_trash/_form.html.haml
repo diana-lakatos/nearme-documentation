@@ -1,0 +1,24 @@
+= dashboard_simple_form_for resource, :as => resource_name, :url => registration_path(resource_name), :html => { class: "form-expandable", :"data-includes-address-field" => true, autocomplete: 'off' } do |f|
+
+  .panel
+    .panel-body
+      - @form_components.each do |form_component|
+        - form_component.form_fields.each do |form_field|
+          - model = form_field.keys.first
+          - field = form_field[model]
+          - if model == 'user'
+            = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
+          - elsif model == 'buyer' && @buyer_profile.try(:persisted?)
+            = f.simple_fields_for :profiles do |profiles_form|
+              = profiles_form.simple_fields_for :buyer do |buyer_profile_form|
+                = buyer_profile_form.simple_fields_for :properties, @buyer_profile.properties do |buyer_properties_form|
+                  = render :partial => 'user_profiles/form', :locals => { f: buyer_profile_form, user_form: f, only_inputs: [field.to_sym], properties_form: buyer_properties_form }
+          - elsif model == 'seller' && @seller_profile.try(:persisted?)
+            = f.simple_fields_for :profiles do |profiles_form|
+              = profiles_form.simple_fields_for :seller do |seller_profile_form|
+                = seller_profile_form.simple_fields_for :properties, @seller_profile.properties do |seller_properties_form|
+                  = render :partial => 'user_profiles/form', :locals => { f: seller_profile_form, user_form: f, only_inputs: [field.to_sym], properties_form: seller_properties_form }
+
+  .panel.form-actions
+    .panel-body
+      = f.submit t('general.save')

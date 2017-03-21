@@ -1,0 +1,137 @@
+---
+name: Listing
+workflow_type: listing
+events_metadata: {}
+workflow_steps:
+- name: Created
+  associated_class: WorkflowStep::ListingWorkflow::Created
+  workflow_alerts:
+  - name: Listing created email
+    alert_type: email
+    recipient_type: lister
+    template_path: post_action_mailer/list
+    delay: 0
+    subject: "[{{platform_context.name}}] {{user.first_name}}, your new listing looks
+      amazing!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Draft Created
+  associated_class: WorkflowStep::ListingWorkflow::DraftCreated
+  workflow_alerts:
+  - name: Draft listing created email
+    alert_type: email
+    recipient_type: lister
+    template_path: post_action_mailer/list_draft
+    delay: 60
+    subject: "[{{platform_context.name}}] {{user.first_name}}, you're almost ready
+      for your first guests!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Shared
+  associated_class: WorkflowStep::ListingWorkflow::Shared
+  workflow_alerts:
+  - name: Share with user email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: listing_mailer/share
+    delay: 0
+    subject: "{{sharer.name}} has shared a {{listing.transactable_type.bookable_noun}}
+      with you on {{platform_context.name}}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Pending Approval
+  associated_class: WorkflowStep::ListingWorkflow::PendingApproval
+  workflow_alerts:
+  - name: Listing pending approval email
+    alert_type: email
+    recipient_type: Administrator
+    template_path: vendor_approval_mailer/notify_admin_of_new_listings
+    delay: 0
+    subject: New listing is pending approval
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Approved
+  associated_class: WorkflowStep::ListingWorkflow::Approved
+  workflow_alerts:
+  - name: Listing approved email
+    alert_type: email
+    recipient_type: lister
+    template_path: vendor_approval_mailer/notify_host_of_listing_approval
+    delay: 0
+    subject: "{{ listing.name }} has been approved!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Rejected
+  associated_class: WorkflowStep::ListingWorkflow::Rejected
+  workflow_alerts:
+  - name: Listing rejected email
+    alert_type: email
+    recipient_type: lister
+    template_path: vendor_approval_mailer/notify_host_of_listing_rejection
+    delay: 0
+    subject: "{{ listing.name }} has been rejected!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Questioned
+  associated_class: WorkflowStep::ListingWorkflow::Questioned
+  workflow_alerts:
+  - name: Listing questioned email
+    alert_type: email
+    recipient_type: lister
+    template_path: vendor_approval_mailer/notify_host_of_listing_questioned
+    delay: 0
+    subject: "{{ listing.name }} is being reviewed!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Inappropriate Reported
+  associated_class: WorkflowStep::ListingWorkflow::InappropriateReported
+  workflow_alerts:
+  - name: Listing inappropriate reported email
+    alert_type: email
+    recipient_type: Administrator
+    template_path: inappropriate_reports_mailer/inappropriate_report
+    delay: 0
+    subject: "{{ listing.name }} has been flagged as inappropriate!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Cancelled
+  associated_class: WorkflowStep::ListingWorkflow::Cancelled
+  workflow_alerts:
+  - name: Notify lister of cancellation
+    alert_type: email
+    recipient_type: lister
+    template_path: transactable_mailer/notify_lister_of_cancellation
+    delay: 0
+    subject: You have cancelled {{ listing.name }}!
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Notify collaborators of cancellation
+    alert_type: email
+    recipient_type: ''
+    template_path: transactable_mailer/notify_collaborators_of_cancellation
+    delay: 0
+    subject: "{{ listing.name }} has been cancelled!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Completed
+  associated_class: WorkflowStep::ListingWorkflow::Completed
+  workflow_alerts:
+  - name: Notify enquirer of completion
+    alert_type: email
+    recipient_type: enquirer
+    template_path: transactable_mailer/notify_enquirer_of_completion
+    delay: 0
+    subject: "{{ listing.name }} has been marked as completed!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

@@ -14,6 +14,9 @@ require 'elasticsearch/rails/instrumentation'
 
 module DesksnearMe
   class Application < Rails::Application
+    # Use the responders controller from the responders gem
+    config.app_generators.scaffold_controller :responders_controller
+
     # for NewRelic
     GC::Profiler.enable
     # Settings in config/environments/* take precedence over those specified here.

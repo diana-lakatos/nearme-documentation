@@ -15,7 +15,7 @@ class EventStoreTest < ActiveSupport::TestCase
     )
 
     assert_equal event.payload[:foo], :bar
-    assert_equal(event.payload[:user], { class_name: 'User', id: user.id })
+    assert_equal(event.payload[:user], class_name: 'User', id: user.id)
     assert_equal event.event_type, 'DummyEvent'
   end
 

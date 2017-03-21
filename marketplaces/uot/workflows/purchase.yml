@@ -1,0 +1,50 @@
+---
+name: Purchase
+workflow_type: purchase
+events_metadata: {}
+workflow_steps:
+- name: Manually Confirmed
+  associated_class: WorkflowStep::PurchaseWorkflow::ManuallyConfirmed
+  workflow_alerts:
+  - name: Notify guest of confirmation
+    alert_type: email
+    recipient_type: enquirer
+    template_path: purchase_mailer/notify_guest_of_confirmation
+    delay: 0
+    subject: "[{{platform_context.name}}] Your purchase of {{ listing.name }} has
+      been confirmed!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Notify host of confirmation
+    alert_type: email
+    recipient_type: lister
+    template_path: purchase_mailer/notify_host_of_confirmation
+    delay: 0
+    subject: "[{{platform_context.name}}] Thanks for confirming!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Rejected
+  associated_class: WorkflowStep::PurchaseWorkflow::Rejected
+  workflow_alerts:
+  - name: Notify guest of rejection
+    alert_type: email
+    recipient_type: enquirer
+    template_path: purchase_mailer/notify_guest_of_rejection
+    delay: 0
+    subject: "[{{platform_context.name}}] Your purchase of {{ listing.name }} has
+      been rejected!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Notify host of rejection
+    alert_type: email
+    recipient_type: lister
+    template_path: purchase_mailer/notify_host_of_rejection
+    delay: 0
+    subject: "[{{platform_context.name}}] Your have rejected a purchase of {{ listing.name
+      }}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

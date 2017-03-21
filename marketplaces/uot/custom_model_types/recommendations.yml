@@ -1,0 +1,23 @@
+---
+name: Recommendations
+custom_attributes:
+- name: recommendation
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: false
+  label: Recommendation
+  validation:
+  - required: true
+    field_name: recommendation
+    validation_only_on_update: false
+- name: author
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: Author
+  validation:
+  - required: true
+    field_name: author
+    validation_only_on_update: false
+instance_profile_types:
+- Buyer

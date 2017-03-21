@@ -24,8 +24,7 @@
             input_html: { tabindex: tab_index }, label_html: { class: 'hidden' } }) if field == attribute.name
 
       - if platform_context.instance.force_accepting_tos
-        = render 'registrations/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '),
-          checked: !f.object.errors[:accept_terms_of_service].present?, namespace: namespace
+        = render 'registrations/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '), namespace: namespace
       - else
         - if @legal_page_present
           %p.notice.text-center.legal

@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 class GroupMembersController < ApplicationController
   rescue_from GroupMember::OwnerCannotLeaveGroup, with: :owner_cannot_leave_group
 
   layout :dashboard_or_community_layout
 
   before_action :authenticate_user!
-  before_filter :find_group
+  before_action :find_group
 
   def create
     raise ActiveRecord::NotFound if @group.secret?

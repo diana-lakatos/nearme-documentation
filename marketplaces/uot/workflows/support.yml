@@ -1,0 +1,64 @@
+---
+name: Support
+workflow_type: support
+events_metadata: {}
+workflow_steps:
+- name: Created
+  associated_class: WorkflowStep::SupportWorkflow::Created
+  workflow_alerts:
+  - name: Request received
+    alert_type: email
+    recipient_type: enquirer
+    template_path: support_mailer/request_received
+    delay: 0
+    subject: "[Ticket Support {{ticket.id}}] {{platform_context.name}} - Your support
+      request has been received"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Support received
+    alert_type: email
+    recipient_type: Administrator
+    template_path: support_mailer/support_received
+    delay: 0
+    subject: "[Ticket Support {{ticket.id}}] {{platform_context.name}} - {{message.full_name}}
+      has submited a support request"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Updated
+  associated_class: WorkflowStep::SupportWorkflow::Updated
+  workflow_alerts:
+  - name: Request received
+    alert_type: email
+    recipient_type: enquirer
+    template_path: support_mailer/request_updated
+    delay: 0
+    subject: "[Ticket Support {{ticket.id}}] {{platform_context.name}} - Your support
+      request was updated"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Support received
+    alert_type: email
+    recipient_type: Administrator
+    template_path: support_mailer/support_updated
+    delay: 0
+    subject: "[Ticket Support {{ticket.id}}] {{platform_context.name}} - {{message.full_name}}
+      has updated their support request"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Replied
+  associated_class: WorkflowStep::SupportWorkflow::Replied
+  workflow_alerts:
+  - name: Request replied
+    alert_type: email
+    recipient_type: enquirer
+    template_path: support_mailer/request_replied
+    delay: 0
+    subject: "[Ticket Support {{ticket.id}}] {{platform_context.name}} - {{message.full_name}}
+      replied to your support request"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

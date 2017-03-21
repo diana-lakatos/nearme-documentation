@@ -364,7 +364,7 @@ class UserDrop < UserBaseDrop
   # @return [String] path for verifying (confirming) a user's email
   # @todo -- depracate url for filter
   def verify_user_url
-    routes.verify_user_path(@source.id, @source.email_verification_token)
+    routes.verify_api_user_path(@source.id, token: UserVerificationForm.new(@source).email_verification_token)
   end
 
   # @return [String] path to the dashboard location for the user reservations

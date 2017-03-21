@@ -1,6 +1,11 @@
+# frozen_string_literal: true
 class UserProfile < ActiveRecord::Base
   include Categorizable
   include AvailabilityHelpers
+  include CustomImagesOwnerable
+  include CustomAttachmentsOwnerable
+  include CustomizationsOwnerable
+  include CategoriesOwnerable
 
   has_paper_trail
   acts_as_paranoid
@@ -11,10 +16,7 @@ class UserProfile < ActiveRecord::Base
   belongs_to :instance_profile_type
   belongs_to :availability_template
 
-  has_many :customizations, as: :customizable
   has_many :availability_templates, as: :parent
-  has_many :custom_images, as: :owner
-  accepts_nested_attributes_for :custom_images, allow_destroy: true
 
   accepts_nested_attributes_for :availability_template
   accepts_nested_attributes_for :customizations, allow_destroy: true
@@ -22,17 +24,16 @@ class UserProfile < ActiveRecord::Base
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
   delegate :onboarding, :onboarding?, :has_fields?, :custom_attributes_custom_validators,
-    :default_availability_template, to: :instance_profile_type, allow_nil: true
+           :default_availability_template, to: :instance_profile_type, allow_nil: true
 
   delegate :time_zone, to: :user
   alias timezone time_zone
 
-
   after_create :create_company_if_needed
 
-  SELLER = 'seller'.freeze
-  BUYER = 'buyer'.freeze
-  DEFAULT = 'default'.freeze
+  SELLER = 'seller'
+  BUYER = 'buyer'
+  DEFAULT = 'default'
   PROFILE_TYPES = [SELLER, BUYER, DEFAULT].freeze
 
   validates :profile_type, inclusion: { in: PROFILE_TYPES }

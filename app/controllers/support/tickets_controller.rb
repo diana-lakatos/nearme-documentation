@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 class Support::TicketsController < Support::BaseController
-  before_filter :authenticate_user!, only: [:index, :show]
+  before_action :authenticate_user!, only: [:index, :show]
 
   def new
     @ticket = Support::Ticket.new

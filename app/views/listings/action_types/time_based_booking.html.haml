@@ -51,7 +51,7 @@
         - if @action_type.bookable?
           - rfq_class = nil
           - rfq_label = nil
-          - registration_url = new_user_registration_path(return_to: @listing.show_path(restore_reservations: @listing.id))
+          - registration_url = new_api_user_path(return_to: @listing.show_path(restore_reservations: @listing.id))
           - book_hash = { id: "book-#{@listing.id}", class: "btn btn-green btn-large ", rel: "tooltip",
             :'data-original-title' => t('booking_module.notices.days_first'),
             :'data-behavior' => 'reviewBooking', :'data-listing-id' => @listing.id,

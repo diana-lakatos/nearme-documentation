@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 class InstanceAdmin::ApprovalRequestSearchForm < SearchForm
-  VALID_STATES = %w(pending rejected approved questioned)
+  VALID_STATES = %w(pending rejected approved questioned).freeze
 
   property :q, virtual: true
   property :date, virtual: true

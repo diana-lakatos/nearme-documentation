@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::Company::Support::TicketMessagesController < Dashboard::Company::BaseController
   def create
     message = ::Support::TicketMessage.new(support_ticket_message_params)
@@ -5,28 +6,28 @@ class Dashboard::Company::Support::TicketMessagesController < Dashboard::Company
     message.ticket = ticket
     if message.save
       WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Replied, message.id, as: current_user)
-      if ticket.target.action_free_booking?
-        flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
-      else
-        flash[:success] = t('flash_messages.support.offer_ticket_message.created')
-      end
+      flash[:success] = if ticket.target.action_free_booking?
+                          t('flash_messages.support.rfq_ticket_message.created')
+                        else
+                          t('flash_messages.support.offer_ticket_message.created')
+                        end
     else
       flash[:error] = t('flash_messages.support.ticket_message.error') unless close?
     end
 
     if close?
       if ticket.resolve
-        if ticket.target.action_free_booking?
-          flash[:success] = t('flash_messages.support.rfq_ticket_message.closed')
-        else
-          flash[:success] = t('flash_messages.support.offer_ticket_message.closed')
-        end
+        flash[:success] = if ticket.target.action_free_booking?
+                            t('flash_messages.support.rfq_ticket_message.closed')
+                          else
+                            t('flash_messages.support.offer_ticket_message.closed')
+                          end
       else
-        if ticket.target.action_free_booking?
-          flash[:success] = t('flash_messages.support.rfq_ticket_message.error')
-        else
-          flash[:success] = t('flash_messages.support.offer_ticket_message.error')
-        end
+        flash[:success] = if ticket.target.action_free_booking?
+                            t('flash_messages.support.rfq_ticket_message.error')
+                          else
+                            t('flash_messages.support.offer_ticket_message.error')
+                          end
       end
     end
 

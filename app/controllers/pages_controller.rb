@@ -8,29 +8,7 @@ class PagesController < ApplicationController
     @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs([params[:slug], params[:slug2]].compact.join('/'), params[:format])) if @page.nil?
     @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs(params[:slug], params[:format])) if @page.nil?
     raise Page::NotFound unless @page.present?
-
-    @data_source_contents_scope = DataSourceContent.joins(:page_data_source_contents).where(page_data_source_contents: { page: @page, slug: [nil, [params[:slug], params[:slug2], params[:slug3]].compact.join('/')] })
-    @data_source_last_update = @data_source_contents_scope.maximum(:updated_at)
-    @data_source_contents = @data_source_contents_scope.paginate(page: params[:page].to_i.zero? ? 1 : params[:page].to_i, per_page: 20)
-    @seo_params = SeoParams.create(params)
-    if @page.redirect?
-      redirect_to @page.redirect_url, status: @page.redirect_code
-    elsif params[:simple]
-      respond_to do |format|
-        format.html { render :simple, platform_context: [platform_context.decorate] }
-      end
-    elsif @page.layout_name.blank? || params[:nolayout]
-      assigns = {}
-      assigns['params'] = params.except(*Rails.application.config.filter_parameters)
-      assigns['current_user'] = current_user
-      assigns['platform_context'] = PlatformContext.current.decorate
-      assigns['data_source_contents'] = @data_source_contents
-      render text: Liquid::Template.parse(@page.content).render(assigns, registers: { action_view: self }, filters: [LiquidFilters])
-    else
-      respond_to do |format|
-        format.html { render :show, layout: @page.layout_name }
-      end
-    end
+    RenderCustomPage.new(self).render(page: @page, params: params)
   end
 
   def redirect

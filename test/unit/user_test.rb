@@ -674,23 +674,6 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context 'metadata' do
-    context 'populate_companies_metadata' do
-      setup do
-        @listing = FactoryGirl.create(:transactable)
-        @user = @listing.creator
-      end
-
-      should 'have no active listing if company is assigned to someone else and have active listing if assigned back' do
-        @company = @listing.company
-        @listing.company.company_users.first.destroy
-        @user.expects(:update_instance_metadata).with(companies_metadata: [])
-        @user.reload.populate_companies_metadata!
-        @listing.company.company_users.create(user_id: @user.id)
-        @user.expects(:update_instance_metadata).with(companies_metadata: [@company.id])
-        @user.reload.populate_companies_metadata!
-      end
-    end
-
     context 'populate_instance_admins_metadata' do
       setup do
         @instance_admin = FactoryGirl.create(:instance_admin)

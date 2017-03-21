@@ -1,0 +1,53 @@
+---
+name: Payment gateway
+workflow_type: payment_gateway
+events_metadata: {}
+workflow_steps:
+- name: Merchant Account Approved
+  associated_class: WorkflowStep::PaymentGatewayWorkflow::MerchantAccountApproved
+  workflow_alerts:
+  - name: Notify host about merchant account approved email
+    alert_type: email
+    recipient_type: lister
+    template_path: payment_gateway_mailer/notify_host_of_merchant_account_approval
+    delay: 0
+    subject: Your payout information has been approved
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Merchant Account Declined
+  associated_class: WorkflowStep::PaymentGatewayWorkflow::MerchantAccountDeclined
+  workflow_alerts:
+  - name: Notify host about merchant account declined email
+    alert_type: email
+    recipient_type: lister
+    template_path: payment_gateway_mailer/notify_host_of_merchant_account_declinal
+    delay: 0
+    subject: Your payout information has been declined
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Disbursement Failed
+  associated_class: WorkflowStep::PaymentGatewayWorkflow::DisbursementFailed
+  workflow_alerts:
+  - name: Notify host about payout failure email
+    alert_type: email
+    recipient_type: lister
+    template_path: payment_gateway_mailer/notify_host_about_payout_failure_email
+    delay: 0
+    subject: Automatic payout failed
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Merchant Account Pending
+  associated_class: WorkflowStep::PaymentGatewayWorkflow::MerchantAccountPending
+  workflow_alerts:
+  - name: Notify host about merchant account requirements email
+    alert_type: email
+    recipient_type: lister
+    template_path: payment_gateway_mailer/notify_host_of_merchant_account_requirements
+    delay: 0
+    subject: Please provide required information
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

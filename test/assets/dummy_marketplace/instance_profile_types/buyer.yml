@@ -1,0 +1,112 @@
+---
+name: Buyer
+profile_type: buyer
+custom_attributes:
+- name: textarea_field
+  attribute_type: string
+  html_tag: textarea
+  search_in_query: true
+  label: Textarea Field
+  searchable: false
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+  validation:
+  - required: true
+    field_name: textarea_field
+    validation_only_on_update: true
+    regex: ''
+- name: radio_button_fields
+  attribute_type: string
+  html_tag: radio_buttons
+  search_in_query: false
+  label: Radio Button Fields
+  searchable: true
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+  validation:
+  - required: true
+    field_name: radio_button_fields
+    valid_values:
+    - 'one'
+    - 'two'
+    - 'three'
+    validation_only_on_update: true
+- name: string_field
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: String Field
+  searchable: false
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+  validation:
+  - required: true
+    field_name: string_field
+    validation_only_on_update: true
+- name: decimal_field
+  attribute_type: decimal
+  html_tag: input
+  search_in_query: false
+  label: Decimal Field
+  searchable: false
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+  validation:
+  - required: true
+    field_name: decimal_field
+    validation_only_on_update: true
+- name: array_checkboxes
+  attribute_type: array
+  html_tag: check_box_list
+  search_in_query: false
+  label: Array Checkboxes
+  searchable: true
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+  validation:
+  - required: true
+    field_name: array_checkboxes
+    valid_values:
+    - one
+    - two
+    - three
+    validation_only_on_update: true
+- name: boolean_checkbox
+  attribute_type: boolean
+  html_tag: check_box
+  search_in_query: false
+  label: Boolean Checkbox
+  searchable: false
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+  validation:
+  - required: true
+    field_name: boolean_checkbox
+    validation_only_on_update: true
+- name: photo_input
+  attribute_type: photo
+  html_tag: input
+  search_in_query: false
+  label: Photo Input
+  searchable: false
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+  validation:
+  - required: true
+    field_name: photo_input
+    validation_only_on_update: true
+- name: attachment_input
+  attribute_type: file
+  html_tag: input
+  search_in_query: false
+  label: Attachment Input
+  searchable: false
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+  validation:
+  - required: true
+    field_name: attachment_input
+    validation_only_on_update: true
+
+form_components:
+- name: Registration
+  fields:
+  - !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+    user: name
+  - !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+    user: email
+  - !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+    user: password
+  type: buyer_registration

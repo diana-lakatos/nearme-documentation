@@ -269,6 +269,12 @@ class PlatformContextDrop < BaseDrop
     @platform_context_decorator.instance.user_blog_posts.highlighted.by_date.limit(3)
   end
 
+  def available_login_providers
+    @available_providers ||= (Authentication::PROVIDERS.select do |provider|
+      @instance.authentication_supported?(provider)
+    end & Authentication::ALLOWED_LOGIN_PROVIDERS).map(&:downcase)
+  end
+
   private
 
   # Helper method

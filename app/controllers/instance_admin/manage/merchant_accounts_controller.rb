@@ -12,7 +12,7 @@ class InstanceAdmin::Manage::MerchantAccountsController < InstanceAdmin::Manage:
     merchant_account_scope = merchant_account_scope.where(payment_gateway_id: params[:payment_gateway_id]) if params[:payment_gateway_id].present?
     merchant_account_scope = merchant_account_scope.where(test: params[:mode] == PaymentGateway::TEST_MODE)
 
-    @merchant_accounts = merchant_account_scope.paginate(per_page: 20, page: params[:page])
+    @merchant_accounts = merchant_account_scope.paginate(page: params[:page], per_page: reports_per_page)
   end
 
   def void

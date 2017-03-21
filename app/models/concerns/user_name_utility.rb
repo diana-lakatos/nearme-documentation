@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 module UserNameUtility
-
   MAX_NAME_LENGTH = 30
 
   extend ActiveSupport::Concern
@@ -19,11 +19,11 @@ module UserNameUtility
     end
 
     def first_name
-      self[:last_name].present? ? self[:first_name] : self[:name]&.split&.first
+      self[:first_name].present? ? self[:first_name] : self[:name]&.split&.first
     end
 
     def last_name
-      self[:last_name].presence || self[:name]&.split&.last
+      self[:last_name].presence || self[:name]&.split&.first
     end
 
     def name_with_state
@@ -45,7 +45,7 @@ module UserNameUtility
     private
 
     def full_name_from_parts
-      "#{first_name} #{middle_name} #{last_name}"
+      [first_name.presence, middle_name.presence, last_name.presence].compact.join(' ')
     end
 
     def prepare_name_fields

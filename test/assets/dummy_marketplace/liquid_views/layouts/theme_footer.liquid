@@ -1,0 +1,69 @@
+---
+partial: true
+---
+<footer class="mastfoot">
+    <div class="about-nav"  itemscope itemtype="http://schema.org/Organization">
+        <div class="wrapper-a">
+            <div class="about-a">
+                <h2 class="struct-label" itemprop="name"><a href="{{ platform_context.root_path }}" itemprop="url">Upside of Talent</a></h2>
+                <img src="https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/attachment_file/data/2735/logo-small-footer.svg" width="80" height="80" alt="Upside of Talent logo" itemprop="logo">
+                <p itemprop="description">A global marketplace providing on-demand access to the world’s </br> best SMEs.</p>
+            </div>
+
+            <nav class="nav-secondary">
+                <h2 class="struct-label">Secondary Navigation</h2>
+                <div class="col">
+                    <h3>General</h3>
+                    <ul>
+                      <li><a href='/'>Home</a></li>
+                      <li><a href='/about-overview'>About</a></li>
+                      <li><a href='/business-benefits'>Business Benefits</a></li>
+                      <li><a href='/sme-benefits'>SME Benefits</a></li>
+                      <li><a href='/expertise'>Expertise</a></li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h3>More</h3>
+                    <ul>
+                      <li><a href='/terms-of-use'>Terms of Use</a></li>
+                      <li><a href='/privacy-policy'>Privacy Policy</a></li>
+                      <li><a href='/faq'>FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Connect</h3>
+                    <ul class="social-b">
+                          {% if platform_context.facebook_url != blank %}<li><a href="{{ platform_context.facebook_url }}" class="facebook" itemprop="sameAs">Facebook</a></li>{% endif %}
+                          {% if platform_context.twitter_url != blank %}<li><a href="{{ platform_context.twitter_url }}" class="twitter" itemprop="sameAs">Twitter</a></li>{% endif %}
+                          {% if platform_context.linkedin_url != blank %}<li><a href="{{ platform_context.linkedin_url }}" class="linkedin" itemprop="sameAs">LinkedIn</a></li>{% endif %}
+                          {% if platform_context.gplus_url != blank %}<li><a href="{{ platform_context.gplus_url }}" class="googleplus" itemprop="sameAs">Google+</a></li>{% endif %}
+                          {% if platform_context.youtube_url != blank %}<li><a href="{{ platform_context.youtube_url }}" class="youtube" itemprop="sameAs">YouTube</a></li>{% endif %}
+                          {% if platform_context.blog_url != blank %}<li><a href="{{ platform_context.blog_url }}" class="feed">Blog</a></li>{% endif %}
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h3>Contact</h3>
+                    <p class="contact-option">
+                        <span class="contact-label">Telephone</span>
+                        <a href="tel:{{ platform_context.phone_number_noformat }}" itemprop="telephone">{{ platform_context.phone_number }}</a>
+                    </p>
+                    <p class="contact-option">
+                        <span class="contact-label">Email</span>
+                        <a href="mailto:{{ platform_context.support_email.downcase}}" itemprop="email">{{ platform_context.support_email }}</a>
+                    </p>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="contentinfo" role="contentinfo">
+        <div class="wrapper-a">
+            <p class="copyright" itemprop="copyrightHolder">© 2016 UoT. All rights reserved.</p>
+            <p class="poweredby">
+                <a href="http://near-me.com" rel="external">Powered by Near Me <img src="https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2725/near-me-logo.png" alt="Near Me logo" width="30" height="30"></a>
+            </p>
+        </div>
+    </div>
+</footer>

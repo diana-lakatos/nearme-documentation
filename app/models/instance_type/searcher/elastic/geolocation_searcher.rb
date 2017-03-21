@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # TODO: promote module to class
 module InstanceType::Searcher::Elastic::GeolocationSearcher
   include InstanceType::Searcher
@@ -7,7 +8,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
     @fetcher ||= invoke_search
   end
 
-  def search
+  def search_form
     @search ||= ::Listing::Search::Params::Web.new(params, @transactable_type)
   end
 

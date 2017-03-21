@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 module CurrencyHelper
   def number_to_currency_symbol(currency, price = '0.00', options = {})
     currency ||= PlatformContext.current.instance.default_currency
     options[:unit] = Money::Currency.new(currency).symbol
 
     options.reverse_merge!(rel: 'tooltip', title: currency)
-    content_tag('span', number_to_currency(price, options),  options)
+    content_tag('span', number_to_currency(price, options), options)
   end
 
   def currency_symbol_from_code(currency = nil)

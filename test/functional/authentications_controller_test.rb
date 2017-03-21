@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class AuthenticationsControllerTest < ActionController::TestCase
@@ -10,7 +11,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
   test 'authentication can be deleted if user has password set' do
     create_signed_in_user_with_authentication
     assert_difference('@user.authentications.count', -1) do
-      delete :destroy, { id: @user.authentications.first.id }
+      delete :destroy, id: @user.authentications.first.id
     end
   end
 
@@ -18,14 +19,14 @@ class AuthenticationsControllerTest < ActionController::TestCase
     create_signed_in_user_with_authentication
     add_authentication('twitter', 'abc123')
     assert_difference('@user.authentications.count', -1) do
-      delete :destroy, { id: @user.authentications.first.id }
+      delete :destroy, id: @user.authentications.first.id
     end
   end
 
   test 'authentication cannot be deleted if user has no password and one authentication' do
     create_no_password_signed_in_user_and_authentication
     assert_no_difference('@user.authentications.count') do
-      delete :destroy, { id: @user.authentications.first.id }
+      delete :destroy, id: @user.authentications.first.id
     end
   end
 
@@ -115,7 +116,6 @@ class AuthenticationsControllerTest < ActionController::TestCase
     end
 
     context 'should successfully sign up and log' do
-
       should 'create user with auth.' do
         assert_difference('User.count') do
           assert_difference('Authentication.count') do
@@ -135,7 +135,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
           post :create
         end
       end
-      assert_redirected_to new_user_registration_url(role: 'default')
+      assert_redirected_to new_api_user_url(role: 'default')
     end
 
     context 'token params after login' do

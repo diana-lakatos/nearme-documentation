@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class CategoryTest < ActiveSupport::TestCase
@@ -7,6 +8,7 @@ class CategoryTest < ActiveSupport::TestCase
 
       @category = FactoryGirl.create(:category)
       @category_child = FactoryGirl.create(:category, parent_id: @category.id)
+      @category_second_child = FactoryGirl.create(:category, parent_id: @category.id)
       @category_grand_child = FactoryGirl.create(:category, parent_id: @category_child.id)
       @category_sibling = FactoryGirl.create(:category)
       @category_child.reload
@@ -37,22 +39,22 @@ class CategoryTest < ActiveSupport::TestCase
     end
 
     should 'create familiy relations' do
-      assert_equal [@category_child], @category.children
+      assert_equal [@category_child, @category_second_child], @category.children
       assert_equal [@category_grand_child], @category_child.children
       assert_equal [@category_sibling], @category.siblings
-      assert_equal [@category, @category_child, @category_grand_child].map(&:id).sort, @category.self_and_descendants.map(&:id).sort
+      assert_equal [@category, @category_child, @category_second_child, @category_grand_child].map(&:id).sort, @category.self_and_descendants.map(&:id).sort
     end
 
     should 'remove category linkings when service is removed' do
       @transactable_type = FactoryGirl.create(:transactable_type)
-      assert_difference 'CategoryLinking.count', 4 do
+      assert_difference 'CategoryLinking.count', 5 do
         @transactable_type.categories << Category.all
       end
-      assert_equal 4, @transactable_type.categories.count
-      assert_difference 'CategoryLinking.count', -4 do
+      assert_equal 5, @transactable_type.categories.count
+      assert_difference 'CategoryLinking.count', -5 do
         @transactable_type.destroy
       end
-      assert_equal 4, Category.count
+      assert_equal 5, Category.count
     end
 
     should 'remove category proper linkings on category update' do
@@ -88,13 +90,13 @@ class CategoryTest < ActiveSupport::TestCase
     should 'remove categories when transactable_type is removed' do
       @transactable_type = FactoryGirl.create(:transactable_type)
       @transactable_type.categories << Category.all
-      assert_equal 4, @transactable_type.categories.count
-      assert_difference 'CategoryLinking.count', -4 do
+      assert_equal 5, @transactable_type.categories.count
+      assert_difference 'CategoryLinking.count', -5 do
         @transactable_type.destroy
       end
     end
 
-    should 'maintain change descendants when category move around'  do
+    should 'maintain change descendants when category move around' do
       @category_sibling.update_attributes(parent_id: @category.id, child_index: 1)
       @category.reload
       assert @category.self_and_descendants.include?(@category_sibling)
@@ -122,6 +124,34 @@ class CategoryTest < ActiveSupport::TestCase
       @category.destroy
       translation = Translation.where(value: @category.name, locale: @locale.code, key: @category.translation_key).first
       refute translation.present?
+    end
+
+    should 'sort properly when nodes are moved' do
+      # Roots
+      @category_sibling.change_child_index!(0)
+      @category.change_child_index!(1)
+
+      assert_equal @category_sibling, Category.roots.first
+      assert_equal @category, Category.roots.second
+
+      @category.change_child_index!(0)
+      @category_sibling.change_child_index!(1)
+
+      assert_equal @category_sibling, Category.roots.second
+      assert_equal @category, Category.roots.first
+
+      # With parent
+      @category_second_child.change_child_index!(0)
+      @category_child.change_child_index!(1)
+
+      assert_equal @category_second_child, @category.children.first
+      assert_equal @category_child, @category.children.second
+
+      @category_child.change_child_index!(0)
+      @category_second_child.change_child_index!(1)
+
+      assert_equal @category_second_child, @category.children.second
+      assert_equal @category_child, @category.children.first
     end
   end
 end

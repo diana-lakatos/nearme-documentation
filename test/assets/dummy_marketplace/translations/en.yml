@@ -1,0 +1,811 @@
+---
+en:
+  activerecord:
+    attributes:
+      user:
+        buyer_properties: Your
+        seller_properties: Your
+      transactable:
+        timezone_info: Please note that this offer operates in %{timezone} time zone.
+      user/buyer_profile:
+        Area Of Expertise: Area Of Expertise
+        Languages: Languages
+        Industry: Industry
+        travel: Travel
+        hourly_rate: Hourly Rate
+        linkedin_url: Linkedin URL
+    errors:
+      models:
+        reservation:
+          attributes:
+            base:
+              total_amount_changed: Looks like the total price of this offer has changed.
+                Please verify all prices.
+        order:
+          transactable_quantity: Exceeded quantity for %{transactable_name}, please
+            adjust Project quantity to confirm that order.
+        transactable:
+          attributes:
+            free: must be Pro Bono if no prices are provided
+            cant_set_montly_price: Cant't set monthly price if Project is not open
+              7 days a week.
+            no_consecutive_days: Offer will not be possible if no consecutive days
+              are open.
+  instance_admin:
+    manage:
+      transfers:
+        total_fee: MP Fees
+        lessee_service_fees: MP Fees
+        payout_failed: We were notified that this payment transfer failed to be delivered,
+          most likely due to wrong payout information. Please follow up with the Client
+          and once issues are resolved, manually mark the payment as not failed.
+        guest_fee: Expert fee
+        host_fee: Client fee
+        transfers_are_generated_automatically: 'Transfers are generated automatically
+          depending on your setting in ''Settings > Configuration'' for outstanding
+          charges we''ve recieved on behalf of Clients. The next batch will be generated
+          at about:'
+      orders:
+        order_amount: Total paid
+        listing: Listing
+        user: SME
+        lister: Client
+        pro_bono: ProBono
+      reservation_types:
+        reservation_types: Offer Types
+        new: New Offer Type
+      transactable_types:
+        booking_settings: Offer settings
+    settings:
+      documents_upload:
+        form:
+          safety_and_trust: For safety and trust purposes, some services might need
+            extra documentation from customers before completing the offer.
+        safety_and_trust: For safety and trust purposes, some services might need
+          extra documentation from customers before completing the offer.
+      domains:
+        hosted_zones:
+          create: Create Route53 Cliented zone
+      seller_attachments:
+        seller_attachments: Client attachments
+        activate_seller_attachments: Activate Client attachments
+        description: If enabled, Client can upload additional documents for Projects/products.
+        access_levels:
+          sellers_preference: Clients preference
+    rating_systems:
+      index:
+        only_if_both_completed_services: Only display reviews if both Expert and Client
+          have completed
+        only_if_both_completed_products: Only display reviews if both Expert and Client
+          have completed
+      rate_subject:
+        guest: Client/Client rates Expert/Expert
+        host: Expert/Expert rates Client/Client
+        transactable: Expert/Expert rates Listing/Product
+    bookings: Offers
+    analytics:
+      no_bookings_yet: No offers yet.
+      no_listings_visits_yet: Your Projects haven't been visited yet.
+    workflows:
+      alerts:
+        prevent_trigger_condition: Liquid parsed string of conditions; leave blank
+          to always run; if evaluates to true, it will not be triggered; e.g. Project.draft?
+  instance_profile_type:
+    buyer:
+      hints:
+        teaching: ''
+        availability: Describe your availability to take projects. e.g. I am available
+          to take projects on part time from Monday through Thursday every week.
+        referred_by_sme: ''
+        pro_service: ''
+        bio: ''
+        hourly_rate: ''
+        hourly_rate_decimal: 'Input decimal only. Do not use ''$''. '
+      placeholders:
+        teaching: ''
+        referred_by_sme: ''
+        pro_service: ''
+        bio: ''
+        hourly_rate: ''
+        hourly_rate_decimal: ''
+      labels:
+        bio: Bio
+        education: Education, Certifications and Training
+        awards: Awards and Honors
+        teaching: Teaching, Writing and Publishing
+        employers: Prior Employers or Clients
+        accomplishments: 'Special Projects and Accomplishments '
+        giving_back: Community and Giving Back Interests
+        hobbies: Brief Personal Details (Family and Hobbies)
+        workplace_type: Workplace Type
+        travel: Travel
+        pro_service: Consulting Services Offered
+        hourly_rate: Hourly rate
+        discounts_available: Discounts available
+        discounts_description: What kind of discounts do you offer?
+        availability: Availability
+        linkedin_url: LinkedIn URL
+        cities: In what cities you are willing to work?
+        referred_by_sme: 'Referred by:'
+        hourly_rate_decimal: Hourly rate
+      valid_values:
+        travel:
+          'yes': 'yes'
+          'no': 'no'
+        discounts_available:
+          available: Available
+          not_available: Not Available
+      name:
+        one: Buyer
+        other: Buyers
+    seller:
+      labels:
+        linkedin_url: LinkedIn URL
+        referred_by: Referred By
+      name:
+        one: Seller
+        other: Sellers
+    default:
+      labels:
+        buyer___hourly_rate_decimal: buyer___hourly_rate_decimal
+        buyer_hourly_rate_decimal: Hourly Rate
+        user_buyer_hourly_rate_decimal: User - Buyer Hourly Rate Decimal (With Hint)
+      hints:
+        buyer___hourly_rate_decimal: Enter decimal only. Do not use a '$'.
+        buyer_hourly_rate_decimal: Enter decimal only. Do not use a '$'.
+        user_buyer_hourly_rate_decimal: Enter decimal only. Do not use a '$'.
+      placeholders:
+        buyer___hourly_rate_decimal: ''
+        buyer_hourly_rate_decimal: ''
+        user_buyer_hourly_rate_decimal: ''
+      name:
+        one: Default
+        other: Defaults
+  transactable_type:
+    project:
+      labels:
+        capacity: Capacity
+        quantity: Quantity
+        confirm_reservations: Confirm reservations
+        last_request_photos_sent_at: Last request photos sent at
+        about_company: About Company (short description)
+        estimation: Approx. Time Required to Complete
+        workplace_type: Workplace Type
+        office_location: Office Location
+        budget: Approximate Value / Budget
+        deadline: Deadline
+        type_of_deliverable: Type of Deliverable
+        other_requirements: Other Requirements
+        project_contact: Project Contact
+        description: Vignette of a Scope (describe the project)
+        name: Project Title
+      name:
+        one: Project
+        other: Projects
+      lessor:
+        one: Client
+        other: Clients
+      lessee:
+        one: Expert
+        other: Experts
+      placeholders:
+        about_company: Description of company
+        estimation: Enter Amount (months, days, hours)
+        office_location: Enter City or Area
+        budget: Enter Amount
+        deadline: yyyy-mm-dd
+        type_of_deliverable: ''
+        other_requirements: ''
+        project_contact: Enter Full Name
+        name: Enter Title
+        description: Description, format of delivery, any other requirements
+      valid_values:
+        workplace_type:
+          online: Online
+          on_site: On Site
+      hints:
+        deadline: ''
+    business_services:
+      labels:
+        confirm_reservations: Confirm reservations
+        capacity: Capacity
+        description: Description
+        last_request_photos_sent_at: Last request photos sent at
+        name: Name
+        quantity: Quantity
+      name:
+        other: Business Services
+        one: Business Services
+  custom_model_type:
+    recommendations:
+      name:
+        one: Recommendations
+        other: Recommendations
+      labels:
+        recommendation: Recommendation
+        author: Author
+    links:
+      labels:
+        url_link: URL
+      name:
+        other: Links to whitepapers, articles
+        one: Links to whitepapers, articles
+  categories:
+    languages: Languages
+    english: English
+    spanish: Spanish
+    french: French
+    german: German
+    japanese: Japanese
+    korean: Korean
+    italian: Italian
+    polish: Polish
+    russian: Russian
+    other: Other
+    industry: Industry
+    government: Government
+    civilian_government: Civilian Government
+    defense_and_intelligence: Defense and Intelligence
+    law_enforcement_and_homeland_security: Law Enforcement and Homeland Security
+    state_and_local_government: State and Local Government
+    health_and_life_sciences: Health and Life Sciences
+    health_plans: Health Plans
+    healthcare_providers: Healthcare Providers
+    life_sciences_biotechnology_and_pharmaceutical: Life Sciences, Biotechnology,
+      & Pharmaceutical
+    technology: Technology
+    oversight_and_decision_support: Oversight and Decision Support
+    management_and_operations: Management and Operations
+    area_of_expertise: Area Of Expertise
+    management: Management
+    growth: Growth
+    globalization_international_and_emerging_markets: Globalization, International
+      & Emerging Markets
+    business_development: Business Development
+    marketing_branding_communications_social_media_and_digital_engagement: Marketing,
+      Branding, Communications, Social Media & Digital Engagement
+    packaging_and_pricing: Packaging and Pricing
+    procurement_government_contracting_vehicles_and_rfps: Procurement, Government
+      Contracting, Vehicles & RFPs
+    sales_forecasting_and_execution: Sales Forecasting and Execution
+    organization: Organization
+    advisory: Advisory
+    business_disruption_and_digital_transformation: Business Disruption and Digital
+      Transformation
+    business_turnarounds: Business Turnarounds
+    innovation: Innovation
+    leadership: Leadership
+    m_and_a_and_divestitures: M&A and Divestitures
+    small_business_start_ups_and_entrepreneurship: Small Business, Start-ups & Entrepreneurship
+    strategy: Strategy
+    operations: Operations
+    financial_revenue_management_and_tax: Financial, Revenue Management & Tax
+    governance_policy_and_standards: Governance, Policy, and Standards
+    hr_culture_diversity_and_inclusion: HR, Culture, Diversity and Inclusion
+    legal_compliance_and_regulatory: Legal, Compliance & Regulatory
+    operations_efficiency_people_and_organization: Operations, Efficiency, People
+      & Organization
+    organizational_change_management: Organizational Change Management
+    postmerger_integration: Postmerger Integration
+    information_technology: Information Technology
+    analytics: Analytics
+    architecture_and_methodologies: Architecture and Methodologies
+    assessments: Assessments
+    big_data: Big Data
+    database_analysis_and_design: Database Analysis and Design
+    iot: IoT
+    cloud_and_hosting: Cloud & Hosting
+    documentation_and_technical_writing: Documentation and Technical Writing
+    mainframe_environment: Mainframe Environment
+    operating_systems: Operating Systems
+    operations_and_productivity: Operations and Productivity
+    program_management: Program Management
+    programming_and_assembly_languages: Programming & Assembly Languages
+    quality_and_testing: Quality and Testing
+    rapid_prototyping: Rapid Prototyping
+    security_privacy_and_cyber_risk: Security, Privacy & Cyber Risk
+    software_design_development_and_integration: Software Design, Development & Integration
+    supply_chain_plm_manufacturing_and_erp: Supply Chain, PLM, Manufacturing & ERP
+    technology_infrastructure: Technology Infrastructure
+    training: Training
+    usability_and_user_experience: Usability and user experience
+    crm: CRM
+  activemodel:
+    errors:
+      models:
+        reservation:
+          attributes:
+            base:
+              total_amount_changed: Looks like the total price of this offer has changed.
+                Please verify all prices.
+        reservation_request:
+          attributes:
+            base:
+              total_amount_changed: Bid on Project
+  errors:
+    messages:
+      free: must be Pro Bono if no prices are provided
+      free_if_zero: must be Pro Bono if all prices are zero
+      not_in_radius: Address is not in radius of Project
+    transactable:
+      cant_cancel: Can't cancel a project with unpaid expenses.
+  flash_messages:
+    buy_sell:
+      no_payment_gateway: The Client does not support payments for the selected country.
+    guest_rating:
+      already_exists: Rating for this offer has already been submitted.
+    host_rating:
+      already_exists: Rating for this offer has already been submitted.
+    instance_admin:
+      manage:
+        reservation_types:
+          created: Offer Type created
+          updated: Offer Type updated
+          deleted: Offer Type deleted
+      settings:
+        listing_type_added: New Project type added.
+        listing_type_not_added: Could not add new Project type.
+      reports:
+        listings:
+          successfully_deleted: The Project has been successfully deleted.
+    listings:
+      listing_disabled: Your Project has been temporarily disabled by the owner. Displaying
+        other Projects in this location.
+      listing_disabled_but_admin: Your Project has been temporarily disabled by the
+        owner. Other users will not be able to browse it.
+      listing_inactive: Your Project is inactive. Displaying other Projects in this
+        location.
+      no_longer_have_access: It seems that you do not have access to this project.
+        Please make sure you are correctly logged in.
+    locations:
+      listing_removed: Your Project has been removed. Displaying other Projects near
+        %{address}.
+      no_listings: There aren't any Projects at that location. Check out some other
+        locations.
+      browsing_no_listings: There aren't any active Projects at that location. Other
+        users will be redirected to search page.
+    dashboard:
+      no_bookings: You haven't made any offers yet!
+      seller:
+        updated: Client profile has been updated
+      buyer:
+        updated: Expert profile has been updated
+      listings:
+        listing_deleted: Your Project has been deleted.
+        listing_updated: Great, your Project's details have been updated.
+      reservations:
+        reservation_already_confirmed: This offer has already been confirmed.
+        reservation_cancelled: You have cancelled this offer.
+        reservation_confirmed: You have confirmed the offer!
+        reservation_not_confirmed: Your offer could not be confirmed.
+        reservation_rejected: You have rejected the offer. Maybe next time!
+      locations:
+        add_your_company: Please complete your Project first.
+      add_your_company: Please complete your Project first.
+      order_items:
+        updated: Expenses have been updated.
+        approved: Expenses have been approved.
+        rejected: Expenses have been rejected
+        reject_failed: Expenses could not be rejected
+        can_not_edit_accepted_order_item: You can't edit accepted expenses.
+        recently_edited: Looks like total amount of expenses has changed. Please verify
+          total price and reaccept.
+        approve_failed: Your Credit Card could not be charged.
+    manage:
+      listings:
+        listing_deleted: Your Project has been deleted.
+        listing_updated: Great, your Project's details have been updated.
+        listing_cancelled: Your project has been canceled.
+      reservations:
+        reservation_already_confirmed: This offer has already been confirmed.
+        reservation_cancelled: You have cancelled this offer.
+        reservation_confirmed: You have confirmed the offer!
+        reservation_confirmed_but_not_charged: You have confirmed the offer, however
+          we were not able to capture payment. We have reached out to Expert to notify
+          him about the issue.
+        reservation_not_confirmed: Your offer could not be confirmed.
+        reservation_rejected: You have rejected the offer. Maybe next time!
+      order:
+        can_not_approve: Can’t mark project as complete with pending expenses.
+    reservations:
+      credit_card_will_be_charged: Your credit card will be charged when your offer
+        is confirmed by the Client.
+      invalid_operation: Not a valid offer operation.
+      reservation_cancelled: You have cancelled your offer.
+      reservation_not_cancellable: This offer can not be canceled anymore.
+      reservation_made: Your offer has been made! %{message}
+      reservation_not_confirmed: Your offer could not be confirmed.
+    space_wizard:
+      item_listed: Your %{bookable_noun} was listed! You can provide more details
+        about your location and Project from this page.
+      space_listed: You have successfully completed your profile! Start by clicking
+        on 'Add new Project' below.
+    support:
+      rfq_ticket:
+        created: Your request has been sent. Client will be in touch shortly.
+      offer_ticket:
+        created: Offer has been sent. Client will be in touch shortly.
+    wish_list_items:
+      item_deleted: Item has been successfully deleted.
+  simple_form:
+    labels:
+      location:
+        email: Offer email
+      company:
+        listings_public: Enable public Projects
+      transactable:
+        action_types:
+          minimum_booking_minutes: Minimum offer minutes
+          no_action: Disable offer
+          pricings:
+            is_free_booking: Please define project type?
+        confirm_reservations: Manually confirm offers
+      transactable_type:
+        all_action_types:
+          action_continuous_dates_booking: Action continuous dates offer
+          service_fee_guest_percent: Expert Service Fee Percent
+          service_fee_host_percent: Client Service Fee Percent
+          cancellation_policy_hours_for_cancellation: Number of hours before offer
+            to cancel
+          hours_to_expiration: Number of hours before unconfirmed offer expires
+          minimum_booking_minutes: Minimum offer minutes (for hourly pricing)
+          allow_no_action: Allow to disable offer
+          pricings:
+            allow_book_it_out_discount: Allow Bulk Offer Discount
+            allow_free_booking: Allow Pro Bono offer
+        lessor: Lessor (e.g. Client)
+        lessee: Lessee (e.g. Expert)
+      user:
+        name: Full Name
+    placeholders:
+      location:
+        email: Your offer email
+    hints:
+      transactable_type:
+        all_action_types:
+          action_continuous_dates_booking: Allow user to select only continuous dates
+            when offer
+      user:
+        verify_number: Verifying your mobile number allows you to take advantage of
+          Click to Call functionality. This allows you to communicate with experts
+          without sharing your private number information.
+      buyer_profile:
+        enabled: In order for your Expert Profile to be listed in our marketplace,
+          it must be set to ON. You can work on your profile as a draft or disable
+          your listing from being publicly listed while it is OFF. Make sure to click
+          save for settings to be applied.
+      user_blog_post:
+        hero_image: For best results upload an image with 4:3 ratio.  Suggested size
+          is 850px &times; 638px
+  pricing:
+    mode:
+      no_action_booking:
+        description: No transaction is made between customer and Client
+      offer_action:
+        description: Customer makes an offer and Project's owner accepts one of the
+          offers
+    daily_rate:
+      hours_count: hours after offer begins
+    time_booking_option:
+      range:
+        example: Example of time range based offer option
+      quantity:
+        example: Example of quantity based offer option
+    availability:
+      preset_info: Want to use this availability schedule for other Projects?
+      event_preset_info: Want to use this event schedule for other Projects?
+    schedule:
+      mode:
+        seller: Client Preset
+      book_it_out:
+        minimum_bookings: Minimum offers
+    free_enabled: Pro Bono
+    free_disabled: Paid
+  confirmations:
+    are_you_sure_delete_price: Are you sure? This price will be removed from all existing
+      Projects.
+  desk:
+    reservation_rejected_body: "%{user} declined offer with reason: %{reason}"
+    reservation_rejected_title: "[internal] User has declined offer"
+  general:
+    generic_lessor_term: Client
+    generic_lessee_term: client
+  transactable_types:
+    locations:
+      listings:
+        the_listing: The Project
+  manage:
+    listings:
+      no_trust_explanation: Your Project will remain disabled until approved.
+  buy_sell_market:
+    buyer: Expert
+    seller: Client
+    products:
+      buttons:
+        contact_host: Contact Client
+      labels:
+        summary: 'Overall Rating:'
+    checkout:
+      order_mailer:
+        notify_seller_email:
+          dear_seller: Dear Client,
+      labels:
+        the_following_documents: 'Please make an offer by submitting a proposal with
+          scope of work and terms for client to review.  Please upload your PDF file
+          here:'
+      manual_payment: Manual Payment
+      manual_payment_description: You will make payment in person
+  onboarding_wizard:
+    seller_info: Client Info
+    vendor_approval:
+      intro: Please provide the following information to become an approved Client
+        for this service. Your Project will be published when the Marketplace Owner
+        approves your status.
+    list_your: Complete Your Profile
+  dashboard:
+    credit_cards:
+      delete_warning: You are about to remove credit card. Please note that it still
+        will be charged if used for any past and unpaid offers you have made. Please
+        make sure to cancel all transations separately.
+    items:
+      unsaved_listing_changes: You have unsaved changes to your Project
+      view_listing: View Project
+      delete_listing: Delete Project
+      confirm_delete: Are you sure you want to delete your Project?
+      required_documents: Please enter the documents your customers will need to provide
+        before offer this service.
+      new_listing_full: Add new Project
+    nav:
+      user_reservations: My Offers
+      user_reservations_count_html: My Offers <span>%{count}</span>
+      host_reservations_count_html: Offers Received <span>%{count}</span>
+      reviews: Ratings
+      host_reservations: My Offers
+      edit: Edit Profile
+      transactables: My Projects
+      order_items: Time / Expense Overview
+      admin: Payments Admin
+      payouts: Merchant Account
+    user_reservations:
+      test_mode: This offer was made in Test Mode. No money was actually transferred
+      title_count: Offers (%{count})
+      penalty_info: The penalty fee for cancelling the offer is %{penalty}% of the
+        offer price.
+      cancel: Do you really want to cancel this offer? %{penalty}
+      pending_confirmation: 'Pending confirmation from Client. Offer will expire in '
+      exclusive_price_guests_notes: 'Exclusive offer instructions:'
+      show_listing_page: Show Project page
+      cancel_confirmation: Do you really want to cancel this offer?
+      guest_notes: Expert Notes
+      booking_successful: Your offer was requested successfully!
+      reservation_placed_html: 'Offer created: <span>%{date}</span>'
+      archived: Offers Closed
+      upcoming: Offers Open
+      send_message: Send Message
+      track_time: Track Time & Expenses
+      approved_offer: Approved Offer
+    user_profile:
+      sections:
+        seller: Client
+        buyer: Expert
+        default: My Profile
+    user_recurring_bookings:
+      placed: Offer placed
+      successful_booking: Your recurring offer was requested successfully!
+      other_recurring_booking:
+        one: 1 other recurring offer
+        other: "%{count} other recurring offers"
+      cancel_confirmation: Do you really want to cancel this recurring offer?
+      booking_placed_html: 'Offer placed: <span>%{date}</span>'
+      guest_notes: Expert Notes
+      host_actions:
+        confirmations:
+          confirm_credit_card: Your credit card will not be charged until you receive
+            an invoice from your SME and approve that invoice. Your card information
+            is stored in Stripe, our secure processing payment gateway.
+    host_reservations:
+      reservation_state: 'Offer state: '
+      no_unconfirmed_reservations: You have no unconfirmed offers.
+      pending_confirmation: You must confirm this offer within <strong>%{time_to_expiry}</strong>
+        or it will expire.
+      exclusive_price_guests_notes: 'Exclusive offer instructions from Expert:'
+      no_confirmed_reservations: You have no confirmed offers.
+      no_archived_reservations: You have no archived offers.
+      no_overdue_reservations: You have no overdue offers.
+      no_reservations_promote_reservations: You currently have no offers.
+      show_listing_page: Show Project page
+      actions:
+        complete_reservation: Complete offer
+      complete_reservation:
+        title: Complete offer
+      confirmations:
+        cancel: Do you really want to cancel this offer?
+        confirm: Do you want to confirm this offer?
+        mark_as_paid: Do you want to mark this offer as paid?
+        request_payment: Do you want to send payment request email for this Expert?
+      reservation_is_expired: Offer is expired!
+      unconfirmed: Offers Pending
+      confirmed: Offers Open
+      archived: Offers Closed
+    products:
+      address_errors_html: Please address the following <b>%{count}</b> errors in
+        order to save your Project.
+    transactables:
+      address_errors_html: Please address the following <b>%{count}</b> errors in
+        order to save your Project.
+      view_html: View Project
+      title:
+        listings: My Projects
+    reviews:
+      feedback:
+        seller_feedback: Client Feedback
+        guest_feedback: Expert Feedback
+        view_seller_profile: View Client's Profile
+        view_host_profile: View Client's Profile
+        view_guest_profile: View Expert's Profile
+        view_buyer_profile: View Expert's Profile
+        subject:
+          seller: Client
+          buyer: Expert
+          host: Client
+          guest: Expert
+    document_requirements:
+      enter_your_documents: Please, enter below the documents your users will need
+        to provide before offer the item
+    payment_documents:
+      reservation: Offer
+    analytics:
+      bookings: Offers
+      columns:
+        bookings: Offers
+        fee: MP Fee
+      total:
+        bookings: "%{total} offers"
+      no_reservations_yet: You currently do not have any offers.
+      no_invoices_paid: You've not paid any invoices.
+    location:
+      are_you_sure: If you continue, %{Projects_count} Projects which belong to this
+        location will also be deleted. Are you really sure you want to proceed?
+    photos:
+      requirement: Please upload at least one photo for your Project.
+    click_to_call:
+      short_info: Verify your number to enable voice calling between Experts and Clients
+        without revealing your phone number
+      intro_html: <h3>What is Click to Call?</h3> <p>We give you an easy to way to
+        make calls between Experts and Clients while keeping phone numbers of both
+        parties private. Thanks to <a href="http://twilio.com" rel="external">Twilio</a>
+        integration, you will be able to make and receive calls to other users who
+        verified their number on our website.</p> <p>When setting up a call with Twilio
+        the other party will receive a phone call on their verified number first.
+        When they answer, Twilio will call you back on your phone registered in the
+        system.</p>
+    order_items:
+      reject: What's wrong?
+      reject_placeholder: Please let us know what is the reason of declining expenses
+      free_unit_price: Pro bono projects don’t allow hourly rate to be set as project
+        time is free.
+    payments:
+      merchant_fee_charge: <b>Important Note:</b> Pro bono projects will not charge
+        any hourly time expenses due to the nature of the project. However, there
+        is a one time "%{name}" of %{price} due. Also, system will track any expense
+        items required for the project.
+    manage_listings:
+      tab: My Projects
+  user_profile:
+    labels:
+      contact_buyer: Contact Expert
+      contact_seller: Contact Client
+  orders:
+    buttons:
+      seller_feedback: Leave Client feedback
+      buyer_feedback: Leave Expert feedback
+      update_seller_feedback: Update Client feedback
+      update_buyer_feedback: Update Expert feedback
+  registrations:
+    sms_preferences:
+      new_reservation: I receive a offer request.
+      reservation_state_changed: A offer I have requested is accepted or declined.
+    accept_terms_of_service: Yes, I understand and agree to <a href="/terms-of-use"
+      target="_blank">Terms of Use</a> and the <a href="/privacy-policy" target="_blank">Privacy
+      Policy</a>
+  recurring_bookings:
+    overbooked: Subscription can't be confirmed due to overoffer.
+  reservations:
+    booking_was_requested_successfully: Your offer was requested successfully!
+    company_address_not_valid: The location address of the Client is not correct or
+      complete. Please contact the Client.
+    charge_after_confirmation: You will not be charged until the offer is confirmed.
+    manually_confirm: This %{lessor} manually confirms all offers.
+    paypal_and_cc_charge_after_confirmation: Your will not be charged until the offer
+      is confirmed.
+    cancellation_time: You have up to %{time} hours before the offer takes place to
+      cancel.
+    no_bookings_html: You don't have any %{type} offers. <a href='/search'>Find %{bookable_nouns}
+      near you!</a>
+    rfq_message: Please, enter a message for the Client
+    booking_module:
+      only_exclusive_price: Only exclusive offer is possible
+    states:
+      cancelled_by_guest: Cancelled by Expert
+      cancelled_by_host: Cancelled by Client
+      unconfirmed: Pending
+      confirmed: Accepted
+      archived: Closed
+  search:
+    list:
+      view_listing: View Project
+  mailers:
+    rating:
+      experience_hosting: How was your experience Clienting %{name}?
+  top_navbar:
+    my_bookings: My Offers
+    bookings_received: My Offers
+    manage_bookable: My Projects
+    sign_up: Join Our Community
+    account: Edit Profile
+  sign_up_form:
+    link_to_seller: Become a Client here
+    buyer_sign_up_to: Sign Up for UoT
+    seller_sign_up_to: Create a Client Account
+    link_to_buyer: Become an Expert here
+    log_in_to: Log in
+  reservations_review:
+    errors:
+      whoops: Whoops! We couldn't make that offer.
+      no_minimum_days: Offer selection does not meet requirements. A minimum of %{minimum_days}
+        consecutive bookable days are required.
+      no_minimum_minutes: Offer selection does not meet requirements. A minimum of
+        %{minimum_minutes} hours are required.
+      dates_not_available: 'Unfortunately the following offers are no longer available:
+        %{dates}'
+    heading: Bid on Project
+    disabled_buttons:
+      request: Bidding...
+    buttons:
+      request: SUBMIT OFFER
+  recurring_reservations_review:
+    total: Total per offer
+  shared:
+    booking_types_tabs:
+      booking_types: Offer types
+  user_reviews:
+    reviews_about_this_seller: How others rated %{first_name} as a Client
+    reviews_left_by_this_seller: How %{first_name} rated others as a Client
+    reviews_about_this_buyer: How others rated %{first_name} as an Expert
+    reviews_left_by_this_buyer: How %{first_name} rated others as an Expert
+  payouts:
+    braintree:
+      credit_card_subscription_info: A credit card is required in the case of a cancellation
+        to provide a refund of the offer charge to the Expert.
+  seller_attachments:
+    seller_attachments: Client attachments
+    associated_with_order: Here are the Client attachments associated with your order
+  datepicker:
+    dformat: "%m/%d/%Y"
+    pformat: MM/DD/YYYY
+  ui:
+    header:
+      list_your_thing: Become a Client
+  phone_calls:
+    buttons:
+      click_to_call_user: Call Me
+  homepage:
+    search_field_placeholder:
+      full_text: General search...
+  time:
+    formats:
+      short: "%l:%M %p"
+  wish_lists:
+    buttons:
+      selected_state: Remove Favorite
+      unselected_state: Add to Favorites
+  transactable_collaborator:
+    collaboration_cancelled: User has been removed from project.
+  forms:
+    product_form:
+      attachments: Files
+  attachment_upload:
+    label: Title
+  user_messages:
+    search:
+      filter_by_transactable: By Project

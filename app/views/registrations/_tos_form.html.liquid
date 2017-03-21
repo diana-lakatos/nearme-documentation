@@ -1,6 +1,6 @@
 <p class="notice legal controlgroup {% if error != blank %}error{% endif %}">
   <label class="checkbox control" for="{{ namespace }}_user_accept_terms_of_service">
-    <input type="checkbox" name="user[accept_terms_of_service]" id="{{ namespace }}_user_accept_terms_of_service" value="1" class="input-block-level" tabindex="4" {%if checked %}checked="checked"{%endif%}>
+    <input type="checkbox" name="user[accept_terms_of_service]" id="{{ namespace }}_user_accept_terms_of_service" value="1" class="input-block-level" tabindex="4" {%if params.user.accept_terms_of_service %}checked="checked"{%endif%}>
     {{ 'registrations.accept_terms_of_service' | translate }}
   </label>
 </p>

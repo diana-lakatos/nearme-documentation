@@ -2,7 +2,7 @@ class InstanceAdmin::Manage::CategoriesPositionsController < InstanceAdmin::Mana
 
   def update
     params[:category].each_with_index do |category, index|
-      Category.find(category).update_attribute(:position, index)
+      Category.find(category).change_child_index!(index)
     end
 
     render json: { success: true }

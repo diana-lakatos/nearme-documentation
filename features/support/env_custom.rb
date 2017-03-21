@@ -46,8 +46,14 @@ Before do
   FactoryGirl.create(:primary_locale)
   FactoryGirl.create(:instance)
 
+  ActiveMerchant::Billing::Base.mode = :test
   I18N_DNM_BACKEND.update_cache(instance.id) if defined? I18N_DNM_BACKEND
   InstanceViewResolver.instance.clear_cache
+
+  %w(default lister enquirer).each do |role|
+    FactoryGirl.create(:"form_configuration_#{role}_signup")
+  end
+  FactoryGirl.create(:form_configuration_default_update_minimum)
 end
 
 After do
@@ -64,7 +70,7 @@ Before('@fake_payments') do
   PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(response.reverse_merge(params: { 'id' => '12345' })))
   PayPal::SDK::AdaptivePayments::API.any_instance.stubs(:pay).returns(OpenStruct.new(response.reverse_merge(paymentExecStatus: 'COMPLETED')))
   PaymentGateway::StripePaymentGateway.any_instance.stubs(:find_balance).returns(
-    OpenStruct.new({ id: '1', status: 'succeeded', fee_details: [OpenStruct.new(type: 'stripe_fee', amount: 10)] })
+    OpenStruct.new(id: '1', status: 'succeeded', fee_details: [OpenStruct.new(type: 'stripe_fee', amount: 10)])
   )
   stub = OpenStruct.new(success?: true, params: {
                           'object' => 'customer',

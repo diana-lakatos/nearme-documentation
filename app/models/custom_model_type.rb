@@ -1,4 +1,6 @@
+# frozen_string_literal: true
 class CustomModelType < ActiveRecord::Base
+  include WithParameterizedName
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
@@ -15,7 +17,7 @@ class CustomModelType < ActiveRecord::Base
   has_many :project_types, through: :custom_model_type_linkings
   has_many :offer_types, through: :custom_model_type_linkings
   has_many :instance_profile_types, through: :custom_model_type_linkings
-  has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
+  has_many :custom_attributes_custom_validators, -> { where.not(custom_attributes: { attribute_type: %w(photo file) }) }, through: :custom_attributes, source: :custom_validators
   has_many :custom_validators, as: :validatable
 
   after_update :destroy_translations!, if: ->(model_type) { model_type.name_changed? }

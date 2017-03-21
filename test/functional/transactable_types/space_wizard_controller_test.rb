@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require 'vcr_setup'
 
@@ -99,7 +100,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
     should 'not raise exception if hash is incomplete' do
       assert_no_difference('Transactable.count') do
-        post :submit_listing, { transactable_type_id: @transactable_type.id, 'user' => { 'companies_attributes' => { '0' => { 'name' => 'International Secret Intelligence Service' } } } }
+        post :submit_listing, transactable_type_id: @transactable_type.id, 'user' => { 'companies_attributes' => { '0' => { 'name' => 'International Secret Intelligence Service' } } }
       end
     end
   end
@@ -126,7 +127,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
         FactoryGirl.create(:country, name: 'Brazil', iso: 'BR')
         # Set request ip to an ip address in Brazil
         @request.env['REMOTE_ADDR'] = '139.82.255.255'
-        get :list, { transactable_type_id: @transactable_type.id }
+        get :list, transactable_type_id: @transactable_type.id
         assert assigns(:country) == 'Brazil'
         assert_select 'option[value="Brazil"][selected="selected"]', 1
       end
@@ -142,14 +143,14 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       end
 
       should 'show form to write message' do
-        get :list, { transactable_type_id: @transactable_type.id }
+        get :list, transactable_type_id: @transactable_type.id
         assert_select '#user_approval_requests_attributes_0_message', 1
       end
     end
 
     context 'instance does not require verification' do
       should 'not show form to write message' do
-        get :list, { transactable_type_id: @transactable_type.id }
+        get :list, transactable_type_id: @transactable_type.id
         assert_select '#user_approval_requests_attributes_0_message', false
       end
     end
@@ -158,21 +159,21 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
   context 'GET new' do
     should 'redirect to manage listings page if has listings' do
       create_listing
-      get :new, { transactable_type_id: @transactable_type.id }
+      get :new, transactable_type_id: @transactable_type.id
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to new location if no listings' do
       create_listing
       @location.destroy
-      get :new, { transactable_type_id: @transactable_type.id }
+      get :new, transactable_type_id: @transactable_type.id
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to new listing if no listings but with one location' do
       create_listing
       @listing.destroy
-      get :new, { transactable_type_id: @transactable_type.id }
+      get :new, transactable_type_id: @transactable_type.id
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
@@ -180,19 +181,19 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       create_listing
       @listing.destroy
       FactoryGirl.create(:location, company: @company)
-      get :new, { transactable_type_id: @transactable_type.id }
+      get :new, transactable_type_id: @transactable_type.id
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to space wizard list if no listings' do
-      get :new, { transactable_type_id: @transactable_type.id }
+      get :new, transactable_type_id: @transactable_type.id
       assert_redirected_to transactable_type_space_wizard_list_url(@transactable_type)
     end
 
     should 'redirect to registration path if not logged in' do
       sign_out @user
-      get :new, { transactable_type_id: @transactable_type.id }
-      assert_redirected_to new_user_registration_url(wizard: 'space', return_to: transactable_type_space_wizard_list_url(@transactable_type))
+      get :new, transactable_type_id: @transactable_type.id
+      assert_redirected_to new_api_user_url(return_to: transactable_type_space_wizard_list_url(@transactable_type))
     end
   end
 
@@ -201,7 +202,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       FactoryGirl.create(:form_component, form_componentable: @transactable_type, form_fields: [{ 'company' => 'name' }, { 'company' => 'address' }, { 'location' => 'name' }], name: 'Super Cool Section 1')
       FactoryGirl.create(:form_component, form_componentable: @transactable_type, form_fields: [{ 'transactable' => 'price' }, { 'transactable' => 'photos' }, { 'transactable' => 'name' }], name: 'Transactable Section')
       FactoryGirl.create(:form_component, form_componentable: @transactable_type, form_fields: [{ 'user' => 'phone' }], name: 'Contact Information')
-      get :list, { transactable_type_id: @transactable_type.id }
+      get :list, transactable_type_id: @transactable_type.id
       assert_select 'h2', 'Super Cool Section 1'
       assert_select 'h2', 'Transactable Section'
       assert_select 'h2', 'Contact Information'

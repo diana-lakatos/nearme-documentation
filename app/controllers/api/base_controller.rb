@@ -1,149 +1,125 @@
 # frozen_string_literal: true
-class Api::BaseController < ActionController::Base
-  force_ssl if: -> { Rails.application.config.use_only_ssl }
+require 'application_responder'
+module Api
+  class BaseController < ActionController::Base
+    self.responder = ApplicationResponder
+    force_ssl if: -> { Rails.application.config.use_only_ssl }
+    include ViewsFromDb
+    include RaygunExceptions
 
-  JSONAPI_CONTENT_TYPE = 'application/vnd.api+json'
+    JSONAPI_CONTENT_TYPE = 'application/vnd.api+json'
 
-  respond_to :json
+    layout :layout_for_request_type
 
-  around_action :set_time_zone
+    respond_to :json, :html
 
-  before_action :set_i18n_locale
-  before_action :set_raygun_custom_data
-  before_action :verified_api_request?
-  before_action :require_authentication # whitelist approach
-  before_action :require_authorization # some actions only by MPO or token
-  before_action :set_paper_trail_whodunnit
-  before_action :set_content_type
+    around_action :set_time_zone
 
-  rescue_from ::DNM::Error, with: :nm_error
-  rescue_from ::DNM::Unauthorized, with: :nm_unauthorized
+    before_action :verified_api_request?
+    before_action :require_authentication # whitelist approach
+    before_action :require_authorization # some actions only by MPO or token
+    before_action :set_paper_trail_whodunnit
+    before_action :set_content_type, if: -> { request.format.symbol == :js || request.format.symbol == :json }
 
-  protected
+    rescue_from ::DNM::Error, with: :nm_error
+    rescue_from ::DNM::Unauthorized, with: :nm_unauthorized
 
-  def render_api_object(object, options = {})
-    render json: ApiSerializer.serialize_object(object, options)
-  end
-
-  def render_api_collection(collection, options = {})
-    render json: ApiSerializer.serialize_collection(collection, options)
-  end
-
-  def render_api_errors(errors, status = 409)
-    render json: ApiSerializer.serialize_errors(errors), status: status
-  end
-
-  private
-
-  # Ensure the user is authenticated
-  def require_authentication
-    raise DNM::Unauthorized unless current_user
-  end
-
-  def require_authorization
-    return true if verified_api_request? || valid_api_token? # we assume api token is secret
-    current_user.instance_admins.exists? # for now no role distinguish - we assume MPO won't be hacking :)
-  end
-
-  # Return the current user
-  def current_user
-    if auth_token.present?
-      @current_user ||= User.find_by(authentication_token: auth_token)
-    else
-      super
+    # Return the current user
+    def current_user
+      if auth_token.present?
+        @current_user ||= User.find_by(authentication_token: auth_token)
+      else
+        super
+      end
     end
-  end
 
-  # Retrieve the current authorization token
-  def auth_token
-    request.headers['UserAuthorization'].presence
-  end
+    protected
 
-  def verified_api_request?
-    skip_api_requests_verification? || valid_csrf_token? || valid_api_token?
-  end
-
-  def skip_api_requests_verification?
-    !Rails.application.config.verify_api_requests
-  end
-
-  def valid_csrf_token?
-    valid_authenticity_token?(session, form_authenticity_param) ||
-      valid_authenticity_token?(session, request.headers['X-CSRF-Token'])
-  end
-
-  def valid_api_token?
-    authenticate_or_request_with_http_token do |token, _options|
-      current_instance.api_keys.active.exists?(token: token)
+    def layout_for_request_type
+      if request.xhr?
+        false
+      else
+        layout_name
+      end
     end
-  end
 
-  # Render an error message
-  def nm_error(e)
-    render json: e.to_hash, status: e.status
-  end
-
-  # Render an unauthorized message
-  def nm_unauthorized(e)
-    render json: { meta: { message: e.message } }, status: 401
-  end
-
-  def set_content_type
-    response.headers['Content-Type'] = JSONAPI_CONTENT_TYPE
-  end
-
-  def set_i18n_locale
-    I18n.locale = language_service.get_language
-    session[:language] = I18n.locale
-  end
-
-  def set_raygun_custom_data
-    return if Rails.application.config.silence_raygun_notification
-    begin
-      Raygun.configuration.custom_data = {
-        platform_context: platform_context.to_h,
-        request_params: params.reject { |k, _v| Rails.application.config.filter_parameters.include?(k.to_sym) },
-        current_user_id: current_user.try(:id),
-        process_pid: Process.pid,
-        process_ppid: Process.ppid,
-        git_version: Rails.application.config.git_version
-      }
-    rescue => e
-      Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"
+    def layout_name
+      PlatformContext.current.instance.is_community? ? 'community' : 'application'
     end
-  end
 
-  def set_time_zone(&block)
-    time_zone = current_user.try(:time_zone).presence || current_instance.try(:time_zone).presence || 'UTC'
-    Time.use_zone(time_zone, &block)
-  end
+    def redirect_unverified_user
+      unless (current_user&.verified_at.present? && current_user&.expires_at.try(:>, Time.zone.now)) || current_user&.admin? || current_user&.instance_admin?
+        flash[:warning] = t('flash_messages.need_verification_html')
+        redirect_to root_path
+      end
+    end
 
-  def language_service
-    @language_service ||= Language::LanguageService.new(
-      language_params,
-      fallback_languages,
-      current_instance.available_locales
-    )
-  end
+    def render_api_object(object, options = {})
+      render json: ApiSerializer.serialize_object(object, options)
+    end
 
-  def language_params
-    [params[:language]]
-  end
+    def render_api_collection(collection, options = {})
+      render json: ApiSerializer.serialize_collection(collection, options)
+    end
 
-  def fallback_languages
-    [
-      session[:language],
-      current_user.try(:language),
-      current_instance.try(:primary_locale),
-      I18n.default_locale
-    ]
-  end
+    def render_api_errors(errors, status = 409)
+      render json: ApiSerializer.serialize_errors(errors), status: status
+    end
 
-  def current_instance
-    PlatformContext.current.instance
-  end
+    # Ensure the user is authenticated
+    def require_authentication
+      raise DNM::Unauthorized unless current_user
+    end
 
-  def secured_params
-    @secured_params ||= SecuredParams.new
+    def require_authorization
+      return true if verified_api_request? || valid_api_token? # we assume api token is secret
+      current_user.instance_admin? # for now no role distinguish - we assume MPO won't be hacking :)
+    end
+
+    # Retrieve the current authorization token
+    def auth_token
+      request.headers['UserAuthorization'].presence
+    end
+
+    def verified_api_request?
+      skip_api_requests_verification? || verified_request? || valid_api_token?
+    end
+
+    def skip_api_requests_verification?
+      !Rails.application.config.verify_api_requests
+    end
+
+    def valid_api_token?
+      authenticate_or_request_with_http_token do |token, _options|
+        current_instance.api_keys.active.exists?(token: token)
+      end
+    end
+
+    # Render an error message
+    def nm_error(e)
+      render json: e.to_hash, status: e.status
+    end
+
+    # Render an unauthorized message
+    def nm_unauthorized(e)
+      render json: { meta: { message: e.message } }, status: 401
+    end
+
+    def set_content_type
+      response.headers['Content-Type'] = JSONAPI_CONTENT_TYPE
+    end
+
+    def set_time_zone(&block)
+      time_zone = current_user.try(:time_zone).presence || current_instance.try(:time_zone).presence || 'UTC'
+      Time.use_zone(time_zone, &block)
+    end
+
+    def current_instance
+      PlatformContext.current.instance
+    end
+
+    def secured_params
+      @secured_params ||= SecuredParams.new
+    end
   end
 end

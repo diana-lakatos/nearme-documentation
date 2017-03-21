@@ -1,8 +1,0 @@
-%article.company-user
-  .row
-    .col-sm-8
-      %h3= "#{user.name} <#{mail_to(user.email)}>".html_safe
-    .col-sm-4
-      .actions
-        = link_to t('dashboard.users.delete'), dashboard_company_user_path(user), :method => :delete, :confirm => t('dashboard.users.confirm_delete', name: user), class: 'btn btn-sm btn-warning'
-

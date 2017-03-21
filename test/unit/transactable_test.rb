@@ -32,13 +32,6 @@ class TransactableTest < ActiveSupport::TestCase
     @manual_payment_method = FactoryGirl.create(:manual_payment_gateway).payment_methods.first
   end
 
-  context 'validation' do
-    should 'not be valid if quantity is 0' do
-      @listing.quantity = 0
-      refute @listing.valid?
-    end
-  end
-
   context 'is trusted' do
     setup do
       @transactable = FactoryGirl.create(:transactable)
@@ -282,9 +275,9 @@ class TransactableTest < ActiveSupport::TestCase
     end
 
     should 'clear transactable opened_on_days if moved to event based booking' do
-      @listing.update_column(:opened_on_days, [0,1,2,3])
+      @listing.update_column(:opened_on_days, [0, 1, 2, 3])
       @listing.reload
-      assert_equal [0,1,2,3], @listing.opened_on_days
+      assert_equal [0, 1, 2, 3], @listing.opened_on_days
 
       @listing.save
       assert_equal [], @listing.opened_on_days

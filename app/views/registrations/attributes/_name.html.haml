@@ -2,8 +2,8 @@
   = f.input :name
 - else
   - if only_inputs.empty? || only_inputs.include?(:first_name)
-    = f.input :first_name, input_html: { value: f.object.first_name }, required: f.object.required?(:first_name)
+    = f.input :first_name, input_html: { value: f.object.first_name }
   - if only_inputs.empty? || only_inputs.include?(:middle_name)
-    = f.input :middle_name, input_html: { value: f.object.middle_name }, required: f.object.required?(:middle_name)
+    = f.input :middle_name, input_html: { value: f.object.middle_name }
   - if only_inputs.empty? || only_inputs.include?(:last_name)
-    = f.input :last_name, input_html: { value: f.object.last_name }, required: f.object.required?(:last_name)
+    = f.input :last_name, input_html: { value: f.object.last_name }

@@ -2,6 +2,10 @@ require_dependency 'line_item/transactable'
 
 # frozen_string_literal: true
 class Transactable < ActiveRecord::Base
+  include CustomImagesOwnerable
+  include CustomAttachmentsOwnerable
+  include CustomizationsOwnerable
+  include CategoriesOwnerable
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -21,7 +25,7 @@ class Transactable < ActiveRecord::Base
 
   DEFAULT_ATTRIBUTES = %w(name description capacity).freeze
 
-  SORT_OPTIONS_MAP = { all: 'All', featured: 'Featured', most_recent: 'Most Recent', most_popular: 'Most Popular', collaborators: 'Collaborators'}.freeze
+  SORT_OPTIONS_MAP = { all: 'All', featured: 'Featured', most_recent: 'Most Recent', most_popular: 'Most Popular', collaborators: 'Collaborators' }.freeze
   SORT_OPTIONS = SORT_OPTIONS_MAP.values.freeze
 
   DATE_VALUES = %w(today yesterday week_ago month_ago 3_months_ago 6_months_ago).freeze
@@ -35,8 +39,6 @@ class Transactable < ActiveRecord::Base
 
   include CreationFilter
 
-  has_many :customizations, as: :customizable
-  has_many :custom_images, through: :customizations
   has_many :additional_charge_types, foreign_type: :charge_type_target_type, foreign_key: :charge_type_target_id
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy

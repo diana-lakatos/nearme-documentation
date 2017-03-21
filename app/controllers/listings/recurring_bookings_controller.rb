@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Listings::RecurringBookingsController < ApplicationController
   before_action :find_listing
   before_action :require_login_for_recurring_booking, only: [:review, :create]
@@ -60,7 +61,7 @@ class Listings::RecurringBookingsController < ApplicationController
   private
 
   def require_login_for_recurring_booking
-    redirect_to new_user_registration_path(return_to: @listing.decorate.show_path) unless user_signed_in?
+    redirect_to new_api_user_path(return_to: @listing.decorate.show_path) unless user_signed_in?
   end
 
   def find_listing

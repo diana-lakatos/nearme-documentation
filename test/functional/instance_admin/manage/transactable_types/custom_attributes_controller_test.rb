@@ -2,8 +2,6 @@ require 'test_helper'
 
 class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest < ActionController::TestCase
   setup do
-    @instance = FactoryGirl.create(:instance)
-    PlatformContext.any_instance.stubs(:instance).returns(@instance)
     @user = FactoryGirl.create(:user)
     @transactable_type = FactoryGirl.create(:transactable_type)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
@@ -28,7 +26,7 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest <
       assert_equal({ 'class' => 'wrapper-class', 'style' => 'color: blue' }, custom_attribute.wrapper_html_options)
       assert_equal @transactable_type.id, custom_attribute.target_id
       assert_equal @transactable_type.class.name, custom_attribute.target_type
-      assert_equal @instance.id, custom_attribute.instance_id
+      assert_equal PlatformContext.current.instance.id, custom_attribute.instance_id
     end
   end
 

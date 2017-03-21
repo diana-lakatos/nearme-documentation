@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class V2::UsersController < BaseController
     skip_before_action :require_authentication, only: [:create, :show]
@@ -14,7 +15,6 @@ module Api
       @user.custom_validation = true
 
       if @user.save
-        ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
         case @role
         when 'default'
           WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id, as: current_user)

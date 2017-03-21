@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Authentication < ActiveRecord::Base
   class InvalidToken < StandardError; end
   acts_as_paranoid
@@ -26,7 +27,7 @@ class Authentication < ActiveRecord::Base
   after_commit :find_friends, on: :create
   after_commit :update_info, on: :create
 
-  PROVIDERS = %w(Facebook LinkedIn Twitter Instagram Google GitHub)
+  PROVIDERS = %w(Facebook LinkedIn Twitter Instagram Google GitHub).freeze
   ALLOWED_LOGIN_PROVIDERS = PROVIDERS + ['SAML'] - ['Instagram']
 
   def social_connection
@@ -50,13 +51,11 @@ class Authentication < ActiveRecord::Base
     "Authentication::#{provider.camelize}Provider".constantize
   end
 
-  def connections_count
-    connections.count
-  end
+  delegate :count, to: :connections, prefix: true
 
   def can_be_deleted?
     # we can delete authentication if user has other option to log in, i.e. has set password or other authentications
-    user.has_password? || user.authentications.size > 1
+    user.encrypted_password.present? || user.authentications.size > 1
   end
 
   def expire_token!

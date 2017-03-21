@@ -18,7 +18,7 @@
           - action_translation = current_instance.use_cart? ? 'buy_sell_market.products.buttons.add_to_cart' : 'buy_sell_market.products.buttons.purchase'
           - rfq_class = nil
           - rfq_label = nil
-          - registration_url = new_user_registration_path(return_to: @listing.show_path(restore_reservations: @listing.id))
+          - registration_url = new_api_user_path(return_to: @listing.show_path(restore_reservations: @listing.id))
           - store_reservation_request_url = store_reservation_request_listing_reservations_path(@listing)
           - book_hash = { id: "book-#{@listing.id}", class: "btn btn-green btn-large ", rel: "tooltip",
             :'data-original-title' => t('booking_module.notices.days_first'),

@@ -1,12 +1,14 @@
+# frozen_string_literal: true
 module Elastic
   module Aggregations
     class BaseAggregator
       attr_reader :fields
 
-      def initialize(name:, filters:, fields: [])
+      def initialize(name:, filters:, fields: [], nested: false)
+        @name = name
         @filters = filters
         @fields = fields
-        @name = name
+        @nested = nested
 
         @aggregations = {}
       end
@@ -36,7 +38,7 @@ module Elastic
       end
 
       def create_field(field)
-        Field.new(label: field[:label], field: field[:field], type: field[:type], size: field[:size])
+        Nodes::Terms.new(field)
       end
     end
   end

@@ -13,7 +13,8 @@
     .row-fluid
       %h2 Hair dressers unite! Connect with thousands of professional hair dressers when you list your stylist station on Desks Near Me.
       - if !user_signed_in?
-        = link_to '#', :class => 'btn btn-large btn-green', :title => 'List your desk', :data => { modal: true, href: new_user_registration_url(:return_to => new_space_wizard_url), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
+
+        = link_to '#', :class => 'btn btn-large btn-green', :title => 'List your desk', :data => { modal: true, href: new_api_user_url(:return_to => new_space_wizard_url), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } do
           List your extra station
       - else
         = link_to new_space_wizard_url, :class => 'btn btn-large btn-green', :title => 'List your desk' do

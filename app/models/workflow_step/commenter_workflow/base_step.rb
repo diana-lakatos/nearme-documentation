@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::CommenterWorkflow::BaseStep < WorkflowStep::BaseStep
   def initialize(comment_id)
     @comment = Comment.find_by(id: comment_id)
@@ -10,7 +11,7 @@ class WorkflowStep::CommenterWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def lister
-    fail NotImplementedError.new("#{self.class.name} has to define lister method")
+    raise NotImplementedError, "#{self.class.name} has to define lister method"
   end
 
   def workflow_type

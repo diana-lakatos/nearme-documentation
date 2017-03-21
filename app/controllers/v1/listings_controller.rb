@@ -103,7 +103,6 @@ class V1::ListingsController < V1::BaseController
   end
 
   ##
-  ##
 
   protected
 

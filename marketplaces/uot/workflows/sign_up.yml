@@ -1,0 +1,145 @@
+---
+name: Sign up
+workflow_type: sign_up
+events_metadata: {}
+workflow_steps:
+- name: Account Created
+  associated_class: WorkflowStep::SignUpWorkflow::AccountCreated
+  workflow_alerts:
+  - name: Email verification email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: post_action_mailer/sign_up_verify
+    delay: 0
+    subject: "{{user.first_name}}, please verify your {{platform_context.name}} email"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Welcome email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: post_action_mailer/sign_up_welcome
+    delay: 30
+    subject: "{{user.first_name}}, welcome to {{platform_context.name}}!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: No Reservations
+  associated_class: WorkflowStep::SignUpWorkflow::NoReservations
+  workflow_alerts:
+  - name: Reengagement email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: reengagement_mailer/no_bookings
+    delay: 0
+    subject: "[{{platform_context.name}}] Check out these new listings in your area!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Created By Admin
+  associated_class: WorkflowStep::SignUpWorkflow::CreatedByAdmin
+  workflow_alerts:
+  - name: User created by admin email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: post_action_mailer/created_by_instance_admin
+    delay: 0
+    subject: "{{new_user.first_name}}, you were invited to {{platform_context.name}}
+      by {{creator.name}}!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Wrong Phone Number
+  associated_class: WorkflowStep::SignUpWorkflow::WrongPhoneNumber
+  workflow_alerts:
+  - name: Notify user of wrong phone number email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: user_mailer/notify_about_wrong_phone_number
+    delay: 0
+    subject: "{{user.first_name}}, we can't reach you!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Created Via Bulk Uploader
+  associated_class: WorkflowStep::SignUpWorkflow::CreatedViaBulkUploader
+  workflow_alerts:
+  - name: User created via bulk uploader email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: post_action_mailer/user_created_invitation
+    delay: 0
+    subject: "{{user.first_name}}, you were invited to {{platform_context.name}}!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Approved
+  associated_class: WorkflowStep::SignUpWorkflow::Approved
+  workflow_alerts:
+  - name: User approved email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: vendor_approval_mailer/notify_host_of_user_approval
+    delay: 0
+    subject: "{{ user.first_name }}, you have been approved at {{ platform_context.name
+      }}!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Enquirer Account Created
+  associated_class: WorkflowStep::SignUpWorkflow::EnquirerAccountCreated
+  workflow_alerts:
+  - name: Welcome email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: post_action_mailer/guest_sign_up_welcome
+    delay: 0
+    subject: "{{user.first_name}}, welcome to {{platform_context.name}}!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Lister Account Created
+  associated_class: WorkflowStep::SignUpWorkflow::ListerAccountCreated
+  workflow_alerts:
+  - name: Marketing email project not created within days
+    alert_type: email
+    recipient_type: lister
+    template_path: marketing/not_created_project
+    delay: 10080
+    subject: "{{ user.first_name }}, can we help?"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Welcome email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: post_action_mailer/host_sign_up_welcome
+    delay: 0
+    subject: "{{user.first_name}}, welcome to {{platform_context.name}}!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Lister Onboarded
+  associated_class: WorkflowStep::SignUpWorkflow::ListerOnboarded
+  workflow_alerts:
+  - name: Lister onboarded
+    alert_type: email
+    recipient_type: lister
+    template_path: post_action_mailer/lister_onboarded
+    delay: 0
+    subject: "{{ user.first_name }}, you have completed profile!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Enquirer Onboarded
+  associated_class: WorkflowStep::SignUpWorkflow::EnquirerOnboarded
+  workflow_alerts:
+  - name: Enquirer onboarded
+    alert_type: email
+    recipient_type: lister
+    template_path: post_action_mailer/enquirer_onboarded
+    delay: 0
+    subject: "{{ user.first_name }}, you have completed profile!"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

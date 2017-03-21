@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ImageInput < SimpleForm::Inputs::FileInput
   def input(wrapper_options = nil)
     input_html_options[:accept] = 'image/*'
@@ -62,7 +63,7 @@ class ImageInput < SimpleForm::Inputs::FileInput
 
     out = ActiveSupport::SafeBuffer.new
 
-    return out unless image_attribute.present?
+    return out unless image_attribute.present? && !image_attribute.is_a?(ActionDispatch::Http::UploadedFile)
 
     template.content_tag(:div, class: 'preview') do
       out << template.content_tag(:figure) do
@@ -108,9 +109,7 @@ class ImageInput < SimpleForm::Inputs::FileInput
       out << template.hidden_field_tag("#{object_name}[#{image_model_name.pluralize}_attributes][#{image[:id]}][id]", image[:id])
       out << template.hidden_field_tag("#{object_name}[#{image_model_name.pluralize}_attributes][#{image[:id]}][position]", image[:position], class: 'photo-position-input')
 
-      if options[:sortable].present?
-        out << template.content_tag(:span, '', class: 'sort-handle')
-      end
+      out << template.content_tag(:span, '', class: 'sort-handle') if options[:sortable].present?
 
       out
     end

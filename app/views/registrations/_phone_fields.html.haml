@@ -5,5 +5,5 @@
   .control-group
     .controls
       = label_tag do
-        = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
+        = check_box_tag "#{(f.object.class.name || f.object.model.class.name).underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
         =  t 'general.same_as_phone'

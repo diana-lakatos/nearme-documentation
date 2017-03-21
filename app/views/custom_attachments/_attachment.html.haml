@@ -1,0 +1,16 @@
+- if attachment.model.persisted?
+  - file_name = File.basename(attachment.file.path.to_s).presence || attachment.file.filename
+  - extension = File.extname(attachment.file.path.to_s.presence || attachment.file.filename)&.tr('.', '')
+  %li{ class: "type-#{extension}", data: {'attachment' => attachment.model.id } }
+    .attachment-container
+      %span.link
+        = link_to file_name, attachment.file.url, download: file_name
+      %span.meta
+        %time{ datetime: attachment.model.created_at || Time.zone.now }
+          = l((attachment.model.created_at || Time.zone.now).to_date, format: :long)
+
+        - if (attachment.file.try(:size) rescue nil)
+          %span.size= number_to_human_size(attachment.file.size)
+
+    - if !attachment.required?(:file)  && attachment.model.uploader_id.present?
+      %button.action--remove{ type: :button, data: { delete: true, url: api_user_custom_attachment_path(attachment.model), "label-confirm": t('attachment_upload.are_you_sure_you_want_to_delete_this_attachment') }}

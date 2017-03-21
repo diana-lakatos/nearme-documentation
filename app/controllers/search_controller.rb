@@ -1,12 +1,11 @@
+# frozen_string_literal: true
 require 'will_paginate/array'
 class SearchController < ApplicationController
   include SearchHelper
-  include SearcherHelper
   include CoercionHelpers::Controller
 
-  before_action :ensure_valid_params
+  before_action :redirect_to_people_search
   before_action :coerce_pagination_params
-  before_action :find_transactable_type
   before_action :assign_transactable_type_id_to_lookup_context
   before_action :store_search
 
@@ -15,17 +14,22 @@ class SearchController < ApplicationController
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
+  rescue_from ActiveRecord::RecordNotFound do
+    redirect_back_or_default
+  end
+
   def index
-    @searcher = InstanceType::SearcherFactory.new(@transactable_type, search_params, result_view, current_user).get_searcher
+    @searcher = InstanceType::SearcherFactory.create(params, current_user)
+
     remember_search_query
 
-    render "search/#{result_view}", formats: [:html]
+    render "search/#{@searcher.result_view}", formats: [:html]
   end
 
   def categories
     category_ids = params[:category_ids].to_s.split(',').map(&:to_i)
     category_root_ids = Category.roots.map(&:id)
-    @categories = Category.where(id: category_ids).order('position ASC, id ASC').to_a
+    @categories = Category.where(id: category_ids).order('lft ASC, id ASC').to_a
     @categories_html = ''
     @categories.reject! { |c| c.parent.present? && !category_root_ids.include?(c.parent.id) && !category_ids.include?(c.parent.id) }
     @categories.each do |category|
@@ -45,18 +49,7 @@ class SearchController < ApplicationController
     render text: @categories_html
   end
 
-  def ensure_valid_params
-    redirect_to :back unless is_valid_single_param?(params[:transactable_type_id])
-  rescue
-    # No referrer was present
-    redirect_to root_path
-  end
-
   private
-
-  def search_params
-    @search_params ||= params.merge(per_page: params[:per_page]).reverse_merge(sort: @transactable_type.default_sort_by)
-  end
 
   def remember_search_query
     cookies[:last_search_query] = {
@@ -100,5 +93,14 @@ class SearchController < ApplicationController
     params[:search_type] = 'projects' unless %w(people projects topics groups).include?(params[:search_type])
     @search_type = params[:search_type]
     @transactable_type = InstanceProfileType.default.first
+  end
+
+  # TODO: temporary - discuss better approach and remove
+  # in case of shitty transactable_type_class=InstanceProfileType redirect to nice search/people
+  def redirect_to_people_search
+    return unless params[:transactable_type_class] == 'InstanceProfileType'
+
+    params.delete(:transactable_type_class)
+    redirect_to search_path(params.merge(search_type: 'people'))
   end
 end

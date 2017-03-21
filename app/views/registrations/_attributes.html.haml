@@ -30,12 +30,12 @@
     = file_upload_input_with_label('Profile Photo',
       "avatar",
       avatar_path,
-      resource.avatar.thumbnail_dimensions[:medium],
+      f.object.avatar.thumbnail_dimensions[:medium],
       "Upload Photo",
       "no-multiple" => true,
       :error => f.object.errors.include?(:avatar).present? ? "Please upload avatar." : nil) do
-      - if current_user.attributes['avatar']
-        = fileupload_photo(resource.avatar_url(:medium),
+      - if f.object.avatar.present?
+        = fileupload_photo(f.object.avatar.url(:medium),
           destroy_avatar_path,
           edit_avatar_path,
           :div)
