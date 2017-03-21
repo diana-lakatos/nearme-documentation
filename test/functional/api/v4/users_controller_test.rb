@@ -242,7 +242,7 @@ module Api
           @user.update_attribute(:verified_at, @time)
           get :verify, id: @user.id, token: UserVerificationForm.new(@user).email_verification_token
           assert_equal @time.to_i, @user.reload.verified_at.to_i
-          assert_response 200
+          assert_response 302
         end
 
         should 'not verify user if id is incorrect' do
