@@ -3,7 +3,7 @@ module LinkToAssociation
   class HelpfulLinkToAssociationError < ArgumentError
     class << self
       def raise_form_object_is_nil(tag_name, form_name)
-        raise "#{tag_name} - #{form_name}'s object is nil. Maybe form_configuration does not include #{form_name}?"
+        raise "#{tag_name} - #{form_name}'s object is nil. Maybe form_configuration does not include #{form_name} or fields_for is missing proper form argument?"
       end
 
       def raise_form_is_nil(tag_name, form_name)

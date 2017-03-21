@@ -25,7 +25,7 @@ class RenderFormTag < Liquid::Tag
     raise SyntaxError, error_message if form_configuration.nil?
     # this instance variable is set in RenderCustomPage interactor
     # it's used to re-render form submitted by user in case of validation errors
-    form = context['forms'].dig(@form_name, :form)
+    form = context['forms']&.dig(@form_name, :form)
     form ||= form_configuration.build(FormConfiguration::FormObjectFactory.object(normalize_liquid_tag_attributes(@attributes, context))).tap(&:prepopulate!)
     LiquidView.new(context.registers[:action_view]).render(form_configuration.liquid_body, 'form' => form, 'form_configuration' => form_configuration)
   end
