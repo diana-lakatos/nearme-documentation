@@ -21,6 +21,7 @@ module.exports = class SearchController
     queryField ||= @queryField
     autocomplete = new google.maps.places.Autocomplete(queryField[0], {})
     @submit_form = false
+
     google.maps.event.addListener autocomplete, 'place_changed', =>
       place = Geocoder.wrapResult autocomplete.getPlace()
       place = null unless place.isValid()
@@ -186,6 +187,10 @@ module.exports = class SearchController
   # Geocde the search query and assign it as the geocoded result
   geocodeSearchQuery: (callback) ->
     query = @queryField.val()
+
+    # if query field is empty, do not attempt to run geolocation
+    if !query
+      return callback()
 
     # If the query has already been geolocated we can just search immediately
     if @isQueryGeolocated(query) || @mapTrigger
