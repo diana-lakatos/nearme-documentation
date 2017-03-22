@@ -11,25 +11,14 @@ namespace :mpbuilder do
     MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'])
   end
 
-  task liquid_views: :environment do
-    creators = [
-      MarketplaceBuilder::Creators::LiquidViewsCreator
-    ]
-    MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
-  end
-
-  task content_holders: :environment do
-    creators = [
-      MarketplaceBuilder::Creators::ContentHoldersCreator
-    ]
-    MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
-  end
-
-  task views: :environment do
+  task frontend: :environment do
     creators = [
       MarketplaceBuilder::Creators::ContentHoldersCreator,
       MarketplaceBuilder::Creators::LiquidViewsCreator,
-      MarketplaceBuilder::Creators::PagesCreator
+      MarketplaceBuilder::Creators::PagesCreator,
+      MarketplaceBuilder::Creators::FormConfigurationsCreator,
+      MarketplaceBuilder::Creators::TranslationsCreator,
+      MarketplaceBuilder::Creators::GraphQueriesCreator
     ]
     MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
   end
@@ -44,6 +33,13 @@ namespace :mpbuilder do
   task translations: :environment do
     creators = [
       MarketplaceBuilder::Creators::TranslationsCreator
+    ]
+    MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
+  end
+
+  task mailers: :environment do
+    creators = [
+      MarketplaceBuilder::Creators::MailersCreator
     ]
     MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
   end
