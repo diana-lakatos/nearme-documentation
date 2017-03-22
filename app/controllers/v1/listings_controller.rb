@@ -82,7 +82,7 @@ class V1::ListingsController < V1::BaseController
     listing = Transactable.find(params[:id])
     message = json_params['query']
     users.each do |user|
-      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Shared, listing.id, user['email'], user['name'], current_user.id, message)
+      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Shared, listing.id, user['email'], user['name'], current_user.id, message, as: current_user)
     end
 
     head :no_content

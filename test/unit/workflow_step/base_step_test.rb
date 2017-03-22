@@ -5,6 +5,10 @@ class WorkflowStep::BaseStepTest < ActiveSupport::TestCase
     def workflow_type
       'dummy_workflow_type'
     end
+
+    def workflow_triggered_by
+      nil
+    end
   end
 
   setup do
@@ -20,12 +24,12 @@ class WorkflowStep::BaseStepTest < ActiveSupport::TestCase
       @invoker_instance.expects(:invoke!).with(@dummy_step).twice
       WorkflowAlert::InvokerFactory.expects(:get_invoker).with(@alert1).returns(@invoker_instance)
       WorkflowAlert::InvokerFactory.expects(:get_invoker).with(@alert2).returns(@invoker_instance)
-      @dummy_step.invoke!
+      @dummy_step.invoke!(nil)
     end
 
     should 'do not raise exception if relevant records are not in db' do
       assert_nothing_raised do
-        DummyStep.new.invoke!
+        DummyStep.new.invoke!(nil)
       end
     end
   end

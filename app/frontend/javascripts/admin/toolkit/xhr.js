@@ -96,7 +96,7 @@ function parseRequestMethod(options: { method: string, data: FormData | { [key: 
 /**
  * Makes xhr request
  * @param {String} url
- * @param {Object} options ex. {contentType: 'application/vnd.api+json', data: JSON.stringify({foo: bar}), method: 'post'}
+ * @param {Object} options ex. {contentType: 'application/vnd.api+json', data: {foo: bar}, method: 'post'}
  * @return {Promise} result
  */
 function xhr(url: string, options: { method: string, contentType: string, data: mixed } = {}): Promise<any> {
@@ -136,6 +136,7 @@ function xhr(url: string, options: { method: string, contentType: string, data: 
       xhrOptions.body = data;
     }
   }
+
 
   return new Promise((resolve: Promise, reject: Promise)=>{
     fetch(url, xhrOptions)

@@ -12,9 +12,9 @@ class GroupMembersController < ApplicationController
 
     if @group.public?
       @membership.update(approved_by_owner_at: Time.zone.now)
-      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberJoined, @membership.id)
+      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberJoined, @membership.id, as: current_user)
     else
-      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberPendingApproval, @membership.id)
+      WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberPendingApproval, @membership.id, as: current_user)
     end
 
     respond_to do |format|
@@ -25,7 +25,7 @@ class GroupMembersController < ApplicationController
   def accept
     @membership = @group.memberships.for_user(current_user).find(params[:id])
     @membership.update(approved_by_user_at: Time.zone.now)
-    WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::UserAcceptsInvitation, @membership.id)
+    WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::UserAcceptsInvitation, @membership.id, as: current_user)
 
     respond_to do |format|
       format.js { render :create }
@@ -37,7 +37,7 @@ class GroupMembersController < ApplicationController
 
   def destroy
     @memberships = @group.memberships.for_user(current_user).destroy_all
-    WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberHasQuit, @memberships.first.id)
+    WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberHasQuit, @memberships.first.id, as: current_user)
 
     respond_to do |format|
       format.js { render :create }

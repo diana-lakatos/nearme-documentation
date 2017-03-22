@@ -43,14 +43,13 @@ module LiquidFilters
   # @param params [Hash, nil] variables used in query
   # @param current_user [User]
   def query(query_string, params = {}, current_user = nil)
-    response = ::Graph::Schema.execute(
+    ::Graph.execute_query(
       query_string,
       variables: params,
       context: {
         current_user: current_user
       }
     )
-    response.key?('data') ? response.fetch('data') : response
   end
 
   # @return [String, nil] returns class_name (by default 'active') if the first
@@ -293,6 +292,7 @@ module LiquidFilters
 
   # @return [String] translation value taken from translations for the key given as parameter
   # @param key [String] translation key
+  # @param options [Hash{String => String}] values passed to translation string
   def translate(key, options = {})
     I18n.t(key, options.deep_symbolize_keys)
   end
@@ -562,7 +562,7 @@ module LiquidFilters
   # @param valid_params [String] query params separated by comma used to search proper ReverseProxyLink
   def widget_links(url, valid_params = '')
     return [] unless url.present?
-    uri = URI.parse(::CGI.unescapeHTML(url.to_str))
+    uri = Addressable::URI.parse(::CGI.unescapeHTML(url.to_str))
 
     whitelisted_query = Rack::Utils.parse_nested_query(uri.query).slice(*valid_params.split(',')).to_query
     whitelisted_query.prepend('?') if whitelisted_query.present?

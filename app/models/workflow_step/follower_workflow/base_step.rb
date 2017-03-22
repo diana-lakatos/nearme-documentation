@@ -16,4 +16,8 @@ class WorkflowStep::FollowerWorkflow::BaseStep < WorkflowStep::BaseStep
   def workflow_type
     'follower_workflow'
   end
+
+  def workflow_triggered_by
+    enquirer
+  end
 end

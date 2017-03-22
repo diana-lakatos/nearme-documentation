@@ -46,6 +46,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
           assert_equal "My Company's", @company.name
           assert_equal 'http://www.mycompany.example.com', @company.url
           assert_equal 'company@example.com', @company.email
+          assert_not_nil @company.completed_at
         end
 
         should '2 should have the right details' do

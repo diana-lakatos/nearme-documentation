@@ -78,11 +78,11 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
       end
 
       if @order.lister_confirmed_at.present? && @order.action.both_side_confirmation
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerConfirmedWithDoubleConfirmation, @order.id)
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerConfirmedWithDoubleConfirmation, @order.id, as: current_user)
       end
 
       if @order.confirmed?
-        WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::ManuallyConfirmed".constantize, @order.id)
+        WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::ManuallyConfirmed".constantize, @order.id, as: current_user)
 
         if @order.reload.paid_until.present? || !@order.instance_of?(RecurringBooking)
           flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')

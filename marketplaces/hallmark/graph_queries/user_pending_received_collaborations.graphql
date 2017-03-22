@@ -1,0 +1,19 @@
+query UserPendingCollaborationsQuery($user_id: ID!){
+  user(id: $user_id) {
+    email
+    collaborations(filters: [PENDING_RECEIVED_INVITATION]){
+      id
+      transactable{
+        id
+        show_path
+        name
+        cover_photo_thumbnail_url
+        creator{
+          avatar_url_thumb
+          name_with_affiliation
+          profile_path
+        }
+      }
+    }
+  }
+}

@@ -536,7 +536,7 @@ GEM
       faraday (~> 0.9)
       hashie (~> 3.2)
       oauth2 (~> 1.0)
-    liquid (3.0.6)
+    liquid (4.0.0)
     listen (2.8.4)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -1015,7 +1015,7 @@ DEPENDENCIES
   koala
   launchy
   linkedin-oauth2 (~> 1.0)
-  liquid (= 3.0.6)
+  liquid (= 4.0.0)
   mail_view (~> 2)
   mailcatcher
   mailman

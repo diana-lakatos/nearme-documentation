@@ -86,6 +86,53 @@ FactoryGirl.define do
       longitude '174.777303'
     end
 
+    factory :address_bronx_address_components do
+      formatted_address "754 Coster St, Bronx, NY 10474, USA"
+      address_components do
+        {
+          "0"=>{
+            "long_name"=>"754",
+            "short_name"=>"754",
+            "types"=>["street_number"]
+          },
+          "1"=>{
+            "long_name"=>"Coster Street",
+            "short_name"=>"Coster St",
+            "types"=>["route"]
+          },
+         "2"=>{
+            "long_name"=>"West Bronx",
+            "short_name"=>"West Bronx",
+            "types"=>["neighborhood", "political"]
+          },
+         "3"=>{
+            "long_name"=>"Bronx",
+            "short_name"=>"Bronx",
+            "types"=>["political", "sublocality", "sublocality_level_1"]
+          },
+         "4"=>{
+            "long_name"=>"Bronx County",
+            "short_name"=>"Bronx County",
+            "types"=>["administrative_area_level_2", "political"]
+          },
+         "5"=>{
+            "long_name"=>"New York",
+            "short_name"=>"NY",
+            "types"=>["administrative_area_level_1", "political"]
+          },
+         "6"=>{
+            "long_name"=>"United States",
+            "short_name"=>"US",
+            "types"=>["country", "political"]
+          },
+         "7"=>{
+            "long_name"=>"10474",
+            "short_name"=>"10474",
+            "types"=>["postal_code"]
+          }}
+      end
+    end
+
     factory :address_ursynowska_address_components do
       formatted_address 'Ursynowska, Warsaw, Poland'
       address_components do

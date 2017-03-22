@@ -5,4 +5,5 @@ class WorkflowStep::SignUpWorkflow::EnquirerAccountCreated < WorkflowStep::SignU
   def data
     { user: @user }
   end
+
 end

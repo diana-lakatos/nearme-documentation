@@ -6,7 +6,7 @@ class InappropriateReportsController < ApplicationController
     @report = InappropriateReport.new(reportable: @reportable, user: current_user, ip_address: request.remote_ip, reason: params[:inappropriate_report][:reason])
     if @report.save
       flash[:notice] = t('inappropriate_reports.report_has_been_sent')
-      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::InappropriateReported, @report.id)
+      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::InappropriateReported, @report.id, as: current_user)
     else
       flash[:error] = t('inappropriate_reports.please_fill_in_reason')
     end

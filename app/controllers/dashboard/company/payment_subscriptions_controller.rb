@@ -43,7 +43,7 @@ class Dashboard::Company::PaymentSubscriptionsController < Dashboard::BaseContro
 
   def build_payment_subscription
     @payment_subscription = @order.payment_subscription || @order.build_payment_subscription(
-      payer: current_user.object,
+      payer: current_user,
       company: @order.owner.default_company
     ).decorate
   end

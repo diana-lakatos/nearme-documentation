@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170308155549) do
+ActiveRecord::Schema.define(version: 20170320112322) do
+
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -647,6 +648,21 @@ ActiveRecord::Schema.define(version: 20170308155549) do
 
   add_index "currencies", ["iso_code"], name: "index_currencies_on_iso_code", using: :btree
 
+  create_table "custom_attachments", force: :cascade do |t|
+    t.integer  "instance_id",         null: false
+    t.integer  "custom_attribute_id", null: false
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "uploader_id"
+    t.string   "file"
+    t.datetime "deleted_at"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+  end
+
+  add_index "custom_attachments", ["instance_id", "custom_attribute_id"], name: "index_custom_attachments_on_instance_id_and_custom_attribute_id", using: :btree
+  add_index "custom_attachments", ["owner_id", "owner_type"], name: "index_custom_attachments_on_owner_id_and_owner_type", using: :btree
+
   create_table "custom_attributes", force: :cascade do |t|
     t.string   "name",                      limit: 255
     t.integer  "instance_id"
@@ -717,8 +733,9 @@ ActiveRecord::Schema.define(version: 20170308155549) do
     t.string   "name"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "parameterized_name"
   end
 
   add_index "custom_model_types", ["deleted_at", "instance_id"], name: "index_custom_model_types_on_deleted_at_and_instance_id", using: :btree
@@ -992,6 +1009,18 @@ ActiveRecord::Schema.define(version: 20170308155549) do
   add_index "domains", ["name"], name: "index_domains_on_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "domains", ["target_id", "target_type"], name: "index_domains_on_target_id_and_target_type", using: :btree
 
+  create_table "event_store_events", force: :cascade do |t|
+    t.integer  "instance_id",     null: false
+    t.integer  "triggered_by_id"
+    t.string   "event_type",      null: false
+    t.string   "topic_name"
+    t.text     "payload"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "event_store_events", ["instance_id", "event_type"], name: "index_event_store_events_on_instance_id_and_event_type", using: :btree
+
   create_table "external_api_requests", force: :cascade do |t|
     t.integer  "context_id"
     t.string   "context_type"
@@ -1017,6 +1046,19 @@ ActiveRecord::Schema.define(version: 20170308155549) do
   end
 
   add_index "form_components", ["instance_id", "form_componentable_id", "form_type"], name: "ttfs_instance_tt_form_type", using: :btree
+
+  create_table "form_configurations", force: :cascade do |t|
+    t.integer  "instance_id",                        null: false
+    t.string   "base_form",                          null: false
+    t.string   "name",                               null: false
+    t.text     "liquid_body"
+    t.text     "configuration", default: "--- {}\n", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "form_configurations", ["instance_id"], name: "index_form_configurations_on_instance_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",           limit: 255, null: false
@@ -1726,6 +1768,16 @@ ActiveRecord::Schema.define(version: 20170308155549) do
   end
 
   add_index "page_data_source_contents", ["instance_id", "page_id", "data_source_content_id", "slug"], name: "pdsc_on_foreign_keys", using: :btree
+
+  create_table "page_forms", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "page_id"
+    t.integer  "form_configuration_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "page_forms", ["instance_id", "page_id", "form_configuration_id"], name: "index_page_forms_on_instance_id_and_fks", unique: true, using: :btree
 
   create_table "pages", force: :cascade do |t|
     t.string   "path",                      limit: 255,                         null: false
@@ -2646,7 +2698,7 @@ ActiveRecord::Schema.define(version: 20170308155549) do
     t.text    "settings",    default: "{}", null: false
   end
 
-  add_index "third_party_integrations", ["instance_id", "type", "environment"], name: "unique", unique: true, using: :btree
+  add_index "third_party_integrations", ["instance_id", "type", "environment"], name: "third_party_integrations_index_on_instance_type", using: :btree
 
   create_table "topics", force: :cascade do |t|
     t.integer  "instance_id"
@@ -2915,6 +2967,7 @@ ActiveRecord::Schema.define(version: 20170308155549) do
     t.boolean  "access_restricted_to_invited"
     t.boolean  "auto_seek_collaborators",                                                        default: false
     t.string   "default_sort_by"
+    t.string   "parameterized_name"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

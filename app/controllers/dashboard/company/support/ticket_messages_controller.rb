@@ -4,7 +4,7 @@ class Dashboard::Company::Support::TicketMessagesController < Dashboard::Company
     message.user = current_user
     message.ticket = ticket
     if message.save
-      WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Replied, message.id)
+      WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Replied, message.id, as: current_user)
       if ticket.target.action_free_booking?
         flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
       else

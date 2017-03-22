@@ -34,6 +34,7 @@ class Address::GoogleGeolocationDataParser
 
     if type == 'locality' && component.missing?
       component = find_component_for('administrative_area_level_3')
+      component = find_component_for('sublocality_level_1') if component.missing?
     end
     if type == 'sublocality' && component.missing?
       component = find_component_for('neighborhood')

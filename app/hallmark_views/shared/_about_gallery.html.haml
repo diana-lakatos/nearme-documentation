@@ -1,0 +1,9 @@
+- if photos.any?
+  %section.gallery
+    %h4= t('about_tab.gallery')
+
+    %ul.gallery-a{ :"data-gallery" => '' }
+      - photos.each do |p|
+        %li
+          %a{ href: p.image_url, data: { "original-width": p.image_original_width, "original-height": p.image_original_height } }
+            = image_tag p.image_url(:thumb), width: 200, height: 175

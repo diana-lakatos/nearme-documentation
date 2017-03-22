@@ -7,6 +7,10 @@ class WorkflowStep::SpamReportWorkflow::SummaryStep < WorkflowStep::BaseStep
     'spam_report'
   end
 
+  def workflow_triggered_by
+    nil # Called from job
+  end
+
   # amount_or_no:
   #   no - if the spam report count is 0, otherwise the number of spam reports
   # date:

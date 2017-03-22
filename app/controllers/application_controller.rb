@@ -35,9 +35,10 @@ class ApplicationController < ActionController::Base
 
   around_action :set_time_zone
 
-  def current_user
-    super.try(:decorate)
+  def current_user_decorated
+    @current_user_decorated ||= current_user.decorate
   end
+  helper_method :current_user_decorated
 
   def current_instance
     platform_context.try(:instance)

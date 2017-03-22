@@ -137,7 +137,8 @@ class UserMessage < ActiveRecord::Base
   end
 
   def update_unread_message_counter_for(user)
-    actual_count = user.reload.decorate.unread_user_message_threads_for(instance).fetch.size
+    actual_count = unread_user_message_threads_count_for(user.reload)
+
     user.instance_unread_messages_threads_count ||= {}
     user.instance_unread_messages_threads_count[instance_id] = actual_count
     user.save(validate: false)
@@ -159,5 +160,13 @@ class UserMessage < ActiveRecord::Base
 
   def mark_as_read_for_author
     mark_as_read_for!(author) if author != recipient
+  end
+
+  def unread_user_message_threads_count_for(user)
+    user_messages_decorator_for(user).inbox.unread.fetch.size
+  end
+
+  def user_messages_decorator_for(user)
+    @user_messages_decorator ||= UserMessagesDecorator.new(user.user_messages, user)
   end
 end
