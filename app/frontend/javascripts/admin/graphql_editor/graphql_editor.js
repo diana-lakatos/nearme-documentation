@@ -27,7 +27,11 @@ class GraphqlEditor {
   }
 
   _graphQLFetcher(graphQLParams) {
-    const url = window.location.origin + '/api/graph';
+    const url = `${window.location.origin}/api/graph`;
+    if (graphQLParams.variables === null) {
+      delete graphQLParams.variables; // due to poor xhr lib
+    }
+
     return xhr(url, {
       method: 'post',
       contentType: 'application/json',
