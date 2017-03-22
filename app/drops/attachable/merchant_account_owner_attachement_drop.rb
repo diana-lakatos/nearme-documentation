@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Attachable::MerchantAccountOwnerAttachement < BaseDrop
+class Attachable::MerchantAccountOwnerAttachementDrop < BaseDrop
 
   # @!method file
   #   @return [PaymentDocumentUploader] file uploader object
