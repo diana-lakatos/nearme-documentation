@@ -1,0 +1,60 @@
+{% if event.is_comment_event %}
+  {% assign figure_path = event.followed.path %}
+  {% assign content = event.event_source.body %}
+  {% assign header_image = 'community/status-a-chat-a.png' | image_url %}
+  {% assign big_image = '' %}
+  {% assign title_path = '' %}
+{% elsif event.is_photo_event %}
+  {% assign figure_path = event.followed.path %}
+  {% assign content = '' %}
+  {% assign header_image = '' %}
+  {% assign big_image = event.event_source.image.url %}
+  {% assign title_path = '' %}
+{% else %}
+  {% assign figure_path = event.followed.path %}
+  {% assign content = event.description %}
+  {% assign header_image = event.header_image %}
+  {% assign big_image = '' %}
+  {% assign title_path = event.followed.path %}
+{% endif %}
+
+{% if 'Comment UserStatusUpdate' contains event.event_source_type %}
+  {% assign images = event.event_source.activity_feed_images %}
+{% else %}
+  {% assign images = '' %}
+{% endif %}
+
+<section>
+  <article
+    class="status-a {% if event.is_status_update_event %}status-update{% endif %}">
+    {% if big_image != blank %}
+      <a href="{{ figure_path }}" target="{{ target }}">
+        <img src="{{ big_image }}" />
+      </a>
+      {% include 'shared/activity_feed/footer', event: event, footer_class: 'no-spacing' %}
+    {% else %}
+      <header>
+        <figure>
+          {% if event.followed.class == 'ActivityFeedEvent' %}
+            <img src="{% if header_image != blank %} {{ header_image }} {% else %} {% placeholder width: 80, height: 80 %} {% endif %}" />
+          {% else %}
+            <a href="{{ figure_path }}" target="{{ target }}">
+              <img src="{% if header_image != blank %} {{ header_image }} {% else %} {% placeholder width: 80, height: 80 %} {% endif %}" />
+            </a>
+          {% endif %}
+        </figure>
+      </header>
+      <section>
+        {% if title_path != blank %}
+          <h3 class="hx">
+            <a href="{{ title_path }}" target="{{ target }}">
+              {{ event.name }}
+            </a>
+          </h3>
+        {% endif %}
+        {% include 'shared/activity_feed/body_content', event: event, content: content, title: title, images: images %}
+      </section>
+      {% include 'shared/activity_feed/footer', event: event %}
+    {% endif %}
+  </article>
+</section>

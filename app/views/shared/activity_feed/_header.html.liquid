@@ -1,0 +1,26 @@
+<header>
+  <figure>
+    {% if event.details.image != blank %}
+      <img src="{{ event.details.image }}" />
+    {% else %}
+      {% placeholder width: 80, height: 80 %}
+    {% endif %}
+  </figure>
+  <p class="desc">
+    {{ event.details.text }}
+  </p>
+
+  {% if event.is_status_update_event %}
+    {% include 'shared/activity_feed/actions', event: event %}
+  {% endif %}
+  {% if event.is_comment_event %}
+    {% include 'shared/activity_feed/comment_actions', comment_object: event.event_source %}
+  {% endif %}
+
+
+  <p class="meta">
+    <time>
+      {{ event.created_at | to_time_from_str | l: 'long' }}
+    </time>
+  </p>
+</header>

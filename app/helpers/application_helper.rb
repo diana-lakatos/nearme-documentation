@@ -425,17 +425,6 @@ module ApplicationHelper
     body_classes.join(' ')
   end
 
-  def header_image_for_event(event)
-    if event.event_source.is_a?(Link) && event.event_source.try(:image).try(:file).present?
-      event.event_source.image.url(:medium)
-    else
-      followed = event.event_source.is_a?(Photo) ? event.event_source : event.followed
-      image = followed.try(:cover_image).try(:url, :medium) if followed.is_a?(Group)
-      image ||= (followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium)
-      image.present? ? image : followed.try(:cover_photo).try(:image).try(:url, :medium)
-    end
-  end
-
   def current_url
     request.protocol + platform_context.host + request.fullpath
   end

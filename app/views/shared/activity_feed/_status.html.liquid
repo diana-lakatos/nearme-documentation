@@ -1,0 +1,23 @@
+{% assign followed = event.followed %}
+{% assign event_source = event.event_source %}
+{% cache_for current_user, context_cache_key, event, followed, event_source %}
+  {% assign hide_comment_options = hide_comment_options | default: false %}
+  {% assign target = target | default: '_self' %}
+
+  {% if event.event_source != blank and event.details.text != blank and event.details.image != blank %}
+    {% if event.is_status_update_event or event.is_comment_event %}
+      {% assign user_entry = 'data-user-entry=""' %}
+    {% else %}
+      {% assign user_entry = '' %}
+    {% endif %}
+    <article class="status-a current-user-is-owner" {{ user_entry }} data-activity-feed-event-id="{{ event.id }}" data-creator-id="{{ event.creator_id }}">
+      {% include 'shared/activity_feed/header', event: event %}
+      {% if event.has_body %}
+        {% include 'shared/activity_feed/body', event: event, target: target %}
+      {% endif %}
+      {% unless event.has_body or hide_comment_options %}
+        {% include 'shared/activity_feed/footer', event: event %}
+      {% endunless %}
+    </article>
+  {% endif %}
+{% endcache_for %}

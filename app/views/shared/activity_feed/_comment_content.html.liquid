@@ -1,0 +1,9 @@
+<div class="entry-content-a" id="entry-content-comment-{{ comment_object.id }}">
+  <div class="entry-body {% if comment.created_at != comment.updated_at %}edited{% endif %}">
+    {{ comment_object.body }}
+  </div>
+  {% include 'shared/activity_feed/images', collection: comment_object.activity_feed_images %}
+  <div class="entry-editor">
+    {% include 'shared/activity_feed/comment_form', comment_object: comment_object, event: event %}
+  </div>
+</div>

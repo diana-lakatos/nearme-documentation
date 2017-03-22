@@ -342,6 +342,12 @@ module LiquidFilters
     hour.to_i * 60 + minute.to_i
   end
 
+  # @return [Time] a Time object obtained/parsed from the input object
+  # @param string [String] object from which we try to obtain/parse a date object
+  def to_time_from_str(string)
+    parse_time(string)
+  end
+
   # @return [Date] a Date object obtained/parsed from the input object
   # @param datetime [Date, String, Object] object from which we try to obtain/parse a date object
   def to_date(datetime)

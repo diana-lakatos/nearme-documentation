@@ -2,6 +2,10 @@
 module Graph
   module Resolvers
     class Users
+      def self.decorate(user)
+        UserDrop.new(user)
+      end
+
       def call(_, arguments, ctx)
         @ctx = ctx
         @variables = ctx.query.variables
@@ -15,7 +19,7 @@ module Graph
       end
 
       def decorate(relation)
-        relation.map { |user| UserDrop.new(user) }
+        relation.map { |user| self.class.decorate(user) }
       end
 
       def resolve_by_filters(relation, filters)
