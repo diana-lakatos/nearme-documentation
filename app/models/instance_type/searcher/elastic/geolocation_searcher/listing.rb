@@ -24,7 +24,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing < Searching:
     listings_scope = listings_scope.where(id: listing_ids)
 
     @results = listings_scope
-                 .includes(:location, :location_address, :company, :photos, :transactable_type, action_type: [:pricings], creator: [:user_profiles])
+                 .includes(:location, :location_address, :company, :photos, :transactable_type, :action_type, creator: [:user_profiles])
                  .order_by_array_of_ids(order_ids)
                  .paginate(page: params[:page], per_page: params[:per_page], total_entries: @search_results_count)
     @results = @results.offset(0) unless postgres_filters?
