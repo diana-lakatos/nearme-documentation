@@ -1,6 +1,6 @@
 class FixImportForSpacer < ActiveRecord::Migration
   def up
-    Instance.where(id: Instance::INSTANCE_IDS[:spacer]).find_each do |i|
+    Instances::InstanceFinder.get(:spacer).each do |i|
       i.set_context!
 
       companies = i.companies.where("external_id NOT ILIKE 'manual-%'")
