@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 class LongtailApi
-  def initialize(endpoint:, page_slug:, campaigns:)
-    @page = Page.where(slug: page_slug,
-                       theme_id: PlatformContext.current.theme.id)
-                .first_or_create!(path: page_slug.humanize, content: generic_page_content)
+  def initialize(endpoint:, campaigns:)
     @campaigns = campaigns
     @endpoint = endpoint
   end
 
   def parse!
     with_cleanup do
-      @campaigns.each do |campaign|
+      @campaigns.each do |slug, campaign|
+        @page = Page.where(slug: slug,
+                           theme_id: PlatformContext.current.theme.id)
+                    .first_or_create!(path: page_slug.humanize, content: generic_page_content)
         parse_keyword_list(LongtailApi::KeywordListIterator.new(@endpoint, campaign: campaign))
       end
     end
