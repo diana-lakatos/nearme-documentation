@@ -9,6 +9,6 @@ class ParseLongtailJob < Job
     @longtail_integration = ThirdPartyIntegration::LongtailIntegration.find(@longtail_integration_id)
     @endpoint = LongtailApi::Endpoint.new(host: @longtail_integration.host,
                                           token: @longtail_integration.token)
-    LongtailApi.new(endpoint: @endpoint, campaigns: @longtail_integration.campaigns).parse!
+    LongtailApi.new(endpoint: @endpoint, page_slug: @longtail_integration.page_slug, campaigns: @longtail_integration.campaigns).parse!
   end
 end
