@@ -14,15 +14,16 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
       Locale.create! code: 'en'
     end
 
-    teardown do
-      FileUtils.rm_rf(EXPORT_DESTINATION_PATH)
-    end
-
     should 'export instance to files' do
       run_all_setup_methods
       MarketplaceBuilder::Exporter.new(@instance.id, EXPORT_DESTINATION_PATH).execute!
       run_all_should_export_methods
     end
+
+    teardown do
+      FileUtils.rm_rf(EXPORT_DESTINATION_PATH)
+    end
+
   end
 
   def should_export_instance_basic_attributes
@@ -33,7 +34,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal yaml_content['require_verified_user'], false
   end
 
-  def setup_translations
+  def setup_1_translations
     @instance.translations.create! locale: 'en', key: 'first_test_key.nested.value', value: 'First test key nested value'
     @instance.translations.create! locale: 'en', key: 'second_test_key.nested.value', value: 'Second test key nested name'
     @instance.translations.create! locale: 'pl', key: 'first_test_key.value', value: 'Testowa nazwa'
@@ -48,7 +49,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal yaml_content['pl']['first_test_key']['value'], 'Testowa nazwa'
   end
 
-  def setup_transactable_types
+  def setup_2_transactable_types
     type = @instance.transactable_types.create! name: 'Car'
 
     type.custom_validators.create! field_name: 'name', max_length: 140
@@ -77,7 +78,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal yaml_content['name'], 'Bike'
   end
 
-  def setup_instance_profile_types
+  def setup_3_instance_profile_types
     profile_type = @instance.instance_profile_types.create! name: 'Default', profile_type: 'default'
     profile_type.custom_validators.create! field_name: 'name', max_length: 140
     profile_type.custom_validators.create! field_name: 'name', regex_validation: true, regex_expression: '^\\d{10}$'
@@ -94,7 +95,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_same_elements yaml_content['custom_attributes'], [{ 'name' => 'description', 'attribute_type' => 'text', 'html_tag' => 'textarea', 'search_in_query' => true, 'searchable' => false, 'input_html_options' => {}, 'validation' => [{ 'required' => false, 'field_name' => 'description', 'validation_only_on_update' => false, 'min_length' => 5 }] }]
   end
 
-  def setup_reservation_types
+  def setup_4_reservation_types
     reservation_type = @instance.reservation_types.create! name: 'Booking', withdraw_invitation_when_reject: true, transactable_types: [@instance.transactable_types.first]
 
     creator = Utils::BaseComponentCreator.new(reservation_type)
@@ -110,7 +111,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_same_elements yaml_content['form_components'], [{ 'name' => 'Booking form', 'fields' => [{ 'reservation' => 'guest_notes' }], 'type' => 'reservation_attributes' }]
   end
 
-  def setup_categories
+  def setup_5_categories
     Category.create! name: 'Extras', multiple_root_categories: true, shared_with_users: true, instance_id: @instance.id,
                      transactable_types: [TransactableType.last], instance_profile_types: [InstanceProfileType.last],
                      children: [Category.create!(name: 'Child Seat', children: [Category.create!(name: 'test')]), Category.create!(name: 'Bike Rack')]
@@ -127,11 +128,11 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_same_elements yaml_content['children'], [{ 'name' => 'Bike Rack' }, { 'name' => 'Child Seat', 'children' => [{ 'name' => 'test' }] }]
   end
 
-  def setup_topics
+  def setup_6_topics
     Topic.create! name: 'test', description: 'test', instance_id: @instance.id, category: Category.last, featured: true, remote_cover_image_url: 'http://example.com/test.jpg'
   end
 
-  def should_export_topics
+  def should_7_export_topics
     yaml_content = read_exported_file('topics/topics.yml')
 
     assert_equal yaml_content, 'topics' => [{ 'name' => 'test', 'description' => 'test', 'featured' => true, 'remote_cover_image_url' => nil }]
@@ -141,12 +142,12 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     Page.create! path: 'Test', content: '<h1>Hello</h1>', slug: 'test-page'
   end
 
-  def should_export_pages
+  def should_8_export_pages
     liquid_content = read_exported_file('pages/test.liquid', :liquid)
     assert_equal liquid_content.body, '<h1>Hello</h1>'
   end
 
-  def setup_content_holders
+  def setup_9_content_holders
     ContentHolder.create! name: 'Test', content: '<h1>Hello from content holder</h1>'
   end
 
@@ -155,27 +156,27 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal liquid_content.body, '<h1>Hello from content holder</h1>'
   end
 
-  def setup_emails
+  def setup_10_emails
     InstanceView.create!(instance_id: @instance.id, view_type: 'email', path: 'example_path/example_mailer', handler: 'liquid', format: 'html',
                          partial: false, body: 'Hello from email', locales: Locale.all)
   end
 
-  def should_export_emails
+  def should_11_export_emails
     liquid_content = read_exported_file('mailers/example_path/example_mailer.liquid', :liquid)
     assert_equal liquid_content.body, 'Hello from email'
   end
 
-  def setup_liquid_views
+  def setup_12_liquid_views
     InstanceView.create!(instance_id: @instance.id, view_type: 'view', path: 'home/index', handler: 'liquid', format: 'html',
                          partial: false, body: 'Hello from liquid view', locales: Locale.all)
   end
 
-  def should_export_liquid_views
+  def should_13_export_liquid_views
     liquid_content = read_exported_file('liquid_views/home/index.liquid', :liquid)
     assert_equal liquid_content.body, 'Hello from liquid view'
   end
 
-  def setup_sms
+  def setup_14_sms
     InstanceView.create!(instance_id: @instance.id, view_type: 'sms', path: 'example/path', handler: 'liquid', format: 'html',
                          partial: false, body: 'Hello from sms', locales: Locale.all)
   end
@@ -185,7 +186,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal liquid_content.body, 'Hello from sms'
   end
 
-  def setup_workflow
+  def setup_15_workflow
     workflow = Workflow.create! name: 'test workflow', instance_id: @instance.id
     workflow_step = WorkflowStep.create! workflow: workflow, name: 'test workflow', instance_id: @instance.id, associated_class: WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate
     WorkflowAlert.create! workflow_step: workflow_step, name: 'test', alert_type: 'email', recipient_type: 'lister', template_path: 'user_mailer/user_commented_on_user_update'
