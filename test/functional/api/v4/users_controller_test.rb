@@ -20,7 +20,7 @@ module Api
       context 'default user' do # rubocop:disable Metrics/BlockLength
         context 'create' do # rubocop:disable Metrics/BlockLength
           should 'successfully sign up without extra configuration' do
-            assert_difference('User.count') do
+            assert_difference('::User.count') do
               assert_difference('UserProfile.count') do
                 post :create, form: user_attributes
               end
@@ -48,7 +48,7 @@ module Api
               end
 
               should 'not create user without required custom attribute' do
-                assert_no_difference('User.count') do
+                assert_no_difference('::User.count') do
                   assert_no_difference('UserProfile.count') do
                     post :create, form: user_attributes.merge(profiles: { default: { properties: {} } })
                   end
@@ -56,12 +56,12 @@ module Api
               end
 
               should 'create user when all params sent' do
-                assert_difference('User.count') do
+                assert_difference('::User.count') do
                   assert_difference('UserProfile.count') do
                     post :create, form: user_attributes.merge(profiles: { default: { properties: { user_attr: 'my value' } } })
                   end
                 end
-                assert_equal 'my value', User.last.default_profile.properties.user_attr
+                assert_equal 'my value', ::User.last.default_profile.properties.user_attr
               end
             end
           end
@@ -89,7 +89,7 @@ module Api
             )
           end
           should 'successfully sign up without extra configuration' do
-            assert_difference('User.count') do
+            assert_difference('::User.count') do
               assert_difference('UserProfile.count', 2) do
                 post :create, role: FormBuilder::UserSignupBuilderFactory::LISTER, form: user_attributes
               end
@@ -124,7 +124,7 @@ module Api
               end
 
               should 'not create user without required custom attribute' do
-                assert_no_difference('User.count') do
+                assert_no_difference('::User.count') do
                   assert_no_difference('UserProfile.count') do
                     post :create, role: FormBuilder::UserSignupBuilderFactory::LISTER, form: user_attributes.merge(profiles: { default: { properties: {} },
                                                                                                                    seller: { properties: {} } })
@@ -135,7 +135,7 @@ module Api
               end
 
               should 'create user when all params sent' do
-                assert_difference('User.count') do
+                assert_difference('::User.count') do
                   assert_difference('UserProfile.count', 2) do
                     post :create, role: FormBuilder::UserSignupBuilderFactory::LISTER,
                       form: user_attributes.merge(profiles: {
@@ -144,8 +144,8 @@ module Api
                     })
                   end
                 end
-                assert_equal 'other value', User.last.seller_profile.properties.lister_attr
-                assert_equal 'my value', User.last.default_profile.properties.user_attr
+                assert_equal 'other value', ::User.last.seller_profile.properties.lister_attr
+                assert_equal 'my value', ::User.last.default_profile.properties.user_attr
               end
             end
           end
@@ -201,7 +201,7 @@ module Api
               end
 
               should 'not create user without required custom attribute' do
-                assert_no_difference('User.count') do
+                assert_no_difference('::User.count') do
                   assert_no_difference('UserProfile.count') do
                     post :create, role: FormBuilder::UserSignupBuilderFactory::ENQUIRER, form: user_attributes
                       .merge(profiles: { default: { properties: {} },
@@ -213,7 +213,7 @@ module Api
               end
 
               should 'create user when all params sent' do
-                assert_difference('User.count') do
+                assert_difference('::User.count') do
                   assert_difference('UserProfile.count', 2) do
                     post :create, role: FormBuilder::UserSignupBuilderFactory::ENQUIRER,
                       form: user_attributes.merge(profiles: {
@@ -222,8 +222,8 @@ module Api
                     })
                   end
                 end
-                assert_equal 'my value', User.last.default_profile.properties.user_attr
-                assert_equal 'other value', User.last.buyer_profile.properties.enquirer_attr
+                assert_equal 'my value', ::User.last.default_profile.properties.user_attr
+                assert_equal 'other value', ::User.last.buyer_profile.properties.enquirer_attr
               end
             end
           end
