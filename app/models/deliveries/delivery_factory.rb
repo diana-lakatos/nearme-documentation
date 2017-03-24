@@ -3,16 +3,18 @@ module Deliveries
   class DeliveryFactory
     DEFAULT_MESSAGE = 'no notes'
 
-    def self.build(order:)
+    def self.build(order:, shipping_provider:)
       [
-        InboundDeliveryFactory.new(order: order).build,
-        OutboundDeliveryFactory.new(order: order).build
+        InboundDeliveryFactory.new(order: order, shipping_provider: shipping_provider, direction: 'inbound').build,
+        OutboundDeliveryFactory.new(order: order, shipping_provider: shipping_provider, direction: 'outbound').build
       ]
     end
 
     class BaseDeliveryFactory
-      def initialize(order:)
+      def initialize(order:, shipping_provider:, direction:)
         @order = order
+        @shipping_provider = shipping_provider
+        @direction = direction
       end
 
       def build
@@ -37,8 +39,9 @@ module Deliveries
           order: @order,
           order_id: @order.id,
           dimensions_template_id: dimensions_template.id,
-          courier: @order.shipping_provider.shipping_provider_name,
-          notes: notes
+          courier: @shipping_provider.shipping_provider_name,
+          notes: notes,
+          direction: @direction
         }
       end
 
@@ -58,11 +61,16 @@ module Deliveries
                          address: lister_detailed_address
       end
 
+
+      # TODO: setting validation should be handled bit better
+      # 1. shipping-provider should provide us with banch of custom validators
+      # kind a registry { validations: { sendle: [validator#1, validator#2]}}
+      # and this could be handled by form-builder with its validators
       def lister_detailed_address
         address = OrderListerAddress.new(@order.host).find
         address.raw_address = true
         address.dup.tap do |add|
-          add.add_validator Deliveries::Sendle::Validations::Address.new
+          add.add_validator Deliveries::Sendle::Validations::Address.new if @shipping_provider.shipping_provider_name == 'sendle'
         end
       end
 

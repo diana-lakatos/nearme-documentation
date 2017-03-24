@@ -15,7 +15,7 @@ module Payable
     has_many :transactable_line_items, class_name: 'LineItem::Transactable', as: :line_itemable, dependent: :destroy
     has_many :additional_line_items, class_name: 'LineItem::Additional', as: :line_itemable, dependent: :destroy
     has_many :insurance_line_items, class_name: 'LineItem::Insurance', as: :line_itemable, dependent: :destroy
-    has_many :shipping_line_items, class_name: 'LineItem::Shipping', as: :line_itemable, dependent: :destroy
+    has_many :shipping_line_items, -> { order('created_at asc') }, class_name: 'LineItem::Shipping', as: :line_itemable, dependent: :destroy
     has_many :tax_line_items, class_name: 'LineItem::Tax', as: :line_itemable, dependent: :destroy
     has_many :service_fee_line_items, class_name: 'LineItem::ServiceFee', as: :line_itemable, dependent: :destroy
     has_many :host_fee_line_items, as: :line_itemable, dependent: :destroy

@@ -1,5 +1,5 @@
 <header class="dialog__header">
-  <h2 id="dialog__title">Approve Request</h2>
+  <h2 id="dialog__title">Approve Request 2</h2>
 </header>
 
 {% assign form_url = 'confirm_dashboard_company_orders_received_path' | generate_url: order.id, listing_id: order.transactable.id %}
@@ -8,9 +8,32 @@
   <div class="dialog__body">
     <div class="row">
       <div class="col-xs-12">
+
+        {% if params.shipping_provider_name == blank %}
+
+        <h3>Please select shipping provider</h3>
+        <ul>
+          <li>
+            <a class="button" data-modal="true" href="{{ 'confirmation_form_dashboard_company_orders_received_path' | generate_url: order.id, listing_id: order.transactable, shipping_provider_name: 'sendle' }}">Sendle</a>
+            <button type="button" class="hint-toggler" data-toggle="tooltip" title="" data-original-title="Sendle delivers parcels door-to-door across Australia at flat rates cheaper than post. You can read more at https://www.sendle.com/" />
+          </li>
+          <li><a class="button" data-modal="true" href="{{ 'confirmation_form_dashboard_company_orders_received_path' | generate_url: order.id, listing_id: order.transactable, shipping_provider_name: 'manual' }}">Manual shipping</a>
+            <button type="button" class="hint-toggler" data-toggle="tooltip" title="" data-original-title="???" />
+</li>
+          <li><a class="button" data-modal="true" href="{{ 'confirmation_form_dashboard_company_orders_received_path' | generate_url: order.id, listing_id: order.transactable, shipping_provider_name: 'manual', shipping_provider_fee: 1000 }}">Australian Post [manual] $10</a>
+            <button type="button" class="hint-toggler" data-toggle="tooltip" title="" data-original-title="???" />
+          </li>
+        </ul>
+
+        <hr>
+        {% else %}
+
         <h3>Item Rental Summary</h3>
 
         <dl class="clearfix">
+          <dt> Selected Shipping Provider:</dt>
+          <dd> {{ params['shipping_provider_name']}} </dd>
+
           <dt>Item:</dt>
           <dd>
             {% if order.transactable != blank %}
@@ -41,7 +64,7 @@
           <dd>{{ order.owner.name }}</dd>
 
           <dt>Borrower ship to address:</dt>
-          <dd>{{ order.enquirer_shipping_address.full }}</dd>
+          <dd>{{ order.enquirer_shipping_address.discreet }}</dd>
         </dl>
       </div>
     </div>
@@ -114,12 +137,17 @@
 
 
         </dl>
+
+        {% endif %}
       </div>
     </div>
   </div>
 
   <div class="dialog__actions">
-    {% submit Approve, class: 'button button-default' %}
+
+    {% if params.shipping_provider_name != blank %}
+      {% submit Approve, class: 'button button-default' %}
+    {% endif %}
     <a href="#" class="button button-inverse" data-modal-close>Cancel</a>
   </div>
 {% endform_for%}

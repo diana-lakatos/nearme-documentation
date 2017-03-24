@@ -28,9 +28,9 @@ module Deliveries
       # outbound_receiver.address.errors.each { |k, v| errors.add("outbound_return_address_#{k}", v) }
       def parse_error_response(message)
         {
-          pickup_date: message.dig('messages', 'pickup_date').join(', '),
-          'pickup_address_state' => Array(message.dig('messages', 'sender', 0, 'address', 0, 'state_name')).join(', '),
-          'return_address_state' => Array(message.dig('messages', 'receiver', 0, 'address', 0, 'state_name')).join(', ')
+          pickup_date: Array(message.dig('messages', 'pickup_date')).join(', '),
+          pickup_address_state: Array(message.dig('messages', 'sender', 0, 'address', 0, 'state_name')).join(', '),
+          return_address_state: Array(message.dig('messages', 'receiver', 0, 'address', 0, 'state_name')).join(', ')
         }
       end
 
