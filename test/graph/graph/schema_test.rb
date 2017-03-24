@@ -58,6 +58,24 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
       assert_not_nil result(query)
     end
+
+    should 'get activity feed' do
+      query = %(
+        {
+          feed(include_user_feed: true, object_id: #{@user.id}, object_type: "User"){
+            owner_id
+            owner_type
+            has_next_page
+            events_next_page
+            events{
+              id
+              name
+            }
+          }
+        })
+
+      assert_not_nil result(query)
+    end
   end
 
   def result(query)

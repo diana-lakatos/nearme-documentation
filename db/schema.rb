@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170321154249) do
+ActiveRecord::Schema.define(version: 20170327085738) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1489,6 +1489,8 @@ ActiveRecord::Schema.define(version: 20170321154249) do
     t.datetime "deleted_at"
     t.datetime "image_versions_generated_at"
     t.integer  "creator_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "links", ["creator_id"], name: "index_links_on_creator_id", using: :btree

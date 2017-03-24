@@ -1,4 +1,4 @@
-{% query_graph 'activity_feed', result_name: g, include_user_feed: include_user_feed %}
+{% query_graph 'activity_feed', result_name: g, object_id: object.id, object_type: 'User', include_user_feed: include_user_feed %}
 
 {% if g.feed.events.size > 0 %}
   <div class="content-container" data-activity-feed=""
