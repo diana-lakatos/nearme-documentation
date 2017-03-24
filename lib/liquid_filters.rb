@@ -261,6 +261,12 @@ module LiquidFilters
     render_money(money)
   end
 
+  # @return [String] formatted price using the global price formatting rules, displayed as negative amount; the default currency will be used
+  # @param money [Numeric] amount to be formatted
+  def price_with_cents_with_currency_as_cost(money)
+    pricify(money.to_f * -1, money.currency)
+  end
+
   # @return [String] url to a placeholder image with the width and height given as parameters
   # @param height [Integer] height of the placeholder image
   # @param width [Integer] width of the placeholder image
