@@ -1,0 +1,174 @@
+---
+name: new_transactable
+base_form: TransactableForm
+pages:
+  - new_transactable
+configuration:
+  name:
+    validation:
+      presence: {}
+  location_id:
+    validation:
+      presence: {}
+  description: {}
+  properties:
+    validation:
+        presence: {}
+    listing_type:
+      validation:
+        presence: {}
+  currency:
+    validation:
+      presence: {}
+  capacity: {}
+  quantity:
+    validation:
+      presence: {}
+  confirm_reservations:
+    validation:
+      presence: {}
+  action_type:
+    validation:
+      presence: {}
+      length:
+        minimum: 1
+  time_based_booking:
+    availability_templates:
+      availability_rules: {}
+    pricings:
+      validation:
+        length:
+          minimum: 1
+        if: :is_enabled?
+      price_cents:
+        validation:
+          presence: {}
+  event_booking:
+    schedule:
+      schedule_rules: {}
+    pricings:
+      validation:
+        length:
+          minimum: 1
+        if: :is_enabled?
+      price_cents:
+        validation:
+          presence: {}
+  subscription_booking:
+    pricings:
+      validation:
+        length:
+          minimum: 1
+        if: :is_enabled?
+      price_cents:
+        validation:
+          presence: {}
+  purchase_action:
+    pricings:
+      validation:
+        length:
+          minimum: 1
+        if: :is_enabled?
+      price_cents:
+        validation:
+          presence: {}
+  no_action_booking: {}
+  offer_action:
+    pricings: {}
+---
+
+{% assign form_url = "/api/user/transactables/" | append: form.model.id %}
+{% form_for form, url: @form_url, as: transactable, form_for_type: 'dashboard', method: 'PATCH' %}
+  <input value="{{ forms['new_transactable'].configuration.id }}" type="hidden" name="form_configuration_id" />
+  <input value="{{ form.model.transactable_type_id }}" type="hidden" name="transactable_type_id" />
+  <input value="{{ page.id }}" type="hidden" name="page_id" />
+  <input value="/new_transactable" type="hidden" name="return_to" />
+  {% input name, input_html-tabindex: 1 %}
+  {% input description, input_html-tabindex: 2 %}
+  {% assign locations = current_user.default_company.locations %}
+  {% input location_id, collection: @locations, input_html-data-location-field: true, include_blank: false, input_html-tabindex: 3 %}
+  <p data-location-actions>
+    <a href="{{ 'new_dashboard_company_location_path' | generate_url: with_deleted_link: true }}" data-modal>{{ 'locations.add_new_location' | t }}</a>
+    {% for location in locations %}
+      <span data-location-id={{ location.id }} data-availability: {{ pretty_availability_sentence(location.availability).to_s }} hidden={{ is_hidden }}>
+        <a href="{{ 'edit_dashboard_company_location_path' | generate_url: id: location.id,  with_deleted_link: true, should_check_address: false }}" data-modal>{{ 'dashboard.location.edit' | t }}</a>
+        {% if transactable.object.location_id != location.id %}
+         |
+          {% if location.listings.size > 0 %}
+            {% assign confirm = 'dashboard.location.are_you_sure' | t: listings_count: location.listings.size %}
+          {% else %}
+            {% assign confirm = 'confirmations.are_you_sure' | t %}
+          {% endif %}
+          <a href="{{ 'dashboard_company_location_path' | generate_url: id: location.id }}" remote="true" method="delete", data-confirm="{{ confirm }}">{{ 'dashboard.location.remove' | t }}</a>
+        {% endif %}
+      </span>
+    {% endfor %}
+  </p>
+  {% fields_for properties %}
+    {% assign listing_type_collection = 'Desk,Meeting Room,Office Space,Salon Booth' | split: ',' %}
+    {% input listing_type, collection: @listing_type_collection, input_html-tabindex: 4, form: properties %}
+  {% endfields_for %}
+
+  {% input currency, as: currency, allowed_currencies: @transactable_type.allowed_currencies, default: @transactable_type.default_currency, input_html-data-live-search: true, input_html-class: 'selectpicker', input_html-id: 'currency-select', input_html-data-currency-symbols: platform_context.all_currency_symbols_associations_json, input_html-tabindex: 5 label_html-class: 'block-label'%}
+
+  {% input capacity, input_html-tabindex: 6 %}
+  {% input quantity, input_html-tabindex: 7 %}
+  {% input confirm_reservations, as: switch, input_html-tabindex: 8 %}
+
+  {% fields_for action_types %}
+
+    <div class="listing-availability">
+      <hr/>
+      <h3>{{ 'pricing.availability.title' | t }}</h3>
+      <ul class="box-options">
+        {% for availability in action_type.model.availability_templates_choices %}
+          {% assign options = availability[2] %}
+          <li>
+            {% input availability_template_id, form: action_types, as: radio, label: false, input_html: @options %}
+            <label for="{{ availability[2]['id'] }}">
+              <h5>{{ availability[1] }}</h5>
+              <p>{{ availability[2]['description'] }}</p>
+            </label>
+          </li>
+        {% endfor %}
+        <div class="custom-availability">
+          <h4>{{ 'pricing.availability.available_from' | t }}</h4>
+          {% fields_for availability_template, form: action_types %}
+            <div class="nested-fields-set">
+              {% fields_for availability_rules, form: availability_template %}
+                <div class="nested-container">
+                  {% include 'forms/time_availability', form_object_availability_rules: form_object_availability_rules %}
+                </div>
+              {% endfields_for%}
+            </div>
+            <p>
+              {{ 'pricing.availability.different_availability_info' | t }}
+            </p>
+            <p>
+              {% link_to_add_association label: 'Add availability', form: availability_template, association: availability_rules, class: 'btn btn-primary', partial: forms/time_availability %}
+            </p>
+            <div class="unavailability">
+              <h4>{{ 'pricing.unavailability.title' | t }}</h4>
+              <p>{{ 'pricing.unavailability.info' | t }}</p>
+            </div>
+            <div class="schedule-exception-rules-container">
+              {% fields_for schedule_exception_rules, form:  availability_template %}
+                {% include 'forms/schedule_exception_rule_fields', form_object_schedule_exception_rules: form_object_schedule_exception_rules %}
+              {% endfields_for%}
+              <div class="add-link">
+                {% link_to_add_association label: 'Add another', association: schedule_exception_rules, form: availability_template, class: 'btn btn-primary btn-sm', partial: forms/schedule_exception_rule_fields %}
+              </div>
+            </div>
+
+          {% endfields_for%}
+        </div>
+      </ul>
+
+    </div>
+  {% endfields_for%}
+
+
+  <div class='actions'>
+    {% submit 'Save', class: 'desksnearme submit btn btn-green', data-disable_with: 'Saving...', tabindex: 11  %}
+  </div>
+{% endform_for %}

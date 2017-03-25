@@ -169,6 +169,11 @@ class Transactable::Pricing < ActiveRecord::Base
     @pricing_drop ||= Transactable::PricingDrop.new(self)
   end
 
+  def assign_defaults
+    self.unit = transactable_type_pricing&.unit
+    self.number_of_units = transactable_type_pricing&.number_of_units
+  end
+
   private
 
   def check_pricing_uniqueness

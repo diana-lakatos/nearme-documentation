@@ -22,6 +22,10 @@ module CurrencyHelper
     currency_symbols_associations(DesksnearMe::Application.config.supported_currencies)
   end
 
+  def all_currency_symbols_associations_json
+    all_currency_symbols_associations.to_json
+  end
+
   def currency_content_tag(currency, price = '0.00', el = :span, currency_options = {}, content_tag_options = {})
     currency ||= PlatformContext.current.instance.default_currency
     content_tag_options.reverse_merge!(class: 'total')

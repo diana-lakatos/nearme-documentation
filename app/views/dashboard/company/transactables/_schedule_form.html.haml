@@ -1,4 +1,8 @@
-- schedule ||= f.object.schedule || build_schedule(f.object)
+- if f.object.is_a?(BaseForm)
+  = f.simple_fields_for :schedule do |schedule_form|
+    = render 'schedules/fields', f: schedule_form
+- else
+  - schedule ||= f.object.schedule || build_schedule(f.object)
 
-= f.simple_fields_for :schedule,  schedule do |schedule_form|
-  = render 'schedules/fields', f: schedule_form
+  = f.simple_fields_for :schedule,  schedule do |schedule_form|
+    = render 'schedules/fields', f: schedule_form

@@ -1,23 +1,49 @@
-- content_for :page_header do
-  - if @transactable_type.single_transactable
-    %h1= t("dashboard.nav.transactables")
-  - else
-    %h1
-      = link_to t("dashboard.transactables.manage"), dashboard_company_transactable_type_transactables_path(@transactable_type), class: 'hidden-xs hidden-sm'
-      %span.hidden-xs.hidden-sm >
-      = t("dashboard.transactables.list_new_item")
+- if @transactable_form
+  - content_for :page_header do
+    - if @transactable_type.single_transactable
+      %h1= t("dashboard.nav.transactables")
+    - else
+      %h1
+        = link_to t("dashboard.transactables.manage"), dashboard_company_transactable_type_transactables_path(@transactable_type), class: 'hidden-xs hidden-sm'
+        %span.hidden-xs.hidden-sm >
+        = t("dashboard.transactables.list_new_item")
 
-= dashboard_simple_form_for @controller_scope + [@transactable], :html => { :multipart => true, id: 'listing-form' } do |f|
-  = hidden_field_tag :transactable_type_id, params[:transactable_type_id]
+  = dashboard_simple_form_for @transactable_form, url: @controller_scope + [@transactable_form.model], :html => { :multipart => true, id: 'listing-form' } do |f|
+    = hidden_field_tag :transactable_type_id, params[:transactable_type_id]
 
-  = render "dashboard/company/transactables/errors", f: f
+    = render "dashboard/company/transactables/errors", f: f
 
-  = render "dashboard/company/transactables/form_panels_nav", f: f
+    = render "dashboard/company/transactables/form_panels_nav", f: f
 
-  .panel
-    .panel-body
-      = render 'form', f: f
+    .panel
+      .panel-body
+        = render 'form', f: f
 
-  .panel.form-actions
-    .panel-body
-      = f.button :submit, t('dashboard.items.save'), data: { disable_with: t('general.saving') }
+    .panel.form-actions
+      .panel-body
+        = f.button :submit, t('dashboard.items.save'), data: { disable_with: t('general.saving') }
+
+-else
+  - content_for :page_header do
+    - if @transactable_type.single_transactable
+      %h1= t("dashboard.nav.transactables")
+    - else
+      %h1
+        = link_to t("dashboard.transactables.manage"), dashboard_company_transactable_type_transactables_path(@transactable_type), class: 'hidden-xs hidden-sm'
+        %span.hidden-xs.hidden-sm >
+        = t("dashboard.transactables.list_new_item")
+
+  = dashboard_simple_form_for @controller_scope + [@transactable], :html => { :multipart => true, id: 'listing-form' } do |f|
+    = hidden_field_tag :transactable_type_id, params[:transactable_type_id]
+
+    = render "dashboard/company/transactables/errors", f: f
+
+    = render "dashboard/company/transactables/form_panels_nav", f: f
+
+    .panel
+      .panel-body
+        = render 'form', f: f
+
+    .panel.form-actions
+      .panel-body
+        = f.button :submit, t('dashboard.items.save'), data: { disable_with: t('general.saving') }

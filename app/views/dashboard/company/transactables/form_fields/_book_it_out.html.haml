@@ -1,14 +1,30 @@
-- if f.object.allow_book_it_out_discount
-  %hr/
-  .form-inline
-    = f.input :has_book_it_out_discount, as: :switch, label_html: { class: 'block-label' }, required: false,
-    label: t(:enable, scope: [:pricing, :schedule, :book_it_out])
+-if f.object.is_a?(BaseForm)
+  - if f.object.model.allow_book_it_out_discount
+    %hr/
+    .form-inline
+      = f.input :has_book_it_out_discount, as: :switch, label_html: { class: 'block-label' }, required: false,
+      label: t(:enable, scope: [:pricing, :schedule, :book_it_out])
 
-    = f.input :book_it_out_discount, as: :numeric, label_html: { class: 'block-label' }, required: false, label: t(:percent_discount, scope: [:pricing, :schedule, :book_it_out])
+      = f.input :book_it_out_discount, as: :numeric, label_html: { class: 'block-label' }, required: false, label: t(:percent_discount, scope: [:pricing, :schedule, :book_it_out])
 
-    .form-unit.label-offset %
+      .form-unit.label-offset %
 
-    = f.input :book_it_out_minimum_qty, as: :numeric, label_html: { class: 'block-label' }, label: t(:minimum_bookings, scope: [:pricing, :schedule, :book_it_out])
+      = f.input :book_it_out_minimum_qty, as: :numeric, label_html: { class: 'block-label' }, label: t(:minimum_bookings, scope: [:pricing, :schedule, :book_it_out])
 
-    .form-unit.label-offset
-      = t(:people, scope: [:pricing, :discounts])
+      .form-unit.label-offset
+        = t(:people, scope: [:pricing, :discounts])
+- else
+  - if f.object.allow_book_it_out_discount
+    %hr/
+    .form-inline
+      = f.input :has_book_it_out_discount, as: :switch, label_html: { class: 'block-label' }, required: false,
+      label: t(:enable, scope: [:pricing, :schedule, :book_it_out])
+
+      = f.input :book_it_out_discount, as: :numeric, label_html: { class: 'block-label' }, required: false, label: t(:percent_discount, scope: [:pricing, :schedule, :book_it_out])
+
+      .form-unit.label-offset %
+
+      = f.input :book_it_out_minimum_qty, as: :numeric, label_html: { class: 'block-label' }, label: t(:minimum_bookings, scope: [:pricing, :schedule, :book_it_out])
+
+      .form-unit.label-offset
+        = t(:people, scope: [:pricing, :discounts])

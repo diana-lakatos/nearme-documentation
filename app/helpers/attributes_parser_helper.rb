@@ -15,7 +15,7 @@ module AttributesParserHelper
   end
 
   def normalize_liquid_tag_attributes(hash, context, prefixes = [])
-    # We don't want to change the original hash because it's 
+    # We don't want to change the original hash because it's
     # reused in all fields_for iterations
     hash_result = hash.try(:dup) || {}
 
@@ -37,6 +37,13 @@ module AttributesParserHelper
         # store in proper hash but not under %prefix%_key, but just as a key
         instance_variable_get(:"@#{prefix}_attributes")[key.sub(/^#{prefix}-/, '')] = value
         # otherwise just overwrite value in case there are quotes
+      # check if prefixes include key - if yes, then we should merge it's content with the rest of values
+      elsif prefixes.include?(key)
+        hash_result.delete(key)
+        instance_variable_set(
+          :"@#{key}_attributes",
+          instance_variable_get(:"@#{key}_attributes").merge(value)
+        )
       else
         hash_result[key] = value
       end

@@ -4,11 +4,13 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
   include AvailabilityRule::TargetHelper
 
   belongs_to :availability_template
-  has_many :availability_templates, as: :parent
+  has_many :availability_templates, as: :parent, inverse_of: :parent
 
   delegate :availability_for, :default_availability_template, to: :transactable
 
-  accepts_nested_attributes_for :availability_template
+  belongs_to :transactable, -> { with_deleted }, touch: true, inverse_of: :time_based_booking
+
+  accepts_nested_attributes_for :availability_templates
 
   validates :minimum_booking_minutes, numericality: { greater_than_or_equal_to: 15, allow_blank: true }
   validate :booking_availability, if: :night_booking?
@@ -41,7 +43,6 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
     time = Time.now.in_time_zone(timezone)
     date = time.to_date
     max_date = date + 60.days
-
     closed_at = availability.close_minute_for(date)
 
     date += 1.day if closed_at && (closed_at < (time.hour * 60 + time.min + minimum_booking_minutes))

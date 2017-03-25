@@ -58,7 +58,30 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
   should 'correctly validate empty params' do
     @lister_user_signup_builder.prepopulate!
     refute @lister_user_signup_builder.validate({})
-    assert_equal "Email can't be blank, Password can't be blank, Avatar can't be blank, Profiles default properties default attr can't be blank, Profiles default categories default category can't be blank, Profiles seller properties seller attr can't be blank, Profiles seller custom images #{@seller_photo.id} image can't be blank, Profiles seller custom attachments #{@seller_attachment.id} file can't be blank, Profiles seller categories seller category can't be blank, Companies name can't be blank, Companies locations name can't be blank, Companies locations transactables boat photos is too short (minimum is 1 character), Companies locations transactables boat name can't be blank, Companies locations transactables boat properties boat attr can't be blank, Companies locations transactables boat custom images #{@boat_photo.id} image can't be blank, Companies locations transactables boat custom attachments #{@boat_attachment.id} file can't be blank, Companies locations transactables boat categories boat category can't be blank, Companies locations transactables boat action types pricings unit can't be blank, Companies locations location address address can't be blank", @lister_user_signup_builder.errors.full_messages.join(', ')
+    messages = [
+      "Email can't be blank",
+      "Password can't be blank",
+      "Avatar can't be blank",
+      "Profiles default properties default attr can't be blank",
+      "Profiles default categories default category can't be blank",
+      "Profiles seller properties seller attr can't be blank",
+      "Profiles seller custom images #{@seller_photo.id} image can't be blank",
+      "Profiles seller custom attachments #{@seller_attachment.id} file can't be blank",
+      "Profiles seller categories seller category can't be blank",
+      "Companies name can't be blank",
+      "Companies locations name can't be blank",
+      'Companies locations transactables boat photos is too short (minimum is 1 character)',
+      "Companies locations transactables boat name can't be blank",
+      "Companies locations transactables boat properties boat attr can't be blank",
+      "Companies locations transactables boat custom images #{@boat_photo.id} image can't be blank",
+      "Companies locations transactables boat custom attachments #{@boat_attachment.id} file can't be blank",
+      "Companies locations transactables boat categories boat category can't be blank",
+      "Companies locations location address address can't be blank"
+    ]
+    @lister_user_signup_builder.errors.full_messages
+    messages.each do |message|
+      assert_includes @lister_user_signup_builder.errors.full_messages, message
+    end
   end
 
   should 'be able to save all parameters' do
@@ -108,8 +131,8 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
     assert action_type.enabled?
     pricing = action_type.pricings.first
     assert pricing.present?
-    assert_equal Money.new(1023, 'PLN'), pricing.price
-    assert_equal 'month', pricing.unit
+    assert_equal Money.new(10_500, 'PLN'), pricing.price
+    assert_equal 'subscription_month', pricing.unit
 
     assert_equal @user.id, transactable.creator_id
     assert_equal [@boat_sub_cat.id, @boat_sub_cat2.id], transactable.categories.pluck(:id).sort
@@ -171,7 +194,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
               '0' => { properties: { seller_model_attr: 'my first value' } }
             }
           }
-        },
+        }
       },
       'companies_attributes' => {
         '0' => {
@@ -240,17 +263,16 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                     properties: {
                       'boat_attr' => 'boat attr value'
                     },
-                    'action_types_attributes' => {
-                      '0' => {
-                        transactable_type_action_type_id: @transactable_type_boat.action_types.first.id,
-                        type: 'Transactable::SubscriptionBooking',
-                        enabled: '1',
-                        'pricings_attributes' => {
-                          '0' => {
-                            price_cents: 1023,
-                            transactable_type_pricing_id: @transactable_type_boat.action_types.first.pricings.first.id,
-                            unit: 'month'
-                          }
+                    'subscription_booking_attributes' => {
+                      transactable_type_action_type_id: @transactable_type_boat.subscription_booking.id,
+                      type: 'Transactable::SubscriptionBooking',
+                      enabled: 'true',
+                      'pricings_attributes' => {
+                        '0' => {
+                          '_destroy' => 'false',
+                          price: 105,
+                          enabled: '1',
+                          transactable_type_pricing_id: @transactable_type_boat.subscription_booking.pricings.first.id
                         }
                       }
                     }
@@ -276,7 +298,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
       'mobile_number' => {},
       'tags' => {},
       profiles: {
-        :default => {
+        default: {
           'enabled' => {},
           :properties => {
             'default_attr' => {
@@ -304,7 +326,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
             }
           }
         },
-        :seller => {
+        seller: {
           'enabled' => {},
           :properties => {
             'seller_attr' => {
@@ -345,7 +367,7 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
               }
             }
           }
-        },
+        }
       },
       :companies => {
         name: {
@@ -431,14 +453,9 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                   }
                 }
               },
-              action_types: {
+              subscription_booking: {
                 pricings: {
                   price_cents: {
-                    validation: {
-                      presence: true
-                    }
-                  },
-                  unit: {
                     validation: {
                       presence: true
                     }

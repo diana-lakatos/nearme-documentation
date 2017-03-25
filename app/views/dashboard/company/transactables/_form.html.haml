@@ -1,93 +1,188 @@
-- custom_attribute_names = @transactable_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
-= f.hidden_field :transactable_type_id, value: @transactable_type.id
-= f.input :id, as: :hidden
+- if f.object.is_a?(BaseForm)
+  - custom_attribute_names = f.object.transactable_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
+  = f.hidden_field :transactable_type_id, value: @transactable_type.id
+  = f.input :id, as: :hidden
 
-= f.simple_fields_for :properties, f.object.properties do |properties_form|
-  - unless @form_components.map(&:form_fields).map{|ff| ff.map(&:values).flatten }.flatten.include? 'price'
-    = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: {}, model: 'transactable'
+  = f.simple_fields_for :properties, f.object.properties do |properties_form|
+    - unless @form_components.map(&:form_fields).map{|ff| ff.map(&:values).flatten }.flatten.include? 'price'
+      = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: {}, model: 'transactable'
 
-  - @form_components.each_with_index do |form_component, index|
-    - component_class = 'listing-form-component panel-tab-container'
-    - component_class = "#{component_class} active" if index == 0
-    %div{class: component_class, indexid: "form-component-#{form_component.id}"}
-      - form_component.form_fields.each do |form_field|
+    - @form_components.each_with_index do |form_component, index|
+      - component_class = 'listing-form-component panel-tab-container'
+      - component_class = "#{component_class} active" if index == 0
+      %div{class: component_class, indexid: "form-component-#{form_component.id}"}
+        - form_component.form_fields.each do |form_field|
 
-        - model = form_field.keys.first
-        - field = form_field[model]
+          - model = form_field.keys.first
+          - field = form_field[model]
 
-        - next if field == 'schedule'
-        - next if field == 'enabled'
+          - next if field == 'schedule'
+          - next if field == 'enabled'
 
-        - case field
+          - case field
 
-          - when 'location_id'
-            = render "dashboard/company/transactables/form_fields/location", f: f
+            - when 'location_id'
+              = render "dashboard/company/transactables/form_fields/location", f: f
 
-          - when 'approval_requests'
-            = render 'dashboard/shared/fields/approval_requests', f: f
+            - when 'approval_requests'
+              = render 'dashboard/shared/fields/approval_requests', f: f
 
-          - when 'price'
-            = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: form_component.form_fields, model: model
+            - when 'price'
+              = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: form_component.form_fields, model: model
 
-          - when 'additional_charges'
-            = render "dashboard/company/transactables/form_fields/additional_charges", f: f
+            - when 'additional_charges'
+              = render "dashboard/company/transactables/form_fields/additional_charges", f: f
 
-          - when 'photos'
-            = render "dashboard/company/transactables/form_fields/photos", f: f
+            - when 'photos'
+              = render "dashboard/company/transactables/form_fields/photos", f: f
 
-          - when 'waiver_agreement_templates'
-            = render "dashboard/company/transactables/form_fields/waiver_agreement_templates", f: f
+            - when 'waiver_agreement_templates'
+              = render "dashboard/company/transactables/form_fields/waiver_agreement_templates", f: f
 
-          - when 'seller_attachments'
-            = render "dashboard/company/transactables/form_fields/seller_attachments", f: f
+            - when 'seller_attachments'
+              = render "dashboard/company/transactables/form_fields/seller_attachments", f: f
 
-          - when 'documents_upload'
-            = render "dashboard/company/transactables/form_fields/documents_upload", f: f
+            - when 'documents_upload'
+              = render "dashboard/company/transactables/form_fields/documents_upload", f: f
 
-          - when 'quantity'
-            = render "dashboard/company/transactables/form_fields/quantity", f: f
+            - when 'quantity'
+              = render "dashboard/company/transactables/form_fields/quantity", f: f
 
-          - when 'currency'
-            = render "dashboard/company/transactables/form_fields/currency", f: f
+            - when 'currency'
+              = render "dashboard/company/transactables/form_fields/currency", f: f
 
-          - when 'confirm_reservations'
-            = render "dashboard/company/transactables/form_fields/confirm_reservations", f: f
+            - when 'confirm_reservations'
+              = render "dashboard/company/transactables/form_fields/confirm_reservations", f: f
 
-          - when 'capacity'
-            = render "dashboard/company/transactables/form_fields/capacity", f: f
+            - when 'capacity'
+              = render "dashboard/company/transactables/form_fields/capacity", f: f
 
-          - when 'deposit_amount'
-            = render "dashboard/company/transactables/form_fields/deposit_amount", f: f
+            - when 'deposit_amount'
+              = render "dashboard/company/transactables/form_fields/deposit_amount", f: f
 
-          - when 'shipping_info'
-            = render "dashboard/company/transactables/form_fields/shipping_profiles", f: f
+            - when 'shipping_info'
+              = render "dashboard/company/transactables/form_fields/shipping_profiles", f: f
 
-          - when 'collaborators'
-            = render "dashboard/company/transactables/form_fields/collaborators", f: f
+            - when 'collaborators'
+              = render "dashboard/company/transactables/form_fields/collaborators", f: f
 
-          - when 'tags'
-            = render "dashboard/company/transactables/form_fields/tags", f: f
+            - when 'tags'
+              = render "dashboard/company/transactables/form_fields/tags", f: f
 
-          - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
-            = render "dashboard/company/transactables/form_fields/category", f: f, field: field
+            - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
+              = render "dashboard/company/transactables/form_fields/category", f: f, field: field
 
-          - when *@transactable_type.custom_model_types.map { |c| "Custom Model - #{c.name}" }
-            = render "dashboard/company/transactables/form_fields/custom_model", f: f, field: field
-
-
-          - else
-            - if custom_attribute_names.include?(field)
-              = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), properties_form)
-            -elsif f.object.attributes.include?(field) && !f.object.action_types.first.attributes.include?(field)
-              = f.input field, {required: f.object.required?(field)}.merge(cke_attrs(model, field))
-
-      -# DISCUSS: is this OK enough?
-      - if Shippings.enabled?(@transactable_type)
-        = render 'listings/package_details', f: f
+            - when *@transactable_type.custom_model_types.map { |c| "Custom Model - #{c.name}" }
+              = render "dashboard/company/transactables/form_fields/custom_model", f: f, field: field
 
 
-.hidden
-  - Money::Currency.table.values.each do |c|
-    %span{:id => "currency_#{c[:iso_code]}"}
-      = c[:symbol]
-  %span{:id => "default_currency"}= @transactable_type.default_currency
+            - else
+              - if custom_attribute_names.include?(field)
+                = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), properties_form)
+              -elsif f.object.model.attributes.include?(field) && !f.object.model.action_type.attributes.include?(field)
+                = f.input field, cke_attrs(model, field)
+
+        -# DISCUSS: is this OK enough?
+        - if Shippings.enabled?(@transactable_type)
+          = render 'listings/package_details', f: f
+
+
+  .hidden
+    - Money::Currency.table.values.each do |c|
+      %span{:id => "currency_#{c[:iso_code]}"}
+        = c[:symbol]
+    %span{:id => "default_currency"}= @transactable_type.default_currency
+- else
+  - custom_attribute_names = @transactable_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
+  = f.hidden_field :transactable_type_id, value: @transactable_type.id
+  = f.input :id, as: :hidden
+
+  = f.simple_fields_for :properties, f.object.properties do |properties_form|
+    - unless @form_components.map(&:form_fields).map{|ff| ff.map(&:values).flatten }.flatten.include? 'price'
+      = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: {}, model: 'transactable'
+
+    - @form_components.each_with_index do |form_component, index|
+      - component_class = 'listing-form-component panel-tab-container'
+      - component_class = "#{component_class} active" if index == 0
+      %div{class: component_class, indexid: "form-component-#{form_component.id}"}
+        - form_component.form_fields.each do |form_field|
+
+          - model = form_field.keys.first
+          - field = form_field[model]
+
+          - next if field == 'schedule'
+          - next if field == 'enabled'
+
+          - case field
+
+            - when 'location_id'
+              = render "dashboard/company/transactables/form_fields/location", f: f
+
+            - when 'approval_requests'
+              = render 'dashboard/shared/fields/approval_requests', f: f
+
+            - when 'price'
+              = render "dashboard/company/transactables/form_fields/price", f: f, form_fields: form_component.form_fields, model: model
+
+            - when 'additional_charges'
+              = render "dashboard/company/transactables/form_fields/additional_charges", f: f
+
+            - when 'photos'
+              = render "dashboard/company/transactables/form_fields/photos", f: f
+
+            - when 'waiver_agreement_templates'
+              = render "dashboard/company/transactables/form_fields/waiver_agreement_templates", f: f
+
+            - when 'seller_attachments'
+              = render "dashboard/company/transactables/form_fields/seller_attachments", f: f
+
+            - when 'documents_upload'
+              = render "dashboard/company/transactables/form_fields/documents_upload", f: f
+
+            - when 'quantity'
+              = render "dashboard/company/transactables/form_fields/quantity", f: f
+
+            - when 'currency'
+              = render "dashboard/company/transactables/form_fields/currency", f: f
+
+            - when 'confirm_reservations'
+              = render "dashboard/company/transactables/form_fields/confirm_reservations", f: f
+
+            - when 'capacity'
+              = render "dashboard/company/transactables/form_fields/capacity", f: f
+
+            - when 'deposit_amount'
+              = render "dashboard/company/transactables/form_fields/deposit_amount", f: f
+
+            - when 'shipping_info'
+              = render "dashboard/company/transactables/form_fields/shipping_profiles", f: f
+
+            - when 'collaborators'
+              = render "dashboard/company/transactables/form_fields/collaborators", f: f
+
+            - when 'tags'
+              = render "dashboard/company/transactables/form_fields/tags", f: f
+
+            - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
+              = render "dashboard/company/transactables/form_fields/category", f: f, field: field
+
+            - when *@transactable_type.custom_model_types.map { |c| "Custom Model - #{c.name}" }
+              = render "dashboard/company/transactables/form_fields/custom_model", f: f, field: field
+
+
+            - else
+              - if custom_attribute_names.include?(field)
+                = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), properties_form)
+              -elsif f.object.attributes.include?(field) && !f.object.action_types.first.attributes.include?(field)
+                = f.input field, {required: f.object.required?(field)}.merge(cke_attrs(model, field))
+
+        -# DISCUSS: is this OK enough?
+        - if Shippings.enabled?(@transactable_type)
+          = render 'listings/package_details', f: f
+
+
+  .hidden
+    - Money::Currency.table.values.each do |c|
+      %span{:id => "currency_#{c[:iso_code]}"}
+        = c[:symbol]
+    %span{:id => "default_currency"}= @transactable_type.default_currency

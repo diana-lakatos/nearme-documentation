@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Api
-  class V4::User::TransactableCollaboratorsController < BaseController
+  class V4::User::TransactableCollaboratorsController < V4::User::BaseController
     skip_before_action :require_authorization
     before_action :find_transactable
 

@@ -1,17 +1,36 @@
-.row.nested-fields{data: { pricing_for: f.object.units_to_s }}
-  = f.hidden_field :transactable_type_pricing_id, value: tt_pricing.try(:id)
-  = f.input :_destroy, as: :hidden
-  - if f.object.action.pricings.many?
-    .col-md-2
-      = f.input :enabled, as: :boolean, label: f.object.decorate.units_translation('pricing.unit_price', 'pricing'), input_html: { 'data-price-enabler' => true, checked: !f.object.marked_for_destruction? && (f.object.persisted? || f.object.enabled == '1') }
-  - else
-    = f.hidden_field :enabled, value: '1'
-  - if show_free_column
-    .col-md-2
-      - if tt_pricing.try(:allow_free_booking?)
-        = f.input :is_free_booking, as: :switch, inline_label: true, label: false, input_html: { 'data-free-booking' => true, data: { :"label-off" => t('pricing.free'), :"label-on" => t('pricing.free') } }
-  .col-md-4
-    = f.input :price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(@transactable.try(:currency)), input_html: { 'data-price-field' => true, readonly: f.object.is_free_booking? }
-  .col-md-3
-    .form-unit
-      = t :person_unit, scope: [:pricing, :price_unit], unit: f.object.decorate.units_translation('pricing.unit_price', 'pricing')
+-if f.object.is_a?(BaseForm)
+  .row.nested-fields{data: { pricing_for: f.object.model.units_to_s }}
+    = f.hidden_field :transactable_type_pricing_id, value: tt_pricing.try(:id)
+    = f.input :_destroy, as: :hidden
+    - if f.object.model.action.pricings.many?
+      .col-md-2
+        = f.input :enabled, as: :boolean, label: f.object.model.decorate.units_translation('pricing.unit_price', 'pricing'), input_html: { 'data-price-enabler' => true, checked: !f.object.model.marked_for_destruction? && (f.object.persisted? || f.object.model.enabled == '1') }
+    - else
+      = f.hidden_field :enabled, value: '1'
+    - if show_free_column
+      .col-md-2
+        - if tt_pricing.try(:allow_free_booking?)
+          = f.input :is_free_booking, as: :switch, inline_label: true, label: false, input_html: { 'data-free-booking' => true, data: { :"label-off" => t('pricing.free'), :"label-on" => t('pricing.free') } }
+    .col-md-4
+      = f.input :price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(f.object.model.action.transactable.currency), input_html: { 'data-price-field' => true, readonly: f.object.model.is_free_booking? }
+    .col-md-3
+      .form-unit
+        = t :person_unit, scope: [:pricing, :price_unit], unit: f.object.model.decorate.units_translation('pricing.unit_price', 'pricing')
+- else
+  .row.nested-fields{data: { pricing_for: f.object.units_to_s }}
+    = f.hidden_field :transactable_type_pricing_id, value: tt_pricing.try(:id)
+    = f.input :_destroy, as: :hidden
+    - if f.object.action.pricings.many?
+      .col-md-2
+        = f.input :enabled, as: :boolean, label: f.object.decorate.units_translation('pricing.unit_price', 'pricing'), input_html: { 'data-price-enabler' => true, checked: !f.object.marked_for_destruction? && (f.object.persisted? || f.object.enabled == '1') }
+    - else
+      = f.hidden_field :enabled, value: '1'
+    - if show_free_column
+      .col-md-2
+        - if tt_pricing.try(:allow_free_booking?)
+          = f.input :is_free_booking, as: :switch, inline_label: true, label: false, input_html: { 'data-free-booking' => true, data: { :"label-off" => t('pricing.free'), :"label-on" => t('pricing.free') } }
+    .col-md-4
+      = f.input :price, as: :numeric, label: false, wrapper: :dashboard_addon, prefix: currency_symbol_from_code(f.object.action.transactable.currency), input_html: { 'data-price-field' => true, readonly: f.object.is_free_booking? }
+    .col-md-3
+      .form-unit
+        = t :person_unit, scope: [:pricing, :price_unit], unit: f.object.decorate.units_translation('pricing.unit_price', 'pricing')

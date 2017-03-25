@@ -35,6 +35,7 @@ class Transactable::ActionTypeDecorator < Draper::Decorator
     pricings.any?(&:hour_booking?)
   end
 
+  #TODO: remove after FormConfiguration
   def pricings_for_form
     all_pricings = []
     transactable_type_action_type.pricings.ordered_by_unit.each do |tt_pricing|

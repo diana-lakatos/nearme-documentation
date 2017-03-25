@@ -21,7 +21,7 @@ module MarketplaceBuilder
         path = File.join(@theme_path, source)
         data = load_dir(path) if File.directory? path
         data = load_file(path) if File.file? path
-        data = [] if data.nil? || !data
+        data = {} if data.nil? || !data
         data
       end
 

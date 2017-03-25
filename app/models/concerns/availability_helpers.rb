@@ -9,6 +9,7 @@ module AvailabilityHelpers
       availability_template&.custom_for_object?
     end
 
+    #TODO: remove after FormConfiguration
     def availability_template_attributes=(template_attributes)
       if template_attributes.present?
         if template_attributes['id'].present?
