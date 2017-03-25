@@ -37,3 +37,8 @@
 Load changed config for particular marketplace
 
     bin/rake mpbuilder:run source=marketplaces/hallmark
+
+
+## Mails
+
+In order to test mailers just use `mailcatcher` in development.

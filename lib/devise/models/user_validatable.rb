@@ -6,7 +6,7 @@ module Devise
         base.extend ClassMethods
         base.class_eval do
           validate do
-            errors.add(:email, :unique) if User.where.not(id: model.id).where(email: email).exists?
+            errors.add(:email, :unique) if ::User.where.not(id: model.id).where(email: email).exists?
             # update form does not need to have email, but if it has, it can't be blank
             errors.add(:email, :blank) if model.email.blank? && email.blank?
           end

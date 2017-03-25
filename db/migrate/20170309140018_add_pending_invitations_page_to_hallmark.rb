@@ -2,8 +2,7 @@
 class AddPendingInvitationsPageToHallmark < ActiveRecord::Migration
   def up
     Instance.transaction do
-      hallmark_id = 5011
-      Instance.where(id: [hallmark_id]).each do |i|
+      Instances::InstanceFinder.get(:hallmark).each do |i|
         i.set_context!
 
         query_string = <<EOQ
@@ -137,8 +136,7 @@ EOQ
 
   def down
     Instance.transaction do
-      hallmark_id = 5011
-      Instance.where(id: [hallmark_id]).each do |i|
+      Instances::InstanceFinder.get(:hallmark).each do |i|
         i.set_context!
 
         i.graph_queries.where(name: 'user_pending_received_collaborations').delete_all

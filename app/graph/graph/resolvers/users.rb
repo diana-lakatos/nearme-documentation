@@ -12,6 +12,10 @@ module Graph
         decorate(resolve_by(arguments))
       end
 
+      def self.decorate(user)
+        UserDrop.new(user)
+      end
+
       def resolve_by(arguments)
         arguments.keys.reduce(main_scope) do |relation, argument_key|
           public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])

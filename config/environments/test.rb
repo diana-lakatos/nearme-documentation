@@ -24,7 +24,7 @@ DesksnearMe::Application.configure do
   config.secure_app = false
   config.root_secured = false
 
-  config.eager_load = false
+  config.eager_load = true
   config.run_jobs_in_background = false
   config.allow_concurrency = false
 
