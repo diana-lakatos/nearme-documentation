@@ -1,0 +1,32 @@
+<div class="entry-actions-a" id="status-update-actions-{{ event.event_source.id }}">
+  <button type='button'>
+    {{ 'user_entry.toggle_actions' | translate }}
+  </button>
+  <ul>
+    <li class="edit-action">
+      <a href="#entry-content-user-status-{{ event.event_source.id }}" data-edit-entry="">
+        {{ 'user_entry.edit' | translate }}
+      </a>
+    </li>
+    <li class="remove-action">
+      <a href="{{ event.event_source.url }}" data-remove-entry="" data-confirm-label="{{ 'user_entry.confirm.remove_status_update' | translate }}" >
+        {{ 'user_entry.remove' | translate }}
+      </a>
+    </li>
+    {% if event.is_reportable %}
+      <li class="report-spam-action">
+        {% if current_user != blank %}
+          <a href="{{ event.url }}/spam_reports" data-report-spam=""
+            data-cancel-report-url="{{ event.url }}/spam_reports/cancel"
+            data-cancel-report-label="{{ 'user_entry.cancel_spam_report' | translate }}">
+            {{ 'user_entry.report_as_spam' | translate }}
+          </a>
+        {% else %}
+          <a href="{{ 'new_user_session_path' | generate_url: return_to: request.path }}">
+            {{ 'user_entry.report_as_spam' | translate }}
+          </a>
+        {% endif %}
+      </li>
+    {% endif %}
+  </ul>
+</div>

@@ -49,6 +49,7 @@ module ListingsHelper
     find_connections_for(listing, current_user)
   end
 
+  # TODO: remove after switching to FormConfiguration
   def get_availability_template_object(parent)
     if parent.availability_template && parent.custom_availability_template?
       parent.availability_template
@@ -67,6 +68,7 @@ module ListingsHelper
     end
   end
 
+  # TODO: remove after switching to FormConfiguration
   def duplicate_template(parent, template)
     parent.availability_template = template.dup
     parent.availability_template.availability_rules = template.availability_rules.map(&:dup)

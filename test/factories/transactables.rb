@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :transactable_no_action, class: 'Transactable' do
     sequence(:name) { |n| "Listing #{n}" }
@@ -18,7 +19,7 @@ FactoryGirl.define do
       {
         'listing_type' => 'Desk'
       }.each do |key, value|
-        listing.properties[key] ||= value if listing.properties[key].nil? if listing.properties.respond_to?(key)
+        listing.properties[key] ||= value if listing.properties.respond_to?(key) && listing.properties[key].nil?
       end
       if listing.photos.empty? && evaluator.photos_count > 0
         listing.photos = create_list(:photo, evaluator.photos_count,
@@ -35,7 +36,8 @@ FactoryGirl.define do
       trait :with_time_based_booking do
         after(:build) do |listing|
           listing.action_types.destroy_all
-          listing.action_type = FactoryGirl.build(:time_based_booking, :with_prices, transactable: listing, transactable_type_action_type: listing.transactable_type.time_based_booking)
+          listing.time_based_booking = FactoryGirl.build(:time_based_booking, :with_prices, transactable: listing, transactable_type_action_type: listing.transactable_type.time_based_booking)
+          listing.action_type = listing.time_based_booking
         end
       end
 
@@ -56,10 +58,10 @@ FactoryGirl.define do
         after(:build) do |listing|
           listing.action_types.destroy_all
           listing.transactable_type.purchase_action ||= FactoryGirl.create(:transactable_type_purchase_action, transactable_type: listing.transactable_type)
-          listing.action_type = FactoryGirl.build(:purchase_action, transactable: listing, transactable_type_action_type: listing.transactable_type.purchase_action)
+          listing.purchase_action = FactoryGirl.build(:purchase_action, transactable: listing, transactable_type_action_type: listing.transactable_type.purchase_action)
+          listing.action_type = listing.purchase_action
         end
       end
-
 
       trait :free_listing do
         after(:build) do |listing|
@@ -79,7 +81,8 @@ FactoryGirl.define do
         after(:build) do |listing|
           listing.action_types.destroy_all
           listing.transactable_type.subscription_booking ||= FactoryGirl.build(:transactable_type_subscription_action, transactable_type: listing.transactable_type)
-          listing.action_type = FactoryGirl.build(:subscription_booking, transactable: listing, transactable_type_action_type: listing.transactable_type.subscription_booking)
+          listing.subscription_booking = FactoryGirl.build(:subscription_booking, transactable: listing, transactable_type_action_type: listing.transactable_type.subscription_booking)
+          listing.action_type = listing.subscription_booking
         end
         quantity 10
       end
@@ -88,7 +91,8 @@ FactoryGirl.define do
         after(:build) do |listing|
           listing.action_types.destroy_all
           listing.transactable_type.subscription_booking ||= FactoryGirl.build(:transactable_type_subscription_pro_rated_action, transactable_type: listing.transactable_type)
-          listing.action_type = FactoryGirl.build(:subscription_pro_rated_booking, transactable: listing, transactable_type_action_type: listing.transactable_type.subscription_booking)
+          listing.subscription_booking = FactoryGirl.build(:subscription_pro_rated_booking, transactable: listing, transactable_type_action_type: listing.transactable_type.subscription_booking)
+          listing.action_type = listing.subscription_booking
         end
         quantity 10
       end
@@ -102,8 +106,9 @@ FactoryGirl.define do
       trait :fixed_price do
         after(:build) do |listing|
           listing.action_types.destroy_all
-          listing.action_type = FactoryGirl.build(:event_booking, transactable: listing)
           listing.transactable_type.event_booking ||= FactoryGirl.build(:transactable_type_event_action, transactable_type: listing.transactable_type)
+          listing.event_booking = FactoryGirl.build(:event_booking, transactable: listing, transactable_type_action_type: listing.transactable_type.event_booking)
+          listing.action_type = listing.event_booking
         end
         quantity 10
       end
@@ -203,14 +208,14 @@ FactoryGirl.define do
 
       factory :listing_from_transactable_type_with_price_constraints do
         initialize_with do
-          new(transactable_type: (FactoryGirl.create(:transactable_type_listing_with_price_constraints)))
+          new(transactable_type: FactoryGirl.create(:transactable_type_listing_with_price_constraints))
         end
       end
     end
 
     factory :transactable_offer do
-      creator { User.sellers.last || FactoryGirl.build(:lister)}
-      location { Location.last || FactoryGirl.build(:location, company: creator.default_company ) }
+      creator { User.sellers.last || FactoryGirl.build(:lister) }
+      location { Location.last || FactoryGirl.build(:location, company: creator.default_company) }
       after(:build) do |listing|
         listing.action_types.destroy_all
         listing.transactable_type.offer_action ||= FactoryGirl.create(:transactable_type_offer_action, transactable_type: listing.transactable_type)

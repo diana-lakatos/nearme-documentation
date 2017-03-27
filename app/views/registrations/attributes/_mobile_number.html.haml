@@ -1,8 +1,8 @@
 %div{'data-phone-fields-container' => true}
-  = f.input :country_name, :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), input_html: { 'data-country-selector' => true, class: 'selectpicker', "data-live-search" => "true", autocomplete: false }, required: f.object.validation_for(:phone).try(:is_required?), include_blank: true
+  = f.input :country_name, :as => :select, :collection => user_country_name_options, :selected => user_country_default(f.object.try(:country_name) || @country), input_html: { 'data-country-selector' => true, class: 'selectpicker', "data-live-search" => "true", autocomplete: false }, required: f.object.validation_for(:phone).try(:is_required?), include_blank: true
 
   - calling_code = '&nbsp;'
-  - calling_code = "+#{f.object.country.calling_code}" if f.object.country
+  - calling_code = "+#{f.object.country.calling_code}" if f.object.try(:country)
 
   = f.input :mobile_number, as: :tel, required: (f.object.validation_for(:phone).try(:is_required?) || f.object.validation_for(:mobile_number).try(:is_required?)), input_html: { data: { 'mobile-number': true }}, prefix: calling_code
 

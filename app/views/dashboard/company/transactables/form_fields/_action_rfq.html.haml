@@ -1,6 +1,14 @@
-- if f.object.transactable_type_action_type.allow_action_rfq? || f.object.transactable_type_action_type.allow_no_action?
-  %hr/
-- if f.object.transactable_type_action_type.allow_action_rfq?
-  = f.input :action_rfq, as: :switch
-- if f.object.transactable_type_action_type.allow_no_action?
-  = f.input :no_action, as: :switch
+- if f.object.is_a?(BaseForm)
+  - if f.object.model.transactable_type_action_type.allow_action_rfq? || f.object.model.transactable_type_action_type.allow_no_action?
+    %hr/
+  - if f.object.model.transactable_type_action_type.allow_action_rfq?
+    = f.input :action_rfq, as: :switch
+  - if f.object.model.transactable_type_action_type.allow_no_action?
+    = f.input :no_action, as: :switch
+- else
+  - if f.object.transactable_type_action_type.allow_action_rfq? || f.object.transactable_type_action_type.allow_no_action?
+    %hr/
+  - if f.object.transactable_type_action_type.allow_action_rfq?
+    = f.input :action_rfq, as: :switch
+  - if f.object.transactable_type_action_type.allow_no_action?
+    = f.input :no_action, as: :switch

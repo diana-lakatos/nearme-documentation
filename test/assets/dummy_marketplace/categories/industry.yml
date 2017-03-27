@@ -1,0 +1,22 @@
+---
+name: Industry
+multiple_root_categories: true
+children:
+- name: Technology
+  children:
+  - name: Management and Operations
+  - name: Oversight and Decision Support
+- name: Health and Life Sciences
+  children:
+  - name: Life Sciences, Biotechnology, & Pharmaceutical
+  - name: Healthcare Providers
+  - name: Health Plans
+- name: Government
+  children:
+  - name: Law Enforcement and Homeland Security
+  - name: State and Local Government
+  - name: Civilian Government
+  - name: Defense and Intelligence
+- name: Other
+instance_profile_types:
+- Buyer

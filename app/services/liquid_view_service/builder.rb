@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module LiquidViewService
   class Builder
     def initialize(liquid_view)

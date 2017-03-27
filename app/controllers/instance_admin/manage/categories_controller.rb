@@ -1,6 +1,6 @@
 class InstanceAdmin::Manage::CategoriesController < InstanceAdmin::Manage::BaseController
   def index
-    @categories = Category.roots.order(:position)
+    @categories = Category.roots
     @category = Category.new
   end
 
@@ -16,7 +16,7 @@ class InstanceAdmin::Manage::CategoriesController < InstanceAdmin::Manage::BaseC
       end
     else
       @new_category = Category.new
-      @categories = Category.roots.order(:position)
+      @categories = Category.roots
 
       flash[:error] = @category.errors.full_messages.to_sentence
       render action: :index
@@ -25,10 +25,10 @@ class InstanceAdmin::Manage::CategoriesController < InstanceAdmin::Manage::BaseC
 
   def jstree
     if params[:root]
-      @categories = Category.roots.where(id: params[:id]).order(:position)
+      @categories = Category.roots.where(id: params[:id]).order(:lft)
     else
       @category = Category.find(params[:id])
-      @categories = @category.children.order(:position)
+      @categories = @category.children
     end
     render json: {} if @categories.empty?
   end

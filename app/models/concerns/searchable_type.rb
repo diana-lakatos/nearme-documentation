@@ -1,9 +1,9 @@
+# frozen_string_literal: true
 module SearchableType
   extend ActiveSupport::Concern
 
   included do
-
-    after_update :create_es_index, if: -> (obj) { obj.searchable_changed? && obj.searchable }
+    after_update :create_es_index, if: ->(obj) { obj.searchable_changed? && obj.searchable }
 
     def update_es_mapping
       return unless Rails.application.config.use_elastic_search

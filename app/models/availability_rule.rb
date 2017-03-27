@@ -104,6 +104,10 @@ class AvailabilityRule < ActiveRecord::Base
     [:day, :open_hour, :open_minute, :close_hour, :close_minute, :days]
   end
 
+  def to_liquid
+    @availability_rule_drop ||= AvailabilityRuleDrop.new(self)
+  end
+
   private
 
   def update_location

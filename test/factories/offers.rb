@@ -10,10 +10,8 @@ FactoryGirl.define do
     before(:create) do |offer, _|
       transactable = Transactable.last || FactoryGirl.create(:transactable_offer)
       offer.add_line_item!(
-        {
-          transactable_id: transactable.id,
-          transactable_pricing_id: transactable.action_type.pricing.id
-        }
+        transactable_id: transactable.id,
+        transactable_pricing_id: transactable.action_type.pricing.id
       )
     end
 

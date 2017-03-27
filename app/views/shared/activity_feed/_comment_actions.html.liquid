@@ -1,0 +1,32 @@
+<div class="entry-actions-a" id="comment-actions-{{ comment_object.id }}">
+  <button type="button">
+    {{ 'user_entry.toggle_actions' | translate }}
+  </button>
+  <ul>
+    <li class="edit-action">
+      <a href="#entry-content-comment-{{ comment_object.id }}" data-edit-entry="">
+        {{ 'user_entry.edit' | translate }}
+      </a>
+    </li>
+    <li class="remove-action">
+      <a href="{{ comment_object.url }}" data-remove-entry="" data-confirm-label="{{ 'user_entry.confirm.remove_comment' | translate }}">
+        {{ 'user_entry.remove' | translate }}
+      </a>
+    </li>
+    <li class="report-spam-action">
+      {% if current_user != blank %}
+        <a href="{{ comment_object.url }}/spam_reports"
+          data-report-spam=""
+          data-cancel-report-url="{{ comment_object.url }}/spam_reports/cancel"
+          data-cancel-report-label="{{ 'user_entry.cancel_spam_report' | translate }}"
+          >
+          {{ 'user_entry.report_as_spam' | translate }}
+        </a>
+      {% else %}
+        <a href="{{ 'new_user_session_path' | generate_url: return_to: request.path }}">
+          {{ 'user_entry.report_as_spam' | translate }}
+        </a>
+      {% endif %}
+    </li>
+  </ul>
+</div>

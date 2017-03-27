@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class SearchControllerTest < ActionController::TestCase
@@ -16,7 +17,7 @@ class SearchControllerTest < ActionController::TestCase
     end
 
     should 'redirect to homepage' do
-      get :index, { loc: 'Anywhere' }
+      get :index, loc: 'Anywhere'
       assert_redirected_to root_path
     end
   end
@@ -38,14 +39,14 @@ class SearchControllerTest < ActionController::TestCase
             listing.update_attribute(:enabled, false)
           end
 
-          get :index, { loc: 'Auckland' }
+          get :index, loc: 'Auckland'
           assert_nothing_found
         end
       end
 
       context 'for invalid place' do
         should 'find nothing for invalid query' do
-          get :index, { loc: 'bung' }
+          get :index, loc: 'bung'
           assert_nothing_found
         end
       end
@@ -56,7 +57,7 @@ class SearchControllerTest < ActionController::TestCase
           unavaliable_location = FactoryGirl.create(:fully_booked_listing_in_cleveland).location
           available_location = FactoryGirl.create(:listing_in_cleveland).location
 
-          get :index, { loc: 'Cleveland', v: 'mixed' }
+          get :index, loc: 'Cleveland', v: 'mixed'
 
           assert_location_in_mixed_result(unavaliable_location)
           assert_location_in_mixed_result(available_location)
@@ -71,7 +72,7 @@ class SearchControllerTest < ActionController::TestCase
             filtered_auckland = FactoryGirl.create(:location_in_auckland, location_type: filtered_location_type)
             another_auckland = FactoryGirl.create(:location_in_auckland, location_type: another_location_type)
 
-            get :index, { loc: 'Auckland', lntype: filtered_location_type.id, v: 'mixed' }
+            get :index, loc: 'Auckland', lntype: filtered_location_type.id, v: 'mixed'
 
             assert_location_in_result(filtered_auckland)
             refute_location_in_result(another_auckland)
@@ -86,7 +87,7 @@ class SearchControllerTest < ActionController::TestCase
             filtered_auckland = FactoryGirl.create(:listing_in_auckland, transactable_type: service_type, properties: { listing_type: filtered_listing_type }).location
             another_auckland = FactoryGirl.create(:listing_in_auckland, transactable_type: service_type, properties: { listing_type: another_listing_type }).location
 
-            get :index, { loc: 'Auckland', lg_custom_attributes: { 'listing_type' => [filtered_listing_type] }, v: 'mixed' }
+            get :index, loc: 'Auckland', lg_custom_attributes: { 'listing_type' => [filtered_listing_type] }, v: 'mixed'
 
             assert_location_in_mixed_result(filtered_auckland)
             refute_location_in_mixed_result(another_auckland)
@@ -100,7 +101,7 @@ class SearchControllerTest < ActionController::TestCase
             filtered_auckland = listing.location
 
             another_auckland = FactoryGirl.create(:listing_in_cleveland, properties: { filterable_attribute: ['Righthanded'] }).location
-            get :index, { loc: 'Cleveland', lg_custom_attributes: { filterable_attribute: ['Lefthanded'] }, v: 'mixed' }
+            get :index, loc: 'Cleveland', lg_custom_attributes: { filterable_attribute: ['Lefthanded'] }, v: 'mixed'
 
             assert_location_in_mixed_result(filtered_auckland)
             refute_location_in_mixed_result(another_auckland)
@@ -119,7 +120,7 @@ class SearchControllerTest < ActionController::TestCase
 
           should 'filter only filtered locations when "OR" search mode' do
             TransactableType.first.update_attribute(:category_search_type, 'OR')
-            get :index, { loc: 'Auckland', category_ids: @filtered_category.id, v: 'mixed', buyable: false }
+            get :index, loc: 'Auckland', category_ids: @filtered_category.id, v: 'mixed', buyable: false
             assert_location_in_mixed_result(@filtered_auckland_1)
             assert_location_in_mixed_result(@filtered_auckland_2)
             refute_location_in_mixed_result(@another_auckland)
@@ -127,7 +128,7 @@ class SearchControllerTest < ActionController::TestCase
 
           should 'filter only filtered locations when "AND" search mode' do
             TransactableType.first.update_attribute(:category_search_type, 'AND')
-            get :index, { loc: 'Auckland', category_ids: "#{@filtered_category.id},#{@another_category.id}", v: 'mixed', buyable: false }
+            get :index, loc: 'Auckland', category_ids: "#{@filtered_category.id},#{@another_category.id}", v: 'mixed', buyable: false
             assert_location_in_mixed_result(@filtered_auckland_1)
             refute_location_in_mixed_result(@filtered_auckland_2)
             refute_location_in_mixed_result(@another_auckland)
@@ -142,20 +143,20 @@ class SearchControllerTest < ActionController::TestCase
             end
 
             should 'in map view' do
-              get :index, { loc: 'Adelaide', v: 'map' }
+              get :index, loc: 'Adelaide', v: 'map'
               assert_location_in_result(@adelaide)
               refute_location_in_result(@auckland)
             end
 
             should 'in mixed view' do
-              get :index, { loc: 'Adelaide', v: 'mixed' }
+              get :index, loc: 'Adelaide', v: 'mixed'
               assert_location_in_result(@adelaide)
               refute_location_in_result(@auckland)
             end
 
             context 'in list view' do
               should 'show results' do
-                get :index, { loc: 'Adelaide', v: 'list' }
+                get :index, loc: 'Adelaide', v: 'list'
                 assert_location_in_result(@adelaide)
                 refute_location_in_result(@auckland)
               end
@@ -174,7 +175,7 @@ class SearchControllerTest < ActionController::TestCase
                 should 'are shown for logged user' do
                   sign_in(@me)
                   @me.stubs(:unread_messages_count).returns(0)
-                  get :index, { v: 'list', transactable_type_id: @adelaide.listings.first.transactable_type_id }
+                  get :index, v: 'list', transactable_type_id: @adelaide.listings.first.transactable_type_id
                   assert_select '.connections[rel=?]', 'tooltip', 1
                   assert_select '[title=?]', "#{@friend.name} worked here"
                 end
@@ -182,7 +183,7 @@ class SearchControllerTest < ActionController::TestCase
                 should 'are hidden for guests' do
                   sign_out(@me)
 
-                  get :index, { loc: 'Adelaide', v: 'list' }
+                  get :index, loc: 'Adelaide', v: 'list'
 
                   assert_select '.connections[rel=?]', 'tooltip', 0
                 end
@@ -205,25 +206,25 @@ class SearchControllerTest < ActionController::TestCase
 
         context 'on mixed results page' do
           should 'return only super location' do
-            get :index, { loc: 'adelaide', query: 'super', v: 'mixed' }
+            get :index, loc: 'adelaide', query: 'super', v: 'mixed'
             assert_transactable_in_mixed_result(@adelaide_super)
             refute_transactable_in_mixed_result(@adelaide)
           end
 
           should 'return only super location with half word' do
-            get :index, { loc: 'adelaide', query: 'loca', v: 'mixed' }
+            get :index, loc: 'adelaide', query: 'loca', v: 'mixed'
             assert_transactable_in_mixed_result(@adelaide_super)
             refute_transactable_in_mixed_result(@adelaide)
           end
 
           should 'return both locations' do
-            get :index, { loc: 'adelaide', v: 'mixed' }
+            get :index, loc: 'adelaide', v: 'mixed'
             assert_transactable_in_mixed_result(@adelaide)
             assert_transactable_in_mixed_result(@adelaide_super)
           end
 
           should 'return one location by query only' do
-            get :index, { query: 'super', v: 'mixed' }
+            get :index, query: 'super', v: 'mixed'
             assert_transactable_in_mixed_result(@adelaide_super)
             refute_transactable_in_mixed_result(@adelaide)
           end
@@ -231,25 +232,25 @@ class SearchControllerTest < ActionController::TestCase
 
         context 'on list results page' do
           should 'return only super location' do
-            get :index, { loc: 'adelaide', query: 'super', v: 'list' }
+            get :index, loc: 'adelaide', query: 'super', v: 'list'
             assert_location_in_mixed_result(@adelaide_super)
             refute_location_in_mixed_result(@adelaide)
           end
 
           should 'return only super location with half word' do
-            get :index, { loc: 'adelaide', query: 'loca', v: 'list' }
+            get :index, loc: 'adelaide', query: 'loca', v: 'list'
             assert_location_in_mixed_result(@adelaide_super)
             refute_location_in_mixed_result(@adelaide)
           end
 
           should 'return both locations' do
-            get :index, { loc: 'adelaide', v: 'list' }
+            get :index, loc: 'adelaide', v: 'list'
             assert_location_in_mixed_result(@adelaide)
             assert_location_in_mixed_result(@adelaide_super)
           end
 
           should 'return one location by query only' do
-            get :index, { query: 'super', v: 'list' }
+            get :index, query: 'super', v: 'list'
             assert_location_in_mixed_result(@adelaide_super)
             refute_location_in_mixed_result(@adelaide)
           end
@@ -278,12 +279,12 @@ class SearchControllerTest < ActionController::TestCase
     end
 
     should 'fallback to "projects" when param is unknown' do
-      get :index, { search_type: 'something' }
+      get :index, search_type: 'something'
       assert_equal assigns(:search_type), 'projects'
     end
 
     should 'prepare view variables when param is known' do
-      get :index, { search_type: 'people' }
+      get :index, search_type: 'people'
       assert_equal assigns(:search_type), 'people'
     end
 

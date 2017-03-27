@@ -1,0 +1,22 @@
+{% if is_active %}
+  {% assign css_class = 'is-active' %}
+{% endif %}
+
+{% if current_user != blank %}
+  {% include 'shared/activity_feed/comment_form', event: event %}
+{% endif %}
+<div class="comments" id="comments-feed-{{ event.id }}" data-comments-for="{{ event.id }}">
+  {% for sub_comment in event.comments %}
+    {% cache_for current_user, context_cache_key, sub_comment %}
+      {% include 'shared/activity_feed/comment', comment_object: sub_comment, event: event %}
+    {% endcache_for %}
+  {% endfor %}
+</div>
+
+<div class="aligncenter">
+  {% if event.comments_total_pages > event.comments.current_page %}
+    <a href="{{ comment.commentable }}/comments" data-remote="true" data-load-more-comments="true" data-params-page="2">
+      {{ 'load_more_comments' | translate }}
+    </a>
+  {% endif %}
+</div>

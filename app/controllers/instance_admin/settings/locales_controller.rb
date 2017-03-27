@@ -25,7 +25,8 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
 
   def edit_keys
     @translations = @instance.translations.where(locale: @locale.code)
-    @default_and_custom_translations = LocalesService.new(platform_context, @locale.code, q: params[:q])
+    @default_and_custom_translations = LocalesService.new(platform_context: platform_context, locale: @locale.code, query: search_params[:q],
+                                                         case_sensitive: search_params[:case_sensitive], match_whole_words: search_params[:match_whole_words])
                                        .get_locales
                                        .order('key ASC')
                                        .paginate(page: params[:page], per_page: 50)
@@ -103,6 +104,10 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
 
   def locale_params
     params.require(:locale).permit(secured_params.locale)
+  end
+
+  def search_params
+    params.permit(:q, :case_sensitive, :match_whole_words)
   end
 
   def translation_params

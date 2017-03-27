@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class InappropriateReportsController < ApplicationController
-  before_filter :find_reportable
-  before_filter :redirect_unless_authenticated
+  before_action :find_reportable
+  before_action :redirect_unless_authenticated
 
   def create
     @report = InappropriateReport.new(reportable: @reportable, user: current_user, ip_address: request.remote_ip, reason: params[:inappropriate_report][:reason])

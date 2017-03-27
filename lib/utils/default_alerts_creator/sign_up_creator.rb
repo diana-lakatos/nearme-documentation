@@ -1,8 +1,8 @@
+# frozen_string_literal: true
 class Utils::DefaultAlertsCreator::SignUpCreator < Utils::DefaultAlertsCreator::WorkflowCreator
   def create_all!
     create_email_verification_email!
     create_welcome_email!
-    create_reengageemnt_email!
     create_create_user_by_admin_email!
     create_notify_of_wrong_phone_number_email!
     create_create_user_via_bulk_uploader_email!
@@ -23,10 +23,6 @@ class Utils::DefaultAlertsCreator::SignUpCreator < Utils::DefaultAlertsCreator::
 
   def create_host_welcome_email!
     create_alert!(associated_class: WorkflowStep::SignUpWorkflow::ListerAccountCreated, name: 'Welcome email', path: 'post_action_mailer/host_sign_up_welcome', subject: '{{user.first_name}}, welcome to {{platform_context.name}}!', alert_type: 'email', recipient_type: 'enquirer', delay: 30)
-  end
-
-  def create_reengageemnt_email!
-    create_alert!(associated_class: WorkflowStep::SignUpWorkflow::NoReservations, name: 'Reengagement email', path: 'reengagement_mailer/no_bookings', subject: '[{{platform_context.name}}] Check out these new listings in your area!', alert_type: 'email', recipient_type: 'enquirer')
   end
 
   def create_create_user_by_admin_email!

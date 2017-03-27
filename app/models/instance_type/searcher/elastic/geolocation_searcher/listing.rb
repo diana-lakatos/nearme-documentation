@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing < Searching::ElasticSearchBased
   def initialize(transactable_type, params)
     super(transactable_type, params)
@@ -6,7 +7,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing < Searching:
 
   def invoke
     set_options_for_filters
-    @filters = { date_range: search.available_dates }
+    @filters = { date_range: search_form.available_dates }
 
     listing_ids = fetcher.map(&:id)
 
@@ -24,19 +25,19 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing < Searching:
     listings_scope = listings_scope.where(id: listing_ids)
 
     @results = listings_scope
-                 .includes(:location, :location_address, :company, :photos, :transactable_type, :action_type, creator: [:user_profiles])
-                 .order_by_array_of_ids(order_ids)
-                 .paginate(page: params[:page], per_page: params[:per_page], total_entries: @search_results_count)
+               .includes(:location, :location_address, :company, :photos, :transactable_type, action_type: [:pricings], creator: [:user_profiles])
+               .order_by_array_of_ids(order_ids)
+               .paginate(page: params[:page], per_page: params[:per_page], total_entries: @search_results_count)
     @results = @results.offset(0) unless postgres_filters?
   end
 
   def search_params
-    @search_params ||= params.merge date_range: search.available_dates,
-                                    custom_attributes: search.lg_custom_attributes,
-                                    location_types_ids: search.location_types_ids,
-                                    listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
+    @search_params ||= params.merge date_range: search_form.available_dates,
+                                    custom_attributes: search_form.lg_custom_attributes,
+                                    location_types_ids: search_form.location_types_ids,
+                                    listing_pricing: search_form.lgpricing.blank? ? [] : search_form.lgpricing_filters,
                                     category_ids: category_ids,
-                                    sort: search.sort
+                                    sort: search_form.sort
   end
 
   def filters

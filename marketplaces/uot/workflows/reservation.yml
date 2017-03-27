@@ -1,0 +1,18 @@
+---
+name: Reservation
+workflow_type: reservation
+events_metadata: {}
+workflow_steps:
+- name: Warn Expiration
+  associated_class: WorkflowStep::ReservationWorkflow::WarnExpiration
+  workflow_alerts:
+  - name: Warn guest of expiration
+    alert_type: email
+    recipient_type: enquirer
+    template_path: reservation_mailer/warn_guest_of_expiration
+    delay: 0
+    subject: "[{{platform_context.name}}] {{ 'mailers.orders.warn_guest_of_expiration.subject'
+      | translate }}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

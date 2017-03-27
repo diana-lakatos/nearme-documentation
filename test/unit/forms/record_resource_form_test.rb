@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 def txt_record
@@ -50,10 +51,9 @@ class ResourceRecordFormTest < ActiveSupport::TestCase
                    name: 'linguamag.eu.',
                    type: 'TXT',
                    resource_records: [
-                     { value: "\"txt record value\"" }
+                     { value: '"txt record value"' }
                    ],
-                   ttl: 1000
-                  )
+                   ttl: 1000)
     end
   end
 end

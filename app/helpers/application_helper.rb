@@ -109,7 +109,7 @@ module ApplicationHelper
     options[:rel] = nil if secure_links
     constraint.merge!(secured_constraint) if secure_links
     options[:data] ||= {}
-    options[:data][:href] = new_user_registration_url(constraint)
+    options[:data][:href] = new_api_user_path(constraint)
     link_to('#', options, &block)
   end
 
@@ -423,17 +423,6 @@ module ApplicationHelper
     body_classes = []
     body_classes << 'signed-in' if user_signed_in?
     body_classes.join(' ')
-  end
-
-  def header_image_for_event(event)
-    if event.event_source.is_a?(Link) && event.event_source.try(:image).try(:file).present?
-      event.event_source.image.url(:medium)
-    else
-      followed = event.event_source.is_a?(Photo) ? event.event_source : event.followed
-      image = followed.try(:cover_image).try(:url, :medium) if followed.is_a?(Group)
-      image ||= (followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium)
-      image.present? ? image : followed.try(:cover_photo).try(:image).try(:url, :medium)
-    end
   end
 
   def current_url

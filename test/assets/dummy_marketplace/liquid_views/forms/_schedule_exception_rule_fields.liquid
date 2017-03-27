@@ -1,0 +1,19 @@
+{% assign form_object_schedule_exception_rules = schedule_exception_rules %}
+<div class="row unavailable-period schedule-exception-rule nested-fields">
+  <div class="col-xs-11">
+    {% input id, as: hidden, form: schedule_exception_rules %}
+    {% input label, form: schedule_exception_rules  %}
+    <div class="form-inline" data-date-range-picker>
+      {% input user_duration_range_start, form: schedule_exception_rules, as: date_picker, wrapper_html-class: 'form-control-sm', label: 'Date range' | t,  label_html-class: 'block-label', input_html-data-date-range-picker-start: '' %}
+      <div class="form-unit label-offset">
+        <b>{{ 'pricing.unavailability.from_to_separator' | t }}</b>
+      </div>
+      {% input user_duration_range_end, form: schedule_exception_rules, as: date_picker, wrapper_html-class: 'form-control-sm label-offset', label: false, input_html-data-date-range-picker-end: '' %}
+    </div>
+  </div>
+  <div class="col-xs-1">
+    <button class="action--remove remove_fields dynamic" type="button">
+      {{ 'pricing.unavailability.remove_period' | t }}
+    </button>
+  </div>
+</div>

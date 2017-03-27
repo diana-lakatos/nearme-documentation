@@ -16,7 +16,7 @@ name: Signup form
 
   <h2>Let’s list your space and start<br>making you some extra money</h2>
 
-  <form action="./" method="post" class="no_inheritance" novalidate>
+  {% form_for user_signup, url: '/api/users.html', as: user %}
     <div class="step active-step" data-step="0">
       <h3>Evaluate rent income from your space</h3>
       <fieldset data-form-field="required-group">
@@ -101,7 +101,7 @@ name: Signup form
         <input type="hidden" name="transactable[city]" data-city>
         <input type="hidden" name="transactable[state]" data-state>
         <input type="hidden" name="transactable[country]" data-country>
-        <input type="hidden" name="transactable[postcode]" data-postcode'>
+        <input type="hidden" name="transactable[postcode]" data-postcode>
 
         <p class="help">Start entering the FULL street address of your space and select from the dropdown list , e.g. 123 George St, Parramatta, NSW, Australia​.</p>
         <p class="help">Your address will not be shown on the ad, but the Spacer Team needs to know where your space is close to in order to assist potential renters.</p>
@@ -436,5 +436,5 @@ name: Signup form
         <button type="submit" class="next submit">List your space</button>
       </div>
     </div>
-  </form>
+  {% endform_for %}
 </section>

@@ -61,7 +61,7 @@ namespace :elastic do
       Instance.find_each do |instance|
         instance.set_context!
         indices_in_use << instance.searchable_classes.map do |_klass|
-          _klass.indexer_helper.get_current_index_name
+          _klass.indexer_helper.current_index_name
         end
       end
       indices_in_use.flatten!
@@ -151,8 +151,7 @@ namespace :elastic do
     end
   end
 
-  def rebuild_index_for(instance, klasses = nil)
-    klasses ||= instance.searchable_classes
+  def rebuild_index_for(instance, klasses = instance.searchable_classes)
     Array(klasses).each do |klass|
       unless instance.searchable_classes.include?(klass)
         puts "For instance --===#{instance.name} - #{instance.id}===-- skipping index for #{klass} - it's not searchable."

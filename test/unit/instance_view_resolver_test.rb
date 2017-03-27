@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class InstanceViewResolverTest < ActiveSupport::TestCase
   setup do
     @instance = PlatformContext.current.instance
     @resolver = InstanceViewResolver.instance
-    @details = { formats: [:html], locale: [:en], handlers: [:haml], instance_id: @instance.id  }
+    @details = { formats: [:html], locale: [:en], handlers: [:haml], instance_id: @instance.id }
   end
 
   should 'not find not existent template' do

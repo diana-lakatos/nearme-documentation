@@ -47,6 +47,7 @@ dump.rdb
 .envrc
 .vimrc
 npm-debug.log
+yarn-error.log
 work_files
 *.sublime-project
 *.sublime-workspace

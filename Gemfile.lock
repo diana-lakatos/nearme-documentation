@@ -153,6 +153,10 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.3.1)
       aws-sdk-core (= 2.3.1)
+    axiom-types (0.1.1)
+      descendants_tracker (~> 0.0.4)
+      ice_nine (~> 0.11.0)
+      thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.11)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
@@ -162,6 +166,7 @@ GEM
       debug_inspector (>= 0.0.1)
     braintree (2.46.0)
       builder (>= 2.0.0)
+    brakeman (3.5.0)
     buftok (0.2.0)
     builder (3.2.3)
     bullet (5.4.2)
@@ -202,15 +207,21 @@ GEM
     cocaine (0.5.7)
       climate_control (>= 0.0.3, < 1.0)
     cocoon (1.2.6)
+    code_analyzer (0.4.7)
+      sexp_processor
+    codeclimate-engine-rb (0.4.0)
+      virtus (~> 1.0)
     codeclimate-test-reporter (0.4.4)
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.1)
+    coercible (1.0.0)
+      descendants_tracker (~> 0.0.1)
     colorize (0.8.1)
     counter_culture (0.1.28)
       after_commit_action (~> 0.1.3)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crass (1.0.1)
+    crass (1.0.2)
     css_parser (1.3.6)
       addressable
     cucumber (2.4.0)
@@ -233,7 +244,7 @@ GEM
     daemons (1.1.9)
     database_cleaner (1.5.3)
     debug_inspector (0.0.2)
-    declarative (0.0.5)
+    declarative (0.0.8)
       uber (>= 0.0.15)
     delayed_job (4.1.2)
       activesupport (>= 3.0, < 5.1)
@@ -254,8 +265,8 @@ GEM
     devise-token_authenticatable (0.5.2)
       devise (>= 4.0.0, < 4.3.0)
     diff-lcs (1.3)
-    disposable (0.2.5)
-      declarative (~> 0.0.4)
+    disposable (0.3.2)
+      declarative (>= 0.0.8, < 1.0.0)
       representable (>= 2.4.0, <= 3.1.0)
       uber
     docile (1.1.5)
@@ -314,6 +325,15 @@ GEM
       CFPropertyList (~> 2.2)
     flamegraph (0.1.0)
       fast_stack
+    flay (2.8.1)
+      erubis (~> 2.7.0)
+      path_expander (~> 1.0)
+      ruby_parser (~> 3.0)
+      sexp_processor (~> 4.0)
+    flog (4.5.0)
+      path_expander (~> 1.0)
+      ruby_parser (~> 3.1, > 3.1.0)
+      sexp_processor (~> 4.4)
     fog (1.38.0)
       fog-aliyun (>= 0.1.0)
       fog-atmos
@@ -458,6 +478,9 @@ GEM
       multi_json (>= 1.7.5, < 2.0)
       nokogiri (~> 1.6.0)
       oauth2
+    gitlab (3.7.0)
+      httparty (~> 0.13.0)
+      terminal-table
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     googl (0.7.0)
@@ -489,6 +512,7 @@ GEM
     i18n (0.7.0)
     i18n_data (0.6.2)
     ice_cube (0.13.0)
+    ice_nine (0.11.2)
     image_optim (0.24.0)
       exifr (~> 1.2, >= 1.2.2)
       fspath (~> 3.0)
@@ -595,7 +619,7 @@ GEM
     newrelic_rpm (3.17.1.326)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
-    nokogumbo (1.2.0)
+    nokogumbo (1.4.10)
       nokogiri
     oauth (0.5.1)
     oauth2 (1.0.0)
@@ -604,6 +628,8 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (~> 1.2)
+    octokit (4.6.2)
+      sawyer (~> 0.8.0, >= 0.5.3)
     omniauth (1.3.1)
       hashie (>= 1.2, < 4)
       rack (>= 1.0, < 3)
@@ -643,11 +669,12 @@ GEM
       activerecord (>= 3.0, < 6.0)
       activesupport (>= 3.0, < 6.0)
       request_store (~> 1.1)
-    parallel (1.4.1)
-    parallel_tests (1.3.7)
+    parallel (1.11.1)
+    parallel_tests (2.14.0)
       parallel
     parser (2.3.1.4)
       ast (~> 2.2)
+    path_expander (1.0.1)
     patron (0.4.20)
     paypal-sdk-adaptivepayments (1.117.0)
       paypal-sdk-core (~> 0.3.0)
@@ -674,6 +701,28 @@ GEM
       actionmailer (>= 3, < 5)
       premailer (~> 1.7, >= 1.7.9)
     progress (3.2.2)
+    pronto (0.8.2)
+      gitlab (~> 3.6, >= 3.4.0)
+      httparty (>= 0.13.7, < 0.15)
+      octokit (~> 4.3, >= 4.1.0)
+      rainbow (~> 2.1)
+      rugged (~> 0.24, >= 0.23.0)
+      thor (~> 0.19.0)
+    pronto-brakeman (0.8.0)
+      brakeman (~> 3.2, >= 3.2.0)
+      pronto (~> 0.8.0)
+    pronto-fasterer (0.8.0)
+      fasterer (~> 0.3, >= 0.3.0)
+      pronto (~> 0.8.0)
+    pronto-rails_best_practices (0.8.0)
+      pronto (~> 0.8.0)
+      rails_best_practices (~> 1.16, >= 1.15.0)
+    pronto-reek (0.8.0)
+      pronto (~> 0.8.0)
+      reek (~> 4.2)
+    pronto-rubocop (0.8.0)
+      pronto (~> 0.8.0)
+      rubocop (~> 0.38, >= 0.35.0)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -727,6 +776,14 @@ GEM
     rails-perftest (0.0.6)
     rails_autolink (1.1.6)
       rails (> 3.1)
+    rails_best_practices (1.18.0)
+      activesupport
+      code_analyzer (>= 0.4.3)
+      erubis
+      i18n
+      json
+      require_all
+      ruby-progressbar
     railties (4.2.7.1)
       actionpack (= 4.2.7.1)
       activesupport (= 4.2.7.1)
@@ -769,13 +826,20 @@ GEM
       redis-store (~> 1.1.0)
     redis-store (1.1.7)
       redis (>= 2.2)
-    reform (2.1.0)
-      disposable (>= 0.2.2, < 0.3.0)
+    reek (4.5.6)
+      codeclimate-engine-rb (~> 0.4.0)
+      parser (>= 2.3.1.2, < 2.5)
+      rainbow (~> 2.0)
+    reform (2.2.3)
+      disposable (>= 0.3.0, < 0.4.0)
       representable (>= 2.4.0, < 3.1.0)
-      uber (~> 0.0.11)
-    representable (3.0.0)
+      uber (>= 0.0.15, < 0.2.0)
+    reform-rails (0.1.7)
+      activemodel (>= 3.2)
+      reform (>= 2.2.0)
+    representable (3.0.2)
       declarative (~> 0.0.5)
-      uber (~> 0.0.15)
+      uber (>= 0.0.15, < 0.2.0)
     request_store (1.3.1)
     require_all (1.3.3)
     responders (2.3.0)
@@ -808,12 +872,25 @@ GEM
       nokogiri (>= 1.5.10)
     ruby_parser (3.8.3)
       sexp_processor (~> 4.1)
+    rubycritic (3.1.0)
+      flay (~> 2.8)
+      flog (~> 4.4)
+      launchy (= 2.4.3)
+      parser (= 2.3.1.4)
+      rainbow
+      reek (~> 4.4)
+      ruby_parser (~> 3.8)
+      virtus (~> 1.0)
     rubyzip (1.1.7)
+    rugged (0.25.1.1)
     safe_yaml (1.0.4)
-    sanitize (3.1.0)
-      crass (~> 1.0.1)
+    sanitize (4.4.0)
+      crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
-      nokogumbo (= 1.2.0)
+      nokogumbo (~> 1.4.1)
+    sawyer (0.8.1)
+      addressable (>= 2.3.5, < 2.6)
+      faraday (~> 0.8, < 1.0)
     sexp_processor (4.7.0)
     shippo (1.0.3)
       json (~> 1.8.1)
@@ -870,6 +947,8 @@ GEM
     stringex (2.5.2)
     stripe (1.57.0)
       rest-client (>= 1.4, < 4.0)
+    terminal-table (1.7.3)
+      unicode-display_width (~> 1.1.1)
     test_after_commit (1.1.0)
       activerecord (>= 3.2)
     thin (1.5.1)
@@ -899,7 +978,7 @@ GEM
       simple_oauth (~> 0.2.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uber (0.0.15)
+    uber (0.1.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
@@ -922,6 +1001,11 @@ GEM
       addressable
       htmlentities
       multi_json
+    virtus (1.0.5)
+      axiom-types (~> 0.1)
+      coercible (~> 1.0)
+      descendants_tracker (~> 0.0, >= 0.0.3)
+      equalizer (~> 0.0, >= 0.0.9)
     warden (1.2.6)
       rack (>= 1.0)
     webmock (1.17.4)
@@ -936,8 +1020,6 @@ GEM
     yard (0.9.5)
     yard-activerecord (0.0.16)
       yard (>= 0.8.3)
-    yardstick (0.9.9)
-      yard (~> 0.8, >= 0.8.7.2)
 
 PLATFORMS
   ruby
@@ -987,7 +1069,6 @@ DEPENDENCIES
   elasticsearch-rails
   email_spec
   factory_girl_rails (~> 4.5.0)
-  fasterer
   ffaker (~> 1.16)
   figaro
   flamegraph
@@ -1052,6 +1133,12 @@ DEPENDENCIES
   pickle (~> 0.5.1)
   plaid
   premailer-rails
+  pronto
+  pronto-brakeman
+  pronto-fasterer
+  pronto-rails_best_practices
+  pronto-reek
+  pronto-rubocop
   pry-doc
   pry-nav
   pry-rails
@@ -1072,12 +1159,14 @@ DEPENDENCIES
   redcarpet
   redis
   redis-rails (~> 4)
-  reform (~> 2.1.0)
+  reform
+  reform-rails
+  responders
   ri_cal
   routing-filter (~> 0.5.0)
   rspec (= 2.14.1)
-  rubocop
   ruby-prof
+  rubycritic
   sanitize
   sendle_api!
   shippo
@@ -1110,10 +1199,9 @@ DEPENDENCIES
   will_paginate
   yard (~> 0.9.5)
   yard-activerecord (~> 0.0.16)
-  yardstick
 
 RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.14.3
+   1.14.6

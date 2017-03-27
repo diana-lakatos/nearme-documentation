@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::IntegrationTest
@@ -8,7 +9,6 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
   should 'create all' do
     @signup_creator.expects(:create_email_verification_email!).once
     @signup_creator.expects(:create_welcome_email!).once
-    @signup_creator.expects(:create_reengageemnt_email!).once
     @signup_creator.expects(:create_create_user_by_admin_email!).once
     @signup_creator.expects(:create_notify_of_wrong_phone_number_email!).once
     @signup_creator.expects(:create_create_user_via_bulk_uploader_email!).once
@@ -31,7 +31,7 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
         WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert mail.html_part.body.include?("/verify/#{@user.id}/#{@user.email_verification_token}")
+      assert_contains "/api/users/#{@user.id}/verify?token=#{UserVerificationForm.new(@user).email_verification_token}", mail.html_part.body
       assert_contains 'href="https://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
@@ -54,20 +54,6 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert_equal subject, mail.subject
     end
 
-    should 'send no_bookings' do
-      @signup_creator.create_reengageemnt_email!
-      assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::NoReservations, @user.id)
-      end
-      mail = ActionMailer::Base.deliveries.last
-      assert mail.html_part.body.include?(@user.first_name)
-      assert_equal [@user.email], mail.to
-      assert_equal "[#{@platform_context.decorate.name}] Check out these new listings in your area!", mail.subject
-      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="https://example.com', mail.html_part.body
-      assert_not_contains 'href="/', mail.html_part.body
-    end
-
     context 'when sending invitation email' do
       setup do
         @new_user_token = 'new_user--token'
@@ -85,8 +71,8 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
         assert mail.html_part.body.include?(@user.first_name)
         assert_equal [@user.email], mail.to
         assert_equal "#{@user.first_name}, you were invited to #{@platform_context.decorate.name} by #{@creator.name}!", mail.subject
-        assert_contains "Welcome, #{@user.first_name }!", mail.html_part.body
-        assert_contains "You have been invited by #{ @creator.name } to join #{ @platform_context.decorate.name }!", mail.html_part.body
+        assert_contains "Welcome, #{@user.first_name}!", mail.html_part.body
+        assert_contains "You have been invited by #{@creator.name} to join #{@platform_context.decorate.name}!", mail.html_part.body
         assert_contains 'href="https://custom.domain.com/', mail.html_part.body
         assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
@@ -119,7 +105,7 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
       assert_equal "#{@user.first_name}, you were invited to #{@platform_context.decorate.name}!", mail.subject
-      assert_contains "Hi #{@user.first_name }", mail.html_part.body
+      assert_contains "Hi #{@user.first_name}", mail.html_part.body
       assert_contains "We'd like to invite you to participate in our #{@platform_context.decorate.name} marketplace", mail.html_part.body
       assert_contains 'Password: cool_password', mail.html_part.body
       assert_contains 'href="https://custom.domain.com', mail.html_part.body
@@ -135,7 +121,7 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
         WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::Approved, @user.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_equal "#{ @user.first_name }, you have been approved at #{ @platform_context.decorate.name }!", mail.subject
+      assert_equal "#{@user.first_name}, you have been approved at #{@platform_context.decorate.name}!", mail.subject
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
       assert mail.html_part.body.include?('You have been approved')

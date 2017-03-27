@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::Manage::MarketplaceBuilderImportService
   def initialize(file)
     @file = file
@@ -15,7 +16,7 @@ class InstanceAdmin::Manage::MarketplaceBuilderImportService
   protected
 
   def save_file_to_tmp
-    File.open("tmp/#{zip_file_name}.zip", "wb") { |f| f.write(@file.read) }
+    File.open("tmp/#{zip_file_name}.zip", 'wb') { |f| f.write(@file.read) }
   end
 
   def unzip_file
@@ -38,11 +39,11 @@ class InstanceAdmin::Manage::MarketplaceBuilderImportService
 
   def ensure_proper_instance_id_in_mpbuilderrc!
     config = JSON.parse(File.read("#{marketplace_folder_path}/.mpbuilderrc"))
-    raise "Invalid instance_id in mpbuilderrc file!" unless config["instance_id"] == PlatformContext.current.instance.id
+    raise 'Invalid instance_id in mpbuilderrc file!' unless config['instance_id'] == PlatformContext.current.instance.id
   end
 
   def marketplace_folder_path
-    @path ||= Dir.glob("tmp/#{zip_file_name}/*").find {|e| File.directory?(e)}
+    @path ||= Dir.glob("tmp/#{zip_file_name}/*").find { |e| File.directory?(e) }
   end
 
   def zip_file_name

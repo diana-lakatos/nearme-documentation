@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::ReviewSearchForm < SearchForm
   property :q, virtual: true
   property :rating, virtual: true
@@ -18,9 +19,7 @@ class InstanceAdmin::ReviewSearchForm < SearchForm
 
     result[:with_date] = [date_from_params] if date.present?
 
-    if transactable_type.present?
-      result[:with_transactable_type] = [transactable_type]
-    end
+    result[:with_transactable_type] = [transactable_type] if transactable_type.present?
 
     result
   end

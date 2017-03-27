@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class AuthenticationTest < ActiveSupport::TestCase
@@ -93,12 +94,6 @@ class AuthenticationTest < ActiveSupport::TestCase
   end
 
   context '#can_be_deleted?' do
-    should 'not be deleted if user has nil password and he has no other authentications' do
-      auth = FactoryGirl.create(:user).authentications.create(@valid_params)
-      auth.user.stubs(:has_password?).returns(false)
-      refute auth.can_be_deleted?
-    end
-
     should 'be deleted if user has not blank password and he has no other authentications' do
       auth = FactoryGirl.create(:user).authentications.create(@valid_params)
       auth.user.stubs(:has_password?).returns(true)

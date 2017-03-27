@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class InstanceType::Searcher::UserSearcher
   include InstanceType::Searcher
-  attr_reader :filterable_custom_attributes, :search
+  attr_reader :filterable_custom_attributes, :search, :params
   ALLOWED_QUERY_FIELDS = [:first_name, :last_name, :name, :country_name, :company_name, :tags].freeze
 
   def initialize(params, current_user, transactable_type)
@@ -37,7 +38,7 @@ class InstanceType::Searcher::UserSearcher
       else
         @fetcher = @fetcher.joins("INNER JOIN categories_categorizables cc ON
           cc.categorizable_type = 'UserProfile' AND cc.categorizable_id = user_profiles.id")
-                   .where('cc.category_id in (?)', category_ids)
+                           .where('cc.category_id in (?)', category_ids)
       end
     end
 
@@ -50,7 +51,7 @@ class InstanceType::Searcher::UserSearcher
   end
 
   def selected_values(name)
-    @params[name].select(&:present?) if @params[name]
+    @params[name]&.select(&:present?)
   end
 
   def queried_fields
@@ -83,5 +84,9 @@ class InstanceType::Searcher::UserSearcher
 
   def set_options_for_filters
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable
+  end
+
+  def result_view
+    'community'
   end
 end

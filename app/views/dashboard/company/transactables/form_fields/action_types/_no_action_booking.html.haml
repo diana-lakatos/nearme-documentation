@@ -1,6 +1,14 @@
-- if f.object.transactable_type_action_type.allow_action_rfq? && fields.include?('action_rfq')
-  = f.input :action_rfq, as: :switch
-- elsif f.object.allow_no_action?
-  = f.hidden_field :no_action, value: true
-- elsif f.object.allow_action_rfq?
-  = f.hidden_field :action_rfq, value: true
+- if f.object.is_a?(BaseForm)
+  - if f.object.model.transactable_type_action_type.allow_action_rfq? && fields.include?('action_rfq')
+    = f.input :action_rfq, as: :switch
+  - elsif f.object.model.allow_no_action?
+    = f.hidden_field :no_action, value: true
+  - elsif f.object.model.allow_action_rfq?
+    = f.hidden_field :action_rfq, value: true
+- else
+  - if f.object.transactable_type_action_type.allow_action_rfq? && fields.include?('action_rfq')
+    = f.input :action_rfq, as: :switch
+  - elsif f.object.allow_no_action?
+    = f.hidden_field :no_action, value: true
+  - elsif f.object.allow_action_rfq?
+    = f.hidden_field :action_rfq, value: true

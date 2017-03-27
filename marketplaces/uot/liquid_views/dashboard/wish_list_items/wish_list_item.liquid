@@ -1,0 +1,38 @@
+---
+partial: true
+---
+{% if wish_list_item.wishlistable_present? %}
+  <article class="wish-list__item wish-list__item-{{ wish_list_item.wishlistable_type }}" style="background-image: url({{ wish_list_item.image_url }});">
+
+    <a href="{{ wish_list_item.wishlistable_path }}" rel="external" class="link">
+      <div class="wish-list__item__content">
+        <div class="name">
+          {{ wish_list_item.wishlistable_name }}
+        </div>
+        <div class="company">
+          {{ wish_list_item.company_name }}
+        </div>
+
+        <div class="address">
+          {{ wish_list_item.price }}
+        </div>
+      </div>
+    </a>
+
+    <div class="actions">
+
+
+      {% if current_user != blank and current_user.has_seller_profile? %}
+        <a href="#project-invite-{{ wish_list_item.wishlistable_id }}" class="action--invite" data-project-invite-trigger>Invite</a>
+
+        {% content_for 'body_bottom' %}
+        <div class="project-invite" id="project-invite-{{ wish_list_item.wishlistable_id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: wish_list_item.wishlistable_id }}"></div>
+        {% endcontent_for %}
+      {% endif %}
+
+      <a href="{{ wish_list_item.dashboard_wish_list_item_path }}" rel="nofollow" data-method="delete" class="action--delete">{{ 'wish_lists.buttons.delete' | translate }}</a>
+    </div>
+
+
+  </article>
+{% endif %}

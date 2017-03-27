@@ -1,0 +1,25 @@
+---
+partial: false
+---
+
+<div class='blog-container'>
+  <div class='blog-nav'>
+    <ul class='tags-filters'>
+      {% for tag in tags %}
+        <li class='tag-filter-link'>{{ tag | tag_filter_link }}</li>
+      {% endfor %}
+    </ul>
+    <a class='rss-feed-button' href='{{ blog_rss_feed_url }}'>RSS Feed</a>
+  </div>
+
+  <div class='blog-posts' id='user-blog-posts'>
+    {% for blog_post in blog_posts %}
+      {% include 'registrations/blog/blog_post.html' %}
+    {% endfor %}
+  </div>
+
+<div id='infinite-scrolling'>
+  {{ @blog_posts | pagination_links }}
+</div>
+</div>
+

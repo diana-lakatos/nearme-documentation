@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 class CustomThemeAsset::ThemeFontFile < CustomThemeAsset
-  validates_presence_of :file
+  validates :file, presence: true
 
   def asset_type
     'font'

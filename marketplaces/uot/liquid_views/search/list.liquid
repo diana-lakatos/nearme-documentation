@@ -1,0 +1,185 @@
+---
+partial: false
+---
+{% content_for 'hero' %}
+    <div class="search-form" id="listing_search">
+      <div class="wrapper-a">
+        <form action="/search" method="get" id="search-form">
+          <div class="query">
+            <label for="field-q" class="struct-label">Search keyword</label>
+            <input type="text" name="query" id="field-q" placeholder="Enter keywords... (Searches Bios and tags)" value="{{ params['query'] }}">
+            <input type="hidden" name="lg_custom_attributes[workplace_type]" value="{{ searcher.lg_custom_attributes_hash['workplace_type'] }}">
+            <input type="hidden" name="lg_custom_attributes[travel]" value="{{ searcher.lg_custom_attributes_hash['travel'] }}">
+            <input type="hidden" name="per_page" value="{{ searcher.per_page }}">
+            <input type="hidden" name="page" value="{{ searcher.current_page }}" id="input-page">
+            <input type="hidden" name="category_ids" value="{{ searcher.category_ids }}">
+            <input type="hidden" name="query_fields" value="tags">
+            <input type="hidden" name="sort">
+            <input type="hidden" name="search_type" value="{{ params['search_type'] }}">
+
+            <div class="form-action">
+              <button type="submit" class="button-a">Search</button>
+              <a class="button-b" href="{{ 'dashboard_wish_list_items_path' | generate_url }}">View Favorites</a>
+            </div>
+          </div>
+        </form>
+
+        {% if params['search_type'] == 'advanced' %}
+          {% include 'search/advanced_search' %}
+        {% else %}
+          {% include 'search/basic_search' %}
+        {% endif %}
+
+        <div class="search-sort-order" data-search-filters-container>
+          <label for="search-order">Sort by:</label>
+          <span class="select-a">
+            <select id="search-order" name="sort" class="unstyled-select">
+              <option {% if params['sort'] == blank  %}selected{% endif %} value=''>Relevance</option>
+              <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_asc'  %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_asc'>Hourly rate ascending</option>
+              <option {% if params['sort'] == 'custom_attributes.hourly_rate_decimal_desc' %}selected{% endif %} value='custom_attributes.hourly_rate_decimal_desc'>Houry rate descending</option>
+            </select>
+          </span>
+        </div>
+      </div>
+    </div>
+{% endcontent_for %}
+
+<main id="results">
+    <div class="wrapper-a">
+        <h1 class="struct-label">SME Search results</h1>
+        <section class="search-results">
+
+            <div class="search-results-query-info" style="border: none; height: 37px;">
+                <span class="results-count"></span>
+            </div>
+
+            <div class="search-results-items">
+                {% for user in searcher.results %}
+                    <article class="user-a" id="user-{{ user.id }}">
+                        <div class="wrapper">
+                            <header class="header">
+                                <figure>
+                                    <img src="{{user.avatar_url_big}}" alt="{{ user.name }}">
+                                </figure>
+                                <h2><a href="{{ user.user_profile_url }}">{{ user.name }}</a></h2>
+
+                                <div class="properties">
+                                    <p class="price">
+                                        <strong>{{ user.buyer_properties.hourly_rate_decimal | price_with_cents_with_currency }} USD / hr</strong>
+                                    </p>
+                                    <dl class="property">
+                                        <dt>Discounts:</dt>
+                                        <dd>{{ user.buyer_properties.discounts_available | humanize }}</dd>
+                                    </dl>
+                                </div>
+
+                                <div class="contact">
+                                    <a class="button-b action-message" data-href='{{ user.user_message_path }}' data-modal='true'>Send Message</a>
+                                    {{ user.click_to_call_button }}
+                                </div>
+                            </header>
+
+                            <ul class="actions-a">
+                            {% if current_user != blank and current_user.has_seller_profile? %}
+                              <li><a href="#project-invite-{{ user.id }}" class="button-a" data-project-invite-trigger>Invite to project</a></li>
+                            {% endif %}
+
+                            <li>
+                              {% if current_user.has_seller_profile? %}
+                                {% include 'shared/components/wish_list_button_injection', object: user, link_to_classes: 'button-b action-favorite' %}
+                              {% endif %}
+                            </li>
+                            {% if user.has_active_blog? %}
+                              <li><a href="{{ user.user_blog_posts_list_path }}" class="button-b action-blog">View Blog</a></li>
+                            {% endif %}
+                            {% if user.buyer_properties['linkedin_url'] != blank %}
+                              <li><a href="{{ user.buyer_properties['linkedin_url'] }}" class="button-b action-linkedin" target="_blank">LinkedIn Bio</a></li>
+                            {% endif %}
+                            </ul>
+
+                            {% assign aoe_categories = user.fetch_buyer_categories["area-of-expertise"] %}
+                            {% assign industry_categories = user.fetch_buyer_categories["industry"] %}
+                            {% assign languages = user.fetch_buyer_categories["languages"] %}
+
+                            {% if aoe_categories.size > 0 || industry_categories.size > 0 || languages.size > 0 || user.buyer_properties.bio != blank %}
+                                <div class="content">
+                                    <div class="props">
+                                    {% if industry_categories.size > 0 %}
+                                        <div class="prop">
+                                            <h3>Industry</h3>
+                                            <ul class="short-list">
+                                                {% for industry in industry_categories %}
+                                                <li>{{ industry }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if aoe_categories.size > 0 %}
+                                        <div class="prop">
+                                            <h3>Area of Expertise</h3>
+                                            <ul class="short-list">
+                                                {% for expertise in aoe_categories %}
+                                                <li>{{ expertise }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if languages.size > 0 %}
+                                        <div class="prop">
+                                            <h3>Languages</h3>
+                                            <p>{{ languages | join: ', ' }}</p>
+                                        </div>
+                                    {% endif %}
+
+                                    </div>
+
+                                    {% if user.buyer_properties.bio != blank %}
+                                        <h3>Bio</h3>
+                                        {% if user.buyer_properties.bio.size > 350 %}
+                                           <div data-shorten-description>
+                                            <p data-description>{{ user.buyer_properties.bio | slice: 0, 350 | nl2br }}<span class="show_more_container">...<a class="show_more_link"> show more</a></span></p>
+                                            <div style='display: none;'  class="rest_of_text">{{ user.buyer_properties.bio | slice: 350, user.buyer_properties.bio.size | nl2br }}</div>
+                                          </div>
+                                        {% else %}
+                                          <p>{{ user.buyer_properties.bio }}</p>
+                                        {% endif %}
+                                    {% endif %}
+                              </div>
+                          {% endif %}
+                      </div>
+
+                      {% if user.tag_list.size > 0 %}
+                      <div class="tags-a tags-short-list">
+                          <h4>Tags</h4>
+                          <ul>
+                              {% for tag in user.tag_list %}
+                                  <li><a href="?query_fields=tags&amp;query={{ tag }}">{{ tag }}</a></li>
+                              {% endfor %}
+                          </ul>
+                      </div>
+                      {% endif %}
+
+                      <div class="project-invite" id="project-invite-{{ user.id }}" data-collaborations-url="{{ 'collaborations_for_current_user_dashboard_company_user_path' | generate_url: user.id }}"></div>
+                  </article>
+
+                  <script>
+                    $(function(){
+                      $(document).trigger('userLoaded.uot', 'user-{{user.id}}')
+                    });
+                  </script>
+              {% endfor %}
+            </div>
+            {% if searcher.next_page %}
+                <p class="search-results-more-trigger">
+                    <button type="button" class="button-a" data-page='{{ searcher.next_page }}'>More Results</button>
+                </p>
+            {% endif %}
+        </section>
+    </div>
+</main>
+
+{% content_for 'domready' %}
+    $(document).trigger('init:list:searchresults.nearme');
+{% endcontent_for %}

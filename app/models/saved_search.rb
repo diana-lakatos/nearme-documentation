@@ -29,14 +29,14 @@ class SavedSearch < ActiveRecord::Base
 
   def results_count
     find_transactable_type
-    searcher = instantiate_searcher(@transactable_type, params)
+    searcher = instantiate_searcher(params)
     # TODO: result_count raises an exception in SQL here for some reason
     searcher.results.size
   end
 
   def fetch_new_results
     find_transactable_type
-    searcher = instantiate_searcher(@transactable_type, params)
+    searcher = instantiate_searcher(params)
     searcher.results.select do |object|
       object.created_at > (user.saved_searches_alerts_frequency == 'daily' ? 1.day.ago : 1.week.ago)
     end
@@ -48,6 +48,14 @@ class SavedSearch < ActiveRecord::Base
 
   def to_liquid
     @saved_search_drop ||= SavedSearchDrop.new(self)
+  end
+
+  def query=(val)
+    if val.present?
+      val = '?' + val unless val.start_with?('?')
+    end
+
+    super
   end
 
   private

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CustomAttributes
   module HasCustomAttributes
     extend ActiveSupport::Concern
@@ -13,6 +14,10 @@ module CustomAttributes
         raise '(vendor/gems/custom_attributes) please provide mandatory :target_type option' if @options[:target_type].nil?
 
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
+
+          def custom_attribute_target
+            #{@options[:target_id].to_s.sub(/_id$/, '')}
+          end
 
           def #{@options[:store_accessor_name]}_attributes=(attrs)
             attrs.each do |key, value|

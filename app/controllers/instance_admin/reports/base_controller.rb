@@ -6,7 +6,8 @@ class InstanceAdmin::Reports::BaseController < InstanceAdmin::BaseController
   def index
     @scope_search_form = @search_form.new
     @scope_search_form.validate(params)
-    @resources = SearchService.new(@scope_class.order("#{@scope_class.table_name}.created_at DESC")).search(@scope_search_form.to_search_params).paginate(page: params[:page])
+    scope = @scope_class.order("#{@scope_class.table_name}.created_at DESC")
+    @resources = SearchService.new(scope).search(@scope_search_form.to_search_params).paginate(page: params[:page], per_page: reports_per_page)
  end
 
   def download_report

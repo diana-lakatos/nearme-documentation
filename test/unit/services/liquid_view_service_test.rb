@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class LiquidViewServiceTest < ActiveSupport::TestCase
-
   context 'create' do
     setup do
       @service_class = LiquidViewService::Create

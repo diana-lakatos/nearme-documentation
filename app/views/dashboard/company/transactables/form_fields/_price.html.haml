@@ -1,20 +1,43 @@
-- if f.object.transactable_type.action_types.many?
-  %h4.control-label= t('pricing.how_is_the_service_priced')
-  %ul.pricing-model.box-options{'data-booking-type-list' => true}
-    - f.object.transactable_type.action_types.enabled.each do |action_type|
-      - booking_class = "pricing-model--#{action_type.name} #{booking_types_active_toggle(f.object, action_type)}"
-      %li{class: booking_class}
-        = link_to "#booking-type-#{action_type.name}", class: booking_class, 'data-toggle' => 'tab' do
-          %h5
-            = t :label, scope: [:pricing, :mode, action_type.name]
-          %p
-            = t :description, scope: [:pricing, :mode, action_type.name]
+- if f.object.is_a?(BaseForm)
+  - if f.object.model.transactable_type.action_types.many?
+    %h4.control-label= t('pricing.how_is_the_service_priced')
+    %ul.pricing-model.box-options{'data-booking-type-list' => true}
+      - f.object.model.transactable_type.action_types.enabled.each do |action_type|
+        - booking_class = "pricing-model--#{action_type.name} #{booking_types_active_toggle(f.object.model.action_type, action_type)}"
+        %li{class: booking_class}
+          = link_to "#booking-type-#{action_type.name}", class: booking_class, 'data-toggle' => 'tab' do
+            %h5
+              = t :label, scope: [:pricing, :mode, action_type.name]
+            %p
+              = t :description, scope: [:pricing, :mode, action_type.name]
 
-.tab-content.control-group.booking-tabs
-  = f.simple_fields_for :action_types do |at|
-    %div{id: "booking-type-#{at.object.name}", class: "tab-pane #{booking_types_active_toggle(f.object, at.object.transactable_type_action_type)}"}
-      = at.input :transactable_type_action_type_id, as: :hidden
-      = at.input :transactable_id, as: :hidden
-      = at.input :type, as: :hidden
-      = at.hidden_field :enabled, value: at.object == @transactable.action_type, 'data-action': "#booking-type-#{at.object.name}"
-      = render "dashboard/company/transactables/form_fields/action_types/#{at.object.name}.html.haml", f: at, fields: form_fields.map{|f| f['transactable']}.compact
+  .tab-content.control-group.booking-tabs
+    - TransactableForm::AVAILABLE_ACTION_TYPES.each do |action|
+      - next if !f.object.respond_to?(action) || f.object.send(action).blank?
+      = f.simple_fields_for action do |at|
+        %div{id: "booking-type-#{at.object.model.name}", class: "tab-pane #{booking_types_active_toggle(f.object.model.action_type, at.object.model.transactable_type_action_type)}"}
+          = at.input :transactable_type_action_type_id, as: :hidden
+          = at.input :type, as: :hidden
+          = at.hidden_field :enabled, value: at.object.model == f.object.model.action_type, 'data-action': "#booking-type-#{at.object.model.name}"
+          = render "dashboard/company/transactables/form_fields/action_types/#{at.object.model.name}.html.haml", f: at, fields: form_fields.map{|f| f['transactable']}.compact
+- else
+  - if f.object.transactable_type.action_types.many?
+    %h4.control-label= t('pricing.how_is_the_service_priced')
+    %ul.pricing-model.box-options{'data-booking-type-list' => true}
+      - f.object.transactable_type.action_types.enabled.each do |action_type|
+        - booking_class = "pricing-model--#{action_type.name} #{booking_types_active_toggle(f.object.action_type, action_type)}"
+        %li{class: booking_class}
+          = link_to "#booking-type-#{action_type.name}", class: booking_class, 'data-toggle' => 'tab' do
+            %h5
+              = t :label, scope: [:pricing, :mode, action_type.name]
+            %p
+              = t :description, scope: [:pricing, :mode, action_type.name]
+
+  .tab-content.control-group.booking-tabs
+    = f.simple_fields_for :action_types do |at|
+      %div{id: "booking-type-#{at.object.name}", class: "tab-pane #{booking_types_active_toggle(f.object.action_type, at.object.transactable_type_action_type)}"}
+        = at.input :transactable_type_action_type_id, as: :hidden
+        = at.input :transactable_id, as: :hidden
+        = at.input :type, as: :hidden
+        = at.hidden_field :enabled, value: at.object == @transactable.action_type, 'data-action': "#booking-type-#{at.object.name}"
+        = render "dashboard/company/transactables/form_fields/action_types/#{at.object.name}.html.haml", f: at, fields: form_fields.map{|f| f['transactable']}.compact

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class V2::SpaceWizardsController < BaseController
     skip_before_action :require_authorization
@@ -49,7 +50,7 @@ module Api
     # When saving drafts we end up with parent_type = nil for custom availability templates causing problems down the line
     def fix_availability_templates
       listing = @user.companies.first.locations.first.listings.first
-      return unless listing.time_based_booking
+      return unless listing.time_based_booking?
       availability_template = listing.time_based_booking.availability_template
       if availability_template
         if availability_template.try(:parent_type) == 'Transactable::TimeBasedBooking' && availability_template.try(:parent_id).nil?

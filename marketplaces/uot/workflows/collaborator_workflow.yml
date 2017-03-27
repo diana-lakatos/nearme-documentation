@@ -1,0 +1,66 @@
+---
+name: Collaborator workflow
+workflow_type: collaborator_workflow
+events_metadata: {}
+workflow_steps:
+- name: Collaborator Added By Transactable Owner
+  associated_class: WorkflowStep::CollaboratorWorkflow::CollaboratorAddedByTransactableOwner
+  workflow_alerts:
+  - name: Transactable owner added collaborator email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: transactable_mailer/transactable_owner_added_collaborator_email
+    delay: 0
+    subject: You're invited to join {{ transactable.name }}
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Collaborator Pending Approval
+  associated_class: WorkflowStep::CollaboratorWorkflow::CollaboratorPendingApproval
+  workflow_alerts:
+  - name: Notify transactable owner of pending request
+    alert_type: email
+    recipient_type: lister
+    template_path: transactable_mailer/pending_approval
+    delay: 0
+    subject: New request to join {{ transactable.name }}
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Collaborator Approved
+  associated_class: WorkflowStep::CollaboratorWorkflow::CollaboratorApproved
+  workflow_alerts:
+  - name: Collaborator approved email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: transactable_mailer/collaborator_approved
+    delay: 0
+    subject: You've been approved as a collaborator on {{ transactable.name }}
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Collaborator Declined
+  associated_class: WorkflowStep::CollaboratorWorkflow::CollaboratorDeclined
+  workflow_alerts:
+  - name: Collaborator declined email
+    alert_type: email
+    recipient_type: enquirer
+    template_path: transactable_mailer/collaborator_declined
+    delay: 0
+    subject: Your request to collaborate on {{ transactable.name }} has been declined
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Collaborator Has Quit
+  associated_class: WorkflowStep::CollaboratorWorkflow::CollaboratorHasQuit
+  workflow_alerts:
+  - name: Collaborator has quit email
+    alert_type: email
+    recipient_type: lister
+    template_path: transactable_mailer/collaborator_has_quit
+    delay: 0
+    subject: "{{lister.first_name}}, {{ enquirer.first_name }} decided to be no longer
+      collaborator on {{ transactable.name }}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::UserReservationsController < Dashboard::BaseController
   before_action only: [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)

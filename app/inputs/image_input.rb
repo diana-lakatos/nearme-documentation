@@ -1,5 +1,15 @@
+# frozen_string_literal: true
 class ImageInput < SimpleForm::Inputs::FileInput
   def input(wrapper_options = nil)
+    # tmp hack to greatly simplify liquid view
+    if object.is_a?(BaseForm) && object.model.is_a?(CustomImage) && object.persisted?
+      options[:thumb] ||= :transformed
+      options[:full_url] ||= :transformed
+      options[:edit_url] ||= "/dashboard/custom_images/#{object.id}/edit"
+      if !object.required?(:image) && object.model.uploader_id.present?
+        options[:delete_url] ||= "/api/user/custom_images/#{object.id}"
+      end
+    end
     input_html_options[:accept] = 'image/*'
     input_html_options[:capture] = 'capture'
     input_html_options['data-image-input'] = true
@@ -62,12 +72,12 @@ class ImageInput < SimpleForm::Inputs::FileInput
 
     out = ActiveSupport::SafeBuffer.new
 
-    return out unless image_attribute.present?
+    return out unless image_attribute.present? && !image_attribute.is_a?(ActionDispatch::Http::UploadedFile)
 
     template.content_tag(:div, class: 'preview') do
       out << template.content_tag(:figure) do
         thumb_url = options[:thumb].present? ? image_attribute.send(options[:thumb]) : image_attribute.url
-        template.link_to(template.image_tag(thumb_url), image_attribute.url, class: 'action--preview', rel: "preview-#{reflection_or_attribute_name}")
+        template.link_to(template.image_tag(thumb_url), options[:full_url].present? ? image_attribute.url(options[:full_url]) : image_attribute.url, class: 'action--preview', rel: "preview-#{reflection_or_attribute_name}")
       end
 
       out << image_options(options[:edit_url], options[:delete_url])
@@ -108,9 +118,7 @@ class ImageInput < SimpleForm::Inputs::FileInput
       out << template.hidden_field_tag("#{object_name}[#{image_model_name.pluralize}_attributes][#{image[:id]}][id]", image[:id])
       out << template.hidden_field_tag("#{object_name}[#{image_model_name.pluralize}_attributes][#{image[:id]}][position]", image[:position], class: 'photo-position-input')
 
-      if options[:sortable].present?
-        out << template.content_tag(:span, '', class: 'sort-handle')
-      end
+      out << template.content_tag(:span, '', class: 'sort-handle') if options[:sortable].present?
 
       out
     end

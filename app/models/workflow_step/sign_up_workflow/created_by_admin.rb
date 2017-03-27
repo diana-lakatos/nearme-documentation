@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::SignUpWorkflow::CreatedByAdmin < WorkflowStep::SignUpWorkflow::BaseStep
   def initialize(user_id, admin_id)
     @user = User.find(user_id)

@@ -4,11 +4,13 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
   include AvailabilityRule::TargetHelper
 
   belongs_to :availability_template
-  has_many :availability_templates, as: :parent
+  has_many :availability_templates, as: :parent, inverse_of: :parent
 
   delegate :availability_for, :default_availability_template, to: :transactable
 
-  accepts_nested_attributes_for :availability_template
+  belongs_to :transactable, -> { with_deleted }, touch: true, inverse_of: :time_based_booking
+
+  accepts_nested_attributes_for :availability_templates
 
   validates :minimum_booking_minutes, numericality: { greater_than_or_equal_to: 15, allow_blank: true }
   validate :booking_availability, if: :night_booking?
@@ -41,7 +43,6 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
     time = Time.now.in_time_zone(timezone)
     date = time.to_date
     max_date = date + 60.days
-
     closed_at = availability.close_minute_for(date)
 
     date += 1.day if closed_at && (closed_at < (time.hour * 60 + time.min + minimum_booking_minutes))
@@ -120,19 +121,23 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
                        maximum_date: availability_dates.end_date,
                        first_available_date: first_date.strftime('%Y-%m-%d'),
                        second_available_date: second_date.strftime('%Y-%m-%d'))
-    hash.merge!(prices_by_days: prices_by_days_cents,
-                prices_by_nights: prices_by_nights_cents,
-                minimum_booking_days: minimum_booking_days,
-                continuous_dates: action_continuous_dates_booking,
-                date_not_available_title: I18n.t('reservations.booking_module.date_not_available_title'),
-                action_daily_booking: day_booking?) if night_booking? || day_booking?
-    hash.merge!(minimum_booking_minutes: minimum_booking_minutes,
-                earliest_open_minute: availability.earliest_open_minute,
-                latest_close_minute: availability.latest_close_minute,
-                action_hourly_booking: true,
-                prices_by_hours: prices_by_hours_cents,
-                hourly_availability_schedule_url: Rails.application.routes.url_helpers.hourly_availability_schedule_listing_reservations_path(transactable, format: :json),
-                hourly_availability_schedule: { I18n.l(first_date.to_date, format: :short) => hourly_availability_schedule(first_date).as_json }) if hour_booking?
+    if night_booking? || day_booking?
+      hash.merge!(prices_by_days: prices_by_days_cents,
+                  prices_by_nights: prices_by_nights_cents,
+                  minimum_booking_days: minimum_booking_days,
+                  continuous_dates: action_continuous_dates_booking,
+                  date_not_available_title: I18n.t('reservations.booking_module.date_not_available_title'),
+                  action_daily_booking: day_booking?)
+    end
+    if hour_booking?
+      hash.merge!(minimum_booking_minutes: minimum_booking_minutes,
+                  earliest_open_minute: availability.earliest_open_minute,
+                  latest_close_minute: availability.latest_close_minute,
+                  action_hourly_booking: true,
+                  prices_by_hours: prices_by_hours_cents,
+                  hourly_availability_schedule_url: Rails.application.routes.url_helpers.hourly_availability_schedule_listing_reservations_path(transactable, format: :json),
+                  hourly_availability_schedule: { I18n.l(first_date.to_date, format: :short) => hourly_availability_schedule(first_date).as_json })
+    end
     hash
   end
 

@@ -14,7 +14,7 @@ module MarketplaceBuilder
       end
 
       def scope
-        RatingSystem.where(instance_id: @model.id).all
+        RatingSystem.where(instance_id: @model.id).joins(:transactable_type).all
       end
     end
   end

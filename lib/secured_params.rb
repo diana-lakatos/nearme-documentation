@@ -845,7 +845,14 @@ class SecuredParams
     attributes = [:id]
     attributes << [:document]
     attributes << { current_address_attributes: nested(address) }
+    attributes << { attachements_attributes: nested(merchant_account_owner_attachement) }
     attributes << MerchantAccountOwner::StripeConnectMerchantAccountOwner::ATTRIBUTES
+  end
+
+  def merchant_account_owner_attachement
+    [
+      :file
+    ]
   end
 
   def domain
@@ -1223,16 +1230,12 @@ class SecuredParams
       :country_name,
       :drivers_licence_number,
       :email,
-      :facebook_url,
       :first_name,
       :gender,
-      :google_plus_url,
       :gov_number,
-      :instagram_url,
       :job_title,
       :language,
       :last_name,
-      :linkedin_url,
       :middle_name,
       :mobile_number,
       :mobile_phone,
@@ -1247,7 +1250,6 @@ class SecuredParams
       :accept_terms_of_service,
       :time_zone,
       :tag_list,
-      :twitter_url,
       category_ids: [],
       seller_profile_attributes: nested(seller_profile),
       buyer_profile_attributes: nested(buyer_profile),

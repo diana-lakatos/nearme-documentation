@@ -30,10 +30,11 @@ class InputTag < Liquid::Tag
   end
 
   def render(context)
-    form = (context["form_object_#{@attributes.fetch('form', nil)}"] || context['form_object']).source
     # drop for form_builder defined in form_builder_to_liquid_monkeypatch.rb
     attributes = normalize_liquid_tag_attributes(@attributes, context, %w(label_html wrapper_html input_html))
+    @field_name = attributes.delete(:field_name) if attributes[:field_name].present?
+    form = (context["form_object_#{attributes.fetch(:form, nil)}"] || context['form_object']).source
     attributes[:prompt] = :translate if attributes[:prompt] == 'translate'
-    form.input(@field_name, attributes).html_safe
+    form.input(@field_name.to_s, attributes).html_safe
   end
 end

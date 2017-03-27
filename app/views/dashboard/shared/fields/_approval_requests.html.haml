@@ -1,21 +1,27 @@
-- if !f.object.is_trusted? && f.object.current_approval_requests.first
+- if f.object.respond_to?(:model)
+  - if !f.object.model.is_trusted?
+    = f.simple_fields_for :approval_requests do |approval_request_form|
+      - if approval_request_form.object.model.approval_request_template.required_written_verification && ((!defined?(only_missing) || !only_missing) || (defined?(only_missing) && only_missing && approval_request_form.object.model/message_blank_or_changed?))
+        = approval_request_form.input :message, required: true
+- else
+  - if !f.object.is_trusted? && f.object.current_approval_requests.first
 
-  = f.simple_fields_for :approval_requests, f.object.current_approval_requests.first do |approval_request_form|
-    - if approval_request_form.object.approval_request_template.required_written_verification && ((!defined?(only_missing) || !only_missing) || (defined?(only_missing) && only_missing && approval_request_form.object.message_blank_or_changed?))
-      = approval_request_form.input :message, required: true
+    = f.simple_fields_for :approval_requests, f.object.current_approval_requests.first do |approval_request_form|
+      - if approval_request_form.object.approval_request_template.required_written_verification && ((!defined?(only_missing) || !only_missing) || (defined?(only_missing) && only_missing && approval_request_form.object.message_blank_or_changed?))
+        = approval_request_form.input :message, required: true
 
-    = approval_request_form.input :approval_request_template_id, as: :hidden
-    = approval_request_form.input :draft_at, as: :hidden
+      = approval_request_form.input :approval_request_template_id, as: :hidden
+      = approval_request_form.input :draft_at, as: :hidden
 
-    - approval_request_form.object.approval_request_template.approval_request_attachment_templates.each do |attachment_template|
-      - next if defined?(only_required) && only_required && !attachment_template.required?
+      - approval_request_form.object.approval_request_template.approval_request_attachment_templates.each do |attachment_template|
+        - next if defined?(only_required) && only_required && !attachment_template.required?
 
-      - attachments = current_user.approval_request_attachments.for_request_or_free(approval_request_form.object.id).for_attachment_template(attachment_template.id)
+        - attachments = current_user.approval_request_attachments.for_request_or_free(approval_request_form.object.id).for_attachment_template(attachment_template.id)
 
-      - next if defined?(only_missing) && only_missing && attachments.empty? && attchments.first[file]
+        - next if defined?(only_missing) && only_missing && attachments.empty? && attchments.first[file]
 
-      - collection = attachments.select { |attachment| attachment && attachment['file'] }
+        - collection = attachments.select { |attachment| attachment && attachment['file'] }
 
-      - hint = attachment_template.hint.present? ? attachment_template.hint : nil
+        - hint = attachment_template.hint.present? ? attachment_template.hint : nil
 
-      = f.input :file, as: :attachment, collection: collection, upload_url: approval_request_attachments_path(approval_request_attachment_template_id: attachment_template.id), label: attachment_template.label, hint: hint, required: attachment_template.required?, attachment_template: "dashboard/shared/attachments/approval_request_attachment", accept: PrivateFileUploader.new.extension_white_list, upload_name: 'file', multiple: false
+        = f.input :file, as: :attachment, collection: collection, upload_url: approval_request_attachments_path(approval_request_attachment_template_id: attachment_template.id), label: attachment_template.label, hint: hint, required: attachment_template.required?, attachment_template: "dashboard/shared/attachments/approval_request_attachment", accept: PrivateFileUploader.new.extension_white_list, upload_name: 'file', multiple: false

@@ -32,15 +32,6 @@ class Instance < ActiveRecord::Base
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }.freeze
   SEARCHABLE_CLASSES = %w(TransactableType InstanceProfileType).freeze
   CLASSES_WITH_ES_INDEX = [Transactable, User].freeze
-  INSTANCE_IDS = { # use them in data migrations
-    uot:         195,
-    local_drive: 211,
-    the_volter:  194,
-    lit_volte:   198,
-    hallmark:    5011,
-    bronxchange: 5014,
-    spacer:      5020
-  }.freeze
 
   has_one :theme, as: :owner
   has_one :custom_theme, -> { where(in_use: true) }, as: :themeable
@@ -48,6 +39,7 @@ class Instance < ActiveRecord::Base
   has_many :api_keys
   has_many :custom_themes, as: :themeable
   has_many :companies, inverse_of: :instance
+  has_many :form_configurations, dependent: :destroy
   has_many :locations, inverse_of: :instance
   has_many :locations_impressions, through: :locations, source: :impressions, class_name: 'Impression'
   has_many :location_types, inverse_of: :instance
@@ -431,9 +423,8 @@ class Instance < ActiveRecord::Base
 
   def searchable_classes
     SEARCHABLE_CLASSES.map do |searchable_class|
-      _klass =searchable_class.constantize
+      _klass = searchable_class.constantize
       _klass::DEPENDENT_CLASS if _klass.searchable.any?
     end.compact
   end
-
 end

@@ -1,15 +1,32 @@
-.prices-container
-  = f.simple_fields_for :pricings, f.object.decorate.pricings_for_form do |pricing|
-    = pricing.hidden_field :transactable_type_pricing_id, value: pricing.object.transactable_type_pricing.try(:id)
-    = pricing.input :_destroy, as: :hidden
-    = pricing.hidden_field :enabled, value: '1'
-    - if pricing.object.fixed_price?
-      = pricing.hidden_field :price, as: :hidden, value: pricing.object.transactable_type_pricing.fixed_price
-    - else
-      = pricing.hidden_field :exclusive_price, value: '1'
-      = pricing.input :price, as: :hidden
+- if f.object.is_a?(BaseForm)
+  .prices-container
+    = f.simple_fields_for :pricings do |pricing|
+      = pricing.hidden_field :transactable_type_pricing_id
+      = pricing.input :_destroy, as: :hidden
+      = pricing.hidden_field :enabled, value: '1'
+      - if pricing.object.model.fixed_price?
+        = pricing.hidden_field :price, as: :hidden, value: pricing.object.model.transactable_type_pricing.fixed_price
+      - else
+        = pricing.hidden_field :exclusive_price, value: '1'
+        = pricing.input :price, as: :hidden
 
-    - if fields.include?('pro_bono')
-      = pricing.input :is_free_booking, as: :radio_buttons, collection: [[t('pricing.free_disabled'), '0'], [t('pricing.free_enabled'), '1']], input_html: { 'data-free-booking' => true }, checked: (pricing.object.is_free_booking ? '1' : '0')
-    - elsif pricing.object.transactable_type_pricing.try(:allow_free_booking?) && f.object.try(:allow_free_booking?)
-      = pricing.input :is_free_booking, as: :switch, inline_label: true, label: false, input_html: { 'data-free-booking' => true, data: { :"label-off" => t('pricing.free'), :"label-on" => t('pricing.free') } }
+      - if fields.include?('pro_bono')
+        = pricing.input :is_free_booking, as: :radio_buttons, collection: [[t('pricing.free_disabled'), '0'], [t('pricing.free_enabled'), '1']], input_html: { 'data-free-booking' => true }, checked: (pricing.object.model.is_free_booking ? '1' : '0')
+      - elsif pricing.object.model.transactable_type_pricing.try(:allow_free_booking?) && f.object.model.try(:allow_free_booking?)
+        = pricing.input :is_free_booking, as: :switch, inline_label: true, label: false, input_html: { 'data-free-booking' => true, data: { :"label-off" => t('pricing.free'), :"label-on" => t('pricing.free') } }
+- else
+  .prices-container
+    = f.simple_fields_for :pricings, f.object.decorate.pricings_for_form do |pricing|
+      = pricing.hidden_field :transactable_type_pricing_id, value: pricing.object.transactable_type_pricing.try(:id)
+      = pricing.input :_destroy, as: :hidden
+      = pricing.hidden_field :enabled, value: '1'
+      - if pricing.object.fixed_price?
+        = pricing.hidden_field :price, as: :hidden, value: pricing.object.transactable_type_pricing.fixed_price
+      - else
+        = pricing.hidden_field :exclusive_price, value: '1'
+        = pricing.input :price, as: :hidden
+
+      - if fields.include?('pro_bono')
+        = pricing.input :is_free_booking, as: :radio_buttons, collection: [[t('pricing.free_disabled'), '0'], [t('pricing.free_enabled'), '1']], input_html: { 'data-free-booking' => true }, checked: (pricing.object.is_free_booking ? '1' : '0')
+      - elsif pricing.object.transactable_type_pricing.try(:allow_free_booking?) && f.object.try(:allow_free_booking?)
+        = pricing.input :is_free_booking, as: :switch, inline_label: true, label: false, input_html: { 'data-free-booking' => true, data: { :"label-off" => t('pricing.free'), :"label-on" => t('pricing.free') } }

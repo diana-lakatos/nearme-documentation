@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceAdmin::TransactableSearchForm < SearchForm
   property :q, virtual: true
   property :date, virtual: true
@@ -11,9 +12,7 @@ class InstanceAdmin::TransactableSearchForm < SearchForm
   def to_search_params
     result = {}
 
-    if q.present?
-      result[:search_by_query] = [%w(name description properties), "%#{q}%"]
-    end
+    result[:search_by_query] = [%w(name description properties), "%#{q}%"] if q.present?
 
     result[:with_date] = [date_from_params] if date.present?
 

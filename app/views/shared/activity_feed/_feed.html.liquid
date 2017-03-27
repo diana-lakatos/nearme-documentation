@@ -1,0 +1,35 @@
+{% query_graph 'activity_feed', result_name: g, include_user_feed: include_user_feed %}
+
+{% if g.feed.events.size > 0 %}
+  <div class="content-container" data-activity-feed=""
+    data-current-user-id="{{ feed_data.current_user_id }}"
+    data-comments-spam-reports="[{{ feed_data.comments_spam_reports }}]"
+    data-event-spam-reports="[{{ feed_data.events_spam_reports }}]"
+    >
+    {% for event in g.feed.events %}
+      {% include 'shared/activity_feed/status', event: event, object: object %}
+    {% endfor %}
+  </div>
+
+  {% if g.feed.has_next_page %}
+    {% if current_user != blank %}
+      <p class="more-a" data-see-more="true">
+        {% assign see_more_activity_feed_path = 'see_more_activity_feed_path' | generate_url: id: g.feed.owner_id, type: g.feed.owner_type %}
+        <button type="button" name="button" data-url="{{ see_more_activity_feed_path }}" data-next-page="{{ g.feed.events_next_page }}">
+          {{ 'see_more' | translate }}
+        </button>
+      </p>
+    {% else %}
+      <p class="more-a">
+        {% assign new_user_session_path = 'dashboard_user_messages_path' | generate_url %}
+        <a href="{{ new_user_session_path }}">
+          {{ 'see_more' | translate }}
+        </a>
+      </p>
+    {% endif %}
+  {% endif %}
+{% else %}
+  <p>
+    {{ 'activity_feed.no_interactions_yet' | translate }}
+  </p>
+{% endif %}

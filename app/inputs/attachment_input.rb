@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AttachmentInput < SimpleForm::Inputs::FileInput
   def input(wrapper_options = nil)
     accept_types = options[:accept] || Rails.application.config.attachment_upload_file_types
@@ -21,7 +22,7 @@ class AttachmentInput < SimpleForm::Inputs::FileInput
     end
 
     out << field
-    out << build_collection(options[:collection] || [])
+    out << build_collection(Array(options[:collection]).reject(&:blank?) || [])
 
     template.content_tag :div, out, class: 'form-attachments'
   end
@@ -37,7 +38,7 @@ class AttachmentInput < SimpleForm::Inputs::FileInput
 
     items = ActiveSupport::SafeBuffer.new
     collection.each do |attachment|
-      items << template.render(options[:attachment_template], attachment: attachment)
+      items << template.render(options.delete(:attachment_template), options.merge(attachment: attachment))
     end
     template.content_tag(:ul, items, data: collection_data, class: (options[:multiple].present? ? 'multiple' : nil))
   end

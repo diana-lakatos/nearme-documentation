@@ -1,0 +1,5 @@
+{% assign is_active = is_active | default: false %}
+
+<footer class="{{ footer_class }}">
+  {% include 'shared/activity_feed/comments', is_active: is_active, event: event %}
+</footer>

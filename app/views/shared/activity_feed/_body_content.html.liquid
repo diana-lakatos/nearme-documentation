@@ -1,0 +1,24 @@
+<div class="entry-content-a" id="entry-content-user-status-{{ event.event_source.id }}">
+  {% if event.event_source.created_at != event.event_source.updated_at and event.event_source != blank %}
+    {% assign body_class = 'edited' %}
+  {% endif %}
+  <div class="entry-body {{ body_class }}">
+    {% if content != blank %}
+      {% if event.is_text_update or event.event == 'user_created_transactable' %}
+        {{ content | videoify_and_parse_with_markdown }}
+      {% else %}
+        {{ content | auto_link: target: '_blank', ref: 'nofollow' | simple_format }}
+      {% endif %}
+    {% endif %}
+    {% include 'shared/activity_feed/images', collection: images %}
+  </div>
+  {% if event.is_status_update_event %}
+    <div class="entry-editor">
+      {% include 'shared/activity_feed/user_status_form', user_status_update: event.event_source %}
+    </div>
+  {% elsif event.is_comment_event %}
+    <div class="entry-editor">
+      {% include 'shared/activity_feed/comment_form', event: event, comment_object: event.event_source %}
+    </div>
+  {% endif %}
+</div>

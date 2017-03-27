@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ActivityFeedService::Event
   include ActionView::Helpers::UrlHelper
   include ActionDispatch::Routing::UrlFor
@@ -22,7 +23,11 @@ class ActivityFeedService::Event
 
   def user_updated_user_status
     user = @event.event_source.user
-    updated = user.try(:properties).try(:[], :gender).presence rescue updated = ''
+    updated = begin
+                user.try(:properties).try(:[], :gender).presence
+              rescue
+                updated = ''
+              end
     self.image = image_or_placeholder(user.avatar.url(:medium))
     self.text = I18n.t(@event.i18n_key, user: link_if_not_deleted(user, :secret_name), updated: updated).html_safe
   end
@@ -33,7 +38,7 @@ class ActivityFeedService::Event
     self.image = image_or_placeholder(user.avatar.url(:medium))
     self.text = I18n.t(@event.i18n_key, user: link_if_not_deleted(user, :secret_name), updated: link_if_not_deleted(updated, :name)).html_safe
   end
-  alias_method :user_updated_topic_status, :user_updated_transactable_status
+  alias user_updated_topic_status user_updated_transactable_status
 
   def user_followed_user
     follower = @event.event_source.follower
@@ -42,8 +47,8 @@ class ActivityFeedService::Event
     self.image = image_or_placeholder(follower.avatar.url(:medium))
     self.text = I18n.t(@event.i18n_key, follower: link_if_not_deleted(follower, :secret_name), followed: link_if_not_deleted(followed, :secret_name, :name)).html_safe
   end
-  alias_method :user_followed_transactable, :user_followed_user
-  alias_method :user_followed_topic, :user_followed_user
+  alias user_followed_transactable user_followed_user
+  alias user_followed_topic user_followed_user
 
   def user_created_transactable
     transactable = @event.event_source
@@ -59,16 +64,16 @@ class ActivityFeedService::Event
 
   def user_added_photos_to_transactable
     transactable = @event.followed
-    if @event.event_source.try(:creator).present?
-      user_record = @event.event_source.creator
-    else
-      user_record = transactable.creator
-    end
+    user_record = if @event.event_source.try(:creator).present?
+                    @event.event_source.creator
+                  else
+                    transactable.creator
+                  end
     user = link_if_not_deleted(user_record, :secret_name)
     self.image = image_or_placeholder(user_record.avatar)
     self.text = I18n.t(@event.i18n_key, user: user, transactable: link_if_not_deleted(transactable, :name)).html_safe
   end
-  alias_method :user_added_links_to_transactable, :user_added_photos_to_transactable
+  alias user_added_links_to_transactable user_added_photos_to_transactable
 
   def user_commented
     comment = @event.event_source
@@ -103,11 +108,11 @@ class ActivityFeedService::Event
 
   def user_added_photos_to_group
     group = @event.followed
-    if @event.event_source.try(:creator).present?
-      user_record = @event.event_source.creator
-    else
-      user_record = group.creator
-    end
+    user_record = if @event.event_source.try(:creator).present?
+                    @event.event_source.creator
+                  else
+                    group.creator
+                  end
     user = link_if_not_deleted(user_record, :secret_name)
     self.image = image_or_placeholder(user_record.avatar)
     self.text = I18n.t(@event.i18n_key, user: user, group: link_if_not_deleted(group, :name)).html_safe
@@ -115,11 +120,11 @@ class ActivityFeedService::Event
 
   def user_added_links_to_group
     group = @event.followed
-    if @event.event_source.try(:creator).present?
-      user_record = @event.event_source.creator
-    else
-      user_record = group.creator
-    end
+    user_record = if @event.event_source.try(:creator).present?
+                    @event.event_source.creator
+                  else
+                    group.creator
+                  end
     user = link_if_not_deleted(user_record, :secret_name)
     self.image = image_or_placeholder(user_record.avatar)
     self.text = I18n.t(@event.i18n_key, user: user, group: link_if_not_deleted(group, :name)).html_safe

@@ -1,4 +1,10 @@
 en:
+  activemodel:
+    attributes:
+      "user/buyer_profile/properties": 'Property'
+      "user/seller_profile/properties": 'Property'
+  buyer_profile:
+    properties.: 'Property'
   activerecord:
     errors:
       models:
@@ -422,7 +428,10 @@ en:
         new_key: 'Add Translation Key'
         example_key: 'Example: home.welcome.label'
         default_en_value: 'Default English text'
-        default_text: "Default text"
+        search_by_keyword: 'Search by keyword'
+        default_text: 'Default text'
+        case_sensitive: 'Case sensitive'
+        match_whole_words: 'Match whole words'
 
       buttons:
         add: 'Add language'
@@ -779,6 +788,15 @@ en:
         to: "To:"
         apply_filter: "Apply filter"
         search_by_keyword: "Search by keyword"
+        per_page: "Per page"
+        base:
+          search_types:
+            instance_profile_types: "Profile Types"
+            transactable_types: "Transactable Types"
+        transactable:
+          search_types:
+            created_at: 'Created at'
+            search_by: 'Search by'
         user:
           search_types:
             date_created: 'Date created'
@@ -791,6 +809,27 @@ en:
           profile_types:
             buyer: 'Buyer'
             seller: 'Seller'
+        payments:
+          payment_gateways: 'Payment Gateways'
+          all_payment_gateways: 'All Payment Gateways'
+          transferred: 'Transferred'
+          state: 'State'
+          in_all_states: 'In all states'
+          mode: 'Mode'
+        webhooks:
+          query: 'Query'
+          event_id: 'Event ID'
+          payment_gateway: 'Payment Gateway'
+          all_payment_gateways: 'All Payment Gateways'
+          state: 'State'
+          in_all_states: 'In all states'
+          mode: 'Mode'
+        merchant_accounts:
+          payment_gateway: 'Payment Gateway'
+          all_payment_gateways: 'All Payment Gateways'
+          state: 'State'
+          in_all_states: 'In all states'
+          mode: 'Mode'
       reviews:
         index:
           missing: "Missing object"
@@ -1934,6 +1973,9 @@ en:
       address_line2: 'Address line 2 (Apartment/Suite/Building)'
       additional_owners: 'Additional owners'
       additional_owner: 'Additional owner'
+      photo_id_1: 'Front side photo ID'
+      photo_id_2: 'Back side photo ID'
+
 
     reservations:
       purchase_was_successful: Your purchase was successful!
@@ -3170,4 +3212,3 @@ en:
     confirm:
       remove_status_update: 'Are you sure you want to remove this status update?'
       remove_comment: 'Are you sure you want to remove this comment?'
-

@@ -1,0 +1,88 @@
+---
+name: Order
+workflow_type: order
+events_metadata: {}
+workflow_steps:
+- name: Finalized
+  associated_class: WorkflowStep::OrderWorkflow::Finalized
+  workflow_alerts:
+  - name: Confirm email to buyer
+    alert_type: email
+    recipient_type: enquirer
+    template_path: spree/order_mailer/confirm_email
+    delay: 0
+    subject: "{{'buy_sell_market.checkout.order_mailer.confirm_email.subject' | translate}}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Confirm email to seller
+    alert_type: email
+    recipient_type: lister
+    template_path: spree/order_mailer/notify_seller_email
+    delay: 0
+    subject: "{{'buy_sell_market.checkout.order_mailer.notify_seller_email.subject'
+      | translate }}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Cancelled
+  associated_class: WorkflowStep::OrderWorkflow::Cancelled
+  workflow_alerts:
+  - name: Cancel email to buyer
+    alert_type: email
+    recipient_type: enquirer
+    template_path: spree/order_mailer/cancel_email
+    delay: 0
+    subject: "{{'buy_sell_market.checkout.order_mailer.cancel_email.subject' | translate}}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Shipped
+  associated_class: WorkflowStep::OrderWorkflow::Shipped
+  workflow_alerts:
+  - name: Shipped email to buyer
+    alert_type: email
+    recipient_type: enquirer
+    template_path: spree/shipment_mailer/shipped_email
+    delay: 0
+    subject: "{{'buy_sell_market.checkout.shipment_mailer.shipped_email.subject' |
+      translate}} {{ order.number }}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Approved
+  associated_class: WorkflowStep::OrderWorkflow::Approved
+  workflow_alerts:
+  - name: Approved email to buyer
+    alert_type: email
+    recipient_type: enquirer
+    template_path: spree/order_mailer/approved_email
+    delay: 0
+    subject: "{{'buy_sell_market.checkout.order_mailer.approved_email.subject' | translate}}
+      {{ order.number }}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+- name: Shipping Info
+  associated_class: WorkflowStep::OrderWorkflow::ShippingInfo
+  workflow_alerts:
+  - name: Shipping info for buyer
+    alert_type: email
+    recipient_type: enquirer
+    template_path: spree/order_mailer/shipping_info_for_buyer
+    delay: 0
+    subject: "{{'buy_sell_market.checkout.order_mailer.shipping_info_for_buyer_email.subject'
+      | translate}}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com
+  - name: Shipping info for seller
+    alert_type: email
+    recipient_type: lister
+    template_path: spree/order_mailer/shipping_info_for_seller
+    delay: 0
+    subject: "{{'buy_sell_market.checkout.order_mailer.shipping_info_for_seller_email.subject'
+      | translate}}"
+    layout_path: layouts/mailer
+    from: info@UpsideOfTalent.com
+    reply_to: info@UpsideOfTalent.com

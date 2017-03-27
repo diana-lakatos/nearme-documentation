@@ -9,7 +9,7 @@ module MarketplaceBuilder
         unused_pages = if pages.empty?
                          @instance.theme.pages.all
                        else
-                         @instance.theme.pages.where('slug NOT IN (?)', pages.map { |page| page.name.parameterize })
+                         @instance.theme.pages.where('slug NOT IN (?)', pages.map { |page| page.slug.presence || page.name.parameterize })
                        end
 
         unused_pages.each { |page| logger.debug "Removing unused page: #{page.path}" }

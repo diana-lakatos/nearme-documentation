@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddDraftToInstanceViews < ActiveRecord::Migration
   def change
     add_column :instance_views, :draft, :boolean, default: false

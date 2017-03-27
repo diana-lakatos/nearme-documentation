@@ -1191,8 +1191,7 @@ DesksnearMe::Application.routes.draw do
           resources :assets, as: 'custom_theme_assets', controller: 'custom_themes/custom_theme_assets', concerns: :versionable
         end
       end
-
-      scope module: :v3, constraints: Constraints::ApiConstraints.new(version: 3, default: true) do
+      scope module: :v3, constraints: Constraints::ApiConstraints.new(version: 3, default: false) do
         resources :sessions, only: [:create]
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
@@ -1205,6 +1204,37 @@ DesksnearMe::Application.routes.draw do
             put :accept
           end
         end
+        resources :instances, only: [:index, :create]
+
+        resources :instance_views, only: [:show, :create, :update, :destroy], concerns: :versionable
+
+        resources :themes, as: 'custom_themes', controller: 'custom_themes', only: [:show, :create, :update, :destroy] do
+          resources :instance_views, controller: 'custom_themes/instance_views', concerns: :versionable
+          resources :assets, as: 'custom_theme_assets', controller: 'custom_themes/custom_theme_assets', concerns: :versionable
+        end
+      end
+      scope module: :v4, constraints: Constraints::ApiConstraints.new(version: 4, default: true) do
+        resources :users, only: [:new, :create, :show, :update, :destroy] do
+          member do
+            get :verify
+          end
+        end
+        namespace :user do
+          resource :space_wizard, only: [:create]
+          resources :transactables, only: [:index, :create, :update]
+          resources :custom_attachments, only: [:destroy]
+          resources :custom_images, only: [:destroy]
+          resources :transactable_collaborators, only: [:create, :destroy] do
+            member do
+              put :accept
+            end
+          end
+        end
+        resources :sessions, only: [:create]
+        resources :forms, only: [:create]
+        resources :photos, only: [:create]
+        resources :reverse_proxy_links, only: [:index, :create]
+        resources :wish_list_items, only: [:index, :create, :destroy]
         resources :instances, only: [:index, :create]
 
         resources :instance_views, only: [:show, :create, :update, :destroy], concerns: :versionable

@@ -5,8 +5,8 @@ class UserSerializer < ApplicationSerializer
   def avatar
     return {} if object.avatar.blank?
     {
-      thumb_url:  object.avatar_url(:thumb).to_s,
-      medium_url: object.avatar_url(:medium).to_s
+      thumb_url:  object.avatar.url(:thumb),
+      medium_url: object.avatar.url(:medium)
     }
   end
 end

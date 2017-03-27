@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
@@ -5,7 +6,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
 
   context 'marketplace exporter' do
     setup do
-      stub_request(:get, "http://example.com/test.jpg").to_return(status: 200)
+      stub_request(:get, 'http://example.com/test.jpg').to_return(status: 200)
 
       @instance = create(:instance, name: 'ExportTestInstance', is_community: true, require_verified_user: false)
       @instance.set_context!
@@ -13,26 +14,27 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
       Locale.create! code: 'en'
     end
 
-    teardown do
-      FileUtils.rm_rf(EXPORT_DESTINATION_PATH)
-    end
-
     should 'export instance to files' do
       run_all_setup_methods
       MarketplaceBuilder::Exporter.new(@instance.id, EXPORT_DESTINATION_PATH).execute!
       run_all_should_export_methods
     end
+
+    teardown do
+      FileUtils.rm_rf(EXPORT_DESTINATION_PATH)
+    end
+
   end
 
   def should_export_instance_basic_attributes
-    yaml_content = read_exported_file('instance_attributes.yml') 
+    yaml_content = read_exported_file('instance_attributes.yml')
 
     assert_equal yaml_content['name'], 'ExportTestInstance'
     assert_equal yaml_content['is_community'], true
     assert_equal yaml_content['require_verified_user'], false
   end
 
-  def setup_translations
+  def setup_1_translations
     @instance.translations.create! locale: 'en', key: 'first_test_key.nested.value', value: 'First test key nested value'
     @instance.translations.create! locale: 'en', key: 'second_test_key.nested.value', value: 'Second test key nested name'
     @instance.translations.create! locale: 'pl', key: 'first_test_key.value', value: 'Testowa nazwa'
@@ -47,18 +49,18 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal yaml_content['pl']['first_test_key']['value'], 'Testowa nazwa'
   end
 
-  def setup_transactable_types
+  def setup_2_transactable_types
     type = @instance.transactable_types.create! name: 'Car'
 
     type.custom_validators.create! field_name: 'name', max_length: 140
-    type.custom_validators.create! field_name: 'name', regex_validation: true, regex_expression: "^\\d{10}$"
+    type.custom_validators.create! field_name: 'name', regex_validation: true, regex_expression: '^\\d{10}$'
     type.action_types.create! enabled: true, type: 'TransactableType::NoActionBooking', allow_no_action: true
 
     type.action_types.create! enabled: true, type: 'TransactableType::SubscriptionBooking', allow_no_action: true,
-      pricings: [TransactableType::Pricing.new(number_of_units: 30, unit: 'day')]
+                              pricings: [TransactableType::Pricing.new(number_of_units: 30, unit: 'day')]
 
     attribute = type.custom_attributes.create! name: 'description', html_tag: 'textarea', attribute_type: 'text', search_in_query: true
-    attribute.custom_validators.create! field_name: 'description', regex_validation: true, regex_expression: "^\\d{10}$"
+    attribute.custom_validators.create! field_name: 'description', regex_validation: true, regex_expression: '^\\d{10}$'
 
     @instance.transactable_types.create! name: 'Bike'
   end
@@ -66,20 +68,20 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
   def should_export_transactable_types
     yaml_content = read_exported_file('transactable_types/car.yml')
     assert_equal yaml_content['name'], 'Car'
-    assert_same_elements yaml_content['validation'], [{"required" => false, "field_name"=>"name", 'validation_only_on_update' => false, "regex"=>"^\\d{10}$"},
-                                              {"required" => false, "field_name"=>"name", "max_length"=>140, 'validation_only_on_update' => false}]
+    assert_same_elements yaml_content['validation'], [{ 'required' => false, 'field_name' => 'name', 'validation_only_on_update' => false, 'regex' => '^\\d{10}$' },
+                                                      { 'required' => false, 'field_name' => 'name', 'max_length' => 140, 'validation_only_on_update' => false }]
 
-    assert_same_elements yaml_content['action_types'], [{"enabled"=>true, "type"=>"TransactableType::SubscriptionBooking", "allow_no_action"=>true, "pricings"=>[{"number_of_units"=>30, "unit"=>"day", "min_price_cents"=>0, "max_price_cents"=>0, "order_class_name"=>"RecurringBooking", "allow_nil_price_cents"=>false}]}, {"enabled"=>true, "type"=>"TransactableType::NoActionBooking", "allow_no_action"=>true}]
-    assert_same_elements yaml_content['custom_attributes'], [{"name"=>"description", "attribute_type"=>"text", "html_tag"=>"textarea", "search_in_query"=>true, "searchable"=>false, "input_html_options"=>{}, "validation"=>[{"required"=>false, "field_name"=>"description", "validation_only_on_update"=>false, "regex"=>"^\\d{10}$"}]}]
+    assert_same_elements yaml_content['action_types'], [{ 'enabled' => true, 'type' => 'TransactableType::SubscriptionBooking', 'allow_no_action' => true, 'pricings' => [{ 'number_of_units' => 30, 'unit' => 'day', 'min_price_cents' => 0, 'max_price_cents' => 0, 'order_class_name' => 'RecurringBooking', 'allow_nil_price_cents' => false }] }, { 'enabled' => true, 'type' => 'TransactableType::NoActionBooking', 'allow_no_action' => true }]
+    assert_same_elements yaml_content['custom_attributes'], [{ 'name' => 'description', 'attribute_type' => 'text', 'html_tag' => 'textarea', 'search_in_query' => true, 'searchable' => false, 'input_html_options' => {}, 'validation' => [{ 'required' => false, 'field_name' => 'description', 'validation_only_on_update' => false, 'regex' => '^\\d{10}$' }] }]
 
     yaml_content = read_exported_file('transactable_types/bike.yml')
     assert_equal yaml_content['name'], 'Bike'
   end
 
-  def setup_instance_profile_types
+  def setup_3_instance_profile_types
     profile_type = @instance.instance_profile_types.create! name: 'Default', profile_type: 'default'
     profile_type.custom_validators.create! field_name: 'name', max_length: 140
-    profile_type.custom_validators.create! field_name: 'name', regex_validation: true, regex_expression: "^\\d{10}$"
+    profile_type.custom_validators.create! field_name: 'name', regex_validation: true, regex_expression: '^\\d{10}$'
 
     profile_attribute = profile_type.custom_attributes.create! name: 'description', html_tag: 'textarea', attribute_type: 'text', search_in_query: true
     profile_attribute.custom_validators.create! field_name: 'description', regex_validation: true, min_length: 5
@@ -89,15 +91,15 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     yaml_content = read_exported_file('instance_profile_types/default.yml')
 
     assert_equal yaml_content['name'], 'Default'
-    assert_same_elements yaml_content['validation'], [{"required" => false, "field_name"=>"name", 'validation_only_on_update' => false, "regex"=>"^\\d{10}$"}, {"required" => false, "field_name"=>"name", "max_length"=>140, 'validation_only_on_update' => false}]
-    assert_same_elements yaml_content['custom_attributes'], [{"name"=>"description", "attribute_type"=>"text", "html_tag"=>"textarea", "search_in_query"=>true, "searchable"=>false, "input_html_options"=>{}, "validation"=>[{"required"=>false, "field_name"=>"description", "validation_only_on_update"=>false, "min_length"=>5}]}]
+    assert_same_elements yaml_content['validation'], [{ 'required' => false, 'field_name' => 'name', 'validation_only_on_update' => false, 'regex' => '^\\d{10}$' }, { 'required' => false, 'field_name' => 'name', 'max_length' => 140, 'validation_only_on_update' => false }]
+    assert_same_elements yaml_content['custom_attributes'], [{ 'name' => 'description', 'attribute_type' => 'text', 'html_tag' => 'textarea', 'search_in_query' => true, 'searchable' => false, 'input_html_options' => {}, 'validation' => [{ 'required' => false, 'field_name' => 'description', 'validation_only_on_update' => false, 'min_length' => 5 }] }]
   end
 
-  def setup_reservation_types
+  def setup_4_reservation_types
     reservation_type = @instance.reservation_types.create! name: 'Booking', withdraw_invitation_when_reject: true, transactable_types: [@instance.transactable_types.first]
 
     creator = Utils::BaseComponentCreator.new(reservation_type)
-    creator.instance_variable_set(:@form_type_class, "reservation_attributes")
+    creator.instance_variable_set(:@form_type_class, 'reservation_attributes')
     creator.create_components! [type: 'reservation_attributes', name: 'Booking form', fields: [reservation: 'guest_notes']]
   end
 
@@ -106,13 +108,13 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
 
     assert_equal yaml_content['name'], 'Booking'
     assert_equal yaml_content['transactable_types'], ['Car']
-    assert_same_elements yaml_content['form_components'], [{"name"=>"Booking form", "fields"=>[{"reservation"=>"guest_notes"}], "type"=>"reservation_attributes"}]
+    assert_same_elements yaml_content['form_components'], [{ 'name' => 'Booking form', 'fields' => [{ 'reservation' => 'guest_notes' }], 'type' => 'reservation_attributes' }]
   end
 
-  def setup_categories
+  def setup_5_categories
     Category.create! name: 'Extras', multiple_root_categories: true, shared_with_users: true, instance_id: @instance.id,
-      transactable_types: [TransactableType.last], instance_profile_types: [InstanceProfileType.last],
-      children: [Category.create!(name: "Child Seat", children: [Category.create!(name: 'test')]), Category.create!(name: "Bike Rack")]
+                     transactable_types: [TransactableType.last], instance_profile_types: [InstanceProfileType.last],
+                     children: [Category.create!(name: 'Child Seat', children: [Category.create!(name: 'test')]), Category.create!(name: 'Bike Rack')]
   end
 
   def should_export_categories
@@ -123,29 +125,29 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal yaml_content['shared_with_users'], true
     assert_equal yaml_content['transactable_types'], ['Bike']
     assert_equal yaml_content['instance_profile_types'], ['Default']
-    assert_same_elements yaml_content['children'], [{"name"=>"Bike Rack"}, {"name"=>"Child Seat", "children"=>[{"name"=>"test"}]}]
+    assert_same_elements yaml_content['children'], [{ 'name' => 'Bike Rack' }, { 'name' => 'Child Seat', 'children' => [{ 'name' => 'test' }] }]
   end
 
-  def setup_topics
+  def setup_6_topics
     Topic.create! name: 'test', description: 'test', instance_id: @instance.id, category: Category.last, featured: true, remote_cover_image_url: 'http://example.com/test.jpg'
   end
 
-  def should_export_topics
+  def should_7_export_topics
     yaml_content = read_exported_file('topics/topics.yml')
 
-    assert_equal yaml_content, {"topics"=> [{"name"=>"test", "description"=>"test", "featured"=>true, "remote_cover_image_url"=>nil}]}
+    assert_equal yaml_content, 'topics' => [{ 'name' => 'test', 'description' => 'test', 'featured' => true, 'remote_cover_image_url' => nil }]
   end
 
   def setup_pages
     Page.create! path: 'Test', content: '<h1>Hello</h1>', slug: 'test-page'
   end
 
-  def should_export_pages
+  def should_8_export_pages
     liquid_content = read_exported_file('pages/test.liquid', :liquid)
     assert_equal liquid_content.body, '<h1>Hello</h1>'
   end
 
-  def setup_content_holders
+  def setup_9_content_holders
     ContentHolder.create! name: 'Test', content: '<h1>Hello from content holder</h1>'
   end
 
@@ -154,29 +156,29 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal liquid_content.body, '<h1>Hello from content holder</h1>'
   end
 
-  def setup_emails
+  def setup_10_emails
     InstanceView.create!(instance_id: @instance.id, view_type: 'email', path: 'example_path/example_mailer', handler: 'liquid', format: 'html',
                          partial: false, body: 'Hello from email', locales: Locale.all)
   end
 
-  def should_export_emails
+  def should_11_export_emails
     liquid_content = read_exported_file('mailers/example_path/example_mailer.liquid', :liquid)
     assert_equal liquid_content.body, 'Hello from email'
   end
 
-  def setup_liquid_views
+  def setup_12_liquid_views
     InstanceView.create!(instance_id: @instance.id, view_type: 'view', path: 'home/index', handler: 'liquid', format: 'html',
                          partial: false, body: 'Hello from liquid view', locales: Locale.all)
   end
 
-  def should_export_liquid_views
+  def should_13_export_liquid_views
     liquid_content = read_exported_file('liquid_views/home/index.liquid', :liquid)
     assert_equal liquid_content.body, 'Hello from liquid view'
   end
 
-  def setup_sms
+  def setup_14_sms
     InstanceView.create!(instance_id: @instance.id, view_type: 'sms', path: 'example/path', handler: 'liquid', format: 'html',
-                       partial: false, body: 'Hello from sms', locales: Locale.all)
+                         partial: false, body: 'Hello from sms', locales: Locale.all)
   end
 
   def should_export_sms
@@ -184,25 +186,26 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
     assert_equal liquid_content.body, 'Hello from sms'
   end
 
-  def setup_workflow
+  def setup_15_workflow
     workflow = Workflow.create! name: 'test workflow', instance_id: @instance.id
     workflow_step = WorkflowStep.create! workflow: workflow, name: 'test workflow', instance_id: @instance.id, associated_class: WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate
-    WorkflowAlert.create! workflow_step: workflow_step, name: "test", alert_type: "email", recipient_type: "lister", template_path: "user_mailer/user_commented_on_user_update"
+    WorkflowAlert.create! workflow_step: workflow_step, name: 'test', alert_type: 'email', recipient_type: 'lister', template_path: 'user_mailer/user_commented_on_user_update'
   end
 
   def should_export_workflow
     yaml_content = read_exported_file('workflows/test_workflow.yml')
 
-    assert_equal yaml_content, {"name"=>"test workflow", "events_metadata"=>{}, "workflow_steps"=>[
-      {"name"=>"test workflow",
-       "associated_class"=>"WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate", 
-       "workflow_alerts"=>[
-         {"name"=>"test",
-          "alert_type"=>"email",
-          "recipient_type"=>"lister",
-          "template_path"=>"user_mailer/user_commented_on_user_update",
-          "delay"=>0
-       }]}]}
+    assert_equal yaml_content, 'name' => 'test workflow', 'events_metadata' => {}, 'workflow_steps' => [
+      { 'name' => 'test workflow',
+        'associated_class' => 'WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate',
+        'workflow_alerts' => [
+          { 'name' => 'test',
+            'alert_type' => 'email',
+            'recipient_type' => 'lister',
+            'template_path' => 'user_mailer/user_commented_on_user_update',
+            'delay' => 0 }
+        ] }
+    ]
   end
 
   def setup_custom_model_types
@@ -214,20 +217,21 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
   def should_export_custom_model_types
     yaml_content = read_exported_file('custom_model_types/test.yml')
 
-    assert_equal yaml_content, {"name"=>"Test", "custom_attributes"=>[
-      {"name"=>"description",
-       "attribute_type"=>"text",
-       "html_tag"=>"textarea",
-       "search_in_query"=>true,
-       "searchable"=>false,
-       "input_html_options"=>{},
-       "validation"=>[
-         {"required"=>false,
-          "field_name"=>"description",
-          "min_length"=>5,
-          "validation_only_on_update"=>false
-       }]}],
-       "instance_profile_types"=>["Default"], "transactable_types"=>["Bike"]}
+    assert_equal yaml_content, 'name' => 'Test', 'custom_attributes' => [
+      { 'name' => 'description',
+        'attribute_type' => 'text',
+        'html_tag' => 'textarea',
+        'search_in_query' => true,
+        'searchable' => false,
+        'input_html_options' => {},
+        'validation' => [
+          { 'required' => false,
+            'field_name' => 'description',
+            'min_length' => 5,
+            'validation_only_on_update' => false }
+        ] }
+    ],
+                               'instance_profile_types' => ['Default'], 'transactable_types' => ['Bike']
   end
 
   def setup_graph_queries
@@ -241,7 +245,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
   end
 
   def setup_custom_themes
-    File.open("#{Rails.root}/tmp/main.js", "w+") { |f| f.puts "js content" }
+    File.open("#{Rails.root}/tmp/main.js", 'w+') { |f| f.puts 'js content' }
 
     custom_theme = @instance.custom_themes.create! name: 'Default', in_use: false, in_use_for_instance_admins: true
     custom_theme.custom_theme_assets.create! name: 'main.js', file: File.open("#{Rails.root}/tmp/main.js"), type: 'CustomThemeAsset::ThemeJsFile'
@@ -249,7 +253,7 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
 
   def should_export_custom_themes
     yaml_content = read_exported_file('custom_themes/default.yml')
-    assert_equal yaml_content, {"name"=>"Default", "in_use"=>false, "in_use_for_instance_admins"=>true}
+    assert_equal yaml_content, 'name' => 'Default', 'in_use' => false, 'in_use_for_instance_admins' => true
 
     js_content = read_exported_file('custom_themes/default_custom_theme_assets/main.js')
     assert_equal js_content, 'js content'
@@ -265,15 +269,15 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
 
   def should_export_rating_systems
     yaml_content = read_exported_file('rating_systems/host.yml')
-    assert_equal yaml_content, {"subject"=>"host", "active"=>true,
-                                "rating_questions"=>[{"text"=>"Example question?"}],
-                                "rating_hints"=>[{"value"=>"2", "description"=>"Good"}, {"value"=>"1", "description"=>"Bad"}], 
-                                "transactable_type"=>"Car"}
+    assert_equal yaml_content, 'subject' => 'host', 'active' => true,
+                               'rating_questions' => [{ 'text' => 'Example question?' }],
+                               'rating_hints' => [{ 'value' => '2', 'description' => 'Good' }, { 'value' => '1', 'description' => 'Bad' }],
+                               'transactable_type' => 'Car'
   end
 
   def should_export_mpbuilderrc_file
     hash_content = read_exported_file('.mpbuilderrc')
-    assert_equal hash_content, { 'instance_id' => @instance.id, 'mode' => 'append' }
+    assert_equal hash_content, 'instance_id' => @instance.id, 'mode' => 'append'
   end
 
   private
@@ -289,10 +293,10 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
   end
 
   def run_all_setup_methods
-    self.class.instance_methods(false).grep(/setup_/).each {|method_sym| self.send(method_sym) }
+    self.class.instance_methods(false).grep(/setup_/).each { |method_sym| send(method_sym) }
   end
 
   def run_all_should_export_methods
-    self.class.instance_methods(false).grep(/should_export_/).each {|method_sym| self.send(method_sym) }
+    self.class.instance_methods(false).grep(/should_export_/).each { |method_sym| send(method_sym) }
   end
 end

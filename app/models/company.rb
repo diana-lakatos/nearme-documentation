@@ -17,7 +17,7 @@ class Company < ActiveRecord::Base
 
   has_metadata accessors: [:draft_at, :completed_at]
 
-  attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name, :verify_associated
+  attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name
 
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :company_users, dependent: :destroy
@@ -43,7 +43,7 @@ class Company < ActiveRecord::Base
   has_one :domain, as: :target, foreign_key: 'target_id', dependent: :destroy
   has_one :theme, as: :owner, foreign_key: 'owner_id', dependent: :destroy
 
-  belongs_to :creator, -> { with_deleted }, class_name: 'User', inverse_of: :created_companies
+  belongs_to :creator, -> { with_deleted }, class_name: 'User', inverse_of: :companies
   belongs_to :instance
   belongs_to :partner
   belongs_to :payments_mailing_address, class_name: 'Address', foreign_key: 'mailing_address_id'
@@ -106,7 +106,7 @@ class Company < ActiveRecord::Base
     self.created_payment_transfers = []
     transaction do
       charges_without_payment_transfer = payments.needs_payment_transfer
-      charges_without_payment_transfer.group_by(&:currency).each do |currency, all_charges|
+      charges_without_payment_transfer.group_by(&:currency).each do |_currency, all_charges|
         all_charges.group_by(&:payment_gateway_mode).each do |mode, charges|
           payment_transfer = payment_transfers.create!(payments: charges, payment_gateway_mode: mode)
           created_payment_transfers << payment_transfer if possible_payout_not_configured?(payout_payment_gateway)
@@ -142,7 +142,7 @@ class Company < ActiveRecord::Base
     listings.select('DISTINCT currency').map(&:currency).presence || [instance.default_currency || 'USD']
   end
 
-  def possible_payout_not_configured?(payment_gateway=payout_payment_gateway)
+  def possible_payout_not_configured?(payment_gateway = payout_payment_gateway)
     payment_gateway.try(:supports_payout?) && verified_merchant_account_missing?(payment_gateway)
   end
 
@@ -166,7 +166,7 @@ class Company < ActiveRecord::Base
   end
 
   def validate_url_format
-    return if url.blank?
+    return true if url.blank?
     # We parse and normalize with Addressable to make sure we catch unicode domains as well
 
     parsed = begin Addressable::URI.parse(url)

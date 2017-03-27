@@ -23,7 +23,10 @@ class AddressDrop < BaseDrop
   #   @return [Float] returns the latitude for this address
   # @!method longitude
   #   @return [Float] returns the longitude for this address
-  delegate :street, :address, :city, :suburb, :iso_country_code, :country, :state, :postcode, :latitude, :longitude, to: :address_object
+  # @!method street_number
+  #   @return [String] returns the street number for this address
+  delegate :street, :address, :city, :suburb, :iso_country_code, :country, :state, :postcode, :latitude, :longitude,
+           :street_number, to: :address_object
 
   def initialize(address_object)
     @address_object = address_object

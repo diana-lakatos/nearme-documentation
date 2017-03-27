@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 module CurrencyHelper
   def number_to_currency_symbol(currency, price = '0.00', options = {})
     currency ||= PlatformContext.current.instance.default_currency
     options[:unit] = Money::Currency.new(currency).symbol
 
     options.reverse_merge!(rel: 'tooltip', title: currency)
-    content_tag('span', number_to_currency(price, options),  options)
+    content_tag('span', number_to_currency(price, options), options)
   end
 
   def currency_symbol_from_code(currency = nil)
@@ -19,6 +20,10 @@ module CurrencyHelper
 
   def all_currency_symbols_associations
     currency_symbols_associations(DesksnearMe::Application.config.supported_currencies)
+  end
+
+  def all_currency_symbols_associations_json
+    all_currency_symbols_associations.to_json
   end
 
   def currency_content_tag(currency, price = '0.00', el = :span, currency_options = {}, content_tag_options = {})

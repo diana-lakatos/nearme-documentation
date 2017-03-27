@@ -58,7 +58,7 @@ class EventStoreTest < ActiveSupport::TestCase
 
     assert_equal(
       {
-        foo: { comment: { class_name: 'Comment', id: comment.id } },
+        foo: { comment: { class_name: 'Comment', id: comment.id } }
       },
       serializer.to_h
     )

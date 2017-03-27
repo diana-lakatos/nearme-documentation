@@ -41,7 +41,7 @@ class Address < ActiveRecord::Base
   end
 
   def clear_fields
-    [:street, :formatted_address, :suburb, :city, :country, :state, :postcode, :address_components, :latitude, :longitude, :iso_country_code].each do |field|
+    [:street, :formatted_address, :suburb, :city, :country, :state, :postcode, :address_components, :latitude, :longitude, :iso_country_code, :street_number].each do |field|
       send("#{field}=", nil)
     end
   end
@@ -124,21 +124,6 @@ class Address < ActiveRecord::Base
     State.find_by(name: state, country_id: country_id).try(:id)
   end
 
-  def street_number
-    result = nil
-
-    if address_components.present?
-      address_components.each do |_key, value|
-        if value['types'].to_s.include?('street_number')
-          result = value['long_name']
-          break
-        end
-      end
-    end
-
-    result
-  end
-
   def parse_address_components
     parse_address_components! if address_components_changed?
   end
@@ -152,6 +137,7 @@ class Address < ActiveRecord::Base
     self.iso_country_code = data_parser.fetch_address_component('country', :short)
     self.state = data_parser.fetch_address_component('state')
     self.postcode = data_parser.fetch_address_component('postcode')
+    self.street_number = data_parser.fetch_address_component('street_number')
   end
 
   def to_s

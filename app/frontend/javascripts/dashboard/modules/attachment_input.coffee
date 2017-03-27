@@ -14,12 +14,18 @@ module.exports = class AttachmentInput
     @preventEarlySubmission()
     @processing = 0
     @bindEvents()
-    @initializeFileUpload()
+    @initializeFileUpload() if @isJsUpload
 
   bindEvents: ->
     @listenToDeleteFile()
-    @listenToFormSubmit()
-    @listenToParamsChange()
+    @listenToFormSubmit() if @isJsUpload
+    @listenToParamsChange() if @isJsUpload
+    @listenToFileChange() unless @isJsUpload
+
+  listenToFileChange: =>
+    @fileInput.on 'change', (e) =>
+      console.log('trigger new file!')
+      @updateLabelStatic()
 
   listenToParamsChange: =>
     @collection.on 'change', 'select[data-attachment-property]', (e) =>
@@ -122,18 +128,22 @@ module.exports = class AttachmentInput
     else
       matches = @fileInput.val().match /\\([^\\]+)$/i
       output = matches[1]
+    output = @defaultLabel() unless !!output
 
     @label.find('.add-label').html output
 
   updateLabelJS: ->
-    defaultLabel = if @isMultiple then 'Add file(s)...' else 'Select file...'
     switch @processing
-      when 0 then text = defaultLabel
+      when 0 then text = @defaultLabel()
       when 1 then text = 'Uploading file...'
       else text = "Uploading #{@processing} files..."
 
     @label.find('.add-label').html text
     @label.toggleClass('active-upload', @processing > 0)
+
+  defaultLabel: ->
+    if @isMultiple then 'Add file(s)...' else 'Select file...'
+
 
   preventEarlySubmission: ->
     @container.parents('form').on 'submit', =>

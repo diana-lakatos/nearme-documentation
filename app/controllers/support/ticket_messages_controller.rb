@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Support::TicketMessagesController < Support::BaseController
   def create
     message = Support::TicketMessage.new(message_params)
@@ -7,11 +8,11 @@ class Support::TicketMessagesController < Support::BaseController
       message.save!
       if ticket.target_rfq?
         WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Updated, message.id, as: current_user)
-        if ticket.target.action_free_booking?
-          flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
-        else
-          flash[:success] = t('flash_messages.support.offer_ticket_message.created')
-        end
+        flash[:success] = if ticket.target.action_free_booking?
+                            t('flash_messages.support.rfq_ticket_message.created')
+                          else
+                            t('flash_messages.support.offer_ticket_message.created')
+                          end
       else
         WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Updated, message.id, as: current_user)
         flash[:success] = t('flash_messages.support.ticket_message.created')
@@ -19,11 +20,11 @@ class Support::TicketMessagesController < Support::BaseController
     else
       unless close?
         if ticket.target_rfq?
-          if ticket.target.action_free_booking?
-            flash[:error] = t('flash_messages.support.rfq_ticket_message.error')
-          else
-            flash[:error] = t('flash_messages.support.offer_ticket_message.error')
-          end
+          flash[:error] = if ticket.target.action_free_booking?
+                            t('flash_messages.support.rfq_ticket_message.error')
+                          else
+                            t('flash_messages.support.offer_ticket_message.error')
+                          end
         else
           flash[:error] = t('flash_messages.support.ticket_message.error')
         end

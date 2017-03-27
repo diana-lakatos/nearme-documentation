@@ -1,0 +1,21 @@
+<div id="signup" class="signup-form">
+  {% form_for user_signup, url: '/api/users.html', as: user %}
+    {% input email %}
+    {% input password  %}
+    {% fields_for companies %}
+      This is company
+      {% input paypal_email, form: companies  %}
+      {% input mailing_address, form: companies  %}
+    {% endfields_for %}
+    {% input name %}
+    {% submit Save  %}
+  {% endform_for %}
+</div>
+
+<script>
+  $(function() {
+    $(document).trigger('setclass:modal.nearme', ['sign-up-modal']);
+    $(document).trigger('init:signupform.nearme');
+    $(document).trigger('init:custominputs.nearme');
+  });
+</script>

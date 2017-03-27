@@ -1,8 +1,34 @@
+# frozen_string_literal: true
 module SearcherHelper
-  def result_view
-    return @result_view = 'community' if PlatformContext.current.instance.is_community?
-    @result_view = params[:v].presence
-    @result_view = @result_view.in?(@transactable_type.available_search_views) ? @result_view : @transactable_type.default_search_view
+  class ResultView
+    delegate :==, to: :type
+
+    def initialize(params, object)
+      @object = object
+      @params = params
+    end
+
+    def type
+      valid_view? && view_name || default
+    end
+
+    def to_s
+      type
+    end
+
+    private
+
+    def view_name
+      @params[:v] || @params[:result_view]
+    end
+
+    def valid_view?
+      @object.available_search_views.include? view_name
+    end
+
+    def default
+      @object.default_search_view
+    end
   end
 
   def find_transactable_type
@@ -11,16 +37,14 @@ module SearcherHelper
     elsif params[:transactable_type_id].present?
       @transactable_type = TransactableType.find(params[:transactable_type_id])
     end
+
     unless @transactable_type
-      Instance::SEARCHABLE_CLASSES.each do|_klass|
+      Instance::SEARCHABLE_CLASSES.each do |_klass|
         @transactable_type ||= _klass.constantize.searchable.by_position.first
       end
     end
 
-    if @transactable_type.blank?
-      flash[:error] = t('flash_messages.search.missing_transactable_type')
-      return redirect_to root_path
-    end
+    raise ActiveRecord::RecordNotFound, 'could not find transactable_type' unless @transactable_type
 
     # TODO: as a lookup context we use TransactableType, but search can by for
     # InstanceProfileType, this is temporary workaround. I think we need to add
@@ -33,14 +57,8 @@ module SearcherHelper
     end
   end
 
-  def instantiate_searcher(transactable_type, params)
-    if result_view == 'mixed'
-      InstanceType::Searcher::Elastic::GeolocationSearcher::Location.new(transactable_type, params)
-    else
-      searcher = InstanceType::Searcher::Elastic::GeolocationSearcher::Listing.new(transactable_type, params)
-      searcher.invoke
-      searcher
-    end
+  def instantiate_searcher(params)
+    InstanceType::TransactableSearchFactory.new(params).create
   end
 
   def search_breadcrumb(searcher)

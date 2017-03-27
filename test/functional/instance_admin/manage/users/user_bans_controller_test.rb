@@ -2,8 +2,6 @@ require 'test_helper'
 
 class InstanceAdmin::Manage::Users::UserBansControllerTest < ActionController::TestCase
   setup do
-    @instance = FactoryGirl.create(:instance)
-    PlatformContext.any_instance.stubs(:instance).returns(@instance)
     @user = FactoryGirl.create(:user)
     @transactable_type = FactoryGirl.create(:transactable_type)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
@@ -21,7 +19,7 @@ class InstanceAdmin::Manage::Users::UserBansControllerTest < ActionController::T
       @user_ban = assigns(:user_ban)
       assert_equal @user_to_be_banned.id, @user_ban.user_id
       assert_equal @user.id, @user_ban.creator_id
-      assert_equal @instance.id, @user_ban.instance_id
+      assert_equal PlatformContext.current.instance.id, @user_ban.instance_id
       assert_equal @user_ban.created_at.to_i, @user_to_be_banned.reload.banned_at.to_i
       assert_nil @user.reload.banned_at
     end

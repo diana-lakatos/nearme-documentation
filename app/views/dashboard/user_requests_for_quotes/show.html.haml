@@ -27,7 +27,7 @@
           = l(@ticket.reservation_date, format: :long)
         - elsif @ticket.target.try(:purchase_action?)
           &times;
-        - elsif @ticket.target.try(:subscription_booking) && @ticket.reservation_date.present? && @ticket.reservation_pricing
+        - elsif @ticket.target.try(:subscription_booking?) && @ticket.reservation_date.present? && @ticket.reservation_pricing
           &times;
           = t('support.new.subscription', period: @ticket.reservation_pricing.units_translation('search.per_unit_price').titleize, from: l(@ticket.reservation_date, format: :long))
         - elsif @ticket.reservation_dates.any?

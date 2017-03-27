@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Dashboard::Api::BaseController < Dashboard::BaseController
   private
 

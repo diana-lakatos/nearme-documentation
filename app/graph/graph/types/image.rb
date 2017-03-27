@@ -5,6 +5,9 @@ module Graph
       name 'Image'
       description 'Generic image'
 
+      field :id, types.ID do
+        resolve ->(obj, _arg, _ctx) { obj.model.id }
+      end
       field :url,
             !types.String,
             'image url, ex: thumb: url(version: "thumb")' do

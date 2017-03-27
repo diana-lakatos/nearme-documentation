@@ -2,7 +2,7 @@
   %span#service_buttons
 
     - Authentication.available_login_providers.each do |provider|
-      - provider.downcase!
+      - provider = provider.downcase
       = link_to provider_auth_url(provider), :class => "btn btn-large #{provider} submit", :id => provider do
         %i{:class => "icon ico-#{provider}"}
 

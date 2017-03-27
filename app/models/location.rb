@@ -3,6 +3,7 @@ require 'nearest_time_zone'
 
 class Location < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
+  include TransactablesOwnerable
   has_paper_trail
   acts_as_paranoid
   scoped_to_platform_context
@@ -26,6 +27,7 @@ class Location < ActiveRecord::Base
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :impressions, as: :impressionable, dependent: :destroy
   has_many :listings, dependent: :destroy, inverse_of: :location, class_name: 'Transactable'
+  has_many :transactables, dependent: :destroy, inverse_of: :location
   has_many :payments, through: :reservations
   has_many :photos, through: :listings
   has_many :reservations, through: :listings
@@ -137,7 +139,7 @@ class Location < ActiveRecord::Base
     @name ||= if validation_for(:name)
                 self[:name]
               else
-                self[:name].presence || [company.name, street].compact.join(' @ ')
+                self[:name].presence || [company&.name, street].compact.join(' @ ')
     end
   end
 

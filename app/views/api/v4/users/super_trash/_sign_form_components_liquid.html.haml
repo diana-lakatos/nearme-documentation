@@ -1,0 +1,30 @@
+= simple_form_for resource, as: :user, url: '/api/users.html', html: { class: form_classes } do |f|
+  <input name='role' value='{{ params.role }}' type='hidden'>
+
+<div class="name-holder input-icon-holder">
+  {% assign placeholder = 'simple_form.placeholders.registration.name' | t %}
+  {% input name, label: false, placeholder: @placeholder, input_html_tabindex: 1 %}
+  <span class='ico-user'></span>
+</div>
+
+<div class="email-holder input-icon-holder">
+  {% assign placeholder = 'simple_form.placeholders.registration.email' | t %}
+  {% input email, label: false, placeholder: @placeholder, input_html_tabindex: 2 %}
+  <span class='ico-mail'></span>
+</div>
+
+<div class="password-holder input-icon-holder">
+  {% assign placeholder = 'simple_form.placeholders.registration.password' | t %}
+  {% input password, label: false, placeholder: @placeholder, input_html_tabindex: 3, input_html_autocomplete: 'new-password' %}
+  <span class='ico-lock'></span>
+</div>
+
+      - if platform_context.instance.force_accepting_tos
+        = render 'registrations/tos_form', user: f.object, error: f.object.errors[:accept_terms_of_service].join(', '),
+          checked: !f.object.errors[:accept_terms_of_service].present?
+      - else
+        - if @legal_page_present
+          %p.notice.text-center.legal
+            #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
+      .actions
+        = f.submit t('sign_up_form.buttons.sign_up'), class: 'desksnearme submit btn btn-green', data: { disable_with: t('sign_up_form.disabled_buttons.sign_up') }, tabindex: tab_index+1

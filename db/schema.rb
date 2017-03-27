@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 20170321202617) do
     t.datetime "updated_at"
     t.string   "iso_country_code",   limit: 2
     t.boolean  "raw_address",                    default: false, null: false
+    t.string   "street_number"
   end
 
   add_index "addresses", ["instance_id", "entity_id", "entity_type", "address"], name: "index_addresses_on_entity_id_and_entity_type_and_address", unique: true, where: "(deleted_at IS NULL)", using: :btree
@@ -1269,6 +1270,7 @@ ActiveRecord::Schema.define(version: 20170321202617) do
     t.boolean  "admin_approval",                               default: false,        null: false
     t.string   "default_sort_by"
     t.integer  "default_availability_template_id"
+    t.string   "parameterized_name"
   end
 
   add_index "instance_profile_types", ["instance_id", "profile_type"], name: "index_instance_profile_types_on_instance_id_and_profile_type", unique: true, using: :btree

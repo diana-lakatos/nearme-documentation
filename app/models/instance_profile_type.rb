@@ -1,5 +1,7 @@
+# frozen_string_literal: true
 class InstanceProfileType < ActiveRecord::Base
   include SearchableType
+  include WithParameterizedName
 
   has_paper_trail
   acts_as_paranoid
@@ -11,7 +13,7 @@ class InstanceProfileType < ActiveRecord::Base
   acts_as_custom_attributes_set
   belongs_to :instance
   belongs_to :default_availability_template, class_name: 'AvailabilityTemplate'
-  has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
+  has_many :custom_attributes_custom_validators, -> { where.not(custom_attributes: { attribute_type: %w(photo file) }) }, through: :custom_attributes, source: :custom_validators
   has_many :users, through: :user_profiles
   has_many :user_profiles
   has_many :custom_validators, as: :validatable
@@ -25,12 +27,10 @@ class InstanceProfileType < ActiveRecord::Base
   delegate :translated_bookable_noun, :create_translations!, :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
            :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
-  DEFAULT = 'default'.freeze
-  SELLER = 'seller'.freeze
-  BUYER = 'buyer'.freeze
+  DEFAULT = 'default'
+  SELLER = 'seller'
+  BUYER = 'buyer'
   PROFILE_TYPES = [DEFAULT, SELLER, BUYER].freeze
-
-  validates :profile_type, inclusion: { in: PROFILE_TYPES }
 
   scope :default, -> { where(profile_type: DEFAULT) }
   scope :seller, -> { where(profile_type: SELLER) }
@@ -78,8 +78,6 @@ class InstanceProfileType < ActiveRecord::Base
   private
 
   def es_users_reindex
-    if admin_approval_changed?
-      ElasticIndexerUsersByProfileTypeJob.perform(self.id)
-    end
+    ElasticIndexerUsersByProfileTypeJob.perform(id) if admin_approval_changed?
   end
 end

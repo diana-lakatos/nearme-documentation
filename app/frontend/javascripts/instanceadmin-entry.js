@@ -57,7 +57,6 @@ NM.on('ready', ()=>{
   require('initializers/instance_admin/support_ticket_message.initializer');
   require('initializers/instance_admin/tags.initializer');
   require('initializers/instance_admin/theme.initializer');
-  require('initializers/instance_admin/translation_default_text.initializer');
   require('initializers/instance_admin/wish_list.initializer');
   require('initializers/instance_admin/workflow_form.initializer');
 });

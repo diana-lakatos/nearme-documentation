@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Searchable
   extend ActiveSupport::Concern
 
@@ -33,9 +34,7 @@ module Searchable
     private
 
     def index_object_on_create
-      if Rails.application.config.use_elastic_search
-        ElasticIndexerJob.perform(:index, self.class.to_s, id)
-      end
+      ElasticIndexerJob.perform(:index, self.class.to_s, id) if Rails.application.config.use_elastic_search
     end
 
     def index_object_on_update
@@ -49,9 +48,7 @@ module Searchable
     end
 
     def delete_from_index_on_destroy
-      if Rails.application.config.use_elastic_search
-        ElasticIndexerJob.perform(:delete, self.class.to_s, id)
-      end
+      ElasticIndexerJob.perform(:delete, self.class.to_s, id) if Rails.application.config.use_elastic_search
     end
   end
 end

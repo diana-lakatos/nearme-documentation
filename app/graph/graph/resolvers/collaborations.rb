@@ -2,7 +2,7 @@
 module Graph
   module Resolvers
     class Collaborations
-      def call(user, args, ctx)
+      def call(user, args, _ctx)
         resolve_by(user.source.transactable_collaborators, args)
       end
 
@@ -27,7 +27,7 @@ module Graph
       FILTER_SCOPE_MAP = {
         'PENDING_RECEIVED_INVITATION' => :pending_received_invitation,
         'APPROVED' => :approved
-      }
+      }.freeze
     end
   end
 end

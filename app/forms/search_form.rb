@@ -1,6 +1,5 @@
-require 'reform'
-
-class SearchForm < Reform::Form
+# frozen_string_literal: true
+class SearchForm < BaseForm
   def date_from_params(param_name = 'date')
     date = public_send(param_name)
     case date

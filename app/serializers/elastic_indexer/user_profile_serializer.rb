@@ -23,7 +23,7 @@ module ElasticIndexer
     end
 
     def categories
-      object.categories.order(:position).map { |c| CategorySerializer.new(c).as_json }
+      object.categories.order(:lft).map { |c| CategorySerializer.new(c).as_json }
     end
   end
 end

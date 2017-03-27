@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class Dashboard::Company::HostReservationsControllerTest < ActionController::TestCase
@@ -81,14 +82,14 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
     should 'track and redirect a host to the Manage Guests page when they confirm a booking' do
       WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id, as: @user)
-      post :confirm, { id: @reservation.id }
+      post :confirm, id: @reservation.id
       assert_redirected_to dashboard_company_orders_received_index_path
     end
 
     should 'track and redirect a host to the Manage Guests page when they reject a booking' do
       WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
       Reservation.any_instance.expects(:schedule_void).once
-      put :reject, { id: @reservation.id }
+      put :reject, id: @reservation.id
       assert_redirected_to dashboard_company_orders_received_index_path
     end
 
@@ -97,7 +98,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
       @reservation.confirm # Must be confirmed before can be cancelled
       Reservation.any_instance.stubs(:schedule_refund).returns(true)
-      post :host_cancel, { id: @reservation.id }
+      post :host_cancel, id: @reservation.id
       assert_redirected_to dashboard_company_orders_received_index_path
     end
 
@@ -110,7 +111,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       setup_refund_for_reservation(@reservation)
 
       assert_difference 'Refund.count' do
-        post :host_cancel, { id: @reservation.id }
+        post :host_cancel, id: @reservation.id
       end
 
       assert_redirected_to dashboard_company_orders_received_index_path
@@ -120,7 +121,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     context 'PUT #reject' do
       should 'set rejection reason' do
         Reservation.any_instance.expects(:schedule_void).once
-        put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
+        put :reject, id: @reservation.id, reservation: { rejection_reason: 'Dont like him' }
         assert_equal 'Dont like him', @reservation.reload.rejection_reason
       end
     end
@@ -129,7 +130,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       should 'store new version after confirm' do
         assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 1) do
           with_versioning do
-            post :confirm, { id: @reservation.id }
+            post :confirm, id: @reservation.id
           end
         end
       end
@@ -138,7 +139,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
         Reservation.any_instance.expects(:schedule_void).once
         assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
           with_versioning do
-            put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
+            put :reject, id: @reservation.id, reservation: { rejection_reason: 'Dont like him' }
           end
         end
       end
@@ -148,7 +149,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
         @reservation.confirm
         assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
           with_versioning do
-            post :host_cancel, { id: @reservation.id }
+            post :host_cancel, id: @reservation.id
           end
         end
       end

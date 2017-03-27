@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PaypalAccount < ActiveRecord::Base
   include Encryptable
   include Modelable
@@ -58,5 +59,4 @@ class PaypalAccount < ActiveRecord::Base
   def test_mode?
     self.test_mode ||= payment_gateway.test_mode?
   end
-
 end

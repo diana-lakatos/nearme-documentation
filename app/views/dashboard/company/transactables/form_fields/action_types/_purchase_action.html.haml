@@ -1,17 +1,36 @@
-.prices-container
-  %hr/
-  %h3.control-label
-    %abbr{:title => t('form.required')} *
-    = t('pricing.price')
-    - if is_i18n_set?('pricing.hint.price')
-      = hint_button t('pricing.hint.price')
+- if f.object.is_a?(BaseForm)
+  .prices-container
+    %hr/
+    %h3.control-label
+      %abbr{:title => t('form.required')} *
+      = t('pricing.price')
+      - if is_i18n_set?('pricing.hint.price')
+        = hint_button t('pricing.hint.price')
 
-  .price-options.nested-fields-set
-    = f.simple_fields_for :pricings, f.object.decorate.pricings_for_form do |pricing|
-      .nested-container
-        = render 'dashboard/company/transactables/form_fields/action_types/pricing', f: pricing, tt_pricing: pricing.object.transactable_type_pricing, show_free_column: f.object.try(:allow_free_booking?)
+    .price-options.nested-fields-set
+      = f.simple_fields_for :pricings do |pricing|
+        .nested-container
+          = render 'dashboard/company/transactables/form_fields/action_types/pricing', f: pricing, tt_pricing: pricing.object.model.transactable_type_pricing, show_free_column: f.object.model.try(:allow_free_booking?)
 
-      - if fields.include? 'book_it_out'
-        = render 'dashboard/company/transactables/form_fields/book_it_out', f: pricing
-  - if fields.include? 'action_rfq'
-    = render "dashboard/company/transactables/form_fields/action_rfq", f: f
+        - if fields.include? 'book_it_out'
+          = render 'dashboard/company/transactables/form_fields/book_it_out', f: pricing
+    - if fields.include? 'action_rfq'
+      = render "dashboard/company/transactables/form_fields/action_rfq", f: f
+- else
+  .prices-container
+    %hr/
+    %h3.control-label
+      %abbr{:title => t('form.required')} *
+      = t('pricing.price')
+      - if is_i18n_set?('pricing.hint.price')
+        = hint_button t('pricing.hint.price')
+
+    .price-options.nested-fields-set
+      = f.simple_fields_for :pricings, f.object.decorate.pricings_for_form do |pricing|
+        .nested-container
+          = render 'dashboard/company/transactables/form_fields/action_types/pricing', f: pricing, tt_pricing: pricing.object.transactable_type_pricing, show_free_column: f.object.try(:allow_free_booking?)
+
+        - if fields.include? 'book_it_out'
+          = render 'dashboard/company/transactables/form_fields/book_it_out', f: pricing
+    - if fields.include? 'action_rfq'
+      = render "dashboard/company/transactables/form_fields/action_rfq", f: f

@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 class Dashboard::GroupsController < Dashboard::BaseController
   include LinksHelper
 
-  before_filter :find_group, only: [:edit, :update, :destroy]
-  before_filter :can_moderate?, only: [:edit, :update, :destroy]
+  before_action :find_group, only: [:edit, :update, :destroy]
+  before_action :can_moderate?, only: [:edit, :update, :destroy]
 
   def index
     @groups = current_user.group_collaborated.decorate
