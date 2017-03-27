@@ -278,9 +278,9 @@ class Transactable < ActiveRecord::Base
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :schedule_availability, :next_available_occurrences, :book_it_out_available?,
-           :exclusive_price_available?, :only_exclusive_price_available?, to: :event_booking, allow_nil: true
+           :exclusive_price_available?, :only_exclusive_price_available?, to: :enabled_event_booking, allow_nil: true
   delegate :first_available_date, :second_available_date, :availability_exceptions,
-           :custom_availability_template?, :availability, :overnight_booking?, to: :time_based_booking, allow_nil: true
+           :custom_availability_template?, :availability, :overnight_booking?, to: :enabled_time_based_booking, allow_nil: true
   delegate :open_on?, :open_now?, :bookable?, :has_price?, :hours_to_expiration,
            :service_fee_guest_percent, :service_fee_host_percent, to: :action_type, allow_nil: true
 
@@ -781,6 +781,14 @@ class Transactable < ActiveRecord::Base
 
   def set_action_type
     self.action_type = action_types.find(&:enabled) if self.action_type.blank? || !self.action_type.valid?
+  end
+
+  def enabled_event_booking
+    event_booking == action_type ? event_booking : nil
+  end
+
+  def enabled_time_based_booking
+    time_based_booking == action_type ? time_based_booking : nil
   end
 
   def decline_reservations
