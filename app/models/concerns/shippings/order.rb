@@ -39,20 +39,20 @@ module Shippings
         Deliveries::CancelOrderDeliveries.new(self).perform
       end
 
-      # FIX: bad approach
-      # TODO: provider should be selected by user during checkout phase
       def shipping_provider
-        instance.shipping_providers.first
+        inbound&.shipping_provider
       end
 
       def inbound
-        deliveries.last(2).first
+        deliveries.detect(&:inbound?)
       end
 
       def outbound
-        deliveries.last(2).last
+        deliveries.detect(&:outbound?)
       end
 
+      # bunch of helper methods to facilitate form handling
+      # will be removed once form-builder arrive
       def inbound_pickup_date=(date_string)
         @inbound_pickup_date = date_time_handler.convert_to_date(date_string)
         inbound.pickup_date = @inbound_pickup_date

@@ -7,13 +7,23 @@ module Deliveries
       end
 
       def validator_for(courier)
-        send courier || :default
+        case courier
+        when 'sendle' then sendle
+        when 'manual' then manual
+        when 'auspost-manual' then manual
+        else
+          default
+        end
       end
 
       private
 
       def default
         DefaultDeliveryValidator.new
+      end
+
+      def manual
+        Deliveries::Manual::Validations::Delivery.new
       end
 
       def sendle

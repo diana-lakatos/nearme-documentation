@@ -17,19 +17,19 @@ class Transactable::ActionTypeDrop < BaseDrop
   # @return [Transactable::PricingDrop] returns the first pricing
   # @todo - remove, DIY
   def first_pricing
-    pricings.first
+    @action_type.pricings.first
   end
 
   # @return [Array<Transactable::PricingDrop>] sorted (by number of units) pricing objects for this action type
   # @todo - move sorting to filter
   def sorted_pricings
-    pricings.sort_by(&:number_of_units)
+    @action_type.pricings.sort_by(&:number_of_units)
   end
 
   # @return [Hash{String => MoneyDrop}] hash of the form !{ 'pricing_unit' => MoneyDrop } for example
   #   { 'day' => MoneyDrop }
   def pricings_hash
-    @pricings_hash ||= pricings.each_with_object({}) { |pricing, hash| hash[pricing.unit] = pricing.price }
+    @pricings_hash ||= @action_type.pricings.each_with_object({}) { |pricing, hash| hash[pricing.unit] = pricing.price }
   end
 
   # @return [Array<Hash>] array containing all available templates that can be used for transacable

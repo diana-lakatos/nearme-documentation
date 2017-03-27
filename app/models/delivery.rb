@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 # TODO: duplicates shipping model
 class Delivery < ActiveRecord::Base
+  TYPES = {
+    inbound: 'inbound',
+    outbound: 'outbound'
+  }.freeze
+
   include Validatable
 
   has_paper_trail
@@ -12,6 +17,7 @@ class Delivery < ActiveRecord::Base
   belongs_to :receiver_address, class_name: OrderAddress
   belongs_to :order, inverse_of: :deliveries
   belongs_to :dimensions_template
+  belongs_to :instance
 
   has_many :external_states, class_name: 'Shippings::DeliveryExternalState'
   has_one :external_state, -> { order 'created_at desc' }, class_name: 'Shippings::DeliveryExternalState'
@@ -39,5 +45,20 @@ class Delivery < ActiveRecord::Base
 
   def to_liquid
     DeliveryDrop.new(self)
+  end
+
+  def shipping_provider(default = instance.shipping_providers.last)
+    return default unless courier
+
+    instance.shipping_providers.find_by(shipping_provider_name: courier)
+  end
+
+  # TODO: this might be handled a bit better
+  def inbound?
+    direction == TYPES[:inbound]
+  end
+
+  def outbound?
+    direction == TYPES[:outbound]
   end
 end

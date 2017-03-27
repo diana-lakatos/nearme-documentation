@@ -112,7 +112,7 @@ class CheckoutController < ApplicationController
     return unless Shippings.enabled?(@order)
 
     # FIX this should be generic validation
-    @order.add_validator Deliveries::Sendle::Validations::Order.new
+    # @order.add_validator Deliveries::Sendle::Validations::Order.new
     @order.shipping_address = Deliveries::ShippingAddressBuilder.build(@order, @order.user)
   end
 

@@ -28,7 +28,7 @@ module Deliveries
         def process_response
           raise Deliveries::UnprocessableEntity, @response.body unless @response.success?
 
-          ::Deliveries::Quote.new @response
+          ::Deliveries::Sendle::Quote.new @response
         end
       end
     end

@@ -155,7 +155,14 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     return if @order.confirmed?
     return unless Shippings.enabled?(@order)
 
-    Deliveries::DeliveryFactory.build(order: @order)
+    # move detecion into the factory
+    # rename factory to builder
+    Deliveries::DeliveryFactory.build(
+      order: @order,
+      shipping_provider:
+        Shippings::ShippingProvider.find_by(shipping_provider_name: params[:shipping_provider_name]) || Shippings::ShippingProvider.last,
+    )
+
     Deliveries::BuildShippingLineItems.build(order: @order)
   end
 
