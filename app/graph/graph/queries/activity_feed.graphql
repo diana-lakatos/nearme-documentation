@@ -1,5 +1,5 @@
-query ActivityFeedQuery($include_user_feed: Boolean){
-  feed(include_user_feed: $include_user_feed){
+query ActivityFeedQuery($object_id: ID!, $object_type: String!, $include_user_feed: Boolean){
+  feed(object_id: $object_id, object_type: $object_type, include_user_feed: $include_user_feed){
     owner_id
     owner_type
     has_next_page

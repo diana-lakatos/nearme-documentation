@@ -1,0 +1,8 @@
+- no_topic_select = false if local_assigns[:no_topic_select].nil?
+- include_user_feed = false if local_assigns[:include_user_feed].nil?
+
+- if current_user.try(:can_update_feed_status?, object) == true
+  .publish-a
+    = render 'user_status_updates/form', user_status_update: UserStatusUpdate.new, no_topic_select: no_topic_select, feed: feed
+
+= render 'shared/activity_feed/feed', object: object, feed_data: feed_data, include_user_feed: include_user_feed
