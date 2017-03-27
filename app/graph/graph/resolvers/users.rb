@@ -12,10 +12,6 @@ module Graph
         decorate(resolve_by(arguments))
       end
 
-      def self.decorate(user)
-        UserDrop.new(user)
-      end
-
       def resolve_by(arguments)
         arguments.keys.reduce(main_scope) do |relation, argument_key|
           public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])
@@ -53,41 +49,17 @@ module Graph
               .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::User))
       end
 
-      class CustomAttributePhotos
-        def call(obj, arg, _ctx)
-          user = obj.source
-          custom_attributes = ::CustomAttributes::CustomAttribute.where(name: arg[:name])
-          custom_images = ::CustomImage.where(id: custom_images_ids(custom_attributes, user))
-                                       .order(order(arg) => order_direction(arg))
-          custom_images.map(&:image)
-        end
-
+      class CustomAttributePhotos < Resolvers::CustomAttributePhotosBase
         private
 
-        def custom_images_ids(custom_attributes, user)
-          attribute_images = ::CustomImage.where(custom_attribute: custom_attributes)
-          profile_images = attribute_images.where(owner: user.user_profiles)
-          customization_images = attribute_images.where(
+        def custom_images_ids(custom_images)
+          user = @object.source
+          profile_images = custom_images.where(owner: user.user_profiles)
+          customization_images = custom_images.where(
             owner_type: ::Customization.to_s,
             owner_id: user.user_profiles.map { |up| up.customizations.pluck(:id) }.flatten
           )
           profile_images.pluck(:id) + customization_images.pluck(:id)
-        end
-
-        def order(arg)
-          arg[:order] || default_order
-        end
-
-        def order_direction(arg)
-          arg[:order_direction] || default_order_direction
-        end
-
-        def default_order_direction
-          Graph::Types::OrderDirectionEnum.values['ASC'].value
-        end
-
-        def default_order
-          Graph::Types::CustomImageOrderEnum.values['DATE'].value
         end
       end
     end

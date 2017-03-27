@@ -47,6 +47,20 @@ module Graph
         ::Transactable.all
                       .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::Transactable))
       end
+
+      class CustomAttributePhotos < Resolvers::CustomAttributePhotosBase
+        private
+
+        def custom_images_ids(custom_images)
+          transactable = @object.source
+          images = custom_images.where(owner: transactable)
+          customization_images = custom_images.where(
+            owner_type: ::Customization.to_s,
+            owner_id: transactable.customizations.pluck(:id)
+          )
+          images.pluck(:id) + customization_images.pluck(:id)
+        end
+      end
     end
   end
 end

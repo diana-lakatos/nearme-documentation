@@ -27,6 +27,12 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       assert_equal @user.properties.hair_color, result(query)['users'].first['hair_color']
     end
 
+    should 'get user custom photo' do
+      query = %({ users { funny_pic: custom_attribute_photos(name: "funny_pic"){ url }}})
+
+      assert_not_nil result(query)
+    end
+
     should 'get user pending collaborations' do
       collaboration = FactoryGirl.create(
         :transactable_collaborator,
@@ -41,7 +47,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
     end
 
     should 'get user pending group collaborations' do
-      collaboration = FactoryGirl.create(
+      FactoryGirl.create(
         :group_member_pending,
         user: @user
       )
@@ -100,6 +106,14 @@ class Graph::SchemaTest < ActiveSupport::TestCase
             }
           }
         })
+
+      assert_not_nil result(query)
+    end
+  end
+
+  context 'transactable query' do
+    should 'get transactable custom photo' do
+      query = %({ transactables { funny_pic: custom_attribute_photos(name: "funny_pic"){ url }}})
 
       assert_not_nil result(query)
     end

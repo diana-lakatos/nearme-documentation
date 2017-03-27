@@ -7,6 +7,20 @@ And('the instance is a community instance') do
 
   @instance = PlatformContext.current.instance
   @instance.update_attribute(:is_community, true)
+
+  query_string = <<EOQ
+query TransactableCoverPhotoQuery($transactable_id: ID!){
+  transactable(id: $transactable_id) {
+    cover_photos: custom_attribute_photos(name: "cover_photo"){
+      url: url(version: "normal")
+    }
+  }
+}
+EOQ
+  @instance.graph_queries.create!(
+    name: 'transactable_cover_photos',
+    query_string: query_string
+  )
 end
 
 And(/^a project with name: "(.*?)"$/) do |name|

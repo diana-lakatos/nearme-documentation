@@ -7,6 +7,7 @@
             %tr
               %td= resource.name.humanize
               %td
+                - next unless resource.class == TransactableType
                 = link_to t('instance_admin.manage.transactable_types.form_components'), [:instance_admin, @controller_scope, resource, :form_components], class: 'pull-left btn btn-blue btn-bottom-margin'
                 = link_to t('instance_admin.manage.transactable_types.data_upload'), [:instance_admin, @controller_scope, resource, :data_uploads], class: 'pull-left btn btn-blue btn-bottom-margin'
                 = link_to t('instance_admin.manage.transactable_types.custom_attributes'), [:instance_admin, @controller_scope, resource, :custom_attributes], class: 'pull-left btn btn-blue btn-bottom-margin'
@@ -19,4 +20,3 @@
 
   = content_for :header_buttons do
     = link_to t("instance_admin.#{@controller_scope}.#{@translation_key}.new"), new_polymorphic_path([:instance_admin, @controller_scope, resource_class]), class: 'pull-right btn btn-blue'
-

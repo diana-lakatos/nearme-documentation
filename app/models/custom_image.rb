@@ -21,6 +21,8 @@ class CustomImage < ActiveRecord::Base
   delegate :aspect_ratio, :settings_for_version,
            :optimization_settings, to: :custom_attribute
 
+  scope :for_attribute, ->(attr_name) { joins(:custom_attribute).where(custom_attributes: { name: attr_name }) }
+
   def set_uploader_id
     return true if uploader_id.present?
     value = calculate_uploader_id

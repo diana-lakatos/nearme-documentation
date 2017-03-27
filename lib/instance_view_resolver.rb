@@ -5,20 +5,21 @@ class InstanceViewResolver < DbViewResolver
   include Singleton
 
   def find_templates(name, prefix, partial, details, _outside_app_allowed = false)
-    views = _find_templates name, prefix, partial, details
+    ActiveRecord::Base.logger.silence do
+      views = _find_templates name, prefix, partial, details
 
-    # Fallback to primary
-    if views.count < 1 && PlatformContext.current.try(:instance).try(:primary_locale).present? && normalize_array(details[:locale]).first != PlatformContext.current.instance.primary_locale
-      # if we just modify details, we will be using primary locale not only for this path, but also for all others
-      views = _find_templates name, prefix, partial, details.dup.tap { |d| d[:locale] = [PlatformContext.current.instance.primary_locale] }
+      # Fallback to primary
+      if views.count < 1 && PlatformContext.current.try(:instance).try(:primary_locale).present? && normalize_array(details[:locale]).first != PlatformContext.current.instance.primary_locale
+        # if we just modify details, we will be using primary locale not only for this path, but also for all others
+        views = _find_templates name, prefix, partial, details.dup.tap { |d| d[:locale] = [PlatformContext.current.instance.primary_locale] }
+      end
+
+      # Fallback to not custom theme
+      if views.count < 1 && details[:custom_theme_id].present?
+        views = find_templates(name, prefix, partial, details.except(:custom_theme_id))
+      end
+      views
     end
-
-    # Fallback to not custom theme
-    if views.count < 1 && details[:custom_theme_id].present?
-      views = find_templates(name, prefix, partial, details.except(:custom_theme_id))
-    end
-
-    views
   end
 
   def get_body(name, prefix, partial, details)

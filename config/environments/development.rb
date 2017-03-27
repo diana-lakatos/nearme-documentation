@@ -5,6 +5,7 @@ require 'new_relic/rack/developer_mode'
 DesksnearMe::Application.configure do
   # true to turn on caching
   config.action_controller.perform_caching = false
+  config.action_controller.action_on_unpermitted_parameters = :raise
   # comment to turn on caching
   config.cache_store = :null_store
 
