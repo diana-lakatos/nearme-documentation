@@ -17,8 +17,8 @@ namespace :mpbuilder do
       MarketplaceBuilder::Creators::LiquidViewsCreator,
       MarketplaceBuilder::Creators::PagesCreator,
       MarketplaceBuilder::Creators::FormConfigurationsCreator,
-      MarketplaceBuilder::Creators::TranslationsCreator,
-      MarketplaceBuilder::Creators::GraphQueriesCreator
+      MarketplaceBuilder::Creators::GraphQueriesCreator,
+      MarketplaceBuilder::Creators::CustomThemesCreator,
     ]
     MarketplaceBuilder::Loader.load(ENV['source'], verbose: ENV['verbose'], creators: creators)
   end
