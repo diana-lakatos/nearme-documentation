@@ -39,7 +39,8 @@ module CurrencyHelper
     options = {
       symbol: instance.show_currency_symbol,
       with_currency: instance.show_currency_name,
-      no_cents_if_whole: instance.no_cents_if_whole
+      no_cents_if_whole: instance.no_cents_if_whole,
+      sign_before_symbol: true
     }
     money = money.to_money
     money.format(options)
