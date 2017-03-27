@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170321154249) do
+ActiveRecord::Schema.define(version: 20170323133759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -912,6 +912,7 @@ ActiveRecord::Schema.define(version: 20170321154249) do
     t.datetime "updated_at",             null: false
     t.integer  "instance_id"
     t.integer  "dimensions_template_id"
+    t.string   "direction"
   end
 
   add_index "deliveries", ["instance_id", "dimensions_template_id"], name: "index_deliveries_on_instance_id_and_dimensions_template_id", using: :btree
@@ -3245,7 +3246,7 @@ ActiveRecord::Schema.define(version: 20170321154249) do
     t.integer  "instance_id"
     t.integer  "domain_id"
     t.string   "time_zone"
-    t.boolean  "sms_notifications_enabled",                          default: true
+    t.boolean  "sms_notifications_enabled",                          default: false
     t.string   "sms_preferences",                        limit: 255, default: "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
     t.text     "instance_unread_messages_threads_count",             default: "--- {}\n"
     t.text     "metadata"

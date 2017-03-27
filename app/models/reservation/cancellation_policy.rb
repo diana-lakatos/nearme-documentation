@@ -21,7 +21,7 @@ class Reservation::CancellationPolicy
     # hours for booking, hence using skip_payment_authorization flag - but noted here to extend this solution.
     def initialize(reservation)
       @reservation = reservation
-      @cancel_threshold = Time.now + (@reservation.skip_payment_authorization? ? 0.hours : @reservation.cancellation_policy_hours_for_cancellation.to_i.hours)
+      @cancel_threshold = Time.zone.now + (@reservation.skip_payment_authorization? ? 0.hours : @reservation.cancellation_policy_hours_for_cancellation.to_i.hours)
     end
 
     def allowed?

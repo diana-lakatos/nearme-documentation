@@ -22,10 +22,4 @@ class Deliveries::Validations::DeliveryTest < ActiveSupport::TestCase
       validator.validator_for('sendle')
     end
   end
-
-  test 'unknown validations' do
-    assert_raises do
-      validator.validator_for('unknown')
-    end
-  end
 end

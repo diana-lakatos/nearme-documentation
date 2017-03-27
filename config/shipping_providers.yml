@@ -11,6 +11,25 @@
     - environment
 
 -
+  name: 'manual'
+  quote:
+    gross: 0
+  countries:
+    - Australia
+  fields:
+    - environment
+
+-
+  name: 'auspost-manual'
+  url: 'https://auspost.com.au/'
+  quote:
+    gross: 1000
+  countries:
+    - Australia
+  fields:
+    - environment
+
+-
   name: 'sendle'
   countries:
     - Australia
