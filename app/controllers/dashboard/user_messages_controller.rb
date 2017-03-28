@@ -25,55 +25,53 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
     @user_message.author = current_user
     @user_message.set_message_context_from_request_params(params, current_user)
 
-    respond_to do |format|
-      format.json do
-        if @user_message.save
-          @user_message.send_notification
+    # so far use in Hallmark, should be made consistent across the board
+    if params[:new_inbox].present?
+      if @user_message.save
+        @user_message.send_notification
 
-          attachments = @user_message.attachments.map { |att| { url: att.file.url, name: att.file.file_name } }
+        attachments = @user_message.attachments.map { |att| { url: att.file.url, name: att.file.file_name } }
 
-          response = {
-            author: @user_message.author.first_name,
-            time: @user_message.created_at,
-            body: @user_message.body,
-            attachments: attachments
-          }
+        response = {
+          author: @user_message.author.first_name,
+          time: @user_message.created_at,
+          body: @user_message.body,
+          attachments: attachments
+        }
 
-          render json: response
-        else
-          render json: { error: @user_message.errors.messages.values.flatten.first }, status: 400
-        end
+        render json: response
+      else
+        render json: { error: @user_message.errors.messages.values.flatten.first }, status: 400
       end
 
-      # DEPRACATED: jQuery method used in dashboard/messages_controller.coffee
-      format.html do
-        # @user_messave.save will always succeed because in update_unread_message_counter_for we do
-        # save(validate: false), so it will succeed even if the recipient is not valid
-        if @user_message.save
-          @user_message.send_notification
+    # used from modals and outside hallmark
+    else
+      # @user_messave.save will always succeed because in update_unread_message_counter_for we do
+      # save(validate: false), so it will succeed even if the recipient is not valid
+      if @user_message.save
+        @user_message.send_notification
 
-          if request.xhr?
-            if @user_message.first_in_thread?
-              flash[:notice] = t('flash_messages.user_messages.message_sent')
-              redirect_to dashboard_user_message_path(@user_message)
-              render_redirect_url_as_json
-            else
-              render partial: 'user_message_for_show', locals: { user_message: @user_message }
-            end
-          else
+        if request.xhr?
+          if @user_message.first_in_thread?
             flash[:notice] = t('flash_messages.user_messages.message_sent')
             redirect_to dashboard_user_message_path(@user_message)
-          end
-
-        else
-          @error = @user_message.errors.messages.values.flatten.first
-          if request.xhr?
-            render partial: 'form'
+            render_redirect_url_as_json
           else
-            @displayed_user_message = @user_message
-            @user_messages = Messages::ForThreadQuery.new.call(@user_message).by_created.decorate
-            render :show
+            render partial: 'user_message_for_show', locals: { user_message: @user_message }
           end
+        else
+          flash[:notice] = t('flash_messages.user_messages.message_sent')
+          redirect_to dashboard_user_message_path(@user_message)
+        end
+
+      else
+        @error = @user_message.errors.messages.values.flatten.first
+        if request.xhr?
+          render partial: 'form'
+        else
+          @displayed_user_message = @user_message
+          @user_messages = Messages::ForThreadQuery.new.call(@user_message).by_created.decorate
+          render :show
         end
       end
     end
