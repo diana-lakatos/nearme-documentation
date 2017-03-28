@@ -9,7 +9,7 @@
   = render 'search/list_results', searcher: @searcher
 - else
   .category-container.list-search-left{"data-search-filters-container" => true}
-    %section#category-tree.list-view-category-tree{ class: @transactable_type.show_price_slider ? 'with_slider' : '' }
+    %section#category-tree.list-view-category-tree{ class: @searcher.transactable_type.show_price_slider ? 'with_slider' : '' }
       - cache i18n_cache_key(@searcher.transactable_type, @searcher.category_ids) do
         - @searcher.searchable_categories.each do |category|
           .nav-categories.collapse.in

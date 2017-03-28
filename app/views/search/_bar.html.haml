@@ -1,5 +1,5 @@
 %form#listing_search.search_results{:action => search_path, :method => "get"}
-  = hidden_field_tag :transactable_type_id, @transactable_type.id
+  = hidden_field_tag :transactable_type_id, @searcher.transactable_type.id
   - search_geofields.each do |geofield|
     = hidden_field_tag geofield, ''
   = hidden_field_tag 'ignore_search_event', 0
