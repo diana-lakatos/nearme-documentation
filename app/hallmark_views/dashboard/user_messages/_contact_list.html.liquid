@@ -1,0 +1,16 @@
+<aside data-user-messages-contact-list>
+  <h2 class="sr-only">Contacts</h2>
+
+  <ul>
+    {% for thread in threads %}
+    <li>
+      <a href="{{ thread.url }}" {% unless thread.is_read %}class="unread"{% endunless %}>
+        <img src="{{ thread.participant.avatar.thumb }}" alt="{{ thread.participant.first_name }} {{ thread.participant.last_name }}">
+        <h3>{{ thread.participant.first_name }}</h3>
+        {{ thread.last_message.created_at | timeago }}
+        <p class="summary">{{ thread.last_message.body | truncate: 20 }}</p>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</aside>

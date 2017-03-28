@@ -321,6 +321,8 @@
   input[type=email],
   input[type=password],
   input[type=number],
+  input[type=tel],
+  select,
   textarea {
     border-color: #f00;
   }
@@ -329,5 +331,29 @@
 .ui-sortable {
   .photo-item {
     cursor: move;
+  }
+}
+
+/* input addons */
+.input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.input-group-addon {
+  display: inline-block;
+  padding: 0 20px;
+  border: 1px solid #dde1ea;
+  background: #fafafa;
+  font-weight: bold;
+  height: 40px;
+  line-height: 38px;
+
+  &:first-child {
+    border-right: none;
+  }
+
+  &:last-child {
+    border-left: none;
   }
 }

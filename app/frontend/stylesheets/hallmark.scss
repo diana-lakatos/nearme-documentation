@@ -46,6 +46,7 @@
 @import "hallmark/modules/user-header";
 @import "hallmark/modules/projects";
 @import "hallmark/modules/modal";
+@import "hallmark/modules/dialog";
 @import "hallmark/modules/flash-messages";
 @import "hallmark/modules/group";
 @import "hallmark/modules/search";
@@ -55,6 +56,8 @@
 @import "hallmark/modules/intro-video";
 @import "hallmark/modules/user-entries/user-entry";
 @import "hallmark/modules/user-entries/user-entry-form";
+@import "hallmark/modules/user-messages/modal-form";
+@import "hallmark/modules/user-messages/inbox";
 
 // Defaults
 @import "hallmark/defaults/buttons";
@@ -65,3 +68,6 @@
 
 // Plugins
 @import "hallmark/plugins/selectize";
+
+// Shared
+@import "shared/forms/notification_preferences_form";

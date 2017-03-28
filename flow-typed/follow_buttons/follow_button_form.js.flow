@@ -1,0 +1,28 @@
+declare class FollowButtonForm {
+  form: HTMLFormElement;
+  state: boolean;
+  previousState: boolean;
+  followUrl: string;
+  unfollowUrl: string;
+  followLabel: string;
+  unfollowLabel: string;
+  csrfToken: string;
+  methodInput: HTMLInputElement;
+  button: HTMLButtonElement;
+  followersCounters: NodeList<HTMLElement>;
+
+  constructor(form: HTMLFormElement): FollowButtonForm;
+  setCSRFToken(): void;
+  process(): void;
+  submit(): void;
+  setState(state: boolean): void;
+  rollback(): void;
+  processResponse(response: { is_following: boolean, followers_count: number }): void;
+  setFollowersCount(count: number): void;
+
+  updateFollowersCountBy(delta: number): void;
+}
+
+type FollowButtonHTMLFormElement = HTMLElement & {
+  followButtonForm: FollowButtonForm;
+}

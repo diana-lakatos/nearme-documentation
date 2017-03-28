@@ -6,7 +6,7 @@ module Graph
         name 'SearchLocationType'
         description 'Location Type'
 
-        field :id, !types.ID
+        field :id, !types.Int
         field :name, !types.String
       end
     end

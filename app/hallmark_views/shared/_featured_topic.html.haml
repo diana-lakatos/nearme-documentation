@@ -9,8 +9,8 @@
       - if topic.featured?
         %figcaption
           = t :featured
-  %p.action{:'data-follow-button' => true}
-    = render partial: 'shared/follow_button', locals: { object: topic, css_class: 'tiny' }
+  .action
+    = render 'shared/follow_button', object: topic, object_type: 'Topic', css_class: 'tiny'
   %h3.hx
     = link_to topic.name, topic_path(topic)
   %p= custom_sanitze topic.description.try(:truncate, 100)

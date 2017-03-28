@@ -1,0 +1,44 @@
+{% unless object.creator == current_user %}
+  {% assign css_class = css_class | default: 'small' %}
+
+  {% if current_user == blank %}
+    <a href="{{ 'new_user_session_path' | generate_url: return_to: '/?home=1' }}" class='button-a action--follow {{ css_class }}'>
+      {{ 'activity_feed.verbs.follow' | translate }}
+    </a>
+  {% else %}
+    {% assign is_following = current_user | is_user_following: object.id, object_type %}
+    {% assign follow_url = 'follow_path' | generate_url %}
+    {% assign unfollow_url = 'unfollow_path' | generate_url %}
+    {% assign follow_label = 'activity_feed.verbs.follow' | translate %}
+    {% assign unfollow_label = 'activity_feed.verbs.unfollow' | translate %}
+
+    {% if is_following %}
+      {% assign action_url = unfollow_url %}
+      {% assign follow_class = 'action--unfollow' %}
+      {% assign action_method = 'delete' %}
+      {% assign button_label = unfollow_label %}
+      {% assign follow_state = 'true' %}
+    {% else %}
+      {% assign action_url = follow_url %}
+      {% assign follow_class = 'action--follow' %}
+      {% assign action_method = 'post' %}
+      {% assign button_label = follow_label %}
+      {% assign follow_state = 'false' %}
+    {% endif %}
+
+    <form action="{{ action_url }}"
+          method="post"
+          data-follow-button-form
+          data-follow-state="{{ follow_state }}"
+          data-follow-url="{{ follow_url }}"
+          data-follow-label="{{ follow_label }}"
+          data-unfollow-url="{{ unfollow_url }}"
+          data-unfollow-label="{{ unfollow_label }}"
+          data-followers-counter-id="{{ object_type }}:{{ object.id }}">
+      <input type="hidden" name="type" value="{{ object_type }}">
+      <input type="hidden" name="id" value="{{ object.id }}">
+      <input type="hidden" name="_method" value="{{ action_method }}" data-method>
+      <button type="submit" class="button-a {{ follow_class }} {{ css_class }}">{{ button_label }}</button>
+    </form>
+  {% endif %}
+{% endunless %}

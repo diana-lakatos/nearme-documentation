@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # user-to-user message
 class UserMessage < ActiveRecord::Base
   has_paper_trail
@@ -16,18 +17,15 @@ class UserMessage < ActiveRecord::Base
   validates :author_id, presence: true
   validates :thread_owner_id, presence: true
   validates :thread_recipient_id, presence: true
-  validates :body, presence: { message: "Message can't be blank." }
+  validates :body, presence: { message: "Message can't be blank." }, if: ->(um) { um.attachments.empty? }
   validates :body, length: { maximum: 2000, message: 'Message cannot have more than 2000 characters.' }
+  validates :attachments, presence: true, unless: ->(um) { um.body.present? }
 
-  # Thread is defined by thread owner, thread recipient and thread context
-  scope :for_thread, lambda { |ids, thread_context|
-    where(thread_context_id: thread_context.id, thread_context_type: thread_context.class.to_s).where('user_messages.thread_owner_id IN (:ids) AND user_messages.author_id IN (:ids) AND user_messages.thread_recipient_id IN (:ids)', ids: ids)
-  }
   scope :for_user, lambda { |user|
     where('"user_messages"."thread_owner_id" = :id OR "user_messages"."author_id" = :id OR "user_messages"."thread_recipient_id" = :id', id: user.id).order('user_messages.created_at asc')
   }
   scope :by_created, -> { order('created_at desc') }
-  scope :for_transactable, -> (transactable) do
+  scope :for_transactable, ->(transactable) do
     where('("user_messages"."thread_context_type" = ? AND "user_messages"."thread_context_id" IN (?)) OR
           ("user_messages"."thread_context_type" = ? AND "user_messages"."thread_context_id" = ?)',
           'TransactableCollaborator', transactable.transactable_collaborators.pluck(:id), 'Transactable', transactable.id)

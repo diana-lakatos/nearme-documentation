@@ -1,0 +1,24 @@
+declare type PaymentMethodFieldValidatorArgument = {
+  validator: (value: string) => boolean,
+  message: string
+}
+
+declare type Stripe = any;
+declare type StripeCheckout = any;
+declare type Plaid = any;
+declare type BrainTree = any;
+
+
+declare class PaymentMethod {
+  container: HTMLElement;
+  id: number;
+  fieldset: HTMLFieldSetElement;
+  form: HTMLFormElement;
+
+  getFormElement(): HTMLFormElement;
+
+  isActive(): boolean;
+  activate(): void;
+  deactivate(): void;
+  process(): Promise<mixed>;
+}

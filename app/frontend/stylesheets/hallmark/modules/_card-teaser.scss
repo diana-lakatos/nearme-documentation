@@ -1,6 +1,5 @@
-/* card teaster */
-
 .card-a {
+  position: relative;
   margin: 0 0 40px;
   padding: 20px;
   border-radius: 0;
@@ -24,6 +23,14 @@
     display: block;
     width: 100%;
     height: auto;
+    text-align: center;
+
+    /* before and after are only visible on broken images */
+    &::before, &::after {
+      content: "";
+      display: block;
+      height: 60px;
+    }
   }
 
   figure figcaption {
@@ -43,7 +50,6 @@
   }
 
   figure figcaption {
-    -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
   }
 
@@ -97,6 +103,17 @@
   }
 
   .action {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+
+    .button-a {
+      border: 10px solid transparent;
+      background-clip: padding-box;
+    }
+  }
+
+  .message-action {
     float: right;
     margin: -3px 0 5px 10px;
   }
@@ -137,14 +154,14 @@
 
   .location {}
 
-  // .location:before {
-  //     display: inline-block;
-  //     content: '\e607';
-  //     margin: 0 5px 0 0;
-  //     font: 14px/1 $font-icons;
-  //     line-height: inherit;
-  //     vertical-align: top;
-  // }
+  /* .location:before {*/
+  /*     display: inline-block;*/
+  /*     content: '\e607';*/
+  /*     margin: 0 5px 0 0;*/
+  /*     font: 14px/1 $font-icons;*/
+  /*     line-height: inherit;*/
+  /*     vertical-align: top;*/
+  /* }*/
 
   @include bp($screen-lg) {
     .numbers li {

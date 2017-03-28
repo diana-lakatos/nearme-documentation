@@ -14,12 +14,16 @@
           = link_to t(:social_accounts), social_accounts_path
 
     .box-a
-      = simple_form_for @user, url: dashboard_notification_preferences_path, html: { class: 'form-a' } do |f|
+      = simple_form_for @user, url: dashboard_notification_preferences_path, html: { class: 'form-a', data: { 'notification-preferences': '' } } do |f|
+
         .fields
-          - if HiddenUiControls.find('dashboard/notification_preferences/emails').visible?
-            = f.input :accept_emails, as: :switch, wrapper_html: { class: 'sep' }
-          - if HiddenUiControls.find('dashboard/notification_preferences/sms').visible?
-            = f.input :sms_notifications_enabled, as: :switch, wrapper_html: { class: 'sep' }
+          = f.input :accept_emails, as: :switch, wrapper_html: { class: 'sep' }
+          = f.input :sms_notifications_enabled, as: :switch, wrapper_html: { class: 'sep' }, input_html: { data: { sms_notification: '' }}
+
+          - klass = f.object.sms_notifications_enabled ? 'active' : ''
+          .sms-notifications-requirements{ class: klass, data: { sms_notifications_required_fields: '' } }
+            %p.sms-notifications-requirements-info=  t 'dashboard.notification_preferences.sms_requirements'
+            = render "registrations/attributes/mobile_number", f: f
 
         %p.action
           = f.submit t('general.save')

@@ -20,11 +20,3 @@
         %ul.location-and-listings
           = render partial: 'ticket', collection: @tickets
         = will_paginate @tickets
-
-- content_for :script do
-  :javascript
-    jQuery.timeago.settings.strings.minutes = "%d min"
-    jQuery.timeago.settings.strings.minute = jQuery.timeago.settings.strings.minutes
-    jQuery.timeago.settings.strings.seconds = jQuery.timeago.settings.strings.seconds;
-    jQuery.timeago.settings.strings.hours = "about %d h"
-    jQuery.timeago.settings.strings.hours = jQuery.timeago.settings.strings.hours

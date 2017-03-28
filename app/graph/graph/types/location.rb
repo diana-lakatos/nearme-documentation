@@ -6,7 +6,7 @@ module Graph
 
       global_id_field :id
 
-      field :id, !types.ID
+      field :id, !types.Int
       field :name, !types.String
       field :description, !types.String
       field :availability, !types.String

@@ -8,7 +8,7 @@
     .name.pull-left
       = ticket_message.user.try(:name)
     .time.text-right.pull-right
-      %abbr.timeago{:title => "#{ticket_message.created_at.to_time.iso8601}"}
+      %time.timeago{:datetime => ticket_message.created_at.to_time.iso8601 }
         =ticket_message.created_at
     .clearfix
     =simple_format(ticket_message.message)

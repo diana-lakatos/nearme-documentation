@@ -7,13 +7,15 @@ module Graph
 
       global_id_field :id
 
-      field :id, !types.ID
+      field :id, !types.Int
       field :is_followed, !types.Boolean do
         argument :follower_id, types.ID
         resolve -> (obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
       end
 
       field :name, !types.String
+      field :first_name, !types.String
+      field :last_name, types.String
       field :email, !types.String
       field :slug, !types.String
       field :custom_attribute,
@@ -36,12 +38,27 @@ module Graph
       field :profile_path, !types.String
       field :avatar_url_thumb, !types.String
       field :avatar_url_bigger, !types.String
+      field :avatar, Types::Image
       field :name_with_affiliation, !types.String
       field :display_location, !types.String
       field :current_address, Types::Address
       field :collaborations, types[Types::Collaboration] do
         argument :filters, types[Resolvers::Collaborations::FilterEnum]
         resolve Graph::Resolvers::Collaborations.new
+      end
+
+      field :threads do
+        type !types[Types::Thread]
+        argument :take, types.Int
+
+        resolve Resolvers::MessageThreads.new
+      end
+
+      field :thread do
+        type Types::Thread
+        argument :id, types.ID
+
+        resolve Resolvers::MessageThread.new
       end
     end
 

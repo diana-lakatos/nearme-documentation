@@ -1,0 +1,28 @@
+{% comment %}THIS ACTION URL SEEMS FISHY{% endcomment %}
+{% assign action_url = displayed_user_message | user_message_create_path: user_message %}
+<form
+  novalidate
+  class="new-message-form"
+  enctype="multipart/form-data"
+  action="{{ action_url }}"
+  accept-charset="UTF-8"
+  method="post"
+  data-user-messages-inbox-form
+  data-user-messages-inbox-current-user="{{ current_user.first_name }}">
+  <input value="{{ user_message.replying_to_id }}" name="user_message[replying_to_id]" type="hidden">
+
+  <div class="fields">
+    <div class="form-group message-body">
+      <label for="user-message-body" class="sr-only">{{ 'user_messages.labels.body' | t }}</label>
+      <textarea placeholder="{{ 'user_messages.placeholders.body_html' | t }}" name="user_message[body]" id="user-message-body" data-user-messages-inbox-body-input></textarea>
+      <span class="submit-hint">{{ 'user_messages.submit_hint' | t }}</span>
+    </div>
+    <div class="form-group attachment">
+      <label for="user-message-attachment">{{ 'user_messages.labels.attachment' | t }}</label>
+      <input name="user_message[attachments_attributes][0][file]" id="user-message-attachment" type="file" data-user-messages-inbox-file-input>
+    </div>
+  </div>
+  <div class="action">
+    <button type="submit" class="button-a">{{ 'user_messages.actions.send' | t }}</button>
+  </div>
+</form>

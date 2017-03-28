@@ -13,6 +13,8 @@ NM.on('ready', () => {
   require('initializers/shared/payment_method_selector.initializer');
   require('initializers/shared/timeago.initializer');
 
+  require('initializers/shared/notification_preferences_form');
+
   require('initializers/dashboard/address.initializer');
   require('initializers/dashboard/attachment_input.initializer');
   require('initializers/dashboard/availability_rules.initializer');

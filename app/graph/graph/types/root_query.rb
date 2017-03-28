@@ -6,12 +6,13 @@ module Graph
       description 'Root query for schema'
       fields FieldCombiner.combine(
         [
-          LocationQueryType,
-          UserQueryType,
-          TransactableQueryType,
-          TopicQueryType,
           FeedQueryType,
-          SearchQueryType
+          LocationQueryType,
+          MessagesQueryType,
+          SearchQueryType,
+          TopicQueryType,
+          TransactableQueryType,
+          UserQueryType
         ]
       )
     end
