@@ -16,7 +16,7 @@ class UserProfilesForm < BaseForm
 
         def find_instance_profile_type(parameterized_name)
           instance_profile_type = InstanceProfileType.find_by(parameterized_name: parameterized_name)
-          raise ArgumentError, "Unknown instance profile type: #{parameterized_name}. Valid profile types: #{InstanceProfileType.pluck(:parameterized_name)}."
+          raise ArgumentError, "Unknown instance profile type: #{parameterized_name}. Valid profile types: #{InstanceProfileType.pluck(:parameterized_name)}." if instance_profile_type.nil?
           instance_profile_type.user_profiles.build
         end
       end

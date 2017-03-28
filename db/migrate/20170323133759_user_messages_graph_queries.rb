@@ -7,7 +7,7 @@ class UserMessagesGraphQueries < ActiveRecord::Migration
     return unless i
     i.set_context!
 
-    query = i.graph_queries.find_by(name: 'user_message_conversation')
+    query = i.graph_queries.find_or_initialize_by(name: 'user_message_conversation')
     query.query_string = <<EOQ
 query conversation($user_id: ID!, $thread_id: ID!){
   user(id: $user_id){
@@ -42,7 +42,7 @@ query conversation($user_id: ID!, $thread_id: ID!){
 EOQ
     query.save
 
-    query = i.graph_queries.find_by(name: 'conversation_threads_for_user')
+    query = i.graph_queries.find_or_initialize_by(name: 'conversation_threads_for_user')
     query.query_string = <<EOQ
 query conversationThreadsForUser($user_id: ID!){
   user(id: $user_id) {

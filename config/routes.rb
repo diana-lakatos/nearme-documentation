@@ -1192,6 +1192,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
       scope module: :v3, constraints: Constraints::ApiConstraints.new(version: 3, default: false) do
+        resources :activity_feed_events, only: [:index]
         resources :sessions, only: [:create]
         resources :users, only: [:create, :show]
         resource :space_wizard, only: [:create]
