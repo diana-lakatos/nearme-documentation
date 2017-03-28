@@ -26,7 +26,7 @@ class AddressDrop < BaseDrop
   # @!method street_number
   #   @return [String] returns the street number for this address
   # @!method address_components
-  #   @return [Hash] returns hash returned by Google Maps API with address components
+  #   @return [Hash] returns all address components in Google Maps API format
   delegate :street, :address, :city, :suburb, :iso_country_code, :country, :state, :postcode, :latitude, :longitude,
            :street_number, :address_components, to: :address_object
 
