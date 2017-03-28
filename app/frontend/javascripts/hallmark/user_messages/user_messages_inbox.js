@@ -1,6 +1,7 @@
 // @flow
 const FORM_SELECTOR = '[data-user-messages-inbox-form]';
 const ENTRIES_SELECTOR = '[data-user-messages-inbox-entries]';
+const CONTACT_LIST_SELECTOR = '[data-user-messages-contact-list]';
 import UserMessagesInboxContactList from './user_messages_inbox_contact_list';
 import UserMessagesInboxForm from './user_messages_inbox_form';
 import UserMessagesInboxEntries from './user_messages_inbox_entries';
@@ -14,7 +15,11 @@ class UserMessagesInbox {
 
   constructor(container: HTMLElement) {
     this.container = container;
-    this.contactList = new UserMessagesInboxContactList(this.container);
+
+    let contactList = this.container.querySelector(CONTACT_LIST_SELECTOR);
+    if (contactList instanceof HTMLElement) {
+      this.contactList = new UserMessagesInboxContactList(this.container);
+    }
 
     let form = this.container.querySelector(FORM_SELECTOR);
     if (form instanceof HTMLFormElement) {
