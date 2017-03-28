@@ -91,7 +91,6 @@ class Elastic::AggregationsTest < ActiveSupport::TestCase
     #     }
     #   }
 
-    puts builder.to_h.to_json
     assert_equal builder.to_h.dig(:aggregations, 'user_profiles', :aggregations).keys, ['profile_type']
     assert_equal builder.to_h.dig(:aggregations, 'user_profiles', :nested), path: 'user_profiles'
     assert builder.to_h.dig(:aggregations, 'user_profiles', :aggregations, 'profile_type', :terms)

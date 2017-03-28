@@ -3,8 +3,10 @@ require 'test_helper'
 require 'event_store'
 
 class EventStoreTest < ActiveSupport::TestCase
+  class DummyEvent < EventStore::Event
+  end
+
   test 'publish event as class' do
-    ::DummyEvent = Class.new(EventStore::Event)
     user = FactoryGirl.create(:user)
 
     event = EventStore.publish_event(
@@ -16,7 +18,7 @@ class EventStoreTest < ActiveSupport::TestCase
 
     assert_equal event.payload[:foo], :bar
     assert_equal(event.payload[:user], class_name: 'User', id: user.id)
-    assert_equal event.event_type, 'DummyEvent'
+    assert_equal event.event_type, 'EventStoreTest::DummyEvent'
   end
 
   test 'publish event from workflow step' do
@@ -38,7 +40,6 @@ class EventStoreTest < ActiveSupport::TestCase
   end
 
   test 'publish event with user decorator' do
-    ::DummyEvent = Class.new(EventStore::Event)
     user = FactoryGirl.create(:user)
 
     event = EventStore.publish_event(
