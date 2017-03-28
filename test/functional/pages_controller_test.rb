@@ -29,5 +29,29 @@ class PagesControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context 'require_verified_user is on' do
+      setup do
+        Instance.any_instance.stubs(:require_verified_user?).returns(true)
+      end
+
+      should 'should render page when require_verified_user is set to false' do
+        @page = FactoryGirl.create(:page, content: "# Page heading \nSome text")
+
+        get :show, slug: @page.slug
+
+        assert_response :success
+        assert_select 'h1', 'Page heading'
+        assert_select 'p', 'Some text'
+      end
+
+      should 'should not render page when require_verified_user is set to true' do
+        @page = FactoryGirl.create(:page, content: "# Page heading \nSome text", require_verified_user: true)
+        get :show, slug: @page.slug
+
+        assert_response :redirect
+        assert_equal flash[:warning], I18n.t('flash_messages.need_verification_html')
+      end
+    end
   end
 end

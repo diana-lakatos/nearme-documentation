@@ -655,6 +655,7 @@ class SecuredParams
       :position,
       :redirect_url,
       :redirect_code,
+      :require_verified_user,
       :open_in_new_window,
       :layout_name,
       :metadata_title,
