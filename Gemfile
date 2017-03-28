@@ -34,7 +34,7 @@ gem 'aws-sdk', require: false
 
 gem 'omniauth'
 gem 'omniauth-twitter'
-gem 'omniauth-facebook'
+gem 'omniauth-facebook', '~> 4.0'
 gem 'omniauth-linkedin'
 gem 'omniauth-instagram'
 gem 'omniauth-saml'
