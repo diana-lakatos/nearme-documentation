@@ -7,7 +7,6 @@ gem 'pg'
 gem 'will_paginate'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
-gem 'patron'
 
 gem 'redis'
 gem 'redis-rails', '~> 4'
@@ -15,7 +14,7 @@ gem 'raygun4ruby'
 gem 'liquid', '4.0.0'
 gem 'active_model_serializers', '~> 0.8.1'
 gem 'jsonapi-serializers', github: 'mdyd-dev/jsonapi-serializers', branch: 'feature/namespace'
-gem 'rabl'
+gem 'rabl' # jstree.rabl and tree.rabl
 gem 'graphql'
 gem 'carrierwave'
 gem 'carrierwave-imageoptim'
@@ -85,7 +84,6 @@ gem 'font-awesome-rails'
 
 gem 'delayed_job_active_record'
 gem 'delayed_job_recurring'
-gem 'rdiscount', require: false
 gem 'attr_encrypted', '~> 1'
 gem 'stripe', '1.57.0', require: false
 gem 'plaid', require: false
@@ -117,7 +115,6 @@ gem 'ranked-model'
 gem 'after_commit_action'
 
 gem 'premailer-rails'
-gem 'hpricot' # used by premailer, premailer is used to insert token?
 gem 'addressable', require: false
 gem 'newrelic_rpm'
 gem 'unicorn-worker-killer'
@@ -135,7 +132,6 @@ gem 'domainatrix', require: false
 gem 'acts-as-taggable-on', '~> 3.4'
 
 gem 'validate_url'
-gem 'ansi', require: false
 
 gem 'yard', '~> 0.9.5', require: false
 gem 'yard-activerecord', '~> 0.0.16', require: false
@@ -167,7 +163,7 @@ group :development, :staging do
   gem 'mail_view', '~>2'
 end
 
-group :development, :test do
+group :test do
   gem 'pronto'
   gem 'pronto-brakeman', require: false
   gem 'pronto-fasterer', require: false
@@ -229,15 +225,14 @@ gem 'nearme', path: 'vendor/gems/nearme', require: false
 gem 'sendle_api', path: 'vendor/gems/sendle_api', require: false
 gem 'custom_attributes', path: 'vendor/gems/custom_attributes'
 
-gem 'figaro'
+gem 'figaro' # do we need it? application.yml
 gem 'wicked'
-gem 'carmen'
 
 gem 'i18n_data'
 
-gem 'parser', require: false
+gem 'parser', require: false # move it to development, it is for generating documentation. Can be run locally only
 
-gem 'routing-filter', '~> 0.5.0'
+gem 'routing-filter', '~> 0.5.0' # looks we no longer use filer in routes.rb
 
 gem 'sprockets', '2.11.0'
 gem 'sprockets-rails', '2.3.2'
@@ -245,4 +240,3 @@ gem 'cocoon'
 
 gem 'redcarpet'
 gem 'slack-notifier', require: false
-gem 'colorize'

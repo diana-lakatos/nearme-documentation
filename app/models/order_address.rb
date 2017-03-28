@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 class OrderAddress < ActiveRecord::Base
   include ShippoLegacy::OrderAddress
-  include Carmen
 
   # TODO: import validation from shipping-provider either
   # to this class or to the delivery class

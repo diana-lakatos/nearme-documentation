@@ -1,9 +1,5 @@
-require 'ansi/progressbar'
-
 namespace :elastic do
-
   namespace :aliases do
-
     desc 'Create aliases for all indices'
     task create_all: [:environment] do
       es_indices = Transactable.__elasticsearch__.client.indices
@@ -160,18 +156,11 @@ namespace :elastic do
       puts "For instance --===#{instance.name} - #{instance.id}===-- Rebuilding index #{klass.base_index_name}"
       all_objects = klass.searchable.count
       puts "Objects to index: #{all_objects}"
-      klass.indexer_helper.with_alias do |new_index_name, old_index_name|
+      klass.indexer_helper.with_alias do |new_index_name, _old_index_name|
         klass.__elasticsearch__.index_name = new_index_name
-        pbar = ANSI::Progressbar.new(klass.to_s, all_objects)
-        pbar.__send__ :show if pbar
         klass.searchable.import batch_size: 50 do |response|
-          if pbar
-            pbar.inc response['items'].size
-          else
-            puts "Objects left: #{ all_objects -= response["items"].size }"
-          end
+          puts "Objects left: #{all_objects -= response['items'].size}"
         end
-        pbar.finish
       end
     end
   end
