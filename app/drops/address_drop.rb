@@ -25,8 +25,10 @@ class AddressDrop < BaseDrop
   #   @return [Float] returns the longitude for this address
   # @!method street_number
   #   @return [String] returns the street number for this address
+  # @!method address_components
+  #   @return [Hash] returns all address components in Google Maps API format
   delegate :street, :address, :city, :suburb, :iso_country_code, :country, :state, :postcode, :latitude, :longitude,
-           :street_number, to: :address_object
+           :street_number, :address_components, to: :address_object
 
   def initialize(address_object)
     @address_object = address_object
