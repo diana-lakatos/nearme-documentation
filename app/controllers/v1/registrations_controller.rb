@@ -11,7 +11,6 @@ class V1::RegistrationsController < V1::BaseController
     if @user.save
       render json: @user
     else
-      puts @user.errors.to_json
       render json: registration_failed_hash(@user), status: 422
     end
   end
