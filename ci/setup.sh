@@ -8,4 +8,4 @@ docker-compose -f ci/docker-compose.ci.yml up -d es
 bundle install --deployment --path vendor/bundle --without=development
 
 # prepare DB
-bundle exec rake db:create db:schema:load
+RAILS_ENV=test bundle exec rake db:create db:schema:load
