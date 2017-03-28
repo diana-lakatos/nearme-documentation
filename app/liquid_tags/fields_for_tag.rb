@@ -35,7 +35,7 @@ class FieldsForTag < Liquid::Block
     # drop for form_builder defined in form_builder_to_liquid_monkeypatch.rb
     form_name = @attributes.fetch(:form, nil)
     form = (context["form_object_#{form_name}"] || context['form_object'])&.source
-    raise "Unknown form name: #{form_name}." if form.nil?
+    raise ArgumentError, "Unknown form name: #{form_name}." if form.nil?
     context.stack do
       form.simple_fields_for(@association_name) do |f|
         context["form_object_#{@association_name}"] = f

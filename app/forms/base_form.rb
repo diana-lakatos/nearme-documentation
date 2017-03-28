@@ -4,6 +4,10 @@ class BaseForm < Reform::Form
     def reflect_on_association(*_args)
       nil
     end
+
+    def checked?(value)
+      value == '1' || value == 'true'
+    end
   end
 
   def to_liquid
@@ -25,5 +29,9 @@ class BaseForm < Reform::Form
 
   def required?(attr)
     self.class.validators_on(attr).any? { |v| v.kind == :presence }
+  end
+
+  def checked?(value)
+    self.class.checked?(value)
   end
 end

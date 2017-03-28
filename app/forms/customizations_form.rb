@@ -18,7 +18,7 @@ class CustomizationsForm < BaseForm
       Class.new(self) do
         configuration.each do |custom_model_name, fields|
           @@mapping_hash ||= {}
-          @@mapping_hash[custom_model_name] = fields.dup
+          @@mapping_hash[custom_model_name] = fields.deep_dup
           validation = fields.delete(:validation)
           validates :"#{custom_model_name}", validation if validation.present?
           collection :"#{custom_model_name}",
@@ -29,7 +29,8 @@ class CustomizationsForm < BaseForm
           define_method("build_#{custom_model_name}") do
             cmt = CustomModelType.with_parameterized_name(custom_model_name)
             raise "Couldn't find Custom Model Type with name: #{CustomModelType.with_parameterized_name(custom_model_name)}. Valid names are: #{CustomModelType.pluck(:parametrized_name).join(', ')}" if cmt.nil?
-            CustomizationForm.decorate(@@mapping_hash[custom_model_name]).new(cmt.customizations.build).tap(&:prepopulate!)
+            CustomizationForm.decorate(@@mapping_hash[custom_model_name].deep_dup)
+                             .new(cmt.customizations.build).tap(&:prepopulate!)
           end
         end
       end

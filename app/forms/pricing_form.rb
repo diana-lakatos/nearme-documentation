@@ -17,12 +17,15 @@ class PricingForm < BaseForm
   property :_destroy, virtual: true
 
   def price=(value)
+    old_value = model.price
     model.price = value
+    super(model.price.to_f)
     self.price_cents = model.price.fractional
+    model.price = old_value
   end
 
   def price
-    model.price
+    super.presence || model.price
   end
 
   class << self
