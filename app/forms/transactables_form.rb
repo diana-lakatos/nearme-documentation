@@ -18,7 +18,7 @@ class TransactablesForm < BaseForm
       Class.new(self) do
         configuration.each do |transactable_type_name, fields|
           @@mapping_hash ||= {}
-          @@mapping_hash[transactable_type_name] = fields.dup
+          @@mapping_hash[transactable_type_name] = fields.deep_dup
           validation = fields.delete(:validation)
           validates :"#{transactable_type_name}", validation if validation.present?
           collection :"#{transactable_type_name}",
@@ -30,7 +30,7 @@ class TransactablesForm < BaseForm
           define_method("build_#{transactable_type_name}") do
             tt = TransactableType.with_parameterized_name(transactable_type_name)
             raise "Couldn't find TransactableType with name: #{transactable_type_name}. Valid names are: #{TransactableType.pluck(:parameterized_name)}" if tt.nil?
-            TransactableForm.decorate(@@mapping_hash[transactable_type_name]).new(tt.transactables.build).tap(&:prepopulate!)
+            TransactableForm.decorate(@@mapping_hash[transactable_type_name].deep_dup).new(tt.transactables.build).tap(&:prepopulate!)
           end
         end
       end

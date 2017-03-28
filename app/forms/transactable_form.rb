@@ -17,7 +17,7 @@ class TransactableForm < BaseForm
   property :_destroy, virtual: true
 
   def _destroy=(value)
-    model.mark_for_destruction if value == '1'
+    model.mark_for_destruction if checked?(value)
   end
 
   def _destroy
@@ -80,9 +80,9 @@ class TransactableForm < BaseForm
           validates action, validation if validation.present?
           property action, form: "#{action.to_s.camelize}Form".constantize.decorate(action_configuration),
                            populator: ->(fragment:, **) {
-                                        return skip! unless fragment[:enabled] == 'true'
-                                        send("#{action}=", model.send("build_#{action}", transactable: model)) if send(action).blank?
-                                        self.action_type = send(action).model if fragment[:enabled] == 'true'
+                                        return skip! unless checked?(fragment[:enabled])
+                                        send("#{action}=", model.send("build_#{action}", transactable: model, transactable_type_action_type: model.transactable_type.send(action))) if send(action).blank?
+                                        self.action_type = send(action).model if checked?(fragment[:enabled])
                                       },
                            prepopulator: ->(_options) {
                                            return if send(action).present?

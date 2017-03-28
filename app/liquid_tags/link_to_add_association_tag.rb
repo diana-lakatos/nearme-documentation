@@ -19,7 +19,8 @@ class LinkToAddAssociationTag < Liquid::Tag
     form_name = @attributes.fetch(:form, nil)
     form = (context["form_object_#{form_name}"] || context[form_name] || context['form_object']).source
     raise LinkToAssociation::HelpfulLinkToAssociationError.raise_form_is_nil('LinkToAddAssociation', form_name) if form.nil?
-    raise LinkToAssociation::HelpfulLinkToAssociationError.raise_form_object_is_nil('LinkToAddAssociation', form_name) if form&.object.nil?
+    raise LinkToAssociation::HelpfulLinkToAssociationError.raise_wrong_variable_name('LinkToAddAssociation', form_name) unless form.respond_to?(:object)
+    raise LinkToAssociation::HelpfulLinkToAssociationError.raise_form_object_is_nil('LinkToAddAssociation', form_name) if form.try(:object).nil?
     context.registers[:action_view].send(:link_to_add_association,
                                          @attributes[:label],
                                          form,

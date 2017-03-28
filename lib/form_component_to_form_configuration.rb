@@ -135,6 +135,8 @@ class FormComponentToFormConfiguration
             configuration[:password_confirmation][:property_options] ||= { virtual: true }
             configuration[:password_confirmation][:validation] ||= {}
             configuration[:password_confirmation][:validation][:confirm] = {}
+          elsif field == 'company_name'
+            configuration[field] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, field).build
           else
             configuration['country_name'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'country_name').build.deep_merge(ValidationBuilder.new(PlatformContext.current.instance.send("#{role}_profile_type"), 'country_name').build) if field == 'mobile_number' || field == 'phone' || field == 'mobile_phone'
             configuration['mobile_number'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'mobile_number').build.deep_merge(ValidationBuilder.new(PlatformContext.current.instance.send("#{role}_profile_type"), 'mobile_number').build) if field == 'phone' || field == 'mobile_phone'
@@ -200,6 +202,8 @@ class FormComponentToFormConfiguration
               configuration[:profiles][:"#{model}"][:properties] ||= { validation: { presence: {} } }
               configuration[:profiles][:"#{model}"][:properties][field] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), field).build
             end
+          elsif field == 'company_name'
+            configuration[field] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, field).build
           else
             logger.debug "\t\tSkipping field - #{field}, can't find it"
           end
