@@ -3,9 +3,10 @@ module Api
   module V3
     class ActivityFeedEventsController < BaseController
       skip_before_action :require_authentication
+      PER_PAGE = 50
 
       def index
-        events = ActivityFeedEvent.all.order(:created_at).paginate(page: page)
+        events = ActivityFeedEvent.all.order(:created_at).paginate(page: page, per_page: PER_PAGE)
         render json: ApiSerializer.serialize_collection(
           events,
           namespace: ::V3,
