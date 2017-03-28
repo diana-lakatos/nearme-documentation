@@ -15,14 +15,20 @@ module Api
 
       def api_respond_with(namespaced_object, options = {})
         options[:location] = params[:redirect_to].presence || params[:return_to] if params[:redirect_to].present? || params[:return_to].present?
+
         if params[:page_id].present? && @form_configuration.present? && namespaced_object.last.errors.present?
           result = respond_with(*namespaced_object, options) do |format|
             submitted_form ||= {}
             submitted_form = { @form_configuration.name => { form: namespaced_object.last.tap(&:prepopulate!), configuration: @form_configuration } } if @form_configuration.present?
+
             format.html do
               RenderCustomPage.new(self).render(page: Page.find(params[:page_id]),
                                                 params: params,
                                                 submitted_form: submitted_form)
+            end
+
+            format.json do
+              render json: submitted_form.first[1][:form].errors.messages, status: 422 # blargh
             end
           end
         else
