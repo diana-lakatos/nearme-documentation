@@ -10,6 +10,7 @@
   data-user-messages-inbox-form
   data-user-messages-inbox-current-user="{{ current_user.first_name }}">
   <input value="{{ user_message.replying_to_id }}" name="user_message[replying_to_id]" type="hidden">
+  <input value="1" name="new_inbox" type="hidden">
 
   <div class="fields">
     <div class="form-group message-body">
