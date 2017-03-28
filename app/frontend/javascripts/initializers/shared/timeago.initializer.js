@@ -1,3 +1,2 @@
-require('timeago');
-
-$('abbr.timeago').timeago();
+import timeago from 'timeago.js';
+new timeago().render($('time.timeago'));

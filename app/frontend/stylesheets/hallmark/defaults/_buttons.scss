@@ -83,6 +83,19 @@ input[type="reset"] {
     color: #fff;
   }
 
+  &.revert {
+    border: 1px solid #fff;
+    background: #fff;
+    color: #0077d9;
+  }
+
+  &.revert:hover {
+    color: #00aeef;
+    background: #003f73;
+    border-color: #003f73;
+    color: #fff;
+  }
+
   &.danger {
     border-color: $color-red-1;
     background-color: $color-red-1;
@@ -122,10 +135,11 @@ input[type="reset"] {
     top: -1px;
     font-family: FontAwesome;
     font-weight: normal;
-    font-size: 16px;
     margin-right: 8px;
     vertical-align: middle;
     line-height: 22px;
+    display: inline-block;
+    transform: scale(1.2);
   }
 
   &.icon-only {
@@ -159,6 +173,18 @@ input[type="reset"] {
 
 .button-a.action--edit:before {
   content: $fa-var-pencil;
+}
+
+.button-a.action--follow:before {
+  content: $fa-var-rss;
+}
+
+.button-a.action--unfollow:before {
+  content: $fa-var-check;
+}
+
+.button-a.action--message:before {
+  content: $fa-var-commenting-o;
 }
 
 // TODO: Remove when Coming Soon button is change to regular register link

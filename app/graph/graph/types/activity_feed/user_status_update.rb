@@ -5,7 +5,7 @@ module Graph
       UserStatusUpdate = GraphQL::ObjectType.define do
         interfaces [ActivityFeed::EventSourceInterface]
         name 'ActivityFeedUserStatusUpdate'
-        field :id, !types.ID
+        field :id, !types.Int
         field :body, types.String
         field :created_at, types.String
         field :updated_at, types.String

@@ -4,7 +4,7 @@ module Graph
     module ActivityFeed
       Commentable = GraphQL::ObjectType.define do
         name 'ActivityFeedCommentable'
-        field :id, !types.ID
+        field :id, !types.Int
         field :creator_id, types.ID
         field :url, types.String do
           resolve Resolvers::ResourceUrl.new

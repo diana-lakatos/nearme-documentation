@@ -1,0 +1,19 @@
+declare class UserMessagesInboxEntry {
+  element: HTMLElement;
+  author: string;
+  time: Date;
+  attachment: { name: string, url: string };
+  body: ?string;
+  isOwnMessage: boolean;
+  getElement(): HTMLElement;
+  build(): HTMLElement;
+  getFormattedTime(): string;
+  setElement(el: HTMLElement): void;
+  setAuthor(author: string): void;
+  setTime(time: Date): void;
+  setBody(body: string): void;
+  setOwnMessage(isOwnMessage: boolean): void;
+  setAttachment(name: string, url: string): void;
+  static parse(el: HTMLElement): UserMessagesInboxEntry;
+  static parseBody(el: HTMLElement): string;
+}

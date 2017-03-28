@@ -3,14 +3,19 @@
 - content_for :page_header do
   %h1= yield :title
 
-= dashboard_simple_form_for @user, url: dashboard_notification_preferences_path, method: :put, html: { multipart: true, id: 'edit_notification_preferences', data: { :"notification-preferences" => true } } do |f|
+= dashboard_simple_form_for @user, url: dashboard_notification_preferences_path, method: :put, html: { multipart: true, id: 'edit_notification_preferences', data: { 'notification-preferences': '' } } do |f|
+
   .panel
     .panel-body
       - if HiddenUiControls.find('dashboard/notification_preferences/emails').visible?
         = f.input :accept_emails, as: :switch
       - if HiddenUiControls.find('dashboard/notification_preferences/sms').visible?
-        = f.input :sms_notifications_enabled, as: :switch
+        = f.input :sms_notifications_enabled, as: :switch, input_html: { data: { sms_notification: '' }}
 
+        - klass = f.object.sms_notifications_enabled ? 'active' : ''
+        .sms-notifications-requirements.sep{ class: klass, data: { sms_notifications_required_fields: '' } }
+          %p.sms-notifications-requirements-info=  t 'dashboard.notification_preferences.sms_requirements'
+          = render "registrations/attributes/mobile_number", f: f
 
   .panel.form-actions
     .panel-body

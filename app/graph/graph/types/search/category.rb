@@ -8,7 +8,7 @@ module Graph
 
         global_id_field :id
 
-        field :id, !types.ID
+        field :id, !types.Int
         field :name, !types.String
         field :translated_name, !types.String
         field :path, !types.String

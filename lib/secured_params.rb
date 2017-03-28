@@ -1325,6 +1325,8 @@ class SecuredParams
     [
       :accept_emails,
       :sms_notifications_enabled,
+      :mobile_number,
+      :country_name,
       notification_preference_attributes: [
         :group_updates_enabled,
         :project_updates_enabled,

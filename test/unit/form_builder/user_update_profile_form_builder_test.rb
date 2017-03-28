@@ -46,10 +46,9 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
 
       @user = FactoryGirl.create(
         :user,
-        user_profiles: [ UserProfile.new(instance_profile_type: buyer_profile_type, profile_type: 'buyer'),
-        UserProfile.new(instance_profile_type: default_profile_type, profile_type: 'default'),
-        UserProfile.new(instance_profile_type: seller_profile_type, profile_type: 'seller')
-      ]
+        user_profiles: [UserProfile.new(instance_profile_type: buyer_profile_type, profile_type: 'buyer'),
+                        UserProfile.new(instance_profile_type: default_profile_type, profile_type: 'default'),
+                        UserProfile.new(instance_profile_type: seller_profile_type, profile_type: 'seller')]
       )
       @user.password = nil
 
@@ -203,77 +202,77 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
       'mobile_number' => '604 103 204',
       'tag_list' => 'mac, iek',
       profiles: {
-      :buyer => {
-        'enabled' => true,
-        :properties => {
-          'buyer_attr' => 'my buyer value'
-        },
-        :categories => {
-          'Buyer Category' => @buyer_sub_cat.id
-        },
-        :customizations => {
-          'buyer_model_attributes' => {
-            '0' => {
-              properties: {
-                buyer_model_attr: 'my first value'
+        buyer: {
+          'enabled' => true,
+          :properties => {
+            'buyer_attr' => 'my buyer value'
+          },
+          :categories => {
+            'Buyer Category' => @buyer_sub_cat.id
+          },
+          :customizations => {
+            'buyer_model_attributes' => {
+              '0' => {
+                properties: {
+                  buyer_model_attr: 'my first value'
+                },
+                custom_images: {
+                  :"#{@buyer_model_photo.id}" => {
+                    image: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
+                  }
+                }
               },
-              custom_images: {
-                :"#{@buyer_model_photo.id}" => {
-                  image: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
+              '1' => {
+                properties: {
+                  buyer_model_attr: 'my second value'
+                },
+                custom_images: {
+                  :"#{@buyer_model_photo.id}" => {
+                    image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
+                  }
                 }
               }
             },
-            '1' => {
-              properties: {
-                buyer_model_attr: 'my second value'
-              },
-              custom_images: {
-                :"#{@buyer_model_photo.id}" => {
-                  image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
-                }
-              }
+            'reviews_attributes' => {
+              '0' => { properties: { author: 'Maciek', body: 'hey hi hello' } },
+              '1' => { properties: { body: 'valid review despite lack of author' } }
+            }
+          }
+        },
+        default: {
+          'enabled' => false,
+          :properties => {
+            'default_attr' => 'my default value'
+          },
+          :categories => {
+            'Default Category' => @default_sub_cat.id
+          },
+          :customizations => {
+            'default_model_attributes' => {
+              '0' => { properties: { default_model_attr: 'my first value' } },
+              '1' => { properties: { default_model_attr: 'my second value' } }
+            }
+          }
+        },
+        seller: {
+          'enabled' => true,
+          :properties => {
+            'seller_attr' => 'my seller value'
+          },
+          custom_images: {
+            :"#{@seller_photo.id}" => {
+              image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
             }
           },
-          'reviews_attributes' => {
-            '0' => { properties: { author: 'Maciek', body: 'hey hi hello' } },
-            '1' => { properties: { body: 'valid review despite lack of author' } }
+          :categories => {
+            'Seller Category' => [@seller_sub_cat.id, @seller_sub_cat2.id]
+          },
+          :customizations => {
+            'seller_model_attributes' => {
+              '0' => { properties: { seller_model_attr: 'my first value' } }
+            }
           }
         }
-      },
-      :default => {
-        'enabled' => false,
-        :properties => {
-          'default_attr' => 'my default value'
-        },
-        :categories => {
-          'Default Category' => @default_sub_cat.id
-        },
-        :customizations => {
-          'default_model_attributes' => {
-            '0' => { properties: { default_model_attr: 'my first value' } },
-            '1' => { properties: { default_model_attr: 'my second value' } }
-          }
-        }
-      },
-      :seller => {
-        'enabled' => true,
-        :properties => {
-          'seller_attr' => 'my seller value'
-        },
-        custom_images: {
-          :"#{@seller_photo.id}" => {
-            image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
-          }
-        },
-        :categories => {
-          'Seller Category' => [@seller_sub_cat.id, @seller_sub_cat2.id]
-        },
-        :customizations => {
-          'seller_model_attributes' => {
-            '0' => { properties: { seller_model_attr: 'my first value' } }
-          }
-        }
-      }
       }
     }
   end
@@ -292,113 +291,113 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
       'mobile_number' => {},
       'tags' => {},
       profiles: {
-      :buyer => {
-        'enabled' => {},
-        :properties => {
-          'buyer_attr' => {
-            validation: {
-              'presence' => {}
+        buyer: {
+          'enabled' => {},
+          :properties => {
+            'buyer_attr' => {
+              validation: {
+                'presence' => {}
+              }
             }
-          }
-        },
-        :categories => {
-          'Buyer Category' => {}
-        },
-        :customizations => {
-          'buyer_model' => {
-            properties: {
-              'buyer_model_attr' => {
-                validation: {
-                  'presence' => {}
+          },
+          :categories => {
+            'Buyer Category' => {}
+          },
+          :customizations => {
+            'buyer_model' => {
+              properties: {
+                'buyer_model_attr' => {
+                  validation: {
+                    'presence' => {}
+                  }
+                }
+              },
+              custom_images: {
+                "#{@buyer_model_photo.id}": {
+                  validation: {
+                    'presence' => {}
+                  }
                 }
               }
             },
-            custom_images: {
-              "#{@buyer_model_photo.id}": {
-                validation: {
-                  'presence' => {}
+            'reviews' => {
+              properties: {
+                'author' => {},
+                'body' => {
+                  validation: {
+                    'presence' => {}
+                  }
                 }
+              }
+            }
+          }
+        },
+        default: {
+          'enabled' => {},
+          :properties => {
+            'default_attr' => {
+              validation: {
+                'presence' => {}
               }
             }
           },
-          'reviews' => {
-            properties: {
-              'author' => {},
-              'body' => {
-                validation: {
-                  'presence' => {}
+          :categories => {
+            'Default Category' => {
+              validation: {
+                presence: true
+              }
+            }
+          },
+          :customizations => {
+            'default_model' => {
+              properties: {
+                'default_model_attr' => {
+                  validation: {
+                    'presence' => {}
+                  }
                 }
               }
             }
           }
-        }
-      },
-      :default => {
-        'enabled' => {},
-        :properties => {
-          'default_attr' => {
-            validation: {
-              'presence' => {}
-            }
-          }
         },
-        :categories => {
-          'Default Category' => {
-            validation: {
-              presence: true
-            }
-          }
-        },
-        :customizations => {
-          'default_model' => {
-            properties: {
-              'default_model_attr' => {
-                validation: {
-                  'presence' => {}
-                }
+        seller: {
+          'enabled' => {},
+          :properties => {
+            'seller_attr' => {
+              validation: {
+                'presence' => {}
               }
             }
-          }
-        }
-      },
-      :seller => {
-        'enabled' => {},
-        :properties => {
-          'seller_attr' => {
-            validation: {
-              'presence' => {}
-            }
-          }
-        },
-        :custom_images => {
-          "#{@seller_photo.id}": {
+          },
+          :custom_images => {
+            "#{@seller_photo.id}": {
+              validation: {
+                'presence' => {}
+              }
+            },
             validation: {
               'presence' => {}
             }
           },
-          validation: {
-            'presence' => {}
-          }
-        },
-        :categories => {
-          'Seller Category' => {
-            validation: {
-              presence: true
+          :categories => {
+            'Seller Category' => {
+              validation: {
+                presence: true
+              }
             }
-          }
-        },
-        :customizations => {
-          'seller_model' => {
-            properties: {
-              'seller_model_attr' => {
-                validation: {
-                  'presence' => {}
+          },
+          :customizations => {
+            'seller_model' => {
+              properties: {
+                'seller_model_attr' => {
+                  validation: {
+                    'presence' => {}
+                  }
                 }
               }
             }
           }
         }
-      }
       }
     }
   end

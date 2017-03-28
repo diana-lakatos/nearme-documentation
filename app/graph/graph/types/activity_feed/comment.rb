@@ -5,7 +5,7 @@ module Graph
       Comment = GraphQL::ObjectType.define do
         interfaces [ActivityFeed::EventSourceInterface]
         name 'ActivityFeedComment'
-        field :id, !types.ID
+        field :id, !types.Int
         field :body, types.String
         field :created_at, types.String
         field :updated_at, types.String

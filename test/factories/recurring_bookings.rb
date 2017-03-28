@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :recurring_booking do
-    association :user
+    association :user, factory: :user_with_sms_notifications_enabled
     owner { user }
     association :transactable, factory: :subscription_transactable
     company { transactable.try(:company) || FactoryGirl.build(:company) }
@@ -19,9 +20,7 @@ FactoryGirl.define do
     end
 
     trait :activated do
-      after(:build) do |booking|
-        booking.try_to_activate!
-      end
+      after(:build, &:try_to_activate!)
     end
 
     trait :with_deleted_payment_source do

@@ -3,182 +3,180 @@ $modal-background: #fff;
 $modal-border-radius: 3px;
 
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0,0,0,0.9);
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 
-    &.visible {
-        opacity: 1;
-    }
+  &.visible {
+    opacity: 1;
+  }
 
-    html.no-rgba & {
-        background: #000;
-        opacity: 0.6;
-    }
+  html.no-rgba & {
+    background: #000;
+    opacity: 0.6;
+  }
 
-    z-index: 998;
+  z-index: 998;
 }
 
 .modal-wrapper {
-    border-radius: $modal-border-radius;
-    background: $modal-background;
+  border-radius: $modal-border-radius;
+  background: $modal-background;
 }
 
 .modal-container {
-    z-index: 999;
-    position: absolute;
-    overflow: hidden;
-    padding-bottom: 50px;
-    width: $screen-tablet-vertical;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    transition: opacity 0.5s ease-in-out;
-    opacity: 0;
+  z-index: 999;
+  position: absolute;
+  padding-bottom: 50px;
+  width: $screen-tablet-vertical;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
 
-    &.visible {
-        opacity: 1;
+  &.visible {
+    opacity: 1;
+  }
+
+  &.loading .modal-close {
+    display: none;
+  }
+
+  @media (max-width: $screen-tablet-vertical) {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    left: 20px;
+    bottom: 20px;
+    overflow-y: auto;
+    transform: translate(0, 0);
+    width: auto;
+  }
+
+  &.sign-up-modal {
+    .modal-close {
+      top: 12px;
+      right: 20px;
     }
 
-    &.loading .modal-close {
-        display: none;
-    }
+    .modal-content {
+      background: transparent;
 
-    @media (max-width: $screen-tablet-vertical) {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        left: 20px;
-        bottom: 20px;
-        overflow-y: auto;
-        transform: translate(0, 0);
-        width: auto;
-    }
+      h2 {
+        margin-left: -10px;
+        color: rgb(230, 230, 230);
+      }
 
-    &.sign-up-modal {
+      .hr {
+        background: transparent;
 
-        .modal-close {
-            top: 12px;
-            right: 20px;
+        span {
+          color: rgb(220, 220, 220);
         }
+      }
 
-        .modal-content {
-            background: transparent;
+      .pnotice {
+        a {
+          color: #ffffff;
+          opacity: 0.7;
 
-            h2 {
-                margin-left: -10px;
-                color: rgb(230, 230, 230);
-            }
-
-            .hr {
-                background: transparent;
-
-                span {
-                    color: rgb(220, 220, 220);
-                }
-            }
-
-            .pnotice {
-                a {
-                    color: #ffffff;
-                    opacity: 0.7;
-                    &:hover {
-                        opacity: 1;
-                    }
-                }
-            }
+          &:hover {
+            opacity: 1;
+          }
         }
-
-        .modal-loading {
-            background: transparent;
-        }
+      }
     }
+
+    .modal-loading {
+      background: transparent;
+    }
+  }
 }
 
 .modal-loading {
-    @extend .modal-wrapper;
-    height: 200px;
-    background: rgb(220, 220, 220) url("/assets/components/modal/loader.gif") center center no-repeat;
+  @extend .modal-wrapper;
+
+  height: 200px;
+  background: rgb(220, 220, 220) url("/assets/components/modal/loader.gif") center center no-repeat;
 }
 
-
 .modal-content {
-    @extend .modal-wrapper;
-    padding: $modal-padding;
-    z-index: 1000;
-    transition: opacity 0.2s;
+  @extend .modal-wrapper;
 
-    /* NB: Chrome doesn't like other vendor-prefixed transition types. */
-    opacity: 0;
+  padding: $modal-padding;
+  z-index: 1000;
+  transition: opacity 0.2s;
 
-    &.visible {
-        opacity: 1;
-    }
+  /* NB: Chrome doesn't like other vendor-prefixed transition types. */
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
 }
 
 .modal-body-wrapper {
-    position: fixed;
-    width: 100%;
+  position: fixed;
+  width: 100%;
 }
 
 .modal-header {
-    position: relative;
-    margin: #{-$modal-padding} #{-$modal-padding} #{$modal-padding / 2} !important;
-    padding: #{$modal-padding / 2} #{60px + $modal-padding}  #{$modal-padding / 2} $modal-padding;
-    background: darken($modal-background, 2%);
-    border-radius: $modal-border-radius $modal-border-radius 0 0;
+  position: relative;
+  margin: #{-$modal-padding} #{-$modal-padding} #{$modal-padding / 2} !important;
+  padding: #{$modal-padding / 2} #{60px + $modal-padding} #{$modal-padding / 2} $modal-padding;
+  background: darken($modal-background, 2%);
+  border-radius: $modal-border-radius $modal-border-radius 0 0;
 }
 
 .modal-title {
-    @extend .h2;
+  @extend .h2;
 }
 
 .modal-close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 999 + 3;
-    width: 60px;
-    top: 0;
-    bottom: 0;
-    padding: 0;
-    right: 0;
+  position: absolute;
+  z-index: 999 + 3;
+  width: 34px;
+  height: 34px;
+  top: 10px;
+  right: 10px;
+  padding: 0;
+  background: none;
+  border: none;
+  text-align: center;
+  font-size: 0;
+  color: rgb(160, 160, 160);
+
+  &:hover {
+    color: rgb(80, 80, 80);
     background: none;
     border: none;
-    font-size: 0;
+  }
 
-    color: rgb(160, 160, 160);
-
-    &:hover {
-        color: rgb(80, 80, 80);
-        background: none;
-        border: none;
-    }
-
-    span {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 25px;
-        text-align: center;
-    }
+  &::before {
+    display: block;
+    width: 34px;
+    height: 34px;
+    background: #fff;
+    border-radius: 100%;
+    font-family: FontAwesome;
+    content: $fa-var-times-circle;
+    font-size: 30px;
+    line-height: 34px;
+  }
 }
 
-
-.modal-body {
-}
+.modal-body {}
 
 .modal-footer {
-    margin: #{$modal-padding / 2} #{-$modal-padding} #{-$modal-padding};
-    padding: #{$modal-padding / 2} $modal-padding;
-    margin-bottom: -$modal-padding !important;
-    text-align: right;
-    border-radius: 0 0 $modal-border-radius $modal-border-radius;
+  margin: #{$modal-padding / 2} #{-$modal-padding} #{-$modal-padding};
+  padding: #{$modal-padding / 2} $modal-padding;
+  margin-bottom: (-$modal-padding) !important;
+  text-align: right;
+  border-radius: 0 0 $modal-border-radius $modal-border-radius;
 }
-

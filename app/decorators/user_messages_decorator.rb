@@ -7,7 +7,7 @@ class UserMessagesDecorator < Draper::CollectionDecorator
   end
 
   def inbox
-    @threaded_user_messages = threaded_user_messages.reject do|_key, user_messages|
+    @threaded_user_messages = threaded_user_messages.reject do |_key, user_messages|
       # reject all threads that have all messages archived for @user
       user_messages.all? { |user_message| user_message.archived_for?(@user) }
     end

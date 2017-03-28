@@ -1,0 +1,14 @@
+declare class UserMessagesInboxContactList {
+
+  container: HTMLElement;
+  list: HTMLElement;
+  toggler: HTMLButtonElement;
+  constructor(container: HTMLElement): UserMessagesInboxContactList;
+
+  bindEvents(): void;
+  enable(): void;
+  disable(): void;
+  bindSwipeEvents(): void;
+
+
+}

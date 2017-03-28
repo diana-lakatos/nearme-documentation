@@ -1,0 +1,10 @@
+declare class UserMessagesInboxEntries {
+  container: HTMLElement;
+  wrapper: HTMLElement;
+  entries: Array<UserMessagesInboxEntry>;
+
+  constructor(container: HTMLElement): UserMessagesInboxEntries;
+  parse(): void;
+  add(entry: UserMessagesInboxEntry): void;
+  scrollToBottom(): void;
+}

@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class ActivityFeedController < ApplicationController
-  before_filter :set_object_with_followed_whitelist
-  before_filter :authenticate_user!, only: [:follow, :unfollow]
+  before_action :set_object_with_followed_whitelist
+  before_action :authenticate_user!, only: [:follow, :unfollow]
 
   # "Follow/Unfollow" feature section
   #
@@ -12,16 +13,20 @@ class ActivityFeedController < ApplicationController
   def follow
     current_user.feed_follow!(@object)
     @followers_count = @object.feed_followers.count
+    @is_following = true
     respond_to do |format|
       format.js { render :follow_and_unfollow }
+      format.json { render :follow_and_unfollow }
     end
   end
 
   def unfollow
     current_user.feed_unfollow!(@object)
     @followers_count = @object.feed_followers.count
+    @is_following = false
     respond_to do |format|
       format.js { render :follow_and_unfollow }
+      format.json { render :follow_and_unfollow }
     end
   end
 
@@ -40,7 +45,7 @@ class ActivityFeedController < ApplicationController
     @container = params[:container].presence || '#activity'
 
     options = {}
-    options.merge!(user_feed: true) if params[:type] == 'User'
+    options[:user_feed] = true if params[:type] == 'User'
 
     @feed = ActivityFeedService.new(@object, options)
 

@@ -104,6 +104,17 @@
     text-align: center;
   }
 
+  .header .actions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: right;
+
+    form {
+      display: inline;
+    }
+  }
+
   .navbar-a {
     padding-left: 225px;
   }
@@ -143,7 +154,8 @@
     }
 
     .header {
-      height: 100px;
+      height: auto;
+      min-height: 100px;
       margin-top: -100px;
     }
 
@@ -175,6 +187,25 @@
     .header .location:before,
     .header .featured:before {
       margin-right: 5px;
+    }
+
+    .header .actions {
+      position: relative;
+      margin-left: 0;
+      clear: both;
+      text-align: left;
+      margin-top: 10px;
+      padding: 30px 20px 0;
+      margin: 0 -20px;
+
+      p, div {
+        display: inline;
+      }
+
+      .button-a {
+        background: #0077d9;
+        color: #fff;
+      }
     }
   }
 

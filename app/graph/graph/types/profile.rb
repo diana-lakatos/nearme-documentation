@@ -7,7 +7,7 @@ module Graph
 
       global_id_field :id
 
-      field :id, !types.ID
+      field :id, !types.Int
       field :profile_type, !types.String
       field :custom_attribute,
             !types.String,

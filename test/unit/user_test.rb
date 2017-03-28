@@ -649,7 +649,7 @@ class UserTest < ActiveSupport::TestCase
 
   context 'accepts sms' do
     setup do
-      @user = FactoryGirl.create(:user)
+      @user = FactoryGirl.create(:user_with_sms_notifications_enabled)
     end
 
     should 'not accept sms if no mobile phone' do
@@ -829,6 +829,27 @@ class UserTest < ActiveSupport::TestCase
       @user.set_ui_setting('help-is-visible', 'true')
       assert_equal '{"help-is-visible":true}', @user.ui_settings
       assert @user.get_ui_setting('help-is-visible')
+    end
+
+    context 'name' do
+      should 'last_name from name' do
+        user = User.new(name: 'Jane Foo Doe')
+
+        assert_equal 'Foo Doe', user.last_name
+      end
+
+      should 'first_name from name' do
+        user = User.new(name: 'Jane Foo Doe')
+
+        assert_equal 'Jane', user.first_name
+      end
+
+      should 'name' do
+        user = User.new(name: 'Jane', last_name: 'Doe')
+
+        assert_equal 'Jane Doe', user.name
+        assert_equal 'Doe', user.last_name
+      end
     end
   end
 

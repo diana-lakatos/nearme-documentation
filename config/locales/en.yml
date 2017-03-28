@@ -1679,6 +1679,9 @@ en:
         photos: 'Photos'
         colors: 'Colors'
 
+    notification_preferences:
+      sms_requirements: 'In order to receive SMS notifications you have to provide your mobile number'
+
     user_reservations:
       track_time: "TRACK TIME & EXPENSES"
       approved_offer: 'APPROVED OFFER'

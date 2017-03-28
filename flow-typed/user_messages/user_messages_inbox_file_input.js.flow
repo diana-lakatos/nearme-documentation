@@ -1,0 +1,9 @@
+declare class UserMessagesInboxFileInput mixins Events {
+  form: HTMLFormElement;
+  input: HTMLInputElement;
+  wrapper: HTMLElement;
+  constructor(input: HTMLInputElement, form: HTMLFormElement): UserMessagesInboxFileInput;
+  bindEvents(): void;
+  onChange(): void;
+  empty(): void;
+}

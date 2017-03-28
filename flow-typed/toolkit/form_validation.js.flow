@@ -1,0 +1,19 @@
+declare class Validator {
+  message: ?string;
+  condition: ?(boolean | () => boolean);
+  setMessage(message: string): void;
+  getMessage(): string;
+  defaultMessage(): string;
+  process(value: any): Promise<mixed>;
+  checkConditionalRun(): boolean;
+};
+
+declare module './app/frontend/javascripts/toolkit/form_validation/validator' {
+  declare module.exports: Validator;
+}
+
+type validatorFactoryOptions = {
+  type: string,
+  message: ?string,
+  condition: ?(boolean | () => boolean)
+}

@@ -1,3 +1,5 @@
+- has_messages = current_user && current_user.unread_user_message_threads_count_for(platform_context.instance) > 0
+
 %nav.skips
   %ul
     %li
@@ -7,7 +9,7 @@
     %li
       = link_to "#{t(:skip_to_footer)} [f]".html_safe, '#footer', accesskey: 'f'
 
-%h2.toggler{"data-nav" => true}
+%h2.toggler{"data-nav" => true, class: has_messages ? 'has-messages' : ''}
   %span Menu
 
 .wrap
@@ -40,9 +42,11 @@
           %span.text
             = "#{t(:projects)} <em>4</em>".html_safe
 
+
+
   .corner
     - if current_user
-      .user
+      .user{ class: has_messages ? 'has-messages' : '' }
         %p.name
           = link_to profile_path(current_user.slug) do
             = image_tag current_user.avatar.url(:thumb), size: "40x40"
@@ -50,6 +54,12 @@
         %ul
           %li{ class: (controller_name == 'registrations' && action_name == 'show' ? 'active' : '') }
             = link_to t(:profile), user_path(current_user.slug)
+          %li{ class: (controller_name == 'user_messages' ? 'active' : '') }
+            = link_to dashboard_user_messages_path do
+              = t('user_messages.topnav')
+              - if has_messages
+                %span.count= current_user.unread_user_message_threads_count_for(platform_context.instance)
+
           %li{ class: (controller_name == 'registrations' && action_name == 'show' ? 'active' : '') }
             = link_to 'Get Started', '/faq'
           %li{ class: (controller_name == 'home' && action_name == 'index' ? 'active' : '') }

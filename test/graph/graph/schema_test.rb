@@ -37,7 +37,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
       query = %({ users { collaborations(filters: [PENDING_RECEIVED_INVITATION]) { id } }})
 
-      assert_equal({ 'users' => [{ 'collaborations' => [{ 'id' => collaboration.id.to_s }] }] }, result(query))
+      assert_equal({ 'users' => [{ 'collaborations' => [{ 'id' => collaboration.id }] }] }, result(query))
     end
 
     should 'get user pending group collaborations' do
@@ -56,6 +56,33 @@ class Graph::SchemaTest < ActiveSupport::TestCase
           }
         }})
 
+      assert_not_nil result(query)
+    end
+
+    should 'user threads' do
+      FactoryGirl.create(:user_message, author: @user)
+      query = %({ user(id: #{@user.id}) { threads { participant { name } is_read }}})
+
+      assert_equal(
+        { 'user' => { 'threads' => [{ 'participant' => { 'name' => @user.name }, 'is_read' => false }] } },
+        result(query)
+      )
+    end
+
+    should 'user thread' do
+      message = FactoryGirl.create(:user_message, author: @user, thread_owner: @user, thread_recipient: @user)
+      query = %({ user(id: #{@user.id}) { thread(id: #{message.id}) { participant { name } is_read }}})
+
+      assert_equal(
+        { 'user' => { 'thread' => { 'participant' => { 'name' => @user.name }, 'is_read' => false } } },
+        result(query)
+      )
+    end
+
+    should 'user thread messages' do
+      message = FactoryGirl.create(:user_message, author: @user, thread_owner: @user, thread_recipient: @user)
+      FactoryGirl.create(:attachable_attachment, user: @user, attachable: message)
+      query = %({ user(id: #{@user.id}) { thread(id: #{message.id}){ messages{attachments{url}}}}})
       assert_not_nil result(query)
     end
 

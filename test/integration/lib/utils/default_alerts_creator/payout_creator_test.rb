@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require 'helpers/reservation_test_support'
 
@@ -5,7 +6,7 @@ class Utils::DefaultAlertsCreator::PayoutTest < ActionDispatch::IntegrationTest
   include ReservationTestSupport
 
   setup do
-    @company_owner = FactoryGirl.create(:user, mobile_number: '124456789')
+    @company_owner = FactoryGirl.create(:user_with_sms_notifications_enabled, mobile_number: '124456789')
     User.any_instance.stubs(:temporary_token).returns('abc')
     @instance = FactoryGirl.create(:instance, name: 'MyBoat')
     @domain = FactoryGirl.create(:domain, name: 'notifcations.com', target: @instance)
@@ -14,9 +15,9 @@ class Utils::DefaultAlertsCreator::PayoutTest < ActionDispatch::IntegrationTest
     @company.creator.update_column(:instance_id, @instance.id)
     PlatformContext.current = PlatformContext.new(@company)
     Company.any_instance.stubs(:created_payment_transfers).returns([
-      PaymentTransfer.new(amount_cents: 7887, currency: 'USD'),
-      PaymentTransfer.new(amount_cents: 4650, currency: 'EUR')
-    ])
+                                                                     PaymentTransfer.new(amount_cents: 7887, currency: 'USD'),
+                                                                     PaymentTransfer.new(amount_cents: 4650, currency: 'EUR')
+                                                                   ])
     @payout_creator = Utils::DefaultAlertsCreator::PayoutCreator.new
   end
 

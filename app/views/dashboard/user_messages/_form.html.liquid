@@ -4,7 +4,7 @@
       {{ 'user_messages.send_a_message_to' | translate: recipient_name: @user_message.recipient_name }}
     </h2>
   </header>
-  
+
   <form novalidate="novalidate" class="simple_form new_user_message" id="new_user_message" data-modal="true" action="{{ @user_message.create_path }}" accept-charset="UTF-8" method="post">
     <input name="authenticity_token" data-authenticity-token="1" type="hidden">
     <div class="dialog__body">
