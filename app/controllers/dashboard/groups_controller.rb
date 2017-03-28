@@ -73,7 +73,7 @@ class Dashboard::GroupsController < Dashboard::BaseController
     video_urls = params[:video_url].to_s.split(/\s*,\s*/)
     video_urls = [''] if video_urls.blank?
 
-    video_embedders = video_urls.map { |video_url| VideoEmbedder.new(video_url) }
+    video_embedders = video_urls.map { |video_url| Videos::VideoEmbedder.new(video_url) }
 
     if video_embedders.any?(&:valid?)
       render json: {

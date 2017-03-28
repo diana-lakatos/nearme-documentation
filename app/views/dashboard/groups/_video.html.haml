@@ -1,5 +1,5 @@
 %li
-  = VideoEmbedder.new(video, url_attributes: { wmode: :transparent }).html.html_safe
+  = Videos::VideoEmbedder.new(video, url_attributes: { wmode: :transparent }).html.html_safe
   %button.button-a.small.red.remove-video
     %span.intelicon-trash-outlined
   = hidden_field_tag 'group[properties][videos][]', video

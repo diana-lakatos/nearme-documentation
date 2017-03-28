@@ -14,6 +14,7 @@ query ActivityFeedQuery($object_id: ID!, $object_type: String!, $include_user_fe
       has_body
       description
       is_status_update_event
+      is_text_update
       is_comment_event
       is_photo_event
       is_reportable
