@@ -44,6 +44,7 @@ module Graph
       field :profile_path, !types.String
       field :avatar_url_thumb, !types.String
       field :avatar_url_bigger, !types.String
+      field :avatar_url_big, !types.String
       field :avatar, Types::Image
       field :name_with_affiliation, !types.String
       field :display_location, types.String
@@ -71,6 +72,14 @@ module Graph
 
         resolve Resolvers::MessageThread.new
       end
+
+      field :profile_property,
+            types.String,
+            'Fetch any buyer property by name, ex: bio: buyer_property(name: "bio")' do
+              argument :name, !types.String
+              argument :profile_type, !types.String
+              resolve ->(obj, arg, _ctx) { obj.user_profiles.find_by(profile_type: arg[:profile_type]).properties[arg[:name]] }
+            end
     end
 
     CustomImageOrderEnum = GraphQL::EnumType.define do
