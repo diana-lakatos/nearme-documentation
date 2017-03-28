@@ -34,12 +34,12 @@ module Api
 
     def pagination_links
       query = params.except(:page, :controller, :action)
-      {
-        first: api_transactables_url(query.merge(page: 1)),
-        last: api_transactables_url(query.merge(page: @searcher.total_pages)),
-        prev: params[:page] > 1 ? api_transactables_url(query.merge(page: params[:page] - 1)) : nil,
-        next: params[:page] < @searcher.total_pages ? api_transactables_url(query.merge(page: params[:page] + 1)) : nil
-      }
+      Api::PaginationLinks.links(
+        url_generator: ->(params) { api_transactables_url(params) },
+        total_pages: @searcher.total_pages,
+        current_page: params[:page],
+        params: query
+      )
     end
   end
 end
