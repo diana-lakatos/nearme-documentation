@@ -3,12 +3,10 @@ class PagesController < ApplicationController
   layout :resolve_layout
   respond_to :html
 
+  skip_before_filter :redirect_unverified_user, unless: -> { page.require_verified_user? }
+
   def show
-    @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs([params[:slug], params[:slug2], params[:slug3]].compact.join('/'), params[:format]))
-    @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs([params[:slug], params[:slug2]].compact.join('/'), params[:format])) if @page.nil?
-    @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs(params[:slug], params[:format])) if @page.nil?
-    raise Page::NotFound unless @page.present?
-    RenderCustomPage.new(self).render(page: @page, params: params)
+    RenderCustomPage.new(self).render(page: page, params: params)
   end
 
   def redirect
@@ -16,6 +14,18 @@ class PagesController < ApplicationController
   end
 
   private
+
+  def page
+    return @page if @page
+
+    @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs([params[:slug], params[:slug2], params[:slug3]].compact.join('/'), params[:format]))
+    @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs([params[:slug], params[:slug2]].compact.join('/'), params[:format])) if @page.nil?
+    @page = platform_context.theme.pages.find_by(slug: Page.possible_slugs(params[:slug], params[:format])) if @page.nil?
+
+    raise Page::NotFound unless @page.present?
+
+    @page
+  end
 
   # Layout per action
   def resolve_layout
