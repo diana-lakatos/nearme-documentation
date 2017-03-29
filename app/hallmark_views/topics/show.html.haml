@@ -20,7 +20,7 @@
             = t :projects
             %small= "(#{@topic.transactables.active.count})"
       %div
-        = render partial: 'shared/follow_button', object: @topic, object_type: 'Topic'
+        = render 'shared/follow_button', object: @topic, object_type: 'Topic'
         - if current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
           = link_to t(:edit), edit_instance_admin_manage_topic_path(@topic), class: 'button-a small edit-action', rel: "modal"
 
