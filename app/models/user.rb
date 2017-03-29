@@ -205,7 +205,9 @@ class User < ActiveRecord::Base
   }
 
   scope :by_search_query, lambda { |query|
-    where('users.name ilike ? or users.email ilike ? or users.id = ?', query, query, query.remove('%').to_i)
+    where('users.name ilike :query or users.email ilike :query or users.phone like :query or '\
+          'users.mobile_number like :query or users.id = :id',
+          query: query, id: query.remove('%').to_i)
   }
 
   scope :featured, -> { where(featured: true) }
