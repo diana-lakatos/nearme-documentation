@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 class FormDrop < BaseDrop
-  # see gems/liquid-3.0.6/lib/liquid/drop.rb
-  # specifically, implementation in line 35
-  def before_method(method_name)
-    if @source.respond_to?(method_name)
-      @source.send(method_name)
+  # see documentation in bundle open liquid -> lib/liquid/drop.rb
+  def liquid_method_missing(name)
+    if @source.respond_to?(name)
+      @source.send(name)
     else
-      "Unknowm method: #{method_name}. Please make sure if FormConfiguration includes it."
+      super
     end
   end
 
