@@ -14,7 +14,8 @@ module Attachable
 
     def path
       # If it's a SanitizedFile it's local, most likely not yet uploaded, and we use SanitizedFile#path instead
-      file.is_a?(CarrierWave::SanitizedFile) ? file.path : file.proper_file_path
+      file.file.is_a?(CarrierWave::SanitizedFile) ? file.path : file.proper_file_path
+      # TODO refactor https://near-me.atlassian.net/browse/NM-7961
     end
 
     def to_liquid
