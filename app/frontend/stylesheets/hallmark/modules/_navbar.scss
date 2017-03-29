@@ -64,13 +64,18 @@
     font: inherit;
   }
 
-  p {
+  p, div {
     float: right;
     margin: 0;
-  }
 
-  p .button-a {
-    vertical-align: middle;
+    .button-a {
+      vertical-align: middle;
+    }
+
+    form {
+      display: inline-block;
+      margin: 0;
+    }
   }
 
   @include bp($screen-lg) {
@@ -97,22 +102,28 @@
       float: none;
     }
 
-    p {
+    p, div {
       position: relative;
       float: none;
       margin: 0 -30px !important;
       padding: 25px 30px 0;
       background: #f5f6f8;
       line-height: 1;
-    }
 
-    p .button-a {
-      display: block;
-    }
+      .button-a {
+        display: block;
+        width: 100%;
+      }
 
-    p a + span, p a + a {
-      display: block;
-      margin-top: 10px;
+      form {
+        display: block;
+        width: 100%;
+      }
+
+      a + span, a + a, a + form, form + a {
+        display: block;
+        margin-top: 10px;
+      }
     }
   }
 
