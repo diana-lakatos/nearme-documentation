@@ -206,6 +206,7 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
           }
         },
       },
+      "company_name" => {},
       password_confirmation: { property_options: { virtual: true }, validation: { confirm: {} } }
     }
   end

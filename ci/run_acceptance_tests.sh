@@ -10,10 +10,8 @@ yarn --force --frozen-lockfile
 ./node_modules/coffeelint/bin/coffeelint ./app/frontend/javascripts
 node ./node_modules/eslint/bin/eslint.js ./app/frontend/javascripts
 
-bundle exec pronto run -c staging -f github_pr github_status --exit-code
-
 # build assets
 node ./node_modules/gulp/bin/gulp.js build:test
 
 # run e2e tests
-bundle exec rake cucumber:verbose
+RAILS_ENV=test bundle exec rake cucumber:verbose

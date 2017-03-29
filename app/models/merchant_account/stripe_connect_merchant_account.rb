@@ -157,8 +157,8 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       bank_account: {
         country: iso_country_code,
         currency: get_currency,
-        account_number: bank_account_number.to_s.delete(' ').scan(/^\w{0,2}[\d\-]*$/).first,
-        routing_number: bank_routing_number.to_s.delete(' ').scan(/^[\d\-]*$/).first
+        account_number: bank_account_number.to_s.delete('*').delete(' ').scan(/^\w{0,2}[\d\-]*$/).first || '',
+        routing_number: bank_routing_number.to_s.delete(' ').scan(/^[\d\-]*$/).first || ''
       }
     }
   end
