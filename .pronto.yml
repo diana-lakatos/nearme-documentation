@@ -5,3 +5,6 @@ github:
   web_endpoint: https://github.com/
 max_warnings: 150
 verbose: true
+all:
+  exclude:
+    - 'db/**/*'
