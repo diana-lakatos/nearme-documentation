@@ -24,6 +24,22 @@ class MerchantAccountTest < ActiveSupport::TestCase
       Instance.any_instance.stubs(test_mode?: true)
       assert_nil merchant_account.merchantable.reload.merchant_accounts.mode_scope.first
     end
+
+    should 'proces accounts in various format including IBAN' do
+      MerchantAccount::StripeConnectMerchantAccount.any_instance.stubs(:iso_country_code).returns('AU')
+      MerchantAccount::StripeConnectMerchantAccount.any_instance.stubs(:get_currency).returns('AUD')
+      {
+        '000123456789' => '000123456789',
+        '000123-456' => '000123-456',
+        '000000001234567897' => '000000001234567897',
+        'DE89370400440532013000' => 'DE89370400440532013000',
+        'DE 8937 0400 4405 3201 3000' => 'DE89370400440532013000'
+      }.each do |bank_account_key, bank_account_value|
+        merchant_account = MerchantAccount::StripeConnectMerchantAccount.new
+        merchant_account.bank_account_number = bank_account_key
+        assert_equal bank_account_value, merchant_account.bank_account_hash[:bank_account][:account_number]
+      end
+    end
   end
 
   def create_merchant_account
