@@ -4,7 +4,7 @@ class User::TemporaryTokenVerifier
   # If we ever need to invalidate all oustanding tokens, we can just
   # cycle this secret.
   class_attribute :secret_token
-  self.secret_token = '8ad98c608f442abac9783d71d19c08b51abef2c8c36435ec205c1a67d028fd126ed5135f1651befe3629f58c0455f48e7829451715865b9a00b9fdd9b60f540a'
+  self.secret_token = '9ad98c608f442abac9783d71d19c08b51abef2c8c36435ec205c1a67d028fd126ed5135f1651befe3629f58c0455f48e7829451715865b9a00b9fdd9b60f540b'
 
   # Prepare a verifier for a given User
   def initialize(user)
@@ -17,7 +17,7 @@ class User::TemporaryTokenVerifier
   # the expires_at date has passed.
   #
   # Returns String
-  def generate(expires_at = 48.hours.from_now)
+  def generate(expires_at = 12.hours.from_now)
     verifier.generate([@user.id, expires_at.to_i].join('|'))
   end
 
