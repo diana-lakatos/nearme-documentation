@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # TODO: this might be converted into more generic range builder
 module Elastic
-  class QueryBuilder
+  module QueryBuilder
     class AvailabilityExceptions
       def initialize(params)
         @params = params

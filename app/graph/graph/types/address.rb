@@ -8,8 +8,16 @@ module Graph
       global_id_field :id
 
       field :id, !types.Int
-      field :city, !types.String
-      field :state, !types.String
+      field :address, types.String
+      field :city, types.String
+      field :iso_country_code, types.String
+      field :latitude, types.Float
+      field :longitude, types.Float
+      field :postcode, types.String
+      field :suburb, types.String
+      field :state, types.String
+      field :street, types.String
+      field :street_number, types.String
     end
   end
 end

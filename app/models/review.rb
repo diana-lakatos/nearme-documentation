@@ -37,8 +37,8 @@ class Review < ActiveRecord::Base
   scope :by_line_items, ->(id) { where(reviewable_id: id, reviewable_type: ['LineItem::Transactable', 'LineItem']).includes(rating_answers: [:rating_question]) }
   scope :by_search_query, ->(query) { joins(:user).where('users.name ILIKE ?', query) }
   scope :displayable, -> { where(displayable: true).joins(:rating_system).where('rating_systems.active = ?', true) }
-  scope :about_seller, ->(user) { displayable.where(seller_id: user.id, subject: RatingConstants::HOST).where.not(user_id: user.id) }
-  scope :about_buyer, ->(user) { displayable.where(buyer_id: user.id, subject: [RatingConstants::GUEST]).where.not(user_id: user.id) }
+  scope :about_seller, ->(user) { displayable.where(seller: user, subject: RatingConstants::HOST).where.not(user: user) }
+  scope :about_buyer, ->(user) { displayable.where(buyer: user, subject: [RatingConstants::GUEST]).where.not(user: user) }
   scope :left_by_seller, ->(user) { displayable.where(seller_id: user.id, user_id: user.id, subject: RatingConstants::GUEST) }
   scope :left_by_buyer, ->(user) { displayable.where(buyer_id: user.id, user_id: user.id, subject: [RatingConstants::HOST, RatingConstants::TRANSACTABLE]) }
   scope :active_with_subject, ->(subject) { joins(:rating_system).merge(RatingSystem.active_with_subject(subject)) }

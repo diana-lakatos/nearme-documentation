@@ -18,7 +18,11 @@ module Graph
 
   def self.execute_query(*args)
     response = ::Graph::Schema.execute(*args)
-    response.key?('data') ? response.fetch('data') : throw(ArgumentError.new(response.pretty_inspect))
+    if response.key?('data') && !response.key?('errors')
+      response.fetch('data')
+    else
+      throw(ArgumentError.new(response['errors'].to_s + response.pretty_inspect))
+    end
   end
 
   def self.execute(query_name, variables)

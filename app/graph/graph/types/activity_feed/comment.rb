@@ -19,7 +19,7 @@ module Graph
           resolve ->(comment, _arg, _ctx) { comment.activity_feed_images.map(&:image) }
         end
         field :creator, Types::User do
-          resolve ->(obj, _arg, _ctx) { Resolvers::Users.decorate(obj.creator) }
+          resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.creator_id }, ctx) }
         end
         field :commentable, ActivityFeed::Commentable
       end

@@ -14,7 +14,7 @@ module Graph
         resolve ->(obj, _arg, _ctx) { obj.cover_photo&.image }
       end
       field :creator, !Types::User do
-        resolve ->(obj, _arg, _ctx) { Resolvers::Users.decorate(obj.creator) }
+        resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.creator_id }, ctx) }
       end
     end
   end

@@ -2,7 +2,7 @@
 require 'test_helper_lite'
 require './lib/elastic/aggregations'
 require './lib/elastic/aggregations/options_for_select'
-require './test/unit/elastic/fixtures.rb'
+require './test/unit/lib/elastic/fixtures'
 require 'pry'
 require 'ostruct'
 

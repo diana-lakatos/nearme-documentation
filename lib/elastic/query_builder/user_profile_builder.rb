@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Elastic
-  class QueryBuilder
+  module QueryBuilder
     class UserProfileBuilder
       attr_reader :type
 

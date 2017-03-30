@@ -3,16 +3,16 @@ module Graph
   module Resolvers
     class MessageThread
       def call(user, arguments, _ctx)
-        @user = user.source
+        @user_model = ::User.find(user.id)
         @thread_id = arguments[:id]
         resolve_by
       end
 
       def resolve_by
-        message = @user.user_messages.find(@thread_id).decorate
+        message = @user_model.user_messages.find(@thread_id).decorate
         messages = Messages::ForThreadQuery.new.call(message).by_created.decorate
 
-        Thread.new(messages, @user)
+        Thread.new(messages, @user_model)
       end
     end
   end

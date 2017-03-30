@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Elastic::QueryBuilderTest < ActiveSupport::TestCase
   setup do
-    @qbuilder = Elastic::QueryBuilder.new({}, [], TransactableType.first)
+    @qbuilder = Elastic::QueryBuilderBase.new({}, [], TransactableType.first)
   end
 
   context 'filters' do

@@ -12,8 +12,6 @@ module Elastic
       end
 
       class Node
-        delegate :to_h, to: :body
-
         def initialize(attributes = {})
           attributes.each do |name, value|
             instance_variable_set("@#{name}", value)
@@ -30,6 +28,10 @@ module Elastic
 
         def add(type, attributes, &block)
           add_field Nodes.create_field(type).new(attributes, &block)
+        end
+
+        def to_h
+          body
         end
 
         private

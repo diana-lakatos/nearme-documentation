@@ -5,7 +5,7 @@ class MarkdownWrapper
   end
 
   def to_html
-    processor.render(@text)
+    processor.render(@text.to_s)
   end
 
   private

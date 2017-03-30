@@ -26,9 +26,9 @@ For liquid drops, tags and filters:
 
 ### And for ubuntu
 
-    sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x libcurl4-openssl-dev libpq-dev libicu-dev 
+    sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x libcurl4-openssl-dev libpq-dev libicu-dev
 
-### Frontend for all OS 
+### Frontend for all OS
 
     npm install -g yarn
     yarn
@@ -143,9 +143,9 @@ For payments use any Security Code (CVC), Expiration date that is in future and 
 
 ## Different Instances (Market Places [MP])
 
-In Rails Console run:
+Run:
 
-    Domain.find_each { |d| d.update_column(:name, d.name.gsub('near-me.com', 'lvh.me')) }
+    rake domains:create_dev
 
 To access the Instance you need locally, find its domain with the `lvh.me` part and use instead of `localhost`.
 

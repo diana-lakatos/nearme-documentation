@@ -3,20 +3,20 @@ module Graph
   module Resolvers
     class MessageThreads
       def call(user, arguments, _ctx)
-        @user = user.source
+        @user_model = ::User.find(user.id)
         @take = arguments[:take]
         resolve_by
       end
 
       def resolve_by
-        messages_grouped = UserMessagesDecorator.new(initial_scope, @user).inbox.fetch.map(&:last)
-        messages_grouped.map { |messages| Thread.new(messages, @user) }
+        messages_grouped = UserMessagesDecorator.new(initial_scope, @user_model).inbox.fetch.map(&:last)
+        messages_grouped.map { |messages| Thread.new(messages, @user_model) }
       end
 
       private
 
       def initial_scope
-        @user.user_messages
+        @user_model.user_messages
       end
     end
 

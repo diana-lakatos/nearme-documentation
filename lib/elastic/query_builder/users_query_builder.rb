@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 module Elastic
-  class QueryBuilder
-    class UsersQueryBuilder < QueryBuilder
-      def initialize(query, instance_profile_type:, searchable_custom_attributes: [], query_searchable_attributes: [])
+  module QueryBuilder
+    class UsersQueryBuilder < QueryBuilderBase
+      def initialize(query, instance_profile_type:, searchable_custom_attributes: [], query_searchable_attributes: [], instance_profile_types: PlatformContext.current.instance.instance_profile_types.searchable)
         @query = query
 
         @searchable_custom_attributes = searchable_custom_attributes
         @query_searchable_attributes = query_searchable_attributes
         @instance_profile_type = instance_profile_type
+        @instance_profile_types = instance_profile_types
 
         @filters = []
         @not_filters = []
@@ -22,6 +23,19 @@ module Elastic
           filter: { bool: { must: @filters } }
         }.merge(aggregations)
       end
+
+
+      def simple_query
+        @filters = profiles_filters
+        {
+          _source: @query[:source],
+          sort: sorting_options,
+          query: @query[:query],
+          filter: { bool: { must: @filters } }
+        }
+      end
+
+      private
 
       def match_query
         if @query[:query].blank?
@@ -127,7 +141,7 @@ module Elastic
 
       # TODO: query builder should rely on query params not some globals
       def profiles_filters
-        PlatformContext.current.instance.instance_profile_types.searchable.map do |profile|
+        @instance_profile_types.map do |profile|
           build_profile_query(profile)
         end
       end
@@ -157,10 +171,9 @@ module Elastic
         { nested: { path: 'user_profiles', query: { bool: { must: user_profiles_filters } } } }
       end
 
-    end
-
-    def build_profile_query(profile)
-      { nested: { path: 'user_profiles', query: { bool: { must: Elastic::QueryBuilder::UserProfileBuilder.build(@query, profile: profile) } } } }
+      def build_profile_query(profile)
+        { nested: { path: 'user_profiles', query: { bool: { must: Elastic::QueryBuilder::UserProfileBuilder.build(@query, profile: profile) } } } }
+      end
     end
   end
 end
