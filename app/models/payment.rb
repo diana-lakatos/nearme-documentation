@@ -580,7 +580,9 @@ class Payment < ActiveRecord::Base
   end
 
   def create_transfer(response)
-    return if payment_gateway.direct_charge?
+    # If direct_token exists that means that we want to create aggregated
+    # transfer for many charges, this happens when Stripe send us webhook.
+    return if direct_token.present?
 
     company.payment_transfers.create!(
       payments: [self],
