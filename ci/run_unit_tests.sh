@@ -1,1 +1,1 @@
-time bundle exec rake test
+bundle exec rake test

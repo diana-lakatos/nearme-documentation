@@ -30,7 +30,6 @@
     "chunk-manifest-webpack-plugin": "0.1.0",
     "coffee-loader": "^0.7.3",
     "coffee-script": "^1.12.4",
-    "coffeelint": "^1.16.0",
     "css-loader": "^0.26.2",
     "del": "^2.2.2",
     "eslint": "^3.17.1",
