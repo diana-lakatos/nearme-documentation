@@ -193,7 +193,6 @@ group :development do
   gem 'active_record_query_trace'
   gem 'parallel_tests', require: false
 
-  gem 'rubycritic', require: false
   gem 'overcommit', require: false
   gem 'foreman', require: false
 end
