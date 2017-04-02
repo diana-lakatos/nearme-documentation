@@ -14,6 +14,9 @@ class InstanceAdmin::UserSearchForm < SearchForm
   def to_search_params
     result = {}
 
+    # We don't want to include global admins
+    result[:not_admin] = nil
+
     result[:by_search_query] = ["%#{q}%"] if q.present?
 
     result[:with_date] = [date_from_params] if date.present?
