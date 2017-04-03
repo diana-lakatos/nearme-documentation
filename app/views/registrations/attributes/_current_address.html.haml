@@ -4,6 +4,6 @@
       .fields.location
         = render 'dashboard/shared/fields/address', f: address_form, field_label: t('simple_form.labels.user.current_address')
   - else
-    = f.simple_fields_for :current_address, current_user.current_address || current_user.build_current_address do |address_form|
+    = f.simple_fields_for :current_address, f.object.current_address || f.object.build_current_address do |address_form|
       .fields.location
         = render 'dashboard/shared/fields/address', f: address_form, field_label: t('simple_form.labels.user.current_address')
