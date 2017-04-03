@@ -18,12 +18,12 @@ module Api
       private
 
       def pagination_links(events)
-        {
-          first: api_activity_feed_events_url(page: 1),
-          last: api_activity_feed_events_url(page: events.total_pages),
-          prev: page > 1 ? api_activity_feed_events_url(page: page - 1) : nil,
-          next: page < events.total_pages ? api_activity_feed_events_url(page: page + 1) : nil
-        }
+        Api::PaginationLinks.links(
+          url_generator: ->(params) { api_activity_feed_events_url(params) },
+          total_pages: events.total_pages,
+          current_page: page,
+          params: {}
+        )
       end
 
       def page

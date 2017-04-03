@@ -135,7 +135,7 @@ class FormComponentToFormConfiguration
             configuration[:password_confirmation][:property_options] ||= { virtual: true }
             configuration[:password_confirmation][:validation] ||= {}
             configuration[:password_confirmation][:validation][:confirm] = {}
-          elsif field == 'company_name'
+          elsif %w(company_name last_name).include?(field)
             configuration[field] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, field).build
           else
             configuration['country_name'] = ValidationBuilder.new(PlatformContext.current.instance.default_profile_type, 'country_name').build.deep_merge(ValidationBuilder.new(PlatformContext.current.instance.send("#{role}_profile_type"), 'country_name').build) if field == 'mobile_number' || field == 'phone' || field == 'mobile_phone'

@@ -7,10 +7,11 @@
 yarn --force --frozen-lockfile
 
 # run linter tests
-./node_modules/coffeelint/bin/coffeelint ./app/frontend/javascripts
-node ./node_modules/eslint/bin/eslint.js ./app/frontend/javascripts
+# ./node_modules/coffeelint/bin/coffeelint ./app/frontend/javascripts
+# node ./node_modules/eslint/bin/eslint.js ./app/frontend/javascripts
 
-bundle exec pronto run -c staging -f github_pr github_status --exit-code
+# Make sure staging is in git refs
+bundle exec pronto run -c origin/staging -f github_pr github_status --exit-code
 
 # build assets
 node ./node_modules/gulp/bin/gulp.js build:test

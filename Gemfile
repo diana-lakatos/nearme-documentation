@@ -174,6 +174,8 @@ group :development, :test do
   gem 'pronto-rails_best_practices', require: false
   gem 'pronto-reek', require: false
   gem 'pronto-rubocop', require: false
+  gem 'pronto-coffeelint', require: false
+  gem 'pronto-eslint', require: false
 end
 
 group :development do
@@ -191,7 +193,6 @@ group :development do
   gem 'active_record_query_trace'
   gem 'parallel_tests', require: false
 
-  gem 'rubycritic', require: false
   gem 'overcommit', require: false
   gem 'foreman', require: false
 end

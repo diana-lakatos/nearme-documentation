@@ -55,7 +55,6 @@ class TransactableDecorator < Draper::Decorator
   end
 
   def show_url(options = {})
-    options.reverse_merge!(host: PlatformContext.current.decorate.host)
     build_link('url', options)
   end
 
@@ -70,24 +69,24 @@ class TransactableDecorator < Draper::Decorator
     if transactable_type.show_path_format
       case transactable_type.show_path_format
       when '/:transactable_type_id/:id'
-        h.send(:"short_transactable_type_listing_#{suffix}", transactable_type, self, options)
+        UrlGenerator.url_from_params(:"short_transactable_type_listing_#{suffix}", transactable_type, self, options)
       when '/listings/:id'
-        h.send(:"listing_#{suffix}", self, options)
+        UrlGenerator.url_from_params(:"listing_#{suffix}", self, options)
       when '/transactable_types/:transactable_type_id/locations/:location_id/listings/:id'
-        h.send(:"transactable_type_location_listing_#{suffix}", transactable_type, location, self, options)
+        UrlGenerator.url_from_params(:"transactable_type_location_listing_#{suffix}", transactable_type, location, self, options)
       when '/:transactable_type_id/locations/:location_id/listings/:id'
-        h.send(:"short_transactable_type_location_listing_#{suffix}", transactable_type, location, self, options)
+        UrlGenerator.url_from_params(:"short_transactable_type_location_listing_#{suffix}", transactable_type, location, self, options)
       when '/:transactable_type_id/:location_id/listings/:id'
-        h.send(:"short_transactable_type_short_location_listing_#{suffix}", transactable_type, location, self, options)
+        UrlGenerator.url_from_params(:"short_transactable_type_short_location_listing_#{suffix}", transactable_type, location, self, options)
       when '/locations/:location_id/:id'
-        h.send(:"location_#{suffix}", location, self, options)
+        UrlGenerator.url_from_params(:"location_#{suffix}", location, self, options)
       when '/locations/:location_id/listings/:id'
-        h.send(:"location_listing_#{suffix}", location, self, options)
+        UrlGenerator.url_from_params(:"location_listing_#{suffix}", location, self, options)
       end
     elsif transactable_type.show_page_enabled?
-      h.send(:"location_listing_#{suffix}", location, self, options)
+      UrlGenerator.url_from_params(:"location_listing_#{suffix}", location, self, options)
     else
-      h.send(:"location_#{suffix}", location, self, options)
+      UrlGenerator.url_from_params(:"location_#{suffix}", location, self, options)
     end
   end
 end

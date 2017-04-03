@@ -7,7 +7,11 @@ sudo service elasticsearch stop
 docker-compose -f ci/docker-compose.ci.yml up -d es
 
 # install gems
-bundle install --deployment --path vendor/bundle --without=development
+# use more than 1 core
+number_of_cores=`cat /proc/cpuinfo | grep processor | wc -l`
+bundle config --global jobs `expr $number_of_cores - 1`
+
+bundle check || time bundle install --deployment --path vendor/bundle --without=development
 
 # prepare DB
 RAILS_ENV=test bundle exec rake db:create db:schema:load

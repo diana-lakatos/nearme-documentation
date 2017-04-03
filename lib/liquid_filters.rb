@@ -515,9 +515,9 @@ module LiquidFilters
   # @return [String] returns a url for the given url helper name and the given arguments; allows to generate
   #   any url inside our platform; e.g. 'user_path' | generate_url: id: 1 generates /users/1
   def generate_url(url_name, *args)
-    return "unknown route #{url_name}" unless BaseDrop::RoutesProxy.respond_to_missing?(url_name)
+    return "unknown route #{url_name}" unless UrlGenerator.respond_to_missing?(url_name)
 
-    BaseDrop::RoutesProxy.public_send(url_name, *args)
+    UrlGenerator.public_send(url_name, *args)
   end
 
   # @return [String] returns a url for the given url helper name and the given arguments with the user temporary token;
