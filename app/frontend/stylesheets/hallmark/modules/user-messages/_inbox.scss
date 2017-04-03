@@ -4,6 +4,18 @@
   }
 }
 
+@keyframes newEntry {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
 $inbox-border-color: #eee;
 
 .user-messages-inbox {
@@ -11,13 +23,13 @@ $inbox-border-color: #eee;
   display: flex;
   background: #fff;
   border: 1px solid $inbox-border-color;
-  max-height: 70vh;
+  min-height: 55vh;
 
   aside {
     order: 1;
     width: 250px;
     border-right: 1px solid $inbox-border-color;
-    overflow: auto;
+    overflow-y: auto;
 
     ul {
       padding: 0;
@@ -92,18 +104,15 @@ $inbox-border-color: #eee;
     position: releative;
     order: 2;
     flex: 1;
-    padding: 85px 0 95px;
     overflow: auto;
+    margin-bottom: 0;
 
     header {
-      position: absolute;
-      left: 250px;
-      right: 0;
-      top: 0;
+      position: relative;
       text-align: center;
-      background: #dfdfdf;
+      background: #f1f1f1;
       padding: 20px;
-      margin: 0;
+      margin: 0 0 15px;
 
       img {
         width: 50px;
@@ -156,15 +165,23 @@ $inbox-border-color: #eee;
     }
   }
 
-  .entries {
+  .entries-wrapper {
     overflow: auto;
-    padding: 0 30px;
+    height: 55vh;
+    margin: 20px 0 10px;
+  }
+
+  .entries {
+    padding: 0 20px;
     margin: 0;
 
     p {
-      padding: 10px 20px;
+      clear: both;
+      float: left;
+      max-width: 90%;
+      padding: 5px 12px;
+      border-radius: 10px 10px 10px 0;
       background: #f4f4f4;
-      margin-right: 10%;
       margin-bottom: 0;
     }
 
@@ -179,6 +196,8 @@ $inbox-border-color: #eee;
         font-weight: normal;
         text-decoration: underline;
 
+        // color: inherit;
+
         &:hover {
           text-decoration: none;
         }
@@ -186,15 +205,9 @@ $inbox-border-color: #eee;
     }
 
     .own-message {
-      text-align: right;
-      background: $color-blue;
-      color: #fff;
-      margin-left: 10%;
-      margin-right: 0;
-
-      a {
-        color: #fff;
-      }
+      float: right;
+      background: rgba($color-blue, 0.2);
+      border-radius: 10px 10px 0 10px;
     }
 
     .meta {
@@ -209,24 +222,24 @@ $inbox-border-color: #eee;
 
     p:not(.own-message) + p:not(.own-message),
     .own-message + .own-message {
-      margin-top: 0px;
+      margin-top: 8px;
 
       .meta {
         display: none;
       }
     }
+
+    .new-entry {
+      transform-origin: 0 0;
+      animation: newEntry .5s ease;
+    }
   }
 
   .new-message-form {
-    position: absolute;
-    left: 250px;
-    bottom: 0;
-    right: 0;
-    background: #fff;
-
     @include clear;
 
-    padding: 15px 30px;
+    padding: 15px 20px;
+    margin: 0;
 
     .fields {
       display: flex;
@@ -246,6 +259,10 @@ $inbox-border-color: #eee;
       text-align: right;
       content: "Press enter to send message";
       color: #999;
+
+      b {
+        color: #666;
+      }
     }
 
     .attachment {
@@ -319,6 +336,7 @@ $inbox-border-color: #eee;
   @media screen and (max-width: 800px) {
     display: block;
     max-height: none;
+    height: auto;
     overflow: hidden;
 
     aside {
@@ -330,10 +348,10 @@ $inbox-border-color: #eee;
       width: 90%;
       background: #fff;
       pointer-events: none;
-      box-shadow: 5px 0 5px rgba(0, 0, 0, 0.1);
+      box-shadow: 5px 0 5px rgba(0, 0, 0, 0.05);
       transform: translateX(calc(-100% - 10px));
       transition: transform .3s ease;
-      will-transform: transform;
+      will-change: transform;
 
       &::after {
         z-index: -1;
@@ -346,7 +364,7 @@ $inbox-border-color: #eee;
         background: rgba(0, 0, 0, 0.3);
         opacity: 0;
         transition: opacity .3s ease;
-        will-transform: opacity;
+        will-change: opacity;
         pointer-events: none;
       }
 
