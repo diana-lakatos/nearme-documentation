@@ -122,6 +122,7 @@ class RegistrationsController < Devise::RegistrationsController
       sign_in(resource, bypass: true)
       redirect_to dashboard_profile_path(onboarded: onboarded)
     else
+      @user_update_profile_form.prepopulate!
       flash.now[:error] = @user_update_profile_form.pretty_errors_string
       render :edit, layout: dashboard_or_community_layout
     end
