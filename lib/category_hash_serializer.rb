@@ -19,7 +19,7 @@ class CategoryHashSerializer
     built_path = [built_category]
 
     # These will be correctly ordered by lft
-    category.descendants.each do |o|
+    category.descendants.where('deleted_at is null').each do |o|
       if o.parent_id != path.last
         # We are on a new level, did we descend or ascend?
         if path.include?(o.parent_id)
