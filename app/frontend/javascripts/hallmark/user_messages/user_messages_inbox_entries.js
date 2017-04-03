@@ -1,5 +1,5 @@
 // @flow
-const WRAPPER_SELECTOR = '[data-user-messages-inbox-conversation]';
+const WRAPPER_SELECTOR = '[data-user-messages-inbox-entries-wrapper]';
 import UserMessagesInboxEntry from './user_messages_inbox_entry';
 import { closest } from '../../toolkit/dom';
 
@@ -32,7 +32,9 @@ class UserMessagesInboxEntries {
 
   add(entry: UserMessagesInboxEntry) {
     this.entries.push(entry);
-    this.container.appendChild(entry.getElement());
+    let el = entry.getElement();
+    el.classList.add('new-entry');
+    this.container.appendChild(el);
 
     this.scrollToBottom();
   }

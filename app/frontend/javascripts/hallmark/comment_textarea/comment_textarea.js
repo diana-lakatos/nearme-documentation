@@ -60,19 +60,30 @@ class CommentTextarea {
   }
 
   submitOnEnter(event: KeyboardEvent) {
+    // non enter key pressed, go on, nothing to see here
     if (event.keyCode !== 13) {
       return;
     }
 
-    if (!event.altKey) {
-      event.preventDefault();
-      let submitEvent = document.createEvent('Event');
-      submitEvent.initEvent('submit', true, true);
-      this.form.dispatchEvent(submitEvent);
-    } else {
+    // enter pressed, we want custom actions instead of default support
+    event.preventDefault();
+
+    // alt pressed, we want a newline, not submit
+    if (event.altKey) {
       this.textarea.value = this.textarea.value + '\n';
       this.adjust();
+      return;
     }
+
+    // enter pressed, no alt, but textarea is empty or whitespace, stop right here
+    if (this.textarea.value.trim() === '') {
+      return;
+    }
+
+    // enter pressed, no alt, our textarea has content - bam! we can submit form
+    let submitEvent = document.createEvent('Event');
+    submitEvent.initEvent('submit', true, true);
+    this.form.dispatchEvent(submitEvent);
   }
 
   empty() {
