@@ -13,7 +13,7 @@ class Dashboard::BuyersController < Dashboard::BaseController
     if @user_update_profile_form.validate(params[:user] || params[:form] || {})
       @user_update_profile_form.save
       current_user.reload.buyer_profile.mark_as_onboarded!
-      flash.now[:success] = t('flash_messages.dashboard.buyer.updated')
+      flash[:success] = t('flash_messages.dashboard.buyer.updated')
       if session[:after_onboarding_path].present?
         redirect_to session[:after_onboarding_path]
         session[:after_onboarding_path] = nil
