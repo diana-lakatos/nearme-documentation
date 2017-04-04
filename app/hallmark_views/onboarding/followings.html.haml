@@ -28,6 +28,7 @@
           - if @people.blank?
             .cell
               = t('onboarding.no_suggestions_at_this_time')
+              = f.input "people][", as: :hidden
 
       %h2
         = t :projects_to_follow
@@ -49,6 +50,7 @@
           - if @projects.blank?
             .cell
               = t('onboarding.no_suggestions_at_this_time')
+              = f.input "projects][", as: :hidden
 
       %h2
         = t :topics_to_follow
@@ -69,6 +71,7 @@
           - if @topics.blank?
             .cell
               = t('onboarding.no_suggestions_at_this_time')
+              = f.input "topics][", as: :hidden
 
       %p.action
         %button.button-a{:type => "submit", "data-disable-with" => t('general.processing')}
