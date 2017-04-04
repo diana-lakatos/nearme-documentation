@@ -1,28 +1,25 @@
-require 'colorize'
-
 # frozen_string_literal: true
 module MarketplaceBuilder
   module Loggers
     class ConsoleLogger < MarketplaceBuilder::Loggers::Logger
       private
 
-      def log(message, level)
-        case level
-        when Logger::DEBUG
-          message = "[DEBUG] #{message}"
-        when Logger::INFO
-          message = "[INFO] #{message}".white
-        when Logger::WARN
-          message = "[WARN] #{message}".yellow
-        when Logger::ERROR
-          message = "[ERROR] #{message}".red
-        when Logger::FATAL
-          message = "[FATAL] #{message}".white.on_red
-        end
+      PREFIXES = {
+        Logger::DEBUG => '[DEBUG]',
+        Logger::INFO => '[DEBUG]',
+        Logger::WARN => '[DEBUG]',
+        Logger::ERROR => '[DEBUG]',
+        Logger::FATAL => '[DEBUG]'
+      }.freeze
 
-        print "\n#{message}"
+      def log(message, level)
+        print "\n#{decorate_message(message, level)}"
 
         $stdout.flush
+      end
+
+      def decorate_message(message, level)
+        "#{PREFIXES[level]} #{message}"
       end
     end
   end

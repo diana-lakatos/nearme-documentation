@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'rdiscount'
 module AdminHelper
   def admin_help_area(slug)
     options = {}
@@ -31,7 +30,7 @@ module AdminHelper
           end
         end
 
-        markdown = ::RDiscount.new(help_content.content)
+        markdown = ::MarkdownWrapper.new(help_content.content)
         out << content_tag(:div, markdown.to_html.html_safe, 'data-help-container': '')
       end
     end

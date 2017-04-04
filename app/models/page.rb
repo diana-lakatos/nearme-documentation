@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'rdiscount'
-
 class Page < ActiveRecord::Base
   VALID_LAYOUTS = %w(community application dashboard).freeze
   auto_set_platform_context
@@ -70,7 +68,7 @@ class Page < ActiveRecord::Base
   private
 
   def convert_to_html
-    self.html_content = content.include?('<div') ? content : RDiscount.new(content).to_html
+    self.html_content = content.include?('<div') ? content : MarkdownWrapper.new(content).to_html
   end
 
   def should_generate_new_friendly_id?

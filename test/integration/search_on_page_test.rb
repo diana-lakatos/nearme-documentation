@@ -16,7 +16,7 @@ class SearchOnPageTest < ActionDispatch::IntegrationTest
       @tt = FactoryGirl.create(:transactable_type)
       create_graph_query(@tt)
       template = "
-      {% query_graph 'search', result_name: g, query: seo_params.slug2 %}
+      {% query_graph search, result_name: g, query: seo_params.slug2 %}
       hola
       {{ g }}
       {{ params }}

@@ -2,7 +2,7 @@ require 'graph/schema'
 # frozen_string_literal: true
 # Usage example:
 # ```
-#  {% query_graph 'users_query', result_name: g, current_user: current_user %}
+#  {% query_graph users_query, result_name: g, current_user: current_user %}
 # ```
 #
 # Used to execute defined graph query.

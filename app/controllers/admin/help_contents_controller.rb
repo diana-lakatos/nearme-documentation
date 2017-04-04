@@ -15,7 +15,7 @@ class Admin::HelpContentsController < Admin::BaseController
     # do not allow to change path for now
     if @help_content.update(help_content_params)
       if request.xhr?
-        markdown = RDiscount.new(@help_content.content)
+        markdown = MarkdownWrapper.new(@help_content.content)
         render json: { result: 'success', data: markdown.to_html }
       else
         flash[:success] = t 'admin.flash_messages.manage.help_contents.updated'
