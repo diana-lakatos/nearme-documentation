@@ -2,7 +2,7 @@
 
   = render 'authentications/services'
 
-  = render 'api/v4/users/super_trash/signup_form_components', resource: @user_signup, form_classes: "", hide_password: false
+  = render 'api/v4/users/super_trash/signup_form_components', resource: @user_signup, form_classes: "", hide_password: false, namespace: 'no_auth_provider'
 
 - if !user_auth_provider
   .text-center.already-a-user= link_to(t('sign_up_form.buttons.already_user'), '#', data: { modal: true, href: new_user_session_url(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal', 'modal-overlay-close' => 'disabled' } )
@@ -20,7 +20,7 @@
     %p.intro
       = t 'sign_up_form.more_details'
 
-    = render 'api/v4/users/super_trash/signup_form_components', resource: @user_signup, form_classes: "", hide_password: true
+    = render 'api/v4/users/super_trash/signup_form_components', resource: @user_signup, form_classes: "", hide_password: true, namespace: 'with_auth_provider'
 
 - if request.xhr?
   :javascript
