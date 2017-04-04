@@ -1,6 +1,6 @@
 - size ||= :space_listing
 - if images.present?
-  .entry-images{ data: { entry_images: '' }}
+  .entry-images{ "data-entry-images": '' }
     - images.each do |image|
       %a{ href: image.image.url, data: { "original-width": image.image_original_width, "original-height": image.image_original_height } }
         %img{ src: image.image.url(size) }
