@@ -1,8 +1,12 @@
----
-name: Pending Received Invitations
-slug: pending-received-invitations
-layout: community
----
+class FixPendingInvitationsPage < ActiveRecord::Migration
+  def up
+    Instance.transaction do
+      Instances::InstanceFinder.get(:hallmark).each do |i|
+        i.set_context!
+        puts i.name
+
+        page = i.pages.find_by(slug: 'pending-received-invitations')
+        page.content = <<EOQ
 {% if current_user %}
   {% query_graph 'user_pending_received_collaborations', result_name: g, user_id: current_user.id %}
 
@@ -44,6 +48,15 @@ layout: community
   {% endif %}
 {% else %}
   <script>
-    window.location.href = '/users/sign_in?return_to=/pending-received-invitations'
+    window.location.href = '/users/sign_in?return_to=/pending-received-invitations';
   </script>
 {% endif %}
+EOQ
+        page.save!
+      end
+    end
+  end
+
+  def down
+  end
+end
