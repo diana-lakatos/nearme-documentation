@@ -11,7 +11,7 @@ import Events from 'minivents/dist/minivents.commonjs';
 import { closest, findMeta } from '../../toolkit/dom';
 
 const PROCESSING_CLASS = 'processing';
-const WRAPPER_SELECTOR = '.form-group';
+const WRAPPER_SELECTOR = '.attachment';
 const META_SELECTOR = 'meta[name="csrf-token"]';
 
 class UserMessagesInboxFileInput {
