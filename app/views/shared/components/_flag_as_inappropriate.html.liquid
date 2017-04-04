@@ -1,0 +1,27 @@
+<header class="dialog__header">
+	<h2 id="dialog__title">
+    {{ 'inappropriate_reports.inappropriate_report' | t }}
+	</h2>
+</header>
+
+{% if current_user != blank %}
+
+<form novalidate="novalidate" class="simple_form inappropriate_report" action="{{ 'inappropriate_reports_path' | generate_url: id: reportable.id, reportable_type: reportable.source_class_name }}" accept-charset="UTF-8" method="post">
+  <input name="utf8" type="hidden" value="✓">
+  <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}">
+
+	<div class="control-group text required inappropriate_report_reason">
+		<label class="text required control-label" for="inappropriate_report_reason">
+      <abbr title="required">*</abbr> {{ 'inappropriate_reports.reason' | t }}
+		</label>
+		<div class="controls">
+		  <textarea class="text required" name="inappropriate_report[reason]" id="inappropriate_report_reason"></textarea>
+		</div>
+	</div>
+
+	<input type="submit" name="commit" value="Send" class="btn btn-green">
+</form>
+
+{% else %}
+  {{ 'inappropriate_reports.you_need_to_be_logged_in' | t }}
+{% endif %}

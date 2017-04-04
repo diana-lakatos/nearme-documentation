@@ -19,6 +19,11 @@ class BaseDrop < Liquid::Drop
     @source.errors
   end
 
+  # @return [String] name of the source class (e.g. User, Transactable etc.)
+  def source_class_name
+    @source.class.to_s.gsub(/Decorator$/, '')
+  end
+
   private
 
   # @todo -- deprecate, DIY
