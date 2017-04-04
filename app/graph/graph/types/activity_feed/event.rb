@@ -18,6 +18,7 @@ module Graph
         field :event_source, ActivityFeed::EventSource
         field :event_source_type, types.String
         field :is_status_update_event, types.Boolean
+        field :is_text_update, types.Boolean
         field :is_comment_event, types.Boolean
         field :is_photo_event, types.Boolean
         field :is_reportable, types.Boolean

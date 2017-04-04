@@ -160,6 +160,7 @@ class ActivityFeedEvent < ActiveRecord::Base
       user_commented_on_transactable
     ).include?(event)
   end
+  alias is_text_update is_text_update?
 
   def allowed_for_user(user)
     case followed

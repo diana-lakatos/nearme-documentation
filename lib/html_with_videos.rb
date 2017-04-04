@@ -25,14 +25,15 @@ class HtmlWithVideos < Redcarpet::Render::HTML
   end
 
   def get_video_embed(url)
-    video_info = VideoInfo.new(url) rescue nil
-    if video_info.try(:embed_code).present?
-      width = @embed_options[:iframe_width] || 480
-      height = @embed_options[:iframe_height] || 270
+    width = @embed_options[:iframe_width] || 480
+    height = @embed_options[:iframe_height] || 270
 
-      return "<div class=\"video-wrapper #{video_info.provider.downcase}\"><div class=\"video-constrainer\">#{video_info.embed_code(iframe_attributes: { width: width, height: height })}</div></div>"
+    video_embedder = Videos::VideoEmbedder.new(url, iframe_attributes: { width: width, height: height })
+
+    if video_embedder.html.present?
+      video_embedder.html
+    else
+      nil
     end
-
-    nil
   end
 end
