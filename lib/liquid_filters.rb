@@ -785,7 +785,7 @@ module LiquidFilters
   # @return [String] processed text with markdown syntax changed to HTML
   # @param text [String] text using markdown syntax
   def markdownify(text)
-    markdown = RDiscount.new(text)
+    markdown = MarkdownWrapper.new(text)
     markdown.to_html
   end
 

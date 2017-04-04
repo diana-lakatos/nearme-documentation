@@ -87,10 +87,10 @@ class PageTest < ActiveSupport::TestCase
   private
 
   def example_markdown_content
-    "# FAQ\n*[Checking link](http://example.com)\n*[Checking link](http://allowed-domain.com/cool/path)"
+    "# FAQ\n*[Checking link](http://example.com)*\n[Checking link](http://allowed-domain.com/cool/path)"
   end
 
   def expected_html_content
-    '<h1>FAQ</h1>' + "\n\n" + '<p><em><a href="http://example.com">Checking link</a>' + "\n" + '</em><a href="http://allowed-domain.com/cool/path">Checking link</a></p>'
+    '<h1>FAQ</h1>' + "\n\n" + '<p><em><a href="http://example.com">Checking link</a></em>' + "\n" + '<a href="http://allowed-domain.com/cool/path">Checking link</a></p>'
   end
 end

@@ -1,1 +1,1 @@
-Premailer::Rails.config.merge!(preserve_styles: true, generate_text_part: false, adapter: :hpricot)
+Premailer::Rails.config.merge!(preserve_styles: true, generate_text_part: false, adapter: :nokogiri)
