@@ -3,7 +3,7 @@
 
 <div class="wrap-a reduce">
   <div class="contain">
-    <h1>{{ 'user_messages.inbox_header' | t }}</h1>
+    <h1 class="inbox-heading">{{ 'user_messages.inbox_header' | t }}</h1>
     <section class="user-messages-inbox" data-user-messages-inbox>
       {% include "dashboard/user_messages/conversation", thread: conv.user.thread %}
       {% include "dashboard/user_messages/contact_list", threads: g.user.threads, active_participant_id: conv.user.thread.participant.id %}

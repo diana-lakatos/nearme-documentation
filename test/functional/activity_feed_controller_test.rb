@@ -20,4 +20,10 @@ class ActivityFeedControllerTest < ActionController::TestCase
       delete :unfollow, id: @another_user.id, type: 'User', format: :js
     end
   end
+
+  should 'get #activity_feed' do
+    xhr :get, :activity_feed, id: @another_user.id, type: 'User', page: 1, format: :js
+
+    assert_response :success
+  end
 end

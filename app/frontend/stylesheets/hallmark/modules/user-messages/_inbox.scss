@@ -30,6 +30,7 @@ $inbox-border-color: #eee;
     width: 250px;
     border-right: 1px solid $inbox-border-color;
     overflow-y: auto;
+    overflow-x: hidden;
 
     ul {
       padding: 0;
@@ -235,29 +236,29 @@ $inbox-border-color: #eee;
     }
   }
 
+  $action-button-size: 30px;
+
   .new-message-form {
     @include clear;
 
+    position: relative;
     padding: 15px 20px;
     margin: 0;
-
-    .fields {
-      display: flex;
-      margin: 0;
-    }
+    width: 100%;
 
     .form-group {
       margin: 0;
     }
 
     .message-body {
-      flex: 1;
+      textarea {
+        padding-right: 80px;
+      }
     }
 
     .submit-hint {
       display: block;
       text-align: right;
-      content: "Press enter to send message";
       color: #999;
 
       b {
@@ -265,26 +266,58 @@ $inbox-border-color: #eee;
       }
     }
 
+    .actions {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+    }
+
+    .submit {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      button {
+        width: $action-button-size;
+        height: $action-button-size;
+        background: none;
+        padding: 0;
+        font-weight: normal;
+        border: none;
+        font-size: 0;
+
+        &::before {
+          line-height: $action-button-size;
+          text-align: center;
+          font-size: 20px;
+          color: $color-blue;
+          font-family: FontAwesome;
+          content: $fa-var-reply;
+        }
+      }
+    }
+
     .attachment {
-      position: relative;
-      width: 100px;
-      margin-left: 10px;
+      position: absolute;
+      top: 0;
+      right: $action-button-size;
+      width: $action-button-size;
+      height: $action-button-size;
       overflow: hidden;
       text-align: center;
-      margin-top: 5px;
+      margin: 0;
 
       label {
-        text-transform: uppercase;
-        color: $color-blue;
-        font-weight: bold;
+        font-size: 0;
         margin: 0;
 
         &::before {
-          content: $fa-var-cloud-upload;
+          content: $fa-var-paperclip;
           display: block;
           font-family: FontAwesome;
-          font-size: 30px;
-          line-height: 1;
+          font-size: 20px;
+          line-height: $action-button-size;
+          color: $color-blue;
           font-weight: normal;
         }
       }
@@ -294,8 +327,8 @@ $inbox-border-color: #eee;
         left: 0;
         top: 0;
         font-size: 120px;
-        width: 100px;
-        height: 100px;
+        width: $action-button-size;
+        height: $action-button-size;
         opacity: 0;
       }
 
@@ -305,14 +338,14 @@ $inbox-border-color: #eee;
           position: absolute;
           left: 0;
           right: 0;
-          top: 0;
+          top: 1px;
           bottom: 0;
           background: rgba(255, 255, 255, 0.8);
           z-index: 10;
         }
 
         &::after {
-          font-size: 30px;
+          font-size: 20px;
           line-height: 1;
           font-family: FontAwesome;
           content: $fa-var-spinner;
@@ -320,16 +353,12 @@ $inbox-border-color: #eee;
           position: absolute;
           left: 50%;
           top: 50%;
-          margin-top: -30px;
-          margin-left: -15px;
           color: $color-blue;
           z-index: 20;
+          margin-left: -10px;
+          margin-top: -10px;
         }
       }
-    }
-
-    .action {
-      display: none;
     }
   }
 
@@ -378,6 +407,10 @@ $inbox-border-color: #eee;
       }
     }
 
+    .entries-wrapper {
+      height: calc(100vh - 300px);
+    }
+
     .conversation {
       padding-bottom: 0;
 
@@ -423,52 +456,8 @@ $inbox-border-color: #eee;
     }
 
     .new-message-form {
-      position: relative;
-      left: 0;
-      bottom: auto;
-
-      .fields {
-        display: block;
-
-        textarea {
-          height: 150px;
-        }
-      }
-
-      .attachment {
-        position: relative;
-        width: 100%;
-        margin: 1em 0;
-
-        label {
-          text-align: center;
-          border: 1px solid;
-          margin: 0;
-          display: block;
-          padding: 5px;
-
-          &::before {
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 10px;
-            font-size: 20px;
-          }
-        }
-      }
-
       .submit-hint {
         display: none;
-      }
-
-      .action {
-        display: block;
-        text-align: center;
-        margin-top: 1em;
-
-        button {
-          display: block;
-          width: 100%;
-        }
       }
     }
   }
@@ -489,5 +478,12 @@ $inbox-border-color: #eee;
       color: #999;
       font-size: 20px;
     }
+  }
+}
+
+.inbox-heading {
+  @media screen and (max-width: 600px) {
+    position: absolute;
+    left: -999em;
   }
 }
