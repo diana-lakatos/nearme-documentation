@@ -46,7 +46,7 @@
           %ul.gallery-a
             - @group.properties[:videos].each do |video_url|
               %li
-                = VideoEmbedder.new(video_url).html.html_safe
+                = Videos::VideoEmbedder.new(video_url).html.html_safe
 
       - if @group.links.any?
         %section.links

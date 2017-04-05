@@ -435,7 +435,7 @@ module LiquidFilters
   # @param url [String] url to a video on the internet
   def videoify(url = '')
     return url if url.blank?
-    VideoEmbedder.new(url).html.html_safe
+    Videos::VideoEmbedder.new(url).html.html_safe
   end
 
   # @return [String] JSON formatted string containing a representation of object
