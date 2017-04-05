@@ -1,5 +1,5 @@
 {% if collection != blank %}
-  <div class="entry-images" data-entry_images="">
+  <div class="entry-images" data-entry-images>
     {% for image in collection %}
       <a href="{{ image.url }}" data-original-width="{{ image.image_original_width }}" data-original-height="{{ image.image_original_height }}">
         <img src="{{ image.url }}" />
