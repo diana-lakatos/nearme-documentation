@@ -92,7 +92,7 @@
   <div class='col-sm-9 col-sm-push-3'>
     <div class='order-actions'>
       {% if reservation.confirmed?%}
-        <a class='btn btn-default' href="{{ 'export_dashboard_user_reservation_path' | generate_url: reservation.id, format: :ics }}">
+        <a class='btn btn-default' href="{{ 'export_dashboard_user_reservation_path' | generate_url: reservation.id, format: 'ics' }}">
           {{ 'dashboard.user_reservations.add_to_ical' | t }}
         </a>
         {% if reservation.inbound_shipment.label_url != blank %}
