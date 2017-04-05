@@ -44,14 +44,14 @@ class ActivityFeedController < ApplicationController
   def activity_feed
     @container = params[:container].presence || '#activity'
 
-    options = {}
+    options = { page: pagination_params[:page] }
     options[:user_feed] = true if params[:type] == 'User'
 
     @feed = ActivityFeedService.new(@object, options)
 
     @partial = 'shared/activity_status'
     @as = :event
-    @collection = @feed.events(pagination_params.merge(per_page: ActivityFeedService::Helpers::EVENTS_PER_PAGE))
+    @collection = @feed.events
 
     respond_to do |format|
       format.js { render :see_more }

@@ -2,7 +2,7 @@
 
 <div class="wrap-a reduce">
   <div class="contain">
-    <h1>{{ 'user_messages.inbox_header' | t }}</h1>
+    <h1 class="inbox-heading">{{ 'user_messages.inbox_header' | t }}</h1>
     <section class="user-messages-inbox" data-user-messages-inbox>
       {% if g.user.threads.size > 0 %}
         {% include "dashboard/user_messages/no_user_selected" %}

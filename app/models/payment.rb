@@ -227,6 +227,7 @@ class Payment < ActiveRecord::Base
 
   def pay_with!
     return false unless block_given?
+    return true if paid?
     return mark_as_paid! if manual_payment? || total_amount_cents.zero?
     return false unless active_merchant_payment?
     return false unless valid?

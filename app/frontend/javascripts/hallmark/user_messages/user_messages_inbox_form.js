@@ -68,6 +68,11 @@ class UserMessagesInboxForm {
     entry.setOwnMessage(true);
 
     let body: string = this.commentTextarea.getValue();
+
+    if (body.trim() === '') {
+      return;
+    }
+
     entry.setBody(body);
 
     this.emit('newentry', entry);
