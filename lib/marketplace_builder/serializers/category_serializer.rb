@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module MarketplaceBuilder
   module Serializers
     class CategorySerializer < BaseSerializer
-      resource_name -> (t) { "categories/#{t.name.underscore}" }
+      resource_name ->(t) { "categories/#{t.name.parameterize('_')}" }
 
       properties :name, :multiple_root_categories, :shared_with_users, :search_options
 
@@ -19,7 +20,7 @@ module MarketplaceBuilder
       end
 
       def scope
-        @model.kind_of?(Instance) ? Category.where(instance_id: @model.id, parent_id: nil): @model.children
+        @model.is_a?(Instance) ? Category.where(instance_id: @model.id, parent_id: nil) : @model.children
       end
     end
   end

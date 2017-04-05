@@ -21,7 +21,7 @@ class Transactable::Pricing < ActiveRecord::Base
   validates_with MinMaxPriceValidator, if: :monetize_price_cents?
 
   delegate :allow_book_it_out_discount, :allow_exclusive_price, :allow_nil_price_cents,
-    :fixed_price?, to: :transactable_type_pricing, allow_nil: true
+           :fixed_price?, :fixed_price, to: :transactable_type_pricing, allow_nil: true
   delegate :transactable, to: :action, allow_nil: true
   delegate :quantity, to: :transactable, prefix: true
 
@@ -39,8 +39,7 @@ class Transactable::Pricing < ActiveRecord::Base
   scope :order_by_unit_and_price, lambda {
     order('COALESCE(is_free_booking, false) DESC, price_cents ASC')
   }
-  scope :by_number_and_unit, -> (number, unit) { where(number_of_units: number, unit: unit) }
-  scope :by_unit, -> (by_unit) { where(unit: by_unit) if by_unit.present? }
+  scope :by_unit, ->(by_unit) { where(unit: by_unit) if by_unit.present? }
 
   def order_class
     if transactable_type_pricing
@@ -172,6 +171,18 @@ class Transactable::Pricing < ActiveRecord::Base
   def assign_defaults
     self.unit = transactable_type_pricing&.unit
     self.number_of_units = transactable_type_pricing&.number_of_units
+  end
+
+  def service_fee_guest_percent
+    transactable_type_pricing&.service_fee_guest_percent.presence || action.service_fee_guest_percent
+  end
+
+  def service_fee_host_percent
+    transactable_type_pricing&.service_fee_host_percent.presence || action.service_fee_host_percent
+  end
+
+  def price_for_offer
+    fixed_price? ? fixed_price : price
   end
 
   private

@@ -162,9 +162,12 @@ class Order < ActiveRecord::Base
                                    .order("coalesce(nullif(payments_info.sum_amount, 0), nullif(order_info.paid, 0), line_items.paid, 0) #{direction}, created_at DESC")
                                }
 
-  delegate :action, to: :transactable_pricing
-  delegate :service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents, to: :action
-  delegate :photos, :confirm_reservations?, to: :transactable, allow_nil: true
+  delegate :service_fee_guest_percent, :service_fee_host_percent, :action,
+           to: :transactable_pricing
+  delegate :minimum_lister_service_fee_cents, :favourable_pricing_rate,
+           to: :action
+  delegate :photos, :confirm_reservations?, :display_additional_charges?,
+           to: :transactable, allow_nil: true
 
   # You can customize order tabs (states) displauyed in dashboard
   # via orders_received_tabs and my_orders_tabs Instance attributes

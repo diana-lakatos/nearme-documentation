@@ -60,7 +60,6 @@ class Company < ActiveRecord::Base
 
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
            :latitude, :longitude, :state_code, :street_number, to: :company_address, allow_nil: true
-  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :instance, allow_nil: true
   delegate :first_name, :last_name, :mobile_number, to: :creator
 
   # Returns the companies in need of recieving a payment transfer for

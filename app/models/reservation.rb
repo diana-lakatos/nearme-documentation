@@ -27,8 +27,6 @@ class Reservation < Order
 
   delegate :location, :show_company_name, :transactable_type_id, :transactable_type, to: :transactable
   delegate :administrator=, to: :location
-  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents, to: :action, allow_nil: true
-  delegate :display_additional_charges?, to: :transactable, allow_nil: true
   delegate :address_in_radius, to: :reservation_type, allow_nil: true
   delegate :event_booking?, to: :transactable_pricing
 
@@ -36,8 +34,6 @@ class Reservation < Order
     after_transition confirmed: [:cancelled_by_guest], do: [:charge_penalty!]
     after_transition unconfirmed: :confirmed, do: [:warn_user_of_expiration]
   end
-
-  scope :for_transactable, -> (transactable) { where(transactable_id: transactable.id) }
 
   def add_line_item!(attrs)
     self.attributes = attrs

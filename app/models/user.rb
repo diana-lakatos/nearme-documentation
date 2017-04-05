@@ -860,11 +860,11 @@ class User < ActiveRecord::Base
   end
 
   def can_manage_location?(location)
-    (location.company && location.company.company_users.where(user_id: id).any?) || location.creator_id == id
+    location.creator_id == id || (location.company && location.company.company_users.where(user_id: id).any?)
   end
 
   def can_manage_listing?(listing)
-    (listing.company && listing.company.company_users.where(user_id: id).any?) || listing.creator_id == id
+    listing.creator_id == id || (listing.company && listing.company.company_users.where(user_id: id).any?)
   end
 
   def instance_admin?

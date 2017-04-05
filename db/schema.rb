@@ -2873,6 +2873,8 @@ ActiveRecord::Schema.define(version: 20170404123053) do
     t.boolean  "allow_nil_price_cents",      default: false
     t.integer  "fixed_price_cents"
     t.boolean  "pro_rated",                  default: false
+    t.integer  "service_fee_guest_percent"
+    t.integer  "service_fee_host_percent"
   end
 
   add_index "transactable_type_pricings", ["instance_id", "action_type", "action_id"], name: "action_type_pricings_main_index", using: :btree

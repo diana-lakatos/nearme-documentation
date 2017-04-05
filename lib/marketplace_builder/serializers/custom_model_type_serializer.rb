@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module MarketplaceBuilder
   module Serializers
     class CustomModelTypeSerializer < BaseSerializer
-      resource_name -> (c) { "custom_model_types/#{c.name.underscore}" }
+      resource_name ->(c) { "custom_model_types/#{c.name.parameterize('_')}" }
 
       properties :name
       property :instance_profile_types

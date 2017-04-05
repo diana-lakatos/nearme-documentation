@@ -1,6 +1,7 @@
 {% for transactable in transactables %}
   {% assign collaborator = transactable.transactable_collaborators[0] %}
   {% assign offer = transactable.not_cancelled_orders | detect: user_id: current_user.id %}
+  {% assign prices = transactable.action_type.transactable_type_action_type.pricings | group_by: 'number_of_units' %}
 
   <article class="listing-b" id="transactable_{{transactable.id}}">
     <header>
@@ -78,10 +79,11 @@
 
           <p class="price">Price:
             {% if offer != blank %}
-            <span>{{ offer.total_amount_money | pricify }}</span>
+              <span>AUD {{ offer.total_payable_to_host | pricify }}</span>
             {% else %}
-            {% assign total = current_user.buyer_properties.hourly_price | times: transactable.properties.duration %}
-            <span data-convert-price="{{ total }}">{{ total | pricify }}</span>
+              {% assign price = prices[current_user.buyer_properties['driver_type_unit']].first %}
+              {% assign total = price.fixed_price_f | times: transactable.properties.duration %}
+              <span data-convert-price="{{ total }}">AUD {{ total | pricify }}</span>
             {% endif %}
           </p>
 

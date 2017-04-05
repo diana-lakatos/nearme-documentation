@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module MarketplaceBuilder
   module Serializers
     class ReservationTypeSerializer < BaseSerializer
-      resource_name -> (t) { "reservation_types/#{t.name.underscore}" }
+      resource_name ->(t) { "reservation_types/#{t.name.parameterize('_')}" }
 
       properties :name
       property :transactable_types

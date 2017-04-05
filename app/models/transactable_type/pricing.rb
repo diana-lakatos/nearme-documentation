@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class TransactableType::Pricing < ActiveRecord::Base
   MAX_PRICE = 2_147_483_647
   acts_as_paranoid
@@ -50,7 +51,7 @@ class TransactableType::Pricing < ActiveRecord::Base
     max_price_cents.to_i > 0 ? max_price_cents : MAX_PRICE
   end
 
-  # TODO remove after switch to FormConfiguration
+  # TODO: remove after switch to FormConfiguration
   def build_transactable_pricing(action_type)
     action_type.pricings.new(
       slice(:number_of_units, :unit).merge(action: action_type,
@@ -72,11 +73,19 @@ class TransactableType::Pricing < ActiveRecord::Base
   end
 
   def subscription?
-    action_type == "TransactableType::SubscriptionBooking"
+    action_type == 'TransactableType::SubscriptionBooking'
   end
 
   def to_liquid
     TransactableType::PricingDrop.new(self)
+  end
+
+  def service_fee_guest_percent
+    super || action.service_fee_guest_percent
+  end
+
+  def service_fee_host_percent
+    super || action.service_fee_host_percent
   end
 
   private

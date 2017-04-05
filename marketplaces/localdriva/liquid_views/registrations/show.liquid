@@ -109,7 +109,12 @@
           <p>{{ user.buyer_properties.full_bio | nl2br }}</p>
           {% endif %}
 
-          {% assign languages = user.buyer_profile.customizations | map: 'properties' %}
+          {% for customization in user.buyer_profile.customizations %}
+            {% if customization.custom_model_type.name == 'Languages' %}
+              {% assign languages = languages | add_to_array: customization.properties %}
+            {% endif %}
+          {% endfor %}
+
           {% if languages.size > 0 %}
           <h3>Languages</h3>
           <dl class="languages-proficiency short-list">

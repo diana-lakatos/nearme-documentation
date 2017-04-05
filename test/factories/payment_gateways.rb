@@ -143,12 +143,26 @@ FactoryGirl.define do
     factory :stripe_connect_payment_gateway, class: PaymentGateway::StripeConnectPaymentGateway do
       test_settings { { login: 'sk_test_DoIom7ZOL848ziY39cC75lI0' } }
       live_settings { { login: '123456789' } }
+
+      factory :stripe_connect_payment_gateway_au, class: PaymentGateway::StripeConnectPaymentGateway do
+        before(:create) do |payment_gateway|
+          payment_gateway.payment_countries << (Country.find_by(iso: 'AU') || FactoryGirl.create(:country_au))
+          payment_gateway.payment_currencies << (Currency.find_by(iso_code: 'AUD') || FactoryGirl.create(:currency_aud))
+        end
+      end
     end
 
     factory :direct_stripe_sconnect_payment_gateway, class: PaymentGateway::StripeConnectPaymentGateway do
-      test_settings { { login: 'sk_test_DoIom7ZOL848ziY39cC75lI0', publishable_key:  'pk_test_P54WUkDA1vryMRtw300Ajshi'} }
+      test_settings { { login: 'sk_test_DoIom7ZOL848ziY39cC75lI0', publishable_key: 'pk_test_P54WUkDA1vryMRtw300Ajshi' } }
       live_settings { { login: 'sk_test_DoIom7ZOL848ziY39cC75lI0', publishable_key: 'pk_test_P54WUkDA1vryMRtw300Ajshi' } }
-      config  { {'settings' => {"charge_type"=>"direct"}, "transfer_schedule"=>{"interval"=>"default"}} }
+      config  { { 'settings' => { 'charge_type' => 'direct' }, 'transfer_schedule' => { 'interval' => 'default' } } }
+
+      factory :direct_stripe_sconnect_payment_gateway_au, class: PaymentGateway::StripeConnectPaymentGateway do
+        before(:create) do |payment_gateway|
+          payment_gateway.payment_countries << (Country.find_by(iso: 'AU') || FactoryGirl.create(:country_au))
+          payment_gateway.payment_currencies << (Currency.find_by(iso_code: 'AUD') || FactoryGirl.create(:currency_aud))
+        end
+      end
     end
 
     factory :manual_payment_gateway, class: PaymentGateway::ManualPaymentGateway do
