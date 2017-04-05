@@ -75,10 +75,12 @@ module.exports = class BookingListing
   hasFavourablePricingRate: ->
     @favourablePricingRate
 
-  # If the listing is an overnight booking we only want to let the user
-  # select contiguous blocks of 2 days
+  # If the listing is an overnight booking we have to select +1 day in calendar
   minimumBookingDays: ->
-    if @isOvernightBooking() && @data.minimum_booking_days <=1 then 2 else @data.minimum_booking_days
+    if @isOvernightBooking()
+      @data.minimum_booking_days + 1
+    else
+      @data.minimum_booking_days
 
   onlyRfqAction: ->
     @possibleUnits.length == 0 && @data.action_rfq
