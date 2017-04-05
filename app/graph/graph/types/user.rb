@@ -14,8 +14,8 @@ module Graph
         resolve ->(obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
       end
 
-      field :name, !types.String
-      field :first_name, !types.String
+      field :name, types.String
+      field :first_name, types.String
       field :last_name, types.String
       field :email, !types.String
       field :slug, !types.String
@@ -87,6 +87,10 @@ module Graph
                 end
               )
             end
+
+      field :transactables, types[Types::Transactable] do
+        resolve ->(obj, _arg, _) { obj.created_listings }
+      end
     end
 
     CustomImageOrderEnum = GraphQL::EnumType.define do

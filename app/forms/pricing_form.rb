@@ -16,6 +16,8 @@ class PricingForm < BaseForm
 
   property :_destroy, virtual: true
 
+  validates :price, presence: true
+
   def price=(value)
     old_value = model.price
     model.price = value

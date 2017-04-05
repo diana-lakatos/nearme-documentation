@@ -12,7 +12,9 @@ module Graph
           SearchQueryType,
           TopicQueryType,
           TransactableQueryType,
-          UserQueryType
+          UserQueryType,
+          ShoppingCartQueryType,
+          OrdersQueryType
         ]
       )
     end

@@ -1221,9 +1221,12 @@ DesksnearMe::Application.routes.draw do
           end
         end
         namespace :user do
+          resource :checkout, only: [:create]
+          resource :shopping_cart, only: [:create, :update]
           resource :space_wizard, only: [:create]
           resources :transactables, only: [:index, :create, :update]
           resources :custom_attachments, only: [:destroy]
+          resources :orders, only: [:update]
           resources :custom_images, only: [:destroy]
           resources :transactable_collaborators, only: [:create, :destroy] do
             member do

@@ -84,65 +84,66 @@ class User < ActiveRecord::Base
   belongs_to :instance_profile_type, -> { with_deleted }
   belongs_to :partner
 
-  has_many :orders
-  has_many :purchases
-  has_many :shipping_profiles
-  has_many :transactable_line_items, class_name: 'LineItem::Transactable'
-  has_many :shipping_addresses, through: :orders, class_name: 'OrderAddress'
-  has_many :billing_addresses, through: :orders, class_name: 'OrderAddress'
   has_many :activity_feed_events, as: :followed, dependent: :destroy
   has_many :activity_feed_subscriptions, foreign_key: 'follower_id'
   has_many :activity_feed_subscriptions_as_followed, as: :followed, class_name: 'ActivityFeedSubscription', dependent: :destroy
-  has_many :administered_locations, class_name: 'Location', foreign_key: 'administrator_id', inverse_of: :administrator
   has_many :administered_listings, class_name: 'Transactable', through: :administered_locations, source: :listings, inverse_of: :administrator
-  has_many :authentications, dependent: :destroy
-  has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
-  has_many :assigned_company_tickets, -> { where(target_type: 'Transactable').order('updated_at DESC') }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
+  has_many :administered_locations, class_name: 'Location', foreign_key: 'administrator_id', inverse_of: :administrator
   has_many :approval_request_attachments, foreign_key: 'uploader_id'
   has_many :approval_requests, as: :owner, dependent: :destroy
+  has_many :approved_transactable_collaborations, -> { approved }, class_name: 'TransactableCollaborator'
+  has_many :approved_transactables_collaborated, through: :transactable_collaborators, source: :transactable
+  has_many :assigned_company_tickets, -> { where(target_type: 'Transactable').order('updated_at DESC') }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
+  has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
+  has_many :attachments, class_name: 'SellerAttachment'
+  has_many :authentications, dependent: :destroy
   has_many :authored_messages, class_name: 'UserMessage', foreign_key: 'author_id', inverse_of: :author
+  has_many :billing_addresses, through: :orders, class_name: 'OrderAddress'
   has_many :blog_posts, class_name: 'UserBlogPost'
   has_many :categories_categorizable, as: :categorizable, through: :user_profiles
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
-  has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
-  has_many :companies, foreign_key: 'creator_id', inverse_of: :creator
   has_many :comments, inverse_of: :creator
-  has_many :custom_images, foreign_key: 'uploader_id', inverse_of: :uploader
+  has_many :companies, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
+  has_many :created_listings, class_name: 'Transactable', foreign_key: 'creator_id'
+  has_many :created_listings_orders, class_name: 'Order', through: :created_listings, source: :orders, inverse_of: :creator
   has_many :custom_attachments, foreign_key: 'uploader_id', inverse_of: :uploader
-  has_many :feed_followers, through: :activity_feed_subscriptions_as_followed, source: :follower
-  has_many :feed_followed_transactables, through: :activity_feed_subscriptions, source: :followed, source_type: 'Transactable'
+  has_many :custom_images, foreign_key: 'uploader_id', inverse_of: :uploader
   has_many :feed_followed_topics, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
+  has_many :feed_followed_transactables, through: :activity_feed_subscriptions, source: :followed, source_type: 'Transactable'
   has_many :feed_followed_users, through: :activity_feed_subscriptions,  source: :followed, source_type: 'User'
+  has_many :feed_followers, through: :activity_feed_subscriptions_as_followed, source: :follower
   has_many :feed_following, through: :activity_feed_subscriptions, source: :follower
   has_many :followed_users, through: :relationships, source: :followed
   has_many :followers, through: :reverse_relationships, source: :follower
-  has_many :instance_clients, as: :client, dependent: :destroy
-  has_many :payments, foreign_key: 'payer_id'
   has_many :instance_admins, foreign_key: 'user_id', dependent: :destroy
-  has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
+  has_many :instance_clients, as: :client, dependent: :destroy
   has_many :listing_orders, class_name: 'Order', source: :orders, foreign_key: :creator_id, inverse_of: :creator
-  has_many :created_listings, class_name: 'Transactable', foreign_key: 'creator_id'
-  has_many :created_listings_orders, class_name: 'Order', through: :created_listings, source: :orders, inverse_of: :creator
-  has_many :listing_reservations, class_name: 'Reservation', through: :listings, source: :reservations, inverse_of: :creator
   has_many :listing_recurring_bookings, class_name: 'RecurringBooking', through: :listings, source: :recurring_bookings, inverse_of: :creator
+  has_many :listing_reservations, class_name: 'Reservation', through: :listings, source: :reservations, inverse_of: :creator
+  has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
   has_many :locations, through: :companies, inverse_of: :creator
   has_many :mailer_unsubscriptions
-  has_many :photos, foreign_key: 'creator_id', inverse_of: :creator
-  has_many :attachments, class_name: 'SellerAttachment'
-  has_many :transactables, foreign_key: 'creator_id', inverse_of: :creator
-  has_many :transactables_collaborated, through: :transactable_collaborators, source: :transactable
-  has_many :approved_transactables_collaborated, through: :transactable_collaborators, source: :transactable
-  has_many :transactable_collaborators, dependent: :destroy
-  has_many :approved_transactable_collaborations, -> { approved }, class_name: 'TransactableCollaborator'
+  has_many :orders
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
+  has_many :payments, foreign_key: 'payer_id'
+  has_many :photos, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :purchases
   has_many :recurring_bookings, foreign_key: 'owner_id'
   has_many :relationships, class_name: 'UserRelationship', foreign_key: 'follower_id', dependent: :destroy
+  has_many :requests_for_quotes, -> { where(target_type: 'Transactable').order('updated_at DESC') }, class_name: 'Support::Ticket'
   has_many :reverse_relationships, class_name: 'UserRelationship', foreign_key: 'followed_id', dependent: :destroy
   has_many :reviews
-  has_many :requests_for_quotes, -> { where(target_type: 'Transactable').order('updated_at DESC') }, class_name: 'Support::Ticket'
   has_many :saved_searches, dependent: :destroy
+  has_many :shipping_addresses, through: :orders, class_name: 'OrderAddress'
+  has_many :shipping_profiles
+  has_many :shopping_carts
   has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
   has_many :tickets, -> { order 'updated_at DESC' }, class_name: 'Support::Ticket'
+  has_many :transactable_collaborators, dependent: :destroy
+  has_many :transactable_line_items, class_name: 'LineItem::Transactable'
+  has_many :transactables, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :transactables_collaborated, through: :transactable_collaborators, source: :transactable
   has_many :user_bans
   has_many :user_status_updates, class_name: 'UserStatusUpdate'
   has_many :wish_lists, dependent: :destroy
@@ -412,6 +413,10 @@ class User < ActiveRecord::Base
 
   def user
     self
+  end
+
+  def current_shopping_cart
+    shopping_carts.where(checkout_at: nil).first_or_initialize
   end
 
   def get_seller_profile
@@ -1104,7 +1109,7 @@ class User < ActiveRecord::Base
   end
 
   def all_currencies
-    listings.map(&:currency).presence || [instance.default_currency || 'USD']
+    created_listings.pluck(:currency).presence || [instance.default_currency || 'USD']
   end
 
   def is_available_now?

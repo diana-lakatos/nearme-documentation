@@ -34,6 +34,7 @@ class InputFieldTag < Liquid::Tag
     @field_name = attributes.delete(:field_name) if attributes[:field_name].present?
     form = (context["form_object_#{attributes.fetch(:form, nil)}"] || context['form_object']).source
     # drop for form_builder defined in form_builder_to_liquid_monkeypatch.rb
-    form.input_field(@field_name.to_s, attributes).html_safe
+    # check HTML documentation to know why we have to remove form
+    form.input_field(@field_name.to_s, attributes.except(:form)).html_safe
   end
 end
