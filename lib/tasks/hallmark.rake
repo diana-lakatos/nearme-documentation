@@ -152,7 +152,7 @@ namespace :hallmark do
     MEMBER_SINCE = 6
     EXPIRES_AT = 7
     MEMBER_YEAR = 8
-    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_13Mar.txt')
+    path = Rails.root.join('marketplaces', 'hallmark', 'KOC_03Apr.txt')
     emails = []
     CSV.foreach(path, col_sep: '|') do |array|
       unless array[FIRST_NAME] == 'CNSMR_FIRST_NM'
