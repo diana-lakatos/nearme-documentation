@@ -6,13 +6,13 @@ module Graph
         name 'ActivityFeedFollowed'
         field :id, !types.Int
         field :class, !types.String
-        field :path, types.String do
+        field :url, types.String do
           resolve ->(followed, _args, _ctx) {
             case followed
-            when Transactable, User
-              followed.decorate.show_path
+            when ::Transactable
+              followed.to_liquid.show_path
             else
-              followed
+              Resolvers::ResourceUrl.new.call(followed)
             end
           }
         end

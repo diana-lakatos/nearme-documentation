@@ -65,7 +65,7 @@ query ActivityFeedQuery($object_id: ID!, $object_type: String!, $include_user_fe
       }
       followed {
         id
-        path
+        url
         class
       }
       comments{
