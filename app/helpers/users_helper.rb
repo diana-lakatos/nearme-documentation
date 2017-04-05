@@ -65,7 +65,7 @@ module UsersHelper
 
   def user_video_embed_html(user)
     return unless user.properties.respond_to?(:video_url)
-    video_embedder = VideoEmbedder.new(user.properties.video_url, iframe_attributes: { width: 350, height: 175 })
+    video_embedder = Videos::VideoEmbedder.new(user.properties.video_url, iframe_attributes: { width: 350, height: 175 })
     video_embedder.html.html_safe
   end
 
