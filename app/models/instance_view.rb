@@ -546,8 +546,10 @@ class InstanceView < ActiveRecord::Base
     },
     'shared/social_meta_tags_for_listing' => {
       is_partial: true
+    },
+    'shared/components/flag_as_inappropriate' => {
+      is_partial: true
     }
-
   }.sort.to_h.freeze
 
   scope :for_instance_id, lambda { |instance_id|

@@ -2260,6 +2260,9 @@ en:
     report_has_been_sent: "Your report has been sent. Thank you!"
     redirecting_to_log_in_page: "Redirecting to log in page..."
     please_fill_in_reason: 'Please fill the form.'
+    you_need_to_be_logged_in: 'You need to be logged in to flag an item as inappropriate.'
+    reason: 'Reason'
+    inappropriate_report: 'Inappropriate report'
 
   wish_lists:
     name: 'Favorites'

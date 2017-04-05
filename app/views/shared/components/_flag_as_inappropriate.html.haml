@@ -1,8 +1,0 @@
-%header.dialog__header
-  %h2#dialog__title
-    Inappropriate report
-
-= simple_form_for :inappropriate_report, :url => inappropriate_reports_path(id: @reportable.id, reportable_type: @reportable.class.to_s) do |f|
-  = f.input :reason, as: :text
-  = f.submit t("inappropriate_reports.send"), class: "btn btn-green"
-
