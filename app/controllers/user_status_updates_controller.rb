@@ -4,7 +4,7 @@ class UserStatusUpdatesController < ApplicationController
 
   def create
     current_user.user_status_updates.create(permitted_params)
-    redirect_to request.referer
+    redirect_to "#{request.referer}#activity"
   end
 
   def update

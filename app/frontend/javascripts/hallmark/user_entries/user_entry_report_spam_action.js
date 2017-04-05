@@ -1,28 +1,77 @@
+// @flow
 let resolver = require('./spam_report_resolver');
 
+type ActionType = {
+  url: string,
+  label: string,
+  method: 'delete' | 'post'
+};
+
+type SpamReportDataType = {
+  comments_spam_reports: Array<number>,
+  events_spam_reports: Array<number>
+};
+
 class UserEntryReportSpamAction {
-  constructor(trigger, container) {
+
+  trigger: HTMLElement;
+  container: HTMLElement;
+  raportExists: boolean;
+  type: 'comment' | 'event'
+  entryId: number;
+  actionCancel: ActionType;
+  actionCreate: ActionType;
+  processing: boolean;
+
+  data: SpamReportDataType;
+
+  constructor(trigger: HTMLElement, container: HTMLElement) {
     this.trigger = trigger;
     this.raportExists = false;
     this.type = container.dataset.commentId ? 'comment' : 'event';
-    this.entryId = container.dataset.commentId ? container.dataset.commentId : container.dataset.activityFeedEventId;
-    this.entryId = parseInt(this.entryId, 10);
+    this.processing = false;
+
+    let entryId = container.dataset.commentId ? container.dataset.commentId : container.dataset.activityFeedEventId;
+    entryId = parseInt(entryId, 10);
+    if (!entryId || isNaN(entryId)) {
+      throw new Error('Unable to determine entry ID in spam report action');
+    }
+    this.entryId = entryId;
+
+    let cancelReportUrl = trigger.dataset.cancelReportUrl;
+    let cancelReportLabel = trigger.dataset.cancelReportLabel;
+    let createReportUrl = trigger.getAttribute('href');
+    let createReportLabel = trigger.innerHTML;
+
+    if (!cancelReportUrl) {
+      throw new Error('Missing cancel report url');
+    }
+    if (!cancelReportLabel) {
+      throw new Error('Missing cancel report label');
+    }
+
+    if (!createReportUrl) {
+      throw new Error('Missing create report url');
+    }
+    if (!createReportLabel) {
+      throw new Error('Missing create report label');
+    }
 
     this.actionCancel = {
-      url: trigger.dataset.cancelReportUrl,
-      label: trigger.dataset.cancelReportLabel,
+      url: cancelReportUrl,
+      label: cancelReportLabel,
       method: 'delete'
     };
 
     this.actionCreate = {
-      url: trigger.getAttribute('href'),
-      label: trigger.innerHTML,
+      url: createReportUrl,
+      label: createReportLabel,
       method: 'post'
     };
 
     this.container = container;
 
-    resolver.get().then((data) => {
+    resolver.get().then((data: SpamReportDataType) => {
       this.data = data;
       this.initialize();
     });
@@ -40,7 +89,7 @@ class UserEntryReportSpamAction {
   }
 
   bindEvents() {
-    this.trigger.addEventListener('click', (e) => {
+    this.trigger.addEventListener('click', (e: Event) => {
       e.preventDefault();
       this.updateState();
     });
@@ -73,7 +122,7 @@ class UserEntryReportSpamAction {
     this.trigger.innerHTML = this.getCurrentAction().label;
   }
 
-  getCurrentAction() {
+  getCurrentAction(): ActionType {
     return this.raportExists ? this.actionCancel : this.actionCreate;
   }
 }

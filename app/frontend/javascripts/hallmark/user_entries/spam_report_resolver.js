@@ -1,13 +1,16 @@
+// @flow
 class SpamReportResolver {
+  promise: JQueryXHR;
+
   constructor(){
     this.promise = this._fetch();
   }
 
-  get(){
+  get(): JQueryXHR {
     return this.promise;
   }
 
-  _fetch() {
+  _fetch(): JQueryXHR {
     return $.ajax({
       url: '/spam_reports',
       dataType: 'json'

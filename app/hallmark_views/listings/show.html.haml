@@ -46,7 +46,6 @@
       %ul.nav.nav-tabs{role: "tablist"}
         %li.active= link_to t(:about), '#about', role: "tab", :'data-toggle' => "tab"
         %li= link_to t(:activity), '#activity', role: "tab", :'data-toggle' => "tab"
-        %li= link_to t(:comments), '#comments', role: "tab", :'data-toggle' => "tab"
         %li= link_to t(:collaborators), '#collaborators', role: "tab", :'data-toggle' => "tab"
         %li= link_to t(:followers), '#followers', role: "tab", :'data-toggle' => "tab"
 
@@ -56,9 +55,7 @@
         #about.tab-pane.fade.active{:role => "tabpanel"}
           = render 'show_about'
         #activity.tab-pane.fade{:role => "tabpanel"}
-          = render 'shared/activity_feed', object: @transactable, feed: @feed
-        #comments.tab-pane.fade{:role => "tabpanel"}
-          = render 'comments/comments', comment: @comment
+          = render 'shared/activity_feed', object: @transactable, feed: @feed, can_update_feed_status: current_user.present?, comment_view: true, no_topic_select: true
         #collaborators.tab-pane.fade{:role => "tabpanel"}
           = render 'shared/show_followers', see_more_route: see_more_collaborators_path(id: @transactable.id, type: 'Transactable', container: '#collaborators'), collection: @collaborators, container: '#collaborators'
         #followers.tab-pane.fade{:role => "tabpanel"}

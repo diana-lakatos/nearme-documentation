@@ -7,14 +7,14 @@ type UserMessageResponseType = {
   attachments: Array<{ url: string, fileName: string }>
 };
 
-import Events from 'minivents/dist/minivents.commonjs';
+import Eventable from '../../toolkit/eventable';
 import { closest, findMeta } from '../../toolkit/dom';
 
 const PROCESSING_CLASS = 'processing';
 const WRAPPER_SELECTOR = '.attachment';
 const META_SELECTOR = 'meta[name="csrf-token"]';
 
-class UserMessagesInboxFileInput {
+class UserMessagesInboxFileInput extends Eventable {
   form: HTMLFormElement;
   input: HTMLInputElement;
   wrapper: HTMLElement;
@@ -22,7 +22,7 @@ class UserMessagesInboxFileInput {
   action: string;
 
   constructor(input: HTMLInputElement, form: HTMLFormElement) {
-    Events(this);
+    super(input, form);
 
     this.input = input;
     this.form = form;
