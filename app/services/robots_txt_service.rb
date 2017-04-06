@@ -23,6 +23,7 @@ module RobotsTxtService
         robots_txt << 'Disallow: /search/show'
         robots_txt << 'Disallow: /authentications'
         robots_txt << 'Disallow: /v1'
+        robots_txt << 'Disallow: /api'
         robots_txt << 'Disallow: /widgets'
         robots_txt << "Sitemap: #{sitemap_url}"
       end
