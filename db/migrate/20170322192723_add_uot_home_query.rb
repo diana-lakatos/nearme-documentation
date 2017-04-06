@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 class AddUotHomeQuery < ActiveRecord::Migration
-  def up
+  def up # rubocop:disable Metrics/MethodLength
     query = <<-EOQ
     query UOTHomeQuery{
       featured_smes:users(take: 6, filters: [FEATURED]){
@@ -12,14 +13,16 @@ class AddUotHomeQuery < ActiveRecord::Migration
     }
     EOQ
 
-    GraphQuery.create!(
-      instance_id: 195,
-      name: 'uot_home',
-      query_string: query
-    )
+    GraphQuery.create!(instance_id: instance.id, name: 'uot_home', query_string: query) if instance
   end
 
   def down
-    GraphQuery.find_by(instance_id: 195, name: 'uot_home').destroy
+    GraphQuery.find_by(instance_id: instance.id, name: 'uot_home').destroy if instance
+  end
+
+  private
+
+  def instance
+    Instance.find_by(id: 195)
   end
 end

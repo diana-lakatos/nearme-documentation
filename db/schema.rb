@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20170328130957) do
+ActiveRecord::Schema.define(version: 20170322192723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -912,7 +911,6 @@ ActiveRecord::Schema.define(version: 20170328130957) do
     t.datetime "updated_at",             null: false
     t.integer  "instance_id"
     t.integer  "dimensions_template_id"
-    t.string   "direction"
   end
 
   add_index "deliveries", ["instance_id", "dimensions_template_id"], name: "index_deliveries_on_instance_id_and_dimensions_template_id", using: :btree
@@ -1489,8 +1487,6 @@ ActiveRecord::Schema.define(version: 20170328130957) do
     t.datetime "deleted_at"
     t.datetime "image_versions_generated_at"
     t.integer  "creator_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   add_index "links", ["creator_id"], name: "index_links_on_creator_id", using: :btree
@@ -1803,7 +1799,6 @@ ActiveRecord::Schema.define(version: 20170328130957) do
     t.integer  "redirect_code"
     t.string   "metadata_canonical_url"
     t.string   "layout_name",                           default: "application"
-    t.boolean  "require_verified_user",                 default: false
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
@@ -3248,7 +3243,7 @@ ActiveRecord::Schema.define(version: 20170328130957) do
     t.integer  "instance_id"
     t.integer  "domain_id"
     t.string   "time_zone"
-    t.boolean  "sms_notifications_enabled",                          default: false
+    t.boolean  "sms_notifications_enabled",                          default: true
     t.string   "sms_preferences",                        limit: 255, default: "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
     t.text     "instance_unread_messages_threads_count",             default: "--- {}\n"
     t.text     "metadata"

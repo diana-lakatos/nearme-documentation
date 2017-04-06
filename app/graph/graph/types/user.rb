@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/BlockLength
 module Graph
   module Types
     User = GraphQL::ObjectType.define do
@@ -75,10 +76,16 @@ module Graph
 
       field :profile_property,
             types.String,
-            'Fetch any buyer property by name, ex: bio: buyer_property(name: "bio")' do
+            'Fetch any property of given kind by name, ex: bio: profile_property(profile_type: "buyer", name: "bio")' do
               argument :name, !types.String
               argument :profile_type, !types.String
-              resolve ->(obj, arg, _ctx) { obj.user_profiles.find_by(profile_type: arg[:profile_type]).properties[arg[:name]] }
+              resolve(
+                lambda do |obj, arg, _ctx|
+                  obj.user_profiles
+                  .joins(:instance_profile_type)
+                  .find_by(instance_profile_types: { parameterized_name: arg[:profile_type] }).properties[arg[:name]]
+                end
+              )
             end
     end
 
