@@ -92,14 +92,10 @@ partial: false
 
           <div class="cta-boxes-b">
             {% for sme in g.featured_smes %}
-              <article class='user-a'>
-                <div class='wrapper'>
-                  <header class="header">
-                    <h4><a href="{{ sme.profile_path }}">{{ sme.name }}</a></h4>
-                    <figure><a href="{{ sme.profile_path }}"><img src="{{ sme.avatar_url_big }}" alt="{{ sme.name }}"/></a></figure>
-                  </header>
-                  <p>{{ sme.bio | truncate: 140 }}</p>
-                </div>
+              <article>
+                <figure><a href="{{ sme.profile_path }}"><img src="{{ sme.avatar_url_big }}" alt="{{ sme.name }}"/></a></figure>
+                <h4><a href="{{ sme.profile_path }}">{{ sme.name }}</a></h4>
+                <p>{{ sme.bio | truncate: 140 }}</p>
               </article>
             {% endfor %}
           </div>
@@ -252,6 +248,7 @@ partial: false
     </div>
 </main>
 
+{% comment %}
 <!-- <section class="testimonials-a">
     <div class="wrapper-a">
 
@@ -285,3 +282,4 @@ partial: false
         </div>
     </div>
 </section>   -->
+{% endcomment %}
