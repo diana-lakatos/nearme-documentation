@@ -93,15 +93,11 @@ class AddFeaturedUsersToUotHomePageLiquid < ActiveRecord::Migration
 
           <div class="cta-boxes-b">
             {% for sme in g.featured_smes %}
-              <article class='user-a'>
-                <div class='wrapper'>
-                    <header class="header">
-                    <h4><a href="{{ sme.profile_path }}">{{ sme.name }}</a></h4>
-                    <figure><a href="{{ sme.profile_path }}"><img src="{{ sme.avatar_url_big }}" alt="{{ sme.name }}"/></a></figure>
-                    </header>
-                    <p>{{ sme.bio | truncate: 140 }}</p>
-                </div>
-                </article>
+              <article>
+                <figure><a href="{{ sme.profile_path }}"><img src="{{ sme.avatar_url_big }}" alt="{{ sme.name }}"/></a></figure>
+                <h4><a href="{{ sme.profile_path }}">{{ sme.name }}</a></h4>
+                <p>{{ sme.bio | truncate: 140 }}</p>
+              </article>
           {% endfor %}
          </div>
         </section>
