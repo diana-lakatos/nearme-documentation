@@ -22,12 +22,20 @@
             = t('instance_admin.reports.fields.id')
           %th
             = t('instance_admin.reports.fields.name')
-          %th
-            = t('instance_admin.reports.fields.description')
-          %th
-            = t('instance_admin.reports.fields.properties')
-          %th
-            = t('instance_admin.reports.fields.actions')
+          - if @scope_class == Transactable
+            %th
+              = t('instance_admin.reports.fields.creator_name')
+            %th
+              = t('instance_admin.reports.fields.creator_email')
+            %th
+              = t('instance_admin.reports.fields.description')
+            %th
+              = t('instance_admin.reports.fields.actions')
+          - else
+            %th
+              = t('instance_admin.reports.fields.email')
+            %th
+              = t('instance_admin.reports.fields.properties')
         - @resources.each do |transactable|
           = render 'transactable', :transactable => transactable
 

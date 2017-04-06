@@ -1,8 +1,9 @@
 %tr
   %td= link_to transactable.id, [:instance_admin, :reports, transactable]
   %td= transactable.name
+  %td= transactable.creator&.name
+  %td= transactable.creator&.email
   %td= transactable.description.to_s.truncate(100)
-  %td= (transactable.respond_to?(:extra_properties) ? transactable.extra_properties : transactable.properties).to_h.to_s.truncate(100)
   %td
     = link_to t('instance_admin.edit'), [:edit, :instance_admin, :reports, transactable]
     - if controller.respond_to?(:destroy)
