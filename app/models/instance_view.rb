@@ -549,6 +549,9 @@ class InstanceView < ActiveRecord::Base
     },
     'shared/components/flag_as_inappropriate' => {
       is_partial: true
+    },
+    'dashboard/reservations/reservation' => {
+      is_partial: true
     }
   }.sort.to_h.freeze
 
