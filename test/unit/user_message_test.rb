@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class UserMessageTest < ActiveSupport::TestCase
-  def create_user_message
+  def create_user_message_for_transactable
     @transactable = FactoryGirl.create(:transactable)
     @transactable_administrator = @transactable.administrator
     @user = FactoryGirl.create(:user)
@@ -14,34 +14,38 @@ class UserMessageTest < ActiveSupport::TestCase
                                       )
   end
 
-  context 'archived_for' do
+  context 'with user message for transactable' do
     setup do
-      create_user_message
+      create_user_message_for_transactable
     end
 
-    should 'choose write field to store information about archiving' do
-      assert_equal @user_message.archived_for?(@user), false
-      assert_equal @user_message.archived_for?(@transactable_administrator), false
-      assert_equal @user_message.archived_column_for(@user), 'archived_for_owner'
-      assert_equal @user_message.archived_column_for(@transactable_administrator), 'archived_for_recipient'
-    end
-  end
-
-  context 'mark as read' do
-    setup do
-      create_user_message
+    context 'archived_for' do
+      should 'choose write field to store information about archiving' do
+        assert_equal @user_message.archived_for?(@user), false
+        assert_equal @user_message.archived_for?(@transactable_administrator), false
+        assert_equal @user_message.archived_column_for(@user), 'archived_for_owner'
+        assert_equal @user_message.archived_column_for(@transactable_administrator), 'archived_for_recipient'
+      end
     end
 
-    should 'mark as read for thread owner' do
-      @user_message.mark_as_read_for!(@user)
+    context 'mark as read' do
+      should 'mark as read for thread owner' do
+        @user_message.mark_as_read_for!(@user)
 
-      assert @user_message.read_for?(@user)
+        assert @user_message.read_for?(@user)
+      end
+
+      should 'mark as read for thread recipient' do
+        @user_message.mark_as_read_for!(@transactable_administrator)
+
+        assert @user_message.read_for?(@transactable_administrator)
+      end
     end
 
-    should 'mark as read for thread recipient' do
-      @user_message.mark_as_read_for!(@transactable_administrator)
-
-      assert @user_message.read_for?(@transactable_administrator)
+    context 'update_unread_message_counter_for' do
+      should 'run' do
+        assert @user_message.update_unread_message_counter_for(@user)
+      end
     end
   end
 
@@ -66,13 +70,19 @@ class UserMessageTest < ActiveSupport::TestCase
     end
   end
 
-  context 'update_unread_message_counter_for' do
-    setup do
-      create_user_message
-    end
+  should 'return other user' do
+    @some_user = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user)
 
-    should 'run' do
-      assert @user_message.update_unread_message_counter_for(@user)
-    end
+    @user_message = FactoryGirl.create(
+      :user_message,
+      thread_context: @user,
+      thread_owner: @some_user,
+      author: @user,
+      thread_recipient: @user
+    )
+
+    assert_not_equal @user, @user_message.the_other_user(@user)
+    assert_not_equal @some_user, @user_message.the_other_user(@some_user)
   end
 end
