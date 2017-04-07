@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/BlockLength
 module Graph
   module Types
     User = GraphQL::ObjectType.define do
@@ -44,6 +45,7 @@ module Graph
       field :profile_path, !types.String
       field :avatar_url_thumb, !types.String
       field :avatar_url_bigger, !types.String
+      field :avatar_url_big, !types.String
       field :avatar, Types::Image
       field :name_with_affiliation, !types.String
       field :display_location, types.String
@@ -71,6 +73,20 @@ module Graph
 
         resolve Resolvers::MessageThread.new
       end
+
+      field :profile_property,
+            types.String,
+            'Fetch any property of given kind by name, ex: bio: profile_property(profile_type: "buyer", name: "bio")' do
+              argument :name, !types.String
+              argument :profile_type, !types.String
+              resolve(
+                lambda do |obj, arg, _ctx|
+                  obj.user_profiles
+                  .joins(:instance_profile_type)
+                  .find_by(instance_profile_types: { parameterized_name: arg[:profile_type] }).properties[arg[:name]]
+                end
+              )
+            end
     end
 
     CustomImageOrderEnum = GraphQL::EnumType.define do
