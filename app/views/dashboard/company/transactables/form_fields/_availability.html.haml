@@ -61,7 +61,7 @@
     %h3
       = title ||= t(:title, scope: [:pricing, :availability])
     - if f.object.is_a?(Transactable::TimeBasedBooking) && f.object.only_night_booking?
-      = f.simple_fields_for :availability_template, get_availability_template_object(f.object) do |at|
+      = f.simple_fields_for :availability_templates, get_availability_template_object(f.object) do |at|
         = f.input :availability_template_id, as: :hidden, input_html: { value: at.object.id }
         = at.input :id, as: :hidden, input_html: { value: at.object.id }
         .nested-fields-set
@@ -85,8 +85,9 @@
         .custom-availability{:style => ('display: none' unless availability_custom?(f.object))}
           %h4.control-label
             = t(:available_from, scope: [:pricing, :availability])
-          = f.simple_fields_for :availability_template, get_availability_template_object(f.object) do |at|
+          = f.simple_fields_for :availability_templates, get_availability_template_object(f.object) do |at|
             = at.input :id, as: :hidden, input_html: { value: at.object.id }
+            = at.input :name, as: :hidden, input_html: { value: 'Custom transactable availability' }
             .nested-fields-set
               = at.simple_fields_for(:availability_rules) do |af|
                 .nested-container

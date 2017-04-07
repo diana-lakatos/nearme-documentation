@@ -969,7 +969,7 @@ class SecuredParams
       :transactable_type_action_type_id,
       pricings_attributes: nested(transactable_pricing),
       schedule_attributes: nested(schedule),
-      availability_template_attributes: nested(availability_template)
+      availability_templates_attributes: nested(availability_template)
     ]
   end
 
