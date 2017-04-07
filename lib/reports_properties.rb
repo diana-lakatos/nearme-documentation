@@ -21,7 +21,7 @@ module ReportsProperties
   def export_data_to_csv(items, attribute_names = [], properties_columns)
     csv = CSV.generate do |csv|
       if items.first.is_a?(Transactable)
-        csv << [attribute_names, 'url', 'latitude', 'longitude', 'address', 'street', 'suburb', 'city', 'country', 'state', 'postcode', 'prices', properties_columns].flatten
+        csv << [attribute_names, 'creator_name', 'creator_email', 'url', 'latitude', 'longitude', 'address', 'street', 'suburb', 'city', 'country', 'state', 'postcode', 'prices', properties_columns].flatten
       else
         csv << [attribute_names, properties_columns].flatten
       end
@@ -32,6 +32,8 @@ module ReportsProperties
         properties = record.send(:properties).to_h
 
         if record.is_a?(Transactable)
+          values << record.creator&.name
+          values << record.creator&.email
           values << record.show_url
           values << record.location.latitude
           values << record.location.longitude
