@@ -562,7 +562,9 @@ class SecuredParams
       :allow_nil_price_cents,
       :order_class_name,
       :fixed_price,
-      :fixed_price_cents
+      :fixed_price_cents,
+      :service_fee_guest_percent,
+      :service_fee_host_percent
     ]
  end
 

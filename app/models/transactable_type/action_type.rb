@@ -75,6 +75,14 @@ class TransactableType::ActionType < ActiveRecord::Base
     end
   end
 
+  def guest_fee_enabled?
+    pricings.any? { |pricing| pricing.service_fee_guest_percent.to_i.nonzero? }
+  end
+
+  def host_fee_enabled?
+    pricings.any? { |pricing| pricing.service_fee_host_percent.to_i.nonzero? }
+  end
+
   def to_liquid
     TransactableType::ActionTypeDrop.new(self)
   end

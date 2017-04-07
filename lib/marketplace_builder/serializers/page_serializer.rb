@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module MarketplaceBuilder
   module Serializers
     class PageSerializer < BaseSerializer
-      resource_name -> (p) { "pages/#{p.path.underscore}" }
+      resource_name ->(p) { "pages/#{p.path.parameterize}" }
 
       properties :slug, :content, :redirect_url, :redirect_code
 

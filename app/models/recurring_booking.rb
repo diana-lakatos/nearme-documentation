@@ -17,8 +17,10 @@ class RecurringBooking < Order
   scope :upcoming, -> { where('ends_at > ?', Time.zone.now) }
   scope :archived, -> { where('ends_at < ? OR state IN (?)', Time.zone.now, %w(rejected expired cancelled_by_host cancelled_by_guest)).uniq }
   scope :not_archived, -> { without_state(:cancelled_by_guest, :cancelled_by_host, :rejected, :expired).uniq }
-  scope :needs_charge, ->(date) { with_state(:confirmed, :overdued).where('next_charge_date <= ?', date).
-    includes(:recurring_booking_periods).where.not(recurring_booking_periods: { id: nil }) }
+  scope :needs_charge, lambda { |date|
+    with_state(:confirmed, :overdued).where('next_charge_date <= ?', date)
+                                     .includes(:recurring_booking_periods).where.not(recurring_booking_periods: { id: nil })
+  }
 
   before_validation :set_dates, on: :create
 
@@ -216,17 +218,19 @@ class RecurringBooking < Order
     transactable_pricing.unit == 'subscription_month'
   end
 
-  def pro_rated?
-    transactable_pricing.pro_rated?
-  end
+  delegate :pro_rated?, to: :transactable_pricing
 
   def first_transactable_line_item
     transactable_line_items.first
   end
 
-  [:service_fee_guest_percent, :service_fee_host_percent, :minimum_lister_service_fee_cents].each do |method_name|
+  def minimum_lister_service_fee_cents
+    first_transactable_line_item&.minimum_lister_service_fee_cents || action&.minimum_lister_service_fee_cents
+  end
+
+  [:service_fee_guest_percent, :service_fee_host_percent].each do |method_name|
     define_method method_name do
-      first_transactable_line_item.try(method_name) || action.try(method_name)
+      first_transactable_line_item.try(method_name) || transactable_pricing.try(method_name)
     end
   end
 end

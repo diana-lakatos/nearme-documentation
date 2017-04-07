@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require 'helpers/gmaps_fake'
 
@@ -150,7 +151,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   # Availability
 
   test 'should get availability' do
-    raw_post :availability, { id: @listing.id }, '{ "dates": ["2012-01-01", "2012-01-02", "2012-01-03"] }'
+    raw_post :availability, { id: @listing.id }, { dates: ["2012-01-01", "2012-01-02", "2012-01-03"] }.to_json
     assert_response :success
   end
 
@@ -165,28 +166,28 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   test 'share should raise when a listing is not found' do
     authenticate!
-    raw_post :share, { id: 999_999_999 }, '{ "to": [{ "name": "John Carter", "email": "john@example.com" }] }'
+    raw_post :share, { id: 999_999_999 }, { to: [{ name: "John Carter", email: "john@example.com" }] }.to_json
     assert_response :unprocessable_entity
   end
 
   test 'share should raise when json is missing' do
     assert_raise DNM::MissingJSONData do
       authenticate!
-      raw_post :share, { id: @listing.id }, '{ "message": "no email addresses" }'
+      raw_post :share, { id: @listing.id }, { "message": "no email addresses" }.to_json
     end
   end
 
   test 'share should raise when name in json is missing' do
     assert_raise DNM::MissingJSONData do
       authenticate!
-      raw_post :share, { id: @listing.id }, '{ "to": [{ "email": "name-is-missing@example.com" }] }'
+      raw_post :share, { id: @listing.id }, { "to": [{ "email": "name-is-missing@example.com" }] }.to_json
     end
   end
 
   test 'share should raise when email in json is missing' do
     assert_raise DNM::MissingJSONData do
       authenticate!
-      raw_post :share, { id: @listing.id }, '{ "to": [{ "name": "Mr. No Having Email" }] }'
+      raw_post :share, { id: @listing.id }, { "to": [{ "name": "Mr. No Having Email" }] }.to_json
     end
   end
 

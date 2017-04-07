@@ -49,9 +49,9 @@ class RecurringBookingPeriod < ActiveRecord::Base
   def set_service_fees
     transactable_line_items.each do |tli|
       tli.attributes = {
-        service_fee_guest_percent: action.service_fee_guest_percent,
-        service_fee_host_percent: action.service_fee_host_percent,
-        minimum_lister_service_fee_cents: action.minimum_lister_service_fee_cents
+        service_fee_guest_percent: service_fee_guest_percent,
+        service_fee_host_percent: service_fee_host_percent,
+        minimum_lister_service_fee_cents: minimum_lister_service_fee_cents
       }
     end
   end
@@ -99,7 +99,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
     return unless (tt_action_type = action.transactable_type_action_type)
     return if (approve_in = tt_action_type.hours_to_order_item_approval.to_i).zero?
 
-    self.update_attributes!(approve_at: (Time.current + approve_in.hours))
+    update_attributes!(approve_at: (Time.current + approve_in.hours))
   end
 
   def auto_approve!

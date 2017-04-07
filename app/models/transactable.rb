@@ -282,7 +282,7 @@ class Transactable < ActiveRecord::Base
   delegate :first_available_date, :second_available_date, :availability_exceptions,
            :custom_availability_template?, :availability, :overnight_booking?, to: :enabled_time_based_booking, allow_nil: true
   delegate :open_on?, :open_now?, :bookable?, :has_price?, :hours_to_expiration,
-           :service_fee_guest_percent, :service_fee_host_percent, to: :action_type, allow_nil: true
+           to: :action_type, allow_nil: true
 
   attr_accessor :distance_from_search_query, :photo_not_required, :enable_monthly,
                 :enable_weekly, :enable_daily, :enable_hourly, :skip_activity_feed_event,
@@ -405,8 +405,9 @@ class Transactable < ActiveRecord::Base
       lowest_price = lowest_price.dup
 
       full_price_cents = lowest_price.price
-
-      full_price_cents *= (1 + service_fee_guest_percent / 100.0) unless service_fee_guest_percent.to_f.zero?
+      unless lowest_price.service_fee_guest_percent.to_f.zero?
+        full_price_cents *= (1 + lowest_price.service_fee_guest_percent / 100.0)
+      end
 
       full_price_cents += Money.new(AdditionalChargeType.where(status: 'mandatory').sum(:amount_cents), full_price_cents.currency.iso_code)
       lowest_price.price = full_price_cents

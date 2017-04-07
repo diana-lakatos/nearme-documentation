@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class Dashboard::Company::TransactableTypes::TransactablesControllerTest < ActionController::TestCase
-
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
@@ -235,7 +235,7 @@ class Dashboard::Company::TransactableTypes::TransactablesControllerTest < Actio
   end
 
   def action_type_attibutes(action_type, price, number_of_units, unit)
-    pricing = action_type && action_type.pricings.by_number_and_unit(number_of_units, unit).first
+    pricing = action_type && action_type.pricing_for("#{number_of_units}_#{unit}")
     {
       action_types_attributes: [{
         transactable_type_action_type_id: TransactableType.first.action_types.first.id,

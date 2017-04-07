@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :country do
     iso_name 'UNITED STATES'
@@ -19,6 +20,16 @@ FactoryGirl.define do
       numcode 616
       states_required true
       calling_code '48'
+    end
+
+    factory :country_au do
+      iso_name 'AUSTRALIA'
+      iso 'AU'
+      iso3 'AUS'
+      name 'Australia'
+      numcode 36
+      states_required true
+      calling_code '61'
     end
 
     factory :country_nz do

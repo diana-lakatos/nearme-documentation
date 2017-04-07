@@ -1,14 +1,19 @@
+{% assign collaborators = current_user | find_collaborators_for_user_transactables: user %}
+{% assign prices = platform_context.transactable_types[0].action_types[0].pricings | group_by: 'number_of_units' %}
+
 <div class="project-invite-content">
   <header>
-    <h2>Invite a Driver</h2>
+    {% if collaborators.size > 0 %}
+      <h2>Your Booking is Sent!</h2>
+    {% else %}
+      <h2>Invite a Driver</h2>
+    {% endif %}
     <button type="button" data-close>Close</button>
   </header>
 
-  {% assign collaborators = current_user | find_collaborators_for_user_transactables: user %}
-
   {% if collaborators.size > 0 %}
     <div class="existing-projects" data-delete-url="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">
-      <h3>You have invited {{ user.name }} as a driver to your booking.</h3>
+      <h3>You have sent the following booking to {{ user.first_name }}. {{ user.first_name }} will review your booking and respond to you soon.</h3>
       <ul>
         {% for collaborator in collaborators %}
         <li>
@@ -25,10 +30,10 @@
   {% if current_user.transactables_without_collaborators.size > 0 %}
 
     {% if user.pending_collaborated_transactables.size == 0 %}
-      <p><strong>{{ user.name }}</strong> will be invited to become your driver.</p>
+      <p><strong>{{ user.first_name }}</strong> will be invited to become your driver.</p>
       <p>Please select your booking:</p>
     {% else %}
-      <p>You have other bookings, would you like to invite <strong>{{ user.name }}</strong> to another one? If so, please select from your the list below.</p>
+      <p>You have other bookings, would you like to invite <strong>{{ user.first_name }}</strong> to another one? If so, please select from your the list below.</p>
     {% endif %}
 
     <form method="post" action="{{ 'dashboard_company_transactable_collaborators_path' | generate_url }}">
@@ -47,18 +52,20 @@
               {% else %}
                 {% assign any_booking_with_capacity = true %}
               {% endif %}
-            <option {% if capacity_not_met %}disabled {% endif %} value="{{ booking.id }}" data-booking-duration="{{ booking.properties.duration }}">{{ booking.name }}{% if capacity_not_met %} (Driver's car doesn't have required number of seats){% endif %}</option>
+              <option {% if capacity_not_met %}disabled {% endif %} value="{{ booking.id }}" data-booking-duration="{{ booking.properties.duration }}">{{ booking.name }}{% if capacity_not_met %} (Driver's car doesn't have required number of seats){% endif %}</option>
             {% endfor %}
           </select>
         </span>
       </div>
-      {% assign first_booking_price = current_user.transactables_without_collaborators[0].properties.duration %}
+      {% assign price = prices[user.buyer_properties['driver_type_unit']].first %}
+      {% assign full_price = price.fixed_price_with_guest_service_fee | times: current_user.transactables_without_collaborators[0].properties['duration'] %}
+      {% assign guest_fee = price.fixed_price_guest_service_fee | times: current_user.transactables_without_collaborators[0].properties['duration']   %}
 
-      <p class="cost">Cost: <span class="price" data-driver-cost="{{ user.buyer_properties.hourly_price }}">{{ user.buyer_properties.hourly_price | times: first_booking_price | pricify }}</span></p>
+      <p class="cost">Cost: <span class="price" data-driver-cost="{{ full_price | round }}">AUD {{ full_price | pricify }} <span style="font-size: 0.75em; font-weight: normal;">(plus AUD {{ guest_fee | pricify }} service fee)</span></span></p>
 
-      <p>The cost is calculated based on the selected booking and the selected driver. For more details, please read our <a href="/about">pricing structure</a> guidelines.</p>
+      <p>The cost is calculated based on the selected booking and the selected driver. For more details, please read our <a href="/pricing-guidelines" target="_blank">pricing structure</a> guidelines.</p>
 
-      <p><strong>Please note that you will also be responsible for any expenses paid by the driver on your behalf, such as parking, toll etc. You will be required to compensate the driver directly in cash upon completion of the booking.</strong></p>
+      <p><strong>Please note that the Booking Fee doesn't include expenses such as parking, tolls, food, entry fees etc. Please bring along enough local currency to your booking. You can cancel your Booking up to 48 hours before the start time of your booking and receive a full refund of your Booking Fee.</strong></p>
 
       <div class="actions">
         {% if any_booking_with_capacity %}
@@ -75,9 +82,9 @@
     </form>
 
 
-  {% elsif current_user.transactables.size == 0 %}
+  {% elsif current_user.transactables_count == 0 %}
 
-    <p>In order to invite a driver, you must first create a booking.</p>
+    <p>Before you book another driver, you need to fill out a booking form to share details with the Driver.</p>
 
     <p>Would you like to create a booking now?</p>
 
@@ -88,11 +95,14 @@
 
   {% else %}
 
-    <p>There are no other bookings to invite {{ user.name }} to. Would you like to create another booking right now?</p>
+    <p>Before you book another driver, you need to fill out a booking form to share details with the Driver.</p>
+
+    <p>Would you like to create a new booking?</p>
 
     <div class="actions">
-      <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Create a booking</a>
-      <button type="button" class="button-b" data-close>I'm done</button>
+      <a href="{{ platform_context.transactable_types[0].new_transactable_path }}" class="button-a">Yes</a>
+      <button type="button" class="button-b" data-close>No. I'm done</button>
     </div>
   {% endif %}
+
 </div>

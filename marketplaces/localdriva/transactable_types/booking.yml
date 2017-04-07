@@ -20,28 +20,26 @@ action_types:
     cancellation_policy_enabled: '1'
     cancellation_policy_hours_for_cancellation: 24
     cancellation_policy_penalty_hours: 1.5
-    service_fee_guest_percent: 0
-    service_fee_host_percent: 10
     type: TransactableType::OfferAction
     pricings:
-      - unit: 'hour'
+      - unit: 'item'
         number_of_units: 1
         order_class_name: 'Offer'
         allow_free_booking: false
         allow_nil_price_cents: true
-        fixed_price_cents: 50_0
-      - unit: 'hour'
+        fixed_price_cents: 3800
+      - unit: 'item'
         number_of_units: 2
         order_class_name: 'Offer'
         allow_free_booking: false
         allow_nil_price_cents: true
-        fixed_price_cents: 100_0
-      - unit: 'hour'
+        fixed_price_cents: 4500
+      - unit: 'item'
         number_of_units: 3
         order_class_name: 'Offer'
         allow_free_booking: false
         allow_nil_price_cents: true
-        fixed_price_cents: 150_00
+        fixed_price_cents: 4500
 
 custom_attributes:
   - name: city_name

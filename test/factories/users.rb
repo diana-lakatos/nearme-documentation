@@ -61,7 +61,7 @@ FactoryGirl.define do
       communication
     end
 
-    factory :enquirer do
+    factory :enquirer, aliases: [:driver] do
       after(:build, &:get_buyer_profile)
 
       factory :registered_enquirer do
@@ -71,7 +71,7 @@ FactoryGirl.define do
       end
     end
 
-    factory :lister do
+    factory :lister, aliases: [:passenger] do
       sms_notifications_enabled true
       after(:build, &:get_seller_profile)
     end
