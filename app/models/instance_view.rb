@@ -154,7 +154,8 @@ class InstanceView < ActiveRecord::Base
     'vendor_approval_mailer/notify_host_of_listing_approval',
     'vendor_approval_mailer/notify_host_of_listing_questioned',
     'vendor_approval_mailer/notify_host_of_listing_rejection',
-    'vendor_approval_mailer/notify_host_of_user_approval'
+    'vendor_approval_mailer/notify_host_of_user_approval',
+    'order_mailer/notify_host_of_marked_as_completed'
   ].sort.freeze
 
   DEFAULT_SMS_TEMPLATES_PATHS = [
