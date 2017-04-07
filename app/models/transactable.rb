@@ -129,6 +129,7 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :no_action_booking
   accepts_nested_attributes_for :purchase_action
   accepts_nested_attributes_for :offer_action
+  accepts_nested_attributes_for :custom_images
 
   # == Callbacks
 

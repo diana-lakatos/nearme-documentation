@@ -11,6 +11,12 @@ module Graph
 
         resolve Resolvers::Transactables.new
       end
+
+      field :transactable do
+        type !Types::Transactable
+        argument :id, !types.ID
+        resolve ->(_obj, args, _ctx) { Resolvers::Transactables.decorate(::Transactable.find(args[:id])) }
+      end
     end
   end
 end

@@ -1010,10 +1010,12 @@ class SecuredParams
 
   def project(transactable_type, is_project_owner = false)
     based_params = [
+      :id,
       :description,
       :transactable_type_id,
       :seek_collaborators,
       photos_attributes: nested(photo),
+      custom_images_attributes: nested(custom_image),
       links_attributes: nested(link),
       photo_ids: [],
       topic_ids: [],

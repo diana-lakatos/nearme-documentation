@@ -8,6 +8,10 @@
       = f.simple_fields_for :properties, f.object.properties do |properties_form|
         = properties_form.input :summary, required: true, as: :text, input_html: { maxlength: 140 }
 
+      - ca = @transactable_type.custom_attributes.find_by(name: 'cover_photo')
+      = f.simple_fields_for :custom_images, f.object.custom_images.where(custom_attribute_id: ca.id).first_or_initialize do |custom_images_form|
+        = render 'custom_images/attribute_without_edit', f: custom_images_form, ca: ca
+
     = f.input :description, as: :text, required: true, input_html: { maxlength: 5000, cols: 40, rows: 8 }
 
     = f.association :topics, as: :select, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }, required: true

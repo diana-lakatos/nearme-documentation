@@ -1,13 +1,16 @@
+- g = Graph.execute('transactable_cover_photos', 'transactable_id' => @transactable.id)
+- cover_photo = g.dig('transactable', 'cover_photos', 0, 'url')
+
 - title raw(@transactable.name)
 - canonical_url @transactable.show_path
 - meta_description "#{mask_phone_and_email_if_necessary(@transactable.properties.summary).try(:truncate, 130)}"
-- meta_og_image @transactable.cover_photo.image.url if @transactable.cover_photo.id.present?
+- meta_og_image cover_photo if cover_photo
 
 .wrap-a.white.reduce
   .contain
     .project-a
       %figure
-        = image_tag @transactable.cover_photo.image_url(:golden), alt: @transactable.name
+        = image_tag cover_photo, alt: @transactable.name
         - if @transactable.featured?
           %figcaption
             = t :featured
