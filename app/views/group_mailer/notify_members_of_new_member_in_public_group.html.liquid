@@ -1,1 +1,1 @@
-<p><a href="{{ enquirer.profile_url }}">{{ enquirer.name }}</a> has joined <a href="{{ group.show_url }}">{{ group.name }}</a>.</p>
+<p><a href="{{ 'profile_url' | generate_url: id: enquirer.slug }}">{{ enquirer.name }}</a> has joined <a href="{{ 'group_url' | generate_url: id: group.id }}">{{ group.name }}</a>.</p>

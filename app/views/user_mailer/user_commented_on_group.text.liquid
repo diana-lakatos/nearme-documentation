@@ -1,0 +1,3 @@
+Hi,
+
+{{ commenter.name }} ( {{ 'profile_url' | generate_url: id: commenter.slug }} ) commented on {{ group.name }} ( {{ 'group_url' | generate_url: id: group.id }} ). Click {{ 'group_url' | generate_url: id: group.id }}#comments to read and respond.

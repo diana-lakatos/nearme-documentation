@@ -3,9 +3,11 @@ class GroupDrop < BaseDrop
   # @return [GroupDrop]
   attr_reader :group
 
+  # @!method id
+  #   @return [Integer] id of the group
   # @!method name
   #   @return [String] name of the group
-  delegate :name, to: :group
+  delegate :id, :name, to: :group
 
   def initialize(group)
     @group = group

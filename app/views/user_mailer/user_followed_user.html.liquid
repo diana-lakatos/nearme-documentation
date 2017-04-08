@@ -1,3 +1,3 @@
 <h1>Hi,</h1>
 
-<p><a href="{{ follower_user.profile_url }}">{{ follower_user.name }}</a> started following <a href="{{ followed_user.profile_url }}#followers">You</a>.
+<p><a href="{{ 'profile_url' | generate_url: id: follower_user.slug }}">{{ follower_user.name }}</a> started following <a href="{{ 'profile_url' | generate_url: id: followed_user.slug }}#followers">You</a>.

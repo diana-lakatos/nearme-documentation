@@ -1,0 +1,8 @@
+<h1>Welcome, {{ new_user.first_name }}!</h1>
+
+<p>
+You have been invited by {{ creator.name }} to join {{ platform_context.name }}!
+The e-mail that was used as an username is {{ new_user.email }}, you can set the password manually by clicking the link below.
+</p>
+
+Set your password at <a href="{{ 'set_password_url' | generate_url_with_user_token: new_user }}">Set Password</a>
