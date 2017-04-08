@@ -1,6 +1,7 @@
 class AddFeaturedUsersToUotHomePageLiquid < ActiveRecord::Migration
   def up
     view = InstanceView.find_by(path: 'home/index', instance_id: 195)
+    return if view.nil?
     view.body = <<-HTML
 {% query_graph 'uot_home', result_name: g %}
 <section class="hero-a">
@@ -288,6 +289,7 @@ class AddFeaturedUsersToUotHomePageLiquid < ActiveRecord::Migration
 
   def down
     view = InstanceView.find_by(path: 'home/index', instance_id: 195)
+    return if view.nil?
     view.body = <<-HTML
 <section class="hero-a">
 
