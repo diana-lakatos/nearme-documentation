@@ -42,7 +42,6 @@ class PageTest < ActiveSupport::TestCase
   end
 
   should 'not convert when html content entered xxx' do
-    binding.pry
     page = Page.create(content: '<p> {% content_for head %} </p>', theme: @instance.theme, path: 'Sample Page')
 
     assert '<p> {% content_for head %} </p>', page.html_content
