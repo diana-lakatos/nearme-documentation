@@ -158,6 +158,7 @@ class ActivityFeedEvent < ActiveRecord::Base
       user_updated_topic_status
       user_commented
       user_commented_on_transactable
+      user_updated_group_status
     ).include?(event)
   end
   alias is_text_update is_text_update?
