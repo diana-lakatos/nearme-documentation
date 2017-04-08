@@ -146,7 +146,8 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
         state: {},
         country: {},
         postcode: {},
-        address_components: {}
+        address_components: {},
+        validation: { presence: {} }
       },
       'country_name' => {},
       'mobile_number' => {},
@@ -180,7 +181,8 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
         state: {},
         country: {},
         postcode: {},
-        address_components: {}
+        address_components: {},
+        validation: { presence: {} }
       },
       'country_name' => {},
       'mobile_number' => { validation: { presence: {} } },

@@ -107,7 +107,7 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
   end
 
   def search_params
-    params.permit(:q, :case_sensitive, :match_whole_words)
+    params.permit(:q, :case_sensitive, :match_whole_words, :language, :id, :utf8)
   end
 
   def translation_params

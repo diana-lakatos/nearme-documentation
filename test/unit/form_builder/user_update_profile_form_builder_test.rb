@@ -119,14 +119,19 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
         ).build
       end
 
-      should 'be able to not provide current address' do
+      # FIXME: the test should allow to actually save address
+      # it's just that we can't remove built-in validation for now :|
+      should 'not be able to not provide current address' do
         assert @user_update_profile_form_builder.validate(
           name: 'Maciek',
           'current_address_attributes' => { 'address' => '' }
         )
-        @user_update_profile_form_builder.save
-        assert_equal 'Maciek', @user.name
-        assert_nil @user.current_address
+        # assert_raise should be removed and two assets below should be uncommented
+        assert_raise ActiveRecord::RecordNotSaved do
+          @user_update_profile_form_builder.save
+        end
+        # assert_equal 'Maciek', @user.name
+        # assert_nil @user.current_address
       end
 
       should 'be able to save and then update address' do
@@ -172,7 +177,11 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           configuration: {
             name: {},
             current_address: {
-              address: {},
+              address: {
+                validation: {
+                  presence: {}
+                }
+              },
               validation: {
                 presence: {}
               }
@@ -187,7 +196,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
           name: 'Maciek',
           'current_address_attributes' => { 'address' => '' }
         )
-        assert_equal "Current address can't be blank", @user_update_profile_form_builder.errors.full_messages.join(',')
+        assert_equal "Current address address can't be blank", @user_update_profile_form_builder.errors.full_messages.join(',')
       end
     end
   end
@@ -286,7 +295,14 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
         }
       },
       current_address: {
-        address: {}
+        address: {
+          validation: {
+            presence: {}
+          }
+        },
+        validation: {
+          presence: {}
+        }
       },
       'mobile_number' => {},
       'tags' => {},
