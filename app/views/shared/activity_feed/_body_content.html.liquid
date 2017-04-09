@@ -4,7 +4,7 @@
   {% assign entryId = "entry-content-comment-" | append: event.event_source.id %}
 {% endif %}
 
-<div class="entry-content-a" id="{{ entryId }}">
+<div class="entry-content-a" id="{{ entryId }}" data-user-entry-form-wrapper>
   {% if event.event_source.created_at != event.event_source.updated_at and event.event_source != blank %}
     {% assign body_class = 'edited' %}
   {% endif %}

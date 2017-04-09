@@ -1,5 +1,5 @@
 - if current_user.try(:is_member_of?, group)
-  .publish-a
+  .publish-a{ data: { user_entry_form_wrapper: '' }}
     = simple_form_for UserStatusUpdate.new, url: user_status_updates_path, method: :post do |f|
       - image = current_user.try(:avatar).try(:url, :medium)
       %figure= image_tag(image || space_listing_placeholder_path(width: 80, height: 80))

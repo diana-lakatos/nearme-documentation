@@ -1,6 +1,6 @@
 - no_topic_select = false if local_assigns[:no_topic_select].nil?
 
-.publish-a
+.publish-a{ data: { user_entry_form_wrapper: '' }}
   = simple_form_for :activity_feed, url: root_url do |f|
 
     %figure
