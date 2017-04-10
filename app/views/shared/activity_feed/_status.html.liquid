@@ -10,7 +10,7 @@
     {% else %}
       {% assign user_entry = '' %}
     {% endif %}
-    <article class="status-a current-user-is-owner" {{ user_entry }} data-activity-feed-event-id="{{ event.id }}" data-creator-id="{{ event.creator_id }}">
+    <article class="status-a" {{ user_entry }} data-activity-feed-event-id="{{ event.id }}" data-creator-id="{{ event.creator_id }}">
       {% include 'shared/activity_feed/header', event: event %}
       {% if event.has_body %}
         {% include 'shared/activity_feed/body', event: event, target: target %}

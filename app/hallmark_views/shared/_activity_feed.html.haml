@@ -1,8 +1,10 @@
 - no_topic_select = false if local_assigns[:no_topic_select].nil?
+- can_update_feed_status ||= current_user.try(:can_update_feed_status?, object)
+- comment_view ||= false
 
-- if current_user.try(:can_update_feed_status?, object) == true
+- if can_update_feed_status == true
   .publish-a
-    = render 'user_status_updates/form', user_status_update: UserStatusUpdate.new, no_topic_select: no_topic_select, feed: feed
+    = render 'user_status_updates/form', user_status_update: UserStatusUpdate.new, no_topic_select: no_topic_select, feed: feed, comment_view: comment_view
 
 - if feed.events.count > 0
   .content-container{ 'data-activity-feed': true, data: feed_data }

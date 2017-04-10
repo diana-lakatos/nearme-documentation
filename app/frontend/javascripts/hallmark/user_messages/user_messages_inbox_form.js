@@ -3,13 +3,13 @@
 const BODY_INPUT_SELECTOR = '[data-user-messages-inbox-body-input]';
 const FILE_INPUT_SELECTOR = '[data-user-messages-inbox-file-input]';
 const META_SELECTOR = 'meta[name="csrf-token"]';
-import Events from 'minivents/dist/minivents.commonjs';
+import Eventable from '../../toolkit/eventable';
 import { findInput, findTextArea, findMeta } from '../../toolkit/dom';
 import CommentTextarea from '../comment_textarea/comment_textarea';
 import UserMessagesInboxEntry from './user_messages_inbox_entry';
 import UserMessagesInboxFileInput from './user_messages_inbox_file_input';
 
-class UserMessagesInboxForm {
+class UserMessagesInboxForm extends Eventable {
   form: HTMLFormElement;
   commentTextarea: CommentTextarea;
   fileInput: UserMessagesInboxFileInput;
@@ -18,7 +18,8 @@ class UserMessagesInboxForm {
   action: string;
 
   constructor(form: HTMLFormElement) {
-    Events(this);
+    super();
+
     this.form = form;
 
     let textarea = findTextArea(BODY_INPUT_SELECTOR, this.form);

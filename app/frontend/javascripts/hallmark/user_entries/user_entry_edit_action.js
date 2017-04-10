@@ -1,23 +1,26 @@
-const Events = require('minivents/dist/minivents.commonjs');
+// @flow
+import Eventable from '../../toolkit/eventable';
+import { findElement } from '../../toolkit/dom';
 
-class UserEntryEditAction {
-  constructor(trigger, container) {
-    new Events(this);
+const TARGET_SELECTOR = '.entry-content-a';
+
+class UserEntryEditAction extends Eventable {
+  container: HTMLElement;
+  trigger: HTMLElement;
+  target: HTMLElement;
+
+  constructor(trigger: HTMLElement, container: HTMLElement) {
+    super();
 
     this.trigger = trigger;
-
-    this.target = container.querySelector('.entry-content-a');
     this.container = container;
-
-    if (!this.target) {
-      return;
-    }
+    this.target = findElement(TARGET_SELECTOR, container);
 
     this.bindEvents();
   }
 
   bindEvents() {
-    this.trigger.addEventListener('click', (e) => {
+    this.trigger.addEventListener('click', (e: Event) => {
       e.preventDefault();
       this.toggleEditor();
     });
@@ -38,7 +41,10 @@ class UserEntryEditAction {
 
   showEditor() {
     this.target.classList.add('is-active');
-    this.target.querySelector('textarea').focus();
+    let textarea = this.target.querySelector('textarea');
+    if (textarea instanceof HTMLTextAreaElement) {
+      textarea.focus();
+    }
   }
 
 }

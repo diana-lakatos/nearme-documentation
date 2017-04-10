@@ -1,4 +1,10 @@
-<div class="entry-content-a" id="entry-content-user-status-{{ event.event_source.id }}">
+{% if event.is_status_update_event %}
+  {% assign entryId = "entry-content-user-status-" | append: event.event_source.id %}
+{% elsif event.is_comment_event %}
+  {% assign entryId = "entry-content-comment-" | append: event.event_source.id %}
+{% endif %}
+
+<div class="entry-content-a" id="{{ entryId }}">
   {% if event.event_source.created_at != event.event_source.updated_at and event.event_source != blank %}
     {% assign body_class = 'edited' %}
   {% endif %}
