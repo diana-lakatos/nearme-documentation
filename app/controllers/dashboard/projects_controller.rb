@@ -102,10 +102,15 @@ class Dashboard::ProjectsController < Dashboard::BaseController
       transactable_by_slug = Transactable.find_by(slug: params[:id])
       @transactable = current_user.transactable_collaborators.find_by(transactable_id: transactable_by_slug.id).try(:transactable) if transactable_by_slug.present?
     end
+
+    redirect_to dashboard_project_type_projects_path(@transactable_type) if @transactable.blank?
   end
 
   def find_transactable_type
+    # Search is performed by slug or id
     @transactable_type = TransactableType.find(params[:project_type_id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to root_path
   end
 
   def transactable_params
