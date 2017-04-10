@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module MarketplaceBuilder
   module Serializers
     class InstanceProfileTypeSerializer < BaseSerializer
-      resource_name -> (t) { "instance_profile_types/#{t.name.underscore}" }
+      resource_name ->(t) { "instance_profile_types/#{t.name.parameterize('_')}" }
 
       properties :name, :profile_type
 

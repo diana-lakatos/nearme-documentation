@@ -1,6 +1,8 @@
 {% for transactable in transactables %}
   {% assign collaborator = transactable.transactable_collaborators[0] %}
   {% assign offer = transactable.not_cancelled_orders | detect: user_id: collaborator.user.id %}
+  {% assign prices = transactable.action_type.transactable_type_action_type.pricings | group_by: 'number_of_units' %}
+
   <article class="listing-b" id="transactable_{{transactable.id}}">
     <header>
       <h2>{{ transactable.name }}</h2>
@@ -51,7 +53,7 @@
 
       <div class="listing-b-user-details">
         {% if collaborator == blank %}
-          <h3 class="no-driver-selected">You have not selected a driver for this booking yet.</h3>
+          <h3 class="no-driver-selected">You have not selected a driver for this booking yet. Please click on Find A Driver above to choose a driver and send your booking.</h3>
         {% else %}
           {% assign driver = collaborator.user %}
           <div class="user-profile">
@@ -75,11 +77,14 @@
             <p class="driver-category driver-category-{{ driver.buyer_properties.driver_category | downcase }}">Category: <b>{{ driver.buyer_properties.driver_category }}</b></p>
             <p class="price">Price:
               {% if offer != blank %}
-              <span data-convert-price="{{ offer.total_amount_money.to_i }}">{{ offer.total_amount_money | pricify }}</span>
+                {% assign full_price = offer.total_amount %}
+                {% assign guest_fee = offer.service_fee_amount_guest_money %}
               {% else %}
-              {% assign total = driver.buyer_properties.hourly_price | times: transactable.properties.duration %}
-              <span data-convert-price="{{ total }}">{{ total | pricify }}</span>
+                {% assign price = prices[driver.buyer_properties['driver_type_unit']].first %}
+                {% assign full_price = price.fixed_price_with_guest_service_fee | times: transactable.properties['duration'] %}
+                {% assign guest_fee = price.fixed_price_guest_service_fee | times: transactable.properties['duration']   %}
               {% endif %}
+              <span data-convert-price="{{ full_price.to_f }}">AUD {{ full_price | pricify }}<br /><span style="font-size: 0.75em; font-weight: normal;">(plus AUD {{ guest_fee | pricify }} service fee)</span></span>
             </p>
 
             {% if driver.buyer_properties.short_bio != blank %}

@@ -41,6 +41,12 @@ class PageTest < ActiveSupport::TestCase
     end
   end
 
+  should 'not convert when html content entered xxx' do
+    page = Page.create(content: '<p> {% content_for head %} </p>', theme: @instance.theme, path: 'Sample Page')
+
+    assert '<p> {% content_for head %} </p>', page.html_content
+  end
+
   context 'url slugging' do
     should 'create unique slugs per theme' do
       FactoryGirl.create(:page, theme: @instance.theme, slug: 'faq')

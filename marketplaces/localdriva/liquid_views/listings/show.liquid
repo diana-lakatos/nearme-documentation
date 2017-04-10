@@ -1,6 +1,7 @@
 {% content_for 'social_meta_tags' %}
   {% include 'shared/social_meta_for_object', object: listing, url: listing.show_path %}
 {% endcontent_for %}
+{% assign prices = listing.action_type.transactable_type_action_type.pricings | group_by: 'number_of_units' %}
 
 {% assign collaborator = current_user | find_collaborator: listing %}
 {% if collaborator != blank %}
@@ -58,7 +59,9 @@
               {% endif %}
               {% if listing.transactable_collaborators[0] != blank %}
                 <dt>Price:</dt>
-                {% assign total = listing.transactable_collaborators[0].user.buyer_properties.hourly_price | times: listing.properties.duration %}
+                {% assign driver_type_unit = listing.transactable_collaborators[0].user.buyer_profile.properties['driver_type_unit'] | minus: 0 %}
+                {% assign price = prices[driver_type_unit].first %}
+                {% assign total = price.fixed_price_f | times: listing.properties.duration %}
                 <dd data-convert-price="{{ total }}">{{ total | pricify }}</dd>
               {% endif %}
             </dl>

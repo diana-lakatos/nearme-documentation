@@ -224,6 +224,7 @@ module.exports = class ModeAndConstraintModel extends DatepickerModel
     return false if endDate.getTime() < startDate.getTime()
     current = startDate
     while current.getTime() <= endDate.getTime()
-      return false unless @canSelectDate(current)
+      if !@canSelectDate(current) || endDate.toDateString() != current.toDateString() && @listing.firstUnavailableDay(current)
+        return false
       current = dateUtil.next(current)
     true

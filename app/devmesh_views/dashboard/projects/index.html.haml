@@ -38,7 +38,7 @@
               %tr
                 %td.col-picture
                   = link_to transactable.decorate.show_path do
-                    = image_tag transactable.cover_photo.image.url(:medium)
+                    = image_tag transactable.custom_images.for_attribute('cover_photo').first&.image&.url(:thumb)
                 %td.col-name
                   = link_to transactable.name, transactable.decorate.show_path
                 %td.col-summary
@@ -57,4 +57,3 @@
                   = link_to t(:edit), edit_dashboard_project_type_project_path(@transactable_type, transactable), class: 'action-edit'
                   - if transactable.creator_id == current_user.id
                     = link_to t(:remove), dashboard_project_type_project_path(@transactable_type, transactable), method: :delete, class: 'action-remove', data: { confirm: 'Are you sure?' }
-

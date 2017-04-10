@@ -6,7 +6,7 @@
 - if @transactable.photos.except_cover.any?
   %h4= t :gallery
   %ul.gallery-a
-    - @transactable.photos.except_cover.each do |p|
+    - @transactable.photos.each do |p|
       %li
         = image_tag p.image_url(:thumb), width: 200, height: 175
 

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 class Transactable::PricingDrop < BaseDrop
-  # @return [Transactable::PricingDrop]
-  attr_reader :pricing
-
   # @!method id
   #   @return [Integer] numeric identifier for this pricing object
   # @!method action
@@ -15,9 +12,10 @@ class Transactable::PricingDrop < BaseDrop
   #   @return [MoneyDrop] price set for this pricing object
   # @!method number_of_units
   #   @return [Integer] number of the specified units for this pricing object
-  delegate :id, :action, :unit, :price, :number_of_units, to: :pricing
-
-  def initialize(pricing)
-    @pricing = pricing
-  end
+  # @!method service_fee_guest_percent
+  #   @return [Integer] Service fee paid by guest for this pricing
+  # @!method service_fee_host_percent
+  #   @return [Integer] Service fee paid by host for this pricing
+  delegate :id, :action, :unit, :price, :number_of_units, :service_fee_host_percent,
+           :service_fee_guest_percent, to: :source
 end

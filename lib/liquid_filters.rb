@@ -95,19 +95,11 @@ module LiquidFilters
     array.compact
   end
 
-  # @return [Array<Object>] the input array in reversed order
-  # @param array [Array<Object>] array to be reversed
-  def reverse(array)
-    array.reverse
-  end
-
   # @return [Array<Object>] array to which we add the item given as the second parameter
   # @param array [Array<Object>] array to which we add a new element
   # @param item [Object] item we add to the array
   def add_to_array(array, item)
-    array ||= []
-    array << item
-    array
+    Array(array.presence).push(item)
   end
 
   # @return [Array<Object>] the input array rotated by a number of times given as the second
@@ -765,14 +757,6 @@ module LiquidFilters
                    .where('data_file_name LIKE ? OR title LIKE ?', "%#{options['query']}%", "%#{options['query']}%")
                    .order("#{sort_option} #{sort_direction}")
                    .paginate(page: options['page'] || 1, per_page: [(options['per_page'] || 10).to_i, 50].min)
-  end
-
-  # @return [Array] array that is the result of of concatenating passed arguments
-  # @param arr_a [Array]
-  # @param arr_b [Array]
-  # @todo -- remove after upgrade to Liquid 4.x as duplicated
-  def concat(arr_a, arr_b)
-    arr_a + arr_b
   end
 
   # @return [String] path used for a form for creating a new message in a thread

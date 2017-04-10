@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module MarketplaceBuilder
   module Serializers
     class GraphQuerySerializer < BaseSerializer
-      resource_name -> (g) { "graph_queries/#{g.name.underscore}" }
+      resource_name ->(g) { "graph_queries/#{g.name.parameterize('_')}" }
 
       property :content
 

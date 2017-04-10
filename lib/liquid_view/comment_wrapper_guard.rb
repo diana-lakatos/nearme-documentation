@@ -12,13 +12,20 @@ class LiquidView
     end
 
     def authorized?
-      debugging_enabled? &&
-        user_is_instance_admin? &&
+      instance_admin_in_debugging_mode? &&
         html_request_and_response? &&
         response_success?
     end
 
     protected
+
+    def instance_admin_in_debugging_mode?
+      development_mode? || (debugging_enabled? && user_is_instance_admin?)
+    end
+
+    def development_mode?
+      Rails.env.development? || Rails.env.staging?
+    end
 
     def debugging_enabled?
       PlatformContext.current&.instance&.debugging_mode_for_admins?

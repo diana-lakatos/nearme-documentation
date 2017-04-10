@@ -85,6 +85,22 @@ partial: false
 
         </section>
 
+        <section class="featured-users">
+          <header class="section-header">
+            <h2 class="hx-a" id="FeaturedSMEs">Featured SMEs</h2>
+          </header>
+
+          <div class="cta-boxes-b">
+            {% for sme in g.featured_smes %}
+              <article>
+                <figure><a href="{{ sme.profile_path }}"><img src="{{ sme.avatar_url_big }}" alt="{{ sme.name }}"/></a></figure>
+                <h4><a href="{{ sme.profile_path }}">{{ sme.name }}</a></h4>
+                <p>{{ sme.bio | truncate: 140 }}</p>
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+
         <section class="video-cta">
             <header class="section-header">
                 <h2 class="hx-a" id="WatchOurVideo">Watch Our Video</h2>
@@ -232,6 +248,7 @@ partial: false
     </div>
 </main>
 
+{% comment %}
 <!-- <section class="testimonials-a">
     <div class="wrapper-a">
 
@@ -265,3 +282,4 @@ partial: false
         </div>
     </div>
 </section>   -->
+{% endcomment %}

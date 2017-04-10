@@ -71,7 +71,15 @@ class TransactableTypes::SpaceWizardController < ApplicationController
         end
         format.json { render json: nil, status: :ok }
       end
-    elsif User.transaction { raise ActiveRecord::Rollback unless @user.seller_profile.save && @user.save; true }
+      # @user.current_address&.save was added because for some reason it disappears:
+      #     @user.current_address # => Object
+      #     @user.save # => true
+      #     @user.current_address # => nil
+      # have not debugged the root cause - this whole method will be rewritten very soon
+      # as we have almost all we need already in FormBuilder.
+      # In case you have issues with transactable not being saved or something - that's
+      # probably the same
+    elsif User.transaction { @user.current_address&.save; raise ActiveRecord::Rollback unless @user.seller_profile.save && @user.save; true }
       @user.listings.first.try(:action_type).try(:schedule).try(:create_schedule_from_schedule_rules)
       @user.companies.first.update_metadata(draft_at: nil, completed_at: Time.now)
       if @transactable_type.require_transactable_during_onboarding?

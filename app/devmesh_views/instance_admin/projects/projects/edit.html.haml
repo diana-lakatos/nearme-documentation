@@ -5,7 +5,7 @@
     .row
       .input-container.col-xs-12
         = f.input :featured, as: :switch, label: 'Featured'
-        = f.input :category_ids, as: :select, collection: Category.tags, input_html: { multiple: true }
+        = f.input :category_ids, as: :select, collection: (Category.find_by(name: "Project tags", parent_id: nil).try(:children) || []), input_html: { multiple: true }
 
   = content_for :header_buttons do
     = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

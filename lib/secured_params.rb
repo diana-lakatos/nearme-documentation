@@ -562,7 +562,9 @@ class SecuredParams
       :allow_nil_price_cents,
       :order_class_name,
       :fixed_price,
-      :fixed_price_cents
+      :fixed_price_cents,
+      :service_fee_guest_percent,
+      :service_fee_host_percent
     ]
  end
 
@@ -967,7 +969,7 @@ class SecuredParams
       :transactable_type_action_type_id,
       pricings_attributes: nested(transactable_pricing),
       schedule_attributes: nested(schedule),
-      availability_template_attributes: nested(availability_template)
+      availability_templates_attributes: nested(availability_template)
     ]
   end
 
@@ -1008,10 +1010,12 @@ class SecuredParams
 
   def project(transactable_type, is_project_owner = false)
     based_params = [
+      :id,
       :description,
       :transactable_type_id,
       :seek_collaborators,
       photos_attributes: nested(photo),
+      custom_images_attributes: nested(custom_image),
       links_attributes: nested(link),
       photo_ids: [],
       topic_ids: [],

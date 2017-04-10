@@ -27,6 +27,16 @@ module Graph
       field :creator, !Types::User do
         resolve ->(obj, _args, _ctx) { UserDrop.new(obj.creator) }
       end
+      field :custom_attribute_photos,
+            !types[Types::Image],
+            'Fetch images for photo custom attribute by name,
+             ex: cover_images: custom_attribute_photo(name: "cover_image")
+             by default they are ordered by DATE' do
+        argument :name, !types.String
+        argument :order, Types::CustomImageOrderEnum
+        argument :order_direction, Types::OrderDirectionEnum
+        resolve Graph::Resolvers::Transactables::CustomAttributePhotos.new
+      end
     end
 
     TransactableFilterEnum = GraphQL::EnumType.define do

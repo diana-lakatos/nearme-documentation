@@ -13,7 +13,8 @@ class FormComponentToFormConfiguration
     state: {},
     country: {},
     postcode: {},
-    address_components: {}
+    address_components: {},
+    validation: { presence: {} }
   }.freeze
 
   def initialize(instances)

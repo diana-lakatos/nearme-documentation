@@ -530,8 +530,11 @@ en:
       fields:
         id: "ID"
         name: "Name"
+        email: 'Email'
         description: "Description"
         properties: "Properties"
+        creator_name: 'Creator name'
+        creator_email: 'Creator email'
         actions: "Actions"
       projects:
         community_reports: "Community reports"

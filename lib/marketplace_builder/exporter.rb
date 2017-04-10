@@ -66,7 +66,7 @@ module MarketplaceBuilder
           f.puts '---' if raw_content.present?
         end
 
-        f.write raw_content
+        f.write raw_content.encode(raw_content.encoding, universal_newline: true) if raw_content.present?
       end
     end
 

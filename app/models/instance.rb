@@ -63,6 +63,7 @@ class Instance < ActiveRecord::Base
   has_many :tickets, -> { where(target_type: 'Instance').order('created_at DESC') }, class_name: 'Support::Ticket'
   has_many :transactable_types
   has_many :action_types, class_name: 'TransactableType::ActionType'
+  has_many :transactable_type_pricings
   # @todo Remove project_types when {ProjectType} will be finally removed
   has_many :project_types, class_name: 'ProjectType'
   has_many :all_payment_gateways, class_name: 'PaymentGateway'
@@ -213,11 +214,11 @@ class Instance < ActiveRecord::Base
   end
 
   def guest_fee_enabled?
-    action_types.where('service_fee_guest_percent != 0').any?
+    action_types.enabled.any?(&:guest_fee_enabled?)
   end
 
   def host_fee_enabled?
-    action_types.where('service_fee_host_percent != 0').any?
+    action_types.enabled.any?(&:host_fee_enabled?)
   end
 
   def default_twilio_config

@@ -70,7 +70,12 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def new
-    @order = @transactable_pricing.order_class.where(user: current_user, transactable_id: @transactable.id, state: 'inactive').first_or_initialize
+    @order = @transactable_pricing.order_class.where(
+      user: current_user,
+      transactable_id: @transactable.id,
+      state: 'inactive',
+      transactable_pricing_id: @transactable_pricing.id
+    ).first_or_initialize
     if @order.persisted?
       redirect_to(action: 'edit', id: @order)
     else

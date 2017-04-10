@@ -76,7 +76,7 @@ module.exports = class Search
       @showResults(html)
       @reinitializeElements()
       @replaceSeeMore(html)
-      @updateUrlForSearchQuery()
+      @updateUrlForSearchQuery(data['search_type'])
 
   showResults: (html) ->
     @searchContainer().replaceWith($(html).find('.search-container'))
@@ -110,16 +110,16 @@ module.exports = class Search
     )
 
 
-  updateUrlForSearchQuery: ->
+  updateUrlForSearchQuery: (search_type) ->
     url = document.location.href.replace(/\?.*$/, "")
     params = @getSearchParams()
     # we need to decodeURIComponent, otherwise accents will not be handled correctly. Remove decodeURICompoent if we switch back
     # to window.history.replaceState, but it's *absolutely mandatory* in this case. Removing it now will lead to infiite redirection in IE lte 9
-    url = decodeURIComponent("?#{$.param(params)}")
+    params = decodeURIComponent("?#{$.param(params)}")
     for tab in @searchTabs
       old_url = $(tab).attr('href').split('?')[0]
       $(tab).attr('href', old_url + "?query=#{@topnavFormQuery.val()}")
-    History.replaceState(params, "Search Results", url)
+    History.replaceState(params, "Search Results", "/search/#{search_type}#{params}")
 
 
   getSearchParams: ->

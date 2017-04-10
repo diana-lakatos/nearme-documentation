@@ -5,6 +5,9 @@ class Group < ActiveRecord::Base
   scoped_to_platform_context
 
   include QuerySearchable
+  include Categorizable
+  include CategoriesOwnerable
+
   SORT_OPTIONS_MAP = { all: 'All', featured: 'Featured', most_recent: 'Most Recent', near_me: 'Near Me', members: 'Members' }.freeze
   SORT_OPTIONS = SORT_OPTIONS_MAP.values.freeze
 

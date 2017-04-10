@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
@@ -107,14 +108,13 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     FactoryGirl.create(:additional_charge_type, currency: currency, amount: 15)
     @transactable = FactoryGirl.create(:transactable, :with_time_based_booking, currency: currency)
     @transactable.action_type.pricing_for('1_day').update! price: 25
-    # @transactable.action_type.save!
     @transactable.action_type.transactable_type_action_type.update_attribute(:service_fee_host_percent, 10)
     @transactable.action_type.transactable_type_action_type.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
 
     payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
     payout_gateway = FactoryGirl.create(:paypal_adaptive_payment_gateway)
-    currency = Currency.find_by_iso_code(currency) || FactoryGirl.create(:currency, iso_code: currency)
+    currency = Currency.find_by(iso_code: currency) || FactoryGirl.create(:currency, iso_code: currency)
     payout_gateway.payment_currencies << currency unless payout_gateway.payment_currencies.include?(currency)
     @payment_method = payment_gateway.payment_methods.credit_card.first
 
@@ -169,7 +169,7 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     assert_equal @transactable.currency, @order.currency
     # assert_equal 25.to_money(@transactable.currency), @order.subtotal_amount
     assert_equal 25.to_money(@transactable.currency), @order.unit_price
-    assert_equal 3.75.to_money(@transactable.currency), @order.service_fee_amount_guest  if %w(USD IQD).include?(@transactable.currency)
+    assert_equal 3.75.to_money(@transactable.currency), @order.service_fee_amount_guest if %w(USD IQD).include?(@transactable.currency)
     assert_equal 15.00.to_money(@transactable.currency), @order.service_additional_charges
     assert_equal 18.75.to_money(@transactable.currency), @order.service_fee_amount_guest + @order.service_additional_charges
     assert_equal 2.5.to_money(@transactable.currency), @order.service_fee_amount_host if %w(USD IQD).include?(@transactable.currency)

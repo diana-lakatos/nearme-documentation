@@ -1,0 +1,9 @@
+query UOTHomeQuery{
+  featured_smes:users(take: 6, filters: [FEATURED]){
+    id
+    profile_path
+    avatar_url_big
+    name
+    bio: profile_property(profile_type: 'buyer', name: 'bio')
+  }
+}

@@ -337,6 +337,8 @@ en:
             unit: 'Unit'
             min_price: 'Minimal price'
             max_price: 'Maximal price'
+            service_fee_guest_percent: 'Guest Service Fee Percent'
+            service_fee_host_percent: 'Host Service Fee Percent'
         action_price_per_unit: "Enable Per Unit Pricing"
         bookable_noun: 'Bookable Noun (e.g. Desk)'
         lessor: 'Lessor (e.g. host)'

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :currency do
     symbol '$'
@@ -29,6 +30,15 @@ FactoryGirl.define do
       iso_code 'PLN'
       iso_numeric 985
       subunit 'Grosz'
+    end
+
+    factory :currency_aud do
+      symbol '$'
+      priority 4
+      html_entity '$'
+      name 'Australian Dollar'
+      iso_code 'AUD'
+      iso_numeric 36
     end
 
     factory :currency_nzd do

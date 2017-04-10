@@ -143,7 +143,7 @@ class UserMessage < ActiveRecord::Base
   end
 
   def the_other_user(current_user)
-    author_id == current_user.id ? thread_recipient : author
+    author_id == current_user.id ? recipient : author
   end
 
   private
