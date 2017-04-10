@@ -1,31 +1,47 @@
-const Events = require('minivents/dist/minivents.commonjs');
-const closest = require('../toolbox/closest');
-const getImageOrientationFromArrayBuffer = require('../toolbox/get_image_orientation_from_array_buffer');
-const base64ArrayBuffer = require('../toolbox/base64_array_buffer');
-const getImageTypeFromArrayBuffer = require('../toolbox/get_image_type_from_array_buffer');
+// @flow
 
-class UserEntryFileField {
-  constructor(input) {
-    Events(this);
+import Eventable from '../../toolkit/eventable';
+import { closest } from '../../toolkit/dom';
+import { getImageTypeFromArrayBuffer, base64ArrayBuffer, getImageOrientationFromArrayBuffer } from '../../toolkit/array_buffer';
 
-    this.ui = {};
-    this.ui.input = input;
-    this.ui.form = closest(input, 'form');
+type ImageDataType = {
+  dataUrl: string,
+  orientation: number
+};
+
+class UserEntryFileField extends Eventable {
+  input: HTMLInputElement;
+  form: HTMLFormElement;
+  reader: FileReader;
+  imageData: ImageDataType;
+
+  constructor(input: HTMLInputElement) {
+    super();
+
+    this.input = input;
+    let form = closest(this.input, 'form');
+    if (!(form instanceof HTMLFormElement)) {
+      throw new Error('Unable to find form element for user entry file field');
+    }
+    this.form = form;
 
     this.reader = new FileReader();
-    this.imageData = {};
+    this.imageData = {
+      dataUrl: '',
+      orientation: 0
+    };
     this.bindEvents();
   }
 
   bindEvents() {
-    this.ui.input.addEventListener('change', this.update.bind(this));
+    this.input.addEventListener('change', this.update.bind(this));
     this.reader.onload = this.parse.bind(this);
   }
 
   parse() {
-    let buffer = this.reader.result;
+    let buffer: ArrayBuffer = this.reader.result;
 
-    let fileType = getImageTypeFromArrayBuffer(buffer) || this.ui.input.files[0].type;
+    let fileType: string = getImageTypeFromArrayBuffer(buffer) || this.input.files[0].type;
 
     let url = `data:${fileType};base64,${base64ArrayBuffer(buffer)}`;
     this.imageData = {
@@ -36,19 +52,23 @@ class UserEntryFileField {
   }
 
   update() {
-    if (this.ui.input.files.length > 0) {
-      return this.reader.readAsArrayBuffer(this.ui.input.files[0]);
+    if (this.input.files.length > 0) {
+      this.reader.readAsArrayBuffer(this.input.files[0]);
+      return;
     }
-    this.imageData = {};
+    this.imageData = {
+      dataUrl: '',
+      orientation: 0
+    };
     this.emit('empty');
   }
 
-  getImageData() {
+  getImageData(): ImageDataType {
     return this.imageData;
   }
 
   empty() {
-    this.ui.input.value = '';
+    this.input.value = '';
   }
 }
 

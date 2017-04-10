@@ -1,18 +1,32 @@
-const Events = require('minivents/dist/minivents.commonjs');
-const UserEntryImage = require('./user_entry_image');
+// @flow
 
-class UserEntryImages {
-  constructor(container) {
-    Events(this);
-    this.ui = {};
-    this.ui.container = container;
+import Eventable from '../../toolkit/eventable';
+import UserEntryImage from './user_entry_image';
+
+const REMOVE_FIELD_SELECTOR = '[data-user-entry-form-remove-input]';
+const ENTRY_FORM_IMAGE_SELECTOR = '[data-user-entry-form-image]';
+
+class UserEntryImages extends Eventable {
+  container: HTMLElement;
+  images: Array<UserEntryImage>;
+  removeField: ?HTMLInputElement;
+
+  constructor(container: HTMLElement) {
+    super();
+
+    this.container = container;
     this.images = this.getImagesFromContainer();
     this.bindEvents();
-    this.ui.removeField = container.querySelector('[data-user-entry-form-remove-input]');
+    let removeField = container.querySelector(REMOVE_FIELD_SELECTOR);
+    if (removeField instanceof HTMLInputElement) {
+      this.removeField = removeField;
+    }
   }
 
-  getImagesFromContainer() {
-    return Array.prototype.map.call(this.ui.container.querySelectorAll('[data-user-entry-form-image]'), (imageContainer) => {
+  getImagesFromContainer(): Array<UserEntryImage> {
+    let els = this.container.querySelectorAll(ENTRY_FORM_IMAGE_SELECTOR);
+
+    return Array.prototype.map.call(els, (imageContainer: HTMLElement): UserEntryImage => {
       let image = new UserEntryImage({
         isPersisted: true
       });
@@ -21,7 +35,7 @@ class UserEntryImages {
     });
   }
 
-  add({ dataUrl, orientation }) {
+  add({ dataUrl, orientation }: { dataUrl: string, orientation: number }) {
     let image = new UserEntryImage();
     image.setSource(dataUrl);
     if (orientation > 0) {
@@ -31,20 +45,20 @@ class UserEntryImages {
     image.build();
     this.bindImageEvents(image);
     this.images.push(image);
-    this.ui.container.insertAdjacentElement('afterbegin', image.getContainer());
+    this.container.insertAdjacentElement('afterbegin', image.getContainer());
 
     this.unmarkRemoval();
   }
 
   removeAll() {
-    this.images.forEach((image) => {
+    this.images.forEach((image: UserEntryImage) => {
       image.destroy();
     });
 
     this.markRemoval();
   }
 
-  bindImageEvents(image) {
+  bindImageEvents(image: UserEntryImage) {
     image.on('remove', () => {
       this.emit('remove');
       this.markRemoval();
@@ -52,27 +66,27 @@ class UserEntryImages {
   }
 
   bindEvents() {
-    this.images.forEach((image) => {
+    this.images.forEach((image: UserEntryImage) => {
       this.bindImageEvents(image);
     });
   }
 
   rollback() {
-    this.images.forEach((image) => {
+    this.images.forEach((image: UserEntryImage) => {
       image.rollback();
     });
     this.unmarkRemoval();
   }
 
   markRemoval() {
-    if (this.ui.removeField) {
-      this.ui.removeField.value = 1;
+    if (this.removeField instanceof HTMLInputElement) {
+      this.removeField.value = '1';
     }
   }
 
   unmarkRemoval() {
-    if (this.ui.removeField) {
-      this.ui.removeField.value = '';
+    if (this.removeField instanceof HTMLInputElement) {
+      this.removeField.value = '';
     }
   }
 }

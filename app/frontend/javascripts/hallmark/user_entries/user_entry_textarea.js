@@ -1,14 +1,29 @@
-const closest = require('../toolbox/closest');
+// @flow
+import { closest } from '../../toolkit/dom';
+
+
+const SHOULD_SUBMIT_ON_RETURN_ATTRIBUTE = 'data-user-entry-form-submit-on-return';
 
 class UserEntryTextarea {
-  constructor(textarea) {
-    if (!(textarea instanceof Element) || textarea.nodeName.toLowerCase() !== 'textarea') {
+  initValue: string;
+  shouldSubmitOnReturn: boolean;
+  form: HTMLFormElement;
+  textarea: HTMLTextAreaElement;
+
+  constructor(textarea: HTMLElement) {
+    if (!(textarea instanceof HTMLTextAreaElement)) {
       throw new Error('Invalid or missing textarea element');
     }
     this.textarea = textarea;
     this.initValue = textarea.value;
-    this.shouldSubmitOnReturn = this.textarea.hasAttribute('data-user-entry-form-submit-on-return');
-    this.form = closest(textarea, 'form');
+    this.shouldSubmitOnReturn = this.textarea.hasAttribute(SHOULD_SUBMIT_ON_RETURN_ATTRIBUTE);
+
+    let form = closest(textarea, 'form');
+    if (!(form instanceof HTMLFormElement)) {
+      throw new Error('Unable to locate encapsulating form for UserEntryTextarea');
+    }
+    this.form = form;
+
     this.bindEvents();
     this.init();
   }
@@ -32,7 +47,7 @@ class UserEntryTextarea {
     }
   }
 
-  submitOnReturn(event) {
+  submitOnReturn(event: Event) {
 
     // on enter
     if (event.keyCode === 13)
@@ -67,12 +82,15 @@ class UserEntryTextarea {
     this.textarea.value = val;
   }
 
-  value(val) {
+  value(val: ?string): ?string {
     if (typeof val === 'undefined') {
       return this.textarea.value;
     }
-    this.textarea.value = val;
-    this.adjust();
+
+    if (typeof val === 'string') {
+      this.textarea.value = val;
+      this.adjust();
+    }
   }
 
   init() {

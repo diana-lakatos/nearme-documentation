@@ -1,48 +1,64 @@
-const Events = require('minivents/dist/minivents.commonjs');
+// @flow
+import Eventable from '../../toolkit/eventable';
 
 const defaults = {
   isPersisted: false
 };
 
-class UserEntryImage {
-  constructor(options = {}) {
-    Events(this);
+class UserEntryImage extends Eventable {
+  container: HTMLElement;
+  image: ?HTMLImageElement;
+  trigger: HTMLButtonElement;
+  isPersisted: boolean;
+  fileType: string;
+  orientation: number;
+  source: string;
+  options: {
+    isPersisted: boolean
+  }
+
+  constructor(options: { isPersisted?: boolean } = {}) {
+    super();
+
     this.options = Object.assign({}, defaults, options);
     this.source = '';
-    this.ui = {};
     this.orientation = 1;
     this.fileType = 'image/jpg';
   }
 
-  getContainer() {
-    return this.ui.container;
+  getContainer(): HTMLElement {
+    return this.container;
   }
 
-  setContainer(container) {
-    this.ui.container = container;
-    this.ui.image = container.querySelector('img');
+  setContainer(container: HTMLElement) {
+    this.container = container;
+    let image = container.querySelector('img');
+    if (image instanceof HTMLImageElement) {
+      this.image = image;
+    }
 
     this.addRemoveTrigger();
     this.bindEvents();
   }
 
-  setSource(source) {
+  setSource(source: string) {
     this.source = source;
-    if (this.ui.image) {
-      this.ui.image.setAttribute('src', source);
+    if (this.image instanceof HTMLImageElement) {
+      this.image.setAttribute('src', source);
     }
   }
 
-  setFileType(fileType) {
+  setFileType(fileType: string) {
     this.fileType = fileType;
   }
 
-  setOrientation(orientation) {
+  setOrientation(orientation: number) {
     if (orientation < 1 || orientation > 8) {
       throw new Error(`Invalid orientation value: ${orientation}`);
     }
     this.orientation = orientation;
-    if (this.ui.image) {
+
+    if (this.image instanceof HTMLImageElement) {
       this.applyOrientation();
     }
   }
@@ -53,22 +69,23 @@ class UserEntryImage {
     if (iOS) {
       return;
     }
-
-    this.ui.image.className = `orientation-${this.orientation}`;
+    if (this.image) {
+      this.image.className = `orientation-${this.orientation}`;
+    }
   }
 
   build() {
     let container = document.createElement('div');
     container.classList.add('user-entry-form-image');
     container.setAttribute('data-user-entry-form-image', '');
-    this.ui.container = container;
+    this.container = container;
 
-    let image = document.createElement('img');
+    let image: HTMLImageElement = document.createElement('img');
     image.setAttribute('src', this.source);
-    this.ui.image = image;
+    this.image = image;
     this.applyOrientation();
 
-    this.ui.container.appendChild(this.ui.image);
+    this.container.appendChild(image);
 
     this.addRemoveTrigger();
     this.bindEvents();
@@ -79,26 +96,26 @@ class UserEntryImage {
     trigger.setAttribute('type', 'button');
     trigger.classList.add('remove');
     trigger.innerText = 'Remove this image';
-    this.ui.trigger = trigger;
-    this.ui.container.appendChild(trigger);
+    this.trigger = trigger;
+    this.container.appendChild(trigger);
   }
 
   bindEvents() {
-    this.ui.trigger.addEventListener('click', () => {
+    this.trigger.addEventListener('click', () => {
       this.destroy();
       this.emit('remove');
     });
   }
 
   destroy() {
-    this.ui.container.classList.add('hidden');
+    this.container.classList.add('hidden');
   }
 
   rollback() {
-    if (this.isPersisted) {
-      this.ui.container.classList.remove('hidden');
+    if (this.options.isPersisted) {
+      this.container.classList.remove('hidden');
     } else {
-      this.ui.container.classList.add('hidden');
+      this.container.classList.add('hidden');
     }
   }
 }

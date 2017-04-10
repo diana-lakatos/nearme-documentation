@@ -1,9 +1,13 @@
+// @flow
+//
 class UserEntryLoader {
+  loader: HTMLElement;
+
   constructor() {
     this.loader = this.build();
   }
 
-  getElement() {
+  getElement(): HTMLElement {
     return this.loader;
   }
 
@@ -19,7 +23,7 @@ class UserEntryLoader {
     this.loader.classList.remove('is-active');
   }
 
-  build() {
+  build(): HTMLElement {
     let loader = document.createElement('div');
     loader.classList.add('loader', 'loader-default');
     return loader;
