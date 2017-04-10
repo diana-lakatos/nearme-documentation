@@ -4,7 +4,29 @@
       %h3.hx
         = t :filter_by
 
-      = f.input :topic_ids, as: :select, multiple: true, input_html: { class: 'selectize', multiple: true }, collection: Topic.all, value_method: :id, label_method: :name, selected: @searcher.selected_topic_ids, wrapper_html: { class: 'drop role' }, required: false, placeholder: t('simple_form.placeholders.defaults.topic_ids')
+      = f.input :topic_ids,
+        as: :select,
+        multiple: true,
+        input_html: { class: 'selectize', multiple: true },
+        collection: Topic.all,
+        value_method: :id,
+        label_method: :name,
+        selected: @searcher.selected_topic_ids,
+        wrapper_html: { class: 'drop role' },
+        required: false,
+        placeholder: t('simple_form.placeholders.defaults.topic_ids')
+
+      = f.input :category_ids,
+        as: :select,
+        multiple: true,
+        input_html: { class: 'selectize', multiple: true },
+        collection: Category.tags,
+        value_method: :id,
+        label_method: :name,
+        selected: @searcher.selected_category_ids,
+        wrapper_html: { class: 'drop role' },
+        required: false,
+        placeholder: t('simple_form.placeholders.defaults.category_ids')
 
       = f.input :seek_collaborators, as: :boolean, input_html: { class: 'tick-a',  checked: params[:seek_collaborators] == '1' }, wrapper_html: { class: 'tick' }, wrapper: :inline_checkbox
       = f.input :query, as: :hidden, input_html: { value: params[:query] }

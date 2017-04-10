@@ -159,4 +159,8 @@ class Category < ActiveRecord::Base
       end
     end
   end
+
+  def self.tags
+    Category.find_by(name: "Tags", parent_id: nil).children
+  end
 end
