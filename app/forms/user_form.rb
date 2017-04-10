@@ -30,11 +30,7 @@ class UserForm < BaseForm
           validation = (current_address_configuration || {}).delete(:validation)
           validates :current_address, validation if validation.present?
           property :current_address, form: AddressForm.decorate(current_address_configuration),
-                                     populator: ->(model:, fragment:, **) do
-                                       fragment = fragment.with_indifferent_access
-                                       return skip! if fragment[:address].blank? && model.nil?
-                                       model || self.current_address = Address.new
-                                     end,
+                                     populator: ->(model:, **) { self.current_address ||= Address.new },
                                      prepopulator: ->(*) { self.current_address ||= Address.new }
         end
         configuration.each do |field, options|
