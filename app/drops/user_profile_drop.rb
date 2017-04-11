@@ -9,7 +9,9 @@ class UserProfileDrop < BaseDrop
   #   @return [DateTime] Date when the user has been marked as onboarded
   # @!method approved
   #   @return [Boolean] True if user was approved by admin
-  delegate :customizations, :onboarded_at, :approved?, to: :source
+  # @!method enabled
+  #   @return [Boolean] whether the profile is enabled
+  delegate :customizations, :onboarded_at, :approved?, :enabled, to: :source
 
   def initialize(profile)
     @source = profile

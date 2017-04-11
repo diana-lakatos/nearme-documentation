@@ -21,5 +21,6 @@ class Utils::DefaultAlertsCreator
     Utils::DefaultAlertsCreator::ActivityEventsSummaryCreator.new.create_all!
     Utils::DefaultAlertsCreator::FollowerCreator.new.create_all!
     Utils::DefaultAlertsCreator::CommenterCreator.new.create_all!
+    Utils::DefaultAlertsCreator::OrderCreator.new.create_all!
   end
 end

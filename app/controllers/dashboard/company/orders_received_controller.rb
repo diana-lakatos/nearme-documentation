@@ -48,6 +48,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     if @order.complete!
       @order.transactable.finish!
       flash[:success] = t('flash_messages.manage.order.approved')
+      WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Completed, @order.id)
     else
       flash[:error] = t('flash_messages.manage.order.can_not_approve')
     end
