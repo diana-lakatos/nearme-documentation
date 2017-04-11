@@ -127,7 +127,7 @@ end
 
 Then(/^I can fill status update and add picture and submit it$/) do
   @text = "This is a status update for #{@resource.class.name}!"
-  page.find('#user_status_update_text').set(@text)
+  page.execute_script("document.querySelector('.CodeMirror').CodeMirror.setValue('#{@text}');")
   attach_file find('#new_user_status_update input[type="file"]', visible: false)[:name], File.join(Rails.root, 'test', 'assets', 'foobear.jpeg')
   click_button I18n.t('activity_feed.user_status_submit')
 end
@@ -188,7 +188,7 @@ Then(/^I can edit the event and add new image$/) do
   page.find("#status-update-actions-#{@status_update.id} > button").click
   page.find("#status-update-actions-#{@status_update.id} > ul > li.edit-action > a").click
   @new_text = 'New text of status'
-  page.find("#edit_user_status_update_#{@status_update.id} textarea").set(@new_text)
+  page.execute_script("document.querySelector('#edit_user_status_update_#{@status_update.id} .CodeMirror').CodeMirror.setValue('#{@new_text}');")
   within("#edit_user_status_update_#{@status_update.id}") do
     attach_file find('input[type="file"]')[:name], File.join(Rails.root, 'test', 'assets', 'bully.jpeg')
     find('[type="submit"]').click
@@ -214,6 +214,7 @@ Then(/I edit the event and delete image$/) do
   within("#edit_user_status_update_#{@status_update.id}") do
     find('button.remove').click
     find('[type=submit]').click
+    sleep(1)
   end
 end
 

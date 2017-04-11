@@ -11,8 +11,8 @@
     id="new_comment"
     data-user-entry-form-target="#comments-feed-{{ event.id }}"
   {% endif %}
-  data-user-entry-form=""
-  data-user-entry-form-remote=""
+  data-user-entry-form
+  data-user-entry-form-remote
   data-new-comment-for="{{ comment_object.commentable.id }}"
   >
   {% if comment_object.id != blank %}
@@ -28,7 +28,7 @@
         Body
       </label>
       <div class="controls">
-        <textarea maxlength="5000" data-user-entry-form-content="" data-user-entry-form-submit-on-return="" cols="40" rows="1" class="text required" placeholder="Leave a comment" name="comment[body]" id="comment_body" style="height: 38px;">{{ comment_object.body}}</textarea>
+        <textarea maxlength="5000" data-user-entry-form-content data-user-entry-form-submit-on-return cols="40" rows="1" class="text required" placeholder="Leave a comment" name="comment[body]" id="comment_body">{{ comment_object.body}}</textarea>
       </div>
     </div>
     {% if comment_object.id == blank %}
@@ -36,15 +36,15 @@
     {% endif %}
     <div class="image-upload-input">
       <div class="controls">
-        <input data-user-entry-form-file="" accept="image/gif, image/jpeg, image/jpg, image/png" capture="camera" type="file" name="comment[activity_feed_images_attributes][0][image]" id="comment_activity_feed_images_attributes_0_image">
+        <input data-user-entry-form-file accept="image/gif, image/jpeg, image/jpg, image/png" capture="camera" type="file" name="comment[activity_feed_images_attributes][0][image]" id="comment_activity_feed_images_attributes_0_image">
       </div>
     </div>
-    <div class="user-entry-form-images" data-user-entry-form-images="">
+    <div class="user-entry-form-images" data-user-entry-form-images>
     </div>
   </div>
   <p class="action">
     {% if comment_object.id != blank %}
-      <button class="button-a tiny light" data-cancel-edit="" type="button">Cancel</button>
+      <button class="button-a tiny light" data-cancel-edit type="button">Cancel</button>
     {% endif %}
     <input type="submit" name="commit" value="Post" class="button-a tiny" data-initial-disabled-state="no">
   </p>

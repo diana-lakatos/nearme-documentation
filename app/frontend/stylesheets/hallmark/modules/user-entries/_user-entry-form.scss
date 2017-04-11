@@ -193,6 +193,10 @@
     }
   }
 
+  .editor-toolbar {
+    padding-right: 50px;
+  }
+
   @media screen and (min-width: 768px) {
     .user-entry-form-image {
       width: 32%;
@@ -219,5 +223,92 @@
     &::after {
       position: absolute;
     }
+  }
+}
+
+// codemirror integration
+.publish-a {
+  position: relative;
+  z-index: 30;
+
+  > .user-entry-form-overlay {
+    position: fixed;
+    content: "";
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .3s ease;
+    will-change: opacity;
+  }
+
+  form {
+    position: relative;
+    z-index: 10;
+  }
+
+  textarea {
+    height: 38px;
+    transition: height .3s ease;
+    will-change: height;
+  }
+
+  .CodeMirror {
+    height: 38px;
+    padding-top: 3px;
+  }
+
+  .CodeMirror, .CodeMirror-scroll {
+    min-height: 0;
+  }
+
+  .editor-toolbar, .editor-statusbar, .topics, .action {
+    display: none;
+  }
+
+  &.focused, .entry-editor {
+    & > .user-entry-form-overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .CodeMirror {
+      height: 300px;
+      padding-top: 10px;
+    }
+
+    .editor-toolbar, .editor-statusbar, .topics, .action {
+      display: block;
+    }
+
+    .user_status_update_text + .image-upload-input {
+      top: 7px;
+      right: 10px;
+      margin-left: 0;
+
+      &::before {
+        color: #777;
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+[data-user-entry-form-wrapper]:focus {
+  outline: none;
+}
+
+.entry-editor .user_status_update_text + .image-upload-input {
+  top: 7px;
+  right: 10px;
+  margin-left: 0;
+
+  &::before {
+    color: #777;
+    font-size: 15px;
   }
 }

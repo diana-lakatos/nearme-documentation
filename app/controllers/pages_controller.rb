@@ -3,7 +3,7 @@ class PagesController < ApplicationController
   layout :resolve_layout
   respond_to :html
 
-  skip_before_filter :redirect_unverified_user, unless: -> { page.require_verified_user? }
+  skip_before_action :redirect_unverified_user, unless: -> { page.require_verified_user? }
 
   def show
     RenderCustomPage.new(self).render(page: page, params: params)
@@ -37,5 +37,11 @@ class PagesController < ApplicationController
     else
       false
     end
+  end
+
+  def set_new_relic_transaction_name
+    NewRelic::Agent.set_transaction_name(
+      "#{PlatformContext.current.instance.id} - #{page.slug}"
+    )
   end
 end

@@ -3221,3 +3221,8 @@ en:
     confirm:
       remove_status_update: 'Are you sure you want to remove this status update?'
       remove_comment: 'Are you sure you want to remove this comment?'
+
+  activity_feed:
+    user_status_text: 'Enter status'
+    user_status_submit: 'Post'
+    no_interactions_yet: 'No events yet'
