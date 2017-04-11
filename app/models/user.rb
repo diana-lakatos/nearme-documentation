@@ -739,11 +739,19 @@ class User < ActiveRecord::Base
 
   # @return [String, nil] the mobile number with the full international calling prefix
   def full_mobile_number
-    return unless mobile_number.present?
+    return @full_mobile_number if defined? @full_mobile_number
 
-    number = mobile_number
-    number = "+#{country.calling_code}#{number.gsub(/^0/, '')}" if country.try(:calling_code)
-    number
+    @full_mobile_number = PhoneHelper.new(number: mobile_number, country: country).full_number
+  end
+
+  def full_phone_number
+    return @full_phone_number if defined? @full_phone_number
+
+    @full_phone_number = PhoneHelper.new(number: phone, country: country).full_number
+  end
+
+  def country_calling_code
+    country.try(:calling_code)
   end
 
   def accepts_sms?

@@ -2386,6 +2386,7 @@ en:
         country: 'Country'
         phone: 'Phone'
         mobile_number: 'Mobile'
+        full_mobile_number: 'Mobile'
         skills_and_interests: 'Skills and Interests'
         biography: 'Biography'
 
