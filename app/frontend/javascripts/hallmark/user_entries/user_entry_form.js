@@ -1,6 +1,6 @@
 // @flow
-
-import UserEntryTextarea from './user_entry_textarea';
+import type UserEntryEditor from './user_entry_editor/user_entry_editor';
+import UserEntryEditorFactory from './user_entry_editor/user_entry_editor_factory';
 import UserEntryFileField from './user_entry_file_field';
 import UserEntryImages from './user_entry_images';
 import UserEntryLoader from './user_entry_loader';
@@ -14,7 +14,6 @@ import { findElement, findTextArea, findInput } from '../../toolkit/dom';
 
 const TEXTAREA_SELECTOR = '[data-user-entry-form-content]';
 const FORM_INITIALIZED_ATTRIBUTE = 'data-user-entry-form-initialized';
-const SUBMIT_ON_RETURN_ATTRIBUTE = 'data-user-entry-form-submit-on-return';
 const ENTRY_IMAGES_SELECTOR = '[data-user-entry-form-images]';
 const FILE_FIELD_SELECTOR = '[data-user-entry-form-file]';
 const CANCEL_BUTTON_SELECTOR = '[data-cancel-edit]';
@@ -26,10 +25,9 @@ class UserEntryForm {
   isXHR: boolean;
   mode: 'edit' | 'new';
   target: ?HTMLElement;
-  textarea: HTMLTextAreaElement;
   isProcessing: boolean;
 
-  textarea: UserEntryTextarea;
+  editor: UserEntryEditor;
   images: UserEntryImages;
   fileField: UserEntryFileField;
   cancelButton: ?HTMLElement;
@@ -68,7 +66,7 @@ class UserEntryForm {
     }
 
     let textarea = findTextArea(TEXTAREA_SELECTOR, form);
-    this.textarea = new UserEntryTextarea(textarea, { submitOnReturn: textarea.hasAttribute(SUBMIT_ON_RETURN_ATTRIBUTE) });
+    this.editor = UserEntryEditorFactory.get(textarea);
     this.images = new UserEntryImages(findElement(ENTRY_IMAGES_SELECTOR, form));
     this.fileField = new UserEntryFileField(findInput(FILE_FIELD_SELECTOR, form));
     this.cancelButton = form.querySelector(CANCEL_BUTTON_SELECTOR);
@@ -91,8 +89,11 @@ class UserEntryForm {
       return;
     }
 
+    /* make sure textarea content is updated regardless of the editor used */
+    this.editor.sync();
+
     /* Do not submit if the content area is empty */
-    if (!this.textarea.value()) {
+    if (!this.editor.getValue()) {
       event.preventDefault();
       return;
     }
@@ -157,7 +158,7 @@ class UserEntryForm {
       this.images.add(imageData);
     }
 
-    this.textarea.focus();
+    this.editor.focus();
   }
 
   enableProcessing() {
@@ -182,7 +183,7 @@ class UserEntryForm {
   }
 
   empty() {
-    this.textarea.empty();
+    this.editor.empty();
     this.fileField.empty();
     this.images.removeAll();
   }
@@ -204,7 +205,7 @@ class UserEntryForm {
   cancel() {
     this.images.rollback();
     this.fileField.empty();
-    this.textarea.rollback();
+    this.editor.rollback();
   }
 
   build() {

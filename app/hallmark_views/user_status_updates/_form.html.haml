@@ -2,7 +2,7 @@
 - remote = (local_assigns[:remote].presence || false)
 - no_avatar = (local_assigns[:no_avatar].presence || false)
 
-- data = { user_entry_form: '' }
+- data = { user_entry_form: '', user_entry_form_rich: '' }
 
 - if user_status_update.persisted?
   - data['user_entry_form_remote'] = ''
@@ -15,10 +15,9 @@
     = f.input :updateable_type, as: :hidden, input_html: { value: feed.owner_type }
 
   .user-entry-form-content
-    - image = current_user.try(:avatar).try(:url, :thumb)
-    %figure= image_tag(image || space_listing_placeholder_path(width: 30, height: 30))
+    %figure= image_tag current_user.avatar.url(:thumb), width: 35, height: 35
 
-    = f.input :text, label: I18n.t('activity_feed.user_status_text'), placeholder: I18n.t('activity_feed.user_status_text'), input_html: { maxlength: 5000, cols: 40, rows: 1, data: { user_entry_form_content: '' } }
+    = f.input :text, label: t('activity_feed.user_status_text'), placeholder: t('activity_feed.user_status_text'), input_html: { maxlength: 5000, cols: 40, rows: 1, data: { user_entry_form_content: '' } }
 
     - # When implementing multiple images, new image form should be moved outside of the images area, thumbs in their own container
     = f.simple_fields_for :activity_feed_images, collection_or_new_object(f.object.activity_feed_images) do |afi|
@@ -37,5 +36,6 @@
 
   %p.action
     - if user_status_update.persisted?
-      %button.button-a.tiny.light{ type: 'button', data: { cancel_edit: '' }} Cancel
-    = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'
+      %button.button-a.tiny.light{ type: 'button', data: { cancel_edit: '' }}
+        = t('cancel')
+    = f.submit t('activity_feed.user_status_submit'), class: 'button-a tiny'

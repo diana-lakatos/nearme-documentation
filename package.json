@@ -134,6 +134,7 @@
     "redux": "^3.6.0",
     "select2": "^3.5.0",
     "selectize": "^0.12.4",
+    "simplemde": "^1.11.2",
     "spectrum-colorpicker": "^1.8.0",
     "spin.js": "^2.3.2",
     "swipebox": "^1.4.6",

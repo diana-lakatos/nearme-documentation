@@ -42,9 +42,14 @@ class UserEntryEditAction extends Eventable {
   showEditor() {
     this.target.classList.add('is-active');
     let textarea = this.target.querySelector('textarea');
-    if (textarea instanceof HTMLTextAreaElement) {
-      textarea.focus();
+    if (!(textarea instanceof HTMLTextAreaElement)) {
+      throw new Error('Unable to locate textarea element');
     }
+    textarea.focus();
+
+    let focusEvent = document.createEvent('Event');
+    focusEvent.initEvent('focus', true, true);
+    textarea.dispatchEvent(focusEvent);
   }
 
 }

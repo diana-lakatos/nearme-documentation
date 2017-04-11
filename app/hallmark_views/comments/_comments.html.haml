@@ -2,7 +2,7 @@
 
 %div.comment{:class => css_class}
   - if current_user
-    .publish-a
+    .publish-a{ data: { user_entry_form_wrapper: '' }}
       = render "comments/form", comment: comment, comment_view: true
 
   - comments =  comment.commentable.comments.order("created_at DESC").paginate(page: 1, per_page: 10)
