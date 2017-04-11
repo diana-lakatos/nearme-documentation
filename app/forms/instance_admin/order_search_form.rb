@@ -27,7 +27,11 @@ class InstanceAdmin::OrderSearchForm < SearchForm
       result[:non_free_orders] = nil
     end
 
-    result[:sorted_by_date] = sort_by_date if sort_by_date.present?
+    if sort_by_date.present?
+      result[:sorted_by_date] = sort_by_date
+    else
+      result[:sorted_by_date] = 'desc'
+    end
 
     result[:sorted_by_total_paid] = sort_by_total_paid if sort_by_total_paid.present?
 

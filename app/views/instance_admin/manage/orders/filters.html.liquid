@@ -90,19 +90,14 @@
                 <span class="current">
                   {% if params.sort_by_date == 'asc' %}
                     Ascending
-                  {% elsif params.sort_by_date == 'desc' %}
+                  {% elsif params.sort_by_date == 'desc' or params.sort_by_date == blank %}
                     Descending
-                  {% else %}
-                    None
                   {% endif %}
                 </span>
                 <span class="caret"></span>
                 <input type="hidden" name="sort_by_date" id="created_at_date" value="{{ params.sort_by_date }}">
               </a>
               <ul aria-labelledby="dLabel" class="dropdown-menu" role="menu">
-                <li>
-                  <a data-value="">None</a>
-                </li>
                 <li>
                   <a data-value="asc">Ascending</a>
                 </li>
