@@ -17,7 +17,7 @@ class Comment < ActiveRecord::Base
   has_many :comments, as: :commentable
 
   validates :body, presence: true, length: { maximum: 5000 }
-
+  validates :creator, presence: true
   validate :group_membership, if: :group_activity_commented?
 
   after_commit :user_commented_event, on: :create

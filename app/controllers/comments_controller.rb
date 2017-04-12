@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class CommentsController < ApplicationController
   before_action :find_commentable
+  before_action :authenticate_user!, only: [:create, :update, :destroy]
 
   def index
     @comments = @commentable.comments.order('created_at DESC').paginate(page: params[:page], per_page: 10)
