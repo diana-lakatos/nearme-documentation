@@ -23,6 +23,7 @@ NM.on('ready', ()=>{
 
   require('community/initializers/activity_feed.initializer');
   require('community/initializers/fileupload.initializer');
+  require('community/initializers/image_input.initializer');
   require('community/initializers/flash_message.initializer');
   require('community/initializers/general.initializer');
   require('community/initializers/group_form.initializer');
