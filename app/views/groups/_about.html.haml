@@ -26,7 +26,7 @@
         = t('group.description')
 
       %p
-        = @group.description
+        = videoify_and_parse_with_markdown(@group.description)
 
       - if @group.gallery_photos.any?
         %section.gallery
