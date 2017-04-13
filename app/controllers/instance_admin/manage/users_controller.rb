@@ -21,7 +21,7 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
       render layout: false
     else
       flash[:success] = "#{@user.first_name} has been updated successfully"
-      redirect_to instance_admin_manage_users_path
+      redirect_to edit_instance_admin_manage_user_path(@user)
     end
   end
 
