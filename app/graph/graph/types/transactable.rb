@@ -15,8 +15,8 @@ module Graph
       field :currency, !types.String
       field :description, types.String
       field :is_followed, !types.Boolean do
-         argument :follower_id, types.ID
-         resolve ->(obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
+        argument :follower_id, types.ID
+        resolve ->(obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
       end
       field :latitude, types.String
       field :location_id, types.ID
@@ -27,9 +27,7 @@ module Graph
       field :slug, !types.String
       field :summary, types.String
       field :url, types.String
-      field :time_based_booking, Types::Transactables::TimeBasedBooking do
-        resolve ->(obj, _args, _ctx) { obj.source.time_based_booking }
-      end
+      field :time_based_booking, Types::Transactables::TimeBasedBooking
       field :orders, !types[Types::Order] do
         resolve ->(obj, _args, _ctx) { obj.source.orders }
       end
@@ -42,6 +40,16 @@ module Graph
         argument :order, Types::CustomImageOrderEnum
         argument :order_direction, Types::OrderDirectionEnum
         resolve Graph::Resolvers::Transactables::CustomAttributePhotos.new
+      end
+      field :custom_attribute,
+            types.String,
+            'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
+        argument :name, !types.String
+        resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
+      end
+      field :custom_attribute_array, !types[types.String] do
+        argument :name, !types.String
+        resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
       end
     end
 

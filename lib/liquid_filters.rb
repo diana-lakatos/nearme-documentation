@@ -85,8 +85,9 @@ module LiquidFilters
 
   # @return [String] pluralized version of the input string
   # @param string [String] string to be pluralized
-  def pluralize(string)
-    string.try(:pluralize)
+  # @param count [Number] optional count number based on which string will be pluralized or singularized
+  def pluralize(string, count = 2)
+    count == 1 ? string.try(:singularize) : string.try(:pluralize)
   end
 
   # @return [Array<Object>] array from which nil values are removed
@@ -794,5 +795,13 @@ module LiquidFilters
   # @param units_namespace [String] namespace for the units e.g. 'reservations'
   def pricing_units_translation(transactable_pricing, base_key, units_namespace)
     transactable_pricing.source.decorate.units_translation(base_key, units_namespace)
+  end
+
+  # @return [String] returns string padded from left to length of count with symbol character
+  # @param str [String] string to pad
+  # @param count [Integer] minimum length of output string
+  # @param symbol [String] string to pad with
+  def pad_left(str, count, symbol = ' ')
+    str.to_s.rjust(count, symbol)
   end
 end
