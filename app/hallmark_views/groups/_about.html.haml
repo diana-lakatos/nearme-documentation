@@ -23,7 +23,7 @@
             = @group.creator.current_address.try(:address)
 
       %h4= t('group.description')
-      %p= @group.description
+      %p= videoify_and_parse_with_markdown(@group.description)
 
       = render 'shared/about_gallery', photos: @group.gallery_photos
 
