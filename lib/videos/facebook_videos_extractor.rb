@@ -25,7 +25,7 @@ module Videos
       width = attributes.dig(:iframe_attributes, :width).presence || 480
       height = attributes.dig(:iframe_attributes, :height).presence || 270
 
-      "<div class=\"video-wrapper facebook\"><div class=\"video-constrainer\"><iframe src='https://www.facebook.com/plugins/video.php?href=#{CGI.escape(@url)}?show_text=0&width=#{width}' width='#{width}' height='#{height}' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTransparency='true' allowFullScreen='true'></iframe></div></div>"
+      "<div class=\"video-wrapper facebook\"><div class=\"video-constrainer\"><iframe src='https://www.facebook.com/plugins/video.php?href=#{CGI.escape(@url)}?show_text=0&width=#{width}&height=#{height}' width='#{width}' height='#{height}' style='border:none;overflow:hidden' scrolling='no' frameborder='0' allowTransparency='true' allowFullScreen='true'></iframe></div></div>"
     end
   end
 end
