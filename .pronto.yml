@@ -5,7 +5,8 @@ github:
   web_endpoint: https://github.com/
 max_warnings: 150
 verbose: true
-format: "%{runner} :: %{level} :: %{msg}"
 all:
+  format: "%{runner} :: %{level} :: %{msg}"
   exclude:
     - 'db/**/*'
+    - 'test/**/*'
