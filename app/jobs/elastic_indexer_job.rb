@@ -40,8 +40,10 @@ class ElasticIndexerJob < Job
     end
   end
 
+  # this sucks
   def update_params
     return {} unless PlatformContext.current.instance.multiple_types?
+    return {} unless record.class.mapping.options.key? :_parent
 
     { parent: record.__parent_id }
   end
