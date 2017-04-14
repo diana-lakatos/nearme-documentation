@@ -2,11 +2,9 @@
 class UserForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
   include Sync::SkipUnchanged
-  include Devise::Models::UserValidatable
   class << self
     def decorate(configuration)
       Class.new(self) do
-
         if (user_profiles_configuration = configuration.delete(:profiles)).present?
           validation = user_profiles_configuration.delete(:validation)
           validates :profiles, validation if validation.present?
@@ -46,9 +44,10 @@ class UserForm < BaseForm
   property :external_id, virtual: true
   property :password
 
-  validate :base_email_validation, if: :email_changed?
-  def base_email_validation
-    errors.add(:email, :blank) if email.blank?
+  validate :email_uniqueness, if: :email_changed?
+  validates :email, email: true, presence: true
+  validates_with PasswordValidator, if: -> { password.present? && !(new_record? && model.authentications.size.positive?) }
+  def email_uniqueness
     errors.add(:email, :taken) if User.admin.where(email: email).exists?
     errors.add(:email, :taken) if external_id.blank? && User.where(email: email).exists?
   end

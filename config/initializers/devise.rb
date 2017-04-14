@@ -2,7 +2,6 @@
 # Setup our custom expiring URL token authentication strategy
 require 'temporary_token_authenticatable'
 require 'payment_token_authenticatable'
-require 'devise/models/user_validatable'
 
 # Overwritten fix for using both modules: rememberable and timeoutable
 # http://stackoverflow.com/questions/5034846/devise-remember-me-and-sessions
