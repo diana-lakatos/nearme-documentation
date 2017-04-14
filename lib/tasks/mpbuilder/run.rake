@@ -13,6 +13,7 @@ namespace :mpbuilder do
 
   task frontend: :environment do
     creators = [
+      MarketplaceBuilder::Creators::InstanceProfileTypesCreator,
       MarketplaceBuilder::Creators::ContentHoldersCreator,
       MarketplaceBuilder::Creators::LiquidViewsCreator,
       MarketplaceBuilder::Creators::PagesCreator,
