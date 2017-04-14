@@ -1,0 +1,13 @@
+en:
+  flash:
+    api:
+      v4:
+        user:
+          shopping_carts:
+            create:
+              notice: "You can now checkout."
+            update:
+              notice: "You can now checkout."
+          checkout:
+            create:
+              notice: "Well done! You have successfully checked out."

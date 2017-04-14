@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class ReservationType < ActiveRecord::Base
+  include WithParameterizedName
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context

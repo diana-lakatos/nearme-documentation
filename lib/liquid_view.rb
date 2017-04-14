@@ -27,6 +27,7 @@ class LiquidView
   Liquid::Template.register_tag('form_tag', FormTagTag)
   Liquid::Template.register_tag('form_for', FormForTag)
   Liquid::Template.register_tag('input', InputTag)
+  Liquid::Template.register_tag('label', LabelTag)
   Liquid::Template.register_tag('input_field', InputFieldTag)
   Liquid::Template.register_tag('input_field_error', InputFieldErrorTag)
   Liquid::Template.register_tag('submit', SubmitTag)

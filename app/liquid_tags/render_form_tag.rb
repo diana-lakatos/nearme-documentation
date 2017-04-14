@@ -26,8 +26,12 @@ class RenderFormTag < Liquid::Tag
     # this instance variable is set in RenderCustomPage interactor
     # it's used to re-render form submitted by user in case of validation errors
     form = context['forms']&.dig(@form_name, :form)
-    form ||= form_configuration.build(FormConfiguration::FormObjectFactory.object(normalize_liquid_tag_attributes(@attributes, context))).tap(&:prepopulate!)
-    LiquidView.new(context.registers[:action_view]).render(form_configuration.liquid_body, 'form' => form, 'form_configuration' => form_configuration)
+    attributes = normalize_liquid_tag_attributes(@attributes, context)
+    form ||= form_configuration.build(FormConfiguration::FormObjectFactory.new(attributes).object).tap(&:prepopulate!)
+    attributes.deep_stringify_keys!
+    attributes['form'] = form
+    attributes['form_configuration'] = form_configuration
+    LiquidView.new(context.registers[:action_view]).render(form_configuration.liquid_body, attributes)
   end
 
   protected

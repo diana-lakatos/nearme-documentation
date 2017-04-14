@@ -103,6 +103,8 @@ class UserDrop < UserBaseDrop
   #   @return [Integer] number of follows given by this user
   # @!method tag_list
   #   @return [Array] search tags
+  # @!method current_shopping_cart
+  #   @return [ShoppingCart] shopping cart pending checkout
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends,
            :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
@@ -300,6 +302,12 @@ class UserDrop < UserBaseDrop
   def listings
     @source.listings
   end
+
+  # @return [Array<TransactableDrop>] Listings that were created by this user.
+  def created_listings
+    @source.created_listings
+  end
+
 
   # @return [Boolean] whether to show the services tab containing listings created
   #   by the user (used mostly on the buyer/seller profile pages)
@@ -758,6 +766,11 @@ class UserDrop < UserBaseDrop
   # @return [Boolean] whether the user has any friends (followed users)
   def has_friends
     @source.friends?
+  end
+
+  # @return [ShoppingCart] returns current shopping cart pending checkout
+  def current_shopping_cart
+    @shopping_cart ||= ShoppingCart.get_for_user(@source)
   end
 
   private

@@ -22,18 +22,19 @@ class Order < ActiveRecord::Base
 
   has_custom_attributes target_type: 'ReservationType', target_id: :reservation_type_id
 
-  belongs_to :user, -> { with_deleted }
+  belongs_to :administrator, -> { with_deleted }, class_name: 'User'
+  belongs_to :billing_address, foreign_key: :billing_address_id, class_name: 'OrderAddress'
+  belongs_to :company, -> { with_deleted }
   # TODO: creator is not intuitive name we should switch to the "lister"
   belongs_to :creator, -> { with_deleted }, class_name: 'User'
-  belongs_to :owner, -> { with_deleted }, class_name: 'User', counter_cache: true
-  belongs_to :administrator, -> { with_deleted }, class_name: 'User'
-  belongs_to :company, -> { with_deleted }
   belongs_to :currency_object, foreign_key: :currency, primary_key: :iso_code, class_name: 'Currency'
-  belongs_to :shipping_address, foreign_key: :shipping_address_id, class_name: 'OrderAddress'
-  belongs_to :billing_address, foreign_key: :billing_address_id, class_name: 'OrderAddress'
+  belongs_to :owner, -> { with_deleted }, class_name: 'User', counter_cache: true
   belongs_to :reservation_type
+  belongs_to :shipping_address, foreign_key: :shipping_address_id, class_name: 'OrderAddress'
+  belongs_to :shopping_cart, -> { with_deleted }
   belongs_to :transactable, -> { with_deleted }
   belongs_to :transactable_pricing, -> { with_deleted }, class_name: 'Transactable::Pricing'
+  belongs_to :user, -> { with_deleted }
 
   has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   has_many :reviews, as: :reviewable

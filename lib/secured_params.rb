@@ -509,6 +509,7 @@ class SecuredParams
       :single_location,
       :require_transactable_during_onboarding,
       availability_templates_attributes: nested(availability_template),
+      custom_csv_fields: [],
       allowed_currencies: [],
       merchant_fees_attributes: nested(charge_type),
       all_action_types_attributes: nested(transactable_type_action_type),
