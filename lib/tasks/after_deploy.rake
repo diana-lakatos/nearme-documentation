@@ -22,6 +22,7 @@ namespace :after_deploy do
     ScheduleCommunityAggregatesCreation.schedule!
     ScheduleSitemapsRefresh.schedule!
     ScheduleLongtailApiParse.schedule!
+    ScheduleImportHallmarkUsers.schedule!
 
     puts 'Creating default locales'
     Utils::EnLocalesSeeder.new.go!
