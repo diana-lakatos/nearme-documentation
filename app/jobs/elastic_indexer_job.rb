@@ -15,37 +15,60 @@ class ElasticIndexerJob < Job
 
   def perform
     return unless should_update_index?
-
-    if self.class.run_in_background? && settings.values.first['settings']['index']['blocks'].try(:[], 'write') == 'true'
-      self.class.perform_later(1.minute.from_now, @operation, @klass, @record_id, @options)
-      return
-    end
+    return postpone if delay_indexing?
 
     Rails.logger.info format('Started reindexing ES: %s#%s', @klass, @record_id)
 
-    begin
-      case @operation.to_s
-      when /index|update/
-        record = @klass.constantize.with_deleted.find(@record_id)
-        return if record.deleted? || record.try(:draft)
-        record.__elasticsearch__.client = client
-        record.__elasticsearch__.__send__ "#{@operation}_document"
-      when /delete/
-        client.delete index: @klass.constantize.index_name, type: @klass.constantize.document_type, id: @record_id
-      else raise ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
-      end
-    rescue Elasticsearch::Transport::Transport::Errors::NotFound
+    case @operation.to_s
+    when 'index', 'update'
+      update_document
+    when 'delete'
+      client.delete index: index_name, type: source_class.document_type, id: @record_id
+    else raise ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
     end
   end
 
   private
+
+  def update_document
+    return if record.deleted?
+    return if record.try(:draft)
+
+    record.__elasticsearch__.tap do |es|
+      es.client = client
+      es.__send__ "#{operation}_document", update_params
+    end
+  end
+
+  def update_params
+    return {} unless PlatformContext.current.instance.multiple_types?
+
+    { parent: record.__parent_id }
+  end
+
+  def operation
+    @operation.to_s
+  end
+
+  def record
+    @record ||= source_class.with_deleted.find(@record_id)
+  end
+
+  def postpone
+    self.class.perform_later(1.minute.from_now, @operation, @klass, @record_id, @options)
+  end
+
+  # check if index is writeable
+  def delay_indexing?
+    self.class.run_in_background? && settings.values.first['settings']['index']['blocks'].try(:[], 'write') == 'true'
+  end
 
   def should_update_index?
     Rails.application.config.use_elastic_search && seacheable_class?
   end
 
   def seacheable_class?
-    PlatformContext.current && PlatformContext.current.instance.searchable_classes.include?(@klass.constantize)
+    PlatformContext.current && PlatformContext.current.instance.searchable_classes.include?(source_class)
   end
 
   def client
@@ -53,6 +76,14 @@ class ElasticIndexerJob < Job
   end
 
   def settings
-    @settings ||= client.indices.get_settings index: @klass.constantize.index_name
+    @settings ||= client.indices.get_settings index: index_name
+  end
+
+  def index_name
+    source_class.index_name
+  end
+
+  def source_class
+    @klass.constantize
   end
 end

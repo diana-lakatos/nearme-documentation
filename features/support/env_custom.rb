@@ -89,18 +89,20 @@ end
 
 Before('@elasticsearch') do
   Rails.application.config.use_elastic_search = true
-  Transactable.indexer_helper.create_base_index
-  User.indexer_helper.create_base_index
-  Transactable.indexer_helper.create_alias
-  User.indexer_helper.create_alias
-  Transactable.searchable.import
+
+  engine = Elastic::Engine.new
+  builder = Elastic.default_index_name_builder(PlatformContext.current.instance)
+  index_type = Elastic::IndexTypes::MultipleModel.new(sources: [User, Transactable])
+
+  Elastic::IndexZero.new(type: index_type, version: 0, builder: builder).tap do |index|
+    engine.create_index index unless engine.index_exists? index.alias_name
+  end
+
+  Elasticsearch::Model.client.indices.refresh
 end
 
 After('@elasticsearch') do
-  Transactable.__elasticsearch__.client.indices.delete_alias name: Transactable.alias_index_name, index: Transactable.base_index_name
-  User.__elasticsearch__.client.indices.delete_alias name: User.alias_index_name, index: User.base_index_name
-  Transactable.__elasticsearch__.client.indices.delete index: Transactable.base_index_name
-  User.__elasticsearch__.client.indices.delete index: User.base_index_name
+  Elasticsearch::Model.client.indices.delete index: Transactable.index_name
   Rails.application.config.use_elastic_search = false
 end
 
