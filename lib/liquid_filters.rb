@@ -780,4 +780,12 @@ module LiquidFilters
   def is_user_following(user, object_id, object_type)
     user.source.activity_feed_subscriptions.where(followed_id: object_id, followed_type: object_type).any?
   end
+
+  # @return [String] information about the unit pricing e.g. 'Every calendar month price'
+  # @param transactable_pricing [TransactablePricingDrop] transactable pricing object
+  # @param base_key [String] base translation key
+  # @param units_namespace [String] namespace for the units e.g. 'reservations'
+  def pricing_units_translation(transactable_pricing, base_key, units_namespace)
+    transactable_pricing.source.decorate.units_translation(base_key, units_namespace)
+  end
 end

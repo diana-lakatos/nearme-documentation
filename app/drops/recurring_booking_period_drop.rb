@@ -33,9 +33,18 @@ class RecurringBookingPeriodDrop < BaseDrop
   #   @return [TransactableDrop] transactable associated with this order
   # @!method approve_at
   #   @return [TimeStamp or nil] if auto approve set returns timestamp of approval.
+  # @!method period_start_date
+  #   @return [Date] start date for the period
+  # @!method period_end_date
+  #   @return [Date] end date for the period
+  # @!method total_amount
+  #   @return [Money] total amount for the period
+  # @!method paid_at
+  #   @return [Date] date when payment for the object was made
   delegate :id, :line_items, :created_at, :payment, :total_amount_cents, :pending?,
            :approved?, :rejected?, :state, :order, :persisted?, :rejection_reason,
-           :transactable, :user, :approve_at, to: :source
+           :transactable, :user, :approve_at, :period_start_date, :period_end_date,
+           :total_amount, :paid_at, to: :source
 
   # @return [String] payment state for this period
   # @todo - just a code smell :)
