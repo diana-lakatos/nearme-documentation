@@ -11,7 +11,7 @@ module Graph
       field :id, !types.Int
       field :is_followed, !types.Boolean do
         argument :follower_id, types.ID
-        resolve ->(obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
+        resolve ->(user, arg, _) { ActivityFeedSubscription.followed_by_user?(user.id, ::User, arg['follower_id']) }
       end
 
       field :name, types.String

@@ -59,12 +59,6 @@ module Graph
         @arguments.keys.sort_by{ |key| ARGUMENTS_RESOLVE_ORDER.index(key) }
       end
 
-      def main_scope
-        return ::User.all unless @variables['follower_id']
-        ::User.all
-              .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::User))
-      end
-
       class CustomAttributePhotos < Resolvers::CustomAttributePhotosBase
         private
 
