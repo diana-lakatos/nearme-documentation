@@ -3,11 +3,11 @@ module Graph
   module Resolvers
     class Collaborations
       def call(user, args, _ctx)
-        resolve_by(::User.find(user.id).transactable_collaborators, args)
+        resolve_by(Resolvers::User.find_model(user).transactable_collaborators, args)
       end
 
-      def resolve_by(relation, arguments)
-        arguments.keys.reduce(relation) do |relation, argument_key|
+      def resolve_by(collaborations, arguments)
+        arguments.keys.reduce(collaborations) do |relation, argument_key|
           public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])
         end
       end

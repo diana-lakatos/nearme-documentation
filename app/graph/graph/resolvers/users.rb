@@ -63,7 +63,7 @@ module Graph
         private
 
         def custom_images_ids(custom_images)
-          user = ::User.find(@object.id)
+          user = Resolvers::User.find_model(@object)
           profile_images = custom_images.where(owner: user.user_profiles)
           customization_images = custom_images.where(
             owner_type: ::Customization.to_s,

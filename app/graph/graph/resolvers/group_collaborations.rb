@@ -3,7 +3,7 @@ module Graph
   module Resolvers
     class GroupCollaborations
       def call(user, args, _ctx)
-        user_model = ::User.find(user.id)
+        user_model = Resolvers::User.find_model(user)
         resolve_by(user_model.memberships, args)
       end
 
