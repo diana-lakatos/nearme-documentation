@@ -1,7 +1,7 @@
 - [:notice, :success, :warning, :error, :deleted].each do |key|
   - if flash[key].present?
-    %div{class: "alert #{key}", 'data-flash-message' => true}
+    .multiline{class: "alert #{key}", 'data-flash-message' => true}
       %p
         %i{ :class => ico_for_flash(key)}
-        = nl2br(flash[key])
+        = flash[key]
         %a.close.ico-close.right{href: '#'}

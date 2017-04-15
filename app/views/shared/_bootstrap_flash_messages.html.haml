@@ -1,6 +1,6 @@
 - [:notice, :success, :warning, :error, :deleted].each do |key|
   - if flash[key].present?
-    %div{class: "alert alert-#{flash_key_name(key)} alert-dismissible", role: "alert" }
+    .multiline{class: "alert alert-#{flash_key_name(key)} alert-dismissible", role: "alert" }
       %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => "button"}
         %span{"aria-hidden" => "true"} ×
-      = nl2br(flash[key])
+      = flash[key]

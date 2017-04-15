@@ -20,7 +20,7 @@
           %h3.hx
             = link_to @transactable.creator.to_liquid.name_with_affiliation, user_path(@transactable.creator.slug)
           %p.location= "#{@transactable.creator.current_address.try(:city)}, #{@transactable.creator.current_address.try(:state)}"
-        %p.tx-a= nl2br(@transactable.properties.summary)
+        %p.tx-a.multiline= @transactable.properties.summary
         %p.topics
           = @transactable.topics.map { |t| link_to(t.name, topic_path(t)) }.join(', ').html_safe
       .bignums-a
