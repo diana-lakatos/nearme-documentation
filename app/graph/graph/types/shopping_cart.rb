@@ -13,7 +13,7 @@ module Graph
       end
       field :checkout_at, types.String
       field :user, !Types::User do
-        resolve ->(obj, _args, _ctx) { UserDrop.new(obj.user) }
+        resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.user_id }, ctx) }
       end
     end
   end

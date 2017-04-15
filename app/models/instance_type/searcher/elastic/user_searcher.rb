@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'elastic/user_collection_proxy'
 class InstanceType::Searcher::Elastic::UserSearcher
   ALLOWED_QUERY_FIELDS = [:first_name, :last_name, :name, :country_name, :company_name, :tags].freeze
 
@@ -39,26 +40,11 @@ class InstanceType::Searcher::Elastic::UserSearcher
   end
 
   def results
-    @results ||= ElasticCollectionProxy.new(fetcher.results)
+    @results ||= ::Elastic::UserCollectionProxy.new(fetcher.results)
   end
 
   def result_view
     'list'
-  end
-
-  # we need this wrapper because of elasticsearch-model results immutable implementation
-  class ElasticCollectionProxy < SimpleDelegator
-    delegate :each, :map, to: :results
-
-    def results
-      __getobj__.results.map { |u| u.extend(Liquidable) }
-    end
-
-    module Liquidable
-      def to_liquid
-        Elastic::UserDrop.new(_source)
-      end
-    end
   end
 
   private

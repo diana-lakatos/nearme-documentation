@@ -26,6 +26,10 @@ module Graph
             'image original height' do
         resolve ->(obj, _arg, _ctx) { obj.model.image_original_height }
       end
+
+      field :filename, !types.String do
+        resolve ->(obj, _arg, _ctx) { obj.file.filename }
+      end
     end
   end
 end

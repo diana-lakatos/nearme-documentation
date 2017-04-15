@@ -3,7 +3,8 @@ module Graph
   module Resolvers
     class GroupCollaborations
       def call(user, args, _ctx)
-        resolve_by(user.source.memberships, args)
+        user_model = ::User.find(user.id)
+        resolve_by(user_model.memberships, args)
       end
 
       def resolve_by(relation, arguments)

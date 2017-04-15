@@ -19,6 +19,7 @@ module Graph
       field :last_name, types.String
       field :email, !types.String
       field :slug, !types.String
+      field :seller_average_rating, !types.Int
       field :custom_attribute,
             types.String,
             'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
@@ -26,9 +27,9 @@ module Graph
         resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
       end
 
-      field :profile, Types::Profile do
+      field :profile, Types::Users::Profile do
         argument :profile_type, !types.String
-        resolve ->(obj, arg, _ctx) { obj.source.user_profiles.find_by(profile_type: arg[:name]) }
+        resolve ->(obj, arg, _ctx) { obj.profiles[arg[:profile_type]] }
       end
 
       field :custom_attribute_photos,
@@ -42,13 +43,23 @@ module Graph
         resolve Graph::Resolvers::Users::CustomAttributePhotos.new
       end
 
-      field :profile_path, !types.String
-      field :avatar_url_thumb, !types.String
-      field :avatar_url_bigger, !types.String
-      field :avatar_url_big, !types.String
+      field :profile_path, !types.String, deprecation_reason: 'Use generate_url filter'
+      field :avatar_url_thumb, types.String, deprecation_reason: 'Use avatar{}' do
+        resolve ->(obj, _arg, _ctx) { obj.avatar&.thumb&.url }
+      end
+      field :avatar_url_bigger, types.String, deprecation_reason: 'Use avatar{}' do
+        resolve ->(obj, _arg, _ctx) { obj.avatar&.bigger&.url }
+      end
+      field :avatar_url_big, types.String, deprecation_reason: 'Use avatar{}' do
+        resolve ->(obj, _arg, _ctx) { obj.avatar&.big&.url }
+      end
       field :avatar, Types::Image
-      field :name_with_affiliation, !types.String
-      field :display_location, types.String
+      field :name_with_affiliation, !types.String do
+        resolve ->(obj, _arg, _ctx) { ::User.find(obj.id).to_liquid.name_with_affiliation }
+      end
+      field :display_location, types.String do
+        resolve ->(obj, _arg, _ctx) { ::User.find(obj.id).to_liquid.display_location }
+      end
       field :current_address, Types::Address
       field :collaborations, types[Types::Collaboration] do
         argument :filters, types[Resolvers::Collaborations::FilterEnum]
@@ -89,7 +100,11 @@ module Graph
             end
 
       field :transactables, types[Types::Transactable] do
-        resolve ->(obj, _arg, _) { obj.created_listings }
+        resolve ->(obj, _arg, _) { ::Transactable.where(creator_id: obj.id) }
+      end
+
+      field :reviews, !types[Types::Review], 'Review about a user as seller' do
+        resolve Resolvers::Reviews.new
       end
     end
 
@@ -110,7 +125,6 @@ module Graph
       name 'UserFilter'
       description 'Available filters'
       value('FEATURED', 'Featured users')
-      value('FEED_NOT_FOLLOWED_BY_USER', 'Not followed by current user')
     end
   end
 end

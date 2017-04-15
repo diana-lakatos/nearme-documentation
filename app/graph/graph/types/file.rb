@@ -9,6 +9,8 @@ module Graph
       field :name, !types.String do
         resolve ->(obj, _, _) { obj.file_name }
       end
+      field :file_name, types.String
+      field :content_type, types.String
     end
   end
 end

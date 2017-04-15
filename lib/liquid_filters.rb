@@ -583,11 +583,19 @@ module LiquidFilters
   end
 
   # @return [String] replaces special characters in a string so that it may be used as part of a 'pretty' URL;
-  #   the default separator used is '-'; e.g. 'John arrived' becomes 'john-arrived'
+  #   the default separator used is '-'; e.g. 'John arrived_foo' becomes 'john-arrived_foo'
   # @param text [String] input string to be 'parameterized'
   # @param separator [String] string to be used as separator in the output string; default is '-'
   def parameterize(text, separator = '-')
     text.parameterize(separator)
+  end
+
+  # @return [String] replaces special characters in a string so that it may be used as part of a 'pretty' URL;
+  #   e.g. 'John arrived_foo' becomes 'john-arrived-foo'
+  # @param text [String] input string to be 'slugified'
+  def slugify(text)
+    parameterize(text)
+      .tr('_', '-')
   end
 
   # @return [TransactableCollaboratorDrop] transactable collaborator object for the given transactable and user;
@@ -694,6 +702,19 @@ module LiquidFilters
   #   in array of objects
   def map(object, method)
     object.map(&method.to_sym)
+  end
+
+  # @return [Array<Object>] that exists in both arrays
+  # @param array [Array<Object>] array of objects to be processed
+  # @param other_array [Array<Object>] array of objects to be processed
+  def intersection(array, other_array)
+    array & other_array
+  end
+
+  # @return [Array<Object>] with objects
+  # @param objects [Array<Array>] array of arrays to be processed
+  def flatten(array)
+    array.flatten
   end
 
   # @return [Object] with first object from collection that matches provided conditions

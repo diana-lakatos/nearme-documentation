@@ -13,7 +13,8 @@ module Graph
       field :user do
         type Types::User
         argument :id, types.ID
-        resolve ->(_obj, args, _ctx) { UserDrop.new(::User.find(args[:id])) }
+        argument :slug, types.String
+        resolve Resolvers::User.new
       end
     end
   end

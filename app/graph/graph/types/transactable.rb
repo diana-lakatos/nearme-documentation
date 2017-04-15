@@ -10,7 +10,7 @@ module Graph
       field :cover_photo_thumbnail_url, types.String
       field :cover_photo_url, types.String
       field :creator, !Types::User do
-        resolve ->(obj, _args, _ctx) { UserDrop.new(obj.creator) }
+        resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.creator_id }, ctx) }
       end
       field :currency, !types.String
       field :description, types.String
@@ -41,12 +41,14 @@ module Graph
         argument :order_direction, Types::OrderDirectionEnum
         resolve Graph::Resolvers::Transactables::CustomAttributePhotos.new
       end
+
       field :custom_attribute,
             types.String,
             'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
         argument :name, !types.String
         resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
       end
+
       field :custom_attribute_array, !types[types.String] do
         argument :name, !types.String
         resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }

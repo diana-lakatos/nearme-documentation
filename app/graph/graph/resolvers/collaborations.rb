@@ -3,7 +3,7 @@ module Graph
   module Resolvers
     class Collaborations
       def call(user, args, _ctx)
-        resolve_by(user.source.transactable_collaborators, args)
+        resolve_by(::User.find(user.id).transactable_collaborators, args)
       end
 
       def resolve_by(relation, arguments)
