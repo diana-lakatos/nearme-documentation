@@ -45,7 +45,12 @@ class ImportHallmarkUsersJob < Job
             if email.include?('@')
               emails << email
               u = User.where('email ilike ?', email).first_or_initialize
-              u.expires_at = Date.strptime(array[EXPIRES_AT], '%Y%m').end_of_month
+              u.expires_at = begin
+                               Date.strptime(array[EXPIRES_AT], '%Y%m').end_of_month
+                             rescue
+                               logger.info "\tCRITICAL ISSUE: expires date is invalid - #{array[EXPIRES_AT]}"
+                               next
+                             end
               if u.persisted?
                 logger.info "updating: #{email}"
               else
