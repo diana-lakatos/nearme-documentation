@@ -16,15 +16,8 @@ module Searchable
 
     def self.define_index_name
       raise PlatformContext::MissingContextError if PlatformContext.current.nil?
-      alias_index_name
-    end
 
-    def self.base_index_name
-      "#{to_s.demodulize.pluralize.downcase}-#{Rails.application.config.stack_name}-#{Rails.env}-#{PlatformContext.current.try(:instance).try(:id)}"
-    end
-
-    def self.alias_index_name
-      "#{base_index_name}-alias"
+      Elastic.index_for(PlatformContext.current.instance).alias_name
     end
 
     def self.indexer_helper

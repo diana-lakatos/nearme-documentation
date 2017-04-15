@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 class InstanceProfileType < ActiveRecord::Base
-  include SearchableType
   include WithParameterizedName
 
   has_paper_trail
