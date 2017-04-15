@@ -13,7 +13,7 @@ class PropertiesForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         configuration.each do |field, options|
-          property :"#{field}"
+          property :"#{field}", options[:property_options].presence || {}
           validates :"#{field}", options[:validation] if options[:validation].present?
 
           # tmp hack before we get coercion to work properly... :|

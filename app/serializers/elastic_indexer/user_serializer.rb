@@ -12,7 +12,8 @@ module ElasticIndexer
                :instance_profile_type_ids,
                :tags,
                :number_of_completed_orders_user,
-               :number_of_completed_orders_creator
+               :number_of_completed_orders_creator,
+               :featured
 
     def attributes
       super.merge __default_attributes

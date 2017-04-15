@@ -11,7 +11,9 @@ module TransactablesIndex
     # rebuilding/refreshing index For ex. for each Instance perform:
     # ElasticInstanceIndexerJob.perform(update_type: 'refresh', only_classes: ['Transactable'])
     def self.set_es_mapping(instance = PlatformContext.current.try(:instance))
-      mapping do
+
+      # TODO: customize relation per mp?
+      mapping __index_options(instance) do
         indexes :custom_attributes, type: 'object' do
           if TransactableType.table_exists?
             all_custom_attributes = CustomAttributes::CustomAttribute
@@ -68,6 +70,16 @@ module TransactablesIndex
         indexes :tags, type: 'string'
         indexes :state, type: 'string'
       end
+    end
+
+    def self.__index_options(instance)
+      return {} unless instance.multiple_types?
+
+      { _parent: { type: 'user' } }
+    end
+
+    def __parent_id
+      user.id
     end
 
     def as_indexed_json(_options = {})
@@ -127,7 +139,7 @@ module TransactablesIndex
     end
 
     def self.regular_search(query, transactable_type = nil)
-      query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes(transactable_type), transactable_type)
+      query_builder = ::Elastic::QueryBuilderBase.new(query.with_indifferent_access, searchable_custom_attributes(transactable_type), transactable_type)
       __elasticsearch__.search(query_builder.geo_regular_query)
     end
 
@@ -146,7 +158,7 @@ module TransactablesIndex
     end
 
     def self.geo_search(query, transactable_type = nil)
-      query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes(transactable_type), transactable_type)
+      query_builder = ::Elastic::QueryBuilderBase.new(query.with_indifferent_access, searchable_custom_attributes(transactable_type), transactable_type)
       __elasticsearch__.search(query_builder.geo_query)
     end
 

@@ -1,0 +1,223 @@
+<header>
+  <div class="row">
+    <div class="col-sm-7">
+      <h2>
+        {% if recurring_booking.transactable != blank and recurring_booking.transactable.deleted? == false %}
+          <a href="{{ recurring_booking.transactable.show_path }}">{{ recurring_booking.transactable.name }}</a>
+        {% else %}
+          {% assign transactable_name = '' %}
+          {% if recurring_booking.transactable != blank %}
+            {% assign transactable_name = recurring_booking.transactable.name %}
+          {% endif %}
+
+          {{ transactable_name }} [{{ 'dashboard.user_recurring_bookings.listing_deleted' | t }}]
+        {% endif %}
+      </h2>
+    </div>
+
+    <div class="col-sm-5">
+      <div class="order-status">
+        <span class="{{ recurring_booking.state }}">
+          {{ recurring_booking.state | humanize | capitalize }}
+        </span>
+      </div>
+    </div>
+  </div>
+</header>
+
+{% if recurring_booking.state == 'unconfirmed' %}
+  <div class="alert alert-warning">
+    {{ recurring_booking.my_booking_status_info_new }}
+  </div>
+{% endif %}
+
+{% if recurring_booking.state == 'rejected' and recurring_booking.rejection_reason != blank %}
+  <div class="alert alert-warning">
+    {{ 'dashboard.user_recurring_bookings.rejection_reason' | t }}: {{ recurring_booking.rejection_reason }}
+  </div>
+{% endif %}
+
+<div class="row">
+  <div class="col-md-3">
+    {% if recurring_booking.transactable != blank %}
+      <h3>
+        {{ 'dashboard.user_recurring_bookings.address' | t }}
+      </h3>
+
+      <p>
+        {{ recurring_booking.transactable.location.address | replace: ', ', '<br />' | make_html_safe }}
+        <br/>
+        [
+          <a href="http://maps.apple.com/?q={{ recurring_booking.transactable.location.address }}" target="_blank">{{ 'dashboard.user_recurring_bookings.show_on_map' | t }}</a>
+        ]
+      </p>
+    {% else %}
+      <h3>
+        {{ 'dashboard.user_reservations.listing_deleted' | t }}
+      </h3>
+    {% endif %}
+  </div>
+
+  <div class="col-sm-2">
+    <h3>
+      {{ 'dashboard.user_recurring_bookings.quantity' | t }}
+    </h3>
+    <p>{{ recurring_booking.quantity }}</p>
+  </div>
+
+  <div class="col-md-2">
+    <h3>
+      {{ 'dashboard.user_recurring_bookings.starts_from' | t }}
+    </h3>
+    <p>
+      {{ recurring_booking.start_on | l: 'short' }}
+    </p>
+  </div>
+
+  {% if recurring_booking.next_charge_date != blank %}
+    <div class="col-md-2">
+      <h3>
+        {{ 'dashboard.user_recurring_bookings.next_payment_at' | t }}
+      </h3>
+      <p>
+        {{ recurring_booking.next_charge_date | l: 'short' }}
+      </p>
+    </div>
+  {% endif %}
+
+  <div class="col-md-3">
+    <h3>
+      {{ recurring_booking.transactable_pricing | pricing_units_translation: 'dashboard.user_recurring_bookings.every_unit_price', 'reservations' }}
+    </h3>
+
+    <p>
+      <b>
+        {{ recurring_booking.total_price_for_guest }}
+      </b>
+    </p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+  </div>
+
+  {% if recurring_booking.guest_notes != blank %}
+    <div class="col-sm-3">
+      <h3>
+        {{ 'dashboard.user_reservations.user_note' | t }}
+      </h3>
+      <blockquote>
+        {{ recurring_booking.guest_notes }}
+      </blockquote>
+    </div>
+  {% endif %}
+
+  {% if recurring_booking.payment_documents.size > 0 %}
+    <div class="col-sm-3">
+      <h3>
+        {{ 'dashboard.user_reservations.payment_documents' | t }}
+      </h3>
+      <ul class="payment-documents">
+        {% for payment_document in recurring_booking.payment_documents %}
+          <li>
+            <a href="{{ payment_document.file_url }}" download="true">{{ payment_document.file_name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if recurring_booking.additional_line_items.size > 0 %}
+    <div class="col-sm-3 right">
+      <h3>
+        {{ 'dashboard.user_reservations.additional_charges' | t }}
+      </h3>
+      <ul class="payment-documents">
+        {% for ac in recurring_booking.additional_line_items %}
+          <li>
+            {{ ac.name }} - {{ ac.total_price | pricify }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
+
+<div class="row">
+  <div class="col-sm-9 col-sm-push-3">
+    <div class="order-actions">
+      {% if recurring_booking.archived? == false and current_user.id == recurring_booking.owner.id %}
+        <span>
+          <a href="{{ 'edit_dashboard_user_recurring_booking_payment_subscription_path' | generate_url: recurring_booking.id, recurring_booking.payment_subscription.id }}" class="btn btn-warning" data-modal="true">{{ 'dashboard.user_reservations.update_credit_card' | t }}</a>
+        </span>
+        {% if recurring_booking.state == 'overdued' %}
+          <div class="cc-error">
+            {{ 'dashboard.user_reservations.must_change_credit_card' | t }}
+          </div>
+        {% else %}
+          <form class="edit_recurring_booking" id="edit_recurring_booking_{{ recurring_booking.id }}" action="{{ 'user_cancel_dashboard_user_recurring_booking_path' | generate_url: recurring_booking.id }}" accept-charset="UTF-8" method="post">
+            <input name="utf8" type="hidden" value="&#x2713;" />
+            <input type="hidden" name="authenticity_token" value="{{ form_authenticity_token }}" />
+            <input type="submit" name="commit" value="{{ 'general.cancel' | t }}" data-confirm="{{ 'dashboard.user_recurring_bookings.cancel_confirmation' | t }}" class="btn btn-warning" />
+          </form>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-sm-3 col-sm-pull-9">
+    <small>
+      {% assign created_at_date = recurring_booking.created_at | l: 'long' %}
+      {{ 'dashboard.user_recurring_bookings.booking_placed_html' | t: date: created_at_date }}
+    </small>
+  </div>
+</div>
+
+{% if recurring_booking.recurring_booking_periods.size > 0 %}
+  <h3>
+    {{ 'dashboard.user_recurring_bookings.periods.title' | t }}
+  </h3>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{{ 'dashboard.user_recurring_bookings.periods.start_end' | t}}</th>
+        <th>{{ 'dashboard.user_recurring_bookings.periods.total_amount' | t }}</th>
+        <th>{{ 'dashboard.user_recurring_bookings.periods.payment_state' | t }}</th>
+        <th>{{ 'dashboard.user_recurring_bookings.periods.paid_at' | t }}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for period in recurring_booking.recurring_booking_periods %}
+        {% assign payment_state = '' %}
+        {% if period.payment != blank %}
+          {% assign payment_state = period.payment.state %}
+        {% endif %}
+        <tr>
+          <td>
+            {{ period.period_start_date | l: 'short' }} - {{ period.period_end_date | l: 'short' }}
+          </td>
+          <td>
+            {{ period.total_amount | pricify }}
+          </td>
+          <td>
+            <span class="{{ payment_state }}">
+              {% if payment_state == blank %}
+                {{ 'dashboard.host_reservations.payment_missing' | t }}
+              {% else %}
+                {{ 'dashboard.user_recurring_bookings.states.' | append: payment_state | t }}
+              {% endif %}
+            </span>
+          </td>
+          <td>
+            {% if period.paid_at != blank %}
+              {{ period.paid_at | l: 'short' }}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}

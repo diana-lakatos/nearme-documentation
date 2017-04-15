@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 ENV['RAILS_ENV'] ||= 'test'
 require 'simplecov'
-SimpleCov.start
+SimpleCov.start if ENV['COVERAGE']
 
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
@@ -277,22 +277,23 @@ end
 
 def enable_elasticsearch!(&_block)
   Rails.application.config.use_elastic_search = true
-  Transactable.indexer_helper.create_base_index
-  User.indexer_helper.create_base_index
-  Transactable.indexer_helper.create_alias
-  User.indexer_helper.create_alias
+
+  instance = Instance.last
+
+  engine = Elastic::Engine.new
+  builder = Elastic.default_index_name_builder(instance)
+  index_type = Elastic::IndexTypes::MultipleModel.new(sources: [User, Transactable])
+
+  Elastic::IndexZero.new(type: index_type, version: 0, builder: builder).tap do |index|
+    engine.create_index index
+  end
+
   yield if block_given?
   Transactable.__elasticsearch__.refresh_index!
 end
 
 def disable_elasticsearch!
-  Instance.last.set_context! unless PlatformContext.current
-  Transactable.__elasticsearch__.client.indices.delete_alias name: Transactable.alias_index_name, index: Transactable.base_index_name
-  Transactable.__elasticsearch__.client.indices.delete index: Transactable.base_index_name
-  if User.__elasticsearch__.client.indices.exists_alias?(name: User.alias_index_name, index: User.base_index_name)
-    User.__elasticsearch__.client.indices.delete_alias(name: User.alias_index_name, index: User.base_index_name)
-  end
-  User.__elasticsearch__.client.indices.delete index: User.base_index_name
+  Elasticsearch::Model.client.indices.delete index: 'test-*'
   Rails.application.config.use_elastic_search = false
 end
 

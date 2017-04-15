@@ -21,9 +21,9 @@
             %td=truncate(graph_query.query_string)
             %td
               .pull-right{style: 'margin-left: 10px'}
-                = button_to t('instance_admin.destroy'), admin_advanced_graph_query_path(graph_query), method: :delete, class: 'btn btn-link'
+                = button_to t('instance_admin.destroy'), admin_advanced_graph_query_path(graph_query), method: :delete, class: 'btn btn-delete'
               .pull-right{style: 'margin-left: 10px'}
-                = link_to t('instance_admin.edit'), edit_admin_advanced_graph_query_path(graph_query)
+                = link_to t('instance_admin.edit'), edit_admin_advanced_graph_query_path(graph_query), class: 'btn btn-edit'
 
 .listing-actions
   = link_to t('instance_admin.graph_queries.add_graph_query'), new_admin_advanced_graph_query_path, class: 'pull-right btn btn-blue'

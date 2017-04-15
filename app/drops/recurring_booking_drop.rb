@@ -29,10 +29,18 @@ class RecurringBookingDrop < OrderDrop
   #     renders an icon with the status information
   # @!method manage_booking_status_info_new
   #   @return [String] formatted string instructing the user to confirm their booking before expiration
+  # @!method my_booking_status_info_new
+  #   @return [String] string with info about the time to expiry for pending bookings
+  # @!method start_on
+  #   @return [Date] date when the recurring booking starts
+  # @!method next_charge_date
+  #   @return [Date] date when the next charge occurs
+  # @!method total_price_for_guest
+  #   @return [String] total price payable by guest
   delegate :quantity, :total_price, :rejection_reason, :owner, :has_service_fee?,
            :with_delivery?, :last_unpaid_amount, :total_payable_to_host_formatted, :total_units_text,
-           :manage_booking_status_info, :manage_booking_status_info_new,
-           to: :recurring_booking
+           :manage_booking_status_info, :manage_booking_status_info_new, :my_booking_status_info_new,
+           :start_on, :next_charge_date, :total_price_for_guest, to: :recurring_booking
 
   # @!method transactable_type
   #   @return [TransactableTypeDrop] Transactable type to which this transactable belongs

@@ -11,7 +11,6 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   store_accessor :properties, :min_value, :max_value, :step
   after_save :create_translations, :add_to_csv
-  after_create :update_es_mapping, if: ->(ca) { %w(TransactableType InstanceProfileType).include?(ca.target_type) }
 
   scope :searchable, -> { where(searchable: true) }
   scope :public_display, -> { where(public: true) }

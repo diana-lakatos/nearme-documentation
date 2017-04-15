@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 class TransactableType < ActiveRecord::Base
-  include SearchableType
   include WithParameterizedName
 
   self.inheritance_column = :type

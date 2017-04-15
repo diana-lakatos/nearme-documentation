@@ -14,7 +14,9 @@ module Graph
       field :attachments, types[Types::File] do
         resolve ->(obj, _, _) { obj.attachments.map(&:file) }
       end
-      field :author, !Types::User
+      field :author, !Types::User do
+        resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.author_id }, ctx) }
+      end
     end
   end
 end

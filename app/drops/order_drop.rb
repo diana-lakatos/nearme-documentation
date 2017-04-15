@@ -114,6 +114,8 @@ class OrderDrop < BaseDrop
   #   @return [Integer] quantity for this order
   # @!method is_free_booking
   #   @return [Boolean] if order is free
+  # @!method additional_line_items
+  #   @return [Array<LineItemDrop>] array of additional line items belonging to this order
   delegate :id, :user, :company, :number, :line_items, :guest_notes,
            :can_host_cancel?, :can_confirm?, :can_reject?,
            :paid?, :unconfirmed?, :confirmed?, :inactive?, :manual_payment?, :can_complete_checkout?,
@@ -125,7 +127,7 @@ class OrderDrop < BaseDrop
            :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing,
            :outbound, :inbound, :inbound_pickup_date, :outbound_pickup_date,
            :inbound_pickup_address_address, :outbound_return_address_address,
-           :quantity, :is_free_booking, to: :order
+           :quantity, :is_free_booking, :additional_line_items, to: :order
 
   def initialize(order)
     @source = @order = order.decorate

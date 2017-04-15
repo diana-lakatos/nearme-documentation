@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Elastic
-  class QueryBuilder
+  class QueryBuilderBase
     QUERY_BOOST = 1.0
     ENABLE_FUZZY = false
     ENABLE_PARTIAL = false

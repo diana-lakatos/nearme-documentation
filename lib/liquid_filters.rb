@@ -85,8 +85,9 @@ module LiquidFilters
 
   # @return [String] pluralized version of the input string
   # @param string [String] string to be pluralized
-  def pluralize(string)
-    string.try(:pluralize)
+  # @param count [Number] optional count number based on which string will be pluralized or singularized
+  def pluralize(string, count = 2)
+    count == 1 ? string.try(:singularize) : string.try(:pluralize)
   end
 
   # @return [Array<Object>] array from which nil values are removed
@@ -237,6 +238,13 @@ module LiquidFilters
   # @param currency [String] currency to be used for formatting
   def pricify(amount, currency = 'USD')
     render_money(amount.to_f.to_money(currency))
+  end
+
+  # @return [String] formatted price using the global price formatting rules
+  # @param amount [Numeric] amount in cents to be formatted
+  # @param currency [String] currency to be used for formatting
+  def pricify_cents(amount, currency = 'USD')
+    render_money(Money.new(amount, currency))
   end
 
   # @return [String] formatted price using the global price formatting rules; the default currency will be used
@@ -575,11 +583,19 @@ module LiquidFilters
   end
 
   # @return [String] replaces special characters in a string so that it may be used as part of a 'pretty' URL;
-  #   the default separator used is '-'; e.g. 'John arrived' becomes 'john-arrived'
+  #   the default separator used is '-'; e.g. 'John arrived_foo' becomes 'john-arrived_foo'
   # @param text [String] input string to be 'parameterized'
   # @param separator [String] string to be used as separator in the output string; default is '-'
   def parameterize(text, separator = '-')
     text.parameterize(separator)
+  end
+
+  # @return [String] replaces special characters in a string so that it may be used as part of a 'pretty' URL;
+  #   e.g. 'John arrived_foo' becomes 'john-arrived-foo'
+  # @param text [String] input string to be 'slugified'
+  def slugify(text)
+    parameterize(text)
+      .tr('_', '-')
   end
 
   # @return [TransactableCollaboratorDrop] transactable collaborator object for the given transactable and user;
@@ -688,6 +704,19 @@ module LiquidFilters
     object.map(&method.to_sym)
   end
 
+  # @return [Array<Object>] that exists in both arrays
+  # @param array [Array<Object>] array of objects to be processed
+  # @param other_array [Array<Object>] array of objects to be processed
+  def intersection(array, other_array)
+    array & other_array
+  end
+
+  # @return [Array<Object>] with objects
+  # @param objects [Array<Array>] array of arrays to be processed
+  def flatten(array)
+    array.flatten
+  end
+
   # @return [Object] with first object from collection that matches provided conditions
   # @param objects [Array<Object>] array of objects to be processed
   # @param conditions [Hash] hash with conditions { field_name: value }
@@ -779,5 +808,21 @@ module LiquidFilters
   # @param object_type [String] class name of the object we are checking for - User, Topic, Transactable
   def is_user_following(user, object_id, object_type)
     user.source.activity_feed_subscriptions.where(followed_id: object_id, followed_type: object_type).any?
+  end
+
+  # @return [String] information about the unit pricing e.g. 'Every calendar month price'
+  # @param transactable_pricing [TransactablePricingDrop] transactable pricing object
+  # @param base_key [String] base translation key
+  # @param units_namespace [String] namespace for the units e.g. 'reservations'
+  def pricing_units_translation(transactable_pricing, base_key, units_namespace)
+    transactable_pricing.source.decorate.units_translation(base_key, units_namespace)
+  end
+
+  # @return [String] returns string padded from left to length of count with symbol character
+  # @param str [String] string to pad
+  # @param count [Integer] minimum length of output string
+  # @param symbol [String] string to pad with
+  def pad_left(str, count, symbol = ' ')
+    str.to_s.rjust(count, symbol)
   end
 end

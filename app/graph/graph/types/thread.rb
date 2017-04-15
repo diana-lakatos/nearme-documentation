@@ -9,7 +9,9 @@ module Graph
 
       field :id, !types.Int
       field :is_read, types.Boolean
-      field :participant, Types::User
+      field :participant, Types::User do
+        resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.participant.id }, ctx) }
+      end
       field :last_message, Types::Message
       field :messages, types[Types::Message]
       field :url, types.String

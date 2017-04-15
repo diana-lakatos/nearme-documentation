@@ -24,7 +24,7 @@ class Dashboard::ReviewsController < Dashboard::BaseController
   def create
     @review = current_user.reviews.build
     @review.transactable_type_id = reviews_service.get_transactable_type_id
-    @review.rating_system_id = RatingSystem.find(params[:rating_system_id]).id
+    @review.rating_system_id = RatingSystem.find(params.delete(:rating_system_id)).id
     if @review.update(review_params)
       rating_answers_params.values.each do |rating_answer_param|
         @review.rating_answers.create!(rating_answer_param)

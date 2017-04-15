@@ -45,7 +45,7 @@ class UserProfileForm < BaseForm
                                            prepopulator: ->(*) { self.availability_template ||= AvailabilityTemplate.new }
         end
         configuration.each do |field, options|
-          property :"#{field}"
+          property :"#{field}", options[:property_options].presence || {}
           validates :"#{field}", options[:validation] if options[:validation].present?
         end
       end

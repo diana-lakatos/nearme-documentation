@@ -12,10 +12,11 @@ module UsersIndex
     # ElasticInstanceIndexerJob.perform(update_type: 'refresh', only_classes: ['User'])
     def self.set_es_mapping(instance = PlatformContext.current.try(:instance))
       mapping do
+        indexes :email, type: 'string'
         indexes :first_name, type: 'string'
         indexes :last_name, type: 'string'
         indexes :name, type: 'string'
-        indexes :slug, type: 'string'
+        indexes :slug, type: 'string', index: 'not_analyzed'
         indexes :created_at, type: 'date'
 
         indexes :country_name, type: 'string'
@@ -86,6 +87,15 @@ module UsersIndex
                                                                    instance_profile_type: instance_profile_type)
 
       __elasticsearch__.search(query_builder.regular_query)
+    end
+
+    def self.simple_search(query, instance_profile_type = nil)
+      query_builder = Elastic::QueryBuilder::UsersQueryBuilder.new(query.with_indifferent_access,
+                                                                   searchable_custom_attributes: searchable_custom_attributes(instance_profile_type),
+                                                                   query_searchable_attributes: search_in_query_custom_attributes(instance_profile_type),
+                                                                   instance_profile_type: instance_profile_type)
+
+      __elasticsearch__.search(query_builder.simple_query)
     end
 
     def self.search_in_query_custom_attributes(instance_profile_type)
