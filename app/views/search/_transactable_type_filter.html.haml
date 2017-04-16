@@ -9,4 +9,4 @@
         %label.radio.small-radio
           %input{:type => 'radio', :name => 'transactable_type_id', :value => transactable_type.id, :checked => (@searcher.transactable_type.id == transactable_type.id), 'data-list-view' => 1}
           %span.filter-label-text
-            = @searcher.transactable_type.translated_bookable_noun
+            = transactable_type.translated_bookable_noun
