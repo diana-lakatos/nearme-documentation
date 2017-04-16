@@ -285,7 +285,7 @@ def enable_elasticsearch!(&_block)
   index_type = Elastic::IndexTypes::MultipleModel.new(sources: [User, Transactable])
 
   Elastic::IndexZero.new(type: index_type, version: 0, builder: builder).tap do |index|
-    engine.create_index index
+    engine.create_index index unless engine.index_exists? index.alias_name
   end
 
   yield if block_given?
