@@ -142,36 +142,10 @@ module Elastic
         end
       end
 
-      # TODO: query builder should rely on query params not some globals
       def profiles_filters
         @instance_profile_types.map do |profile|
           build_profile_query(profile)
         end
-      end
-
-      def default_profile_query
-        user_profiles_filters = Elastic::QueryBuilder::UserProfileBuilder.build(@query, type: 'default')
-
-        # legacy and deprecated
-        @query[:lg_custom_attributes]&.each do |key, value|
-          next if value.blank?
-          attribute = key.match(/([a-zA-Z\.\_\-]*)_(gte|lte|gt|lt)/)
-          if attribute
-            user_profiles_filters << { range: { "user_profiles.properties.#{attribute[1]}.raw" => { attribute[2] => value.to_f } } }
-          else
-            Array(value).reject(&:blank?).each do |single|
-              user_profiles_filters << { match: { "user_profiles.properties.#{key}" => single } }
-            end
-          end
-        end
-
-        # legacy and deprecated
-        @query[:lg_customizations]&.each do |key, value|
-          next if value.blank?
-          user_profiles_filters << { match: { "user_profiles.customizations.#{key}" => value } }
-        end
-
-        { nested: { path: 'user_profiles', query: { bool: { must: user_profiles_filters } } } }
       end
 
       def build_profile_query(profile)
