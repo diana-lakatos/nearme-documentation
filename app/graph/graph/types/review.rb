@@ -10,7 +10,7 @@ module Graph
       field :lister, !Types::User do
         resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.seller_id }, ctx) }
       end
-      field :enquirer, !Types::User do
+      field :enquirer, Types::User do
         resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.buyer_id }, ctx) }
       end
     end
