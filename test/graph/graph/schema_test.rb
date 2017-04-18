@@ -35,6 +35,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
           avatar{ url }
           name_with_affiliation
           display_location
+          is_followed(follower_id: 123)
           current_address{ address }
           profile(profile_type: "default") {
             profile_type
@@ -58,6 +59,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
           'avatar' => nil,
           'name_with_affiliation' => @user.to_liquid.name_with_affiliation,
           'display_location' => @user.to_liquid.display_location,
+          'is_followed' => false,
           'current_address' => { 'address' => @user.current_address.address },
           'profile' => { 'profile_type' => 'default' }
         },
