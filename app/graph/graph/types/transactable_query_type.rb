@@ -8,6 +8,7 @@ module Graph
         argument :listing_type_id, types.ID
         argument :filters, types[Types::TransactableFilterEnum]
         argument :take, types.Int
+        argument :creator_id, types.ID
 
         resolve Resolvers::Transactables.new
       end
@@ -16,6 +17,7 @@ module Graph
         type !Types::Transactable
         argument :id, types.ID
         argument :slug, types.String, 'Slug of the transactable'
+        argument :creator_id, types.ID
         resolve Resolvers::Transactable.new
       end
     end
