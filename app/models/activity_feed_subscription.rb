@@ -28,6 +28,14 @@ class ActivityFeedSubscription < ActiveRecord::Base
 
   after_create :trigger_workflow_alert_for_new_follow
 
+  def self.followed_by_user?(followed_id, followed_klass, user_id)
+    ActivityFeedSubscription.where(
+      followed_id: followed_id,
+      followed_type: followed_klass.name, 
+      follower_id: user_id
+    ).any?
+  end
+
   def set_followed_identifier
     self.followed_identifier = ActivityFeedService::Helpers.object_identifier_for(followed)
   end

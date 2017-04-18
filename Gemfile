@@ -190,6 +190,7 @@ group :development do
   gem 'parallel_tests', require: false
 
   gem 'overcommit', require: false
+  gem 'rubocop', require: false
   gem 'foreman', require: false
 end
 
