@@ -9,8 +9,6 @@ module ElasticIndexer
                :country,
                :state,
                :postcode,
-               :latitude,
-               :longitude,
                :iso_country_code,
                :street_number
   end

@@ -15,27 +15,30 @@ module Elastic
       end
 
       def regular_query
-        @filters = profiles_filters
-
         {
           sort: sorting_options,
           query: match_query,
-          filter: { bool: { must: @filters } }
+          filter: { bool: { must: filters } }
         }.merge(aggregations)
       end
 
-
       def simple_query
-        @filters = profiles_filters
         {
           _source: @query[:source],
           sort: sorting_options,
           query: @query[:query],
-          filter: { bool: { must: @filters } }
+          filter: { bool: { must: filters } }
         }
       end
 
       private
+
+      def filters
+        @filters = []
+        @filters.concat profiles_filters
+        @filters.concat [geo_shape] if geo_shape
+        @filters
+      end
 
       def match_query
         if @query[:query].blank?
@@ -173,6 +176,21 @@ module Elastic
 
       def build_profile_query(profile)
         { nested: { path: 'user_profiles', query: { bool: { must: Elastic::QueryBuilder::UserProfileBuilder.build(@query, profile: profile) } } } }
+      end
+
+      def geo_shape
+        return unless @query[:location]
+        {
+          geo_shape: {
+            geo_service_shape: {
+              shape: {
+                type: 'Point',
+                coordinates: @query[:location].values.map(&:to_f)
+              },
+              relation: 'contains'
+            }
+          }
+        }
       end
     end
   end

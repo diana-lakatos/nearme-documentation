@@ -43,6 +43,8 @@ module UsersIndex
         indexes :number_of_completed_orders_user, type: 'integer'
         indexes :seller_average_rating, type: 'float'
         indexes :buyer_average_rating, type: 'float'
+        indexes :geo_location, type: 'geo_point'
+        indexes :geo_service_shape, type: 'geo_shape'
 
         indexes :user_profiles, type: 'nested' do
           indexes :enabled, type: 'boolean'

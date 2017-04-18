@@ -289,6 +289,7 @@ def enable_elasticsearch!(&_block)
   end
 
   yield if block_given?
+
   Transactable.__elasticsearch__.refresh_index!
 end
 
