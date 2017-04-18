@@ -1,4 +1,4 @@
 - [:notice, :success, :warning, :error, :deleted].each do |key|
   - if flash[key].present?
     %div{class: "alert #{key}", :'data-flash-message' => true, :"data-close-label" => t(:close_label, scope: [:flash_messages] )}
-      .contain.multiline= flash[key]
+      .contain= nl2br(flash[key])
