@@ -9,10 +9,9 @@ module Graph
       end
 
       def fetch
-        Elastic::UserCollectionProxy
-          .new(::User.simple_search(elastic_query))
-          .results
-          .map(&:to_liquid)
+        Elastic::UserCollectionProxy.new(users)
+                                    .results
+                                    .map(&:to_liquid)
       end
 
       private
@@ -27,6 +26,13 @@ module Graph
           source: source_mapper,
           query: @query
         }
+      end
+
+      def users
+        ::User.simple_search(
+          elastic_query,
+          instance_profile_types: PlatformContext.current.instance.instance_profile_types.default
+        )
       end
 
       def query_fields
