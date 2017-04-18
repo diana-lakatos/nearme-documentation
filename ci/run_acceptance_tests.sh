@@ -11,6 +11,7 @@ yarn --force --frozen-lockfile
 # node ./node_modules/eslint/bin/eslint.js ./app/frontend/javascripts
 
 # Make sure staging is in git refs
+git fetch origin/staging
 bundle exec pronto run -c origin/staging -f github_pr github_status --exit-code
 
 # build assets
