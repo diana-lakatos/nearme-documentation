@@ -45,7 +45,12 @@ class ImportHallmarkUsersJob < Job
             if email.include?('@')
               emails << email
               u = User.where('email ilike ?', email).first_or_initialize
-              u.expires_at = Date.strptime(array[EXPIRES_AT], '%Y%m').end_of_month
+              u.expires_at = begin
+                               Date.strptime(array[EXPIRES_AT], '%Y%m').end_of_month
+                             rescue
+                               logger.info "\tCRITICAL ISSUE: expires date is invalid - #{array[EXPIRES_AT]}"
+                               next
+                             end
               if u.persisted?
                 logger.info "updating: #{email}"
               else
@@ -77,12 +82,15 @@ class ImportHallmarkUsersJob < Job
               u.last_name = array[LAST_NAME].humanize if u.last_name.blank?
               u.verified_at = Time.now unless u.verified_at.present?
               logger.info "\tERROR!!! #{u.expires_at} not in the future" if u.expires_at < Time.now
-              u.save!
-              if u.metadata['verification_email_sent_at'].blank?
-                logger.info "\tSending email to: #{u.email}"
-                WorkflowAlert::InvokerFactory.get_invoker(WorkflowAlert.find(133_65)).invoke!(WorkflowStep::SignUpWorkflow::AccountCreated.new(u.id))
-                u.metadata['verification_email_sent_at'] = Time.zone.now
-                u.save!
+              if u.save
+                if u.metadata['verification_email_sent_at'].blank?
+                  logger.info "\tSending email to: #{u.email}"
+                  WorkflowAlert::InvokerFactory.get_invoker(WorkflowAlert.find(133_65)).invoke!(WorkflowStep::SignUpWorkflow::AccountCreated.new(u.id))
+                  u.metadata['verification_email_sent_at'] = Time.zone.now
+                  u.save!
+                end
+              else
+                logger.info "\tCRITICAL ISSUE: user was not saved - #{u.errors.full_messages.join(', ')}"
               end
             else
               logger.info "Skipping due to email: #{email}"

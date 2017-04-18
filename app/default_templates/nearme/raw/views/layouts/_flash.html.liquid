@@ -1,8 +1,8 @@
 {% assign keys = "notice,success,warning,error,deleted" | split: ',' %}
 {% for key in keys %}
   {% if flash[key] != blank %}
-    <div class="alert {{key}}" data-flash-message data-close-label="{{ 'flash_messages.close_label' }}">
-      <div class="contain">{{ flash[key] | nl2br }}</div>
+    <div class="multiline alert {{key}}" data-flash-message data-close-label="{{ 'flash_messages.close_label' }}">
+      <div class="contain">{{ flash[key] }}</div>
     </div>
   {% endif %}
 {% endfor %}

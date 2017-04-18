@@ -78,32 +78,10 @@ module ApplicationHelper
     content_for(:meta_og_image) { image }
   end
 
-  def truncate_with_ellipsis(body, length, html_options = {})
-    body ||= ''
-    if body.size > length
-
-      size = 0
-      body = body.squish
-
-      truncated_body = body.split.reject do |token|
-        size += token.size + 1
-        size > length
-      end
-
-      truncated_body_str = truncated_body.join(' ')
-      truncated_body_regexp = Regexp.new("^#{Regexp.escape(truncated_body_str)}")
-      excess_body = body.gsub(truncated_body_regexp, '').strip
-
-      content_tag(:p, html_options) do
-        truncated_body_str.html_safe +
-          content_tag(:span, '&hellip;'.html_safe, class: 'truncated-ellipsis').html_safe +
-          content_tag(:span, excess_body.html_safe, class: 'truncated-text hidden').html_safe
-      end
-
-    else
-      body
-    end
-  end
+  # used in flash messages for now. Do not use anywhere else
+   def nl2br(str)
+     str.to_s.gsub(/\r\n|\r|\n/, '<br />').html_safe
+   end
 
   def link_to_registration(constraint, secured_constraint, secure_links, options = {}, &block)
     options[:rel] = nil if secure_links
@@ -218,10 +196,6 @@ module ApplicationHelper
 
   def render_olark?
     !(params[:controller] == 'locations' && params[:action] == 'show')
-  end
-
-  def nl2br(str)
-    str.to_s.gsub(/\r\n|\r|\n/, '<br />').html_safe
   end
 
   def home_page?
