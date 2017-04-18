@@ -78,6 +78,11 @@ module ApplicationHelper
     content_for(:meta_og_image) { image }
   end
 
+  # used in flash messages for now. Do not use anywhere else
+   def nl2br(str)
+     str.to_s.gsub(/\r\n|\r|\n/, '<br />').html_safe
+   end
+
   def link_to_registration(constraint, secured_constraint, secure_links, options = {}, &block)
     options[:rel] = nil if secure_links
     constraint.merge!(secured_constraint) if secure_links

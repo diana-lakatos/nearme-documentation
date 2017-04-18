@@ -1,6 +1,6 @@
 - [:notice, :success, :warning, :error, :deleted].each do |key|
   - if flash[key].present?
-    .multiline{class: "alert #{key}", :'data-flash-message' => true}
-      = flash[key]
+    %div{class: "alert #{key}", :'data-flash-message' => true}
+      = nl2br(flash[key])
       %button.close{ type: 'button', "data-close": true }= t('flash_messages.close_label')
 
