@@ -36,7 +36,7 @@ module Api
           # tmp safety check - we still have validation in User model itself
           # so if model is invalid, it won't be saved and user won't be able to
           # sign up - we want to be notified
-          raise "Update failed due to configuration issue: #{@user_update_form.model.errors.full_messages.join(', ')}" if @user_update_form.errors.any?
+          raise "Update failed due to configuration issue: #{@user_update_form.model.errors.full_messages.join(', ')}" if @user_update_form.model.changed?
         end
         respond(@user_update_form, notice: I18n.t('flash_messages.api.users.update.notice'),
                                    alert: false)
