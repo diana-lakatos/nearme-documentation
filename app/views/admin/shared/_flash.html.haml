@@ -2,6 +2,6 @@
   - [:notice, :success, :warning, :error, :deleted].each do |key|
     - if flash[key].present?
       %div{class: "notification is-#{key}"}
-        .notification-body
-          = nl2br(flash[key])
+        .notification-body.multiline
+          = flash[key]
         %button.notification-close{ type: 'button' }= t('flash_messages.close_label')
