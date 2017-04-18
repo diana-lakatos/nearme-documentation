@@ -50,7 +50,7 @@ module Api
       if params[:id]
         current_user.transactables.find(params[:id])
       else
-        @transactable_type.transactables.build
+        @transactable_type.transactables.build(creator: current_user)
       end.tap { |t| t.location_not_required = true }
     end
 
