@@ -3,7 +3,7 @@ module Graph
   module Resolvers
     class MessageThreads
       def call(user, arguments, _ctx)
-        @user_model = ::User.find(user.id)
+        @user_model = Resolvers::User.find_model(user)
         @take = arguments[:take]
         resolve_by
       end
