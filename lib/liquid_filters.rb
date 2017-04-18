@@ -701,7 +701,13 @@ module LiquidFilters
   # @param method [String] method name to be called on each of the objects in the passed
   #   in array of objects
   def map(object, method)
-    object.map(&method.to_sym)
+    object.map do |o|
+      if o.is_a?(Hash)
+        o[method]
+      else
+        o.public_send(method)
+      end
+    end
   end
 
   # @return [Array<Object>] that exists in both arrays

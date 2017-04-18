@@ -23,10 +23,9 @@ module Api
     def create
       if @transactable_form.validate(params[:form].presence || params[:transactable] || {})
         @transactable_form.save
-        raise "Create failed due to configuration issue: #{@transactable_form.model.errors.full_messages.join(', ')}" unless @transactable_form.model.persisted?
+        raise "Create failed due to configuration issue: #{@transactable_form.model.errors.full_messages.join(', ')}" if @transactable_form.model.changed?
       end
-      respond(@transactable_form, alert: false,
-                                  location: session.delete(:user_return_to).presence || params[:return_to].presence || root_path)
+      respond(@transactable_form, alert: false)
     end
 
     def update
@@ -35,10 +34,9 @@ module Api
         # tmp safety check - we still have validation in Transactable model itself
         # so if model is invalid, it won't be saved and user won't be able to
         # sign up - we want to be notified
-        raise "Update failed due to configuration issue: #{@transactable_form.model.errors.full_messages.join(', ')}" if @transactable_form.errors.any?
+        raise "Update failed due to configuration issue: #{@transactable_form.model.errors.full_messages.join(', ')}" if @transactable_form.model.changed?
       end
-      respond(@transactable_form, notice: I18n.t('flash_messages.api.users.update.notice'),
-                                  alert: false)
+      respond(@transactable_form, alert: false)
     end
 
     private
@@ -52,8 +50,8 @@ module Api
       if params[:id]
         current_user.transactables.find(params[:id])
       else
-        @transactable_type.transactables.new
-      end
+        @transactable_type.transactables.build(creator: current_user)
+      end.tap { |t| t.location_not_required = true }
     end
 
     def find_transactable_type

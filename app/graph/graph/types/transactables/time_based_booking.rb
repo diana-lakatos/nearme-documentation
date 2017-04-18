@@ -9,6 +9,7 @@ module Graph
 
         field :id, !types.Int
         field :minimum_booking_minutes, !types.Int
+        field :availability_template, Types::Transactables::AvailabilityTemplate
         field :pricings, !types[Types::Transactables::Pricing]
       end
     end
