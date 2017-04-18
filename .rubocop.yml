@@ -14,5 +14,5 @@ Style/WhileUntilModifier:
   MaxLineLength: 130
 Metrics/LineLength:
   Max: 130
-Layout/TrailingWhitespace:
+Style/TrailingWhitespace:
   Enabled: false
