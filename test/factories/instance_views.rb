@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :instance_view do
     body "%h1\n\tHello"
@@ -18,6 +19,13 @@ FactoryGirl.define do
 
     factory :instance_view_email_html do
       body 'Hello {{dummy_arg.name}}'
+      format 'html'
+      handler 'liquid'
+      path 'custom_email_templates/custom_template'
+    end
+
+    factory :instance_view_email_html_blank do
+      body 'Hello'
       format 'html'
       handler 'liquid'
       path 'custom_email_templates/custom_template'

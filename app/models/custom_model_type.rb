@@ -11,7 +11,7 @@ class CustomModelType < ActiveRecord::Base
            :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, :destroy_translations!, to: :translation_manager
 
   belongs_to :instance
-  has_many :customizations, dependent: :destroy
+  has_many :customizations, dependent: :destroy, inverse_of: :custom_model_type
   has_many :custom_model_type_linkings, dependent: :destroy
   has_many :transactable_types, through: :custom_model_type_linkings
   has_many :project_types, through: :custom_model_type_linkings

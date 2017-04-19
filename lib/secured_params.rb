@@ -508,6 +508,7 @@ class SecuredParams
       :hide_additional_charges_on_listing_page,
       :single_location,
       :require_transactable_during_onboarding,
+      custom_csv_fields: [],
       availability_templates_attributes: nested(availability_template),
       custom_csv_fields: [],
       allowed_currencies: [],

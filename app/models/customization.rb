@@ -10,8 +10,9 @@ class Customization < ActiveRecord::Base
   validates_with CustomValidators
 
   belongs_to :instance
-  belongs_to :custom_model_type
+  belongs_to :custom_model_type, inverse_of: :customizations
   belongs_to :customizable, polymorphic: true, touch: true
+  belongs_to :user
 
   delegate :custom_validators, to: :custom_model_type
   def custom_attributes_custom_validators

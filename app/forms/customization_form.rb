@@ -2,6 +2,7 @@
 class CustomizationForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
   property :id
+  property :custom_model_type_id
   property :_destroy, virtual: true
 
   def _destroy=(value)

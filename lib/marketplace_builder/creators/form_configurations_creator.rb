@@ -27,6 +27,7 @@ module MarketplaceBuilder
         form_configuration.base_form = template.base_form
         form_configuration.configuration = template.configuration
         form_configuration.liquid_body = template.body if template.body.present?
+        form_configuration.workflow_steps = WorkflowStep.where(name: template.workflow_steps) if template.workflow_steps.present?
         form_configuration.save!
         template.pages&.each do |slug|
           p = Page.find_by(slug: slug)

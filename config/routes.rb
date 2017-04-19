@@ -1231,6 +1231,7 @@ DesksnearMe::Application.routes.draw do
           resources :custom_attachments, only: [:destroy]
           resources :orders, only: [:update]
           resources :custom_images, only: [:destroy]
+          resources :customizations, only: [:create]
           resources :transactable_collaborators, only: [:create, :destroy] do
             member do
               put :accept

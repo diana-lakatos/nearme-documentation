@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170412082728) do
+ActiveRecord::Schema.define(version: 20170419101157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -797,6 +797,7 @@ ActiveRecord::Schema.define(version: 20170412082728) do
     t.datetime "deleted_at"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
+    t.integer  "user_id"
   end
 
   add_index "customizations", ["instance_id", "customizable_id", "customizable_type"], name: "instance_customizable_index", using: :btree
@@ -1060,6 +1061,14 @@ ActiveRecord::Schema.define(version: 20170412082728) do
   end
 
   add_index "form_configurations", ["instance_id"], name: "index_form_configurations_on_instance_id", using: :btree
+
+  create_table "form_configurations_workflows", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "form_configuration_id"
+    t.integer  "workflow_step_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",           limit: 255, null: false
