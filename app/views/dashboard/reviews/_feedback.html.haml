@@ -38,7 +38,7 @@
           - if rating_system.subject == RatingConstants::GUEST
             - link_to_user_profile = link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(feedback.line_itemable.user)
           - else
-            - link_to_user_profile = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.line_itemable.company.creator)
+            - link_to_user_profile = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.line_itemable.creator)
 
       = render 'dashboard/reviews/order_info', placed_at: I18n.l(archived_at.to_date, format: :long), order_id: order_id, feedback: feedback, link_to_user_profile: link_to_user_profile, view_order_link: view_order_link, feedback_type: rating_system.subject
 
