@@ -5,7 +5,6 @@ module Api
       class OrdersController < Api::V4::BaseController
         skip_before_action :require_authorization
         before_action :find_order, only: [:update]
-        before_action :build_order_form, only: [:update]
         before_action :authorize_action, only: [:update]
 
         def update
@@ -65,7 +64,6 @@ module Api
         def order_form
           @order_form ||= form_configuration.build(@order)
         end
-
       end
     end
   end
