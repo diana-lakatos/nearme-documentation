@@ -10,7 +10,7 @@ module ElasticIndexer
     private
 
     def valid?
-      location&.latitude && location&.longitude && object.seller_profile
+      location&.latitude && location&.longitude && object.seller_profile && radius
     end
 
     def location

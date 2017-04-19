@@ -364,7 +364,7 @@ module Elastic
         next if value.blank? || value.empty? || value.none?(&:present?)
         @filters << {
           terms: {
-            "custom_attributes.#{key}" => value.map(&:downcase)
+            "custom_attributes.#{key}" => value
           }
         }
       end

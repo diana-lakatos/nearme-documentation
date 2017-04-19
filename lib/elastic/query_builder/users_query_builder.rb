@@ -37,6 +37,7 @@ module Elastic
         @filters = []
         @filters.concat profiles_filters
         @filters.concat [geo_shape] if @query.dig(:location, :lat)
+        @filters.concat [transactable_child] if @query.dig(:transactable, :custom_attributes)
         @filters
       end
 
@@ -164,6 +165,41 @@ module Elastic
             }
           }
         }
+      end
+
+      def transactable_child
+        HasTransactableChild.new(@query).as_json
+      end
+
+      class HasTransactableChild
+        attr_reader :options
+
+        def initialize(options)
+          @options = options
+        end
+
+        def as_json(*args)
+          {
+            has_child: {
+              type: 'transactable',
+              filter: {
+                bool: {
+                  must: custom_attributes
+                }
+              }
+            }
+          }
+        end
+
+        def custom_attributes
+          options.dig(:transactable, :custom_attributes).map do |attribute, values|
+            custom_attribute "custom_attributes.#{attribute}", values
+          end
+        end
+
+        def custom_attribute(name, values)
+          { terms: { name => values } }
+        end
       end
     end
   end
