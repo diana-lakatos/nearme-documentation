@@ -1226,6 +1226,13 @@ class SecuredParams
   end
 
   def user(transactable_type: nil, reservation_type: nil)
+    base_user(transactable_type, reservation_type) + [
+      seller_profile_attributes: nested(seller_profile),
+      default_profile_attributes: nested(default_profile)
+    ]
+  end
+
+  def base_user(transactable_type: nil, reservation_type: nil)
     [
       :avatar,
       :avatar_cache,
@@ -1257,9 +1264,7 @@ class SecuredParams
       :time_zone,
       :tag_list,
       category_ids: [],
-      seller_profile_attributes: nested(seller_profile),
       buyer_profile_attributes: nested(buyer_profile),
-      default_profile_attributes: nested(default_profile),
       current_address_attributes: nested(address),
       companies_attributes: nested(company(transactable_type: transactable_type)),
       approval_requests_attributes: nested(approval_request)
@@ -1267,9 +1272,17 @@ class SecuredParams
   end
 
   def user_from_instance_admin
-    user + [
+    base_user + [
       :featured,
-      default_profile_attributes: nested(default_profile_with_private_attribs)
+      default_profile_attributes: nested(default_profile_with_private_attribs),
+      seller_profile_attributes: nested(seller_profile_with_private_attribs)
+    ]
+  end
+
+  def seller_profile_with_private_attribs
+    profile_attribs = PlatformContext.current.instance.seller_profile_type.custom_attributes.map(&:name).flatten
+    [
+      properties_attributes: profile_attribs
     ]
   end
 
