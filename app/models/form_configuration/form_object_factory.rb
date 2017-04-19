@@ -16,7 +16,6 @@ class FormConfiguration
     end
 
     def object
-      binding.pry
       if @object_class == 'ShoppingCart'
         ShoppingCart.get_for_user(parent_object)
       elsif @object_class == 'CheckoutShoppingCart'
