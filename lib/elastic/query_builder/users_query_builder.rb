@@ -36,7 +36,7 @@ module Elastic
       def filters
         @filters = []
         @filters.concat profiles_filters
-        @filters.concat [geo_shape] if @query.dig(:location, :lat)
+        @filters.concat [geo_shape] if @query.dig(:location, :lat).present?
         @filters.concat [transactable_child] if @query.dig(:transactable, :custom_attributes)
         @filters
       end
