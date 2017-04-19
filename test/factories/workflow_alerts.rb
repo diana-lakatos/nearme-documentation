@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :workflow_alert do
     workflow_step
@@ -16,6 +17,8 @@ FactoryGirl.define do
 
     factory :workflow_alert_enquirer do
       recipient_type 'enquirer'
+      from 'info@mycsn.com'
+      template_path 'custom_email_templates/custom_template'
     end
 
     factory :workflow_alert_administrator do

@@ -10,6 +10,8 @@ class FormConfiguration < ActiveRecord::Base
 
   has_many :page_forms, dependent: :destroy
   has_many :pages, through: :page_forms
+  has_many :form_configurations_workflows, dependent: :destroy
+  has_many :workflow_steps, through: :form_configurations_workflows
 
   scope :with_parameterized_name, ->(name) { where(name: parameterize_name(name)).limit(1) }
   before_save :generate_parameterized_name, if: ->(object) { object.name_changed? }
@@ -26,7 +28,8 @@ class FormConfiguration < ActiveRecord::Base
   def build(object)
     FormBuilder.new(base_form: base_form.constantize,
                     configuration: configuration.deep_symbolize_keys,
-                    object: object).build
+                    object: object,
+                    workflow_steps: workflow_steps).build
   end
 
   def to_liquid

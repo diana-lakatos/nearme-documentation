@@ -14,6 +14,18 @@ class BaseForm < Reform::Form
     @form_builder_drop ||= FormDrop.new(self)
   end
 
+  def save
+    if super && model.persisted? && @workflow_steps.present?
+      @workflow_steps.each do |step|
+        WorkflowStepJob.perform(step.associated_class.constantize, model.id)
+      end
+    end
+  end
+
+  def set_workflow_steps(workflow_steps)
+    @workflow_steps = workflow_steps
+  end
+
   delegate :new_record?, :marked_for_destruction?, :persisted?, to: :model
 
   # Ideally this method should not exist, forms should be clever enough to use translations automatically

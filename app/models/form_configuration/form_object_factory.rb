@@ -3,7 +3,7 @@ class FormConfiguration
   class FormObjectFactory
     ALLOWED_OBJECT_CLASSES = %w(User UserProfile Transactable Customization ShoppingCart CheckoutShoppingCart Order).freeze
     ALLOWED_OBJECT_PARENT_CLASSES = %w(User InstanceProfileType TransactableType CustomModelType).freeze
-    CUSTOM_CLASSES = %w(ShoppingCart CheckoutShoppingCart)
+    CUSTOM_CLASSES = %w(ShoppingCart CheckoutShoppingCart).freeze
 
     def initialize(object_class:, object_id: nil, parent_object_class: nil, parent_object_id: nil, **)
       @object_class = object_class
@@ -51,7 +51,7 @@ class FormConfiguration
 
     def parent_object
       return nil if @parent_object_class.blank? || @parent_object_id.blank?
-      @parent_object ||= @parent_object_class.constantize.find(@parent_object_id)
+      @parent_object ||= @parent_object_class.constantize.find_by(parameterized_name: @parent_object_id)
     end
 
     def invalid_parent_class?(klass)
