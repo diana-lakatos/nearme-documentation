@@ -35,6 +35,7 @@ class FormForTag < Liquid::Block
     @attributes = normalize_liquid_tag_attributes(@attributes, context, %w(html wrapper_mappings))
     @attributes.merge!(form_options) if @attributes[:form_for_type].present?
     namespace = @model.try(:source) || @model_name.to_sym
+    namespace = UserMessage.new.tap { |u| u.attachments.build } if namespace == :user_message
 
     raise 'Object passed to form_for tag cannot be nil' if namespace.blank?
     context.stack do
