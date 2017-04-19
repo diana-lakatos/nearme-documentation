@@ -23,10 +23,6 @@ class InstanceType::Searcher::Elastic::UserSearcher
     @instance_profile_type
   end
 
-  def object
-    @instance_profile_type
-  end
-
   def searchable_categories
     @instance_profile_type.categories.searchable.roots.includes(children: { children: :children })
   end

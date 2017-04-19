@@ -38,22 +38,11 @@ module ElasticIndexer
     end
 
     def geo_location
-      return unless object.current_address
-
-      {
-        lat: latitude,
-        lon: longitude
-      }
+      GeoLocationSerializer.new(object).as_json
     end
 
     def geo_service_shape
-      return unless object.current_address
-
-      {
-        type: 'circle',
-        coordinates: [longitude, latitude],
-        radius: '50km'
-      }
+      GeoServiceShapeSerializer.new(object).as_json
     end
 
     private
