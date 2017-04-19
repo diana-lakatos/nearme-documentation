@@ -16,6 +16,7 @@ class FormConfiguration
     end
 
     def object
+      binding.pry
       if @object_class == 'ShoppingCart'
         ShoppingCart.get_for_user(parent_object)
       elsif @object_class == 'CheckoutShoppingCart'
@@ -51,7 +52,7 @@ class FormConfiguration
 
     def parent_object
       return nil if @parent_object_class.blank? || @parent_object_id.blank?
-      @parent_object ||= @parent_object_class.constantize.find_by(parameterized_name: @parent_object_id)
+      @parent_object ||= @parent_object_class.constantize.find_by(parameterized_name: @parent_object_id) || @parent_object_class.constantize.find_by(id: @parent_object_id)
     end
 
     def invalid_parent_class?(klass)
