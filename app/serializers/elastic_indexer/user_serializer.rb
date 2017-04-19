@@ -13,7 +13,9 @@ module ElasticIndexer
                :tags,
                :number_of_completed_orders_user,
                :number_of_completed_orders_creator,
-               :featured
+               :featured,
+               :geo_location,
+               :geo_service_shape
 
     def attributes
       super.merge __default_attributes
@@ -35,7 +37,34 @@ module ElasticIndexer
       object.orders.reviewable.count
     end
 
+    def geo_location
+      return unless object.current_address
+
+      {
+        lat: latitude,
+        lon: longitude
+      }
+    end
+
+    def geo_service_shape
+      return unless object.current_address
+
+      {
+        type: 'circle',
+        coordinates: [longitude, latitude],
+        radius: '50km'
+      }
+    end
+
     private
+
+    def latitude
+      object.current_address.latitude.to_f
+    end
+
+    def longitude
+      object.current_address.longitude.to_f
+    end
 
     def __default_attributes
       object.as_json only: User.mappings.to_hash[:user][:properties].keys

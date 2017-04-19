@@ -43,6 +43,8 @@ module UsersIndex
         indexes :number_of_completed_orders_user, type: 'integer'
         indexes :seller_average_rating, type: 'float'
         indexes :buyer_average_rating, type: 'float'
+        indexes :geo_location, type: 'geo_point'
+        indexes :geo_service_shape, type: 'geo_shape'
 
         indexes :user_profiles, type: 'nested' do
           indexes :enabled, type: 'boolean'
@@ -89,11 +91,12 @@ module UsersIndex
       __elasticsearch__.search(query_builder.regular_query)
     end
 
-    def self.simple_search(query, instance_profile_type = nil)
+    def self.simple_search(query, instance_profile_types:, instance_profile_type: nil)
       query_builder = Elastic::QueryBuilder::UsersQueryBuilder.new(query.with_indifferent_access,
                                                                    searchable_custom_attributes: searchable_custom_attributes(instance_profile_type),
                                                                    query_searchable_attributes: search_in_query_custom_attributes(instance_profile_type),
-                                                                   instance_profile_type: instance_profile_type)
+                                                                   instance_profile_type: instance_profile_type,
+                                                                   instance_profile_types: instance_profile_types)
 
       __elasticsearch__.search(query_builder.simple_query)
     end

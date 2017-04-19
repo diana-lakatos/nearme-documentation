@@ -10,6 +10,17 @@ module Graph
               .fetch
               .first
       end
+
+      def self.find_model(user)
+        case user
+        when ActiveRecord::Base
+          user
+        when Elastic::UserDrop
+          ::User.find(user.id)
+        else
+          raise NotImplementedError, "User class #{user.class.name} not supported. Valid classes: ::User, Elastic::UserDrop" 
+        end
+      end
     end
   end
 end

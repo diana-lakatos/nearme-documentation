@@ -25,6 +25,10 @@ module Graph
         relation.where(id: ids)
       end
 
+      def resolve_by_creator_id(relation, creator_id)
+        relation.where(creator_id: creator_id)
+      end
+
       def resolve_by_listing_type_id(listing_type_id)
         relation.for_transactable_type_id(listing_type_id)
       end

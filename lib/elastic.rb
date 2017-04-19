@@ -11,6 +11,6 @@ module Elastic
   end
 
   def self.default_index_name_builder(instance)
-    Elastic::IndexNameBuilder.new(ENV['RAILS_ENV'], instance.id, 'development', 'user-transactables')
+    Elastic::IndexNameBuilder.new(ENV.fetch('RAILS_ENV', 'development'), instance.id, 'development', 'user-transactables')
   end
 end

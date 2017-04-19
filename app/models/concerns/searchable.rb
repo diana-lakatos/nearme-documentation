@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require './lib/elastic' # rails dev env needs this
+
 module Searchable
   extend ActiveSupport::Concern
 

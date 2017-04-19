@@ -18,7 +18,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       disable_elasticsearch!
     end
 
-    should 'get user xxx' do
+    should 'get user' do
       query = %({
         user(slug: "#{@user.slug}") {
           id
@@ -35,6 +35,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
           avatar{ url }
           name_with_affiliation
           display_location
+          is_followed(follower_id: 123)
           current_address{ address }
           profile(profile_type: "default") {
             profile_type
@@ -58,6 +59,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
           'avatar' => nil,
           'name_with_affiliation' => @user.to_liquid.name_with_affiliation,
           'display_location' => @user.to_liquid.display_location,
+          'is_followed' => false,
           'current_address' => { 'address' => @user.current_address.address },
           'profile' => { 'profile_type' => 'default' }
         },
@@ -168,17 +170,34 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       assert_not_nil result(query)['user']
     end
 
-    # should 'get user reviews' do
-    #   comment = 'very good'
-    #   review = FactoryGirl.create(:review, comment: comment, subject: RatingConstants::HOST)
-    #   review.update_attributes(seller: @user)
-    #   query = %({ user(id: #{@user.id}) {reviews{comment}}})
+    should 'get user reviews' do
+      comment = 'very good'
+      review = FactoryGirl.create(
+        :review,
+        comment: comment,
+        rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)
+      )
+      review.update_attributes(seller: @user)
+      query = %({ user(id: #{@user.id}) {
+        id
+        reviews{
+          comment
+          enquirer{ email }
+        }
+      }})
+      refresh_elastic
 
-    #   assert_equal(
-    #     comment,
-    #     result(query).dig('user', 'reviews', 0, 'comment')
-    #   )
-    # end
+      data = result(query)
+
+      assert_equal(
+        comment,
+        data.dig('user', 'reviews', 0, 'comment')
+      )
+      assert_equal(
+        review.buyer.email,
+        data.dig('user', 'reviews', 0, 'enquirer', 'email')
+      )
+    end
   end
 
   should 'get activity feed' do
