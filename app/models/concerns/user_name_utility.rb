@@ -6,9 +6,6 @@ module UserNameUtility
 
   included do
     validates :name, :first_name, presence: true
-    validates :first_name, length: { maximum: UserNameUtility::MAX_NAME_LENGTH }
-    validates :middle_name, length: { maximum: UserNameUtility::MAX_NAME_LENGTH }
-    validates :last_name, length: { maximum: UserNameUtility::MAX_NAME_LENGTH }
 
     before_validation :prepare_name_fields
 
