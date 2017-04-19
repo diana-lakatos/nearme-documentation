@@ -824,7 +824,7 @@ class User < ActiveRecord::Base
   end
 
   def is_instance_owner?
-    self == instance.instance_owner
+    self == instance&.instance_owner
   end
 
   def is_location_administrator?
