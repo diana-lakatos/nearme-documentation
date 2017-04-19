@@ -1220,6 +1220,9 @@ DesksnearMe::Application.routes.draw do
             get :verify
           end
         end
+        namespace :instance_admin do
+          resources :reverse_proxy_links, only: [:create, :index]
+        end
         namespace :user do
           resource :checkout, only: [:create]
           resource :shopping_cart, only: [:create, :update]
