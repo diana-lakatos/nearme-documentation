@@ -39,6 +39,13 @@
             .input-container.col-xs-12
               = draw_attribute_for_form(attribute, properties_form, true)
 
+    = f.simple_fields_for :seller_profile do |profile_form|
+      = profile_form.simple_fields_for :properties, profile_form.object.properties do |properties_form|
+        - (profile_form.object.instance_profile_type.try(:custom_attributes).try(:where, public: false) || []).each do |attribute|
+          .row
+            .input-container.col-xs-12
+              = properties_form.input attribute.name, as: :switch, label: attribute.label
+
     = content_for :header_buttons do
       = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 

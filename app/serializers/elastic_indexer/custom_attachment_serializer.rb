@@ -12,9 +12,7 @@ module ElasticIndexer
     private
 
     def file_name
-      # FIXME: crashing
-      # NoMethodError: undefined method `original_filename' for CarrierWave::Storage::Fog::File
-      # file.file.original_filename
+      file.file.filename
     end
   end
 end
