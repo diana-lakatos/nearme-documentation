@@ -71,9 +71,9 @@ class ReservationDrop < OrderDrop
   #   @return [DateTime] Time when the lister confirmed the reservation
   # @!method enquirer_confirmed_at
   #   @return [DateTime] Time when the enquirer (buyer) confirmed the reservation
-  delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price, :transactable, :state_to_string,
+  delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price_cents, :total_price, :transactable, :state_to_string,
            :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
-           :total_payable_to_host_formatted, :total_units_text, :unit_price, :has_service_fee?, :transactable_line_items,
+           :total_payable_to_host_formatted, :total_payable_to_host_cents, :total_units_text, :unit_price, :has_service_fee?, :transactable_line_items,
            :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price,
            :manage_booking_status_info, :manage_booking_status_info_new, :lister_confirmed_at, :enquirer_confirmed_at,
            to: :reservation
