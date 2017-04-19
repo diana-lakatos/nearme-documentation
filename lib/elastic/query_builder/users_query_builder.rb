@@ -36,7 +36,7 @@ module Elastic
       def filters
         @filters = []
         @filters.concat profiles_filters
-        @filters.concat [geo_shape] if geo_shape
+        @filters.concat [geo_shape] if @query.dig(:location, :lat)
         @filters
       end
 
@@ -153,13 +153,12 @@ module Elastic
       end
 
       def geo_shape
-        return unless @query[:location]
         {
           geo_shape: {
             geo_service_shape: {
               shape: {
                 type: 'Point',
-                coordinates: @query[:location].values.map(&:to_f)
+                coordinates: @query[:location].values_at(:lon, :lat)
               },
               relation: 'contains'
             }
