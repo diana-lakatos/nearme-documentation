@@ -59,5 +59,5 @@ NM.on('ready', () => {
   require('initializers/dashboard/tags.initializer');
   require('initializers/dashboard/ticket_message.initializer');
   require('initializers/dashboard/white_label.initializer');
-
+  require('initializers/application/wish_list_buttons.initializer');
 });
