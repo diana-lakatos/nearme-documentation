@@ -12,7 +12,7 @@ module Graph
             !types.String,
             'image url, ex: thumb: url(version: "thumb")' do
         argument :version, types.String
-        resolve ->(obj, arg, _ctx) { arg[:version].present? ? obj.url(arg[:version]) : obj.url }
+        resolve ->(obj, arg, _ctx) { arg[:version].present? ? obj.url(arg[:version].to_sym) : obj.url }
       end
 
       field :image_original_width,
