@@ -13,7 +13,7 @@ module Graph
       def resolve_by
         return all if argument_keys.empty?
         argument_keys.reduce([]) do |collection, argument_key|
-          method = ARGUMENTS_RESOLVERS_MAP[argument_key]
+          method = ARGUMENTS_RESOLVERS_MAP[argument_key.to_sym]
           value = @arguments[argument_key]
           public_send(method, collection, value)
         end
@@ -48,7 +48,7 @@ module Graph
         UserEs.new(query: query, ctx: @ctx).fetch
       end
 
-      def map_filters_into_term
+      def map_filters_into_term(filters)
         filters = filters.map(&:downcase).map(&:to_sym)
         FILTER_TERMS_MAP.slice(*filters)
                         .values

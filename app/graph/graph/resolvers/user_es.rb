@@ -21,6 +21,8 @@ module Graph
         'current_address' => 'current_address.*'
       }.freeze
 
+      MANDATORY_FIELDS = %w(id slug).freeze
+
       def elastic_query
         {
           source: source_mapper,
@@ -40,7 +42,8 @@ module Graph
       end
 
       def source_mapper
-        source_fields = query_fields[:simple]
+        source_fields = MANDATORY_FIELDS.dup 
+        source_fields << query_fields[:simple]
         source_fields << NESTED_FIELDS_SOURCE_MAPPING.slice(*query_fields[:nested].keys).values
         source_fields.flatten.compact
       end
