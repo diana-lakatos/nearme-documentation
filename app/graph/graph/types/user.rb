@@ -13,7 +13,6 @@ module Graph
         argument :follower_id, types.ID
         resolve ->(user, arg, _) { ActivityFeedSubscription.followed_by_user?(user.id, ::User, arg['follower_id']) }
       end
-
       field :name, types.String
       field :first_name, types.String
       field :last_name, types.String
@@ -24,7 +23,8 @@ module Graph
             types.String,
             'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
         argument :name, !types.String
-        resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
+        deprecation_reason 'Fetch custom_atrribute directly from profile'
+        resolve ->(obj, arg, _ctx) { Resolvers::User.find_model(obj).properties[arg[:name]] }
       end
 
       field :profile, Types::Users::Profile do
@@ -55,10 +55,10 @@ module Graph
       end
       field :avatar, Types::Image
       field :name_with_affiliation, !types.String do
-        resolve ->(obj, _arg, _ctx) { ::User.find(obj.id).to_liquid.name_with_affiliation }
+        resolve ->(obj, _arg, _ctx) { Resolvers::User.find_model(obj).to_liquid.name_with_affiliation }
       end
       field :display_location, types.String do
-        resolve ->(obj, _arg, _ctx) { ::User.find(obj.id).to_liquid.display_location }
+        resolve ->(obj, _arg, _ctx) { Resolvers::User.find_model(obj).to_liquid.display_location }
       end
       field :current_address, Types::Address
       field :collaborations, types[Types::Collaboration] do
@@ -92,9 +92,11 @@ module Graph
               argument :profile_type, !types.String
               resolve(
                 lambda do |obj, arg, _ctx|
-                  obj.user_profiles
-                  .joins(:instance_profile_type)
-                  .find_by(instance_profile_types: { parameterized_name: arg[:profile_type] }).properties[arg[:name]]
+                  Resolvers::User.find_model(obj)
+                                 .user_profiles
+                                 .joins(:instance_profile_type)
+                                 .find_by(instance_profile_types: { parameterized_name: arg[:profile_type] })
+                                 .properties[arg[:name]]
                 end
               )
             end

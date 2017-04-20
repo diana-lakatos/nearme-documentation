@@ -84,6 +84,21 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       )
     end
 
+    should 'get user profile property xxx' do
+      add_custom_attribute(attr_name: 'hair_color', value: 'red', object: @user)
+      query = %({
+        user(id: #{@user.id}) {
+          hair_color: profile_property(profile_type: "default", name: "hair_color")
+        }
+      })
+
+      assert_equal(
+        @user.properties.hair_color,
+        result(query).dig('user', 'hair_color')
+      )
+    end
+
+
     should 'get user custom photo' do
       query = %({ users { funny_pic: custom_attribute_photos(name: "funny_pic"){ url }}})
 
@@ -197,6 +212,12 @@ class Graph::SchemaTest < ActiveSupport::TestCase
         review.buyer.email,
         data.dig('user', 'reviews', 0, 'enquirer', 'email')
       )
+    end
+
+    should 'get users with filters' do
+      query = %({ users(filters: FEATURED) { id } })
+      
+      assert_empty result(query)['users']
     end
   end
 
