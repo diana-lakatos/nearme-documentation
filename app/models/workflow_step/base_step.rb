@@ -47,7 +47,7 @@ class WorkflowStep::BaseStep
   end
 
   def publish_event
-    EventStore.publish_event(to_event)
+    EventStore.publish_event(to_event) if should_be_processed?
   end
 
   def to_event
