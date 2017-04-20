@@ -2,38 +2,38 @@
 module Api
   module V4
     module User
-      class OrdersController < Api::V4::BaseController
+      class OrdersController < Api::V4::User::BaseController
         skip_before_action :require_authorization
-        before_action :find_order, only: [:update]
         before_action :authorize_action, only: [:update]
 
         def update
           if order_form.validate(params[:form].presence || {})
             order_form.save
-            # just quick and dirty to explore our possibilites here and to not have to migrate all MPs
-            raise ArgumentError, "Order was not saved: #{order_form.model.errors.full_messages.join(', ')}" if order_form.model.changed?
+            raise ArgumentError, "Order was not saved: #{model.errors.full_messages.join(', ')}" if model.changed?
 
-            if state_event == 'confirm'
-              WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::ManuallyConfirmed".constantize, @order.id, as: current_user)
-            elsif state_event == 'complete'
-              WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Completed, @order.id)
-            elsif state_event == 'host_cancel' && reservation?
-              WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerCancelled, @order.id, as: current_user)
-            elsif state_event == 'user_cancel' && reservation?
-              WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, @order.id, as: current_user)
-            else
-              WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::OrderUpdated, @order.id, as: current_user)
-            end
+            publish_event!
+            model.lister_confirmed! if order_form.try(:lister_confirm)
+            model.schedule_expiry if order_form.try(:schedule_expiry)
+            payment.authorized? ? payment.capture! : payment.purchase! if order_form.try(:with_charge)
           end
           respond(order_form)
         end
 
         protected
 
-        def find_order
-          @order = Order.where('id = :id AND (user_id = :user_id OR creator_id = :user_id)',
-                               id: params[:id], user_id: current_user.id).first
-          raise ActiveRecord::NotFound unless @order.present?
+        def model
+          @model ||= order_form.model
+        end
+
+        def payment
+          @payment ||= model.payment
+        end
+
+        def order
+          @order ||= Order.where('id = :id AND (user_id = :user_id OR creator_id = :user_id)',
+                                 id: params[:id], user_id: current_user.id).first.tap do |o|
+            raise ActiveRecord::NotFound if o.nil?
+          end
         end
 
         def authorize_action
@@ -46,15 +46,15 @@ module Api
         end
 
         def lister?
-          current_user.id == @order.creator_id
+          current_user.id == order.creator_id
         end
 
         def enquirer?
-          current_user.id == @order.user_id
+          current_user.id == order.user_id
         end
 
         def reservation?
-          order_form.model.is_a?(Reservation)
+          model.is_a?(Reservation)
         end
 
         def form_configuration
@@ -62,7 +62,22 @@ module Api
         end
 
         def order_form
-          @order_form ||= form_configuration.build(@order)
+          @order_form ||= form_configuration.build(order)
+        end
+
+        def publish_event!
+          # just quick and dirty to explore our possibilites here and to not have to migrate all MPs
+          if state_event == 'confirm'
+            WorkflowStepJob.perform("WorkflowStep::#{order.class.workflow_class}Workflow::ManuallyConfirmed".constantize, order.id, as: current_user)
+          elsif state_event == 'complete'
+            WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Completed, order.id, as: current_user)
+          elsif state_event == 'host_cancel' && reservation?
+            WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerCancelled, order.id, as: current_user)
+          elsif state_event == 'user_cancel' && reservation?
+            WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, order.id, as: current_user)
+          else
+            WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::OrderUpdated, order.id, as: current_user)
+          end
         end
       end
     end
