@@ -2,7 +2,7 @@
 module Api
   module V4
     module User
-      class ShoppingCartsController < Api::V4::BaseController
+      class ShoppingCartsController < Api::V4::User::BaseController
         skip_before_action :require_authorization
         before_action :build_shopping_cart_form, only: [:create, :update]
 

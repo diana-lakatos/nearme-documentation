@@ -2,7 +2,7 @@
 module Api
   module V4
     module User
-      class CheckoutsController < Api::V4::BaseController
+      class CheckoutsController < Api::V4::User::BaseController
         skip_before_action :require_authorization
 
         def create
