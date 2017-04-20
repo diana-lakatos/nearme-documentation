@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ApplicationResponder < ActionController::Responder
-  include Responders::FlashResponder
+  include Responders::ApiFlashResponder
   include Responders::HttpCacheResponder
 
   # Redirects resources to the collection path (index action) instead

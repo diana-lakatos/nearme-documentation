@@ -16,10 +16,6 @@ module Api
 
         protected
 
-        def form_configuration
-          @form_configuration ||= FormConfiguration.find(params[:form_configuration_id])
-        end
-
         def checkout_form
           @checkout_form ||= form_configuration.build(CheckoutShoppingCart.new(ShoppingCart.get_for_user(current_user)))
         end

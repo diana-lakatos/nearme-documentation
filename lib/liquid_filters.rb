@@ -751,7 +751,7 @@ module LiquidFilters
   # @param format [String] string representing the desired output format
   #   e.g. '%Y-%m-%d' will result in something like '2020-12-12'
   def strftime(date, format)
-    date.strftime(format)
+    date&.strftime(format)
   end
 
   # @return [MoneyDrop] a Money object constructed with the given amount and currency
