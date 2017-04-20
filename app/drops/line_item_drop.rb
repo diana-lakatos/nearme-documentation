@@ -13,7 +13,8 @@ class LineItemDrop < BaseDrop
   #   @return [MoneyDrop] unit price
   # @!method created_at
   #   @return [DateTime] when the line item was created
-  delegate :name, :quantity, :unit_price, :created_at, to: :line_item
+  delegate :name, :quantity, :unit_price, :created_at, :included_tax_total_rate,
+           to: :line_item
 
   def initialize(line_item)
     @line_item = line_item

@@ -1227,7 +1227,7 @@ class SecuredParams
   end
 
   def user(transactable_type: nil, reservation_type: nil)
-    base_user(transactable_type, reservation_type) + [
+    base_user(transactable_type: transactable_type, reservation_type: reservation_type) + [
       seller_profile_attributes: nested(seller_profile),
       default_profile_attributes: nested(default_profile)
     ]
