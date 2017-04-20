@@ -21,7 +21,7 @@ class WorkflowStep::CommenterWorkflow::BaseStep < WorkflowStep::BaseStep
   def should_be_processed?
     return false if enquirer && lister && enquirer.id == lister.id
 
-    @comment.present? && @commentable.present?
+    @comment.present? && !@comment.deleted? && @commentable.present?
   end
 
   def workflow_triggered_by
