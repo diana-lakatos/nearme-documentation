@@ -511,7 +511,7 @@ class Order < ActiveRecord::Base
 
   def reject(reason = nil)
     self.rejection_reason = reason if reason
-    fire_state_event :reject
+    fire_state_event :reject, reason
   end
 
   def message_context_object
