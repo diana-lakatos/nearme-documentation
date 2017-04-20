@@ -6,7 +6,7 @@ class JiraWrapper
   NM_PROJECT_ID = 10_000
 
   def initialize
-    @client = JIRA::Client.new(username: 'jira-api', password: 'N#arM3123adam', context_path: '', site: 'https://near-me.atlassian.net', rest_base_path: '/rest/api/2', auth_type: :basic, read_timeout: 120)
+    @client = JIRA::Client.new(username: 'jira-api', password: 'j1r44p1$%', context_path: '', site: 'https://near-me.atlassian.net', rest_base_path: '/rest/api/2', auth_type: :basic, read_timeout: 120)
   end
 
   def ensure_version_present!(name:, description:)
