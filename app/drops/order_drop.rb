@@ -315,8 +315,7 @@ class OrderDrop < BaseDrop
   # @return [Boolean] whether tax is included for the first line item
   #   in the order
   def included_tax?
-    @first_line_item =
-      first_line_item.included_tax_total_rate.zero? == false
+    first_line_item.included_tax_total_rate.zero? == false
   end
 
   # @return [Boolean] whether an additional tax rate has been included
