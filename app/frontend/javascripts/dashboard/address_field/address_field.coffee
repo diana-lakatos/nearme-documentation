@@ -9,7 +9,7 @@ module.exports = class AddressField
 
   constructor: (@input) ->
     @inputWrapper = @input.closest('[data-address-field]')
-    @autocomplete = new google.maps.places.Autocomplete(@input[0], {})
+    @autocomplete = new google.maps.places.Autocomplete(@input[0], @getAutocompleteOptions())
     @addressComponentParser = new AddressComponentParser(@inputWrapper)
     @inputChanged = false
 
@@ -49,6 +49,13 @@ module.exports = class AddressField
             @input.parent().find('.address_components_input').remove()
             @_onLocate(null, null) if @_onLocate
       , 200)
+
+  getAutocompleteOptions: () =>
+    {
+      componentRestrictions: {
+        country: @input.data('restrict-country') || ''
+      }
+    }
 
   markerMoved: (lat, lng) =>
     setTimeout( =>
