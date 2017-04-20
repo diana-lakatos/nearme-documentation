@@ -56,7 +56,7 @@ class UserForm < BaseForm
 
   def email=(email)
     @email_changed = email != model.email
-    super
+    super(email&.downcase)
   end
 
   def email_changed?
