@@ -62,7 +62,7 @@ class Order < ActiveRecord::Base
     after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at, :schedule_refund, :cancel_deliveries]
     after_transition unconfirmed: [:cancelled_by_host], do: [:mark_as_archived!]
     after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:mark_as_archived!, :schedule_void]
-    after_transition any => [:rejected] { |o| WorkflowStepJob.perform("WorkflowStep::#{o.class.workflow_class}Workflow::Rejected".constantize, o.id) }
+    after_transition any => [:rejected] { |o| WorkflowStepJob.perform("WorkflowStep::#{o.class.workflow_class}Workflow::Rejected".constantize, o.id, as: o.creator) }
 
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end

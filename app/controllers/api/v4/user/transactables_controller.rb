@@ -42,8 +42,7 @@ module Api
     private
 
     def build_form
-      @form_configuration = FormConfiguration.find_by(id: params[:form_configuration_id]) if params[:form_configuration_id].present?
-      @transactable_form = @form_configuration&.build(get_transactable)
+      @transactable_form = form_configuration&.build(get_transactable)
     end
 
     def get_transactable

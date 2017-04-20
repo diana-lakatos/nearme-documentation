@@ -57,10 +57,6 @@ module Api
           model.is_a?(Reservation)
         end
 
-        def form_configuration
-          @form_configuration ||= FormConfiguration.find(params[:form_configuration_id])
-        end
-
         def order_form
           @order_form ||= form_configuration.build(order)
         end
@@ -75,6 +71,8 @@ module Api
             WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerCancelled, order.id, as: current_user)
           elsif state_event == 'user_cancel' && reservation?
             WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, order.id, as: current_user)
+          elsif state_event == 'reject'
+            # do nothing - it's in callback :|
           else
             WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::OrderUpdated, order.id, as: current_user)
           end

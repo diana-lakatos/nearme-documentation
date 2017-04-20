@@ -16,10 +16,11 @@ module Api
       def api_respond_with(namespaced_object, options = {})
         options[:location] = params[:redirect_to].presence || params[:return_to] if params[:redirect_to].present? || params[:return_to].present?
 
-        if params[:page_id].present? && @form_configuration.present? && namespaced_object.last.errors.present?
+        if params[:page_id].present? && form_configuration.present? && namespaced_object.last.errors.present?
           result = respond_with(*namespaced_object, options) do |format|
             submitted_form ||= {}
-            submitted_form = { @form_configuration.name => { form: namespaced_object.last.tap(&:prepopulate!), configuration: @form_configuration } } if @form_configuration.present?
+            submitted_form = { form_configuration.name => { form: namespaced_object.last.tap(&:prepopulate!),
+                                                            configuration: form_configuration } }
 
             format.html do
               RenderCustomPage.new(self).render(page: Page.find(params[:page_id]),
@@ -74,6 +75,10 @@ module Api
         PlatformContext.current.instance
       end
       helper_method :current_instance
+
+      def form_configuration
+        @form_configuration ||= FormConfiguration.find_by(id: params[:form_configuration_id])
+      end
     end
   end
 end

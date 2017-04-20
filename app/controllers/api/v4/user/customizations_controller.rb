@@ -15,8 +15,7 @@ module Api
     protected
 
     def build_form
-      @form_configuration = FormConfiguration.find_by(id: params[:form_configuration_id]) if params[:form_configuration_id].present?
-      @customization_form = @form_configuration&.build(get_customization)
+      @customization_form = form_configuration&.build(get_customization)
     end
 
     def get_customization
