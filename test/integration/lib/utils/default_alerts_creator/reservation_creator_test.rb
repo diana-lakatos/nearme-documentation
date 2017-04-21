@@ -49,7 +49,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     should '#notify_guest_of_cancellation_by_host' do
       @reservation_creator.notify_guest_of_cancellation_by_host_email!
       assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id)
+        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id, as: @reservation.creator)
       end
       mail = ActionMailer::Base.deliveries.last
       assert_contains @reservation.owner.first_name, mail.html_part.body

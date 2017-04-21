@@ -6,7 +6,6 @@ module Api
       skip_before_action :require_authorization
       skip_before_action :redirect_unverified_user, only: [:verify]
       before_action :find_user, only: [:verify]
-      before_action :build_verification_form, only: [:verify]
       before_action :set_return_to, only: :new
 
       def new
