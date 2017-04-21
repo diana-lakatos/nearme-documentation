@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # Usage:
 # ```
-#  {% placeholder { width: 80, height: 80 } %}
+#  {% placeholder: { width: 80, height: 80 } %}
 # ```
 #
 # Generates svg placeholder with given size.
@@ -10,7 +10,7 @@ class PlaceholderTag < Liquid::Tag
 
   def initialize(_tag_name, markup, _tokens)
     super
-    @attributes = create_initial_hash_from_liquid_tag_markup(markup)
+    @attributes = create_initial_hash_from_liquid_tag_markup(markup).symbolize_keys
   end
 
   def render(_context)
