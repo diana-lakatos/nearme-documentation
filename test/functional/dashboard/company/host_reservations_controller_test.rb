@@ -87,7 +87,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     end
 
     should 'track and redirect a host to the Manage Guests page when they reject a booking' do
-      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Rejected, @reservation.id, as: @reservation.creator)
       Reservation.any_instance.expects(:schedule_void).once
       put :reject, id: @reservation.id
       assert_redirected_to dashboard_company_orders_received_index_path
