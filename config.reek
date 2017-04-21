@@ -1,6 +1,8 @@
 ---
 IrresponsibleModule:
   enabled: false
+DuplicateMethodCall:
+  max_calls: 2
 UncommunicativeVariableName:
   enabled: false
 UtilityFunction:
