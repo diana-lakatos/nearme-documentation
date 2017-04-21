@@ -60,7 +60,7 @@ module Payable
           receiver: act.commission_receiver,
           name: act.name,
           quantity: 1,
-          unit_price: act.amount
+          unit_price: act.count_charge_amount(total_amount)
         )
       end
     end
