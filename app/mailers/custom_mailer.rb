@@ -1,12 +1,14 @@
 class CustomMailer < InstanceMailer
-  def custom_mail(step, workflow_id)
+  def custom_mail(step, workflow_id, metadata: {})
+    metadata.deep_stringify_keys!
     @step = step
     return unless @step.should_be_processed?
     @workflow_alert = WorkflowAlert.find(workflow_id)
-    return unless @workflow_alert.should_be_triggered?(step)
+    return unless @workflow_alert.should_be_triggered?(step, metadata: metadata)
     @step.data.each do |key, value|
       instance_variable_set(:"@#{key}", value)
     end
+    instance_variable_set(:"@metadata", metadata)
     @step.mail_attachments(@workflow_alert).each do |attachment|
       attachments[attachment[:name].to_s] = attachment[:value]
     end

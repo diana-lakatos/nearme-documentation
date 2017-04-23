@@ -1,7 +1,7 @@
 class ApiCaller
   extend Job::SyntaxEnhancer
 
-  def self.call(step, workflow_id)
+  def self.call(step, workflow_id, metadata: {})
     @step = step
     return unless @step.should_be_processed?
     @workflow_alert = WorkflowAlert.find(workflow_id)

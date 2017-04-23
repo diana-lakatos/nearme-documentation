@@ -360,7 +360,6 @@ class Order < ActiveRecord::Base
     schedule_expiry
     auto_confirm_reservation
     pre_booking_job
-    first_booking_job
   end
 
   def pre_booking_job
@@ -369,10 +368,6 @@ class Order < ActiveRecord::Base
     if pre_booking_sending_date < Time.current.beginning_of_day
       ReservationPreBookingJob.perform_later(pre_booking_sending_date, id)
     end
-  end
-
-  def first_booking_job
-    ReengagementOneBookingJob.perform_later(last_date.in_time_zone + 7.days, id) if user.orders.reservations.active.count == 1
   end
 
   def restart_checkout!

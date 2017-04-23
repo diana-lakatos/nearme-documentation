@@ -296,10 +296,10 @@ class Reservation < Order
 
   def auto_confirm_reservation
     if transactable.confirm_reservations?
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, id)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, id, as: user)
     else
       charge_and_confirm!
-      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, id)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, id, as: user)
     end
   end
 

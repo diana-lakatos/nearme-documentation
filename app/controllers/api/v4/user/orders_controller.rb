@@ -62,20 +62,8 @@ module Api
         end
 
         def publish_event!
-          # just quick and dirty to explore our possibilites here and to not have to migrate all MPs
-          if state_event == 'confirm'
-            WorkflowStepJob.perform("WorkflowStep::#{order.class.workflow_class}Workflow::ManuallyConfirmed".constantize, order.id, as: current_user)
-          elsif state_event == 'complete'
-            WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Completed, order.id, as: current_user)
-          elsif state_event == 'host_cancel' && reservation?
-            WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerCancelled, order.id, as: current_user)
-          elsif state_event == 'user_cancel' && reservation?
-            WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, order.id, as: current_user)
-          elsif state_event == 'reject'
-            # do nothing - it's in callback :|
-          else
-            WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::OrderUpdated, order.id, as: current_user)
-          end
+          WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::OrderUpdated,
+                                  order.id, metadata: { state_event: state_event }, as: current_user)
         end
       end
     end

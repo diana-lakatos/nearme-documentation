@@ -475,7 +475,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         end
 
         should 'trigger proper sms' do
-          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
+          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last, metadata: {}).returns(stub(invoke!: true)).once
           WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, @reservation.id)
         end
       end
@@ -486,7 +486,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         end
 
         should 'trigger proper sms' do
-          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
+          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last, metadata: {}).returns(stub(invoke!: true)).once
           WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
         end
 
@@ -507,7 +507,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         end
 
         should 'trigger proper sms' do
-          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
+          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last, metadata: {}).returns(stub(invoke!: true)).once
           WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
         end
 
@@ -529,7 +529,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         end
 
         should 'trigger proper sms' do
-          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
+          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last, metadata: {}).returns(stub(invoke!: true)).once
           WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ListerCancelled, @reservation.id)
         end
 
