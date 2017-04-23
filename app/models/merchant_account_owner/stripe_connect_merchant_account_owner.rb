@@ -3,49 +3,29 @@
 require 'stripe'
 
 class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountOwner
-  ATTRIBUTES = %w(dob_formated dob first_name last_name personal_id_number business_vat_id business_tax_id)
+  ATTRIBUTES = %w(dob_formated dob first_name last_name business_vat_id business_tax_id)
+
+  # We don't want to store sensitive information so we only pass it to Stripe
+  attr_accessor :personal_id_number
 
   include MerchantAccount::Concerns::DataAttributes
   has_one :current_address, class_name: 'Address', as: :entity, validate: false
   has_many :attachements, class_name: '::Attachable::MerchantAccountOwnerAttachement', validate: true, as: :attachable
-  accepts_nested_attributes_for :current_address
-  accepts_nested_attributes_for :attachements
-
   belongs_to :merchant_account, class_name: 'MerchantAccount::StripeConnectMerchantAccount'
-  delegate :iso_country_code, :account_type, to: :merchant_account, allow_nil: true
+
+  delegate :iso_country_code, :account_type, :payment_gateway, to: :merchant_account, allow_nil: true
 
   validates :last_name, :first_name, presence: true
+  validates :personal_id_number, presence: { if: :personal_id_number_required? }
   validate :validate_dob_formated
-  validates :personal_id_number, presence: { if: proc { |m| m.iso_country_code == 'US' } }
   validates :business_tax_id, presence: { if: proc { |m| m.iso_country_code == 'US' && m.account_type == 'company' } }
-
   validate :validate_current_address
-
-  def validate_current_address
-    return if current_address.blank?
-
-    current_address.parse_address_components! unless current_address.raw_address?
-    current_address.errors.clear
-    errors.add(:current_address, :inacurate) if current_address.valid? && current_address.check_address
-  end
+  validate :validate_attachements
 
   after_initialize :build_current_address_if_needed
-  def build_current_address_if_needed
-    build_current_address unless current_address
-  end
 
-  def validate_dob_formated
-    if dob_formated.blank?
-      errors.add :dob, :blank
-    else
-      begin
-        self.dob = Date.strptime(dob_formated, date_format).strftime(default_date_format).to_s
-        self.dob_formated = dob.to_date.strftime(date_format).to_s
-      rescue
-        errors.add :dob, :invalid
-      end
-    end
-  end
+  accepts_nested_attributes_for :current_address
+  accepts_nested_attributes_for :attachements
 
   def upload_document(stripe_account_id)
     if attachements.any?
@@ -80,5 +60,45 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
 
   def date_format_readable
     date_format.gsub('%Y', 'YYYY').gsub('%m', 'MM').gsub('%d', 'DD')
+  end
+
+  private
+
+  def build_current_address_if_needed
+    build_current_address unless current_address
+  end
+
+  def validate_current_address
+    return if current_address.blank?
+
+    current_address.parse_address_components! unless current_address.raw_address?
+    current_address.errors.clear
+    errors.add(:current_address, :inacurate) if current_address.valid? && current_address.check_address
+  end
+
+  def validate_attachements
+    return true if payment_gateway.nil?
+    return true unless (payment_gateway.config[:validate_merchant_account] || []).include?(:attachements)
+
+    errors.add(:attachements, :blank) if attachements.size < 2
+  end
+
+  def validate_dob_formated
+    if dob_formated.blank?
+      errors.add :dob, :blank
+    else
+      begin
+        self.dob = Date.strptime(dob_formated, date_format).strftime(default_date_format).to_s
+        self.dob_formated = dob.to_date.strftime(date_format).to_s
+      rescue
+        errors.add :dob, :invalid
+      end
+    end
+  end
+
+  def personal_id_number_required?
+    if (payment_gateway.config[:validate_merchant_account] || []).include?(:personal_id_number)
+      !merchant_account.attribute('legal_entity.personal_id_number_provided')
+    end
   end
 end
