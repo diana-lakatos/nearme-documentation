@@ -1,13 +1,11 @@
 .panel
   .panel-body
     - if merchant_account.persisted?
-      - url = dashboard_company_merchant_account_path(merchant_account.id)
+      - url = dashboard_company_merchant_account_path(merchant_account.id, payment_gateway_id: merchant_account.payment_gateway_id)
     - else
-      - url = dashboard_company_merchant_accounts_path
+      - url = dashboard_company_merchant_accounts_path(payment_gateway_id: merchant_account.payment_gateway_id)
 
     = dashboard_simple_form_for merchant_account,  as: :merchant_account, url: url, html: { 'data-payouts-form' => true, :'data-includes-address-field' => true} do |f|
-      = f.input :payment_gateway_id, as: :hidden
-      = f.input :type, as: :hidden
       = f.input :redirect_url, as: :hidden, input_html: { value: params[:redirect_url] || merchant_account.redirect_url  }
       = render merchant_account.partial_location, merchant_account: merchant_account, f: f
       - unless merchant_account.try(:payment_subscription).blank?

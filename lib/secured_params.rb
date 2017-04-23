@@ -852,7 +852,7 @@ class SecuredParams
 
   def merchant_account_owner
     attributes = [:id]
-    attributes << [:document]
+    attributes << [:document, :personal_id_number]
     attributes << { current_address_attributes: nested(address) }
     attributes << { attachements_attributes: nested(merchant_account_owner_attachement) }
     attributes << MerchantAccountOwner::StripeConnectMerchantAccountOwner::ATTRIBUTES

@@ -151,9 +151,11 @@ en:
         document: 'Photo ID'
         personal_id_number: 'Social Security Number'
         business_tax_id: 'Employer Identification Number'
+        attachements: 'Photo ID (front and back)'
       merchant_account/owners/current_address:
         address: "Additonal owners address"
       merchant_account_owner:
+        attachements: 'Photo ID (front and back)'
         document: 'Photo ID'
         dob_formated: 'Date of birth'
         personal_id_number: 'Social Security Number'

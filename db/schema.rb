@@ -1758,16 +1758,16 @@ ActiveRecord::Schema.define(version: 20170509140459) do
     t.integer  "shipping_address_id"
     t.integer  "billing_address_id"
     t.string   "currency"
-    t.string   "state",                                         limit: 255
-    t.string   "type",                                          limit: 255
+    t.string   "state",                                                      limit: 255
+    t.string   "type",                                                       limit: 255
     t.string   "time_zone"
-    t.boolean  "use_billing",                                               default: false, null: false
-    t.string   "rejection_reason",                              limit: 255
-    t.string   "completed_form_component_ids",                  limit: 255
-    t.integer  "cancellation_policy_hours_for_cancellation",                default: 0
-    t.integer  "cancellation_policy_penalty_percentage",                    default: 0
-    t.integer  "cancellation_policy_penalty_hours",                         default: 0
-    t.integer  "minimum_booking_minutes",                                   default: 60
+    t.boolean  "use_billing",                                                            default: false, null: false
+    t.string   "rejection_reason",                                           limit: 255
+    t.string   "completed_form_component_ids",                               limit: 255
+    t.integer  "cancellation_policy_hours_for_cancellation",                             default: 0
+    t.integer  "cancellation_policy_penalty_percentage",                                 default: 0
+    t.integer  "cancellation_policy_penalty_hours",                                      default: 0
+    t.integer  "minimum_booking_minutes",                                                default: 60
     t.integer  "book_it_out_discount"
     t.text     "guest_notes"
     t.hstore   "properties"
@@ -1781,9 +1781,9 @@ ActiveRecord::Schema.define(version: 20170509140459) do
     t.datetime "confirmed_at"
     t.datetime "archived_at"
     t.datetime "deleted_at"
-    t.boolean  "insurance_enabled",                                         default: false, null: false
-    t.string   "delivery_type",                                 limit: 255
-    t.string   "confirmation_email",                            limit: 255
+    t.boolean  "insurance_enabled",                                                      default: false, null: false
+    t.string   "delivery_type",                                              limit: 255
+    t.string   "confirmation_email",                                         limit: 255
     t.text     "comment"
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_and_product_rating_email_sent_at"
@@ -1791,10 +1791,10 @@ ActiveRecord::Schema.define(version: 20170509140459) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.hstore   "settings",                                                  default: {}
+    t.hstore   "settings",                                                               default: {}
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
-    t.boolean  "is_free_booking",                                           default: false
+    t.boolean  "is_free_booking",                                                        default: false
     t.datetime "lister_confirmed_at"
     t.datetime "enquirer_confirmed_at"
     t.datetime "draft_at"
@@ -2936,30 +2936,30 @@ ActiveRecord::Schema.define(version: 20170509140459) do
   create_table "transactable_type_action_types", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "transactable_type_id"
-    t.boolean  "enabled",                                    default: true
+    t.boolean  "enabled",                                                    default: true
     t.datetime "deleted_at"
     t.string   "type"
-    t.integer  "minimum_booking_minutes",                    default: 60
+    t.integer  "minimum_booking_minutes",                                    default: 60
     t.boolean  "action_continuous_dates_booking"
-    t.integer  "hours_to_expiration",                        default: 24
+    t.integer  "hours_to_expiration",                                        default: 24
     t.datetime "cancellation_policy_enabled"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.integer  "cancellation_policy_penalty_hours",          default: 0
-    t.float    "service_fee_guest_percent",                  default: 0.0
-    t.float    "service_fee_host_percent",                   default: 0.0
+    t.integer  "cancellation_policy_hours_for_cancellation",                 default: 0
+    t.integer  "cancellation_policy_penalty_percentage",                     default: 0
+    t.integer  "cancellation_policy_penalty_hours",                          default: 0
+    t.float    "service_fee_guest_percent",                                  default: 0.0
+    t.float    "service_fee_host_percent",                                   default: 0.0
     t.boolean  "favourable_pricing_rate"
     t.boolean  "allow_custom_pricings"
     t.boolean  "allow_no_action"
     t.boolean  "allow_action_rfq"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "confirm_reservations",                       default: true
-    t.boolean  "send_alert_hours_before_expiry",             default: false, null: false
-    t.integer  "send_alert_hours_before_expiry_hours",       default: 0,     null: false
-    t.integer  "minimum_lister_service_fee_cents",           default: 0
-    t.boolean  "both_side_confirmation",                     default: false
-    t.boolean  "allow_drafts",                               default: false, null: false
+    t.boolean  "confirm_reservations",                                       default: true
+    t.boolean  "send_alert_hours_before_expiry",                             default: false, null: false
+    t.integer  "send_alert_hours_before_expiry_hours",                       default: 0,     null: false
+    t.integer  "minimum_lister_service_fee_cents",                           default: 0
+    t.boolean  "both_side_confirmation",                                     default: false
+    t.boolean  "allow_drafts",                                               default: false, null: false
     t.integer  "hours_to_order_item_approval"
   end
 

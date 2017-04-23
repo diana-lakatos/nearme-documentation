@@ -17,12 +17,14 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   include MerchantAccount::Concerns::DataAttributes
 
   has_many :owners, -> { order(:id) }, class_name: 'MerchantAccountOwner::StripeConnectMerchantAccountOwner',
-                                       foreign_key: 'merchant_account_id', dependent: :destroy
+                                       foreign_key: 'merchant_account_id', dependent: :destroy, inverse_of: 'merchant_account'
 
   validates :bank_account_number, presence: true
   validates :bank_routing_number, presence: true, if: :based_in_us
   validates :account_type, inclusion: { in: ACCOUNT_TYPES }
   validates :tos, acceptance: true
+  
+  validates_associated :owners
 
   accepts_nested_attributes_for :owners, allow_destroy: true
 
