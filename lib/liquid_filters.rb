@@ -831,4 +831,11 @@ module LiquidFilters
   def pad_left(str, count, symbol = ' ')
     str.to_s.rjust(count, symbol)
   end
+
+  # @return [Boolean] checks if given array contains at least one queried string/number
+  # @param arr [Array] array to search through
+  # @param query [String, Number] String/Number compared to each item in the given array
+  def any(arr = [], query = 'true')
+    Array(arr).any? { |item| item == query }
+  end
 end
