@@ -29,6 +29,10 @@ module Api
       def update
         if user_update_form.validate(params[:form].presence || params[:user] || {})
           user_update_form.save
+          user_update_form.profiles&.model&.to_h&.keys&.each do |profile_name|
+            profile = user_update_form.profiles.send(:try, profile_name)
+            profile.model.mark_as_onboarded! if profile.try(:mark_as_onboarded)
+          end
           I18n.locale = current_user.reload.language&.to_sym || :en
           # tmp safety check - we still have validation in User model itself
           # so if model is invalid, it won't be saved and user won't be able to

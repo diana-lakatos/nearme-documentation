@@ -47,7 +47,7 @@ class Utils::DefaultAlertsCreator::PayoutTest < ActionDispatch::IntegrationTest
     end
 
     should 'trigger proper sms' do
-      WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
+      WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last, metadata: {}).returns(stub(invoke!: true)).once
       WorkflowStepJob.perform(WorkflowStep::PayoutWorkflow::NoPayoutOption, @company.id, @company.created_payment_transfers)
     end
   end

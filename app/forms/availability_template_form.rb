@@ -18,13 +18,14 @@ class AvailabilityTemplateForm < BaseForm
 
   collection :availability_rules, form: AvailabilityRuleForm,
                                   populator: ->(collection:, fragment:, index:, **) {
-                                                     item = availability_rules.find { |ar| ar.id.to_s == fragment['id'].to_s && fragment['id'].present? }
-                                                     if fragment['_destroy'] == '1'
-                                                       availability_rules.delete(item)
-                                                       return skip!
-                                                     end
-                                                     item ? item : availability_rules.append(model.availability_rules.build)
-                                                   }
+                                               item = availability_rules.find { |ar| ar.id.to_s == fragment['id'].to_s && fragment['id'].present? }
+                                               if fragment['_destroy'] == '1'
+                                                 availability_rules.delete(item)
+                                                 return skip!
+                                               end
+                                               return item if item
+                                               availability_rules.append(model.availability_rules.build)
+                                             }
 
   collection :schedule_exception_rules, form: ScheduleExceptionRuleForm,
                                         populator: ->(collection:, fragment:, index:, **) {

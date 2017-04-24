@@ -6,11 +6,11 @@ class WorkflowStep::BaseStep
     false
   end
 
-  def invoke!(triggered_by)
+  def invoke!(metadata: {}, as:)
     alerts.enabled.each do |alert|
-      WorkflowAlert::InvokerFactory.get_invoker(alert).invoke!(self) if invokable_alert?(alert)
+      WorkflowAlert::InvokerFactory.get_invoker(alert, metadata: metadata).invoke!(self) if invokable_alert?(alert)
     end
-    @workflow_triggered_by = triggered_by if triggered_by
+    @workflow_triggered_by = as if as
     publish_event
   end
 

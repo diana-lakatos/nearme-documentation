@@ -22,6 +22,16 @@ class TimeBasedBookingForm < ActionTypeForm
         if (availability_configuration = configuration.delete(:availability_templates)).present?
           validation = availability_configuration.delete(:validation)
           validates :availability_templates, validation if validation.present?
+          validate do
+            return true if minimum_booking_minutes.blank?
+            availability_templates.each do |at|
+              at.availability_rules.each do |ar|
+                ar.errors.add :close_time, I18n.t('errors.messages.minimum_open_time',
+                                                    minimum_hours: sprintf('%.2f', minimum_booking_hours),
+                                                    count: minimum_booking_hours) if ar.opening_time < minimum_booking_minutes.to_i
+              end
+            end
+          end
           collection :availability_templates, form: AvailabilityTemplateForm.decorate(availability_configuration),
                                 prepopulator: ->(option) { self.availability_templates << get_availability_template_object if self.availability_templates.blank? },
                                 populator: -> (fragment:, **) {
@@ -63,5 +73,9 @@ class TimeBasedBookingForm < ActionTypeForm
     model.availability_template = template.dup
     model.availability_template.availability_rules = template.availability_rules.map(&:dup)
     model.availability_template
+  end
+
+  def minimum_booking_hours
+    minimum_booking_minutes.to_f / 60
   end
 end

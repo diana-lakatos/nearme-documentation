@@ -34,7 +34,7 @@ class EventStoreTest < ActiveSupport::TestCase
     user = FactoryGirl.create(:user)
     step = WorkflowStep::SignUpWorkflow::AccountCreated.new(user.id)
 
-    event = step.invoke!(user.decorate)
+    event = step.invoke!(as: user.decorate)
 
     assert_equal event.event_type, 'WorkflowStep::SignUpWorkflow::AccountCreated'
   end

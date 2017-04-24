@@ -244,7 +244,7 @@ module LiquidFilters
   # @param amount [Numeric] amount in cents to be formatted
   # @param currency [String] currency to be used for formatting
   def pricify_cents(amount, currency = 'USD')
-    render_money(Money.new(amount, currency))
+    render_money(Money.new(amount.to_i, currency))
   end
 
   # @return [String] formatted price using the global price formatting rules; the default currency will be used

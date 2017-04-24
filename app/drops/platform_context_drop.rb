@@ -161,6 +161,11 @@ class PlatformContextDrop < BaseDrop
     "https://#{platform_context_decorator.host}"
   end
 
+  # @return [String] current main domain name of the marketplace
+  def domain_name
+    platform_context_decorator.host
+  end
+
   # @return [String] full url to the root of the server hosting the assets (images, javascripts, stylesheets etc.)
   def asset_host
     Rails.application.config.action_controller.asset_host || host

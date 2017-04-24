@@ -257,7 +257,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         end
 
         should 'trigger proper sms' do
-          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
+          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last, metadata: {}).returns(stub(invoke!: true)).once
           WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, @recurring_booking.id)
         end
       end
@@ -268,7 +268,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         end
 
         should 'trigger proper sms' do
-          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
+          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last, metadata: {}).returns(stub(invoke!: true)).once
           WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed, @recurring_booking.id)
         end
 

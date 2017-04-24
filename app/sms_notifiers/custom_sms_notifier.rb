@@ -1,5 +1,5 @@
 class CustomSmsNotifier < InstanceSmsNotifier
-  def custom_sms(step, workflow_alert_id)
+  def custom_sms(step, workflow_alert_id, metadata: {})
     @step = step
     @workflow_alert = WorkflowAlert.find(workflow_alert_id)
     if @step.should_be_processed? && user.present? && @workflow_alert.should_be_triggered?(step)

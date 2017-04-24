@@ -65,7 +65,7 @@ class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::Inte
         end
 
         should 'trigger proper sms' do
-          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last).returns(stub(invoke!: true)).once
+          WorkflowAlert::SmsInvoker.expects(:new).with(WorkflowAlert.where(alert_type: 'sms').last, metadata: {}).returns(stub(invoke!: true)).once
           WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::Created, @user_message.id)
         end
 

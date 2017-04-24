@@ -21,9 +21,9 @@ class WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdateTest < ActiveSup
     should 'invoke with without error' do
       workflow = WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate.new(@comment.id)
 
-      assert_nil workflow.invoke!(FactoryGirl.create(:user))
+      assert_nil workflow.invoke!(as: FactoryGirl.create(:user))
     end
-    
+
     should 'not be processed' do
       workflow = WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate.new(@comment.id)
 

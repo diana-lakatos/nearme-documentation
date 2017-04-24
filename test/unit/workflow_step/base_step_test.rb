@@ -23,14 +23,14 @@ class WorkflowStep::BaseStepTest < ActiveSupport::TestCase
       @dummy_step.expects(:alerts).returns(stub(enabled: [@alert1, @alert2]))
       @invoker_instance = stub
       @invoker_instance.expects(:invoke!).with(@dummy_step).twice
-      WorkflowAlert::InvokerFactory.expects(:get_invoker).with(@alert1).returns(@invoker_instance)
-      WorkflowAlert::InvokerFactory.expects(:get_invoker).with(@alert2).returns(@invoker_instance)
-      @dummy_step.invoke!(nil)
+      WorkflowAlert::InvokerFactory.expects(:get_invoker).with(@alert1, metadata: {}).returns(@invoker_instance)
+      WorkflowAlert::InvokerFactory.expects(:get_invoker).with(@alert2, metadata: {}).returns(@invoker_instance)
+      @dummy_step.invoke!(as: nil)
     end
 
     should 'do not raise exception if relevant records are not in db' do
       assert_nothing_raised do
-        DummyStep.new.invoke!(nil)
+        DummyStep.new.invoke!(as: nil)
       end
     end
   end

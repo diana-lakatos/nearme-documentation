@@ -138,6 +138,11 @@ class OrderDrop < BaseDrop
     @order.payment.try(:manual_payment?)
   end
 
+  # @return [String] returns currency name (f.e. USD, AUD etc)
+  def currency_name
+    @order.currency
+  end
+
   # @return [String] the guest part of the service fee for this particular order
   def service_fee_amount_guest
     @order.service_fee_amount_guest.to_s
@@ -347,9 +352,16 @@ class OrderDrop < BaseDrop
     @order.draft_at.present? && @order.inactive?
   end
 
-  # @return [MoneyDrop] total amount payable to host (subtotal_amount + host_additional_charges + total_tax_amount - service_fee_amount_host)
+  # @return [MoneyDrop] total amount payable to host
+  # (subtotal_amount + host_additional_charges + total_tax_amount - service_fee_amount_host)
   def total_payable_to_host
     @order.total_payable_to_host
+  end
+
+  # @return [Integer] total amount payable to host in cents
+  # (subtotal_amount + host_additional_charges + total_tax_amount - service_fee_amount_host)
+  def total_payable_to_host_cents
+    @order.total_payable_to_host_cents
   end
 
   # @return [MoneyDrop] amount deducted from the sum that is payable to host (subtotal_amount + host_additional_charges + total_tax_amount)
