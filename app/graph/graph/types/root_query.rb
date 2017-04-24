@@ -14,7 +14,8 @@ module Graph
           TransactableQueryType,
           UserQueryType,
           ShoppingCartQueryType,
-          OrdersQueryType
+          OrdersQueryType,
+          WishListItemQueryType
         ]
       )
     end
