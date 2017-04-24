@@ -6,8 +6,8 @@ class WorkflowStep::BaseStep
     false
   end
 
-  def invoke!(metadata: {}, as:)
-    alerts.enabled.each do |alert|
+  def invoke!(metadata: {}, step_id: nil, as:)
+    alerts(step_id).enabled.each do |alert|
       WorkflowAlert::InvokerFactory.get_invoker(alert, metadata: metadata).invoke!(self) if invokable_alert?(alert)
     end
     @workflow_triggered_by = as if as
@@ -61,16 +61,20 @@ class WorkflowStep::BaseStep
 
   protected
 
-  def alerts
-    workflow_step.try(:workflow_alerts) || WorkflowAlert.none
+  def alerts(step_id = nil)
+    workflow_step(step_id).try(:workflow_alerts) || WorkflowAlert.none
   end
 
   def workflow
     Workflow.for_workflow_type(workflow_type).first
   end
 
-  def workflow_step
-    workflow.try(:workflow_steps).try(:for_associated_class, self.class.to_s).try(:includes, :workflow_alerts).try(:first)
+  def workflow_step(step_id = nil)
+    if step_id
+      WorkflowStep.find(step_id)
+    else
+      workflow.try(:workflow_steps).try(:for_associated_class, self.class.to_s).try(:includes, :workflow_alerts).try(:first)
+    end
   end
 
   def invokable_alert?(alert)

@@ -13,7 +13,6 @@ class WorkflowStep < ActiveRecord::Base
   has_many :form_configurations, through: :form_configurations_workflows
   belongs_to :workflow
   belongs_to :instance
-  validates :associated_class, uniqueness: { scope: [:instance_id, :deleted_at] }
 
   scope :for_associated_class, ->(event) { where(associated_class: event) }
 

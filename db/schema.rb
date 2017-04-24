@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170419101157) do
+ActiveRecord::Schema.define(version: 20170424154616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -3532,8 +3532,6 @@ ActiveRecord::Schema.define(version: 20170419101157) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "workflow_steps", ["associated_class", "instance_id", "deleted_at"], name: "index_workflow_steps_on_assoc_class_and_instance_and_deleted", unique: true, using: :btree
 
   create_table "workflows", force: :cascade do |t|
     t.string   "name",            limit: 255
