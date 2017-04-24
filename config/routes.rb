@@ -757,6 +757,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :seller_attachments, only: [:show, :index]
     resources :custom_assets, only: [:show]
+    resources :custom_attachments, only: [:show]
 
     namespace :dashboard do
       namespace :api do

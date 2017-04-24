@@ -17,7 +17,7 @@ module Graph
         argument :name, !types.String
         resolve ->(obj, arg, _ctx) { obj.custom_images[arg[:name]] }
       end
-      field :custom_attachment, Types::File do
+      field :custom_attachment, Types::PrivateFile do
         argument :name, !types.String
         resolve ->(obj, arg, _ctx) { obj.custom_attachments[arg[:name]] }
       end
