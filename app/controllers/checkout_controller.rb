@@ -4,6 +4,7 @@ class CheckoutController < ApplicationController
   before_action :set_theme
   before_action :set_order
   before_action :build_shipping_address, only: [:show, :update]
+  before_action :build_wiaver_agreements, only: [:show]
   before_action :build_payment_documents, only: [:show, :back]
   before_action :set_countries_states, only: [:show, :update, :back]
   before_action :blank_pricing_if_price_present_in_checkout, only: [:show]
@@ -25,6 +26,7 @@ class CheckoutController < ApplicationController
         redirect_to success_dashboard_order_path(@order)
       end
     else
+      build_wiaver_agreements
       flash.now[:error] = @order.errors.full_messages.join(',<br />')
       render(:show)
     end
@@ -128,5 +130,14 @@ class CheckoutController < ApplicationController
     end
 
     true
+  end
+
+  def build_wiaver_agreements
+    @order.waiver_agreements.reload
+    @order.assigned_waiver_agreement_templates.each do |wat|
+      @order.waiver_agreements.find_or_initialize_by(waiver_agreement_template_id: wat.id) do |w|
+        w.name = wat.name
+      end
+    end
   end
 end

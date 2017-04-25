@@ -903,7 +903,7 @@ class SecuredParams
   end
 
   def form_component
-    [:form_type, :name]
+    [:form_type, :name, form_fields: []]
   end
 
   def location(transactable_type = nil)
@@ -1427,10 +1427,6 @@ class SecuredParams
     ]
   end
 
-  def waiver_agreement
-    []
-  end
-
   def nested(object)
     object + [:id, :_destroy]
   end
@@ -1562,7 +1558,6 @@ class SecuredParams
       dates: [],
       category_ids: [],
       additional_charge_ids: [],
-      waiver_agreement_templates: nested(waiver_agreement_templates),
       shipments_attributes: nested(shipment),
       documents: nested(payment_document),
       documents_attributes: nested(payment_document),
@@ -1573,7 +1568,8 @@ class SecuredParams
       billing_address_attributes: nested(order_address),
       payment_documents_attributes: nested(payment_document),
       payment_attributes: nested(payment),
-      properties_attributes: Reservation.public_custom_attributes_names((reservation_type || PlatformContext.current.try(:instance).try(:reservation_type).try(:first)).try(:id))
+      properties_attributes: Reservation.public_custom_attributes_names((reservation_type || PlatformContext.current.try(:instance).try(:reservation_type).try(:first)).try(:id)),
+      waiver_agreements_attributes: nested(waiver_agreement)
     ]
   end
 
@@ -1586,8 +1582,10 @@ class SecuredParams
     ]
   end
 
-  def waiver_agreement_templates
-    WaiverAgreementTemplate.all.map { |w| w.id.to_s }
+  def waiver_agreement
+    [
+      :waiver_agreement_template_id
+    ]
   end
 
   def payment

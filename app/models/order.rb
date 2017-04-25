@@ -48,6 +48,7 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :user
   accepts_nested_attributes_for :payment_documents
   accepts_nested_attributes_for :shipping_address
+  accepts_nested_attributes_for :waiver_agreements, allow_destroy: true
 
   validates :user, presence: true
   validates :currency, presence: true
@@ -429,26 +430,11 @@ class Order < ActiveRecord::Base
   end
   alias skip_payment_authorization? skip_payment_authorization
 
-  def waiver_agreement_templates
-    @waiver_agreement_templates ? @waiver_agreement_templates.select { |_k, v| v == '1' } : []
-  end
-
-  def waiver_agreement_templates=(selected_waiver_agreement_templates)
-    waiver_agreements.destroy_all
-    @waiver_agreement_templates = selected_waiver_agreement_templates
-    assigned_waiver_agreement_templates.select { |w| waiver_agreement_templates.include?(w.id.to_s) }.each do |t|
-      if persisted?
-        waiver_agreements.create(waiver_agreement_template: t, vendor_name: host.try(:name), guest_name: owner.name, target: self)
-      else
-        waiver_agreements.build(waiver_agreement_template: t, vendor_name: host.try(:name), guest_name: owner.name, target: self)
-      end
-    end
-  end
-
   def validate_acceptance_of_waiver_agreements
     assigned_waiver_agreement_templates.each do |wat|
-      wat_id = wat.id
-      errors.add(wat.name, I18n.t('errors.messages.accepted')) unless waiver_agreement_templates.include?(wat_id.to_s)
+      if waiver_agreements.select { |w| w.waiver_agreement_template_id == wat.id && !w.marked_for_destruction? }.blank?
+        errors.add(wat.name, I18n.t('errors.messages.accepted'))
+      end
     end
   end
 
