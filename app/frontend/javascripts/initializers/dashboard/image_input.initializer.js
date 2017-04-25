@@ -1,3 +1,5 @@
+const cocoonWrapper = $(".customizations, .customizations-fields-wrapper");
+
 function run(context = "body") {
   var els = $(context).find("[data-image-input]");
   if (els.length > 0) {
@@ -10,12 +12,8 @@ function run(context = "body") {
   }
 }
 
-let cocoonWrapper = $(".customizations");
-
 cocoonWrapper.on("cocoon:after-insert", () => {
   run(cocoonWrapper);
 });
 
 run();
-
-$(document).on("image_input:initialize", run);

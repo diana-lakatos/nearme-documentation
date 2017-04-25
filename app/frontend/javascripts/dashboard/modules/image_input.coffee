@@ -8,6 +8,8 @@ require '../../vendor/jquery-dragster'
 module.exports = class ImageInput
 
   constructor: (input) ->
+    console.log("DNM :: ImageInput :: Initializing")
+
     @fileInput = $(input)
     @container = @fileInput.closest('.form-group')
     @form = @fileInput.closest('form')
