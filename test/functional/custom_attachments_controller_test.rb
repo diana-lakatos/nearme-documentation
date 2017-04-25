@@ -14,7 +14,7 @@ class CustomAttachmentsControllerTest < ActionController::TestCase
     should 'get file url' do
       get :show, id: @custom_attachment
 
-      assert_redirected_to 'http://example.com/instances/1/uploads/attachments/custom_attachment/file/1/foobear.jpeg'
+      assert_redirected_to @custom_attachment.file.url
     end
   end
 
