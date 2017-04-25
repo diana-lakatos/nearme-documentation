@@ -1091,6 +1091,7 @@ en:
           weekly: "Weekly"
           monthly: "Monthly"
           free: "Free"
+        search_settings: 'Search Settings'
       project_types:
         custom_attributes: "Custom Attributes"
         custom_validators: "Custom Validators"

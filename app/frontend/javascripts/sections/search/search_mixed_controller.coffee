@@ -110,7 +110,12 @@ module.exports = class SearchMixedController extends SearchSearchController
 
 
   initializeAutocomplete: ->
-    @autocomplete = new google.maps.places.Autocomplete(@queryField[0], {})
+    options = {}
+    restrictCountries = @queryField.data('restrict-countries')
+    if restrictCountries && restrictCountries.length > 0
+      options['componentRestrictions'] = { 'country': restrictCountries }
+
+    @autocomplete = new google.maps.places.Autocomplete(@queryField[0], options)
     google.maps.event.addListener @autocomplete, 'place_changed', =>
       if @submit_form
         @loader.show()

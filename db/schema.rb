@@ -11,7 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20170424154616) do
+
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2997,6 +2999,7 @@ ActiveRecord::Schema.define(version: 20170424154616) do
     t.boolean  "auto_seek_collaborators",                                                        default: false
     t.string   "default_sort_by"
     t.string   "parameterized_name"
+    t.text     "search_restrictions"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
