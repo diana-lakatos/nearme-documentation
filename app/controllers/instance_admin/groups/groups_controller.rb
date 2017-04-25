@@ -11,7 +11,10 @@ class InstanceAdmin::Groups::GroupsController < InstanceAdmin::Manage::BaseContr
 
   def update
     @group = Group.find(params[:id])
-    @group.update_columns(params[:group])
+
+    @group.assign_attributes(group_params)
+    @group.save(validate: false)
+
     flash[:success] = "#{@group.name} has been updated successfully"
     redirect_to instance_admin_groups_groups_path
   end
@@ -31,6 +34,10 @@ class InstanceAdmin::Groups::GroupsController < InstanceAdmin::Manage::BaseContr
   end
 
   private
+
+  def group_params
+    params.require(:group).permit(:featured, category_ids: [])
+  end
 
   def prepare_search_form
     @group_search_form = InstanceAdmin::GroupSearchForm.new
