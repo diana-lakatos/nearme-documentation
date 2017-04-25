@@ -38,7 +38,10 @@ module MarketplaceBuilder
       end
 
       def create_or_update_workflow_step(workflow, workflow_step_attributes)
-        workflow_step = workflow.workflow_steps.where(associated_class: workflow_step_attributes['associated_class']).first_or_initialize
+        workflow_step = workflow.workflow_steps.where(
+          name: workflow_step_attributes['name'],
+          associated_class: workflow_step_attributes['associated_class']
+        ).first_or_initialize
         workflow_step.assign_attributes workflow_step_attributes
         workflow_step.save!
         workflow_step

@@ -16,6 +16,7 @@ en:
         topic_ids: 'Select Topic'
         project_ids: 'Select Topic'
         group_ids: 'Select Group'
+        category_ids: 'Select Category'
         role: 'Select Role'
         group_type_id: 'Select Group Type'
       search:
@@ -72,6 +73,7 @@ en:
         current_address: "Address"
       defaults:
         topic_ids: 'Topic'
+        category_ids: 'Category'
         seek_collaborators: 'Seeking Collaborators'
         group_type_id: 'Group Type'
       activity_feed:

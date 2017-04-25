@@ -10,10 +10,10 @@ class CustomFieldsBuilder
     case @form_type
     when FormComponent::SPACE_WIZARD
       if @form_componentable.instance_of?(ProjectType)
-        to_object_field_notation(user_fields, 'user') +
+        to_object_field_notation(space_wizard_user_fields, 'user') +
           to_object_field_notation(project_fields, 'project')
       elsif @form_componentable.instance_of?(TransactableType)
-        to_object_field_notation(user_fields, 'user') +
+        to_object_field_notation(space_wizard_user_fields, 'user') +
           to_object_field_notation(seller_fields, 'seller') +
           to_object_field_notation(company_fields, 'company') +
           to_object_field_notation(location_fields, 'location') +
@@ -79,7 +79,7 @@ class CustomFieldsBuilder
     when FormComponent::SPACE_WIZARD
       case object
       when 'user'
-        user_fields
+        space_wizard_user_fields
       when 'seller'
         seller_fields
       when 'company'
@@ -95,27 +95,31 @@ class CustomFieldsBuilder
   end
 
   def form_attributes
-    @form_attributes = FormAttributes.new
+    @form_attributes ||= FormAttributes.new
   end
 
   def user_fields
-    @user_fields = form_attributes.user.map(&:to_s)
+    @user_fields ||= form_attributes.user.map(&:to_s)
+  end
+
+  def space_wizard_user_fields
+    @space_wizard_user_fields ||= user_fields - ['email']
   end
 
   def seller_fields
-    @seller_fields = form_attributes.seller.map(&:to_s)
+    @seller_fields ||= form_attributes.seller.map(&:to_s)
   end
 
   def buyer_fields
-    @buyer_fields = form_attributes.buyer.map(&:to_s)
+    @buyer_fields ||= form_attributes.buyer.map(&:to_s)
   end
 
   def company_fields
-    @company_fields = form_attributes.company.map(&:to_s)
+    @company_fields ||= form_attributes.company.map(&:to_s)
   end
 
   def location_fields
-    @location_fields = form_attributes.location.map(&:to_s)
+    @location_fields ||= form_attributes.location.map(&:to_s)
   end
 
   def transactable_fields

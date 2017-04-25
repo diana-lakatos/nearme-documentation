@@ -5,7 +5,7 @@ class WishList < ActiveRecord::Base
   belongs_to :user
   has_many :items, class_name: 'WishListItem'
 
-  validates_presence_of :name
+  validates :name, presence: true
 
   scope :default, -> { where default: true }
 end

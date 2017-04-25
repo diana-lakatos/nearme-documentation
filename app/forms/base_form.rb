@@ -17,7 +17,7 @@ class BaseForm < Reform::Form
   def save
     if super && model.persisted? && @workflow_steps.present?
       @workflow_steps.each do |step|
-        WorkflowStepJob.perform(step.associated_class.constantize, model.id)
+        WorkflowStepJob.perform(step.associated_class.constantize, model.id, step_id: step.id)
       end
     end
   end

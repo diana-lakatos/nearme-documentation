@@ -8,7 +8,7 @@ module Graph
 
       field :id, !types.Int
       field :custom_attribute,
-            !types.String,
+            types.String,
             'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
         argument :name, !types.String
         resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
@@ -17,7 +17,7 @@ module Graph
         argument :name, !types.String
         resolve ->(obj, arg, _ctx) { obj.custom_images[arg[:name]] }
       end
-      field :custom_attachment, Types::File do
+      field :custom_attachment, Types::PrivateFile do
         argument :name, !types.String
         resolve ->(obj, arg, _ctx) { obj.custom_attachments[arg[:name]] }
       end

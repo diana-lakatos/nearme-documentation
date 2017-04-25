@@ -10,7 +10,10 @@ class InstanceAdmin::Projects::ProjectsController < InstanceAdmin::Projects::Bas
 
   def update
     @project = Transactable.find(params[:id])
-    @project.update_columns(params[:transactable])
+
+    @project.assign_attributes(transactable_params)
+    @project.save(validate: false)
+
     flash[:success] = "#{@project.name} has been updated successfully"
     redirect_to instance_admin_projects_projects_path
   end
@@ -30,6 +33,10 @@ class InstanceAdmin::Projects::ProjectsController < InstanceAdmin::Projects::Bas
   end
 
   protected
+
+  def transactable_params
+    params[:transactable].permit(:featured, category_ids: [])
+  end
 
   def collection_search_fields
     %w(name)

@@ -26,7 +26,7 @@
               .geo-loading.text-center(data-loading style='display: none')
                 = image_tag('spinner.gif', width: '16', style: 'margin-left: -15px;')
 
-            %input#search.query{:name => @searcher.transactable_type.search_input_name, :placeholder => @searcher.transactable_type.search_field_placeholder, :type => "text", :value => @searcher.input_value(@searcher.transactable_type.search_input_name), :autocomplete => "off", 'data-disable-autocomplete' => @searcher.transactable_type.fulltext_search?}
+            %input#search.query{:name => @searcher.transactable_type.search_input_name, :placeholder => @searcher.transactable_type.search_field_placeholder, :type => "text", :value => @searcher.input_value(@searcher.transactable_type.search_input_name), :autocomplete => "off", 'data-disable-autocomplete' => @searcher.transactable_type.fulltext_search?, 'data-restrict-countries' => @searcher.transactable_type.restrict_countries.map(&:downcase) }
           -if @searcher.transactable_type.fulltext_geo_search?
             .keyword-input.span4
               .search-loop-icon

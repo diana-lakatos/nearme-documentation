@@ -63,6 +63,7 @@ class TransactableType < ActiveRecord::Base
   serialize :custom_csv_fields, Array
   serialize :allowed_currencies, Array
   serialize :availability_options, Hash
+  serialize :search_restrictions, Hash
 
   after_update :destroy_translations!, if: ->(transactable_type) { transactable_type.name_changed? || transactable_type.bookable_noun_changed? || transactable_type.lessor_changed? || transactable_type.lessee_changed? }
   before_validation :set_default_options
@@ -223,6 +224,14 @@ class TransactableType < ActiveRecord::Base
 
   def required_custom_attributes_for_csv(import_model = 'transactable')
     required_custom_attributes.map { |required_attribute| { import_model => required_attribute.name } }
+  end
+
+  def restrict_countries
+    (search_restrictions['countries'] || []).reject(&:blank?)
+  end
+
+  def restrict_countries=(countries)
+    search_restrictions['countries'] = countries.reject(&:blank?)
   end
 
   private

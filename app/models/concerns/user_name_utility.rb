@@ -12,7 +12,7 @@ module UserNameUtility
     delegate :to_s, to: :name
 
     def name
-      self[:last_name].present? ? full_name_from_parts : self[:name]
+      self[:name].present? ? self[:name] : full_name_from_parts
     end
 
     def first_name
