@@ -13,7 +13,13 @@ class LineItemDrop < BaseDrop
   #   @return [MoneyDrop] unit price
   # @!method created_at
   #   @return [DateTime] when the line item was created
+  # @!method included_tax_total_rate
+  #   @return [Float] included tax value percent
+  # @!method additional_tax_total_rate
+  #   @return [Float] added tax value percent
+
   delegate :name, :quantity, :unit_price, :created_at, :included_tax_total_rate,
+    :additional_tax_total_rate,
            to: :line_item
 
   def initialize(line_item)
