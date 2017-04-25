@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :wish_list_item do
-    wish_list
+    association :wish_list
+    association :wishlistable, factory: :user
   end
 end

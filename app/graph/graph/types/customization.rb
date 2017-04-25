@@ -8,7 +8,7 @@ module Graph
 
       field :id, !types.Int
       field :custom_attribute,
-            !types.String,
+            types.String,
             'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
         argument :name, !types.String
         resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }

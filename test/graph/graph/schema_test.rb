@@ -84,7 +84,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       )
     end
 
-    should 'get user profile property xxx' do
+    should 'get user profile property' do
       add_custom_attribute(attr_name: 'hair_color', value: 'red', object: @user)
       query = %({
         user(id: #{@user.id}) {
@@ -216,8 +216,25 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
     should 'get users with filters' do
       query = %({ users(filters: FEATURED) { id } })
-      
+
       assert_empty result(query)['users']
+    end
+  end
+
+  context 'wish_list_items' do
+    should 'get items for user' do
+      user = FactoryGirl.create(:user)
+      wish_list = FactoryGirl.create(:default_wish_list, user: user)
+      FactoryGirl.create(:wish_list_item, wish_list: wish_list)
+
+      query = %({ wish_list_items(user_id: #{user.id}) {
+        id
+        name
+        type
+        image_url
+      }})
+
+      assert_not_empty result(query)['wish_list_items']
     end
   end
 
