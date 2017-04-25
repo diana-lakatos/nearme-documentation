@@ -38,4 +38,16 @@ class AvailabilityRuleForm < BaseForm
   rescue
     errors.add(:close_time, :invalid)
   end
+
+  def validate_minimum_opening_times(booking_minutes)
+    hours = booking_minutes.to_f / 60
+    if opening_time < booking_minutes.to_i
+      errors.add :close_time, I18n.t('errors.messages.minimum_open_time',
+                                     minimum_hours: sprintf('%.2f', hours),
+                                     count: hours)
+      false
+    else
+      true
+    end
+  end
 end
