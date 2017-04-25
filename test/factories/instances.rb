@@ -31,6 +31,7 @@ FactoryGirl.define do
       unless Domain.find_by_name('example.com').present?
         instance.domains = [FactoryGirl.create(:test_domain, target: instance, instance_id: instance.id)]
       end
+      MarketplaceBuilderSettings.create!(instance_id: instance.id, manifest: {}, status: 'ready') unless instance.marketplace_builder_settings
     end
 
     factory :instance_test_mode do

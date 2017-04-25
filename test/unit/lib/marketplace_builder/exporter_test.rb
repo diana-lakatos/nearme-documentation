@@ -2,7 +2,7 @@
 require 'test_helper'
 
 class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
-  EXPORT_DESTINATION_PATH = "#{Rails.root}/tmp/exported_instances"
+  MPBUILDER_EXPORT_DESTINATION_PATH = "#{Rails.root}/tmp/exported_instances"
 
   context 'marketplace exporter' do
     setup do
@@ -16,12 +16,12 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
 
     should 'export instance to files' do
       run_all_setup_methods
-      MarketplaceBuilder::Exporter.new(@instance.id, EXPORT_DESTINATION_PATH).execute!
+      MarketplaceBuilder::Exporter.new(@instance.id, MPBUILDER_EXPORT_DESTINATION_PATH).execute!
       run_all_should_export_methods
     end
 
     teardown do
-      FileUtils.rm_rf(EXPORT_DESTINATION_PATH)
+      FileUtils.rm_rf(MPBUILDER_EXPORT_DESTINATION_PATH)
     end
 
   end
@@ -284,9 +284,9 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
 
   def read_exported_file(path, reader = :yml)
     if reader == :yml
-      YAML.load(File.read("#{EXPORT_DESTINATION_PATH}/ExportTestInstance/#{path}"))
+      YAML.load(File.read("#{MPBUILDER_EXPORT_DESTINATION_PATH}/ExportTestInstance/#{path}"))
     elsif reader == :liquid
-      MarketplaceBuilder::Creators::TemplatesCreator.load_file_with_yaml_front_matter("#{EXPORT_DESTINATION_PATH}/ExportTestInstance/#{path}", 'test')
+      MarketplaceBuilder::Creators::TemplatesCreator.load_file_with_yaml_front_matter("#{MPBUILDER_EXPORT_DESTINATION_PATH}/ExportTestInstance/#{path}", 'test')
     else
       raise 'Not implemented reader'
     end

@@ -570,10 +570,15 @@ DesksnearMe::Application.routes.draw do
 
         resources :inappropriate_reports
 
-        namespace :marketplace_builder do
-          get :index
-          get :download_export
-          put :import
+        resources :marketplace_releases, only: [:index, :show, :create] do
+          collection do
+            put :backup
+            put :sync
+          end
+
+          member do
+            get :restore
+          end
         end
       end
 
@@ -1215,6 +1220,13 @@ DesksnearMe::Application.routes.draw do
         resources :themes, as: 'custom_themes', controller: 'custom_themes', only: [:show, :create, :update, :destroy] do
           resources :instance_views, controller: 'custom_themes/instance_views', concerns: :versionable
           resources :assets, as: 'custom_theme_assets', controller: 'custom_themes/custom_theme_assets', concerns: :versionable
+        end
+
+        resources :marketplace_releases, only: [:show, :create] do
+          collection do
+            put :backup
+            put :sync
+          end
         end
       end
       scope module: :v4, constraints: Constraints::ApiConstraints.new(version: 4, default: true) do

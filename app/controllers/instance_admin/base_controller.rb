@@ -52,7 +52,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'upsell_addons'             => { controller: '/instance_admin/manage/additional_charge_types', default_action: 'index', title: 'Upsell & Add-ons' },
     'search'                    => { controller: '/instance_admin/manage/search', default_action: 'show', title: 'Search' },
     'inappropriate_reports'     => { controller: '/instance_admin/manage/inappropriate_reports', default_action: 'index', title: 'Inappropriate Reports' },
-    'marketplace_builder'       => { controller: '/instance_admin/manage/marketplace_builder', default_action: 'index', title: 'Marketplace Builder' }
+    'marketplace_releases'      => { controller: '/instance_admin/manage/marketplace_releases', default_action: 'index', title: 'Marketplace Releases' }
   }.freeze
 
   MANAGE_BLOG_CONTROLLERS = {

@@ -1,0 +1,41 @@
+= content_for :header_buttons do
+  = link_to "Request marketplace backup", backup_instance_admin_manage_marketplace_releases_path, class: 'pull-right btn btn-blue', method: :put
+
+.content-container
+  %h4="Marketplace releases"
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %thead
+          %tr
+            %th= 'Name'
+            %th= 'Creator'
+            %th= 'Status'
+            %th= 'Date time'
+            %th= 'Actions'
+
+        %tbody
+          - @releases.each do |release|
+            %tr
+              %td
+                = release.name
+              %td
+                = release.creator
+              %td
+                = release.status
+              %td
+                = release.created_at
+              %td
+                = link_to 'Download', release.zip_file.url, class: 'btn btn-blue btn-small'
+                = link_to 'Load this version', restore_instance_admin_manage_marketplace_release_path(release), class: 'btn btn-blue btn-small'
+
+.content-container
+  %h4= "Upload new release"
+
+  = simple_form_for :marketplace_builder, url: instance_admin_manage_marketplace_releases_path, method: :post, html: {multipart: true} do |f|
+    .row
+      .input-container.col-xs-12
+        = f.input :name, as: :string, required: false, label: 'Name (optional)'
+        = f.input :zip_file, as: :file, required: true
+        %br
+        = f.button :submit, 'Upload', class: 'btn btn-blue'

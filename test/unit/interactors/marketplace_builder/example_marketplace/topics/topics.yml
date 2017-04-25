@@ -1,0 +1,17 @@
+- name: 2017 Convention
+  description: Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
+  category: Extras
+  featured: true
+  remote_cover_image_url: https://example_url.jpg
+
+- name: Ask a Keepsake Artist
+  description: Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
+  category: Child Seat
+  featured: true
+  remote_cover_image_url: https://example_url.jpg
+  
+- name: Featured Artist
+  description: Quisque euismod orci sed nisi malesuada porta. In non molestie purus. Sed ut maximus nibh, eu ultrices massa. In accum san augue nisl, eget ultrices
+  category: Bike Rack
+  featured: true
+  remote_cover_image_url: https://example_url.jpg
