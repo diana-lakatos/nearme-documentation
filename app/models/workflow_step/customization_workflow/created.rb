@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 class WorkflowStep::CustomizationWorkflow::Created < WorkflowStep::CustomizationWorkflow::BaseStep
   def enquirer
-    @enquirer ||= User.new(email: @customization.properties[:enquirer_email],
-                           name: @customization.properties[:enquirer_name])
+    customization_properties = @customization.properties
+    if customization_properties.key?('enquirer_email') && customization_properties.key?('enquirer_name')
+      @enquirer ||= User.new(email: customization_properties[:enquirer_email],
+                             name: customization_properties[:enquirer_name])
+    end
   end
 
   def lister
