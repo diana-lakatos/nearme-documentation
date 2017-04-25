@@ -846,8 +846,7 @@ class UserTest < ActiveSupport::TestCase
 
       should 'name' do
         user = User.new(name: 'Jane', last_name: 'Doe')
-
-        assert_equal 'Jane Doe', user.name
+        assert_equal 'Jane', user.name
         assert_equal 'Doe', user.last_name
       end
     end

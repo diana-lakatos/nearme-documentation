@@ -15,7 +15,6 @@ class AvailabilityRuleForm < BaseForm
   validate :open_time_after_close_time
 
   def open_time_after_close_time
-    return true if parsed_open_time.blank? || parsed_close_time.blank?
     errors.add(:close_time, I18n.t('errors.messages.open_time_before_close_time')) if opening_time.negative?
   end
 
@@ -24,6 +23,7 @@ class AvailabilityRuleForm < BaseForm
   end
 
   def opening_time
+    return 0 if parsed_open_time.blank? || parsed_close_time.blank?
     @opening_time ||= (parsed_close_time - parsed_open_time) / 60
   end
 
@@ -37,5 +37,17 @@ class AvailabilityRuleForm < BaseForm
     Time.zone.parse(close_time)
   rescue
     errors.add(:close_time, :invalid)
+  end
+
+  def validate_minimum_opening_times(booking_minutes)
+    hours = booking_minutes.to_f / 60
+    if opening_time < booking_minutes.to_i
+      errors.add :close_time, I18n.t('errors.messages.minimum_open_time',
+                                     minimum_hours: sprintf('%.2f', hours),
+                                     count: hours)
+      false
+    else
+      true
+    end
   end
 end

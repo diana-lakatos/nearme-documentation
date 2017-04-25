@@ -29,7 +29,7 @@ module Api
       def update
         if user_update_form.validate(params[:form].presence || params[:user] || {})
           user_update_form.save
-          user_update_form.profiles&.model&.to_h&.keys&.each do |profile_name|
+          user_update_form.try(:profiles)&.model&.to_h&.keys&.try(:each) do |profile_name|
             profile = user_update_form.profiles.send(:try, profile_name)
             profile.model.mark_as_onboarded! if profile.try(:mark_as_onboarded)
           end
