@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 # encoding: utf-8
 class CustomImageUploader < BaseUploader
-  include CarrierWave::TransformableImage
   include CarrierWave::ImageDefaults
+  include CarrierWave::TransformableImage
   include CarrierWave::Cleanable
 
   def aspect_ratio
