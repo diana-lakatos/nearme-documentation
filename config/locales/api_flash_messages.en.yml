@@ -11,3 +11,6 @@ en:
           checkout:
             create:
               notice: "Well done! You have successfully checked out."
+        custom_attachment:
+          show:
+            notice: "You're not allowed to access this file"
