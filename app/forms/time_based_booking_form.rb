@@ -4,6 +4,7 @@ class TimeBasedBookingForm < ActionTypeForm
 
   property :type, default: 'Transactable::TimeBasedBooking'
   property :availability_template
+  property :minimum_booking_minutes
   property :availability_template_id,
     populator: ->(fragment:, **){
       if fragment.to_i > 0
@@ -75,7 +76,11 @@ class TimeBasedBookingForm < ActionTypeForm
     model.availability_template
   end
 
+  def minimum_booking_minutes
+    super.presence || minimum_booking_hours.to_f * 60 || 0
+  end
+
   def minimum_booking_hours
-    minimum_booking_minutes.to_f / 60
+    super.presence || minimum_booking_minutes.to_f / 60 || 0
   end
 end
