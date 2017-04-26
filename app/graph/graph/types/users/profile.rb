@@ -18,7 +18,7 @@ module Graph
           resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
         end
 
-        field :custom_attribute_array, !types[types.String] do
+        field :custom_attribute_array, types[types.String] do
           argument :name, !types.String
           resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
         end
