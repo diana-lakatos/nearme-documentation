@@ -76,8 +76,9 @@ class ImageInput < SimpleForm::Inputs::FileInput
 
     template.content_tag(:div, class: 'preview') do
       out << template.content_tag(:figure) do
-        thumb_url = options[:thumb].present? ? image_attribute.send(options[:thumb]) : image_attribute.url
-        template.link_to(template.image_tag(thumb_url), options[:full_url].present? ? image_attribute.url(options[:full_url]) : image_attribute.url, class: 'action--preview', rel: "preview-#{reflection_or_attribute_name}")
+        image = template.image_tag(options[:thumb].present? ? image_attribute.url(options[:thumb]) : image_attribute.url)
+        url = options[:full_url].present? ? image_attribute.send(options[:full_url]).to_s : image_attribute.url
+        template.link_to(image, url, class: 'action--preview', rel: "preview-#{reflection_or_attribute_name}")
       end
 
       out << image_options(options[:edit_url], options[:delete_url])
