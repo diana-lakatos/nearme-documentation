@@ -17,10 +17,6 @@ class WishListItemDrop < BaseDrop
     @wishlistable = @wish_list_item.wishlistable
   end
 
-  # @!method id 
-  #   @return [Integer] numeric identifier for the object
-  delegate :id, to: :wish_list_item
-
   # @!method wishlistable_id
   #   @return [Integer] numeric identifier of the wishlisted object
   #   @todo -- remove, DIY
@@ -28,7 +24,6 @@ class WishListItemDrop < BaseDrop
   #   @return [String] name of the associated object (wishlisted object)
   #   @todo -- remove, DIY
   delegate :id, :name, to: :wishlistable, prefix: true
-  alias name wishlistable_name 
 
   # @return [Boolean] whether the associated object (wishlisted) is present
   # @todo -- remove, DIY
@@ -46,7 +41,6 @@ class WishListItemDrop < BaseDrop
   def wishlistable_type
     @wishlistable.class.name.downcase
   end
-  alias type wishlistable_type
 
   # @return [String] name of the associated company (company to which the wishlisted object belongs)
   def company_name

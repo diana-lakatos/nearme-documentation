@@ -226,15 +226,20 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       user = FactoryGirl.create(:user)
       wish_list = FactoryGirl.create(:default_wish_list, user: user)
       FactoryGirl.create(:wish_list_item, wish_list: wish_list)
+      refresh_elastic
 
       query = %({ wish_list_items(user_id: #{user.id}) {
         id
-        name
-        type
-        image_url
+        wishlistable{
+          ... on User {
+            name
+          }
+        }
       }})
 
       assert_not_empty result(query)['wish_list_items']
+
+      disable_elasticsearch!
     end
   end
 
