@@ -27,7 +27,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   end
 
   def invoke_search
-    if located || (adjust_to_map && search.bounding_box.present?)
+    if located || (adjust_to_map && search_form.bounding_box.present?)
       geo_search
     else
       regular_search
@@ -71,14 +71,14 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   end
 
   def extend_params_by_geo_filters
-    if adjust_to_map || (!search.precise_address? && !service_radius_enabled? && search.bounding_box)
-      search_params[:bounding_box] = search.bounding_box
+    if adjust_to_map || (!search_form.precise_address? && !service_radius_enabled? && search_form.bounding_box)
+      search_params[:bounding_box] = search_form.bounding_box
     end
 
     if located
-      lat, lng = search.midpoint
+      lat, lng = search_form.midpoint
       radius = @transactable_type.search_radius.to_i
-      radius = search.radius.to_i if radius.zero?
+      radius = search_form.radius.to_i if radius.zero?
 
       search_params.merge!(lat: lat, lon: lng, distance: "#{radius}km")
     end

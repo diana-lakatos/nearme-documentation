@@ -85,8 +85,7 @@ module UsersIndex
     def self.regular_search(query, instance_profile_type = nil)
       query_builder = Elastic::QueryBuilder::UsersQueryBuilder.new(query.with_indifferent_access,
                                                                    searchable_custom_attributes: searchable_custom_attributes(instance_profile_type),
-                                                                   query_searchable_attributes: search_in_query_custom_attributes(instance_profile_type),
-                                                                   instance_profile_type: instance_profile_type)
+                                                                   query_searchable_attributes: search_in_query_custom_attributes(instance_profile_type))
 
       __elasticsearch__.search(query_builder.regular_query)
     end
@@ -95,7 +94,6 @@ module UsersIndex
       query_builder = Elastic::QueryBuilder::UsersQueryBuilder.new(query.with_indifferent_access,
                                                                    searchable_custom_attributes: searchable_custom_attributes(instance_profile_type),
                                                                    query_searchable_attributes: search_in_query_custom_attributes(instance_profile_type),
-                                                                   instance_profile_type: instance_profile_type,
                                                                    instance_profile_types: instance_profile_types)
 
       __elasticsearch__.search(query_builder.simple_query)

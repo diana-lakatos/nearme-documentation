@@ -1,13 +1,47 @@
 # frozen_string_literal: true
 module Elastic
   module QueryBuilder
+    # for local class requeirements of buildng
+    # franco was a famous builder
+    class Franco
+      attr_reader :query
+
+      def initialize(query = {})
+        @query = query
+      end
+
+      def add(branch)
+        @query.deep_merge!(branch) do |_key, old, new|
+          Array(old) + Array(new)
+        end
+      end
+
+      def to_h
+        @query.reverse_merge(default)
+      end
+
+      private
+
+      def default
+        {
+          query: {
+            match_all: {
+              boost: QueryBuilderBase::QUERY_BOOST
+            }
+          }
+        }
+      end
+    end
+
     class UsersQueryBuilder < QueryBuilderBase
-      def initialize(query, instance_profile_type:, searchable_custom_attributes: [], query_searchable_attributes: [], instance_profile_types: PlatformContext.current.instance.instance_profile_types.searchable)
+      def initialize(query,
+                     searchable_custom_attributes: [],
+                     query_searchable_attributes: [],
+                     instance_profile_types: PlatformContext.current.instance.instance_profile_types.searchable)
         @query = query
 
         @searchable_custom_attributes = searchable_custom_attributes
         @query_searchable_attributes = query_searchable_attributes
-        @instance_profile_type = instance_profile_type
         @instance_profile_types = instance_profile_types
 
         @filters = []
@@ -15,20 +49,21 @@ module Elastic
       end
 
       def regular_query
-        {
-          sort: sorting_options,
-          query: match_query,
-          filter: { bool: { must: filters } }
-        }.merge(aggregations)
+        Franco.new.tap do |builder|
+          builder.add build_query_branch
+          builder.add filter: { bool: { must: filters } }
+          builder.add aggregations
+          builder.add sorting
+        end.to_h
       end
 
       def simple_query
-        {
-          _source: @query[:source],
-          sort: sorting_options,
-          query: @query[:query],
-          filter: { bool: { must: filters } }
-        }
+        Franco.new.tap do |builder|
+          builder.add _source: @query[:source]
+          builder.add query: @query[:query]
+          builder.add filter: { bool: { must: filters } }
+          builder.add sorting
+        end.to_h
       end
 
       private
@@ -37,25 +72,18 @@ module Elastic
         @filters = []
         @filters.concat profiles_filters
         @filters.concat [geo_shape] if @query.dig(:location, :lat).present?
-        @filters.concat [transactable_child] if @query.dig(:transactable, :custom_attributes)
         @filters
       end
 
-      def match_query
-        if @query[:query].blank?
-          { match_all: { boost: QUERY_BOOST } }
-        else
-          match_bool_condition = {
-            bool: {
-              should: [
-                simple_match_query
-              ]
-            }
-          }
+      def build_query_branch
+        { query: { bool: { must: query_bool_conditions } } }
+      end
 
-          match_bool_condition[:bool][:should] << multi_match_query if @query_searchable_attributes.present?
-
-          match_bool_condition
+      def query_bool_conditions
+        [].tap do |conditions|
+          conditions << simple_match_query if @query[:query].present?
+          conditions << multi_match_query if @query_searchable_attributes.present?
+          conditions << transactable_child
         end
       end
 
@@ -71,7 +99,7 @@ module Elastic
       def multi_match_query
         {
           nested: {
-            path: 'user_profiles',
+            profile_type: 'user_profiles',
             query: {
               multi_match: {
                 query: @query[:query],
@@ -90,43 +118,8 @@ module Elastic
         ['name^2', 'tags^10', 'company_name']
       end
 
-      def sorting_options
-        sorting_fields = []
-
-        if @query[:sort].present?
-          sorting_fields = @query[:sort].split(',').compact.map do |sort_option|
-            next unless sort = sort_option.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
-
-            default_user_profile_body = {
-              order: sort[2],
-              nested_path: 'user_profiles',
-              nested_filter: {
-                term: {
-                  'user_profiles.instance_profile_type_id': @instance_profile_type.id
-                }
-              }
-            }
-
-            body = default_user_profile_body
-
-            if sort[1].split('.').first == 'custom_attributes'
-              sort_column = "user_profiles.properties.#{sort[1].split('.').last}.raw"
-            elsif sort[1].split('.').first == 'user'
-              sort_column = sort[1].split('.').last
-              body = sort[2]
-            else
-              sort_column = sort[1]
-            end
-
-            {
-              sort_column => body
-            }
-          end.compact
-        end
-
-        return ['_score'] if sorting_fields.empty?
-
-        sorting_fields
+      def sorting
+        SortingOptions.new(@query).prepare
       end
 
       # TODO: rebuild and use new aggregation builder
@@ -168,7 +161,7 @@ module Elastic
       end
 
       def transactable_child
-        HasTransactableChild.new(@query).as_json
+        HasTransactableChild.new(@query).to_h
       end
 
       class HasTransactableChild
@@ -178,13 +171,13 @@ module Elastic
           @options = options
         end
 
-        def as_json(*args)
+        def to_h
           {
             has_child: {
               type: 'transactable',
-              filter: {
-                bool: {
-                  must: custom_attributes
+              query: {
+                function_score: {
+                  filter: { bool: { must: custom_attributes } }
                 }
               }
             }
@@ -192,6 +185,8 @@ module Elastic
         end
 
         def custom_attributes
+          return [] unless options.dig(:transactable, :custom_attributes)
+
           options.dig(:transactable, :custom_attributes).map do |attribute, values|
             custom_attribute "custom_attributes.#{attribute}", values
           end

@@ -2487,9 +2487,9 @@ ActiveRecord::Schema.define(version: 20170424154616) do
 
   create_table "support_faqs", force: :cascade do |t|
     t.integer  "instance_id"
-    t.text     "question",      null: false
-    t.text     "answer",        null: false
-    t.integer  "position",      null: false
+    t.text     "question",                     null: false
+    t.text     "answer",                       null: false
+    t.integer  "position",                     null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "deleted_by_id"
