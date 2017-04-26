@@ -111,7 +111,11 @@ class RecurringBookingPeriod < ActiveRecord::Base
   end
 
   def paid?
-    total_amount_cents.zero? ? true : !!payment.try(:paid?)
+    total_amount_cents.zero? ? true : paid_at.present?
+  end
+
+  def payment_state
+    paid? ? 'paid' : 'unpaid'
   end
 
   def update_payment

@@ -9,7 +9,6 @@ module ListingsHelper
     base_data = {
       id: listing.id,
       name: listing.name,
-      review_url: review_listing_reservations_url(listing),
       subunit_to_unit_rate: Money::Currency.new(listing.currency).subunit_to_unit,
       quantity: listing.quantity,
       initial_bookings: @initial_bookings,

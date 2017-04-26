@@ -137,7 +137,7 @@
           %td= "#{I18n.l(period.period_start_date, format: :short)} - #{I18n.l(period.period_end_date, format: :short)}"
           %td= render_money(current_user == recurring_booking.host ? period.total_amount - period.service_fee_amount_guest : period.total_amount)
           %td
-            %span{class: period.payment.try(:state) }
-              = t("dashboard.user_recurring_bookings.states.#{period.payment.try(:state)}")
+            %span{class: period.payment_state }
+              = t("dashboard.user_recurring_bookings.states.#{period.payment_state}")
           %td
             = "#{I18n.l(period.paid_at, format: :short)}" if period.paid_at?

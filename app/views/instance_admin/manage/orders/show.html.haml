@@ -36,6 +36,7 @@
               %th= t('instance_admin.manage.periods.currency')
               %th
                 %b= t('instance_admin.manage.periods.total_amount')
+              %th
 
             - @order.order_items.each do |order_item|
               %tr
@@ -50,6 +51,7 @@
                 %td= order_item.currency
                 %td
                   %b= render_money(order_item.total_amount)
+                %td= link_to 'Edit', edit_instance_admin_manage_order_item_path(order_item)
   - elsif (item = @order.transactable_line_items.first).present?
     %h4 Items
     .row
@@ -91,4 +93,3 @@
     .row
       .text-container.col-xs-12
         = t('instance_admin.manage.orders.no_details')
-

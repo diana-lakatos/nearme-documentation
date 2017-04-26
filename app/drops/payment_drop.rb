@@ -30,10 +30,12 @@ class PaymentDrop < BaseDrop
   #   @return [Boolean] whether the payment is in the pending state
   # @!method voided?
   #   @return [Boolean] whether the payment is in the voided state
+  # @!method payment_state
+  #   @return [String] curent payment state
   delegate :id, :billing_authorizations, :successful_billing_authorization,
            :successful_charge, :test_mode?, :active_merchant_payment?, :payable,
            :currency, :total_amount, :created_at, :amount, :pending?, :voided?,
-           :amount_to_be_refunded, to: :payment
+           :state, to: :payment
 
   def initialize(payment)
     @payment = payment
