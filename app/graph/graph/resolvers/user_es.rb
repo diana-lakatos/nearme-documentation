@@ -42,10 +42,11 @@ module Graph
       end
 
       def source_mapper
-        source_fields = MANDATORY_FIELDS.dup 
-        source_fields << query_fields[:simple]
-        source_fields << NESTED_FIELDS_SOURCE_MAPPING.slice(*query_fields[:nested].keys).values
-        source_fields.flatten.compact
+        [
+          MANDATORY_FIELDS.dup,
+          query_fields[:simple],
+          NESTED_FIELDS_SOURCE_MAPPING.slice(*query_fields[:nested].keys).values
+        ].flatten.compact
       end
     end
   end

@@ -4,12 +4,18 @@ module Graph
     query Types::RootQuery
     resolve_type lambda { |record, _ctx|
       case record
-      when Comment
+      when ::Comment
         Types::ActivityFeed::Comment
-      when Photo
+      when ::Photo
         Types::ActivityFeed::Photo
-      when UserStatusUpdate
+      when ::UserStatusUpdate
         Types::ActivityFeed::UserStatusUpdate
+      when ::Transactable
+        Types::Transactable
+      when ::Location
+        Types::Location
+      when ::Elastic::UserDrop
+        Types::User
       else
         Types::ActivityFeed::Generic
       end

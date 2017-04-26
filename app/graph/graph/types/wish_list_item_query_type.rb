@@ -10,7 +10,6 @@ module Graph
           ::WishListItem
             .joins(:wish_list)
             .merge(WishList.default.where(user_id: args[:user_id]))
-            .map(&:to_liquid)
         }
       end
     end
