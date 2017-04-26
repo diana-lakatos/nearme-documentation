@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 module Graph
   module Types
-    module Transactables
+    module AvailabilityTemplates
       ScheduleExceptionRule = GraphQL::ObjectType.define do
         name 'ScheduleExceptionRule'
 

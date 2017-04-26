@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ElasticIndexer
   class CategorySerializer < BaseSerializer
     attributes :root,
@@ -6,7 +7,8 @@ module ElasticIndexer
                :permalink
 
     def root
-      object.root && object.root.name
+      # maciek says hi :)
+      object.root&.name
     end
   end
 end

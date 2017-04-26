@@ -46,4 +46,8 @@ class BaseForm < Reform::Form
   def checked?(value)
     self.class.checked?(value)
   end
+
+  def date_time_handler
+    @date_time_handler ||= ::DateTimeHandler.new
+  end
 end

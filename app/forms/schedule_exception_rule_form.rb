@@ -19,6 +19,14 @@ class ScheduleExceptionRuleForm < BaseForm
     '1' if model.marked_for_destruction?
   end
 
+  def user_duration_range_start=(date)
+    super(date_time_handler.convert_to_datetime(date))
+  end
+
+  def user_duration_range_end=(date)
+    super(date_time_handler.convert_to_datetime(date))
+  end
+
   protected
 
   def end_time_after_start_time

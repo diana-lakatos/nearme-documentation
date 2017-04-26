@@ -3,6 +3,15 @@ module Elastic
   class ProfileDrop < BaseDrop
     delegate :properties, :categories, :profile_type, :enabled, to: :source
 
+    # @return [Hash{String => Hash}] hash of availability template
+    # {
+    #   availability_rules: [{ .. }],
+    #   schedule_exception_rules: [{ .. }],
+    # }
+    def availability_template
+      @source.availability_template
+    end
+
     # @return [Hash{String => Array}] hash of customizations grouped by custom model type name
     def grouped_customizations
       source.customizations

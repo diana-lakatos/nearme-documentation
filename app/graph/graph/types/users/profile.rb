@@ -30,6 +30,7 @@ module Graph
           argument :name, !types.String
           resolve ->(obj, arg, _ctx) { obj.customizations.fetch(arg[:name], []) }
         end
+        field :availability_template, Types::AvailabilityTemplate
       end
     end
   end

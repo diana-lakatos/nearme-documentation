@@ -116,10 +116,9 @@ class UserDrop < UserBaseDrop
            :has_active_credit_cards?, :has_active_bank_accounts?,
            :communication, :created_at, :has_buyer_profile?, :has_seller_profile?, :default_company,
            :company_name, :instance_admins_metadata, :total_reviews_count, :reviews_counter, :companies, :instance_admin?,
-           :avatar,
-           :instance_admin?, :user_messages_received, :valid?, :last_sign_in_at, :left_by_seller_average_rating,
-           :left_by_buyer_average_rating, :followers_count, :following_count, :is_followed, :slug,
-           to: :source
+           :avatar, :instance_admin?, :user_messages_received, :valid?, :last_sign_in_at,
+           :left_by_seller_average_rating, :left_by_buyer_average_rating, :followers_count, :following_count,
+           :is_followed, :slug, to: :source
 
   # @return [String] path to the wishlisting this user
   # @todo -- depracate to url filter

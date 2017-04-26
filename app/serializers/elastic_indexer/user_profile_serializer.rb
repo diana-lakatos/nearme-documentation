@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ElasticIndexer
   class UserProfileSerializer < BaseSerializer
     attributes :instance_profile_type_id,
@@ -10,6 +11,7 @@ module ElasticIndexer
 
     has_many :customizations, serializer: CustomModelSerializer
     has_many :custom_images, serializer: CustomImageSerializer
+    has_one :availability_template, serializer: AvailabilityTemplateSerializer
 
     def properties
       CustomModelPropertySerializer.new(object.properties, scope: object.instance_profile_type).as_json
