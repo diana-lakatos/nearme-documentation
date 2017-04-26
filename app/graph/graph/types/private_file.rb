@@ -3,7 +3,7 @@ module Graph
   module Types
     PrivateFile = GraphQL::ObjectType.define do
       name 'PrivateFile'
-      description 'A attachment file, to retrieve url please call /custom_attachments/:id'
+      description 'A attachment file, to retrieve url please call /api/user/custom_attachments/:id'
 
       field :id, types.ID
       field :name, !types.String do

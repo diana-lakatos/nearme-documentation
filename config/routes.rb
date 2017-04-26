@@ -760,7 +760,6 @@ DesksnearMe::Application.routes.draw do
 
     resources :seller_attachments, only: [:show, :index]
     resources :custom_assets, only: [:show]
-    resources :custom_attachments, only: [:show]
 
     namespace :dashboard do
       namespace :api do
@@ -1232,7 +1231,7 @@ DesksnearMe::Application.routes.draw do
           resource :shopping_cart, only: [:create, :update]
           resource :space_wizard, only: [:create]
           resources :transactables, only: [:index, :create, :update]
-          resources :custom_attachments, only: [:destroy]
+          resources :custom_attachments, only: [:show, :destroy]
           resources :orders, only: [:update]
           resources :custom_images, only: [:destroy]
           resources :customizations, only: [:create]
