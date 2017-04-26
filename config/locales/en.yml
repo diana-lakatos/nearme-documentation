@@ -991,6 +991,7 @@ en:
         faq: "FAQ"
         name: "Name"
         add_question: "Add Question"
+        select_language: "Select Language"
       approval_requests:
         vendor_approval: "VENDOR APPROVAL"
         object_name: "Object Name"

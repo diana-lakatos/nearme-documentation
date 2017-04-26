@@ -11,9 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20170424154616) do
-
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2496,8 +2494,9 @@ ActiveRecord::Schema.define(version: 20170424154616) do
     t.integer  "updated_by_id"
     t.integer  "deleted_by_id"
     t.datetime "deleted_at"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "language",      default: "en", null: false
   end
 
   add_index "support_faqs", ["created_by_id"], name: "index_support_faqs_on_created_by_id", using: :btree

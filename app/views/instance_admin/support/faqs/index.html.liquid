@@ -1,0 +1,38 @@
+<div class="content-container">
+  <h4>
+    {{ 'instance_admin.manage.faq.faq' | t }}
+  </h4>
+  <div class="row">
+    <div class="text-container">
+      {{ 'instance_admin.manage.faq.select_language' | t }}
+      <div class="faq_languages_select">
+        {% languages_select %}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="table-container col-xs-12">
+      <table id="faqs" class="table sortable">
+        <thead>
+          <tr>
+            <th>
+              {{ 'instance_admin.manage.faq.name' | t }}
+            </th>
+            <th>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for faq in faqs %}
+            {% include "instance_admin/support/faqs/faq", faq_item: faq %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="text-container col-xs-12">
+      <a href="{{ 'new_instance_admin_support_faq_path' | generate_url }}" class="btn btn-blue pull-right">{{ 'instance_admin.manage.faq.add_question' | t }}</a>
+    </div>
+  </div>
+</div>

@@ -4,11 +4,11 @@ class InstanceAdmin::Support::FaqsController < InstanceAdmin::Manage::BaseContro
   defaults resource_class: ::Support::Faq
 
   def index
-    @faqs = ::Support::Faq.all.rank(:position)
+    @faqs = ::Support::Faq.for_current_locale.rank(:position)
   end
 
   def create
-    @faq = ::Support::Faq.new(faq_params)
+    @faq = ::Support::Faq.new(faq_params.merge(language: I18n.locale))
     @faq.created_by_id = current_user.id
     create! do |format|
       format.html do

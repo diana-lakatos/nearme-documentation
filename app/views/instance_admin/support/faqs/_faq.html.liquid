@@ -1,0 +1,12 @@
+<tr>
+  <td>
+    {{ faq_item.question }}
+  </td>
+  <td>
+    <div class="pull-right">
+      <a href="{{ 'edit_instance_admin_support_faq_path' | generate_url: id: faq_item.id }}"><span class="fa fa-pencil fa-2x inline-form-icon"></span></a>
+
+      <a data-confirm="{{ 'confirmations.are_you_sure_you_want_to_delete_this_item' | t }}" rel="nofollow" data-method="delete" href="{{ 'instance_admin_support_faq_path' | generate_url: id: faq_item.id }}"><span class='fa fa-trash-o fa-2x inline-form-icon'></span></a>
+    </div>
+  </td>
+</tr>

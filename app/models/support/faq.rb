@@ -9,12 +9,18 @@ class Support::Faq < ActiveRecord::Base
 
   auto_set_platform_context
 
-  ranks :position, with_same: :instance_id
+  ranks :position, with_same: [:instance_id, :language]
 
   # attr_accessible :question, :answer
 
   belongs_to :instance
 
+  scope :for_current_locale, -> { where(language: I18n.locale) }
+
   validates :question, presence: true
   validates :answer, presence: true
+
+  def to_liquid
+    @support_faq_drop ||= Support::FaqDrop.new(self)
+  end
 end

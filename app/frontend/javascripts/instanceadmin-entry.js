@@ -59,4 +59,5 @@ NM.on('ready', ()=>{
   require('initializers/instance_admin/theme.initializer');
   require('initializers/instance_admin/wish_list.initializer');
   require('initializers/instance_admin/workflow_form.initializer');
+  require('initializers/application/language_switch.initializer');
 });
