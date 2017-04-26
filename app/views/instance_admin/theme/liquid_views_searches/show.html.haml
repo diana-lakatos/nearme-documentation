@@ -1,0 +1,26 @@
+.content-container.reports
+  %h4
+    = t('instance_admin.manage.admin_searchable.liquid_views.search_types.search')
+  .row
+    .text-container
+      = render partial: 'instance_admin/shared/liquid_views_search_form'
+
+  .row
+    .table-container.col-xs-12
+      %table.table.table-striped
+        %tbody
+          %tr
+            %th= t('instance_admin.liquid_views.template')
+            %th= t('instance_admin.liquid_views.format')
+            %th
+
+          - @liquid_views.each do |resource|
+            %tr
+              %td= link_to resource.path, edit_instance_admin_theme_liquid_view_path(resource)
+              %td= resource.format
+              %td= link_to t('instance_admin.edit'), edit_instance_admin_theme_liquid_view_path(resource), class: 'pull-right'
+
+.row
+  .text-container
+    .pull-right
+      = will_paginate @liquid_views

@@ -1,4 +1,9 @@
-.content-container
+.content-container.reports
+  %h4
+    = t('instance_admin.liquid_views.liquid_views')
+  .row
+    .text-container
+      = render partial: 'instance_admin/shared/liquid_views_search_form'
   .row
     .table-container.col-xs-12
       %table.table.table-striped

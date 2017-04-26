@@ -378,6 +378,7 @@ DesksnearMe::Application.routes.draw do
         resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template', concerns: :versionable
         resources :content_holders, only: [:index, :new, :create, :edit, :update, :destroy]
         resources :liquid_views, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :versionable
+        resource :liquid_views_searches, only: [:show]
         resources :graph_queries, only: [:index, :new, :create, :edit, :update, :destroy]
         resources :file_uploads do
           collection do
@@ -417,6 +418,7 @@ DesksnearMe::Application.routes.draw do
         resources :workflow_steps do
           resources :workflow_alerts, except: [:index], controller: 'workflows/workflow_alerts'
         end
+        resource :workflow_alerts_searches, only: [:show]
 
         resources :instance_profile_types, except: [:show] do
           collection do
@@ -546,6 +548,7 @@ DesksnearMe::Application.routes.draw do
 
         resources :email_layout_templates, only: [:index, :new, :create, :edit, :update, :destroy]
         resources :email_templates, only: [:index, :new, :create, :edit, :update, :destroy]
+        resource :email_templates_searches, only: [:show]
         resources :sms_templates, only: [:index, :new, :create, :edit, :update, :destroy]
         resources :waiver_agreement_templates, only: [:index, :create, :update, :destroy]
 

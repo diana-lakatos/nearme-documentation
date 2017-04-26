@@ -1,0 +1,26 @@
+.content-container.reports
+  %h4
+    = t('instance_admin.manage.admin_searchable.email_templates.search_types.search')
+  .row
+    .text-container
+      = render partial: 'instance_admin/shared/email_templates_search_form'
+
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %tbody
+          %tr
+            %th= t('instance_admin.manage.email_templates.template')
+            %th= t('instance_admin.manage.email_templates.format')
+            %th
+
+          - @email_templates.each do |resource|
+            %tr
+              %td= link_to resource.path, edit_instance_admin_manage_email_template_path(resource)
+              %td= resource.format
+              %td= link_to t('instance_admin.edit'), edit_instance_admin_manage_email_template_path(resource), class: 'pull-right'
+
+.row
+  .text-container
+    .pull-right
+      = will_paginate @email_templates

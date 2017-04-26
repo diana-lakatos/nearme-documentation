@@ -597,6 +597,10 @@ class InstanceView < ActiveRecord::Base
 
   scope :published, -> { where(draft: false) }
 
+  scope :by_search_query, lambda { |query|
+    where('instance_views.body ilike :query or instance_views.path ilike :query', query: query)
+  }
+
   def self.all_email_templates_paths
     (DEFAULT_EMAIL_TEMPLATES_PATHS + for_instance_id(PlatformContext.current.instance.id).custom_emails.pluck(:path)).uniq
   end

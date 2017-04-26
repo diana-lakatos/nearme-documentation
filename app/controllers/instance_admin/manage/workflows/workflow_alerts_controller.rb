@@ -3,6 +3,7 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
   before_action :find_custom_emails
   before_action :find_custom_email_layouts
   before_action :find_custom_smses
+  before_action :set_breadcrumbs_title
 
   def index
     @workflow_alerts = @workflow_step.workflow_alerts
@@ -61,5 +62,14 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
 
   def permitting_controller_class
     'manage'
+  end
+
+  def set_breadcrumbs_title
+    @breadcrumbs_title = BreadcrumbsList.new(
+      { title: t('instance_admin.workflows.manage_workflows'), url: instance_admin_manage_workflows_path },
+      { title: @workflow_step.workflow.name, url: instance_admin_manage_workflow_path(@workflow_step.workflow) },
+      { title: @workflow_step.name, url: instance_admin_manage_workflow_workflow_step_path(@workflow_step.workflow, @workflow_step) },
+      { title: t('instance_admin.workflows.workflow_alert') }
+    )
   end
 end

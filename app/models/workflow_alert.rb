@@ -19,6 +19,18 @@ class WorkflowAlert < ActiveRecord::Base
   scope :for_api_calls_path, ->(path) { where(alert_type: 'api_call', template_path: path) }
   scope :for_email_path, ->(path) { where(alert_type: 'email', template_path: path) }
   scope :for_email_layout_path, ->(path) { where(alert_type: 'email', layout_path: path) }
+  scope :by_search_query, lambda { |query|
+    where('workflow_alerts.name ilike :query or workflow_alerts.template_path ilike :query or '\
+          'workflow_alerts.subject ilike :query',
+          query: query)
+  }
+  scope :by_from_field, lambda { |query|
+    where('workflow_alerts.from ilike :query', query: query)
+  }
+  scope :by_reply_to_field, lambda { |query|
+    where('workflow_alerts.from ilike :query', query: query)
+  }
+
   belongs_to :workflow_step
   belongs_to :instance
 

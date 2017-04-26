@@ -1,4 +1,9 @@
-.content-container
+.content-container.reports
+  %h4 Manage workflows
+  .row
+    .text-container
+      = render partial: 'instance_admin/shared/workflow_alerts_search_form'
+
   .row
     .table-container.col-xs-12
       %table.table

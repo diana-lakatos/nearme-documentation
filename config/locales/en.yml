@@ -753,9 +753,12 @@ en:
       add_content_holder: 'Add content holder'
     liquid_views:
       template: Template
+      format: 'Format'
       duplicate_default: "Duplicate default"
       customize_defaults: "Customize defaults"
       add_liquid_view: "Add Liquid View"
+      liquid_views: 'Liquid Views'
+      liquid_views_results: 'Liquid Views Results'
     file_upload:
       upload_file: "Upload File"
       search: "Search"
@@ -833,6 +836,18 @@ en:
           state: 'State'
           in_all_states: 'In all states'
           mode: 'Mode'
+        workflows:
+          search_types:
+            search: 'Search'
+            from: 'From field'
+            reply_to: 'Reply to field'
+          workflow_alerts_results: 'Workflow Alerts Results'
+        email_templates:
+          search_types:
+            search: 'Search'
+        liquid_views:
+          search_types:
+            search: 'Search'
       reviews:
         index:
           missing: "Missing object"
@@ -1027,6 +1042,9 @@ en:
         add_email_template: 'Add Email Template'
         template_path: "Template path"
         service_type: "Service Type"
+        email_templates: 'Email Templates'
+        email_templates_results: 'Email Templates Results'
+        actions: 'Actions'
       sms_templates:
         template: "Template"
         customize: "Customize"
@@ -1241,6 +1259,11 @@ en:
     workflows:
       alerts:
         prevent_trigger_condition: "Liquid parsed string of conditions; leave blank to always run; if evaluates to true, it will not be triggered; e.g. listing.draft?"
+      workflow_alerts_results: 'Workflow Alerts Results'
+      manage_workflows: 'Manage Workflows'
+      workflow_alert: 'Workflow Alert'
+      workflow_step: 'Workflow Step'
+      workflow: 'Workflow'
     graph_queries:
       title: "Graph Queries"
       name: "Name"

@@ -1,0 +1,7 @@
+= form_tag instance_admin_manage_workflow_alerts_searches_path, method: :get, enforce_utf8: :false do
+  .filters
+    = filter_query_text param_name: 'q', label: t('instance_admin.manage.admin_searchable.workflows.search_types.search'), placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword')
+
+    = filter_query_text param_name: 'from', label: t('instance_admin.manage.admin_searchable.workflows.search_types.from'), placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword')
+
+    = filter_query_text param_name: 'reply_to', label: t('instance_admin.manage.admin_searchable.workflows.search_types.reply_to'), placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword')
