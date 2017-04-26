@@ -67,6 +67,14 @@ module LiquidFilters
     array.include?(el)
   end
 
+  # @return [Array] result contains all elements from both arrays.
+  # @param array [Array] base array
+  # @param el [Object] we will transform object into array and add it to the other. Method
+  # is called soft, because it will not crash when nil is provided as argument
+  def soft_concat(array, obj)
+    Array(array) + Array(obj)
+  end
+
   # @return [Array<Array<Object>>] the original array split into groups having the size
   #   specified by the second parameter (an array of arrays)
   # @param array [Array<Object>] array to be split into groups
@@ -529,7 +537,7 @@ module LiquidFilters
   # @return [Time] a time object created from parsing the string representation of time given as input
   # @param time [String] a string representation of time for example 'today', '3 days ago' etc.
   def parse_time(time)
-    Chronic.parse(time)
+    Chronic.parse(time) || time&.to_time(:local)
   end
 
   # @return [String] the input text marked as 'HTML safe'; this ensures that all HTML content will be output to the

@@ -63,13 +63,12 @@ To make ES search work locally you have to enable scripting queries in your loca
     script.indexed: on
     script.disable_dynamic: false
 
-After installing ES you load need to create indicies
+After installing ES you load need to create indicies for each marketplace. Assuming you want to do it for MP with id 5014, you can do:
 
-    rake elastic:indices:create_all
-    rake "elastic:indices:rebuild:all_for_instance[1]"
+    rake "elasticsearch:create_index[5014]"
 
 Where 1 is id of MP you want to rebuild. Shall you encounter any difficulties with `rebuild:all_for_instance` (like for example
-error that there is alias with this name), you might want to delete everything via `curl -XDELETE "localhost:9200/*"` and
+error that there is alias with this name), you might want to delete everything via `curl -XDELETE "http://localhost:9200/*5014*"` and
 try again. Of course, do not do this on production by any means.
 
 ---

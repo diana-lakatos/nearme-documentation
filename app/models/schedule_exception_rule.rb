@@ -23,8 +23,8 @@ class ScheduleExceptionRule < ActiveRecord::Base
   validates :duration_range_end, :duration_range_start, presence: true
 
   def parse_user_input
-    self.duration_range_start = date_time_handler.convert_to_datetime(user_duration_range_start).try(:beginning_of_day) if user_duration_range_start.present?
-    self.duration_range_end = date_time_handler.convert_to_datetime(user_duration_range_end).try(:end_of_day) if user_duration_range_end.present?
+    self.duration_range_start = date_time_handler.convert_to_datetime(user_duration_range_start) if user_duration_range_start.present?
+    self.duration_range_end = date_time_handler.convert_to_datetime(user_duration_range_end) if user_duration_range_end.present?
     errors.add(:duration_range_end, :must_be_later) if duration_range_end.try(:<, duration_range_start) if duration_range_start.present?
     self.user_duration_range_start = duration_range_start
     self.user_duration_range_end = duration_range_end
@@ -52,7 +52,7 @@ class ScheduleExceptionRule < ActiveRecord::Base
   end
 
   def time_range
-    (duration_range_start..duration_range_end)
+    (duration_range_start.beginning_of_day..duration_range_end.end_of_day)
   end
 
   def schedulable

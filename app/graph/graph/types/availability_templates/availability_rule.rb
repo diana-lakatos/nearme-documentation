@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Graph
   module Types
-    module Transactables
+    module AvailabilityTemplates
       AvailabilityRule = GraphQL::ObjectType.define do
         name 'AvailabilityRule'
 
