@@ -7,7 +7,13 @@ module LiquidViewService
 
     def call
       ActiveRecord::Base.transaction do
-        currently_published_for_draft.destroy && save || throw(ActiveRecord::Rollback)
+        currently_published = currently_published_for_draft
+
+        if currently_published.present?
+          currently_published.destroy
+        else
+          true
+        end && save || raise(ActiveRecord::Rollback)
       end
       @liquid_view
     end
