@@ -54,6 +54,8 @@ class Review < ActiveRecord::Base
   end
 
   def expire_cache
+    buyer.touch
+    seller.touch
     Rails.cache.delete_matched("reviews_view/#{reviewable_object.cache_key}/*")
     Rails.cache.delete_matched("reviews_view/#{seller.cache_key}/*")
     Rails.cache.delete_matched("reviews_view/#{buyer.cache_key}/*")
