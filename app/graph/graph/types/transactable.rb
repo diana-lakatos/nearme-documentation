@@ -10,7 +10,7 @@ module Graph
       field :cover_photo_thumbnail_url, types.String
       field :cover_photo_url, types.String
       field :creator, !Types::User do
-        resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.creator_id }, ctx) }
+        resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, { id: obj.creator_id }, ctx) }
       end
       field :currency, !types.String
       field :description, types.String

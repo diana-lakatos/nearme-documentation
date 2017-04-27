@@ -8,6 +8,7 @@ module Graph
         argument :creator_id, types.ID
         argument :archived, types.Boolean
         argument :state, types[Types::OrderStateEnum]
+        argument :reviewable, types.Boolean
         resolve Resolvers::Orders.new
       end
 

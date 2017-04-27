@@ -540,6 +540,14 @@ module LiquidFilters
     Chronic.parse(time) || time&.to_time(:local)
   end
 
+  # @return [Time] a time object created from time in string
+  # @param time [String] a string representation of time in hours and minutes, like 4:0 -> 4:00
+  # @param zone [String] string representing the time zone
+  # 16:3 -> 16:03 etc
+  def to_time(time, zone = nil)
+    ActiveSupport::TimeZone[zone || Time.zone.name].parse(time)
+  end
+
   # @return [String] the input text marked as 'HTML safe'; this ensures that all HTML content will be output to the
   #   page; otherwise, without this filter the text would be sanitized;
   #   e.g. !{{ @some_variable_with_html_contents | make_html_safe }}
@@ -757,9 +765,10 @@ module LiquidFilters
   #   will be based on what the format parameter specifies
   # @param date [Date, Time, DateTime] date object
   # @param format [String] string representing the desired output format
+  # @param zone [String] string representing the time zone
   #   e.g. '%Y-%m-%d' will result in something like '2020-12-12'
-  def strftime(date, format)
-    date&.strftime(format)
+  def strftime(date, format, zone = nil)
+    date&.in_time_zone(zone || Time.zone.name)&.strftime(format)
   end
 
   # @return [MoneyDrop] a Money object constructed with the given amount and currency
