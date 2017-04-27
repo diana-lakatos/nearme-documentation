@@ -206,8 +206,9 @@ class User < ActiveRecord::Base
   }
 
   scope :by_search_query, lambda { |query|
-    where('users.name ilike :query or users.email ilike :query or users.phone like :query or '\
-          'users.mobile_number like :query or users.id = :id',
+    where("users.name ilike :query or concat_ws(' ', nullif(first_name, ''), nullif(middle_name, ''), nullif(last_name, '')) ilike :query or "\
+          "users.email ilike :query or users.phone like :query or "\
+          "users.mobile_number like :query or users.id = :id",
           query: query, id: query.remove('%').to_i)
   }
 
