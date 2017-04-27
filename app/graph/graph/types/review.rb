@@ -8,6 +8,7 @@ module Graph
       field :id, !types.Int
       field :comment, !types.String
       field :rating, !types.Int
+      field :created_at, !types.String
 
       field :lister, !Types::User do
         resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, { id: obj.seller_id }, ctx) }
