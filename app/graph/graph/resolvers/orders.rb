@@ -13,6 +13,11 @@ module Graph
         end
       end
 
+      def resolve_by_reviewable(relation, reviewable)
+        return relation unless reviewable
+        relation.reviewable
+      end
+
       def resolve_by_user_id(relation, id)
         relation.where(user_id: id)
       end

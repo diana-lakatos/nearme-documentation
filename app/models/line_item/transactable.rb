@@ -11,6 +11,8 @@ class LineItem::Transactable < LineItem
 
   before_create :store_properties
 
+  has_many :reviews, as: :reviewable
+
   def transactable
     line_item_source
   end
