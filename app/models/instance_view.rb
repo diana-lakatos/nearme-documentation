@@ -556,6 +556,12 @@ class InstanceView < ActiveRecord::Base
     },
     'dashboard/recurring_bookings/recurring_booking' => {
       is_partial: true
+    },
+    'dashboard/order_items/show' => {
+      is_partial: true
+    },
+    'dashboard/order_items/order_item' => {
+      is_partial: true
     }
   }.sort.to_h.freeze
 
