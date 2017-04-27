@@ -41,7 +41,7 @@ class ImportHallmarkUsersJob < Job
         emails = []
         CSV.foreach(file, col_sep: '|') do |array|
           unless array[FIRST_NAME] == 'CNSMR_FIRST_NM'
-            email = array[EMAIL].downcase.strip
+            email = array[EMAIL].to_s.downcase.strip
             if email.include?('@')
               emails << email
               u = User.where('email ilike ?', email).first_or_initialize
@@ -93,7 +93,7 @@ class ImportHallmarkUsersJob < Job
                 logger.info "\tCRITICAL ISSUE: user was not saved - #{u.errors.full_messages.join(', ')}"
               end
             else
-              logger.info "Skipping due to email: #{email}"
+              logger.info "Skipping due to email: #{email}; external_id: #{array[EXTERNAL_ID]}"
             end
           end
         end
