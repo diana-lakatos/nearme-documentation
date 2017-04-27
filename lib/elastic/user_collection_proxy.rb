@@ -10,7 +10,7 @@ module Elastic
 
     module Liquidable
       def to_liquid
-        Elastic::UserDrop.new(_source)
+        Elastic::UserDrop.new(self)
       end
     end
   end

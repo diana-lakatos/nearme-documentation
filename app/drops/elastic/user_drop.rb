@@ -9,10 +9,21 @@ module Elastic
              :reviews_counter, :current_address,
              to: :source
 
+    def initialize(result)
+      @source = result['_source']
+      @inner_hits = result['inner_hits']
+    end
+
     def profiles
       @__profiles ||= source.user_profiles.each_with_object({}) do |profile, profiles|
         profiles[profile.profile_type] = Elastic::ProfileDrop.new(profile)
       end
+    end
+
+    def all_prices
+      @inner_hits.transactable.hits.hits.first._source.all_prices
+    rescue
+      0
     end
 
     def tag_list
