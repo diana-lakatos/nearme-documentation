@@ -545,7 +545,7 @@ module LiquidFilters
   # @param zone [String] string representing the time zone
   # 16:3 -> 16:03 etc
   def to_time(time, zone = nil)
-    ActiveSupport::TimeZone[zone || Time.zone.name].parse(time)
+    ActiveSupport::TimeZone[zone || Time.zone.name]&.parse(time.to_s)
   end
 
   # @return [String] the input text marked as 'HTML safe'; this ensures that all HTML content will be output to the
@@ -854,5 +854,19 @@ module LiquidFilters
   # @param query [String, Number] String/Number compared to each item in the given array
   def any(arr = [], query = 'true')
     Array(arr).any? { |item| item == query }
+  end
+
+  def group_rules_by_day(rules)
+    grouped_hash = {}
+    rules.each do |rule|
+      rule.delete('days').each do |d|
+        grouped_hash[d] ||= Set.new
+        grouped_hash[d] << rule
+      end
+    end
+    grouped_hash.each do |k, v|
+      grouped_hash[k] = v.sort_by { |r| [r['open_hour'], r['open_minute']] }
+    end
+    Hash[grouped_hash.sort]
   end
 end
