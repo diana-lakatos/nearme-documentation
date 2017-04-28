@@ -1,6 +1,6 @@
 - title @page.metadata_title.presence || @page.path
 - meta_description @page.metadata_meta_description
-- canonical_url @page.metadata_canonical_url.presence || request.original_url
+- canonical_url @page.metadata_canonical_url.presence || original_url
 
 = content_for :hero do
   = image_tag(@page.hero_image.url) if @page.hero_image.present?

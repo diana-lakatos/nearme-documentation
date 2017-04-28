@@ -1,5 +1,5 @@
 - title @page.metadata_title.presence || @page.path
 - meta_description @page.metadata_meta_description.presence || truncate(strip_tags(@page.html_content.try(:squish)), length: 160)
-- canonical_url @page.metadata_canonical_url.presence || request.original_url
+- canonical_url @page.metadata_canonical_url.presence || original_url
 
 = LiquidView.new(self).render(@page.html_content)

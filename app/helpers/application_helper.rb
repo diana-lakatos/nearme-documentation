@@ -469,4 +469,8 @@ module ApplicationHelper
   def collection_or_new_object(association)
     association.presence || association.new
   end
+
+  def original_url
+    request.original_url.try(:force_encoding, "UTF-8")
+  end
 end
