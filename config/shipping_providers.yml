@@ -23,7 +23,7 @@
   name: 'auspost-manual'
   url: 'https://auspost.com.au/'
   quote:
-    gross: 1000
+    gross: 1495
   countries:
     - Australia
   fields:
