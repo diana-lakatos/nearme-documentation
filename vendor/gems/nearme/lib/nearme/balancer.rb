@@ -24,7 +24,7 @@ module NearMe
 
     def delete!
       LoadBalancerRepository.delete(@name)
-      HostedZoneRepository.find_by_name(@name).tap do |zone|
+      HostedZoneRepository.get_by_name(@name).tap do |zone|
         zone.delete if zone.id
       end
     end

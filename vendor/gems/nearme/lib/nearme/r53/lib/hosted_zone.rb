@@ -31,7 +31,7 @@ class HostedZone
 end
 
 module HostedZoneRepository
-  def self.find_by_name(name)
+  def self.get_by_name(name)
     HostedZone.new(find_one_by_name(name))
   end
 
