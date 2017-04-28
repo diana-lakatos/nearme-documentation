@@ -25,7 +25,7 @@ class SetupHostedZoneJob < Job
  end
 
   def zone
-    @zone ||= HostedZoneRepository.find_by_name @domain.name
+    @zone ||= HostedZoneRepository.get_by_name @domain.name
   end
 
   def balancer
