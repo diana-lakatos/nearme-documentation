@@ -100,7 +100,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   extend FriendlyId
-  friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :instance
+  friendly_id :slug_candidates, use: [:slugged, :finders, :scoped, :history], scope: :instance
   def slug_candidates
     [
       :name,
@@ -235,6 +235,10 @@ class TransactableType < ActiveRecord::Base
   end
 
   private
+
+  def should_generate_new_friendly_id?
+    slug.blank? || name_changed?
+  end
 
   def set_default_options
     self.default_search_view ||= available_search_views.first
