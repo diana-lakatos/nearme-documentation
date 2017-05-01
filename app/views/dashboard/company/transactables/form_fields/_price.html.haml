@@ -37,7 +37,6 @@
     = f.simple_fields_for :action_types do |at|
       %div{id: "booking-type-#{at.object.name}", class: "tab-pane #{booking_types_active_toggle(f.object.action_type, at.object.transactable_type_action_type)}"}
         = at.input :transactable_type_action_type_id, as: :hidden
-        = at.input :transactable_id, as: :hidden
         = at.input :type, as: :hidden
         = at.hidden_field :enabled, value: at.object == @transactable.action_type, 'data-action': "#booking-type-#{at.object.name}"
         = render "dashboard/company/transactables/form_fields/action_types/#{at.object.name}.html.haml", f: at, fields: form_fields.map{|f| f['transactable']}.compact

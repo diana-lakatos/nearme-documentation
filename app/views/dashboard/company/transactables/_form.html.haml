@@ -1,7 +1,6 @@
 - if f.object.is_a?(BaseForm)
   - custom_attribute_names = f.object.transactable_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
   = f.hidden_field :transactable_type_id, value: @transactable_type.id
-  = f.input :id, as: :hidden
 
   = f.simple_fields_for :properties, f.object.properties do |properties_form|
     - unless @form_components.map(&:form_fields).map{|ff| ff.map(&:values).flatten }.flatten.include? 'price'
@@ -95,7 +94,6 @@
 - else
   - custom_attribute_names = @transactable_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
   = f.hidden_field :transactable_type_id, value: @transactable_type.id
-  = f.input :id, as: :hidden
 
   = f.simple_fields_for :properties, f.object.properties do |properties_form|
     - unless @form_components.map(&:form_fields).map{|ff| ff.map(&:values).flatten }.flatten.include? 'price'

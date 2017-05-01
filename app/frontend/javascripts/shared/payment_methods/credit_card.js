@@ -54,6 +54,7 @@ class PaymentMethodCreditCard {
             } catch (err) {
               if (err) {
                 Loader.hide();
+                $(this._ui.container).find('.has-error').text(err);
                 return false;
               }
             }
