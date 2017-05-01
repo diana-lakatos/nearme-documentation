@@ -21,6 +21,10 @@ module Graph
         argument :name, !types.String
         resolve ->(obj, arg, _ctx) { obj.custom_attachments[arg[:name]] }
       end
+      field :custom_attribute_array, types[types.String] do
+        argument :name, !types.String
+        resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
+      end
     end
   end
 end
