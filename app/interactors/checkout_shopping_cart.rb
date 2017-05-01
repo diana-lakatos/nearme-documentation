@@ -42,6 +42,7 @@ class CheckoutShoppingCart
     def build(order)
       order.build_payment({
         payer: order.user,
+        company_id: order.creator.default_company.id,
         payment_method: @payment.payment_method,
         credit_card: CreditCard.new(credit_card_token: @payment.credit_card_token,
                                     payment_method: @payment.payment_method,
