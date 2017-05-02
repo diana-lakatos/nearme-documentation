@@ -252,27 +252,35 @@ class ReservationTest < ActiveSupport::TestCase
 
   context 'waiver agreement' do
     setup do
-      @reservation = FactoryGirl.build(:reservation)
+      @reservation = FactoryGirl.create(:reservation)
     end
 
     should 'copy instance waiver agreement template details if available' do
       @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
       assert_difference 'WaiverAgreement.count' do
-        @reservation.waiver_agreement_templates = { @waiver_agreement_template_instance.id.to_s => '1' }
+        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_instance.id }}}
         @reservation.save!
       end
       waiver_agreement = @reservation.waiver_agreements.first
       assert_equal @waiver_agreement_template_instance.content, waiver_agreement.content
       assert_equal @waiver_agreement_template_instance.name, waiver_agreement.name
-      assert_equal @reservation.host.name, waiver_agreement.vendor_name
-      assert_equal @reservation.owner.name, waiver_agreement.guest_name
+    end
+
+    should 'raise validation error when waiver agreement not checked' do
+      @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
+      @reservation.stubs(:should_validate_field?).returns(true)
+      assert_no_difference 'WaiverAgreement.count' do
+        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_instance.id, _destroy: true }}}
+        @reservation.save
+      end
+      refute @reservation.valid?
     end
 
     should 'copy instance waiver agreement template details if available, ignoring not assigned company template' do
       @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
       @waiver_agreement_template_company = FactoryGirl.create(:waiver_agreement_template, target: @reservation.company)
       assert_difference 'WaiverAgreement.count' do
-        @reservation.waiver_agreement_templates = { @waiver_agreement_template_instance.id.to_s => '1', @waiver_agreement_template_company.id.to_s => '1' }
+        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_instance.id }}}
         @reservation.save!
       end
       assert_equal @waiver_agreement_template_instance.name, @reservation.waiver_agreements.first.name
@@ -283,7 +291,7 @@ class ReservationTest < ActiveSupport::TestCase
       @waiver_agreement_template_company = FactoryGirl.create(:waiver_agreement_template, target: @reservation.company)
       @reservation.location.waiver_agreement_templates << @waiver_agreement_template_company
       assert_difference 'WaiverAgreement.count' do
-        @reservation.waiver_agreement_templates = { @waiver_agreement_template_company.id.to_s => '1' }
+        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_company.id }}}
         @reservation.save!
       end
       assert_equal @waiver_agreement_template_company.name, @reservation.waiver_agreements.first.name
@@ -296,13 +304,12 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.transactable.waiver_agreement_templates << @waiver_agreement_template_company
       @reservation.transactable.waiver_agreement_templates << @waiver_agreement_template_company2
       assert_difference 'WaiverAgreement.count', 2 do
-        @reservation.waiver_agreement_templates = {
-          @waiver_agreement_template_company.id.to_s => '1',
-          @waiver_agreement_template_company2.id.to_s => '1'
+        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_company.id },
+          '1' => { waiver_agreement_template_id: @waiver_agreement_template_company2.id }}
         }
         @reservation.save!
       end
-      assert_equal [@waiver_agreement_template_company.name, @waiver_agreement_template_company2.name], @reservation.waiver_agreements.pluck(:name)
+      assert_equal [@waiver_agreement_template_company.name, @waiver_agreement_template_company2.name].sort, @reservation.waiver_agreements.pluck(:name).sort
     end
   end
 
