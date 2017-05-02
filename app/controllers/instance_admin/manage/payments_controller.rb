@@ -20,6 +20,8 @@ class InstanceAdmin::Manage::PaymentsController < InstanceAdmin::Manage::BaseCon
                          payments_scope.transferred
                        when 'excluded'
                          payments_scope.where(exclude_from_payout: true)
+                       when 'all'
+                         payments_scope
                        else
                          raise StandardError, 'Invalid value for transferred parameter'
       end
