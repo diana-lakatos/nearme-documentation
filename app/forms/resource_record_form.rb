@@ -47,7 +47,7 @@ class ResourceRecordForm < Form
   end
 
   def hosted_zone
-    HostedZoneRepository.find_by(name: hosted_zone_name)
+    HostedZoneRepository.get_by_name(hosted_zone_name)
   end
 
   def add_record

@@ -42,6 +42,8 @@ class ReservationForm < BaseForm
 
   def validate!(*args)
     t = Transactable.find_by(id: @fields['transactable_id'])
+    model.creator_id = t.creator_id
+    model.company_id = t.company_id
     model.minimum_booking_minutes = t.time_based_booking&.minimum_booking_minutes
     super
   end

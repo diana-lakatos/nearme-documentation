@@ -15,6 +15,7 @@ module Graph
         field :currency, !types.String
         field :min_price, types.String
         field :max_price, types.String
+        field :transactable_type_pricing, Types::TransactableTypes::Pricing
       end
     end
   end

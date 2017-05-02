@@ -2,7 +2,7 @@ class DomainDecorator < Draper::Decorator
   delegate_all
 
   def hosted_zone
-    @hosted_zone ||= HostedZoneRepository.find_by_name(name)
+    @hosted_zone ||= HostedZoneRepository.get_by_name(name)
   end
 
   def balancer

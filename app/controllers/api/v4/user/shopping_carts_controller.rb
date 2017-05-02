@@ -11,6 +11,12 @@ module Api
         end
 
         def update
+          # TODO: this is hotfix to recalculate hostfee properly in MyCSN
+          shopping_cart_form.model.orders.each do |order|
+            order.host_fee_line_items.destroy_all
+            order.service_fee_line_items.destroy_all
+          end
+
           shopping_cart_form.save if shopping_cart_form.validate(params[:form].presence || {})
           respond(shopping_cart_form)
         end
