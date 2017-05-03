@@ -38,7 +38,7 @@ class AttachmentInput < SimpleForm::Inputs::FileInput
 
     items = ActiveSupport::SafeBuffer.new
     collection.each do |attachment|
-      items << template.render(options.delete(:attachment_template), options.merge(attachment: attachment))
+      items << template.render(options[:attachment_template], options.merge(attachment: attachment))
     end
     template.content_tag(:ul, items, data: collection_data, class: (options[:multiple].present? ? 'multiple' : nil))
   end
