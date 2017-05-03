@@ -13,40 +13,27 @@ class PaymentMethodAch {
 
     var that = this;
 
-    that.shouldBindEvents = false;
-    that.shouldSetupPlaid = false;
-
     if (!window.Stripe) {
       let s = document.createElement('script');
       s.src = 'https://js.stripe.com/v2/';
       s.addEventListener('load', function() {
-        that.shouldBindEvents = true;
+        that._bindEvents();
       });
       document.head.appendChild(s);
     } else {
-      that.shouldBindEvents = true;
+      that._bindEvents();
     }
 
     if (!window.Plaid) {
       let s = document.createElement('script');
-      s.src = 'https://cdn.plaid.com/link/stable/link-initialize.js';
+      s.src = 'https://cdn.plaid.com/link/v2/stable/link-initialize.js';
       s.addEventListener('load', function() {
-        that.shouldBindEvents = true;
-        that.shouldSetupPlaid = true;
+        that._setupPlaid();
       });
       document.head.appendChild(s);
     } else {
-      that.shouldBindEvents = true;
-      that.shouldSetupPlaid = true;
-    }
-
-    if (that.shouldSetupPlaid) {
       that._setupPlaid();
     }
-    if (that.shouldBindEvents) {
-      that._bindEvents();
-    }
-
   }
 
   _bindEvents() {
@@ -62,6 +49,7 @@ class PaymentMethodAch {
 
     var linkHandler = Plaid.create({
       env: plaidOptions.env,
+      apiVersion: 'v2',
       clientName: plaidOptions.name,
       key: plaidOptions.key,
       product: 'auth',
