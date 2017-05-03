@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+# InstanceClient is a class representing Customer saved in PaymentGateway
+# Every InstanceClient has many CC and Bank Accounts synced within payment gateway account
+
 class InstanceClient < ActiveRecord::Base
   include Encryptable
   auto_set_platform_context
@@ -15,9 +19,9 @@ class InstanceClient < ActiveRecord::Base
   has_many :bank_accounts
   before_save :clear_decorator, if: ->(ic) { ic.encrypted_response_changed? }
 
-  validates_presence_of :client_id, :client_type, unless: ->(ic) { ic.client.present? }
+  validates :client_id, :client_type, presence: { unless: ->(ic) { ic.client.present? } }
 
-  scope :for_payment_gateway, -> (payment_gateway, test_mode) { where(payment_gateway: payment_gateway, test_mode: test_mode) }
+  scope :for_payment_gateway, ->(payment_gateway, test_mode) { where(payment_gateway: payment_gateway, test_mode: test_mode) }
   scope :mode_scope, -> { PlatformContext.current.instance.test_mode? ? where(test_mode: true) : where(test_mode: false) }
 
   def credit_card
