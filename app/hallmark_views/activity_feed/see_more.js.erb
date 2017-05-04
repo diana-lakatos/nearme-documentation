@@ -6,7 +6,11 @@ $moreButton = $container.find(".more-a")
 <% elsif %>
   $container.find('.content-container').append(content)
 <% end %>
-$(document).trigger('activity-feed-next-page')
+try {
+  $(document).trigger('activity-feed-next-page');
+} catch(e) {
+  // TODO check error from UserEntryEditorSimpleMDE
+}
 
 <% if @collection.next_page %>
   $moreButton.show()
@@ -14,3 +18,4 @@ $(document).trigger('activity-feed-next-page')
 <% elsif %>
   $moreButton.hide()
 <%  end %>
+
