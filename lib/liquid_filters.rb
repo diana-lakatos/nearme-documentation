@@ -859,7 +859,7 @@ module LiquidFilters
   def group_rules_by_day(rules)
     grouped_hash = {}
     rules.each do |rule|
-      rule.delete('days').each do |d|
+      rule.fetch('days').each do |d|
         grouped_hash[d] ||= Set.new
         grouped_hash[d] << rule
       end
