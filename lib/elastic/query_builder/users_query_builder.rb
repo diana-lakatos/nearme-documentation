@@ -76,7 +76,7 @@ module Elastic
       end
 
       def build_query_branch
-        { query: { bool: { must: query_bool_conditions } } }
+        { query: { bool: { should: query_bool_conditions } } }
       end
 
       def query_bool_conditions
@@ -99,7 +99,7 @@ module Elastic
       def multi_match_query
         {
           nested: {
-            profile_type: 'user_profiles',
+            path: 'user_profiles',
             query: {
               multi_match: {
                 query: @query[:query],
@@ -172,6 +172,7 @@ module Elastic
         end
 
         def to_h
+          return {} unless valid?
           {
             has_child: {
               type: 'transactable',
@@ -184,9 +185,11 @@ module Elastic
           }
         end
 
-        def custom_attributes
-          return [] unless options.dig(:transactable, :custom_attributes)
+        def valid?
+          options.dig(:transactable, :custom_attributes)
+        end
 
+        def custom_attributes
           options.dig(:transactable, :custom_attributes).map do |attribute, values|
             custom_attribute "custom_attributes.#{attribute}", values
           end

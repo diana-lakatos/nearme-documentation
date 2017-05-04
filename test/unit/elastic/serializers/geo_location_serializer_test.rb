@@ -9,7 +9,8 @@ require './app/serializers/elastic_indexer/geo_location_serializer.rb'
 class ElasticIndexer::GeoServiceShapeSerializerTest < ActiveSupport::TestCase
   test 'names are correct' do
     current_address = OpenStruct.new(longitude: 150, latitude: -33)
-    profile = OpenStruct.new(properties: {'service_radius' => '25km'})
+    properties = OpenStruct.new(service_radius: '25km')
+    profile = OpenStruct.new(properties: properties)
     user = OpenStruct.new(current_address: current_address, seller_profile: profile)
 
     json = ElasticIndexer::GeoServiceShapeSerializer.new(user).as_json

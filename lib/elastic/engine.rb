@@ -7,8 +7,8 @@ module Elastic
       indices.create index: index.name, body: index.body
     end
 
-    def find_index(alias_name)
-      data = indices.get_alias index: alias_name
+    def find_index(name)
+      data = indices.get index: name
 
       IndexNameBuilder.load(data)
     end
@@ -19,6 +19,10 @@ module Elastic
 
     def switch_alias(from:, to:)
       SwitchAliases.new(from: from, to: to).perform
+    end
+
+    def add_alias(index:, alias_name:)
+      AddAliasToIndex.new(index: index, alias_name: alias_name).perform
     end
 
     def import(index)
@@ -78,6 +82,38 @@ module Elastic
 
     def default_transform
       source.__elasticsearch__.__transform
+    end
+  end
+
+  class AddAliasToIndex
+    def initialize(index:, alias_name:)
+      @index = index
+      @alias_name = alias_name
+    end
+
+    def perform
+      connection.post '_aliases', options.to_json
+    end
+
+    private
+
+    def connection
+      client.transport.get_connection.connection
+    end
+
+    def options
+      {
+        actions:
+          [
+            {
+              add: { alias: @alias_name, index: @index.name }
+            }
+          ]
+      }
+    end
+
+    def client
+      Elasticsearch::Model.client
     end
   end
 

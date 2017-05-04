@@ -23,8 +23,9 @@ class ElasticIndexerJob < Job
     when 'index', 'update'
       update_document
     when 'delete'
-      client.delete index: index_name, type: source_class.document_type, id: @record_id
-    else raise ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
+      delete_document
+    else
+      raise ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
     end
   end
 
@@ -38,6 +39,10 @@ class ElasticIndexerJob < Job
       es.client = client
       es.__send__ "#{operation}_document", update_params
     end
+  end
+
+  def delete_document
+    client.delete index: index_name, type: source_class.document_type, id: @record_id
   end
 
   # this sucks

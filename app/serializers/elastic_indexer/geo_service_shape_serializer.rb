@@ -18,7 +18,7 @@ module ElasticIndexer
     end
 
     def radius
-      object.seller_profile.properties['service_radius']
+      object.seller_profile.properties.try :service_radius
     end
   end
 
