@@ -7,6 +7,8 @@ module Graph
       global_id_field :id
 
       field :id, !types.Int
+      field :created_at, types.String
+      field :updated_at, types.String
       field :cover_photo_thumbnail_url, types.String
       field :cover_photo_url, types.String
       field :creator, !Types::User do
