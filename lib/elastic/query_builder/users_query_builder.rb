@@ -68,11 +68,33 @@ module Elastic
 
       private
 
+      class ConditionGroup
+        def initialize
+          @group = []
+        end
+
+        def add(item)
+          if item.is_a? Array
+            item.each { |single| add_single single }
+          else
+            add_single item
+          end
+        end
+
+        def add_single(item)
+          @group.push item unless item.empty?
+        end
+
+        def to_h
+          @group
+        end
+      end
+
       def filters
-        @filters = []
-        @filters.concat profiles_filters
-        @filters.concat [geo_shape] if @query.dig(:location, :lat).present?
-        @filters
+        ConditionGroup.new.tap do |group|
+          group.add profiles_filters
+          group.add build_geo_shape
+        end.to_h
       end
 
       def build_query_branch
@@ -80,14 +102,15 @@ module Elastic
       end
 
       def query_bool_conditions
-        [].tap do |conditions|
-          conditions << simple_match_query if @query[:query].present?
-          conditions << multi_match_query if @query_searchable_attributes.present?
-          conditions << transactable_child
-        end
+        ConditionGroup.new.tap do |group|
+          group.add simple_match_query
+          group.add multi_match_query
+          group.add transactable_child
+        end.to_h
       end
 
       def simple_match_query
+        return {} unless @query[:query].present?
         {
           simple_query_string: {
             query: @query[:query],
@@ -97,6 +120,8 @@ module Elastic
       end
 
       def multi_match_query
+        return {} unless @query[:query].present?
+        return {} unless @query_searchable_attributes.present?
         {
           nested: {
             path: 'user_profiles',
@@ -146,7 +171,8 @@ module Elastic
         { nested: { path: 'user_profiles', query: { bool: { must: Elastic::QueryBuilder::UserProfileBuilder.build(@query, profile: profile) } } } }
       end
 
-      def geo_shape
+      def build_geo_shape
+        return {} unless @query.dig(:location, :lat).present?
         {
           geo_shape: {
             geo_service_shape: {

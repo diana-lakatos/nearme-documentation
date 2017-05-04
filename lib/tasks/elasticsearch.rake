@@ -9,7 +9,7 @@ namespace :elasticsearch do
       # setup
       engine = Elastic::Engine.new
       builder = Elastic.default_index_name_builder(instance)
-      index_type = Elastic::IndexTypes::MultipleModel.new(sources: [User, Transactable])
+      index_type = Elastic::IndexTypes::MultipleModel.new(sources: find_sources)
 
       # ensure index exists
       unless engine.index_exists? builder.alias_name
@@ -30,6 +30,13 @@ namespace :elasticsearch do
 
       # change alias to new index
       engine.switch_alias from: current_index, to: index
+    end
+  end
+
+  def find_sources
+    [].tap do |items|
+      items << User if InstanceProfileType.searchable.any?
+      items << Transactable if TransactableType.searchable.any?
     end
   end
 end

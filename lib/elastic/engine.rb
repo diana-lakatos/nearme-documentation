@@ -57,7 +57,12 @@ module Elastic
     end
 
     def perform
+      print_import_details
       source.searchable.import batch_size: 50, index: index.name, transform: transform
+    end
+
+    def print_import_details
+      puts format('Importing %d items from %s', source.searchable.count, source.to_s)
     end
 
     private
