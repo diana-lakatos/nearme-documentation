@@ -289,6 +289,7 @@ class User < ActiveRecord::Base
   scope :banned, -> { where('users.banned_at is not null') }
   scope :not_banned, -> { where('users.banned_at is null') }
   scope :active_users, -> { where('users.banned_at is null AND users.deleted_at is null') }
+  scope :with_email, ->(email) { where('email ilike ?', email) }
 
   validates_with CustomValidators
 

@@ -333,6 +333,10 @@ module LiquidFilters
     date + number_of_days.days
   end
 
+  def is_date_in_past(date)
+    to_date(date).past?
+  end
+
   # @return [String] filtered version of the input text using the marketplace global text filters
   # @param text [String] text to be filtered
   def filter_text(text = '')
@@ -859,7 +863,7 @@ module LiquidFilters
   def group_rules_by_day(rules)
     grouped_hash = {}
     rules.each do |rule|
-      rule.delete('days').each do |d|
+      rule.fetch('days').each do |d|
         grouped_hash[d] ||= Set.new
         grouped_hash[d] << rule
       end
