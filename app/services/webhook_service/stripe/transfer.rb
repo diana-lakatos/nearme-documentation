@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 module WebhookService
   module Stripe
     class Transfer < WebhookService::Stripe::Event
-      ALLOWED_EVENTS = %w{created paid failed updated}
+      ALLOWED_EVENTS = %w(created paid failed updated).freeze
 
       def parse_event!
-        return false unless ALLOWED_EVENTS.map {|e| "transfer." + e }.include?(event.type)
+        return false unless ALLOWED_EVENTS.map { |e| 'transfer.' + e }.include?(event.type)
 
         'transfer.created' == event.type ? transfer_created : transfer_updated
       end
@@ -17,31 +18,35 @@ module WebhookService
         return if (company = payments.first.company).blank?
         return if payments.map(&:company_id).uniq.size != 1
 
-        payment_transfer = payment_gateway.payment_transfers.create!(
+        transfer = payment_gateway.payment_transfers.create!(
           company: company,
           payments: payments,
           payment_gateway_mode: payment_gateway.mode,
-          token: event.data.object.id,
+          token: transfer_response.id,
           merchant_account: merchant_account
         )
 
-        update_transfer(payment_transfer, event.data.object.status)
+        update_transfer(payment_transfer)
       end
 
       def transfer_updated
-        update_transfer(params_transfer, event.data.object.status)
+        update_transfer(payment_transfer)
       end
 
-      def update_transfer(transfer, transfer_state)
-        if transfer_state == 'paid'
+      def update_transfer(transfer)
+        if transfer_response.paid?
           transfer.payout_attempts.last.payout_successful(event)
-        elsif %w(canceled failed).include?(transfer_state)
+        elsif transfer_response.failed?
           transfer.payout_attempts.last.payout_failed(event)
         end
       end
 
+      def transfer_response
+        @transfer_response ||= PaymentGateway::Response::Stripe::Transfer.new(event.data.object)
+      end
+
       def transfer_scope
-        payment_gateway.payment_transfers.with_token(event.data.object.id).where(payment_gateway_mode: payment_gateway.mode)
+        payment_gateway.payment_transfers.with_token(transfer_response.id).where(payment_gateway_mode: payment_gateway.mode)
       end
 
       def find_transfer_payments
@@ -50,13 +55,13 @@ module WebhookService
         payment_gateway.payments.where(external_id: charge_ids)
       end
 
-      def params_transfer
-        @transfer ||= transfer_scope.pending.first!
+      def payment_transfer
+        @payment_transfer ||= transfer_scope.pending.first!
       end
 
       def transfer_transactions
         @transfer_transactions ||= payment_gateway.find_transfer_transactions(
-          event.data.object.id, merchant_account.try(:external_id)
+          transfer_response.id, merchant_account.try(:external_id)
         ).try(:data)
       end
 
