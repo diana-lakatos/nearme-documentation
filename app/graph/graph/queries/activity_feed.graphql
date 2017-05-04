@@ -57,6 +57,7 @@ query ActivityFeedQuery($object_id: ID!, $object_type: String!, $include_user_fe
             url: url(version: "space_listing")
           }
         }
+        ... on Transactable { id created_at updated_at }
         ... on ActivityFeedGeneric { id created_at updated_at }
       }
       details{

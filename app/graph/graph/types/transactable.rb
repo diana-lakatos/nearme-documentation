@@ -8,6 +8,15 @@ module Graph
       global_id_field :id
 
       field :id, !types.Int
+      field :created_at, types.String
+      field :updated_at, types.String
+      field :cover_photo_thumbnail_url, types.String
+      field :cover_photo_url, types.String
+      field :creator, !Types::User do
+        resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, { id: obj.creator_id }, ctx) }
+      end
+      field :currency, !types.String
+      field :description, types.String
       field :is_followed, !types.Boolean do
          argument :follower_id, types.ID
          resolve ->(obj, arg, _) { arg[:follower_id] ? obj.is_followed : false }
