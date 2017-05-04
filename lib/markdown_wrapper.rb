@@ -11,6 +11,12 @@ class MarkdownWrapper
   private
 
   def processor
-    @processor ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
+    @processor ||= Redcarpet::Markdown.new(
+      Redcarpet::Render::HTML,
+      autolink: true,
+      tables: true,
+      no_intra_emphasis: true,
+      quote: false
+    )
   end
 end
