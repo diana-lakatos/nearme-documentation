@@ -19,7 +19,13 @@ module.exports = class SearchController
 
   initializeAutocomplete: (queryField) ->
     queryField ||= @queryField
-    autocomplete = new google.maps.places.Autocomplete(queryField[0], {})
+
+    options = {}
+    restrictCountries = queryField.data('restrict-countries')
+    if restrictCountries && restrictCountries.length > 0
+      options['componentRestrictions'] = { 'country': restrictCountries }
+
+    autocomplete = new google.maps.places.Autocomplete(queryField[0], options)
     @submit_form = false
 
     google.maps.event.addListener autocomplete, 'place_changed', =>

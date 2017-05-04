@@ -5,7 +5,7 @@
 
 - if only_inputs.empty? || only_inputs.include?(:address)
   = f.simple_fields_for :location_address, (f.object.location_address.presence || f.object.build_location_address) do |address_form|
-    = render 'dashboard/shared/fields/address', :f => address_form, field_label: t('simple_form.labels.locations.location_address.address')
+    = render 'dashboard/shared/fields/address', :f => address_form, field_label: t('simple_form.labels.locations.location_address.address'), restrict_countries: allowed_country_codes
 
 - if only_inputs.empty? || only_inputs.include?(:time_zone)
   = f.input :time_zone, default: f.object.company.time_zone, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:time_zone)

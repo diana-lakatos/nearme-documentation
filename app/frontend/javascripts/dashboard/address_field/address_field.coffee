@@ -51,11 +51,13 @@ module.exports = class AddressField
       , 200)
 
   getAutocompleteOptions: () =>
-    {
-      componentRestrictions: {
-        country: @input.data('restrict-country') || ''
-      }
-    }
+    options = {}
+    restrictCountries = @input.data('restrict-countries')
+
+    if restrictCountries && restrictCountries.length > 0
+      options['componentRestrictions'] = { country: restrictCountries }
+
+    options
 
   markerMoved: (lat, lng) =>
     setTimeout( =>
