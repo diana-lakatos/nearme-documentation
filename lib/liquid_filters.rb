@@ -333,6 +333,10 @@ module LiquidFilters
     date + number_of_days.days
   end
 
+  def is_date_in_past(date)
+    to_date(date).past?
+  end
+
   # @return [String] filtered version of the input text using the marketplace global text filters
   # @param text [String] text to be filtered
   def filter_text(text = '')
