@@ -48,15 +48,15 @@ class UserForm < BaseForm
   validates :email, email: true, presence: true
   validates_with PasswordValidator, if: -> { password.present? && !(new_record? && model.authentications.size.positive?) }
   def email_uniqueness
-    errors.add(:email, :taken) if User.admin.where(email: email).exists?
-    errors.add(:email, :taken) if external_id.blank? && User.where(email: email).exists?
+    errors.add(:email, :taken) if User.admin.with_email(email).exists?
+    errors.add(:email, :taken) if external_id.blank? && User.with_email(email).exists?
   end
 
   model :user
 
   def email=(email)
     @email_changed = email != model.email
-    super(email&.downcase)
+    super(email&.strip)
   end
 
   def email_changed?
