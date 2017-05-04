@@ -95,6 +95,7 @@ class Instance < ActiveRecord::Base
   has_many :aws_certificates
   has_many :pages
   has_many :graph_queries
+  has_one :marketplace_builder_settings
 
   validates :id, uniqueness: true
   validates :name, presence: true, length: { maximum: 255 }

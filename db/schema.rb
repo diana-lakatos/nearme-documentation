@@ -1453,6 +1453,7 @@ ActiveRecord::Schema.define(version: 20170503134046) do
     t.string   "prepend_view_path"
     t.boolean  "require_verified_user",                                                             default: false
     t.boolean  "only_first_name_as_user_slug",                                                      default: false,                            null: false
+    t.integer  "marketplace_builder_settings_id"
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -1599,6 +1600,17 @@ ActiveRecord::Schema.define(version: 20170503134046) do
 
   add_index "mailer_unsubscriptions", ["user_id", "mailer"], name: "index_mailer_unsubscriptions_on_user_id_and_mailer", unique: true, using: :btree
   add_index "mailer_unsubscriptions", ["user_id"], name: "index_mailer_unsubscriptions_on_user_id", using: :btree
+
+  create_table "marketplace_builder_settings", force: :cascade do |t|
+    t.integer  "status"
+    t.json     "manifest"
+    t.integer  "marketplace_release_id"
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marketplace_builder_settings", ["instance_id"], name: "index_marketplace_builder_settings_on_instance_id", unique: true, using: :btree
 
   create_table "marketplace_error_groups", force: :cascade do |t|
     t.integer  "instance_id"

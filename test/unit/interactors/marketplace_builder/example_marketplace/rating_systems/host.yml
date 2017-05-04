@@ -1,0 +1,13 @@
+---
+subject: host
+active: true
+transactable_type: Car
+
+rating_questions:
+  - text: Example question?
+
+rating_hints:
+  - value: '1'
+    description: Bad
+  - value: '2'
+    description: Good

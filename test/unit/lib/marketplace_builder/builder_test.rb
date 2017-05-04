@@ -2,14 +2,14 @@
 require 'test_helper'
 
 class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
-  EXAMPLE_MARKETPLACE_PATH = "#{Rails.root}/test/unit/lib/marketplace_builder/example_marketplace/"
+  MPBUILDER_EXAMPLE_MARKETPLACE_PATH = "#{Rails.root}/test/unit/lib/marketplace_builder/example_marketplace/"
 
   context 'marketplace builder' do
     setup do
       stub_request(:get, 'https://example_url.jpg').to_return(status: 200)
       @instance = create(:instance)
 
-      MarketplaceBuilder::Builder.new(@instance.id, EXAMPLE_MARKETPLACE_PATH, MarketplaceBuilder::Loader::AVAILABLE_CREATORS_LIST).execute!
+      MarketplaceBuilder::Builder.new(@instance.id, MPBUILDER_EXAMPLE_MARKETPLACE_PATH, MarketplaceBuilder::Loader::AVAILABLE_CREATORS_LIST).execute!
       @instance.reload
     end
 

@@ -1,0 +1,10 @@
+name: Booking
+withdraw_invitation_when_reject: true
+transactable_types:
+  - Car
+
+form_components:
+  - type: reservation_attributes
+    name: Booking form
+    fields:
+      - reservation: guest_notes
