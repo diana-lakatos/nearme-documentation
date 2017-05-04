@@ -31,7 +31,7 @@ class ActionTypeForm < BaseForm
         property :"#{field}", options[:property_options].presence || {}
         validates :"#{field}", options[:validation] if options[:validation].present?
       end
-      end
+    end
   end
 
   def enabled?

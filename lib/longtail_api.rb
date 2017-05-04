@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class LongtailApi
-  def initialize(endpoint:, page_slug:, campaigns:)
+  def initialize(endpoint:, page_slug:, campaigns: [])
     @page = Page.where(slug: page_slug,
                        theme_id: PlatformContext.current.theme.id)
                 .first_or_create!(path: page_slug.humanize, content: generic_page_content)

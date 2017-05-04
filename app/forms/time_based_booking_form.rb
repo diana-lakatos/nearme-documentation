@@ -1,45 +1,44 @@
 # frozen_string_literal: true
 class TimeBasedBookingForm < ActionTypeForm
-  model "transactable/time_based_booking"
+  model 'transactable/time_based_booking'
 
   property :type, default: 'Transactable::TimeBasedBooking'
   property :availability_template
   property :minimum_booking_minutes
+  property :minimum_booking_hours, virtual: true
   property :availability_template_id,
-    populator: ->(fragment:, **){
-      if fragment.to_i > 0
-        self.availability_template_id = fragment
-      else
-        return skip!
-      end
-    }
+           populator: ->(fragment:, **) {
+             if fragment.to_i > 0
+               self.availability_template_id = fragment
+             else
+               return skip!
+             end
+           }
 
   class << self
     def decorate(configuration)
       Class.new(self) do
-
         super
-
         if (availability_configuration = configuration.delete(:availability_templates)).present?
           validation = availability_configuration.delete(:validation)
           validates :availability_templates, validation if validation.present?
           validate :availability_rules_minimum_booking_minutes
           collection :availability_templates, form: AvailabilityTemplateForm.decorate(availability_configuration),
-                                prepopulator: ->(option) { self.availability_templates << get_availability_template_object if self.availability_templates.blank? },
-                                populator: -> (fragment:, **) {
-                                                    item = availability_templates.find { |at| at.id.to_s == fragment['id'].to_s && fragment['id'].present? }
-                                                    if fragment['_destroy'] == '1'
-                                                     availability_templates.delete(item)
-                                                     return skip!
-                                                   end
-                                                   if item
-                                                      model.availability_template = item.model
-                                                      item
-                                                    else
-                                                      self.availability_template = model.availability_templates.new
-                                                      availability_templates.append(self.availability_template)
-                                                    end
-                                                   }
+                                              prepopulator: ->(_option) { availability_templates << get_availability_template_object if availability_templates.blank? },
+                                              populator: ->(fragment:, **) {
+                                                           item = availability_templates.find { |at| at.id.to_s == fragment['id'].to_s && fragment['id'].present? }
+                                                           if fragment['_destroy'] == '1'
+                                                             availability_templates.delete(item)
+                                                             return skip!
+                                                          end
+                                                           if item
+                                                             model.availability_template = item.model
+                                                             item
+                                                           else
+                                                             self.availability_template = model.availability_templates.new
+                                                             availability_templates.append(availability_template)
+                                                            end
+                                                         }
         end
       end
     end
@@ -76,8 +75,9 @@ class TimeBasedBookingForm < ActionTypeForm
     end
   end
 
-  def minimum_booking_minutes
-    super.presence || minimum_booking_hours.to_f * 60
+  def minimum_booking_hours=(hours)
+    super(hours.to_f)
+    self.minimum_booking_minutes = hours.to_f * 60
   end
 
   def minimum_booking_hours
