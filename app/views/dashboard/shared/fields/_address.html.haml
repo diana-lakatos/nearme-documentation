@@ -7,7 +7,7 @@
     - if defined?(field_hint) && field_hint.present?
       = hint_button field_hint
 
-  = f.text_field :address, :'data-behavior' => 'address-autocomplete', placeholder: t('locations.address_placeholder'), 'data-address-input' => true, class: 'form-control', :'data-precise-search' => current_instance.precise_search?
+  = f.text_field :address, :'data-behavior' => 'address-autocomplete', placeholder: t('locations.address_placeholder'), 'data-address-input' => true, class: 'form-control', :'data-precise-search' => current_instance.precise_search?, :'data-restrict-countries' => (defined?(restrict_countries) ? restrict_countries : []).to_json
 
   - if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)
     %span.help-block

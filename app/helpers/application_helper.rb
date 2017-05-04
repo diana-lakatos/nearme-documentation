@@ -473,4 +473,8 @@ module ApplicationHelper
   def original_url
     request.original_url.try(:force_encoding, "UTF-8")
   end
+
+  def allowed_country_codes
+    Country.where('name in (?)', PlatformContext.current.instance.allowed_countries).map { |c| c.iso.downcase }
+  end
 end

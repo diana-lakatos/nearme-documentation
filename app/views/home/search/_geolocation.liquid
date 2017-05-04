@@ -6,7 +6,7 @@
         <img src="{{ "spinner.gif" | image_url }}" alt="Spinner" />
     </div>
   </div>
-  <input class="query" name="loc" placeholder="{{ transactable_type.geolocation_placeholder }}" type="text" />
+  <input class="query" name="loc" placeholder="{{ transactable_type.geolocation_placeholder }}" type="text" data-restrict-countries="{{ transactable_type.restrict_countries | json | raw_escape_string }}" />
 </div>
 <input id="lat" name="lat" type="hidden" value>
 <input id="lng" name="lng" type="hidden" value>
