@@ -34,7 +34,7 @@
 
 :javascript
   var plaid_options = {
-    env: "#{current_instance.test_mode? ? 'tartan' : 'production'}",
+    env: "#{payment_method.environment}",
     name: "#{PlatformContext.current.instance.name}",
     key: '#{payment_method.key}',
     auth_with: "#{t('payment_source.authorize_with')}"

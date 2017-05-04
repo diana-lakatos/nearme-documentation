@@ -121,8 +121,10 @@ class BankAccount < ActiveRecord::Base
   end
 
   def create_account_with_plaid
-    user = Plaid::User.exchange_token(public_token, account_id)
-    create_source(user.stripe_bank_account_token)
+    exchange_response = payment_method.plaid_client.item.public_token.exchange(public_token)
+    stripe_response = payment_method.plaid_client.processor.stripe.bank_account_token.create(exchange_response['access_token'], account_id)
+    bank_account_token = stripe_response['stripe_bank_account_token']
+    create_source(bank_account_token)
   end
 
   def create_source(token)

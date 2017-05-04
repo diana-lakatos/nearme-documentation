@@ -104,7 +104,7 @@
 
             = p.fields_for :settings, OpenStruct.new(p.object.settings) do |live|
               - p.object.class.settings.each do |setting, options|
-                = live.input setting, as: :string,label: options[:label], input_html: {class: 'form-control', required: false }
+                = live.input setting, collection: options[:collection], label: options[:label], input_html: {class: 'form-control', required: false }
 
     - if @payment_gateway.config_settings.present?
       .content-container
@@ -157,4 +157,3 @@
 
 - content_for :domready do
   $(document).trigger('init:paymentgateway.nearme', ['#edit-payment-gateway'])
-
