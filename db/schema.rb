@@ -1641,6 +1641,20 @@ ActiveRecord::Schema.define(version: 20170503134046) do
 
   add_index "marketplace_errors", ["instance_id", "error_type", "message_digest"], name: "errors_type_digest_instance", using: :btree
 
+  create_table "marketplace_releases", force: :cascade do |t|
+    t.string   "name"
+    t.string   "creator"
+    t.string   "zip_file"
+    t.integer  "status"
+    t.text     "error"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marketplace_releases", ["instance_id"], name: "index_marketplace_releases_on_instance_id", using: :btree
+
   create_table "merchant_account_owners", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "merchant_account_id"
