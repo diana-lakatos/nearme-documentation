@@ -151,8 +151,7 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
     @payment = @order.payment
     assert @payment.paid?
     relog_to_guest
-    charge = @payment.charges.last
-    assert_equal 43.75.to_money(@transactable.currency), charge.amount_money
+    assert @payment.charges.last.success?
     @payment_transfer = @order.company.payment_transfers.last
     assert_equal 1, @order.company.payment_transfers.count
     assert @payment_transfer.pending?

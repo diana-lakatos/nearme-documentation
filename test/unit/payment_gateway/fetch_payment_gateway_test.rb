@@ -38,7 +38,7 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
       @reservation.charge_and_confirm!
     end
     @reservation.reload
-    assert @reservation.payment.authorized?
+    assert @reservation.payment.failed?
     @charge = @reservation.payment.charges.last
     refute @charge.success
     assert_equal OpenStruct.new(success?: false, message: parse_params(FAILED_FETCH_RESPONSE)), @charge.response

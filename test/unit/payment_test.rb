@@ -64,7 +64,8 @@ class PaymentTest < ActiveSupport::TestCase
 
   context 'authorized payment' do
     setup do
-      @payment = FactoryGirl.create(:authorized_payment)
+      @company = FactoryGirl.build(:company)
+      @payment = FactoryGirl.build(:authorized_payment, company: @company)
       @host = @payment.payable.owner
     end
 
@@ -108,8 +109,26 @@ class PaymentTest < ActiveSupport::TestCase
       @payment.payment_gateway.gateway.stubs(:capture).raises(ResponseError.new(response))
       @payment.credit_card_attributes = FactoryGirl.attributes_for(:credit_card_attributes)
       refute @payment.capture!
+      assert @payment.errors.full_messages.include?('Failed with 500 Internal server error')
       refute @payment.paid?
-      assert @payment.errors[:base].include?('Failed with 500 Internal server error')
+    end
+
+    should 'require transfer for imediate payment' do
+      @payment.stubs(:immediate_payout?).returns(false)
+      refute @payment.send(:should_create_transfer?)
+
+      @payment.stubs(:immediate_payout?).returns(true)
+      assert @payment.send(:should_create_transfer?)
+
+      @payment.stubs(:direct_token).returns('direct_token')
+      refute @payment.send(:should_create_transfer?)
+    end
+
+    should 'create transfer for successful imediate payment' do
+      stub_active_merchant_interaction(success?: true, params: SUCCESS_RESPONSE)
+      @payment.stubs(:immediate_payout?).returns(true)
+      assert @payment.capture!
+      assert_equal [@payment], PaymentTransfer.last.payments
     end
   end
 

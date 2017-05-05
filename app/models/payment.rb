@@ -7,7 +7,7 @@ class Payment < ActiveRecord::Base
   scoped_to_platform_context
 
   attr_accessor :express_checkout_redirect_url, :payment_response_params, :customer,
-                :recurring, :rejection_form, :chosen_credit_card_id, :public_token, :account_id, :redirect_to_gateway
+                :recurring, :rejection_form, :public_token, :account_id, :redirect_to_gateway
 
   # === Associations
 
@@ -61,6 +61,7 @@ class Payment < ActiveRecord::Base
   }
 
   accepts_nested_attributes_for :payment_source
+  accepts_nested_attributes_for :charges
 
   before_validation do |_p|
     self.payer ||= payable.try(:owner)
@@ -92,11 +93,23 @@ class Payment < ActiveRecord::Base
   delegate :cancelled_by_guest?, :cancelled_by_host?, to: :payable, allow_nil: true
 
   state_machine :state, initial: :pending do
-    event :mark_as_authorized do transition [:pending, :voided] => :authorized; end
-    event :mark_as_paid       do transition [:pending, :authorized] => :paid; end
-    event :mark_as_voided     do transition [:authorized, :paid] => :voided; end
-    event :mark_as_refuneded  do transition paid: :refunded; end
-    event :mark_as_failed     do transition any => :failed; end
+    after_transition any => :failed, do: :fail!
+
+    event :mark_as_authorized do
+      transition [:pending, :voided] => :authorized
+    end
+    event :mark_as_paid do
+      transition [:pending, :failed, :authorized] => :paid
+    end
+    event :mark_as_voided do
+      transition [:authorized, :paid] => :voided
+    end
+    event :mark_as_refuneded do
+      transition paid: :refunded
+    end
+    event :mark_as_failed do
+      transition any => :failed
+    end
   end
 
   # TODO: now as we call that on Payment object there is no need to _payment?, instead payment.manual?
@@ -225,22 +238,28 @@ class Payment < ActiveRecord::Base
 
   # pay_with!
   # - capture (needs prior authorization) or purchase
-
+  # @return [Boolean] true if paid
   def pay_with!
-    return false unless block_given?
     return true if paid?
     return mark_as_paid! if manual_payment? || total_amount_cents.zero?
-    return false unless active_merchant_payment?
-    return false unless valid?
+    return false unless active_merchant_payment? || valid?
 
-    response = yield
+    # block invokes captures or purchase method that is processed by ActiveMerchant
+    # and returns ActiveMerchant response
+    process_response(yield)
 
-    apply_pg_fee(response)
-    create_transfer(response) if response.try(:success?) && immediate_payout?
-    self.external_id ||= response.params.try('[]', 'id')
-    charges.create!(charge_attributes(response))
-    errors.add(:base, response.message) if response.try(:message)
-    response.success? ? mark_as_paid! : touch(:failed_at) && false
+    paid?
+  end
+
+  def process_response(active_merchant_response)
+    response = ActiveMerchant::ResponseProcessor.new(active_merchant_response, payment_gateway, merchant_account)
+    update_attributes(response.payment_attributes)
+
+    # For connected payments we are creating PaymentTransfer object
+    # we should consider moving that operation to webhook as we already do for direct_payment
+    create_transfer(response.transfer_id) if should_create_transfer?
+
+    errors.add(:base, response.message)
   end
 
   # refund!(amount)
@@ -351,7 +370,7 @@ class Payment < ActiveRecord::Base
   def fetch
     return unless payment_gateway.gateway.respond_to?(:find_payment)
 
-    payment_gateway.find_payment(authorization_token, merchant_account.try(:external_id))
+    payment_gateway.find_payment(external_id, merchant_account.try(:external_id))
   end
 
   def can_activate?
@@ -540,43 +559,24 @@ class Payment < ActiveRecord::Base
     options.with_indifferent_access
   end
 
-  def charge_attributes(response)
-    {
-      response: response,
-      success: response.success?,
-      amount: total_amount.cents,
-      currency: currency,
-      user_id: payer_id,
-      payment_gateway_mode: payment_gateway_mode
-    }
-  end
-
-  def create_transfer(response)
+  def should_create_transfer?
     # If direct_token exists that means that we want to create aggregated
     # transfer for many charges, this happens when Stripe send us webhook.
-    return if direct_token.present?
+    immediate_payout? && direct_token.blank?
+  end
 
-    company.payment_transfers.create!(
+  def create_transfer(transfer_id = nil)
+    create_payment_transfer(
+      company: company,
       payments: [self],
       payment_gateway_mode: payment_gateway_mode,
       payment_gateway_id: payment_gateway_id,
-      token: response.params.try('[]', 'transfer')
+      token: transfer_id
     )
-  end
-
-  # apply_pg_fee
-  # - sets payment_gateway_fee_cents based on balance response, this currently works only for Stripe
-  def apply_pg_fee(response)
-    return unless payment_gateway.respond_to?(:find_balance)
-    return if response.blank? || response.params.blank? || (balance_id = response.params['balance_transaction']).blank?
-
-    balance_response = payment_gateway.find_balance(balance_id, merchant_account.try(:custom_options))
-    self.payment_gateway_fee_cents = balance_response.payment_gateway_fee_cents
   end
 
   # @return [Integer, nil] customer_id of Merchant Credit Card
   # user when Merchant CC is charged for Braintree Payout
-
   def merchant_subscription_customer_id
     merchant_account.try(:payment_subscription).try(:credit_card).try(:customer_id)
   end
@@ -630,5 +630,9 @@ class Payment < ActiveRecord::Base
   def require_payment_source?
     payment_gateway && payment_gateway.supports_payment_source_store? &&
       new_record? && !payment_method.manual? && !payment_method.free?
+  end
+
+  def fail!
+    touch(:failed_at)
   end
 end

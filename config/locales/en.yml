@@ -1790,9 +1790,11 @@ en:
 
     user_recurring_bookings:
       states:
+        failed: "Failed"
         pending: "Pending"
         authorized: "Authorized"
         paid: "Paid"
+        unpaid: "Unpaid"
         voided: "Voided"
         refunded: "Refunded"
       title: "Subscriptions (%{count})"
