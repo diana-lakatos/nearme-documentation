@@ -14,7 +14,7 @@
   {% if g.feed.has_next_page %}
     {% if current_user != blank %}
       <p class="more-a" data-see-more="true">
-        {% assign see_more_activity_feed_path = 'see_more_activity_feed_path' | generate_url: id: g.feed.owner_id, type: g.feed.owner_type %}
+        {% assign see_more_activity_feed_path = 'see_more_activity_feed_path' | generate_url: id: g.feed.owner_id, type: g.feed.owner_type, user_feed: include_user_feed %}
         <button type="button" name="button" data-url="{{ see_more_activity_feed_path }}" data-next-page="{{ g.feed.events_next_page }}">
           {{ 'see_more' | translate }}
         </button>

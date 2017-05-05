@@ -9,7 +9,7 @@ class ActivityFeedService
   end
 
   def events
-    @events ||= @user_feed.blank? ? events_without_user_feed : events_with_user_feed
+    @events ||= @user_feed.blank? ? events_with_followed : events_with_user_feed
   end
 
   def owner_id
@@ -46,8 +46,7 @@ class ActivityFeedService
     ActivityFeedService::Helpers::EVENTS_PER_PAGE
   end
 
-
-  def events_without_user_feed
+  def events_with_followed
     followed_identifiers = ActivityFeedSubscription.where(follower: @object).pluck(:followed_identifier)
     itself_identifier = ActivityFeedService::Helpers.object_identifier_for(@object)
     followed_identifiers.push(itself_identifier)
