@@ -1,0 +1,4 @@
+{% assign form_object = f %}
+{% assign transactable_starts_at = f.object.transactable.properties.trip_start_date  %}
+
+{% input starts_at, as: hidden, input_html-value: @transactable_starts_at %}

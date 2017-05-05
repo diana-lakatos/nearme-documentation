@@ -13,6 +13,7 @@ class Transactable < ActiveRecord::Base
 
   include Impressionable
   include Searchable
+
   # FIXME: disabled Sitemap updates. Needs to be optimized.
   # include SitemapService::Callbacks
   # == Helpers
@@ -299,6 +300,7 @@ class Transactable < ActiveRecord::Base
     event :cancel                 do transition [:in_progress, :pending] => :cancelled; end
 
     before_transition in_progress: :cancelled, do: :check_expenses
+    before_transition in_progress: :cancelled, do: :cancel_orders
 
     after_transition any => [:cancelled], do: :decline_reservations
     after_transition any => [:completed], do: :archive_orders
@@ -735,6 +737,14 @@ class Transactable < ActiveRecord::Base
 
   def set_seek_collaborators
     self.seek_collaborators = true
+  end
+
+  def cancel_orders
+    return false if cancelled?
+
+    orders.each do |order|
+      errors.add :base, order.errors unless order.user_cancel
+    end
   end
 
   def check_expenses

@@ -2,6 +2,7 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
   before_filter :set_theme, except: [:change_state]
   before_filter :translation_key
   before_filter :set_breadcrumbs
+  before_filter :set_cancellation_policy_conditions, only: [:new, :edit, :create, :update]
 
   def index
   end
@@ -102,5 +103,9 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
     params.require(params_key).permit(secured_params.transactable_type).tap do |whitelisted|
       whitelisted[:custom_csv_fields] = params[params_key][:custom_csv_fields].map { |el| el = el.split('=>'); { el[0] => el[1] } } if params[params_key][:custom_csv_fields]
     end
+  end
+
+  def set_cancellation_policy_conditions
+    @cancellation_conditions = CancellationPolicyCondition.all.to_json(:only => [:name, :translated_name, :variables, :query, :id])
   end
 end

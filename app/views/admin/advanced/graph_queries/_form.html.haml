@@ -1,6 +1,6 @@
 = stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/graphiql/0.9.3/graphiql.min.css'
 
-= simple_form_for @graph_query, as: :graph_query, url: @graph_query.persisted? ? admin_advanced_graph_query_path(@graph_query) : admin_advanced_graph_queries_path, method: @graph_query.persisted? ? :put : :post do |f|
+= simple_form_for [:admin, :advanced, @graph_query] do |f|
   .content-container
     %h4
       = link_to 'Manage graph query', admin_advanced_graph_queries_url

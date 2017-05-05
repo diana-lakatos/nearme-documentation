@@ -20,7 +20,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def enquirer_cancel
-    if @order.enquirer_cancelable?
+    if @order.enquirer_cancellable?
       if @order.user_cancel
         # we want to make generic workflows probably. Maybe even per TT [ many to many ]
         WorkflowStepJob.perform("WorkflowStep::#{@order.class.workflow_class}Workflow::EnquirerCancelled".constantize, @order.id, as: current_user)

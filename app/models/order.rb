@@ -43,6 +43,7 @@ class Order < ActiveRecord::Base
   has_many :waiver_agreements, as: :target
   has_many :transactables, through: :transactable_line_items, source: :line_item_source, source_type: 'Transactable'
   has_many :order_items, class_name: 'RecurringBookingPeriod', dependent: :destroy, foreign_key: :order_id
+  has_many :cancellation_policies, as: :cancellable
 
   accepts_nested_attributes_for :billing_address
   accepts_nested_attributes_for :user
@@ -57,10 +58,12 @@ class Order < ActiveRecord::Base
   before_validation :remove_empty_documents
   before_validation :set_owner, :skip_validation_for_custom_attributes, :set_owner_for_payment_documents
 
+  after_create :set_cancellation_policy
+
   state_machine :state, initial: :inactive do
     after_transition inactive: :unconfirmed, do: :activate_order!
     after_transition unconfirmed: :confirmed, do: [:set_confirmed_at, :set_archived_at]
-    after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at, :schedule_refund, :cancel_deliveries]
+    after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:mark_as_archived!, :set_cancelled_at, :perform_cancel_actions, :cancel_deliveries]
     after_transition unconfirmed: [:cancelled_by_host], do: [:mark_as_archived!]
     after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:mark_as_archived!, :schedule_void]
     after_transition any => [:rejected] { |o| WorkflowStepJob.perform("WorkflowStep::#{o.class.workflow_class}Workflow::Rejected".constantize, o.id, as: o.creator) }
@@ -68,7 +71,7 @@ class Order < ActiveRecord::Base
     event :activate                 do transition inactive: :unconfirmed; end
     event :confirm                  do transition unconfirmed: :confirmed; end
     event :reject                   do transition unconfirmed: :rejected; end
-    event :host_cancel              do transition [:inactive, :unconfirmed, :confirmed] => :cancelled_by_host, if: ->(order) { order.cancelable? }; end
+    event :host_cancel              do transition [:inactive, :unconfirmed, :confirmed] => :cancelled_by_host, if: ->(order) { order.cancellable? }; end
     event :user_cancel              do transition [:inactive, :unconfirmed, :confirmed] => :cancelled_by_guest, if: ->(reservation) { reservation.archived_at.nil? }; end
     event :expire                   do transition unconfirmed: :expired; end
     event :completed                do transition confirmed: :completed; end
@@ -186,9 +189,22 @@ class Order < ActiveRecord::Base
     end.presence || DEFAULT_DASHBOARD_TABS
   end
 
-  def schedule_refund(_transition, run_at = Time.zone.now)
-    PaymentRefundJob.perform_later(run_at, payment.id) if payment.paid? && !skip_payment_authorization?
+  def perform_cancel_actions(_transition, run_at = Time.zone.now)
+    PaymentRefundJob.perform_later(run_at, payment.id, refund_amount_cents) if payment.try(:paid?) && refund_amount_cents > 0
+    ChargeCancellationPenaltyJob.perform_later(run_at, id, penalty_amount_cents) if payment && !payment.paid? && penalty_amount_cents > 0
     true
+  end
+
+  def penalty_amount_with_service_fee_cents
+    refund_amount_cents + (refund_amount_cents * service_fee_guest_percent.to_f / BigDecimal(100))
+  end
+
+  def refund_amount_cents
+    cancellation_policies.refunds.map(&:amount_cents).sum
+  end
+
+  def penalty_amount_cents
+    cancellation_policies.penalties.map(&:amount_cents).sum
   end
 
   # This is workaround to use STI class with routing Rails standards
@@ -352,6 +368,19 @@ class Order < ActiveRecord::Base
     super.presence || creator
   end
 
+  def cancellable?
+    return false if cancelled? || archived? || rejected?
+    return true if cancellation_policies.allowed.blank?
+
+    cancellation_policies.allowed.all?(&:conditions_met?)
+  end
+
+  # @return [Boolean] whether the penalty charge applies to this order
+  def penalty_charge_apply?
+    return false if cancellation_policies.penalties.blank?
+    cancellation_policies.penalties.any?(&:conditions_met?)
+  end
+
   # ----- SETTERS ---------
   def set_cancelled_at
     touch(:cancelled_at)
@@ -513,19 +542,9 @@ class Order < ActiveRecord::Base
     raise NotImplementedError
   end
 
-  # @return [Boolean] whether the order can be cancelled
-  def cancelable?
-    raise NotImplementedError
-  end
-
-  # @return [Boolean] whether the penalty charge applies to this order
-  def penalty_charge_apply?
-    raise NotImplementedError
-  end
-
   # @return [Boolean] whether the order is in a state where it can be
   #   cancelled by the enquirer
-  def enquirer_cancelable
+  def enquirer_cancellable
     raise NotImplementedError
   end
 
@@ -541,7 +560,20 @@ class Order < ActiveRecord::Base
     activate! if payment && payment.can_activate?
   end
 
+
+  def to_liquid
+    @drop ||= OrderDrop.new(self)
+  end
   private
+
+  def set_cancellation_policy
+    if transactable_pricing && transactable_pricing.action && transactable_pricing.action.cancellation_policies.any?
+      transactable_pricing.action.cancellation_policies.each do |cp|
+        self.cancellation_policies << cp.dup
+      end
+    end
+    true
+  end
 
   def skip_validation_for_custom_attributes
     self.skip_custom_attribute_validation = !checkout_update

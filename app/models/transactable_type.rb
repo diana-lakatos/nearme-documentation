@@ -55,6 +55,7 @@ class TransactableType < ActiveRecord::Base
   has_many :instance_views, through: :transactable_type_instance_views
   has_many :transactables, dependent: :destroy, foreign_key: 'transactable_type_id'
   has_many :availability_templates, dependent: :destroy, foreign_key: 'transactable_type_id'
+
   belongs_to :default_availability_template, class_name: 'AvailabilityTemplate'
 
   belongs_to :instance

@@ -40,7 +40,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
     end
 
     should 'use test mode for test charge' do
-      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company))
+      payment = FactoryGirl.create(:paid_payment, payment_gateway_mode: nil, payment_method: @payment_method, company: create(:company))
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
 
@@ -53,7 +53,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
 
     should 'use live mode for live charge' do
       PaymentGateway::PaypalExpressChainPaymentGateway.any_instance.stubs(:mode).returns('live')
-      payment = FactoryGirl.create(:paid_payment, payment_method: @payment_method, company: create(:company))
+      payment = FactoryGirl.create(:paid_payment, payment_gateway_mode: nil, payment_method: @payment_method, company: create(:company))
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
 
@@ -61,6 +61,7 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
 
       assert payment.reload.refunded?
       assert_equal 2, payment.refunds.successful.count
+      assert_equal 'live', payment.refunds.last.payment_gateway_mode
       assert_equal payment.payment_gateway_mode, payment.refunds.last.payment_gateway_mode
     end
 
@@ -74,8 +75,8 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
       assert_equal 2, payment.refunds.successful.count
       assert_equal payment.payment_gateway_mode, payment.refunds.last.payment_gateway_mode
       # We have 2 refunds first from MPO to seller (service_fee) second total amount from Seller to Guest
-      assert_equal payment.payment_transfer.total_service_fee + payment.amount, Money.new(payment.refunds.map(&:amount).sum)
-      assert_equal payment.amount, Money.new(payment.refunds.guest.successful.last.amount)
+      assert_equal payment.payment_transfer.total_service_fee + payment.payable.total_amount, Money.new(payment.refunds.map(&:amount).sum)
+      assert_equal payment.payable.total_amount, Money.new(payment.refunds.guest.successful.last.amount)
       assert_equal payment.payment_transfer.total_service_fee, Money.new(payment.refunds.host.successful.last.amount)
     end
 
@@ -101,7 +102,6 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
       payment = FactoryGirl.create(:paid_payment,
                                    payment_method: @payment_method,
                                    company: create(:company),
-                                   cancellation_policy_penalty_percentage: 50,
                                    service_fee_amount_host_cents: 100)
 
       # Needed to imitate "imidiate payout" where we create payment transfer directly after payment is placed
@@ -112,8 +112,8 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
       assert_equal 100, payment.payment_transfer.service_fee_amount_host_cents
       # 50% cancellation policy apply + service fee is not refundable
       # 50% of 100$ subtotal should be refunded to guest, the rest 60$ is left on HOST account!
-      assert_equal payment.amount_to_be_refunded, payment.refunds.guest.successful.first.amount_cents
-      assert_equal 50_00, payment.amount_to_be_refunded
+      assert_equal payment.payable.refund_amount_cents, payment.refunds.guest.successful.first.amount_cents
+      assert_equal payment.payable.subtotal_amount_cents * 0.5, payment.payable.refund_amount_cents
     end
   end
 
@@ -125,6 +125,9 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
     payout.payout_successful(payout_response)
 
     assert payment.paid?
+
+    create_cancellation_policies(payment.payable, { guest_refund_options: { penalty_factor: 0.5 } })
+
     payment.payable.send(refund_with)
   end
 end

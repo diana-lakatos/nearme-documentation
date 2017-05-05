@@ -21,6 +21,7 @@
           %th= t('instance_admin.manage.payments.payer')
           %th= t('instance_admin.manage.payments.state')
           %th= t('instance_admin.manage.payments.payment_gateway')
+          %th= t('instance_admin.manage.payments.payment_method')
           %th= t('instance_admin.manage.payments.created_at')
           %th
             %b= t('instance_admin.manage.payments.payment_amount')
@@ -37,6 +38,7 @@
           %td= payment.payer ? link_to(payment.payer.name_with_state, edit_instance_admin_manage_user_path(payment.payer)) : "-  "
           %td= payment.state.try(:capitalize)
           %td= payment.payment_gateway.try(:name)
+          %td= payment.payment_method.try(:name)
           %td= l(payment.created_at, format: :long)
           %td
             %b= render_money(payment.total_amount)

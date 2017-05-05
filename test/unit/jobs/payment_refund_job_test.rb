@@ -6,13 +6,13 @@ class PaymentRefundJobTest < ActiveSupport::TestCase
     payment = FactoryGirl.create(:paid_payment)
     PaymentGateway.any_instance.expects(:gateway_refund).returns(OpenStruct.new(success?: false)).times(3)
     MarketplaceErrorLogger::DummyLogger.any_instance.expects(:log_issue).once
-    payment.refund!
+    payment.refund!(payment.total_amount_cents)
   end
 
   should 'refund correctly' do
     stub_active_merchant_interaction
     payment = FactoryGirl.create(:paid_payment)
-    PaymentRefundJob.perform(payment.id)
+    PaymentRefundJob.perform(payment.id, payment.total_amount_cents)
     assert payment.reload.refunded?
   end
 end

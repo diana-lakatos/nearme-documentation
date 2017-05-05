@@ -11,24 +11,17 @@ class TransactableType::ActionType < ActiveRecord::Base
   has_many :reservations
   has_many :pricings, as: :action, inverse_of: :action, dependent: :destroy
   has_many :transactable_action_types, class_name: 'Transactable::ActionType', foreign_key: :transactable_type_action_type_id
+  has_many :cancellation_policies, as: :cancellable
 
   delegate :default_currency, :hide_location_availability?, to: :transactable_type, allow_nil: true
 
-  validates :cancellation_policy_hours_for_cancellation,
-            :cancellation_policy_penalty_percentage,
-            presence: { if: :cancellation_policy_enabled }
-  validates :cancellation_policy_penalty_percentage,
-            inclusion: { in: 0..100, allow_nil: true,
-                         message: 'must be between 0 and 100', if: :cancellation_policy_enabled }
-
-  validates :hours_to_expiration, :minimum_booking_minutes,
-            :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage,
-            :cancellation_policy_penalty_hours, :minimum_lister_service_fee,
+  validates :hours_to_expiration, :minimum_booking_minutes, :minimum_lister_service_fee,
             numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
   validates :send_alert_hours_before_expiry_hours, numericality: { greater_than_or_equal_to: 0, allow_nil: false }
 
   accepts_nested_attributes_for :pricings, allow_destroy: true, reject_if: ->(attrs) { attrs[:number_of_units].blank? && attrs[:unit].blank? }
+  accepts_nested_attributes_for :cancellation_policies, allow_destroy: true
 
   monetize :minimum_lister_service_fee_cents, with_model_currency: :default_currency
 

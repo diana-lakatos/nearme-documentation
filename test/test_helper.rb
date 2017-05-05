@@ -204,6 +204,20 @@ ActiveSupport::TestCase.class_eval do
   def wait_for_elastic_index
     sleep 2
   end
+
+  def build_default_cancellation_policy_for(record)
+    if record.instance_of?(Transactable)
+      record.action_types.where(type: 'Transactable::TimeBasedBooking').each do |at|
+        create_cancellation_policies(at.transactable_type_action_type)
+      end
+    end
+  end
+end
+
+def create_cancellation_policies(cancellable, options = {})
+  FactoryGirl.create(:cancel_allowed_cellation_policy, cancellable: cancellable)
+  FactoryGirl.create(:cancelled_by_host_refund_cellation_policy, (options[:host_refund_options] || {}).reverse_merge(cancellable: cancellable) )
+  FactoryGirl.create(:cancelled_by_guest_refund_cellation_policy,  (options[:guest_refund_options] || {}).reverse_merge(cancellable: cancellable) )
 end
 
 ActionController::TestCase.class_eval do

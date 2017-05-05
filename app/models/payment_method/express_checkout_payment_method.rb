@@ -5,4 +5,8 @@ class PaymentMethod::ExpressCheckoutPaymentMethod < PaymentMethod
     PaypalAccount
   end
 
+  def name
+    "PayPal Express"
+  end
+
 end

@@ -44,7 +44,7 @@ class OrderDrop < BaseDrop
   #   @return [DateTime] Time when the order has been transitioned to archived
   # @!method state
   #   @return [String] state of the current order
-  # @!method cancelable?
+  # @!method cancellable?
   #   @return [Boolean] whether the order can be cancelled
   # @!method archived?
   #   @return [Boolean] whether the order has been moved to the archived state
@@ -64,7 +64,7 @@ class OrderDrop < BaseDrop
   #   @return [String] total units as a text (e.g. "2 nights")
   #     the name is taken from the translations 'reservations.item.one' (for singular)
   #     and 'reservations.item.other' (for plural)
-  # @!method enquirer_cancelable
+  # @!method enquirer_cancellable
   #   @return [Boolean] whether the order is in a state where it can be
   #     cancelled by the enquirer
   # @!method enquirer_editable
@@ -73,6 +73,8 @@ class OrderDrop < BaseDrop
   # @!method transactable
   #   @return [TransactableDrop] Transactable object being ordered
   # @!method cancelled_at
+  #   @return [DateTime] Time when the order was cancelled
+  # @!method starts_at
   #   @return [DateTime] Time when the order was cancelled
   # @!method confirmed_at
   #   @return [DateTime] Time when the order was confirmed
@@ -92,6 +94,8 @@ class OrderDrop < BaseDrop
   # @!method inactive?
   #   @return [Boolean] whether the order is inactive (i.e. the initial state when the user just
   #     pressed on 'book'/'buy' without actually completing the order)
+  # @!method deliveries
+  #   @return [Array<DeliveryDrop>] deliveries array
   # @!method outbound
   #   @return [DeliveryDrop] outbound delivery for this order (contains information about the
   #     outbound delivery of the items - from the buyer to the seller)
@@ -120,14 +124,14 @@ class OrderDrop < BaseDrop
            :can_host_cancel?, :can_confirm?, :can_reject?,
            :paid?, :unconfirmed?, :confirmed?, :inactive?, :manual_payment?, :can_complete_checkout?,
            :can_approve_or_decline_checkout?, :has_to_update_credit_card?, :user_messages,
-           :archived_at, :state, :cancelable?, :archived?, :penalty_charge_apply?, :rejection_reason,
+           :archived_at, :state, :cancellable?, :archived?, :penalty_charge_apply?, :rejection_reason,
            :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_hours,
-           :created_at, :payment, :total_units_text, :enquirer_cancelable, :enquirer_editable,
-           :transactable, :cancelled_at, :confirmed_at, :recurring_booking_periods, :creator,
+           :created_at, :payment, :total_units_text, :enquirer_cancellable, :enquirer_editable,
+           :transactable, :cancelled_at, :starts_at, :confirmed_at, :recurring_booking_periods, :creator,
            :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing,
            :outbound, :inbound, :inbound_pickup_date, :outbound_pickup_date,
            :inbound_pickup_address_address, :outbound_return_address_address,
-           :quantity, :is_free_booking, :additional_line_items, to: :order
+           :quantity, :is_free_booking, :additional_line_items, :deliveries, to: :order
 
   def initialize(order)
     @source = @order = order.decorate
@@ -153,9 +157,19 @@ class OrderDrop < BaseDrop
     @order.total_amount.to_s
   end
 
+  # @return [String] the subtotal amount to be charged for this order
+  def subtotal_amount
+    @order.subtotal_amount.to_s
+  end
+
   # @return [MoneyDrop] total amount to be charged for this order as a MoneyDrop
   def total_amount_money
     @order.total_amount
+  end
+
+  # @return [MoneyDrop] subtotal amount to be charged for this order as a MoneyDrop
+  def subtotal_amount_money
+    @order.subtotal_amount
   end
 
   # @return [String] the total amount paid for all order items formatted
@@ -377,6 +391,16 @@ class OrderDrop < BaseDrop
   # @return [MoneyDrop] the service fee that is added to the base price to yield the final price to be paid
   def service_fee_amount_guest_money
     @order.service_fee_amount_guest
+  end
+
+  # @return [MoneyDrop] the service fee that is paid by host
+  def service_fee_amount_host_money
+    @order.service_fee_amount_host
+  end
+
+  # @return [MoneyDrop] the shipping price
+  def shipping_total_money
+    @order.shipping_total
   end
 
   # @return [MoneyDrop] total_payable_to_host from which shipping charges have been deducted

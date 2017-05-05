@@ -3,6 +3,8 @@
 = simple_form_for @order, as: :order,  url: @update_path || order_checkout_path(@order), html: { id: 'checkout-form', class: 'form-horizontal' } do |f|
   = f.hidden_field :step_control
 
+  = render :partial => 'checkout/custom', :locals => { f: f }
+
   - if f.object.reservation_type
 
     = f.simple_fields_for :user, f.object.user do |user|

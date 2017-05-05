@@ -100,14 +100,6 @@ class Purchase < Order
     archived_at.present?
   end
 
-  def cancelable?
-    true
-  end
-
-  def penalty_charge_apply?
-    false
-  end
-
   def remote_payment?
     false
   end

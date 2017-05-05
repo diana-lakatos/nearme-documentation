@@ -376,6 +376,48 @@ ActiveRecord::Schema.define(version: 20170503134046) do
     t.datetime "author_avatar_versions_generated_at"
   end
 
+  create_table "cancellation_policies", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "action_type"
+    t.text     "amount_rule"
+    t.text     "condition"
+    t.integer  "cancellable_id"
+    t.string   "cancellable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  create_table "cancellation_policies_conditions", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "cancellation_policy_id"
+    t.integer  "condition_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cancellation_policy_conditions", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.text     "name"
+    t.text     "query"
+    t.text     "variables"
+    t.text     "validators"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  create_table "cancellation_templates", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.text     "name"
+    t.text     "description"
+    t.integer  "cancelable_id"
+    t.string   "cancelable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string   "name",                     limit: 255
     t.integer  "position",                             default: 0
@@ -2889,6 +2931,7 @@ ActiveRecord::Schema.define(version: 20170503134046) do
     t.boolean  "both_side_confirmation",                     default: false
     t.boolean  "allow_drafts",                               default: false, null: false
     t.integer  "hours_to_order_item_approval"
+    t.integer  "cancellation_template_id"
   end
 
   add_index "transactable_type_action_types", ["instance_id", "transactable_type_id", "deleted_at"], name: "instance_tt_deleted_at_idx", using: :btree

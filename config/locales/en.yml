@@ -5,6 +5,7 @@ en:
       "user/seller_profile/properties": 'Property'
   buyer_profile:
     properties.: 'Property'
+
   activerecord:
     errors:
       models:
@@ -65,11 +66,22 @@ en:
           attributes:
             arn:
               taken: "You can not request more than one certificate for the same domain name within one hour."
+
+    # activerecord.models
     models:
       payment_gateway: "Payment gateway"
       payment_method: "Payment method"
       merchant_account_owner: "Additional owner"
+
+    # activerecord.attributes
     attributes:
+      cancellation_policy_condition:
+        name:
+          guest_cancel: "order is cancelled by guest"
+          host_cancel: "order is cancelled by host"
+          booking_started: "booking has started"
+          booking_not_started: "booking did not start"
+          one_day_to_booking_start: "more than a day to booking start"
       payment:
         payment_gateway: 'Payment gateway'
         payment_method: 'Payment method'
@@ -545,6 +557,7 @@ en:
         day_start: "Starting day"
         day_end: "Ending day"
 
+    # instance_admin.settings
     settings:
       configuration:
         master_lock: 'Master Lock'
@@ -762,6 +775,8 @@ en:
     file_upload:
       upload_file: "Upload File"
       search: "Search"
+
+    # instance_admin.manage
     manage:
       orders:
         number: Number
@@ -1085,6 +1100,7 @@ en:
       reservation_types:
         reservation_types: 'Reservation Types'
         new: 'New Reservation Type'
+      #instance_admin.manage.transactable_types
       transactable_types:
         transactable_types: "Transactable Types"
         form_components: "Form Components"
@@ -1097,6 +1113,7 @@ en:
         new: 'New Service Type'
         basic_configuration: "Basic Configuration"
         cancellation_policy: "Cancellation Policy"
+        cancellation_and_refund_policy: "Refund and Cancellation Policy"
         booking_settings: "Booking settings"
         pricing: "Pricing"
         pricing_options: "Pricing Options"
@@ -1646,6 +1663,7 @@ en:
     modal:
       close: 'Close modal'
 
+    # dashboard.nav
     nav:
       title: 'Dashboard'
       orders: 'My Orders'
@@ -2024,6 +2042,7 @@ en:
       product_not_saved: 'Product not saved.'
       address_errors_html: 'Please address the following <b>%{count}</b> errors in order to save your listing.'
 
+    # dashboard.transactables
     transactables:
       add_new_item: 'Add item'
       title:
@@ -2044,6 +2063,10 @@ en:
         night: "night"
       transactable_not_saved: 'Listing not saved.'
       address_errors_html: 'Please address the following <b>%{count}</b> errors in order to save your listing.'
+      cancel: Cancel Booking
+      abort: Abort
+      actions:
+        cancel: "Booking Cancel"
 
     offers:
       title:

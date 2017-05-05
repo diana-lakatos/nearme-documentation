@@ -143,10 +143,6 @@ class RecurringBookingPeriod < ActiveRecord::Base
     WorkflowStepJob.perform(WorkflowStep::OrderItemWorkflow::Updated, id)
   end
 
-  def penalty_charge_apply?
-    false
-  end
-
   private
 
   def send_creation_alert

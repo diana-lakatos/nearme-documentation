@@ -5,19 +5,6 @@
 2. Start every topic with h2 (##)
 3. Use lists
 
-
-## Payments with **Paid Link**
-
-1. Go to listing page: https://staging.near-me.com/locations/qa-san-francisco-ca-usa-14090/qa-25295 and "Book"
-2. Pay and choose **Bank of America**
-  * username:  plaid_test
-  * password:  plaid_good
-  * "You say tomato, I say ?": tomato
-
-## NearMe payments
-  * various payments accounts: https://near-me.atlassian.net/wiki/pages/viewpage.action?spaceKey=ENGINEERING&title=Test+Payments
-  * flow explained: https://docs.google.com/document/d/1vvRU46FMPVebDxzONeXUfMHWEtXgi5SBQ6_ZCkUxwT4/pub
-
 ## Capture backup from production
 
 1. Use `bin/nearme capture`
