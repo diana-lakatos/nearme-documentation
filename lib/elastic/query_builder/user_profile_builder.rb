@@ -17,6 +17,7 @@ module Elastic
 
       def query
         add default
+        add enabled
         add properties
         add legacy_categories
         add availability_exceptions
@@ -33,8 +34,15 @@ module Elastic
       # TODO: add profile-type categories only when there is related criteria
       def default
         [
-          { match: { 'user_profiles.enabled': true } },
           { match: { 'user_profiles.profile_type' => type } }
+        ]
+      end
+
+      def enabled
+        return unless @profile.search_only_enabled_profiles?
+
+        [
+          { match: { 'user_profiles.enabled': true } }
         ]
       end
 
