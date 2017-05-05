@@ -6,8 +6,8 @@
       = title ||= t(:title, scope: [:pricing, :availability])
     = f.simple_fields_for :availability_template do |at_form|
       = at_form.simple_fields_for :availability_rules do |af_form|
-        = af_form.input :open_time, as: :hidden, input_html: { value: af_form.object.try(:open_time_with_default) }
-        = af_form.input :close_time, as: :hidden, input_html: { value: af_form.object.try(:close_time_with_default) }
+        = af_form.input :open_time, as: :hidden
+        = af_form.input :close_time, as: :hidden
         - (af_form.object.try(:days).presence || (0..6).to_a).each do |day|
           = af_form.input :days, as: :hidden, input_html: { value: day, multiple: true }
       .unavailability= render 'schedules/reform_unavailability', f: at_form
