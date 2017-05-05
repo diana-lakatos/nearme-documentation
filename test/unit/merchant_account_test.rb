@@ -40,7 +40,16 @@ class MerchantAccountTest < ActiveSupport::TestCase
         assert_equal bank_account_value, merchant_account.bank_account_hash[:bank_account][:account_number]
       end
     end
+
+    should 'only require personal_id_numebr if validation set' do
+      merchant_account = create_merchant_account
+      merchant_account.owners.first.personal_id_number = nil
+      assert merchant_account.valid?
+      merchant_account.payment_gateway.config[:validate_merchant_account] = [:personal_id_number]
+      refute merchant_account.valid?
+    end
   end
+
 
   def create_merchant_account
     merchant_account = FactoryGirl.build(:stripe_connect_merchant_account)

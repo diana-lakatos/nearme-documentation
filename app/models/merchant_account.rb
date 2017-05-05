@@ -97,8 +97,24 @@ class MerchantAccount < ActiveRecord::Base
   def update_onboard!(*_args)
   end
 
+  # Featch any response attribute
+  # in example attribute('legal_entity.personal_id_number_provided')
+  # would return true or false based on the response
+
+  def attribute(attribute)
+    return unless attribute
+    return unless response_object
+
+    response_object_data = response_object
+    attribute.split('.').each do |attr|
+      response_object_data = response_object_data[attr]
+    end
+
+    response_object_data
+  end
+
   def response_object
-    YAML.load(response)
+    YAML.load(response.to_s)
   end
 
   def client

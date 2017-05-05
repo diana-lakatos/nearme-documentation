@@ -12,7 +12,7 @@ class Dashboard::Company::MerchantAccountsController < Dashboard::Company::BaseC
   end
 
   def create
-    @payment_gateway = all_payout_gateways.find(params[:merchant_account][:payment_gateway_id])
+    @payment_gateway = all_payout_gateways.find(params[:payment_gateway_id])
 
     @merchant_account = MerchantAccount.new(merchantable: @company.object, type: @payment_gateway.merchant_account_type)
     @merchant_account.attributes = merchant_account_params
@@ -22,6 +22,7 @@ class Dashboard::Company::MerchantAccountsController < Dashboard::Company::BaseC
       redirect_to @merchant_account.try(:redirect_url) || edit_dashboard_company_payouts_path
     else
       @merchant_account.translate_error_messages
+      @merchant_account.build_owners if @merchant_account.respond_to?(:owners)
       render :edit
     end
   end

@@ -55,6 +55,11 @@ class MerchantAccountDrop < BaseDrop
     @merchant_account = merchant_account
   end
 
+  # @return [Boolean] true if provided personal number
+  def personal_id_number_provided
+    merchant_account.attribute('legal_entity.personal_id_number_provided')
+  end
+
   # @return [String] timestamp - date until account is valid
   def due_by
     I18n.l(Time.at(merchant_account.data[:due_by].to_i), format: :long) if merchant_account.data[:due_by]
