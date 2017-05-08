@@ -14,6 +14,7 @@ module NewMarketplaceBuilder
           attributes['content'] ||= attributes['body']
           attributes['path'] ||= parse_liquid_path
           attributes['partial'] ||= is_partial
+          attributes['view_type'] ||= 'view'
         end
       end
 
