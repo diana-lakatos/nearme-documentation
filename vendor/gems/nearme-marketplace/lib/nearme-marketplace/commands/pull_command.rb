@@ -29,8 +29,10 @@ module NearmeMarketplace
     end
 
     def download_and_unzip_exported_zip(release)
-      url = marketplace_config[endpoint_name]['url'] + release['zip_file']['url']
-      system "curl -o marketplace_release.zip #{url}"
+      url = release['zip_file']['url']
+      url = url.prepend(marketplace_config[endpoint_name]['url']) if url.start_with?('/')
+
+      system "curl -o marketplace_release.zip '#{url}'"
       system "unzip -o marketplace_release.zip -d marketplace_builder"
     end
   end

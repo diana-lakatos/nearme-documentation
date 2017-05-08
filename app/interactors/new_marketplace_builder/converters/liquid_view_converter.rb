@@ -3,10 +3,10 @@ module NewMarketplaceBuilder
   module Converters
     class LiquidViewConverter < BaseConverter
       primary_key :path
-      properties :body, :path, :partial
+      properties :body, :path, :partial, :view_type
 
       def scope
-        InstanceView.where(view_type: 'view', instance_id: @model.id)
+        InstanceView.where(view_type: ['view', 'mail_layout'], instance_id: @model.id)
       end
 
       def resource_name(liquid)
