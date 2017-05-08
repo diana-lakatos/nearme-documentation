@@ -229,7 +229,7 @@
 // codemirror integration
 .publish-a {
   position: relative;
-  z-index: 30;
+  z-index: 300;
 
   > .user-entry-form-overlay {
     position: fixed;
@@ -244,6 +244,7 @@
     opacity: 0;
     transition: opacity .3s ease;
     will-change: opacity;
+    margin: 0;
   }
 
   form {
@@ -266,8 +267,16 @@
     min-height: 0;
   }
 
+  .action {
+    margin-top: 10px;
+  }
+
   .editor-toolbar, .editor-statusbar, .topics, .action {
     display: none;
+  }
+
+  &:not(.focused) .CodeMirror-vscrollbar {
+    display: none !important;
   }
 
   &.focused, .entry-editor {
