@@ -14,7 +14,8 @@
 
   <div class="form-group message-body">
     <label for="user-message-body" class="sr-only">{{ 'user_messages.labels.body' | t }}</label>
-    <textarea placeholder="{{ 'user_messages.placeholders.body_html' | t }}" name="user_message[body]" id="user-message-body" data-user-messages-inbox-body-input></textarea>
+    <textarea placeholder="{{ 'user_messages.placeholders.body_html' | t }}" name="user_message[body]" id="user-message-body" data-user-messages-inbox-body-input data-counter-limit="2000" data-counter-show-after="1500"></textarea>
+    <span class="char-counter" data-counter-for="user-message-body"></span>
     <span class="submit-hint">Press <b>enter</b> to send message</span>
   </div>
 

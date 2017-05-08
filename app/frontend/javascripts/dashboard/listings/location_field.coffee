@@ -1,4 +1,4 @@
-Limiter = require('./../modules/limited_input')
+LimitedInput = require('../../components/limited_input')
 AvailabilityRules = require('./availability_rules')
 
 module.exports = class LocationField
@@ -15,7 +15,7 @@ module.exports = class LocationField
 
     $('html').on 'loaded:dialog.nearme', ->
       $('.dialog--loaded [data-counter-limit]').each (index, item) ->
-        new Limiter(item)
+        new LimitedInput(item)
       new AvailabilityRules('.dialog .listing-availability')
 
   locationChanged: ->

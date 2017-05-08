@@ -2,7 +2,7 @@
 class SpamReportResolver {
   promise: JQueryXHR;
 
-  constructor(){
+  constructor() {
     this.promise = this._fetch();
   }
 
