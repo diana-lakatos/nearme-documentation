@@ -38,7 +38,7 @@
       <input type="hidden" name="type" value="{{ object_type }}">
       <input type="hidden" name="id" value="{{ object.id }}">
       <input type="hidden" name="_method" value="{{ action_method }}" data-method>
-      <button type="submit" class="button-a {{ follow_class }} {{ css_class }}">{{ button_label }}</button>
+      <button type="submit" class="button-a {{ follow_class }} {{ css_class }}" data-disable-with="{{ 'general.processing' | t }}">{{ button_label }}</button>
     </form>
   {% endif %}
 {% endunless %}
