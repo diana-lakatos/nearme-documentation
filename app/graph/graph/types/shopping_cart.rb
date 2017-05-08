@@ -8,7 +8,7 @@ module Graph
 
       field :id, !types.ID
 
-      field :orders, !types[Types::Order] do
+      field :orders, !types[Types::Orders::Order] do
         resolve ->(obj, _arg, _) { obj.orders }
       end
       field :checkout_at, types.String

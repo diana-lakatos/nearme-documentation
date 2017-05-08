@@ -38,7 +38,7 @@ module Graph
       end
 
       def query_fields
-        @query_fields ||= Resolvers::QueryFields.new(@ctx.ast_node).to_h
+        @query_fields ||= QueryFields.new(@ctx.ast_node).to_h
       end
 
       def source_mapper

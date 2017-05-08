@@ -6,6 +6,7 @@ module Graph
       description 'Root query for schema'
       fields FieldCombiner.combine(
         [
+          Types::CustomAttributes::CustomAttributeQueryType,
           FeedQueryType,
           LocationQueryType,
           MessagesQueryType,
@@ -14,7 +15,7 @@ module Graph
           TransactableQueryType,
           UserQueryType,
           ShoppingCartQueryType,
-          OrdersQueryType,
+          Orders::OrdersQueryType,
           WishListItemQueryType
         ]
       )
