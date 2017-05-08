@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 class Utils::DefaultAlertsCreator::WorkflowCreator
   def initialize
     @steps = {}
   end
 
   def create_all!
-    fail NotImplemplementedError
+    raise NotImplemplementedError
   end
 
   protected
@@ -19,6 +20,7 @@ class Utils::DefaultAlertsCreator::WorkflowCreator
     alert.from = hash.fetch(:from, PlatformContext.current.theme.contact_email)
     alert.reply_to = hash.fetch(:no_reply, PlatformContext.current.theme.contact_email)
     alert.bcc_type = hash[:bcc_type]
+    alert.endpoint = hash[:endpoint]
     alert.save!
     alert
   end

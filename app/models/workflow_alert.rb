@@ -67,7 +67,6 @@ class WorkflowAlert < ActiveRecord::Base
   def should_be_triggered?(step, metadata: {})
     condition = prevent_trigger_condition.to_s.strip
     return true if condition.blank?
-
     begin
       result = Liquid::Template.parse(
         "{% if #{prevent_trigger_condition} %} Do not run {% endif %}"

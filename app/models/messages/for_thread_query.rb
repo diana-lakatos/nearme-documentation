@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Messages
   # Thread is defined by thread owner, thread recipient and thread context
   class ForThreadQuery
