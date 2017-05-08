@@ -110,6 +110,9 @@ class FollowButtonForm {
   }
 
   processResponse(response: { is_following: boolean, followers_count: number }) {
+    $.rails.enableElement($(this.button))
+    $(this.button).prop('disabled', false)
+
     this.setState(response.is_following);
     this.setFollowersCount(response.followers_count);
   }

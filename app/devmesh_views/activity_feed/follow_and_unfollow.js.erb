@@ -2,6 +2,8 @@
     var btn = $('[data-follow-button] [data-object-id="<%= @object.id %>"]');
     var updated = $('<%= escape_javascript(render(partial: 'shared/follow_button', locals: { object: @object })) %>');
 
+    $.rails.enableElement(btn)
+
     btn
         .attr('href', updated.attr('href'))
         .data('method', updated.data('method'))
