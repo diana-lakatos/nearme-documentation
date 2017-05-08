@@ -312,6 +312,8 @@ en:
     shipments:
       address_based_price: 'Price will be calculated based on your address'
       processing_time: '%{days} days'
+    order_items:
+      already_approved: 'Already approved.'
   charge_type:
     charge_at:
       confirm: "Order confirmation"

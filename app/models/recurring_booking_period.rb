@@ -62,7 +62,12 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def charge_and_approve!
     generate_payment!
-    paid? ? approve! : false
+    if paid? && !approved?
+      approve!
+    else
+      errors.add(:base, I18n.t('order.order_items.already_approved')) if approved?
+      false
+    end
   end
 
   def generate_payment!
