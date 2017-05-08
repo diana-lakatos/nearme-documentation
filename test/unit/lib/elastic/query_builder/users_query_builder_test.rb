@@ -22,21 +22,23 @@ class Elastic::QueryBuilder::UsersQueryBuilderTest < ActiveSupport::TestCase
     instance_profile_types = [OpenStruct.new(name: 'Jane')]
     results = @builder.new(query, instance_profile_types: instance_profile_types).simple_query
 
-    assert_equal(
-      {
-        _source: %w(name avatar),
-        query: { terms: { _id: [1] } },
-        filter: { bool: { must: [{ nested: {
-          path: 'user_profiles',
-          query: { bool: { must: [
-            { match: { "user_profiles.enabled": true } },
-            { match: { 'user_profiles.profile_type' => 'jane' } }
-          ] } }
-                                   } }] } },
+    assert_equal results.dig(:_source), %w(name avatar)
+    results.dig(:filter, :bool, :must, 0, :nested).tap do |nested|
+      assert_equal nested.dig(:path), 'user_profiles'
+      assert_equal nested.dig(:query, :bool, :must, 0, :match), 'user_profiles.profile_type' => 'jane'
+    end
+  end
 
-        sort: ['_score']
-      },
-      results
-    )
+  test 'find by id for only enabled profiles' do
+    query = { source: %w(name avatar), query: { terms: { _id: [1] } } }
+    instance_profile_types = [OpenStruct.new(name: 'Jane', search_only_enabled_profiles?: true)]
+    results = @builder.new(query, instance_profile_types: instance_profile_types).simple_query
+
+    assert_equal results.dig(:_source), %w(name avatar)
+    results.dig(:filter, :bool, :must, 0, :nested).tap do |nested|
+      assert_equal nested.dig(:path), 'user_profiles'
+      assert_equal nested.dig(:query, :bool, :must, 0, :match), 'user_profiles.profile_type' => 'jane'
+      assert_equal nested.dig(:query, :bool, :must, 1, :match), "user_profiles.enabled": true
+    end
   end
 end
