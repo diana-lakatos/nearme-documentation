@@ -51,7 +51,6 @@ class UserEntryEditAction extends Eventable {
     focusEvent.initEvent('focus', true, true);
     textarea.dispatchEvent(focusEvent);
   }
-
 }
 
 module.exports = UserEntryEditAction;

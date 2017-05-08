@@ -1,8 +1,8 @@
 // @flow
 import { closest } from '../../toolkit/dom';
 
-
-const SHOULD_SUBMIT_ON_RETURN_ATTRIBUTE = 'data-user-entry-form-submit-on-return';
+const SHOULD_SUBMIT_ON_RETURN_ATTRIBUTE =
+  'data-user-entry-form-submit-on-return';
 
 class UserEntryTextarea {
   initValue: string;
@@ -16,11 +16,15 @@ class UserEntryTextarea {
     }
     this.textarea = textarea;
     this.initValue = textarea.value;
-    this.shouldSubmitOnReturn = this.textarea.hasAttribute(SHOULD_SUBMIT_ON_RETURN_ATTRIBUTE);
+    this.shouldSubmitOnReturn = this.textarea.hasAttribute(
+      SHOULD_SUBMIT_ON_RETURN_ATTRIBUTE
+    );
 
     let form = closest(textarea, 'form');
     if (!(form instanceof HTMLFormElement)) {
-      throw new Error('Unable to locate encapsulating form for UserEntryTextarea');
+      throw new Error(
+        'Unable to locate encapsulating form for UserEntryTextarea'
+      );
     }
     this.form = form;
 
@@ -43,12 +47,11 @@ class UserEntryTextarea {
       this.textarea.style.height = 'auto';
     }
     if (this.textarea.scrollHeight > 0) {
-      this.textarea.style.height = (this.textarea.scrollHeight + 2) + 'px';
+      this.textarea.style.height = this.textarea.scrollHeight + 2 + 'px';
     }
   }
 
   submitOnReturn(event: Event) {
-
     // on enter
     if (event.keyCode === 13)
       if (!event.altKey) {

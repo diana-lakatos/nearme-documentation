@@ -2,7 +2,11 @@
 
 import Eventable from '../../toolkit/eventable';
 import { closest } from '../../toolkit/dom';
-import { getImageTypeFromArrayBuffer, base64ArrayBuffer, getImageOrientationFromArrayBuffer } from '../../toolkit/array_buffer';
+import {
+  getImageTypeFromArrayBuffer,
+  base64ArrayBuffer,
+  getImageOrientationFromArrayBuffer
+} from '../../toolkit/array_buffer';
 
 type ImageDataType = {
   dataUrl: string,
@@ -41,12 +45,13 @@ class UserEntryFileField extends Eventable {
   parse() {
     let buffer: ArrayBuffer = this.reader.result;
 
-    let fileType: string = getImageTypeFromArrayBuffer(buffer) || this.input.files[0].type;
+    let fileType: string =
+      getImageTypeFromArrayBuffer(buffer) || this.input.files[0].type;
 
     let url = `data:${fileType};base64,${base64ArrayBuffer(buffer)}`;
     this.imageData = {
       dataUrl: url,
-      orientation: getImageOrientationFromArrayBuffer(buffer),
+      orientation: getImageOrientationFromArrayBuffer(buffer)
     };
     this.emit('change', this.imageData);
   }
