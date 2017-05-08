@@ -30,7 +30,7 @@ module Graph
       field :summary, types.String
       field :url, types.String
       field :time_based_booking, Types::Transactables::TimeBasedBooking
-      field :orders, !types[Types::Order] do
+      field :orders, !types[Types::Orders::Order] do
         resolve ->(obj, _args, _ctx) { obj.source.orders }
       end
       field :custom_attribute_photos,
