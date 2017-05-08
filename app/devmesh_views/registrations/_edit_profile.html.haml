@@ -62,6 +62,12 @@
           %p.photo-uploader-hint
             = t('simple_form.hints.profile.avatar')
 
+      - user_category = community_user_category
+      - if user_category.present?
+        = f.simple_fields_for :profiles do |user_profiles_form|
+          = user_profiles_form.simple_fields_for :default do |default_profile_form|
+            = default_profile_form.simple_fields_for :categories do |categories_form|
+              = render partial: 'dashboard/shared/fields/category', locals: { category: user_category, f: categories_form }
 
     = f.simple_fields_for :current_address do |address_form|
       .fields.location
