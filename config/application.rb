@@ -151,6 +151,6 @@ module DesksnearMe
 
     config.verify_api_requests = true
 
-    config.force_sending_all_workflow_alerts = false
+    config.force_sending_all_workflow_alerts = ENV['SEND_WORKFLOW_ALERTS'] == 'true'
   end
 end

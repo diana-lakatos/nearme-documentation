@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Utils::DefaultAlertsCreator::UserMessageCreator < Utils::DefaultAlertsCreator::WorkflowCreator
   def create_all!
     create_user_transactable_message_from_lister_email!

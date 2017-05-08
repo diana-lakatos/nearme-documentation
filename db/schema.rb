@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170509140459) do
+ActiveRecord::Schema.define(version: 20170509193446) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -3255,7 +3255,6 @@ ActiveRecord::Schema.define(version: 20170509140459) do
   end
 
   add_index "user_message_types", ["instance_id", "type"], name: "user_message_types_main_idx", using: :btree
-  add_index "user_message_types", ["instance_id"], name: "index_user_message_types_on_instance_id", using: :btree
 
   create_table "user_messages", force: :cascade do |t|
     t.integer  "thread_owner_id"
@@ -3278,6 +3277,7 @@ ActiveRecord::Schema.define(version: 20170509140459) do
   end
 
   add_index "user_messages", ["instance_id"], name: "index_user_messages_on_instance_id", using: :btree
+  add_index "user_messages", ["user_message_type_id"], name: "index_user_messages_on_user_message_type_id", using: :btree
 
   create_table "user_profiles", force: :cascade do |t|
     t.hstore   "properties"
