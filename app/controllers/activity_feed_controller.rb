@@ -43,12 +43,12 @@ class ActivityFeedController < ApplicationController
 
   def activity_feed
     @container = params[:container].presence || '#activity'
-
-    options = { page: pagination_params[:page] }
-    options[:user_feed] = true if params[:type] == 'User'
+    options = {
+      page: pagination_params[:page],
+      user_feed: include_user_feed?
+    }
 
     @feed = ActivityFeedService.new(@object, options)
-
     @partial = 'shared/activity_status'
     @as = :event
     @collection = @feed.events
@@ -165,5 +165,13 @@ class ActivityFeedController < ApplicationController
       page: params[:page].to_i > 0 ? params[:page] : 1,
       per_page: ActivityFeedService::Helpers::FOLLOWED_PER_PAGE
     }
+  end
+
+  def include_user_feed?
+    if params.key?(:user_feed)
+      params[:user_feed] == 'true'
+    else
+      params[:type] == 'User'
+    end
   end
 end
