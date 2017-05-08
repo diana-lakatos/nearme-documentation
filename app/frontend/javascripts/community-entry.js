@@ -36,4 +36,5 @@ NM.on('ready', ()=>{
   require('community/initializers/see_more.initializer');
   require('community/initializers/tabs.initializer');
   require('community/initializers/tutorial.initializer');
+  require('initializers/dashboard/category_tree_input.initializer');
 });

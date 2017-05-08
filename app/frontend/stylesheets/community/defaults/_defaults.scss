@@ -393,3 +393,8 @@ sub {
 sub {
   vertical-align: bottom;
 }
+
+/* jstree */
+ul.jstree-container-ul li.jstree-node::before {
+  content: normal;
+}
