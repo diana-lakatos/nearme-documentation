@@ -160,7 +160,7 @@ class Reservation < Order
       transactable_line_item.build_host_fee.try(:save!)
       update_payment_attributes
       payment.payment_transfer.try(:send, :assign_amounts_and_currency)
-      if payment.authorize && payment.capture!
+      if payment.authorize! && payment.capture!
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeSucceeded, id)
       else
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PenaltyChargeFailed, id)
