@@ -40,7 +40,7 @@ class UserMessagesInboxEntry {
       let meta = document.createElement('span');
       meta.classList.add('meta');
       meta.setAttribute('data-user-messages-meta', '');
-      meta.innerHTML = `<span data-user-messages-meta-author>${this.author}</span> <time datetime="${this.time.toString()}">${this.getFormattedTime()}</time> says:`;
+      meta.innerHTML = `<span data-user-messages-meta-author>${this.author}</span> <time datetime="${this.time.getTime()}">${this.getFormattedTime()}</time> says:`;
 
       let time = findElement(TIME_SELECTOR, meta);
       new timeago().render(time);
@@ -64,7 +64,7 @@ class UserMessagesInboxEntry {
   }
 
   getFormattedTime(): string {
-    return new timeago().format(this.time);
+    return timeago().format(this.time);
   }
 
   setElement(el: HTMLElement) {
@@ -92,7 +92,6 @@ class UserMessagesInboxEntry {
   }
 
   static parse(el: HTMLElement): UserMessagesInboxEntry {
-
     let meta = el.querySelector(META_SELECTOR);
     let entry = new UserMessagesInboxEntry();
     entry.setElement(el);
@@ -111,8 +110,7 @@ class UserMessagesInboxEntry {
     if (el.classList.contains(ATTACHMENT_CLASS)) {
       let link = findElement('a', el);
       entry.setAttachment(link.innerHTML, link.getAttribute('href'));
-    }
-    else {
+    } else {
       entry.setBody(this.parseBody(el));
     }
 

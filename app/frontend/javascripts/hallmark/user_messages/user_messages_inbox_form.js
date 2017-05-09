@@ -6,6 +6,7 @@ const META_SELECTOR = 'meta[name="csrf-token"]';
 import Eventable from '../../toolkit/eventable';
 import { findInput, findTextArea, findMeta } from '../../toolkit/dom';
 import CommentTextarea from '../comment_textarea/comment_textarea';
+import LimitedInput from '../../components/limited_input';
 import UserMessagesInboxEntry from './user_messages_inbox_entry';
 import UserMessagesInboxFileInput from './user_messages_inbox_file_input';
 
@@ -23,8 +24,14 @@ class UserMessagesInboxForm extends Eventable {
     this.form = form;
 
     let textarea = findTextArea(BODY_INPUT_SELECTOR, this.form);
+
+    new LimitedInput(textarea);
+
     this.commentTextarea = new CommentTextarea(textarea, { form: this.form });
-    this.fileInput = new UserMessagesInboxFileInput(findInput(FILE_INPUT_SELECTOR, this.form), this.form);
+    this.fileInput = new UserMessagesInboxFileInput(
+      findInput(FILE_INPUT_SELECTOR, this.form),
+      this.form
+    );
 
     this.author = this.form.dataset.userMessagesInboxCurrentUser;
     if (!this.author) {
@@ -42,13 +49,14 @@ class UserMessagesInboxForm extends Eventable {
     this.bindEvents();
   }
 
-
   bindEvents() {
     this.fileInput.on('newfile', this.onFileInputChange.bind(this));
     this.form.addEventListener('submit', this.onFormSubmit.bind(this));
   }
 
-  onFileInputChange({ name: name, url: url }: { name: string, url: string } = {}) {
+  onFileInputChange(
+    { name: name, url: url }: { name: string, url: string } = {}
+  ) {
     let entry = new UserMessagesInboxEntry();
     entry.setAuthor(this.author);
     entry.setAttachment(name, url);

@@ -43,7 +43,13 @@ module.exports = class Modal
       if form.is('form[data-modal-class]')
         modalClass = form.attr('data-modal-class')
 
-      Modal.load({ type: "POST", url: form.attr("action"), data: form.serialize()}, modalClass, overlayCloseDisabled)
+      Modal.load({
+        type: "POST",
+        url: form.attr("action"),
+        data: new FormData(form.get(0)),
+        processData: false,
+        contentType: false
+      }, modalClass, overlayCloseDisabled)
       false
 
 

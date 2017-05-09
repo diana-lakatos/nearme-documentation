@@ -1,18 +1,23 @@
-$(document).on('init:limiter.nearme', function(event, elements){
-  require.ensure('../../dashboard/modules/limited_input', function(require){
-    var Limiter = require('../../dashboard/modules/limited_input');
-    $(elements).each(function(){
-      return new Limiter(this);
+let run = function(elements) {
+  if (elements.length === 0) {
+    return;
+  }
+
+  console.log(elements);
+
+  require.ensure('../../components/limited_input', function(require) {
+    var LimitedInput = require('../../components/limited_input');
+    Array.prototype.forEach.call(elements, el => {
+      new LimitedInput(el);
     });
   });
+};
+
+$(document).on('init:limiter.nearme', function(event, elements) {
+  if (typeof elements === 'string') {
+    elements = document.querySelectorAll(elements);
+  }
+  run(elements);
 });
 
-var els = $('[data-counter-limit]');
-if (els.length > 0) {
-  require.ensure('../../dashboard/modules/limited_input', function(require){
-    var Limiter = require('../../dashboard/modules/limited_input');
-    els.each(function(){
-      return new Limiter(this);
-    });
-  });
-}
+run(document.querySelectorAll('[data-counter-limit]'));

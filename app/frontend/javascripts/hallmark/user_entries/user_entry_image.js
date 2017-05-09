@@ -15,7 +15,7 @@ class UserEntryImage extends Eventable {
   source: string;
   options: {
     isPersisted: boolean
-  }
+  };
 
   constructor(options: { isPersisted?: boolean } = {}) {
     super();

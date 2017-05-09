@@ -17,7 +17,6 @@ import UserEntryReportSpamAction from './user_entry_report_spam_action';
 import Gallery from '../gallery/gallery';
 
 class UserEntry {
-
   container: HTMLElement;
   creatorId: number;
   currentUserId: number;
@@ -62,7 +61,6 @@ class UserEntry {
     this.currentUserId = currentUserId;
     this.actionsActive = false;
 
-
     this.actions = findElement(ACTIONS_SELECTOR, this.container);
     let actionsContainerId = this.actions.getAttribute('id');
     if (!actionsContainerId) {
@@ -71,9 +69,18 @@ class UserEntry {
     this.actionsContainerId = actionsContainerId;
 
     this.actionsToggler = findElement(ACTIONS_TOGGLER_SELECTOR, this.container);
-    this.editAction = new UserEntryEditAction(findElement(EDIT_ACTION_SELECTOR, this.container), this.container);
-    this.removeAction = new UserEntryRemoveAction(findElement(REMOVE_ACTION_SELECTOR, this.container), this.container);
-    this.reportSpamAction = new UserEntryReportSpamAction(findElement(REPORT_SPAM_ACTION_SELECTOR, this.container), this.container);
+    this.editAction = new UserEntryEditAction(
+      findElement(EDIT_ACTION_SELECTOR, this.container),
+      this.container
+    );
+    this.removeAction = new UserEntryRemoveAction(
+      findElement(REMOVE_ACTION_SELECTOR, this.container),
+      this.container
+    );
+    this.reportSpamAction = new UserEntryReportSpamAction(
+      findElement(REPORT_SPAM_ACTION_SELECTOR, this.container),
+      this.container
+    );
 
     this.initGallery();
 
@@ -115,7 +122,6 @@ class UserEntry {
     }
     new Gallery(container);
   }
-
 
   toggleActions() {
     if (this.actionsActive) {

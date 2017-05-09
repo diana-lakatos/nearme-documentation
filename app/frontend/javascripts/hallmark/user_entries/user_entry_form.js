@@ -1,6 +1,7 @@
 // @flow
 import type UserEntryEditor from './user_entry_editor/user_entry_editor';
-import UserEntryEditorFactory from './user_entry_editor/user_entry_editor_factory';
+import UserEntryEditorFactory
+  from './user_entry_editor/user_entry_editor_factory';
 import UserEntryFileField from './user_entry_file_field';
 import UserEntryImages from './user_entry_images';
 import UserEntryLoader from './user_entry_loader';
@@ -20,7 +21,6 @@ const CANCEL_BUTTON_SELECTOR = '[data-cancel-edit]';
 const USER_ENTRY_SELECTOR = '[data-user-entry]';
 
 class UserEntryForm {
-
   form: HTMLFormElement;
   isXHR: boolean;
   mode: 'edit' | 'new';
@@ -59,16 +59,19 @@ class UserEntryForm {
     let entryFormTargetSelector = form.dataset.userEntryFormTarget;
 
     if (this.isXHR && !entryFormTargetSelector) {
-      throw new Error(`Missing or invalid entryFormTargetSelector: ${entryFormTargetSelector}`);
-    }
-    else if (this.isXHR) {
+      throw new Error(
+        `Missing or invalid entryFormTargetSelector: ${entryFormTargetSelector}`
+      );
+    } else if (this.isXHR) {
       this.target = findElement(entryFormTargetSelector);
     }
 
     let textarea = findTextArea(TEXTAREA_SELECTOR, form);
     this.editor = UserEntryEditorFactory.get(textarea);
     this.images = new UserEntryImages(findElement(ENTRY_IMAGES_SELECTOR, form));
-    this.fileField = new UserEntryFileField(findInput(FILE_FIELD_SELECTOR, form));
+    this.fileField = new UserEntryFileField(
+      findInput(FILE_FIELD_SELECTOR, form)
+    );
     this.cancelButton = form.querySelector(CANCEL_BUTTON_SELECTOR);
 
     this.loader = new UserEntryLoader();
@@ -83,7 +86,6 @@ class UserEntryForm {
   }
 
   submit(event: Event) {
-
     if (this.isProcessing) {
       event.preventDefault();
       return;
@@ -118,12 +120,12 @@ class UserEntryForm {
       cache: false,
       processData: false
     })
-    .done(this.process.bind(this))
-    .fail(() => {
-      alert('We couldn’t create this content. Please try again');
-      this.disableProcessing();
-      throw new Error(`Unable to create content ${this.form.action}`);
-    });
+      .done(this.process.bind(this))
+      .fail(() => {
+        alert('We couldn’t create this content. Please try again');
+        this.disableProcessing();
+        throw new Error(`Unable to create content ${this.form.action}`);
+      });
   }
 
   process(html: string) {
@@ -164,21 +166,27 @@ class UserEntryForm {
   enableProcessing() {
     this.form.classList.add('processing');
     this.loader.enable();
-    Array.prototype.forEach.call(this.form.querySelectorAll('[type="submit"]'), (el: HTMLButtonElement) => {
-      el.dataset.initialDisabledState = el.disabled ? 'yes' : 'no';
-      el.setAttribute('disabled', 'disabled');
-    });
+    Array.prototype.forEach.call(
+      this.form.querySelectorAll('[type="submit"]'),
+      (el: HTMLButtonElement) => {
+        el.dataset.initialDisabledState = el.disabled ? 'yes' : 'no';
+        el.setAttribute('disabled', 'disabled');
+      }
+    );
     this.isProcessing = true;
   }
 
   disableProcessing() {
     this.form.classList.remove('processing');
     this.loader.disable();
-    Array.prototype.forEach.call(this.form.querySelectorAll('[type="submit"]'), (el: HTMLButtonElement) => {
-      if (el.dataset.initialDisabledState === 'yes') {
-        el.removeAttribute('disabled');
+    Array.prototype.forEach.call(
+      this.form.querySelectorAll('[type="submit"]'),
+      (el: HTMLButtonElement) => {
+        if (el.dataset.initialDisabledState === 'yes') {
+          el.removeAttribute('disabled');
+        }
       }
-    });
+    );
     this.isProcessing = false;
   }
 
@@ -208,9 +216,7 @@ class UserEntryForm {
     this.editor.rollback();
   }
 
-  build() {
-
-  }
+  build() {}
 }
 
 module.exports = UserEntryForm;

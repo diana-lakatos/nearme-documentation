@@ -13,11 +13,10 @@ type SpamReportDataType = {
 };
 
 class UserEntryReportSpamAction {
-
   trigger: HTMLElement;
   container: HTMLElement;
   raportExists: boolean;
-  type: 'comment' | 'event'
+  type: 'comment' | 'event';
   entryId: number;
   actionCancel: ActionType;
   actionCreate: ActionType;
@@ -31,7 +30,9 @@ class UserEntryReportSpamAction {
     this.type = container.dataset.commentId ? 'comment' : 'event';
     this.processing = false;
 
-    let entryId = container.dataset.commentId ? container.dataset.commentId : container.dataset.activityFeedEventId;
+    let entryId = container.dataset.commentId
+      ? container.dataset.commentId
+      : container.dataset.activityFeedEventId;
     entryId = parseInt(entryId, 10);
     if (!entryId || isNaN(entryId)) {
       throw new Error('Unable to determine entry ID in spam report action');
@@ -107,15 +108,19 @@ class UserEntryReportSpamAction {
       url: action.url,
       method: action.method,
       dataType: 'json'
-    }).done(() => {
-      this.processing = false;
-      this.raportExists = !this.raportExists;
-      this.updateTrigger();
-    }).fail(() => {
-      this.processing = false;
-      alert('We were unable to modify this spam report');
-      throw new Error(`Unable to update spam report for ${action.url} ${action.method}`);
-    });
+    })
+      .done(() => {
+        this.processing = false;
+        this.raportExists = !this.raportExists;
+        this.updateTrigger();
+      })
+      .fail(() => {
+        this.processing = false;
+        alert('We were unable to modify this spam report');
+        throw new Error(
+          `Unable to update spam report for ${action.url} ${action.method}`
+        );
+      });
   }
 
   updateTrigger() {

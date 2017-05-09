@@ -38,7 +38,9 @@ class FollowButtonForm {
     this.methodInput = findInput('[data-method]', this.form);
     this.button = findButton('button', this.form);
 
-    this.followersCounters = document.querySelectorAll(`[data-followers-count="${this.form.dataset.followersCounterId}"]`);
+    this.followersCounters = document.querySelectorAll(
+      `[data-followers-count="${this.form.dataset.followersCounterId}"]`
+    );
 
     this.setCSRFToken();
   }
@@ -109,25 +111,33 @@ class FollowButtonForm {
     this.setState(this.previousState);
   }
 
-  processResponse(response: { is_following: boolean, followers_count: number }) {
-    $.rails.enableElement($(this.button))
-    $(this.button).prop('disabled', false)
+  processResponse(
+    response: { is_following: boolean, followers_count: number }
+  ) {
+    $.rails.enableElement($(this.button));
+    $(this.button).prop('disabled', false);
 
     this.setState(response.is_following);
     this.setFollowersCount(response.followers_count);
   }
 
   setFollowersCount(count: number) {
-    Array.prototype.forEach.call(this.followersCounters, (counter: HTMLElement) => {
-      counter.innerHTML = count + '';
-    });
+    Array.prototype.forEach.call(
+      this.followersCounters,
+      (counter: HTMLElement) => {
+        counter.innerHTML = count + '';
+      }
+    );
   }
 
   updateFollowersCountBy(delta: number) {
-    Array.prototype.forEach.call(this.followersCounters, (counter: HTMLElement) => {
-      let current: number = parseInt(counter.innerHTML, 10) || 0;
-      counter.innerHTML = current + delta + '';
-    });
+    Array.prototype.forEach.call(
+      this.followersCounters,
+      (counter: HTMLElement) => {
+        let current: number = parseInt(counter.innerHTML, 10) || 0;
+        counter.innerHTML = current + delta + '';
+      }
+    );
   }
 }
 
