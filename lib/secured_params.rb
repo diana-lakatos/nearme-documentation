@@ -805,10 +805,13 @@ class SecuredParams
   end
 
   def user_message
+    custom_attributes_names = UserMessage.public_custom_attributes_names(UserMessageType.default)
     [
       :body,
       :replying_to_id,
-      attachments_attributes: nested(attachment)
+      attachments_attributes: nested(attachment),
+      properties: custom_attributes_names,
+      properties_attributes: custom_attributes_names
     ]
   end
 
