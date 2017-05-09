@@ -14,7 +14,6 @@ require('hallmark/vendor/jquery-ui');
 require('vendor/jQueryRotate');
 require('../vendor/cocoon');
 
-
 NM.on('ready', () => {
   require('initializers/shared/ckeditor.initializer');
   require('initializers/shared/notification_preferences_form');
@@ -28,7 +27,7 @@ NM.on('ready', () => {
   require('hallmark/initializers/project_form.initializer');
   require('hallmark/initializers/project_links.initializer');
   require('hallmark/initializers/search.initializer');
-  require('hallmark/initializers/see_more.initializer');
+  require('hallmark/initializers/paginable_container.initializer');
   require('hallmark/initializers/tabs.initializer');
   require('hallmark/initializers/tutorial.initializer');
   require('hallmark/initializers/gallery.initializer');
