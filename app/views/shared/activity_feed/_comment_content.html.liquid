@@ -1,4 +1,4 @@
-<div class="entry-content-a" id="entry-content-comment-{{ comment_object.id }}">
+<div class="entry-content-a" id="entry-content-comment-{{ comment_object.id }}" data-user-entry-form-wrapper>
   <div class="entry-body {% if comment.created_at != comment.updated_at %}edited{% endif %}">
     {{ comment_object.body | videoify_and_parse_with_markdown: iframe_width: 350, iframe_height: 198 }}
   </div>

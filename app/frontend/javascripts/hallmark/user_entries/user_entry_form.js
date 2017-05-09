@@ -67,6 +67,7 @@ class UserEntryForm {
     }
 
     let textarea = findTextArea(TEXTAREA_SELECTOR, form);
+    console.log(textarea);
     this.editor = UserEntryEditorFactory.get(textarea);
     this.images = new UserEntryImages(findElement(ENTRY_IMAGES_SELECTOR, form));
     this.fileField = new UserEntryFileField(
