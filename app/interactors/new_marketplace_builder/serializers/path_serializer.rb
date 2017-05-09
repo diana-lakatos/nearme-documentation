@@ -25,6 +25,8 @@ module NewMarketplaceBuilder
 
         File.open(file_path, 'w') do |f|
           raw_content = file[:exported_data].delete('body') || file[:exported_data].delete('content')
+          file[:exported_data].delete('view_type') if file[:exported_data]['view_type'] == 'view'
+
           if file[:exported_data].present?
             f.write file[:exported_data].to_yaml
             f.puts '---' if raw_content.present?

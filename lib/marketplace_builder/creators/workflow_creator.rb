@@ -10,10 +10,12 @@ module MarketplaceBuilder
           workflow_attributes = workflows[key]
           workflow_steps = workflow_attributes.delete('workflow_steps')
           workflow = create_or_update_workflow(workflow_attributes)
+          next unless workflow_steps
 
           workflow_steps.each do |workflow_step_attributes|
             workflow_alerts = workflow_step_attributes.delete('workflow_alerts')
             workflow_step = create_or_update_workflow_step(workflow, workflow_step_attributes)
+            next unless workflow_alerts
 
             workflow_alerts.each do |workflow_alert_attributes|
               create_or_update_workflow_alert(workflow_step, workflow_alert_attributes)
