@@ -62,7 +62,7 @@
           = render 'shared/activity_feed', object: @transactable, feed: @feed
         #comments.tab-pane.fade{:role => "tabpanel"}
           = render 'comments/comments', comment: @comment
-        #collaborators.tab-pane.fade{:role => "tabpanel"}
+        #collaborators.tab-pane.fade{:role => "tabpanel", 'data-paginable-container': true }
           = render 'shared/show_followers', see_more_route: see_more_collaborators_path(id: @transactable.id, type: 'Transactable', container: '#collaborators'), collection: @collaborators, container: '#collaborators'
-        #followers.tab-pane.fade{:role => "tabpanel"}
+        #followers.tab-pane.fade{:role => "tabpanel", 'data-paginable-container': true }
           = render 'shared/show_followers', see_more_route: see_more_followers_path(id: @transactable.id, type: 'Transactable', container: '#followers'), container: '#followers', collection: @followers

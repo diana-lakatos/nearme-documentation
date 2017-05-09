@@ -3,7 +3,7 @@
     = render 'user_status_updates/form', user_status_update: UserStatusUpdate.new, no_topic_select: true, feed: feed
 
 - if feed.events.count > 0
-  .content-container{ 'data-activity-feed': true, data: feed_data }
+  .content-container{ 'data-activity-feed': true, 'data-paginable-container': true, data: feed_data }
     = render partial: "shared/activity_status", collection: feed.events, as: :event, locals: { object: group }
 
   - if feed.has_next_page?

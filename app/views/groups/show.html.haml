@@ -55,12 +55,13 @@
         = render 'about', group: @group
 
   - if !@group.confidential? || current_user.try(:is_member_of?, @group)
-    #members.tab-pane.fade{:role => "tabpanel"}
+    #members.tab-pane.fade{:role => "tabpanel", 'data-paginable-container': true }
       .wrap-a.reduce-top
         .contain
-          .box-a= render 'shared/show_followers', container: '#members', see_more_route: see_more_members_path(id: @group.id, type: 'Group', container: '#members'), collection: @members
+          .box-a
+            = render 'shared/show_followers', container: '#members', see_more_route: see_more_members_path(id: @group.id, type: 'Group', container: '#members'), collection: @members
 
-    #projects.tab-pane.fade{:role => "tabpanel"}
+    #projects.tab-pane.fade{:role => "tabpanel", 'data-paginable-container': true }
       .wrap-a.reduce-top
         .contain
           .box-a
