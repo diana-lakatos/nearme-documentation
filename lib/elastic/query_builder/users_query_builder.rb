@@ -93,19 +93,26 @@ module Elastic
       def filters
         ConditionGroup.new.tap do |group|
           group.add profiles_filters
-          group.add build_geo_shape
         end.to_h
       end
 
+
       def build_query_branch
-        { query: { bool: { should: query_bool_conditions } } }
+        {
+          query: {
+            bool: {
+              must: query_must_conditions
+            }
+          }
+        }
       end
 
-      def query_bool_conditions
+      def query_must_conditions
         ConditionGroup.new.tap do |group|
           group.add simple_match_query
           group.add multi_match_query
           group.add transactable_child
+          group.add build_geo_shape
         end.to_h
       end
 
@@ -173,6 +180,7 @@ module Elastic
 
       def build_geo_shape
         return {} unless @query.dig(:location, :lat).present?
+
         {
           geo_shape: {
             geo_service_shape: {

@@ -10,7 +10,7 @@ module Elastic
     def find_index(name)
       data = indices.get index: name
 
-      IndexNameBuilder.load(data)
+      data.any? && IndexNameBuilder.load(data)
     end
 
     def index_exists?(alias_name)
