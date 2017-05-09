@@ -1,29 +1,31 @@
 {% query_graph 'activity_feed', result_name: g, object_id: object.id, object_type: 'User', include_user_feed: include_user_feed %}
 
 {% if g.feed.events.size > 0 %}
-  <div class="content-container" data-activity-feed=""
-    data-current-user-id="{{ feed_data.current_user_id }}"
-    data-comments-spam-reports="[{{ feed_data.comments_spam_reports }}]"
-    data-event-spam-reports="[{{ feed_data.events_spam_reports }}]"
-    data-paginable-container
-    >
-    {% for event in g.feed.events %}
-      {% include 'shared/activity_feed/status', event: event, object: object %}
-    {% endfor %}
-  </div>
+  <div data-paginable-container>
+    <div class="content-container" data-activity-feed=""
+      data-current-user-id="{{ feed_data.current_user_id }}"
+      data-comments-spam-reports="[{{ feed_data.comments_spam_reports }}]"
+      data-event-spam-reports="[{{ feed_data.events_spam_reports }}]"
 
-  {% if g.feed.has_next_page %}
-    {% if current_user != blank %}
-      <p class="more-a" data-see-more>
-        {% assign see_more_activity_feed_path = 'see_more_activity_feed_path' | generate_url: id: g.feed.owner_id, type: g.feed.owner_type, user_feed: include_user_feed %}
-        <button type="button" data-url="{{ see_more_activity_feed_path }}" data-next-page="{{ g.feed.events_next_page }}">{{ 'see_more' | translate }}</button>
-      </p>
-    {% else %}
-      <p class="more-a">
-        <a href="{{ 'dashboard_user_messages_path' | generate_url }}">{{ 'see_more' | translate }}</a>
-      </p>
+      >
+      {% for event in g.feed.events %}
+        {% include 'shared/activity_feed/status', event: event, object: object %}
+      {% endfor %}
+    </div>
+
+    {% if g.feed.has_next_page %}
+      {% if current_user != blank %}
+        <p class="more-a" data-see-more>
+          {% assign see_more_activity_feed_path = 'see_more_activity_feed_path' | generate_url: id: g.feed.owner_id, type: g.feed.owner_type, user_feed: include_user_feed %}
+          <button type="button" data-url="{{ see_more_activity_feed_path }}" data-next-page="{{ g.feed.events_next_page }}">{{ 'see_more' | translate }}</button>
+        </p>
+      {% else %}
+        <p class="more-a">
+          <a href="{{ 'dashboard_user_messages_path' | generate_url }}">{{ 'see_more' | translate }}</a>
+        </p>
+      {% endif %}
     {% endif %}
-  {% endif %}
+  </div>
 {% else %}
   <p>
     {{ 'activity_feed.no_interactions_yet' | translate }}

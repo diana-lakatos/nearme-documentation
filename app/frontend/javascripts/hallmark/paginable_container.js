@@ -75,7 +75,7 @@ class PaginableContainer {
       dataType: 'json'
     })
       .done(this.processMoreResults.bind(this))
-      .fail((jqXHR, textStatus, errorThrown) => {
+      .fail(() => {
         this.enableMoreTrigger();
         throw new Error('Unable to fetch more results');
       });
