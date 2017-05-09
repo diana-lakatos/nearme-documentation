@@ -12,6 +12,7 @@ class Dashboard::BuyersController < Dashboard::BaseController
   def update
     if @user_update_profile_form.validate(params[:user] || params[:form] || {})
       @user_update_profile_form.save
+      raise "Update buyer profile failed: #{@user_update_profile_form.model.errors.full_messages.join(', ')}" if @user_update_profile_form.model.changed?
       current_user.reload.buyer_profile.mark_as_onboarded!
       flash[:success] = t('flash_messages.dashboard.buyer.updated')
       if session[:after_onboarding_path].present?
