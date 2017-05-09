@@ -270,6 +270,19 @@ class Graph::SchemaTest < ActiveSupport::TestCase
     end
   end
 
+  context 'custom attributes xxx' do
+    should 'get custom attribute definition' do
+      FactoryGirl.create(
+        :custom_attribute,
+        name: 'foo', target: InstanceProfileType.default.first, attribute_type: 'string'
+      )
+      query = %({ custom_attribute_definition(name: "foo") { name valid_values }} )
+
+      assert_not_nil result(query)['custom_attribute_definition']
+    end
+  end
+
+
   def result(query)
     Graph.execute_query(
       query,
