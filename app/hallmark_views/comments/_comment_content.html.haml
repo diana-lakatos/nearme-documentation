@@ -1,4 +1,4 @@
-.entry-content-a{ id: "entry-content-comment-#{comment.id}" }
+.entry-content-a{ id: "entry-content-comment-#{comment.id}",  "data-user-entry-form-wrapper": true }
   .entry-body{ class: ('edited' if comment.created_at != comment.updated_at) }
     = videoify_and_parse_with_markdown(comment.body , { iframe_width: 350, iframe_height: 198 })
   = render 'shared/activity_feed_images', images: comment.activity_feed_images
