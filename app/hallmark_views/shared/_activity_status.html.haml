@@ -1,4 +1,4 @@
-- cache [user_signed_in?, current_instance.context_cache_key, event, event.followed, event.event_source] do
+- cache [current_user&.id, current_instance.context_cache_key, event, event.followed, event.event_source] do
   - hide_comment_options = local_assigns[:hide_comment_options].presence || false
   - target = local_assigns[:target].presence || "_self"
   - formatted_event = setup_activity_feed_event(event, target)
