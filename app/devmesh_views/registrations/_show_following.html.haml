@@ -19,10 +19,10 @@
     / white box
     .box-a
       .tab-content
-        #following-people.tab-pane.fade.active
+        #following-people.tab-pane.fade.active{ 'data-paginable-container': true }
           = render 'shared/sort_form', form_url: see_more_following_people_path(id: @user.id, type: @user.class.name), sort_options: User::SORT_OPTIONS.map { |option| [I18n.t("simple_form.labels.search_filter.options.#{option}"), option] }, container: '#following-people'
           = render "shared/listing_people", users: @users_followed, see_more_type: "followingPeople", see_more_route: see_more_following_people_path(id: @user.id, type: @user.class.name, container: '#following-people')
-        #following-projects.tab-pane.fade
+        #following-projects.tab-pane.fade{ 'data-paginable-container': true }
           = render "shared/show_transactables", transactables: @transactables_followed, container: '#following-projects', see_more_route: see_more_following_transactables_path(id: @user.id, type: @user.class.name, container: '#following-projects')
-        #following-topics.tab-pane.fade
+        #following-topics.tab-pane.fade{ 'data-paginable-container': true }
           = render "shared/listing_topics", topics: @topics_followed

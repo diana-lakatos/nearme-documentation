@@ -11,7 +11,7 @@
         = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'
 
 - if feed.events.count > 0
-  .content-container{ 'data-activity-feed': true, data: feed_data }
+  .content-container{ 'data-activity-feed': true, data: feed_data, 'data-paginable-container': true }
     = render partial: "shared/activity_status", collection: feed.events, as: :event, locals: { object: group }
 
   - if feed.has_next_page?
