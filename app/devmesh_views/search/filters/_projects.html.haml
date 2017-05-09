@@ -28,7 +28,17 @@
         required: false,
         placeholder: t('simple_form.placeholders.defaults.category_ids')
 
-      = f.input :seek_collaborators, as: :boolean, input_html: { class: 'tick-a',  checked: params[:seek_collaborators] == '1' }, wrapper_html: { class: 'tick' }, wrapper: :inline_checkbox
+      = f.input :roles,
+        as: :select,
+        multiple: true,
+        input_html: { class: 'selectize', multiple: true },
+        collection: (CustomAttributes::CustomAttribute.find_by(name: 'role').valid_values),
+        selected: @searcher.selected_roles,
+        wrapper_html: { class: 'drop role', style: 'width: 300px' },
+        required: false,
+        placeholder: 'Select Role'
+
+      = f.input :seek_collaborators, as: :boolean, input_html: { class: 'tick-a',  checked: params[:seek_collaborators] == '1' }, wrapper_html: { class: 'tick', style: 'margin-left: 0px;' }, wrapper: :inline_checkbox
       = f.input :query, as: :hidden, input_html: { value: params[:query] }
       = f.input :page, as: :hidden, input_html: { value: params[:page] }
       = f.input :search_type, as: :hidden, input_html: { value: 'projects' }

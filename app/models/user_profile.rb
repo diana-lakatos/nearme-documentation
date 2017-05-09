@@ -47,6 +47,7 @@ class UserProfile < ActiveRecord::Base
   scope :by_search_query, lambda { |query|
     joins(:user).merge(User.by_search_query(query))
   }
+  scope :filtered_by_custom_attribute, ->(property, values) { where("string_to_array((user_profiles.properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
 
   def enabled
     check_approved && super
