@@ -2,7 +2,7 @@ module AttributesParserHelper
   # this is needed to support data attributes with hyphen, i.e. input_html_data-custom-attr
   # original expression starts with /(\w+ , I've just changed it to /([\w-]+ to not ignore
   # tag if hyphen is included
-  TagAttributesWithHypen = /([\w-]+)\s*\:\s*(#{Liquid::QuotedFragment})/
+  TagAttributesWithHypen = /([@\w-]+)\s*\:\s*(#{Liquid::QuotedFragment})/
 
   def create_initial_hash_from_liquid_tag_markup(markup)
     hash = {}
@@ -21,6 +21,10 @@ module AttributesParserHelper
 
     # inicjalize variables for each prefix, if prefix is 'html' then create '@html_attributes' variable
     prefixes.each { |p| instance_variable_set(:"@#{p}_attributes", {}) }
+    hash_result.keys.each do |k|
+      next unless k =~ /^@/
+      hash_result[context[k].try(:source).presence || context[k]] = hash_result.delete(k)
+    end
     hash_result.each do |key, value|
       next unless String === value
       # if value starts with @ then get value from context as it's variable, otherwise remove trailing quotes
