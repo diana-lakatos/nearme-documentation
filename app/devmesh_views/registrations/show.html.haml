@@ -51,7 +51,7 @@
   #activity.tab-pane.fade{:role => "tabpanel"}
     = render 'show_activity', object: @user, feed: @feed
 
-  #transactables.tab-pane.fade{:role => "tabpanel"}
+  #transactables.tab-pane.fade{:role => "tabpanel", 'data-paginable-container': true }
     / content wrapper
     .wrap-a.reduce-top
       .contain
@@ -59,16 +59,17 @@
         .box-a
           = render 'shared/show_transactables', transactables: @all_transactables, container: '#transactables', see_more_route: see_more_transactables_path(id: @user.id, type: @user.class.name, container: '#transactables'), sort_options: Transactable::SORT_OPTIONS + ['Pending approvals']
 
-  #groups.tab-pane.fade{:role => "tabpanel"}
+  #groups.tab-pane.fade{:role => "tabpanel", 'data-paginable-container': true }
     .wrap-a.reduce-top
       .contain
         .box-a
           = render 'shared/show_groups', groups: @groups, container: '#groups', see_more_route: see_more_groups_path(id: @user.id, type: @user.class.name, container: '#groups')
 
-  #following.tab-pane.fade{:role => "tabpanel"}
+  #following.tab-pane.fade{:role => "tabpanel", 'data-paginable-container': true }
     = render 'show_following', object: @user
 
-  #followers.tab-pane.fade{:role => "tabpanel"}
+  #followers.tab-pane.fade{:role => "tabpanel", 'data-paginable-container': true }
     .wrap-a.reduce-top
       .contain
-        .box-a= render 'shared/show_followers', container: '#followers', see_more_route: see_more_followers_path(id: @user.id, type: 'User', container: '#followers'), collection: @followers
+        .box-a
+          = render 'shared/show_followers', container: '#followers', see_more_route: see_more_followers_path(id: @user.id, type: 'User', container: '#followers'), collection: @followers

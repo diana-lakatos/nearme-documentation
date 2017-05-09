@@ -55,6 +55,7 @@ class ActivityFeedController < ApplicationController
 
     respond_to do |format|
       format.js { render :see_more }
+      format.json { render json: response_hash }
     end
   end
 
@@ -67,6 +68,7 @@ class ActivityFeedController < ApplicationController
 
     respond_to do |format|
       format.js { render :see_more }
+      format.json { render json: response_hash }
     end
   end
 
@@ -79,6 +81,7 @@ class ActivityFeedController < ApplicationController
 
     respond_to do |format|
       format.js { render :see_more }
+      format.json { render json: response_hash }
     end
   end
 
@@ -91,6 +94,7 @@ class ActivityFeedController < ApplicationController
 
     respond_to do |format|
       format.js { render :see_more }
+      format.json { render json: response_hash }
     end
   end
 
@@ -103,6 +107,7 @@ class ActivityFeedController < ApplicationController
 
     respond_to do |format|
       format.js { render :see_more }
+      format.json { render json: response_hash }
     end
   end
 
@@ -115,6 +120,7 @@ class ActivityFeedController < ApplicationController
 
     respond_to do |format|
       format.js { render :see_more }
+      format.json { render json: response_hash }
     end
   end
 
@@ -127,6 +133,7 @@ class ActivityFeedController < ApplicationController
 
     respond_to do |format|
       format.js { render :see_more }
+      format.json { render json: response_hash }
     end
   end
 
@@ -139,10 +146,20 @@ class ActivityFeedController < ApplicationController
 
     respond_to do |format|
       format.js { render :see_more }
+      format.json { render json: response_hash }
     end
   end
 
   private
+
+  def response_hash
+    OpenStruct.new(
+      container: @container,
+      append: @collection.offset > 0,
+      next_page: @collection.next_page,
+      content: render_to_string(partial: @partial, collection: @collection, as: @as, locals: { object: @object }, formats: :html)
+    ).to_h
+  end
 
   def set_object(whitelist)
     @id = params[:id]

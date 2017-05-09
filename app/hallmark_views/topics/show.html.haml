@@ -28,11 +28,12 @@
 .tab-content
   #activity.tab-pane.fade.active{:role => "tabpanel"}
     = render 'show_activity', object: @topic, feed: @feed
-  #followers.tab-pane.fade{:role => "tabpanel"}
+  #followers.tab-pane.fade{:role => "tabpanel", 'data-paginable-container': true }
     .wrap-a.reduce-top
       .contain
-        .box-a= render 'shared/show_followers', container: '#followers', see_more_route: see_more_followers_path(id: @topic.id, type: 'Topic', container: '#followers'), collection: @followers
-  #projects.tab-pane.fade{:role => "tabpanel"}
+        .box-a
+          = render 'shared/show_followers', container: '#followers', see_more_route: see_more_followers_path(id: @topic.id, type: 'Topic', container: '#followers'), collection: @followers
+  #projects.tab-pane.fade{:role => "tabpanel", 'data-paginable-container': true }
     / content wrapper
     .wrap-a.reduce-top
       .contain
