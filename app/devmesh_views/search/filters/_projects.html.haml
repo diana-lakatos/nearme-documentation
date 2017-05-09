@@ -32,7 +32,7 @@
         as: :select,
         multiple: true,
         input_html: { class: 'selectize', multiple: true },
-        collection: (CustomAttributes::CustomAttribute.find_by(name: 'role').valid_values),
+        collection: (CustomAttributes::CustomAttribute.find_by(name: 'role')&.valid_values || []),
         selected: @searcher.selected_roles,
         wrapper_html: { class: 'drop role', style: 'width: 300px' },
         required: false,
