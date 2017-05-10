@@ -60,13 +60,11 @@ class UserEntryForm {
 
     if (this.isXHR && !entryFormTargetSelector) {
       throw new Error(`Missing or invalid entryFormTargetSelector: ${entryFormTargetSelector}`);
-    }
-    else if (this.isXHR) {
+    } else if (this.isXHR) {
       this.target = findElement(entryFormTargetSelector);
     }
 
     let textarea = findTextArea(TEXTAREA_SELECTOR, form);
-    console.log(textarea);
     this.editor = UserEntryEditorFactory.get(textarea);
     this.images = new UserEntryImages(findElement(ENTRY_IMAGES_SELECTOR, form));
     this.fileField = new UserEntryFileField(findInput(FILE_FIELD_SELECTOR, form));
