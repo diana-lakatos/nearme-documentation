@@ -234,6 +234,7 @@ class FormComponentToFormConfiguration
 
   def hallmark_configuration
     {
+      email: { validation: { presence: {} } },
       name: { validation: { presence: {} } },
       cover_image: { validation: {} },
       avatar: { validation: {} },
