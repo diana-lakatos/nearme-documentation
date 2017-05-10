@@ -23,7 +23,7 @@ module ReportsProperties
       if items.first.is_a?(Transactable)
         csv << [attribute_names, 'creator_name', 'creator_email', 'url', 'latitude', 'longitude', 'address', 'street', 'suburb', 'city', 'country', 'state', 'postcode', 'prices', properties_columns].flatten
       else
-        csv << [attribute_names, properties_columns].flatten
+        csv << [attribute_names, 'user_categories', 'followed_topics', properties_columns].flatten
       end
 
       items.each do |record|
@@ -31,7 +31,8 @@ module ReportsProperties
         values = record.attributes.values
         properties = record.send(:properties).to_h
 
-        if record.is_a?(Transactable)
+        case record
+        when Transactable then
           values << record.creator&.name
           values << record.creator&.email
           values << record.show_url
@@ -45,6 +46,9 @@ module ReportsProperties
           values << (record.location.location_address.try(:state) || '')
           values << (record.location.location_address.try(:postcode) || '')
           values << record.action_type.pricings.inject({}) { |hash, p| hash[p.unit] = p.price_cents; hash }
+        when User then
+          values << record.categories.pluck(:name).join(',')
+          values << Topic.joins("inner join activity_feed_subscriptions afs on afs.followed_id = topics.id and afs.followed_type = 'Topic'").where('afs.follower_id = ?', record.id).pluck(:name).join(',')
         end
 
         properties_columns.each do |column|

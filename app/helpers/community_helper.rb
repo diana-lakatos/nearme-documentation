@@ -11,4 +11,8 @@ module CommunityHelper
       address.try(:address)
     end
   end
+
+  def community_user_category
+    Category.where(parent_id: nil, name: 'Categories').first
+  end
 end
