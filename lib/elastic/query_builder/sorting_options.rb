@@ -7,15 +7,13 @@ module Elastic
 
       def prepare
         return default_sort if @query[:sort].blank?
-        return default_sort if @query[:sort] == 'relevance' # find and get rid of this crap
 
         @query[:sort]
           .split(',')
           .compact
-          .map { |option| SortOption.new(option) }
-          .select(&:valid?)
+          .map { |option| SortOption.new(option, query: @query) }
           .map(&:to_h)
-          .each_with_object({}) { |field, sort| sort.merge!(field) }
+          .each_with_object({}) { |field, sort| sort.merge!(field.to_h) }
       end
 
       private
@@ -25,29 +23,32 @@ module Elastic
       end
 
       class SortOption
-        def initialize(source)
+        def initialize(source, query: {})
           @source = source
+          @query = query
         end
 
         def to_h
           case type
           when 'custom_attribute'
-            NestedSort.new(name: name, order: order, profile_type: 'seller').to_h
+            NestedSort.new(name: name, order: order, profile_type: 'seller')
           when 'user_profiles'
-            NestedSort.new(name: name, order: order, profile_type: profile_name).to_h
+            NestedSort.new(name: name, order: order, profile_type: profile_name)
           when 'transactable'
-            ChildFieldSort.new(name: name, order: order).to_h
+            ChildFieldSort.new(name: name, order: order)
+          when 'location'
+            GeoSort.new(name: 'geo_location', location: @query[:location], order: order)
+          when 'relevance'
+            SimpleSort.new(name: '_score', order: order)
           else
-            SimpleSort.new(name: name, order: order).to_h
+            SimpleSort.new(name: name, order: order)
           end
         end
 
-        def valid?
-          field
-        end
+        private
 
         def field
-          @field ||= @source.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/)
+          @field ||= @source.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/) || [@source, @source, 'asc']
         end
 
         def order
@@ -74,6 +75,30 @@ module Elastic
           }
         end
 
+        class GeoSort
+          def initialize(name:, location:, order: 'asc')
+            @name = name
+            @order = order
+            @location = location
+          end
+
+          def to_h
+            { sort: [body] }
+          end
+
+          private
+
+          def body
+            {
+              _geo_distance: {
+                @name => @location,
+                order: @order,
+                distance_type: 'plane'
+              }
+            }
+          end
+        end
+
         class SimpleSort
           def initialize(name:, order:)
             @name = name
@@ -85,42 +110,8 @@ module Elastic
           end
         end
 
-        class ChildFieldFilter
-          SCORE_MODE = 'max'
-
-          def initialize(name:, order:, type: 'transactable')
-            @name = name
-            @order = order
-            @type = type
-          end
-
-          def to_h
-            {
-              query: {
-                has_child: {
-                  inner_hits: { _source: '*'},
-                  type: @type,
-                  score_mode: SCORE_MODE,
-                  query: {
-                    function_score: script_score
-                  }
-                }
-              },
-              sort: [{ '_score' => @order }]
-            }
-          end
-
-          private
-
-          def script_score
-            {
-              filter: { terms: { @name => terms } }
-            }
-          end
-        end
-
         class ChildFieldSort
-          SCORE_MODE = 'max'
+          SCORE_MODE = 'max'.freeze
 
           def initialize(name:, order:, type: 'transactable')
             @name = name
@@ -130,25 +121,25 @@ module Elastic
 
           def to_h
             {
-              query: {
-                bool: {
-                  must: [
-                    has_child: {
-                      inner_hits: { _source: '*' },
-                      type: @type,
-                      score_mode: SCORE_MODE,
-                      query: {
-                        function_score: script_score
-                      }
-                    }
-                  ]
-                }
-              },
+              query: { bool: { must: [query_has_child] } },
               sort: [{ '_score' => @order }]
             }
           end
 
           private
+
+          def query_has_child
+            {
+              has_child: {
+                inner_hits: { _source: '*' },
+                type: @type,
+                score_mode: SCORE_MODE,
+                query: {
+                  function_score: script_score
+                }
+              }
+            }
+          end
 
           def script_score
             {
@@ -158,7 +149,6 @@ module Elastic
             }
           end
         end
-
 
         class NestedSort
           def initialize(name:, order:, profile_type:)

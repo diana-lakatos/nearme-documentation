@@ -8,7 +8,7 @@ require './lib/elastic/query_builder/sorting_options'
 class Elastic::QueryBuilder::SortingOptions::SortOptionTest < ActiveSupport::TestCase
 
   def build(*args)
-    Elastic::QueryBuilder::SortingOptions::SortOption.new(*args)
+    Elastic::QueryBuilder::SortingOptions::SortOption.new(*args).to_h
   end
 
   def assert_equal_sort(key, expectation)
@@ -29,6 +29,14 @@ class Elastic::QueryBuilder::SortingOptions::SortOptionTest < ActiveSupport::Tes
 
   test 'seller_average_rating_asc' do
     assert_equal_sort 'seller_average_rating_asc', 'seller_average_rating' => 'asc'
+  end
+
+  test 'location_desc' do
+    assert_equal build('location_desc', query: { location: {} }).to_h.dig(:sort, 0), { _geo_distance: { 'geo_location' => {}, order: 'desc', distance_type: 'plane'}}
+  end
+
+  test 'location' do
+    assert_equal build('location', query: { location: {} }).to_h.dig(:sort, 0), { _geo_distance: { 'geo_location' => {}, order: 'asc', distance_type: 'plane'}}
   end
 
   test 'user.seller_average_rating_asc' do
