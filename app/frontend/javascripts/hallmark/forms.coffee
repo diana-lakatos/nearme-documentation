@@ -52,11 +52,19 @@ module.exports = class Forms
     return unless $.fn.selectize and !Modernizr.touch
 
     $('select.selectize').each (index, el) ->
+      select = this
       $select = $(this)
       $select.selectize
         plugins: [ 'remove_button' ]
         hideSelected: false
         closeAfterSelect: !$select.is('[multiple]')
+        onChange: ->
+          event = new Event('change', {
+            'view': window,
+            'bubbles': true,
+            'cancellable': true
+          })
+          cancelled = !select.dispatchEvent(event)
 
       $select.on 'change', ->
         if $select.val() == 0
