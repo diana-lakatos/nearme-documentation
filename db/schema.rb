@@ -13,7 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20170515145406) do
 
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "btree_gin"
@@ -1875,6 +1874,7 @@ ActiveRecord::Schema.define(version: 20170515145406) do
     t.string   "metadata_canonical_url"
     t.string   "layout_name",                           default: "application"
     t.boolean  "require_verified_user",                 default: false
+    t.boolean  "admin_page",                            default: false
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree

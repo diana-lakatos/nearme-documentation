@@ -7,7 +7,7 @@ module Graph
 
       global_id_field :id
 
-      field :id, !types.Int
+      field :id, !types.ID
       field :is_read, types.Boolean
       field :participant, Types::User do
         resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.participant.id }, ctx) }

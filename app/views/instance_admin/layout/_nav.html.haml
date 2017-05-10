@@ -76,6 +76,11 @@
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/manage/" + controller_name), action: settings[:default_action]}", :class => is_active_instance_admin_nav_link(controller_name, settings)}
                 %span= settings[:title] || controller_name.titleize
 
+          - Page.admin_pages.each do |page|
+            %li
+              %a{href: "/#{page.path}"}
+                %span= page.metadata_title
+
 
     - if @authorizer.authorized?('Blog')
       %li#blog

@@ -2,10 +2,8 @@
 module Graph
   module Types
     MessagesQueryType = GraphQL::ObjectType.define do
-      field :thread do
-        type Types::Thread
-        argument :id, types.ID
-        resolve ->(_obj, args, _ctx) { }
+      connection :messages, Graph::Types::MessagesConnection, max_page_size: 50 do
+        resolve ->(_obj, _args, _ctx) { ::UserMessage.all.order(created_at: :desc) }
       end
     end
   end

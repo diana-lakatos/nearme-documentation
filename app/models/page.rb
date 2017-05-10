@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class Page < ActiveRecord::Base
-  VALID_LAYOUTS = %w(community application dashboard).freeze
+  VALID_LAYOUTS = %w(community application dashboard instance_admin).freeze
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
@@ -33,6 +33,8 @@ class Page < ActiveRecord::Base
   has_many :page_data_source_contents, dependent: :destroy
   has_many :page_forms
   has_many :form_configurations, through: :page_forms
+
+  scope :admin_pages, -> { where(admin_page: true) }
 
   def to_liquid
     @page_drop ||= PageDrop.new(self)

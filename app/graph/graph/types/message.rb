@@ -4,19 +4,22 @@ module Graph
     Message = GraphQL::ObjectType.define do
       name 'Message'
       description 'A message in a thread'
+      implements GraphQL::Relay::Node.interface
 
-      global_id_field :id
-
-      field :id, !types.Int
+      field :id, !types.ID
       field :body, !types.String
       field :created_at, types.String
       field :url, types.String
       field :attachments, types[Types::File] do
         resolve ->(obj, _, _) { obj.attachments.map(&:file) }
       end
-      field :author, !Types::User do
-        resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, {id: obj.author_id }, ctx) }
+      field :author, Types::User do
+        resolve ->(obj, _arg, ctx) { Graph::Resolvers::User.new.call(nil, { id: obj.author_id }, ctx) }
       end
+      field :recipient, Types::User do
+        resolve ->(obj, _arg, ctx) { Graph::Resolvers::User.new.call(nil, { id: obj.thread_recipient_id }, ctx) }
+      end
+      # field :properties,
     end
   end
 end
