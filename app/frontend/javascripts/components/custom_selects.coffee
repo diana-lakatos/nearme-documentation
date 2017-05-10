@@ -22,7 +22,7 @@ module.exports = class CustomSelects
 
     #select2
 
-    container.find('.select2').each ->
+    container.find('select.select2').each ->
       $select = $(this)
 
       defaults = {
