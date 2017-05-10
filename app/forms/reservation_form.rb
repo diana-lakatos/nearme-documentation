@@ -33,10 +33,8 @@ class ReservationForm < BaseForm
                                prepopulator: ->(_options) { periods << model.periods.build if periods.size.zero? }
           validates :periods, presence: true, length: { minimum: 1 }
         end
-        if (properties_configuration = configuration.delete(:properties)).present?
-          add_validation(:properties, properties_configuration)
-          property :properties, form: PropertiesForm.decorate(properties_configuration)
-        end
+
+        inject_custom_attributes(configuration)
         inject_dynamic_fields(configuration)
       end
     end

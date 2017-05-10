@@ -8,6 +8,13 @@ class BaseForm < Reform::Form
       end
     end
 
+    def inject_custom_attributes(configuration)
+      if (properties_configuration = configuration.delete(:properties)).present?
+        add_validation(:properties, properties_configuration)
+        property :properties, form: PropertiesForm.decorate(properties_configuration)
+      end
+    end
+
     def add_validation(field, options)
       return if options.nil?
       return unless options.key?(:validation)

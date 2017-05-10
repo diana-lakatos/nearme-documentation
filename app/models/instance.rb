@@ -59,6 +59,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_billing_gateways, dependent: :destroy, inverse_of: :instance
   has_one :blog_instance, as: :owner
   has_many :user_messages, dependent: :destroy, inverse_of: :instance
+  has_many :user_message_types
   has_many :faqs, class_name: 'Support::Faq'
   has_many :tickets, -> { where(target_type: 'Instance').order('created_at DESC') }, class_name: 'Support::Ticket'
   has_many :transactable_types

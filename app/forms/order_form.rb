@@ -28,10 +28,8 @@ class OrderForm < BaseForm
                                     populator: RESERVATIONS_POPULATOR,
                                     prepopulator: ->(_options) { reservations << build_reservation_object if reservations.size.zero? }
         end
-        if (properties_configuration = configuration.delete(:properties)).present?
-          add_validation(:properties, properties_configuration)
-          property :properties, form: PropertiesForm.decorate(properties_configuration)
-        end
+
+        inject_custom_attributes(configuration)
         inject_dynamic_fields(configuration)
       end
     end
