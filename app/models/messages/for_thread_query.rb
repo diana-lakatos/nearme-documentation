@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Messages
   # Thread is defined by thread owner, thread recipient and thread context
   class ForThreadQuery
@@ -12,6 +13,13 @@ module Messages
     private
 
     def find(ids, thread_context)
+      # This is special case when listing owner writes himself as a guest
+      # we don't want to fetch those messages on others users conversations
+      # for that listing thread
+      if ids.uniq.size > 1
+        @relation = @relation.where('NOT(user_messages.author_id = user_messages.thread_recipient_id
+          AND user_messages.author_id = user_messages.thread_owner_id)')
+      end
       @relation
         .where(thread_context_id: thread_context.id, thread_context_type: thread_context.class.to_s)
         .where('user_messages.thread_owner_id IN (:ids)', ids: ids)

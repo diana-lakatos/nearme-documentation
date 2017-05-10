@@ -61,6 +61,10 @@ class UserMessage < ActiveRecord::Base
     !read_for?(user)
   end
 
+  def replied?
+    Messages::ForThreadQuery.new.call(self).where.not(author_id: author_id).where('created_at > ?', created_at).any?
+  end
+
   def mark_as_read_for!(user)
     column = read_column_for(user)
     send("#{column}=", true)
