@@ -5,6 +5,35 @@
 - canonical_url @transactable.show_path
 - meta_description "#{mask_phone_and_email_if_necessary(@transactable.properties.summary).try(:truncate, 130)}"
 - meta_og_image cover_photo if cover_photo
+- content_for :script do
+  :javascript
+    window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+      if (d.getElementById(id)) return t;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+
+      t._e = [];
+      t.ready = function(f) {
+        t._e.push(f);
+      };
+
+      return t;
+    }(document, "script", "twitter-wjs"));
+
+- content_for :body_top do
+  #fb-root
+  :javascript
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9&appId=207810385953274";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
 
 .wrap-a.white.reduce
   .contain
@@ -26,6 +55,17 @@
         %p.tx-a.multiline= @transactable.properties.summary
         %p.topics
           = @transactable.topics.map { |t| link_to(t.name, topic_path(t)) }.join(', ').html_safe
+
+        .share-a
+          %ul
+            %li.twitter
+              %a.twitter-share-button{ :href => "https://twitter.com/intent/tweet", data: { size: 'default' }}
+            %li.facebook
+              .fb-share-button{ data: { href: @transactable.show_path, layout: "button",  size: "small", "mobile-iframe": "true" } }
+                %a.fb-xfbml-parse-ignore{ href: "https://www.facebook.com/sharer/sharer.php?u=#{URI.encode(@transactable.show_path)}", target: "_blank" }
+            %li.linkedin
+              %script{ src: "//platform.linkedin.com/in.js" } lang: en_US
+              %script{ type: "IN/Share" }
       .bignums-a
         %ul
           %li

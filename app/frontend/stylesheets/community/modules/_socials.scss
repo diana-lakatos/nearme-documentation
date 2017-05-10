@@ -1,94 +1,137 @@
 /* socials */
 
 .socials-a {
+  p {
+    margin-bottom: 40px;
+    font-size: 14px;
+  }
 
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+    letter-spacing: -1em;
+  }
+
+  li {
+    display: inline-block;
+    font: 26px / 50px $font-icons;
+    letter-spacing: 0;
+    vertical-align: top;
+  }
+
+  li ~ li {
+    margin-left: 50px;
+  }
+
+  li:before {
+    display: none;
+  }
+
+  li a {
+    display: block;
+    width: 50px;
+    height: 50px;
+    background: #2071B9;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  li a:hover {
+    background-color: #18639B;
+  }
+
+  li a:before {
+    text-align: inherit;
+  }
+
+  li.facebook a:before {
+    content: '\e60f';
+  }
+
+  li.twitter a:before {
+    content: '\e612';
+  }
+
+  li.google a:before {
+    content: '\e611';
+  }
+
+  li.instagram a:before {
+    content: '\e613';
+  }
+
+  li.youtube a:before {
+    content: '\e610';
+  }
+
+  li a span {
+    display: none;
+  }
+
+  @include bp($screen-mobile) {
     p {
-        margin-bottom: 40px;
-        font-size: 14px;
-    }
-
-    ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        font-size: 0;
-        letter-spacing: -1em;
+      margin-bottom: 20px;
     }
 
     li {
-        display: inline-block;
-        font: 26px/50px $font-icons;
-        letter-spacing: 0;
-        vertical-align: top;
+      font-size: 20px;
+      line-height: 40px;
     }
 
     li ~ li {
-        margin-left: 50px;
-    }
-
-    li:before {
-        display: none;
+      margin-left: 10px;
     }
 
     li a {
-        display: block;
-        width: 50px;
-        height: 50px;
-        background: #2071B9;
-        color: #fff;
-        text-decoration: none;
+      width: 40px;
+      height: 40px;
     }
+  }
+}
 
-    li a:hover {
-        background-color: #18639B;
+.share-a {
+  h3 {
+    display: inline;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    font-weight: bold;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+
+  ul {
+    display: inline;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+  }
+
+  li {
+    display: inline-block;
+    vertical-align: top;
+
+    &::before {
+      display: none;
     }
+  }
 
-    li a:before {
-        text-align: inherit;
+  .twitter > iframe {
+    display: block;
+    vertical-align: top;
+  }
+
+  .facebook > div {
+    vertical-align: top;
+
+    > span {
+      vertical-align: top !important;
     }
+  }
 
-    li.facebook a:before {
-        content: '\e60f';
-    }
-
-    li.twitter a:before {
-        content: '\e612';
-    }
-
-    li.google a:before {
-        content: '\e611';
-    }
-
-    li.instagram a:before {
-        content: '\e613';
-    }
-
-    li.youtube a:before {
-        content: '\e610';
-    }
-
-    li a span {
-        display: none;
-    }
-
-    @include bp($screen-mobile) {
-
-        p {
-            margin-bottom: 20px;
-        }
-
-        li {
-            font-size: 20px;
-            line-height: 40px;
-        }
-
-        li ~ li {
-            margin-left: 10px;
-        }
-
-        li a {
-            width: 40px;
-            height: 40px;
-        }
-    }
+  .linkedin > span {
+    vertical-align: top;
+  }
 }
