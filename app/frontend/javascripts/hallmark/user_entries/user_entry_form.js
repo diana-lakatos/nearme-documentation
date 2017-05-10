@@ -1,7 +1,6 @@
 // @flow
 import type UserEntryEditor from './user_entry_editor/user_entry_editor';
-import UserEntryEditorFactory
-  from './user_entry_editor/user_entry_editor_factory';
+import UserEntryEditorFactory from './user_entry_editor/user_entry_editor_factory';
 import UserEntryFileField from './user_entry_file_field';
 import UserEntryImages from './user_entry_images';
 import UserEntryLoader from './user_entry_loader';
@@ -59,20 +58,15 @@ class UserEntryForm {
     let entryFormTargetSelector = form.dataset.userEntryFormTarget;
 
     if (this.isXHR && !entryFormTargetSelector) {
-      throw new Error(
-        `Missing or invalid entryFormTargetSelector: ${entryFormTargetSelector}`
-      );
+      throw new Error(`Missing or invalid entryFormTargetSelector: ${entryFormTargetSelector}`);
     } else if (this.isXHR) {
       this.target = findElement(entryFormTargetSelector);
     }
 
     let textarea = findTextArea(TEXTAREA_SELECTOR, form);
-    console.log(textarea);
     this.editor = UserEntryEditorFactory.get(textarea);
     this.images = new UserEntryImages(findElement(ENTRY_IMAGES_SELECTOR, form));
-    this.fileField = new UserEntryFileField(
-      findInput(FILE_FIELD_SELECTOR, form)
-    );
+    this.fileField = new UserEntryFileField(findInput(FILE_FIELD_SELECTOR, form));
     this.cancelButton = form.querySelector(CANCEL_BUTTON_SELECTOR);
 
     this.loader = new UserEntryLoader();
