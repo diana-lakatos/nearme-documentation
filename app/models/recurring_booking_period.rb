@@ -86,6 +86,8 @@ class RecurringBookingPeriod < ActiveRecord::Base
       payment_subscription.try(:unexpire!)
       update_attribute(:paid_at, Time.zone.now)
       mark_recurring_booking_as_paid!
+
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingPeriodWorkflow::Paid, id)
     else
       payment_subscription.try(:expire!)
       order.overdue
