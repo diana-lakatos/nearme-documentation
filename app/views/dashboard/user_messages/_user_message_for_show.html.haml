@@ -20,7 +20,7 @@
 
 
   .body
-    = user_message.body
+    = nl2br(h(user_message.body))
 
   %footer
     %span.attachment
