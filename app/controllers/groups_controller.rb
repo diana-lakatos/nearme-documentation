@@ -6,7 +6,7 @@ class GroupsController < ApplicationController
   before_filter :find_membership, only: [:show]
 
   def show
-    @feed = ActivityFeedService.new(@group)
+    @feed = ActivityFeedService.new(@group, current_user: current_user)
     @members = @group.approved_members.paginate(paginate_params)
     @transactables = @group.transactables.active.paginate(paginate_params)
     respond_to :html

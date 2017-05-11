@@ -62,6 +62,13 @@ class ActivityFeedEvent < ActiveRecord::Base
     end
   end
 
+  scope :visible_for_user, ->(user) do
+    transactable_ids = user.present? ? user.accessible_transactable_ids : []
+
+    where("not flags ? 'private_transactable_feed' OR flags -> 'private_transactable_feed' IN (:transactable_ids)",
+          transactable_ids: transactable_ids.map(&:to_s))
+  end
+
   before_create :update_affected_objects
   def update_affected_objects
     if affected_objects.present?
