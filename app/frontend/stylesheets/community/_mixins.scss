@@ -62,3 +62,7 @@
   transition-delay:         $delay;
 }
 
+@mixin sr-only {
+  position: absolute;
+  left: -999em;
+}

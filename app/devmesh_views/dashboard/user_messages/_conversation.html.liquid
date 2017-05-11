@@ -1,0 +1,39 @@
+<div class="conversation">
+  <header>
+    <h2 class="user-name">
+      <a href="{{ 'profile_path' | generate_url: id: thread.participant.id }}">
+        <span class="first-name">{{ thread.participant.first_name }}</span> <span class="last-name">{{ thread.participant.last_name }}</span>
+      </a>
+    </h2>
+    <a href="{{ 'profile_path' | generate_url: id: thread.participant.id }}" class="profile-link">{{ 'user_messages.profile_link' | t }}</a>
+    <button type="button" class='contact-list-toggler' data-user-messages-contact-list-toggler>{{ 'user_messages.contact_list' | t }}</button>
+  </header>
+  {% assign messages = thread.messages | reverse %}
+  <div class="entries-wrapper" data-user-messages-inbox-entries-wrapper>
+    <div class="entries" data-user-messages-inbox-entries>
+      {% for message in messages %}
+        {% assign author_id = message.author.id | plus: 0 %}
+        {% capture message_klass %}{% if author_id == current_user.id %}own-message{% endif %}{% endcapture %}
+        {% if message.attachments.size > 0 %}
+          {% for attachment in message.attachments %}
+            <p class="attachment {{ message_klass | trim }}">
+              <span class="meta" data-user-messages-meta>
+                <span data-user-messages-meta-author>{{ message.author.first_name }}</span> <time datetime="{{ message.created_at }}"></time>:
+              </span>
+              {{ 'user_messages.attachment' | t }}: <a href="{{ attachment.url }}" download>{{ attachment.name }}</a>
+            </p>
+          {% endfor %}
+        {% else %}
+          <p class="{{ message_klass | trim }}">
+            <span class="meta" data-user-messages-meta>
+              <span data-user-messages-meta-author>{{ message.author.first_name }}</span> <time datetime="{{ message.created_at }}"></time>:
+            </span>
+            {{ message.body }}
+          </p>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  {% include 'dashboard/user_messages/dashboard_form' %}
+</div>
