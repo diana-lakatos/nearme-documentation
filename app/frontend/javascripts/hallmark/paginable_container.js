@@ -11,7 +11,7 @@ class PaginableContainer {
     }
 
     this.sortForm = container.querySelector('form.sort-form');
-    this.sortControl = container.querySelector('form.sort-form [name="sort"]');
+    this.sortControl = container.querySelector('form.sort-form select[name="[sort]"]');
 
     this.bindEvents();
   }
@@ -25,63 +25,85 @@ class PaginableContainer {
     }
 
     if (this.sortForm) {
-      this.sortForm.addEventListener(
-        'change',
-        this.reorderResults.bind(this),
-        true
-      );
+      this.sortForm.addEventListener('change', this.reorderResults.bind(this), true);
     }
   }
 
   reorderResults() {
-    this.sortForm.submit();
+    $(this.sortForm).submit();
+    let url = this.sortForm.getAttribute('action');
+    if (!url) {
+      throw new Error('Missing action in the sort-form');
+    }
+
+    url = this.updatePageNumberInUrl(url, 1);
+    url = this.updateSortOrderInUrl(url);
+
+    this.updateResults(url);
   }
 
-  getResultsUrl() {
+  updatePageNumberInUrl(url, pageNumber) {
+    if (/page=/i.test(url)) {
+      url = url.replace(/page=\d/, `page=${pageNumber}`);
+    } else {
+      url = url + `&page=${pageNumber}`;
+    }
+
+    return url;
+  }
+
+  updateSortOrderInUrl(url) {
+    if (!this.sortControl) {
+      return;
+    }
+
+    let sortType = this.sortControl.value;
+    if (/sort=/i.test(url)) {
+      url = url.replace(/sort=[\w ]*/, `sort=${sortType}`);
+    } else {
+      url = url + `&sort=${sortType}`;
+    }
+
+    return url;
+  }
+
+  getMoreResultsUrl() {
     let nextPage = parseInt(this.seeMoreTrigger.dataset.nextPage, 10);
     if (!nextPage || nextPage < 2) {
       throw new Error('Invalid next page parameter');
     }
 
-    let moreUrl = this.seeMoreTrigger.dataset.url;
-    if (!moreUrl) {
+    let url = this.seeMoreTrigger.dataset.url;
+    if (!url) {
       throw new Error('Missing URL attribute for fetching more results');
     }
 
-    if (/page=/i.test(moreUrl)) {
-      moreUrl = moreUrl.replace(/page=\d/, `page=${nextPage}`);
-    } else {
-      moreUrl = moreUrl + `&page=${nextPage}`;
-    }
+    url = this.updatePageNumberInUrl(url, nextPage);
+    url = this.updateSortOrderInUrl(url);
 
-    if (this.sortControl) {
-      let sortType = this.sortControl.value;
-
-      if (/sort=/i.test(moreUrl)) {
-        moreUrl = moreUrl.replace(/sort=[\w ]*/, `sort=${sortType}`);
-      } else {
-        moreUrl = moreUrl + `&sort=${sortType}`;
-      }
-    }
-
-    return moreUrl;
+    return url;
   }
 
-  loadMoreResults() {
+  updateResults(url) {
+    console.log(url);
     this.disableMoreTrigger();
 
     $.ajax({
-      url: this.getResultsUrl(),
+      url: url,
       dataType: 'json'
     })
-      .done(this.processMoreResults.bind(this))
+      .done(this.processResults.bind(this))
       .fail(() => {
         this.enableMoreTrigger();
         throw new Error('Unable to fetch more results');
       });
   }
 
-  processMoreResults(results) {
+  loadMoreResults() {
+    this.updateResults(this.getMoreResultsUrl());
+  }
+
+  processResults(results) {
     // update results
     if (results.append) {
       this.contentContainer.insertAdjacentHTML('beforeend', results.content);
@@ -94,6 +116,7 @@ class PaginableContainer {
       this.seeMoreTrigger.classList.add('hidden');
     } else {
       this.seeMoreTrigger.dataset.nextPage = results.next_page + '';
+      this.seeMoreTrigger.classList.remove('hidden');
     }
 
     // reinitialize
