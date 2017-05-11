@@ -10,14 +10,6 @@
 
   {% input first_name, form: owners, required: true %}
   {% input last_name, form: owners, required: true %}
-  {% if merchant_account.personal_id_number_provided %}
-    {% input personal_id_number, form: owners, disabled: true,
-      input_html-disabled: true, input_html-value: 'Provided.',
-      hint: 'You cannot change Social Security Number once it was provided. Please contact us if you need to change this field.' %}
-  {% else %}
-    {% input personal_id_number, form: owners, required: true %}
-  {% endif %}
-  {% input business_tax_id, form: owners, required: true, wrapper_html-data-account-type: 'company' %}
 
   <div class='datetimepicker' style='position: relative'>
     {% assign date_format = owner.date_format_readable %}

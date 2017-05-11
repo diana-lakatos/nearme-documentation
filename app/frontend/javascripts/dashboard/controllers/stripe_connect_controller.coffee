@@ -15,12 +15,14 @@ module.exports = class StripeConnectController
 
   bindEvents: ->
     @accountTypeSelect.on 'change', ->
-      companyFields = $("div[data-account-type=company]")
-      if $(@).val() == 'company'
-        companyFields.removeClass('hidden')
-      else
-        companyFields.addClass('hidden')
+      for el in ['company', 'individual', 'both']
+        fields = $("div[data-account-type=" + el + "]")
+        if el == 'both'
+          match = $(@).val() in ['individual', 'company']
+        else
+          match = $(@).val() == el
 
+        fields.toggleClass('hidden', !match)
 
     @container.on 'cocoon:after-insert', (e, fields) ->
       Datepickers(fields)

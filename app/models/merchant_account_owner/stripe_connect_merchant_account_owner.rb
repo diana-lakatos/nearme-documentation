@@ -3,22 +3,17 @@
 require 'stripe'
 
 class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountOwner
-  ATTRIBUTES = %w(dob_formated dob first_name last_name business_vat_id business_tax_id)
-
-  # We don't want to store sensitive information so we only pass it to Stripe
-  attr_accessor :personal_id_number
+  ATTRIBUTES = %w(dob_formated dob first_name last_name).freeze
 
   include MerchantAccount::Concerns::DataAttributes
   has_one :current_address, class_name: 'Address', as: :entity, validate: false
   has_many :attachements, class_name: '::Attachable::MerchantAccountOwnerAttachement', validate: true, as: :attachable
   belongs_to :merchant_account, class_name: 'MerchantAccount::StripeConnectMerchantAccount'
 
-  delegate :iso_country_code, :account_type, :payment_gateway, to: :merchant_account, allow_nil: true
+  delegate :iso_country_code, :payment_gateway, to: :merchant_account, allow_nil: true
 
   validates :last_name, :first_name, presence: true
-  validates :personal_id_number, presence: { if: :personal_id_number_required? }
-  validate :validate_dob_formated
-  validates :business_tax_id, presence: { if: proc { |m| m.iso_country_code == 'US' && m.account_type == 'company' } }
+  validate :validate_dob_formated, on: :create
   validate :validate_current_address
   validate :validate_attachements
 
@@ -93,12 +88,6 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
       rescue
         errors.add :dob, :invalid
       end
-    end
-  end
-
-  def personal_id_number_required?
-    if (payment_gateway.config[:validate_merchant_account] || []).include?(:personal_id_number)
-      !merchant_account.attribute('legal_entity.personal_id_number_provided')
     end
   end
 end

@@ -43,7 +43,7 @@ class MerchantAccountTest < ActiveSupport::TestCase
 
     should 'only require personal_id_numebr if validation set' do
       merchant_account = create_merchant_account
-      merchant_account.owners.first.personal_id_number = nil
+      merchant_account.personal_id_number = nil
       assert merchant_account.valid?
       merchant_account.payment_gateway.config[:validate_merchant_account] = [:personal_id_number]
       refute merchant_account.valid?
