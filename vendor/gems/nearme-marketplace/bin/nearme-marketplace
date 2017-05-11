@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require "nearme-marketplace/command_dispatcher"
+
+NearmeMarketplace::CommandDispatcher.new.on_user_command
