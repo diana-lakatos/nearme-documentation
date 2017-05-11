@@ -269,6 +269,13 @@ module LiquidFilters
     render_money(money)
   end
 
+  # @return [String] formatted price using the global price formatting rules; the default currency will be used
+  # @param money [Numeric] amount to be formatted
+  # This should be used instead of the deprecated price_with_cents_with_currency and price_without_cents_with_currency
+  def render_price(money)
+    render_money(money)
+  end
+
   # @return [String] formatted price using the global price formatting rules, displayed as negative amount; the default currency will be used
   # @param money [Numeric] amount to be formatted
   def price_with_cents_with_currency_as_cost(money)
