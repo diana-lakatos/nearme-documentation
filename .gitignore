@@ -35,7 +35,6 @@ tmp
 coverage
 runner.html
 .jhw-cache
-bin/
 tags
 .tags
 .gemtags
