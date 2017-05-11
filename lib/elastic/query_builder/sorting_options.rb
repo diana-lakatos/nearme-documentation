@@ -37,15 +37,25 @@ module Elastic
           when 'transactable'
             ChildFieldSort.new(name: name, order: order)
           when 'location'
-            GeoSort.new(name: 'geo_location', location: @query[:location], order: order)
+            sort_by_location || default_sort
           when 'relevance'
-            SimpleSort.new(name: '_score', order: order)
+            default_sort
           else
             SimpleSort.new(name: name, order: order)
           end
         end
 
         private
+
+        def sort_by_location
+          return unless @query.dig(:location, :lat).present?
+
+          GeoSort.new(name: 'geo_location', location: @query[:location], order: order)
+        end
+
+        def default_sort
+          SimpleSort.new(name: '_score', order: order)
+        end
 
         def field
           @field ||= @source.match(/([a-zA-Z\.\_\-]*)_(asc|desc)/) || [@source, @source, 'asc']

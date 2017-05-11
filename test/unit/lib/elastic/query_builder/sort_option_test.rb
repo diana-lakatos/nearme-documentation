@@ -32,11 +32,11 @@ class Elastic::QueryBuilder::SortingOptions::SortOptionTest < ActiveSupport::Tes
   end
 
   test 'location_desc' do
-    assert_equal build('location_desc', query: { location: {} }).to_h.dig(:sort, 0), { _geo_distance: { 'geo_location' => {}, order: 'desc', distance_type: 'plane'}}
+    assert_equal build('location_desc', query: { location: { lat: 11, lon: 11 } }).to_h.dig(:sort, 0), { _geo_distance: { 'geo_location' => { lat: 11, lon: 11 }, order: 'desc', distance_type: 'plane'}}
   end
 
   test 'location' do
-    assert_equal build('location', query: { location: {} }).to_h.dig(:sort, 0), { _geo_distance: { 'geo_location' => {}, order: 'asc', distance_type: 'plane'}}
+    assert_equal build('location', query: { location: { lat: 11, lon: 11 } }).to_h.dig(:sort, 0), { _geo_distance: { 'geo_location' => { lat: 11, lon: 11 }, order: 'asc', distance_type: 'plane'}}
   end
 
   test 'user.seller_average_rating_asc' do
