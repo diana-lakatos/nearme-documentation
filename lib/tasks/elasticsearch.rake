@@ -35,7 +35,7 @@ namespace :elasticsearch do
 
   def find_sources
     [].tap do |items|
-      items << User if InstanceProfileType.searchable.any?
+      items << User
       items << Transactable if TransactableType.searchable.any?
     end
   end
