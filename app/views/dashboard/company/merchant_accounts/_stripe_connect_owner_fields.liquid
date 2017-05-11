@@ -10,7 +10,6 @@
 
   {% input first_name, form: owners, required: true %}
   {% input last_name, form: owners, required: true %}
-
   {% if merchant_account.personal_id_number_provided %}
     {% input personal_id_number, form: owners, disabled: true,
       input_html-disabled: true, input_html-value: 'Provided.',
