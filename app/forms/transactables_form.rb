@@ -19,8 +19,7 @@ class TransactablesForm < BaseForm
         configuration.each do |transactable_type_name, fields|
           @@mapping_hash ||= {}
           @@mapping_hash[transactable_type_name] = fields.deep_dup
-          validation = fields.delete(:validation)
-          validates :"#{transactable_type_name}", validation if validation.present?
+          add_validation(transactable_type_name, fields)
           collection :"#{transactable_type_name}",
                      form: TransactableForm.decorate(fields),
                      populator: POPULATOR,

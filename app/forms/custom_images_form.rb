@@ -7,8 +7,7 @@ class CustomImagesForm < BaseForm
           property :"#{field}", form: CustomImageForm.decorate(options, human_attribute_name(field)),
                                 populate_if_empty: ->(as:, **_options) { CustomImage.new(custom_attribute: CustomAttributes::CustomAttribute.find(as)) },
                                 prepopulator: ->(*) { send(:"#{field}=", CustomImage.new(custom_attribute: CustomAttributes::CustomAttribute.find(field.to_s))) if send(:"#{field}").nil? }
-
-          validates :"#{field}", options[:validation] if options[:validation].present?
+          add_validation(field, options)
         end
       end
     end

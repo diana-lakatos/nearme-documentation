@@ -20,8 +20,7 @@ class TimeBasedBookingForm < ActionTypeForm
       Class.new(self) do
         super
         if (availability_configuration = configuration.delete(:availability_templates)).present?
-          validation = availability_configuration.delete(:validation)
-          validates :availability_templates, validation if validation.present?
+          add_validation(:availability_templates, availability_configuration)
           validate :availability_rules_minimum_booking_minutes
           collection :availability_templates, form: AvailabilityTemplateForm.decorate(availability_configuration),
                                               prepopulator: ->(_option) { availability_templates << get_availability_template_object if availability_templates.blank? },

@@ -4,16 +4,13 @@ class CheckoutForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         property :payment do
-          property :payment_method_id, configuration.dig(:payment, :payment_method_id, :property_options).presence || {}
-          validation = configuration.dig(:payment, :payment_method_id).delete(:validation)
-          validates :payment_method_id, validation if validation.present?
-
-          property :credit_card_token
-          validation = configuration.dig(:payment, :credit_card_token).delete(:validation)
-          validates :credit_card_token, validation if validation.present?
+          %i(payment_method_id credit_card_token).each do |field|
+            options = configuration.dig(:payment, field)
+            add_property(field, options)
+            add_validation(field, options)
+          end
         end
-        validation = configuration[:payment].delete(:validation)
-        validates :payment, validation if validation.present?
+        add_validation(:payment, configuration[:payment])
       end
     end
   end

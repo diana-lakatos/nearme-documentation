@@ -13,8 +13,8 @@ class PropertiesForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         configuration.each do |field, options|
-          property :"#{field}", options[:property_options].presence || {}
-          validates :"#{field}", options[:validation] if options[:validation].present?
+          add_property(field, options)
+          add_validation(field, options)
 
           # tmp hack before we get coercion to work properly... :|
           # the reason is that for example checkbox boolean custom attributes
