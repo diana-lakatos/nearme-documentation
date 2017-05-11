@@ -101,16 +101,22 @@ module Elastic
         {
           query: {
             bool: {
-              must: query_must_conditions
+              must: query_must_conditions,
+              should: query_should_conditions
             }
           }
         }
       end
 
-      def query_must_conditions
+      def query_should_conditions
         ConditionGroup.new.tap do |group|
           group.add simple_match_query
           group.add multi_match_query
+        end.to_h
+      end
+
+      def query_must_conditions
+        ConditionGroup.new.tap do |group|
           group.add transactable_child
           group.add build_geo_shape
         end.to_h
@@ -121,7 +127,7 @@ module Elastic
         {
           simple_query_string: {
             query: @query[:query],
-            fields: search_by_query_attributes
+            fields: searchable_main_attributes
           }
         }
       end
@@ -135,7 +141,7 @@ module Elastic
             query: {
               multi_match: {
                 query: @query[:query],
-                fields: search_by_query_attributes
+                fields: @query_searchable_attributes
               }
             }
           }
