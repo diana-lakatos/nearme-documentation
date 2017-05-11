@@ -42,6 +42,7 @@ DesksnearMe::Application.configure do
   config.root_secured = false
   config.secure_app = false
   config.run_jobs_in_background = ENV['RUN_BACKGROUND_JOBS'] == 'true'
+  config.debug_graphql = ENV['DEBUG_GRAPHQL'] == 'true'
   config.googl_api_key = 'AIzaSyBV7BhIuT6s2HbprOP4jfXSmpdBFmocSMg'
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }

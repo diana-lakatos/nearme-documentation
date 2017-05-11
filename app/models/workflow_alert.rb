@@ -86,7 +86,7 @@ class WorkflowAlert < ActiveRecord::Base
   protected
 
   def payload_data_is_parsable
-    JSON.parse(payload_data)
+    JSON.parse(Liquid::Template.parse(payload_data).render)
   rescue JSON::ParserError
     errors.add(:payload_data, 'not valid json')
   end

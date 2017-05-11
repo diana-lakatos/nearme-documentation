@@ -69,15 +69,16 @@ namespace :local do
         return
       end
 
-      instance = Instance.find(130)
-      instance.set_context!
-      instance.update_attributes(olark_enabled: false)
+      Instances::InstanceFinder.get(:spacercom, :spacerau).each do |instance|
+        instance.set_context!
+        instance.update_attributes(olark_enabled: false)
 
-      ContentHolder.where("name LIKE '%Tracking%'").enabled.update_all(enabled: false)
-      ContentHolder.where("content LIKE '%olark%'").enabled.update_all(enabled: false)
-      ContentHolder.find_by(name: 'SCRIPTS GO HERE').update_attribute(content:
+        ContentHolder.where("name LIKE '%Tracking%'").enabled.update_all(enabled: false)
+        ContentHolder.where("content LIKE '%olark%'").enabled.update_all(enabled: false)
+        ContentHolder.find_by(name: 'SCRIPTS GO HERE').update_attributes(content:
         "<script src=\"https://d2rw3as29v290b.cloudfront.net/instances/130/uploads/ckeditor/attachment_file/data/4181/main.js\"
         async></script>")
+      end
     end
   end
 end

@@ -20,6 +20,7 @@ module Messages
         @relation = @relation.where('NOT(user_messages.author_id = user_messages.thread_recipient_id
           AND user_messages.author_id = user_messages.thread_owner_id)')
       end
+      
       @relation
         .where(thread_context_id: thread_context.id, thread_context_type: thread_context.class.to_s)
         .where('user_messages.thread_owner_id IN (:ids)', ids: ids)

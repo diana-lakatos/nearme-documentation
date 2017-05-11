@@ -15,7 +15,6 @@ module Api
 
       def api_respond_with(namespaced_object, options = {})
         options[:location] = params[:redirect_to].presence || params[:return_to] if params[:redirect_to].present? || params[:return_to].present?
-
         if params[:page_id].present? && form_configuration.present? && namespaced_object.last.errors.present?
           result = respond_with(*namespaced_object, options) do |format|
             submitted_form ||= {}
@@ -35,6 +34,7 @@ module Api
         else
           result = respond_with(*namespaced_object, options)
         end
+
         render_redirect_url_as_json if html_redirect?(result) && render_html_after_ajax_call?
       end
 

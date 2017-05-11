@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Responders
   # Responder to automatically set flash messages based on I18n API. It checks for
   # message based on the current action, but also allows defaults to be set, using
@@ -87,14 +88,14 @@ module Responders
       attr_accessor :flash_keys, :namespace_lookup, :helper
     end
 
-    self.flash_keys = [ :notice, :alert ]
+    self.flash_keys = [:notice, :alert]
     self.namespace_lookup = false
     self.helper = Object.new.extend(
       ActionView::Helpers::TranslationHelper,
       ActionView::Helpers::TagHelper
     )
 
-    def initialize(controller, resources, options={})
+    def initialize(controller, resources, options = {})
       super
       @flash     = options.delete(:flash)
       @notice    = options.delete(:notice)
@@ -112,7 +113,7 @@ module Responders
       defined?(super) ? super : to_format
     end
 
-  protected
+    protected
 
     def set_flash_message!
       if has_errors?
@@ -139,7 +140,7 @@ module Responders
 
     def set_flash_now?
       @flash_now == true || format == :js ||
-        (default_action && (has_errors? ? @flash_now == :on_failure : @flash_now == :on_success))
+        (default_action && (@flash_now == (has_errors? ? :on_failure : :on_success)))
     end
 
     def set_flash_message? #:nodoc:
@@ -148,15 +149,13 @@ module Responders
 
     def mount_i18n_options(status) #:nodoc:
       options = {
-        :default => flash_defaults_by_namespace(status),
-        :resource_name => resource_name,
-        :downcase_resource_name => resource_name.downcase
+        default: flash_defaults_by_namespace(status),
+        resource_name: resource_name,
+        downcase_resource_name: resource_name.downcase
       }
 
       controller_options = controller_interpolation_options
-      if controller_options
-        options.merge!(controller_options)
-      end
+      options.merge!(controller_options) if controller_options
 
       options
     end
@@ -194,7 +193,6 @@ module Responders
         actions_scope = lookup ? slices.fill('actions', -1).join('.') : :actions
         actions_scope = :"flash.#{actions_scope}.#{controller.action_name}.#{status}"
 
-
         defaults << :"#{controller_scope}_html"
         defaults << controller_scope
 
@@ -202,9 +200,9 @@ module Responders
         defaults << actions_scope
 
         slices.shift
-      end while slices.size > 0 && lookup
+      end while slices.any? && lookup
 
-      defaults << ""
+      defaults << ''
     end
   end
 end
