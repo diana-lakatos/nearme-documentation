@@ -19,7 +19,7 @@ class RequestPreviewConfiguration < ActiveRecord::Migration
   end
 
   def up
-    Instances::InstanceFinder.get(:spacer, :spacercom).each do |i|
+    Instances::InstanceFinder.get(:spacerau, :spacercom).each do |i|
       i.set_context!
 
       cmt = CustomModelType.create!(
