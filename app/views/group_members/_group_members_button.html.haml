@@ -1,4 +1,4 @@
-- options ||= { class: 'button-a small' }
+- options ||= { class: 'button-a small', 'data-join-group' => group.id, 'data-current-user' => current_user }
 - if current_user.nil?
   - path = '/users/sign_in?wizard=onboarding'
 - else
