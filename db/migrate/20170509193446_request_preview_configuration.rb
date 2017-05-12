@@ -14,7 +14,7 @@ class RequestPreviewConfiguration < ActiveRecord::Migration
     protected
 
     def workflow_type
-      'user_message'
+      'customization_workflow'
     end
   end
 
@@ -159,7 +159,7 @@ class RequestPreviewConfiguration < ActiveRecord::Migration
   end
 
   def down
-    Instances::InstanceFinder.get(:spacer, :spacercom).each do |i|
+    Instances::InstanceFinder.get(:spacerau, :spacercom).each do |i|
       i.set_context!
       Page.find_by(slug: 'request-to-inspect-space').try(:destroy)
       CustomModelType.find_by(parameterized_name: 'preview_request_form').try(:destroy)
