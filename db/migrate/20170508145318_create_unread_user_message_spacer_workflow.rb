@@ -19,7 +19,7 @@ class CreateUnreadUserMessageSpacerWorkflow < ActiveRecord::Migration
   end
 
   def up
-    Instances::InstanceFinder.get(:spacer, :spacercom).each do |i|
+    Instances::InstanceFinder.get(:spacerau, :spacercom).each do |i|
       i.set_context!
       workflow_alert = SpacerUserMessageCreator.new.create_user_message_created_api!
       workflow_alert.update_attributes!(
