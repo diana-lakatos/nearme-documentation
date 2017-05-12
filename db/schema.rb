@@ -3226,7 +3226,6 @@ ActiveRecord::Schema.define(version: 20170511192044) do
   end
 
   add_index "user_messages", ["instance_id"], name: "index_user_messages_on_instance_id", using: :btree
-  add_index "user_messages", ["user_message_type_id"], name: "index_user_messages_on_user_message_type_id", using: :btree
 
   create_table "user_profiles", force: :cascade do |t|
     t.hstore   "properties"
