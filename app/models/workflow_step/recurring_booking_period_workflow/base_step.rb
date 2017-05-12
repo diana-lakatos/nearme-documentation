@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkflowStep::RecurringBookingPeriodWorkflow::BaseStep < WorkflowStep::BaseStep
   def self.belongs_to_transactable_type?
     true
@@ -6,8 +7,8 @@ class WorkflowStep::RecurringBookingPeriodWorkflow::BaseStep < WorkflowStep::Bas
   def initialize(recurring_booking_period_id)
     @recurring_booking_period = RecurringBookingPeriod.find_by(id: recurring_booking_period_id)
     @recurring_booking = @recurring_booking_period.recurring_booking
-    @lister = @recurring_booking.host
-    @enquirer = @recurring_booking.owner
+    @lister = @recurring_booking&.host
+    @enquirer = @recurring_booking&.owner
   end
 
   def workflow_type
@@ -26,5 +27,9 @@ class WorkflowStep::RecurringBookingPeriodWorkflow::BaseStep < WorkflowStep::Bas
 
   def transactable_type_id
     @recurring_booking.transactable.transactable_type_id
+  end
+
+  def should_be_processed?
+    @recurring_booking.present?
   end
 end
