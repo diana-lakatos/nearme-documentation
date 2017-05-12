@@ -33,10 +33,7 @@ class PricingForm < BaseForm
   class << self
     def decorate(configuration)
       Class.new(self) do
-        configuration.each do |field, options|
-          property :"#{field}", options[:property_options].presence || {}
-          validates :"#{field}", options[:validation] if options[:validation].present?
-        end
+        inject_dynamic_fields(configuration)
       end
     end
   end

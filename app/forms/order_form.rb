@@ -5,21 +5,16 @@ class OrderForm < BaseForm
       Class.new(self) do
         @reservation_type = configuration[:reservation_type]
         if (reservations_configuration = configuration.delete(:reservations)).present?
-          validation = reservations_configuration.delete(:validation)
-          validates :reservations, validation if validation.present?
+          add_validation(:reservations, reservations_configuration)
           collection :reservations, form: ReservationForm.decorate(reservations_configuration),
                                     populate_if_empty: :build_reservation_object,
                                     prepopulator: ->(_options) { reservations << build_reservation_object if reservations.size.zero? }
         end
         if (properties_configuration = configuration.delete(:properties)).present?
-          validation = properties_configuration.delete(:validation)
-          validates :properties, validation if validation.present?
+          add_validation(:properties, properties_configuration)
           property :properties, form: PropertiesForm.decorate(properties_configuration)
         end
-        configuration.each do |field, options|
-          property :"#{field}", options[:property_options].presence || {}
-          validates :"#{field}", options[:validation] if options[:validation].present?
-        end
+        inject_dynamic_fields(configuration)
       end
     end
   end

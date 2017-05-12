@@ -7,8 +7,7 @@ class CustomAttachmentsForm < BaseForm
           property :"#{field}", form: CustomAttachmentForm.decorate(options, human_attribute_name(field)),
                                 populate_if_empty: ->(as:, **) { CustomAttachment.new(custom_attribute: CustomAttributes::CustomAttribute.find(as)) },
                                 prepopulator: ->(*) { send(:"#{field}=", CustomAttachment.new(custom_attribute: CustomAttributes::CustomAttribute.find(field.to_s))) if send(:"#{field}").nil? }
-
-          validates :"#{field}", options[:validation] if options[:validation].present?
+          add_validation(field, options)
         end
       end
     end

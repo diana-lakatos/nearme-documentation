@@ -19,8 +19,7 @@ class CustomizationsForm < BaseForm
         configuration.each do |custom_model_name, fields|
           @@mapping_hash ||= {}
           @@mapping_hash[custom_model_name] = fields.deep_dup
-          validation = fields.delete(:validation)
-          validates :"#{custom_model_name}", validation if validation.present?
+          add_validation(custom_model_name, fields)
           collection :"#{custom_model_name}",
                      form: CustomizationForm.decorate(fields),
                      populator: POPULATOR

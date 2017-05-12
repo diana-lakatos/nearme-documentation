@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 class BaseForm < Reform::Form
   class << self
+    def inject_dynamic_fields(configuration)
+      configuration.each do |field, options|
+        add_property(field, options)
+        add_validation(field, options)
+      end
+    end
+
+    def add_validation(field, options)
+      return if options.nil?
+      return unless options.key?(:validation)
+      validation = options.delete(:validation)
+      validates :"#{field}", ValidationHash.new(validation).sanitize if validation.any?
+    end
+
+    def add_property(field, options)
+      property :"#{field}", options[:property_options].presence || {}
+    end
+
     def reflect_on_association(*_args)
       nil
     end

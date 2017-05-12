@@ -10,7 +10,7 @@ class AvailabilityTemplateForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         configuration.each do |field, options|
-          validates :"#{field}", options[:validation] if options[:validation].present?
+          add_validation(field, options)
         end
       end
     end

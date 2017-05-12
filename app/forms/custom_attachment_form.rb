@@ -4,10 +4,10 @@ class CustomAttachmentForm < BaseForm
   class << self
     def decorate(options, attr_name)
       Class.new(self) do
-        validates :file, options[:validation] if options[:validation].present?
         define_method :file_required? do
           options[:validation].present? && !options[:validation][:presence].nil?
         end
+        add_validation(:file, options)
 
         define_singleton_method(:human_attribute_name) do |_attr|
           attr_name
