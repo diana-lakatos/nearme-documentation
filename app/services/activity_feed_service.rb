@@ -2,10 +2,11 @@
 class ActivityFeedService
   attr_accessor :next_page
 
-  def initialize(object, user_feed: nil, page: nil)
+  def initialize(object, user_feed: nil, page: nil, current_user: nil)
     @object = object
     @user_feed = user_feed
     @page = page.present? ? page.to_i : 1
+    @current_user = current_user
   end
 
   def events
@@ -30,13 +31,19 @@ class ActivityFeedService
   end
 
   def self.create_event(event, followed, affected_objects, event_source)
+    transactable = affected_objects.find {|a| a.kind_of?(Transactable) }
+
+    flags = {}
+    flags[:private_transactable_feed] = transactable.id if private_transactable?(transactable)
+
     ActivityFeedEvent.create(
       followed_id: followed.id,
       followed_type: followed.class.name,
       event_source_id: event_source.id,
       event_source_type: event_source.class.name,
       event: event,
-      affected_objects: affected_objects
+      affected_objects: affected_objects,
+      flags: flags
     )
   end
 
@@ -53,6 +60,7 @@ class ActivityFeedService
 
     sql_array = "{#{followed_identifiers.join(',')}}"
     ActivityFeedEvent
+      .visible_for_user(@current_user)
       .with_identifiers(sql_array)
       .includes(:event_source, :followed)
       .exclude_events
@@ -66,11 +74,16 @@ class ActivityFeedService
     sql_include_array = "{#{followed_identifiers.join(',')}}"
     sql_exclude_array = "{#{excluded_identifiers.join(',')}}"
     ActivityFeedEvent
+      .visible_for_user(@current_user)
       .with_identifiers(sql_include_array)
       .without_identifiers(sql_exclude_array)
       .includes(:event_source, :followed)
       .exclude_events
       .exclude_this_user_comments(@object)
       .paginate(page: @page, per_page: per_page)
+  end
+
+  def self.private_transactable?(transactable)
+    transactable && transactable.properties.try(:visibility) == 'private'
   end
 end
