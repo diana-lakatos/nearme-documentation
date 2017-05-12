@@ -1,10 +1,23 @@
 - g = Graph.execute('transactable_cover_photos', 'transactable_id' => @transactable.id)
 - cover_photo = g.dig('transactable', 'cover_photos', 0, 'url')
 
+- description_for_meta = "#{mask_phone_and_email_if_necessary(@transactable.properties.summary).try(:truncate, 130)}"
+
 - title raw(@transactable.name)
 - canonical_url @transactable.show_path
-- meta_description "#{mask_phone_and_email_if_necessary(@transactable.properties.summary).try(:truncate, 130)}"
+- meta_description = description_for_meta
 - meta_og_image cover_photo if cover_photo
+
+- # Twitter card metadata
+- content_for :head_bottom do
+  %meta{:name => "twitter:card", :content => "summary_large_image"}/
+  %meta{:name => "twitter:site", :content => "@intelsoftware"}/
+  %meta{:name => "twitter:title", :content => @transactable.name}/
+  %meta{:name => "twitter:description", :content => description_for_meta }/
+  %meta{:name => "twitter:image", :content => cover_photo }/
+
+
+- # Twitter share button initialization
 - content_for :script do
   :javascript
     window.twttr = (function(d, s, id) {
@@ -24,6 +37,7 @@
       return t;
     }(document, "script", "twitter-wjs"));
 
+- # Facebook share button initialization
 - content_for :body_top do
   #fb-root
   :javascript
