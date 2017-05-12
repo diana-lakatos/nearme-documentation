@@ -12,8 +12,6 @@ class UserMessage < ActiveRecord::Base
   belongs_to :thread_owner, -> { with_deleted }, class_name: 'User'     # user that started conversation
   belongs_to :thread_recipient, -> { with_deleted }, class_name: 'User' # user that is conversation recipient
   belongs_to :thread_context, -> { with_deleted }, polymorphic: true    # conversation context: Transactable, Reservation, User
-  belongs_to :user_message_type
-  has_custom_attributes target_type: 'UserMessageType', target_id: :user_message_type_id
   has_many :attachments, class_name: 'Attachable::Attachment', as: :attachable
 
   validates :author_id, presence: true
