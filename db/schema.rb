@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170511192044) do
+ActiveRecord::Schema.define(version: 20170515145406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1486,6 +1486,7 @@ ActiveRecord::Schema.define(version: 20170511192044) do
     t.boolean  "require_verified_user",                                                             default: false
     t.boolean  "only_first_name_as_user_slug",                                                      default: false,                            null: false
     t.integer  "marketplace_builder_settings_id"
+    t.boolean  "maintenance_mode",                                                                  default: false
   end
 
   create_table "line_items", force: :cascade do |t|
