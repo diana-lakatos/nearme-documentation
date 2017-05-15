@@ -53,7 +53,7 @@ module Graph
       field :avatar_url_big, types.String, deprecation_reason: 'Use avatar{}' do
         resolve ->(obj, _arg, _ctx) { obj.avatar&.big&.url }
       end
-      field :avatar, Types::Image
+      field :avatar, Types::EsImage
       field :name_with_affiliation, !types.String do
         resolve ->(obj, _arg, _ctx) { Resolvers::User.find_model(obj).to_liquid.name_with_affiliation }
       end
