@@ -3,19 +3,22 @@
 module Elastic
   module QueryBuilder
     class AvailabilityExceptions
+      attr_reader :query
+
       def initialize(params)
         @params = params
+        @query = {}
       end
 
       def prepare
         return unless any?
 
-        add gte: from
-        add lte: to
+        add_range gte: from
+        add_range lte: to
         query
       end
 
-      def as_json(*_args)
+      def to_h
         prepare
       end
 
@@ -29,12 +32,10 @@ module Elastic
         from || to
       end
 
-      def add(range)
-        query.merge range if range
-      end
+      def add_range(range)
+        return unless range
 
-      def query
-        @query ||= { not: { range: { 'user_profiles.availability_exceptions' => {} } } }
+        query.deep_merge! not: { range: { 'user_profiles.availability_exceptions' => range } }
       end
 
       def from
