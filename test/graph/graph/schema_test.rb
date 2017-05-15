@@ -53,10 +53,10 @@ class Graph::SchemaTest < ActiveSupport::TestCase
           'slug' => @user.slug,
           'seller_average_rating' => @user.seller_average_rating.to_i,
           'profile_path' => @user.to_liquid.profile_path,
-          'avatar_url_thumb' => nil,
-          'avatar_url_bigger' => nil,
-          'avatar_url_big' => nil,
-          'avatar' => nil,
+          "avatar_url_thumb" => "/images/default-user-avatar.svg",
+          "avatar_url_bigger" => "/images/default-user-avatar.svg",
+          "avatar_url_big" => "/images/default-user-avatar.svg",
+          "avatar" =>{ "url" => "/images/default-user-avatar.svg" },
           'name_with_affiliation' => @user.to_liquid.name_with_affiliation,
           'display_location' => @user.to_liquid.display_location,
           'is_followed' => false,
@@ -270,7 +270,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
     end
   end
 
-  context 'custom attributes xxx' do
+  context 'custom attributes' do
     should 'get custom attribute definition' do
       FactoryGirl.create(
         :custom_attribute,

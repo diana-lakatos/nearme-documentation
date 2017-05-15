@@ -18,11 +18,10 @@ module Graph
 
       NESTED_FIELDS_SOURCE_MAPPING = {
         'profile' => 'user_profiles.*',
-        'current_address' => 'current_address.*',
-        'avatar' => 'avatar.*'
+        'current_address' => 'current_address.*'
       }.freeze
 
-      MANDATORY_FIELDS = %w(id slug).freeze
+      MANDATORY_FIELDS = %w(id slug avatar.*).freeze
 
       def elastic_query
         {
