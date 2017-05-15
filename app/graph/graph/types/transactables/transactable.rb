@@ -12,6 +12,7 @@ module Graph
         field :updated_at, types.String
         field :cover_photo_thumbnail_url, types.String
         field :cover_photo_url, types.String
+        field :creator_id, types.ID
         field :creator, !Types::User do
           resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, { id: obj.creator_id }, ctx) }
         end
