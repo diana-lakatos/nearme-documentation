@@ -533,6 +533,9 @@ class InstanceView < ActiveRecord::Base
     'errors/not_found' => {
       is_partial: false
     },
+    'errors/maintenance' => {
+      is_partial: false
+    },
     'errors/server_error' => {
       is_partial: false
     },

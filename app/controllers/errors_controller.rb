@@ -1,9 +1,15 @@
 class ErrorsController < ApplicationController
   skip_before_filter :set_locale
   skip_before_filter :redirect_if_marketplace_password_protected
+  skip_before_filter :redirect_if_maintenance_mode_enabled
   skip_before_filter :redirect_if_domain_not_valid
+  skip_before_filter :redirect_unverified_user
   before_filter :find_exception
   layout 'errors'
+
+  def maintenance
+    render template: 'errors/maintenance', status: 503, formats: [:html]
+  end
 
   def not_found
     render template: 'errors/not_found', status: 404, formats: [:html]
