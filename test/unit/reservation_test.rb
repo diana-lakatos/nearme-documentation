@@ -88,8 +88,8 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal 1, Reservation.rejected.count
       end
 
-      should 'not be cancelable if owner rejected' do
-        refute @reservation.cancelable
+      should 'not be cancellable if owner rejected' do
+        refute @reservation.cancellable?
       end
     end
 
@@ -98,8 +98,8 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation = FactoryGirl.create(:unconfirmed_reservation)
       end
 
-      should 'be cancelable if all periods are for future' do
-        assert @reservation.cancelable
+      should 'be cancellable if all periods are for future' do
+        assert @reservation.cancellable?
       end
 
       should 'exist within unconfirmed scope' do
@@ -181,7 +181,7 @@ class ReservationTest < ActiveSupport::TestCase
 
       should 'behave correctly when user cancel' do
         travel_to Time.zone.now do
-          assert @reservation.cancelable
+          assert @reservation.cancellable?
           @reservation.user_cancel!
           assert_equal Time.zone.now, @reservation.cancelled_at
           assert_nil @reservation.confirmed_at
@@ -194,10 +194,15 @@ class ReservationTest < ActiveSupport::TestCase
         assert @reservation.payment.reload.paid?
       end
 
-      should 'not be cancelable if at least one period has past' do
+      should 'not be cancellable if at least one period has past' do
         @reservation.add_period((Time.zone.today - 2.days))
         @reservation.save!
-        refute @reservation.cancelable
+        assert @reservation.cancellable?
+        FactoryGirl.create(:cancel_allowed_cellation_policy,
+          cancellable: @reservation.action.transactable_type_action_type)
+        @reservation.send :set_cancellation_policy
+        @reservation.save!
+        refute @reservation.cancellable?
       end
     end
 
@@ -210,8 +215,8 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal 1, Reservation.cancelled.count
       end
 
-      should 'not be cancelable if user canceled' do
-        refute @reservation.cancelable
+      should 'not be cancellable if user canceled' do
+        refute @reservation.cancellable?
       end
     end
 
@@ -224,9 +229,8 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal 1, Reservation.cancelled.count
       end
 
-      should 'not be cancelable when owner canceled' do
-        refute @reservation.cancelable
-      end
+      should 'not be cancellable when owner canceled' do
+        refute @reservation.cancellable?      end
     end
   end
 
@@ -321,7 +325,7 @@ class ReservationTest < ActiveSupport::TestCase
       # reservation.subtotal_amount_cents = nil
       # reservation.service_fee_amount_guest_cents = nil
       # reservation.service_fee_amount_host_cents = nil
-      Reservation::CancellationPolicy.any_instance.stubs(:cancelable?).returns(true)
+      Reservation.any_instance.stubs(:cancellable?).returns(true)
 
       expected = {
         reservation: {
@@ -329,7 +333,7 @@ class ReservationTest < ActiveSupport::TestCase
           user_id: nil,
           listing_id: reservation.transactable.id,
           state: 'pending',
-          cancelable: true,
+          cancellable: true,
           total_cost: { amount: 0.0, label: '$0.00', currency_code: 'USD' },
           times: []
         }

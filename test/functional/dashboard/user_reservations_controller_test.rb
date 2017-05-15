@@ -69,6 +69,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
       @company = FactoryGirl.create(:company_in_auckland, creator_id: @user.id)
       @location = FactoryGirl.create(:location_in_auckland)
       @transactable = FactoryGirl.create(:transactable, location: @location)
+      build_default_cancellation_policy_for(@transactable)
       @company.locations << @location
     end
 
@@ -129,13 +130,16 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
           @reservation.save!
 
           # Travel to UTC time - similar as user London 13h before reservation happends but reservation zone is +13h
-          # Lising should be stil visible but not cancelable anymore
+          # Lising should be stil visible but not cancellable anymore
 
           travel_to Date.parse('2016-01-30').beginning_of_day do
             get :upcoming
             assert_response :success
             assert_select '.order', 1
+
+            # Check if cancel form is displayed
             assert_select '.order form', 0
+
             stub_active_merchant_interaction
             post :user_cancel, { id: @reservation }
             assert_redirected_to dashboard_orders_path

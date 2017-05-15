@@ -41,17 +41,13 @@ class RecurringBookingPeriodDrop < BaseDrop
   #   @return [Money] total amount for the period
   # @!method paid_at
   #   @return [Date] date when payment for the object was made
+  # @!method payment_state
+  #  @return [String] payment state for this period
+
   delegate :id, :line_items, :created_at, :payment, :total_amount_cents, :pending?,
            :approved?, :rejected?, :state, :order, :persisted?, :rejection_reason,
            :transactable, :user, :approve_at, :period_start_date, :period_end_date,
-           :total_amount, :paid_at, to: :source
-
-  # @return [String] payment state for this period
-  # @todo - just a code smell :)
-  def payment_state
-    return 'paid' if @source.paid?
-    @source.pending? ? @source.state : (@source.payment.try(:state) || 'unpaid')
-  end
+           :total_amount, :paid_at, :payment_state, to: :source
 
   # @return [String] total amount for this period formatted using the global currency
   #   formatting rules

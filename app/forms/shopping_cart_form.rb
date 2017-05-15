@@ -6,8 +6,7 @@ class ShoppingCartForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         if (orders_configuration = configuration.delete(:orders)).present?
-          validation = orders_configuration.delete(:orders)
-          validates :orders, validation if validation.present?
+          add_validation(orders, orders_configuration)
           property :orders, form: OrdersForm.decorate(orders_configuration),
                             from: :orders_open_struct
         end

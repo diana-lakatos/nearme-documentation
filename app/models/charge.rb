@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'active_merchant/billing/gateways/paypal/paypal_express_response'
 
 class Charge < ActiveRecord::Base
@@ -14,7 +15,6 @@ class Charge < ActiveRecord::Base
   scope :successful, -> { where(success: true) }
   scope :failed, -> { where(success: false) }
 
-  monetize :amount, as: :price, with_model_currency: :currency
   serialize :response, Hash
 
   attr_encrypted :response, marshal: true
@@ -29,9 +29,5 @@ class Charge < ActiveRecord::Base
     self.success = false
     self.response = response
     save!
-  end
-
-  def amount_money
-    Money.new(amount, currency)
   end
 end

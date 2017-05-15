@@ -1,3 +1,6 @@
+- if @transactable.properties.try(:visibility) == 'private' && (current_user.nil? || current_user.accessible_transactable_ids.exclude?(@transactable.id))
+  - raise ActiveRecord::RecordNotFound
+
 - g = Graph.execute('transactable_cover_photos', 'transactable_id' => @transactable.id)
 - cover_photo = g.dig('transactable', 'cover_photos', 0, 'url')
 

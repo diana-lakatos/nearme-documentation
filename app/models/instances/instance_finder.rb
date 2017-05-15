@@ -11,7 +11,9 @@ module Instances
       spacercom:   5020,
       thevolte:    194,
       toodooloo:   211,
-      uot:         195
+      uot:         195,
+      ninjunu:     175,
+
     }.freeze
 
     # use it in data migrations ex. Instances::InstanceFinder.get(:uot).each

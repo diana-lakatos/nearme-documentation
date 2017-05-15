@@ -535,7 +535,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
         should 'render with the reservation' do
           @reservation.stubs(:schedule_refund).returns(true)
-          @reservation.stubs(:cancelable?).returns(true)
+          @reservation.stubs(:cancellable?).returns(true)
           @reservation.confirm!
           @reservation.host_cancel!
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::ReservationWorkflow::ListerCancelled.new(@reservation.id))

@@ -544,7 +544,21 @@ class SecuredParams
       :both_side_confirmation,
       pricings_attributes: nested(transactable_type_pricing),
       schedule_attributes: nested(schedule),
+      cancellation_policies_attributes: nested(cancellation_policies),
       availability_template_attributes: nested(availability_template)
+    ]
+  end
+
+  def cancellation_policies
+    [
+      :action_type,
+      :condition,
+      :amount_rule,
+      :unit,
+      :unit_value,
+      :price,
+      condition_ids: [],
+      conditions: []
     ]
   end
 
@@ -791,13 +805,10 @@ class SecuredParams
   end
 
   def user_message
-    custom_attributes_names = UserMessage.public_custom_attributes_names(UserMessageType.default)
     [
       :body,
       :replying_to_id,
-      attachments_attributes: nested(attachment),
-      properties: custom_attributes_names,
-      properties_attributes: custom_attributes_names
+      attachments_attributes: nested(attachment)
     ]
   end
 
@@ -1528,6 +1539,7 @@ class SecuredParams
       :exclusive_price,
       :start_minute,
       :start_time,
+      :starts_at,
       :end_minute,
       :guest_notes,
       :payment_method_id,

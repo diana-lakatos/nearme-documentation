@@ -10,7 +10,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
   before_action :reservation, only: [:booking_successful_modal, :booking_failed_modal]
 
   def user_cancel
-    if reservation.cancelable?
+    if reservation.cancellable?
       if reservation.user_cancel
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::EnquirerCancelled, reservation.id, as: current_user)
         flash[:success] = t('flash_messages.reservations.reservation_cancelled')

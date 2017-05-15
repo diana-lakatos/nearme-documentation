@@ -45,7 +45,8 @@ class ActivityFeedController < ApplicationController
     @container = params[:container].presence || '#activity'
     options = {
       page: pagination_params[:page],
-      user_feed: include_user_feed?
+      user_feed: include_user_feed?,
+      current_user: current_user
     }
 
     @feed = ActivityFeedService.new(@object, options)

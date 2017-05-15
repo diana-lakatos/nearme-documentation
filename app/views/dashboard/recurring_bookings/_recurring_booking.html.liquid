@@ -193,7 +193,7 @@
       {% for period in recurring_booking.recurring_booking_periods %}
         {% assign payment_state = '' %}
         {% if period.payment != blank %}
-          {% assign payment_state = period.payment.state %}
+          {% assign payment_state = period.payment_state %}
         {% endif %}
         <tr>
           <td>

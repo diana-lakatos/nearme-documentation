@@ -4,8 +4,7 @@ class CategoriesForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         configuration.each do |field, options|
-          property :"#{field}"
-          validates :"#{field}", options[:validation] if options[:validation].present?
+          inject_dynamic_fields(configuration)
 
           define_method("#{field}=") do |value|
             super(value.is_a?(Array) ? value.reject(&:blank?) : value)

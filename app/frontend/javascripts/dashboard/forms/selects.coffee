@@ -12,7 +12,7 @@ selects = (context = 'body') ->
         event = new Event('change', {
           'view': window,
           'bubbles': true,
-          'cancelable': true
+          'cancellable': true
         })
         cancelled = !select.dispatchEvent(event)
 

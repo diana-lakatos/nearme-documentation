@@ -31,6 +31,7 @@ namespace :new_admin do
       'validations',
       'wish-lists',
       'graph-queries',
+      'instance-rules',
     ]
 
     slugs.each do |slug|

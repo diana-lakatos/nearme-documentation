@@ -513,6 +513,12 @@ class TransactableDrop < BaseDrop
     routes.cancel_dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
   end
 
+  # @return [String] path to cancelling this transactable via form (object will be moved to cancelled state)
+  # @todo -- depracate in favor of filter
+  def cancel_form_path
+    routes.cancel_form_dashboard_company_transactable_type_transactable_path(@source.transactable_type, @source)
+  end
+
   # @return [String] formatted date when the transactable was created
   # @todo -- depracate in favor of filter
   def listing_date

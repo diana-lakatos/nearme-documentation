@@ -36,7 +36,7 @@ class PaymentGateway::BraintreePaymentGatewayTest < ActiveSupport::TestCase
 
     @payment_gateway = FactoryGirl.create(:braintree_payment_gateway)
     @payment = FactoryGirl.create(:paid_payment, payment_method: @payment_gateway.payment_methods.first)
-    @payment.refund!
+    @payment.refund!(@payment.total_amount_cents)
     assert_equal 10, @payment.refunds.count
   end
 end

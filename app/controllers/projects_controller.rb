@@ -6,7 +6,7 @@ class ProjectsController < ApplicationController
   before_filter :build_comment, only: [:show]
 
   def show
-    @feed = ActivityFeedService.new(@project)
+    @feed = ActivityFeedService.new(@project, current_user: current_user)
     @followers = @project.feed_followers.paginate(pagination_params)
     @collaborators = @project.collaborating_users.paginate(pagination_params)
   end

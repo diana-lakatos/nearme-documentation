@@ -60,4 +60,5 @@ NM.on('ready', ()=>{
   require('initializers/instance_admin/wish_list.initializer');
   require('initializers/instance_admin/workflow_form.initializer');
   require('initializers/application/language_switch.initializer');
+  require('initializers/instance_admin/cancellation_policies.initializer');
 });

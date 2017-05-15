@@ -11,6 +11,7 @@ class InstanceType::Searcher::ProjectsSearcher
 
   def fetcher
     @fetcher = Transactable.active.search_by_query([:name, :description, :properties], @params[:query])
+    @fetcher = @fetcher.where("not properties ? 'visibility' OR properties -> 'visibility' = 'public'")
     @fetcher = @fetcher.by_topic(selected_topic_ids).custom_order(@params[:sort])
     @fetcher = @fetcher.seek_collaborators if @params[:seek_collaborators] == '1'
     @fetcher = @fetcher.joins(:categories).where(categories: { id: selected_category_ids }).distinct if selected_category_ids.present?

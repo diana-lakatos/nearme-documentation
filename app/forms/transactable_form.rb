@@ -36,48 +36,41 @@ class TransactableForm < BaseForm
       configuration = configuration
       Class.new(self) do
         if (properties_configuration = configuration.delete(:properties)).present?
-          validation = properties_configuration.delete(:validation)
-          validates :properties, validation if validation.present?
+          add_validation(:properties, properties_configuration)
           property :properties, form: PropertiesForm.decorate(properties_configuration)
         end
         if (custom_images_configuration = configuration.delete(:custom_images)).present?
-          validation = custom_images_configuration.delete(:validation)
-          validates :custom_images, validation if validation.present?
+          add_validation(:custom_images, custom_images_configuration)
           property :custom_images, form: CustomImagesForm.decorate(custom_images_configuration),
                                    from: :custom_images_open_struct,
                                    populate_if_empty: :custom_images_open_struct!,
                                    prepopulator: ->(_options) { self.custom_images ||= model.default_images_open_struct }
         end
         if (custom_attachments_configuration = configuration.delete(:custom_attachments)).present?
-          validation = custom_attachments_configuration.delete(:validation)
-          validates :custom_attachments, validation if validation.present?
+          add_validation(:custom_attachments, custom_attachments_configuration)
           property :custom_attachments, form: CustomAttachmentsForm.decorate(custom_attachments_configuration),
                                         from: :custom_attachments_open_struct,
                                         populate_if_empty: :custom_attachments_open_struct!,
                                         prepopulator: ->(_options) { self.custom_attachments ||= model.default_custom_attachments_open_struct }
         end
         if (categories_configuration = configuration.delete(:categories)).present?
-          validation = categories_configuration.delete(:validation)
-          validates :categories, validation if validation.present?
+          add_validation(:categories, categories_configuration)
           property :categories, form: CategoriesForm.decorate(categories_configuration),
                                 from: :categories_open_struct
         end
         if (photos_configuration = configuration.delete(:photos))
-          validation = photos_configuration.delete(:validation)
-          validates :photos, validation if validation.present?
+          add_validation(:photos, photos_configuration)
           collection :photos, form: PhotoForm,
                               populate_if_empty: Photo
         end
         if (customizations_configuration = configuration.delete(:customizations)).present?
-          validation = customizations_configuration.delete(:validation)
-          validates :customizations, validation if validation.present?
+          add_validation(:customizations, customizations_configuration)
           property :customizations, form: CustomizationsForm.decorate(customizations_configuration),
                                     from: :customizations_open_struct
         end
         AVAILABLE_ACTION_TYPES.select { |key| configuration.key?(key) }.each do |action|
           next if (action_configuration = configuration.delete(action)).nil?
-          validation = action_configuration.delete(:validation)
-          validates action, validation if validation.present?
+          add_validation(action, action_configuration)
           property action, form: "#{action.to_s.camelize}Form".constantize.decorate(action_configuration),
                            populator: ->(fragment:, **) {
                                         return skip! unless checked?(fragment[:enabled])
@@ -90,10 +83,7 @@ class TransactableForm < BaseForm
                                            model.action_type ||= send(action).model
                                          }
         end
-        configuration.each do |field, options|
-          property :"#{field}"
-          validates :"#{field}", options[:validation] if options[:validation].present?
-        end
+        inject_dynamic_fields(configuration)
       end
     end
   end

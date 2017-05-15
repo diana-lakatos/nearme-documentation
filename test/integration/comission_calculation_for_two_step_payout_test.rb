@@ -192,7 +192,6 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     assert @payment.paid?
     relog_to_guest
     charge = @payment.charges.last
-    assert_equal 43.75.to_money(@transactable.currency), charge.amount_money
   end
 
   def schedule_payment_transfer!

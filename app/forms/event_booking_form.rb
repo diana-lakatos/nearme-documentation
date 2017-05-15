@@ -8,11 +8,10 @@ class EventBookingForm < ActionTypeForm
       Class.new(self) do
         super
         if (schedule_configuration = configuration.delete(:schedule)).present?
-          validation = schedule_configuration.delete(:validation)
-          validates :schedule, validation if validation.present?
+          add_validation(:schedule, schedule_configuration)
           property :schedule, form: ScheduleForm.decorate(schedule_configuration),
-                                prepopulator: ->(option) { self.schedule ||= build_schedule },
-                                populate_if_empty: -> (fragment:, **) { model.build_schedule }
+                              prepopulator: ->(_option) { self.schedule ||= build_schedule },
+                              populate_if_empty: ->(fragment:, **) { model.build_schedule }
         end
       end
     end

@@ -1,0 +1,16 @@
+<header class='dialog__header'>
+  <h2 id='dialog__title'>{{ 'dashboard.transactables.actions.cancel' | translate }}</h2>
+</header>
+
+</div>
+<div>
+  Are you sure you want to cancel this booking?
+</div>
+
+{% assign url = 'cancel_dashboard_company_transactable_path' | generate_url: transactable %}
+{% form_for @transactable, as: :transactable, url: @url, form_for_type: dashboard %}
+  <div class='dialog__actions'>
+    {% assign submit_label = 'dashboard.transactables.cancel' | translate %}
+    {% submit @submit_label %}
+  </div>
+{% endform_for %}

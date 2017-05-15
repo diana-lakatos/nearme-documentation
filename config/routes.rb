@@ -98,9 +98,6 @@ DesksnearMe::Application.routes.draw do
 
       resources :reservations, only: [:create, :update], controller: 'listings/reservations' do
         collection do
-          post :review
-          post :address
-          post :store_reservation_request
           get :hourly_availability_schedule
           get :detect_overlapping
         end
@@ -529,6 +526,7 @@ DesksnearMe::Application.routes.draw do
             put :reload
           end
         end
+        resources :order_items, only: [:edit, :update]
         resources :orders, only: [:index, :show] do
           member do
             post :generate_next_period
@@ -930,6 +928,7 @@ DesksnearMe::Application.routes.draw do
             get :enable
             get :disable
             get :cancel
+            post :cancel
           end
 
           resources :transactable_collaborators
@@ -941,6 +940,7 @@ DesksnearMe::Application.routes.draw do
               get :enable
               get :disable
               get :cancel
+              get :cancel_form
             end
 
             resources :transactable_collaborators

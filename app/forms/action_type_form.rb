@@ -10,8 +10,8 @@ class ActionTypeForm < BaseForm
   class << self
     def decorate(configuration)
       unless (pricings_configuration = configuration.delete(:pricings)).nil?
-        validation = pricings_configuration.delete(:validation)
-        validates :pricings, validation if validation.present?
+        add_property(:pricings, pricings_configuration)
+        add_validation(:pricings, pricings_configuration)
         collection :pricings, form: PricingForm.decorate(pricings_configuration),
                               prepopulator: :pricings_prepopulator,
                               populator: ->(collection:, fragment:, index:, **) {
@@ -26,11 +26,7 @@ class ActionTypeForm < BaseForm
                                            item ? item : pricings.append(model.pricings.new)
                                          }
       end
-
-      configuration.each do |field, options|
-        property :"#{field}", options[:property_options].presence || {}
-        validates :"#{field}", options[:validation] if options[:validation].present?
-      end
+      inject_dynamic_fields(configuration)
     end
   end
 

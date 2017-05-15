@@ -4,8 +4,7 @@ class CustomImageForm < BaseForm
   class << self
     def decorate(options, attr_name)
       Class.new(self) do
-        validates :image, options[:validation] if options[:validation].present?
-
+        add_validation(:image, options)
         define_singleton_method(:human_attribute_name) do |_attr|
           attr_name
         end

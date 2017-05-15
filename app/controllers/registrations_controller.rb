@@ -92,7 +92,7 @@ class RegistrationsController < Devise::RegistrationsController
     if platform_context.instance.is_community?
       @projects = IntelFakerService.projects(4)
 
-      @feed = ActivityFeedService.new(@user, user_feed: true, page: params[:page])
+      @feed = ActivityFeedService.new(@user, user_feed: true, page: params[:page], current_user: current_user)
       @events = @feed.events
       @context_cache_key = current_instance.context_cache_key
 

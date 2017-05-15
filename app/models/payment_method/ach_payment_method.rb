@@ -8,6 +8,10 @@ class PaymentMethod::AchPaymentMethod < PaymentMethod
 
   has_many :payment_sources, class_name: 'BankAccount', foreign_key: 'payment_method_id'
 
+  def name
+    "ACH"
+  end
+
   def self.settings
     {
       client_id: { validate: [:presence], label:  'Plaid client_id' },

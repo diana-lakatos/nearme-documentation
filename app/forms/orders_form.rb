@@ -4,8 +4,7 @@ class OrdersForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         configuration.each do |reservation_type_name, fields|
-          validation = fields.delete(:validation)
-          validates :"#{reservation_type_name}", validation if validation.present?
+          add_validation(reservation_type_name, fields)
           fields[:reservation_type] = find_reservation_type(reservation_type_name)
           property :"#{reservation_type_name}", form: OrderForm.decorate(fields)
         end

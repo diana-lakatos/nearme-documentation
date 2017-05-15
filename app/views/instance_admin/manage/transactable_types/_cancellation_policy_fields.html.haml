@@ -1,0 +1,24 @@
+.nested-fields.cancellation_policy_fields
+  .row
+    .input-container.col-xs-2
+      = f.input :action_type, collection: CancellationPolicy::AVAILABLE_ACTIONS.map {|c| [c.humanize, c] }, input_html: {data: {action_type: true}}, label: false
+      /= f.input :price, label: false, collection: CancellationPolicy::ACTIONS, class: 'inline'
+    .input-container.col-xs-2
+      = text_field_tag :unit_value, nil, data: {unit_value: true}
+    .input-container.col-xs-1{'data-unit-container': 'true'}
+      = label_tag :price, 'percent of', class: 'inline'
+    .input-container.col-xs-2
+      = select_tag :price, [],  {style: 'width: 100%', data: {price: true}}
+    .input-container.col-xs-1
+      %b if
+    .input-container.col-xs-3
+      = select_tag :condition_ids, [], { style: 'width: 100%', multiple: true, data: {conditions: true}}
+    .input-container.col-xs-1
+      = link_to_remove_association f, class: 'button-a small danger action--remove' do
+        = t('remove', default: 'Remove')
+      = link_to '#', class: 'button-a small danger action--remove', data: {toggle_advanced: true} do
+        = t('advanced', default: 'Advanced')
+  .row
+    .input-container.col-xs-12.advanced.hidden
+      = f.input :amount_rule, input_html: { data: { amount_rule: true},  class: 'field-textarea' }
+      = f.input :condition, input_html: { data: { condition: true},  class: 'field-textarea' }

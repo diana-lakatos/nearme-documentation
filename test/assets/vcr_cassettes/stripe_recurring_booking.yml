@@ -876,4 +876,488 @@ http_interactions:
         }
     http_version: 
   recorded_at: Tue, 07 Mar 2017 16:31:54 GMT
+- request:
+    method: post
+    uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/customers
+    body:
+      encoding: UTF-8
+      string: email=user_12_user_15%40example.com&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2019&card[cvc]=111&card[name]=Rowan+Atkinson
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Stripe/v1 ActiveMerchantBindings/1.47.0
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.47.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","publisher":"active_merchant"}'
+      X-Stripe-Client-User-Metadata:
+      - '{"ip":null}'
+      Stripe-Version:
+      - '2016-07-06'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 04 May 2017 18:02:30 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1417'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_Ab0ItzVZMO6iiL
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "cus_Ab0ITLXgm5SBTU",
+          "object": "customer",
+          "account_balance": 0,
+          "created": 1493920950,
+          "currency": null,
+          "default_source": "card_1AFoHaK2MWM5GsITlGDQgmg9",
+          "delinquent": false,
+          "description": null,
+          "discount": null,
+          "email": "user_12_user_15@example.com",
+          "livemode": false,
+          "metadata": {},
+          "shipping": null,
+          "sources": {
+            "object": "list",
+            "data": [
+              {
+                "id": "card_1AFoHaK2MWM5GsITlGDQgmg9",
+                "object": "card",
+                "address_city": null,
+                "address_country": null,
+                "address_line1": null,
+                "address_line1_check": null,
+                "address_line2": null,
+                "address_state": null,
+                "address_zip": null,
+                "address_zip_check": null,
+                "brand": "Visa",
+                "country": "US",
+                "customer": "cus_Ab0ITLXgm5SBTU",
+                "cvc_check": "pass",
+                "dynamic_last4": null,
+                "exp_month": 1,
+                "exp_year": 2019,
+                "fingerprint": "CtVQWwJF8UOWYf83",
+                "funding": "unknown",
+                "last4": "1111",
+                "metadata": {},
+                "name": "Rowan Atkinson",
+                "tokenization_method": null
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/customers/cus_Ab0ITLXgm5SBTU/sources"
+          },
+          "subscriptions": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/customers/cus_Ab0ITLXgm5SBTU/subscriptions"
+          }
+        }
+    http_version: 
+  recorded_at: Thu, 04 May 2017 18:02:30 GMT
+- request:
+    method: post
+    uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/charges
+    body:
+      encoding: UTF-8
+      string: amount=1670&currency=usd&card=card_1AFoHaK2MWM5GsITlGDQgmg9&customer=cus_Ab0ITLXgm5SBTU&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Stripe/v1 ActiveMerchantBindings/1.47.0
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.47.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","publisher":"active_merchant"}'
+      X-Stripe-Client-User-Metadata:
+      - '{"ip":null}'
+      Stripe-Version:
+      - '2016-07-06'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 04 May 2017 18:02:32 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1785'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_Ab0IesLWTDUiU1
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "ch_1AFoHbK2MWM5GsITpHii8pUT",
+          "object": "charge",
+          "amount": 1670,
+          "amount_refunded": 0,
+          "application": null,
+          "application_fee": null,
+          "balance_transaction": "txn_1AFoHbK2MWM5GsITYyt0OLPS",
+          "captured": true,
+          "created": 1493920951,
+          "currency": "usd",
+          "customer": "cus_Ab0ITLXgm5SBTU",
+          "description": null,
+          "destination": null,
+          "dispute": null,
+          "failure_code": null,
+          "failure_message": null,
+          "fraud_details": {},
+          "invoice": null,
+          "livemode": false,
+          "metadata": {},
+          "on_behalf_of": null,
+          "order": null,
+          "outcome": {
+            "network_status": "approved_by_network",
+            "reason": null,
+            "risk_level": "normal",
+            "seller_message": "Payment complete.",
+            "type": "authorized"
+          },
+          "paid": true,
+          "receipt_email": null,
+          "receipt_number": null,
+          "refunded": false,
+          "refunds": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/charges/ch_1AFoHbK2MWM5GsITpHii8pUT/refunds"
+          },
+          "review": null,
+          "shipping": null,
+          "source": {
+            "id": "card_1AFoHaK2MWM5GsITlGDQgmg9",
+            "object": "card",
+            "address_city": null,
+            "address_country": null,
+            "address_line1": null,
+            "address_line1_check": null,
+            "address_line2": null,
+            "address_state": null,
+            "address_zip": null,
+            "address_zip_check": null,
+            "brand": "Visa",
+            "country": "US",
+            "customer": "cus_Ab0ITLXgm5SBTU",
+            "cvc_check": "pass",
+            "dynamic_last4": null,
+            "exp_month": 1,
+            "exp_year": 2019,
+            "fingerprint": "CtVQWwJF8UOWYf83",
+            "funding": "unknown",
+            "last4": "1111",
+            "metadata": {},
+            "name": "Rowan Atkinson",
+            "tokenization_method": null
+          },
+          "source_transfer": null,
+          "statement_descriptor": null,
+          "status": "succeeded",
+          "transfer_group": null
+        }
+    http_version: 
+  recorded_at: Thu, 04 May 2017 18:02:32 GMT
+- request:
+    method: post
+    uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/customers
+    body:
+      encoding: UTF-8
+      string: email=user_12_user_14%40example.com&card[number]=4111111111111111&card[exp_month]=1&card[exp_year]=2019&card[cvc]=111&card[name]=Rowan+Atkinson
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Stripe/v1 ActiveMerchantBindings/1.47.0
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.47.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","publisher":"active_merchant"}'
+      X-Stripe-Client-User-Metadata:
+      - '{"ip":null}'
+      Stripe-Version:
+      - '2016-07-06'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 04 May 2017 18:20:43 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1417'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_Ab0ayHBhhPcmEA
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "cus_Ab0aUt3wryDlYc",
+          "object": "customer",
+          "account_balance": 0,
+          "created": 1493922043,
+          "currency": null,
+          "default_source": "card_1AFoZDK2MWM5GsITyOQT1yZ1",
+          "delinquent": false,
+          "description": null,
+          "discount": null,
+          "email": "user_12_user_14@example.com",
+          "livemode": false,
+          "metadata": {},
+          "shipping": null,
+          "sources": {
+            "object": "list",
+            "data": [
+              {
+                "id": "card_1AFoZDK2MWM5GsITyOQT1yZ1",
+                "object": "card",
+                "address_city": null,
+                "address_country": null,
+                "address_line1": null,
+                "address_line1_check": null,
+                "address_line2": null,
+                "address_state": null,
+                "address_zip": null,
+                "address_zip_check": null,
+                "brand": "Visa",
+                "country": "US",
+                "customer": "cus_Ab0aUt3wryDlYc",
+                "cvc_check": "pass",
+                "dynamic_last4": null,
+                "exp_month": 1,
+                "exp_year": 2019,
+                "fingerprint": "CtVQWwJF8UOWYf83",
+                "funding": "unknown",
+                "last4": "1111",
+                "metadata": {},
+                "name": "Rowan Atkinson",
+                "tokenization_method": null
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/customers/cus_Ab0aUt3wryDlYc/sources"
+          },
+          "subscriptions": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/customers/cus_Ab0aUt3wryDlYc/subscriptions"
+          }
+        }
+    http_version: 
+  recorded_at: Thu, 04 May 2017 18:20:43 GMT
+- request:
+    method: post
+    uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/charges
+    body:
+      encoding: UTF-8
+      string: amount=1670&currency=usd&card=card_1AFoZDK2MWM5GsITyOQT1yZ1&customer=cus_Ab0aUt3wryDlYc&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Stripe/v1 ActiveMerchantBindings/1.47.0
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.47.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","publisher":"active_merchant"}'
+      X-Stripe-Client-User-Metadata:
+      - '{"ip":null}'
+      Stripe-Version:
+      - '2016-07-06'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 04 May 2017 18:20:44 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1785'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_Ab0aIyDZ1Uxh90
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "ch_1AFoZEK2MWM5GsITRH2bjaTI",
+          "object": "charge",
+          "amount": 1670,
+          "amount_refunded": 0,
+          "application": null,
+          "application_fee": null,
+          "balance_transaction": "txn_1AFoZEK2MWM5GsITrVo08ddF",
+          "captured": true,
+          "created": 1493922044,
+          "currency": "usd",
+          "customer": "cus_Ab0aUt3wryDlYc",
+          "description": null,
+          "destination": null,
+          "dispute": null,
+          "failure_code": null,
+          "failure_message": null,
+          "fraud_details": {},
+          "invoice": null,
+          "livemode": false,
+          "metadata": {},
+          "on_behalf_of": null,
+          "order": null,
+          "outcome": {
+            "network_status": "approved_by_network",
+            "reason": null,
+            "risk_level": "normal",
+            "seller_message": "Payment complete.",
+            "type": "authorized"
+          },
+          "paid": true,
+          "receipt_email": null,
+          "receipt_number": null,
+          "refunded": false,
+          "refunds": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/charges/ch_1AFoZEK2MWM5GsITRH2bjaTI/refunds"
+          },
+          "review": null,
+          "shipping": null,
+          "source": {
+            "id": "card_1AFoZDK2MWM5GsITyOQT1yZ1",
+            "object": "card",
+            "address_city": null,
+            "address_country": null,
+            "address_line1": null,
+            "address_line1_check": null,
+            "address_line2": null,
+            "address_state": null,
+            "address_zip": null,
+            "address_zip_check": null,
+            "brand": "Visa",
+            "country": "US",
+            "customer": "cus_Ab0aUt3wryDlYc",
+            "cvc_check": "pass",
+            "dynamic_last4": null,
+            "exp_month": 1,
+            "exp_year": 2019,
+            "fingerprint": "CtVQWwJF8UOWYf83",
+            "funding": "unknown",
+            "last4": "1111",
+            "metadata": {},
+            "name": "Rowan Atkinson",
+            "tokenization_method": null
+          },
+          "source_transfer": null,
+          "statement_descriptor": null,
+          "status": "succeeded",
+          "transfer_group": null
+        }
+    http_version: 
+  recorded_at: Thu, 04 May 2017 18:20:45 GMT
 recorded_with: VCR 3.0.3

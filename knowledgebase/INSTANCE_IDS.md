@@ -4,7 +4,7 @@ Do not use them in code!
 
 | Instance        | ID   |
 | --------------- |:----:|
-| ninju           | 175  |
+| ninjunu         | 175  |
 | UOT             | 195  |
 | LocalDrive      | 211  |
 | The Volte       | 194  |

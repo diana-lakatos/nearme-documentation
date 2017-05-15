@@ -1,0 +1,10 @@
+.content-container
+  = simple_form_for @order_item, url: instance_admin_manage_order_item_path(@order_item) do |f|
+    %h4
+      = "Current payment state is #{f.object.payment_state}"
+    .row
+      .col-xs-12
+        = f.input :paid_at, collection: [["Mark as paid", f.object.paid_at || Time.zone.now], ['Mark as unpaid']], as: :radio_buttons, label: false
+      .col-xs-12
+        %p.action
+          = f.submit t('general.save')

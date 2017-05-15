@@ -126,7 +126,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     }
 
     if owners.size == 1
-      legal_entity_hash[:additional_owners] = ''
+      legal_entity_hash[:additional_owners] = nil
     else
       legal_entity_hash[:additional_owners] = []
       owners.to_a[1..-1].each do |owner|

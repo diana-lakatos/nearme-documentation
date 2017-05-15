@@ -61,10 +61,10 @@ class DelayedReservation < Reservation
     true
   end
 
-  def enquirer_cancelable
+  def enquirer_cancellable
     state == 'unconfirmed'
   end
-  alias enquirer_cancelable? enquirer_cancelable
+  alias enquirer_cancellable? enquirer_cancellable
 
   def rebuild_first_line_item
     if transactable_line_items.any?

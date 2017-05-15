@@ -1218,6 +1218,11 @@ class User < ActiveRecord::Base
     super || instance&.time_zone.presence || 'Pacific Time (US & Canada)'
   end
 
+  def accessible_transactable_ids
+    group_member_transactable_ids = user.group_collaborated.map(&:transactable_ids).flatten.uniq
+    transactable_ids + approved_transactables_collaborated_ids + group_member_transactable_ids
+  end
+
   private
 
   def populate_ui_settings

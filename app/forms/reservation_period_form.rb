@@ -11,8 +11,8 @@ class ReservationPeriodForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         %i(start_minute end_minute).each do |field|
-          property :"#{field}", configuration.dig(field, :property_options) || {}
-          validates :"#{field}", configuration.dig(field, :validation) if configuration.dig(field, :validation).present?
+          add_property(field, configuration[field])
+          add_validation(field, configuration[field])
         end
         validate :validate_minimum_booking_minutes if configuration[:validate_minimum_booking_minutes]
       end

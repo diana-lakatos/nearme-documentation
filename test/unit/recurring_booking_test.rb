@@ -34,8 +34,7 @@ class ReservationTest < ActiveSupport::TestCase
     context 'pro rated monthly calculator test' do
       setup do
         @order = FactoryGirl.create(:recurring_booking,
-          transactable: create(:subscription_pro_rated_transactable),
-        )
+                                    transactable: create(:subscription_pro_rated_transactable))
         @order.update_column(:starts_at, Time.zone.parse('2025-03-06'))
       end
 
@@ -61,7 +60,8 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
     should 'generate next period' do
-      FactoryGirl.create_list(:confirmed_recurring_booking, 2).each do |rb|
+      @user = FactoryGirl.create(:user, email: 'tomek@near-me.com')
+      FactoryGirl.create_list(:confirmed_recurring_booking, 2, user: @user).each do |rb|
         rb.update_column(:next_charge_date, Date.current.prev_month.end_of_month)
         rb.generate_next_period!
       end
@@ -72,10 +72,10 @@ class ReservationTest < ActiveSupport::TestCase
       # - to check if real connection works - remove the file and rerun test
       # - to add new connections uncomment WebMock.allow_net_connect! - those will be recorded.
 
-      VCR.use_cassette("stripe_recurring_booking", :record => :new_episodes) do
+      VCR.use_cassette('stripe_recurring_booking', record: :new_episodes) do
         CreditCard.last.destroy
         # As we are using real Stripe data we are storing CC within Stripe
-        CreditCard.all.each {|cc| process_credit_card!(cc) }
+        CreditCard.all.each { |cc| process_credit_card!(cc) }
 
         RecurringBooking.needs_charge(Date.current).find_each do |rb|
           ScheduleChargeSubscriptionJob.perform(rb.id)

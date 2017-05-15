@@ -7,7 +7,7 @@ class Payment < ActiveRecord::Base
   scoped_to_platform_context
 
   attr_accessor :express_checkout_redirect_url, :payment_response_params, :customer,
-                :recurring, :rejection_form, :chosen_credit_card_id, :public_token, :account_id, :redirect_to_gateway
+                :recurring, :rejection_form, :public_token, :account_id, :redirect_to_gateway
 
   # === Associations
 
@@ -18,7 +18,6 @@ class Payment < ActiveRecord::Base
   belongs_to :company, -> { with_deleted }
   belongs_to :instance
   belongs_to :payment_transfer
-  belongs_to :payment_gateway, -> { with_deleted }
   belongs_to :payment_method, -> { with_deleted }
   belongs_to :merchant_account
   belongs_to :payer, -> { with_deleted }, class_name: 'User'
@@ -29,11 +28,13 @@ class Payment < ActiveRecord::Base
   has_many :refunds
   has_many :line_items
 
+  has_one :payment_gateway, -> { with_deleted }, through: :payment_method
   has_one :successful_billing_authorization, -> { where(success: true) }, class_name: BillingAuthorization
   has_one :successful_charge, -> { where(success: true) }, class_name: Charge
 
   before_validation :set_offline, on: :create
   before_validation :set_merchant_account, on: :create
+  before_validation :set_payment_gateway_mode, on: :create
 
   # === Scopes
 
@@ -60,6 +61,7 @@ class Payment < ActiveRecord::Base
   }
 
   accepts_nested_attributes_for :payment_source
+  accepts_nested_attributes_for :charges
 
   before_validation do |_p|
     self.payer ||= payable.try(:owner)
@@ -91,11 +93,23 @@ class Payment < ActiveRecord::Base
   delegate :cancelled_by_guest?, :cancelled_by_host?, to: :payable, allow_nil: true
 
   state_machine :state, initial: :pending do
-    event :mark_as_authorized do transition [:pending, :voided] => :authorized; end
-    event :mark_as_paid       do transition [:pending, :authorized] => :paid; end
-    event :mark_as_voided     do transition [:authorized, :paid] => :voided; end
-    event :mark_as_refuneded  do transition paid: :refunded; end
-    event :mark_as_failed     do transition any => :failed; end
+    after_transition any => :failed, do: :fail!
+
+    event :mark_as_authorized do
+      transition [:pending, :voided] => :authorized
+    end
+    event :mark_as_paid do
+      transition [:pending, :failed, :authorized] => :paid
+    end
+    event :mark_as_voided do
+      transition [:authorized, :paid] => :voided
+    end
+    event :mark_as_refuneded do
+      transition paid: :refunded
+    end
+    event :mark_as_failed do
+      transition any => :failed
+    end
   end
 
   # TODO: now as we call that on Payment object there is no need to _payment?, instead payment.manual?
@@ -224,34 +238,40 @@ class Payment < ActiveRecord::Base
 
   # pay_with!
   # - capture (needs prior authorization) or purchase
-
+  # @return [Boolean] true if paid
   def pay_with!
-    return false unless block_given?
     return true if paid?
     return mark_as_paid! if manual_payment? || total_amount_cents.zero?
-    return false unless active_merchant_payment?
-    return false unless valid?
+    return false unless active_merchant_payment? || valid?
 
-    response = yield
+    # block invokes captures or purchase method that is processed by ActiveMerchant
+    # and returns ActiveMerchant response
+    process_response(yield)
 
-    apply_pg_fee(response)
-    create_transfer(response) if response.try(:success?) && immediate_payout?
-    self.external_id ||= response.params.try('[]', 'id')
-    charges.create!(charge_attributes(response))
-    errors.add(:base, response.message) if response.try(:message)
-    response.success? ? mark_as_paid! : touch(:failed_at) && false
+    paid?
   end
 
-  # refund!
+  def process_response(active_merchant_response)
+    response = ActiveMerchant::ResponseProcessor.new(active_merchant_response, payment_gateway, merchant_account)
+    update_attributes(response.payment_attributes)
+
+    # For connected payments we are creating PaymentTransfer object
+    # we should consider moving that operation to webhook as we already do for direct_payment
+    create_transfer(response.transfer_id) if should_create_transfer?
+
+    errors.add(:base, response.message)
+  end
+
+  # refund!(amount)
   # - refund method is invoked by PaymentRefundJob that first call refund! method
   #   where 3 attempts are executed. Payment#amount_to_be_refunded method determines amount
   #   that is refunded.
   # - failed refund does not block Reservation status chage
 
-  def refund!
+  def refund!(amount_cents)
+    return false if amount_cents <= 0
     return false if refunded?
     return false if paid_at.nil? && !paid?
-    return false if amount_to_be_refunded <= 0
     return false unless active_merchant_payment?
 
     # This is special Braintree case, when transaction can't be refunded before
@@ -259,10 +279,10 @@ class Payment < ActiveRecord::Base
     return void! if !settled? && full_refund?
 
     # Refund payout takes back money from seller, break if failed.
-    return false unless refund_payout!
+    return false unless refund_payout!(host_refund_amount_cents(amount_cents))
     return false unless refund_service_fee!
 
-    refund = payment_gateway.refund(amount_to_be_refunded, currency, self, successful_charge)
+    refund = payment_gateway.refund(amount_cents, currency, self, successful_charge)
 
     if refund.success?
       mark_as_refuneded!
@@ -271,7 +291,7 @@ class Payment < ActiveRecord::Base
       touch(:failed_at)
 
       if should_retry_refund?
-        PaymentRefundJob.perform_later(retry_refund_at, id)
+        PaymentRefundJob.perform_later(retry_refund_at, id, amount_cents)
       else
         MarketplaceLogger.error('Refund failed', "Refund for Reservation id=#{id} failed #{refund_attempts} times, manual intervation needed.", raise: false)
       end
@@ -286,7 +306,7 @@ class Payment < ActiveRecord::Base
   # In case of PayPal Adaptive Payments we can alternatively ask host to grant
   # permissions to transfers from his PayPal account - future enhancement.
 
-  def refund_payout!
+  def refund_payout!(amount_cents)
     return true unless transferred_to_seller?
     return true if payment_gateway.supports_refund_from_host?
     return true if refunds.mpo.successful.any?
@@ -294,7 +314,7 @@ class Payment < ActiveRecord::Base
 
     refund = refunds.create(
       receiver: 'mpo',
-      amount_cents: host_refund_amount_cents,
+      amount_cents: amount_cents,
       currency: currency,
       payment_gateway: payment_gateway,
       payment_gateway_mode: payment_gateway_mode,
@@ -302,7 +322,7 @@ class Payment < ActiveRecord::Base
     )
 
     options = { currency: currency, customer_id: merchant_subscription_customer_id }
-    response = payment_gateway.gateway_purchase(host_refund_amount_cents, merchant_subscription_customer_id, options)
+    response = payment_gateway.gateway_purchase(amount_cents, merchant_subscription_customer_id, options)
 
     if response.success?
       refund.refund_successful(response)
@@ -350,7 +370,7 @@ class Payment < ActiveRecord::Base
   def fetch
     return unless payment_gateway.gateway.respond_to?(:find_payment)
 
-    payment_gateway.find_payment(authorization_token, merchant_account.try(:external_id))
+    payment_gateway.find_payment(external_id, merchant_account.try(:external_id))
   end
 
   def can_activate?
@@ -472,26 +492,8 @@ class Payment < ActiveRecord::Base
     total_amount
   end
 
-  def amount_to_be_refunded
-    if cancelled_by_guest? && payment_gateway.supports_partial_refunds?
-      (subtotal_amount.cents * (1 - cancellation_policy_penalty_percentage.to_f / BigDecimal(100))).to_i
-    else
-      total_amount.cents
-    end
-  end
-
-  # Dirty hack for cancellation policies not set for payment
-  # Payment is built before cancelation policies are set
-  def cancellation_policy_penalty_percentage
-    if payable.respond_to?(:cancellation_policy_penalty_percentage) && super.zero?
-      payable.cancellation_policy_penalty_percentage
-    else
-      super
-    end
-  end
-
-  def host_refund_amount_cents
-    amount_to_be_refunded - service_fee_amount_host.cents
+  def host_refund_amount_cents(amount_cents)
+    amount_cents - service_fee_amount_host.cents
   end
 
   def full_refund?
@@ -513,18 +515,6 @@ class Payment < ActiveRecord::Base
   # @return [Boolean] whether the payment method is capturable
   def active_merchant_payment?
     payment_method.try(:capturable?)
-  end
-
-  def payment_method_id=(payment_method_id)
-    self.payment_method = PaymentMethod.find(payment_method_id)
-  end
-
-  def payment_method=(payment_method)
-    super
-    self.payment_gateway = payment_method.payment_gateway
-    self.payment_gateway_mode = payment_gateway.mode
-    self.merchant_account = payment_gateway.merchant_account(company)
-    payment_method
   end
 
   def authorization_token
@@ -569,43 +559,24 @@ class Payment < ActiveRecord::Base
     options.with_indifferent_access
   end
 
-  def charge_attributes(response)
-    {
-      response: response,
-      success: response.success?,
-      amount: total_amount.cents,
-      currency: currency,
-      user_id: payer_id,
-      payment_gateway_mode: payment_gateway_mode
-    }
-  end
-
-  def create_transfer(response)
+  def should_create_transfer?
     # If direct_token exists that means that we want to create aggregated
     # transfer for many charges, this happens when Stripe send us webhook.
-    return if direct_token.present?
+    immediate_payout? && direct_token.blank?
+  end
 
-    company.payment_transfers.create!(
+  def create_transfer(transfer_id = nil)
+    create_payment_transfer(
+      company: company,
       payments: [self],
       payment_gateway_mode: payment_gateway_mode,
       payment_gateway_id: payment_gateway_id,
-      token: response.params.try('[]', 'transfer')
+      token: transfer_id
     )
-  end
-
-  # apply_pg_fee
-  # - sets payment_gateway_fee_cents based on balance response, this currently works only for Stripe
-  def apply_pg_fee(response)
-    return unless payment_gateway.respond_to?(:find_balance)
-    return if response.blank? || response.params.blank? || (balance_id = response.params['balance_transaction']).blank?
-
-    balance_response = payment_gateway.find_balance(balance_id, merchant_account.try(:custom_options))
-    self.payment_gateway_fee_cents = balance_response.payment_gateway_fee_cents
   end
 
   # @return [Integer, nil] customer_id of Merchant Credit Card
   # user when Merchant CC is charged for Braintree Payout
-
   def merchant_subscription_customer_id
     merchant_account.try(:payment_subscription).try(:credit_card).try(:customer_id)
   end
@@ -637,6 +608,11 @@ class Payment < ActiveRecord::Base
     self.merchant_account ||= payment_gateway.merchant_account(company)
   end
 
+  def set_payment_gateway_mode
+    return unless payment_gateway
+    self.payment_gateway_mode ||= payment_gateway.mode
+  end
+
   def generate_paypal_express_link!
     response = payment_gateway.gateway.setup_authorization(total_amount.cents, payable.setup_authorization_options)
     if response.success?
@@ -654,5 +630,9 @@ class Payment < ActiveRecord::Base
   def require_payment_source?
     payment_gateway && payment_gateway.supports_payment_source_store? &&
       new_record? && !payment_method.manual? && !payment_method.free?
+  end
+
+  def fail!
+    touch(:failed_at)
   end
 end

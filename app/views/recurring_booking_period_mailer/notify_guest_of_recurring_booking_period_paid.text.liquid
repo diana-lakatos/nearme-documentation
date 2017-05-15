@@ -1,0 +1,9 @@
+Hello, {{ enquirer.first_name }}!
+
+This is a notice to let you know a payment has been made for your recurring booking for {{ listing.name }}
+
+The period for which you were charged starts on {{ recurring_booking_period.period_start_date | localize: 'short' }} and ends on {{ recurring_booking_period.period_end_date | localize: 'short' }}.
+
+You were charged: {{ recurring_booking_period.total_amount | render_price }}
+
+We're always happy to help! Just send an email to {{ platform_context.support_email }} or call us on {{ platform_context.phone_number }}.

@@ -5,16 +5,12 @@ class CompanyForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         if (locations_configuration = configuration.delete(:locations)).present?
-          validation = locations_configuration.delete(:validation)
-          validates :locations, validation if validation.present?
+          add_validation(:locations, locations_configuration)
           collection :locations, form: LocationForm.decorate(locations_configuration),
                                  populate_if_empty: Location,
                                  prepopulator: ->(*) { locations << Location.new if locations.size.zero? }
         end
-        configuration.each do |field, options|
-          property :"#{field}", options[:property_options].presence || {}
-          validates :"#{field}", options[:validation] if options[:validation].present?
-        end
+        inject_dynamic_fields(configuration)
       end
     end
   end

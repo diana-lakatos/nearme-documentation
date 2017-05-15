@@ -35,6 +35,11 @@ module.exports = class Forms
         SelectpickerInitializer = require('./selectpicker')
         new SelectpickerInitializer()
 
+    if $('.select2').length > 0
+      require.ensure './select2', (require) ->
+        Select2Initializer = require('./select2')
+        new Select2Initializer()
+
     if $('.time_picker').length > 0
       require.ensure '../../dashboard/forms/timepickers', (require) ->
         timepickers = require('../../dashboard/forms/timepickers')

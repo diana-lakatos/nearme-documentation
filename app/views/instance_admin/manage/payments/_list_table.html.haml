@@ -4,7 +4,7 @@
       .filters
         = filter_dropdown param_name: :payment_gateway_id, label: t('instance_admin.manage.admin_searchable.payments.payment_gateways'), allow_blank: true, blank_label: t('instance_admin.manage.admin_searchable.payments.all_payment_gateways'), all_values: @payment_gateways.each_with_object({}) { |val, obj| obj[val.id.to_s] = val.name }, width: 270
 
-        = filter_dropdown param_name: :transferred, label: t('instance_admin.manage.admin_searchable.payments.transferred'), allow_blank: false, all_values: { 'awaiting' => "Awaiting for transfer", 'transferred' => "With transfer attempt", 'all' => 'All', 'excluded' => "Ecluded from transfers" }
+        = filter_dropdown param_name: :transferred, label: t('instance_admin.manage.admin_searchable.payments.transferred'), allow_blank: false, all_values: { 'awaiting' => "Awaiting for transfer", 'transferred' => "With transfer attempt", 'all' => 'All', 'excluded' => "Excluded from transfers" }, width: 250
 
         = filter_dropdown param_name: :state, label: t('instance_admin.manage.admin_searchable.payments.state'), allow_blank: true, blank_label: t('instance_admin.manage.admin_searchable.payments.in_all_states'), all_values: Payment.state_machine.states.each_with_object({}) { |val, obj| obj[val.name.to_s] = val.name.capitalize.to_s }
 
@@ -21,6 +21,7 @@
           %th= t('instance_admin.manage.payments.payer')
           %th= t('instance_admin.manage.payments.state')
           %th= t('instance_admin.manage.payments.payment_gateway')
+          %th= t('instance_admin.manage.payments.payment_method')
           %th= t('instance_admin.manage.payments.created_at')
           %th
             %b= t('instance_admin.manage.payments.payment_amount')
@@ -37,6 +38,7 @@
           %td= payment.payer ? link_to(payment.payer.name_with_state, edit_instance_admin_manage_user_path(payment.payer)) : "-  "
           %td= payment.state.try(:capitalize)
           %td= payment.payment_gateway.try(:name)
+          %td= payment.payment_method.try(:name)
           %td= l(payment.created_at, format: :long)
           %td
             %b= render_money(payment.total_amount)

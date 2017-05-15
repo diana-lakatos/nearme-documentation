@@ -4,8 +4,7 @@ class UserProfilesForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         configuration.each do |instance_profile_name, fields|
-          validation = fields.delete(:validation)
-          validates :"#{instance_profile_name}", validation if validation.present?
+          add_validation(instance_profile_name, fields)
           property :"#{instance_profile_name}",
                    form: UserProfileForm.decorate(fields),
                    prepopulator: ->(*) { send(:"#{instance_profile_name}=", find_instance_profile_type(instance_profile_name.to_s)) if send(:"#{instance_profile_name}").nil? },

@@ -69,6 +69,14 @@ class RecurringBooking < Order
     activate! if payment_subscription.credit_card.try(:success?)
   end
 
+  def update_state!
+    if overdued? && periods.unpaid.empty?
+      reconfirm!
+    elsif confirmed? && periods.unpaid.any?
+      overdue!
+    end
+  end
+
   def activate_order!
     schedule_expiry
     auto_confirm_reservation
@@ -136,10 +144,6 @@ class RecurringBooking < Order
       confirm!
       WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, id)
     end
-  end
-
-  def cancelable?
-    true
   end
 
   def client

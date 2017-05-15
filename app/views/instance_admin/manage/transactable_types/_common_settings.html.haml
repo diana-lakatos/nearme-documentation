@@ -21,18 +21,4 @@
     = f.input :service_fee_guest_percent do
       = f.input_field :service_fee_guest_percent, type: 'tel', class: 'form-control'
 
-%h4= t('instance_admin.manage.transactable_types.cancellation_policy')
-.row
-  .input-container.col-xs-12
-    = f.input :cancellation_policy_enabled, required: false, as: :boolean, input_html: { checked: f.object.cancellation_policy_enabled.present? }, :inline_label => true
-.row
-  .input-container.col-xs-6
-    = f.input :cancellation_policy_hours_for_cancellation, required: false, input_html: { class: 'form-control' }
-  .input-container.col-xs-6
-    - if resource.skip_payment_authorization?
-      = f.input :cancellation_policy_penalty_hours do
-        = f.input_field :cancellation_policy_penalty_hours, class: 'form-control'
-      .info Penalty fee works only when payment is processed with Stripe or Braintree Payment Gateway
-    - else
-      = f.input :cancellation_policy_penalty_percentage do
-        = f.input_field :cancellation_policy_penalty_percentage, type: 'tel', class: 'form-control'
+= render 'cancellation_policies', f: f

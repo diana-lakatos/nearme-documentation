@@ -99,3 +99,7 @@
         = "* #{ t('simple_form.hints.transactable_type.bulk_upload_csv_fields') }"
       .row
         = render partial: 'instance_admin/data_uploads/custom_csv_fields', locals: { f: f }
+
+
+:javascript
+  var cancellationConditions = #{@cancellation_conditions}

@@ -14,7 +14,7 @@ class ListingsController < ApplicationController
 
   def show
     if PlatformContext.current.instance.is_community?
-      @feed = ActivityFeedService.new(@transactable)
+      @feed = ActivityFeedService.new(@transactable, current_user: current_user)
       @followers = @transactable.feed_followers.paginate(pagination_params)
       @collaborators = @transactable.collaborating_users.paginate(pagination_params)
     else

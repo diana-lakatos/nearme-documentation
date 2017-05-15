@@ -110,7 +110,7 @@ class Webhooks::StripeControllerTest < ActionController::TestCase
           assert @payment_transfer.send("#{transfer_state}?")
 
           assert_no_difference '@payment_gateway.payment_transfers.count' do
-            post :webhook, params: { id: event_response(event_options).id }
+            post :webhook, id: event_response(event_options).id
           end
         end
       end

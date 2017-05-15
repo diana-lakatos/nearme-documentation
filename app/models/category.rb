@@ -23,7 +23,6 @@ class Category < ActiveRecord::Base
   has_many :category_linkings
   has_many :transactable_types, through: :category_linkings, source: :category_linkable, source_type: 'TransactableType'
   has_many :project_types, through: :category_linkings, source: :category_linkable, source_type: 'ProjectType'
-  has_many :offer_types, through: :category_linkings, source: :category_linkable, source_type: 'OferType'
   has_many :instance_profile_types, through: :category_linkings, source: :category_linkable, source_type: 'InstanceProfileType'
   has_many :reservation_types, through: :category_linkings, source: :category_linkable, source_type: 'ReservationType'
 

@@ -97,6 +97,11 @@
       = f.simple_fields_for :properties, f.object.properties do |properties_form|
         = properties_form.input :video_url
 
+    - if f.object.properties.respond_to?(:visibility)
+      = f.simple_fields_for :properties, f.object.properties do |properties_form|
+        - (f.object.transactable_type.try(:custom_attributes) || []).each do |attribute|
+          = draw_attribute_for_form(attribute, properties_form)
+
   %p.action
 
     - if f.object.new_record? || f.object.draft?
