@@ -282,6 +282,14 @@ class Graph::SchemaTest < ActiveSupport::TestCase
     end
   end
 
+  context 'orders' do
+    should 'get orders with count' do
+      query = %({ orders{ total_count edges{ node { id }} }} )
+
+      assert_equal 0, result(query).dig('orders', 'total_count')
+    end
+  end
+
 
   def result(query)
     Graph.execute_query(
