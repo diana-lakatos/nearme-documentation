@@ -8,7 +8,7 @@ class JoinGroup {
   }
 
   onJoinGroupClick(e) {
-    if(this._isUserLogged(e)) {
+    if (this._isUserLogged(e)) {
       return;
     }
 
@@ -20,19 +20,19 @@ class JoinGroup {
   sendRequestToJoinGroupIfActionIsPending() {
     var joinGroupId = localStorage.getItem('join-group-after-login');
 
-    if(joinGroupId) {
+    if (joinGroupId) {
       $.post(`/groups/${joinGroupId}/group_members`, () => {});
       localStorage.removeItem('join-group-after-login');
     }
   }
 
   bindJoinGroupClick() {
-    $("a[data-join-group]").on('click', this.onJoinGroupClick.bind(this))
+    $('a[data-join-group]').on('click', this.onJoinGroupClick.bind(this));
   }
 
   bindLoginButtonClick() {
-    $(document).on('click', '.require-login-button', (e) => {
-      var groupId = $("#loginRequiredModal").data('group-id');
+    $(document).on('click', '.require-login-button', () => {
+      var groupId = $('#loginRequiredModal').data('group-id');
       localStorage.setItem('join-group-after-login', groupId);
     });
   }
@@ -47,7 +47,7 @@ class JoinGroup {
   }
 
   _modalContainer() {
-    return $("#loginRequiredModal");
+    return $('#loginRequiredModal');
   }
 }
 

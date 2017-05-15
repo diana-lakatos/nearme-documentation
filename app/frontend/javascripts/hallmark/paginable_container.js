@@ -54,7 +54,7 @@ class PaginableContainer {
 
   updateSortOrderInUrl(url) {
     if (!this.sortControl) {
-      return;
+      return url;
     }
 
     let sortType = this.sortControl.value;
@@ -85,7 +85,6 @@ class PaginableContainer {
   }
 
   updateResults(url) {
-    console.log(url);
     this.disableMoreTrigger();
 
     $.ajax({
