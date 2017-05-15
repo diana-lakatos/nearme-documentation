@@ -18,7 +18,8 @@ module Graph
 
       NESTED_FIELDS_SOURCE_MAPPING = {
         'profile' => 'user_profiles.*',
-        'current_address' => 'current_address.*'
+        'current_address' => 'current_address.*',
+        'avatar' => 'avatar.*'
       }.freeze
 
       MANDATORY_FIELDS = %w(id slug).freeze
