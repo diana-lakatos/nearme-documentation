@@ -4,7 +4,7 @@ module Graph
       EventSourceInterface = GraphQL::InterfaceType.define do
         name 'EventSource'
         field :url, types.String do
-          resolve Resolvers::ResourceUrl.new
+          resolve Graph::Resolvers::ResourceUrl.new
         end
       end
     end

@@ -3,7 +3,7 @@ module Graph
   module Resolvers
     class ResourceUrl
       def call(obj, _arg = nil, _ctx = nil)
-        Types::ActivityFeed::UrlHelper.new.polymorphic_path(obj)
+        Graph::Types::ActivityFeed::UrlHelper.new.polymorphic_path(obj)
       end
     end
   end

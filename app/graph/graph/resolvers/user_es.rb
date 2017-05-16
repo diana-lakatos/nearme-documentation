@@ -21,7 +21,7 @@ module Graph
         'current_address' => 'current_address.*'
       }.freeze
 
-      MANDATORY_FIELDS = %w(id slug).freeze
+      MANDATORY_FIELDS = %w(id slug avatar.*).freeze
 
       def elastic_query
         {
