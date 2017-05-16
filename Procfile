@@ -4,5 +4,5 @@ localdriva: cd ../marketplaces/localdriva && git pull && yarn && gulp
 uot: cd ../marketplaces/uot && git pull && yarn && gulp
 bronxchange: cd ../marketplaces/bronxchange && git pull && yarn && gulp
 litvault: cd ../marketplaces/litvault && git pull && yarn && gulp
-mycsn: cd ../marketplace-mycsn && git reset --hard && git pull && yarn && npm start
+mycsn: cd ../marketplace-mycsn && git pull && yarn && yarn start
 mycsn-app: MARKETPLACE_VIEW=../marketplace-mycsn/marketplace_builder/liquid_views rails s

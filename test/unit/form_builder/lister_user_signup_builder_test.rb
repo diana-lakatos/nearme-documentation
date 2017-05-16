@@ -65,20 +65,19 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
       "Profiles default properties default attr can't be blank",
       "Profiles default categories default category can't be blank",
       "Profiles seller properties seller attr can't be blank",
-      "Profiles seller custom images #{@seller_photo.id} image can't be blank",
-      "Profiles seller custom attachments #{@seller_attachment.id} file can't be blank",
+      "Profiles seller custom images #{@seller_photo.name.humanize.downcase} image can't be blank",
+      "Profiles seller custom attachments #{@seller_attachment.name.humanize.downcase} file can't be blank",
       "Profiles seller categories seller category can't be blank",
       "Companies name can't be blank",
       "Companies locations name can't be blank",
       'Companies locations transactables boat photos is too short (minimum is 1 character)',
       "Companies locations transactables boat name can't be blank",
       "Companies locations transactables boat properties boat attr can't be blank",
-      "Companies locations transactables boat custom images #{@boat_photo.id} image can't be blank",
-      "Companies locations transactables boat custom attachments #{@boat_attachment.id} file can't be blank",
+      "Companies locations transactables boat custom images #{@boat_photo.name.humanize.downcase} image can't be blank",
+      "Companies locations transactables boat custom attachments #{@boat_attachment.name.humanize.downcase} file can't be blank",
       "Companies locations transactables boat categories boat category can't be blank",
       "Companies locations location address address can't be blank"
     ]
-    @lister_user_signup_builder.errors.full_messages
     messages.each do |message|
       assert_includes @lister_user_signup_builder.errors.full_messages, message
     end
@@ -177,12 +176,12 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
             'seller_attr' => 'my seller value'
           },
           custom_images: {
-            :"#{@seller_photo.id}" => {
+            :"#{@seller_photo.name}" => {
               image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
             }
           },
           custom_attachments: {
-            :"#{@seller_attachment.id}" => {
+            :"#{@seller_attachment.name}" => {
               file: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
             }
           },
@@ -211,12 +210,12 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                     name: 'My first boat',
                     currency: 'PLN',
                     custom_images: {
-                      :"#{@boat_photo.id}" => {
+                      :"#{@boat_photo.name}" => {
                         image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
                       }
                     },
                     custom_attachments: {
-                      :"#{@boat_attachment.id}" => {
+                      :"#{@boat_attachment.name}" => {
                         file: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
                       }
                     },
@@ -235,12 +234,12 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                             author: 'John Doe'
                           },
                           custom_images: {
-                            :"#{@boat_review_photo.id}" => {
+                            :"#{@boat_review_photo.name}" => {
                               image: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
                             }
                           },
                           custom_attachments: {
-                            :"#{@boat_review_attachment.id}" => {
+                            :"#{@boat_review_attachment.name}" => {
                               file: File.open(File.join(Rails.root, 'test', 'assets', 'hello.pdf'))
                             }
                           }
@@ -248,12 +247,12 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                         '1' => {
                           properties: { author: 'Jane Doe' },
                           custom_images: {
-                            :"#{@boat_review_photo.id}" => {
+                            :"#{@boat_review_photo.name}" => {
                               image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
                             }
                           },
                           custom_attachments: {
-                            :"#{@boat_review_attachment.id}" => {
+                            :"#{@boat_review_attachment.name}" => {
                               file: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
                             }
                           }
@@ -336,14 +335,14 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
             }
           },
           :custom_images => {
-            "#{@seller_photo.id}": {
+            "#{@seller_photo.name}": {
               validation: {
                 'presence' => {}
               }
             }
           },
           :custom_attachments => {
-            "#{@seller_attachment.id}": {
+            "#{@seller_attachment.name}": {
               validation: {
                 'presence' => {}
               }
@@ -417,14 +416,14 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                     }
                   },
                   custom_images: {
-                    "#{@boat_review_photo.id}": {
+                    "#{@boat_review_photo.name}": {
                       validation: {
                         'presence' => {}
                       }
                     }
                   },
                   custom_attachments: {
-                    "#{@boat_review_attachment.id}": {
+                    "#{@boat_review_attachment.name}": {
                       validation: {
                         'presence' => {}
                       }
@@ -433,14 +432,14 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                 }
               },
               custom_images: {
-                "#{@boat_photo.id}": {
+                "#{@boat_photo.name}": {
                   validation: {
                     'presence' => {}
                   }
                 }
               },
               custom_attachments: {
-                "#{@boat_attachment.id}": {
+                "#{@boat_attachment.name}": {
                   validation: {
                     'presence' => {}
                   }

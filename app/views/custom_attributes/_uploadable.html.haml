@@ -13,7 +13,8 @@
 
 - if f.object.kind_of?(BaseForm)
   = f.simple_fields_for association do |associations_form|
-    = associations_form.simple_fields_for :"#{ca.id}" do |association_form|
+    - field = ca.name
+    = associations_form.simple_fields_for :"#{field}" do |association_form|
       %div{class: div_klass}
         = render "#{association}/reform_attribute", f: association_form, ca: ca, parent_form: associations_form
       - if index.present? && index.zero?

@@ -43,8 +43,8 @@ class CustomizationForm < BaseForm
   def custom_images_open_struct!(fragment:, **_args)
     hash = {}
     custom_images ||= model.custom_images + CustomImage.where(id: fragment.values.map { |h| h[:id] }, uploader_id: nil)
-    model.custom_attribute_target.custom_attributes.where(attribute_type: 'photo').pluck(:id).each do |id|
-      hash[id.to_s] = custom_images.detect { |ci| ci.custom_attribute_id == id }
+    model.custom_attribute_target.custom_attributes.where(attribute_type: 'photo').pluck(:id, :name).each do |id, name|
+      hash[name] = custom_images.detect { |ci| ci.custom_attribute_id == id }
     end
     OpenStruct.new(hash)
   end
@@ -52,8 +52,8 @@ class CustomizationForm < BaseForm
   def custom_attachments_open_struct!(fragment:, **_args)
     hash = {}
     custom_attachments ||= model.custom_attachments + CustomAttachment.where(id: fragment.values.map { |h| h[:id] }, uploader_id: nil)
-    model.custom_attribute_target.custom_attributes.where(attribute_type: 'file').pluck(:id).each do |id|
-      hash[id.to_s] = custom_attachments.detect { |ci| ci.custom_attribute_id == id }
+    model.custom_attribute_target.custom_attributes.where(attribute_type: 'file').pluck(:id, :name).each do |id, name|
+      hash[name] = custom_attachments.detect { |ci| ci.custom_attribute_id == id }
     end
     OpenStruct.new(hash)
   end
