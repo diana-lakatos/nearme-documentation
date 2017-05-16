@@ -4,6 +4,7 @@ class Dashboard::UserRecurringBookings::PaymentSubscriptionsController < Dashboa
   before_filter :find_countries
 
   def edit
+    unpaid_recurring_booking_periods
   end
 
   def update
