@@ -1,9 +1,0 @@
-Hello there, {{ user.first_name }}!
-
-There are some new {{ platform_context.bookable_noun_plural }} around you. Take a look and find the perfect {{ platform_context.bookable_noun }}!
-
-{% include 'reservation_mailer/listings_in_near.text' %}
-Search More {{ platform_context.bookable_noun_plural }}: {{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking }}
-
-Not looking for a {{ platform_context.bookable_noun }}?
-List your {{ platform_context.bookable_noun }}: {{ platform_context.host | append:user.space_wizard_list_url_with_tracking | append:signature_for_tracking }}
