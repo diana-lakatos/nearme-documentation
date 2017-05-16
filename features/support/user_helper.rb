@@ -12,7 +12,7 @@ module UserHelper
   def sign_up_with_provider(provider, email = nil)
     email ||= "#{provider.downcase}@example.com"
     try_to_sign_up_with_provider(provider)
-    fill_in 'form_email', with: email.to_s
+    fill_in 'form[email]', with: email.to_s
     click_button 'Sign up'
   end
 
@@ -28,9 +28,9 @@ module UserHelper
 
   def fill_in_user_sign_up_details(options = {})
     options = options.reverse_merge(default_options)
-    fill_in 'form_name', with: options[:name]
-    fill_in 'form_email', with: options[:email]
-    fill_in 'form_password', with: options[:password]
+    fill_in 'form[name]', with: options[:name]
+    fill_in 'form[email]', with: options[:email]
+    fill_in 'form[password]', with: options[:password]
   end
 
   def update_current_user_information(options = {})

@@ -28,7 +28,7 @@ module Graph
           resolve ->(event, args, _ctx) { ActivityFeedService::Event.new(event, args[:target]) }
         end
         field :url, types.String do
-          resolve Resolvers::ResourceUrl.new
+          resolve Graph::Resolvers::ResourceUrl.new
         end
         field :comments, types[Types::ActivityFeed::Comment]
       end

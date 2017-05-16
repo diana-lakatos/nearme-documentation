@@ -12,7 +12,7 @@ module Graph
             when ::Transactable
               followed.to_liquid.show_path
             else
-              Resolvers::ResourceUrl.new.call(followed)
+              Graph::Resolvers::ResourceUrl.new.call(followed)
             end
           }
         end
