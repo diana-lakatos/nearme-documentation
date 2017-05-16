@@ -1,13 +1,31 @@
 # frozen_string_literal: true
 class OrderForm < BaseForm
+  RESERVATIONS_POPULATOR = lambda do |collection:, fragment:, index:, as:, **_args|
+    item = reservations.find { |c| c.id.to_s == fragment['id'].to_s && fragment['id'].present? }
+    if fragment['_destroy'] == '1'
+      reservations.delete(item)
+      return skip!
+    end
+    if item
+      item
+    else
+      # if this is new item, we want to remove all persisted
+      # i.e. I make a booking for listing A, but I do not pay
+      # instead I go to make a booking for B -> this means
+      # I resigned from A
+      reservations.select(&:persisted?).each { |i| reservations.delete(i) }
+      reservations.append(build_reservation_object)
+    end
+  end.freeze
+
   class << self
     def decorate(configuration)
       Class.new(self) do
-        @reservation_type = configuration[:reservation_type]
+        @reservation_type = configuration.delete(:reservation_type)
         if (reservations_configuration = configuration.delete(:reservations)).present?
           add_validation(:reservations, reservations_configuration)
           collection :reservations, form: ReservationForm.decorate(reservations_configuration),
-                                    populate_if_empty: :build_reservation_object,
+                                    populator: RESERVATIONS_POPULATOR,
                                     prepopulator: ->(_options) { reservations << build_reservation_object if reservations.size.zero? }
         end
         if (properties_configuration = configuration.delete(:properties)).present?
@@ -19,7 +37,7 @@ class OrderForm < BaseForm
     end
   end
 
-  def build_reservation_object(*_args)
+  def build_reservation_object
     rt = self.class.instance_variable_get(:'@reservation_type')
     model.real_model.reservations.build(
       reservation_type: rt,

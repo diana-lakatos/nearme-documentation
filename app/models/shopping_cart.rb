@@ -36,6 +36,11 @@ class ShoppingCart < ActiveRecord::Base
     hash = open_struct.to_h
     hash.delete(:real_model)
     orders_open_structs = hash.values.flatten
-    self.reservations = orders_open_structs.map(&:reservations).flatten
+    self.reservations = orders_open_structs.map(&:reservations).flatten.tap do |collection|
+      collection.each do |o|
+        o.host_fee_line_items.destroy_all
+        o.service_fee_line_items.destroy_all
+      end
+    end
   end
 end
