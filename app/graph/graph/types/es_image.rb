@@ -7,11 +7,12 @@ module Graph
       field :id, types.ID do
         resolve ->(obj, _arg, _ctx) { obj.id }
       end
-      field :url,
-            !types.String,
-            'image url, ex: thumb: url(version: "thumb")' do
-        argument :version, !types.String
-        resolve ->(obj, arg, _ctx) { obj.versions[arg[:version]].url }
+      field :url, types.String, 'image url, ex: thumb: url(version: "thumb")' do
+        argument :version, types.String, default_value: 'thumb'
+        resolve lambda { |obj, arg, _ctx|
+          versions = obj.versions || obj
+          versions[arg[:version]].url
+        }
       end
     end
   end
