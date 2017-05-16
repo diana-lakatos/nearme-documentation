@@ -28,7 +28,13 @@ module Elastic
       private
 
       def add(condition)
-        @query.concat Array(condition) if condition.present?
+        return unless condition.present?
+
+        if condition.is_a? Array
+          @query.concat condition
+        else
+          @query << condition
+        end
       end
 
       # TODO: add profile-type categories only when there is related criteria
@@ -57,7 +63,7 @@ module Elastic
           Array(value).reject(&:blank?).map do |single|
             { match: { "user_profiles.properties.#{key}" => single } }
           end
-        end
+        end&.compact
       end
 
       # TODO: review
@@ -89,7 +95,9 @@ module Elastic
       end
 
       def availability_exceptions
-        AvailabilityExceptions.new(@params.dig(:user_profiles, type, :availability_exceptions))
+        return [] unless @params.dig(:user_profiles, type, :availability_exceptions)
+
+        AvailabilityExceptions.new(@params.dig(:user_profiles, type, :availability_exceptions)).to_h
       end
 
       def config

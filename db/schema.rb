@@ -13,7 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20170515145406) do
 
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "btree_gin"
@@ -3209,6 +3208,15 @@ ActiveRecord::Schema.define(version: 20170515145406) do
     t.string   "header_image", limit: 255
   end
 
+  create_table "user_message_types", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "type"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "user_message_types", ["instance_id", "type"], name: "user_message_types_main_idx", using: :btree
+
   create_table "user_messages", force: :cascade do |t|
     t.integer  "thread_owner_id"
     t.integer  "author_id",                                           null: false
@@ -3225,9 +3233,12 @@ ActiveRecord::Schema.define(version: 20170515145406) do
     t.datetime "deleted_at"
     t.integer  "instance_id"
     t.datetime "unread_last_reminded_at"
+    t.integer  "user_message_type_id"
+    t.hstore   "properties"
   end
 
   add_index "user_messages", ["instance_id"], name: "index_user_messages_on_instance_id", using: :btree
+  add_index "user_messages", ["user_message_type_id"], name: "index_user_messages_on_user_message_type_id", using: :btree
 
   create_table "user_profiles", force: :cascade do |t|
     t.hstore   "properties"
