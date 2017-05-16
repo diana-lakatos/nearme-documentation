@@ -7,7 +7,7 @@ class GroupsController < ApplicationController
 
   def show
     @feed = ActivityFeedService.new(@group, current_user: current_user)
-    @members = @group.approved_members.paginate(paginate_params)
+    @members = @group.approved_members.custom_order("", current_user).paginate(paginate_params)
     @transactables = @group.transactables.active.paginate(paginate_params)
     respond_to :html
   end

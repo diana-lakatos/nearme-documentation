@@ -36,18 +36,22 @@ module ReportsProperties
           values << record.creator&.name
           values << record.creator&.email
           values << record.show_url
-          values << record.location.latitude
-          values << record.location.longitude
-          values << record.location.address
-          values << (record.location.location_address.try(:street) || '')
-          values << (record.location.location_address.try(:suburb) || '')
-          values << (record.location.location_address.try(:city) || '')
-          values << (record.location.location_address.try(:country) || '')
-          values << (record.location.location_address.try(:state) || '')
-          values << (record.location.location_address.try(:postcode) || '')
+          values << record.location&.latitude
+          values << record.location&.longitude
+          values << record.location&.address
+          values << record.location&.location_address&.street
+          values << record.location&.location_address&.suburb
+          values << record.location&.location_address&.city
+          values << record.location&.location_address&.country
+          values << record.location&.location_address&.state
+          values << record.location&.location_address&.postcode
           values << record.action_type.pricings.inject({}) { |hash, p| hash[p.unit] = p.price_cents; hash }
         when User then
-          values << record.categories.pluck(:name).join(',')
+          if record.default_profile.present?
+            values << record.default_profile.categories.pluck(:name).join(',')
+          else
+            values << ''
+          end
           values << Topic.joins("inner join activity_feed_subscriptions afs on afs.followed_id = topics.id and afs.followed_type = 'Topic'").where('afs.follower_id = ?', record.id).pluck(:name).join(',')
         end
 

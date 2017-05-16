@@ -33,7 +33,8 @@ class ApprovalRequest < ActiveRecord::Base
   has_many :approval_request_attachments, inverse_of: :approval_request
   accepts_nested_attributes_for :approval_request_attachments, reject_if: ->(params) { params[:file].nil? && params[:file_cache].nil? }
 
-  validates_presence_of :message, if: ->(ar) { ar.required_written_verification }
+  validates :message, presence: true, if: ->(ar) { ar.required_written_verification }
+  validates :message, length: { maximum: 255 }
   validate :validate_presence_of_attachments
 
   def set_defaults
