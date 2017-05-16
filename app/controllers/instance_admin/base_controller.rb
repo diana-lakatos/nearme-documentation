@@ -9,6 +9,7 @@ class InstanceAdmin::BaseController < ApplicationController
   before_action :check_if_locked, only: [:new, :create, :edit, :update, :destroy]
   before_action :force_scope_to_instance
   skip_before_action :redirect_if_marketplace_password_protected
+  skip_before_action :redirect_if_maintenance_mode_enabled
 
   ANALYTICS_CONTROLLERS = {
     'overview' => { default_action: 'show' },
