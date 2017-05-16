@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
   before_action :platform_context
   before_action :register_platform_context_as_lookup_context_detail
   before_action :redirect_if_marketplace_password_protected
+  before_action :redirect_if_maintenance_mode_enabled
   before_action :filter_out_token
   before_action :redirect_unverified_user, if: -> { platform_context.instance.require_verified_user? }
   before_action :sign_out_if_signed_out_from_intel_sso, if: -> { should_log_out_from_intel? }
@@ -299,6 +300,15 @@ class ApplicationController < ActionController::Base
       if current_user.nil? || !InstanceAdminAuthorizer.new(current_user).instance_admin?
         session[:marketplace_return_to] = request.path if request.get? && !request.xhr?
         redirect_to main_app.new_marketplace_session_path
+      end
+    end
+  end
+
+  def redirect_if_maintenance_mode_enabled
+    if platform_context.instance.maintenance_mode
+      if current_user.nil? || !InstanceAdminAuthorizer.new(current_user).instance_admin?
+        session[:marketplace_return_to] = request.path if request.get? && !request.xhr?
+        redirect_to main_app.maintenance_path
       end
     end
   end

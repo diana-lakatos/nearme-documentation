@@ -572,6 +572,7 @@ en:
         basic_configuration: 'Basic Configuration'
         basic_configuration_section:
           placeholder_marketplace_name: 'Your marketplace name'
+          placeholder_maintenance_mode: 'Maintenance mode'
         leave_blank_to_use_all_countries: "Leave blank to use all countries"
         leave_blank_to_use_all_currencies: "Leave blank to use all currencies"
         checkout: "Checkout"
