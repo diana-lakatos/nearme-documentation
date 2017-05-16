@@ -42,18 +42,8 @@ class AuthenticationsController < ApplicationController
       # There is no authentication in our system, and the user is not logged in. Hence, we create a new user and then new authentication
     else
       if @oauth.create_user(@role)
-        case @role
-        when 'default'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @oauth.authentication.user.id, as: current_user)
-          @onboarding = @oauth.authentication.user.default_profile.onboarding?
-        when 'seller'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::ListerAccountCreated, @oauth.authentication.user.id, as: current_user)
-          @onboarding = @oauth.authentication.user.seller_profile.onboarding?
-        when 'buyer'
-          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated, @oauth.authentication.user.id, as: current_user)
-          @onboarding = @oauth.authentication.user.buyer_profile.onboarding?
-        end
-        session[:user_return_to] = onboarding_index_url if @onboarding
+        broadcast_profile_created
+        finish_onboarding
 
         # User and authentication created successfully. User is now logged in
         new_user_created_successfully
@@ -163,5 +153,30 @@ class AuthenticationsController < ApplicationController
 
   def redirect_after_callback_to
     cookies.delete :redirect_after_callback_to
+  end
+
+  def finish_onboarding
+    return unless PlatformContext.current.instance.is_community?
+
+    user = @oauth.authentication.user
+    onboarding = case @role
+                 when 'default'
+                   user.default_profile.onboarding?
+                 when 'seller'
+                   user.seller_profile.onboarding?
+                 when 'buyer'
+                   user.buyer_profile.onboarding?
+                 end
+    session[:user_return_to] = onboarding_index_url if onboarding
+  end
+
+  ROLE_STEPS = {
+    'default' => WorkflowStep::SignUpWorkflow::AccountCreated,
+    'seller' => WorkflowStep::SignUpWorkflow::ListerAccountCreated,
+    'buyer' => WorkflowStep::SignUpWorkflow::EnquirerAccountCreated
+  }
+
+  def broadcast_profile_created
+    WorkflowStepJob.perform(ROLE_STEPS[@role], @oauth.authentication.user.id, as: current_user)
   end
 end
