@@ -385,23 +385,23 @@ class User < ActiveRecord::Base
     def custom_order(order, user)
       case order
       when /featured/i
-        featured
+        featured.order('id DESC')
       when /people_i_know/i
-        friends_of(user)
+        friends_of(user).order('id DESC')
       when /most_popular/i
-        order('followers_count DESC')
+        order('followers_count DESC, id DESC')
       when /location/i
         return all unless user
         group('addresses.id, users.id').joins(:current_address).select('users.*')
-                                       .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance', select: 'users.*'))
+                                       .merge(Address.near(user.current_address, 8_000_000, units: :km, order: 'distance ASC, users.id DESC', select: 'users.*'))
       when /number_of_projects/i
-        order('transactables_count + transactable_collaborators_count DESC')
+        order('transactables_count + transactable_collaborators_count DESC, id DESC')
       when /custom_attributes./
         parsed_order = order.match(/custom_attributes.([a-zA-Z\.\_\-]*)_(asc|desc)/)
-        order(ActiveRecord::Base.send(:sanitize_sql_array, ["cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}", { field_name: parsed_order[1] }]))
+        order(ActiveRecord::Base.send(:sanitize_sql_array, ["cast(user_profiles.properties -> :field_name as float) #{parsed_order[2]}, id DESC", { field_name: parsed_order[1] }]))
       else
         if current_instance.is_community?
-          order('transactables_count + transactable_collaborators_count DESC, followers_count DESC')
+          order('transactables_count + transactable_collaborators_count DESC, followers_count DESC, id DESC')
         else
           all
         end
