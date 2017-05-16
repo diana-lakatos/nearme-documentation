@@ -7,7 +7,7 @@ module Graph
         field :id, !types.Int
         field :creator_id, types.ID
         field :url, types.String do
-          resolve Resolvers::ResourceUrl.new
+          resolve Graph::Resolvers::ResourceUrl.new
         end
       end
     end
