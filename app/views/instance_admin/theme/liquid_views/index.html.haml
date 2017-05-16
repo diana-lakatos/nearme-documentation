@@ -29,11 +29,11 @@
                   = link_to t('instance_admin.destroy'), instance_admin_theme_liquid_view_path(liquid_view), method: :delete,
                       data: { confirm: 'Are you sure?' }
                 .pull-right{style: 'margin-left: 10px'}
-                  = link_to t('instance_admin.edit'), edit_instance_admin_theme_liquid_view_path(liquid_view)
-                .pull-right{style: 'margin-left: 10px'}
                   = link_to t('instance_admin.liquid_views.duplicate_default'), new_instance_admin_theme_liquid_view_path(liquid_view_id: liquid_view.id)
                 .pull-right{style: 'margin-left: 10px'}
                   = link_to t('instance_admin.versions'), versions_instance_admin_theme_liquid_view_path(liquid_view.id), title: 'Show previous versions'
+                .pull-right{style: 'margin-left: 10px'}
+                  = link_to t('instance_admin.edit'), edit_instance_admin_theme_liquid_view_path(liquid_view)
 
 .content-container
   %h4

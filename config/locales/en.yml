@@ -773,9 +773,9 @@ en:
       template: Template
       format: 'Format'
       duplicate_default: "Duplicate default"
-      customize_defaults: "Customize defaults"
+      customize_defaults: "Default Liquid Views"
       add_liquid_view: "Add Liquid View"
-      liquid_views: 'Liquid Views'
+      liquid_views: 'Customized / Added Liquid Views'
       liquid_views_results: 'Liquid Views Results'
     file_upload:
       upload_file: "Upload File"
@@ -1057,12 +1057,12 @@ en:
       email_templates:
         template: "Template"
         format: "Format"
-        customize_default: "Customize default"
+        customize_default: "Default Email Templates"
         customize: "Customize"
         add_email_template: 'Add Email Template'
         template_path: "Template path"
         service_type: "Service Type"
-        email_templates: 'Email Templates'
+        email_templates: 'Customized Email Templates'
         email_templates_results: 'Email Templates Results'
         actions: 'Actions'
       sms_templates:
