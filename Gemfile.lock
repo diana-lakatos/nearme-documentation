@@ -617,7 +617,7 @@ GEM
       require_all
     nested_form (0.3.2)
     netrc (0.11.0)
-    newrelic_rpm (3.17.1.326)
+    newrelic_rpm (4.1.0.333)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
     nokogumbo (1.4.10)
