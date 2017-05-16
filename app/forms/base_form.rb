@@ -16,7 +16,7 @@ class BaseForm < Reform::Form
     end
 
     def add_property(field, options)
-      property :"#{field}", options[:property_options].presence || {}
+      property :"#{field}", options&.fetch(:property_options, {}) || {}
     end
 
     def reflect_on_association(*_args)
