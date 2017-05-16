@@ -4,10 +4,11 @@ module Graph
     module Orders
       Order = GraphQL::ObjectType.define do
         name 'Order'
+        implements GraphQL::Relay::Node.interface
 
         global_id_field :id
 
-        field :id, !types.Int
+        field :id, !types.ID
         field :user, !Types::User do
           resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, { id: obj.creator_id }, ctx) }
         end

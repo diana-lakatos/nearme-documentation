@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstanceMailer < ActionMailer::Base
   prepend_view_path InstanceViewResolver.instance
   extend Job::SyntaxEnhancer
@@ -41,10 +42,11 @@ class InstanceMailer < ActionMailer::Base
       format.html { render(template, render_options) }
       format.text do
         begin
-                      render(template, render_options)
-                    rescue
-                      ''
-                    end
+          render(template, render_options)
+        rescue ::ActionView::MissingTemplate
+          # do not require text format, html is enough
+          ''
+        end
       end
     end
 

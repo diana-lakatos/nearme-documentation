@@ -20,7 +20,6 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
     notify_host_reservation_rejected_email!
     notify_guest_of_payment_request_email!
     notify_guest_pre_booking_email!
-    notify_guest_one_booking_suggestions_email!
     request_rating_of_guest_from_host_email!
     request_rating_of_host_from_guest_email!
     create_notify_host_of_shipping_details_email!
@@ -116,10 +115,6 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
 
   def notify_host_reservation_rejected_email!
     create_alert!(associated_class: WorkflowStep::ReservationWorkflow::Rejected, name: 'notify_host_of_rejection', path: 'reservation_mailer/notify_host_of_rejection', subject: '[{{platform_context.name}}] Can we help, {{lister.first_name}}?', alert_type: 'email', recipient_type: 'lister')
-  end
-
-  def notify_guest_one_booking_suggestions_email!
-    create_alert!(associated_class: WorkflowStep::ReservationWorkflow::OneBookingSuggestions, name: 'send user with one reservation some suggestions', path: 'reengagement_mailer/one_booking', subject: '[{{platform_context.name}}] Check out these new {{listing.transactable_type.bookable_noun_plural}} in your area!', alert_type: 'email', recipient_type: 'enquirer')
   end
 
   def request_rating_of_guest_from_host_email!

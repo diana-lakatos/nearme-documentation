@@ -25,7 +25,6 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
     @reservation_creator.expects(:notify_guest_of_payment_request_email!).once
     @reservation_creator.expects(:notify_host_reservation_rejected_email!).once
     @reservation_creator.expects(:notify_guest_pre_booking_email!).once
-    @reservation_creator.expects(:notify_guest_one_booking_suggestions_email!).once
     @reservation_creator.expects(:request_rating_of_guest_from_host_email!).once
     @reservation_creator.expects(:request_rating_of_host_from_guest_email!).once
     @reservation_creator.expects(:notify_host_of_approved_payment!).once
@@ -303,27 +302,6 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking is tomorrow!", mail.subject
-      assert_not_contains 'Liquid error:', mail.html_part.body
-      assert_not_contains 'translation missing:', mail.html_part.body
-    end
-
-    should 'one reservation' do
-      @reservation_creator.notify_guest_one_booking_suggestions_email!
-      assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::OneBookingSuggestions, @reservation.id)
-      end
-      mail = ActionMailer::Base.deliveries.last
-
-      assert_contains @user.first_name, mail.html_part.body
-      assert_contains @reservation.transactable.name, mail.html_part.body
-
-      assert_equal [@user.email], mail.to
-      assert_equal '[DesksNearMe] Check out these new Desks in your area!', mail.subject
-      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="https://example.com', mail.html_part.body
-      assert_not_contains 'href="/', mail.html_part.body
-      assert_contains @reservation.transactable.name, mail.html_part.body
-      assert_equal [@reservation.owner.email], mail.to
       assert_not_contains 'Liquid error:', mail.html_part.body
       assert_not_contains 'translation missing:', mail.html_part.body
     end

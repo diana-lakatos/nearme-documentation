@@ -367,6 +367,15 @@ module LiquidFilters
     hour.to_i * 60 + minute.to_i
   end
 
+  # @return [String] time in string in HH:MM format 24h clock
+  # @param string [Int] number of minutes
+  def number_of_minutes_to_time(minutes)
+    minutes = minutes.to_i % 1440 # in case we made overnight booking
+    hours = (minutes.to_f / 60).floor
+    minutes = minutes - (hours * 60)
+    "#{'%.2d' % hours}:#{'%.2d' % minutes}"
+  end
+
   # @return [Time] a Time object obtained/parsed from the input object
   # @param string [String] object from which we try to obtain/parse a date object
   def to_time_from_str(string)

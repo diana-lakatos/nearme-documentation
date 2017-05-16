@@ -6,7 +6,7 @@ class ReservationForm < BaseForm
     super(model)
   end
 
-  property :booking_type
+  property :_destroy, virtual: true
   property :quantity, default: 1
   property :transactable_pricing_id
   property :transactable_id
@@ -14,7 +14,6 @@ class ReservationForm < BaseForm
   property :minimum_booking_minutes, readonly: true
   validates :minimum_booking_minutes, presence: true
 
-  validates :booking_type, presence: true
   validates :transactable_pricing_id, presence: true
   validates :transactable_id, presence: true
 
@@ -23,7 +22,14 @@ class ReservationForm < BaseForm
       Class.new(self) do
         if (periods_configuration = configuration.delete(:periods))
           collection :periods, form: ReservationPeriodForm.decorate(periods_configuration),
-                               populate_if_empty: ->(_options) { model.periods.build },
+                               populator: ->(fragment:, **) {
+                                            item = periods.find { |p| p.id.to_s == fragment['id'].to_s && fragment['id'].present? }
+                                            if fragment['_destroy'] == '1'
+                                              periods.delete(item)
+                                              return skip!
+                                            end
+                                            item ? item : periods.append(model.periods.build)
+                                          },
                                prepopulator: ->(_options) { periods << model.periods.build if periods.size.zero? }
           validates :periods, presence: true, length: { minimum: 1 }
         end

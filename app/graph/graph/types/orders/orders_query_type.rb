@@ -3,8 +3,7 @@ module Graph
   module Types
     module Orders
       OrdersQueryType = GraphQL::ObjectType.define do
-        field :orders do
-          type !types[Types::Orders::Order]
+        connection :orders, Graph::Types::RelayConnection.build(Types::Orders::Order) do
           argument :user_id, types.ID
           argument :creator_id, types.ID
           argument :archived, types.Boolean

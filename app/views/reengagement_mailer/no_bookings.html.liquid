@@ -1,9 +1,0 @@
-<h2>Hello there, {{ user.first_name }}!</h2>
-
-<p>There are some new things around you. Take a look and find the perfect {{ platform_context.bookable_nouns }}!</p>
-
-{% include 'reservation_mailer/listings_in_near.html' %}
-
-<a class="btn" href="{{ platform_context.host | append:user.search_url_with_tracking | append:signature_for_tracking }}">Search More {{ platform_context.bookable_noun_plural }}</a>
-
-<p>Not looking for a {{ platform_context.bookable_nouns }}? <a href="{{ platform_context.host | append:user.space_wizard_list_url_with_tracking | append:signature_for_tracking }}">List your {{ platform_context.bookable_nouns }}</a>.</p>
