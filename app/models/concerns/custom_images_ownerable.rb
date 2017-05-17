@@ -12,8 +12,8 @@ module CustomImagesOwnerable
 
     def default_images_open_struct
       hash = {}
-      custom_attribute_target.custom_attributes.where(attribute_type: 'photo').pluck(:id).each do |id|
-        hash[id.to_s] = custom_images.detect { |ci| ci.custom_attribute_id == id }.tap do |ci|
+      custom_attribute_target.custom_attributes.where(attribute_type: 'photo').pluck(:id, :name).each do |id, name|
+        hash[name] = custom_images.detect { |ci| ci.custom_attribute_id == id }.tap do |ci|
           ci&.owner_type = self.class.name
         end
       end

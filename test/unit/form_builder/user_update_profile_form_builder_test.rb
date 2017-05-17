@@ -226,7 +226,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
                   buyer_model_attr: 'my first value'
                 },
                 custom_images: {
-                  :"#{@buyer_model_photo.id}" => {
+                  :"#{@buyer_model_photo.name}" => {
                     image: File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
                   }
                 }
@@ -236,7 +236,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
                   buyer_model_attr: 'my second value'
                 },
                 custom_images: {
-                  :"#{@buyer_model_photo.id}" => {
+                  :"#{@buyer_model_photo.name}" => {
                     image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
                   }
                 }
@@ -269,7 +269,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
             'seller_attr' => 'my seller value'
           },
           custom_images: {
-            :"#{@seller_photo.id}" => {
+            :"#{@seller_photo.name}" => {
               image: File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
             }
           },
@@ -329,7 +329,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
                 }
               },
               custom_images: {
-                "#{@buyer_model_photo.id}": {
+                "#{@buyer_model_photo.name}": {
                   validation: {
                     'presence' => {}
                   }
@@ -386,7 +386,7 @@ class UserUpdateProfileFormBuilderTest < ActiveSupport::TestCase
             }
           },
           :custom_images => {
-            "#{@seller_photo.id}": {
+            "#{@seller_photo.name}": {
               validation: {
                 'presence' => {}
               }

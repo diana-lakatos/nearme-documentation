@@ -3,17 +3,23 @@ require 'test_helper'
 
 class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
   should 'generate proper configuration for UoT' do
-    load_uot
+    load_mp('marketplaces/uot')
     form_component = FormComponent.new(form_fields: form_component_fields)
     assert_equal buyer_form_configuration, FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).send(:build_configuration_based_on_form_components, form_component, 'buyer')
 
     assert_equal seller_form_configuration, FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).send(:build_configuration_based_on_form_components, form_component, 'seller')
   end
 
+  should 'generate proper configuration for dummy MP' do
+    load_mp('test/assets/dummy_marketplace')
+    form_component = FormComponent.new(form_fields: [{"buyer"=>"photo_input"}])
+    assert_equal dummy_mp_buyer_form_configuration, FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).send(:build_configuration_based_on_form_components, form_component, 'buyer')
+  end
+
   protected
 
-  def load_uot
-    MarketplaceBuilder::Loader.load('marketplaces/uot',
+  def load_mp(path)
+    MarketplaceBuilder::Loader.load(path,
                                     verbose: false,
                                     instance_id: PlatformContext.current.instance.id,
                                     creators: [
@@ -23,6 +29,10 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
                                       MarketplaceBuilder::Creators::CategoriesCreator,
                                       MarketplaceBuilder::Creators::CustomModelTypesCreator
                                     ])
+  end
+
+  def dummy_mp_buyer_form_configuration
+    {:profiles=>{:buyer=>{:validation=>{:presence=>{}}, :custom_images=>{"photo_input"=>{:validation=>{:presence=>{}}}, :validation=>{:presence=>{}}}}}}
   end
 
   def buyer_form_configuration

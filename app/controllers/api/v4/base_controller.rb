@@ -22,9 +22,12 @@ module Api
                                                             configuration: form_configuration } }
 
             format.html do
-              RenderCustomPage.new(self).render(page: Page.find(params[:page_id]),
-                                                params: params,
-                                                submitted_form: submitted_form)
+              RenderCustomPage.new(
+                controller: self,
+                page: Page.find(params[:page_id]),
+                params: params,
+                submitted_form: submitted_form
+              ).render
             end
 
             format.json do

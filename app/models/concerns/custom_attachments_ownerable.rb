@@ -12,8 +12,8 @@ module CustomAttachmentsOwnerable
 
     def default_custom_attachments_open_struct
       hash = {}
-      custom_attribute_target.custom_attributes.where(attribute_type: 'file').pluck(:id).each do |id|
-        hash[id.to_s] = custom_attachments.detect { |ci| ci.custom_attribute_id == id }
+      custom_attribute_target.custom_attributes.where(attribute_type: 'file').pluck(:id, :name).each do |id, name|
+        hash[name] = custom_attachments.detect { |ci| ci.custom_attribute_id == id }
       end
       OpenStruct.new(hash)
     end
