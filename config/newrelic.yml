@@ -2,7 +2,6 @@ common: &default_settings
   license_key: 'd37590e50f88575698b56c3aab713e5bd491afb8'
   app_name: Desks Near Me
   monitor_mode: false
-  developer_mode: false
   log_level: info
   ssl: false
   audit_log:
@@ -27,9 +26,6 @@ common: &default_settings
 
   custom_insights_events:
     enabled: true
-
-development:
-  developer_mode: true
 
 test:
   <<: *default_settings
