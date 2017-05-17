@@ -18,6 +18,11 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   validates :valid_values, presence: { if: :searchable }
   validates :min_value, :max_value, :step, presence: true, if: -> { html_tag.eql?('range') }
+  validates :name,
+            uniqueness: {
+              scope: [:instance_id, :deleted_at],
+              message: ->(_, info) { "with value: '#{info[:value]}' already taken." }
+            }, if: :uploadable?
 
   delegate :update_es_mapping, to: :target
 
