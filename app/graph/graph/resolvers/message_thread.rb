@@ -11,8 +11,7 @@ module Graph
       def resolve_by
         message = @user_model.user_messages.find(@thread_id).decorate
         messages = Messages::ForThreadQuery.new.call(message).by_created.decorate
-
-        Thread.new(messages, @user_model)
+        Resolvers::ThreadDecorator.new(messages, @user_model)
       end
     end
   end

@@ -491,7 +491,7 @@ GEM
     google_plus (0.2.4)
       json
       rest-client (~> 1.6)
-    graphql (1.5.5)
+    graphql (1.5.12)
     haml (4.0.7)
       tilt
     has_scope (0.6.0)

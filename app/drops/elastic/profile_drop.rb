@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Elastic
   class ProfileDrop < BaseDrop
-    delegate :properties, :categories, :profile_type, :enabled, to: :source
+    delegate :id, :properties, :categories, :profile_type, :enabled, to: :source
 
     # @return [Hash{String => Hash}] hash of availability template
     # {

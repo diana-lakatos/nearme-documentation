@@ -6,7 +6,7 @@ class PagesController < ApplicationController
   skip_before_action :redirect_unverified_user, unless: -> { page.require_verified_user? }
 
   def show
-    RenderCustomPage.new(self).render(page: page, params: params)
+    RenderCustomPage.new(controller: self, page: page, params: params).render
   end
 
   def redirect
