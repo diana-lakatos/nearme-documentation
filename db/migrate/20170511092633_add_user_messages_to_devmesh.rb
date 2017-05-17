@@ -76,7 +76,7 @@ EOQ
         { key: 'user_messages.profile_link', value: 'Profile' },
         { key: 'user_messages.contact_list', value: 'Contact list' },
         { key: 'user_messages.message_meta_html', value: '<span data-user-messages-meta-author>%{user_name}</span> <time datetime="%{timestamp}">%{formatted_time}</time> says:' },
-        { key: 'user_messages.submit_hint', value: 'Press enter to send message' }
+        { key: 'user_messages.submit_hint', value: 'Press enter to send message' },
         { key: 'user_messages.trigger_button', value: 'Message' }
       ]
 
