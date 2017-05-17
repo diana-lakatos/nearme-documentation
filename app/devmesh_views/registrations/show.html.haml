@@ -42,6 +42,13 @@
           %span{:'data-follow-button' => true}
             = render partial: 'shared/follow_button', locals: { object: @user }
 
+          %a.button-a.small.revert.action--message{ href: new_user_user_message_path(@user),
+            data: { modal: '',
+                    href: new_user_user_message_path(@user),
+                    message_trigger: '' }}
+            = t('messages.trigger_button')
+
+
 - if current_user.try(:admin?)
   .contain
     .admin-profile-notice

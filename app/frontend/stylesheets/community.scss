@@ -1,15 +1,11 @@
 @import "community/base";
 @import "community/mixins";
 @import "jquery-jcrop/css/jquery.Jcrop";
-
 @import "community/overrides/jcrop";
-
 @import "community/reset";
 @import "community/fonts";
 @import "community/layout";
-
 // Modules
-
 @import "community/modules/bignums";
 @import "community/modules/common";
 @import "community/modules/card-teaser";
@@ -48,20 +44,17 @@
 @import "community/modules/search";
 @import "community/modules/notification_preferences";
 @import "dashboard/vendor/jstree";
-
 @import "community/modules/intro-video";
-
+@import "community/modules/user-messages/modal-form";
+@import "community/modules/user-messages/inbox";
 // Defaults
 @import "community/defaults/buttons";
 @import "community/defaults/helpers";
 @import "community/defaults/spacing";
 @import "community/defaults/bootstrap";
 @import "community/defaults/defaults";
-
 // Plugins
 @import "community/plugins/selectize";
-
 @import "dashboard/common/common";
 @import "dashboard/forms/images";
-
 @import "community/overrides/image_input";

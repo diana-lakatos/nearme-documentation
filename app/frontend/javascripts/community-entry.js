@@ -18,9 +18,8 @@ require('vendor/jQueryRotate');
 require('../vendor/cocoon');
 
 
-NM.on('ready', ()=>{
+NM.on('ready', () => {
   require('initializers/shared/ckeditor.initializer');
-
   require('community/initializers/activity_feed.initializer');
   require('community/initializers/fileupload.initializer');
   require('community/initializers/image_input.initializer');
@@ -38,4 +37,5 @@ NM.on('ready', ()=>{
   require('community/initializers/tutorial.initializer');
   require('community/initializers/join_group.initializer');
   require('initializers/dashboard/category_tree_input.initializer');
+  require('community/initializers/user_messages.initializer');
 });

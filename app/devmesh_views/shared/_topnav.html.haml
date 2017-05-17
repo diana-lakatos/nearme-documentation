@@ -1,3 +1,5 @@
+- has_messages = current_user && current_user.unread_user_message_threads_count_for(platform_context.instance) > 0
+
 %nav.skips
   %ul
     %li
@@ -57,6 +59,11 @@
             %li{ class: (controller_name == 'groups' ? 'active' : '') }
               = link_to t(:my_groups), dashboard_groups_path
 
+          %li{ class: (controller_name == 'user_messages' ? 'active' : '') }
+            = link_to dashboard_user_messages_path do
+              = t('user_messages.topnav')
+              - if has_messages
+                %span.count= current_user.unread_user_message_threads_count_for(platform_context.instance)
           %li{ class: (controller_name == 'registrations' && action_name != 'show' ? 'active' : '') }
             = link_to t(:account), dashboard_profile_path
           %li
