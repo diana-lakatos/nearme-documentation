@@ -9,6 +9,7 @@ When(/^I update Stripe merchant form$/) do
   page.find("#merchant_account_account_type option", :visible => false, match: :first).set('individual')
   fill_in 'merchant_account_bank_routing_number', with: '110000000'
   fill_in 'merchant_account_bank_account_number', with: '000123456789'
+  fill_in 'merchant_account_personal_id_number', with: '694-07-7618'
   fill_in 'merchant_account_owners_attributes_0_first_name', with: 'Tomasz'
   fill_in 'merchant_account_owners_attributes_0_last_name', with: 'Lemkowski'
   fill_in 'merchant_account_owners_attributes_0_dob_formated', with: '01-22-1990' #'01/22/1990'
@@ -16,7 +17,6 @@ When(/^I update Stripe merchant form$/) do
   fill_in 'merchant_account_owners_attributes_0_current_address_attributes_city', with: 'Mountain View'
   fill_in 'merchant_account_owners_attributes_0_current_address_attributes_postcode', with: '94043'
   fill_in 'merchant_account_owners_attributes_0_current_address_attributes_state', with: 'CA'
-  fill_in 'merchant_account_owners_attributes_0_personal_id_number', with: '694-07-7618'
 
   attach_file('merchant_account_owners_attributes_0_attachements_attributes_0_file', File.absolute_path('./public/favicon.png'))
   attach_file('merchant_account_owners_attributes_0_attachements_attributes_1_file', File.absolute_path('./public/favicon.png'))

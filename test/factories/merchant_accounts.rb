@@ -28,8 +28,9 @@ FactoryGirl.define do
       after(:build) do |merchant_account|
         merchant_account.owners = FactoryGirl.build_list(:stripe_connect_merchant_account_owner, 1, merchant_account: merchant_account)
       end
-      data { { 'bank_routing_number' => '110000000', 'bank_account_number' => '000123456789', 'account_type' => 'company' } }
+      data { { 'business_tax_id' => '440-94-3290', 'bank_routing_number' => '110000000', 'bank_account_number' => '000123456789', 'account_type' => 'company' } }
       payment_gateway { FactoryGirl.create(:stripe_connect_payment_gateway) }
+      personal_id_number '440-94-3290'
 
       factory :failed_stripe_connect_merchant_account do
         data { {

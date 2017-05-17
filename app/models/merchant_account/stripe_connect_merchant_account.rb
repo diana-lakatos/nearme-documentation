@@ -2,7 +2,8 @@
 require 'stripe'
 
 class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
-  ATTRIBUTES = %w(account_type currency bank_routing_number bank_account_number tos ssn_last_4).freeze
+  ATTRIBUTES = %w(account_type currency bank_routing_number bank_account_number
+                  tos ssn_last_4 business_name business_tax_id).freeze
   ACCOUNT_TYPES = %w(individual company).freeze
 
   SUPPORTED_CURRENCIES = {
@@ -16,6 +17,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   include MerchantAccount::Concerns::DataAttributes
 
+  # We don't want to store sensitive information so we only pass it to Stripe
+  attr_accessor :personal_id_number
+
   has_many :owners, -> { order(:id) }, class_name: 'MerchantAccountOwner::StripeConnectMerchantAccountOwner',
                                        foreign_key: 'merchant_account_id', dependent: :destroy, inverse_of: 'merchant_account'
 
@@ -23,14 +27,16 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   validates :bank_routing_number, presence: true, if: :based_in_us
   validates :account_type, inclusion: { in: ACCOUNT_TYPES }
   validates :tos, acceptance: true
-  
+  validates :business_tax_id, presence: { if: proc { |m| m.account_type == 'company' } }
+  validates :business_name, presence: { if: proc { |m| m.account_type == 'company' && m.get_business_name.blank? } }
+  validates :personal_id_number, presence: { if: :personal_id_number_required? }
+
   validates_associated :owners
 
   accepts_nested_attributes_for :owners, allow_destroy: true
 
   delegate :direct_charge?, :country_spec, to: :payment_gateway
-  delegate :business_tax_id, :business_vat_id, :personal_id_number, :first_name, :last_name,
-           :dob_date, :current_address, to: :account_owner
+  delegate :first_name, :last_name, :dob_date, :current_address, to: :account_owner
 
   def account_owner
     owners.first || owners.build
@@ -109,7 +115,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def update_params
     legal_entity_hash = {
       type: account_type,
-      business_name: merchantable.name,
+      business_name: get_business_name,
       address: address_hash,
       personal_address: address_hash,
       dob: {
@@ -119,7 +125,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       },
       ssn_last_4:         ssn_last_4,
       business_tax_id:    business_tax_id,
-      business_vat_id:    business_vat_id,
       personal_id_number: personal_id_number,
       first_name: first_name,
       last_name: last_name
@@ -262,6 +267,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     SUPPORTED_CURRENCIES[location.upcase]
   end
 
+  def get_business_name
+    business_name || merchantable.try(:name)
+  end
   private
 
   def individual_fields
@@ -330,5 +338,11 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   def based_in_us
     iso_country_code == 'US'
+  end
+
+  def personal_id_number_required?
+    if (payment_gateway.config[:validate_merchant_account] || []).include?(:personal_id_number)
+      !attribute('legal_entity.personal_id_number_provided')
+    end
   end
 end

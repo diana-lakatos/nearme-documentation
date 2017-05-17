@@ -90,7 +90,6 @@ class Webhooks::StripeControllerTest < ActionController::TestCase
                                                          company: @company,
                                                          merchant_account: @merchant_account)
         end
-
         %w(pending paid failed).each do |transfer_state|
           event_options = {
             type: 'transfer.created',

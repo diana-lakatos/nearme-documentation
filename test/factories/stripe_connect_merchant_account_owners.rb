@@ -4,7 +4,5 @@ FactoryGirl.define do
     document { fixture_file_upload(Rails.root.join('test', 'assets', 'foobear.jpeg'), 'image/jpeg') }
     first_name 'John'
     last_name 'Rambo'
-    business_tax_id '440-94-3290'
-    personal_id_number '440-94-3290'
   end
 end
