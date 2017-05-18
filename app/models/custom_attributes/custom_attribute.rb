@@ -15,6 +15,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   scope :searchable, -> { where(searchable: true) }
   scope :public_display, -> { where(public: true) }
   scope :required, -> { joins(:custom_validators).merge(CustomValidator.required) }
+  scope :uploadable, -> { where(attribute_type: UPLOADABLE_TYPES) }
 
   validates :valid_values, presence: { if: :searchable }
   validates :min_value, :max_value, :step, presence: true, if: -> { html_tag.eql?('range') }
@@ -43,6 +44,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
     thumb: { width: 144, height: 109, transform: :resize_to_fill },
     normal: { width: 1280, height: 960, transform: :resize_to_fill }
   }.freeze
+  UPLOADABLE_TYPES = %w(photo file).freeze
 
   def aspect_ratio
     super.presence || DEFAULT_ASPECT_RATIO
@@ -84,7 +86,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   end
 
   def uploadable?
-    %w(photo file).include?(attribute_type)
+    UPLOADABLE_TYPES.include?(attribute_type)
   end
 
   private

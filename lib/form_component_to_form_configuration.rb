@@ -17,17 +17,15 @@ class FormComponentToFormConfiguration
     validation: { presence: {} }
   }.freeze
 
-  def initialize(instances)
-    @instances = instances
+  def initialize(instance)
+    @instance = instance
   end
 
   def go!
-    @instances.find_each do |i|
-      logger.debug "Instance: #{i.name}"
-      i.set_context!
-      signup_forms!
-      update_profile_form!
-    end
+    logger.debug "Instance: #{@instance.name}"
+    @instance.set_context!
+    signup_forms!
+    update_profile_form!
   end
 
   protected

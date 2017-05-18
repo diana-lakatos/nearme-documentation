@@ -40,7 +40,7 @@ Given /^UoT instance is loaded$/ do
 
   # setup.create_translations
   # setup.create_workflow_alerts
-  FormComponentToFormConfiguration.new(Instance.where(id: @instance.id)).go!
+  FormComponentToFormConfiguration.new(@instance).go!
   enquirer = FactoryGirl.create(:enquirer)
   store_model('enquirer', 'enquirer', enquirer)
   setup.expire_cache
