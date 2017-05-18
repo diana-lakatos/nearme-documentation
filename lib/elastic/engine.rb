@@ -58,14 +58,18 @@ module Elastic
 
     def perform
       print_import_details
-      source.searchable.import batch_size: 50, index: index.name, transform: transform
+      scoped_source.import batch_size: 50, index: index.name, transform: transform
     end
 
     def print_import_details
-      puts format('Importing %d items from %s', source.searchable.count, source.to_s)
+      puts format('Importing %d items from %s', scoped_source.count, source.to_s)
     end
 
     private
+
+    def scoped_source
+      source.with_deleted.searchable
+    end
 
     def transform
       return default_transform unless multiple_types?

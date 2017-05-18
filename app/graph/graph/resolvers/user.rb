@@ -18,7 +18,7 @@ module Graph
         when Elastic::UserDrop
           ::User.find(user.id)
         else
-          raise NotImplementedError, "User class #{user.class.name} not supported. Valid classes: ::User, Elastic::UserDrop" 
+          raise NotImplementedError, "User class #{user.class.name} not supported. Valid classes: ::User, Elastic::UserDrop"
         end
       end
     end
