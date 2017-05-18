@@ -70,7 +70,6 @@
 
   {% input bank_routing_number, required: true %}
   {% input bank_account_number, required: true %}
-  {% input business_name, required: true, wrapper_html-data-account-type: 'company' %}
   {% input business_tax_id, required: true, wrapper_html-data-account-type: 'company' %}
 
   {% if 'US CA NZ' contains  merchant_account.iso_country_code %}
