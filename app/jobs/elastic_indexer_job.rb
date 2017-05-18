@@ -20,8 +20,10 @@ class ElasticIndexerJob < Job
     Rails.logger.info format('Started reindexing ES: %s#%s', @klass, @record_id)
 
     case @operation.to_s
-    when 'index', 'update', 'delete'
+    when 'index', 'update'
       update_document
+    when 'delete'
+      mark_as_deleted
     else
       raise ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
     end
@@ -29,19 +31,26 @@ class ElasticIndexerJob < Job
 
   private
 
+  def mark_as_deleted
+    client.update default_params.merge(body: { doc: { deleted_at: record.deleted_at } },
+                                       index: index_name,
+                                       type: source_class.document_type,
+                                       id: record.id)
+  end
+
   def update_document
     return if record.try(:draft)
 
     record.__elasticsearch__.tap do |es|
       es.client = client
-      es.__send__ "#{operation}_document", update_params
+      es.__send__ "#{operation}_document", default_params
     end
   end
 
   # this sucks
-  def update_params
+  def default_params
     return {} unless PlatformContext.current.instance.multiple_types?
-    return {} unless record.class.mapping.options.key? :_parent
+    return {} unless source_class.mapping.options.key? :_parent
 
     { parent: record.__parent_id }
   end
