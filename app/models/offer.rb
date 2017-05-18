@@ -55,9 +55,9 @@ class Offer < Order
       line_item_source: transactable,
       unit_price: transactable_pricing.price_for_offer,
       line_itemable: self,
-      service_fee_guest_percent: service_fee_guest_percent,
-      service_fee_host_percent: service_fee_host_percent,
-      minimum_lister_service_fee_cents: minimum_lister_service_fee_cents
+      service_fee_guest_percent: transactable_pricing.service_fee_guest_percent,
+      service_fee_host_percent: transactable_pricing.service_fee_host_percent,
+      minimum_lister_service_fee_cents: transactable_pricing.action.minimum_lister_service_fee_cents
     )
 
     transactable_type.merchant_fees.each do |merchant_fee|
