@@ -63,6 +63,7 @@ module TransactablesIndex
         indexes :availability_exceptions, type: 'date'
         indexes :draft, type: 'date'
         indexes :created_at, type: 'date'
+        indexes :deleted_at, type: 'date'
         indexes :completed_reservations, type: 'integer'
         indexes :seller_average_rating, type: 'float'
         indexes :average_rating, type: 'float'

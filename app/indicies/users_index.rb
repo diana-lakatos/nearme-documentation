@@ -18,6 +18,7 @@ module UsersIndex
         indexes :name, type: 'string'
         indexes :slug, type: 'string', index: 'not_analyzed'
         indexes :created_at, type: 'date'
+        indexes :deleted_at, type: 'date'
 
         indexes :country_name, type: 'string'
         indexes :company_name, type: 'string'

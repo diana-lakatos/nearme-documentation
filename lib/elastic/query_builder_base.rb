@@ -104,6 +104,7 @@ module Elastic
     def initial_service_filters
       searchable_transactable_type_ids = @query[:transactable_type_id].to_i
       [
+        not_deleted,
         initial_state_filter,
         {
           term: {
@@ -118,6 +119,12 @@ module Elastic
         term: {
           state: 'pending'
         }
+      }
+    end
+
+    def not_deleted
+      {
+        missing: { field: 'deleted_at' }
       }
     end
 

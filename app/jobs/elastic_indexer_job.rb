@@ -20,10 +20,8 @@ class ElasticIndexerJob < Job
     Rails.logger.info format('Started reindexing ES: %s#%s', @klass, @record_id)
 
     case @operation.to_s
-    when 'index', 'update'
+    when 'index', 'update', 'delete'
       update_document
-    when 'delete'
-      delete_document
     else
       raise ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
     end
@@ -32,17 +30,12 @@ class ElasticIndexerJob < Job
   private
 
   def update_document
-    return if record.deleted?
     return if record.try(:draft)
 
     record.__elasticsearch__.tap do |es|
       es.client = client
       es.__send__ "#{operation}_document", update_params
     end
-  end
-
-  def delete_document
-    client.delete index: index_name, type: source_class.document_type, id: @record_id
   end
 
   # this sucks

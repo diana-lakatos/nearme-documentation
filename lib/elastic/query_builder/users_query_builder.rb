@@ -51,6 +51,7 @@ module Elastic
       def regular_query
         Franco.new.tap do |builder|
           builder.add build_query_branch
+          builder.add filter: { bool: { must: [not_deleted] } }
           builder.add filter: { bool: { must: filters } }
           builder.add aggregations
           builder.add sorting
@@ -67,6 +68,12 @@ module Elastic
       end
 
       private
+
+      def not_deleted
+        {
+          missing: { field: 'deleted_at' }
+        }
+      end
 
       class ConditionGroup
         def initialize
