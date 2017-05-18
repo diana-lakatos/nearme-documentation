@@ -1,6 +1,4 @@
 class InstanceAdmin::Reports::BaseController < InstanceAdmin::BaseController
-  include ReportsProperties
-
   before_filter :set_scopes, :set_breadcrumbs_title
 
   def index
@@ -8,20 +6,22 @@ class InstanceAdmin::Reports::BaseController < InstanceAdmin::BaseController
     @scope_search_form.validate(params)
     scope = @scope_class.order("#{@scope_class.table_name}.created_at DESC")
     @resources = SearchService.new(scope).search(@scope_search_form.to_search_params).paginate(page: params[:page], per_page: reports_per_page)
+    @generated_reports = MarketplaceReport.where(report_type: @scope_class.to_s).order('created_at DESC').paginate(page: params[:generated_page], per_page: 10)
  end
 
-  def download_report
+  def request_report_generation 
     @scope_search_form = @search_form.new
     @scope_search_form.validate(params)
-    @scope_class = @scope_class.includes(location: :location_address) if @scope_class == Transactable
-    @resources = SearchService.new(@scope_class.order(created_at: 'ASC')).search(@scope_search_form.to_search_params)
-    @scope_type = @scope_type_class.find_by_id(params[:item_type_id])
+    
+    marketplace_report = MarketplaceReport.create(report_type: @scope_class.to_s,
+                                                  creator: current_user,
+                                                  report_parameters: @scope_search_form.to_search_params)
 
-    csv = export_data_to_csv_for(@resources)
+    MarketplaceReportsCreatorJob.perform(marketplace_report.id)
 
-    respond_to do |format|
-      format.csv { send_data csv }
-    end
+    flash[:notice] = t('instance_admin.reports.generated.notifications.please_wait_for_report_generation')
+
+    redirect_to :back
   end
 
   def edit

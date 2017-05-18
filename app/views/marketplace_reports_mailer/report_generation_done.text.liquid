@@ -1,0 +1,7 @@
+Hello, {{ user.first_name }}!
+
+This is a notice to let you know that the report you have requested is finished.
+
+You may download it using the link below:
+
+{{ 'instance_admin_marketplace_report_url' | generate_url: id: marketplace_report.id }}

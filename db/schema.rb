@@ -1689,6 +1689,21 @@ ActiveRecord::Schema.define(version: 20170519093253) do
 
   add_index "marketplace_releases", ["instance_id"], name: "index_marketplace_releases_on_instance_id", using: :btree
 
+  create_table "marketplace_reports", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "report_type"
+    t.integer  "creator_id"
+    t.text     "zip_file"
+    t.string   "state"
+    t.text     "error"
+    t.text     "report_parameters"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marketplace_reports", ["instance_id"], name: "index_marketplace_reports_on_instance_id", using: :btree
+
   create_table "merchant_account_owners", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "merchant_account_id"
