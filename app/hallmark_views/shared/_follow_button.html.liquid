@@ -1,4 +1,12 @@
-{% unless object.creator == current_user %}
+{% if current_user == blank %}
+      {% assign visible = true %}
+{% elsif object_type == 'User' and object.id != current_user.id %}
+      {% assign visible = true %}
+{% elsif object_type != 'User' and object.creator_id != current_user.id %}
+      {% assign visible = true %}
+{% endif %}
+
+{% if visible %}
   {% assign css_class = css_class | default: 'small' %}
 
   {% if current_user == blank %}
@@ -41,4 +49,4 @@
       <button type="submit" class="button-a {{ follow_class }} {{ css_class }}" data-disable-with="{{ 'general.processing' | t }}">{{ button_label }}</button>
     </form>
   {% endif %}
-{% endunless %}
+{% endif %}
