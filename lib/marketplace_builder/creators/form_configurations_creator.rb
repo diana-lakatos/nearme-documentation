@@ -26,6 +26,7 @@ module MarketplaceBuilder
         form_configuration = @instance.form_configurations.where(name: template.name).first_or_initialize
         form_configuration.base_form = template.base_form
         form_configuration.configuration = template.configuration
+        form_configuration.return_to = template.return_to
         form_configuration.liquid_body = template.body if template.body.present?
         form_configuration.workflow_steps = WorkflowStep.where(name: template.workflow_steps) if template.workflow_steps.present?
         form_configuration.save!
