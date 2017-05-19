@@ -4,28 +4,25 @@ class EditorPreview {
     this._preview = preview;
 
     if (this._editor.getSyntax() === 'markdown') {
-      require.ensure('syntax_parsers/syntax_parser_markdown', (require)=>{
+      require.ensure('syntax_parsers/syntax_parser_markdown', require => {
         let SyntaxParserMarkdown = require('syntax_parsers/syntax_parser_markdown');
         this._parser = new SyntaxParserMarkdown();
         this._bindEvents();
         this._updatePreview();
       });
-    }
-    else if (this._editor.getSyntax() === 'htmlmixed') {
-      require.ensure('syntax_parsers/syntax_parser_htmlmixed', (require)=>{
+    } else if (this._editor.getSyntax() === 'htmlmixed') {
+      require.ensure('syntax_parsers/syntax_parser_htmlmixed', require => {
         let SyntaxParserHTMLMixed = require('syntax_parsers/syntax_parser_htmlmixed');
         this._parser = new SyntaxParserHTMLMixed();
         this._bindEvents();
         this._updatePreview();
       });
-    }
-
-    else  {
+    } else {
       throw new Error(`${this._editor.getSyntax()} mode is not supported in EditorPreview`);
     }
   }
 
-  _bindEvents(){
+  _bindEvents() {
     this._editor.on('change', this._updatePreview.bind(this));
   }
 

@@ -1,7 +1,7 @@
-export function readCookie(name){
+export function readCookie(name) {
   let cookies = {};
-  document.cookie.split('; ').forEach((c) => {
-    let [n,v] = c.split('=');
+  document.cookie.split('; ').forEach(c => {
+    let [ n, v ] = c.split('=');
     cookies[n] = v;
   });
 
@@ -12,7 +12,7 @@ export function setCookie(name, value, days) {
   var expires = '';
   if (days) {
     var date = new Date();
-    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
     expires = `; expires=${date.toGMTString()}`;
   }
 

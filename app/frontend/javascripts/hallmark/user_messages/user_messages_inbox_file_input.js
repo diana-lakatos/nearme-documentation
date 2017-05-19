@@ -35,17 +35,14 @@ class UserMessagesInboxFileInput extends Eventable {
     let meta = findMeta(META_SELECTOR);
     this.csrfToken = meta.getAttribute('content');
 
-
     let wrapper = closest(this.input, WRAPPER_SELECTOR);
     if (!(wrapper instanceof HTMLElement)) {
       throw new Error('Unable to locate file input wrapper');
     }
     this.wrapper = wrapper;
 
-
     this.bindEvents();
   }
-
 
   bindEvents() {
     this.input.addEventListener('change', this.onChange.bind(this));
@@ -54,17 +51,18 @@ class UserMessagesInboxFileInput extends Eventable {
   onChange() {
     this.wrapper.classList.add(PROCESSING_CLASS);
 
-    this.send()
-        .then((response: UserMessageResponseType) => {
-          response.attachments.forEach((attachment) => {
-            this.emit('newfile', attachment);
-          });
-          this.wrapper.classList.remove(PROCESSING_CLASS);
-        })
-        .catch((error) => {
-          this.wrapper.classList.remove(PROCESSING_CLASS);
-          alert(error);
+    this
+      .send()
+      .then((response: UserMessageResponseType) => {
+        response.attachments.forEach(attachment => {
+          this.emit('newfile', attachment);
         });
+        this.wrapper.classList.remove(PROCESSING_CLASS);
+      })
+      .catch(error => {
+        this.wrapper.classList.remove(PROCESSING_CLASS);
+        alert(error);
+      });
   }
 
   send(): Promise<any> {

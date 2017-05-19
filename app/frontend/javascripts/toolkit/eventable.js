@@ -1,9 +1,6 @@
 // @flow
 
-type EventableEventType = {
-  func: (...params: Array<*>) => void,
-  ctx?: any
-};
+type EventableEventType = { func(...params: Array<*>): void, ctx?: any };
 
 // Based on the minivents library
 class Eventable {
@@ -26,8 +23,8 @@ class Eventable {
 
     let list = this._events[type] || [];
     let i = list.length = func ? list.length : 0;
-    while(i--) {
-      func === list[i].func && list.splice(i,1);
+    while (i--) {
+      func === list[i].func && list.splice(i, 1);
     }
   }
 

@@ -1,5 +1,5 @@
 $('[data-submit-form]').on('click', function() {
-  $($(this).data('form-selector')).each(function(){
+  $($(this).data('form-selector')).each(function() {
     $(this).submit();
   });
 });

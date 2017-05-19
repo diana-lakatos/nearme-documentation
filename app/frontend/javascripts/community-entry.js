@@ -10,13 +10,11 @@ require('community/vendor/placeholders.min');
 require('community/vendor/foreach.polyfill');
 require('community/vendor/hrefid.jquery');
 require('community/vendor/selectize.mod');
-require('community/vendor/trueresize');
 require('community/vendor/geocomplete');
 require('community/vendor/bootstrap-tab');
 require('community/vendor/jquery-ui');
 require('vendor/jQueryRotate');
 require('../vendor/cocoon');
-
 
 NM.on('ready', () => {
   require('initializers/shared/ckeditor.initializer');

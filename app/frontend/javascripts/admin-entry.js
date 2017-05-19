@@ -1,12 +1,12 @@
 'use strict';
 
 if (!Modernizr.fetch) {
-  require.ensure('whatwg-fetch', (require) => require('whatwg-fetch'));
+  require.ensure('whatwg-fetch', require => require('whatwg-fetch'));
 }
 
 import NM from 'nm';
 
-NM.on('ready', () =>{
+NM.on('ready', () => {
   require('admin/initializers/custom_theme_form.initializer');
   require('admin/initializers/dialog.initializer');
   require('admin/initializers/domain_record_form.initializer');

@@ -1,9 +1,7 @@
 // @flow
 import Eventable from '../../toolkit/eventable';
 
-const defaults = {
-  isPersisted: false
-};
+const defaults = { isPersisted: false };
 
 class UserEntryImage extends Eventable {
   container: HTMLElement;
@@ -13,9 +11,7 @@ class UserEntryImage extends Eventable {
   fileType: string;
   orientation: number;
   source: string;
-  options: {
-    isPersisted: boolean
-  };
+  options: { isPersisted: boolean };
 
   constructor(options: { isPersisted?: boolean } = {}) {
     super();

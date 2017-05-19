@@ -16,7 +16,7 @@ class FileNameEditor {
   }
 
   _bindEvents() {
-    this._ui.textWrapper.addEventListener('click', (e) => {
+    this._ui.textWrapper.addEventListener('click', e => {
       e.stopPropagation();
       e.preventDefault();
       this.enableEditMode();
@@ -26,13 +26,13 @@ class FileNameEditor {
       this.save();
     });
 
-    this._ui.input.addEventListener('keydown', (e) => {
+    this._ui.input.addEventListener('keydown', e => {
       if (e.keyCode === 27) {
         this.cancel();
       }
     });
 
-    this._ui.form.addEventListener('submit', (e) => {
+    this._ui.form.addEventListener('submit', e => {
       e.preventDefault();
       this.save();
     });
@@ -114,13 +114,14 @@ class FileNameEditor {
     this._ui.container.appendChild(error);
   }
 
-  _sendForm(){
+  _sendForm() {
     let result = true;
     // TODO: XHR to the server goes here
-    if (result) { // success callback
+    if (result) {
+      // success callback
       this._initialValue = this.currentValue();
-    }
-    else { // fail callback
+    } else {
+      // fail callback
       this._reset();
       this.enableEditMode(false);
       this._showError('Unable to change the file name');

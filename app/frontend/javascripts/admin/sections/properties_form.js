@@ -8,15 +8,24 @@ class PropertiesForm {
     this.typeSwitcher = this.form.querySelector('select[data-type-select]');
     this.typeOptions = {};
 
-    Array.prototype.forEach.call(this.form.querySelectorAll('.property-form-options fieldset'), (el) => {
-      this.typeOptions[el.dataset.type] = el;
-    });
+    Array.prototype.forEach.call(
+      this.form.querySelectorAll('.property-form-options fieldset'),
+      el => {
+        this.typeOptions[el.dataset.type] = el;
+      }
+    );
 
     this.bindEvents();
 
-    Array.prototype.forEach.call(this.form.querySelectorAll('[data-html-options]'), (el)=> new HTMLOptionsInput(el));
-    Array.prototype.forEach.call(this.form.querySelectorAll('[data-csv-input]'), (el)=> new CSVInput(el));
-        // initialize
+    Array.prototype.forEach.call(
+      this.form.querySelectorAll('[data-html-options]'),
+      el => new HTMLOptionsInput(el)
+    );
+    Array.prototype.forEach.call(
+      this.form.querySelectorAll('[data-csv-input]'),
+      el => new CSVInput(el)
+    );
+    // initialize
     this.changeOptions();
   }
   bindEvents() {
@@ -28,8 +37,7 @@ class PropertiesForm {
     for (let type in this.typeOptions) {
       if (current === type) {
         this.typeOptions[type].classList.add('active');
-      }
-      else {
+      } else {
         this.typeOptions[type].classList.remove('active');
       }
     }

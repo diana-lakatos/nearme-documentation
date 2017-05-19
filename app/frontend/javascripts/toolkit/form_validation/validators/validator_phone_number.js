@@ -16,5 +16,3 @@ class ValidatorRequired extends Validator {
 }
 
 module.exports = ValidatorRequired;
-
-

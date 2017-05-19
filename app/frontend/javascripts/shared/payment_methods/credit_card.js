@@ -4,7 +4,6 @@ require('jquery.payment');
 const Loader = require('./modules/loader');
 
 class PaymentMethodCreditCard {
-
   constructor(container) {
     console.log('PaymentMethodCreditCard :: Initializing... container: ', container);
     this.form = $('#checkout-form, #new_payment');
@@ -35,11 +34,9 @@ class PaymentMethodCreditCard {
   }
 
   _submitFormHandler() {
-    var $form = $(this.form),
-      that = this;
+    var $form = $(this.form), that = this;
 
     $form.submit(function() {
-
       var CCFormVisible = $(that._ui.container).find('.payment-source-form.hidden').size() === 0;
       console.log('PaymentMethodCreditCard :: Binding events: $form.submit', CCFormVisible);
 
@@ -71,16 +68,23 @@ class PaymentMethodCreditCard {
   }
 
   _validateForm(form) {
-    var valid = true,
-      that = this;
+    var valid = true, that = this;
 
     $(this.form).find('.errors').html('');
 
-    valid = this._validateField(form.find('[data-stripe="number"]'), this._presenceValidator) && this._validateField(form.find('[data-stripe="number"]'), $.payment.validateCardNumber) && valid;
-    valid = this._validateField(form.find('[data-stripe="cvc"]'), this._presenceValidator) && this._validateField(form.find('[data-stripe="cvc"]'), $.payment.validateCardCVC) && valid;
+    valid = this._validateField(form.find('[data-stripe="number"]'), this._presenceValidator) &&
+      this._validateField(form.find('[data-stripe="number"]'), $.payment.validateCardNumber) &&
+      valid;
+    valid = this._validateField(form.find('[data-stripe="cvc"]'), this._presenceValidator) &&
+      this._validateField(form.find('[data-stripe="cvc"]'), $.payment.validateCardCVC) &&
+      valid;
 
-    $.each(['exp_month', 'exp_year', 'last_name', 'first_name'], function(index, field) {
-      valid = that._validateField(form.find('[data-stripe="' + field + '"]'), that._presenceValidator) && valid;
+    $.each([ 'exp_month', 'exp_year', 'last_name', 'first_name' ], function(index, field) {
+      valid = that._validateField(
+        form.find('[data-stripe="' + field + '"]'),
+        that._presenceValidator
+      ) &&
+        valid;
     });
 
     return valid;
@@ -88,31 +92,34 @@ class PaymentMethodCreditCard {
 
   _validateField(field, validator) {
     if (!validator(field.val())) {
-      field.parents('.control-group, .form-group')
+      field
+        .parents('.control-group, .form-group')
         .addClass('error has-error')
-        .find('.error-block').remove()
-        .end() // append to `parents()`, not .error-block
+        .find('.error-block')
+        .remove()
+        .end()
         .append('<p class="error-block">' + this._validationMessage(validator) + '</p>');
 
       return false;
     } else {
-      field.parents('.control-group, .form-group')
+      field
+        .parents('.control-group, .form-group')
         .removeClass('error has-error')
-        .find('.error-block').remove();
+        .find('.error-block')
+        .remove();
 
       return true;
     }
   }
 
   _bindFieldValidation() {
-    var $form = $(this.form),
-      that = this,
-      valid = true;
+    var $form = $(this.form), that = this, valid = true;
 
     $(this._ui.container).find('[data-stripe]').change(function(event) {
       valid = that._validateField($(event.target), that._presenceValidator);
       if ($(event.target).data('stripe') == 'number') {
-        valid && that._validateField($form.find('[data-stripe="number"]'), $.payment.validateCardNumber);
+        valid &&
+          that._validateField($form.find('[data-stripe="number"]'), $.payment.validateCardNumber);
       }
     });
   }
@@ -133,7 +140,10 @@ class PaymentMethodCreditCard {
     $form.find('[data-stripe="number"]').attr('name');
     var $input = $('<input type="hidden">');
 
-    $input = $input.attr('name', $('form').find('[data-stripe="number"]').attr('name').replace('number', 'credit_card_token'));
+    $input = $input.attr(
+      'name',
+      $('form').find('[data-stripe="number"]').attr('name').replace('number', 'credit_card_token')
+    );
 
     $('[data-stripe]').attr('disabled', true);
 
@@ -142,13 +152,16 @@ class PaymentMethodCreditCard {
 
   _stripeResponseHandler(status, response) {
     if (response.error) {
-      console.log('PaymentMethodCreditCard :: Stripe :: Responded with errors: ', response.error.message);
+      console.log(
+        'PaymentMethodCreditCard :: Stripe :: Responded with errors: ',
+        response.error.message
+      );
       $(this._ui.container).find('.has-error').text(response.error.message);
 
       Loader.hide();
       return false;
-    } else { // Token was created!
-
+    } else {
+      // Token was created!
       // Get the token ID:
       var token = response.id;
       var $form = $('#checkout-form, #new_payment');

@@ -1,5 +1,5 @@
-$(document).on('init:supportattachmentform.nearme', function(){
-  require.ensure('../../sections/support/attachment_form', function(require){
+$(document).on('init:supportattachmentform.nearme', function() {
+  require.ensure('../../sections/support/attachment_form', function(require) {
     var SupportAttachmentForm = require('../../sections/support/attachment_form');
     return new SupportAttachmentForm($('#attachment_form'));
   });
@@ -7,9 +7,8 @@ $(document).on('init:supportattachmentform.nearme', function(){
 
 var form = $('#attachment_form');
 if (form.length > 0) {
-  require.ensure('../../sections/support/attachment_form', function(require){
+  require.ensure('../../sections/support/attachment_form', function(require) {
     var SupportAttachmentForm = require('../../sections/support/attachment_form');
     return new SupportAttachmentForm(form);
   });
 }
-

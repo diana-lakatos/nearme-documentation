@@ -46,7 +46,7 @@ module.exports = {
   showCursorWhenSelecting: true,
   matchTags: true,
   keyMap: 'sublime',
-  gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+  gutters: [ 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ],
   extraKeys: {
     'Esc': function(cm) {
       cm.setOption('fullScreen', !cm.getOption('fullScreen'));
@@ -54,4 +54,3 @@ module.exports = {
     'Ctrl-J': 'toMatchingTag'
   }
 };
-

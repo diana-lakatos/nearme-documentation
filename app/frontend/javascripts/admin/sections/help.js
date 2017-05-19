@@ -3,7 +3,7 @@ import UISettings from '../modules/ui_settings';
 import Draggable from '../modules/draggable';
 
 class Help {
-  constructor(el){
+  constructor(el) {
     this._ui = {};
     this._ui.el = el;
     this._ui.wrapper = document.querySelector('.config-section');
@@ -14,8 +14,8 @@ class Help {
     this._initDraggable();
     this._initEditor();
   }
-  _build(){
-        /* Toggler */
+  _build() {
+    /* Toggler */
     this._ui.toggler = document.createElement('button');
     this._ui.toggler.setAttribute('type', 'button');
     this._ui.toggler.innerHTML = 'Help';
@@ -34,14 +34,14 @@ class Help {
     this._ui.dragHandle.className = 'btn help-option-button help-drag-handle';
     optionsWrapper.insertBefore(this._ui.dragHandle, optionsWrapper.firstChild);
 
-        /* Detacher */
+    /* Detacher */
     this._ui.detachToggler = document.createElement('button');
     this._ui.detachToggler.setAttribute('type', 'button');
     this._ui.detachToggler.innerHTML = this.getDetachTogglerLabel();
     this._ui.detachToggler.className = 'btn help-option-button help-detach-toggler';
     optionsWrapper.appendChild(this._ui.detachToggler);
 
-        /* Close help button */
+    /* Close help button */
     this._ui.closeHelpButton = document.createElement('button');
     this._ui.closeHelpButton.setAttribute('type', 'button');
     this._ui.closeHelpButton.innerHTML = 'Close Help';
@@ -49,18 +49,18 @@ class Help {
     optionsWrapper.appendChild(this._ui.closeHelpButton);
   }
 
-  _bindEvents(){
-    this._ui.toggler.addEventListener('click', (e)=>{
+  _bindEvents() {
+    this._ui.toggler.addEventListener('click', e => {
       e.preventDefault();
       this.toggle();
     });
 
-    this._ui.closeHelpButton.addEventListener('click', (e)=>{
+    this._ui.closeHelpButton.addEventListener('click', e => {
       e.preventDefault();
       this.close();
     });
 
-    this._ui.detachToggler.addEventListener('click', (e)=>{
+    this._ui.detachToggler.addEventListener('click', e => {
       e.preventDefault();
       this.detachToggle();
     });
@@ -68,14 +68,11 @@ class Help {
 
   _initDraggable() {
     if (this._ui.wrapper.classList.contains('has-detached-help')) {
-      this._draggable = new Draggable(this._ui.el, {
-        handle: this._ui.dragHandle
-      });
-      this._draggable.on('dragend', (position)=>{
+      this._draggable = new Draggable(this._ui.el, { handle: this._ui.dragHandle });
+      this._draggable.on('dragend', position => {
         UISettings.set('help-position', JSON.stringify(position));
       });
-    }
-    else if (this._draggable) {
+    } else if (this._draggable) {
       this._draggable.destroy();
     }
   }
@@ -89,16 +86,16 @@ class Help {
     const helpContentId = editButton.getAttribute('data-help-content');
     const helpContentContainer = this._ui.el.querySelector('[data-help-container]');
 
-    editButton.addEventListener('click', (e)=>{
+    editButton.addEventListener('click', e => {
       e.preventDefault();
-      require.ensure('help_editor', (require)=>{
+      require.ensure('help_editor', require => {
         const HelpEditor = require('help_editor');
         return new HelpEditor(helpContentId, helpContentContainer);
       });
     });
   }
 
-  open(){
+  open() {
     this._ui.wrapper.classList.add('has-visible-help');
     UISettings.set('help-is-visible', true);
     NM.emit('toggled:help', true);
@@ -110,7 +107,7 @@ class Help {
     NM.emit('toggled:help', false);
   }
 
-  toggle(){
+  toggle() {
     this._ui.wrapper.classList.toggle('has-visible-help');
 
     const state = this._ui.wrapper.classList.contains('has-visible-help');
@@ -118,7 +115,7 @@ class Help {
     NM.emit('toggled:help', state);
   }
 
-  detachToggle(){
+  detachToggle() {
     this._ui.wrapper.classList.toggle('has-detached-help');
 
     const state = this._ui.wrapper.classList.contains('has-detached-help');

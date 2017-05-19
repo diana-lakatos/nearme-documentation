@@ -8,10 +8,7 @@ import {
   getImageOrientationFromArrayBuffer
 } from '../../toolkit/array_buffer';
 
-type ImageDataType = {
-  dataUrl: string,
-  orientation: number
-};
+type ImageDataType = { dataUrl: string, orientation: number };
 
 class UserEntryFileField extends Eventable {
   input: HTMLInputElement;
@@ -30,10 +27,7 @@ class UserEntryFileField extends Eventable {
     this.form = form;
 
     this.reader = new FileReader();
-    this.imageData = {
-      dataUrl: '',
-      orientation: 0
-    };
+    this.imageData = { dataUrl: '', orientation: 0 };
     this.bindEvents();
   }
 
@@ -45,14 +39,10 @@ class UserEntryFileField extends Eventable {
   parse() {
     let buffer: ArrayBuffer = this.reader.result;
 
-    let fileType: string =
-      getImageTypeFromArrayBuffer(buffer) || this.input.files[0].type;
+    let fileType: string = getImageTypeFromArrayBuffer(buffer) || this.input.files[0].type;
 
     let url = `data:${fileType};base64,${base64ArrayBuffer(buffer)}`;
-    this.imageData = {
-      dataUrl: url,
-      orientation: getImageOrientationFromArrayBuffer(buffer)
-    };
+    this.imageData = { dataUrl: url, orientation: getImageOrientationFromArrayBuffer(buffer) };
     this.emit('change', this.imageData);
   }
 
@@ -61,10 +51,7 @@ class UserEntryFileField extends Eventable {
       this.reader.readAsArrayBuffer(this.input.files[0]);
       return;
     }
-    this.imageData = {
-      dataUrl: '',
-      orientation: 0
-    };
+    this.imageData = { dataUrl: '', orientation: 0 };
     this.emit('empty');
   }
 

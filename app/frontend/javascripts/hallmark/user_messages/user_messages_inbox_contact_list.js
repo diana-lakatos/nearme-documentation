@@ -6,7 +6,6 @@ import { findElement, closest } from '../../toolkit/dom';
 import Hammer from 'hammerjs';
 
 class UserMessagesInboxContactList {
-
   container: HTMLElement;
   list: HTMLElement;
   toggler: HTMLButtonElement;
@@ -22,8 +21,7 @@ class UserMessagesInboxContactList {
       this.toggler = toggler;
       this.bindEvents();
       this.bindSwipeEvents();
-    }
-    else {
+    } else {
       /* There is no toggler, we want to force visibility of the contact list */
       this.enable();
     }
@@ -32,7 +30,7 @@ class UserMessagesInboxContactList {
   bindEvents() {
     let body = document.querySelector('body');
     if (!body) {
-      throw new Error ('Invalid environment, <body> not found');
+      throw new Error('Invalid environment, <body> not found');
     }
 
     body.addEventListener('click', (event: Event) => {
@@ -61,10 +59,7 @@ class UserMessagesInboxContactList {
   bindSwipeEvents() {
     let hm = new Hammer.Manager(this.list);
 
-    hm.add(new Hammer.Swipe({
-      direction: Hammer.DIRECTION_LEFT,
-      threshold: 50
-    }));
+    hm.add(new Hammer.Swipe({ direction: Hammer.DIRECTION_LEFT, threshold: 50 }));
 
     hm.on('swipe', this.disable.bind(this));
   }

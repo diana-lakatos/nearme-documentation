@@ -15,23 +15,24 @@ let spinnerDefaults = {
   speed: 1,
   trail: 40,
   fps: 20,
-  zIndex: 2e9,
+  zIndex: 2000000000,
   className: 'spinner',
   top: '50%',
   left: '50%',
   shadow: false,
-  hwaccel: true, // Whether to use hardware acceleration
+  hwaccel: true,
+  // Whether to use hardware acceleration
   position: 'absolute'
 };
 
 class LoadingIndicator {
-  constructor(){
+  constructor() {
     this._ui = {};
     this._build();
     this._bindEvents();
   }
 
-  _build(){
+  _build() {
     const el = document.createElement('div');
     el.className = 'loading-indicator';
     new Spinner(spinnerDefaults).spin(el);
@@ -44,11 +45,11 @@ class LoadingIndicator {
     NM.on('hide:loading_indicator', this.hide.bind(this));
   }
 
-  show(){
+  show() {
     this._ui.element.classList.add('is-active');
   }
 
-  hide(){
+  hide() {
     this._ui.element.classList.remove('is-active');
   }
 }

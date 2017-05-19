@@ -11,14 +11,11 @@ class DomainRecordForm {
     // and use it as follows for example:
     // this._delegated.form = delegate(this._ui.form);
     // this._delegated.form.on('click', '.some-input-inside', (e, target)=> { console.log(target); });
-
     // Add
     this._bindEvents();
   }
 
-  _bindEvents() {
-
-  }
+  _bindEvents() {}
 }
 
 module.exports = DomainRecordForm;

@@ -1,7 +1,7 @@
 'use strict';
 
 if (!Modernizr.promises) {
-  require.ensure('es6-promise', (require) => require('es6-promise').polyfill());
+  require.ensure('es6-promise', require => require('es6-promise').polyfill());
 }
 
 const Events = require('minivents/dist/minivents.commonjs');
@@ -11,17 +11,16 @@ class NM {
     new Events(this);
 
     if (window.$) {
-      window.$(()=> {
+      window.$(() => {
         this.emit('ready');
       });
-    }
-    else {
-      document.addEventListener('DOMContentLoaded', ()=>{
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
         this.emit('ready');
       });
     }
 
-    document.addEventListener('load', ()=> {
+    document.addEventListener('load', () => {
       this.emit('load');
     });
   }

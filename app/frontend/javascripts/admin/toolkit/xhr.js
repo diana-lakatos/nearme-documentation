@@ -1,9 +1,6 @@
-const defaults = {
-  method: 'get',
-  contentType: 'html'
-};
+const defaults = { method: 'get', contentType: 'html' };
 
-let csrfToken: string, authToken :string;
+let csrfToken: string, authToken: string;
 
 function getCSRFToken(): string {
   if (!csrfToken) {
@@ -25,14 +22,12 @@ function getAuthToken(): string {
   return authToken;
 }
 
-
 function parseResponse(response: Response): Promise<string | { [key: string]: string }> {
   let p: Promise<*>;
 
   if (response.headers.get('Content-Type').toLowerCase().indexOf('json') > -1) {
     p = response.json();
-  }
-  else {
+  } else {
     p = response.text();
   }
 
@@ -40,42 +35,41 @@ function parseResponse(response: Response): Promise<string | { [key: string]: st
     return p;
   }
 
-  return p.then((data: mixed)=>{
+  return p.then((data: mixed) => {
     var error = new Error(response.statusText);
     error.data = data;
     throw error;
   });
 }
 
-
 function getContentTypeString(contentType: string): string {
-  switch(contentType.toLowerCase()) {
+  switch (contentType.toLowerCase()) {
+    case 'html':
+      return 'text/html';
 
-  case 'html':
-    return 'text/html';
+    case 'text':
+      return 'text/plain';
 
-  case 'text':
-    return 'text/plain';
+    case 'json':
+      return 'application/json';
 
-  case 'json':
-    return 'application/json';
-
-  default:
-    return contentType;
+    default:
+      return contentType;
   }
 }
 
-function parseRequestMethod(options: { method: string, data: FormData | { [key: string]: string } }): { [key: string]: string } {
+function parseRequestMethod(
+  options: { method: string, data: FormData | { [key: string]: string } }
+): { [key: string]: string } {
   options.method = options.method.toLowerCase();
-  if (['get', 'post'].indexOf(options.method) > -1) {
+  if ([ 'get', 'post' ].indexOf(options.method) > -1) {
     return options;
   }
   options.data = options.data || new FormData();
 
   if (options.data instanceof FormData) {
     options.data.append('_method', options.method);
-  }
-  else if (options.data instanceof Object){
+  } else if (options.data instanceof Object) {
     let data = new FormData();
     data.append('_method', options.method);
     for (let key in options.data) {
@@ -84,8 +78,7 @@ function parseRequestMethod(options: { method: string, data: FormData | { [key: 
       }
     }
     options.data = data;
-  }
-  else {
+  } else {
     throw new Error('Provide data options as either FormData or object literal');
   }
   options.method = 'post';
@@ -99,7 +92,10 @@ function parseRequestMethod(options: { method: string, data: FormData | { [key: 
  * @param {Object} options ex. {contentType: 'application/vnd.api+json', data: {foo: bar}, method: 'post'}
  * @return {Promise} result
  */
-function xhr(url: string, options: { method: string, contentType: string, data: mixed } = {}): Promise<any> {
+function xhr(
+  url: string,
+  options: { method: string, contentType: string, data: mixed } = {}
+): Promise<any> {
   options = Object.assign({}, defaults, options);
   options = parseRequestMethod(options);
 
@@ -110,7 +106,6 @@ function xhr(url: string, options: { method: string, contentType: string, data: 
       'Accept': getContentTypeString(options.contentType),
       'Content-Type': getContentTypeString(options.contentType),
       'X-CSRF-Token': getCSRFToken(),
-
       'X-Requested-With': 'XMLHttpRequest'
     }
   };
@@ -128,11 +123,11 @@ function xhr(url: string, options: { method: string, contentType: string, data: 
     }
   }
 
-  return new Promise((resolve: Promise, reject: Promise)=>{
+  return new Promise((resolve: Promise, reject: Promise) => {
     fetch(url, xhrOptions)
       .then(parseResponse)
-      .then( (data: any): Promise => resolve(data) )
-      .catch((error: any): Promise =>{
+      .then((data: any): Promise => resolve(data))
+      .catch((error: any): Promise => {
         if (error.data) {
           return reject(error.data);
         }

@@ -4,17 +4,15 @@ const Validator = require('../validator');
 const DEFAULT_MESSAGE = 'Invalid bank routing number';
 
 class ValidatorBankRoutingNumber extends Validator {
-
   run(value: string): Promise<mixed> {
     return new Promise((resolve, reject) => {
-      this.loadStripe()
-          .then((Stripe: Stripe) => {
-            if (Stripe.bankAccount.validateRoutingNumber(value, 'US')) {
-              resolve();
-              return;
-            }
-            reject(this.getMessage());
-          });
+      this.loadStripe().then((Stripe: Stripe) => {
+        if (Stripe.bankAccount.validateRoutingNumber(value, 'US')) {
+          resolve();
+          return;
+        }
+        reject(this.getMessage());
+      });
     });
   }
 

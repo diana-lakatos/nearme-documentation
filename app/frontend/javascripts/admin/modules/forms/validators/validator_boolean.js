@@ -1,7 +1,5 @@
 import ValidatorNoop from './validator_noop';
 
-class ValidatorBoolean extends ValidatorNoop {
-
-}
+class ValidatorBoolean extends ValidatorNoop {}
 
 module.exports = ValidatorBoolean;

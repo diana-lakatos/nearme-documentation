@@ -2,8 +2,7 @@
 
 'use strict';
 
-var
-  path = require('path'),
+var path = require('path'),
   gulp = require('gulp'),
   browserSync = require('browser-sync').create(),
   config = {
@@ -14,7 +13,7 @@ var
       javascripts: path.join(__dirname, 'app', 'frontend', 'javascripts'),
       fonts: path.join(__dirname, 'app', 'frontend', 'fonts'),
       images: path.join(__dirname, 'app', 'frontend', 'images'),
-      output: path.join(__dirname, 'public', 'assets' ),
+      output: path.join(__dirname, 'public', 'assets'),
       tmp: path.join(__dirname, 'tmp', 'assets')
     }
   };

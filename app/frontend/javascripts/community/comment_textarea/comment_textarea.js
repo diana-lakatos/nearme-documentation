@@ -5,15 +5,11 @@ type CommentTextareaOptionsType = {
   autoadjust?: boolean
 };
 
-const DEFAULTS = {
-  submitOnEnter: true,
-  autoadjust: true
-};
+const DEFAULTS = { submitOnEnter: true, autoadjust: true };
 
 import { closest } from '../../toolkit/dom';
 
 class CommentTextarea {
-
   options: CommentTextareaOptionsType;
   textarea: HTMLTextAreaElement;
   form: HTMLFormElement;
@@ -31,8 +27,7 @@ class CommentTextarea {
         throw new Error('Unable to locate binding form for textarea');
       }
       this.form = form;
-    }
-    else {
+    } else {
       this.form = this.options.form;
     }
 
@@ -55,7 +50,7 @@ class CommentTextarea {
       this.textarea.style.height = 'auto';
     }
     if (this.textarea.scrollHeight > 0) {
-      this.textarea.style.height = (this.textarea.scrollHeight + 2) + 'px';
+      this.textarea.style.height = this.textarea.scrollHeight + 2 + 'px';
     }
   }
 

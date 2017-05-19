@@ -4,9 +4,9 @@ const DEFAULT_MESSAGE = 'Invalid value';
 
 class Validator {
   message: ?string;
-  condition: (boolean | () => boolean);
+  condition: boolean | (() => boolean);
 
-  constructor(message: ?string, condition: (boolean | () => boolean) = true) {
+  constructor(message: ?string, condition: boolean | (() => boolean) = true) {
     if (message) {
       this.setMessage(message);
     }
@@ -18,7 +18,7 @@ class Validator {
     this.message = message;
   }
 
-  setCondition(condition: (boolean | () => boolean)) {
+  setCondition(condition: boolean | (() => boolean)) {
     this.condition = condition;
   }
 

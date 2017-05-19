@@ -2,18 +2,18 @@ import NM from 'nm';
 let Notification = require('notification');
 
 class NotificationsController {
-  constructor(){
-    NM.on('create:notification', (options = {})=>{
+  constructor() {
+    NM.on('create:notification', (options = {}) => {
       return new Notification(options);
     });
 
     this.createNotificationsFromDOM();
   }
 
-  createNotificationsFromDOM(){
+  createNotificationsFromDOM() {
     let notifications = document.querySelectorAll('#notification-area .notification');
 
-    Array.prototype.forEach.call(notifications, (el)=>{
+    Array.prototype.forEach.call(notifications, el => {
       if (el.getAttribute('data-initialised')) {
         return;
       }

@@ -29,7 +29,4 @@ function run() {
 
 run();
 
-jQuery(document).on(
-  'activity-feed-next-page next-page new-comment new-user-status',
-  run
-);
+jQuery(document).on('activity-feed-next-page next-page new-comment new-user-status', run);

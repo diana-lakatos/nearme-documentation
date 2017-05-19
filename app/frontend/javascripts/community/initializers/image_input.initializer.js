@@ -1,9 +1,9 @@
 function run(context = 'body') {
   var els = $(context).find('[data-image-input]');
   if (els.length > 0) {
-    require.ensure('../../dashboard/modules/image_input', function(require){
+    require.ensure('../../dashboard/modules/image_input', function(require) {
       var ImageInput = require('../../dashboard/modules/image_input');
-      els.each(function(){
+      els.each(function() {
         return new ImageInput(this);
       });
     });
@@ -12,7 +12,7 @@ function run(context = 'body') {
 
 let cocoonWrapper = $('.customizations');
 
-cocoonWrapper.on('cocoon:after-insert',  ()=>{
+cocoonWrapper.on('cocoon:after-insert', () => {
   run(cocoonWrapper);
 });
 

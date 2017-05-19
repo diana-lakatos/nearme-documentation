@@ -3,13 +3,15 @@
 const ValidatableField = require('./validatable_field');
 
 class ValidatableFieldCollection {
-  fields: Array<ValidatableField>
-
-  constructor(){
+  fields: Array<ValidatableField>;
+  constructor() {
     this.fields = [];
   }
 
-  addField(el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, validations: Array<validatorFactoryOptions>) {
+  addField(
+    el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement,
+    validations: Array<validatorFactoryOptions>
+  ) {
     this.fields.push(new ValidatableField(el, validations));
   }
 

@@ -1,6 +1,6 @@
 function formSubmitter() {
-  Array.prototype.forEach.call(document.querySelectorAll('[data-submit-form]'), (trigger) => {
-    trigger.addEventListener('click', (event)=>{
+  Array.prototype.forEach.call(document.querySelectorAll('[data-submit-form]'), trigger => {
+    trigger.addEventListener('click', event => {
       if (event.defaultPrevented) {
         return;
       }

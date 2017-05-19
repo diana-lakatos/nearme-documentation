@@ -6,7 +6,9 @@ import closest from '../toolkit/closest';
 
 const CodeMirror = require('codemirror/lib/codemirror.js');
 import 'codemirror/addon/merge/merge.css';
-require('imports?diff_match_patch=diff-match-patch&DIFF_DELETE=>-1&DIFF_INSERT=>1&DIFF_EQUAL=>0!codemirror/addon/merge/merge.js');
+require(
+  'imports?diff_match_patch=diff-match-patch&DIFF_DELETE=>-1&DIFF_INSERT=>1&DIFF_EQUAL=>0!codemirror/addon/merge/merge.js'
+);
 
 const editorDefaults = require('../modules/forms/custom_inputs/codemirror/defaults');
 
@@ -22,7 +24,7 @@ class VersionsEditor {
     this._bindEvents();
   }
 
-  _build(){
+  _build() {
     let content = `
         <div class="fullscreen-editor versions-editor">
             <div class="fullscreen-editor-panes versions-editor-panes">
@@ -50,28 +52,34 @@ class VersionsEditor {
     this._ui.editorPane = wrapper.querySelector('.versions-editor-pane-textarea');
   }
 
-  _populateVersions(versions){
+  _populateVersions(versions) {
     const loadingText = this._ui.listContainer.querySelector('.loading');
     loadingText.parentNode.removeChild(loadingText);
 
     if (versions.length === 0) {
-      dialog.getContentElement().querySelector('.fullscreen-editor-panes').innerHTML = '<strong class="no-versions-found">No previous versions found</strong>';
+      dialog
+        .getContentElement()
+        .querySelector(
+          '.fullscreen-editor-panes'
+        ).innerHTML = '<strong class="no-versions-found">No previous versions found</strong>';
       return;
     }
 
     const list = document.createElement('ul');
 
-    versions.forEach((version)=>{
+    versions.forEach(version => {
       console.log(version);
       const li = document.createElement('li');
-      const author = version.author ? `<span class="author">${version.attributes.author}</span>` : '';
+      const author = version.author
+        ? `<span class="author">${version.attributes.author}</span>`
+        : '';
       li.innerHTML = `<a href="${version.links.self}">${version.attributes.date} ${author}</a>`;
       list.appendChild(li);
     });
     this._ui.listContainer.appendChild(list);
   }
 
-  _initEditor(){
+  _initEditor() {
     let options = Object.assign({}, editorDefaults, {
       value: this._currentValue,
       orig: '',
@@ -90,13 +98,13 @@ class VersionsEditor {
     return xhr(this._urlVersionsIndex, {
       method: 'get',
       contentType: 'application/vnd.api+json'
-    }).then((r)=>{
+    }).then(r => {
       this._populateVersions(r.data);
     });
   }
 
   _selectVersion(trigger) {
-    Array.prototype.forEach.call(this._ui.listContainer.querySelectorAll('a'), (el)=>{
+    Array.prototype.forEach.call(this._ui.listContainer.querySelectorAll('a'), el => {
       el.classList.remove('is-active');
     });
     trigger.classList.add('is-active');
@@ -104,9 +112,7 @@ class VersionsEditor {
   }
 
   _loadVersion(url) {
-    return xhr(url, {
-      contentType: 'json'
-    }).then((r) => {
+    return xhr(url, { contentType: 'json' }).then(r => {
       let version = r.data;
 
       this._ui.actionSave.classList.remove('is-hidden');
@@ -121,7 +127,7 @@ class VersionsEditor {
     this._ui.actionCancel.addEventListener('click', this.close.bind(this));
     this._ui.actionSave.addEventListener('click', this.save.bind(this));
     if (this._ui.listContainer) {
-      this._ui.listContainer.addEventListener('click', (e)=>{
+      this._ui.listContainer.addEventListener('click', e => {
         let link = closest(e.target, 'a');
 
         if (link) {
@@ -132,7 +138,7 @@ class VersionsEditor {
     }
   }
 
-  close(){
+  close() {
     dialog.close();
     NM.emit('closed:versions_editor');
   }

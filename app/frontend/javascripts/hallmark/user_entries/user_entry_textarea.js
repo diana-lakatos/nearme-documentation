@@ -1,8 +1,7 @@
 // @flow
 import { closest } from '../../toolkit/dom';
 
-const SHOULD_SUBMIT_ON_RETURN_ATTRIBUTE =
-  'data-user-entry-form-submit-on-return';
+const SHOULD_SUBMIT_ON_RETURN_ATTRIBUTE = 'data-user-entry-form-submit-on-return';
 
 class UserEntryTextarea {
   initValue: string;
@@ -16,15 +15,11 @@ class UserEntryTextarea {
     }
     this.textarea = textarea;
     this.initValue = textarea.value;
-    this.shouldSubmitOnReturn = this.textarea.hasAttribute(
-      SHOULD_SUBMIT_ON_RETURN_ATTRIBUTE
-    );
+    this.shouldSubmitOnReturn = this.textarea.hasAttribute(SHOULD_SUBMIT_ON_RETURN_ATTRIBUTE);
 
     let form = closest(textarea, 'form');
     if (!(form instanceof HTMLFormElement)) {
-      throw new Error(
-        'Unable to locate encapsulating form for UserEntryTextarea'
-      );
+      throw new Error('Unable to locate encapsulating form for UserEntryTextarea');
     }
     this.form = form;
 

@@ -27,7 +27,7 @@ class LoginForm {
   }
 
   bindEvents() {
-    this.uiForm.addEventListener('submit', (e: Event)=>{
+    this.uiForm.addEventListener('submit', (e: Event) => {
       e.preventDefault();
       if (this.validate()) {
         this.submit();
@@ -39,8 +39,9 @@ class LoginForm {
   }
 
   submit() {
-    api.post(newSessionUrl, this.getFormData())
-      .then( (result: { data: { attributes: { token: string }}}) => {
+    api
+      .post(newSessionUrl, this.getFormData())
+      .then((result: { data: { attributes: { token: string } } }) => {
         window.location = `/admin/?token=${result.data.attributes.token}`;
       })
       .catch(() => {
@@ -49,10 +50,7 @@ class LoginForm {
   }
 
   getFormData(): { email: string, password: string } {
-    return {
-      email: this.uiEmail.value,
-      password: this.uiPassword.value
-    };
+    return { email: this.uiEmail.value, password: this.uiPassword.value };
   }
 
   validateEmail(): boolean {
@@ -88,7 +86,7 @@ class LoginForm {
 
   validate(): boolean {
     let flag = true;
-    if (this.validateEmail() === false){
+    if (this.validateEmail() === false) {
       flag = false;
     }
     if (this.validatePassword() === false) {
@@ -103,15 +101,17 @@ class LoginForm {
       return;
     }
     parent.classList.remove('has-error');
-    Array.prototype.forEach.call(parent.querySelectorAll('strong.form-error'), (el: HTMLElement) => {
-      if (!el.parentNode) {
-        return;
+
+    function removeElement(el: HTMLElement) {
+      if (el.parentNode) {
+        el.parentNode.removeChild(el);
       }
-      el.parentNode.removeChild(el);
-    });
+    }
+
+    Array.prototype.forEach.call(parent.querySelectorAll('strong.form-error'), removeElement);
   }
 
-  setError(field: HTMLElement, message: string){
+  setError(field: HTMLElement, message: string) {
     let err = document.createElement('strong');
     err.classList.add('form-error');
     err.innerHTML = message;
@@ -123,7 +123,7 @@ class LoginForm {
   }
 
   validateEmailSyntax(str: string): boolean {
-    return (/^[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,6}$/i).test(str);
+    return /^[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,6}$/i.test(str);
   }
 }
 

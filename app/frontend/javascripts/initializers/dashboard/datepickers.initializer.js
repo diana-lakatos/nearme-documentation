@@ -1,5 +1,5 @@
 var datepickers = require('../../dashboard/forms/datepickers');
-function run(){
+function run() {
   $('.unavailability').on('cocoon:after-insert', function(e, insertedItem) {
     datepickers(insertedItem);
   });

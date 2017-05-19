@@ -12,4 +12,3 @@ if ($container.length > 0) {
     $(this).tab('show');
   });
 }
-

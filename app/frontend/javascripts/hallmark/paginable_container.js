@@ -87,15 +87,10 @@ class PaginableContainer {
   updateResults(url) {
     this.disableMoreTrigger();
 
-    $.ajax({
-      url: url,
-      dataType: 'json'
-    })
-      .done(this.processResults.bind(this))
-      .fail(() => {
-        this.enableMoreTrigger();
-        throw new Error('Unable to fetch more results');
-      });
+    $.ajax({ url: url, dataType: 'json' }).done(this.processResults.bind(this)).fail(() => {
+      this.enableMoreTrigger();
+      throw new Error('Unable to fetch more results');
+    });
   }
 
   loadMoreResults() {

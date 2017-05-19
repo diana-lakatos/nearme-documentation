@@ -10,7 +10,7 @@ const defaults = {
   labelClose: 'Close'
 };
 
-function getNotificationArea(){
+function getNotificationArea() {
   let area = document.getElementById('notification-area');
   if (area) {
     return area;
@@ -23,9 +23,8 @@ function getNotificationArea(){
   return area;
 }
 
-
 class Notification {
-  constructor(options = {}){
+  constructor(options = {}) {
     options = Object.assign({}, defaults, options);
 
     this.element = options.element;
@@ -37,7 +36,9 @@ class Notification {
     }
     this.element.setAttribute('data-initialised', true);
 
-    this.element.querySelector('button.notification-close').addEventListener('click', this.hide.bind(this));
+    this.element
+      .querySelector('button.notification-close')
+      .addEventListener('click', this.hide.bind(this));
 
     if (options.showOnInit) {
       NM.emit('beforeShow:notification', this);
@@ -49,16 +50,16 @@ class Notification {
       this.timeout = window.setTimeout(this.hide.bind(this), options.autoclose);
     }
 
-    this.getOptions = function(){
+    this.getOptions = function() {
       return options;
     };
   }
-  show(){
+  show() {
     let area = getNotificationArea();
     area.appendChild(this.element);
   }
 
-  hide(){
+  hide() {
     NM.emit('beforeHide:notification', this);
     clearTimeout(this.timeout);
     this.element.parentNode.removeChild(this.element);

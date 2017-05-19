@@ -4,4 +4,3 @@ var hidden = $('.add-new-hidden').hide();
 $('.add-new-btn').on('click', function() {
   hidden.slideDown();
 });
-

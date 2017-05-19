@@ -7,25 +7,27 @@ class CSVInput {
     this.parse();
   }
 
-  build(){
+  build() {
     this.infoHolder = document.createElement('div');
     this.infoHolder.className = 'hint';
     this.input.parentNode.appendChild(this.infoHolder);
-
   }
 
-  bindEvents(){
+  bindEvents() {
     this.input.addEventListener('keyup', this.parse.bind(this));
   }
 
-  parse(){
-    let data = this.input.value.split(',').filter((item)=> item !== '');
-    let items = data.reduce((memo, value)=>{
-      if (memo) {
-        memo = `${memo}, `;
-      }
-      return `${memo}<code>${value.trim()}</code>`;
-    }, '');
+  parse() {
+    let data = this.input.value.split(',').filter(item => item !== '');
+    let items = data.reduce(
+      (memo, value) => {
+        if (memo) {
+          memo = `${memo}, `;
+        }
+        return `${memo}<code>${value.trim()}</code>`;
+      },
+      ''
+    );
 
     this.infoHolder.innerHTML = `<span>Current options:</span> ${items}`;
   }

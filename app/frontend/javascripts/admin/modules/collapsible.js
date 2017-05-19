@@ -1,9 +1,8 @@
 class Collapsible {
-  constructor(toggler){
+  constructor(toggler) {
     if (typeof toggler === 'string') {
       this.toggler = document.querySelector('.page-header');
-    }
-    else {
+    } else {
       this.toggler = toggler;
     }
 
@@ -13,8 +12,11 @@ class Collapsible {
       return;
     }
 
-        // create array with dom elements referenced by ID in aria-controls attribute
-    this.targets = this.targets.split(' ').map((id)=> document.getElementById(id)).filter((el) => el !== null);
+    // create array with dom elements referenced by ID in aria-controls attribute
+    this.targets = this.targets
+      .split(' ')
+      .map(id => document.getElementById(id))
+      .filter(el => el !== null);
 
     if (this.targets.length === 0) {
       return;
@@ -23,15 +25,15 @@ class Collapsible {
     this.bindEvents();
     this.updateState();
   }
-  updateState(){
-    this.targets.forEach((el) => {
+  updateState() {
+    this.targets.forEach(el => {
       if (this.toggler.checked) {
         return el.classList.add('active');
       }
       el.classList.remove('active');
     });
   }
-  bindEvents(){
+  bindEvents() {
     this.toggler.addEventListener('change', this.updateState.bind(this));
   }
 }

@@ -10,18 +10,13 @@ require('brace/theme/xcode');
 require('brace/ext/searchbox');
 
 // Hook up ACE editor to all textareas with data-editor attribute
-module.exports = function(textarea){
-
+module.exports = function(textarea) {
   textarea = $(textarea);
 
   var mode = textarea.data('editor');
 
   var editDiv = $('<div>', {
-    css: {
-      position: 'absolute',
-      width: textarea.width(),
-      height: textarea.height()
-    },
+    css: { position: 'absolute', width: textarea.width(), height: textarea.height() },
     'class': textarea.attr('class')
   }).insertBefore(textarea);
 
@@ -37,7 +32,7 @@ module.exports = function(textarea){
   editor.setTheme('ace/theme/xcode');
 
   // copy back to textarea on form submit...
-  textarea.closest('form').submit(function () {
+  textarea.closest('form').submit(function() {
     textarea.val(editor.getSession().getValue());
   });
 };

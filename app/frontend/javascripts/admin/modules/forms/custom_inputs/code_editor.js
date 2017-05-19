@@ -16,17 +16,17 @@ class CodeEditor {
     this._bindEvents();
   }
 
-  _initEditor(){
+  _initEditor() {
     this._editor = CodeMirror.fromTextArea(this._input, this._editorOptions);
     this._input.editor = this;
   }
 
   _bindEvents() {
-    this._editor.on('change', ()=>{
+    this._editor.on('change', () => {
       this.emit('change');
     });
 
-    this._editor.on('blur', ()=>{
+    this._editor.on('blur', () => {
       this._editor.save();
     });
   }
