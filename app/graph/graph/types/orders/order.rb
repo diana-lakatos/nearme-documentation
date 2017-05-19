@@ -32,6 +32,8 @@ module Graph
         field :enquirer_confirmed_at, !types.String
         field :state, Types::Orders::OrderStateEnum
         field :archived_at, types.String
+        field :ends_at, types.String
+        field :starts_at, types.String
         field :created_at, types.String
         field :custom_attribute, !types.String,
               'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do

@@ -91,7 +91,7 @@
             = form_for reservation, method: :post, url: user_cancel_dashboard_user_reservation_path(reservation) do |f|
               = f.submit I18n.t('general.cancel'), data: { confirm: t('dashboard.user_reservations.cancel_confirmation') }, class: 'btn btn-warning'
             - if reservation.penalty_charge_apply?
-              .cc-error= t('dashboard.user_reservations.penalty_charge_will_apply', penalty_hours: reservation.cancellation_policy_penalty_hours, penalty_fee: render_money(reservation.penalty_fee), hours_for_cancellation: reservation.cancellation_policy_hours_for_cancellation)
+              .cc-error= t('dashboard.user_reservations.penalty_charge_will_apply', penalty_hours: reservation.cancellation_policy_penalty_hours, penalty_fee: render_money(reservation.penalty_amount), hours_for_cancellation: reservation.cancellation_policy_hours_for_cancellation)
 
           - if reservation.remote_payment? && !reservation.paid? && !reservation.archived?
             = link_to t('dashboard.user_reservations.pay_now'), remote_payment_dashboard_user_reservation_path(reservation), class: 'btn btn-default'
