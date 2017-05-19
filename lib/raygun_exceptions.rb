@@ -11,7 +11,6 @@ module RaygunExceptions
       begin
         Raygun.configuration.custom_data = {
           platform_context: platform_context.to_h,
-          request_params: params.reject { |k, _v| Rails.application.config.filter_parameters.include?(k.to_sym) },
           current_user_id: current_user.try(:id),
           process_pid: Process.pid,
           process_ppid: Process.ppid,
