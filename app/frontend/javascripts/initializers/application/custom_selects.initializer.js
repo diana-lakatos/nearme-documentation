@@ -4,4 +4,3 @@ new CustomSelects();
 $(document).on('init:customSelects.nearme', function() {
   return new CustomSelects();
 });
-

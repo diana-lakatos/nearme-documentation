@@ -1,10 +1,9 @@
 var els = $('.multiselect');
 if (els.length > 0) {
-  require.ensure('../../components/multiselect', function(require){
+  require.ensure('../../components/multiselect', function(require) {
     var Multiselect = require('../../components/multiselect');
-    els.each(function(){
+    els.each(function() {
       return new Multiselect.initialize(this);
     });
   });
 }
-

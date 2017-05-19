@@ -7,7 +7,7 @@ CodeMirror.defineMode('liquid', function(config, parserConfig) {
   var liquidOverlay = {
     token: function(stream) {
       var ch;
-            /* Variables. */
+      /* Variables. */
       if (stream.match('{{')) {
         ch = stream.next();
         while (ch !== null) {
@@ -19,8 +19,8 @@ CodeMirror.defineMode('liquid', function(config, parserConfig) {
         return 'liquid-variable';
       }
 
-            /* Tags. */
-      if(stream.match('{%')) {
+      /* Tags. */
+      if (stream.match('{%')) {
         ch = stream.next();
         while (ch !== null) {
           if (ch == '%' && stream.next() == '}') {
@@ -38,5 +38,8 @@ CodeMirror.defineMode('liquid', function(config, parserConfig) {
       return null;
     }
   };
-  return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || 'text/html'), liquidOverlay);
+  return CodeMirror.overlayMode(
+    CodeMirror.getMode(config, parserConfig.backdrop || 'text/html'),
+    liquidOverlay
+  );
 });

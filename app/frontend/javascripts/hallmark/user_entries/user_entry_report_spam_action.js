@@ -1,11 +1,7 @@
 // @flow
 let resolver = require('./spam_report_resolver');
 
-type ActionType = {
-  url: string,
-  label: string,
-  method: 'delete' | 'post'
-};
+type ActionType = { url: string, label: string, method: 'delete' | 'post' };
 
 type SpamReportDataType = {
   comments_spam_reports: Array<number>,
@@ -58,17 +54,9 @@ class UserEntryReportSpamAction {
       throw new Error('Missing create report label');
     }
 
-    this.actionCancel = {
-      url: cancelReportUrl,
-      label: cancelReportLabel,
-      method: 'delete'
-    };
+    this.actionCancel = { url: cancelReportUrl, label: cancelReportLabel, method: 'delete' };
 
-    this.actionCreate = {
-      url: createReportUrl,
-      label: createReportLabel,
-      method: 'post'
-    };
+    this.actionCreate = { url: createReportUrl, label: createReportLabel, method: 'post' };
 
     this.container = container;
 
@@ -104,11 +92,8 @@ class UserEntryReportSpamAction {
 
     let action = this.getCurrentAction();
 
-    $.ajax({
-      url: action.url,
-      method: action.method,
-      dataType: 'json'
-    })
+    $
+      .ajax({ url: action.url, method: action.method, dataType: 'json' })
       .done(() => {
         this.processing = false;
         this.raportExists = !this.raportExists;
@@ -117,9 +102,7 @@ class UserEntryReportSpamAction {
       .fail(() => {
         this.processing = false;
         alert('We were unable to modify this spam report');
-        throw new Error(
-          `Unable to update spam report for ${action.url} ${action.method}`
-        );
+        throw new Error(`Unable to update spam report for ${action.url} ${action.method}`);
       });
   }
 

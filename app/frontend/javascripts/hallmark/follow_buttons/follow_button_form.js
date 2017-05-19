@@ -111,9 +111,7 @@ class FollowButtonForm {
     this.setState(this.previousState);
   }
 
-  processResponse(
-    response: { is_following: boolean, followers_count: number }
-  ) {
+  processResponse(response: { is_following: boolean, followers_count: number }) {
     $.rails.enableElement($(this.button));
     $(this.button).prop('disabled', false);
 
@@ -122,22 +120,16 @@ class FollowButtonForm {
   }
 
   setFollowersCount(count: number) {
-    Array.prototype.forEach.call(
-      this.followersCounters,
-      (counter: HTMLElement) => {
-        counter.innerHTML = count + '';
-      }
-    );
+    Array.prototype.forEach.call(this.followersCounters, (counter: HTMLElement) => {
+      counter.innerHTML = count + '';
+    });
   }
 
   updateFollowersCountBy(delta: number) {
-    Array.prototype.forEach.call(
-      this.followersCounters,
-      (counter: HTMLElement) => {
-        let current: number = parseInt(counter.innerHTML, 10) || 0;
-        counter.innerHTML = current + delta + '';
-      }
-    );
+    Array.prototype.forEach.call(this.followersCounters, (counter: HTMLElement) => {
+      let current: number = parseInt(counter.innerHTML, 10) || 0;
+      counter.innerHTML = current + delta + '';
+    });
   }
 }
 

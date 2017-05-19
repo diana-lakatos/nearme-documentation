@@ -1,5 +1,5 @@
 class SideNavigation {
-  constructor(){
+  constructor() {
     this.navs = document.querySelectorAll('.select-navigation > ul');
     if (this.navs.length === 0) {
       return;
@@ -9,16 +9,16 @@ class SideNavigation {
     this.bound = {};
     this.bindEvents();
   }
-  createSelects(){
+  createSelects() {
     let selects = [];
-    Array.prototype.forEach.call(this.navs, (el)=>{
+    Array.prototype.forEach.call(this.navs, el => {
       let select = document.createElement('select');
-      Array.prototype.forEach.call(el.querySelectorAll('li a'), (item)=>{
+      Array.prototype.forEach.call(el.querySelectorAll('li a'), item => {
         let option = document.createElement('option');
         option.value = item.getAttribute('href');
         option.innerHTML = item.innerHTML;
         if (item.classList.contains('selected')) {
-          option.setAttribute('selected','selected');
+          option.setAttribute('selected', 'selected');
         }
         select.appendChild(option);
       });
@@ -29,9 +29,9 @@ class SideNavigation {
 
     this.selects = selects;
   }
-  bindEvents(){
-    this.selects.forEach((select)=>{
-      select.addEventListener('change', (e)=>{
+  bindEvents() {
+    this.selects.forEach(select => {
+      select.addEventListener('change', e => {
         window.location = e.target.value;
       });
     });

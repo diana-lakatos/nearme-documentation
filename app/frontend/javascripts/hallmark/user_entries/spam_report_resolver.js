@@ -11,10 +11,7 @@ class SpamReportResolver {
   }
 
   _fetch(): JQueryXHR {
-    return $.ajax({
-      url: '/spam_reports',
-      dataType: 'json'
-    });
+    return $.ajax({ url: '/spam_reports', dataType: 'json' });
   }
 }
 

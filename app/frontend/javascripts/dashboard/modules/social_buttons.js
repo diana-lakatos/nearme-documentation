@@ -8,13 +8,10 @@ var SocialButtons = function(element, plugin) {
 };
 
 SocialButtons.prototype.setup = function() {
-
   var that = this;
 
   this.plugin.setup({
-    facebook: {
-      appId: getOption('.facebook-like', 'data-app-id')
-    },
+    facebook: { appId: getOption('.facebook-like', 'data-app-id') },
     twitter: {},
     googleplus: {}
   });
@@ -22,7 +19,7 @@ SocialButtons.prototype.setup = function() {
   function getOption(selector, attr) {
     var btn = that.wrapper.querySelector(selector);
 
-    if(btn && btn.getAttribute(attr)) {
+    if (btn && btn.getAttribute(attr)) {
       return btn.getAttribute(attr);
     }
   }
@@ -37,13 +34,12 @@ SocialButtons.prototype.bindEvents = function() {
 };
 
 SocialButtons.prototype.init = function() {
-  var that = this,
-    counter = 0;
+  var that = this, counter = 0;
 
   that.plugin.load(that.wrapper, null, null, function() {
     counter += 1;
 
-    if(counter === that.buttons.length) {
+    if (counter === that.buttons.length) {
       that.wrapper.classList.add('active');
     }
   });

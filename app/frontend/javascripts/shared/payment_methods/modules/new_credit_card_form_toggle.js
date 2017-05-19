@@ -1,7 +1,13 @@
 const CREDIT_CARD_SWITCHER_SELECTOR = '.payment-source-option-select, .nm-new-credit-card-form';
-const $newCreditCardForm = () => { return $('body').find('.nm-credit-card-option-select, .payment-source-form'); };
-const $creditCardSwitcher = () => { return $('body').find(CREDIT_CARD_SWITCHER_SELECTOR); };
-const $formFields = () => { return $newCreditCardForm().find('select, input'); };
+const $newCreditCardForm = () => {
+  return $('body').find('.nm-credit-card-option-select, .payment-source-form');
+};
+const $creditCardSwitcher = () => {
+  return $('body').find(CREDIT_CARD_SWITCHER_SELECTOR);
+};
+const $formFields = () => {
+  return $newCreditCardForm().find('select, input');
+};
 
 class NewCreditCardFormToggle {
   constructor() {
@@ -23,8 +29,10 @@ class NewCreditCardFormToggle {
   }
 
   _attachEventHandlers() {
-    $('body').on('change', CREDIT_CARD_SWITCHER_SELECTOR, (event) => {
-      this.update(event.target); /* event.target is pointing to changed input, not div from selector */
+    $('body').on('change', CREDIT_CARD_SWITCHER_SELECTOR, event => {
+      this.update(
+        event.target
+      ); /* event.target is pointing to changed input, not div from selector */
     });
   }
 
@@ -36,8 +44,13 @@ class NewCreditCardFormToggle {
 
     const showOrHide = $checkbox.val() === 'new_credit_card' || $checkbox.val() == 'new_ach';
 
-    $checboxFieldset.find('.nm-credit-card-option-select, .payment-source-form').toggleClass('hidden', !showOrHide); // Hide/show new cc form
-    $formFields().each(() => $(this).attr('disabled', showOrHide)); // Disable/enable inputs/selects inside of it
+    $checboxFieldset
+      .find('.nm-credit-card-option-select, .payment-source-form')
+      .toggleClass('hidden', !showOrHide);
+    // Hide/show new cc form
+    $formFields().each(
+      () => $(this).attr('disabled', showOrHide)
+    ); // Disable/enable inputs/selects inside of it
   }
 }
 

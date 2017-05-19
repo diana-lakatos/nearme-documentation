@@ -26,16 +26,11 @@ class UserEntryImages extends Eventable {
   getImagesFromContainer(): Array<UserEntryImage> {
     let els = this.container.querySelectorAll(ENTRY_FORM_IMAGE_SELECTOR);
 
-    return Array.prototype.map.call(
-      els,
-      (imageContainer: HTMLElement): UserEntryImage => {
-        let image = new UserEntryImage({
-          isPersisted: true
-        });
-        image.setContainer(imageContainer);
-        return image;
-      }
-    );
+    return Array.prototype.map.call(els, (imageContainer: HTMLElement): UserEntryImage => {
+      let image = new UserEntryImage({ isPersisted: true });
+      image.setContainer(imageContainer);
+      return image;
+    });
   }
 
   add({ dataUrl, orientation }: { dataUrl: string, orientation: number }) {

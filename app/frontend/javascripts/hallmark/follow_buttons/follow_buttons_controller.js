@@ -9,19 +9,25 @@ class FollowButtonsController {
 
   bindEvents() {
     if (document.body) {
-      document.body.addEventListener('submit', (event: Event) => {
-        let form: FollowButtonHTMLFormElement = (event.target: any);
-        if (!(form instanceof HTMLFormElement) || form.hasAttribute(SELECTOR_ATTRIBUTE) === false) {
-          return;
-        }
+      document.body.addEventListener(
+        'submit',
+        (event: Event) => {
+          let form: FollowButtonHTMLFormElement = (event.target: any);
+          if (
+            !(form instanceof HTMLFormElement) || form.hasAttribute(SELECTOR_ATTRIBUTE) === false
+          ) {
+            return;
+          }
 
-        event.preventDefault();
+          event.preventDefault();
 
-        if (!(form.followButtonForm instanceof FollowButtonForm)) {
-          form.followButtonForm = new FollowButtonForm(form);
-        }
-        form.followButtonForm.process();
-      }, true);
+          if (!(form.followButtonForm instanceof FollowButtonForm)) {
+            form.followButtonForm = new FollowButtonForm(form);
+          }
+          form.followButtonForm.process();
+        },
+        true
+      );
     }
   }
 }

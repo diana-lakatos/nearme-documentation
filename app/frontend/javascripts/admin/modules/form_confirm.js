@@ -10,7 +10,7 @@ class FormConfirm {
     this.bindEvents();
   }
 
-  build(){
+  build() {
     this.confirmBox = document.createElement('div');
     this.confirmBox.classList.add('confirm-box');
     this.confirmBox.setAttribute('aria-hidden', true);
@@ -27,37 +27,37 @@ class FormConfirm {
     this.confirmButton = this.form.querySelector('button.confirm-box-yes');
   }
 
-  bindEvents(){
-    this.form.addEventListener('submit', (e)=>{
+  bindEvents() {
+    this.form.addEventListener('submit', e => {
       e.preventDefault();
       this.showConfirmBox();
     });
 
-    this.cancelButton.addEventListener('click', (e)=>{
+    this.cancelButton.addEventListener('click', e => {
       e.preventDefault();
       this.cancel();
     });
 
-    this.confirmButton.addEventListener('click', (e)=>{
+    this.confirmButton.addEventListener('click', e => {
       e.preventDefault();
       this.confirm();
     });
   }
 
-  showConfirmBox(){
+  showConfirmBox() {
     this.focusElement = document.activeElement;
     this.confirmBox.setAttribute('aria-hidden', false);
     this.confirmBox.classList.add('active');
     this.cancelButton.focus();
   }
 
-  cancel(){
-    this.confirmBox.setAttribute('aria-hidden',true);
+  cancel() {
+    this.confirmBox.setAttribute('aria-hidden', true);
     this.confirmBox.classList.remove('active');
     this.focusElement.focus();
   }
 
-  confirm(){
+  confirm() {
     this.form.submit();
   }
 }

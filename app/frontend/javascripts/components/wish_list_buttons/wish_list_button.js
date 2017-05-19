@@ -1,6 +1,5 @@
 class WishListButton {
   constructor(el) {
-
     if (el._data && el._data.wishListButton) {
       return el._data.wishListButton;
     }
@@ -68,7 +67,7 @@ class WishListButton {
   }
 
   _bindEvents() {
-    this.ui.link.addEventListener('click', (e) => {
+    this.ui.link.addEventListener('click', e => {
       e.preventDefault();
       e.stopPropagation();
       this._rollbackState = this.state;
@@ -94,7 +93,10 @@ class WishListButton {
 
     let request = new XMLHttpRequest();
     request.open('POST', url, true);
-    request.setRequestHeader('X-CSRF-Token', document.querySelector('meta[name="csrf-token"]').content);
+    request.setRequestHeader(
+      'X-CSRF-Token',
+      document.querySelector('meta[name="csrf-token"]').content
+    );
     request.setRequestHeader('Accept', 'application/json');
     request.responseType = 'json';
 
@@ -113,6 +115,5 @@ class WishListButton {
     request.send(data);
   }
 }
-
 
 module.exports = WishListButton;

@@ -7,7 +7,6 @@ require('jquery-ujs/src/rails');
 
 require('hallmark/vendor/css_browser_selector.min');
 require('hallmark/vendor/selectize.mod');
-require('hallmark/vendor/trueresize');
 require('hallmark/vendor/geocomplete');
 require('hallmark/vendor/bootstrap-tab');
 require('hallmark/vendor/jquery-ui');

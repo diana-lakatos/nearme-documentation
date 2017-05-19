@@ -7,7 +7,7 @@ const inflection = require('inflection');
 const indicator = require('../loading_indicator');
 
 class NMForm {
-  constructor(form){
+  constructor(form) {
     this._ui = {};
     this._ui.form = form;
     this._apiEndpoint = form.dataset.apiEndpoint;
@@ -22,8 +22,8 @@ class NMForm {
     return this._objectName;
   }
 
-  _bindEvents(){
-    this._ui.form.addEventListener('submit', (e)=>{
+  _bindEvents() {
+    this._ui.form.addEventListener('submit', e => {
       if (this.validateForm() === false) {
         e.preventDefault();
         return false;
@@ -35,8 +35,8 @@ class NMForm {
     });
   }
 
-  _findComponents(){
-    Array.prototype.forEach.call(this._ui.form.querySelectorAll('.form-group'), (el)=>{
+  _findComponents() {
+    Array.prototype.forEach.call(this._ui.form.querySelectorAll('.form-group'), el => {
       if (el.dataset.formComponentInitialized) {
         return;
       }
@@ -62,11 +62,11 @@ class NMForm {
 
     data = data[this._objectName];
 
-    if (data.hasOwnProperty(name)){
+    if (data.hasOwnProperty(name)) {
       return data[name];
     }
 
-        /* try for association name */
+    /* try for association name */
     const associationName = `${inflection.singularize(name)}_ids`;
     if (data.hasOwnProperty(associationName)) {
       return data[associationName];
@@ -77,8 +77,7 @@ class NMForm {
     return serialize(this._ui.form, { hash: true, empty: true });
   }
 
-  sendForm(){
-
+  sendForm() {
     indicator.show();
 
     let url = this._apiEndpoint;
@@ -88,11 +87,10 @@ class NMForm {
       data: new FormData(this._ui.form)
     };
 
-    xhr(url, xhrOptions)
-            .then(this._processSuccess.bind(this), this._processErrors.bind(this));
+    xhr(url, xhrOptions).then(this._processSuccess.bind(this), this._processErrors.bind(this));
   }
 
-  validateForm(){
+  validateForm() {
     let flag = true;
 
     if (this._ui.errorList) {
@@ -115,7 +113,7 @@ class NMForm {
     return flag;
   }
 
-  setError(message, name = ''){
+  setError(message, name = '') {
     console.log(this._ui.errorList);
     if (!this._ui.errorList) {
       this._ui.errorList = document.createElement('ul');
@@ -136,13 +134,12 @@ class NMForm {
       return this.setError('General', 'Unable to save form');
     }
 
-    data.errors.forEach((error)=>{
+    data.errors.forEach(error => {
       let name = error.source.pointer.split('/').pop();
       const component = this.getComponent(name);
       if (component) {
         component.setError(error.detail);
-      }
-      else {
+      } else {
         this.setError(name, error.detail);
       }
     });

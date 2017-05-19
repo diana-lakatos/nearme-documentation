@@ -1,16 +1,15 @@
 'use strict';
 
 const PRICE_LIST = {
-  'Total Price':       'order.total_amount_money.cents',
-  'Items Price':       'order.subtotal_amount_money.cents',
+  'Total Price': 'order.total_amount_money.cents',
+  'Items Price': 'order.subtotal_amount_money.cents',
   'Guest Service Gee': 'order.service_fee_amount_guest_money.cents',
-  'Host Service Fee':  'order.service_fee_amount_guest_money.cents',
-  'Shipping Fee':      'order.shipping_total_money.cents',
+  'Host Service Fee': 'order.service_fee_amount_guest_money.cents',
+  'Shipping Fee': 'order.shipping_total_money.cents'
 };
 const CANCELLATION_CONDITIONS = window.cancellationConditions;
 
 class CancellationPolicy {
-
   amountQuery: HTMLElement;
   conditionQuery: HTMLElement;
 
@@ -34,57 +33,57 @@ class CancellationPolicy {
     this.bindEvents();
   }
 
-  bindEvents(){
+  bindEvents() {
     this.buildPriceSelect();
     this.buildConditionsSelect();
     this.disableQueryInputs(this.actionType);
 
     let matchUnitValue = this.amountQuery.value.match(/[+-]?\d+(\.\d+)?/g);
-    this.unitValue.value = parseFloat((matchUnitValue || [0])[0]) * 100;
+    this.unitValue.value = parseFloat((matchUnitValue || [ 0 ])[0]) * 100;
 
     // TODO remove jQuery together with Chosen
-    jQuery(this.price).chosen().change( () => this.buildAmountQuery() );
-    jQuery(this.conditions).chosen().change( () => this.buildConditionQuery());
+    jQuery(this.price).chosen().change(() => this.buildAmountQuery());
+    jQuery(this.conditions).chosen().change(() => this.buildConditionQuery());
     this.unitValue.addEventListener('change', this.buildAmountQuery.bind(this), true);
-    this.toggleAdvanced.addEventListener('click', (event) => {
+    this.toggleAdvanced.addEventListener('click', event => {
       event.preventDefault();
       this.advanced.classList.toggle('hidden');
     });
 
-    $(this.actionType).chosen().change((event) => this.disableQueryInputs(event.target));
+    $(this.actionType).chosen().change(event => this.disableQueryInputs(event.target));
   }
 
   disableQueryInputs(target) {
-    let queryInputs = [this.amountQuery, this.unitValue, this.price];
+    let queryInputs = [ this.amountQuery, this.unitValue, this.price ];
 
     if (target.value == 'cancel_allowed') {
       queryInputs.map(v => v.setAttribute('disabled', 'disabled'));
-      queryInputs.map(v => v.parentNode.style.display='none');
-      this.unitContainer.style.display='none';
+      queryInputs.map(v => v.parentNode.style.display = 'none');
+      this.unitContainer.style.display = 'none';
     } else {
       queryInputs.map(v => v.removeAttribute('disabled'));
-      queryInputs.map(v => v.parentNode.style.display='block');
-      this.unitContainer.style.display='block';
+      queryInputs.map(v => v.parentNode.style.display = 'block');
+      this.unitContainer.style.display = 'block';
     }
   }
 
-  buildAmountQuery(){
+  buildAmountQuery() {
     let percent = this.unitValue.value / 100;
     let price = $(this.price).chosen().val();
 
-    this.amountQuery.value =  `{{ ${ price } | times: ${ percent } }}`;
+    this.amountQuery.value = `{{ ${price} | times: ${percent} }}`;
   }
 
-  buildConditionQuery(){
-    this.conditionQuery.value = `${this.selectedConditionsVariables() }{% if ${ this.selectedConditionsQueries() } %}true{% endif %}`;
+  buildConditionQuery() {
+    this.conditionQuery.value = `${this.selectedConditionsVariables()}{% if ${this.selectedConditionsQueries()} %}true{% endif %}`;
   }
 
-  selectedConditionsQueries () {
+  selectedConditionsQueries() {
     return this.selectedConditions().map(v => v['query']).join(' and ');
   }
 
   selectedConditionsVariables() {
-    return this.selectedConditions().map(c => this.liquidVariables(c) ).join('');
+    return this.selectedConditions().map(c => this.liquidVariables(c)).join('');
   }
 
   liquidVariables(condition) {
@@ -95,14 +94,14 @@ class CancellationPolicy {
     let selectedValues = $(this.conditions).chosen().val();
 
     if (selectedValues) {
-      return selectedValues.map(con => CANCELLATION_CONDITIONS.find(v => v['id'] == con ));
+      return selectedValues.map(con => CANCELLATION_CONDITIONS.find(v => v['id'] == con));
     } else {
       return [];
     }
   }
 
-  buildPriceSelect(){
-    Object.keys(PRICE_LIST).forEach((prop) => {
+  buildPriceSelect() {
+    Object.keys(PRICE_LIST).forEach(prop => {
       let priceOption = document.createElement('option');
       priceOption.text = prop;
       priceOption.value = PRICE_LIST[prop];
@@ -113,8 +112,8 @@ class CancellationPolicy {
     $(this.price).trigger('chosen:updated');
   }
 
-  buildConditionsSelect(){
-    CANCELLATION_CONDITIONS.forEach((prop) => {
+  buildConditionsSelect() {
+    CANCELLATION_CONDITIONS.forEach(prop => {
       let option = document.createElement('option');
       option.text = prop['name'];
       option.value = prop['id'];
@@ -127,22 +126,21 @@ class CancellationPolicy {
 }
 
 class InstanceAdminCancellationPoliciesController {
-
   cacnellationPolcicies: Array<CancellationPolicy>;
   form: HTMLFormElement;
 
   constructor(form: HTMLFormElement) {
     this.form = form;
 
-    this.buildCancellationPolicies().then((policies) => {
+    this.buildCancellationPolicies().then(policies => {
       this.cacnellationPolcicies = policies;
     });
 
     this.bindEvents();
   }
 
-  bindEvents () {
-    $(this.form).on('cocoon:after-insert', '.nested-fields-set',  (e, fields) => {
+  bindEvents() {
+    $(this.form).on('cocoon:after-insert', '.nested-fields-set', (e, fields) => {
       new CancellationPolicy(fields.get(0));
     });
   }

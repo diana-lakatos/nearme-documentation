@@ -54,9 +54,7 @@ class UserMessagesInboxForm extends Eventable {
     this.form.addEventListener('submit', this.onFormSubmit.bind(this));
   }
 
-  onFileInputChange(
-    { name: name, url: url }: { name: string, url: string } = {}
-  ) {
+  onFileInputChange({ name: name, url: url }: { name: string, url: string } = {}) {
     let entry = new UserMessagesInboxEntry();
     entry.setAuthor(this.author);
     entry.setAttachment(name, url);

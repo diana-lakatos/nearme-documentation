@@ -1,7 +1,6 @@
 // @flow
 
 class FeaturedItems {
-
   loader: HTMLElement;
   url: string;
 
@@ -17,7 +16,6 @@ class FeaturedItems {
 
   load(): Promise<string> {
     return new Promise((resolve, reject) => {
-
       let request = new XMLHttpRequest();
 
       request.open('GET', this.url, true);
@@ -40,12 +38,10 @@ class FeaturedItems {
     });
   }
 
-  initialize(){
-    this.load()
-        .then(this.updateHTML.bind(this))
-        .catch((err: string)=>{
-          throw new Error(err);
-        });
+  initialize() {
+    this.load().then(this.updateHTML.bind(this)).catch((err: string) => {
+      throw new Error(err);
+    });
   }
 
   updateHTML(html: string) {

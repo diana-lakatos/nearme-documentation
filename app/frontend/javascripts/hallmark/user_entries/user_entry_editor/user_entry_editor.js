@@ -1,6 +1,6 @@
 // @flow
 class UserEntryEditor {
-  textarea: HTMLTextAreaElement
+  textarea: HTMLTextAreaElement;
   initialValue: string;
 
   constructor(textarea: HTMLTextAreaElement) {
@@ -16,9 +16,7 @@ class UserEntryEditor {
     this.textarea.value = value;
   }
 
-  sync() {
-    // nothing to do here, we do not have separate widget with regular textarea
-  }
+  sync() {}
 
   rollback() {
     this.textarea.value = this.initialValue;

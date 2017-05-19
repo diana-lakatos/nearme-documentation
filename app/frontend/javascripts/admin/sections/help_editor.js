@@ -17,7 +17,7 @@ class HelpEditor {
     this._bindEvents();
   }
 
-  _build(){
+  _build() {
     let content = `
         <div class="fullscreen-editor help-editor">
             <div class="fullscreen-editor-panes help-editor-panes">
@@ -42,17 +42,17 @@ class HelpEditor {
   }
 
   _init() {
-    this._editor = new CodeEditor(this._ui.input, 'markdown', { viewportMargin: 10, height: '100%' });
+    this._editor = new CodeEditor(this._ui.input, 'markdown', {
+      viewportMargin: 10,
+      height: '100%'
+    });
     this._preview = new EditorPreview(this._editor, this._ui.previewContainer);
   }
 
   _load() {
     const route = routes['help_contents/show'];
 
-    xhr(route.url(this._contentId), {
-      method: route.method,
-      contentType: 'text'
-    }).then((data)=>{
+    xhr(route.url(this._contentId), { method: route.method, contentType: 'text' }).then(data => {
       this._editor.setValue(data);
     });
   }
@@ -62,7 +62,7 @@ class HelpEditor {
     this._ui.actionSave.addEventListener('click', this.save.bind(this));
   }
 
-  close(){
+  close() {
     dialog.close();
     NM.emit('closed:help_editor');
   }
@@ -73,10 +73,8 @@ class HelpEditor {
     xhr(route.url(this._contentId), {
       method: route.method,
       contentType: 'json',
-      data: {
-        'help_content[content]': this._editor.getValue()
-      }
-    }).then((result)=>{
+      data: { 'help_content[content]': this._editor.getValue() }
+    }).then(result => {
       dialog.close();
       this._ui.container.innerHTML = result;
       NM.emit('saved:help_editor');

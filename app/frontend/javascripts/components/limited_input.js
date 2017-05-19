@@ -2,10 +2,7 @@ const INACTIVE_CLASS = 'hidden';
 
 class LimitedInput {
   constructor(input) {
-    if (
-      !(input instanceof HTMLInputElement) &&
-      !(input instanceof HTMLTextAreaElement)
-    ) {
+    if (!(input instanceof HTMLInputElement) && !(input instanceof HTMLTextAreaElement)) {
       console.log(input);
       throw new Error('Invalid or missing input for LimitedInput');
     }
@@ -16,8 +13,7 @@ class LimitedInput {
       throw new Error('Character limit not set on limited input');
     }
 
-    this.showAfterLimit =
-      parseInt(this.input.dataset.counterShowAfter, 10) || 0;
+    this.showAfterLimit = parseInt(this.input.dataset.counterShowAfter, 10) || 0;
 
     this.info = this.getInfoElement();
 

@@ -14,10 +14,10 @@ class Dialog {
     this._bindEvents();
   }
 
-  _build(){
+  _build() {
     let dialog = document.createElement('div');
     dialog.className = 'dialog';
-    dialog.setAttribute('role','dialog');
+    dialog.setAttribute('role', 'dialog');
     dialog.setAttribute('aria-hidden', true);
     dialog.setAttribute('aria-describedby', 'dialog-title');
     dialog.setAttribute('tabindex', '-1');
@@ -29,27 +29,27 @@ class Dialog {
     this._ui.contentHolder = this._ui.dialog.querySelector('.dialog-content');
   }
 
-  _bindEvents(){
-    delegate(this._ui.dialog).on('click', '[data-modal-close]', (e)=>{
+  _bindEvents() {
+    delegate(this._ui.dialog).on('click', '[data-modal-close]', e => {
       e.preventDefault();
       this.close();
     });
 
-        /* Click on modal button trigger */
+    /* Click on modal button trigger */
     this._bodyDelegated.on('click', 'a[data-modal]', (e, target) => {
       e.preventDefault();
       e.stopPropagation();
       this._load(target.href, {}, target.getAttribute('data-modal-class'));
     });
 
-        /* submit form via button */
-    this._bodyDelegated.on('submit', 'form[data-modal]', (e, form) =>{
+    /* submit form via button */
+    this._bodyDelegated.on('submit', 'form[data-modal]', (e, form) => {
       e.preventDefault();
       let xhrOptions = { method: form.method, body: new FormData(form) };
       this.load(form.action, xhrOptions, form.getAttribute('data-modal-class'));
     });
 
-    this._ui.overlay.addEventListener('click', this.close.bind(this) );
+    this._ui.overlay.addEventListener('click', this.close.bind(this));
   }
 
   load(url, xhrOptions = {}, klass = '') {
@@ -58,12 +58,13 @@ class Dialog {
     this._showLoading();
 
     xhr(url, xhrOptions)
-            .then((data)=>{
-              NM.emit('loaded:dialog', data);
-              this.open(data, klass);
-            }).catch((ex)=>{
-              this.open(ex);
-            });
+      .then(data => {
+        NM.emit('loaded:dialog', data);
+        this.open(data, klass);
+      })
+      .catch(ex => {
+        this.open(ex);
+      });
   }
 
   open(content, klass = '') {
@@ -90,13 +91,13 @@ class Dialog {
     loadingIndicator.show();
   }
 
-  _setContent(content){
+  _setContent(content) {
     injectHTML(this._ui.contentHolder, content);
     initializeGeneralModules(this._ui.contentHolder);
     loadingIndicator.hide();
   }
 
-  close(){
+  close() {
     this._ui.dialog.setAttribute('aria-hidden', true);
     document.body.classList.remove('dialog-visible');
     this._bodyDelegated.off('keydown');
@@ -105,8 +106,8 @@ class Dialog {
     NM.emit('closed:dialog');
   }
 
-  _bindEscapeKey(){
-    this._bodyDelegated.on('keydown', (e)=>{
+  _bindEscapeKey() {
+    this._bodyDelegated.on('keydown', e => {
       if (e.which === 27) {
         this.close();
       }
@@ -114,7 +115,7 @@ class Dialog {
   }
 
   _setClass(klass = '') {
-        /* Remove previous custom class if it's set on modal */
+    /* Remove previous custom class if it's set on modal */
     if (this._customClass) {
       this._ui.dialog.classList.remove(this._customClass);
     }

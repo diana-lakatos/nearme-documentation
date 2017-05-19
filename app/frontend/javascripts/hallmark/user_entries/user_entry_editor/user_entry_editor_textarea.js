@@ -2,7 +2,7 @@
 import { closest } from '../../../toolkit/dom';
 import UserEntryEditor from './user_entry_editor';
 
-class UserEntryEditorTextarea extends UserEntryEditor{
+class UserEntryEditorTextarea extends UserEntryEditor {
   shouldSubmitOnReturn: boolean;
   form: HTMLFormElement;
 
@@ -36,12 +36,11 @@ class UserEntryEditorTextarea extends UserEntryEditor{
       this.textarea.style.height = 'auto';
     }
     if (this.textarea.scrollHeight > 0) {
-      this.textarea.style.height = (this.textarea.scrollHeight + 2) + 'px';
+      this.textarea.style.height = this.textarea.scrollHeight + 2 + 'px';
     }
   }
 
   submitOnReturn(event: Event) {
-
     if (event.keyCode !== 13) {
       return;
     }

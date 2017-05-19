@@ -3,7 +3,7 @@
 import { findSelect, findInput } from '../toolkit/dom';
 
 class PhoneNumberCountryCodes {
-  container: HTMLElement
+  container: HTMLElement;
   countrySelector: HTMLSelectElement;
   mobileNumberField: HTMLInputElement;
   prefixContainer: HTMLElement;

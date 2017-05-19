@@ -1,15 +1,11 @@
 // @flow
 import type UserEntryEditor from './user_entry_editor/user_entry_editor';
-import UserEntryEditorFactory
-  from './user_entry_editor/user_entry_editor_factory';
+import UserEntryEditorFactory from './user_entry_editor/user_entry_editor_factory';
 import UserEntryFileField from './user_entry_file_field';
 import UserEntryImages from './user_entry_images';
 import UserEntryLoader from './user_entry_loader';
 
-type ImageDataType = {
-  dataUrl: string,
-  orientation: number
-};
+type ImageDataType = { dataUrl: string, orientation: number };
 
 import { findElement, findTextArea, findInput } from '../../toolkit/dom';
 
@@ -59,9 +55,7 @@ class UserEntryForm {
     let entryFormTargetSelector = form.dataset.userEntryFormTarget;
 
     if (this.isXHR && !entryFormTargetSelector) {
-      throw new Error(
-        `Missing or invalid entryFormTargetSelector: ${entryFormTargetSelector}`
-      );
+      throw new Error(`Missing or invalid entryFormTargetSelector: ${entryFormTargetSelector}`);
     } else if (this.isXHR) {
       this.target = findElement(entryFormTargetSelector);
     }
@@ -69,9 +63,7 @@ class UserEntryForm {
     let textarea = findTextArea(TEXTAREA_SELECTOR, form);
     this.editor = UserEntryEditorFactory.get(textarea);
     this.images = new UserEntryImages(findElement(ENTRY_IMAGES_SELECTOR, form));
-    this.fileField = new UserEntryFileField(
-      findInput(FILE_FIELD_SELECTOR, form)
-    );
+    this.fileField = new UserEntryFileField(findInput(FILE_FIELD_SELECTOR, form));
     this.cancelButton = form.querySelector(CANCEL_BUTTON_SELECTOR);
 
     this.loader = new UserEntryLoader();
@@ -111,15 +103,16 @@ class UserEntryForm {
 
     event.preventDefault();
 
-    $.ajax({
-      url: this.form.action,
-      method: 'POST',
-      data: data,
-      dataType: 'html',
-      contentType: false,
-      cache: false,
-      processData: false
-    })
+    $
+      .ajax({
+        url: this.form.action,
+        method: 'POST',
+        data: data,
+        dataType: 'html',
+        contentType: false,
+        cache: false,
+        processData: false
+      })
       .done(this.process.bind(this))
       .fail(() => {
         alert('We couldn’t create this content. Please try again');
@@ -127,13 +120,11 @@ class UserEntryForm {
         throw new Error(`Unable to create content ${this.form.action}`);
       });
   }
-
   process(html: string) {
     let target = this.target;
     if (!(target instanceof HTMLElement)) {
       throw new Error('Missing target element for form');
     }
-
     if (this.mode === 'edit') {
       target.innerHTML = $(html).html();
       target.classList.remove('is-active');
@@ -144,79 +135,66 @@ class UserEntryForm {
       if (newEntry) {
         newEntry.classList.add('new-entry');
       }
-
       this.empty();
     }
-
     this.disableProcessing();
-
     $(document).trigger('new-comment');
   }
-
   updateImage(imageData: ImageDataType) {
     this.images.removeAll();
-
     if (imageData.dataUrl) {
       this.images.add(imageData);
     }
-
     this.editor.focus();
   }
-
   enableProcessing() {
     this.form.classList.add('processing');
     this.loader.enable();
+    let setInitialStateAndDisable = function(el: HTMLButtonElement) {
+      el.dataset.initialDisabledState = el.disabled ? 'yes' : 'no';
+      el.setAttribute('disabled', 'disabled');
+    };
     Array.prototype.forEach.call(
       this.form.querySelectorAll('[type="submit"]'),
-      (el: HTMLButtonElement) => {
-        el.dataset.initialDisabledState = el.disabled ? 'yes' : 'no';
-        el.setAttribute('disabled', 'disabled');
-      }
+      setInitialStateAndDisable
     );
     this.isProcessing = true;
   }
-
   disableProcessing() {
     this.form.classList.remove('processing');
     this.loader.disable();
+    let revertToInitialDisabledState = function(el: HTMLButtonElement) {
+      if (el.dataset.initialDisabledState === 'no') {
+        el.removeAttribute('disabled');
+      }
+    };
     Array.prototype.forEach.call(
       this.form.querySelectorAll('[type="submit"]'),
-      (el: HTMLButtonElement) => {
-        if (el.dataset.initialDisabledState === 'yes') {
-          el.removeAttribute('disabled');
-        }
-      }
+      revertToInitialDisabledState
     );
     this.isProcessing = false;
   }
-
   empty() {
     this.editor.empty();
     this.fileField.empty();
     this.images.removeAll();
   }
-
   removeImage() {
     this.fileField.empty();
   }
-
   bindEvents() {
     this.form.addEventListener('submit', this.boundSubmit);
     this.fileField.on('change', this.boundUpdateImage);
     this.images.on('remove', this.boundRemoveImage);
-
     if (this.cancelButton instanceof HTMLElement) {
       this.cancelButton.addEventListener('click', this.boundCancel);
     }
   }
-
   cancel() {
     this.images.rollback();
     this.fileField.empty();
     this.editor.rollback();
   }
-
   build() {}
 }
-
 module.exports = UserEntryForm;

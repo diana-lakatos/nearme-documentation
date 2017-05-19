@@ -4,9 +4,7 @@ class Draggable {
   constructor(el, options = {}) {
     new Events(this);
 
-    const defaults = {
-      handle: null
-    };
+    const defaults = { handle: null };
 
     this.options = Object.assign({}, defaults, options);
 
@@ -19,7 +17,6 @@ class Draggable {
     this._dragBound = this._drag.bind(this);
     this._endDragBound = this._endDrag.bind(this);
     this._bindEvents();
-
   }
 
   _bindEvents() {
@@ -42,24 +39,24 @@ class Draggable {
     document.addEventListener('mouseup', this._endDragBound);
 
     this.emit('dragstart');
-        /* Stop propagation */
+    /* Stop propagation */
     return false;
   }
 
   _endDrag(event) {
-    let [x, y] = this._getCurrentOffset(event);
+    let [ x, y ] = this._getCurrentOffset(event);
     this._el.setAttribute('data-offset-x', x);
     this._el.setAttribute('data-offset-y', y);
     document.removeEventListener('mousemove', this._dragBound);
     document.removeEventListener('mouseup', this._endDragBound);
 
-    this.emit('dragend', [x, y]);
+    this.emit('dragend', [ x, y ]);
   }
 
   _drag(event) {
-    let [x, y] = this._getCurrentOffset(event);
+    let [ x, y ] = this._getCurrentOffset(event);
     this._setPosition(x, y);
-    this.emit('drag', [x, y]);
+    this.emit('drag', [ x, y ]);
   }
 
   _setPosition(x, y) {
@@ -70,7 +67,7 @@ class Draggable {
     let x = event.pageX - this._initPageX + this._initOffsetX;
     let y = event.pageY - this._initPageY + this._initOffsetY;
 
-    return [x, y];
+    return [ x, y ];
   }
 
   destroy() {

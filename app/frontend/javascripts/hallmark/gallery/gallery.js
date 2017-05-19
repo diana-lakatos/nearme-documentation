@@ -10,16 +10,14 @@ class Gallery {
   }
 
   initLightbox() {
-    let lightbox = new Lightbox({
-      getThumbBoundsFn: this.getThumbBounds.bind(this)
-    });
+    let lightbox = new Lightbox({ getThumbBoundsFn: this.getThumbBounds.bind(this) });
 
     lightbox.setItems(this.parsePhotosHTML(this.photoElements));
     return lightbox;
   }
 
   parsePhotosHTML(photoElements) {
-    return Array.prototype.map.call(photoElements, (photo) => {
+    return Array.prototype.map.call(photoElements, photo => {
       return {
         src: photo.href,
         w: parseInt(photo.dataset.originalWidth, 10),
@@ -30,7 +28,7 @@ class Gallery {
 
   bindEvents() {
     Array.prototype.forEach.call(this.photoElements, (photo, index) => {
-      photo.addEventListener('click', (e) => {
+      photo.addEventListener('click', e => {
         if (e.defaultPrevented) {
           return;
         }

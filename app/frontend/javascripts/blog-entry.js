@@ -7,7 +7,7 @@ require('jquery-ujs/src/rails');
 require('../vendor/bootstrap');
 require('../vendor/bootstrap-modal-fullscreen');
 
-NM.on('ready', ()=>{
+NM.on('ready', () => {
   require('initializers/blog/blog_posts.initializer');
   require('initializers/shared/modal.initializer');
 });

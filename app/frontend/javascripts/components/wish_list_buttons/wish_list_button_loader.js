@@ -5,9 +5,9 @@ class WishListButtonLoader {
     this._buttons = {};
   }
 
-  load(context = document){
+  load(context = document) {
     let elements = context.querySelectorAll('[data-add-favorite-button]');
-    elements = Array.prototype.filter.call(elements, function(el){
+    elements = Array.prototype.filter.call(elements, function(el) {
       return !el.getAttribute('data-favorite-toggler-loaded');
     });
 
@@ -18,7 +18,7 @@ class WishListButtonLoader {
     /* For signed out user just redirect to login form */
     if (this._checkUserSignin() === false) {
       const signinUrl = elements[0].getAttribute('data-path-signin');
-      Array.prototype.forEach.call(elements, (el) => {
+      Array.prototype.forEach.call(elements, el => {
         let link = el.querySelector('a');
         if (link) {
           link.setAttribute('href', signinUrl);
@@ -29,12 +29,12 @@ class WishListButtonLoader {
 
     let url = elements[0].getAttribute('data-path-load');
 
-    Array.prototype.forEach.call(elements, (el)=>{
+    Array.prototype.forEach.call(elements, el => {
       const button = new WishListButton(el);
       this._buttons[button.id] = button;
     });
 
-    this._enableFavoritedButtons(url, (id)=>{
+    this._enableFavoritedButtons(url, id => {
       if (this._buttons.hasOwnProperty(id)) {
         let button = this._buttons[id];
         button.setActive();
@@ -47,11 +47,13 @@ class WishListButtonLoader {
     return document.querySelector('html').classList.contains('signed-in');
   }
 
-  _enableFavoritedButtons(url, callback){
-
+  _enableFavoritedButtons(url, callback) {
     let request = new XMLHttpRequest();
     request.open('GET', url, true);
-    request.setRequestHeader('X-CSRF-Token', document.querySelector('meta[name="csrf-token"]').content);
+    request.setRequestHeader(
+      'X-CSRF-Token',
+      document.querySelector('meta[name="csrf-token"]').content
+    );
     request.responseType = 'json';
 
     request.onload = function() {
@@ -62,13 +64,13 @@ class WishListButtonLoader {
           throw new Error('Invalid response from wish list buttons fetch');
         }
 
-        res.wish_list_items.map( (item) => item.wishlistable_id ).forEach(callback);
+        res.wish_list_items.map(item => item.wishlistable_id).forEach(callback);
       } else {
         throw new Error(`Unable to parse wish list buttons response. ${JSON.stringify(request)}`);
       }
     };
 
-    request.onerror = function(){
+    request.onerror = function() {
       throw new Error('Unable to reach server to fetch wish list status');
     };
 

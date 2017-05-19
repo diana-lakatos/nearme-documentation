@@ -1,10 +1,11 @@
 import * as React from 'react';
 import ReactDom from 'react-dom';
-import GraphiQL from 'graphiql'; /* eslint no-unused-vars: 0 */
+import GraphiQL from 'graphiql';
+/* eslint no-unused-vars: 0 */
 import xhr from '../toolkit/xhr';
 
 if (process.env.NODE_ENV !== 'production') {
-  require.ensure('react-addons-perf', (require)=>{
+  require.ensure('react-addons-perf', require => {
     React.Perf = require('react-addons-perf');
   });
 }
@@ -21,7 +22,14 @@ class GraphqlEditor {
   render() {
     const graphQLFetcher = this._graphQLFetcher.bind(this);
     const setQueryString = this._setQueryString.bind(this);
-    const graphiqlEditor = <GraphiQL fetcher={graphQLFetcher} query={this._queryString()} onEditQuery={setQueryString} storage={null} />;
+    const graphiqlEditor = (
+      <GraphiQL
+        fetcher={graphQLFetcher}
+        query={this._queryString()}
+        onEditQuery={setQueryString}
+        storage={null}
+      />
+    );
     ReactDom.render(graphiqlEditor, this._ui.container);
     this._disableSubmittingFormOnQueryButton();
   }
@@ -29,11 +37,9 @@ class GraphqlEditor {
   _graphQLFetcher(graphQLParams) {
     const url = `${window.location.origin}/api/graph`;
 
-    return xhr(url, {
-      method: 'post',
-      contentType: 'json',
-      data: graphQLParams,
-    }).then(response => response);
+    return xhr(url, { method: 'post', contentType: 'json', data: graphQLParams }).then(
+      response => response
+    );
   }
 
   _queryString() {

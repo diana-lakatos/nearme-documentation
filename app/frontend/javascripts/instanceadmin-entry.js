@@ -10,7 +10,7 @@ require('bootstrap-sass/assets/javascripts/bootstrap');
 require('../vendor/nested_form');
 require('../vendor/cocoon');
 
-NM.on('ready', ()=>{
+NM.on('ready', () => {
   require('initializers/shared/linechart.initializer');
   require('initializers/shared/timeago.initializer');
   require('initializers/shared/modal.initializer');

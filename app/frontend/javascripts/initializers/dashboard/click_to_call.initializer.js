@@ -4,7 +4,7 @@ function run(context) {
     return;
   }
 
-  require.ensure('../../dashboard/modules/click_to_call_preferences', function(require){
+  require.ensure('../../dashboard/modules/click_to_call_preferences', function(require) {
     var ClickToCallPreferences = require('../../dashboard/modules/click_to_call_preferences');
     return new ClickToCallPreferences(el);
   });
@@ -12,6 +12,6 @@ function run(context) {
 
 run(document);
 
-$('html').on('loaded:dialog.nearme', function(){
+$('html').on('loaded:dialog.nearme', function() {
   run(document.querySelector('.dialog'));
 });

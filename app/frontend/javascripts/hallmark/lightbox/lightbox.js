@@ -2,11 +2,7 @@ let PhotoSwipe = require('photoswipe/dist/photoswipe.js');
 let PhotoSwipeUI_Default = require('photoswipe/dist/photoswipe-ui-default.js');
 let template = require('raw-loader!./lightbox.template');
 
-let defaults = {
-  showHideOpacity: true,
-  getThumbBoundsFn: false,
-  shareEl: false
-};
+let defaults = { showHideOpacity: true, getThumbBoundsFn: false, shareEl: false };
 
 class Lightbox {
   constructor(options = {}) {
@@ -43,11 +39,7 @@ class Lightbox {
     /* get position of element relative to viewport */
     let rect = thumbnail.getBoundingClientRect();
 
-    return {
-      x: rect.left,
-      y: rect.top + pageYScroll,
-      w: rect.width
-    };
+    return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
   }
 }
 

@@ -27,7 +27,7 @@ class NotificationPreferencesForm {
   }
 
   setupValidations(): ValidatableFieldCollection {
-    let validator =  new ValidatableFieldCollection();
+    let validator = new ValidatableFieldCollection();
 
     validator.addField(this.countryField, [
       {
@@ -61,8 +61,7 @@ class NotificationPreferencesForm {
   handleToggleSwitch() {
     if (this.smsNotificationField.checked) {
       this.mobilePhoneWrapper.classList.add(ACTIVE_WRAPPER_CLASS);
-    }
-    else {
+    } else {
       this.mobilePhoneWrapper.classList.remove(ACTIVE_WRAPPER_CLASS);
     }
   }
@@ -71,13 +70,13 @@ class NotificationPreferencesForm {
     event.preventDefault();
 
     this.validator
-        .process()
-        .then(() => {
-          this.form.submit();
-        })
-        .catch((message: string) => {
-          throw new Error(message);
-        });
+      .process()
+      .then(() => {
+        this.form.submit();
+      })
+      .catch((message: string) => {
+        throw new Error(message);
+      });
   }
 }
 

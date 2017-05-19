@@ -16,7 +16,7 @@ class ConditionField {
   /**
    * @param  {DOMElement} container DOM node wrapping the conditional input. Should have data-condition-field attribute
    */
-  constructor(container){
+  constructor(container) {
     this._ui = {};
     this._ui.container = container;
 
@@ -26,10 +26,12 @@ class ConditionField {
     this._ui.container.dataset.initialised = true;
     try {
       /* Remove surrounding quotes if any are added to JSON string */
-      let conditions = this._ui.container.dataset.conditionField.replace(/^(?:"(.*)")|(?:'(.*)')$/,'$1$2');
+      let conditions = this._ui.container.dataset.conditionField.replace(
+        /^(?:"(.*)")|(?:'(.*)')$/,
+        '$1$2'
+      );
       this.conditions = JSON.parse(conditions);
-    }
-    catch (e) {
+    } catch (e) {
       throw new TypeError('Unable to parse condition field parameters.');
     }
 
@@ -45,7 +47,7 @@ class ConditionField {
     value = (value + '').toLowerCase();
 
     for (let prop in this.conditions) {
-      if (this.conditions.hasOwnProperty(prop) && value === (prop+ '').toLowerCase()){
+      if (this.conditions.hasOwnProperty(prop) && value === (prop + '').toLowerCase()) {
         condition = this.conditions[prop];
         break;
       }
@@ -59,9 +61,9 @@ class ConditionField {
       return;
     }
 
-    if (condition.hide != undefined){
-      condition.hide.forEach((selector)=>{
-        Array.prototype.forEach.call(document.querySelectorAll(selector), (el)=>{
+    if (condition.hide != undefined) {
+      condition.hide.forEach(selector => {
+        Array.prototype.forEach.call(document.querySelectorAll(selector), el => {
           el.setAttribute('hidden', 'hidden');
           el.setAttribute('aria-hidden', true);
           this._disableFields(el);
@@ -69,17 +71,17 @@ class ConditionField {
       });
     }
 
-    if (condition.setValue != undefined){
-      condition.setValue.forEach((cond)=>{
-        Array.prototype.forEach.call(document.querySelectorAll(cond.selector), (el)=>{
+    if (condition.setValue != undefined) {
+      condition.setValue.forEach(cond => {
+        Array.prototype.forEach.call(document.querySelectorAll(cond.selector), el => {
           el.setAttribute('value', cond.value);
         });
       });
     }
 
-    if (condition.show != undefined){
-      condition.show.forEach((selector)=>{
-        Array.prototype.forEach.call(document.querySelectorAll(selector), (el)=>{
+    if (condition.show != undefined) {
+      condition.show.forEach(selector => {
+        Array.prototype.forEach.call(document.querySelectorAll(selector), el => {
           el.removeAttribute('hidden');
           el.setAttribute('aria-hidden', false);
           this._enableFields(el);
@@ -91,8 +93,8 @@ class ConditionField {
   /**
    * @param  {DOMElement} container Element holding form inputs to be disabled
    */
-  _disableFields(container){
-    Array.prototype.forEach.call(container.querySelectorAll('input, textarea, select'), (el)=>{
+  _disableFields(container) {
+    Array.prototype.forEach.call(container.querySelectorAll('input, textarea, select'), el => {
       this._persistDefaultDisabledState(el);
       el.disabled = true;
     });
@@ -102,8 +104,8 @@ class ConditionField {
    * @param  {DOMElement} container Element with input fields that will be returned to their original disabled state
    * @return {[type]}
    */
-  _enableFields(container){
-    Array.prototype.forEach.call(container.querySelectorAll('input, textarea, select'), (el)=>{
+  _enableFields(container) {
+    Array.prototype.forEach.call(container.querySelectorAll('input, textarea, select'), el => {
       this._persistDefaultDisabledState(el);
       el.disabled = el.dataset.disabledOriginal === 'false' ? false : true;
     });
@@ -112,15 +114,14 @@ class ConditionField {
   /**
    * @param  {DOMElement} el Input that will have it's state stored in data attribute
    */
-  _persistDefaultDisabledState(el){
+  _persistDefaultDisabledState(el) {
     if (typeof el.dataset.disabledOriginal === 'undefined') {
       el.dataset.disabledOriginal = el.disabled;
     }
   }
 
   _bindEvents() {
-
-    let onUpdate = (event)=>{
+    let onUpdate = event => {
       let value = this._getValueFromField(event.target);
       this.applyConditionsForValue(value);
     };
@@ -130,24 +131,25 @@ class ConditionField {
   }
 
   _getValueFromField(field) {
-    let
-      nodeName = field.nodeName.toLowerCase();
+    let nodeName = field.nodeName.toLowerCase();
 
     if (field.type === 'radio' || field.type === 'checkbox') {
       return field.checked ? field.value : '';
-    }
-    else if (['input', 'select', 'textarea'].indexOf(nodeName) > -1) {
+    } else if ([ 'input', 'select', 'textarea' ].indexOf(nodeName) > -1) {
       return field.value;
     }
   }
 
-  _init(){
-    let fields = Array.prototype.filter.call(this._ui.container.querySelectorAll('input, textarea, select'), (field)=>{
-      if ((field.type === 'radio' || field.type === 'checkbox') && !field.checked) {
-        return false;
+  _init() {
+    let fields = Array.prototype.filter.call(
+      this._ui.container.querySelectorAll('input, textarea, select'),
+      field => {
+        if ((field.type === 'radio' || field.type === 'checkbox') && !field.checked) {
+          return false;
+        }
+        return true;
       }
-      return true;
-    });
+    );
 
     /* get value from last viable field or return empty */
     let value = fields.length > 0 ? this._getValueFromField(fields.pop()) : '';
@@ -156,4 +158,3 @@ class ConditionField {
 }
 
 module.exports = ConditionField;
-

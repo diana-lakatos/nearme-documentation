@@ -1,7 +1,7 @@
 import Validator from './validator';
 
 class ValidatorDateTime extends Validator {
-  run(value){
+  run(value) {
     this._prepareRun();
 
     if (isNaN(Date.parse(value))) {

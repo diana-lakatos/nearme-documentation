@@ -1,8 +1,8 @@
 var els = $('div[data-fileupload-wrapper]');
 if (els.length > 0) {
-  require.ensure('../../components/fileupload', function(require){
+  require.ensure('../../components/fileupload', function(require) {
     var Fileupload = require('../../components/fileupload');
-    els.each(function(){
+    els.each(function() {
       return new Fileupload(this);
     });
   });
@@ -12,5 +12,3 @@ if (els.length > 0) {
 $('.upload-file').change(function() {
   $('#' + $(this).attr('name')).append($(this).val().split('\\').pop());
 });
-
-

@@ -1,15 +1,10 @@
 import xhr from '../toolkit/xhr';
 
 class API {
-  constructor(){
-  }
+  constructor() {}
 
   send(url, method, data) {
-    return xhr(url, {
-      method: method,
-      data: data,
-      contentType: 'application/vnd.api+json'
-    });
+    return xhr(url, { method: method, data: data, contentType: 'application/vnd.api+json' });
   }
 
   get(url) {

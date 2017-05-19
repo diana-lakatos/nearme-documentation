@@ -1,5 +1,4 @@
-var
-  Utils = require('../utils'),
+var Utils = require('../utils'),
   UI = require('../ui'),
   Onboarding = require('../onboarding'),
   Forms = require('../forms'),

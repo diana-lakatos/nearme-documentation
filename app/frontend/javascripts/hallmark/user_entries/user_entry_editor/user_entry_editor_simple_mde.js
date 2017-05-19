@@ -44,12 +44,11 @@ class UserEntryEditorSimpleMDE extends UserEntryEditor {
     this.wrapper.insertAdjacentElement('afterbegin', overlay);
     this.overlay = overlay;
 
-
     const options = {
       element: this.textarea,
       autoDownloadFontAwesome: false,
       placeholder: this.textarea.getAttribute('placeholder') || null,
-      hideIcons: ['image', 'heading', 'side-by-side', 'fullscreen']
+      hideIcons: [ 'image', 'heading', 'side-by-side', 'fullscreen' ]
     };
 
     return new SimpleMDE(options);

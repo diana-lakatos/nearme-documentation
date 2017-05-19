@@ -10,9 +10,10 @@ class FlashMessagesLinks {
   }
 
   _followFirstLink(event) {
-    const clickedCloseButton = event.target.classList.contains('close'); // in case someone wants to just close it
-    const clickedOtherLink = event.target.href && event.target.href !== this.link.href; // in case someone clicks a different link in alert
-
+    const clickedCloseButton = event.target.classList.contains('close');
+    // in case someone wants to just close it
+    const clickedOtherLink = event.target.href && event.target.href !== this.link.href;
+    // in case someone clicks a different link in alert
     if (!clickedCloseButton && !clickedOtherLink) {
       window.location.href = this.link.href;
     }

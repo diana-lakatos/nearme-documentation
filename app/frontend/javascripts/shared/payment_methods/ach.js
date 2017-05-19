@@ -4,7 +4,6 @@
 const plaidOptions = window.plaid_options;
 
 class PaymentMethodAch {
-
   constructor(container) {
     this.form = $('#checkout-form, #new_payment');
     this._publishableToken = this.form.find('#ach_manual_payment_form').data('publishable');
@@ -58,19 +57,18 @@ class PaymentMethodAch {
         $('#stripe_plaid_public_token').val(public_token);
         $('#stripe_plaid_account_id').val(metadata.account_id);
         $('#plaid_institution').text(plaidOptions.auth_with + metadata.institution.name);
-      },
+      }
     });
 
     // Trigger the Link UI
-    $('#linkButton').on('click', (event) => {
+    $('#linkButton').on('click', event => {
       event.preventDefault();
       linkHandler.open();
     });
   }
 
   _submitFormHandler() {
-    var $form = $(this.form),
-      that = this;
+    var $form = $(this.form), that = this;
 
     $form.submit(function(event) {
       var AchFormVisible = $(that._ui.container).find('.payment-source-form.hidden').size() === 0;
@@ -87,36 +85,37 @@ class PaymentMethodAch {
         event.preventDefault();
         $form = $(event.target);
         Stripe.setPublishableKey(that._publishableToken);
-        Stripe.bankAccount.createToken({
-          country: $('[data-country]').val(),
-          currency: $('[data-currency]').val(),
-          routing_number: $('[data-routing-number]').val(),
-          account_number: $('[data-account-number]').val(),
-          account_holder_name: $('[data-account-holder-name]').val(),
-          account_holder_type: $('[data-account-holder-type]').val()
-        }, that._stripeResponseHandler.bind(that));
+        Stripe.bankAccount.createToken(
+          {
+            country: $('[data-country]').val(),
+            currency: $('[data-currency]').val(),
+            routing_number: $('[data-routing-number]').val(),
+            account_number: $('[data-account-number]').val(),
+            account_holder_name: $('[data-account-holder-name]').val(),
+            account_holder_type: $('[data-account-holder-type]').val()
+          },
+          that._stripeResponseHandler.bind(that)
+        );
 
         return false;
       } else {
         return true;
       }
     });
-
   }
 
   _stripeResponseHandler(status, response) {
     // Grab the form:
     var $form = $('#checkout-form, #new_payment');
 
-    if (response.error) { // Problem!
-
+    if (response.error) {
+      // Problem!
       // Show the errors on the form:
       $(this._ui.container).find('.has-error').text(response.error.message);
       // $form.find('button').prop('disabled', false); // Re-enable submission
       console.log('PaymentMethodACH :: Stripe :: Responded with errors: ', response.error.message);
-
-    } else { // Token created!
-
+    } else {
+      // Token created!
       // Get the token ID:
       var token = response.id;
 
@@ -126,11 +125,13 @@ class PaymentMethodAch {
       this._ui.container.querySelector('#stripe_plaid_public_token').value = token;
 
       if ($form.parents('.dialog__content').length > 0) {
-        console.log('PaymentMethodAch :: Form submitted. Submitting checkout form using AJAX. Data: ', $form.serialize());
+        console.log(
+          'PaymentMethodAch :: Form submitted. Submitting checkout form using AJAX. Data: ',
+          $form.serialize()
+        );
 
         var ajaxOptions = { url: $form.attr('action'), data: $form.serialize(), method: 'POST' };
         $(document).trigger('load:dialog.nearme', ajaxOptions);
-
       } else {
         console.log('PaymentMethodAch :: Submitting checkout form.');
         // Submit form while going through standard checkout process

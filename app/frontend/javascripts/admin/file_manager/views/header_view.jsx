@@ -4,11 +4,13 @@ const OtherActionsView = require('other_actions_view');
 
 class HeaderView extends React.Component {
   render() {
-    return <header className="file-manager-header">
-      <FolderPathView></FolderPathView>
-      <FolderActionsView></FolderActionsView>
-      <OtherActionsView></OtherActionsView>
-    </header>;
+    return (
+      <header className="file-manager-header">
+        <FolderPathView></FolderPathView>
+        <FolderActionsView></FolderActionsView>
+        <OtherActionsView></OtherActionsView>
+      </header>
+    );
   }
 }
 

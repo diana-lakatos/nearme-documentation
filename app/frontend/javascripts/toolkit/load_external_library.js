@@ -19,8 +19,7 @@ function loadExternalLibrary({ name, url }: { name?: string, url: string } = {})
       if (name && window[name]) {
         resolve(window[name]);
         return;
-      }
-      else if (name && !window[name]) {
+      } else if (name && !window[name]) {
         reject(`Unable to load ${name} library from ${url}`);
         return;
       }

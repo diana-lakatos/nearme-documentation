@@ -1,13 +1,7 @@
 var zxcvbn = require('zxcvbn');
 import closest from '../../../toolkit/closest';
 
-var strengthLabels = {
-  0: 'Worst',
-  1: 'Bad',
-  2: 'Weak',
-  3: 'Good',
-  4: 'Strong'
-};
+var strengthLabels = { 0: 'Worst', 1: 'Bad', 2: 'Weak', 3: 'Good', 4: 'Strong' };
 
 class PasswordStrength {
   constructor(toggler) {
@@ -20,7 +14,7 @@ class PasswordStrength {
     this.bindEvents();
   }
 
-  build(){
+  build() {
     this._ui.meter = document.createElement('meter');
     this._ui.meter.setAttribute('max', 4);
     this._ui.meter.classList.add('strength-meter');
@@ -31,28 +25,27 @@ class PasswordStrength {
     this._ui.wrapper.appendChild(this._ui.infobox);
   }
 
-  bindEvents(){
+  bindEvents() {
     this._ui.password.addEventListener('input', this.verifyPasswordStrength.bind(this));
     this._ui.toggler.addEventListener('click', this.toggleFieldType.bind(this));
   }
 
-  verifyPasswordStrength(){
+  verifyPasswordStrength() {
     let val = this._ui.password.value;
     let result = zxcvbn(val);
 
-        /* Update the password strength meter */
+    /* Update the password strength meter */
     this._ui.meter.value = result.score;
 
-        /* Update text indicator */
+    /* Update text indicator */
     if (val !== '') {
       this._ui.infobox.innerHTML = `Strength: <b>${strengthLabels[result.score]}</b>`;
-    }
-    else {
+    } else {
       this._ui.infobox.innerHTML = '';
     }
   }
 
-  toggleFieldType(){
+  toggleFieldType() {
     this._ui.password.type = this._ui.password.type === 'password' ? 'text' : 'password';
     this._ui.wrapper.dataset.passwordMode = this._ui.password.type;
   }

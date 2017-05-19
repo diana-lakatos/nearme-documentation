@@ -9,8 +9,7 @@ class UserEntryRemoveAction {
   constructor(trigger: HTMLElement, container: HTMLElement) {
     this.trigger = trigger;
     this.container = container;
-    this.confirmLabel =
-      this.trigger.dataset.confirmLabel ||
+    this.confirmLabel = this.trigger.dataset.confirmLabel ||
       'Are you sure you want to remove this element?';
     let actionUrl = this.trigger.getAttribute('href');
     if (!actionUrl) {
@@ -37,11 +36,8 @@ class UserEntryRemoveAction {
   removeContainer() {
     this.container.classList.add('hidden');
 
-    $.ajax({
-      url: this.actionUrl,
-      method: 'delete',
-      dataType: 'json'
-    })
+    $
+      .ajax({ url: this.actionUrl, method: 'delete', dataType: 'json' })
       .done(() => {
         if (this.container.parentNode) {
           this.container.parentNode.removeChild(this.container);
@@ -50,9 +46,7 @@ class UserEntryRemoveAction {
       .fail(() => {
         alert('We were unable to remove this entry. Please, try again');
         this.container.classList.remove('hidden');
-        throw new Error(
-          `Unable to remove actionable entry from ${this.actionUrl}`
-        );
+        throw new Error(`Unable to remove actionable entry from ${this.actionUrl}`);
       });
   }
 }

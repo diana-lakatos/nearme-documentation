@@ -2,12 +2,12 @@ import routes from 'routes';
 import xhr from '../toolkit/xhr';
 
 class UiSettings {
-  getAll(){
+  getAll() {
     return xhr(routes['ui_settings/index'].url(), { contentType: 'json' });
   }
 
   get(key) {
-    return xhr(routes['ui_settings/get'].url(key), { contentType: 'json'});
+    return xhr(routes['ui_settings/get'].url(key), { contentType: 'json' });
   }
 
   set(key, value) {

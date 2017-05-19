@@ -7,8 +7,6 @@ import NM from 'nm';
 
 require('../vendor/bootstrap');
 
-NM.on('ready',()=>{
-  require([
-    'initializers/global_admin/linechart.initializer'
-  ]);
+NM.on('ready', () => {
+  require([ 'initializers/global_admin/linechart.initializer' ]);
 });

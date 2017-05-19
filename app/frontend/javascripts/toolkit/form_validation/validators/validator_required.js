@@ -4,7 +4,7 @@ const DEFAULT_MESSAGE = 'Required field';
 
 class ValidatorRequired extends Validator {
   run(value: string): Promise<mixed> {
-    if ((value.trim() !== '')) {
+    if (value.trim() !== '') {
       return Promise.resolve();
     }
     return Promise.reject(this.getMessage());
