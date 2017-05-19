@@ -1,0 +1,77 @@
+{% content_for 'tickets' %}
+  <h2>
+    {{ 'support.dashboard.tickets' | t }}
+  </h2>
+  {% if current_user != blank %}
+    <div class="tickets">
+      {% if tickets.size == 0 %}
+        <p class="empty-resultset">
+          {{ 'support.user.no_tickets' | t }}
+        </p>
+      {% else %}
+        {% for ticket in tickets %}
+          <div class="ticket">
+            <div class="question">
+              {% assign message_text = '' %}
+              {% if ticket.recent_message != blank %}
+                {% assign message_text = ticket.recent_message.message_text %}
+              {% endif %}
+              {{ message_text | filter_text | truncate: 60 }}
+            </div>
+            {% if ticket.target_rfq? %}
+              <a href="{{ ticket.show_target_path }}">{{ 'reservations.rfq_short' | t }} - {{ ticket.target.name }}</a>
+            {% endif %}
+            <div class="time">
+              {{ ticket.verb }}
+              <time class="timeago" datetime="{{ ticket.updated_at }}">
+                {{ ticket.updated_at }}
+              </time>
+            </div>
+            <div class="link">
+              <a href="{{ 'support_ticket_path' | generate_url: ticket.id }}" class="view">{{ ticket.open_text }}</a>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <a href="{{ 'support_tickets_path' | generate_url }}" class="view-all">{{ 'support.dashboard.view_all_tickets' | t }}</a>
+  {% endif %}
+  <a href="{{ 'new_support_ticket_path' | generate_url }}" class="btn btn-green btn-large open">{{ 'support.dashboard.open_a_ticket' | t }}</a>
+{% endcontent_for %}
+
+<div class="row-fluid support">
+  <div class="span8 offset2">
+    <h1>
+      {{'support.dashboard.support' | t }}
+    </h1>
+    {% capture support_copy %}{% inject_content_holder Support %}{% endcapture %}
+    {% assign support_copy = support_copy | strip %}
+    {% if faqs.size == 0 and support_copy == blank %}
+      {% yield 'tickets' %}
+    {% else %}
+      <div class="row-fluid">
+        <div class="span8">
+          <div id="support-faq" class="box">
+            {{ support_copy }}
+
+            {% for faq in faqs %}
+              <div class="faq closed">
+                <div class="question">
+                  {{ faq.question | make_html_safe }}
+                </div>
+
+                <div class="answer">
+                  {{ faq.answer | make_html_safe }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="span4">
+          {% yield 'tickets' %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
