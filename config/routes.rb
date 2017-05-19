@@ -1253,6 +1253,7 @@ DesksnearMe::Application.routes.draw do
               put :accept
             end
           end
+          resources :user_messages, only: [:create]
         end
         resources :sessions, only: [:create]
         resources :forms, only: [:create]
