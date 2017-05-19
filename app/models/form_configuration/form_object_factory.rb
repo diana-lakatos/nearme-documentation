@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class FormConfiguration
   class FormObjectFactory
-    ALLOWED_OBJECT_CLASSES = %w(User UserProfile Transactable Customization ShoppingCart CheckoutShoppingCart Order).freeze
+    ALLOWED_OBJECT_CLASSES = %w(User UserProfile Transactable Customization ShoppingCart CheckoutShoppingCart Order UserMessage).freeze
     ALLOWED_OBJECT_PARENT_CLASSES = %w(User InstanceProfileType TransactableType CustomModelType).freeze
     CUSTOM_CLASSES = %w(ShoppingCart CheckoutShoppingCart).freeze
 

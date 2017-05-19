@@ -6,9 +6,9 @@ module Graph
         query = { term: { slug: args[:slug] } } if args[:slug]
         query = { term: { _id: args[:id] } } if args[:id]
 
-        UserEs.new(query: query, ctx: ctx)
-              .fetch
-              .first
+        Graph::Resolvers::UserEs.new(query: query, ctx: ctx)
+                                .fetch
+                                .first
       end
 
       def self.find_model(user)
