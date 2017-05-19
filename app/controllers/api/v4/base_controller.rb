@@ -20,7 +20,6 @@ module Api
             submitted_form ||= {}
             submitted_form = { form_configuration.name => { form: namespaced_object.last.tap(&:prepopulate!),
                                                             configuration: form_configuration } }
-
             format.html do
               RenderCustomPage.new(
                 controller: self,
