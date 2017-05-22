@@ -170,7 +170,6 @@ group :test do
   gem 'pronto-rails_best_practices', require: false
   gem 'pronto-reek', require: false
   gem 'pronto-rubocop', require: false
-  gem 'pronto-coffeelint', require: false
   gem 'pronto-eslint', require: false
 end
 

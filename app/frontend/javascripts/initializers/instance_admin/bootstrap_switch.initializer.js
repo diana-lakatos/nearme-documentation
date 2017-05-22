@@ -1,3 +1,3 @@
-require('bootstrap-switch/src/coffee/bootstrap-switch');
+require('bootstrap-switch/dist/js/bootstrap-switch');
 
 $('input.bootstrap_switch').bootstrapSwitch();

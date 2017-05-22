@@ -1,6 +1,6 @@
 var BootstrapSwitchInitializer;
 
-require('bootstrap-switch/src/coffee/bootstrap-switch');
+require('bootstrap-switch/dist/js/bootstrap-switch');
 
 BootstrapSwitchInitializer = function() {
   function BootstrapSwitchInitializer(el) {

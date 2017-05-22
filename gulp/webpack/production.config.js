@@ -1,11 +1,13 @@
-var
-  webpack = require('webpack'),
-  config = require('./manifest.config.js');
+var webpack = require('webpack');
+var config = require('./manifest.config.js');
 
 config.plugins.push(
   new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false
+    },
     mangle: {
-      except: ['Modernizr','jQuery','$', 'exports', 'require']
+      except: ['Modernizr', 'jQuery', '$', 'exports', 'require', '_']
     }
   })
 );
