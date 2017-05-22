@@ -46,7 +46,7 @@ config.externals = {
 config.resolve = {
   /* tell webpack which extensions to auto search when it resolves modules. With this, */
   /* you'll be able to do `require('./utils')` instead of `require('./utils.js')` */
-  extensions: ['', '.js', '.jsx', '.coffee'],
+  extensions: ['', '.js', '.jsx'],
   modulesDirectories: ['node_modules', '.']
 };
 
@@ -64,7 +64,6 @@ config.plugins = [
 
 config.module = {
   loaders: [
-    { test: /\.coffee$/, loader: 'coffee-loader' },
     {
       test: /\.jsx?$/,
       exclude: /(node_modules|vendor)/,

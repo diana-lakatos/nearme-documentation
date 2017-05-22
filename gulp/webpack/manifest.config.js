@@ -11,11 +11,11 @@ config.output = _.merge(config.output, {
 });
 
 config.plugins.push(
-    new webpack.optimize.CommonsChunkPlugin('common', 'common.js'),
-    new ChunkManifestPlugin({
-      filename: 'webpack-common-manifest.json',
-      manifestVariable: 'webpackBundleManifest',
-    })
+  new webpack.optimize.CommonsChunkPlugin('common', 'common.js'),
+  new ChunkManifestPlugin({
+    filename: 'webpack-common-manifest.json',
+    manifestVariable: 'webpackBundleManifest'
+  })
 );
 
 module.exports = config;

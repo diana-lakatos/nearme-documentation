@@ -1,6 +1,6 @@
 var InstanceAdminSellerAttachmentsController;
 
-require('bootstrap-switch/src/coffee/bootstrap-switch');
+require('bootstrap-switch/dist/js/bootstrap-switch');
 
 InstanceAdminSellerAttachmentsController = function() {
   function InstanceAdminSellerAttachmentsController(container) {

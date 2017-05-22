@@ -1,6 +1,6 @@
 var InstanceAdminDocumentsUploadController;
 
-require('bootstrap-switch/src/coffee/bootstrap-switch');
+require('bootstrap-switch/dist/js/bootstrap-switch');
 
 InstanceAdminDocumentsUploadController = function() {
   function InstanceAdminDocumentsUploadController(container) {

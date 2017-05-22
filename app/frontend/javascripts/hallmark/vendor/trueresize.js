@@ -4,8 +4,7 @@
  */
 
 function trueResize() {
-  let x =
-    window.innerWidth ||
+  var x = window.innerWidth ||
     document.documentElement.clientWidth ||
     document.querySelector('body').clientWidth;
   if (window.previousWidth === x) {

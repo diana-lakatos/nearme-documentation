@@ -19,7 +19,7 @@ function buildModernizr(output, environment, optimize) {
           comments: /license/i,
         },
         mangle: {
-          except: ['Modernizr','jQuery','$', 'exports', 'require']
+          except: ['Modernizr','jQuery', '$', 'exports', 'require']
         }
       });
 
