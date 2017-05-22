@@ -189,6 +189,8 @@ module ApplicationHelper
   end
 
   def distance_of_time_in_words_or_date_in_time_zone(datetime, time_zone = 'UTC')
+    time_zone = 'UTC' if time_zone.blank?
+
     Time.use_zone time_zone do
       distance_of_time_in_words_or_date(datetime.in_time_zone(time_zone))
     end
