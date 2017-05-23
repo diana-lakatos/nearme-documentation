@@ -1243,7 +1243,7 @@ DesksnearMe::Application.routes.draw do
           resource :checkout, only: [:create]
           resource :shopping_cart, only: [:create, :update]
           resource :space_wizard, only: [:create]
-          resources :transactables, only: [:index, :create, :update]
+          resources :transactables, only: [:index, :create, :update, :destroy]
           resources :custom_attachments, only: [:show, :destroy]
           resources :orders, only: [:update]
           resources :custom_images, only: [:destroy]

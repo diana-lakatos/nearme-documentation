@@ -39,17 +39,22 @@ module Api
       respond(@transactable_form, alert: false)
     end
 
+    def destroy
+      transactable.destroy
+      respond(transactable, alert: false)
+    end
+
     private
 
     def build_form
-      @transactable_form = form_configuration&.build(get_transactable)
+      @transactable_form = form_configuration&.build(transactable)
     end
 
-    def get_transactable
-      if params[:id]
-        current_user.transactables.find(params[:id])
-      else
-        @transactable_type.transactables.build(creator: current_user)
+    def transactable
+      @trasnactable ||= if params[:id]
+                          current_user.transactables.find(params[:id])
+                        else
+                          @transactable_type.transactables.build(creator: current_user)
       end.tap { |t| t.location_not_required = true }
     end
 
