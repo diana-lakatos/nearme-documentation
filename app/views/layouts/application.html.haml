@@ -48,8 +48,8 @@
     = stylesheet_link_tag 'application_vendor'
     = stylesheet_link_tag 'application'
     = render 'shared/head/fonts'
-
     = stylesheet_link_tag dynamic_theme_path_for_current_theme(:application)
+    = yield(:stylesheets)
 
     = render 'shared/javascripts/header'
 
