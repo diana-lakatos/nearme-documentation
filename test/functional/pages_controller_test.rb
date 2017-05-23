@@ -18,14 +18,71 @@ class PagesControllerTest < ActionController::TestCase
       end
     end
 
-    context 'a wrong path' do
-      setup do
-        @page = FactoryGirl.create(:page, content: "# Page heading \nSome text")
+    context 'path resolution' do
+
+      context 'not nested' do
+        setup do
+          @page = FactoryGirl.create(:page, max_deep_level: 1, slug: 'my-path', content: "# Page heading \nSome text")
+        end
+
+        should 'raise standard exception and store it in session' do
+          assert_raises Page::NotFound do
+            get :show, slug: 'my-path-wrong'
+          end
+        end
+
+        should 'not find path even if initial slug matches' do
+          assert_raises Page::NotFound do
+            get :show, slug: 'my-path', slug2: 'wrong'
+          end
+        end
+
+        should 'find exact match' do
+          assert_nothing_raised do
+            get :show, slug: 'my-path'
+          end
+        end
+
+        should 'find exact match but with format' do
+          assert_nothing_raised do
+            get :show, slug: 'my-path', format: 'html'
+          end
+        end
+
+        should 'ignore special sql characters' do
+          assert_raises Page::NotFound do
+            get :show, slug: 'my%'
+          end
+        end
       end
 
-      should 'raise standard exception and store it in session' do
-        assert_raises Page::NotFound do
-          get :show, slug: 'wrong-path'
+      context 'second level nested' do
+        setup do
+          @page = FactoryGirl.create(:page, slug: 'my-path', max_deep_level: 2, content: "# Page heading \nSome text")
+        end
+
+        should 'raise standard exception and store it in session' do
+          assert_raises Page::NotFound do
+            get :show, slug: 'my-path-wrong'
+          end
+        end
+
+        should 'find path with additional slug' do
+          assert_nothing_raised do
+            get :show, slug: 'my-path', slug2: 'correct'
+          end
+        end
+
+        should 'not find path with third level slug' do
+          assert_raises Page::NotFound do
+            get :show, slug: 'my-path', slug2: 'correct', slug3: 'wrong'
+          end
+        end
+
+        should 'find exact match' do
+          assert_nothing_raised do
+            get :show, slug: 'my-path'
+          end
         end
       end
     end
