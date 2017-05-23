@@ -49,10 +49,13 @@ class ElasticIndexerJob < Job
 
   # this sucks
   def default_params
-    return {} unless PlatformContext.current.instance.multiple_types?
-    return {} unless source_class.mapping.options.key? :_parent
+    return {} unless parent_id
 
-    { parent: record.__parent_id }
+    { parent: record.public_send(parent_id) }
+  end
+
+  def parent_id
+    doc_type.parent
   end
 
   def operation
@@ -73,7 +76,11 @@ class ElasticIndexerJob < Job
   end
 
   def should_update_index?
-    Rails.application.config.use_elastic_search
+    Rails.application.config.use_elastic_search && doc_type.present?
+  end
+
+  def doc_type
+    Elastic::Configuration.current.doc_types[source_class.document_type]
   end
 
   def client

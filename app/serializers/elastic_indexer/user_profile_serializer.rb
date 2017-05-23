@@ -20,13 +20,19 @@ module ElasticIndexer
 
     # TODO: test twice
     def availability_exceptions
-      Time.use_zone(object.time_zone) do
+      Time.use_zone(user.time_zone) do
         Array(object.availability_exceptions).map(&:all_dates).flatten
       end
     end
 
     def categories
       object.categories.order(:lft).map { |c| CategorySerializer.new(c).as_json }
+    end
+
+    private
+
+    def user
+      User.with_deleted.find(object.user_id)
     end
   end
 end

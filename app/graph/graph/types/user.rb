@@ -5,7 +5,6 @@ module Graph
     User = GraphQL::ObjectType.define do
       name 'User'
       description 'A user'
-      implements GraphQL::Relay::Node.interface
 
       global_id_field :id
 
@@ -30,7 +29,7 @@ module Graph
 
       field :profile, Types::Users::Profile do
         argument :profile_type, !types.String
-        resolve ->(obj, arg, _ctx) { obj.profiles[arg[:profile_type]] }
+        resolve ->(obj, args, _ctx) { obj.user_profiles.find { |up| up.profile_type == args[:profile_type] } }
       end
 
       field :custom_attribute_photos,
@@ -44,7 +43,10 @@ module Graph
         resolve Graph::Resolvers::Users::CustomAttributePhotos.new
       end
 
-      field :profile_path, !types.String, deprecation_reason: 'Use generate_url filter'
+      field :profile_path, !types.String, deprecation_reason: 'Use generate_url filter' do
+        resolve ->(obj, _arg, _ctx) { format('/users/%s', obj.slug) }
+      end
+
       field :avatar_url_thumb, types.String, deprecation_reason: 'Use avatar{}' do
         resolve ->(obj, _arg, _ctx) { obj.avatar&.thumb&.url }
       end
@@ -73,10 +75,10 @@ module Graph
       end
 
       field :threads do
-        type !types[Types::Thread]
+        type !types[Graph::Types::Thread]
         argument :take, types.Int
 
-        resolve Resolvers::MessageThreads.new
+        resolve Graph::Resolvers::MessageThreads.new
       end
 
       field :thread do

@@ -1110,9 +1110,6 @@ DesksnearMe::Application.routes.draw do
 
     get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
 
-    get '/search/categories', to: 'search#categories'
-    get '/search/(:search_type)', to: 'search#index', as: :search
-
     resources :authentications, only: [:create, :destroy] do
       collection do
         post :clear # Clear authentications stored in session
@@ -1287,7 +1284,10 @@ DesksnearMe::Application.routes.draw do
       resources :phone_calls, only: [:new, :create, :destroy]
     end
 
-    get '/:slug/(:slug2)/(:slug3)(.:format)', to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
+    get '/:slug/(:slug2)/(:slug3)/(*slugs)/(.:format)', to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
+
+    get '/search/categories', to: 'search#categories'
+    get '/search/(:search_type)', to: 'search#index', as: :search
 
     get '/w-hotels-desks-near-me', to: 'locations#w_hotels', as: :w_hotels_location
     get '/W-hotels-desks-near-me', to: 'locations#w_hotels'

@@ -1,5 +1,17 @@
 module ElasticIndexer
   class UserSerializer < BaseSerializer
+    attributes :email, :first_name, :last_name, :name, :slug,
+               :created_at, :deleted_at,
+               :country_name, :company_name,
+               :tags,
+               :instance_id, :instance_profile_type_ids,
+               :seller_average_rating, :buyer_average_rating,
+               :click_to_call,
+               :number_of_completed_orders_user,
+               :number_of_completed_orders_creator,
+               :featured,
+               :geo_location, :geo_service_shape
+
     has_one :blog, serializer: UserBlogSerializer
     has_one :communication
     has_one :avatar, serializer: ImageUploaderSerializer
@@ -7,19 +19,6 @@ module ElasticIndexer
     has_one :reviews_counter, serializer: ReviewAggregatorSerializer
 
     has_many :user_profiles, serializer: UserProfileSerializer
-
-    attributes :click_to_call,
-               :instance_profile_type_ids,
-               :tags,
-               :number_of_completed_orders_user,
-               :number_of_completed_orders_creator,
-               :featured,
-               :geo_location,
-               :geo_service_shape
-
-    def attributes
-      super.merge __default_attributes
-    end
 
     def instance_profile_type_ids
       object.user_profiles.map(&:instance_profile_type_id)
@@ -53,10 +52,6 @@ module ElasticIndexer
 
     def longitude
       object.current_address.longitude.to_f
-    end
-
-    def __default_attributes
-      object.as_json only: User.mappings.to_hash[:user][:properties].keys
     end
   end
 end

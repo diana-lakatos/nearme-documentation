@@ -39,18 +39,23 @@ module NewMarketplaceBuilder
       protected
 
       def children_to_hash(category)
-        { name: category.name, children: category.children.map { |child_category| children_to_hash(child_category) } }
+        {
+          name: category.name,
+          children: category.children.map { |child_category| children_to_hash(child_category) },
+          position: category.position
+        }
       end
 
       def create_category_tree(category, children, level)
         children ||= []
         children_names = []
+
         children.each do |child|
           name = child.is_a?(Hash) ? child['name'] : child
           children_names << name
           subcategory = category.children.where(name: name).first
           unless subcategory
-            subcategory = Category.new(name: name, parent: category)
+            subcategory = Category.new(name: name, parent: category, position: child['position'])
             category.children << subcategory
           end
           create_category_tree(subcategory, child['children'], level + 1) if child['children']

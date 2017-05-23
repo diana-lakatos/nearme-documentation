@@ -7,17 +7,15 @@ module TransactablesIndex
 
     settings(index: { number_of_shards: 1 })
 
-    # When changing mappings please remember to write migration to invoke
-    # rebuilding/refreshing index For ex. for each Instance perform:
-    # ElasticInstanceIndexerJob.perform(update_type: 'refresh', only_classes: ['Transactable'])
-    def self.set_es_mapping(instance = PlatformContext.current.try(:instance))
+    def self.build_es_mapping(options: {})
 
-      # TODO: customize relation per mp?
-      mapping __index_options(instance) do
+      # TODO: allow customization without reloading the code
+      # TODO: move configuration to file / database
+      mapping(options) do
         indexes :custom_attributes, type: 'object' do
           if TransactableType.table_exists?
             all_custom_attributes = CustomAttributes::CustomAttribute
-                                    .where(target: TransactableType.where(instance: instance))
+                                    .where(target: TransactableType.all)
                                     .pluck(:name, :attribute_type).uniq
 
             all_custom_attributes.each do |attribute_name, attribute_type|
@@ -27,6 +25,9 @@ module TransactablesIndex
           end
         end
 
+        indexes :id, type: 'integer'
+        indexes :slug, type: 'string', index: 'not_analyzed'
+
         indexes :name, type: 'string', fields: { raw: { type: 'string', index: 'not_analyzed' } }
         indexes :description, type: 'string'
 
@@ -35,6 +36,9 @@ module TransactablesIndex
         indexes :company_id, type: 'integer'
         indexes :location_id, type: 'integer'
         indexes :transactable_type_id, type: 'integer'
+
+        indexes :transactable_type, type: 'object' do
+        end
         indexes :administrator_id, type: 'integer'
 
         indexes :categories, type: 'integer'
@@ -49,8 +53,6 @@ module TransactablesIndex
         indexes :all_price_types, type: 'string'
 
         indexes :location_type_id, type: 'integer'
-        indexes :location_city, type: 'string'
-        indexes :location_state, type: 'string'
 
         indexes :geo_location, type: 'geo_point'
         indexes :geo_service_shape, type: 'geo_shape'
@@ -70,17 +72,22 @@ module TransactablesIndex
         indexes :possible_payout, type: 'boolean'
         indexes :tags, type: 'string'
         indexes :state, type: 'string'
+
+        indexes :category_list, type: 'nested' do
+          indexes :id, type: :integer
+          indexes :name, type: 'string', index: 'not_analyzed'
+          indexes :name_of_root, type: 'string', index: 'not_analyzed'
+        end
+
+        indexes :address, type: :object do
+          indexes :street, type: 'string', index: 'not_analyzed'
+          indexes :city, type: 'string', index: 'not_analyzed'
+          indexes :country, type: 'string', index: 'not_analyzed'
+          indexes :suburb, type: 'string', index: 'not_analyzed'
+          indexes :state, type: 'string', index: 'not_analyzed'
+          indexes :postcode, type: 'string', index: 'not_analyzed'
+        end
       end
-    end
-
-    def self.__index_options(instance)
-      return {} unless instance.multiple_types?
-
-      { _parent: { type: 'user' } }
-    end
-
-    def __parent_id
-      user.id
     end
 
     def as_indexed_json(_options = {})
@@ -94,7 +101,13 @@ module TransactablesIndex
         custom_attrs[custom_attribute] = (val.size == 1 ? val.first : val)
       end
 
-      allowed_keys = Transactable.mappings.to_hash[:transactable][:properties].keys.delete_if { |prop| prop == :custom_attributes }
+      allowed_keys = [:id, :slug, :name, :description, :object_properties, :instance_id, :company_id,
+                      :created_at, :deleted_at, :draft, :location_id,
+                      :transactable_type_id, :administrator_id, :enabled, :action_rfq, :action_free_booking,
+                      :minimum_price_cents, :maximum_price_cents,
+                      :service_radius, :opened_on_days,
+                      :average_rating, :possible_payout]
+
       availability_exceptions = self.availability_exceptions ? self.availability_exceptions.map(&:all_dates).flatten : nil
       if action_type
         price_types = action_type.pricings.map(&:units_to_s)
@@ -108,8 +121,6 @@ module TransactablesIndex
         geo_service_shape: geo_service_shape,
         custom_attributes: custom_attrs,
         location_type_id: location.try(:location_type_id),
-        location_city: location.try(:city).try(:downcase).try(:gsub, ' ', '_'),
-        location_state: location.try(:state).try(:downcase).try(:gsub, ' ', '_'),
         categories: categories.pluck(:id),
         availability: schedule_availability,
         availability_exceptions: availability_exceptions,
@@ -121,7 +132,11 @@ module TransactablesIndex
         completed_reservations: orders.reservations.reviewable.count,
         seller_average_rating: creator.try(:seller_average_rating),
         tags: tags_as_comma_string,
-        state: state
+        state: state,
+        address: ElasticIndexer::AddressSerializer.new(location_address).as_json,
+        transactable_type: ElasticIndexer::TransactableTypeSerializer.new(transactable_type).as_json,
+        category_list: categories.order(:lft).map { |c| ElasticIndexer::CategorySerializer.new(c).as_json },
+        photos: photos.map { |photo| ElasticIndexer::LegacyPhotoSerializer.new(photo).as_json }
       )
     end
 

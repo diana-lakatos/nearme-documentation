@@ -4,6 +4,9 @@ require 'nearest_time_zone'
 class Location < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
   include TransactablesOwnerable
+  include Searchable
+  include LocationsIndex
+
   has_paper_trail
   acts_as_paranoid
   scoped_to_platform_context

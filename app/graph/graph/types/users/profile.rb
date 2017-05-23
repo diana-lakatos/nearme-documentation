@@ -3,12 +3,10 @@ module Graph
   module Types
     module Users
       Profile = GraphQL::ObjectType.define do
+        interfaces [Graph::Types::CustomAttributeInterface]
         name 'Profile'
         description 'A profile'
 
-        global_id_field :id
-
-        field :id, !types.Int
         field :enabled, !types.Boolean
         field :profile_type, !types.String
         field :onboarded_at, types.String
@@ -18,20 +16,12 @@ module Graph
           argument :name, !types.String
           resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
         end
+        field :availability_template, Graph::Types::AvailabilityTemplate
 
-        field :custom_attribute_array, types[types.String] do
+        field :customizations, !types[Graph::Types::Customization] do
           argument :name, !types.String
-          resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
+          resolve ->(obj, args, _ctx) { obj.customizations.select { |c| c.name == args[:name] } }
         end
-        field :custom_image, Types::EsImage do
-          argument :name, !types.String
-          resolve ->(obj, arg, _ctx) { obj.custom_images[arg[:name]] }
-        end
-        field :customizations, !types[Types::Customization] do
-          argument :name, !types.String
-          resolve ->(obj, arg, _ctx) { obj.customizations.fetch(arg[:name], []) }
-        end
-        field :availability_template, Types::AvailabilityTemplate
       end
     end
   end

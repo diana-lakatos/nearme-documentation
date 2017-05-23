@@ -1,0 +1,1415 @@
+[
+{
+        "_index": "development-130--user-transactables-1",
+        "_type": "user",
+        "_id": "1867",
+        "_score": 1.0,
+        "_source": {
+          "id": 1867,
+          "click_to_call": false,
+          "instance_profile_type_ids": [
+            139
+          ],
+          "tags": "",
+          "number_of_completed_orders_user": 0,
+          "number_of_completed_orders_creator": 0,
+          "featured": false,
+          "geo_location": null,
+          "geo_service_shape": null,
+          "email": "adam@desksnear.me",
+          "created_at": "2012-09-02T20:02:18.764Z",
+          "name": "Adam Broadway",
+          "deleted_at": null,
+          "avatar": {
+            "transformed": {
+              "url": "/instances/1/uploads/images/user/avatar/1867/transformed_Headshot-Adam-Broadway.jpg?v=1482333470",
+              "version_name": "transformed"
+            },
+            "thumb": {
+              "url": "/instances/1/uploads/images/user/avatar/1867/thumb_Headshot-Adam-Broadway.jpg?v=1482333470",
+              "version_name": "thumb"
+            },
+            "medium": {
+              "url": "/instances/1/uploads/images/user/avatar/1867/medium_Headshot-Adam-Broadway.jpg?v=1482333470",
+              "version_name": "medium"
+            },
+            "big": {
+              "url": "/instances/1/uploads/images/user/avatar/1867/big_Headshot-Adam-Broadway.jpg?v=1482333470",
+              "version_name": "big"
+            },
+            "bigger": {
+              "url": "/instances/1/uploads/images/user/avatar/1867/bigger_Headshot-Adam-Broadway.jpg?v=1482333470",
+              "version_name": "bigger"
+            }
+          },
+          "country_name": "United States",
+          "company_name": "",
+          "slug": "jash-kivatcheck--2",
+          "instance_id": 1,
+          "first_name": "Adam",
+          "last_name": "Broadway",
+          "seller_average_rating": 0.0,
+          "buyer_average_rating": 0.0,
+          "blog": null,
+          "communication": null,
+          "current_address": null,
+          "reviews_counter": {
+            "total": 0,
+            "about_seller": 0,
+            "about_buyer": 0,
+            "left_by_seller": 0,
+            "left_by_buyer": 0,
+            "left_by_buyer_about_host": 0,
+            "left_by_buyer_about_transactable": 0
+          },
+          "user_profiles": [
+            {
+              "id": 27272,
+              "instance_profile_type_id": 139,
+              "profile_type": "default",
+              "enabled": false,
+              "availability_exceptions": [],
+              "category_ids": [],
+              "categories": [],
+              "properties": {
+                "admin_comments": ""
+              },
+              "customizations": [],
+              "custom_images": [],
+              "availability_template": null
+            }
+          ]
+        }
+},
+  {
+    "_index": "development-130-local-user-transactables-5",
+    "_type": "transactable",
+    "_routing": "1867",
+    "_parent": "1867",
+    "_id": "14629",
+    "_score": 1.0,
+    "_source": {
+      "id": 14629,
+      "instance_id": 130,
+      "company_id": 7246,
+      "location_id": 8049,
+      "administrator_id": null,
+      "deleted_at": "2016-01-19T09:01:38.599Z",
+      "draft": null,
+      "enabled": true,
+      "created_at": "2015-12-18T02:32:46.515Z",
+      "transactable_type_id": 438,
+      "action_rfq": false,
+      "action_free_booking": false,
+      "average_rating": 0.0,
+      "opened_on_days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "name": "URGENT!!! cbd carspace available now in haymarket",
+      "description": "hi there...\r\nwe got car space available NOW\r\nsafe and secure building 24/7\r\n$70/week\r\nneed more information, just contact me",
+      "slug": "urgent-cbd-carapace-available-now",
+      "possible_payout": false,
+      "state": "pending",
+      "geo_location": {
+        "lat": -33.8816405,
+        "lon": 151.2033214
+      },
+      "geo_service_shape": null,
+      "custom_attributes": {
+        "how_did_you_hear_about_us": "",
+        "legally_rent_space": [],
+        "promo_code": "",
+        "space_availability": "Available",
+        "size_of_space": "1 2.5m clearance",
+        "rules_for_my_space": "",
+        "use_google_street_photos": "",
+        "other_space_details": [],
+        "my_rules": [],
+        "space_suitability": [],
+        "additional_rules": [],
+        "bond_or_deposit": ""
+      },
+      "location_type_id": 466,
+      "categories": [
+        4602,
+        3389,
+        6521
+      ],
+      "availability": null,
+      "availability_exceptions": null,
+      "all_prices": [
+        28000
+      ],
+      "all_price_types": [
+        "1_subscription_month"
+      ],
+      "service_radius": null,
+      "open_hours": null,
+      "open_hours_during_week": null,
+      "completed_reservations": 0,
+      "seller_average_rating": 0.0,
+      "tags": "",
+      "address": {
+        "id": 14289,
+        "address": "93 Quay St, Haymarket NSW 2000, Australia",
+        "address2": null,
+        "formatted_address": "93 Quay St, Haymarket NSW 2000, Australia",
+        "street": "Quay Street",
+        "suburb": null,
+        "city": "Parramatta",
+        "country": "Australia",
+        "state": "New South Wales",
+        "postcode": "2000",
+        "iso_country_code": "AU",
+        "street_number": "93",
+        "lat": -33.8816405,
+        "lon": 151.2033214
+      },
+      "transactable_type": {
+        "id": 438,
+        "name": "Space",
+        "parameterized_name": "space"
+      },
+      "category_list": [
+        {
+          "id": 4602,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Basement",
+          "permalink": "storage-type/basement"
+        },
+        {
+          "id": 6521,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Parking Space",
+          "permalink": "storage-type/parking-space"
+        },
+        {
+          "id": 3389,
+          "name_of_root": "Access",
+          "position": 0,
+          "name": "Full Access (Key/Swipe Pass)",
+          "permalink": "access/full-access-key-slash-swipe-pass"
+        }
+      ],
+      "photos": []
+    }
+  },
+  {
+    "_index": "development-130-local-user-transactables-5",
+    "_type": "transactable",
+    "_routing": "1867",
+    "_parent": "1867",
+    "_id": "19585",
+    "_score": 1.0,
+    "_source": {
+      "id": 19585,
+      "instance_id": 130,
+      "company_id": 10067,
+      "location_id": 11178,
+      "administrator_id": null,
+      "deleted_at": "2016-07-28T00:35:20.377Z",
+      "draft": null,
+      "enabled": true,
+      "created_at": "2016-06-22T05:20:04.339Z",
+      "transactable_type_id": 438,
+      "action_rfq": false,
+      "action_free_booking": null,
+      "average_rating": 0.0,
+      "opened_on_days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "name": "Haymarket - Small Garage for Parking/Storage",
+      "description": "Empty garage can accomodate small car and/or few furniture items for short or long term <br>\r\nIdeal for someine who would keep there car in safe lockup while they are away for a while like 1 to 3 months <br>\r\nHas power source <br>\r\nSpace available is only 130 inches by 130 inches (3.3m x 3.3m) as there are other stuff inside <br>",
+      "slug": "haymarket-small-garage-for-parking-storage",
+      "possible_payout": false,
+      "state": "pending",
+      "geo_location": {
+        "lat": -33.8791261,
+        "lon": 151.2078604
+      },
+      "geo_service_shape": null,
+      "custom_attributes": {
+        "how_did_you_hear_about_us": "",
+        "legally_rent_space": "0",
+        "promo_code": "",
+        "space_availability": "Available",
+        "size_of_space": "2 130 inches by 130 inches (3.3m x 3.3m)",
+        "rules_for_my_space": "Minimum 1 month rental",
+        "use_google_street_photos": "",
+        "other_space_details": [],
+        "my_rules": [],
+        "space_suitability": [],
+        "additional_rules": [],
+        "bond_or_deposit": ""
+      },
+      "location_type_id": 466,
+      "categories": [
+        4598,
+        3389
+      ],
+      "availability": null,
+      "availability_exceptions": null,
+      "all_prices": [
+        12000
+      ],
+      "all_price_types": [
+        "1_subscription_month"
+      ],
+      "service_radius": null,
+      "open_hours": null,
+      "open_hours_during_week": null,
+      "completed_reservations": 0,
+      "seller_average_rating": 0.0,
+      "tags": "",
+      "address": {
+        "id": 21585,
+        "address": "414 Pitt St, Haymarket NSW 2000, Australia",
+        "address2": null,
+        "formatted_address": "414 Pitt St, Haymarket NSW 2000, Australia",
+        "street": "Pitt Street",
+        "suburb": null,
+        "city": "Haymarket",
+        "country": "Australia",
+        "state": "New South Wales",
+        "postcode": "2000",
+        "iso_country_code": "AU",
+        "street_number": "414",
+        "lat": -33.8791261,
+        "lon": 151.2078604
+      },
+      "transactable_type": {
+        "id": 438,
+        "name": "Space",
+        "parameterized_name": "space"
+      },
+      "category_list": [
+        {
+          "id": 4598,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Garage",
+          "permalink": "storage-type/garage"
+        },
+        {
+          "id": 3389,
+          "name_of_root": "Access",
+          "position": 0,
+          "name": "Full Access (Key/Swipe Pass)",
+          "permalink": "access/full-access-key-slash-swipe-pass"
+        }
+      ],
+      "photos": []
+    }
+  },
+  {
+    "_index": "development-130-local-user-transactables-5",
+    "_type": "transactable",
+    "_routing": "1867",
+    "_parent": "1867",
+    "_id": "23865",
+    "_score": 1.0,
+    "_source": {
+      "id": 23865,
+      "instance_id": 130,
+      "company_id": 12383,
+      "location_id": 13642,
+      "administrator_id": null,
+      "deleted_at": "2016-12-08T22:59:40.906Z",
+      "draft": null,
+      "enabled": true,
+      "created_at": "2016-11-29T01:40:33.602Z",
+      "transactable_type_id": 438,
+      "action_rfq": false,
+      "action_free_booking": false,
+      "average_rating": 0.0,
+      "opened_on_days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "name": "Haymarket - Parking Space",
+      "description": "Undercover Carspace <br>\r\nRight next to Central station and market city <br>",
+      "slug": "haymarket-parking-space",
+      "possible_payout": false,
+      "state": "pending",
+      "geo_location": {
+        "lat": -33.8823846,
+        "lon": 151.2032848
+      },
+      "geo_service_shape": null,
+      "custom_attributes": {
+        "how_did_you_hear_about_us": "",
+        "legally_rent_space": "0",
+        "promo_code": "GH1116",
+        "space_availability": "Available",
+        "size_of_space": "3 Huge size of space",
+        "rules_for_my_space": "$240 deposit for the remote (refundable)\r\n1 month notice required\r\n",
+        "use_google_street_photos": "",
+        "other_space_details": [],
+        "my_rules": [],
+        "space_suitability": [],
+        "additional_rules": [],
+        "bond_or_deposit": ""
+      },
+      "location_type_id": 466,
+      "categories": [
+        3389,
+        6521
+      ],
+      "availability": null,
+      "availability_exceptions": null,
+      "all_prices": [
+        24000
+      ],
+      "all_price_types": [
+        "1_subscription_month"
+      ],
+      "service_radius": null,
+      "open_hours": null,
+      "open_hours_during_week": null,
+      "completed_reservations": 0,
+      "seller_average_rating": 0.0,
+      "tags": "",
+      "address": {
+        "id": 26946,
+        "address": "107 Quay St, Haymarket NSW 2000, Australia",
+        "address2": null,
+        "formatted_address": "107 Quay St, Haymarket NSW 2000, Australia",
+        "street": "Quay Street",
+        "suburb": null,
+        "city": "Haymarket",
+        "country": "Australia",
+        "state": "New South Wales",
+        "postcode": "2000",
+        "iso_country_code": "AU",
+        "street_number": "107",
+        "lat": -33.8823846,
+        "lon": 151.2032848
+      },
+      "transactable_type": {
+        "id": 438,
+        "name": "Space",
+        "parameterized_name": "space"
+      },
+      "category_list": [
+        {
+          "id": 6521,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Parking Space",
+          "permalink": "storage-type/parking-space"
+        },
+        {
+          "id": 3389,
+          "name_of_root": "Access",
+          "position": 0,
+          "name": "Full Access (Key/Swipe Pass)",
+          "permalink": "access/full-access-key-slash-swipe-pass"
+        }
+      ],
+      "photos": []
+    }
+  },
+  {
+    "_index": "development-130-local-user-transactables-5",
+    "_type": "transactable",
+    "_routing": "1867",
+    "_parent": "1867",
+    "_id": "22078",
+    "_score": 1.0,
+    "_source": {
+      "id": 22078,
+      "instance_id": 130,
+      "company_id": 11616,
+      "location_id": 12869,
+      "administrator_id": null,
+      "deleted_at": null,
+      "draft": null,
+      "enabled": true,
+      "created_at": "2016-10-11T07:04:43.911Z",
+      "transactable_type_id": 438,
+      "action_rfq": false,
+      "action_free_booking": false,
+      "average_rating": 0.0,
+      "opened_on_days": [],
+      "name": "Haymarket - Secured Garage",
+      "description": "Secured Garage <br>\r\nHas a light <br>\r\nNear Train Station <br>\r\nOn the 3rd Level",
+      "slug": "haymarket-secured-garage",
+      "possible_payout": false,
+      "state": "pending",
+      "geo_location": {
+        "lat": -33.8785595,
+        "lon": 151.2076428
+      },
+      "geo_service_shape": null,
+      "custom_attributes": {
+        "how_did_you_hear_about_us": "",
+        "legally_rent_space": "0",
+        "promo_code": "GH1016",
+        "space_availability": "Unavailable",
+        "size_of_space": "4 SUV would fit in 4",
+        "rules_for_my_space": "$100 required for the swipe key deposit <br>\r\nFor car parking only",
+        "use_google_street_photos": "",
+        "other_space_details": [],
+        "my_rules": [],
+        "space_suitability": [],
+        "additional_rules": [],
+        "bond_or_deposit": ""
+      },
+      "location_type_id": 466,
+      "categories": [
+        4598,
+        4751,
+        3389
+      ],
+      "availability": null,
+      "availability_exceptions": null,
+      "all_prices": [
+        40000
+      ],
+      "all_price_types": [
+        "1_subscription_month"
+      ],
+      "service_radius": null,
+      "open_hours": null,
+      "open_hours_during_week": null,
+      "completed_reservations": 0,
+      "seller_average_rating": 0.0,
+      "tags": "",
+      "address": {
+        "id": 25150,
+        "address": "398 Pitt St, Haymarket NSW 2000, Australia",
+        "address2": null,
+        "formatted_address": "398 Pitt St, Haymarket NSW 2000, Australia",
+        "street": "Pitt Street",
+        "suburb": null,
+        "city": "Haymarket",
+        "country": "Australia",
+        "state": "New South Wales",
+        "postcode": "2000",
+        "iso_country_code": "AU",
+        "street_number": "398",
+        "lat": -33.8785595,
+        "lon": 151.2076428
+      },
+      "transactable_type": {
+        "id": 438,
+        "name": "Space",
+        "parameterized_name": "space"
+      },
+      "category_list": [
+        {
+          "id": 4598,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Garage",
+          "permalink": "storage-type/garage"
+        },
+        {
+          "id": 3389,
+          "name_of_root": "Access",
+          "position": 0,
+          "name": "Full Access (Key/Swipe Pass)",
+          "permalink": "access/full-access-key-slash-swipe-pass"
+        },
+        {
+          "id": 4751,
+          "name_of_root": "Security Features",
+          "position": 0,
+          "name": "CCTV",
+          "permalink": "security-features/cctv"
+        }
+      ],
+      "photos": []
+    }
+  },
+  {
+    "_index": "development-130-local-user-transactables-5",
+    "_type": "transactable",
+    "_routing": "1867",
+    "_parent": "1867",
+    "_id": "22242",
+    "_score": 1.0,
+    "_source": {
+      "id": 22242,
+      "instance_id": 130,
+      "company_id": 11710,
+      "location_id": 12962,
+      "administrator_id": null,
+      "deleted_at": null,
+      "draft": null,
+      "enabled": false,
+      "created_at": "2016-10-17T22:50:46.317Z",
+      "transactable_type_id": 438,
+      "action_rfq": false,
+      "action_free_booking": false,
+      "average_rating": 0.0,
+      "opened_on_days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "name": "Haymarket - Parking Space available from 7 Nov 2016 Unique",
+      "description": "You are free to use 20m swiming pool and gym plus car-wash area.",
+      "slug": "107-quay-st-haymarket-from-7-nov-2016",
+      "possible_payout": false,
+      "state": "pending",
+      "geo_location": {
+        "lat": -33.8823846,
+        "lon": 151.2032848
+      },
+      "geo_service_shape": null,
+      "custom_attributes": {
+        "how_did_you_hear_about_us": "",
+        "legally_rent_space": "1",
+        "promo_code": "",
+        "space_availability": "Available",
+        "size_of_space": "5 2.4x3",
+        "rules_for_my_space": "You need to provide register letter and drive licence to the reception. ",
+        "use_google_street_photos": "",
+        "other_space_details": [],
+        "my_rules": [],
+        "space_suitability": [],
+        "additional_rules": [],
+        "bond_or_deposit": ""
+      },
+      "location_type_id": 466,
+      "categories": [
+        5960,
+        4751,
+        4750,
+        3389,
+        6521
+      ],
+      "availability": null,
+      "availability_exceptions": null,
+      "all_prices": [
+        26000
+      ],
+      "all_price_types": [
+        "1_subscription_month"
+      ],
+      "service_radius": null,
+      "open_hours": null,
+      "open_hours_during_week": null,
+      "completed_reservations": 0,
+      "seller_average_rating": 0.0,
+      "tags": "",
+      "address": {
+        "id": 25365,
+        "address": "107 Quay St, Haymarket NSW 2000, Australia",
+        "address2": null,
+        "formatted_address": "107 Quay St, Haymarket NSW 2000, Australia",
+        "street": "Quay Street",
+        "suburb": null,
+        "city": "Haymarket",
+        "country": "Australia",
+        "state": "Other Than NSW",
+        "postcode": "2000",
+        "iso_country_code": "AU",
+        "street_number": "107",
+        "lat": -33.8823846,
+        "lon": 151.2032848
+      },
+      "transactable_type": {
+        "id": 438,
+        "name": "Space",
+        "parameterized_name": "space"
+      },
+      "category_list": [
+        {
+          "id": 6521,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Parking Space",
+          "permalink": "storage-type/parking-space"
+        },
+        {
+          "id": 3389,
+          "name_of_root": "Access",
+          "position": 0,
+          "name": "Full Access (Key/Swipe Pass)",
+          "permalink": "access/full-access-key-slash-swipe-pass"
+        },
+        {
+          "id": 4750,
+          "name_of_root": "Security Features",
+          "position": 0,
+          "name": "Alarm",
+          "permalink": "security-features/alarm"
+        },
+        {
+          "id": 4751,
+          "name_of_root": "Security Features",
+          "position": 0,
+          "name": "CCTV",
+          "permalink": "security-features/cctv"
+        },
+        {
+          "id": 5960,
+          "name_of_root": "Security Features",
+          "position": 0,
+          "name": "Security Bars",
+          "permalink": "security-features/security-bars"
+        }
+      ],
+      "photos": [
+        {
+          "id": 52095,
+          "caption": "",
+          "versions": {
+            "transformed": {
+              "url": "/instances/130/uploads/images/photo/image/52095/transformed_9074e148-bfc8-4cc8-b1db-1fa1e194c7ca.JPG?v=1476745213",
+              "version_name": "transformed"
+            },
+            "thumb": {
+              "url": "/instances/130/uploads/images/photo/image/52095/thumb_9074e148-bfc8-4cc8-b1db-1fa1e194c7ca.JPG?v=1476745213",
+              "version_name": "thumb"
+            },
+            "medium": {
+              "url": "/instances/130/uploads/images/photo/image/52095/medium_9074e148-bfc8-4cc8-b1db-1fa1e194c7ca.JPG?v=1476745213",
+              "version_name": "medium"
+            },
+            "large": {
+              "url": "/instances/130/uploads/images/photo/image/52095/large_9074e148-bfc8-4cc8-b1db-1fa1e194c7ca.JPG?v=1476745213",
+              "version_name": "large"
+            },
+            "space_listing": {
+              "url": "/instances/130/uploads/images/photo/image/52095/space_listing_9074e148-bfc8-4cc8-b1db-1fa1e194c7ca.JPG?v=1476745213",
+              "version_name": "space_listing"
+            },
+            "golden": {
+              "url": "/instances/130/uploads/images/photo/image/52095/golden_9074e148-bfc8-4cc8-b1db-1fa1e194c7ca.JPG?v=1476745213",
+              "version_name": "golden"
+            }
+          }
+        },
+        {
+          "id": 52096,
+          "caption": "",
+          "versions": {
+            "transformed": {
+              "url": "/instances/130/uploads/images/photo/image/52096/transformed_be5a2536-af83-4951-80f6-492a54a9f8cd.jpg?v=1476745220",
+              "version_name": "transformed"
+            },
+            "thumb": {
+              "url": "/instances/130/uploads/images/photo/image/52096/thumb_be5a2536-af83-4951-80f6-492a54a9f8cd.jpg?v=1476745220",
+              "version_name": "thumb"
+            },
+            "medium": {
+              "url": "/instances/130/uploads/images/photo/image/52096/medium_be5a2536-af83-4951-80f6-492a54a9f8cd.jpg?v=1476745220",
+              "version_name": "medium"
+            },
+            "large": {
+              "url": "/instances/130/uploads/images/photo/image/52096/large_be5a2536-af83-4951-80f6-492a54a9f8cd.jpg?v=1476745220",
+              "version_name": "large"
+            },
+            "space_listing": {
+              "url": "/instances/130/uploads/images/photo/image/52096/space_listing_be5a2536-af83-4951-80f6-492a54a9f8cd.jpg?v=1476745220",
+              "version_name": "space_listing"
+            },
+            "golden": {
+              "url": "/instances/130/uploads/images/photo/image/52096/golden_be5a2536-af83-4951-80f6-492a54a9f8cd.jpg?v=1476745220",
+              "version_name": "golden"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "_index": "development-130-local-user-transactables-5",
+    "_type": "transactable",
+    "_routing": "1867",
+    "_parent": "1867",
+    "_id": "30605",
+    "_score": 1.0,
+    "_source": {
+      "id": 30605,
+      "instance_id": 130,
+      "company_id": 16447,
+      "location_id": 16631,
+      "administrator_id": null,
+      "deleted_at": null,
+      "draft": null,
+      "enabled": true,
+      "created_at": "2017-04-27T05:23:06.592Z",
+      "transactable_type_id": 438,
+      "action_rfq": false,
+      "action_free_booking": false,
+      "average_rating": 0.0,
+      "opened_on_days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "name": "Haymarket - Car Park for Rent",
+      "description": "Car park at Regis Tower in Sydney CBD <br>\r\n",
+      "slug": "haymarket-car-park-for-rent",
+      "possible_payout": false,
+      "state": "pending",
+      "geo_location": {
+        "lat": -33.8791261,
+        "lon": 151.2078604
+      },
+      "geo_service_shape": null,
+      "custom_attributes": {
+        "how_did_you_hear_about_us": "Gumtree",
+        "legally_rent_space": "0",
+        "promo_code": "GH0417",
+        "space_availability": "Available",
+        "size_of_space": "6 SUV would fit in 6",
+        "rules_for_my_space": "$150 security deposit required <br>\r\nOnly residents at Regis Rower are eligible to rent my parking place",
+        "use_google_street_photos": "",
+        "other_space_details": [],
+        "my_rules": [],
+        "space_suitability": [],
+        "additional_rules": [],
+        "bond_or_deposit": ""
+      },
+      "location_type_id": 466,
+      "categories": [
+        3389,
+        6521
+      ],
+      "availability": null,
+      "availability_exceptions": null,
+      "all_prices": [
+        32000
+      ],
+      "all_price_types": [
+        "1_subscription_month"
+      ],
+      "service_radius": null,
+      "open_hours": null,
+      "open_hours_during_week": null,
+      "completed_reservations": 0,
+      "seller_average_rating": 0.0,
+      "tags": "",
+      "address": {
+        "id": 34211,
+        "address": "303 Castlereagh St, Haymarket NSW 2000, Australia",
+        "address2": null,
+        "formatted_address": "303 Castlereagh St, Haymarket NSW 2000, Australia",
+        "street": "Castlereagh Street",
+        "suburb": "Haymarket",
+        "city": "Haymarket",
+        "country": "Australia",
+        "state": "New South Wales",
+        "postcode": "2000",
+        "iso_country_code": "AU",
+        "street_number": "303",
+        "lat": -33.8791261,
+        "lon": 151.2078604
+      },
+      "transactable_type": {
+        "id": 438,
+        "name": "Space",
+        "parameterized_name": "space"
+      },
+      "category_list": [
+        {
+          "id": 6521,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Parking Space",
+          "permalink": "storage-type/parking-space"
+        },
+        {
+          "id": 3389,
+          "name_of_root": "Access",
+          "position": 0,
+          "name": "Full Access (Key/Swipe Pass)",
+          "permalink": "access/full-access-key-slash-swipe-pass"
+        }
+      ],
+      "photos": []
+    }
+  },
+  {
+    "_index": "development-130-local-user-transactables-5",
+    "_type": "transactable",
+    "_routing": "1867",
+    "_parent": "1867",
+    "_id": "30823",
+    "_score": 1.0,
+    "_source": {
+      "id": 30823,
+      "instance_id": 130,
+      "company_id": 16536,
+      "location_id": 16774,
+      "administrator_id": null,
+      "deleted_at": null,
+      "draft": null,
+      "enabled": false,
+      "created_at": "2017-05-02T05:47:31.191Z",
+      "transactable_type_id": 438,
+      "action_rfq": false,
+      "action_free_booking": false,
+      "average_rating": 0.0,
+      "opened_on_days": [],
+      "name": "Haymarket - CBD Secured Car Park ",
+      "description": "24-hour security access <br>\r\nYou will get own swipe card, garage key and remote <br>\r\nBackspace is used as storage <br>\r\nWalking distance to Chinatown, World Square, Darling Harbour, Hyde Park, Town Hall & Central Station",
+      "slug": "haymarket-cbd-secured-car-park",
+      "possible_payout": false,
+      "state": "pending",
+      "geo_location": {
+        "lat": -33.878931,
+        "lon": 151.2076055
+      },
+      "geo_service_shape": null,
+      "custom_attributes": {
+        "how_did_you_hear_about_us": "Gumtree",
+        "legally_rent_space": "0",
+        "promo_code": "GH0517",
+        "space_availability": "Available",
+        "size_of_space": "7 An SUV would fit in 8",
+        "rules_for_my_space": "swipe key deposit $150",
+        "use_google_street_photos": "",
+        "other_space_details": [],
+        "my_rules": [],
+        "space_suitability": [],
+        "additional_rules": [],
+        "bond_or_deposit": ""
+      },
+      "location_type_id": 466,
+      "categories": [
+        4754,
+        3389,
+        6521
+      ],
+      "availability": null,
+      "availability_exceptions": null,
+      "all_prices": [
+        24000
+      ],
+      "all_price_types": [
+        "1_subscription_month"
+      ],
+      "service_radius": null,
+      "open_hours": null,
+      "open_hours_during_week": null,
+      "completed_reservations": 0,
+      "seller_average_rating": 0.0,
+      "tags": "",
+      "address": {
+        "id": 34498,
+        "address": "416 Pitt St, Haymarket NSW 2000, Australia",
+        "address2": null,
+        "formatted_address": "416 Pitt St, Haymarket NSW 2000, Australia",
+        "street": "Pitt Street",
+        "suburb": "Haymarket",
+        "city": "Haymarket",
+        "country": "Australia",
+        "state": "New South Wales",
+        "postcode": "2000",
+        "iso_country_code": "AU",
+        "street_number": "416",
+        "lat": -33.878931,
+        "lon": 151.2076055
+      },
+      "transactable_type": {
+        "id": 438,
+        "name": "Space",
+        "parameterized_name": "space"
+      },
+      "category_list": [
+        {
+          "id": 6521,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Parking Space",
+          "permalink": "storage-type/parking-space"
+        },
+        {
+          "id": 3389,
+          "name_of_root": "Access",
+          "position": 0,
+          "name": "Full Access (Key/Swipe Pass)",
+          "permalink": "access/full-access-key-slash-swipe-pass"
+        },
+        {
+          "id": 4754,
+          "name_of_root": "Security Features",
+          "position": 0,
+          "name": "Security Roller-door",
+          "permalink": "security-features/security-roller-door"
+        }
+      ],
+      "photos": []
+    }
+  },
+  {
+    "_index": "development-130-local-user-transactables-5",
+    "_type": "transactable",
+    "_routing": "1867",
+    "_parent": "1867",
+    "_id": "30836",
+    "_score": 1.0,
+    "_source": {
+      "id": 30836,
+      "instance_id": 130,
+      "company_id": 16540,
+      "location_id": 16779,
+      "administrator_id": null,
+      "deleted_at": null,
+      "draft": null,
+      "enabled": true,
+      "created_at": "2017-05-02T07:49:35.851Z",
+      "transactable_type_id": 438,
+      "action_rfq": false,
+      "action_free_booking": false,
+      "average_rating": 0.0,
+      "opened_on_days": [],
+      "name": "Haymarket - Secure Parking Space",
+      "description": "Secure stack up underground parking opposite to World Square Shopping Centre <br>\r\nFew steps to Museum and Central Station, China town, Darling Harbour and Capitol Square",
+      "slug": "haymarket-secure-parking-space-30836",
+      "possible_payout": false,
+      "state": "pending",
+      "geo_location": {
+        "lat": -33.8783958,
+        "lon": 151.2067469
+      },
+      "geo_service_shape": null,
+      "custom_attributes": {
+        "how_did_you_hear_about_us": "Gumtree",
+        "legally_rent_space": "0",
+        "promo_code": "GH0517",
+        "space_availability": "Available",
+        "size_of_space": "8 An SUV would fit 9",
+        "rules_for_my_space": "$200 deposit for the swipe key and 2 weeks bond (refundable)\r\n",
+        "use_google_street_photos": "",
+        "other_space_details": [],
+        "my_rules": [],
+        "space_suitability": [],
+        "additional_rules": [],
+        "bond_or_deposit": ""
+      },
+      "location_type_id": 466,
+      "categories": [
+        4751,
+        3389,
+        6521
+      ],
+      "availability": null,
+      "availability_exceptions": null,
+      "all_prices": [
+        30000
+      ],
+      "all_price_types": [
+        "1_subscription_month"
+      ],
+      "service_radius": null,
+      "open_hours": null,
+      "open_hours_during_week": null,
+      "completed_reservations": 0,
+      "seller_average_rating": 0.0,
+      "tags": "",
+      "address": {
+        "id": 34510,
+        "address": "2 Cunningham St, Haymarket NSW 2000, Australia",
+        "address2": null,
+        "formatted_address": "2 Cunningham St, Haymarket NSW 2000, Australia",
+        "street": "Cunningham Street",
+        "suburb": "Haymarket",
+        "city": "Haymarket",
+        "country": "Australia",
+        "state": "New South Wales",
+        "postcode": "2000",
+        "iso_country_code": "AU",
+        "street_number": "2",
+        "lat": -33.8783958,
+        "lon": 151.2067469
+      },
+      "transactable_type": {
+        "id": 438,
+        "name": "Space",
+        "parameterized_name": "space"
+      },
+      "category_list": [
+        {
+          "id": 6521,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Parking Space",
+          "permalink": "storage-type/parking-space"
+        },
+        {
+          "id": 3389,
+          "name_of_root": "Access",
+          "position": 0,
+          "name": "Full Access (Key/Swipe Pass)",
+          "permalink": "access/full-access-key-slash-swipe-pass"
+        },
+        {
+          "id": 4751,
+          "name_of_root": "Security Features",
+          "position": 0,
+          "name": "CCTV",
+          "permalink": "security-features/cctv"
+        }
+      ],
+      "photos": [
+        {
+          "id": 70233,
+          "caption": "",
+          "versions": {
+            "transformed": {
+              "url": "/instances/130/uploads/images/photo/image/70233/transformed_ba345ed6-4b64-44b8-89ac-fbfa6da3db93.JPG?v=1493711825",
+              "version_name": "transformed"
+            },
+            "thumb": {
+              "url": "/instances/130/uploads/images/photo/image/70233/thumb_ba345ed6-4b64-44b8-89ac-fbfa6da3db93.JPG?v=1493711825",
+              "version_name": "thumb"
+            },
+            "medium": {
+              "url": "/instances/130/uploads/images/photo/image/70233/medium_ba345ed6-4b64-44b8-89ac-fbfa6da3db93.JPG?v=1493711825",
+              "version_name": "medium"
+            },
+            "large": {
+              "url": "/instances/130/uploads/images/photo/image/70233/large_ba345ed6-4b64-44b8-89ac-fbfa6da3db93.JPG?v=1493711825",
+              "version_name": "large"
+            },
+            "space_listing": {
+              "url": "/instances/130/uploads/images/photo/image/70233/space_listing_ba345ed6-4b64-44b8-89ac-fbfa6da3db93.JPG?v=1493711825",
+              "version_name": "space_listing"
+            },
+            "golden": {
+              "url": "/instances/130/uploads/images/photo/image/70233/golden_ba345ed6-4b64-44b8-89ac-fbfa6da3db93.JPG?v=1493711825",
+              "version_name": "golden"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "_index": "development-130-local-user-transactables-5",
+    "_type": "transactable",
+    "_routing": "1867",
+    "_parent": "1867",
+    "_id": "28772",
+    "_score": 1.0,
+    "_source": {
+      "id": 28772,
+      "instance_id": 130,
+      "company_id": 15660,
+      "location_id": 15835,
+      "administrator_id": null,
+      "deleted_at": null,
+      "draft": null,
+      "enabled": true,
+      "created_at": "2017-03-21T01:18:25.280Z",
+      "transactable_type_id": 438,
+      "action_rfq": false,
+      "action_free_booking": false,
+      "average_rating": 0.0,
+      "opened_on_days": [],
+      "name": "Haymarket - Secure Parking Space (not available until end of July)",
+      "description": "The Quay Apartment Oppositte to the UTS library, few steps to market city, China town, darling harbour, central station",
+      "slug": "haymarket-secure-parking-space",
+      "possible_payout": false,
+      "state": "pending",
+      "geo_location": {
+        "lat": -33.8810511,
+        "lon": 151.2024308
+      },
+      "geo_service_shape": null,
+      "custom_attributes": {
+        "how_did_you_hear_about_us": "",
+        "legally_rent_space": "0",
+        "promo_code": "gh0317",
+        "space_availability": "Unavailable",
+        "size_of_space": "9 standard size",
+        "rules_for_my_space": "$150 deposit for the remote control (refundable)",
+        "use_google_street_photos": "",
+        "other_space_details": [],
+        "my_rules": [],
+        "space_suitability": [],
+        "additional_rules": [],
+        "bond_or_deposit": ""
+      },
+      "location_type_id": 466,
+      "categories": [
+        4754,
+        3389,
+        6521
+      ],
+      "availability": null,
+      "availability_exceptions": null,
+      "all_prices": [
+        32000
+      ],
+      "all_price_types": [
+        "1_subscription_month"
+      ],
+      "service_radius": null,
+      "open_hours": null,
+      "open_hours_during_week": null,
+      "completed_reservations": 0,
+      "seller_average_rating": 0.0,
+      "tags": "",
+      "address": {
+        "id": 32102,
+        "address": "33 Ultimo Rd, Haymarket NSW 2000, Australia",
+        "address2": null,
+        "formatted_address": "33 Ultimo Rd, Haymarket NSW 2000, Australia",
+        "street": "Ultimo Road",
+        "suburb": "Haymarket",
+        "city": "Haymarket",
+        "country": "Australia",
+        "state": "New South Wales",
+        "postcode": "2000",
+        "iso_country_code": "AU",
+        "street_number": "33",
+        "lat": -33.8810511,
+        "lon": 151.2024308
+      },
+      "transactable_type": {
+        "id": 438,
+        "name": "Space",
+        "parameterized_name": "space"
+      },
+      "category_list": [
+        {
+          "id": 6521,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Parking Space",
+          "permalink": "storage-type/parking-space"
+        },
+        {
+          "id": 3389,
+          "name_of_root": "Access",
+          "position": 0,
+          "name": "Full Access (Key/Swipe Pass)",
+          "permalink": "access/full-access-key-slash-swipe-pass"
+        },
+        {
+          "id": 4754,
+          "name_of_root": "Security Features",
+          "position": 0,
+          "name": "Security Roller-door",
+          "permalink": "security-features/security-roller-door"
+        }
+      ],
+      "photos": [
+        {
+          "id": 66244,
+          "caption": "",
+          "versions": {
+            "transformed": {
+              "url": "/instances/130/uploads/images/photo/image/66244/transformed_73186667-05e0-48b1-94ae-017847eb7e43.JPG?v=1490059727",
+              "version_name": "transformed"
+            },
+            "thumb": {
+              "url": "/instances/130/uploads/images/photo/image/66244/thumb_73186667-05e0-48b1-94ae-017847eb7e43.JPG?v=1490059727",
+              "version_name": "thumb"
+            },
+            "medium": {
+              "url": "/instances/130/uploads/images/photo/image/66244/medium_73186667-05e0-48b1-94ae-017847eb7e43.JPG?v=1490059727",
+              "version_name": "medium"
+            },
+            "large": {
+              "url": "/instances/130/uploads/images/photo/image/66244/large_73186667-05e0-48b1-94ae-017847eb7e43.JPG?v=1490059727",
+              "version_name": "large"
+            },
+            "space_listing": {
+              "url": "/instances/130/uploads/images/photo/image/66244/space_listing_73186667-05e0-48b1-94ae-017847eb7e43.JPG?v=1490059727",
+              "version_name": "space_listing"
+            },
+            "golden": {
+              "url": "/instances/130/uploads/images/photo/image/66244/golden_73186667-05e0-48b1-94ae-017847eb7e43.JPG?v=1490059727",
+              "version_name": "golden"
+            }
+          }
+        },
+        {
+          "id": 66245,
+          "caption": "",
+          "versions": {
+            "transformed": {
+              "url": "/instances/130/uploads/images/photo/image/66245/transformed_00649d0e-390f-4cb0-9bad-e190a275bdba.JPG?v=1490059733",
+              "version_name": "transformed"
+            },
+            "thumb": {
+              "url": "/instances/130/uploads/images/photo/image/66245/thumb_00649d0e-390f-4cb0-9bad-e190a275bdba.JPG?v=1490059733",
+              "version_name": "thumb"
+            },
+            "medium": {
+              "url": "/instances/130/uploads/images/photo/image/66245/medium_00649d0e-390f-4cb0-9bad-e190a275bdba.JPG?v=1490059733",
+              "version_name": "medium"
+            },
+            "large": {
+              "url": "/instances/130/uploads/images/photo/image/66245/large_00649d0e-390f-4cb0-9bad-e190a275bdba.JPG?v=1490059733",
+              "version_name": "large"
+            },
+            "space_listing": {
+              "url": "/instances/130/uploads/images/photo/image/66245/space_listing_00649d0e-390f-4cb0-9bad-e190a275bdba.JPG?v=1490059733",
+              "version_name": "space_listing"
+            },
+            "golden": {
+              "url": "/instances/130/uploads/images/photo/image/66245/golden_00649d0e-390f-4cb0-9bad-e190a275bdba.JPG?v=1490059733",
+              "version_name": "golden"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "_index": "development-130-local-user-transactables-5",
+    "_type": "transactable",
+    "_routing": "1867",
+    "_parent": "1867",
+    "_id": "31280",
+    "_score": 1.0,
+    "_source": {
+      "id": 31280,
+      "instance_id": 130,
+      "company_id": 16724,
+      "location_id": 16977,
+      "administrator_id": null,
+      "deleted_at": null,
+      "draft": null,
+      "enabled": false,
+      "created_at": "2017-05-11T06:14:02.433Z",
+      "transactable_type_id": 438,
+      "action_rfq": false,
+      "action_free_booking": false,
+      "average_rating": 0.0,
+      "opened_on_days": [],
+      "name": "Haymarket - Car Parking Available for Rent carpark cbd",
+      "description": "4 minutes to Central Station <br>\r\n5 minutes to Darling Harbour  <br>\r\n2 minutes to Haymarket Mall  <br>\r\n5 minutes walk to UTS Library  <br>\r\n5 minutes walk to TAFE NSW",
+      "slug": "haymarket-car-parking-available-for-rent",
+      "possible_payout": false,
+      "state": "pending",
+      "geo_location": {
+        "lat": -33.8821978,
+        "lon": 151.2033696
+      },
+      "geo_service_shape": null,
+      "custom_attributes": {
+        "how_did_you_hear_about_us": "Gumtree",
+        "legally_rent_space": "0",
+        "promo_code": "GH0517",
+        "space_availability": "Unavailable",
+        "size_of_space": "10 A 4-wheel drive would fit in",
+        "rules_for_my_space": "$220 bond for the access is required",
+        "use_google_street_photos": "",
+        "other_space_details": [],
+        "my_rules": [],
+        "space_suitability": [],
+        "additional_rules": [],
+        "bond_or_deposit": ""
+      },
+      "location_type_id": 466,
+      "categories": [
+        4751,
+        4754,
+        4750,
+        3389,
+        6521
+      ],
+      "availability": null,
+      "availability_exceptions": null,
+      "all_prices": [
+        22000
+      ],
+      "all_price_types": [
+        "1_subscription_month"
+      ],
+      "service_radius": null,
+      "open_hours": null,
+      "open_hours_during_week": null,
+      "completed_reservations": 0,
+      "seller_average_rating": 0.0,
+      "tags": "",
+      "address": {
+        "id": 35009,
+        "address": "107-121 Quay St, Haymarket NSW 2000, Australia",
+        "address2": null,
+        "formatted_address": "107-121 Quay St, Haymarket NSW 2000, Australia",
+        "street": "Little Lonsdale Street",
+        "suburb": "Haymarket",
+        "city": "Melbourne",
+        "country": "Australia",
+        "state": "New South Wales",
+        "postcode": "2000",
+        "iso_country_code": "AU",
+        "street_number": "107-121",
+        "lat": -33.8821978,
+        "lon": 151.2033696
+      },
+      "transactable_type": {
+        "id": 438,
+        "name": "Space",
+        "parameterized_name": "space"
+      },
+      "category_list": [
+        {
+          "id": 6521,
+          "name_of_root": "Storage Type",
+          "position": 0,
+          "name": "Parking Space",
+          "permalink": "storage-type/parking-space"
+        },
+        {
+          "id": 3389,
+          "name_of_root": "Access",
+          "position": 0,
+          "name": "Full Access (Key/Swipe Pass)",
+          "permalink": "access/full-access-key-slash-swipe-pass"
+        },
+        {
+          "id": 4750,
+          "name_of_root": "Security Features",
+          "position": 0,
+          "name": "Alarm",
+          "permalink": "security-features/alarm"
+        },
+        {
+          "id": 4751,
+          "name_of_root": "Security Features",
+          "position": 0,
+          "name": "CCTV",
+          "permalink": "security-features/cctv"
+        },
+        {
+          "id": 4754,
+          "name_of_root": "Security Features",
+          "position": 0,
+          "name": "Security Roller-door",
+          "permalink": "security-features/security-roller-door"
+        }
+      ],
+      "photos": []
+    }
+  }
+]

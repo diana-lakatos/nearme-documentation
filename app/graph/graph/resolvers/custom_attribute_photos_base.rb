@@ -2,6 +2,8 @@
 module Graph
   module Resolvers
     class CustomAttributePhotosBase
+      attr_reader :object
+
       def call(obj, arg, _ctx)
         @object = obj
         custom_images = find_custom_images(arg[:name])

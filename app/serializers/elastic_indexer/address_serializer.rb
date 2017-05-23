@@ -11,6 +11,16 @@ module ElasticIndexer
                :state,
                :postcode,
                :iso_country_code,
-               :street_number
+               :street_number,
+               :lat,
+               :lon
+
+    def lat
+      object.latitude
+    end
+
+    def lon
+      object.longitude
+    end
   end
 end

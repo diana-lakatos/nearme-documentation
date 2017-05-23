@@ -52,7 +52,7 @@ module Graph
         private
 
         def custom_images_ids(custom_images)
-          transactable = @object.source
+          transactable = object.source
           images = custom_images.where(owner: transactable)
           customization_images = custom_images.where(
             owner_type: ::Customization.to_s,

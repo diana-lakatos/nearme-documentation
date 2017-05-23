@@ -256,22 +256,6 @@ module Elastic
     end
 
     def apply_geo_search_filters
-      if @query[:item_location_city].present?
-        @filters << {
-          term: {
-            location_city: @query[:item_location_city].downcase.tr(' ', '_')
-          }
-        }
-      end
-
-      if @query[:item_location_state].present?
-        @filters << {
-          term: {
-            location_state: @query[:item_location_state].downcase.tr(' ', '_')
-          }
-        }
-      end
-
       if @transactable_type.show_price_slider && @query[:price] && (@query[:price][:min].present? || @query[:price][:max].present?)
         price_min = @query[:price][:min].to_f * 100
         price_max = @query[:price][:max].to_f * 100
