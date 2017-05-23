@@ -13,8 +13,11 @@
     .input-container.col-xs-12
       = f.input :layout_name, collection: resource.valid_page_layouts, include_blank: true, prompt: 'Pick'
   .row
-    .input-container.col-xs-12
+   .input-container.col-xs-12
       = f.input :max_deep_level, collection: [1, 2, 3], hint: 'Controls the amount of nested slugs. If you pick one, and slug will be "example", then the page will be displayed only for /example. For /example/anything not found error will be raise. If you pick 2, then /example/anything will work, but /example/anything/another will raise error'
+  .row
+    .input-container.col-xs-12
+      = f.input :format, collection: Page.formats, include_blank: false
   .row
     .input-container.col-xs-12
       = f.input :content, hint: "Insert HTML, Markdown or Plain text here", input_html: { class: 'form-control', rows: "20" }

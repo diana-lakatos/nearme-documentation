@@ -8,7 +8,7 @@ module Graph
         argument :take, types.Int
         argument :arbitrary_order, types[types.String]
 
-        resolve Resolvers::Topics.new
+        resolve Graph::Resolvers::Topics.new
       end
     end
   end

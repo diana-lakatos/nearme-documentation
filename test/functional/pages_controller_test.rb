@@ -87,6 +87,40 @@ class PagesControllerTest < ActionController::TestCase
       end
     end
 
+    context 'json page' do
+      should 'render a json' do
+        page = FactoryGirl.create(:page, content: { foo: :bar }.to_json, format: :json)
+
+        get :show, slug: page.slug, format: :json
+
+        assert_response :success
+        assert_equal 'bar', JSON.parse(response.body).fetch('foo')
+      end
+
+      should 'render json from graph' do
+        topic = FactoryGirl.create(:topic)
+        FactoryGirl.create(:graph_query, name: 'topics', query_string: '{ topics{ name } }')
+        template = '{% query_graph topics, result_name: g %} {{ g | json }}'
+        page = FactoryGirl.create(:page, content: template, format: :json)
+
+        get :show, slug: page.slug, format: :json
+
+        assert_response :success
+        assert_equal topic.name, JSON.parse(response.body).dig('topics', 0, 'name')
+      end
+
+      should 'render json page when there is also html one' do
+        page = FactoryGirl.create(:page, content: 'hello')
+        page_json = FactoryGirl.create(:page, content: { foo: :bar }.to_json, format: :json, slug: page.slug)
+
+        get :show, slug: page.slug, format: :json
+
+        assert_equal page.slug, page_json.slug
+        assert_response :success
+        assert_equal 'bar', JSON.parse(response.body).fetch('foo')
+      end
+    end
+
     context 'require_verified_user is on' do
       setup do
         Instance.any_instance.stubs(:require_verified_user?).returns(true)

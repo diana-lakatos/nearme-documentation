@@ -1892,10 +1892,11 @@ ActiveRecord::Schema.define(version: 20170523191507) do
     t.boolean  "require_verified_user",                 default: false
     t.boolean  "admin_page",                            default: false
     t.integer  "max_deep_level",                        default: 3
+    t.integer  "format",                                default: 0
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
-  add_index "pages", ["slug", "theme_id"], name: "index_pages_on_slug_and_theme_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
+  add_index "pages", ["slug", "theme_id", "format"], name: "index_pages_on_slug_and_theme_id_and_format", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "pages", ["theme_id"], name: "index_pages_on_theme_id", using: :btree
 
   create_table "partners", force: :cascade do |t|
