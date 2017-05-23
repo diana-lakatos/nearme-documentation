@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+module Graph
+  module Resolvers
+    class Comments
+      def call(_, arguments, _ctx)
+        resolve_by(arguments.to_h.except('first', 'after'))
+      end
+
+      def resolve_by(arguments)
+        arguments.keys.reduce(collection) do |relation, argument_key|
+          public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])
+        end
+      end
+
+      def resolve_by_since(relation, since_date)
+        relation.where('created_at > ?', Time.zone.at(since_date.to_i))
+      end
+
+      private
+
+      def collection
+        ::Comment.all
+      end
+    end
+  end
+end

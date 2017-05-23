@@ -7,7 +7,7 @@ module Graph
       fields FieldCombiner.combine(
         [
           Types::CustomAttributes::CustomAttributeQueryType,
-          FeedQueryType,
+          ActivityFeed::FeedQueryType,
           LocationQueryType,
           MessagesQueryType,
           SearchQueryType,
