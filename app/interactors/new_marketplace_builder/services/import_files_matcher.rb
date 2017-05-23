@@ -11,7 +11,7 @@ module NewMarketplaceBuilder
           group_builder_file builder_file
         end
 
-        grouped_files_hash.sort.to_h
+        grouped_files_hash.to_h
       end
 
       private

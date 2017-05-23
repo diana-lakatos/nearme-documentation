@@ -1,0 +1,6 @@
+query get_user($slug: String!) {
+  user(slug: $slug) {
+    first_name
+    last_name
+  }
+}

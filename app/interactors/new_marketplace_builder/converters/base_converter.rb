@@ -35,6 +35,7 @@ module NewMarketplaceBuilder
 
           model.assign_attributes default_values(model)
           model.assign_attributes model_hash.with_indifferent_access.slice(*self.class.properties_value.map(&:to_sym))
+          import_dynamic_properties(model, model_hash)
 
           model.save!
 
@@ -105,6 +106,13 @@ module NewMarketplaceBuilder
             content[property_method_name.to_s] = value unless ignored_value?(value)
           end
         end
+      end
+
+      def import_dynamic_properties(model, model_hash)
+        self.class.dynamic_properties.each do |property_method_name|
+          next unless respond_to?("set_#{property_method_name}")
+          send("set_#{property_method_name}", model, model_hash.with_indifferent_access[property_method_name])
+        end if self.class.dynamic_properties.present?
       end
 
       def resource_name(model)

@@ -8,6 +8,9 @@ module NewMarketplaceBuilder
         Converters::PageConverter => ['pages', 'liquid'],
         Converters::TranslationConverter => ['translations', 'yml'],
         Converters::CustomThemeConverter => ['custom_themes', 'theme_with_assets'],
+        Converters::FormConfigurationConverter => ['form_configurations', 'liquid'],
+        Converters::ContentHolderConverter => ['content_holders', 'liquid'],
+        Converters::GraphQueryConverter => ['graph_queries', 'graphql'],
       }
 
       def initialize(instance_id, destination)

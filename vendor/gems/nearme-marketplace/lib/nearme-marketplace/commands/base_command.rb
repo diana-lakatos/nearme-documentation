@@ -4,7 +4,7 @@ module NearmeMarketplace
       if [200, 201, 302].include? response.status
         puts_status "success"
       else
-        puts_status "error", resposne.body
+        puts_status "error", response.body
       end
     end
 

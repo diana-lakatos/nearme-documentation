@@ -12,6 +12,7 @@ module NewMarketplaceBuilder
         parse_liquid_config(@liquid_body.match(LIQUID_CONFIG_REGEX)).tap do |attributes|
           attributes['body'] ||= @liquid_body.gsub(LIQUID_CONFIG_REGEX, '')
           attributes['content'] ||= attributes['body']
+          attributes['name'] ||= File.basename(parse_liquid_path)
           attributes['path'] ||= parse_liquid_path
           attributes['partial'] ||= is_partial
           attributes['view_type'] ||= 'view'

@@ -21,6 +21,7 @@ module NewMarketplaceBuilder
 
       def create_file_with_content!(file, folder, extension)
         file = parse_liquid_file(file) if extension == 'liquid'
+        file = parse_graphql_file(file) if extension == 'graphql'
         file_path = "#{@destination_path}/#{instance_name}/#{folder}/#{file[:resource_name]}.#{extension}"
 
         File.open(file_path, 'w') do |f|
@@ -79,6 +80,11 @@ module NewMarketplaceBuilder
       def parse_liquid_file(file)
         file[:exported_data].delete('partial')
         file[:exported_data].delete('path')
+        file
+      end
+
+      def parse_graphql_file(file)
+        file[:exported_data].delete('name')
         file
       end
 

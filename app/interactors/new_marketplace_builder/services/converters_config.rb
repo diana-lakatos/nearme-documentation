@@ -10,8 +10,16 @@ module NewMarketplaceBuilder
           converter: Converters::LiquidViewConverter,
           parser: Parsers::LiquidParser,
         },
+        'form_configurations' => {
+          converter: Converters::FormConfigurationConverter,
+          parser: Parsers::LiquidParser,
+        },
         'pages' => {
           converter: Converters::PageConverter,
+          parser: Parsers::LiquidParser
+        },
+        'content_holders' => {
+          converter: Converters::ContentHolderConverter,
           parser: Parsers::LiquidParser
         },
         'transactable_types' => {
@@ -22,14 +30,18 @@ module NewMarketplaceBuilder
           converter: Converters::TranslationConverter,
           parser: Parsers::YamlParser,
         },
+        'graph_queries' => {
+          converter: Converters::GraphQueryConverter,
+          parser: Parsers::LiquidParser,
+        },
+        'custom_themes.+\.yml' => {
+          converter: Converters::CustomThemeConverter,
+          parser: Parsers::YamlParser,
+        },
         'custom_themes\/default_custom_theme_assets' => {
           converter: Converters::CustomThemeAssetConverter,
           parser: Parsers::AssetParser,
         },
-        'custom_themes' => {
-          converter: Converters::CustomThemeConverter,
-          parser: Parsers::YamlParser,
-        }
       }
 
       def self.get
