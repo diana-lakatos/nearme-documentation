@@ -236,7 +236,7 @@ DesksnearMe::Application.routes.draw do
       namespace :reports do
         resources :transactables do
           collection do
-            get :download_report
+            get :request_report_generation
           end
         end
 
@@ -254,10 +254,12 @@ DesksnearMe::Application.routes.draw do
 
         resources :users do
           collection do
-            get :download_report
+            get :request_report_generation
           end
         end
       end
+
+      resources :marketplace_reports, only: [:show]
 
       namespace :settings do
         get '/', to: 'base#index'

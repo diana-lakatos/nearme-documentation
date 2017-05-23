@@ -539,6 +539,7 @@ en:
       download_report_as_csv: "Download report as CSV"
       attribute: "Attribute"
       value: "Value"
+      request_report_generation: 'Request report generation'
       fields:
         id: "ID"
         name: "Name"
@@ -556,6 +557,19 @@ en:
         community_reports: "Advanced community reports"
         day_start: "Starting day"
         day_end: "Ending day"
+      generated:
+        title: 'Generated reports'
+        type: 'Type'
+        creator: 'Creator'
+        status: 'Status'
+        date_time: 'Date time'
+        actions: 'Actions'
+        available_actions:
+          download: 'Download'
+          wait_for_report_creation: 'Wait for report creation'
+          no_actions: 'No actions'
+        notifications:
+          please_wait_for_report_generation: 'Please wait for your report to be generated. You will be sent an email when the report is finished in a few minutes.'
 
     # instance_admin.settings
     settings:

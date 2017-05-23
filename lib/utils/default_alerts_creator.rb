@@ -23,5 +23,6 @@ class Utils::DefaultAlertsCreator
     Utils::DefaultAlertsCreator::CommenterCreator.new.create_all!
     Utils::DefaultAlertsCreator::OrderCreator.new.create_all!
     Utils::DefaultAlertsCreator::RecurringBookingPeriodCreator.new.create_all!
+    Utils::DefaultAlertsCreator::MarketplaceReportCreator.new.create_all!
   end
 end

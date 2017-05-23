@@ -155,7 +155,8 @@ class InstanceView < ActiveRecord::Base
     'vendor_approval_mailer/notify_host_of_user_approval',
     'order_mailer/notify_host_of_marked_as_completed',
     'recurring_booking_period_mailer/notify_guest_of_recurring_booking_period_paid',
-    'recurring_booking_period_mailer/notify_host_of_recurring_booking_period_paid'
+    'recurring_booking_period_mailer/notify_host_of_recurring_booking_period_paid',
+    'marketplace_reports_mailer/report_generation_done'
   ].sort.freeze
 
   DEFAULT_SMS_TEMPLATES_PATHS = [
