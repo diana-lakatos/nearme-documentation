@@ -5,15 +5,15 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
   should 'generate proper configuration for UoT' do
     load_mp('marketplaces/uot')
     form_component = FormComponent.new(form_fields: form_component_fields)
-    assert_equal buyer_form_configuration, FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).send(:build_configuration_based_on_form_components, form_component, 'buyer')
+    assert_equal buyer_form_configuration, FormComponentToFormConfiguration.new(PlatformContext.current.instance).send(:build_configuration_based_on_form_components, form_component, 'buyer')
 
-    assert_equal seller_form_configuration, FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).send(:build_configuration_based_on_form_components, form_component, 'seller')
+    assert_equal seller_form_configuration, FormComponentToFormConfiguration.new(PlatformContext.current.instance).send(:build_configuration_based_on_form_components, form_component, 'seller')
   end
 
   should 'generate proper configuration for dummy MP' do
     load_mp('test/assets/dummy_marketplace')
     form_component = FormComponent.new(form_fields: [{"buyer"=>"photo_input"}])
-    assert_equal dummy_mp_buyer_form_configuration, FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).send(:build_configuration_based_on_form_components, form_component, 'buyer')
+    assert_equal dummy_mp_buyer_form_configuration, FormComponentToFormConfiguration.new(PlatformContext.current.instance).send(:build_configuration_based_on_form_components, form_component, 'buyer')
   end
 
   protected

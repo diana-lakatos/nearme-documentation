@@ -17,7 +17,7 @@ When(/^Form builder configuration is in place$/) do
                   'numcode' => 840,
                   'states_required' => true,
                   'calling_code' => '1')
-  FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).go!
+  FormComponentToFormConfiguration.new(PlatformContext.current.instance).go!
 end
 
 When(/^I update my profile and trigger all validation errors$/) do

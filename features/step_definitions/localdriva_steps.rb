@@ -10,7 +10,7 @@ Given /^Localdriva instance is loaded$/ do
   )
   builder.execute!
   @instance.set_context!
-  FormComponentToFormConfiguration.new(Instance.where(id: @instance.id)).go!
+  FormComponentToFormConfiguration.new(@instance).go!
 end
 
 Given /^a localdriva driver exists$/ do

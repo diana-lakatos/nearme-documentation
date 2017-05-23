@@ -15,7 +15,7 @@ class InstanceAdmin::FormComponentsController < InstanceAdmin::ResourceControlle
   def create
     @form_component = @form_componentable.form_components.build(form_component_params)
     if @form_component.save
-      FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).go!
+      FormComponentToFormConfiguration.new(PlatformContext.current.instance).go!
       flash[:success] = t 'flash_messages.instance_admin.manage.form_component.created'
       redirect_to redirect_path
     else
@@ -45,7 +45,7 @@ class InstanceAdmin::FormComponentsController < InstanceAdmin::ResourceControlle
     @form_component = @form_componentable.form_components.find(params[:id])
 
     if @form_component.update_attributes(form_component_params)
-      FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).go!
+      FormComponentToFormConfiguration.new(PlatformContext.current.instance).go!
       flash[:success] = t 'flash_messages.instance_admin.manage.form_component.updated'
       redirect_to redirect_path
     else
