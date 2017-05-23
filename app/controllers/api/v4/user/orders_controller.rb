@@ -12,7 +12,7 @@ module Api
             raise ArgumentError, "Order was not saved: #{model.errors.full_messages.join(', ')}" if model.changed?
 
             publish_event!
-            model.lister_confirmed! if order_form.try(:lister_confirm)
+            model.lister_confirmed! if order_form.try(:lister_confirm) && lister?
             model.schedule_expiry if order_form.try(:schedule_expiry)
             payment.authorized? ? payment.capture! : payment.purchase! if order_form.try(:with_charge)
           end
@@ -37,12 +37,12 @@ module Api
         end
 
         def authorize_action
-          raise ArgumentError if !lister? && %w(confirm complete host_cancel).include?(state_event)
+          raise ArgumentError if !lister? && %w(confirm complete host_cancel reject).include?(state_event)
           raise ArgumentError if !enquirer? && %w(user_cancel).include?(state_event)
         end
 
         def state_event
-          @state_event ||= order_form.state_event
+          @state_event ||= order_form.try(:state_event)
         end
 
         def lister?
