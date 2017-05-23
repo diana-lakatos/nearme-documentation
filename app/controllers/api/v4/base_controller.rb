@@ -5,7 +5,7 @@ module Api
       protected
 
       def respond(object, options = {})
-        options[:location] ||= root_path
+        options[:location] ||= return_to(object)
         api_respond_with(api_namespace(object), options)
       end
 
@@ -14,7 +14,6 @@ module Api
       end
 
       def api_respond_with(namespaced_object, options = {})
-        options[:location] = params[:redirect_to].presence || params[:return_to] if params[:redirect_to].present? || params[:return_to].present?
         if params[:page_id].present? && form_configuration.present? && namespaced_object.last.errors.present?
           result = respond_with(*namespaced_object, options) do |format|
             submitted_form ||= {}
@@ -80,6 +79,22 @@ module Api
 
       def form_configuration
         @form_configuration ||= FormConfiguration.find_by(id: params[:form_configuration_id])
+      end
+
+      def return_to(form)
+        return_to_for_form(form) || return_to_for_params || root_path
+      end
+
+      def return_to_for_form(form)
+        return if form_configuration.blank? || form_configuration.return_to.blank?
+
+        LiquidTemplateParser.new
+                            .parse(form_configuration.return_to, current_user: current_user, form: form)
+                            .presence
+      end
+
+      def return_to_for_params
+        params[:redirect_to].presence || params[:return_to]
       end
     end
   end
