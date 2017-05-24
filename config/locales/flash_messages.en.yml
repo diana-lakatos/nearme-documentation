@@ -80,6 +80,8 @@ en:
         could_not_validate: 'Your IMAP settings appear to be invalid'
         validation_successful: 'Your IMAP settings are valid'
       manage:
+        instance_profile_types:
+          updated: 'Successfully updated instance profile type.'
         webhooks:
           deleted: 'Webhook has been deleted.'
         tax_region:

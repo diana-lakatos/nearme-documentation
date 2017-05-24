@@ -286,6 +286,8 @@ en:
         book_at: 'Book at'
         the_listing: 'The listing'
         admin_logout_confirmation: 'This will log you out and re-log you in as location administrator.'
+    errors:
+      no_action_types_selected: 'No action types selected'
   transactables:
     items_listed: 'Items Listed'
     items_rented: 'Items Rented'
