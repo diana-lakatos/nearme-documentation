@@ -75,7 +75,9 @@ class OrderDrop < BaseDrop
   # @!method cancelled_at
   #   @return [DateTime] Time when the order was cancelled
   # @!method starts_at
-  #   @return [DateTime] Time when the order was cancelled
+  #   @return [DateTime] Time when the service starts
+  # @!method ends_at
+  #   @return [DateTime] Time when the service_ends
   # @!method confirmed_at
   #   @return [DateTime] Time when the order was confirmed
   # @!method recurring_booking_periods
@@ -131,7 +133,8 @@ class OrderDrop < BaseDrop
            :payment_subscription, :confirm_reservations?, :bookable?, :transactable_pricing,
            :outbound, :inbound, :inbound_pickup_date, :outbound_pickup_date,
            :inbound_pickup_address_address, :outbound_return_address_address,
-           :quantity, :is_free_booking, :additional_line_items, :deliveries, to: :order
+           :quantity, :is_free_booking, :additional_line_items, :deliveries,
+           :ends_at, to: :order
 
   def initialize(order)
     @source = @order = order.decorate
@@ -260,7 +263,7 @@ class OrderDrop < BaseDrop
   # @return [String] penalty fee for this order rendered using the global
   #   currency formatting rules
   def formatted_penalty_fee
-    render_money(@order.penalty_fee)
+    render_money(@order.penalty_amount)
   end
 
   # @return [Object] returns the order objects for all the other orders the user placed

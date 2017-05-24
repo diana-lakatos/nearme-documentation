@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170519093253) do
+ActiveRecord::Schema.define(version: 20170523111633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2654,15 +2654,15 @@ ActiveRecord::Schema.define(version: 20170519093253) do
     t.datetime "deleted_at"
     t.integer  "instance_id"
     t.integer  "state_id"
-    t.integer  "value"
-    t.boolean  "included_in_price", default: true
+    t.decimal  "value",             precision: 10, scale: 2
+    t.boolean  "included_in_price",                          default: true
     t.string   "name"
     t.string   "admin_name"
     t.string   "calculate_with"
     t.integer  "tax_region_id"
-    t.boolean  "default",           default: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.boolean  "default",                                    default: false
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
   end
 
   add_index "tax_rates", ["instance_id"], name: "index_tax_rates_on_instance_id", using: :btree
