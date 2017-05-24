@@ -134,28 +134,6 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     end
   end
 
-  context 'verification file' do
-    context 'instance requires verification' do
-      setup do
-        FactoryGirl.create(:approval_request_template, required_written_verification: true)
-        FactoryGirl.create(:form_component, form_componentable: @transactable_type)
-        @user.update! created_at: 1.minute.from_now
-      end
-
-      should 'show form to write message' do
-        get :list, transactable_type_id: @transactable_type.id
-        assert_select '#user_approval_requests_attributes_0_message', 1
-      end
-    end
-
-    context 'instance does not require verification' do
-      should 'not show form to write message' do
-        get :list, transactable_type_id: @transactable_type.id
-        assert_select '#user_approval_requests_attributes_0_message', false
-      end
-    end
-  end
-
   context 'GET new' do
     should 'redirect to manage listings page if has listings' do
       create_listing

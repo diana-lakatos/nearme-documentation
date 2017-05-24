@@ -5,7 +5,7 @@
 - only_inputs ||= []
 - only_inputs.map!(&:to_sym)
 
-- %i(approval_requests name properties categories email language time_zone phones mobile_phone current_address company_name password avatar public_profile custom_model tags).each do |attr|
+- %i(name properties categories email language time_zone phones mobile_phone current_address company_name password avatar public_profile custom_model tags).each do |attr|
   = render "registrations/attributes/#{attr}", only_inputs: only_inputs, f: f, resource: resource
 
 
