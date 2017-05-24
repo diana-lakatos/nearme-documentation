@@ -199,10 +199,12 @@ class Order < ActiveRecord::Base
     refund_amount_cents + (refund_amount_cents * service_fee_guest_percent.to_f / BigDecimal(100))
   end
 
+  monetize :refund_amount_cents, with_model_currency: :currency
   def refund_amount_cents
     cancellation_policies.refunds.map(&:amount_cents).sum
   end
 
+  monetize :penalty_amount_cents, with_model_currency: :currency
   def penalty_amount_cents
     cancellation_policies.penalties.map(&:amount_cents).sum
   end

@@ -19,11 +19,7 @@ class PopulateCancellationPolicies < ActiveRecord::Migration
           attributes = [{
             action_type:  'cancellation_penalty',
             amount_rule:  '{% assign tli = order.transactable_line_items | first %}{{ tli.unit_price.cents }}',
-            condition:  "{% assign tomorrow = 'now' | date: '%s' | plus: 86400 | times: 1 %}
-            {% assign starts_at = order.starts_at | date: '%s' %}
-            {% assign starts_at_size = starts_at | size %}
-            {% assign difference = starts_at | minus: tomorrow %}
-            {% if order.state == 'cancelled_by_guest' and starts_at_size != 0 and difference < 0 %}true{% endif %}"
+            condition:  "{% assign tomorrow = 'now' | parse_time: '%s' | plus: 86400 | times: 1 %}{% assign starts_at = order.starts_at | parse_time: '%s' %}{% assign starts_at_size = starts_at | size %}{% assign difference = starts_at | minus: tomorrow %}{% assign order_states = 'cancelled_by_guest confirmed' | split: ' ' %}{% if order_states contains order.state and starts_at_size != 0 and difference < 0 %}true{% endif %}"
           }]
         else
           attributes = [
@@ -43,8 +39,8 @@ class PopulateCancellationPolicies < ActiveRecord::Migration
             attributes << {
               action_type:  'cancel_allowed',
               condition: "{% assign x_hour_as_seconds = 3600 | times: #{order.cancellation_policy_hours_for_cancellation} %}
-              {% assign tomorrow = 'now' | date: '%s' | plus: x_hour_as_seconds %}
-              {% assign starts_at = order.starts_at | date: '%s' %}
+              {% assign tomorrow = 'now' | parse_time: '%s' | plus: x_hour_as_seconds %}
+              {% assign starts_at = order.starts_at | parse_time: '%s' %}
               {% assign starts_at_size = starts_at | size %}
               {% assign difference = starts_at | minus: tomorrow %}
               {% if starts_at_size != 0 and difference < 0 %}true{% endif %}"
@@ -63,18 +59,14 @@ class PopulateCancellationPolicies < ActiveRecord::Migration
           [{
             action_type:  'cancellation_penalty',
             amount_rule:  '{% assign tli = order.transactable_line_items | first %}{{ tli.unit_price.cents }}',
-            condition:  "{% assign tomorrow = 'now' | date: '%s' | plus: 86400 | times: 1 %}
-              {% assign starts_at = order.starts_at | date: '%s' %}
-              {% assign starts_at_size = starts_at | size %}
-              {% assign difference = starts_at | minus: tomorrow %}
-              {% if order.state == 'cancelled_by_guest' and starts_at_size != 0 and difference < 0 %}true{% endif %}"
+            condition:  "{% assign tomorrow = 'now' | parse_time: '%s' | plus: 86400 | times: 1 %}{% assign starts_at = order.starts_at | parse_time: '%s' %}{% assign starts_at_size = starts_at | size %}{% assign difference = starts_at | minus: tomorrow %}{% assign order_states = 'cancelled_by_guest confirmed' | split: ' ' %}{% if order_states contains order.state and starts_at_size != 0 and difference < 0 %}true{% endif %}"
           }]
         elsif Instances::InstanceFinder.get(:thevolte).include?(instance)
           [
             {
               action_type:  'cancel_allowed',
-              condition:  "{% assign tomorrow = 'now' | date: '%s' | plus: 86400 | times: 1 %}
-              {% assign starts_at = order.starts_at | date: '%s' %}
+              condition:  "{% assign tomorrow = 'now' | parse_time: '%s' | plus: 86400 | times: 1 %}
+              {% assign starts_at = order.starts_at | parse_time: '%s' %}
               {% assign starts_at_size = starts_at | size %}
               {% assign difference = starts_at | minus: tomorrow %}
               {% if starts_at_size != 0 and difference > 0 %}true{% endif %}"
@@ -106,9 +98,9 @@ class PopulateCancellationPolicies < ActiveRecord::Migration
             {
               action_type:  'cancel_allowed',
               amount_rule:  nil,
-              condition:  "{% assign starts_at = order.starts_at | date: '%s' %}
+              condition:  "{% assign starts_at = order.starts_at | parse_time: '%s' %}
               {% assign starts_at_size = starts_at | size %}
-              {% assign difference = 'now' | date: '%s' | minus: starts_at %}
+              {% assign difference = 'now' | parse_time: '%s' | minus: starts_at %}
               {% if starts_at_size != 0 and difference < 0 %}true{% endif %}"
             }
           ]

@@ -556,8 +556,15 @@ module LiquidFilters
 
   # @return [Time] a time object created from parsing the string representation of time given as input
   # @param time [String] a string representation of time for example 'today', '3 days ago' etc.
-  def parse_time(time)
-    Chronic.parse(time) || time&.to_time(:local)
+  def parse_time(time, format=nil)
+    parsed_time = case time
+    when /\A\d+\z/, Integer
+      Time.zone.at(time.to_i)
+    when String
+      Chronic.parse(time) || time&.to_time(:local)
+    end
+
+    format.blank? ? parsed_time : parsed_time.strftime(format.to_s)
   end
 
   # @return [Time] a time object created from time in string
