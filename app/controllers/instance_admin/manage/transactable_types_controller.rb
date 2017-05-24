@@ -14,7 +14,9 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
 
   def create
     @transactable_type = resource_class.new(transactable_type_params)
-    if @transactable_type.save
+    # We check this here to avoid polluting the model with validations
+    # as per Maciek's advice
+    if present_action_types?(@transactable_type) && @transactable_type.save
       at = @transactable_type.availability_templates.build(name: 'Working Week', description: 'Mon - Fri, 9:00 AM - 5:00 PM')
       (1..5).each do |i|
         at.availability_rules.build(day: i, open_hour: 9, open_minute: 0, close_hour: 17, close_minute: 0)
@@ -25,7 +27,7 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
       flash[:success] = t "flash_messages.instance_admin.#{controller_scope}.#{translation_key}.created"
       redirect_to [:instance_admin, controller_scope, resource_class]
     else
-      flash[:error] = @transactable_type.errors.full_messages.to_sentence
+      flash[:error] = resource_errors(@transactable_type)
       render action: :new
     end
   end
@@ -35,11 +37,12 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
   end
 
   def update
-    if resource.update_attributes(transactable_type_params)
+    resource.assign_attributes(transactable_type_params)
+    if present_action_types?(resource) && resource.save
       flash[:success] = t "flash_messages.instance_admin.#{controller_scope}.#{translation_key}.updated"
       redirect_to [:instance_admin, controller_scope, resource_class]
     else
-      flash[:error] = resource.errors.full_messages.to_sentence
+      flash[:error] = resource_errors(resource)
       render action: params[:action_name]
     end
   end
@@ -107,5 +110,15 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
 
   def set_cancellation_policy_conditions
     @cancellation_conditions = CancellationPolicyCondition.all.to_json(:only => [:name, :translated_name, :variables, :query, :id])
+  end
+
+  def present_action_types?(resource)
+    !resource.respond_to?(:all_action_types) || resource.all_action_types.any?(&:enabled)
+  end
+
+  def resource_errors(resource)
+    errors = resource.errors.full_messages
+    errors << I18n.t('transactable_types.errors.no_action_types_selected') if !present_action_types?(resource)
+    errors.to_sentence
   end
 end
