@@ -146,6 +146,7 @@ class InstanceView < ActiveRecord::Base
     'user_mailer/user_followed_transactable',
     'user_mailer/user_followed_user',
     'user_mailer/user_promoted_to_instance_admin_email',
+    'user_mailer/unsubscribe',
     'user_message_mailer/email_message_from_guest',
     'user_message_mailer/email_message_from_host',
     'vendor_approval_mailer/notify_admin_of_new_listings',
@@ -566,6 +567,9 @@ class InstanceView < ActiveRecord::Base
     },
     'dashboard/order_items/order_item' => {
       is_partial: true
+    },
+    'subscribes/edit' => {
+      is_partial: false
     }
   }.sort.to_h.freeze
 

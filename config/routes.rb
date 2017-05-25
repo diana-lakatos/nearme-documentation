@@ -674,6 +674,7 @@ DesksnearMe::Application.routes.draw do
     resources :reviews, only: [:index]
 
     resources :topics, only: [:show]
+    resource :subscribes
 
     resources :comments do
       resources :comments, only: [:update, :create, :index, :destroy] do

@@ -1,0 +1,23 @@
+<section class="content-a" id="content">
+  <section class="user-session-form">
+    <header>
+      <h2>Unsubscribe</h2>
+    </header>
+    <p>
+      <span>
+        In order to unsubscribe yourself from the Keepsake Ornament Club Community email list, we need you to please enter and confirm your email address.
+        By submitting the form below, we will provide you with a followup email including instructions to remove you from our email list.
+      </span>
+    </p>
+    {% form_tag url: '/subscribes', class: 'simple_form new_user' %}
+      <input name="_method" type="hidden" value="put" />
+      <div class="control-group email required user_email">
+        <label class="email required control-label" for="user_email"><abbr title="required">*</abbr> Email</label>
+        <div class="controls"><input tabindex="1" autofocus="autofocus" class="string email required" placeholder="e.g. name@company.com" type="email" value="" name="user[email]"></div>
+      </div>
+      <div class="actions">
+        <input type="submit" name="commit" value="Send" class="btn">
+      </div>
+    {% endform_tag %}
+  </section>
+</section>
