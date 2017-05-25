@@ -6,8 +6,7 @@ class MigrateCancelableToCancellable < ActiveRecord::Migration
     end
 
     InstanceView.where("body LIKE '%.cancelable?%'").each do |iv|
-      iv.body.gsub!('.cancelable?', '.cancellable?')
-      iv.save!
+      iv.update_column(:body, iv.body.gsub('.cancelable?', '.cancellable?'))
     end
   end
 end
