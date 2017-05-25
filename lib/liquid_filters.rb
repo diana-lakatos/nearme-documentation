@@ -52,6 +52,20 @@ module LiquidFilters
     )
   end
 
+  # @return Boolean returns true if provided user satisfies policy with specified name
+  #   two arguments are equal, nil otherwise
+  # @param user [UserDrop] user object - in most scenarios it will be current_user
+  # @param object_name [String] name  - name of the form_cofiguration or page slug to which
+  #   we want to check access
+  # @param object_type [String] name string - by default form_configuration, can also be page
+  def authorized?(user, object_name, object_type = 'form_configuration', _params = {})
+    AuthorizeAction.new(object: AuthorizationPolicy::AuthorizableFetcher.new(object_name: object_name,
+                                                                             object_type: object_type).fetch,
+                        user: user.source).authorize
+  rescue AuthorizeAction::UnauthorizedAction
+    false
+  end
+
   # @return [String, nil] returns class_name (by default 'active') if the first
   #   two arguments are equal, nil otherwise
   # @param arg1 [String] any string - will be used for comparison with the other string
@@ -372,7 +386,7 @@ module LiquidFilters
   def number_of_minutes_to_time(minutes)
     minutes = minutes.to_i % 1440 # in case we made overnight booking
     hours = (minutes.to_f / 60).floor
-    minutes = minutes - (hours * 60)
+    minutes -= (hours * 60)
     "#{'%.2d' % hours}:#{'%.2d' % minutes}"
   end
 
@@ -570,12 +584,12 @@ module LiquidFilters
 
   # @return [Time] a time object created from parsing the string representation of time given as input
   # @param time [String] a string representation of time for example 'today', '3 days ago' etc.
-  def parse_time(time, format=nil)
+  def parse_time(time, format = nil)
     parsed_time = case time
-    when /\A\d+\z/, Integer
-      Time.zone.at(time.to_i)
-    when String
-      Chronic.parse(time) || time&.to_time(:local)
+                  when /\A\d+\z/, Integer
+                    Time.zone.at(time.to_i)
+                  when String
+                    Chronic.parse(time) || time&.to_time(:local)
     end
 
     format.blank? ? parsed_time : parsed_time.strftime(format.to_s)
