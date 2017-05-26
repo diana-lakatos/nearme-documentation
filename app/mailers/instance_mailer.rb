@@ -80,7 +80,7 @@ class InstanceMailer < ActionMailer::Base
   end
 
   def generate_unsubscribe_url(options)
-    if options.values_at(:to, :cc, :bcc).compact.flatten.size == 1
+    if options.values_at(:to, :cc, :bcc).compact.flatten.size == 1 && @user_to_which_email_will_be_sent.present?
       UserDrop.new(@user_to_which_email_will_be_sent).unsubscribe_url
     else
       @platform_context.unsubscribe_url

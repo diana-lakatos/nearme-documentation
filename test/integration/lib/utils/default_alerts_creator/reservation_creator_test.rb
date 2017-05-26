@@ -53,8 +53,6 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       mail = ActionMailer::Base.deliveries.last
       assert_contains @reservation.owner.first_name, mail.html_part.body
       assert_contains @reservation.transactable.name, mail.html_part.body
-      assert_contains 'https://custom.domain.com/dashboard/notification_preferences/edit', mail.html_part.body
-      assert_contains 'https://custom.domain.com/dashboard/notification_preferences/edit', mail.text_part.body
       assert_contains @reservation.transactable.transactable_type.bookable_noun.pluralize, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.transactable.name}' at #{@reservation.location.street} was cancelled by the host", mail.subject
