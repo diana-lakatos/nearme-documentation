@@ -6,6 +6,7 @@ FactoryGirl.define do
     content { Faker::Lorem.paragraph }
     theme_id { PlatformContext.current.instance.theme.id }
     redirect_url nil
+    format { Page.formats.fetch(:html) }
 
     factory :page_contact_form do
       path 'refer-contact'

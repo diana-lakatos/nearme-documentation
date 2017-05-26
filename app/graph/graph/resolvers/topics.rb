@@ -14,7 +14,7 @@ module Graph
       end
 
       def decorate(relation)
-        relation.map { |topic| TopicDrop.new(topic.decorate) }
+        relation.map { |topic| ::TopicDrop.new(topic.decorate) }
       end
 
       def resolve_by_filters(relation, filters)
@@ -39,7 +39,7 @@ module Graph
       def main_scope
         return ::Topic.all unless @variables['follower_id']
         ::Topic.all
-          .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::Topic))
+               .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::Topic))
       end
 
       def arbitrary_order_clause(values)

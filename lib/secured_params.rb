@@ -681,7 +681,8 @@ class SecuredParams
       :layout_name,
       :metadata_title,
       :metadata_meta_description,
-      :metadata_canonical_url
+      :metadata_canonical_url,
+      :format
     ]
   end
 
