@@ -83,7 +83,7 @@ class InstanceMailer < ActionMailer::Base
     if options.values_at(:to, :cc, :bcc).compact.flatten.size == 1 && @user_to_which_email_will_be_sent.present?
       UserDrop.new(@user_to_which_email_will_be_sent).unsubscribe_url
     else
-      @platform_context.unsubscribe_url
+      PlatformContextDrop.new(@platform_context).unsubscribe_url
     end
   end
 end
