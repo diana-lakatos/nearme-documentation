@@ -315,7 +315,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
       assert_equal [@reservation.transactable.creator.email], mail.to
       assert_equal "[DesksNearMe] #{@reservation.owner.first_name} confirmed payment!", mail.subject
-      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
@@ -333,7 +333,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@reservation.transactable.creator.email], mail.to
       assert_equal "[DesksNearMe] #{@reservation.owner.first_name} declined payment!", mail.subject
-      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
@@ -376,7 +376,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         assert_contains 'Please review it and approve or decline in your dashboard', mail.html_part.body
         assert_equal [@reservation.owner.email], mail.to
         assert_equal "[#{@platform_context.decorate.name}] #{@reservation.transactable.name} submitted invoice", mail.subject
-        assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+        assert_contains 'href="http://custom.domain.com/', mail.html_part.body
         assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
         assert_not_contains 'Liquid error:', mail.html_part.body

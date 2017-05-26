@@ -34,7 +34,7 @@ class Utils::DefaultAlertsCreator::SupportCreatorTest < ActionDispatch::Integrat
       mail = ActionMailer::Base.deliveries.last
       assert mail.html_part.body.include?('I have a lot of questions. Where to start.')
       assert mail.html_part.body.include?('Request Received')
-      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_equal [@user.email], mail.to
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
@@ -50,7 +50,7 @@ class Utils::DefaultAlertsCreator::SupportCreatorTest < ActionDispatch::Integrat
       assert mail.html_part.body.include?('I have a lot of questions. Where to start.')
       assert_equal [@user.email], mail.to
       assert mail.html_part.body.include?('Ticket Updated')
-      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_equal "[Ticket Support #{@message.ticket_id}] #{@platform_context.decorate.name} - Your support request was updated", mail.subject
@@ -65,7 +65,7 @@ class Utils::DefaultAlertsCreator::SupportCreatorTest < ActionDispatch::Integrat
       assert mail.html_part.body.include?('I have a lot of questions. Where to start.')
       assert mail.html_part.body.include?('has replied to your support request.')
       assert_equal [@user.email], mail.to
-      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_equal "[Ticket Support #{@message.ticket_id}] #{@platform_context.decorate.name} - #{@message.full_name} replied to your support request", mail.subject
