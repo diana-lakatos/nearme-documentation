@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170523191507) do
+ActiveRecord::Schema.define(version: 20170525191039) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -3574,7 +3574,7 @@ ActiveRecord::Schema.define(version: 20170523191507) do
     t.integer  "api_call_count"
   end
 
-  add_index "workflow_alert_monthly_aggregated_logs", ["instance_id", "year", "month"], name: "wamal_instance_id_year_month_index", unique: true, using: :btree
+  add_index "workflow_alert_monthly_aggregated_logs", ["instance_id", "year", "month"], name: "wamal_instance_id_year_month_index", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "workflow_alert_weekly_aggregated_logs", force: :cascade do |t|
     t.integer  "instance_id"
@@ -3588,7 +3588,7 @@ ActiveRecord::Schema.define(version: 20170523191507) do
     t.integer  "api_call_count"
   end
 
-  add_index "workflow_alert_weekly_aggregated_logs", ["instance_id", "year", "week_number"], name: "wamal_instance_id_year_week_number_index", unique: true, using: :btree
+  add_index "workflow_alert_weekly_aggregated_logs", ["instance_id", "year", "week_number"], name: "wamal_instance_id_year_week_number_index", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "workflow_alerts", force: :cascade do |t|
     t.string   "name",                      limit: 255
