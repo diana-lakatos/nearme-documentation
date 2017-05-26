@@ -45,7 +45,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
       assert_equal(
         {
-          'id' => @user.id,
+          'id' => @user.id.to_s,
           'name' => @user.name,
           'email' => @user.email,
           'first_name' => @user.first_name,
@@ -266,10 +266,27 @@ class Graph::SchemaTest < ActiveSupport::TestCase
   end
 
   context 'transactable query' do
-    should 'get transactable custom photo' do
-      query = %({ transactables { funny_pic: custom_attribute_photos(name: "funny_pic"){ url }}})
+    should 'get custom photo' do
+      query = %({ transactables { edges{ node { funny_pic: custom_attribute_photos(name: "funny_pic"){ url } }}}})
 
       assert_not_nil result(query)
+    end
+
+    should 'get followers' do
+      transactable = FactoryGirl.create(:transactable)
+      FactoryGirl.create(:activity_feed_subscription, followed: transactable)
+      refresh_elastic
+      query = %({ transactable(id: "#{transactable.id}") { followers{ total_count }}})
+
+      assert_equal 1, result(query).dig('transactable', 'followers', 'total_count')
+    end
+
+    should 'get comments' do
+      transactable = FactoryGirl.create(:transactable)
+      FactoryGirl.create(:comment, commentable: transactable)
+      query = %({ transactable(id: "#{transactable.id}") { comments{ total_count }}})
+
+      assert_equal 1, result(query).dig('transactable', 'comments', 'total_count')
     end
   end
 

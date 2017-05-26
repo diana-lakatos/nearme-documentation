@@ -103,16 +103,7 @@ class Transactable < ActiveRecord::Base
   has_many :transactable_collaborators, dependent: :destroy
   has_many :group_transactables, dependent: :destroy
   has_many :groups, through: :group_transactables
-
-  has_many :activity_feed_events, as: :followed, dependent: :destroy
-  has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
-  has_many :comments, as: :commentable, dependent: :destroy
-  has_many :feed_followers, through: :activity_feed_subscriptions, source: :follower
   has_many :links, dependent: :destroy, as: :linkable
-  has_many :transactable_topics, dependent: :destroy
-  has_many :topics, through: :transactable_topics
-  has_many :group_transactables, dependent: :destroy
-  has_many :groups, through: :group_transactables
 
   accepts_nested_attributes_for :additional_charge_types, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :approval_requests

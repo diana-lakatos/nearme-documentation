@@ -3,8 +3,7 @@ module Graph
   module Types
     module Transactables
       TransactableQueryType = GraphQL::ObjectType.define do
-        field :transactables do
-          type !types[Types::Transactables::Transactable]
+        connection :transactables, Graph::Types::RelayConnection.build(Types::Transactables::Transactable) do
           argument :ids, types[types.ID], 'List of ids'
           argument :listing_type_id, types.ID
           argument :filters, types[Types::Transactables::TransactableFilterEnum]

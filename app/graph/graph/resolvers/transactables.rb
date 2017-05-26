@@ -4,11 +4,11 @@ module Graph
     class Transactables
       def call(_, arguments, ctx)
         @variables = ctx.query.variables
-        decorate(resolve_by(arguments))
+        decorate(resolve_by(arguments.to_h.except('first', 'after')))
       end
 
       def self.decorate(transactable)
-        TransactableDrop.new(transactable.decorate)
+        ::TransactableDrop.new(transactable.decorate)
       end
 
       def resolve_by(arguments)

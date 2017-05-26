@@ -69,6 +69,10 @@ Pulls the version from DB to the files.
 
 Deploys the files to DB.
 
+`env ENDPOINT=production nearme-marketplace deploy`
+
+Deploys to production
+
 `nearme-marketplace sync`
 
 Enables sync mode (auto syncing changes in the files)

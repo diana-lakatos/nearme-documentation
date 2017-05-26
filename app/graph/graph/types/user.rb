@@ -5,10 +5,11 @@ module Graph
     User = GraphQL::ObjectType.define do
       name 'User'
       description 'A user'
+      implements GraphQL::Relay::Node.interface
 
       global_id_field :id
 
-      field :id, !types.Int
+      field :id, !types.ID
       field :is_followed, !types.Boolean do
         argument :follower_id, types.ID
         resolve ->(user, arg, _) { ::ActivityFeedSubscription.followed_by_user?(user.id, ::User, arg['follower_id']) }

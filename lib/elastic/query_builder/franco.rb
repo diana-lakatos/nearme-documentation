@@ -14,6 +14,8 @@ module Elastic
         @query.deep_merge!(branch) do |_key, old, new|
           Array(old) + Array(new)
         end
+
+        self
       end
 
       def to_h
