@@ -16,7 +16,8 @@
     </div>
     <div class="grid-a-projects-a">
       <div class="wrap">
-        {% for project in g.projects %}
+        {% for edge in g.projects.edges %}
+          {% assign project edge.node %}
           <div class="cell">
             <article class="card-a" data-equalize>
               <figure><a href="{{ project.show_path }}"><img src="{{ project.cover_photo_url }}" /></a></figure>
