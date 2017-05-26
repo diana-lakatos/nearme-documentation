@@ -69,8 +69,8 @@ module LiquidFilters
 
   # @return [Array] result contains all elements from both arrays.
   # @param array [Array] base array
-  # @param el [Object] we will transform object into array and add it to the other. Method
-  # is called soft, because it will not crash when nil is provided as argument
+  # @param obj [Object] we will transform object into array and add it to the other. Method
+  #   is called soft, because it will not crash when nil is provided as argument
   def soft_concat(array, obj)
     Array(array) + Array(obj)
   end
@@ -368,7 +368,7 @@ module LiquidFilters
   end
 
   # @return [String] time in string in HH:MM format 24h clock
-  # @param string [Int] number of minutes
+  # @param minutes [Integer] number of minutes
   def number_of_minutes_to_time(minutes)
     minutes = minutes.to_i % 1440 # in case we made overnight booking
     hours = (minutes.to_f / 60).floor
@@ -775,7 +775,7 @@ module LiquidFilters
   end
 
   # @return [Array<Object>] with objects
-  # @param objects [Array<Array>] array of arrays to be processed
+  # @param array [Array<Array>] array of arrays to be processed
   def flatten(array)
     array.flatten
   end

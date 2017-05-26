@@ -15,29 +15,43 @@ class CustomAttachmentForm < BaseForm
       end
     end
   end
+
+  # @!attribute id
+  #   @return [Integer] numeric identifier for the custom attachment
   property :id, virtual: true
+
+  # @!attribute file
+  #   @return [File] file object associated with the custom attachment
   property :file, virtual: true
 
   def id
     super.presence || model.id
   end
 
+  # @!method uploader_id
+  #   @return [Integer] numeric identifier for the uploader
   delegate :uploader_id, to: :model
 
+  # @return [String] file name for the associated file
   def file_name
     File.basename(file.path.to_s).presence || file.filename
   end
 
+  # @return [String] file extension for the associated file
   def file_extension
     File.extname(file.path.to_s.presence || file.filename)&.tr('.', '')
   end
 
+  # @!method url
+  #   @return [String] URL to the associated file
   delegate :url, to: :file, prefix: true
 
+  # @return [Time] date when the associated object was created
   def file_time
     model.created_at || Time.zone.now
   end
 
+  # @return [Integer] size of the associated file in bytes
   def file_size
     file.size
   rescue

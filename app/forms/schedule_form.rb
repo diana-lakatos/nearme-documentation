@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 class ScheduleForm < BaseForm
-  property :id
-  property :_destroy, virtual: true
-  property :unavailable_period_enabled
-
   class << self
     def decorate(configuration)
       Class.new(self) do
@@ -36,6 +32,22 @@ class ScheduleForm < BaseForm
                                                      end
                                                      item ? item : schedule_exception_rules.append(model.schedule_exception_rules.build)
                                                    }
+
+  # @!attribute id
+  #   @return [Integer] numeric identifier for the schedule object
+  property :id
+
+  property :_destroy, virtual: true
+
+  # @!attribute unavailable_period_enabled
+  #   @return [Boolean] if enabled, future occurences of the event will be omitted if they
+  #     match a schedule exception range
+  property :unavailable_period_enabled
+
+  # @!attribute schedule_rules
+  #   @return [Array<ScheduleRuleForm>] array of {ScheduleRuleForm} for this schedule
+  # @!attribute schedule_exception_rules
+  #   @return [Array<ScheduleExceptionRuleForm>] array of {ScheduleExceptionRuleForm} for this schedule
 
   def build_schedule_exception_rules
     ScheduleExceptionRuleForm.new(model.schedule_exception_rules.build)
