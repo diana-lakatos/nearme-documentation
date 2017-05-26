@@ -94,12 +94,13 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   def ensure_custom_validators_are_properly_setup!
     if valid_values.any?
       custom_validator = custom_validators
-                         .detect { |cv| cv.field_name == name && cv.valid_values.present? } || custom_validators.build
+                         .detect { |cv| cv.valid_values.present? } || custom_validators.build
       if custom_validator.valid_values != valid_values
         custom_validator.valid_values = valid_values
         custom_validator.save!
       end
     end
+    custom_validators.update_all(field_name: name) if name_changed?
     true
   end
 

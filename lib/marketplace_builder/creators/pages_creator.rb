@@ -29,6 +29,7 @@ module MarketplaceBuilder
         page.layout_name = template.layout_name if template.layout_name.present?
         page.content = template.body if template.body.present?
         page.redirect_url = template.redirect_url if template.redirect_url.present?
+        page.max_deep_level = template.max_deep_level if template.max_deep_level.present?
         page.redirect_code = template.redirect_code if template.redirect_code.present?
         page.save!
       end

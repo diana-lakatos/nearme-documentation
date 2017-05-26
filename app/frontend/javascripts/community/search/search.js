@@ -6,7 +6,7 @@ require('history.js/history.adapter.ender');
 
 Forms = require('../forms');
 
-Search = function() {
+Search = (function() {
   function Search(form) {
     this.form = form;
     this.topnavForm = $('form#search_topnav');
@@ -42,32 +42,32 @@ Search = function() {
     this.bindForm();
     this.topnavForm.on(
       'submit',
-      function(_this) {
+      (function(_this) {
         return function(event) {
           event.preventDefault();
           return _this.triggerSearchAndHandleResults();
         };
-      }(this)
+      })(this)
     );
     this.paginationContainer.on(
       'click',
-      function(_this) {
+      (function(_this) {
         return function(event) {
           event.preventDefault();
           return _this.getNextPage();
         };
-      }(this)
+      })(this)
     );
     return this.searchTabs.on(
       'click',
-      function(_this) {
+      (function(_this) {
         return function(event) {
           event.preventDefault();
           _this.triggerActionButtonsVisibility($(event.target));
           _this.triggerTabSwitchAndHandleResults($(event.target));
           return _this.triggerRelatedDropdownSwitch($(event.target));
         };
-      }(this)
+      })(this)
     );
   };
 
@@ -75,11 +75,11 @@ Search = function() {
     this.form = $('form#search_filter');
     return this.form.on(
       'change',
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.triggerSearchAndHandleResults();
         };
-      }(this)
+      })(this)
     );
   };
 
@@ -90,12 +90,12 @@ Search = function() {
       this.pageInput().val(page);
     }
     this.triggerSearchRequest().success(
-      function(_this) {
+      (function(_this) {
         return function(html) {
           _this.appendResults(html);
           return _this.replaceSeeMore(html);
         };
-      }(this)
+      })(this)
     );
     return true;
   };
@@ -121,6 +121,10 @@ Search = function() {
     return $options.eq(index).attr('selected', true);
   };
 
+  Search.prototype.getSearchType = function() {
+    return $('nav.search-types li.is-active a').data('search-type');
+  };
+
   /*
    * Triggers a search with default UX behaviour and semantics.
    */
@@ -128,14 +132,17 @@ Search = function() {
     this.queryInput().val(this.topnavFormQuery.val());
     this.pageInput().val(1);
     return this.triggerSearchRequest(data).success(
-      function(_this) {
+      (function(_this) {
         return function(html) {
+          let searchType = data && data['search_type']
+            ? data['search_type']
+            : _this.getSearchType();
           _this.showResults(html);
           _this.reinitializeElements();
           _this.replaceSeeMore(html);
-          return _this.updateUrlForSearchQuery(data['search_type']);
+          return _this.updateUrlForSearchQuery(searchType);
         };
-      }(this)
+      })(this)
     );
   };
 
@@ -175,11 +182,11 @@ Search = function() {
     if (!data) {
       data = this.form.serialize();
     }
-    return this.currentAjaxRequest = $.ajax({
+    return (this.currentAjaxRequest = $.ajax({
       url: this.form.attr('action'),
       type: 'GET',
       data: data
-    });
+    }));
   };
 
   Search.prototype.updateUrlForSearchQuery = function(search_type) {
@@ -192,7 +199,7 @@ Search = function() {
      */
     params = decodeURIComponent('?' + $.param(params));
     ref = this.searchTabs;
-    for (i = 0, len = ref.length; i < len; i++) {
+    for ((i = 0), (len = ref.length); i < len; i++) {
       tab = ref[i];
       old_url = $(tab).attr('href').split('?')[0];
       $(tab).attr('href', old_url + ('?query=' + this.topnavFormQuery.val()));
@@ -211,7 +218,9 @@ Search = function() {
     for (k in form_params) {
       param = form_params[k];
       if (
-        param['name'] !== 'page' && param['name'] !== 'authenticity_token' && param['value'] !== ''
+        param['name'] !== 'page' &&
+        param['name'] !== 'authenticity_token' &&
+        param['value'] !== ''
       ) {
         params.push(param);
       }
@@ -220,6 +229,6 @@ Search = function() {
   };
 
   return Search;
-}();
+})();
 
 module.exports = Search;

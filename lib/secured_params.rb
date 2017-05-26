@@ -675,6 +675,7 @@ class SecuredParams
       :position,
       :redirect_url,
       :redirect_code,
+      :max_deep_level,
       :require_verified_user,
       :open_in_new_window,
       :layout_name,
