@@ -7,7 +7,7 @@ class MigrateUsersApprovalRequestsToAttributes < ActiveRecord::Migration
       if art.present?
         ipt = InstanceProfileType.where(profile_type: 'default').first
         if ipt.present?
-          ipt.update_column(:admin_approval, true) 
+          ipt.update_column(:admin_approval, true)
 
           art.approval_request_attachment_templates.each do |arat|
             ca = CustomAttributes::CustomAttribute.new
@@ -38,7 +38,7 @@ class MigrateUsersApprovalRequestsToAttributes < ActiveRecord::Migration
               form_component.form_fields << {"user" => ca.name}
               form_component.save!
 
-              FormComponentToFormConfiguration.new(Instance.where(id: PlatformContext.current.instance.id)).go!
+              FormComponentToFormConfiguration.new(PlatformContext.current.instance).go!
             end
           end
         end
