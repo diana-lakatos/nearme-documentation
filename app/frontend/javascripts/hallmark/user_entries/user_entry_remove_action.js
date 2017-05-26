@@ -9,8 +9,8 @@ class UserEntryRemoveAction {
   constructor(trigger: HTMLElement, container: HTMLElement) {
     this.trigger = trigger;
     this.container = container;
-    this.confirmLabel = this.trigger.dataset.confirmLabel ||
-      'Are you sure you want to remove this element?';
+    this.confirmLabel =
+      this.trigger.dataset.confirmLabel || 'Are you sure you want to remove this element?';
     let actionUrl = this.trigger.getAttribute('href');
     if (!actionUrl) {
       throw new Error('Missing actionURL attribute for remove action');
@@ -36,9 +36,8 @@ class UserEntryRemoveAction {
   removeContainer() {
     this.container.classList.add('hidden');
 
-    $
-      .ajax({ url: this.actionUrl, method: 'delete', dataType: 'json' })
-      .done(() => {
+    $.ajax({ url: this.actionUrl, method: 'delete', dataType: 'json' })
+      .then(() => {
         if (this.container.parentNode) {
           this.container.parentNode.removeChild(this.container);
         }

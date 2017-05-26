@@ -45,6 +45,10 @@
         = render 'shared/render_flash'
 
         %section#content.content-a
+          - if content_for?(:hero_header)
+            .hero-header-a
+              = yield :hero_header
+
           = yield
 
         = yield :tutorial

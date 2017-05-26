@@ -1333,6 +1333,8 @@ DesksnearMe::Application.routes.draw do
     get '/ui_settings/get/:id', to: 'ui_settings#get', as: :get_ui_setting
     patch '/ui_settings', to: 'ui_settings#set', as: :set_ui_setting
 
+    get '/register', to: 'pages#register'
+
     get '/configure', to: 'configure#index'
 
     # get '/:page', to: 'pages#show'

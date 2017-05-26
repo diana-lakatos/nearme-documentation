@@ -8,7 +8,7 @@ $header-height: 80px;
 
   > .inner {
     position: relative;
-    z-index: 101;
+    z-index: 400;
     margin: 0;
     background: $color-default;
     color: #fff;
@@ -147,7 +147,7 @@ $header-height: 80px;
 
   .search {
     float: left;
-    width: 235px;
+    width: 175px;
     margin: 25px 30px 0 0;
 
     > div {
@@ -231,24 +231,28 @@ $header-height: 80px;
       vertical-align: top;
     }
 
-    li a:before {
+    li a::before {
       transition: none;
     }
 
-    li.members a:before {
+    li.members a::before {
       content: $fa-var-user;
     }
 
-    li.diy a:before {
+    li.diy a::before {
       content: $fa-var-thumb-tack;
     }
 
-    li.topics a:before {
+    li.topics a::before {
       content: $fa-var-comments;
     }
 
-    li.groups a:before {
+    li.groups a::before {
       content: $fa-var-users;
+    }
+
+    li.videos a::before {
+      content: $fa-var-video-camera;
     }
 
     li em {

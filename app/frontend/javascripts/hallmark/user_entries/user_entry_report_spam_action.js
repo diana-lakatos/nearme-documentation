@@ -92,9 +92,8 @@ class UserEntryReportSpamAction {
 
     let action = this.getCurrentAction();
 
-    $
-      .ajax({ url: action.url, method: action.method, dataType: 'json' })
-      .done(() => {
+    $.ajax({ url: action.url, method: action.method, dataType: 'json' })
+      .then(() => {
         this.processing = false;
         this.raportExists = !this.raportExists;
         this.updateTrigger();

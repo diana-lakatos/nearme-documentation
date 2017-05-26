@@ -1,4 +1,7 @@
 /* global YT */
+
+import { getYouTubeIframeApi } from '../toolkit/youtube';
+
 var IntroVideo,
   bind = function(fn, me) {
     return function() {
@@ -8,11 +11,10 @@ var IntroVideo,
 
 require('jquery.cookie/jquery.cookie');
 
-IntroVideo = function() {
+IntroVideo = (function() {
   function IntroVideo(container) {
     this.onPlayerReady = bind(this.onPlayerReady, this);
     this.onPlayerStateChange = bind(this.onPlayerStateChange, this);
-    this.loadApi();
     this.container = $(container);
     this.initStructure();
     this.videoWrap = this.container.find('.intro-video-wrapper');
@@ -23,14 +25,6 @@ IntroVideo = function() {
     this.videoAspectRatio = 1280 / 720;
     this.bindEvents();
   }
-
-  IntroVideo.prototype.loadApi = function() {
-    var firstScriptTag, tag;
-    tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    firstScriptTag = document.getElementsByTagName('script')[0];
-    return firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-  };
 
   IntroVideo.prototype.initStructure = function() {
     this.container.html(
@@ -46,53 +40,52 @@ IntroVideo = function() {
   IntroVideo.prototype.bindEvents = function() {
     this.trigger.on(
       'click',
-      function(_this) {
+      (function(_this) {
         return function(e) {
           e.preventDefault();
           e.stopPropagation();
           return _this.showVideo();
         };
-      }(this)
+      })(this)
     );
     this.overlay.add(this.closeButton).add(this.videoWrap).on(
       'click.introvideo',
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.hideVideo();
         };
-      }(this)
+      })(this)
     );
     $(window).on(
       'resize',
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.resizePlayer();
         };
-      }(this)
+      })(this)
     );
-    return window.onYouTubeIframeAPIReady = function(_this) {
-      return function() {
-        return _this.player = new YT.Player('intro-player', {
-          height: 1280,
-          width: 720,
-          videoId: 'cBamideLh3g',
-          events: { onReady: _this.onPlayerReady, onStateChange: _this.onPlayerStateChange },
-          playerVars: { rel: 0, fs: 0 }
-        });
-      };
-    }(this);
+
+    getYouTubeIframeApi().then(YT => {
+      this.player = new YT.Player('intro-player', {
+        height: 1280,
+        width: 720,
+        videoId: 'cBamideLh3g',
+        events: { onReady: this.onPlayerReady, onStateChange: this.onPlayerStateChange },
+        playerVars: { rel: 0, fs: 0 }
+      });
+    });
   };
 
   IntroVideo.prototype.bindOnShow = function() {
     return $('body').on(
       'keydown.introvideo',
-      function(_this) {
+      (function(_this) {
         return function(e) {
           if (e.which === 27) {
             return _this.hideVideo();
           }
         };
-      }(this)
+      })(this)
     );
   };
 
@@ -156,6 +149,6 @@ IntroVideo = function() {
   };
 
   return IntroVideo;
-}();
+})();
 
 module.exports = IntroVideo;

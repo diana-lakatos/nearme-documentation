@@ -34,4 +34,5 @@ NM.on('ready', () => {
   require('hallmark/initializers/phone_numbers.initializer');
   require('hallmark/initializers/follow_buttons.initializer');
   require('hallmark/initializers/user_messages.initializer');
+  require('hallmark/initializers/slider.initializer');
 });
