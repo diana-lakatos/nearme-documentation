@@ -17,9 +17,11 @@ class WishListButton {
     this.ui.label = el.querySelector('[data-text]');
     this.ui.link = el.querySelector('[data-action-link]');
 
-    this.labels = {};
-    this.labels.inactive = this.ui.label.getAttribute('data-inactive-state');
-    this.labels.active = this.ui.label.getAttribute('data-active-state');
+    if (this.ui.label) {
+      this.labels = {};
+      this.labels.inactive = this.ui.label.getAttribute('data-inactive-state');
+      this.labels.active = this.ui.label.getAttribute('data-active-state');
+    }
 
     this._bindEvents();
 
