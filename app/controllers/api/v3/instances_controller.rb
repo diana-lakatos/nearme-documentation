@@ -136,6 +136,7 @@ class InstanceFactory
       Utils::FormComponentsCreator.new(type).create!
     end
 
+    create_default_user_message_type
     tp = instance.transactable_types.new(name: instance.bookable_noun)
 
     tp.action_types << TransactableType::TimeBasedBooking.new(
@@ -185,5 +186,11 @@ class InstanceFactory
     WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, instance.id, user.id, @password, as: user)
     FormComponentToFormConfiguration.new(instance).go!
     instance
+  end
+
+  private
+
+  def create_default_user_message_type
+    instance.user_message_types.create!(message_type: UserMessageType::DEFAULT)
   end
 end

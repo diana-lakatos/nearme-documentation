@@ -35,10 +35,8 @@ class TransactableForm < BaseForm
     def decorate(configuration)
       configuration = configuration
       Class.new(self) do
-        if (properties_configuration = configuration.delete(:properties)).present?
-          add_validation(:properties, properties_configuration)
-          property :properties, form: PropertiesForm.decorate(properties_configuration)
-        end
+
+        inject_custom_attributes(configuration)
         if (custom_images_configuration = configuration.delete(:custom_images)).present?
           add_validation(:custom_images, custom_images_configuration)
           property :custom_images, form: CustomImagesForm.decorate(custom_images_configuration),

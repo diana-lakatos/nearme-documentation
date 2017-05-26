@@ -15,9 +15,9 @@ ActiveRecord::Schema.define(version: 20170523191507) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
   enable_extension "btree_gin"
   enable_extension "btree_gist"
-  enable_extension "hstore"
 
   create_table "activity_feed_events", force: :cascade do |t|
     t.integer  "instance_id"
@@ -3228,12 +3228,12 @@ ActiveRecord::Schema.define(version: 20170523191507) do
 
   create_table "user_message_types", force: :cascade do |t|
     t.integer  "instance_id"
-    t.string   "type"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string   "message_type"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
-  add_index "user_message_types", ["instance_id", "type"], name: "user_message_types_main_idx", using: :btree
+  add_index "user_message_types", ["instance_id", "message_type"], name: "user_message_types_main_idx", using: :btree
 
   create_table "user_messages", force: :cascade do |t|
     t.integer  "thread_owner_id"

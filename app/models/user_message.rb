@@ -12,6 +12,8 @@ class UserMessage < ActiveRecord::Base
   belongs_to :thread_owner, -> { with_deleted }, class_name: 'User'     # user that started conversation
   belongs_to :thread_recipient, -> { with_deleted }, class_name: 'User' # user that is conversation recipient
   belongs_to :thread_context, -> { with_deleted }, polymorphic: true    # conversation context: Transactable, Reservation, User
+  belongs_to :user_message_type
+  has_custom_attributes target_type: 'UserMessageType', target_id: :user_message_type_id
   has_many :attachments, class_name: 'Attachable::Attachment', as: :attachable
 
   validates :author_id, presence: true
@@ -31,6 +33,7 @@ class UserMessage < ActiveRecord::Base
           'TransactableCollaborator', transactable.transactable_collaborators.pluck(:id), 'Transactable', transactable.id)
   end
 
+  before_create :assign_defaults
   after_create :update_recipient_unread_message_counter, :mark_as_read_for_author
 
   accepts_nested_attributes_for :attachments, allow_destroy: true
@@ -170,5 +173,10 @@ class UserMessage < ActiveRecord::Base
 
   def user_messages_decorator_for(user)
     @user_messages_decorator ||= UserMessagesDecorator.new(user.user_messages, user)
+  end
+
+  def assign_defaults
+    self.user_message_type ||= PlatformContext.current.instance.user_message_types.default
+    true
   end
 end

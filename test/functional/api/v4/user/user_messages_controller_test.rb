@@ -23,6 +23,27 @@ module Api
           assert_redirected_to dashboard_user_message_path(UserMessage.last.id)
         end
 
+        should 'add user message with custom attribute' do
+          FactoryGirl.create(
+            :custom_attribute,
+            name: :foo, target: UserMessageType.default, attribute_type: 'string'
+          )
+          assert_difference 'UserMessage.count' do
+            post :create, form_configuration_id: form_configuration_with_custom_attribute.id,
+              user_id: @recipient.id,
+              user_message: {
+                body: 'some body',
+                properties: {
+                  foo: 'bar'
+                }
+              }
+          end
+
+          user_message = UserMessage.last
+          assert_equal('some body', user_message.body)
+          assert_equal({ 'foo' => 'bar' }, user_message.properties.to_h)
+        end
+
         protected
 
         def form_configuration
@@ -38,6 +59,28 @@ module Api
               }
             },
             return_to: "{% if form.model.id %}{{ 'dashboard_user_message_path' | generate_url: id: form.model.id }}{% endif %}"
+          )
+        end
+
+        def form_configuration_with_custom_attribute
+          @form_configuration ||= FactoryGirl.create(
+            :form_configuration,
+            name: 'user_message_form',
+            base_form: 'UserMessageForm',
+            configuration: {
+              body: {
+                validation: {
+                  presence: true
+                }
+              },
+              properties: {
+                foo: {
+                  validation: {
+                    presence: true
+                  }
+                }
+              }
+            }
           )
         end
       end
