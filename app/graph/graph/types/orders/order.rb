@@ -15,7 +15,7 @@ module Graph
         field :creator, !Types::User do
           resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, { id: obj.creator_id }, ctx) }
         end
-        field :transactable, !Types::Transactable do
+        field :transactable, !Types::Transactables::Transactable do
           resolve ->(obj, _args, _ctx) { TransactableDrop.new(obj.transactable) }
         end
         field :transactable_line_items, !types[Types::Transactables::TransactableLineItem]

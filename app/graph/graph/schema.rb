@@ -11,7 +11,7 @@ module Graph
       when ::UserStatusUpdate
         Types::ActivityFeed::UserStatusUpdate
       when ::Transactable
-        Types::Transactable
+        Types::Transactables::Transactable
       when ::Location
         Types::Location
       when ::Elastic::UserDrop

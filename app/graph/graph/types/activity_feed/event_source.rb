@@ -8,7 +8,7 @@ module Graph
           ActivityFeed::Comment,
           ActivityFeed::UserStatusUpdate,
           ActivityFeed::Photo,
-          Types::Transactable,
+          Types::Transactables::Transactable,
           ActivityFeed::Generic
         ]
       end

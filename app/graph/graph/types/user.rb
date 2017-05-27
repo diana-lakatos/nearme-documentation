@@ -101,7 +101,7 @@ module Graph
               )
             end
 
-      field :transactables, types[Types::Transactable] do
+      field :transactables, types[Types::Transactables::Transactable] do
         resolve ->(obj, _arg, _) { ::Transactable.where(creator_id: obj.id) }
       end
 

@@ -19,7 +19,7 @@ module Graph
           }
         end
         field :company, !Graph::Types::Company
-        field :listings, !types[Graph::Types::Transactable] do
+        field :listings, !types[Graph::Types::Transactables::Transactable] do
           resolve ->(obj, _args, _ctx) { obj.listings.map(&:to_liquid) }
         end
         field :path, !types.String

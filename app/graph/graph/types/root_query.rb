@@ -4,6 +4,8 @@ module Graph
     RootQuery = GraphQL::ObjectType.define do
       name 'RootQuery'
       description 'Root query for schema'
+
+      # Please add new query types in namespace of a feature
       fields FieldCombiner.combine(
         [
           Types::CustomAttributes::CustomAttributeQueryType,
@@ -12,7 +14,7 @@ module Graph
           MessagesQueryType,
           SearchQueryType,
           TopicQueryType,
-          TransactableQueryType,
+          Transactables::TransactableQueryType,
           UserQueryType,
           ShoppingCartQueryType,
           Orders::OrdersQueryType,
