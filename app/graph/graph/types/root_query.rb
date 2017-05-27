@@ -6,6 +6,7 @@ module Graph
       description 'Root query for schema'
       fields FieldCombiner.combine(
         [
+          Types::Authentications::LoginProvidersQueryType,
           Types::CustomAttributes::CustomAttributeQueryType,
           FeedQueryType,
           LocationQueryType,
