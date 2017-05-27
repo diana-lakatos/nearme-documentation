@@ -395,7 +395,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         assert_contains 'Unfortunately we had an issue with authorizing your credit card. Please update your payment information to be able to pay.', mail.html_part.body
         assert_equal [@reservation.owner.email], mail.to
         assert_equal "[#{@platform_context.decorate.name}] #{@reservation.transactable.name} submitted invoice", mail.subject
-        assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+        assert_contains 'href="http://custom.domain.com/', mail.html_part.body
         assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
         assert_not_contains 'Liquid error:', mail.html_part.body
