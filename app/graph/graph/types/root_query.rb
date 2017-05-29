@@ -8,6 +8,7 @@ module Graph
       # Please add new query types in namespace of a feature
       fields FieldCombiner.combine(
         [
+          Types::Authentications::LoginProvidersQueryType,
           Types::CustomAttributes::CustomAttributeQueryType,
           FeedQueryType,
           LocationQueryType,
