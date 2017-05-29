@@ -32,7 +32,7 @@ class YoutubeThumbnailService implements ThumbnailService {
 
   getPreviewContent(): Promise<string> {
     let html = `<iframe id="ytplayer" type="text/html"
-                src="http://www.youtube.com/embed/${this.videoId}?autoplay=1&controls=2&fs=1&modestbranding=1&rel=0&showinfo=0"
+                src="https://www.youtube.com/embed/${this.videoId}?autoplay=1&controls=2&fs=1&modestbranding=1&rel=0&showinfo=0"
                 frameborder="0"/>`;
 
     return Promise.resolve(html);
