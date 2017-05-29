@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class AddVideoPagesToHallmark < ActiveRecord::Migration
   def up
+    Page.reset_column_information
     Instance.transaction do
       Instances::InstanceFinder.get(:hallmark).each do |i|
         i.set_context!
