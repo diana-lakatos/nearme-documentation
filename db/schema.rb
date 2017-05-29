@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170527060646) do
+ActiveRecord::Schema.define(version: 20170529121849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1892,10 +1892,11 @@ ActiveRecord::Schema.define(version: 20170527060646) do
     t.boolean  "require_verified_user",                 default: false
     t.boolean  "admin_page",                            default: false
     t.integer  "max_deep_level",                        default: 3
+    t.integer  "format",                                default: 0
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
-  add_index "pages", ["slug", "theme_id"], name: "index_pages_on_slug_and_theme_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
+  add_index "pages", ["slug", "theme_id", "format"], name: "index_pages_on_slug_and_theme_id_and_format", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "pages", ["theme_id"], name: "index_pages_on_theme_id", using: :btree
 
   create_table "partners", force: :cascade do |t|
@@ -3228,12 +3229,12 @@ ActiveRecord::Schema.define(version: 20170527060646) do
 
   create_table "user_message_types", force: :cascade do |t|
     t.integer  "instance_id"
-    t.string   "type"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string   "message_type"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
-  add_index "user_message_types", ["instance_id", "type"], name: "user_message_types_main_idx", using: :btree
+  add_index "user_message_types", ["instance_id", "message_type"], name: "user_message_types_main_idx", using: :btree
 
   create_table "user_messages", force: :cascade do |t|
     t.integer  "thread_owner_id"
@@ -3532,7 +3533,7 @@ ActiveRecord::Schema.define(version: 20170527060646) do
     t.integer  "api_call_count"
   end
 
-  add_index "workflow_alert_monthly_aggregated_logs", ["instance_id", "year", "month"], name: "wamal_instance_id_year_month_index", unique: true, using: :btree
+  add_index "workflow_alert_monthly_aggregated_logs", ["instance_id", "year", "month"], name: "wamal_instance_id_year_month_index", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "workflow_alert_weekly_aggregated_logs", force: :cascade do |t|
     t.integer  "instance_id"
@@ -3546,7 +3547,7 @@ ActiveRecord::Schema.define(version: 20170527060646) do
     t.integer  "api_call_count"
   end
 
-  add_index "workflow_alert_weekly_aggregated_logs", ["instance_id", "year", "week_number"], name: "wamal_instance_id_year_week_number_index", unique: true, using: :btree
+  add_index "workflow_alert_weekly_aggregated_logs", ["instance_id", "year", "week_number"], name: "wamal_instance_id_year_week_number_index", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "workflow_alerts", force: :cascade do |t|
     t.string   "name",                      limit: 255
