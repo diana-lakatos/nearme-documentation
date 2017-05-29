@@ -1,5 +1,3 @@
-
-
 = simple_form_for [:instance_admin, :theme, resource], :html => { :multipart => true } do |f|
   .row
     .input-container.col-xs-12
@@ -13,7 +11,7 @@
     .input-container.col-xs-12
       = f.input :layout_name, collection: resource.valid_page_layouts, include_blank: true, prompt: 'Pick'
   .row
-   .input-container.col-xs-12
+    .input-container.col-xs-12
       = f.input :max_deep_level, collection: [1, 2, 3], hint: 'Controls the amount of nested slugs. If you pick one, and slug will be "example", then the page will be displayed only for /example. For /example/anything not found error will be raise. If you pick 2, then /example/anything will work, but /example/anything/another will raise error'
   .row
     .input-container.col-xs-12
@@ -27,24 +25,19 @@
   .row
     .input-container.col-xs-12
       = f.input :hero_image
-
   .row
     .input-container.col-xs-12
       = f.input :metadata_title, hint: "A good title has between 40 - 250 characters", input_html: { class: 'form-control' }
-
   .row
     .input-container.col-xs-12
       = f.input :metadata_meta_description, as: :text, hint: "A good meta description has between 100 - 350 characters", input_html: { class: 'form-control' }
-
   .row
     .input-container.col-xs-12
       = f.input :metadata_canonical_url, input_html: { class: 'form-control' }
-
   - if platform_context.instance.require_verified_user?
     .row
       .input-container.col-xs-12
         = f.input :require_verified_user, as: :boolean, input_html: { class: 'form-control' }
-
   - if resource.hero_image.present?
     .row
       .input-container.col-xs-12
