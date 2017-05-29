@@ -33,7 +33,7 @@ class VimeoThumbnailService implements ThumbnailService {
   }
 
   getThumbnailUrl(): Promise<string> {
-    let url = `http://vimeo.com/api/v2/video/${this.videoId}.json`;
+    let url = `https://vimeo.com/api/v2/video/${this.videoId}.json`;
 
     return new Promise((resolve, reject) => {
       jsonp(url)
