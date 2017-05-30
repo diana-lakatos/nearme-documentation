@@ -97,7 +97,7 @@ namespace :mycsn do
           u.current_address.longitude = array[LONGITUDE]
           u.current_address.latitude = array[LATITUDE]
         end
-        u.seller_profile.properties.languages = Array(array[FIRST_LANG]) + Array(array[LANGUAGES])
+        u.seller_profile.properties.languages = (Array(array[FIRST_LANG]) + Array(array[LANGUAGES])).uniq
 
         u.seller_profile.properties.summary_profile = array[SUMMARY_PROFILE]
         u.seller_profile.properties.detailed_profile = array[DETAILED_PROFILE]
