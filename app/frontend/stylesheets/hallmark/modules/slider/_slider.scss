@@ -7,6 +7,7 @@ $single-item-width-four-col: "(100% - 80px) / 4";
 $proportion: 160 / 285;
 
 $nav-media-query-bp: 1300px;
+$label-spacing: 25px;
 
 .slider-a {
   position: relative;
@@ -23,7 +24,7 @@ $nav-media-query-bp: 1300px;
 
 .slider-a-wrap {
   position: relative;
-  padding-top: calc(#{$single-item-width-one-col} * #{$proportion});
+  padding-top: calc(#{$single-item-width-one-col} * #{$proportion} + #{$label-spacing});
   overflow: hidden;
   margin-bottom: 0;
 
@@ -31,7 +32,7 @@ $nav-media-query-bp: 1300px;
     position: absolute;
     top: 0;
     left: -20px;
-    bottom: 0;
+    bottom: $label-spacing;
     padding: 0;
     list-style: none;
     width: calc(100% + 20px);
@@ -91,8 +92,23 @@ $nav-media-query-bp: 1300px;
     display: none;
   }
 
+  .thumbnail-label {
+    position: absolute;
+    font-size: 16px;
+    font-weight: bold;
+    top: 100%;
+    display: block;
+    left: 0;
+    right: 0;
+    letter-spacing: 0;
+    margin-top: 5px;
+    line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   @include bpmin($screen-mobile) {
-    padding-top: calc(#{$single-item-width-two-col} * #{$proportion});
+    padding-top: calc(#{$single-item-width-two-col} * #{$proportion} + #{$label-spacing});
 
     li {
       width: calc(#{$single-item-width-two-col});
@@ -101,7 +117,7 @@ $nav-media-query-bp: 1300px;
 
 
   @include bpmin($screen-tablet-vertical) {
-    padding-top: calc(#{$single-item-width-three-col} * #{$proportion});
+    padding-top: calc(#{$single-item-width-three-col} * #{$proportion} + #{$label-spacing});
 
     li {
       width: calc(#{$single-item-width-three-col});
@@ -110,7 +126,7 @@ $nav-media-query-bp: 1300px;
 
 
   @include bpmin(1000px) {
-    padding-top: calc(#{$single-item-width-four-col} * #{$proportion});
+    padding-top: calc(#{$single-item-width-four-col} * #{$proportion} + #{$label-spacing});
 
     li {
       width: calc(#{$single-item-width-four-col});
