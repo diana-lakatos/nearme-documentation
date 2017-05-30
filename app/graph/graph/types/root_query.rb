@@ -10,7 +10,7 @@ module Graph
         [
           Types::Authentications::LoginProvidersQueryType,
           Types::CustomAttributes::CustomAttributeQueryType,
-          FeedQueryType,
+          ActivityFeed::FeedQueryType,
           LocationQueryType,
           MessagesQueryType,
           SearchQueryType,
