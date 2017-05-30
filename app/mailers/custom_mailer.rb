@@ -14,7 +14,7 @@ class CustomMailer < InstanceMailer
     end
     # it's valid email if at least one of these field is present
     if options[:to].blank? && options[:cc].blank? && options[:bcc].blank?
-      Rails.application.config.marketplace_error_logger.log_issue(
+      MarketplaceLogger.error(
         MarketplaceErrorLogger::BaseLogger::MAILER_ERROR,
         "Sending e-mail for workflow alert failed because of 'to' was empty"
       )
