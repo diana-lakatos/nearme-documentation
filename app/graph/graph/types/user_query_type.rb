@@ -6,6 +6,7 @@ module Graph
         type !types[Types::User]
         argument :filters, types[Types::UserFilterEnum]
         argument :take, types.Int
+        argument :ids, types[types.ID]
 
         resolve Resolvers::Users.new
       end
