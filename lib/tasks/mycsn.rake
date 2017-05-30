@@ -162,14 +162,12 @@ namespace :mycsn do
         t.action_type.pricings.build(transactable_type_pricing: TransactableType::Pricing.where(unit: 'hour').first, number_of_units: 1, unit: 'hour', price: array[PAY_RATE])
 
         u.save!
-=begin
-        if u.metadata['verification_email_sent_at'].blank?
+        if u.metadata['import_email_sent_at'].blank?
           puts "\tSending email to: #{u.email}"
-          WorkflowAlert::InvokerFactory.get_invoker(WorkflowAlert.find(133_65)).invoke!(WorkflowStep::SignUpWorkflow::AccountCreated.new(u.id))
-          u.metadata['verification_email_sent_at'] = Time.zone.now
+          WorkflowAlert::InvokerFactory.get_invoker(WorkflowAlert.find_by(name: 'Notify carer about import')).invoke!(WorkflowStep::SignUpWorkflow::ListerAccountCreated.new(u.id))
+          u.metadata['import_email_sent_at'] = Time.zone.now
           u.save!
         end
-=end
       else
         puts "Skipping due to email: #{email}"
       end

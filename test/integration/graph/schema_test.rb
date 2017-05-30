@@ -255,6 +255,9 @@ class Graph::SchemaTest < ActiveSupport::TestCase
           events{
             id
             name
+            comments{
+              body
+            }
           }
         }
       })
@@ -287,6 +290,22 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       query = %({ orders{ total_count edges{ node { id }} }} )
 
       assert_equal 0, result(query).dig('orders', 'total_count')
+    end
+  end
+
+  context 'comments' do
+    should 'get comments with count' do
+      FactoryGirl.create(:comment)
+      query = %({ comments{ total_count edges{ node { id }} }} )
+
+      assert_equal 1, result(query).dig('comments', 'total_count')
+    end
+
+    should 'not get old comments' do
+      FactoryGirl.create(:comment, created_at: 5.days.ago)
+      query = %({ comments(since: #{1.day.ago.to_i}){ total_count edges{ node { id }} }} )
+
+      assert_equal 0, result(query).dig('comments', 'total_count')
     end
   end
 

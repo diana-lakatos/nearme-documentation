@@ -554,6 +554,15 @@ module LiquidFilters
     generate_url url_name, args.merge(TemporaryTokenAuthenticatable::PARAMETER_NAME => user.source.temporary_token)
   end
 
+  # @return [String] returns a url for the given page slug, which includes user temporary token;
+  # e.g: '/account' | url_for_with_token: current_user generates https://example.com/account?temporary_token=TOKEN_HERE
+  def url_for_path_with_token(path, user)
+    'https://' +
+      PlatformContext.current.decorate.host +
+      path +
+      "?#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=#{user.source.temporary_token}"
+  end
+
   # @return [Time] a time object created from parsing the string representation of time given as input
   # @param time [String] a string representation of time for example 'today', '3 days ago' etc.
   def parse_time(time, format=nil)
