@@ -545,9 +545,8 @@ class Payment < ActiveRecord::Base
 
   def payment_options
     options = { currency: currency, payment_gateway_mode: payment_gateway_mode }
-
     options.merge!(merchant_account.try(:custom_options) || {}) if merchant_account.try(:verified?)
-    options[:customer] = payment_source.customer_id if direct_token.blank?
+    options[:customer] = payment_source.customer_id if payment_source && direct_token.blank?
     options[:mns_params] = payment_response_params if payment_response_params
     options[:application_fee] = total_service_amount_cents if merchant_account.try(:verified?)
     options[:token] = express_token if express_token
