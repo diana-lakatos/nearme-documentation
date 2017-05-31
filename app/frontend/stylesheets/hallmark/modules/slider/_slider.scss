@@ -24,15 +24,13 @@ $label-spacing: 25px;
 
 .slider-a-wrap {
   position: relative;
-  padding-top: calc(#{$single-item-width-one-col} * #{$proportion} + #{$label-spacing});
   overflow: hidden;
   margin-bottom: 0;
 
   ul {
-    position: absolute;
+    position: relative;
     top: 0;
     left: -20px;
-    bottom: $label-spacing;
     padding: 0;
     list-style: none;
     width: calc(100% + 20px);
@@ -42,30 +40,29 @@ $label-spacing: 25px;
     transition: transform 1s ease;
     transform: translateX(0);
     will-change: transform;
-    counter-reset: thumbs;
   }
 
   li {
     position: relative;
     display: inline-block;
     width: calc(#{$single-item-width-one-col});
-    height: 100%;
     margin-left: 20px;
-    counter-increment: thumbs;
+    letter-spacing: 0;
+    font-size: 16px;
+    white-space: normal;
   }
 
   a {
-    position: absolute;
+    position: relative;
     display: block;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    width: 100%;
+    padding-top: $proportion * 100%;
     background-color: #ccc;
     background-position: 50% 50%;
     background-repeat: none;
     background-size: cover;
     font-size: 0;
+    margin-bottom: $label-spacing;
   }
 
   a::before {
@@ -77,8 +74,6 @@ $label-spacing: 25px;
     font-weight: normal;
     content: $fa-var-play-circle;
     font-family: FontAwesome;
-
-    // content: counter(thumbs);
     font-size: 70px;
     color: rgba(#fff, 0.7);
     transition: color .3s ease;
@@ -94,13 +89,12 @@ $label-spacing: 25px;
 
   .thumbnail-label {
     position: absolute;
-    font-size: 16px;
     font-weight: bold;
     top: 100%;
     display: block;
     left: 0;
     right: 0;
-    letter-spacing: 0;
+    font-size: 16px;
     margin-top: 5px;
     line-height: 20px;
     overflow: hidden;
@@ -108,8 +102,6 @@ $label-spacing: 25px;
   }
 
   @include bpmin($screen-mobile) {
-    padding-top: calc(#{$single-item-width-two-col} * #{$proportion} + #{$label-spacing});
-
     li {
       width: calc(#{$single-item-width-two-col});
     }
@@ -117,8 +109,6 @@ $label-spacing: 25px;
 
 
   @include bpmin($screen-tablet-vertical) {
-    padding-top: calc(#{$single-item-width-three-col} * #{$proportion} + #{$label-spacing});
-
     li {
       width: calc(#{$single-item-width-three-col});
     }
@@ -126,8 +116,6 @@ $label-spacing: 25px;
 
 
   @include bpmin(1000px) {
-    padding-top: calc(#{$single-item-width-four-col} * #{$proportion} + #{$label-spacing});
-
     li {
       width: calc(#{$single-item-width-four-col});
     }
@@ -210,3 +198,5 @@ $label-spacing: 25px;
     }
   }
 }
+
+.slider-a.video {}
