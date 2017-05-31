@@ -9,20 +9,20 @@ The file describes new Marketplace Builder functionalities.
 - [ ] topics
 - [ ] categories
 - [x] pages
-- [ ] content holders
+- [x] content holders
 - [ ] mailers
 - [ ] SMS
 - [x] liquid views
 - [x] translations
 - [x] workflows
 - [ ] custom model types
-- [ ] graph queries
+- [x] graph queries
 - [x] custom themes and assets
 - [ ] rating system
-- [ ] form configuration
+- [x] form configuration
 
 ## What if I want to export/import part that is not supported?
-You can stil use old marketplace import and export command or collaborate to new MP builder.
+You can still use old marketplace import and export command or collaborate to new MP builder.
 
 ## Installation
 1. Go to `desksnearme/vendor/gems/nearme-marketplace`
@@ -30,6 +30,8 @@ You can stil use old marketplace import and export command or collaborate to new
 
 ## Configuration
 1. Go to marketplace folder you are working on
+2. Ensure `marketplace_builder` directory exists
+3. Ensure `marketplace_builder/.endpoints.example` exists, otherwise copy it from this doc.
 2. `cp marketplace_builder/.endpoints.example marketplace_builder/.endpoints`
 3. Open the .endpoints file
 
