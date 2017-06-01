@@ -66,7 +66,7 @@ class LiquidView
     assigns['request_xhr'] = @view.try(:controller).try(:request).try(:xhr?)
     assigns['current_full_path'] = @view.try(:controller).try(:request).try(:original_fullpath)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
-    assigns['flash'] = @view.try(:flash).try(:to_hash) if ApplicationController === @view.try(:controller)
+    assigns['flash'] = @view.try(:flash).try(:to_hash) if [ApplicationController, Api::BaseController].any? { |klass| @view.try(:controller).kind_of?(klass) }
     assigns['form_authenticity_token'] = @view.try(:controller).try(:form_authenticity_token)
 
     custom_theme = PlatformContext.current.custom_theme

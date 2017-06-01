@@ -22,7 +22,6 @@ module Api
           sign_in(user_signup.model)
         end
         respond(user_signup, notice: I18n.t('devise.registrations.signed_up'),
-                              alert: false,
                               location: session.delete(:user_return_to).presence || params[:return_to].presence || root_path)
       end
 
@@ -39,8 +38,7 @@ module Api
           # sign up - we want to be notified
           raise "Update failed due to configuration issue: #{user_update_form.model.errors.full_messages.join(', ')}" if user_update_form.model.changed?
         end
-        respond(user_update_form, notice: I18n.t('flash_messages.api.users.update.notice'),
-                                   alert: false)
+        respond(user_update_form)
       end
 
       def verify
