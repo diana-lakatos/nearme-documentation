@@ -108,6 +108,8 @@ namespace :mycsn do
         u.seller_profile.properties.aged_care_support = array[AGED_CARE] == 'on'
         u.seller_profile.properties.disability_support = array[DISABILITY] == 'on'
         u.seller_profile.properties.child_care = array[CHILD_CARE] == 'on'
+        u.seller_profile.properties.verification_first_aid = array[FIRST_AID] == 'on'
+        u.seller_profile.properties.verification_police_check = array[POLICE_CHECK] == 'on'
         u.seller_profile.properties.domestic_duties = array[DOMESTIC] == 'on'
         u.seller_profile.properties.personal_care = array[PERSONAL] == 'on'
 
