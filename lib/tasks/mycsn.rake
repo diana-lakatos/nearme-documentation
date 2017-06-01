@@ -61,7 +61,7 @@ namespace :mycsn do
     DATE_CREATED = 53
     IP_ADDRESS = 54
 
-    path = Rails.root.join('marketplaces', 'mycsn', 'carer_test.csv')
+    path = Rails.root.join('marketplaces', 'mycsn', 'admin_test.csv')
     emails = []
     CustomValidator.where(field_name: ['languages', 'how_did_you_hear']).destroy_all
     CSV.foreach(path, col_sep: ',') do |array|
