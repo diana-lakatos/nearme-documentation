@@ -80,7 +80,7 @@ namespace :mycsn do
         u.get_seller_profile
         u.password = SecureRandom.hex(12) unless u.encrypted_password.present?
         u.external_id = array[EXTERNAL_ID]
-        u.first_name = array[FIRST_NAME].humanize
+        u.first_name = array[FIRST_NAME].split(' ').first.humanize
         u.last_name = array[LAST_NAME].humanize
         u.seller_profile.properties.gender = array[GENDER]
         u.seller_profile.properties.date_of_birth = begin
