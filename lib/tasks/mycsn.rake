@@ -61,16 +61,21 @@ namespace :mycsn do
     DATE_CREATED = 53
     IP_ADDRESS = 54
 
-    path = Rails.root.join('marketplaces', 'mycsn', 'admin_test.csv')
+    path = Rails.root.join('marketplaces', 'mycsn', 'carer_full_data.csv')
     emails = []
-    CustomValidator.where(field_name: ['languages', 'how_did_you_hear']).destroy_all
+    CustomValidator.where(field_name: %w(languages how_did_you_hear)).destroy_all
     CSV.foreach(path, col_sep: ',') do |array|
       email = array[EMAIL].strip
       if email.include?('@')
         emails << email
         u = User.where('email ilike ?', email).first_or_initialize
         u.email = email
-        u.persisted? ? puts("updating: #{email}") : puts("importing: #{email}")
+        if u.persisted?
+          puts("#{email} exist, skipping")
+          next
+        else
+          puts("importing: #{email}")
+        end
         u.get_default_profile
         u.get_seller_profile
         u.password = SecureRandom.hex(12) unless u.encrypted_password.present?
@@ -151,7 +156,7 @@ namespace :mycsn do
         t.currency = 'AUD'
         t.location_not_required = true
         t.description = 'General care and support covering basic mobility assistance and light domestic duties'
-        t.properties.ndis_category = ['Assistance with Daily Life','Assistance with Social & Community Participation', 'Improved Daily Living Skills', 'Improved Life Choices', 'Increased Social and Community Participation']
+        t.properties.ndis_category = ['Assistance with Daily Life', 'Assistance with Social & Community Participation', 'Improved Daily Living Skills', 'Improved Life Choices', 'Increased Social and Community Participation']
         t.properties.services_category = ['Cleaning & Laundry', 'Companionship & Social Support', 'Independent Living skills', 'Meal Preparation & Shopping', 'Showering; Toileting & Dressing']
         t.properties.minor_category = ['Activities, Outings & Community Access', 'Assist with Bowel and Bladder Management', 'Assistance with Eating', 'Cleaning & Laundry', 'Companionship', 'Light Gardening', 'Light Housework', 'Meal Preparation', 'Personal Assistant (Admin)', 'Self careassistance', 'Shopping', 'Showering, Dressing, Grooming', 'Toileting']
         action_type = t.build_time_based_booking(minimum_booking_minutes: 60, transactable_type_action_type: TransactableType::TimeBasedBooking.first, enabled: true)
