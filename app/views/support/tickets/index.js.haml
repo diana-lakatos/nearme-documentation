@@ -1,5 +1,0 @@
-$('.tickets.list').append('#{escape_javascript(render @tickets)}');
-$('a.load-links').attr('href', '#{support_tickets_path page: @tickets.next_page}');
- 
-- unless @tickets.next_page
-  $('a.load-links').remove();

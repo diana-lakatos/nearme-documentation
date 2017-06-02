@@ -6,7 +6,7 @@ module InstanceAdminHelper
   end
 
   def support_ticket_title(ticket, length = 60)
-    truncate(mask_phone_and_email_if_necessary(ticket.recent_message.try(:message)), length: length, omission: '...').to_s
+    truncate(mask_phone_and_email_if_necessary(ticket.first_message.try(:message)), length: length, omission: '...').to_s
   end
 
   def support_ticket_title_with_link(ticket)
