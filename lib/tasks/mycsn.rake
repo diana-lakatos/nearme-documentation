@@ -104,8 +104,8 @@ namespace :mycsn do
         end
         u.seller_profile.properties.languages = (Array(array[FIRST_LANG]) + Array(array[LANGUAGES])).uniq
 
-        u.seller_profile.properties.summary_profile = array[SUMMARY_PROFILE]
-        u.seller_profile.properties.detailed_profile = array[SUMMARY_PROFILE] # on purpose! column missing
+        u.seller_profile.properties.summary_profile = array[SUMMARY_PROFILE]&.gsub('_x000D_', '')
+        u.seller_profile.properties.detailed_profile = array[SUMMARY_PROFILE]&.gsub('_x000D_', '') # on purpose! column missing
         skills = u.seller_profile.customizations.where(custom_model_type: CustomModelType.find_by(name: 'Experiences')).first_or_initialize
         skills.properties.name = 'My Skills'
         skills.properties.description = array[SKILLS]&.gsub('_x000D_', '')
@@ -148,7 +148,7 @@ namespace :mycsn do
                                        Date.strptime(array[DATE_CREATED], '%m/%d/%Y')
                                      rescue
                                        puts "\tInvalid Date Created: #{array[DATE_CREATED]}"
-                                       nil
+                                       Time.zone.now
                                      end
         u.transactables.where(transactable_type: TransactableType.first).destroy_all
         t = u.transactables.where(transactable_type: TransactableType.first).first_or_initialize
