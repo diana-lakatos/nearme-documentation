@@ -151,24 +151,28 @@ namespace :mycsn do
                                      rescue
                                        puts "\tInvalid Date Created: #{array[DATE_CREATED]}"
                                      end || Time.zone.now
-        u.transactables.where(transactable_type: TransactableType.first).destroy_all
-        t = u.transactables.where(transactable_type: TransactableType.first).first_or_initialize
-        t.name = 'General Care and Support'
-        t.currency = 'AUD'
-        t.location_not_required = true
-        t.description = 'General care and support covering basic mobility assistance and light domestic duties'
-        t.properties.ndis_category = ['Assistance with Daily Life', 'Assistance with Social & Community Participation', 'Improved Daily Living Skills', 'Improved Life Choices', 'Increased Social and Community Participation']
-        t.properties.services_category = ['Cleaning & Laundry', 'Companionship & Social Support', 'Independent Living skills', 'Meal Preparation & Shopping', 'Showering; Toileting & Dressing']
-        t.properties.minor_category = ['Activities, Outings & Community Access', 'Assist with Bowel and Bladder Management', 'Assistance with Eating', 'Cleaning & Laundry', 'Companionship', 'Light Gardening', 'Light Housework', 'Meal Preparation', 'Personal Assistant (Admin)', 'Self careassistance', 'Shopping', 'Showering, Dressing, Grooming', 'Toileting']
-        action_type = t.build_time_based_booking(minimum_booking_minutes: 60, transactable_type_action_type: TransactableType::TimeBasedBooking.first, enabled: true)
-        t.action_type = action_type
-        at = t.action_type.build_availability_template
-        at.availability_rules.build(open_hour: 6, open_minute: 0, close_hour: 12, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[MORNING] == 'on'
-        at.availability_rules.build(open_hour: 12, open_minute: 0, close_hour: 17, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[AFTERNOON] == 'on'
-        at.availability_rules.build(open_hour: 17, open_minute: 0, close_hour: 22, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[EVENING] == 'on'
-        at.availability_rules.build(open_hour: 6, open_minute: 0, close_hour: 20, close_minute: 0, days: [5, 6]) if array[WEEKEND] == 'on'
-        t.action_type.pricings.build(transactable_type_pricing: TransactableType::Pricing.where(unit: 'hour').first, number_of_units: 1, unit: 'hour', price: array[PAY_RATE])
+        if array[PAY_RATE].to_i > 0
+          u.transactables.where(transactable_type: TransactableType.first).destroy_all
+          t = u.transactables.where(transactable_type: TransactableType.first).first_or_initialize
+          t.name = 'General Care and Support'
+          t.currency = 'AUD'
+          t.location_not_required = true
+          t.description = 'General care and support covering basic mobility assistance and light domestic duties'
+          t.properties.ndis_category = ['Assistance with Daily Life', 'Assistance with Social & Community Participation', 'Improved Daily Living Skills', 'Improved Life Choices', 'Increased Social and Community Participation']
+          t.properties.services_category = ['Cleaning & Laundry', 'Companionship & Social Support', 'Independent Living skills', 'Meal Preparation & Shopping', 'Showering; Toileting & Dressing']
+          t.properties.minor_category = ['Activities, Outings & Community Access', 'Assist with Bowel and Bladder Management', 'Assistance with Eating', 'Cleaning & Laundry', 'Companionship', 'Light Gardening', 'Light Housework', 'Meal Preparation', 'Personal Assistant (Admin)', 'Self careassistance', 'Shopping', 'Showering, Dressing, Grooming', 'Toileting']
+          action_type = t.build_time_based_booking(minimum_booking_minutes: 60, transactable_type_action_type: TransactableType::TimeBasedBooking.first, enabled: true)
+          t.action_type = action_type
+          at = t.action_type.build_availability_template
+          at.availability_rules.build(open_hour: 6, open_minute: 0, close_hour: 12, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[MORNING] == 'on'
+          at.availability_rules.build(open_hour: 12, open_minute: 0, close_hour: 17, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[AFTERNOON] == 'on'
+          at.availability_rules.build(open_hour: 17, open_minute: 0, close_hour: 22, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[EVENING] == 'on'
+          at.availability_rules.build(open_hour: 6, open_minute: 0, close_hour: 20, close_minute: 0, days: [5, 6]) if array[WEEKEND] == 'on'
+          t.action_type.pricings.build(transactable_type_pricing: TransactableType::Pricing.where(unit: 'hour').first, number_of_units: 1, unit: 'hour', price: array[PAY_RATE])
+          raise "Invalid transactable: #{t.errors.full_messages.join(", ")}" unless t.valid?
+        end
         u.save!
+        raise "For some reason couldn't store user #{u.id} #{u.email}\n#{array.inspect}" unless User.find_by(id: u.id).present?
         u.seller_profile.customizations.each(&:save!)
         if u.metadata['import_email_sent_at'].blank?
           puts "\tSending email to: #{u.email}"
