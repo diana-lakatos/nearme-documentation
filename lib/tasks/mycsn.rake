@@ -106,9 +106,11 @@ namespace :mycsn do
 
         u.seller_profile.properties.summary_profile = array[SUMMARY_PROFILE]&.gsub('_x000D_', '')
         u.seller_profile.properties.detailed_profile = array[SUMMARY_PROFILE]&.gsub('_x000D_', '') # on purpose! column missing
-        skills = u.seller_profile.customizations.where(custom_model_type: CustomModelType.find_by(name: 'Experiences')).first_or_initialize
-        skills.properties.name = 'My Skills'
-        skills.properties.description = array[SKILLS]&.gsub('_x000D_', '')
+        if array[SKILLS]&.gsub('_x000D_', '').present?
+          skills = u.seller_profile.customizations.where(custom_model_type: CustomModelType.find_by(name: 'Experiences')).first_or_initialize
+          skills.properties.name = 'My Skills'
+          skills.properties.description = array[SKILLS]&.gsub('_x000D_', '')
+        end
 
         u.seller_profile.properties.aged_care_support = array[AGED_CARE] == 'on'
         u.seller_profile.properties.disability_support = array[DISABILITY] == 'on'
@@ -148,8 +150,7 @@ namespace :mycsn do
                                        Date.strptime(array[DATE_CREATED], '%m/%d/%Y')
                                      rescue
                                        puts "\tInvalid Date Created: #{array[DATE_CREATED]}"
-                                       Time.zone.now
-                                     end
+                                     end || Time.zone.now
         u.transactables.where(transactable_type: TransactableType.first).destroy_all
         t = u.transactables.where(transactable_type: TransactableType.first).first_or_initialize
         t.name = 'General Care and Support'
@@ -167,8 +168,8 @@ namespace :mycsn do
         at.availability_rules.build(open_hour: 17, open_minute: 0, close_hour: 22, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[EVENING] == 'on'
         at.availability_rules.build(open_hour: 6, open_minute: 0, close_hour: 20, close_minute: 0, days: [5, 6]) if array[WEEKEND] == 'on'
         t.action_type.pricings.build(transactable_type_pricing: TransactableType::Pricing.where(unit: 'hour').first, number_of_units: 1, unit: 'hour', price: array[PAY_RATE])
-
         u.save!
+        u.seller_profile.customizations.each(&:save!)
         if u.metadata['import_email_sent_at'].blank?
           puts "\tSending email to: #{u.email}"
           WorkflowAlert::InvokerFactory.get_invoker(WorkflowAlert.find_by(name: 'Notify carer about import')).invoke!(WorkflowStep::SignUpWorkflow::ListerAccountCreated.new(u.id))
