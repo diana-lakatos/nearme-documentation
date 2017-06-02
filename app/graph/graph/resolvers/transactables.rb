@@ -1,24 +1,21 @@
 # frozen_string_literal: true
 module Graph
   module Resolvers
-    class Transactables
+    class Transactables < ActiveRecordCollection
       def call(_, arguments, ctx)
         @variables = ctx.query.variables
-        decorate(resolve_by(arguments.to_h.except('first', 'after')))
+        @arguments = arguments
+        decorate(resolve_by(arguments))
       end
 
       def self.decorate(transactable)
         ::TransactableDrop.new(transactable.decorate)
       end
 
-      def resolve_by(arguments)
-        arguments.keys.reduce(main_scope) do |relation, argument_key|
-          public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])
-        end
-      end
-
       def decorate(relation)
-        relation.map { |transactable| self.class.decorate(transactable) }
+        WillPaginate::Collection.create(@arguments[:paginate][:page], @arguments[:paginate][:per_page], relation.count) do |pager|
+          pager.replace(relation.map { |transactable| self.class.decorate(transactable) })
+        end
       end
 
       def resolve_by_ids(relation, ids)
@@ -38,10 +35,6 @@ module Graph
         scopes.reduce(relation) do |scoped_relation, scope_name|
           scoped_relation.public_send(scope_name)
         end
-      end
-
-      def resolve_by_take(relation, number)
-        relation.take(number)
       end
 
       private

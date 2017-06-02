@@ -267,7 +267,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
   context 'transactable query' do
     should 'get custom photo' do
-      query = %({ transactables { edges{ node { funny_pic: custom_attribute_photos(name: "funny_pic"){ url } }}}})
+      query = %({ transactables(paginate: { page: 1}) { total_entries items { funny_pic: custom_attribute_photos(name: "funny_pic"){ url } }}})
 
       assert_not_nil result(query)
     end
@@ -276,17 +276,17 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       transactable = FactoryGirl.create(:transactable)
       FactoryGirl.create(:activity_feed_subscription, followed: transactable)
       refresh_elastic
-      query = %({ transactable(id: "#{transactable.id}") { followers{ total_count }}})
+      query = %({ transactable(id: "#{transactable.id}") { followers{ total_entries }}})
 
-      assert_equal 1, result(query).dig('transactable', 'followers', 'total_count')
+      assert_equal 1, result(query).dig('transactable', 'followers', 'total_entries')
     end
 
     should 'get comments' do
       transactable = FactoryGirl.create(:transactable)
       FactoryGirl.create(:comment, commentable: transactable)
-      query = %({ transactable(id: "#{transactable.id}") { comments{ total_count }}})
+      query = %({ transactable(id: "#{transactable.id}") { comments(paginate: { page: 1 }){ total_entries }}})
 
-      assert_equal 1, result(query).dig('transactable', 'comments', 'total_count')
+      assert_equal 1, result(query).dig('transactable', 'comments', 'total_entries')
     end
   end
 
@@ -312,17 +312,20 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
   context 'comments' do
     should 'get comments with count' do
-      FactoryGirl.create(:comment)
-      query = %({ comments{ total_count edges{ node { id }} }} )
+      comment = FactoryGirl.create(:comment)
+      query = %({ comments(paginate: { page: 1}){ total_entries has_next_page has_previous_page current_page items{  id } }} )
 
-      assert_equal 1, result(query).dig('comments', 'total_count')
+      assert_equal(
+        {'total_entries'=>1, 'has_next_page'=>false, 'has_previous_page'=>false, 'current_page'=>1, 'items'=>[{'id'=> comment.id.to_s}]},
+        result(query).dig('comments')
+      )
     end
 
     should 'not get old comments' do
       FactoryGirl.create(:comment, created_at: 5.days.ago)
-      query = %({ comments(since: #{1.day.ago.to_i}){ total_count edges{ node { id }} }} )
+      query = %({ comments(since: #{1.day.ago.to_i}){ total_entries items{  id } }} )
 
-      assert_equal 0, result(query).dig('comments', 'total_count')
+      assert_equal 0, result(query).dig('comments', 'total_entries')
     end
   end
 

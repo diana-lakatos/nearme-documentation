@@ -60,10 +60,11 @@ module Graph
           argument :name, !types.String
           resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
         end
-        connection :comments, Graph::Types::RelayConnection.build(Types::ActivityFeed::Comment) do
-          resolve ->(obj, _arg, ctx) { obj.source.comments }
+        field :comments, Graph::Types::Collection.build(Types::ActivityFeed::Comment) do
+          argument :paginate, Types::PaginationParams, default_value:  { page: 1, per_page: 10 }
+          resolve ->(obj, arg, ctx) { Graph::Resolvers::Comments.new(obj.source.comments).call(obj, arg, ctx) }
         end
-        connection :followers, Graph::Types::RelayConnection.build(Types::User) do
+        field :followers, Graph::Types::Collection.build(Types::User) do
           resolve ->(obj, _arg, ctx) {
             Graph::Resolvers::Users.new.call(nil, { ids: obj.source.activity_feed_subscriptions.pluck(:follower_id) }, ctx)
           }

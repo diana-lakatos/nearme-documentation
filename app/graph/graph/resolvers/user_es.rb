@@ -10,8 +10,6 @@ module Graph
 
       def fetch
         Elastic::UserCollectionProxy.new(users)
-                                    .results
-                                    .map(&:to_liquid)
       end
 
       private

@@ -1,14 +1,12 @@
 {
-  projects:transactables(first: 3, filters: [ACTIVE, FEATURED]) {
-    edges{
-      node{
-        name
-        show_path
-        cover_photo_url
-        creator {
-          profile_path
-          avatar_url_thumb
-        }
+  projects:transactables(paginate: { page: 1, per_page: 3 }, filters: [ACTIVE, FEATURED]) {
+    items{
+      name
+      show_path
+      cover_photo_url
+      creator {
+        profile_path
+        avatar_url_thumb
       }
     }
   }
