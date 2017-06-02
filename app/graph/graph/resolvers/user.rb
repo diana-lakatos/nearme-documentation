@@ -9,7 +9,7 @@ module Graph
         Graph::Resolvers::UserEs.new(
           query: Elastic::QueryBuilder::Franco.new.add(query: query),
           ctx: ctx
-        ).fetch.first
+        ).fetch.results.first.to_liquid
       end
 
       def self.find_model(user)

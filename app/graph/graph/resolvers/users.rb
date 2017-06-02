@@ -6,7 +6,7 @@ module Graph
         @ctx = ctx
         @arguments = arguments
 
-        resolve_by
+        decorate(resolve_by)
       end
 
       def resolve_by
@@ -36,6 +36,12 @@ module Graph
       FILTER_TERMS_MAP = {
         featured: { featured: true }
       }.freeze
+
+      def decorate(collection)
+        WillPaginate::Collection.create(1, @arguments[:take], collection.total_entries) do |pager|
+          pager.replace(collection.results.map(&:to_liquid))
+        end
+      end
 
       def query_for_arguments
         argument_keys.reduce(Elastic::QueryBuilder::Franco.new) do |query, argument_key|
