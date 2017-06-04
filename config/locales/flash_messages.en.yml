@@ -99,6 +99,7 @@ en:
           deleted: 'Email template has been deleted.'
           invalid: 'Not a valid email template.'
           updated: 'Email template has been updated.'
+          cannot_be_deleted: 'This email template cannot be deleted as it is in use.'
         liquid_views:
           created: 'Liquid view has been created.'
           deleted: 'Liquid view has been deleted.'
