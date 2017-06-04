@@ -312,11 +312,21 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
   context 'comments' do
     should 'get comments with count' do
-      comment = FactoryGirl.create(:comment)
-      query = %({ comments(paginate: { page: 1}){ total_entries has_next_page has_previous_page current_page items{  id } }} )
+      comment = FactoryGirl.create(:comment, commentable: FactoryGirl.create(:transactable))
+      query = %({ comments(paginate: { page: 1}){
+        total_entries has_next_page has_previous_page current_page
+        items{
+          id
+          commentable{
+            url
+          }
+        }
+      }} )
 
       assert_equal(
-        {'total_entries'=>1, 'has_next_page'=>false, 'has_previous_page'=>false, 'current_page'=>1, 'items'=>[{'id'=> comment.id.to_s}]},
+        {'total_entries'=>1, 'has_next_page'=>false, 'has_previous_page'=>false, 'current_page'=>1, 'items'=>[
+          {'id'=> comment.id.to_s,"commentable"=>{"url"=>"/listings/#{comment.commentable.slug}"}}
+        ]},
         result(query).dig('comments')
       )
     end

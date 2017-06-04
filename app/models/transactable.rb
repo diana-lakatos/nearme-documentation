@@ -724,6 +724,10 @@ class Transactable < ActiveRecord::Base
     @custom_attributes_custom_validators ||= { properties: transactable_type.custom_attributes_custom_validators }
   end
 
+  def self.model_name
+    ActiveModel::Name.new(Listing)
+  end
+
   private
 
   def set_seek_collaborators
