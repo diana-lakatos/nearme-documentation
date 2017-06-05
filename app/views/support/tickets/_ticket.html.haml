@@ -1,7 +1,7 @@
 - ticket = ticket.decorate
 .ticket
   .text
-    =support_ticket_title(ticket, 250)
+    = support_ticket_title(ticket, 250)
   .row-fluid
     - if ticket.target_rfq?
       = link_to "#{t('reservations.rfq_short')} - #{ticket.target.name}", ticket.show_target_path

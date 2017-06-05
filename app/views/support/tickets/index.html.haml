@@ -8,4 +8,5 @@
       .box
         .tickets.list
           = render @tickets
-        %a#support-tickets-link.load-links
+
+        = will_paginate @tickets

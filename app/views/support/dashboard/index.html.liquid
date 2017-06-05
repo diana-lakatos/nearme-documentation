@@ -13,10 +13,10 @@
           <div class="ticket">
             <div class="question">
               {% assign message_text = '' %}
-              {% if ticket.recent_message != blank %}
-                {% assign message_text = ticket.recent_message.message_text %}
+              {% if ticket.first_message != blank %}
+                {% assign message_text = ticket.first_message.message_text %}
               {% endif %}
-              {{ message_text | filter_text | truncate: 60 }}
+              <a href="{{ 'support_ticket_path' | generate_url: ticket.id }}" class="view">#{{ ticket.id }}: {{ message_text | filter_text | truncate: 60 }}</a>
             </div>
             {% if ticket.target_rfq? %}
               <a href="{{ ticket.show_target_path }}">{{ 'reservations.rfq_short' | t }} - {{ ticket.target.name }}</a>
