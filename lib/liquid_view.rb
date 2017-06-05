@@ -51,7 +51,7 @@ class LiquidView
   end
 
   def render(source, local_assigns = {})
-    @view.controller.headers['Content-Type'] ||= 'text/html; charset=utf-8' if @view.controller.respond_to?(:headers)
+    @view.controller.headers['Content-Type'] ||= content_type if @view.controller.respond_to?(:headers)
 
     assigns = @view.assigns.reject { |k, _v| PROTECTED_ASSIGNS.include?(k) }
 
@@ -133,5 +133,9 @@ class LiquidView
            end
 
     tags
+  end
+
+  def content_type
+    'text/html; charset=utf-8'
   end
 end
