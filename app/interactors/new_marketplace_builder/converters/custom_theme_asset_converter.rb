@@ -35,7 +35,8 @@ module NewMarketplaceBuilder
         tmp_file.rewind
         file_params = {
           filename: custom_theme_asset.name,
-          tempfile: tmp_file
+          tempfile: tmp_file,
+          content_type: Rack::Mime.mime_type(File.extname(custom_theme_asset.name))
         }
         custom_theme_asset.file = ActionDispatch::Http::UploadedFile.new(file_params)
         custom_theme_asset
