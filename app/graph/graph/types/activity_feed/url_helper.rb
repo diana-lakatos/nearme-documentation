@@ -5,9 +5,9 @@ module Graph
         include ActionDispatch::Routing::PolymorphicRoutes
         include Rails.application.routes.url_helpers
 
-        # def transactable_path(transactable)
-        #   listing_path(transactable)
-        # end
+        def transactable_path(transactable)
+          listing_path(transactable)
+        end
       end
     end
   end

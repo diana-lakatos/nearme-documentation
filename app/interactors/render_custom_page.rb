@@ -53,14 +53,23 @@ class RenderCustomPage
   end
 
   def http_response
-    if @page.redirect?
-      @controller.redirect_to @page.redirect_url, status: @page.redirect_code
-    elsif @params[:simple]
-      @controller.render 'pages/simple', platform_context: [platform_context.decorate]
-    elsif @page.layout_name.blank? || @params[:nolayout]
-      @controller.render 'pages/show', layout: false
-    else
-      @controller.render 'pages/show', layout: @page.layout_name
+    @controller.redirect_to(@page.redirect_url, status: @page.redirect_code) if @page.redirect?
+
+    @controller.respond_to do |format|
+      format.html do
+        if @params[:simple]
+          @controller.render 'pages/simple', platform_context: [platform_context.decorate]
+        elsif @page.layout_name.blank? || @params[:nolayout]
+          @controller.render 'pages/show', layout: false
+        else
+          @controller.render 'pages/show', layout: @page.layout_name
+        end
+      end
+
+      format.json do
+        @controller.headers['Content-Type'] = 'application/json'
+        @controller.render 'pages/show', layout: false
+      end
     end
   end
 end
