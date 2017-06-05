@@ -30,7 +30,7 @@ module NewMarketplaceBuilder
 
           if file[:exported_data].present?
             f.write file[:exported_data].deep_stringify_keys.to_yaml
-            f.puts '---' if raw_content.present?
+            f.puts '---'
           end
           f.write raw_content
         end
