@@ -8,7 +8,7 @@ yarn --force --frozen-lockfile
 
 # Make sure staging is in git refs
 git fetch origin staging
-bundle exec pronto run -f github_pr github_status --exit-code -r=rails_best_practices Brakeman ESLint Fasterer Reek Rubocop -c origin/staging
+bundle exec pronto run -f github_pr github_status --exit-code -r rails_best_practices brakeman eslint fasterer reek rubocop -c origin/staging
 
 # build assets
 node ./node_modules/gulp/bin/gulp.js build:test
