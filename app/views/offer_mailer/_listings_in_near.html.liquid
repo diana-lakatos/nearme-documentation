@@ -1,6 +1,6 @@
 {% if lister.listings_in_near.size > 0 %}
   <div>
-    {% for listing_in_near in lister.listings_in_near) %}
+    {% for listing_in_near in lister.listings_in_near %}
       <div style="width: 180px; float: left;">
         <p style="padding-bottom: 10px;"><img src="{{ listing_in_near.photo_url }}" alt="{{ listing_in_near.name }}" border="0" width="160" /></p>
         <a href="{{ listing_in_near.listing_url }}"><strong>{{ listing_in_near.name }}</strong></a>

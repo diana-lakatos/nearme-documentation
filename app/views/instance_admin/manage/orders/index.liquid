@@ -15,7 +15,7 @@
           <th>{{ 'instance_admin.manage.orders.details' | translate }}</th>
         </tr>
       </thead>
-      {% for order in @orders %}
+      {% for order in orders %}
         <tr>
           <td>{{ order.number }}</td>
           <td><a href="{{ order.transactable.show_path }}">{{ order.transactable.name}}</a></td>
@@ -40,7 +40,7 @@
 <div class="row">
   <div class="text-container">
     <div class="pull-right">
-      {% will_paginate collection: @orders %}
+      {% will_paginate collection: orders %}
     </div>
   </div>
 </div>

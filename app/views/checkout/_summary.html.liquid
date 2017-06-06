@@ -1,13 +1,13 @@
  <h1>Order summary</h1>
 
-<h2>{{ @order.total_units_text | titleize }}</h2>
+<h2>{{ order.total_units_text | titleize }}</h2>
 
-{% if @order.transactable_pricing.unit == 'hour' %}
-  <p>{{ @order.hourly_summary }}</p>
+{% if order.transactable_pricing.unit == 'hour' %}
+  <p>{{ order.hourly_summary }}</p>
 {% else %}
   <div class='selected-dates-summary'>
     <hr class='thin'>
-    {{ @order.dates_summary_with_hr }}
+    {{ order.dates_summary_with_hr }}
   </div>
 {% endif %}
 
@@ -17,14 +17,14 @@
   <thead>
     <th scope="col">{{ 'orders.checkout.item' | translate }}</th>
 
-    {% if @order.included_tax? %}
+    {% if order.included_tax? %}
       <th scope="col">{{ 'orders.checkout.net' | translate }}</th>
       <th scope="col">{{ 'orders.checkout.tax' | translate }}</th>
     {% endif %}
 
     <th scope="col">{{ 'orders.checkout.price' | translate }}</th>
 
-    {% if @order.additional_tax? %}
+    {% if order.additional_tax? %}
       <th scope="col">{{ 'orders.checkout.tax' | translate }}</th>
       <th scope="col">{{ 'orders.checkout.gross' | translate }}</th>
     {% endif %}
@@ -42,7 +42,7 @@
   </thead>
   <tfoot>
     <tr>
-      <td colspan="{% if @order.included_tax? || @order.additional_tax? %}4{% else %}2{% endif %}"></td>
+      <td colspan="{% if order.included_tax? or order.additional_tax? %}4{% else %}2{% endif %}"></td>
       <th headers="summary-total">{{ 'orders.checkout.total' | translate }}
         {% assign total_hint = 'reservations_review.hints.total' | translate: default: '' %}
         {% if total_hint != blank %}
@@ -51,11 +51,11 @@
         </button>
         {% endif %}
       </th>
-      <td id="summary-total">{{ @order.formatted_total_amount }}</td>
+      <td id="summary-total">{{ order.formatted_total_amount }}</td>
     </tr>
   </tfoot>
   <tbody>
-    {% for item in @order.line_items %}
+    {% for item in order.line_items %}
       <tr data-line-item-class="{{ item.class_name }}">
         <td>
           {{ item.name }}
@@ -70,14 +70,14 @@
           {% endif %}
         </td>
 
-        {% if @order.included_tax? %}
+        {% if order.included_tax? %}
           <td>{{ item.formatted_net_price }}</td>
           <td>{{ item.included_tax_total_rate }}%</td>
         {% endif %}
 
         <td>{{ item.formatted_unit_price }}</td>
 
-        {% if @order.additional_tax? %}
+        {% if order.additional_tax? %}
           <td>{{ item.additional_tax_total_rate }}%</td>
           <td>{{ item.formatted_gross_price }}</td>
         {% endif %}

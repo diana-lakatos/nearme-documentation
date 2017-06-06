@@ -15,5 +15,5 @@
     {% include 'reviews/review', entry: review %}
   {% endfor %}
 
-  {{ reviews | pagination_links, class: '', param_name: 'reviews_page' }}
+  {{ reviews | pagination_links: class: '', param_name: 'reviews_page' }}
 </div>

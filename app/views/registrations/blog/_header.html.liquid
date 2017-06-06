@@ -1,28 +1,28 @@
 {% assign displayed_title = false %}
 
-{% if @user.blog.header_image_present? %}
-  {% capture header_image %} style="background-image: url({{ @user.blog.header_image_url }});"{% endcapture %}
+{% if user.blog.header_image_present? %}
+  {% capture header_image %} style="background-image: url({{ user.blog.header_image_url }});"{% endcapture %}
 {% endif %}
 
 <div class="header">
   <div class='header-text-and-logo'{{ header_image }}>
     <div class="v-wrap">
       <div class="v-box">
-        <a href='{{@user.user_blog_posts_list_path}}' >
+        <a href='{{user.user_blog_posts_list_path}}' >
           <span class="header-text">
-            {% if @user.blog.header_icon_present? %}
-              <img src='{{ @user.blog.header_icon_url }}' />
+            {% if user.blog.header_icon_present? %}
+              <img src='{{ user.blog.header_icon_url }}' />
             {% else %}
               {% assign displayed_title = true %}
-              {{ @user.blog.name }}
+              {{ user.blog.name }}
             {% endif %}
           </span>
-          {% if @user.blog.header_logo_present? %}
-            <img src='{{@user.blog.header_logo_url}}' />
+          {% if user.blog.header_logo_present? %}
+            <img src='{{user.blog.header_logo_url}}' />
           {% else %}
             {% if displayed_title == false %}
               <span class="header-text">
-                {{ @user.blog.name }}
+                {{ user.blog.name }}
               </span>
             {% endif %}
           {% endif %}

@@ -1,6 +1,6 @@
-{% if @order and @order.confirm_reservations? and @order.payment %}
-  <p class="confirm-reservations">{{ 'reservations.manually_confirm' | t: lessor: @order.transactable.transactable_type.lessor }}
-    {% if @order.payment.nonce_payment? %}
+{% if order and order.confirm_reservations? and order.payment %}
+  <p class="confirm-reservations">{{ 'reservations.manually_confirm' | t: lessor: order.transactable.transactable_type.lessor }}
+    {% if order.payment.nonce_payment? %}
       {{ 'reservations.paypal_and_cc_charge_after_confirmation' | t }}
     {% else %}
       {{ 'reservations.charge_after_confirmation' | t }}
@@ -8,9 +8,9 @@
   </p>
 {% endif %}
 
-{% if @order.bookable? %}
+{% if order.bookable? %}
   <p class="cancellation-info">
-    {% assign action_type = @order.transactable_pricing.action %}
+    {% assign action_type = order.transactable_pricing.action %}
     {% if action_type.cancellation_policy_enabled != true or action_type.cancellation_policy_hours_for_cancellation == 0 %}
       {{ 'reservations.no_cancellation_time' | t}}
     {% else %}
