@@ -29,8 +29,8 @@ module NewMarketplaceBuilder
           file[:exported_data].delete('view_type') if file[:exported_data]['view_type'] == 'view'
 
           if file[:exported_data].present?
-            f.write file[:exported_data].to_yaml
-            f.puts '---' if raw_content.present?
+            f.write file[:exported_data].deep_stringify_keys.to_yaml
+            f.puts '---'
           end
           f.write raw_content
         end
@@ -63,6 +63,7 @@ module NewMarketplaceBuilder
         puts "Error while downloading #{asset['remote_url']} status: #{e.io.status}"
       rescue StandardError => e
         puts "Error: #{e.message}"
+        Raygun.track_exception(e) if !Rails.env.development?
       end
 
       def ensure_directory_exist!(file_path)

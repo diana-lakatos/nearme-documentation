@@ -10,8 +10,11 @@ module Graph
         field :id, !types.Int
         field :created_at, types.String
         field :updated_at, types.String
-        field :cover_photo_thumbnail_url, types.String
-        field :cover_photo_url, types.String
+        field :cover_photo_thumbnail_url, types.String, deprecation_reason: 'Use cover_photo { url(version: "thumb") }'
+        field :cover_photo_url, types.String, deprecation_reason: 'Use cover_photo{ url }'
+        field :cover_photo, Types::Image do
+          resolve ->(obj, _arg, _ctx) { obj.source.cover_photo.image }
+        end
         field :creator_id, types.ID
         field :creator, !Types::User do
           resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, { id: obj.creator_id }, ctx) }
@@ -27,10 +30,10 @@ module Graph
         field :longitude, types.String
         field :name, types.String
         field :photo_url, types.String
-        field :show_path, !types.String
+        field :show_path, !types.String, deprecation_reason: 'Use generate_url filter'
         field :slug, !types.String
         field :summary, types.String
-        field :url, types.String
+        field :url, types.String, deprecation_reason: 'Use generate_url filter'
         field :time_based_booking, Types::Transactables::TimeBasedBooking
         field :orders, !types[Types::Orders::Order] do
           resolve ->(obj, _args, _ctx) { obj.source.orders }
@@ -56,6 +59,15 @@ module Graph
         field :custom_attribute_array, !types[types.String] do
           argument :name, !types.String
           resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
+        end
+        field :comments, Graph::Types::Collection.build(Types::ActivityFeed::Comment) do
+          argument :paginate, Types::PaginationParams, default_value:  { page: 1, per_page: 10 }
+          resolve ->(obj, arg, ctx) { Graph::Resolvers::Comments.new(obj.source.comments).call(obj, arg, ctx) }
+        end
+        field :followers, Graph::Types::Collection.build(Types::User) do
+          resolve ->(obj, _arg, ctx) {
+            Graph::Resolvers::Users.new.call(nil, { ids: obj.source.activity_feed_subscriptions.pluck(:follower_id) }, ctx)
+          }
         end
       end
 

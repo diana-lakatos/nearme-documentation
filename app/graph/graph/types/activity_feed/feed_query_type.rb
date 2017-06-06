@@ -12,8 +12,9 @@ module Graph
           resolve Graph::Resolvers::Feed
         end
 
-        connection :comments, Graph::Types::RelayConnection.build(Types::ActivityFeed::Comment) do
+        field :comments, Graph::Types::Collection.build(Types::ActivityFeed::Comment) do
           argument :since, types.Int, 'A Unix timestamp'
+          argument :paginate, Types::PaginationParams, default_value: { page: 1, per_page: 10 }
           resolve Resolvers::Comments.new
         end
       end

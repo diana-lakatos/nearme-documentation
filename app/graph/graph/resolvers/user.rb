@@ -6,9 +6,10 @@ module Graph
         query = { term: { slug: args[:slug] } } if args[:slug]
         query = { term: { _id: args[:id] } } if args[:id]
 
-        Graph::Resolvers::UserEs.new(query: query, ctx: ctx)
-                                .fetch
-                                .first
+        Graph::Resolvers::UserEs.new(
+          query: Elastic::QueryBuilder::Franco.new.add(query: query),
+          ctx: ctx
+        ).fetch.results.first.to_liquid
       end
 
       def self.find_model(user)

@@ -14,8 +14,12 @@ module NewMarketplaceBuilder
 
         @marketplace_release.update! status: 'success'
       rescue StandardError => e
-        @marketplace_release.update! status: "error", error: e.message
-        raise e if Rails.env.development?
+        @marketplace_release.update! status: 'error', error: e.message
+        if Rails.env.development?
+          raise e
+        else
+          Raygun.track_exception(e)
+        end
       end
     end
   end

@@ -4,12 +4,13 @@ module Graph
     module Transactables
       TransactableQueryType = GraphQL::ObjectType.define do
         field :transactables do
-          type !types[Types::Transactables::Transactable]
+          type !Graph::Types::Collection.build(Types::Transactables::Transactable)
           argument :ids, types[types.ID], 'List of ids'
           argument :listing_type_id, types.ID
           argument :filters, types[Types::Transactables::TransactableFilterEnum]
-          argument :take, types.Int
           argument :creator_id, types.ID
+          argument :since, types.Int, 'A Unix timestamp'
+          argument :paginate, Types::PaginationParams, default_value: { page: 1, per_page: 10 }
 
           resolve Graph::Resolvers::Transactables.new
         end

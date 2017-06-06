@@ -13,7 +13,7 @@ module Graph
           ActivityFeed::FeedQueryType,
           LocationQueryType,
           MessagesQueryType,
-          SearchQueryType,
+          Photos::PhotoQueryType,
           TopicQueryType,
           Transactables::TransactableQueryType,
           UserQueryType,

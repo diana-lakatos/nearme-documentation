@@ -95,6 +95,7 @@ class PagesControllerTest < ActionController::TestCase
 
         assert_response :success
         assert_equal 'bar', JSON.parse(response.body).fetch('foo')
+        assert_equal "application/json", @response.content_type
       end
 
       should 'render json from graph' do

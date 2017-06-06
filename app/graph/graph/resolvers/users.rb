@@ -4,45 +4,52 @@ module Graph
     class Users
       def call(_, arguments, ctx)
         @ctx = ctx
-        @variables = ctx.query.variables
         @arguments = arguments
 
-        resolve_by
+        decorate(resolve_by)
       end
 
       def resolve_by
-        return all if argument_keys.empty?
-        argument_keys.reduce([]) do |collection, argument_key|
-          method = ARGUMENTS_RESOLVERS_MAP[argument_key.to_sym]
-          value = @arguments[argument_key]
-          public_send(method, collection, value)
-        end
+        fetch(query_for_arguments)
       end
 
-      def resolve_by_take(collection, number)
-        collection.take(number)
+      def resolve_by_take(query, number)
+        query.add size: number
       end
 
-      def resolve_by_filters(_collection, filters)
-        query = { term: map_filters_into_term(filters) }
-        fetch(query)
+      def resolve_by_filters(query, filters)
+        query.add query: { term: map_filters_into_term(filters) }
       end
 
-      def all
-        query = { match_all: { boost: 1.0 } }
-        fetch(query)
+      def resolve_by_ids(query, ids)
+        query.add query: { ids: { values: ids } }
       end
 
       private
 
-      ARGUMENTS_RESOLVE_ORDER = [:filter, :take].freeze
+      ARGUMENTS_RESOLVE_ORDER = [:filter, :take, :ids].freeze
       ARGUMENTS_RESOLVERS_MAP = {
         filters: :resolve_by_filters,
-        take: :resolve_by_take
-      }
+        take: :resolve_by_take,
+        ids: :resolve_by_ids
+      }.freeze
       FILTER_TERMS_MAP = {
         featured: { featured: true }
-      }
+      }.freeze
+
+      def decorate(collection)
+        WillPaginate::Collection.create(1, @arguments[:take], collection.total_entries) do |pager|
+          pager.replace(collection.results.map(&:to_liquid))
+        end
+      end
+
+      def query_for_arguments
+        argument_keys.reduce(Elastic::QueryBuilder::Franco.new) do |query, argument_key|
+          method = ARGUMENTS_RESOLVERS_MAP[argument_key.to_sym]
+          value = @arguments[argument_key]
+          public_send(method, query, value)
+        end
+      end
 
       def fetch(query)
         UserEs.new(query: query, ctx: @ctx).fetch
@@ -56,7 +63,7 @@ module Graph
       end
 
       def argument_keys
-        @arguments.keys.sort_by{ |key| ARGUMENTS_RESOLVE_ORDER.index(key) }
+        @arguments.keys.sort_by { |key| ARGUMENTS_RESOLVE_ORDER.index(key) }
       end
 
       class CustomAttributePhotos < Resolvers::CustomAttributePhotosBase
