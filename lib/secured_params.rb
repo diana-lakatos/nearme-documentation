@@ -1302,7 +1302,7 @@ class SecuredParams
   end
 
   def seller_profile_with_private_attribs
-    profile_attribs = PlatformContext.current.instance.seller_profile_type.custom_attributes.map(&:name).flatten
+    profile_attribs = PlatformContext.current.instance.seller_profile_type&.custom_attributes&.map(&:name)&.flatten || []
     [
       properties_attributes: profile_attribs
     ]
