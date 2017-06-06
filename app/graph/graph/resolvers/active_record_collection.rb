@@ -7,6 +7,7 @@ module Graph
       end
 
       def call(_, arguments, _ctx)
+        @arguments = arguments
         resolve_by(arguments)
       end
 

@@ -339,6 +339,15 @@ class Graph::SchemaTest < ActiveSupport::TestCase
     end
   end
 
+  context 'photos' do
+    should 'work' do
+      FactoryGirl.create(:photo)
+      query = %({ photos(since: #{1.day.ago.to_i}){ total_entries items{ id image{url} } }} )
+
+      assert_equal 1, result(query).dig('photos', 'total_entries')
+    end
+  end
+
 
   def result(query)
     Graph.execute_query(
