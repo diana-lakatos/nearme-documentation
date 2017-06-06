@@ -23,6 +23,7 @@ class Photo < ActiveRecord::Base
   belongs_to :instance
 
   default_scope -> { rank(:position) }
+  scope :not_confidential, ->{ where(owner_type: Transactable.to_s).where.not(owner_id: Transactable.confidential.pluck(:id)) }
 
   validates :image, presence: true,  if: ->(p) { !p.image_original_url.present? }
 

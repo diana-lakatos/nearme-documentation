@@ -242,6 +242,7 @@ class Transactable < ActiveRecord::Base
   scope :feed_not_followed_by_user, lambda { |current_user|
     where.not(id: current_user.feed_followed_transactables.pluck(:id))
   }
+  scope :confidential, -> { joins(:groups).merge(::Group.confidential) }
 
   # == Validations
   validates_with CustomValidators

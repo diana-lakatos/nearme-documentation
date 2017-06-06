@@ -42,7 +42,7 @@ class Group < ActiveRecord::Base
     options.accepts_nested_attributes_for :links
   end
 
-  scope :confidential, -> { joins(:group_type).where(transactable_types: { name: %(Private Secret) }) }
+  scope :confidential, -> { joins(:group_type).where(transactable_types: { name: %w(Private Secret) }) }
   scope :not_public, -> { joins(:group_type).where(transactable_types: { name: %w(Secret Private Moderated) }) }
   scope :not_secret, -> { joins(:group_type).where.not(transactable_types: { name: 'Secret' }) }
 
