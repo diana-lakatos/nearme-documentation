@@ -27,7 +27,7 @@ You can still use old marketplace import and export command or collaborate to ne
 ## Installation
 1. Go to `desksnearme/vendor/gems/nearme-marketplace`
 2. `bundle install` # installs dependencies
-3. `rake install` # installs marketplace builder 
+3. `rake install` # installs marketplace builder
 
 ## Configuration
 1. Go to marketplace folder you are working on
