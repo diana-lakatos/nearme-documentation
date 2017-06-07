@@ -331,6 +331,24 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       )
     end
 
+    should 'get url for comment on activity feed' do
+      comment = FactoryGirl.create(:comment, commentable: FactoryGirl.create(:activity_feed_event))
+      query = %({ comments(paginate: { page: 1}){
+        items{
+          id
+          commentable{
+            id
+            url
+          }
+        }
+      }} )
+
+      assert_equal(
+        "/listings/#{comment.commentable.followed.slug}",
+        result(query).dig('comments', 'items', 0, 'commentable', 'url')
+      )
+    end
+
     should 'not get old comments' do
       FactoryGirl.create(:comment, created_at: 5.days.ago)
       query = %({ comments(since: #{1.day.ago.to_i}){ total_entries items{  id } }} )

@@ -65,23 +65,23 @@ http://`project_domain`.lvh.me:3000/instance_admin/settings/api_keys
 
 All commands should be run in the marketplace directory (ie. `marketplace-mycsn/`)
 
-### nearme-marketplace pull
+    nearme-marketplace pull
 
 Pulls files from database and saves them in the filesystem
 
-### nearme-marketplace deploy
+    nearme-marketplace deploy
 
 Updates local database using the filesystem as a source
 
-### env ENDPOINT=production nearme-marketplace deploy
+    env ENDPOINT=production nearme-marketplace deploy
 
 Deploys to production environment
 
-### env ENDPOINT=staging nearme-marketplace deploy
+    env ENDPOINT=staging nearme-marketplace deploy
 
 Deploys to staging environment
 
-### nearme-marketplace sync
+    nearme-marketplace sync
 
 Enables sync mode - saves changes made in the filesystem to the database
 
