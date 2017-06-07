@@ -111,11 +111,14 @@
                 %td Enabled
                 %td= user_profile.enabled
 
-          - user_profile.properties.each do |property, value|
+          - labels = {}
+          - user_profile.instance_profile_type.custom_attributes.each{ |ca| labels[ca.name] = ca.label }
 
-            - labels = {}
-            - user_profile.instance_profile_type.custom_attributes.each{ |ca| labels[ca.name] = ca.label }
+          - user_profile.properties.sort.each do |property, value|
 
             %tr
-              %td= labels[property] || property
+              - if labels[property].present?
+                %td= "#{labels[property]} (#{property})"
+              - else
+                %td= property
               %td= value
