@@ -35,6 +35,7 @@ namespace :backup do
     puts "[#{Time.now}] Done"
   end
 
+  desc 'Downloads currently dumped DB from S3 to "tmp/backup.dump"'
   task :download do
     pathname = Rails.root + Pathname.new('tmp/backup.dump')
 
@@ -42,6 +43,7 @@ namespace :backup do
     Utils::S3FileHelper.new(pathname).download_file!
   end
 
+  desc 'Restores DB from "tmp/backup.dump"'
   task :restore_from_local  do
     pathname = Rails.root + Pathname.new('tmp/backup.dump')
 
