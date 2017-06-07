@@ -20,7 +20,7 @@ class Support::ReceiveMails
             Support::Ticket.new.receive(message, params)
           end
         end
-      rescue Net::IMAP::NoResponseError => e
+      rescue StandardError => e
         MarketplaceLogger.error(MarketplaceErrorLogger::BaseLogger::IMAP_ERROR, e.to_s)
       end
     else
