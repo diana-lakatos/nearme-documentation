@@ -66,7 +66,7 @@ class SmsNotifier::Message
           fallback_user.notify_about_wrong_phone_number if fallback_user.present?
         else
           # notify MPO about some kind of twilio issue and re-raise error to re-try background job
-          Rails.application.config.marketplace_error_logger.log_issue(
+          MarketplaceLogger.error(
             MarketplaceErrorLogger::BaseLogger::SMS_ERROR,
             "#{e.message} (error code=#{e.code}; to number=#{@data[:to]})",
             raise: true
@@ -103,7 +103,7 @@ class SmsNotifier::Message
     if twilio_client.nil?
       false
     elsif @data[:body].size > SMS_SIZE
-      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::SMS_ERROR, "Body size is longer than #{SMS_SIZE} - #{@data[:body]} (#{@data[:body].size} characters)")
+      MarketplaceLogger.error(MarketplaceErrorLogger::BaseLogger::SMS_ERROR, "Body size is longer than #{SMS_SIZE} - #{@data[:body]} (#{@data[:body].size} characters)")
       false
     else
       true
@@ -128,7 +128,7 @@ class SmsNotifier::Message
 
   def raise_error_if_config_invalid
     if config[:key].blank? || config[:secret].blank? || config[:from].blank?
-      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::SMS_ERROR, 'Twilio configuration is missing key, secret or from number')
+      MarketplaceLogger.error(MarketplaceErrorLogger::BaseLogger::SMS_ERROR, 'Twilio configuration is missing key, secret or from number')
     end
   end
 end
