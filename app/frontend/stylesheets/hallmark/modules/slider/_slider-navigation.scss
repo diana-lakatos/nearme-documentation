@@ -34,10 +34,6 @@
     }
   }
 
-  button.disabled {
-    opacity: 0;
-  }
-
   button.disabled::before {
     color: $color-gray-1;
   }

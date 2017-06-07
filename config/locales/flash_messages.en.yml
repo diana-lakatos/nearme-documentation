@@ -99,6 +99,7 @@ en:
           deleted: 'Email template has been deleted.'
           invalid: 'Not a valid email template.'
           updated: 'Email template has been updated.'
+          cannot_be_deleted: 'This email template cannot be deleted as it is in use.'
         liquid_views:
           created: 'Liquid view has been created.'
           deleted: 'Liquid view has been deleted.'
@@ -366,7 +367,7 @@ en:
       credit_cards:
         added: 'Credit card has been added'
         not_configured: "You have not made any transaction for this payment gateway. You can add your first credit card during your first transaction."
-        deleted: 'Credit card has been removed. Please not that it still will be used to capture all authorized payments unless you cancel all transactions for which this credit card was used.'
+        deleted: 'Credit card has been removed. Please note that it still will be used to capture all authorized payments unless you cancel all transactions for which this credit card was used.'
         not_added: 'Unfortunately there were validation issues and your credit card has not been added.'
       category:
         created: 'Category has been created.'

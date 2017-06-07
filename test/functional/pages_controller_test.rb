@@ -145,5 +145,30 @@ class PagesControllerTest < ActionController::TestCase
         assert_equal flash[:warning], I18n.t('flash_messages.need_verification_html')
       end
     end
+
+    context 'errors' do
+      should 'store when liquid has syntax error' do
+        @page = FactoryGirl.create(:page, content: '<div class="page-test">hello world {% fooooo bar %}</div>')
+        MarketplaceErrorLogger::DummyLogger.any_instance.expects(:log_issue).once
+
+        get :show, slug: @page.slug
+
+        assert response.body.include?(LiquidTemplateParser::LIQUID_ERROR)
+      end
+
+      should 'store when liquid runtime error' do
+        @page = FactoryGirl.create(:page, content: '<div class="page-test">
+        fooo
+        {% query_graph foo_query, result_name: g %}
+        </div>')
+        MarketplaceErrorLogger::DummyLogger.any_instance.expects(:log_issue).once
+
+        get :show, slug: @page.slug
+
+        assert_response :success
+        assert response.body.include?('foo')
+        assert response.body.include?('Liquid error: internal')
+      end
+    end
   end
 end

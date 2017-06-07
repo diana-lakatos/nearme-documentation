@@ -15,11 +15,11 @@
     {% if user.public_profile? %}
       {% if user.phone != blank and user.phone != user.mobile_number %}
         <dt>{{ 'user_profile.labels.properties.phone' | translate }}</dt>
-        <dd>{{ user.phone | filter_text | custom_sanitize  }}</dd>
+        <dd>{{ user.phone | filter_text | custom_sanitize }}</dd>
       {% endif %}
       {% if user.mobile_number != blank %}
         <dt>{{ 'user_profile.labels.properties.mobile_number' | translate }}</dt>
-        <dd>{{ user.mobile_number }}</dd>
+        <dd>{{ user.mobile_number | filter_text | custom_sanitize }}</dd>
       {% endif %}
     {% endif %}
 

@@ -17,7 +17,13 @@ class Thumbnail {
     this.url = url;
     this.service = service;
 
+    this.prepareLabel();
+
     this.bindEvents();
+  }
+
+  prepareLabel() {
+    this.link.innerHTML = `<span class="thumbnail-label">${this.link.innerHTML}</span>`;
   }
 
   bindEvents() {
