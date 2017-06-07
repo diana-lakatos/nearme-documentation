@@ -2,6 +2,7 @@
 namespace :mycsn do
   desc 'Setup Mycsn'
 
+=begin
   task import_carers: [:environment] do
     instance = Instance.find(5032)
     instance.set_context!
@@ -177,6 +178,127 @@ namespace :mycsn do
         if u.metadata['import_email_sent_at'].blank?
           puts "\tSending email to: #{u.email}"
           WorkflowAlert::InvokerFactory.get_invoker(WorkflowAlert.find_by(name: 'Notify carer about import')).invoke!(WorkflowStep::SignUpWorkflow::ListerAccountCreated.new(u.id))
+          u.metadata['import_email_sent_at'] = Time.zone.now
+          u.save!
+        end
+      else
+        puts "Skipping due to email: #{email}"
+      end
+    end
+    puts "Imported in total: #{emails.count} users"
+  end
+=end
+
+  task import_clients: [:environment] do
+    instance = Instance.find(5032)
+    instance.set_context!
+    EXTERNAL_ID = 0
+    FIRST_NAME = 1
+    LAST_NAME = 2
+    GENDER = 3
+    DOB = 4 # MM/DD/YYYY
+    PHONE = 5
+    MOBILE = 6
+    EMAIL = 7
+    PASSWORD = 8
+    ADDRESS = 9
+    SUBURB = 10
+    POST_CODE = 11
+    STATE = 12
+    LONGITUDE = 13
+    LATITUDE = 14
+    FIRST_LANG = 15
+    LANGUAGES = 16
+    AGED_CARE = 17
+    DISABILITY = 18
+    CHILD_CARE = 19
+    DOMESTIC = 20
+    PERSONAL = 21
+    GENDER_REQUIRE_MALE = 22
+    GENDER_REQUIRE_FEMALE = 23
+    FIRST_AID = 24
+    POLICE_CHECK = 25
+    CHILDREN_CARE = 26
+    AUS_LICENSE = 27
+    OWN_CAR = 28
+    NON_SMOKER = 29
+    AUS_RESIDENT = 30
+    PET_OK = 31
+    STUDENT = 32
+    COOKING = 33
+    HOWHEAR = 34
+    MONTHLY_NEWSLETTER = 35
+    EMAIL_LIST = 36
+    AGREE = 37
+    DATE_CREATED = 38
+    IP_ADDRESS = 39
+
+    path = Rails.root.join('marketplaces', 'mycsn', 'client_test_data.csv')
+    emails = []
+    CustomValidator.where(field_name: %w(languages how_did_you_hear)).destroy_all
+    CSV.foreach(path, col_sep: ',') do |array|
+      email = array[EMAIL].strip
+      if email.include?('@')
+        emails << email
+        u = User.where('email ilike ?', email).first_or_initialize
+        u.email = email
+        if u.persisted?
+          puts("#{email} exist, skipping")
+          next
+        else
+          puts("importing: #{email}")
+        end
+        u.get_default_profile
+        u.get_buyer_profile
+        u.password = SecureRandom.hex(12) unless u.encrypted_password.present?
+        u.external_id = array[EXTERNAL_ID]
+        u.first_name = array[FIRST_NAME].split(' ').first.humanize
+        u.last_name = array[LAST_NAME].humanize
+        u.buyer_profile.properties.gender = array[GENDER]
+        u.buyer_profile.properties.date_of_birth = begin
+                                       Date.strptime(array[DOB], '%m/%d/%Y')
+                                     rescue
+                                       puts "\tInvalid DOB: #{array[DOB]}"
+                                       nil
+                                     end
+        u.default_profile.properties.landline = array[PHONE]
+        u.mobile_number = array[MOBILE]
+        if array[LONGITUDE].present? && array[LATITUDE].present?
+          u.current_address || u.build_current_address
+          u.current_address.address = array[ADDRESS]
+          u.current_address.longitude = array[LONGITUDE]
+          u.current_address.latitude = array[LATITUDE]
+          u.current_address.suburb = array[SUBURB]
+          u.current_address.state = array[STATE]
+          u.current_address.postcode = array[POST_CODE]
+        end
+        u.buyer_profile.properties.languages = (Array(array[FIRST_LANG]) + Array(array[LANGUAGES])).uniq
+
+        u.buyer_profile.properties.search_preference_aged_care_support = array[AGED_CARE] == 'on'
+        u.buyer_profile.properties.search_preference_disability_support = array[DISABILITY] == 'on'
+        u.buyer_profile.properties.search_preference_child_care = array[CHILD_CARE] == 'on'
+        u.buyer_profile.properties.search_preference_first_aid = array[FIRST_AID] == 'on'
+        u.buyer_profile.properties.search_preference_police_check = array[POLICE_CHECK] == 'on'
+        u.buyer_profile.properties.search_preference_domestic_duties = array[DOMESTIC] == 'on'
+        u.buyer_profile.properties.search_preference_personal_care = array[PERSONAL] == 'on'
+
+        u.buyer_profile.properties.search_preference_non_smoker = array[NON_SMOKER] == 'on'
+        u.buyer_profile.properties.search_preference_student = array[STUDENT] == 'on'
+        u.buyer_profile.properties.search_preference_aus_resident = array[AUS_RESIDENT] == 'on'
+        u.buyer_profile.properties.search_preference_pet_friendly = array[PET_OK] == 'on'
+        u.buyer_profile.properties.search_preference_cooking = array[COOKING] == 'Y'
+        u.default_profile.properties.how_did_you_hear = array[HOWHEAR]
+        u.default_profile.properties.accept_newsletter = array[MONTHLY_NEWSLETTER] == 'on'
+        u.created_at = begin
+                                       Date.strptime(array[DATE_CREATED], '%m/%d/%Y')
+                                     rescue
+                                       puts "\tInvalid Date Created: #{array[DATE_CREATED]}"
+                                     end || Time.zone.now
+        u.save!
+        raise "For some reason couldn't store user #{u.id} #{u.email}\n#{array.inspect}" unless User.find_by(id: u.id).present?
+        if u.metadata['import_email_sent_at'].blank?
+          puts "\tSending email to: #{u.email}"
+          WorkflowAlert::InvokerFactory.get_invoker(WorkflowAlert.find_by(name: 'Notify client about import')).invoke!(WorkflowStep::SignUpWorkflow::EnquirerAccountCreated.new(u.id))
           u.metadata['import_email_sent_at'] = Time.zone.now
           u.save!
         end
