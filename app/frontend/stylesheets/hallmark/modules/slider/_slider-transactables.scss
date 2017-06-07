@@ -1,0 +1,108 @@
+.slider-a.transactables {
+  .card-a {
+    overflow: hidden;
+
+    .action {
+      position: relative;
+      text-align: center;
+      right: 0;
+      left: 0;
+      top: 0;
+      margin: 0;
+
+      button {
+        border: none;
+      }
+    }
+
+    .hx {
+      height: 2.6em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .action {
+      min-height: 25px;
+      display: none;
+    }
+
+    .user {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .new-comments-label {
+    position: absolute;
+    left: 15px;
+    top: calc(-6px * 1.2 - 2px);
+    background: red;
+    color: #fff;
+    padding: 2px 5px;
+    font-size: 12px;
+    text-transform: uppercase;
+    line-height: 1.2;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .loading .card-a {
+    figure {
+      .placeholder {
+        display: block;
+        padding-top: 140 / 250 * 100%;
+        background: $color-white-1;
+      }
+    }
+
+    .numbers li {
+      font-size: 0;
+    }
+
+    .hx {
+      font-size: 0;
+      height: 47px;
+
+      &::before {
+        content: "";
+        height: 20px;
+        margin-bottom: 5px;
+        display: inline-block;
+        width: 80%;
+        background: $color-white-1;
+      }
+
+      &::after {
+        content: "";
+        height: 20px;
+        display: inline-block;
+        width: 70%;
+        background: $color-white-1;
+      }
+    }
+
+    .user {
+      font-size: 0;
+
+      &::before {
+        display: inline-block;
+        content: "";
+        width: 30px;
+        height: 30px;
+        background: $color-white-1;
+        vertical-align: middle;
+        margin-right: 10px;
+      }
+
+      &::after {
+        content: "";
+        height: 18px;
+        display: inline-block;
+        width: calc(90% - 40px);
+        background: $color-white-1;
+        vertical-align: middle;
+      }
+    }
+  }
+}

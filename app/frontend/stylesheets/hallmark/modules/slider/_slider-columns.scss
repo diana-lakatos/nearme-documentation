@@ -1,0 +1,50 @@
+.slider-a-wrap {
+  > ul > li {
+    width: calc(#{$single-item-width-one-col});
+  }
+}
+
+.slider-2-cols .slider-a-wrap {
+  @include bpmin($screen-tablet-vertical) {
+    > ul > li {
+      width: calc(#{$single-item-width-two-col});
+    }
+  }
+}
+
+.slider-3-cols .slider-a-wrap {
+  @include bpmin($screen-mobile) {
+    > ul > li {
+      width: calc(#{$single-item-width-two-col});
+    }
+  }
+
+
+  @include bpmin($screen-tablet-vertical) {
+    > ul > li {
+      width: calc(#{$single-item-width-three-col});
+    }
+  }
+}
+
+.slider-4-cols .slider-a-wrap {
+  @include bpmin($screen-mobile) {
+    > ul > li {
+      width: calc(#{$single-item-width-two-col});
+    }
+  }
+
+
+  @include bpmin($screen-tablet-vertical) {
+    > ul > li {
+      width: calc(#{$single-item-width-three-col});
+    }
+  }
+
+
+  @include bpmin(1000px) {
+    > ul > li {
+      width: calc(#{$single-item-width-four-col});
+    }
+  }
+}

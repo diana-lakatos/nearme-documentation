@@ -1,11 +1,11 @@
 /* @flow */
-import type Thumbnail from './thumbnails/thumbnail';
-import ThumbnailFactory from './thumbnails/thumbnail_factory';
 import { findElement, findButton } from '../../toolkit/dom';
 import { requestNextAnimationFrame } from '../../toolkit/animation';
-import { throttle } from 'lodash';
+const throttle = require('lodash/throttle');
 
 const DISABLED_CLASS = 'disabled';
+const WRAPPER_SELECTOR = '[data-slider-wrap]';
+const LIST_SELECTOR = '[data-slider-list]';
 
 class Slider {
   container: HTMLElement;
@@ -16,43 +16,31 @@ class Slider {
   previousButton: HTMLButtonElement;
   nextButton: HTMLButtonElement;
   totalItems: number;
-  currentPosition: number;
+  currentPosition: number; // index of the first item on the page
   initialTransition: string;
-  thumbnails: Array<Thumbnail>;
+  itemProvider: SliderItemProvider;
 
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, itemProvider: SliderItemProvider) {
     this.container = container;
-    this.wrapper = findElement('[data-slider-wrap]', container);
-    this.list = findElement('[data-slider-list]', this.wrapper);
+    this.wrapper = findElement(WRAPPER_SELECTOR, container);
+    this.list = findElement(LIST_SELECTOR, this.wrapper);
 
     this.initialTransition = window.getComputedStyle(this.list).transition;
 
-    this.totalItems = this.getTotalItemsCount();
+    this.itemProvider = itemProvider;
+
     this.itemsPerPage = this.determineItemsCountPerPage();
     this.currentPosition = 0;
 
-    this.nav = this.buildNavigation();
-    this.previousButton = findButton('[data-slider-previous]', this.nav);
-    this.nextButton = findButton('[data-slider-next]', this.nav);
-    this.container.insertAdjacentElement('beforeend', this.nav);
-
-    this.thumbnails = this.initThumbnails();
-
-    this.setPosition(this.currentPosition);
-    this.bindEvents();
-  }
-
-  initThumbnails(): Array<Thumbnail> {
-    let links = this.list.querySelectorAll('a');
-    links = Array.prototype.map.call(links, (link: HTMLLinkElement): Thumbnail => {
-      return ThumbnailFactory.get(link);
+    this.itemProvider.getTotalItemsCount().then((totalItems: number) => {
+      this.totalItems = totalItems;
+      this.nav = this.buildNavigation();
+      this.previousButton = findButton('[data-slider-previous]', this.nav);
+      this.nextButton = findButton('[data-slider-next]', this.nav);
+      this.container.insertAdjacentElement('beforeend', this.nav);
+      this.setPosition(this.currentPosition, true);
+      this.bindEvents();
     });
-
-    return links;
-  }
-
-  getTotalItemsCount(): number {
-    return this.wrapper.querySelectorAll('li').length;
   }
 
   buildNavigation(): HTMLElement {
@@ -124,15 +112,11 @@ class Slider {
   }
 
   determineItemsCountPerPage(): number {
-    let li = this.wrapper.querySelector('li');
+    let li = this.list.firstElementChild;
     if (!(li instanceof HTMLElement)) {
       throw new Error('Unable to fetch first element in slider');
     }
     return Math.round(this.wrapper.offsetWidth / li.offsetWidth);
-  }
-
-  determineTotalPagesCount(): number {
-    return Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
   setPosition(position: number, instant: ?boolean = false) {
@@ -144,11 +128,7 @@ class Slider {
 
     this.currentPosition = position;
 
-    this.thumbnails
-      .slice(position, position + this.itemsPerPage)
-      .forEach((thumbnail: Thumbnail) => {
-        thumbnail.load();
-      });
+    this.itemProvider.load(position, position + this.itemsPerPage);
 
     this.slideTo(position, instant);
 

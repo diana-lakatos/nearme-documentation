@@ -1,19 +1,24 @@
-@import "preview";
-
 $single-item-width-one-col: "(100% - 20px)";
 $single-item-width-two-col: "(100% - 40px) / 2";
 $single-item-width-three-col: "(100% - 60px) / 3";
 $single-item-width-four-col: "(100% - 80px) / 4";
-$proportion: 160 / 285;
 
+$item-image-proportion: 160 / 285;
 $nav-media-query-bp: 1300px;
+
+.header-a + .slider-a {
+  @include bpmin($screen-mobile) {
+    margin-top: -70px;
+  }
+}
 
 .slider-a {
   position: relative;
   margin-bottom: 20px;
 }
 
-.slider-a + h2 {
+.slider-a + h2,
+.slider-a + .header-a {
   margin-top: 50px;
 
   @include bpmin($screen-mobile) {
@@ -23,15 +28,13 @@ $nav-media-query-bp: 1300px;
 
 .slider-a-wrap {
   position: relative;
-  padding-top: calc(#{$single-item-width-one-col} * #{$proportion});
   overflow: hidden;
   margin-bottom: 0;
 
-  ul {
-    position: absolute;
+  > ul {
+    position: relative;
     top: 0;
     left: -20px;
-    bottom: 0;
     padding: 0;
     list-style: none;
     width: calc(100% + 20px);
@@ -41,156 +44,31 @@ $nav-media-query-bp: 1300px;
     transition: transform 1s ease;
     transform: translateX(0);
     will-change: transform;
-    counter-reset: thumbs;
   }
 
-  li {
+  > ul > li {
     position: relative;
     display: inline-block;
-    width: calc(#{$single-item-width-one-col});
-    height: 100%;
+    vertical-align: top;
     margin-left: 20px;
-    counter-increment: thumbs;
-  }
+    letter-spacing: 0;
+    font-size: 16px;
+    white-space: normal;
 
-  a {
-    position: absolute;
-    display: block;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: #ccc;
-    background-position: 50% 50%;
-    background-repeat: none;
-    background-size: cover;
-    font-size: 0;
-  }
-
-  a::before {
-    position: absolute;
-    z-index: 100;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-weight: normal;
-    content: $fa-var-play-circle;
-    font-family: FontAwesome;
-
-    // content: counter(thumbs);
-    font-size: 70px;
-    color: rgba(#fff, 0.7);
-    transition: color .3s ease;
-  }
-
-  a:hover::before {
-    color: #fff;
-  }
-
-  li::before {
-    display: none;
-  }
-
-  @include bpmin($screen-mobile) {
-    padding-top: calc(#{$single-item-width-two-col} * #{$proportion});
-
-    li {
-      width: calc(#{$single-item-width-two-col});
+    &::before {
+      display: none;
     }
   }
-
-
-  @include bpmin($screen-tablet-vertical) {
-    padding-top: calc(#{$single-item-width-three-col} * #{$proportion});
-
-    li {
-      width: calc(#{$single-item-width-three-col});
-    }
-  }
-
-
-  @include bpmin(1000px) {
-    padding-top: calc(#{$single-item-width-four-col} * #{$proportion});
-
-    li {
-      width: calc(#{$single-item-width-four-col});
-    }
-  }
-
 
   @media screen and (min-width: $nav-media-query-bp) {
     z-index: 10;
   }
 }
 
-.slider-a-nav {
-  text-align: center;
-  padding: 0;
-  margin: 0 0 20px;
-
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-
-  li::before {
-    display: none;
-  }
-
-  button {
-    border: none;
-    background: none;
-    padding: 5px 20px;
-    font-size: 0;
-
-    &::before {
-      font-family: FontAwesome;
-      font-size: 30px;
-      line-height: 1;
-      color: $color-blue;
-    }
-
-    &:hover, &:focus, &:active {
-      background: none;
-    }
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  button.disabled::before {
-    color: $color-gray-1;
-  }
-
-  .prev button::before {
-    content: $fa-var-angle-left;
-  }
-
-  .next button::before {
-    content: $fa-var-angle-right;
-  }
-
-  @media screen and (min-width: $nav-media-query-bp) {
-    margin: 0;
-    height: 0;
-
-    button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    button::before {
-      font-size: 60px;
-    }
-
-    .prev button {
-      left: -100px;
-    }
-
-    .next button {
-      right: -100px;
-    }
-  }
-}
+@import "slider-navigation";
+@import "slider-columns";
+@import "slider-preview";
+@import "slider-video";
+@import "slider-comments";
+@import "slider-photos";
+@import "slider-transactables";

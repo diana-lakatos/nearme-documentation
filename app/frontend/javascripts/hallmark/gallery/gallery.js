@@ -1,9 +1,9 @@
 const Lightbox = require('../lightbox/lightbox.js');
 
 class Gallery {
-  constructor(wrapper) {
+  constructor(wrapper, selector = 'a') {
     this.wrapper = wrapper;
-    this.photoElements = wrapper.querySelectorAll('a');
+    this.photoElements = wrapper.querySelectorAll(selector);
 
     this.lightbox = this.initLightbox();
     this.bindEvents();

@@ -1,0 +1,41 @@
+.announcement-a {
+  margin: 0;
+
+  .contain {
+    padding-top: 30px;
+    padding-bottom: 30px;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  time {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  p {
+    clear: both;
+  }
+
+  .contain:empty {
+    display: none;
+  }
+
+  @include bpmin(800px) {
+    .contain {
+      padding-top: 40px;
+      padding-bottom: 40px;
+    }
+
+    h2 {
+      float: left;
+    }
+
+    time {
+      float: right;
+      line-height: 29px;
+    }
+  }
+}
