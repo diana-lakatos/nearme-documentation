@@ -61,21 +61,26 @@ namespace :mycsn do
     DATE_CREATED = 53
     IP_ADDRESS = 54
 
-    path = Rails.root.join('marketplaces', 'mycsn', 'carer_test.csv')
+    path = Rails.root.join('marketplaces', 'mycsn', 'carer_full_data.csv')
     emails = []
-    CustomValidator.where(field_name: ['languages', 'how_did_you_hear']).destroy_all
+    CustomValidator.where(field_name: %w(languages how_did_you_hear)).destroy_all
     CSV.foreach(path, col_sep: ',') do |array|
       email = array[EMAIL].strip
       if email.include?('@')
         emails << email
         u = User.where('email ilike ?', email).first_or_initialize
         u.email = email
-        u.persisted? ? puts("updating: #{email}") : puts("importing: #{email}")
+        if u.persisted?
+          puts("#{email} exist, skipping")
+          next
+        else
+          puts("importing: #{email}")
+        end
         u.get_default_profile
         u.get_seller_profile
         u.password = SecureRandom.hex(12) unless u.encrypted_password.present?
         u.external_id = array[EXTERNAL_ID]
-        u.first_name = array[FIRST_NAME].humanize
+        u.first_name = array[FIRST_NAME].split(' ').first.humanize
         u.last_name = array[LAST_NAME].humanize
         u.seller_profile.properties.gender = array[GENDER]
         u.seller_profile.properties.date_of_birth = begin
@@ -99,11 +104,13 @@ namespace :mycsn do
         end
         u.seller_profile.properties.languages = (Array(array[FIRST_LANG]) + Array(array[LANGUAGES])).uniq
 
-        u.seller_profile.properties.summary_profile = array[SUMMARY_PROFILE]
-        u.seller_profile.properties.detailed_profile = array[DETAILED_PROFILE]
-        skills = u.seller_profile.customizations.where(custom_model_type: CustomModelType.find_by(name: 'Experiences')).first_or_initialize
-        skills.properties.name = 'My Skills'
-        skills.properties.description = array[SKILLS]&.gsub('_x000D_', '')
+        u.seller_profile.properties.summary_profile = array[SUMMARY_PROFILE]&.gsub('_x000D_', '')
+        u.seller_profile.properties.detailed_profile = array[SUMMARY_PROFILE]&.gsub('_x000D_', '') # on purpose! column missing
+        if array[SKILLS]&.gsub('_x000D_', '').present?
+          skills = u.seller_profile.customizations.where(custom_model_type: CustomModelType.find_by(name: 'Experiences')).first_or_initialize
+          skills.properties.name = 'My Skills'
+          skills.properties.description = array[SKILLS]&.gsub('_x000D_', '')
+        end
 
         u.seller_profile.properties.aged_care_support = array[AGED_CARE] == 'on'
         u.seller_profile.properties.disability_support = array[DISABILITY] == 'on'
@@ -143,27 +150,30 @@ namespace :mycsn do
                                        Date.strptime(array[DATE_CREATED], '%m/%d/%Y')
                                      rescue
                                        puts "\tInvalid Date Created: #{array[DATE_CREATED]}"
-                                       nil
-                                     end
-        u.transactables.where(transactable_type: TransactableType.first).destroy_all
-        t = u.transactables.where(transactable_type: TransactableType.first).first_or_initialize
-        t.name = 'General Care and Support'
-        t.currency = 'AUD'
-        t.location_not_required = true
-        t.description = 'General care and support covering basic mobility assistance and light domestic duties'
-        t.properties.ndis_category = ['Assistance with Daily Life','Assistance with Social & Community Participation', 'Improved Daily Living Skills', 'Improved Life Choices', 'Increased Social and Community Participation']
-        t.properties.services_category = ['Cleaning & Laundry', 'Companionship & Social Support', 'Independent Living skills', 'Meal Preparation & Shopping', 'Showering; Toileting & Dressing']
-        t.properties.minor_category = ['Activities, Outings & Community Access', 'Assist with Bowel and Bladder Management', 'Assistance with Eating', 'Cleaning & Laundry', 'Companionship', 'Light Gardening', 'Light Housework', 'Meal Preparation', 'Personal Assistant (Admin)', 'Self careassistance', 'Shopping', 'Showering, Dressing, Grooming', 'Toileting']
-        action_type = t.build_time_based_booking(minimum_booking_minutes: 60, transactable_type_action_type: TransactableType::TimeBasedBooking.first, enabled: true)
-        t.action_type = action_type
-        at = t.action_type.build_availability_template
-        at.availability_rules.build(open_hour: 6, open_minute: 0, close_hour: 12, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[MORNING] == 'on'
-        at.availability_rules.build(open_hour: 12, open_minute: 0, close_hour: 17, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[AFTERNOON] == 'on'
-        at.availability_rules.build(open_hour: 17, open_minute: 0, close_hour: 22, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[EVENING] == 'on'
-        at.availability_rules.build(open_hour: 6, open_minute: 0, close_hour: 20, close_minute: 0, days: [5, 6]) if array[WEEKEND] == 'on'
-        t.action_type.pricings.build(transactable_type_pricing: TransactableType::Pricing.where(unit: 'hour').first, number_of_units: 1, unit: 'hour', price: array[PAY_RATE])
-
+                                     end || Time.zone.now
+        if array[PAY_RATE].to_i > 0
+          u.transactables.where(transactable_type: TransactableType.first).destroy_all
+          t = u.transactables.where(transactable_type: TransactableType.first).first_or_initialize
+          t.name = 'General Care and Support'
+          t.currency = 'AUD'
+          t.location_not_required = true
+          t.description = 'General care and support covering basic mobility assistance and light domestic duties'
+          t.properties.ndis_category = ['Assistance with Daily Life', 'Assistance with Social & Community Participation', 'Improved Daily Living Skills', 'Improved Life Choices', 'Increased Social and Community Participation']
+          t.properties.services_category = ['Cleaning & Laundry', 'Companionship & Social Support', 'Independent Living skills', 'Meal Preparation & Shopping', 'Showering; Toileting & Dressing']
+          t.properties.minor_category = ['Activities, Outings & Community Access', 'Assist with Bowel and Bladder Management', 'Assistance with Eating', 'Cleaning & Laundry', 'Companionship', 'Light Gardening', 'Light Housework', 'Meal Preparation', 'Personal Assistant (Admin)', 'Self careassistance', 'Shopping', 'Showering, Dressing, Grooming', 'Toileting']
+          action_type = t.build_time_based_booking(minimum_booking_minutes: 60, transactable_type_action_type: TransactableType::TimeBasedBooking.first, enabled: true)
+          t.action_type = action_type
+          at = t.action_type.build_availability_template
+          at.availability_rules.build(open_hour: 6, open_minute: 0, close_hour: 12, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[MORNING] == 'on'
+          at.availability_rules.build(open_hour: 12, open_minute: 0, close_hour: 17, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[AFTERNOON] == 'on'
+          at.availability_rules.build(open_hour: 17, open_minute: 0, close_hour: 22, close_minute: 0, days: [0, 1, 2, 3, 4]) if array[EVENING] == 'on'
+          at.availability_rules.build(open_hour: 6, open_minute: 0, close_hour: 20, close_minute: 0, days: [5, 6]) if array[WEEKEND] == 'on'
+          t.action_type.pricings.build(transactable_type_pricing: TransactableType::Pricing.where(unit: 'hour').first, number_of_units: 1, unit: 'hour', price: array[PAY_RATE])
+          raise "Invalid transactable: #{t.errors.full_messages.join(", ")}" unless t.valid?
+        end
         u.save!
+        raise "For some reason couldn't store user #{u.id} #{u.email}\n#{array.inspect}" unless User.find_by(id: u.id).present?
+        u.seller_profile.customizations.each(&:save!)
         if u.metadata['import_email_sent_at'].blank?
           puts "\tSending email to: #{u.email}"
           WorkflowAlert::InvokerFactory.get_invoker(WorkflowAlert.find_by(name: 'Notify carer about import')).invoke!(WorkflowStep::SignUpWorkflow::ListerAccountCreated.new(u.id))
