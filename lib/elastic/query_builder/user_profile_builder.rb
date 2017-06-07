@@ -60,8 +60,12 @@ module Elastic
         @params.dig(:user_profiles, type, :properties)&.flat_map do |key, value|
           next if value.blank?
 
-          Array(value).reject(&:blank?).map do |single|
-            { match: { "user_profiles.properties.#{key}" => single } }
+          if key.match(/(.*)_(gte|lte|lt|gt)/)
+            { range: { "user_profiles.properties.#{$1}" => { $2 => value }}}
+          else
+            Array(value).reject(&:blank?).map do |single|
+              { match: { "user_profiles.properties.#{key}" => single } }
+            end
           end
         end&.compact
       end
