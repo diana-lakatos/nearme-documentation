@@ -4,6 +4,9 @@
 - if only_inputs.empty? || only_inputs.include?(:approval_requests)
   = render 'dashboard/shared/fields/approval_requests', f: f
 
+- if only_inputs.empty? || only_inputs.include?(:documents_upload)
+  = render "dashboard/company/transactables/form_fields/documents_upload", f: f
+
 - if only_inputs.empty? || only_inputs.include?(:transactable_type_id)
   = f.hidden_field :transactable_type_id, value: @transactable_type.id
 
