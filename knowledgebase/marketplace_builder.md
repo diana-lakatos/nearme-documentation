@@ -84,3 +84,11 @@ Deploys to staging environment
 ### nearme-marketplace sync
 
 Enables sync mode - saves changes made in the filesystem to the database
+
+### Clear cache
+
+TODO: Replace with proper `nearme-marketplace clear-cache` command
+
+In `desksnearme/` directory open `rails console`
+
+    Instance.find(`instance_id`).marketplace_builder_settings.update! manifest: {} 
