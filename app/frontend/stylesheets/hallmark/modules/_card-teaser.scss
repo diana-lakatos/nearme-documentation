@@ -24,6 +24,7 @@
     width: 100%;
     height: auto;
     text-align: center;
+    font-size: 0;
 
     /* before and after are only visible on broken images */
     &::before, &::after {

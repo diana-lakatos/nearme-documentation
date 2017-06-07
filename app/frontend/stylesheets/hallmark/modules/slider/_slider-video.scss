@@ -1,0 +1,49 @@
+$thumbnail-label-spacing: 25px;
+
+.slider-a.videos .slider-a-wrap {
+  a {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-top: $item-image-proportion * 100%;
+    background-color: #ccc;
+    background-position: 50% 50%;
+    background-repeat: none;
+    background-size: cover;
+    font-size: 0;
+    margin-bottom: $thumbnail-label-spacing;
+  }
+
+  a::before {
+    position: absolute;
+    z-index: 100;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: normal;
+    content: $fa-var-play-circle;
+    font-family: FontAwesome;
+    font-size: 70px;
+    color: rgba(#fff, 0.7);
+    transition: color .3s ease;
+  }
+
+  a:hover::before {
+    color: #fff;
+  }
+
+  .thumbnail-label {
+    position: absolute;
+    font-size: 16px;
+    font-weight: bold;
+    top: 100%;
+    display: block;
+    left: 0;
+    right: 0;
+    letter-spacing: 0;
+    margin-top: 2px;
+    line-height: $thumbnail-label-spacing;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

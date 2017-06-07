@@ -37,21 +37,20 @@ class AddVideoPagesToHallmark < ActiveRecord::Migration
           {% endfor %}
 EOC
 
-        i.pages.create!(
-          path: 'Video',
-          slug: 'video',
-          layout_name: 'community',
-          theme: i.theme,
-          content: content
-        )
+        page = i.pages.where(slug: 'video').first_or_create!
 
-        i.pages.create!(
-          path: 'Video',
-          slug: 'video-staging',
-          layout_name: 'community',
-          theme: i.theme,
-          content: content
-        )
+        page.path = 'Video'
+        page.layout_name = 'community'
+        page.theme = i.theme
+        page.content = content
+        page.save!
+
+        page = i.pages.where(slug: 'video-staging').first_or_create!
+        page.path = 'Video'
+        page.layout_name = 'community'
+        page.theme = i.theme
+        page.content = content
+        page.save!
       end
     end
   end

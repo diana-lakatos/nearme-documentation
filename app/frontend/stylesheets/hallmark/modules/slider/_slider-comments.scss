@@ -1,0 +1,98 @@
+.slider-a.comments {
+  .slider-a-wrap {
+    > ul {
+      position: relative;
+    }
+  }
+
+  article {
+    @include clear;
+
+    font-size: 16px;
+    letter-spacing: 0;
+    white-space: normal;
+    padding: 10px 0;
+    margin: 0;
+    border-bottom: 1px solid $color-white-1;
+
+    &:first-child {
+      border-top: 1px solid $color-white-1;
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      float: left;
+      margin: 0;
+    }
+
+    .avatar ~ * {
+      margin-left: 60px;
+    }
+
+    .hx {
+      font-size: 14px;
+      font-family: $font-default;
+      font-weight: normal;
+      color: inherit;
+      margin-bottom: 0.2em;
+
+      a {
+        font-weight: bold;
+      }
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 1.2;
+      margin: 0;
+    }
+  }
+
+  .attachment {
+    position: absolute;
+    right: 0;
+    top: 10px;
+
+    img {
+      display: block;
+      width: 50px;
+    }
+  }
+
+  .has-attachment {
+    position: relative;
+    padding-right: 100px;
+  }
+
+  article.loading {
+    .avatar {
+      background: $color-white-1;
+    }
+
+    .hx, p {
+      font-size: 0;
+    }
+
+    .hx::before, p::before, p::after {
+      display: inline-block;
+      height: 13px;
+      content: "";
+      background: $color-white-1;
+      margin-bottom: 6px;
+    }
+
+    .hx::before {
+      width: 50%;
+    }
+
+    p::before {
+      width: 80%;
+    }
+
+    p::after {
+      width: 60%;
+      margin-bottom: 0;
+    }
+  }
+}
