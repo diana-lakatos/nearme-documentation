@@ -8,6 +8,10 @@ module Graph
         def transactable_path(transactable)
           listing_path(transactable)
         end
+
+        def activity_feed_event_path(activity_feed_event)
+          polymorphic_path(activity_feed_event.followed)
+        end
       end
     end
   end

@@ -5,7 +5,7 @@ module Graph
       private
 
       def main_scope
-        Comment.all
+        Comment.all.order(created_at: :desc)
       end
     end
   end
