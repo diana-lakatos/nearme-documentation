@@ -4,7 +4,7 @@ The file describes new Marketplace Builder functionalities.
 ## Supported parts of application
 - [ ] marketplace details
 - [x] transactable types
-- [ ] instance profile types
+- [x] instance profile types
 - [ ] reservation types
 - [ ] topics
 - [ ] categories
@@ -15,7 +15,7 @@ The file describes new Marketplace Builder functionalities.
 - [x] liquid views
 - [x] translations
 - [x] workflows
-- [ ] custom model types
+- [x] custom model types
 - [x] graph queries
 - [x] custom themes and assets
 - [ ] rating system

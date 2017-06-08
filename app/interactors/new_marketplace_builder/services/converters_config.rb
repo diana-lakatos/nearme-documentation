@@ -42,6 +42,14 @@ module NewMarketplaceBuilder
           converter: Converters::CustomThemeAssetConverter,
           parser: Parsers::AssetParser,
         },
+        'instance_profile_types' => {
+          converter: Converters::InstanceProfileTypeConverter,
+          parser: Parsers::YamlParser,
+        },
+        'custom_model_types' => {
+          converter: Converters::CustomModelTypeConverter,
+          parser: Parsers::YamlParser,
+        },
       }
 
       def self.get

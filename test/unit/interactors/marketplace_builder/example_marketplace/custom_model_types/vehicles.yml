@@ -1,0 +1,12 @@
+---
+name: Vehicles
+custom_attributes:
+- name: vehicle_type
+  attribute_type: string
+  html_tag: input
+  search_in_query: false
+  label: Vehicle Type
+  searchable: false
+  input_html_options: !ruby/hash:ActiveSupport::HashWithIndifferentAccess {}
+instance_profile_types:
+- Default
