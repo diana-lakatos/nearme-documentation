@@ -2699,6 +2699,7 @@ en:
       inactive: "Payment failed"
       completed: "Completed"
   search:
+    no_results_found: 'No results found.'
     item:
       one: 'item'
       other: 'items'

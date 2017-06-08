@@ -16,7 +16,7 @@
           = render partial: 'search/mixed/location', locals: {location: location, location_counter: location_counter, transactable_type: @searcher.transactable_type, lgpricing_filters: @searcher.search.lgpricing_filters }
 
       = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
-  - elsif @searcher.located || params[:loc]
+  - else
     .locations
       .hidden-locations
         %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
@@ -26,14 +26,8 @@
         .text-center
           %br/
           %br/
-          %h1.tk-adelle.fat No results found
-  - else
-    .locations
-      .hidden-locations
-        %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
-        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.translated_bookable_noun)}
-      %div.no_results
-        = render 'shared/loading_spinner'
+          %h1.tk-adelle.fat
+            = t('search.no_results_found')
 
 - content_for :hero do
   = render 'search/mixed/header'
