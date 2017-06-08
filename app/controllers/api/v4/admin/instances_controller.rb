@@ -101,6 +101,7 @@ class InstanceFactory
     end
     instance.set_context!
     instance.build_availability_templates
+    instance.marketplace_builder_settings = MarketplaceBuilderSettings.new(manifest: {}, status: :ready)
     instance.save!
 
     Utils::FormComponentsCreator.new(instance).create!
