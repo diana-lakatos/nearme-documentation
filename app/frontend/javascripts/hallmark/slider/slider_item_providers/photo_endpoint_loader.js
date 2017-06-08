@@ -1,21 +1,23 @@
 // @flow
 const Gallery = require('../../gallery/gallery');
 
-const DEFAULT_ITEMS_PER_PAGE = 4;
-const MINIMUM_ITEMS_COUNT = 4;
+const MINIMUM_SLIDES_PER_PAGE = 4;
 
 class PhotoEndpointLoader implements EndpointLoader {
   getObjectsCountInOneSlide(): number {
     return 1;
   }
-  getDefaultItemsPerPageCount(): number {
-    return DEFAULT_ITEMS_PER_PAGE;
+
+  getMinimumSlidesPerPageCount(): number {
+    return MINIMUM_SLIDES_PER_PAGE;
   }
-  getMinimumItemsCount(): number {
-    return MINIMUM_ITEMS_COUNT;
-  }
-  getEndpointUrl(since: number, page: number, perPage: number): string {
-    return `/latest-photos.json?since=${since}&page=${page}&per_page=${perPage}`;
+
+  getEndpointUrl(page: number, perPage: number, since: ?number): string {
+    let url = `/latest-photos.json?page=${page}&per_page=${perPage}`;
+    if (since) {
+      url = `${url}&since=${since}`;
+    }
+    return url;
   }
   buildPlaceholderElement(): HTMLElement {
     let li = document.createElement('li');
@@ -28,8 +30,8 @@ class PhotoEndpointLoader implements EndpointLoader {
     return li;
   }
 
-  parseTotalEntriesResponse(data: PhotoEndpointResponseType): Promise<number> {
-    return Promise.resolve(Math.max(data.photos.total_entries, MINIMUM_ITEMS_COUNT));
+  parseTotalSlidesCountResponse(data: PhotoEndpointResponseType): Promise<number> {
+    return Promise.resolve(Math.max(data.photos.total_entries, MINIMUM_SLIDES_PER_PAGE));
   }
 
   parseEndpointData(

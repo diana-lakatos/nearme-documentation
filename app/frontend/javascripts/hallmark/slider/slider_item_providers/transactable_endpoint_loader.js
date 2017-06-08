@@ -1,25 +1,28 @@
 // @flow
 
-const DEFAULT_ITEMS_PER_PAGE = 4;
-const MINIMUM_ITEMS_COUNT = 4;
+const MINIMUM_SLIDES_PER_PAGE = 4;
+const CUTOFF_PERIOD = 7 * 24 * 60 * 60 * 1000; // one week
+const LABEL_CLASS = 'new-comments-label';
 
 const truncate = require('lodash/truncate');
 
 class CommentEndpointLoader implements EndpointLoader {
+  currentUserId: ?number;
+
   getObjectsCountInOneSlide(): number {
     return 1;
   }
 
-  getDefaultItemsPerPageCount(): number {
-    return DEFAULT_ITEMS_PER_PAGE;
+  getMinimumSlidesPerPageCount(): number {
+    return MINIMUM_SLIDES_PER_PAGE;
   }
 
-  getMinimumItemsCount(): number {
-    return MINIMUM_ITEMS_COUNT;
-  }
-
-  getEndpointUrl(since: number, page: number, perPage: number): string {
-    return `/latest-projects.json?since=${since}&page=${page}&per_page=${perPage}`;
+  getEndpointUrl(page: number, perPage: number, since: ?number): string {
+    let url = `/latest-projects.json?page=${page}&per_page=${perPage}`;
+    if (since) {
+      url = `${url}&since=${since}`;
+    }
+    return url;
   }
 
   buildPlaceholderElement(): HTMLElement {
@@ -41,8 +44,8 @@ class CommentEndpointLoader implements EndpointLoader {
     return li;
   }
 
-  parseTotalEntriesResponse(data: TransactableEndpointResponseType): Promise<number> {
-    return Promise.resolve(Math.max(data.projects.total_entries, MINIMUM_ITEMS_COUNT));
+  parseTotalSlidesCountResponse(data: TransactableEndpointResponseType): Promise<number> {
+    return Promise.resolve(Math.max(data.projects.total_entries, MINIMUM_SLIDES_PER_PAGE));
   }
 
   parseEndpointData(
@@ -71,13 +74,83 @@ class CommentEndpointLoader implements EndpointLoader {
           <a href="${data.show_path}">${truncate(data.title, { length: 40 })}</a>
         </h3>
         <p class="user"><a href="${data.creator.profile_path}"><img src="${data.creator.avatar.url}" width="30" height="30" />${data.creator.name}</a></p>
+        <div class="action">
+        ${this.getFollowButton(data.id, data.creator.id)}
+        </div>
       </article>
     `;
     el.classList.remove('loading');
     item.loaded = true;
   }
 
-  afterLoadedCallback(el: HTMLElement) {}
+  getCurrentUserId(): ?number {
+    if (typeof this.currentUserId !== 'undefined') {
+      return this.currentUserId;
+    }
+
+    let body = document.querySelector('body');
+    if (!(body instanceof HTMLElement)) {
+      throw new Error('Invalid context, missing document body');
+    }
+    this.currentUserId = parseInt(body.dataset.cid, 10);
+    return this.currentUserId;
+  }
+
+  getFollowButton(transactableId: number, creatorId: number): string {
+    if (creatorId === this.getCurrentUserId()) {
+      return '';
+    }
+    return `<form action="/follow"
+          method="post"
+          data-follow-button-form
+          data-follow-state="false"
+          data-follow-url="/follow"
+          data-follow-label="Follow"
+          data-unfollow-url="/unfollow"
+          data-unfollow-label="Following"
+          data-followers-counter-id="Transactable:${transactableId}">
+      <input type="hidden" name="type" value="Transactable">
+      <input type="hidden" name="id" value="${transactableId}">
+      <input type="hidden" name="_method" value="post" data-method>
+      <button type="submit" class="button-a action--follow tiny" data-disable-with="Processing ...">Follow</button>
+    </form>`;
+  }
+
+  getLastCommentDate(dateString?: string): Date | void {
+    if (!dateString) {
+      return;
+    }
+
+    let timestamp = Date.parse(dateString);
+
+    if (isNaN(timestamp)) {
+      throw new Error(`Unable to parse provided date string: ${dateString}`);
+    }
+
+    return new Date(timestamp);
+  }
+
+  checkCommentCutoffPeriod(date: Date): boolean {
+    let now = new Date();
+    return date.getTime() > now.getTime() - CUTOFF_PERIOD;
+  }
+
+  newCommentsLabel(container: HTMLElement) {
+    let lastCommentDate = this.getLastCommentDate(container.dataset.transactableLastCommentDate);
+
+    if (lastCommentDate && this.checkCommentCutoffPeriod(lastCommentDate)) {
+      let anchor = container.querySelector('ul.numbers li');
+      if (!(anchor instanceof HTMLElement)) {
+        throw new Error('Missing comments anchor element');
+      }
+
+      anchor.insertAdjacentHTML('beforeend', `<span class="${LABEL_CLASS}">New</span>`);
+    }
+  }
+
+  afterLoadedCallback(element: HTMLElement) {
+    this.newCommentsLabel(element);
+  }
 }
 
 module.exports = CommentEndpointLoader;

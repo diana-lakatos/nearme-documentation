@@ -11,11 +11,11 @@ class Slider {
   container: HTMLElement;
   wrapper: HTMLElement;
   list: HTMLElement;
-  itemsPerPage: number;
+  slidesPerPage: number;
   nav: HTMLElement;
   previousButton: HTMLButtonElement;
   nextButton: HTMLButtonElement;
-  totalItems: number;
+  totalSlides: number;
   currentPosition: number; // index of the first item on the page
   initialTransition: string;
   itemProvider: SliderItemProvider;
@@ -29,11 +29,11 @@ class Slider {
 
     this.itemProvider = itemProvider;
 
-    this.itemsPerPage = this.determineItemsCountPerPage();
+    this.slidesPerPage = this.determineSlidesCountPerPage();
     this.currentPosition = 0;
 
-    this.itemProvider.getTotalItemsCount().then((totalItems: number) => {
-      this.totalItems = totalItems;
+    this.itemProvider.getTotalSlidesCount().then((totalSlides: number) => {
+      this.totalSlides = totalSlides;
       this.nav = this.buildNavigation();
       this.previousButton = findButton('[data-slider-previous]', this.nav);
       this.nextButton = findButton('[data-slider-next]', this.nav);
@@ -74,16 +74,16 @@ class Slider {
   }
 
   nextPage() {
-    let position = this.currentPosition + this.itemsPerPage;
-    if (position >= this.totalItems) {
-      position = this.totalItems - 1;
+    let position = this.currentPosition + this.slidesPerPage;
+    if (position >= this.totalSlides) {
+      position = this.totalSlides - 1;
     }
 
     this.setPosition(position);
   }
 
   previousPage() {
-    let position = this.currentPosition - this.itemsPerPage;
+    let position = this.currentPosition - this.slidesPerPage;
     if (position < 0) {
       position = 0;
     }
@@ -111,7 +111,7 @@ class Slider {
     this.previousButton.classList.add(DISABLED_CLASS);
   }
 
-  determineItemsCountPerPage(): number {
+  determineSlidesCountPerPage(): number {
     let li = this.list.firstElementChild;
     if (!(li instanceof HTMLElement)) {
       throw new Error('Unable to fetch first element in slider');
@@ -120,24 +120,24 @@ class Slider {
   }
 
   setPosition(position: number, instant: ?boolean = false) {
-    if (position < 0 || position >= this.totalItems) {
+    if (position < 0 || position >= this.totalSlides) {
       return;
     }
 
-    position = this.accountForMaxPosition(position, this.itemsPerPage, this.totalItems);
+    position = this.accountForMaxPosition(position, this.slidesPerPage, this.totalSlides);
 
     this.currentPosition = position;
 
-    this.itemProvider.load(position, position + this.itemsPerPage);
+    this.itemProvider.load(position, position + this.slidesPerPage - 1);
 
     this.slideTo(position, instant);
 
     this.togglePreviousButton(position > 0);
-    this.toggleNextButton(position < this.totalItems - this.itemsPerPage);
+    this.toggleNextButton(position < this.totalSlides - this.slidesPerPage);
   }
 
   slideTo(position: number, instant: ?boolean = false) {
-    let transform = `translateX(-${position / this.itemsPerPage * 100}%)`;
+    let transform = `translateX(-${position / this.slidesPerPage * 100}%)`;
 
     this.list.style.transform = transform;
     this.list.style.webkitTransform = transform;
@@ -155,17 +155,17 @@ class Slider {
     }
   }
 
-  accountForMaxPosition(position: number, itemsPerPage: number, totalItems: number): number {
-    return Math.min(totalItems - itemsPerPage, position);
+  accountForMaxPosition(position: number, slidesPerPage: number, totalItems: number): number {
+    return Math.min(totalItems - slidesPerPage, position);
   }
 
   reinitializeNavigation() {
-    let itemsPerPage = this.determineItemsCountPerPage();
-    if (itemsPerPage === this.itemsPerPage) {
+    let slidesPerPage = this.determineSlidesCountPerPage();
+    if (slidesPerPage === this.slidesPerPage) {
       return;
     }
 
-    this.itemsPerPage = itemsPerPage;
+    this.slidesPerPage = slidesPerPage;
     this.setPosition(this.currentPosition, true);
   }
 }

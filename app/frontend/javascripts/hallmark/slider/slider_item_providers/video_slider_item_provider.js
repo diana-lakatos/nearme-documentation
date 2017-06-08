@@ -27,7 +27,7 @@ class VideoSliderItemProvider implements SliderItemProvider {
     });
   }
 
-  getTotalItemsCount(): Promise<number> {
+  getTotalSlidesCount(): Promise<number> {
     return Promise.resolve(this.thumbnails.length);
   }
 }

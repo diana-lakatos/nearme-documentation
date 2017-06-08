@@ -18,13 +18,13 @@ type CommentEndpointResponseItemType = {
     name: string
   },
   created_at: string,
-  activity_feed_images: {
-    filename: ?string,
-    image_original_height: ?number,
-    image_original_width: ?number,
-    thumb: ?string,
-    full: ?string
-  }
+  activity_feed_images: Array<{
+    filename: string,
+    image_original_height: number,
+    image_original_width: number,
+    thumb: string,
+    full: string
+  }>
 };
 
 type CommentEndpointResponseType = {

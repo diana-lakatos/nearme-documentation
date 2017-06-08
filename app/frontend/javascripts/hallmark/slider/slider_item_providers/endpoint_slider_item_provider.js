@@ -3,13 +3,12 @@
 import { findElement } from '../../../toolkit/dom';
 
 const LIST_SELECTOR = '[data-slider-list]';
-const DAYS_TO_SHOW = 356;
+const DAYS_TO_SHOW = 60;
 
 class EndpointSliderItemProvider implements SliderItemProvider {
   container: HTMLElement;
-  container: HTMLElement;
-  items: Array<SliderItemType>;
-  itemsCountPromise: Promise<number>;
+  slides: Array<SliderItemType>;
+  slidesCountPromise: Promise<number>;
   list: HTMLElement;
   loader: EndpointLoader;
 
@@ -18,15 +17,15 @@ class EndpointSliderItemProvider implements SliderItemProvider {
     this.loader = loader;
     this.container = container;
     this.list = findElement(LIST_SELECTOR, this.container);
-    this.items = [];
+    this.slides = [];
 
-    this.itemsCountPromise = this.createTotalItemsCountPromise();
-    this.preloadExistingItems();
+    this.slidesCountPromise = this.createTotalSlidesCountPromise();
+    this.preloadExistingSlides();
   }
 
-  preloadExistingItems() {
+  preloadExistingSlides() {
     Array.prototype.forEach.call(this.list.children, (element: HTMLElement, index: number) => {
-      this.items[index] = { loaded: true, element: element };
+      this.slides[index] = { loaded: true, element: element };
       if (typeof this.loader.afterLoadedCallback === 'function') {
         this.loader.afterLoadedCallback(element);
       }
@@ -35,53 +34,55 @@ class EndpointSliderItemProvider implements SliderItemProvider {
 
   getPaginationSettings(
     startIndex: number = 0,
-    endIndex: number = 1
-  ): { since: number, page: number, perPage: number } {
-    let now = new Date();
-    let since = Math.round((now.getTime() - 60 * 60 * 24 * DAYS_TO_SHOW * 1000) / 1000);
+    endIndex: number = 0
+  ): { page: number, perPage: number } {
+    let objectsPerSlide = this.loader.getObjectsCountInOneSlide();
 
-    startIndex = startIndex * this.loader.getObjectsCountInOneSlide();
-    endIndex = endIndex * this.loader.getObjectsCountInOneSlide();
+    let slidesPerPage = endIndex + 1 - startIndex || this.loader.getMinimumSlidesPerPageCount();
 
-    let perPage = endIndex ? endIndex - startIndex : this.loader.getDefaultItemsPerPageCount();
-    let page = Math.ceil((startIndex + 1) / perPage);
+    let perPaginationPage = slidesPerPage * objectsPerSlide;
+    let page = Math.ceil((startIndex * objectsPerSlide + 1) / perPaginationPage);
 
-    return { since: since, page: page, perPage: perPage };
+    return { page: page, perPage: perPaginationPage };
   }
 
   load(startIndex: number, endIndex: number): Promise<any> {
-    endIndex = endIndex || startIndex + 1;
+    endIndex = endIndex || startIndex;
 
-    let items = this.items.slice(startIndex, endIndex);
+    if (endIndex > this.slides.length - 1) {
+      endIndex = this.slides.length - 1;
+    }
+
+    let slides = this.slides.slice(startIndex, endIndex + 1);
 
     return new Promise(resolve => {
-      if (items.every((item): boolean => item.loaded)) {
+      if (slides.every((slide): boolean => slide.loaded)) {
         resolve();
         return;
       }
 
       this.buildPlaceholderElements(startIndex, endIndex);
 
-      let { since, page, perPage } = this.getPaginationSettings(startIndex, endIndex);
+      let { page, perPage } = this.getPaginationSettings(startIndex, endIndex);
 
-      fetch(this.loader.getEndpointUrl(since, page, perPage))
+      fetch(this.loader.getEndpointUrl(page, perPage))
         .then((response: Response): Promise<CommentEndpointResponseType> => {
           return response.json();
         })
         .then(this.loader.parseEndpointData)
         .then((dataItems: Array<any>) => {
           dataItems.forEach((data: any, index) => {
-            let item = this.items[startIndex + index];
-            let element = item.element;
+            let slide = this.slides[startIndex + index];
+            let element = slide.element;
 
-            if (!item || !(element instanceof HTMLElement)) {
+            if (!slide || !(element instanceof HTMLElement)) {
               throw new Error('Element has not be instantiated correctly');
             }
 
-            if (item.loaded) {
+            if (slide.loaded) {
               return;
             }
-            this.loader.populatePlaceholderElement(item, data);
+            this.loader.populatePlaceholderElement(slide, data);
             if (typeof this.loader.afterLoadedCallback === 'function') {
               this.loader.afterLoadedCallback(element);
             }
@@ -94,15 +95,20 @@ class EndpointSliderItemProvider implements SliderItemProvider {
     });
   }
 
-  createTotalItemsCountPromise(): Promise<number> {
-    let { since, page, perPage } = this.getPaginationSettings(0, 1);
+  getSinceParam(): number {
+    let now = new Date();
+    return Math.round((now.getTime() - 1000 * 60 * 60 * 24 * DAYS_TO_SHOW) / 1000);
+  }
+
+  createTotalSlidesCountPromise(): Promise<number> {
+    let { page, perPage } = this.getPaginationSettings(0, 1);
 
     return new Promise(resolve => {
-      fetch(this.loader.getEndpointUrl(since, page, perPage))
+      fetch(this.loader.getEndpointUrl(page, perPage, this.getSinceParam()))
         .then((response: Response): Promise<any> => {
           return response.json();
         })
-        .then(this.loader.parseTotalEntriesResponse)
+        .then(this.loader.parseTotalSlidesCountResponse)
         .then((totalCount: number) => {
           this.createPlaceholders(totalCount);
           resolve(totalCount);
@@ -110,29 +116,29 @@ class EndpointSliderItemProvider implements SliderItemProvider {
     });
   }
 
-  getTotalItemsCount(): Promise<number> {
-    return this.itemsCountPromise;
+  getTotalSlidesCount(): Promise<number> {
+    return this.slidesCountPromise;
   }
 
   createPlaceholders(totalCount: number) {
     for (let i = 0; i < totalCount; i++) {
       /* do not overwrite exisitng items */
-      if (this.items[i]) {
+      if (this.slides[i]) {
         continue;
       }
-      this.items[i] = { loaded: false, element: null };
+      this.slides[i] = { loaded: false, element: null };
     }
   }
 
   buildPlaceholderElements(startIndex: number, endIndex: number) {
     for (let i = startIndex; i <= endIndex; i++) {
       // omit existing elemenets
-      if (this.items[i].element) {
+      if (this.slides[i].element) {
         continue;
       }
       let li = this.loader.buildPlaceholderElement();
       this.list.appendChild(li);
-      this.items[i].element = li;
+      this.slides[i].element = li;
     }
   }
 }
