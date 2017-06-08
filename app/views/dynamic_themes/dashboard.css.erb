@@ -6,7 +6,64 @@
   theme_red    = @theme.hex_color(:red).presence || '#e45d51'
   theme_green  = @theme.hex_color(:green).presence || '#157a49'
 
+  font = Hash.new
+  font[:regular] = "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif".html_safe
+  font[:medium] =  "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif".html_safe
+  font[:bold] = "'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif".html_safe
+
+  if @theme.theme_font.present?
+    ThemeFont::FONT_TYPES.map do |font_type|
+      %>
+        @font-face {
+          font-family: "font_<%= font_type %>";
+          src: url(<%= @theme.theme_font.send("#{font_type}_eot") %>);
+          src: url(<%= @theme.theme_font.send("#{font_type}_eot") %>?#iefix) format('eot'),
+               url(<%= @theme.theme_font.send("#{font_type}_woff") %>) format('woff'),
+               url(<%= @theme.theme_font.send("#{font_type}_ttf") %>) format('truetype'),
+               url(<%= @theme.theme_font.send("#{font_type}_svg") %>) format('svg');
+
+          <% if font_type == 'regular' %>
+          font-weight: normal;
+          <% elsif font_type == 'medium' %>
+          font-weight: 600;
+          <% elsif font_type == 'bold' %>
+          font-weight: bold;
+          <% end %>
+        }
+      <%
+      font[font_type.to_sym] = "'font_#{font_type}', sans-serif".html_safe
+    end
+  end
 %>
+
+body,
+input,
+textarea,
+select,
+p,
+ul,
+ol,
+em {
+    font-family: <%= font[:regular] %>;
+}
+h1,
+h1 a,
+h2,
+h2 a,
+h3,
+h3 a,
+h4,
+h4 a,
+h5,
+h5 a {
+    font-family: <%= font[:medium] %>;
+    font-weight: 600;
+}
+strong {
+    font-family: <%= font[:bold] %>;
+    font-weight: bold;
+}
+
 a { background-color: transparent; }
 abbr[title] { border-bottom: 1px dotted; }
 mark { background: #ff0; color: #000; }
