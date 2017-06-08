@@ -1223,6 +1223,10 @@ class User < ActiveRecord::Base
     transactable_ids + approved_transactables_collaborated_ids + group_member_transactable_ids
   end
 
+  def unsolved_company_tickets_count
+    @unsolved_company_tickets_count ||= assigned_company_tickets.for_filter('open').count
+  end
+
   private
 
   def populate_ui_settings
