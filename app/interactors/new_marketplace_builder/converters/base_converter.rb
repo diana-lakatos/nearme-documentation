@@ -3,7 +3,7 @@ module NewMarketplaceBuilder
   module Converters
     class BaseConverter
       class << self
-        attr_reader :properties_value, :converters, :dynamic_properties, :primary_key_value
+        attr_reader :properties_value, :converters, :dynamic_properties, :primary_key_value, :primary_key_options
 
         def properties(*properties)
           @properties_value = properties
@@ -19,8 +19,9 @@ module NewMarketplaceBuilder
           @converters.push name: key_name, options: option_hash
         end
 
-        def primary_key(key)
+        def primary_key(key, options = {})
           @primary_key_value = key
+          @primary_key_options = options
         end
       end
 
@@ -28,11 +29,21 @@ module NewMarketplaceBuilder
         @model = model
       end
 
+      def find_model_in_scope(scope, model_hash)
+        primary_key = self.class.primary_key_value
+        primary_key_options = self.class.primary_key_options
+        find_by_attributes = primary_key_options[:find_by] || [primary_key]
+
+        where_hash = {}
+        find_by_attributes.each do |attribute_name|
+          where_hash[attribute_name] = model_hash[attribute_name.to_s]
+        end
+        scope.where(where_hash).first_or_initialize
+      end
+
       def import(model_hash_array)
         model_hash_array.each do |model_hash|
-          primary_key = self.class.primary_key_value
-          model = scope.where(primary_key => model_hash[primary_key.to_s]).first_or_initialize
-
+          model = find_model_in_scope(scope, model_hash)
           model.assign_attributes default_values(model)
           model.assign_attributes model_hash.with_indifferent_access.slice(*self.class.properties_value.map(&:to_sym))
           import_dynamic_properties(model, model_hash)
