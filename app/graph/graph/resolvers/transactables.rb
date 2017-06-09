@@ -40,9 +40,12 @@ module Graph
       private
 
       def main_scope
-        return ::Transactable.all unless @variables['follower_id']
-        ::Transactable.all
-                      .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::Transactable))
+        all = ::Transactable.all.order(created_at: :desc)
+        if @variables['follower_id']
+          all.merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::Transactable))
+        else
+          all
+        end
       end
 
       class CustomAttributePhotos < Resolvers::CustomAttributePhotosBase
