@@ -14,10 +14,11 @@ class PasswordsController < Devise::PasswordsController
       if PlatformContext.current.instance.id == 5011
         resource.touch(:verified_at) unless resource.verified_at.present?
       end
-      respond_with({}, location: after_sending_reset_password_instructions_path_for(resource_name))
     else
-      respond_with(resource)
+      flash[:notice] = I18n.t('devise.passwords.send_instructions')
     end
+
+    respond_with({}, location: after_sending_reset_password_instructions_path_for(resource_name))
   end
 
   private
