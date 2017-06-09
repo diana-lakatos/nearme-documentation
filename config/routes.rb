@@ -493,6 +493,7 @@ DesksnearMe::Application.routes.draw do
         resources :custom_validators
 
         resources :users, only: [:index, :destroy, :edit, :update] do
+          get :pending_approvals, on: :collection
           post :login_as, on: :member
           post :restore, on: :member
           post :restore_session, on: :collection

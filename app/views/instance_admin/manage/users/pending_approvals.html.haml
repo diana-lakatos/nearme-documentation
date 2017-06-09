@@ -1,0 +1,29 @@
+.content-container
+  .sub-header-nav
+    %ul
+      %li
+        = link_to t('instance_admin.manage.users.manage_users'), instance_admin_manage_users_path
+      %li
+        = link_to t('instance_admin.manage.users.users_pending_approval'), instance_admin_manage_users_path, class: "active"
+
+  %h4= t('instance_admin.manage.users.users_pending_approval')
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %tr
+          %th
+            = t('instance_admin.manage.users.name')
+          %th
+            = t('instance_admin.manage.users.email')
+          %th
+            = t('instance_admin.manage.users.signed_up')
+          %th
+          %th
+          %th
+        - @user_profiles.each do |user_profile|
+          = render 'index_row', :resource => user_profile.user
+
+.row
+  .text-container
+    .pull-right
+      = will_paginate @user_profiles

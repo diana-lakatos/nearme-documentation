@@ -962,6 +962,7 @@ en:
         created_at: Created at
       users:
         manage_users: "Manage Users"
+        users_pending_approval: 'Users Pending Approval'
         name: Name
         email: Email
         signed_up: "Signed Up"
