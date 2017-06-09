@@ -218,7 +218,7 @@ namespace :mycsn do
     GENDER_REQUIRE_FEMALE = 23
     FIRST_AID = 24
     POLICE_CHECK = 25
-    CHILDREN_CARE = 26
+    CHILD_CHECK = 26
     AUS_LICENSE = 27
     OWN_CAR = 28
     NON_SMOKER = 29
@@ -265,7 +265,7 @@ namespace :mycsn do
         u.mobile_number = array[MOBILE]
         if array[LONGITUDE].present? && array[LATITUDE].present?
           u.current_address || u.build_current_address
-          u.current_address.address = array[ADDRESS]
+          u.current_address.address = [array[ADDRESS], array[SUBURB], array[STATE]].reject(&:blank?).join(', ')
           u.current_address.longitude = array[LONGITUDE]
           u.current_address.latitude = array[LATITUDE]
           u.current_address.suburb = array[SUBURB]
@@ -275,6 +275,8 @@ namespace :mycsn do
         u.buyer_profile.properties.languages = (Array(array[FIRST_LANG]) + Array(array[LANGUAGES])).uniq
 
         u.buyer_profile.properties.search_preference_aged_care_support = array[AGED_CARE] == 'on'
+        u.buyer_profile.properties.search_preference_driver_license = array[AUS_LICENSE] == 'on'
+        u.buyer_profile.properties.search_preference_working_with_children = array[CHILD_CHECK] == 'on'
         u.buyer_profile.properties.search_preference_disability_support = array[DISABILITY] == 'on'
         u.buyer_profile.properties.search_preference_child_care = array[CHILD_CARE] == 'on'
         u.buyer_profile.properties.search_preference_first_aid = array[FIRST_AID] == 'on'
