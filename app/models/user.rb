@@ -160,7 +160,7 @@ class User < ActiveRecord::Base
   has_many :group_collaborated, -> { GroupMember.approved }, through: :memberships, source: :group
   has_many :all_group_collaborated, through: :memberships, source: :group
   has_many :moderated_groups, -> { GroupMember.approved.moderator }, through: :memberships, source: :group
-  has_many :group_members
+  has_many :group_members, dependent: :destroy
 
   has_one :blog, class_name: 'UserBlog'
   has_one :current_address, class_name: 'Address', as: :entity
