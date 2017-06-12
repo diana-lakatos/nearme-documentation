@@ -11,7 +11,6 @@ $thumbnail-label-spacing: 25px;
     background-repeat: none;
     background-size: cover;
     font-size: 0;
-    margin-bottom: $thumbnail-label-spacing;
   }
 
   a::before {
@@ -32,18 +31,11 @@ $thumbnail-label-spacing: 25px;
     color: #fff;
   }
 
-  .thumbnail-label {
-    position: absolute;
-    font-size: 16px;
-    font-weight: bold;
-    top: 100%;
+  h3 {
+    font: bold 16px / 1.4 $font-default;
+    color: $color-blue;
     display: block;
-    left: 0;
-    right: 0;
     letter-spacing: 0;
-    margin-top: 2px;
-    line-height: $thumbnail-label-spacing;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    margin: 10px 0 5px;
   }
 }

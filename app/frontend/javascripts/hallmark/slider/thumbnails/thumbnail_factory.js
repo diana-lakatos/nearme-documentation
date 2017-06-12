@@ -11,7 +11,7 @@ class ThumbnailFactory {
       throw new Error('Link is missing href attribute');
     }
 
-    if (url.indexOf('youtube.com/') > -1) {
+    if (/youtube.com\/|youtu.be\//.test(url)) {
       return new Thumbnail(link, new YoutubeThumbnailService(url));
     }
 
