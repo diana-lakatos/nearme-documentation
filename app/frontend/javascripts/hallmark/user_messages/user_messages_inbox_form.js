@@ -61,7 +61,18 @@ class UserMessagesInboxForm extends Eventable {
     entry.setAuthor(this.author);
     entry.setOwnMessage(true);
 
+    let body: string = this.commentTextarea.getValue();
+    if (body.trim() != '') {
+      let entry_text = new UserMessagesInboxEntry();
+      entry_text.setAuthor(this.author);
+      entry_text.setOwnMessage(true);
+      entry_text.setBody(body);
+
+      this.emit('newentry', entry_text);
+    }
+
     this.emit('newentry', entry);
+
     this.reset();
   }
 
