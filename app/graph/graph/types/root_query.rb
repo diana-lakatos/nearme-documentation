@@ -19,7 +19,8 @@ module Graph
           UserQueryType,
           ShoppingCartQueryType,
           Orders::OrdersQueryType,
-          WishListItemQueryType
+          WishListItemQueryType,
+          CreditCards::CreditCardQueryType
         ]
       )
     end

@@ -14,7 +14,13 @@ module Api
             publish_event!
             model.lister_confirmed! if order_form.try(:lister_confirm) && lister?
             model.schedule_expiry if order_form.try(:schedule_expiry)
-            payment.authorized? ? payment.capture! : payment.purchase! if order_form.try(:with_charge)
+            if order_form.try(:with_charge)
+              if model.recurring? || model.payment_subscription
+                Order::OrderItemCreator.new(model).create
+              elsif payment.present?
+                payment.authorized? ? payment.capture! : payment.purchase!
+              end
+            end
           end
           respond(order_form)
         end

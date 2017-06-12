@@ -110,6 +110,13 @@ class AvailabilityRule::Summary
     end
   end
 
+  def days_with_minutes_by_step(step_minutes)
+    days_open.each_with_object({}) do |day, results|
+      _rules = rules_for_day(day)
+      results[day] = (_rules.map(&:day_open_minute).min.._rules.map(&:day_close_minute).max).step(step_minutes).to_a.map {|i| {i => 1}}
+    end
+  end
+
   def open_hours_during_week
     @rules.map do |rule|
       (rule.open_hour..rule.close_hour).to_a

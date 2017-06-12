@@ -199,7 +199,7 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation.save!
         assert @reservation.cancellable?
         FactoryGirl.create(:cancel_allowed_cellation_policy,
-          cancellable: @reservation.action.transactable_type_action_type)
+                           cancellable: @reservation.action.transactable_type_action_type)
         @reservation.send :set_cancellation_policy
         @reservation.save!
         refute @reservation.cancellable?
@@ -230,7 +230,8 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should 'not be cancellable when owner canceled' do
-        refute @reservation.cancellable?      end
+        refute @reservation.cancellable? 
+      end
     end
   end
 
@@ -262,7 +263,7 @@ class ReservationTest < ActiveSupport::TestCase
     should 'copy instance waiver agreement template details if available' do
       @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
       assert_difference 'WaiverAgreement.count' do
-        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_instance.id }}}
+        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_instance.id } } }
         @reservation.save!
       end
       waiver_agreement = @reservation.waiver_agreements.first
@@ -274,7 +275,7 @@ class ReservationTest < ActiveSupport::TestCase
       @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
       @reservation.stubs(:should_validate_field?).returns(true)
       assert_no_difference 'WaiverAgreement.count' do
-        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_instance.id, _destroy: true }}}
+        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_instance.id, _destroy: true } } }
         @reservation.save
       end
       refute @reservation.valid?
@@ -284,7 +285,7 @@ class ReservationTest < ActiveSupport::TestCase
       @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
       @waiver_agreement_template_company = FactoryGirl.create(:waiver_agreement_template, target: @reservation.company)
       assert_difference 'WaiverAgreement.count' do
-        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_instance.id }}}
+        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_instance.id } } }
         @reservation.save!
       end
       assert_equal @waiver_agreement_template_instance.name, @reservation.waiver_agreements.first.name
@@ -295,7 +296,7 @@ class ReservationTest < ActiveSupport::TestCase
       @waiver_agreement_template_company = FactoryGirl.create(:waiver_agreement_template, target: @reservation.company)
       @reservation.location.waiver_agreement_templates << @waiver_agreement_template_company
       assert_difference 'WaiverAgreement.count' do
-        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_company.id }}}
+        @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_company.id } } }
         @reservation.save!
       end
       assert_equal @waiver_agreement_template_company.name, @reservation.waiver_agreements.first.name
@@ -309,8 +310,7 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.transactable.waiver_agreement_templates << @waiver_agreement_template_company2
       assert_difference 'WaiverAgreement.count', 2 do
         @reservation.attributes = { waiver_agreements_attributes: { '0' => { waiver_agreement_template_id: @waiver_agreement_template_company.id },
-          '1' => { waiver_agreement_template_id: @waiver_agreement_template_company2.id }}
-        }
+                                                                    '1' => { waiver_agreement_template_id: @waiver_agreement_template_company2.id } } }
         @reservation.save!
       end
       assert_equal [@waiver_agreement_template_company.name, @waiver_agreement_template_company2.name].sort, @reservation.waiver_agreements.pluck(:name).sort
@@ -406,8 +406,10 @@ class ReservationTest < ActiveSupport::TestCase
         first_reservation.save!
 
         @reservation.add_period(@monday)
+        @reservation.quantity = 2
+        @reservation.save!
         @reservation.charge_and_confirm!
-        refute @reservation.errors.blank?
+        assert @reservation.errors.present?
       end
     end
 

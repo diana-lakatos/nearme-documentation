@@ -55,9 +55,6 @@
 - if only_inputs.empty? || @transactable_type.custom_model_types.map { |c| "Custom Model - #{c.name}".to_sym }.include?(only_inputs.first)
   = render "dashboard/company/transactables/form_fields/custom_model", f: f, field: only_inputs.first.to_s
 
-- if only_inputs.empty? || only_inputs.include?(:minimum_booking_minutes)
-  = f.input :minimum_booking_minutes, required: f.object.required?(:minimum_booking_minutes)
-
 - if only_inputs.empty? || only_inputs.include?(:seller_attachments)
   = render "dashboard/company/transactables/form_fields/seller_attachments", f: f
 

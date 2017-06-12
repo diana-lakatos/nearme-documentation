@@ -166,6 +166,14 @@ class Order < ActiveRecord::Base
                                                   ) payments_info ON payments_info.payable_id = orders.id and payments_info.payable_type = orders.type")
                                    .order("coalesce(nullif(payments_info.sum_amount, 0), nullif(order_info.paid, 0), line_items.paid, 0) #{direction}, created_at DESC")
                                }
+  scope :recurring, -> { includes(:periods).where.not(reservation_periods: { recurring_frequency: nil, recurring_frequency_unit: nil }) }
+  scope :needs_new_order_item, lambda { |time|
+    recurring
+      .with_state(:confirmed)
+      .includes(:order_items)
+      .where('generate_order_item_at <= ?', time)
+      .where.not(recurring_booking_periods: { id: nil })
+  }
 
   delegate :service_fee_guest_percent, :service_fee_host_percent, :action,
            to: :transactable_pricing
@@ -562,16 +570,20 @@ class Order < ActiveRecord::Base
     activate! if payment && payment.can_activate?
   end
 
-
   def to_liquid
     @drop ||= OrderDrop.new(self)
   end
+
+  def conflicting_orders
+    Order::ConflictingOrders.new(order: self).by_quantity
+  end
+
   private
 
   def set_cancellation_policy
     if transactable_pricing && transactable_pricing.action && transactable_pricing.action.cancellation_policies.any?
       transactable_pricing.action.cancellation_policies.each do |cp|
-        self.cancellation_policies << cp.dup
+        cancellation_policies << cp.dup
       end
     end
     true

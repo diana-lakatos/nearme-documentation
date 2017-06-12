@@ -370,7 +370,7 @@ class Payment < ActiveRecord::Base
   def fetch
     return unless payment_gateway.gateway.respond_to?(:find_payment)
 
-    payment_gateway.find_payment(external_id, merchant_account.try(:external_id))
+    payment_gateway.find_payment(external_id, direct_charge? ? merchant_account.try(:external_id) : nil )
   end
 
   def can_activate?

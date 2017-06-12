@@ -30,6 +30,11 @@ class Reservation < Order
 
   state_machine :state, initial: :inactive do
     after_transition unconfirmed: :confirmed, do: [:warn_user_of_expiration]
+    event :overdue do transition confirmed: :overdued; end
+  end
+
+  def recurring?
+    periods.recurring.any?
   end
 
   def add_line_item!(attrs)
@@ -110,7 +115,11 @@ class Reservation < Order
 
   def charge_and_confirm!
     invoke_confirmation! do
-      payment.authorized? ? payment.capture! : payment.purchase!
+      if recurring?
+        Order::OrderItemCreator.new(self).create
+      elsif payment
+        payment.authorized? ? payment.capture! : payment.purchase!
+      end
     end
   end
 
@@ -221,6 +230,7 @@ class Reservation < Order
   def price_calculator
     @price_calculator ||= transactable_pricing.price_calculator(self)
   end
+  alias amount_calculator price_calculator
 
   def set_minimum_booking_minutes
     self.minimum_booking_minutes = action.minimum_booking_minutes
@@ -236,6 +246,10 @@ class Reservation < Order
     end
 
     true
+  end
+
+  def is_recurring?
+    periods.any?(&:is_recurring?)
   end
 
   private

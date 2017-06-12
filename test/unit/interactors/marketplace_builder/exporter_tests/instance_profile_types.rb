@@ -2,7 +2,7 @@ require_relative 'basic'
 
 module MarketplaceBuilder
   module ExporterTests
-    class ShouldExportTransactableTypes < Basic
+    class ShouldExportInstanceProfileTypes < Basic
       def initialize(instance)
         @instance = instance
       end
