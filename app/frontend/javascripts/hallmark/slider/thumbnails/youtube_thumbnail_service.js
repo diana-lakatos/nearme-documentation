@@ -9,13 +9,18 @@ class YoutubeThumbnailService implements ThumbnailService {
   }
 
   getVideoIdFromUrl(url: string): string {
-    let parser = parseUrl(url);
+    let videoId, parser = parseUrl(url);
 
     if (!parser) {
       throw new Error(`Unable to parse provided URL: ${url}`);
     }
 
-    let videoId = parser.search.split('&')[0].split('v=')[1];
+    if (parser.host === 'youtu.be') {
+      videoId = parser.pathname.substr(1);
+    } else {
+      videoId = parser.search.split('&')[0].split('v=')[1];
+    }
+
     if (!videoId) {
       throw new Error(`Unable to fetch video ID from provided url: ${url}`);
     }

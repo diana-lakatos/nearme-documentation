@@ -1,64 +1,64 @@
-{% query_graph ‘hallmark_home_not_signed_in’, result_name: g, follower_id: current_user.id %}
+{% query_graph 'hallmark_home_not_signed_in', result_name: g, follower_id: current_user.id %}
 
-<div id=“intro-video”{% if hide_intro_video %} class=“inactive”{% endif %}></div>
+<div id="intro-video"{% if hide_intro_video %} class="inactive"{% endif %}></div>
 
-<div class=“hero-a”>
+<div class="hero-a">
   {% if current_user == blank %}
-    <div class=“contain compact”>
-      <h2 class=“hx”>{{ ‘hero_slogan_signed_out’ | translate }}</h2>
-      <p>{{ ‘hero_description_signed_out’ | translate }}</p>
-      <div class=“action”><a href=“/users/password/new” class=“button-a large alt”>{{ ‘join_now’ | translate }}</a></div>
+    <div class="contain compact">
+      <h2 class="hx">{{ 'hero_slogan_signed_out' | translate }}</h2>
+      <p>{{ 'hero_description_signed_out' | translate }}</p>
+      <div class="action"><a href="/users/password/new" class="button-a large alt">{{ 'join_now' | translate }}</a></div>
 
-      <p class=“signup-cta”>Not a Keepsake Ornament Club member? Unlock access to Keepsake Community PLUS many other benefits for a whole year!</p>
-      <div class=“action”><a href=“http://explore.hallmark.com/keepsake-ornaments/keepsake-ornament-club/” class=“button-a large alt”>Join the Club</a></div>
+      <p class="signup-cta">Not a Keepsake Ornament Club member? Unlock access to Keepsake Community PLUS many other benefits for a whole year!</p>
+      <div class="action"><a href="http://explore.hallmark.com/keepsake-ornaments/keepsake-ornament-club/" class="button-a large alt">Join the Club</a></div>
     </div>
   {% else %}
-    <div class=“contain”>
-      <h2 class=“hx”>{{ ‘hero_slogan_signed_in’ | translate }}</h2>
-      <p>{{ ‘hero_description_signed_in’ | translate }}</p>
+    <div class="contain">
+      <h2 class="hx">{{ 'hero_slogan_signed_in' | translate }}</h2>
+      <p>{{ 'hero_description_signed_in' | translate }}</p>
     </div>
   {% endif %}
 </div>
 
 {% if current_user == blank %}
-<div class=“wrap-a white benefits-section”>
-  <div class=“contain”>
-    <img src=“https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1422/intro-image.jpg” alt=“Wooden bird” class=“alignright” width=“440" height=“440”>
+<div class="wrap-a white benefits-section">
+  <div class="contain">
+    <img src="https://dmtyylqvwgyxw.cloudfront.net/instances/5011/uploads/images/ckeditor/picture/data/1422/intro-image.jpg" alt="Wooden bird" class="alignright" width="440" height="440">
 
-    <div class=“header-a _mBb”>
-      <h2 class=“hx”>Join the club or sign in to <span>Keepsake Community</span></h2>
+    <div class="header-a _mBb">
+      <h2 class="hx">Join the club or sign in to <span>Keepsake Community</span></h2>
     </div>
 
-    <div class=“page-copy-a”>
-      <p>Now you can connect with people who share your passion for Keepsake Ornaments and interact with artists like never before! With your Keepsake Ornament Club membership, you will be part of an exclusive members-only digital community where you can make new connections, talk to artists, get exclusive content and find sneak peeks &mdash; all year round. Plus, we’ll be adding more exciting features, including a marketplace where you can buy, sell and trade ornaments!</p>
+    <div class="page-copy-a">
+      <p>Now you can connect with people who share your passion for Keepsake Ornaments and interact with artists like never before! With your Keepsake Ornament Club membership, you will be part of an exclusive members-only digital community where you can make new connections, talk to artists, get exclusive content and find sneak peeks &mdash; all year round. Plus, we'll be adding more exciting features, including a marketplace where you can buy, sell and trade ornaments!</p>
     </div>
   </div>
 </div>
 {% endif %}
 
-<div class=“wrap-a white”>
-  <div class=“contain”>
-    <div class=“header-a”>
-      <h2 class=“hx”>{{ ‘featured_projects’ | translate }}</h2>
-      <p class=“tx-a”>Browse other members’ collections, decor and more, and share your own creations.</p>
-      <p class=“action”><a href=“/search/projects?sort=featured” class=‘button-a small light’>{{ ‘view_all’ | translate }}</a></p>
+<div class="wrap-a white">
+  <div class="contain">
+    <div class="header-a">
+      <h2 class="hx">{{ 'featured_projects' | translate }}</h2>
+      <p class="tx-a">Browse other members' collections, decor and more, and share your own creations.</p>
+      <p class="action"><a href="/search/projects?sort=featured" class='button-a small light'>{{ 'view_all' | translate }}</a></p>
     </div>
-    <div class=“grid-a-projects-a”>
-      <div class=“wrap”>
+    <div class="grid-a-projects-a">
+      <div class="wrap">
         {% for project in g.projects.items %}
-          <div class=“cell”>
-            <article class=“card-a” data-equalize>
-              <figure><a href=“{{ project.show_path }}“><img src=“{{ project.cover_photo_thumbnail_url }}” /></a></figure>
+          <div class="cell">
+            <article class="card-a" data-equalize>
+              <figure><a href="{{ project.show_path }}"><img src="{{ project.cover_photo_thumbnail_url }}" /></a></figure>
               {% if current_user.id != project.creator.id %}
-                <div class=“action”>
-                  {% include ‘shared/follow_button’ object: project, object_type: ‘Transactable’, css_class: ‘tiny’ %}
+                <div class="action">
+                  {% include 'shared/follow_button' object: project, object_type: 'Transactable', css_class: 'tiny' %}
                 </div>
               {% endif %}
 
-              <h3 class=“hx”>
-                <a href=“{{ project.show_path}}“>{{ project.name }}</a>
+              <h3 class="hx">
+                <a href="{{ project.show_path}}">{{ project.name }}</a>
               </h3>
-              <p class=“user”><a href=“{{ project.creator.profile_path }}“><img src=“{{ project.creator.avatar_url_thumb }}” width=“30" height=“30” />{{ project.creator.name_with_affiliation }}</a></p>
+              <p class="user"><a href="{{ project.creator.profile_path }}"><img src="{{ project.creator.avatar_url_thumb }}" width="30" height="30" />{{ project.creator.name_with_affiliation }}</a></p>
             </article>
           </div>
         {% endfor %}
@@ -67,33 +67,33 @@
   </div>
 </div>
 
-<div class=“wrap-a white”>
-  <div class=“contain”>
+<div class="wrap-a white">
+  <div class="contain">
     <!-- header with button
     -->
-    <div class=“header-a _mBa”>
-      <h2 class=“hx”>
-        {{ ‘featured_topics’ | translate }}
+    <div class="header-a _mBa">
+      <h2 class="hx">
+        {{ 'featured_topics' | translate }}
       </h2>
-      <p class=“tx-a”>Follow the topics that interest you and join the conversation.</p>
-      <p class=“action”>
-      <a href=“/search/topics?sort=featured” class=‘button-a small light’>{{ ‘view_all’ | translate }}</a>
+      <p class="tx-a">Follow the topics that interest you and join the conversation.</p>
+      <p class="action">
+      <a href="/search/topics?sort=featured" class='button-a small light'>{{ 'view_all' | translate }}</a>
       </p>
     </div>
 
-    <div class=“grid-a-projects-a”>
-      <div class=“wrap”>
+    <div class="grid-a-projects-a">
+      <div class="wrap">
       {% for topic in g.topics %}
-        <div class=“cell”>
-        <article class=“card-a”>
+        <div class="cell">
+        <article class="card-a">
           <figure>
-            <a href=“{{ topic.show_url }}“><img src=“{{ topic.listing_image_url }}” alt=“{{ topic.name }}” /></a>
+            <a href="{{ topic.show_url }}"><img src="{{ topic.listing_image_url }}" alt="{{ topic.name }}" /></a>
           </figure>
-          <div class=“action”>
-            {% include ‘shared/follow_button’ object: topic, object_type: ‘Topic’, css_class: ‘tiny’ %}
+          <div class="action">
+            {% include 'shared/follow_button' object: topic, object_type: 'Topic', css_class: 'tiny' %}
           </div>
-          <h3 class=“hx”>
-            <a href=“{{ topic.show_url }}“>{{ topic.name }}</a>
+          <h3 class="hx">
+            <a href="{{ topic.show_url }}">{{ topic.name }}</a>
           </h3>
         </article>
         </div>
@@ -104,49 +104,49 @@
 </div>
 
 
-<div class=“wrap-a”>
-  <div class=“contain”>
-    <div class=“header-a”>
-      <h2 class=“hx”>
-        {{ ‘connect_with_influencers’ | translate }}
+<div class="wrap-a">
+  <div class="contain">
+    <div class="header-a">
+      <h2 class="hx">
+        {{ 'connect_with_influencers' | translate }}
       </h2>
-      <p class=“tx-a”>Connect with fellow Keepsake Ornament Club members and your favorite artists.</p>
+      <p class="tx-a">Connect with fellow Keepsake Ornament Club members and your favorite artists.</p>
 
-      <p class=“action”>
-      <a href=“/search/people?sort=featured” class=‘button-a small light’>{{ ‘view_all’ | translate }}</a>
+      <p class="action">
+      <a href="/search/people?sort=featured" class='button-a small light'>{{ 'view_all' | translate }}</a>
       </p>
     </div>
 
-    <div class=“grid-a-people-a”>
-      <div class=“wrap”>
+    <div class="grid-a-people-a">
+      <div class="wrap">
         {% for user in g.users %}
-          <div class=“cell”>
-            <article class=“card-a” data-equalize>
-              <figure><a href=“{{ user.profile_path }}“><img src=“{{ user.avatar_url_bigger }}” /></a>
+          <div class="cell">
+            <article class="card-a" data-equalize>
+              <figure><a href="{{ user.profile_path }}"><img src="{{ user.avatar_url_bigger }}" /></a>
               {% if user.role != blank %}
               <figcaption>{{ user.role }}</figcaption>
               {% endif %}</figure>
               {% if current_user.id != user.id %}
-                <div class=“action”>
-                  {% include ‘shared/follow_button’, object: user, object_type: ‘User’, css_class: ‘tiny’ %}
+                <div class="action">
+                  {% include 'shared/follow_button', object: user, object_type: 'User', css_class: 'tiny' %}
                 </div>
               {% endif %}
-              <h3 class=“hx”>
-                <a href=“{{ user.profile_path }}“>{{ user.name_with_affiliation }}</a>
+              <h3 class="hx">
+                <a href="{{ user.profile_path }}">{{ user.name_with_affiliation }}</a>
               </h3>
-              <div class=“message-action”>
-                <a href=“{{ ‘new_user_user_message_path’ | generate_url: user.id }}”
-                    class=“button-a tiny light action--message”
-                    data-href=“{{ ‘new_user_user_message_path’ | generate_url: user.id }}”
+              <div class="message-action">
+                <a href="{{ 'new_user_user_message_path' | generate_url: user.id }}"
+                    class="button-a tiny light action--message"
+                    data-href="{{ 'new_user_user_message_path' | generate_url: user.id }}"
                     data-message-trigger
                     data-modal>
-                  {{ ‘messages.trigger_button’ | translate }}
+                  {{ 'messages.trigger_button' | translate }}
                 </a>
               </div>
               {% if user.properties.short_bio != blank %}
                 <p>{{ user.properties.short_bio }}</p>
               {% endif %}
-              <p class=“location”>{{ user.display_location }}</p>
+              <p class="location">{{ user.display_location }}</p>
             </article>
           </div>
         {% endfor %}

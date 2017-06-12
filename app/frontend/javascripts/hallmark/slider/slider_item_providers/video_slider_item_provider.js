@@ -13,9 +13,9 @@ class VideoSliderItemProvider implements SliderItemProvider {
   }
 
   load(startIndex: number, endIndex: ?number): Promise<any> {
-    endIndex = endIndex || startIndex + 1;
+    endIndex = endIndex || startIndex;
     let ps = this.thumbnails
-      .slice(startIndex, endIndex)
+      .slice(startIndex, endIndex + 1)
       .map((thumbnail: Thumbnail): Promise<void> => thumbnail.load());
     return Promise.all(ps);
   }

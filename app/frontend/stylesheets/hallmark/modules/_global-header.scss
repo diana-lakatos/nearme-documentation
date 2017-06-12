@@ -255,6 +255,10 @@ $header-height: 80px;
       content: $fa-var-video-camera;
     }
 
+    .env-production & li.videos {
+      display: none !important;
+    }
+
     li em {
       position: absolute;
       left: -10001px;
