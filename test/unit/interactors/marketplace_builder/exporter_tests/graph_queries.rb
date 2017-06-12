@@ -6,12 +6,12 @@ module MarketplaceBuilder
       end
 
       def seed!
-        GraphQuery.create!(instance_id: @instance.id, name: 'get_users', query_string: 'query get_user($slug: String!) {}')
+        GraphQuery.create!(instance_id: @instance.id, name: 'get_users', query_string: 'query get_user($slug: String!) { user(slug: $slug){ first_name }}')
       end
 
       def execute!
         liquid_content = read_exported_file('graph_queries/get_users.graphql', :liquid)
-        assert_equal liquid_content.body, 'query get_user($slug: String!) {}'
+        assert_equal liquid_content.body, 'query get_user($slug: String!) { user(slug: $slug){ first_name }}'
       end
     end
   end
