@@ -9,6 +9,7 @@ module NewMarketplaceBuilder
         Converters::GraphQueryConverter => ['graph_queries', 'graphql'],
         Converters::InstanceProfileTypeConverter => ['instance_profile_types', 'yml'],
         Converters::LiquidViewConverter => ['liquid_views', 'liquid'],
+        Converters::MailerConverter => ['mailers', 'liquid'],
         Converters::PageConverter => ['pages', 'liquid'],
         Converters::TransactableTypeConverter => ['transactable_types', 'yml'],
         Converters::TranslationConverter => ['translations', 'yml'],

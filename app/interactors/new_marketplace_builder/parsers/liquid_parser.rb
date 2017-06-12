@@ -15,7 +15,6 @@ module NewMarketplaceBuilder
           attributes['name'] ||= File.basename(parse_liquid_path)
           attributes['path'] ||= parse_liquid_path
           attributes['partial'] ||= is_partial
-          attributes['view_type'] ||= 'view'
         end
       end
 
@@ -38,6 +37,8 @@ module NewMarketplaceBuilder
         @file_path.gsub(/\.[a-z]+$/, '')
                   .gsub('/liquid_views/', '')
                   .gsub('liquid_views/', '')
+                  .gsub('/mailers/', '')
+                  .gsub('mailers/', '')
       end
     end
   end
