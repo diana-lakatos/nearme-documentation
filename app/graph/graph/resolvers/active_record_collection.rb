@@ -18,7 +18,7 @@ module Graph
       end
 
       def resolve_by_since(relation, since_date)
-        relation.where('created_at > ?', Time.zone.at(since_date.to_i))
+        relation.where("#{table_name}.created_at > ?", Time.zone.at(since_date.to_i))
       end
 
       def resolve_by_paginate(relation, params)
@@ -33,6 +33,10 @@ module Graph
 
       def main_scope
         raise NotImplementedError
+      end
+
+      def table_name
+        main_scope.table.name
       end
     end
   end
