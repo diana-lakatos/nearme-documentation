@@ -272,6 +272,19 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       assert_not_nil result(query)
     end
 
+    should 'check is_followed' do
+      @variables['follower_id'] = 1
+      query = %(query get_projects($follower_id: ID){
+        transactables(since: 1){
+          items{
+            is_followed(follower_id: $follower_id)
+          }
+        }
+      })
+
+      assert_not_nil result(query)
+    end
+
     should 'get followers' do
       transactable = FactoryGirl.create(:transactable)
       FactoryGirl.create(:activity_feed_subscription, followed: transactable)
