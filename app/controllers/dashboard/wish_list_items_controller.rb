@@ -7,12 +7,12 @@ class Dashboard::WishListItemsController < Dashboard::BaseController
 
   def destroy
     item.destroy
-    redirect_to dashboard_wish_list_items_path, notice: t('flash_messages.wish_list_items.item_deleted')
+    redirect_to (params[:return_to].presence || dashboard_wish_list_items_path), notice: t('flash_messages.wish_list_items.item_deleted')
   end
 
   def clear
     wish_list.items.destroy_all
-    redirect_to dashboard_wish_list_items_path, notice: t('flash_messages.wish_list_items.all_items_deleted')
+    redirect_to (params[:return_to].presence || dashboard_wish_list_items_path), notice: t('flash_messages.wish_list_items.all_items_deleted')
   end
 
   private
