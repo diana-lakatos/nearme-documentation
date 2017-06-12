@@ -5,7 +5,7 @@ class PaymentRefundJobTest < ActiveSupport::TestCase
   should 'run the right method' do
     payment = FactoryGirl.create(:paid_payment)
     PaymentGateway.any_instance.expects(:gateway_refund).returns(OpenStruct.new(success?: false)).times(3)
-    MarketplaceErrorLogger::DummyLogger.any_instance.expects(:log_issue).once
+    MarketplaceErrorLogger::ActiveRecordLogger.any_instance.expects(:log_issue).once
     payment.refund!(payment.total_amount_cents)
   end
 

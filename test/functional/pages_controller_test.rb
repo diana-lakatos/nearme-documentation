@@ -149,7 +149,7 @@ class PagesControllerTest < ActionController::TestCase
     context 'errors' do
       should 'store when liquid has syntax error' do
         @page = FactoryGirl.create(:page, content: '<div class="page-test">hello world {% fooooo bar %}</div>')
-        MarketplaceErrorLogger::DummyLogger.any_instance.expects(:log_issue).once
+        MarketplaceErrorLogger::ActiveRecordLogger.any_instance.expects(:log_issue).once
 
         get :show, slug: @page.slug
 
@@ -161,13 +161,13 @@ class PagesControllerTest < ActionController::TestCase
         fooo
         {% query_graph foo_query, result_name: g %}
         </div>')
-        MarketplaceErrorLogger::DummyLogger.any_instance.expects(:log_issue).once
 
         get :show, slug: @page.slug
 
         assert_response :success
         assert response.body.include?('foo')
         assert response.body.include?('Liquid error: internal')
+        assert MarketplaceError.last.message.include?('foo_query.graphql')
       end
     end
   end
