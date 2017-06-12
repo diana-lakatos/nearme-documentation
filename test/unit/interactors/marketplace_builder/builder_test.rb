@@ -53,7 +53,7 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
 
         NewMarketplaceBuilder::Interactors::ImportInteractor.new(@instance.id, EXAMPLE_MARKETPLACE_PATH).execute!
 
-        assert_equal 1, InstanceView.count
+        assert_equal 0, InstanceView.where(view_type: 'view').count
       ensure
         FileUtils.mv('tmp/index.liquid.mbuilder', "#{EXAMPLE_MARKETPLACE_PATH}/liquid_views/home/index.liquid")
       end

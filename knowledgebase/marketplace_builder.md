@@ -10,7 +10,7 @@ The file describes new Marketplace Builder functionalities.
 - [ ] categories
 - [x] pages
 - [x] content holders
-- [ ] mailers
+- [x] mailers
 - [ ] SMS
 - [x] liquid views
 - [x] translations

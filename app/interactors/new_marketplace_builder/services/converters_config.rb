@@ -10,6 +10,10 @@ module NewMarketplaceBuilder
           converter: Converters::LiquidViewConverter,
           parser: Parsers::LiquidParser,
         },
+        'mailers' => {
+          converter: Converters::MailerConverter,
+          parser: Parsers::LiquidParser,
+        },
         'form_configurations' => {
           converter: Converters::FormConfigurationConverter,
           parser: Parsers::LiquidParser,

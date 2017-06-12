@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 module NewMarketplaceBuilder
   module Converters
-    class LiquidViewConverter < BaseConverter
+    class MailerConverter < BaseConverter
       primary_key :path
       properties :body, :path, :partial, :view_type
 
       def scope
-        InstanceView.where(view_type: ['view', 'mail_layout'], instance_id: @model.id)
+        InstanceView.where(view_type: ['email'], instance_id: @model.id)
       end
 
       def resource_name(liquid)
@@ -18,8 +18,8 @@ module NewMarketplaceBuilder
         {
           transactable_types: TransactableType.all,
           format: 'html',
+          view_type: 'email',
           handler: 'liquid',
-          view_type: 'view',
           locales: Locale.all
         }
       end
