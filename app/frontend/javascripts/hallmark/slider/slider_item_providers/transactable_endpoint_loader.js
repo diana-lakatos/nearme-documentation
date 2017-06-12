@@ -4,6 +4,13 @@ const MINIMUM_SLIDES_PER_PAGE = 4;
 const CUTOFF_PERIOD = 7 * 24 * 60 * 60 * 1000; // one week
 const LABEL_CLASS = 'new-comments-label';
 
+const FOLLOW_URL = '/follow';
+const UNFOLLOW_URL = '/unfollow';
+const FOLLOW_LABEL = 'Follow';
+const UNFOLLOW_LABEL = 'Unfollow';
+const PROCESSING_LABEL = 'Processing&hellip;';
+const FOLLOW_BUTTON_CLASS = 'tiny';
+
 const truncate = require('lodash/truncate');
 
 class CommentEndpointLoader implements EndpointLoader {
@@ -75,7 +82,7 @@ class CommentEndpointLoader implements EndpointLoader {
         </h3>
         <p class="user"><a href="${data.creator.profile_path}"><img src="${data.creator.avatar.url}" width="30" height="30" />${data.creator.name}</a></p>
         <div class="action">
-        ${this.getFollowButton(data.id, data.creator.id)}
+        ${this.getFollowButton(data.id, data.creator.id, data.is_followed)}
         </div>
       </article>
     `;
@@ -96,23 +103,43 @@ class CommentEndpointLoader implements EndpointLoader {
     return this.currentUserId;
   }
 
-  getFollowButton(transactableId: number, creatorId: number): string {
+  getFollowButton(transactableId: number, creatorId: number, isFollowed: boolean): string {
+    let actionUrl, followClass, actionMethod, buttonLabel, followState;
     if (creatorId === this.getCurrentUserId()) {
       return '';
     }
-    return `<form action="/follow"
+
+    if (!this.getCurrentUserId()) {
+      return `<a href="/users/sign_in?return_to=%2F%3Fhome%3D1" class="button-a action--follow ${FOLLOW_BUTTON_CLASS}">Follow</a>`;
+    }
+
+    if (isFollowed) {
+      actionUrl = UNFOLLOW_URL;
+      followClass = 'action--unfollow';
+      actionMethod = 'delete';
+      buttonLabel = UNFOLLOW_LABEL;
+      followState = 'true';
+    } else {
+      actionUrl = FOLLOW_URL;
+      followClass = 'action--follow';
+      actionMethod = 'post';
+      buttonLabel = FOLLOW_LABEL;
+      followState = 'false';
+    }
+
+    return `<form action="${actionUrl}"
           method="post"
           data-follow-button-form
-          data-follow-state="false"
-          data-follow-url="/follow"
-          data-follow-label="Follow"
-          data-unfollow-url="/unfollow"
-          data-unfollow-label="Following"
+          data-follow-state="${followState}"
+          data-follow-url="${FOLLOW_URL}"
+          data-follow-label="${FOLLOW_LABEL}"
+          data-unfollow-url="${UNFOLLOW_URL}"
+          data-unfollow-label="${UNFOLLOW_LABEL}"
           data-followers-counter-id="Transactable:${transactableId}">
       <input type="hidden" name="type" value="Transactable">
       <input type="hidden" name="id" value="${transactableId}">
-      <input type="hidden" name="_method" value="post" data-method>
-      <button type="submit" class="button-a action--follow tiny" data-disable-with="Processing ...">Follow</button>
+      <input type="hidden" name="_method" value="${actionMethod}" data-method>
+      <button type="submit" class="button-a ${followClass} ${FOLLOW_BUTTON_CLASS}" data-disable-with="${PROCESSING_LABEL}">${buttonLabel}</button>
     </form>`;
   }
 
