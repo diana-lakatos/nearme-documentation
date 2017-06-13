@@ -1,4 +1,4 @@
-.topic-a.group-a(data-object-id="#{@group.id}")
+.topic-a.group-a.hero-header-a(data-object-id="#{@group.id}")
   .wrap
     .contain
       - if !@group.secret? || current_user.try(:is_member_of?, @group)
