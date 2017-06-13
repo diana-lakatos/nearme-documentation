@@ -54,6 +54,7 @@ class ReservationForm < BaseForm
     # FIXME: for now to be able to update reservation. Big refactor required
     # idea - probably skip building line items entirely at this level, and move it
     # to CheckoutForm.
+    raise "Reservation was not saved: #{model.errors.full_messages.join(', ')}" if model.changed?
     model.line_items.destroy_all
     model.reload
     model.build_first_line_item

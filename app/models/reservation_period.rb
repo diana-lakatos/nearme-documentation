@@ -24,7 +24,7 @@ class ReservationPeriod < ActiveRecord::Base
   def hours=(number)
     if self[:start_minute] && number.to_f.positive?
       # set end_time based on start_time and hours
-      self[:end_minute] = self[:start_minute].to_i + hours.to_f * 60
+      self[:end_minute] = self[:start_minute].to_i + number.to_f * 60
     elsif self[:start_minute].nil? || hours != number.to_f
       # sets start/end_minute to correct values when given hours don't match minutes
       # from start/end_minutes

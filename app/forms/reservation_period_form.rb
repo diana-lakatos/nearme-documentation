@@ -4,11 +4,14 @@ class ReservationPeriodForm < BaseForm
   property :_destroy, virtual: true
   property :date
   validates :date, presence: true
-  property :end_minute
 
   class << self
     def decorate(configuration)
       Class.new(self) do
+        %i(start_minute end_minute hours).each do |field|
+          add_property(field, configuration[field])
+          add_validation(field, configuration[field])
+        end
         validate :validate_minimum_booking_minutes if configuration.delete(:validate_minimum_booking_minutes)
         validate :validate_minimum_booking_hours if configuration.delete(:validate_minimum_booking_hours)
         inject_dynamic_fields(configuration)
