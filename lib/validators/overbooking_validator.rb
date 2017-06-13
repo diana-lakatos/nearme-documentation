@@ -9,24 +9,34 @@ class OverbookingValidator
   def validate
     @conflicting_orders = @order.conflicting_orders
     check_quantity
+    check_all_days_are_open
 
-    if !@order.periods.all?(&:transactable_open_on?) || @conflicting_orders.any?
-      @error_object.errors.add(
-        :base,
-        I18n.t('reservations_review.errors.dates_not_available', dates: get_invalid_dates.join(', '))
-      )
-    end
+    return unless @conflicting_orders.any?
+
+    @error_object.errors.add(
+      :base,
+      I18n.t('reservations_review.errors.dates_not_available', dates: get_invalid_dates.join(', '))
+    )
   end
 
   private
 
+  def check_all_days_are_open
+    unavailable_dates = @order.periods.reject(&:transactable_open_on?)
+    return unless unavailable_dates.present?
+
+    @error_object.errors.add(
+      :base,
+      I18n.t('reservations_review.errors.dates_closed', dates: unavailable_dates.map(&:date).join(', '))
+    )
+  end
+
   def check_quantity
-    if @order.quantity > @order.transactable.quantity
-      @error_object.errors.add(
-        :base,
-        I18n.t('reservations_review.errors.quantity_not_available')
-      )
-    end
+    return if @order.quantity < @order.transactable.quantity
+    @error_object.errors.add(
+      :base,
+      I18n.t('reservations_review.errors.quantity_not_available')
+    )
   end
 
   def get_invalid_dates

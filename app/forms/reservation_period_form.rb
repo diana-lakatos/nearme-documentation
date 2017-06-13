@@ -4,6 +4,7 @@ class ReservationPeriodForm < BaseForm
   property :_destroy, virtual: true
   property :date
   validates :date, presence: true
+  property :end_minute
 
   class << self
     def decorate(configuration)
