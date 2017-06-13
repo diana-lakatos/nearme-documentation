@@ -62,26 +62,12 @@ $footer-height: 250px;
 
 .wrap-a {
   margin: 0;
-  padding: 100px 0;
+  padding: 50px 0;
   background: #f6f5f4;
-
-  &.reduce {
-    padding-top: 60px;
-    padding-bottom: 60px;
-  }
-
-  &.reduce-top {
-    padding-top: 60px;
-  }
 
   &.white {
     background: #fff;
   }
-
-  @include bp($screen-tablet) {
-    padding: 60px 0;
-  }
-
 
   &.white + &.white {
     padding-top: 0;
