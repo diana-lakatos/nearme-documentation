@@ -16,7 +16,7 @@ module Api
     end
 
     def user_message
-      message = current_user.authored_messages.new(author: current_user)
+      message = current_user.authored_messages.new(author: current_user, user_message_type: UserMessageType.default)
       message.set_message_context_from_request_params(params, current_user)
       message
     end

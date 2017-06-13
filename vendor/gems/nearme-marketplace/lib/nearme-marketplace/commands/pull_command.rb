@@ -4,6 +4,7 @@ module NearmeMarketplace
       puts "Pull command started!".green
 
       response = send_request_backup_to_sever
+      handle_server_response(response)
       response = JSON.parse(response.body)
       response = wait_for_finish_job(response['id'])
       download_and_unzip_exported_zip(response)

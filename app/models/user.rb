@@ -160,7 +160,7 @@ class User < ActiveRecord::Base
   has_many :group_collaborated, -> { GroupMember.approved }, through: :memberships, source: :group
   has_many :all_group_collaborated, through: :memberships, source: :group
   has_many :moderated_groups, -> { GroupMember.approved.moderator }, through: :memberships, source: :group
-  has_many :group_members
+  has_many :group_members, dependent: :destroy
 
   has_one :blog, class_name: 'UserBlog'
   has_one :current_address, class_name: 'Address', as: :entity
@@ -1221,6 +1221,10 @@ class User < ActiveRecord::Base
   def accessible_transactable_ids
     group_member_transactable_ids = user.group_collaborated.map(&:transactable_ids).flatten.uniq
     transactable_ids + approved_transactables_collaborated_ids + group_member_transactable_ids
+  end
+
+  def unsolved_company_tickets_count
+    @unsolved_company_tickets_count ||= assigned_company_tickets.for_filter('open').count
   end
 
   private

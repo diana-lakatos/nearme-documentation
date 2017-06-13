@@ -39,57 +39,7 @@
           %li
             = link_to user_menu_instance_admin_path(current_user.instance_admins_metadata), class: 'nav-link dropdown-toggle', target: '_blank' do
               %span= t 'top_navbar.marketplace_admin'
-
-        - if HiddenUiControls.find('main_menu/manage_items').visible? && platform_context.white_label_company_user?(current_user) && current_user.registration_completed?
-          - platform_context.transactable_types.decorate.each do |transactable_type|
-            %li
-              - if is_i18n_set?("top_navbar.manage_bookable.#{transactable_type.name}")
-                - title = t("top_navbar.manage_bookable.#{transactable_type.name}")
-              - else
-                - title = t('top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10))
-              = link_to main_app.dashboard_company_transactable_type_transactables_path(transactable_type_id: transactable_type.becomes(TransactableType)), class: 'nav-link dropdown-toggle' do
-                %div.truncate= title
-
-        - if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present? && HiddenUiControls.find('dashboard/host_reservations').visible?
-          %li
-            = link_to main_app.dashboard_company_orders_received_index_path, class: 'nav-link dropdown-toggle' do
-              %span= t 'top_navbar.bookings_received'
-              = current_user_open_host_reservations_count_formatted
-
-        - if (platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?) && (!current_instance.split_registration || current_user.buyer_profile.present?)
-          %li
-            = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
-              %span= t 'top_navbar.my_orders'
-              = current_user_orders_count_formatted
-
-        - if platform_context.instance.wish_lists_enabled? && HiddenUiControls.find('main_menu/wish_list').visible?
-          %li
-            = link_to main_app.dashboard_wish_list_items_path, class: 'nav-link dropdown-toggle' do
-              %span= t 'wish_lists.name'
-
-        - if !current_user.requests_for_quotes.empty? && HiddenUiControls.find('main_menu/rfq').visible?
-          %li
-            = link_to main_app.dashboard_user_requests_for_quotes_path, class: 'nav-link dropdown-toggle' do
-              %span= "#{t('reservations.rfq_menu_text')}"
-
-        - if platform_context.instance.blogging_enabled?(current_user) && HiddenUiControls.find('main_menu/manage_blog').visible?
-          %li
-            = link_to main_app.dashboard_blog_path, class: 'nav-link dropdown-toggle' do
-              %span= t 'top_navbar.manage_blog'
-
-        - if HiddenUiControls.find('main_menu/account').visible?
-          %li
-            = link_to main_app.dashboard_profile_path, class: 'nav-link dropdown-toggle' do
-              %span= t 'top_navbar.account'
-
-        - if HiddenUiControls.find('main_menu/view_profile').visible?
-          %li.view_profile
-            = link_to main_app.user_path(current_user), class: 'nav-link dropdown-toggle', target: '_blank' do
-              %span= t 'top_navbar.view_profile'
-
-        %li
-          = link_to main_app.destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name } do
-            %span= t 'top_navbar.log_out'
+        = render 'layouts/navigation_links'
 
     - if HiddenUiControls.find('main_menu/messages').visible?
       %li.divider-vertical

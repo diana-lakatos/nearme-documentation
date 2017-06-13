@@ -6,7 +6,7 @@ module Graph
       global_id_field :id
 
       field :id, !types.Int
-      field :transactable, Types::Transactable do
+      field :transactable, Types::Transactables::Transactable do
         resolve ->(obj, _arg, _ctx) { Resolvers::Transactables.decorate(obj.transactable) }
       end
     end

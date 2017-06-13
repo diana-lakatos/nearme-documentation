@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class Page < ActiveRecord::Base
   VALID_LAYOUTS = %w(community application dashboard instance_admin).freeze
+  DEFAULT_FORMAT = 'html'
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_paranoid
@@ -13,7 +14,9 @@ class Page < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :theme
 
-  validates :slug, uniqueness: { scope: :theme_id }
+  enum format: { html: 0, json: 1 }
+
+  validates :slug, uniqueness: { scope: [:theme_id, :format] }
   validates :layout_name, inclusion: { in: ->(record) { record.valid_page_layouts }, allow_blank: true }
 
   # FIXME: disabled Sitemap updates. Needs to be optimized.
@@ -69,8 +72,13 @@ class Page < ActiveRecord::Base
 
   private
 
+  # TODO: get rid of markdown content from page and convert everything into html
   def convert_to_html
-    self.html_content = html_content? ? content : MarkdownWrapper.new(content).to_html
+    self.html_content = render_markdown? ? MarkdownWrapper.new(content).to_html : content
+  end
+
+  def render_markdown?
+    !html_content? && !json?
   end
 
   # we could explicity choose content type for a page(ex. markdown, html) and use proper renderer

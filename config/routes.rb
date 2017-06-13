@@ -493,6 +493,7 @@ DesksnearMe::Application.routes.draw do
         resources :custom_validators
 
         resources :users, only: [:index, :destroy, :edit, :update] do
+          get :pending_approvals, on: :collection
           post :login_as, on: :member
           post :restore, on: :member
           post :restore_session, on: :collection
@@ -1249,6 +1250,7 @@ DesksnearMe::Application.routes.draw do
           resources :transactables, only: [:index, :create, :update, :destroy]
           resources :custom_attachments, only: [:show, :destroy]
           resources :orders, only: [:update]
+          resources :order_items, only: [:update]
           resources :custom_images, only: [:destroy]
           resources :customizations, only: [:create]
           resources :transactable_collaborators, only: [:create, :destroy] do
@@ -1333,6 +1335,8 @@ DesksnearMe::Application.routes.draw do
     get '/ui_settings', to: 'ui_settings#index', as: :get_all_ui_settings
     get '/ui_settings/get/:id', to: 'ui_settings#get', as: :get_ui_setting
     patch '/ui_settings', to: 'ui_settings#set', as: :set_ui_setting
+
+    get '/register', to: 'pages#register'
 
     get '/configure', to: 'configure#index'
 

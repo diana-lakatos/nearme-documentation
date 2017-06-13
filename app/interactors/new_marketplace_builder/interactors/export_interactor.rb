@@ -2,15 +2,19 @@ module NewMarketplaceBuilder
   module Interactors
     class ExportInteractor
       EXPORTERS = {
-        Converters::WorkflowConverter =>         ['workflows', 'yml'],
-        Converters::TransactableTypeConverter => ['transactable_types', 'yml'],
-        Converters::LiquidViewConverter => ['liquid_views', 'liquid'],
-        Converters::PageConverter => ['pages', 'liquid'],
-        Converters::TranslationConverter => ['translations', 'yml'],
+        Converters::ContentHolderConverter => ['content_holders', 'liquid'],
+        Converters::CustomModelTypeConverter => ['custom_model_types', 'yml'],
         Converters::CustomThemeConverter => ['custom_themes', 'theme_with_assets'],
         Converters::FormConfigurationConverter => ['form_configurations', 'liquid'],
-        Converters::ContentHolderConverter => ['content_holders', 'liquid'],
         Converters::GraphQueryConverter => ['graph_queries', 'graphql'],
+        Converters::InstanceProfileTypeConverter => ['instance_profile_types', 'yml'],
+        Converters::LiquidViewConverter => ['liquid_views', 'liquid'],
+        Converters::MailerConverter => ['mailers', 'liquid'],
+        Converters::PageConverter => ['pages', 'liquid'],
+        Converters::TransactableTypeConverter => ['transactable_types', 'yml'],
+        Converters::ReservationTypeConverter => ['reservation_types', 'yml'],
+        Converters::TranslationConverter => ['translations', 'yml'],
+        Converters::WorkflowConverter => ['workflows', 'yml'],
       }
 
       def initialize(instance_id, destination)

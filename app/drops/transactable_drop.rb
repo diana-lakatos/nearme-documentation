@@ -127,7 +127,7 @@ class TransactableDrop < BaseDrop
            :to_key, :model_name, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
            :action_free_booking?, :average_rating, :time_based_booking, :time_based_booking?, :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators,
            :user_messages, :line_item_orders, :state, :created_at, :pending?, :completed?, :transactable_type_id, :tags,
-           :is_followed, :impressions_count, :deleted?, to: :source
+           :is_followed, :impressions_count, :deleted?, :formatted_address, to: :source
 
   # @!method action_price_per_unit
   #   @return [Boolean] whether there is a single unit available of the transactable item for a given time period

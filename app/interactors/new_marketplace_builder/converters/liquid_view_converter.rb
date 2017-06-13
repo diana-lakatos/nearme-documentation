@@ -19,6 +19,7 @@ module NewMarketplaceBuilder
           transactable_types: TransactableType.all,
           format: 'html',
           handler: 'liquid',
+          view_type: 'view',
           locales: Locale.all
         }
       end

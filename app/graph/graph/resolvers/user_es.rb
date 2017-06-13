@@ -10,8 +10,6 @@ module Graph
 
       def fetch
         Elastic::UserCollectionProxy.new(users)
-                                    .results
-                                    .map(&:to_liquid)
       end
 
       private
@@ -25,15 +23,12 @@ module Graph
       MANDATORY_FIELDS = %w(id slug avatar.*).freeze
 
       def elastic_query
-        {
-          source: source_mapper,
-          query: @query
-        }
+        @query.add source: source_mapper
       end
 
       def users
         ::User.simple_search(
-          elastic_query,
+          elastic_query.to_h,
           instance_profile_types: PlatformContext.current.instance.instance_profile_types.default
         )
       end

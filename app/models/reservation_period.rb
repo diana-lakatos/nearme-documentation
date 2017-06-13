@@ -9,9 +9,11 @@ class ReservationPeriod < ActiveRecord::Base
   validates :date, presence: true
   validate :validate_start_end_times
 
-  # attr_accessible :date, :start_minute, :end_minute
+  END_OF_DAY_MINUTES = 1439
 
   delegate :transactable, :time_zone, to: :reservation, allow_nil: true
+
+  scope :recurring, -> { where.not(recurring_frequency: nil).where.not(recurring_frequency_unit: nil) }
 
   # @return [Float] the number of hours reserved on this date; if no hourly time specified,
   #   it is assumed that the reservation is for all open hours of that booking.
@@ -20,7 +22,12 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def hours=(number)
-    if self[:start_minute].nil? || hours != number.to_f
+    if self[:start_minute] && number.to_f.positive?
+      # set end_time based on start_time and hours
+      self[:end_minute] = self[:start_minute].to_i + hours.to_f * 60
+    elsif self[:start_minute].nil? || hours != number.to_f
+      # sets start/end_minute to correct values when given hours don't match minutes
+      # from start/end_minutes
       self.start_minute = 0 if self[:start_minute].blank?
       self.end_minute = self[:start_minute].to_i + number.to_f * 60
     end
@@ -39,7 +46,11 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def bookable?
-    transactable.available_on?(date, reservation.quantity, self[:start_minute], self[:end_minute])
+    transactable.available_on?(date, reservation.quantity, self[:start_minute], self[:end_minute], is_recurring?)
+  end
+
+  def transactable_open_on?
+    transactable.open_on?(date, self[:start_minute], self[:end_minute])
   end
 
   def as_formatted_string
@@ -59,7 +70,11 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def ends_at
-    Minute.new(end_minute || 1439, date).to_time_in_timezone(time_zone)
+    Minute.new(end_minute || END_OF_DAY_MINUTES, date).to_time_in_timezone(time_zone)
+  end
+
+  def is_recurring?
+    recurring_frequency.to_i > 0 && recurring_frequency_unit.present?
   end
 
   def to_liquid

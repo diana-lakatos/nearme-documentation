@@ -1,11 +1,13 @@
 {
-  projects:transactables(take: 3, filters: [ACTIVE, FEATURED]) {
-    name
-    show_path
-    cover_photo_url
-    creator {
-      profile_path
-      avatar_url_thumb
+  projects:transactables(paginate: { page: 1, per_page: 3 }, filters: [ACTIVE, FEATURED]) {
+    items{
+      name
+      show_path
+      cover_photo_url
+      creator {
+        profile_path
+        avatar_url_thumb
+      }
     }
   }
   users(take: 8, filters: [FEATURED]) {

@@ -10,12 +10,12 @@ module Graph
 
         field :id, !types.ID
         field :user, !Types::User do
-          resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, { id: obj.creator_id }, ctx) }
+          resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, { id: obj.user_id }, ctx) }
         end
         field :creator, !Types::User do
           resolve ->(obj, _arg, ctx) { Resolvers::User.new.call(nil, { id: obj.creator_id }, ctx) }
         end
-        field :transactable, !Types::Transactable do
+        field :transactable, !Types::Transactables::Transactable do
           resolve ->(obj, _args, _ctx) { TransactableDrop.new(obj.transactable) }
         end
         field :transactable_line_items, !types[Types::Transactables::TransactableLineItem]
@@ -40,9 +40,9 @@ module Graph
           argument :name, !types.String
           resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
         end
-        field :periods, types[Types::Orders::ReservationPeriod] do
-          resolve ->(obj, _arg, _) { obj.try(:periods) }
-        end
+        field :periods, types[Types::Orders::ReservationPeriod]
+        field :order_items, types[Types::Orders::RecurringBookingPeriod]
+        field :conflicting_orders, types[Types::Orders::Order]
       end
 
       OrderStateEnum = GraphQL::EnumType.define do

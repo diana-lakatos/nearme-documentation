@@ -1,3 +1,4 @@
+
 node[:deploy].each do |_application, deploy|
   file 'Create shared/config/application.yml'  do
     path "#{::File.join(deploy[:deploy_to], 'shared', 'config', 'application.yml')}"

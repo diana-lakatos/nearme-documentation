@@ -962,6 +962,7 @@ en:
         created_at: Created at
       users:
         manage_users: "Manage Users"
+        users_pending_approval: 'Users Pending Approval'
         name: Name
         email: Email
         signed_up: "Signed Up"
@@ -2699,6 +2700,7 @@ en:
       inactive: "Payment failed"
       completed: "Completed"
   search:
+    no_results_found: 'No results found.'
     item:
       one: 'item'
       other: 'items'
@@ -3007,6 +3009,8 @@ en:
       no_minimum_days: "Booking selection does not meet requirements. A minimum of %{minimum_days} consecutive bookable days are required."
       no_minimum_minutes: "Booking selection does not meet requirements. A minimum of %{minimum_minutes} hours are required."
       dates_not_available: "Unfortunately the following bookings are no longer available: %{dates}"
+      dates_closed: "Your listing is set to be not available on: %{dates}. Check listing's settings."
+      quantity_not_available: "Quantity of this order is higher than available"
     payments:
       submit: "Submit a secure payment."
 

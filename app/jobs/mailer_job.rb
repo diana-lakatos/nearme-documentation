@@ -44,9 +44,9 @@ class MailerJob < Job
     begin
       @mailer_class.send(@mailer_method, *@args).deliver
     rescue Net::SMTPSyntaxError
-      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::MAILER_ERROR, 'Mail was not sent due to SMTP syntax error')
+      MarketplaceLogger.error(MarketplaceErrorLogger::BaseLogger::MAILER_ERROR, 'Mail was not sent due to SMTP syntax error')
     rescue Net::OpenTimeout
-      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::MAILER_ERROR, 'Mail was not sent due to timeout')
+      MarketplaceLogger.error(MarketplaceErrorLogger::BaseLogger::MAILER_ERROR, 'Mail was not sent due to timeout')
     end
   end
 

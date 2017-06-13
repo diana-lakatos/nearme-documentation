@@ -3,7 +3,9 @@ module NewMarketplaceBuilder
   module Converters
     class PageConverter < BaseConverter
       primary_key :slug
-      properties :content, :layout_name, :redirect_url, :redirect_code, :slug, :path
+      properties :content, :layout_name, :redirect_url, :redirect_code, :slug, :path,
+        :format, :metadata_title, :metadata_meta_description, :metadata_canonical_url,
+        :require_verified_user
       property :name
 
       def name(page)
@@ -11,7 +13,7 @@ module NewMarketplaceBuilder
       end
 
       def scope
-        Page.where(instance_id: @model.id)
+        Page.where(instance_id: @model.id, theme_id: @model.theme.id)
       end
     end
   end

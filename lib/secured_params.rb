@@ -681,7 +681,8 @@ class SecuredParams
       :layout_name,
       :metadata_title,
       :metadata_meta_description,
-      :metadata_canonical_url
+      :metadata_canonical_url,
+      :format
     ]
   end
 
@@ -807,10 +808,13 @@ class SecuredParams
   end
 
   def user_message
+    custom_attributes_names = UserMessage.public_custom_attributes_names(UserMessageType.default)
     [
       :body,
       :replying_to_id,
-      attachments_attributes: nested(attachment)
+      attachments_attributes: nested(attachment),
+      properties: custom_attributes_names,
+      properties_attributes: custom_attributes_names
     ]
   end
 
@@ -1298,7 +1302,7 @@ class SecuredParams
   end
 
   def seller_profile_with_private_attribs
-    profile_attribs = PlatformContext.current.instance.seller_profile_type.custom_attributes.map(&:name).flatten
+    profile_attribs = PlatformContext.current.instance.seller_profile_type&.custom_attributes&.map(&:name)&.flatten || []
     [
       properties_attributes: profile_attribs
     ]

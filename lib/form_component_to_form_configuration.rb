@@ -242,6 +242,7 @@ class FormComponentToFormConfiguration
         default: {
           properties: {
             short_bio: { validation: {} },
+            date_of_birth: { validation: {} },
             about_me: { validation: {} }
           }
         }

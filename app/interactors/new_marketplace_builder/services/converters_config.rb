@@ -10,6 +10,10 @@ module NewMarketplaceBuilder
           converter: Converters::LiquidViewConverter,
           parser: Parsers::LiquidParser,
         },
+        'mailers' => {
+          converter: Converters::MailerConverter,
+          parser: Parsers::LiquidParser,
+        },
         'form_configurations' => {
           converter: Converters::FormConfigurationConverter,
           parser: Parsers::LiquidParser,
@@ -24,6 +28,10 @@ module NewMarketplaceBuilder
         },
         'transactable_types' => {
           converter: Converters::TransactableTypeConverter,
+          parser: Parsers::YamlParser,
+        },
+        'reservation_types' => {
+          converter: Converters::ReservationTypeConverter,
           parser: Parsers::YamlParser,
         },
         'translations' => {
@@ -41,6 +49,14 @@ module NewMarketplaceBuilder
         'custom_themes\/default_custom_theme_assets' => {
           converter: Converters::CustomThemeAssetConverter,
           parser: Parsers::AssetParser,
+        },
+        'instance_profile_types' => {
+          converter: Converters::InstanceProfileTypeConverter,
+          parser: Parsers::YamlParser,
+        },
+        'custom_model_types' => {
+          converter: Converters::CustomModelTypeConverter,
+          parser: Parsers::YamlParser,
         },
       }
 

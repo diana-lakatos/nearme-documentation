@@ -172,7 +172,7 @@
         {% assign sent_to_me_selected = current_path | matches: sent_to_me_path %}
 
         <li id="dashboard-nav-admin" class="{% if companies_selected or payouts_selected or transfers_selected or analytics_selected or waiver_agreement_templates_selected or white_labels_selected or tickets_selected or sent_to_me_selected %}selected{% endif %}">
-          <span>{{ 'dashboard.nav.admin' | t }}</span>
+          <span>{{ 'dashboard.nav.admin' | t }}{% if tickets_show and current_user.unsolved_company_tickets_count > 0 %}<span class="count">{{ current_user.unsolved_company_tickets_count }}</span>{% endif %}</span> 
 
           <ul>
             {% if companies_show %}
@@ -213,7 +213,7 @@
 
             {% if tickets_show %}
               <li id="dashboard-nav-tickets" class="{% if tickets_selected %}selected{% endif %}">
-                <a href="{{ tickets_path }}">{{ 'dashboard.nav.tickets' | t }}</a>
+                <a href="{{ tickets_path }}">{{ 'dashboard.nav.tickets' | t }}{% if current_user.unsolved_company_tickets_count > 0 %}<span class="count">{{ current_user.unsolved_company_tickets_count }}</span>{% endif %}</a>
               </li>
             {% endif %}
 

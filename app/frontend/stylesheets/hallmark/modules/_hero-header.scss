@@ -1,0 +1,63 @@
+/* topic header */
+
+.hero-header-a {
+  position: relative;
+  margin: 0;
+
+  > .wrap {
+    position: relative;
+    margin: 0;
+    padding: 60px 0;
+    background-color: #4c8fb6;
+    background-position: 50% 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+
+    &::before {
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
+      content: "";
+    }
+  }
+
+  > .wrap .hx {
+    margin: 0 0 10px;
+    color: inherit;
+    font: bold 50px / 1 $font-alt;
+  }
+
+  .contain {
+    position: relative;
+  }
+
+  @include bp($screen-mobile) {
+    > .wrap {
+      padding: 40px 0;
+      font-size: 14px;
+    }
+
+    > .wrap .hx {
+      font-size: 50px;
+    }
+  }
+
+
+  @include bp(414px) {
+    > .wrap {
+      padding: 30px 0;
+    }
+
+    > .wrap .hx {
+      font-size: 40px;
+    }
+  }
+}

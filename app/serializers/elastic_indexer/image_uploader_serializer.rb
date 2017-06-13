@@ -12,7 +12,7 @@ module ElasticIndexer
     end
 
     def default_url
-      object.url(object.version_name)
+      object.model.send(object.mounted_as).url(object.version_name)
     end
   end
 

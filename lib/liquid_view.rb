@@ -6,7 +6,6 @@
 #
 #   ActionView::Base::register_template_handler :liquid, LiquidView
 class LiquidView
-  LIQUID_ERROR = 'Liquid Error'
   PROTECTED_ASSIGNS = %w( template_root response _session template_class action_name request_origin session template
                           _response url _request _cookies variables_added _flash params _headers request cookies
                           ignore_missing_templates flash _params logger before_filter_chain_aborted headers ).freeze
@@ -51,11 +50,48 @@ class LiquidView
   end
 
   def render(source, local_assigns = {})
-    @view.controller.headers['Content-Type'] ||= 'text/html; charset=utf-8' if @view.controller.respond_to?(:headers)
+    controller.headers['Content-Type'] ||= content_type if controller.respond_to?(:headers)
+    register_tags
+    assigns = context_assigns.merge(local_assigns.stringify_keys)
+    LiquidTemplateParser.new(
+      filters: filters_from_controller(controller) + [LiquidFilters],
+      registers: { action_view: @view, controller: controller }
+    ).parse(source, assigns).html_safe
+  end
 
+  def compilable?
+    false
+  end
+
+  private
+
+  def filters_from_controller(controller)
+    if controller.respond_to?(:liquid_filters, true)
+      controller.send(:liquid_filters)
+    elsif controller.respond_to?(:master_helper_module)
+      [controller.master_helper_module]
+    else
+      [controller._helpers]
+    end
+  end
+
+  def register_tags(tags = tags_from_controller)
+    tags.keys.each do |key|
+      Liquid::Template.register_tag(key, tags.fetch(key))
+    end
+  end
+
+  def tags_from_controller
+    if controller.respond_to?(:liquid_tags, true)
+      controller.send(:liquid_tags)
+    else
+      {}
+    end
+  end
+
+  def context_assigns
     assigns = @view.assigns.reject { |k, _v| PROTECTED_ASSIGNS.include?(k) }
 
-    assigns['platform_context'] = PlatformContext.current.decorate
     assigns['current_year'] = Date.current.year
     params = @view.try(:controller).try(:params) || {}
     assigns['params'] = params.except(*Rails.application.config.filter_parameters)
@@ -83,55 +119,14 @@ class LiquidView
     elsif @view.content_for?(:layout)
       assigns['content_for_layout'] = @view.content_for(:layout)
     end
-    assigns.merge!(local_assigns.stringify_keys)
-
-    controller = @view.controller
-
-    tags = tags_from_controller(controller)
-    register_tags(tags)
-
-    begin
-      liquid = Liquid::Template.parse(source)
-    rescue => e
-      MarketplaceLogger.error(LIQUID_ERROR, e.to_s, raise: false, stacktrace: e.backtrace)
-      raise
-    end
-
-    filters = filters_from_controller(controller) + [LiquidFilters]
-
-    render_method = ::Rails.env.production? ? :render : :render!
-    liquid.send(render_method, assigns, filters: filters, registers: { action_view: @view, controller: @view.controller }).html_safe
+    assigns
   end
 
-  def compilable?
-    false
+  def controller
+    @view.controller
   end
 
-  def filters_from_controller(controller)
-    filters = if controller.respond_to?(:liquid_filters, true)
-                controller.send(:liquid_filters)
-              elsif controller.respond_to?(:master_helper_module)
-                [controller.master_helper_module]
-              else
-                [controller._helpers]
-              end
-
-    filters
-  end
-
-  def register_tags(tags)
-    tags.keys.each do |key|
-      Liquid::Template.register_tag(key, tags.fetch(key))
-    end
-  end
-
-  def tags_from_controller(controller)
-    tags = if controller.respond_to?(:liquid_tags, true)
-             controller.send(:liquid_tags)
-           else
-             {}
-           end
-
-    tags
+  def content_type
+    'text/html; charset=utf-8'
   end
 end

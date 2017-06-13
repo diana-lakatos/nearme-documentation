@@ -20,11 +20,11 @@ class Support::ReceiveMails
             Support::Ticket.new.receive(message, params)
           end
         end
-      rescue Net::IMAP::NoResponseError => e
-        Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::IMAP_ERROR, e.to_s)
+      rescue StandardError => e
+        MarketplaceLogger.error(MarketplaceErrorLogger::BaseLogger::IMAP_ERROR, e.to_s)
       end
     else
-      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::IMAP_ERROR, 'support_imap settings are not valid')
+      MarketplaceLogger.error(MarketplaceErrorLogger::BaseLogger::IMAP_ERROR, 'support_imap settings are not valid')
     end
   end
 

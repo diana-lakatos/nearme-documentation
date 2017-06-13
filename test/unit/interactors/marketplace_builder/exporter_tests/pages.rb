@@ -6,7 +6,7 @@ module MarketplaceBuilder
       end
 
       def seed!
-        Page.create!(instance_id: @instance.id, slug: 'about-us', content: 'Hello from page', path: 'about-us')
+        Page.create!(instance_id: @instance.id, slug: 'about-us', content: 'Hello from page', path: 'about-us', theme: @instance.theme)
       end
 
       def execute!

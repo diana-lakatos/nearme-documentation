@@ -34,7 +34,7 @@ class OrderSearchService
     end
 
     @orders = @orders.paginate(per_page: 10, page: @options[:page])
-              .order('starts_at ASC')
+              .order('starts_at DESC')
   end
 
   def order_types

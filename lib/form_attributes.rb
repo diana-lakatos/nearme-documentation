@@ -52,7 +52,7 @@ class FormAttributes
   def transactable(transactable_type = nil)
     [
       :name, :description, :availability_rules, :price, :currency, :photos, :tags,
-      :approval_requests, :quantity, :book_it_out, :exclusive_price, :action_rfq,
+      :documents_upload, :approval_requests, :quantity, :book_it_out, :exclusive_price, :action_rfq,
       :confirm_reservations, :capacity, :rental_shipping_type, :seller_attachments,
       :additional_charges, :minimum_booking_minutes, :deposit_amount, :shipping_info,
       :pro_bono, :package_details

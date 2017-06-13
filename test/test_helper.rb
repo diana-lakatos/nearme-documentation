@@ -282,6 +282,7 @@ class TestDataSeeder
       FactoryGirl.create(:primary_locale)
       FactoryGirl.create(:seller_profile_type)
       FactoryGirl.create(:buyer_profile_type)
+      FactoryGirl.create(:user_message_type)
     end
   end
 end

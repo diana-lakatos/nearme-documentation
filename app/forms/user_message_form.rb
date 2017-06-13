@@ -4,6 +4,7 @@ class UserMessageForm < BaseForm
   class << self
     def decorate(configuration)
       Class.new(self) do
+        inject_custom_attributes(configuration)
         inject_dynamic_fields(configuration)
       end
     end

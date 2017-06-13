@@ -33,10 +33,8 @@ class ReservationForm < BaseForm
                                prepopulator: ->(_options) { periods << model.periods.build if periods.size.zero? }
           validates :periods, presence: true, length: { minimum: 1 }
         end
-        if (properties_configuration = configuration.delete(:properties)).present?
-          add_validation(:properties, properties_configuration)
-          property :properties, form: PropertiesForm.decorate(properties_configuration)
-        end
+
+        inject_custom_attributes(configuration)
         inject_dynamic_fields(configuration)
       end
     end
@@ -46,6 +44,7 @@ class ReservationForm < BaseForm
     t = Transactable.find_by(id: @fields['transactable_id'])
     model.creator_id = t.creator_id
     model.company_id = t.company_id
+    self.minimum_booking_minutes = t.time_based_booking&.minimum_booking_minutes
     model.minimum_booking_minutes = t.time_based_booking&.minimum_booking_minutes
     super
   end
