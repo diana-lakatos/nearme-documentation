@@ -21,8 +21,11 @@ class RecurringBookingPeriod < ActiveRecord::Base
   scope :not_rejected, -> { where.not(state: 'rejected') }
 
   state_machine :state, initial: :pending do
-    event :approve                  do transition [:rejected, :pending] => :approved; end
-    event :reject                   do transition pending: :rejected; end
+    event :approve do transition [:rejected, :pending] => :approved; end
+    event :cancel_by_enquirer                   do transition pending: :cancelled_by_enquirer; end
+    event :cancel_by_enquirer_with_payment      do transition pending: :cancelled_by_enquirer_with_payment; end
+    event :cancel_by_lister do transition pending: :cancelled_by_lister; end
+    event :reject do transition pending: :rejected; end
 
     after_transition [:rejected, :pending] => :approved, do: :send_approve_alert
     after_transition pending: :rejected, do: :send_reject_alert
@@ -33,13 +36,13 @@ class RecurringBookingPeriod < ActiveRecord::Base
   end
   alias skip_payment_authorization? skip_payment_authorization
 
-  # TODO: unifiy with ReservationPeriod
+  # TODO: remove after spacer migration to reservation
   def starts_at
-    period_start_date
+    super || period_start_date
   end
 
   def ends_at
-    period_end_date
+    super || period_end_date
   end
 
   def start_minute
@@ -57,7 +60,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
   end
 
   def price_calculator
-    recurring_booking.amount_calculator
+    order.amount_calculator
   end
 
   def charge_and_approve!
@@ -70,8 +73,17 @@ class RecurringBookingPeriod < ActiveRecord::Base
     end
   end
 
+  def cancelled_witout_payment?
+    state.in? %w(cancelled_by_lister cancelled_by_enquirer)
+  end
+
+  def cancelled?
+    cancelled_witout_payment? || state == 'cancelled_by_enquirer_with_payment'
+  end
+
   def generate_payment!
     return true if paid?
+    return false if cancelled_witout_payment?
 
     payment_object = payment || build_payment
 

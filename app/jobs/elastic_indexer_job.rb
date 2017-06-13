@@ -73,11 +73,7 @@ class ElasticIndexerJob < Job
   end
 
   def should_update_index?
-    Rails.application.config.use_elastic_search && seacheable_class?
-  end
-
-  def seacheable_class?
-    PlatformContext.current && PlatformContext.current.instance.searchable_classes.include?(source_class)
+    Rails.application.config.use_elastic_search
   end
 
   def client

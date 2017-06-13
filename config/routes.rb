@@ -1250,6 +1250,7 @@ DesksnearMe::Application.routes.draw do
           resources :transactables, only: [:index, :create, :update, :destroy]
           resources :custom_attachments, only: [:show, :destroy]
           resources :orders, only: [:update]
+          resources :order_items, only: [:update]
           resources :custom_images, only: [:destroy]
           resources :customizations, only: [:create]
           resources :transactable_collaborators, only: [:create, :destroy] do

@@ -1,0 +1,39 @@
+- if platform_context.white_label_company_user?(current_user) && current_user.registration_completed? && HiddenUiControls.find('main_menu/manage_items').visible?
+  - platform_context.transactable_types.each do |transactable_type|
+    - if is_i18n_set?("top_navbar.manage_bookable.#{transactable_type.name}")
+      - title = t("top_navbar.manage_bookable.#{transactable_type.name}")
+    - else
+      - title = t('top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10))
+    %li= link_to title, main_app.dashboard_company_transactable_type_transactables_path(transactable_type)
+
+  - platform_context.project_types.each do |project_type|
+    %li= link_to "My #{project_type.translated_bookable_noun(10)}", main_app.dashboard_project_type_projects_path(project_type)
+
+- if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible? && (!current_instance.split_registration || current_user.buyer_profile.present?)
+  %li
+    = link_to main_app.dashboard_orders_path do
+      = t('top_navbar.my_orders')
+      = current_user_orders_count_formatted
+
+- if platform_context.bookable? && current_instance.split_registration && current_user.seller_profile.present? && HiddenUiControls.find('dashboard/host_reservations').visible?
+  %li
+    = link_to main_app.dashboard_company_host_reservations_path do
+      = t('top_navbar.bookings_received')
+      = current_user_open_host_reservations_count_formatted
+
+- if platform_context.instance.wish_lists_enabled? && HiddenUiControls.find('main_menu/wish_list').visible?
+  %li= link_to t('wish_lists.name'), main_app.dashboard_wish_list_items_path
+
+- if !current_user.requests_for_quotes.empty? && HiddenUiControls.find('main_menu/rfq').visible?
+  %li= link_to t('reservations.rfq_menu_text'), main_app.dashboard_user_requests_for_quotes_path
+
+- if platform_context.instance.blogging_enabled?(current_user) && HiddenUiControls.find('main_menu/manage_blog').visible?
+  %li= link_to t('top_navbar.manage_blog'), main_app.dashboard_blog_path
+
+- if HiddenUiControls.find('main_menu/account').visible?
+  %li= link_to t('top_navbar.account'), main_app.dashboard_profile_path
+
+- if HiddenUiControls.find('main_menu/view_profile').visible?
+  %li.view_profile= link_to t('top_navbar.view_profile'), main_app.user_path(current_user), rel: 'external'
+
+%li= link_to t('top_navbar.log_out'), main_app.destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name }

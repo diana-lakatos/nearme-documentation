@@ -3009,6 +3009,7 @@ en:
       no_minimum_days: "Booking selection does not meet requirements. A minimum of %{minimum_days} consecutive bookable days are required."
       no_minimum_minutes: "Booking selection does not meet requirements. A minimum of %{minimum_minutes} hours are required."
       dates_not_available: "Unfortunately the following bookings are no longer available: %{dates}"
+      quantity_not_available: "Quantity of this order is higher than available"
     payments:
       submit: "Submit a secure payment."
 

@@ -30,6 +30,10 @@ module NewMarketplaceBuilder
           converter: Converters::TransactableTypeConverter,
           parser: Parsers::YamlParser,
         },
+        'reservation_types' => {
+          converter: Converters::ReservationTypeConverter,
+          parser: Parsers::YamlParser,
+        },
         'translations' => {
           converter: Converters::TranslationConverter,
           parser: Parsers::YamlParser,

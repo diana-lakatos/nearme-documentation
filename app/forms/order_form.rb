@@ -21,6 +21,8 @@ class OrderForm < BaseForm
   class << self
     def decorate(configuration)
       Class.new(self) do
+        validate :validate_all_dates_available if configuration.delete(:validate_all_dates_available)
+
         @reservation_type = configuration.delete(:reservation_type)
         if (reservations_configuration = configuration.delete(:reservations)).present?
           add_validation(:reservations, reservations_configuration)
@@ -28,11 +30,19 @@ class OrderForm < BaseForm
                                     populator: RESERVATIONS_POPULATOR,
                                     prepopulator: ->(_options) { reservations << build_reservation_object if reservations.size.zero? }
         end
+        if (payment_subscription_configuration = configuration.delete(:payment_subscription)).present?
+          add_validation(:payment_subscription, payment_subscription_configuration)
+          property :payment_subscription, form: PaymentSubscriptionForm.decorate(payment_subscription_configuration)
+        end
 
         inject_custom_attributes(configuration)
         inject_dynamic_fields(configuration)
       end
     end
+  end
+
+  def validate_all_dates_available
+    OverbookingValidator.new(model, self).validate
   end
 
   def build_reservation_object

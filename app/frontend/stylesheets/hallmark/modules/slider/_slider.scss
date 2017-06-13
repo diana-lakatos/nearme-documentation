@@ -22,7 +22,7 @@ $nav-media-query-bp: 1300px;
   margin-top: 50px;
 
   @include bpmin($screen-mobile) {
-    margin-top: 100px;
+    margin-top: 50px;
   }
 }
 

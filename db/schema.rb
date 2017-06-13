@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170607113909) do
+ActiveRecord::Schema.define(version: 20170607125956) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1816,6 +1816,7 @@ ActiveRecord::Schema.define(version: 20170607113909) do
     t.datetime "enquirer_confirmed_at"
     t.datetime "draft_at"
     t.integer  "shopping_cart_id"
+    t.datetime "generate_order_item_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -2277,6 +2278,8 @@ ActiveRecord::Schema.define(version: 20170607113909) do
     t.string   "state"
     t.text     "rejection_reason"
     t.datetime "approve_at"
+    t.datetime "ends_at"
+    t.datetime "starts_at"
   end
 
   create_table "refunds", force: :cascade do |t|
@@ -2298,17 +2301,20 @@ ActiveRecord::Schema.define(version: 20170607113909) do
   create_table "reservation_periods", force: :cascade do |t|
     t.integer  "old_reservation_id"
     t.date     "date"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.datetime "deleted_at"
     t.integer  "start_minute"
     t.integer  "end_minute"
     t.integer  "instance_id"
     t.string   "description"
     t.integer  "reservation_id"
+    t.integer  "recurring_frequency"
+    t.string   "recurring_frequency_unit"
   end
 
   add_index "reservation_periods", ["old_reservation_id"], name: "index_reservation_periods_on_old_reservation_id", using: :btree
+  add_index "reservation_periods", ["recurring_frequency", "recurring_frequency_unit"], name: "reservation_periods_frequency_index", using: :btree
 
   create_table "reservation_types", force: :cascade do |t|
     t.string   "name"

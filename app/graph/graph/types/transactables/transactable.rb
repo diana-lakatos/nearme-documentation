@@ -27,6 +27,7 @@ module Graph
         end
         field :latitude, types.String
         field :location_id, types.ID
+        field :formatted_address, types.String
         field :longitude, types.String
         field :name, types.String
         field :photo_url, types.String
@@ -68,6 +69,15 @@ module Graph
           resolve ->(obj, _arg, ctx) {
             Graph::Resolvers::Users.new.call(nil, { ids: obj.source.activity_feed_subscriptions.pluck(:follower_id) }, ctx)
           }
+        end
+        field :week_availability, !types[Types::Transactables::DayAvailability] do
+          argument :step, !types.Int
+          resolve -> (obj, args, ctx) { AvailabilityRule::WeekAvailability.new(obj.action_type, args[:step]).as_json }
+        end
+        field :day_availability, !types[Types::Transactables::Availability] do
+          argument :date, !types.String
+          argument :step, !types.Int
+          resolve -> (obj, args, ctx) { AvailabilityRule::HourlyListingStatus.new(obj.action_type, Date.parse(args[:date]), args[:step]).day_availability }
         end
       end
 

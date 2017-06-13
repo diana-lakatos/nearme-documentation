@@ -10,6 +10,7 @@ class ShoppingCartForm < BaseForm
           property :orders, form: OrdersForm.decorate(orders_configuration),
                             from: :orders_open_struct
         end
+        inject_dynamic_fields(configuration)
       end
     end
   end

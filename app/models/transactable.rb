@@ -340,10 +340,10 @@ class Transactable < ActiveRecord::Base
     self.available_actions = action_type.pricings.pluck(:unit).uniq if action_type
   end
 
-  def availability_for(date, start_min = nil, end_min = nil)
+  def availability_for(date, start_min = nil, end_min = nil, recurring = false)
     if open_on?(date, start_min, end_min)
       # Return the number of free desks
-      [quantity - desks_booked_on(date, start_min, end_min), 0].max
+      [quantity - desks_booked_on(date, start_min, end_min, recurring), 0].max
     else
       0
     end
@@ -358,23 +358,14 @@ class Transactable < ActiveRecord::Base
     super.presence || creator
   end
 
-  def desks_booked_on(date, start_minute = nil, end_minute = nil)
-    scope = orders.confirmed.joins(:periods).where(reservation_periods: { date: date })
-
-    if start_minute
-      hourly_conditions = []
-      hourly_values = []
-      hourly_conditions << '(reservation_periods.start_minute IS NULL AND reservation_periods.end_minute IS NULL)'
-
-      [start_minute, end_minute].compact.each do |minute|
-        hourly_conditions << '(? BETWEEN reservation_periods.start_minute AND reservation_periods.end_minute)'
-        hourly_values << minute
-      end
-
-      scope = scope.where(hourly_conditions.join(' OR '), *hourly_values)
-    end
-
-    scope.sum(:quantity)
+  def desks_booked_on(date, start_minute = nil, end_minute = nil, recurring = false)
+    Order::ConflictingOrders.new(
+      dates: Array.wrap(date),
+      start_minute: start_minute,
+      end_minute: end_minute,
+      is_recurring: recurring,
+      transactable: self
+    ).get_scope.sum(:quantity)
   end
 
   def all_prices
@@ -449,9 +440,9 @@ class Transactable < ActiveRecord::Base
   end
 
   # TODO: price per unit
-  def available_on?(date, quantity = 1, start_min = nil, end_min = nil)
+  def available_on?(date, quantity = 1, start_min = nil, end_min = nil, recurring = false)
     quantity = 1 if transactable_type.action_price_per_unit?
-    availability_for(date, start_min, end_min) >= quantity
+    availability_for(date, start_min, end_min, recurring) >= quantity
   end
 
   def all_additional_charge_types_ids

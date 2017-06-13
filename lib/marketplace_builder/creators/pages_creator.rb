@@ -31,6 +31,7 @@ module MarketplaceBuilder
         page.redirect_url = template.redirect_url if template.redirect_url.present?
         page.max_deep_level = template.max_deep_level if template.max_deep_level.present?
         page.redirect_code = template.redirect_code if template.redirect_code.present?
+        page.require_verified_user = template.require_verified_user
         page.save!
       end
 

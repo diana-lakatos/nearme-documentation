@@ -44,6 +44,7 @@ class ReservationForm < BaseForm
     t = Transactable.find_by(id: @fields['transactable_id'])
     model.creator_id = t.creator_id
     model.company_id = t.company_id
+    self.minimum_booking_minutes = t.time_based_booking&.minimum_booking_minutes
     model.minimum_booking_minutes = t.time_based_booking&.minimum_booking_minutes
     super
   end

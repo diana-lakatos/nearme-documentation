@@ -12,6 +12,7 @@ module NewMarketplaceBuilder
         Converters::MailerConverter => ['mailers', 'liquid'],
         Converters::PageConverter => ['pages', 'liquid'],
         Converters::TransactableTypeConverter => ['transactable_types', 'yml'],
+        Converters::ReservationTypeConverter => ['reservation_types', 'yml'],
         Converters::TranslationConverter => ['translations', 'yml'],
         Converters::WorkflowConverter => ['workflows', 'yml'],
       }
