@@ -32,7 +32,7 @@ class OverbookingValidator
   end
 
   def check_quantity
-    return if @order.quantity < @order.transactable.quantity
+    return if @order.quantity <= @order.transactable.quantity
     @error_object.errors.add(
       :base,
       I18n.t('reservations_review.errors.quantity_not_available')
