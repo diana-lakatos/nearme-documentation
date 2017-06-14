@@ -162,7 +162,7 @@ class InstanceAdmin::BaseController < ApplicationController
       first_permission_have_access_to = @authorizer.first_permission_have_access_to
       if first_permission_have_access_to
         flash[:warning] = t('flash_messages.authorizations.not_authorized')
-        redirect_to url_for([:instance_admin, first_permission_have_access_to])
+        redirect_to AdminPermissionedUrls.new(first_permission_have_access_to).url
       else
         redirect_to root_path
       end
