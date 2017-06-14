@@ -1,5 +1,7 @@
 class LiquidTemplateParser
   LIQUID_ERROR = 'Liquid Error'.freeze
+  RENDER_WITH_RAISE = :render!
+  RENDER_SAFE = :render
 
   def initialize(
     filters: [LiquidFilters],
@@ -17,22 +19,34 @@ class LiquidTemplateParser
 
   def parse(source, data = {})
     liquid = Liquid::Template.parse(source)
-    liquid.send(
-      render_method,
-      data.merge(@default_data).stringify_keys,
-      filters: @filters, registers: @registers
-    )
+    render_liquid(liquid, data)
   rescue Liquid::SyntaxError => e
     log_error(e.to_s, source)
     reraise
   ensure
-    log_error(e.to_s, source) if liquid && liquid.errors.any?
+    log_runtime_error(liquid, source, data)
   end
 
   private
 
+  def render_liquid(liquid, data, render = render_method)
+    liquid.send(
+      render,
+      data.merge(@default_data).stringify_keys,
+      filters: @filters, registers: @registers
+    )
+  end
+
+  def log_runtime_error(liquid, source, data)
+    return if !liquid || liquid.errors.empty?
+
+    render_liquid(liquid, data, RENDER_WITH_RAISE)
+  rescue StandardError => e
+    log_error(e.message, source)
+  end
+
   def render_method
-    @raise_mode ? :render! : :render
+    @raise_mode ? RENDER_WITH_RAISE : RENDER_SAFE
   end
 
   def reraise
