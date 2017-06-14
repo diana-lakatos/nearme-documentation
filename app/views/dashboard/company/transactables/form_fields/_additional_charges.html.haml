@@ -4,6 +4,6 @@
   = f.simple_fields_for :additional_charge_types do |additional_charge_type|
     = render 'additional_charge_type_fields', f: additional_charge_type
   %p
-    = link_to_add_association t('dashboard.additional_charge_type.new'), f, :additional_charge_types, class: 'form-control-option-add btn btn-primary'
+    = link_to_add_association t('dashboard.additional_charge_type.new'), f, :additional_charge_types, class: 'form-control-option-add btn btn-primary', partial: 'dashboard/company/transactables/additional_charge_type_fields'
 
 %hr/
