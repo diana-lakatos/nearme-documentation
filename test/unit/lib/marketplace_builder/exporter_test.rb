@@ -234,16 +234,6 @@ class MarketplaceBuilder::ExporterTest < ActiveSupport::TestCase
                                'instance_profile_types' => ['Default'], 'transactable_types' => ['Bike']
   end
 
-  def setup_graph_queries
-    @instance.graph_queries.create! name: 'test', query_string: '{}'
-  end
-
-  def should_export_graph_queries
-    yaml_content = read_exported_file('graph_queries/test.graphql')
-
-    assert_equal yaml_content, {}
-  end
-
   def setup_custom_themes
     File.open("#{Rails.root}/tmp/main.js", 'w+') { |f| f.puts 'js content' }
 

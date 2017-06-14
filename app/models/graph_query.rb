@@ -6,8 +6,33 @@ class GraphQuery < ActiveRecord::Base
   belongs_to :instance
 
   validates :name, uniqueness: { scope: [:instance_id] }, presence: true
-  validates :name, :query_string, presence: true
-  validate :parse_query
+
+  class GraphQlQueryValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      validate_syntax(record, attribute, value) && validate_query_against_schema(record, attribute, value)
+    end
+
+    private
+
+    def validate_syntax(record, attribute, value)
+      GraphQL.parse(value)
+      true
+    rescue GraphQL::ParseError => e
+      record.errors[attribute] << "Query parse error: #{e.message}"
+      false
+    end
+
+    def validate_query_against_schema(record, attribute, value)
+      validator = GraphQL::StaticValidation::Validator.new(schema: Graph::Schema)
+      query = GraphQL::Query.new(Graph::Schema, value)
+      query_errors = validator.validate(query)[:errors]
+      return if query_errors.empty?
+
+      record.errors[attribute] << query_errors.map(&:message).join(', ')
+    end
+  end
+
+  validates :query_string, presence: true, graph_ql_query: true
 
   def generate_tag_line
     "{% query_graph '#{name}', result_name: g #{tag_params_clause} %}"
@@ -22,11 +47,5 @@ class GraphQuery < ActiveRecord::Base
   def tag_params_clause
     clause = variables.map { |v| "#{v}: #{v}" }.join(', ')
     clause.present? ? ", #{clause}" : ''
-  end
-
-  def parse_query
-    GraphQL.parse(query_string)
-  rescue GraphQL::ParseError => e
-    errors[:query_string] << "Query parse error: #{e.message}"
   end
 end
