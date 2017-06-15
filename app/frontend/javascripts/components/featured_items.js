@@ -49,6 +49,8 @@ class FeaturedItems {
     if (this.loader.parentNode instanceof HTMLElement) {
       this.loader.parentNode.removeChild(this.loader);
     }
+
+    $(document).trigger('rendered-favoritable-items.nearme');
   }
 }
 
