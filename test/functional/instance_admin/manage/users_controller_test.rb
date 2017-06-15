@@ -10,13 +10,20 @@ class InstanceAdmin::Manage::UsersControllerTest < ActionController::TestCase
   end
 
   context 'index' do
-    should 'show a listing of users associated with current instance' do
+    should 'show a listing of users associated with current instance without deleted' do
       @user_from_other_instance = FactoryGirl.create(:user)
       @user_from_other_instance.update_attribute(:instance_id, FactoryGirl.create(:instance).id)
       get :index
-      assert_select 'td', 'John X'
+      assert_select 'td', 'John X'      
+      assert_equal [@user.id].sort, assigns(:users).map(&:id).sort
+    end
+
+    should 'show a listing of users associated with current instance with deleted' do
+      @user_from_other_instance = FactoryGirl.create(:user)
+      @user_from_other_instance.update_attribute(:instance_id, FactoryGirl.create(:instance).id)
+      get :index, state: 'deleted'
       assert_select 'td', 'Deleted Jane'
-      assert_equal [@user.id, @deleted_user.id].sort, assigns(:users).map(&:id).sort
+      assert_equal [@deleted_user.id].sort, assigns(:users).map(&:id).sort
     end
 
     should 'delete a user' do
