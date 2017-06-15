@@ -8,3 +8,7 @@ $(document).on('load:searchResults.nearme', function() {
 $(document).on('rendered-search:ias.nearme', function() {
   loader.load();
 });
+
+$(document).on('rendered-favoritable-items.nearme', function() {
+  loader.load();
+});
