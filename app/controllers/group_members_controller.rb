@@ -38,7 +38,7 @@ class GroupMembersController < ApplicationController
 
   def destroy
     @memberships = @group.memberships.for_user(current_user).destroy_all
-    WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberHasQuit, @memberships.first.id, as: current_user)
+    WorkflowStepJob.perform(WorkflowStep::GroupWorkflow::MemberHasQuit, @memberships.first.id, as: current_user) if @memberships.present?
 
     respond_to do |format|
       format.js { render :create }
