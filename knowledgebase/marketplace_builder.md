@@ -92,3 +92,18 @@ TODO: Replace with proper `nearme-marketplace clear-cache` command
 In `desksnearme/` directory open `rails console`
 
     Instance.find(`instance_id`).marketplace_builder_settings.update! manifest: {} 
+
+
+## Troubleshooting
+
+Since we are in transition period between old and new approach, sometimes sync/deploy will produce server errors. If you see a message about undefined manifest, you will need to create empty configuration for marketplace builder.
+
+1) Go to `rails console` in `desksnearme/`
+2) Find instance you want to configure, ie. 5041 and assign reference to it to a variable 
+
+```ruby
+    instance = Instance.find(5041)
+    instance.marketplace_builder_settings = MarketplaceBuilderSettings.new status: 'ready', manifest: {}
+```
+
+3) Restart your `nearme-marketplace` command
