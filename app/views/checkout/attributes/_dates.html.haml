@@ -1,5 +1,5 @@
 - if only_inputs.empty? || only_inputs.include?(:dates)
   .small-inputs{data: {'reservation-dates-controller' => f.object.skip_payment_authorization?, 'validator-url': detect_overlapping_listing_reservations_path(f.object.transactable) }}
-    = f.input :dates_fake, input_html: {class: 'jquery-datepicker', data: { except_periods: Time.use_zone(f.object.transactable.timezone) { f.object.transactable.availability_exceptions.map(&:range) }, open_on_days: f.object.transactable.opened_on_days, days_with_ranges: f.object.transactable.availability.days_with_ranges }}, required: true, label: t('simple_form.labels.reservations.dates')
+    = f.input :dates_fake, input_html: {class: 'jquery-datepicker', data: { except_periods: Time.use_zone(f.object.transactable.time_zone) { f.object.transactable.availability_exceptions.map(&:range) }, open_on_days: f.object.transactable.opened_on_days, days_with_ranges: f.object.transactable.availability.days_with_ranges }}, required: true, label: t('simple_form.labels.reservations.dates')
     = f.input :dates, as: :hidden, input_html: { value: f.object.dates.presence || f.object.booking_date_from_search }
     = f.input :start_time, as: :select, collection: availability_time_options, required: true,  label: t('simple_form.labels.reservations.start_time'), input_html: { data: { no_options: t('general.no_options') } }

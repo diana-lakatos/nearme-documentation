@@ -34,6 +34,7 @@ module Graph
         field :show_path, !types.String, deprecation_reason: 'Use generate_url filter'
         field :slug, !types.String
         field :summary, types.String
+        field :time_zone, types.String
         field :url, types.String, deprecation_reason: 'Use generate_url filter'
         field :time_based_booking, Types::Transactables::TimeBasedBooking
         field :orders, !types[Types::Orders::Order] do

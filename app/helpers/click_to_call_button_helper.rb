@@ -6,16 +6,16 @@ module ClickToCallButtonHelper
 
     path_to_call = routes.new_user_phone_call_path(transactable.administrator)
     if transactable.time_based_booking?
-      closest_availability = transactable.first_available_date.try(:to_datetime).try(:in_time_zone, transactable.timezone)
+      closest_availability = transactable.first_available_date.try(:to_datetime).try(:in_time_zone, transactable.time_zone)
 
       if closest_availability
         open_minute = transactable.availability.open_minute_for(closest_availability)
         closest_availability = open_minute.present? ? closest_availability.change(min: open_minute.modulo(60), hour: (open_minute / 60).floor) : nil
       end
 
-      build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), transactable.open_now?, transactable.timezone, closest_availability)
+      build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), transactable.open_now?, transactable.time_zone, closest_availability)
     else
-      build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), true, transactable.timezone)
+      build_click_to_call_button(path_to_call, I18n.t('phone_calls.buttons.click_to_call'), true, transactable.time_zone)
     end
   end
 
@@ -42,8 +42,8 @@ module ClickToCallButtonHelper
 
   private
 
-  def build_click_to_call_button(path, label, available_now, timezone, next_available_occurence = nil)
-    time_info = I18n.t('phone_calls.tooltip.current_time', time: I18n.l(Time.now.in_time_zone(timezone), format: :short_with_time_zone))
+  def build_click_to_call_button(path, label, available_now, time_zone, next_available_occurence = nil)
+    time_info = I18n.t('phone_calls.tooltip.current_time', time: I18n.l(Time.now.in_time_zone(time_zone), format: :short_with_time_zone))
 
     available_info = next_available_occurence ? I18n.t('phone_calls.tooltip.next_available_occurence', time: I18n.l(next_available_occurence, format: :with_time_zone)) : ''
 

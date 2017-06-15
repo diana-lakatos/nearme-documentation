@@ -591,19 +591,20 @@ class Transactable < ActiveRecord::Base
   end
 
   def zone_utc_offset
-    Time.now.in_time_zone(timezone).utc_offset / 3600
+    Time.now.in_time_zone(time_zone).utc_offset / 3600
   end
 
-  def timezone
-    case transactable_type.timezone_rule
-    when 'location' then location.try(:time_zone)
-    when 'seller' then (creator || location.try(:creator) || company.try(:creator) || location.try(:company).try(:creator)).try(:time_zone)
-    when 'instance' then instance.time_zone
-    end.presence || Time.zone.name
+  def time_zone(format: :rails)
+    case format
+    when :rails then rails_time_zone
+    when :standard then ActiveSupport::TimeZone.zones_map[rails_time_zone].tzinfo.name
+    else
+      raise "Unknown format"
+    end
   end
 
   def timezone_info
-    I18n.t('activerecord.attributes.transactable.timezone_info', timezone: timezone) unless Time.zone.name == timezone
+    I18n.t('activerecord.attributes.transactable.timezone_info', timezone: time_zone) unless Time.zone.name == time_zone
   end
 
   def get_error_messages
@@ -717,6 +718,14 @@ class Transactable < ActiveRecord::Base
   end
 
   private
+
+  def rails_time_zone
+    case transactable_type.timezone_rule
+    when 'location' then location.try(:time_zone)
+    when 'seller' then (creator || location.try(:creator) || company.try(:creator) || location.try(:company).try(:creator)).try(:time_zone)
+    when 'instance' then instance.time_zone
+    end.presence || Time.zone.name
+  end
 
   def set_seek_collaborators
     self.seek_collaborators = true

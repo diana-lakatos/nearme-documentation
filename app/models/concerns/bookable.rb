@@ -107,7 +107,7 @@ module Bookable
 
     def set_inheritated_data
       self.currency ||= transactable.try(:currency)
-      self.time_zone ||= transactable.timezone
+      self.time_zone ||= transactable.time_zone
       self.reservation_type ||= transactable.transactable_type.reservation_type
       self.confirmation_email ||= creator.try(:email)
     end

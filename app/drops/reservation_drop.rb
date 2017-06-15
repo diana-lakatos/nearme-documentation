@@ -254,10 +254,10 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [DateTime] reservation date/time (first date) in
-  #   the timezone of the associated transactable object
+  #   the time_zone of the associated transactable object
   # @todo -- again, maybe some general class of pulling out dates
   def starts_at
-    @reservation.starts_at.in_time_zone(@reservation.transactable.timezone)
+    @reservation.starts_at.in_time_zone(@reservation.transactable.time_zone)
   end
 
   # @return [String] if the payment is pending and the user doesn't need to
