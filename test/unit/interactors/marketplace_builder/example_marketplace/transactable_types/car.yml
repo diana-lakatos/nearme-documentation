@@ -35,3 +35,7 @@ custom_attributes:
     attribute_type: text
     validation:
       max_length: 140
+
+  - name: salary
+    public: false
+    attribute_type: float

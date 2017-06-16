@@ -16,7 +16,9 @@ module MarketplaceBuilder
       def execute!
         yaml_content = read_exported_file('custom_model_types/vehicles.yml')
         assert_equal yaml_content['name'], 'Vehicles'
-        assert_same_elements yaml_content['custom_attributes'], [{ 'name' => 'vehicle_type', 'attribute_type' => 'string', 'input_html_options' => {}, 'label' => 'Vehicle Type', 'search_in_query' => false, 'searchable' => false}]
+        assert_same_elements yaml_content['custom_attributes'], [
+          { 'name' => 'vehicle_type', 'attribute_type' => 'string', 'input_html_options' => {}, 'label' => 'Vehicle Type', 'public' => true, 'search_in_query' => false, 'searchable' => false}
+        ]
       end
     end
   end
