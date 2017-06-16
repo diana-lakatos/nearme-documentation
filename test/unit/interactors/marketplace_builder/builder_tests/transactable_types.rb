@@ -29,19 +29,22 @@ module MarketplaceBuilder
       end
 
       def compare_transactable_type_custom_attributes
-        assert_equal 2, @transactable_type.custom_attributes.count
+        assert_equal 3, @transactable_type.custom_attributes.count
+        description, summary, salary = @transactable_type.custom_attributes.order(:id)
 
-        first_custom_attribute = @transactable_type.custom_attributes.first
-        assert_equal 'description', first_custom_attribute.name
-        assert_equal 'text', first_custom_attribute.attribute_type
-        assert_equal 'description', first_custom_attribute.custom_validators.first.field_name
-        assert_equal 5000, first_custom_attribute.custom_validators.first.validation_rules['length']['maximum']
+        assert_equal 'description', description.name
+        assert_equal 'text', description.attribute_type
+        assert_equal 'description', description.custom_validators.first.field_name
+        assert_equal 5000, description.custom_validators.first.validation_rules['length']['maximum']
 
-        second_custom_attribute = @transactable_type.custom_attributes.second
-        assert_equal 'summary', second_custom_attribute.name
-        assert_equal 'text', second_custom_attribute.attribute_type
-        assert_equal 'summary', second_custom_attribute.custom_validators.first.field_name
-        assert_equal 140, second_custom_attribute.custom_validators.first.validation_rules['length']['maximum']
+        assert_equal 'summary', summary.name
+        assert_equal 'text', summary.attribute_type
+        assert_equal 'summary', summary.custom_validators.first.field_name
+        assert_equal 140, summary.custom_validators.first.validation_rules['length']['maximum']
+
+        assert_equal 'salary', salary.name
+        assert_equal 'float', salary.attribute_type
+        refute salary.public
       end
     end
   end

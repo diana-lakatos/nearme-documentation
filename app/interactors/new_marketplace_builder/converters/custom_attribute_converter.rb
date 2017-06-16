@@ -5,7 +5,7 @@ module NewMarketplaceBuilder
       include NewMarketplaceBuilder::CustomAttributesBuilder
 
       primary_key :name
-      properties :name, :attribute_type, :html_tag, :search_in_query, :label, :searchable, :input_html_options
+      properties :name, :attribute_type, :html_tag, :search_in_query, :label, :searchable, :input_html_options, :public
 
       convert :validation, using: CustomValidationConverter
 
