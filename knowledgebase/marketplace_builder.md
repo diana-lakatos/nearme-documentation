@@ -10,7 +10,7 @@ The file describes new Marketplace Builder functionalities.
 - [ ] categories
 - [x] pages
 - [x] content holders
-- [x] mailers
+- [ ] mailers
 - [ ] SMS
 - [x] liquid views
 - [x] translations
@@ -85,25 +85,9 @@ Deploys to staging environment
 
 Enables sync mode - saves changes made in the filesystem to the database
 
-### Clear cache
+## Options
 
-TODO: Replace with proper `nearme-marketplace clear-cache` command
-
-In `desksnearme/` directory open `rails console`
-
-    Instance.find(`instance_id`).marketplace_builder_settings.update! manifest: {} 
-
-
-## Troubleshooting
-
-Since we are in transition period between old and new approach, sometimes sync/deploy will produce server errors. If you see a message about undefined manifest, you will need to create empty configuration for marketplace builder.
-
-1) Go to `rails console` in `desksnearme/`
-2) Find instance you want to configure, ie. 5041 and assign reference to it to a variable 
-
-```ruby
-    instance = Instance.find(5041)
-    instance.marketplace_builder_settings = MarketplaceBuilderSettings.new status: 'ready', manifest: {}
+### Force mode for deploy command
+To skip MD5 checking and deploy every file use force mode (-f -force).
 ```
-
-3) Restart your `nearme-marketplace` command
+nearme-marketplace deploy -force
