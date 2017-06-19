@@ -35,6 +35,11 @@ class OrderForm < BaseForm
           property :payment_subscription, form: PaymentSubscriptionForm.decorate(payment_subscription_configuration)
         end
 
+        if (order_items_configuration = configuration.delete(:order_items)).present?
+          add_validation(:order_items, order_items_configuration)
+          collection :order_items, form: OrderItemForm.decorate(order_items_configuration)
+        end
+
         inject_custom_attributes(configuration)
         inject_dynamic_fields(configuration)
       end

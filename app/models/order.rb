@@ -45,6 +45,7 @@ class Order < ActiveRecord::Base
   has_many :order_items, class_name: 'RecurringBookingPeriod', dependent: :destroy, foreign_key: :order_id
   has_many :cancellation_policies, as: :cancellable
 
+  accepts_nested_attributes_for :order_items
   accepts_nested_attributes_for :billing_address
   accepts_nested_attributes_for :user
   accepts_nested_attributes_for :payment_documents
