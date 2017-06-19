@@ -1668,6 +1668,7 @@ ActiveRecord::Schema.define(version: 20170607125956) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.json     "options"
   end
 
   add_index "marketplace_releases", ["instance_id"], name: "index_marketplace_releases_on_instance_id", using: :btree
@@ -1875,8 +1876,8 @@ ActiveRecord::Schema.define(version: 20170607125956) do
     t.string   "layout_name",                           default: "application"
     t.boolean  "require_verified_user",                 default: false
     t.boolean  "admin_page",                            default: false
-    t.integer  "max_deep_level",                        default: 3
     t.integer  "format",                                default: 0
+    t.integer  "max_deep_level",                        default: 3
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree

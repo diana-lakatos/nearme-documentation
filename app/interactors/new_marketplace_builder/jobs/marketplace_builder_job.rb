@@ -7,7 +7,7 @@ module NewMarketplaceBuilder
 
       def perform
         if @marketplace_release.ready_for_import?
-          NewMarketplaceBuilder::Interactors::ImportInteractor.new(@marketplace_release.instance_id, @marketplace_release.zip_file).execute!
+          NewMarketplaceBuilder::Interactors::ImportInteractor.new(@marketplace_release.instance_id, @marketplace_release.zip_file, @marketplace_release.options).execute!
         elsif @marketplace_release.ready_for_export?
           NewMarketplaceBuilder::Interactors::ExportInteractor.new(@marketplace_release.instance_id, @marketplace_release).execute!
         end

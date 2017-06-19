@@ -1,13 +1,15 @@
 module NewMarketplaceBuilder
   module Interactors
     class ImportInteractor
-      def initialize(instance_id, source)
+      def initialize(instance_id, source, options = {})
         @instance_id = instance_id
         @source = source
+        @force_mode = options["force_mode"] == "true"
       end
 
       def execute!
         instance.set_context!
+        manifest_updater.clear_manifest if @force_mode
         manifest_updater.remove_outdated_paths builder_file_paths if should_remove_models
 
         grouped_builder_files.each do |pattern, builder_files|

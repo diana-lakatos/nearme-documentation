@@ -10,7 +10,7 @@ The file describes new Marketplace Builder functionalities.
 - [ ] categories
 - [x] pages
 - [x] content holders
-- [x] mailers
+- [ ] mailers
 - [ ] SMS
 - [x] liquid views
 - [x] translations
@@ -85,10 +85,15 @@ Deploys to staging environment
 
 Enables sync mode - saves changes made in the filesystem to the database
 
-### Clear cache
+## Options
 
 TODO: Replace with proper `nearme-marketplace clear-cache` command
 
 In `desksnearme/` directory open `rails console`
 
-    Instance.find(`instance_id`).marketplace_builder_settings.update! manifest: {} 
+    Instance.find(`instance_id`).marketplace_builder_settings.update! manifest: {}
+
+### Force mode for deploy command
+To skip MD5 checking and deploy every file use force mode (-f -force).
+```
+nearme-marketplace deploy -force

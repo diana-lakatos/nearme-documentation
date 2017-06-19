@@ -21,7 +21,7 @@ module NearmeMarketplace
       puts "Sending zip file to the server".green
 
       file = Faraday::UploadIO.new('marketplace_builder/marketplace_builder.zip', 'application/zip')
-      multipart_connection.post("api/marketplace_releases", marketplace_builder: { zip_file: file })
+      multipart_connection.post("api/marketplace_releases", marketplace_builder: { zip_file: file, force_mode: force_mode })
     end
 
     def wait_for_finish_job(release_reponse)
@@ -40,6 +40,10 @@ module NearmeMarketplace
     def remove_zip_file
       puts "Removing zip file".green
       FileUtils.rm('marketplace_builder/marketplace_builder.zip')
+    end
+
+    def force_mode
+      (@options & ['-force', '-f']).any?
     end
   end
 end
