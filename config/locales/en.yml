@@ -464,6 +464,7 @@ en:
       notices:
         key_created: "Custom translation key has been successfully created: %{key}."
         key_destroyed: 'Custom translation key has been deleted.'
+        invalid_search_string: 'Invalid search string.'
     projects:
       transactable_types:
         transactable_types: "Transactable Types"
