@@ -108,6 +108,8 @@ class PlatformContextDrop < BaseDrop
   # @!method instance_profile_types_as_hash
   #   @return [Hash{String => InstanceProfileTypeDrop}] hash where the keys are InstanceProfileType names
   #     and the values are InstanceProfileTypeDrop objects for this marketplace
+  # @!method use_cart?
+  #   @return [Boolean] returns TRUE if marketplace is using cart for checkout
   # @todo Remove #projectable from drop when ProjectType will be finally removed
   delegate :name, :bookable_noun, :pages, :blog_url, :facebook_url, :twitter_url, :gplus_url,
            :instagram_url, :youtube_url, :rss_url, :linkedin_url, :lessor, :lessors,
@@ -118,7 +120,8 @@ class PlatformContextDrop < BaseDrop
            :wish_lists_icon_set, :seller_attachments_enabled?, :wish_lists_enabled?,
            :active_rating_systems_present?, :webhook_token, :instance, :enable_geo_localization, :split_registration?,
            :enquirer_blogs_enabled, :lister_blogs_enabled, :debugging_mode_for_admins?,
-           :transactable_types_ordered, :transactable_types_as_hash, :instance_profile_types_as_hash, to: :platform_context_decorator
+           :transactable_types_ordered, :transactable_types_as_hash,
+           :instance_profile_types_as_hash, :use_cart?, to: :platform_context_decorator
 
   def initialize(platform_context_decorator)
     @platform_context_decorator = platform_context_decorator

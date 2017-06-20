@@ -12,6 +12,7 @@ class Listings::OrdersController < ApplicationController
   def create
     @order.try(:last_search_json=, cookies[:last_search])
     if @order.add_line_item!(order_params)
+      WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Created, @order.id, as: current_user)
       if current_instance.use_cart?
         redirect_to cart_index_path
       else
