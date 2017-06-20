@@ -69,6 +69,10 @@ class ActivityFeedEvent < ActiveRecord::Base
           transactable_ids: transactable_ids.map(&:to_s))
   end
 
+  scope :comments_for_transactable, lambda { |transactable_id|
+    where(followed_type: 'Transactable', followed_id: transactable_id, event_source_type: 'Comment')
+  }
+
   before_create :update_affected_objects
   def update_affected_objects
     if affected_objects.present?
