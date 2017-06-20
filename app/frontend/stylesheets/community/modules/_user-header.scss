@@ -47,6 +47,28 @@
     margin: 0 -100% 0 0;
     background: $avatar-background;
     overflow: hidden;
+    figcaption {
+      position: absolute;
+      left: 35px;
+      top: 35px;
+      width: 150px;
+      margin: -15px 0 0 -75px;
+      padding: 2px 15px 0;
+      background: #fff;
+      background: rgba(255, 255, 255, 0.9);
+      color: #2071B9;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 24px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    figcaption {
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+    }
+
   }
 
   .header figure img {
