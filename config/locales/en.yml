@@ -967,6 +967,8 @@ en:
         email: Email
         signed_up: "Signed Up"
         login_as: "Login As"
+        current_address: 'Current address'
+        locations_addresses: 'Locations addresses'
         index:
           more_filters: "More filters"
           service: "Service"

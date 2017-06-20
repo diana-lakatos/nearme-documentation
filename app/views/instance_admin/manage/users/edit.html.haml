@@ -85,6 +85,12 @@
         %tr
           %td Last sign in IP
           %td= @user.last_sign_in_ip
+        %tr
+          %td= t('instance_admin.manage.users.current_address')
+          %td= @user.current_address&.formatted_address
+        %tr
+          %td= t('instance_admin.manage.users.locations_addresses')
+          %td= @user.locations.map { |l| l.location_address&.formatted_address }.reject(&:blank?).join('; ')
 
 - @user.user_profiles.each do |user_profile|
   .content-container
