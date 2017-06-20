@@ -461,9 +461,14 @@ module LiquidFilters
   # @return [String] if the given url is supported, an HTML formatted string containing a video player (inside an iframe)
   #   which will play the video at the given url; otherwise an empty string is returned
   # @param url [String] url to a video on the internet
-  def videoify(url = '')
+  def videoify(url = '', options = {})
     return url if url.blank?
-    Videos::VideoEmbedder.new(url).html.html_safe
+
+    options.symbolize_keys!
+    embedder_options = {}
+    embedder_options = { iframe_attributes: options } if options.present?
+
+    Videos::VideoEmbedder.new(url, embedder_options).html.html_safe
   end
 
   # @return [String] JSON formatted string containing a representation of object
