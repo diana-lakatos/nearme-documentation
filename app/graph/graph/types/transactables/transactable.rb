@@ -62,8 +62,13 @@ module Graph
           resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
         end
         field :comments, Graph::Types::Collection.build(Types::ActivityFeed::Comment) do
-          argument :paginate, Types::PaginationParams, default_value:  { page: 1, per_page: 10 }
-          resolve ->(obj, arg, ctx) { Graph::Resolvers::Comments.new(obj.source.comments).call(obj, arg, ctx) }
+          argument :paginate, Types::PaginationParams, default_value: { page: 1, per_page: 10 }
+          resolve ->(obj, arg, ctx) {
+            comment_ids = ::ActivityFeedEvent.comments_for_transactable(obj.id).pluck(:event_source_id)
+            Graph::Resolvers::Comments.new(
+              ::Comment.where(id: comment_ids)
+            ).call(obj, arg, ctx)
+          }
         end
         field :followers, Graph::Types::Collection.build(Types::User) do
           resolve ->(obj, _arg, ctx) {
