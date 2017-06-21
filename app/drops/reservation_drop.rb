@@ -265,7 +265,7 @@ class ReservationDrop < OrderDrop
   #   will be returned, otherwise, the HTML-formatted total price will be returned
   # @todo -- we should not provide html in DIY approach at all. Also translations would be nice
   def total_amount_if_payment_at_least_authorized
-    if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
+    if !@reservation.payment.manual_payment? && @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
       I18n.t('dashboard.user_reservations.total_amount_to_be_determined')
     else
       "<strong>#{@reservation.total_price}</strong>"
@@ -278,7 +278,7 @@ class ReservationDrop < OrderDrop
   #   is returned
   # @todo -- we should not provide html in DIY approach at all. Also translations would be nice
   def total_amount_for_host_if_payment_at_least_authorized
-    if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
+    if !@reservation.payment.manual_payment? && @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
       I18n.t('dashboard.user_reservations.total_amount_to_be_determined')
     else
       "<strong>#{@reservation.total_payable_to_host_formatted}</strong>"
