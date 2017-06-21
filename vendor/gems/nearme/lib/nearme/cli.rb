@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'thor'
 require 'nearme'
 require 'slack-notifier'
@@ -29,7 +30,7 @@ DESC
 
     for example:
 
-    nearme deploy -r my-little-staging -e nm-staging --comment "deploy pls"
+    nearme deploy -r my-little-staging -e nm-staging --comment "deploy pls" -a nearme
 
     will deploy branch my-little-staging to nm-staging AWS OpsWorks stack
 DESC
@@ -39,6 +40,8 @@ DESC
                            aliases: :e, desc: 'AWS OpsWorks stack name'
     method_option 'environment', required: false, type: :string,
                                  aliases: :v, desc: 'Rails environtment'
+    method_option 'app_name', required: false, type: :string,
+                              aliases: :a, desc: 'Application name to be deployed'
     method_option 'migrate', required: false, type: :boolean,
                              default: true, desc: 'Trigger migration'
     method_option 'comment', required: false, type: :string,
@@ -166,6 +169,7 @@ BANNER
 
         info = ''
         info << "Branch: #{options[:branch]}\n" if options.key?('branch')
+        info << "Application: #{options[:app_name]}\n" if options.key?('app_name')
         info << "Environment: #{options[:environment]}\n" if options.key?('environment')
         info << "Migrate: #{options[:migrate]}\n" if options.key?('migrate')
         info << "Watch: #{options[:watch]}\n" if options.key?('watch')

@@ -1215,7 +1215,7 @@ class User < ActiveRecord::Base
   end
 
   def time_zone
-    super || instance&.time_zone.presence || 'Pacific Time (US & Canada)'
+    super.presence || instance&.time_zone.presence || 'Pacific Time (US & Canada)'
   end
 
   def accessible_transactable_ids
