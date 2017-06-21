@@ -425,19 +425,19 @@ class UserDrop < UserBaseDrop
   # @return [String] url to the "big" version of a user's avatar image
   # @todo -- depracate url for filter
   def avatar_url_big
-    asset_url(@source.avatar_url(:big))
+    asset_url(@source.avatar_url('big'))
   end
 
   # @return [String] url to the "thumb" version of a user's avatar image
   # @todo -- depracate url for filter
   def avatar_url_thumb
-    asset_url(@source.avatar_url(:thumb))
+    asset_url(@source.avatar_url('thumb'))
   end
 
   # @return [String] url to the "bigger" version of a user's avatar image
   # @todo -- depracate url for filter
   def avatar_url_bigger
-    asset_url(@source.avatar_url(:bigger))
+    asset_url(@source.avatar_url('bigger'))
   end
 
   # @return [Boolean] whether the marketplace has blogging enabled and the user has a blog enabled for his account
