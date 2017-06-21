@@ -30,6 +30,11 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
                                        .get_locales
                                        .order('key ASC')
                                        .paginate(page: params[:page], per_page: 50)
+
+    unless valid_query?
+      flash[:notice] = t('instance_admin.locales.notices.invalid_search_string')
+      redirect_to edit_keys_instance_admin_settings_locale_url(id: @locale.id)
+    end
   end
 
   def date_time_preferences
@@ -93,6 +98,13 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
   end
 
   private
+
+  def valid_query?
+    @default_and_custom_translations.count
+    true
+  rescue ActiveRecord::StatementInvalid
+    false
+  end
 
   def redirect_url
     instance_admin_settings_translations_path
