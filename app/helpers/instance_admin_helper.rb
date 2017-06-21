@@ -84,14 +84,7 @@ module InstanceAdminHelper
   end
 
   def languages
-    I18nData.languages.map do |lang|
-      translated_name = begin
-                          I18nData.languages(lang[0])[lang[0]].mb_chars.capitalize
-                        rescue
-                          lang[1].capitalize
-                        end
-      [lang[1].capitalize, lang[0].downcase, { 'data-translated' => translated_name }]
-    end
+    I18n::LanguagesWrapper.languages_for_select
   end
 
   def default_translation_for_key(key)
