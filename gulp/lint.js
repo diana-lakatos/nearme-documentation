@@ -54,7 +54,7 @@ module.exports = function(gulp){
   /* Run the "lint:javascript:cached" task initially... */
   gulp.task('watch:lint:javascript', ['lint:javascript:cached'], function() {
     /* ...and whenever a watched file changes */
-    return gulp.watch(files, ['lint:javascript:cached'], function(event) {
+    return gulp.watch(files, { interval: 500 }, ['lint:javascript:cached'], function(event) {
       if (event.type === 'deleted' && cache.caches.eslint) {
         /* remove deleted files from cache */
         delete cache.caches.eslint[event.path];
@@ -63,7 +63,7 @@ module.exports = function(gulp){
   });
 
   gulp.task('watch:lint:typecheck', ['lint:typecheck'], function(){
-    return gulp.watch(files, ['lint:typecheck']);
+    return gulp.watch(files, { interval: 500 }, ['lint:typecheck']);
   });
 
 
