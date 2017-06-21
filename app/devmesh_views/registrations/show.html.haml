@@ -7,6 +7,7 @@
     .header
       %figure
         = image_tag @user.avatar.url(:big), size: "180x180", alt: @user.to_liquid.name_with_affiliation_plain
+        = render 'shared/person_ribbon', featured: @user.featured?, role: @user.properties.role
       %h2.hx= @user.to_liquid.name_with_affiliation
       = @user.decorate.display_address
       - if @user.featured?
