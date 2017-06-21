@@ -26,7 +26,7 @@ module NewMarketplaceBuilder
 
         File.open(file_path, 'w') do |f|
           raw_content = file[:exported_data].delete('body') || file[:exported_data].delete('content')
-          file[:exported_data].delete('view_type') if ['view', 'email'].include?(file[:exported_data]['view_type'])
+          file[:exported_data].except!('view_type', 'format') if ['view', 'email'].include?(file[:exported_data]['view_type'])
 
           if file[:exported_data].present?
             f.write file[:exported_data].deep_stringify_keys.to_yaml

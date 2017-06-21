@@ -14,6 +14,7 @@ module NearmeMarketplace
 
     def zip_marketplace_builder_directory
       puts "Compressing marketplace_builder folder".green
+      system "rm marketplace_builder/marketplace_builder.zip"
       system "cd marketplace_builder; zip -r marketplace_builder.zip ."
     end
 

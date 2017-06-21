@@ -31,7 +31,7 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
       Locale.create! code: 'en', instance_id: @instance.id
 
       NewMarketplaceBuilder::Interactors::ImportInteractor.new(@instance.id, EXAMPLE_MARKETPLACE_PATH).execute!
-      instance_view = InstanceView.last
+      instance_view = InstanceView.where(view_type: 'view').last
       after_first_import_timestamp = instance_view.updated_at
 
       sleep 2
