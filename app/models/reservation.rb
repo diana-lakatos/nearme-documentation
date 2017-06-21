@@ -66,7 +66,7 @@ class Reservation < Order
 
       if transactable_pricing.event_booking?
         if @dates.is_a?(String)
-          timestamp = Time.at(@dates.to_i).in_time_zone(transactable.timezone)
+          timestamp = Time.at(@dates.to_i).in_time_zone(transactable.time_zone)
           @start_minute = timestamp.try(:min).to_i + (60 * timestamp.try(:hour).to_i)
           @end_minute = @start_minute
           @dates = [timestamp.try(:to_date).try(:to_s)]

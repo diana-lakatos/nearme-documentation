@@ -210,7 +210,7 @@ class TransactableDrop < BaseDrop
         rule.days.each do |day|
           days[day] ||= []
 
-          days[day] << [rule.open_hour, rule.close_hour, pretty_availability_rule_time_with_time_zone(rule, @source.timezone)]
+          days[day] << [rule.open_hour, rule.close_hour, pretty_availability_rule_time_with_time_zone(rule, @source.time_zone)]
         end
       end
     end
@@ -593,7 +593,7 @@ class TransactableDrop < BaseDrop
 
   # @return [Array<Hash{Symbol => Date}>] returns ranges of rented periods !{from: date, to: date}
   def rented_range_periods
-    Time.use_zone(@source.timezone) do
+    Time.use_zone(@source.time_zone) do
       @source.line_item_orders.with_state(:confirmed).map(&:period_range)
     end
   end
@@ -601,7 +601,7 @@ class TransactableDrop < BaseDrop
   # @return [Array<Hash{Symbol => Date}>] returns ranges of unavailable periods !{from: date, to: date}
   # @todo Investigate malfunctioning method / availability_exceptions can be nil
   def unavailable_range_periods
-    Time.use_zone(@source.timezone) do
+    Time.use_zone(@source.time_zone) do
       @source.availability_exceptions.map(&:range)
     end
   end
@@ -631,5 +631,11 @@ class TransactableDrop < BaseDrop
       results[customization.custom_model_type.name] << customization.properties
       results
     end
+  end
+
+  # @!method time_zone
+  #   @return [String] name of time_zone in "Area/Location" format, e.g. "America/New_York".
+  def time_zone
+    @source.time_zone(format: :standard)
   end
 end

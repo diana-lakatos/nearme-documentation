@@ -62,14 +62,14 @@ class AvailabilityTemplate < ActiveRecord::Base
     ['Transactable', 'UserProfile', 'Transactable::TimeBasedBooking'].include? parent_type
   end
 
-  def timezone
-    parent.respond_to?(:timezone) ? parent.timezone : nil
+  def time_zone
+    parent.respond_to?(:time_zone) ? parent.time_zone : nil
   end
 
   def validate_schedule_rules
     return true if schedule_exception_rules.blank?
 
-    Time.use_zone(timezone) do
+    Time.use_zone(time_zone) do
       schedule_exception_rules.each(&:parse_user_input)
     end
   end

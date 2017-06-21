@@ -52,7 +52,7 @@ class Listings::Support::TicketsController < ApplicationController
     @pricing = @listing.action_type.pricings.find(@details[:transactable_pricing_id]).decorate if @details[:transactable_pricing_id]
     if @listing.event_booking?
       datetime = if !params[:details]
-                   Time.at(@details[:dates].to_i).in_time_zone(@listing.timezone)
+                   Time.at(@details[:dates].to_i).in_time_zone(@listing.time_zone)
                  else
                    @details[:dates].try(:to_datetime)
       end

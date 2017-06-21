@@ -40,7 +40,7 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
   end
 
   def first_available_date
-    time = Time.now.in_time_zone(timezone)
+    time = Time.now.in_time_zone(time_zone)
     date = time.to_date
     max_date = date + 60.days
     closed_at = availability.close_minute_for(date)
@@ -91,7 +91,7 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
   end
 
   def open_on?(date, start_min = nil, end_min = nil)
-    Time.use_zone(timezone) do
+    Time.use_zone(time_zone) do
       availability.try(:open_on?, date: date.in_time_zone, start_minute: start_min, end_minute: end_min)
     end
   end
@@ -105,7 +105,7 @@ class Transactable::TimeBasedBooking < Transactable::ActionType
     second_date = second_available_date
 
     # Daily open/quantity availability data for datepickers
-    time_now = Time.now.in_time_zone(timezone)
+    time_now = Time.now.in_time_zone(time_zone)
     minimum_date = time_now.to_date
 
     close_minute = availability.close_minute_for(minimum_date)
