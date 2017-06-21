@@ -3,6 +3,8 @@ class CustomizationForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
   property :id
   property :custom_model_type_id
+  property :customizable_id
+  property :customizable_type
   property :_destroy, virtual: true
 
   def _destroy=(value)
@@ -32,6 +34,7 @@ class CustomizationForm < BaseForm
                                         prepopulator: ->(_options) { self.custom_attachments ||= model.default_custom_attachments_open_struct }
         end
         inject_custom_attributes(configuration)
+        inject_dynamic_fields(configuration)
       end
     end
   end

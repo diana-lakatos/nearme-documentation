@@ -46,6 +46,13 @@ module Api
             name: 'customization_form',
             base_form: 'CustomizationForm',
             configuration: {
+              customizable_id: {
+                validation: {
+                  unique: {
+                    scope: [:customizable_type, properties: :model_attr]
+                  }
+                }
+              },
               properties: {
                 model_attr: {
                   validation: {
