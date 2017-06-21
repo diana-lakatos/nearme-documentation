@@ -4,7 +4,9 @@ class CustomImageForm < BaseForm
   class << self
     def decorate(options, attr_name)
       Class.new(self) do
-        add_validation(:image, options)
+        if (image_configuration = options.delete(:image))
+          add_validation(:image, image_configuration)
+        end
         validates_with ImageWellFormednessValidator
         define_singleton_method(:human_attribute_name) do |_attr|
           attr_name

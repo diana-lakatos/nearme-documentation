@@ -336,8 +336,10 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
           },
           :custom_images => {
             "#{@seller_photo.name}": {
-              validation: {
-                'presence' => {}
+              image: {
+                validation: {
+                  'presence' => {}
+                }
               }
             }
           },
@@ -417,8 +419,10 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
                   },
                   custom_images: {
                     "#{@boat_review_photo.name}": {
-                      validation: {
-                        'presence' => {}
+                      image: {
+                        validation: {
+                          'presence' => {}
+                        }
                       }
                     }
                   },
@@ -433,8 +437,10 @@ class ListerUserSignupBuilderTest < ActiveSupport::TestCase
               },
               custom_images: {
                 "#{@boat_photo.name}": {
-                  validation: {
-                    'presence' => {}
+                  image: {
+                    validation: {
+                      'presence' => {}
+                    }
                   }
                 }
               },

@@ -5,7 +5,7 @@ module Attachable
     #   @return [MerchantAccountOwnerDocumentUploader]
     mount_uploader :file, ::MerchantAccountOwnerDocumentUploader
 
-    validates :file, presence: true, file_size: { maximum: 50.megabytes.to_i }
+    validates :file, presence: true, file_size: { less_than_or_equal_to: 50.megabytes.to_i }
 
     self.per_page = 20
 

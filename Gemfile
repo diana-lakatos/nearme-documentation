@@ -240,3 +240,4 @@ gem 'cocoon'
 
 gem 'redcarpet'
 gem 'slack-notifier', require: false
+gem 'file_validators'

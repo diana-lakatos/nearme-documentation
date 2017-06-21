@@ -32,7 +32,7 @@ class FormComponentToFormConfigurationTest < ActiveSupport::TestCase
   end
 
   def dummy_mp_buyer_form_configuration
-    {:profiles=>{:buyer=>{:validation=>{:presence=>{}}, :custom_images=>{"photo_input"=>{:validation=>{:presence=>{}}}, :validation=>{:presence=>{}}}}}}
+    {:profiles=>{:buyer=>{:validation=>{:presence=>{}}, :custom_images=>{"photo_input"=>{:image=>{:validation=>{:presence=>{}}}}}}}}
   end
 
   def buyer_form_configuration
