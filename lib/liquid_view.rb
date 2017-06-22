@@ -92,18 +92,19 @@ class LiquidView
   def context_assigns
     assigns = @view.assigns.reject { |k, _v| PROTECTED_ASSIGNS.include?(k) }
 
+    # TODO: Move to GraphQL? g.system.*
     assigns['current_year'] = Date.current.year
     params = @view.try(:controller).try(:params) || {}
     assigns['params'] = params.except(*Rails.application.config.filter_parameters)
     assigns['current_url'] = @view.try(:controller).try(:request).try(:original_url)
-    assigns['is_xhr_request'] = @view.try(:controller).try(:request).try(:xhr?)
+    assigns['is_xhr_request'] = @view.try(:controller).try(:request).try(:xhr?) # TODO: Deduplicate
+    assigns['request_xhr'] = @view.try(:controller).try(:request).try(:xhr?)
     assigns['current_path'] = @view.try(:controller).try(:request).try(:path)
     assigns['request_referer'] = @view.try(:controller).try(:request).try(:referer)
-    assigns['request_xhr'] = @view.try(:controller).try(:request).try(:xhr?)
     assigns['current_full_path'] = @view.try(:controller).try(:request).try(:original_fullpath)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
-    assigns['flash'] = @view.try(:flash).try(:to_hash) if [ApplicationController, Api::BaseController].any? { |klass| @view.try(:controller).kind_of?(klass) }
-    assigns['form_authenticity_token'] = @view.try(:controller).try(:form_authenticity_token)
+    assigns['flash'] = @view.try(:flash).try(:to_hash) if [ApplicationController, Api::BaseController].any? { |klass| @view.try(:controller).is_a?(klass) }
+    assigns['form_authenticity_token'] = @view.try(:form_authenticity_token)
 
     custom_theme = PlatformContext.current.custom_theme
     if custom_theme.present?
