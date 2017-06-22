@@ -176,7 +176,11 @@ class CommentEndpointLoader implements EndpointLoader {
   }
 
   afterLoadedCallback(element: HTMLElement) {
-    this.newCommentsLabel(element);
+    let article = element.querySelector('article');
+    if (!(article instanceof HTMLElement)) {
+      throw new Error('Unable to locate article element');
+    }
+    this.newCommentsLabel(article);
   }
 }
 
