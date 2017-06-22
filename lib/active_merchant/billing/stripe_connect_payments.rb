@@ -16,9 +16,9 @@ module ActiveMerchant
         OpenStruct.new(error: e.message)
       end
 
-      def create_token(credit_card_id, customer_id, merchant_id)
+      def create_token(customer_id, merchant_id, options = {})
         Stripe::Token.create(
-          { customer: customer_id, card: credit_card_id },
+          { customer: customer_id }.merge(options),
           stripe_account: merchant_id # id of the connected account
         )
       rescue

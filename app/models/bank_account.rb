@@ -19,6 +19,8 @@ class BankAccount < ActiveRecord::Base
   has_one :payment_gateway, through: :payment_method
   has_many :payments, as: :payment_source
 
+  before_validation :set_mode
+
   validates :instance_client, presence: true
 
   delegate :customer_id, to: :instance_client
@@ -39,6 +41,7 @@ class BankAccount < ActiveRecord::Base
   def to_active_merchant
     external_id
   end
+  alias token to_active_merchant
 
   def instance_client
     @instance_client ||= super || existing_instance_client || new_instance_client
@@ -116,10 +119,6 @@ class BankAccount < ActiveRecord::Base
     self.instance_client = existing_instance_client
   end
 
-  def test_mode?
-    self.test_mode ||= payment_gateway.test_mode?
-  end
-
   def create_account_with_plaid
     exchange_response = payment_method.plaid_client.item.public_token.exchange(public_token)
     stripe_response = payment_method.plaid_client.processor.stripe.bank_account_token.create(exchange_response['access_token'], account_id)
@@ -163,5 +162,10 @@ class BankAccount < ActiveRecord::Base
     when 'new'
       WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::BankAccountPending, id)
     end
+  end
+
+  def set_mode
+    self.test_mode = payment_gateway.test_mode?
+    true
   end
 end

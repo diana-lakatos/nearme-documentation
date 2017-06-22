@@ -13,6 +13,24 @@ class PaymentTest < ActiveSupport::TestCase
     end
   end
 
+  context 'direct token' do
+    should 'be generated when gateway is set to direct mode' do
+      token = 'TOKEN'
+      @payment_gateway = FactoryGirl.build :stripe_connect_payment_gateway, config: { "settings" => { "charge_type" => 'direct' }}
+      @payment_source = FactoryGirl.build(:credit_card)
+      @payment_source.stubs(:customer_id).returns('CustomerID')
+
+      @payment = FactoryGirl.build(:pending_payment,
+				   payment_method: @payment_gateway.payment_methods.credit_card.first,
+				   payment_source: @payment_source			  )
+      @payment.stubs(:payment_gateway).returns(@payment_gateway)
+      @payment.stubs(:merchant_id).returns('MerchantID')
+      @payment_gateway.stubs(:create_token).returns(OpenStruct.new(id: token))
+      assert_equal token, @payment.direct_token
+      assert @payment.direct_charge?
+    end
+  end
+
   context 'pending payment' do
     setup do
       @payment = FactoryGirl.create(:pending_payment)
@@ -120,7 +138,7 @@ class PaymentTest < ActiveSupport::TestCase
       @payment.stubs(:immediate_payout?).returns(true)
       assert @payment.send(:should_create_transfer?)
 
-      @payment.stubs(:direct_token).returns('direct_token')
+      @payment.stubs(:direct_charge?).returns(true)
       refute @payment.send(:should_create_transfer?)
     end
 

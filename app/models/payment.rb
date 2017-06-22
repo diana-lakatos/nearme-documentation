@@ -217,23 +217,9 @@ class Payment < ActiveRecord::Base
   end
 
   def direct_token
-    @direct_token ||= generate_direct_token
-  end
-
-  def generate_direct_token
-    return unless payment_gateway.direct_charge?
-    return unless payment_source.token && payment_source.customer_id && merchant_id
-
-    new_direct_token = payment_gateway.create_token(
-      payment_source.token,
-      payment_source.customer_id,
-      merchant_id,
-      payment_gateway_mode
-    ).try('[]', :id)
-
-    self.direct_charge = true if new_direct_token.present?
-
-    new_direct_token
+    @direct_token ||= Payment::DirectToken.new(self)
+    self.direct_charge = @direct_token.direct_charge?
+    @direct_token.id
   end
 
   # pay_with!
@@ -546,7 +532,7 @@ class Payment < ActiveRecord::Base
   def payment_options
     options = { currency: currency, payment_gateway_mode: payment_gateway_mode }
     options.merge!(merchant_account.try(:custom_options) || {}) if merchant_account.try(:verified?)
-    options[:customer] = payment_source.customer_id if payment_source && direct_token.blank?
+    options[:customer] = payment_source.customer_id if payment_source && !direct_charge?
     options[:mns_params] = payment_response_params if payment_response_params
     options[:application_fee] = total_service_amount_cents if merchant_account.try(:verified?)
     options[:token] = express_token if express_token
@@ -561,7 +547,7 @@ class Payment < ActiveRecord::Base
   def should_create_transfer?
     # If direct_token exists that means that we want to create aggregated
     # transfer for many charges, this happens when Stripe send us webhook.
-    immediate_payout? && direct_token.blank?
+    immediate_payout? && !direct_charge?
   end
 
   def create_transfer(transfer_id = nil)
