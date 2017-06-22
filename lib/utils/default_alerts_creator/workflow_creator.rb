@@ -21,6 +21,8 @@ class Utils::DefaultAlertsCreator::WorkflowCreator
     alert.reply_to = hash.fetch(:no_reply, PlatformContext.current.theme.contact_email)
     alert.bcc_type = hash[:bcc_type]
     alert.endpoint = hash[:endpoint]
+    alert.prevent_trigger_condition = hash.fetch(:prevent_trigger_condition, '')
+    alert.enabled = hash.fetch(:enabled, true)
     alert.save!
     alert
   end

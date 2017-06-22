@@ -1,0 +1,10 @@
+{% if platform_context.use_cart? %}
+  {% assign checkout_url = 'cart_index_path' | generate_url %}
+{% else %}
+  {% assign checkout_url = 'order_checkout_path' | generate_url: order.id %}
+{% endif %}
+Hello {{ enquirer.first_name }},
+
+
+we have noticed that you didn't finish booking of '{{ listing.name }}'
+If you would like to finish the booking process please go to following URL: {{ platform_context.host | append: checkout_url }} .
