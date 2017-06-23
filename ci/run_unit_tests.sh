@@ -1,1 +1,1 @@
-RAILS_ENV=test bundle exec rake test
+bundle exec rake test
