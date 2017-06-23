@@ -14,4 +14,8 @@ class ShoppingCartForm < BaseForm
       end
     end
   end
+
+  # @!attribute orders
+  #   @return [Array<OrderForm>] array of {OrderForm} specifying the orders for the
+  #     shopping cart
 end
