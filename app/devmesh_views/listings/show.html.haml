@@ -1,7 +1,7 @@
 - if @transactable.properties.try(:visibility) == 'private' && (current_user.nil? || current_user.accessible_transactable_ids.exclude?(@transactable.id))
   - raise ActiveRecord::RecordNotFound
 
-- g = Graph.execute('transactable_cover_photos', 'transactable_id' => @transactable.id)
+- g = Graph.execute_stored_query('transactable_cover_photos', 'transactable_id' => @transactable.id)
 - cover_photo = g.dig('transactable', 'cover_photos', 0, 'url')
 
 - description_for_meta = "#{mask_phone_and_email_if_necessary(@transactable.properties.summary).try(:truncate, 130)}"
