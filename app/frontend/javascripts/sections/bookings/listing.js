@@ -340,6 +340,22 @@ BookingListing = function() {
   };
 
   /*
+   * Returns maximum quantity available for booking for selected days.
+   */
+  BookingListing.prototype.maxQuantityForSelectedDates = function() {
+    var min = this.maxQuantity;
+
+    var i, len, ref;
+    ref = this.bookedDates();
+    for (i = 0, len = ref.length; i < len; i++) {
+      if(min > this.availabilityFor(ref[i])){
+        min = this.availabilityFor(ref[i]);
+      }
+    }
+    return min;
+  };
+
+  /*
    * Set the start/end minutes for an hourly listing reservation.
    */
   BookingListing.prototype.setTimes = function(start, end) {

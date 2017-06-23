@@ -45,9 +45,13 @@ class Order::ConflictingOrders
     if @start_minute
       hourly_values = {}
       hourly_conditions = ['(reservation_periods.start_minute IS NULL AND reservation_periods.end_minute IS NULL)']
-      if @end_minute
+      if @start_minute != @end_minute
         hourly_conditions << ['NOT isempty(int4range(reservation_periods.start_minute, reservation_periods.end_minute) * int4range(:start_minute, :end_minute))']
         hourly_values = { start_minute: @start_minute, end_minute: @end_minute }
+      else
+        # This is EventBooking Reservation
+        hourly_conditions << ['(reservation_periods.start_minute = reservation_periods.end_minute AND reservation_periods.start_minute = :start_minute)']
+        hourly_values = { start_minute: @start_minute }
       end
 
       @scope = @scope.where(hourly_conditions.join(' OR '), hourly_values)

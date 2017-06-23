@@ -204,6 +204,7 @@ BookingsController = function() {
         function(_this) {
           return function(dates) {
             _this.listing.setDates(dates);
+            _this.updateQuantityOptions(_this.listing.maxQuantityForSelectedDates());
             return _this.delayedUpdateBookingStatus();
           };
         }(this)
@@ -225,6 +226,19 @@ BookingsController = function() {
         return $(this).prop('checked', true);
       });
       return this.exclusivePriceCheck.trigger('change');
+    }
+  };
+
+  /*
+  * Disable options in quantity select that are not available.
+  */
+  BookingsController.prototype.updateQuantityOptions = function(maxQuantity) {
+    var isDisabled;
+    var ref = this.quantityField.find('option');
+    for (var i = 0; i < ref.length; i++) {
+      var option = ref[i];
+      isDisabled = parseInt(option.value) > maxQuantity;
+      $(option).prop('disabled', isDisabled);
     }
   };
 
@@ -264,7 +278,6 @@ BookingsController = function() {
    * current selected dates.
    */
   BookingsController.prototype.updateBookingStatus = function() {
-    var i, len, option, ref;
     this.transactablePricing.val(this.listing.currentPricingId);
     if (this.fixedPriceSelect) {
       if (this.fixedPriceSelect.val()) {
@@ -272,15 +285,7 @@ BookingsController = function() {
         this.listing.bookedDateAvailability = (this.fixedPriceSelect.select2('data') ||
           this.fixedPriceSelectInit).availability;
         if (!this.listing.isPerUnitBooking()) {
-          ref = this.quantityField.find('option');
-          for (i = 0, len = ref.length; i < len; i++) {
-            option = ref[i];
-            if (parseInt(option.value) > this.listing.fixedAvailability()) {
-              $(option).prop('disabled', true);
-            } else {
-              $(option).prop('disabled', false);
-            }
-          }
+          this.updateQuantityOptions(this.listing.fixedAvailability());
           if (
             parseInt(this.quantityField.find('option:selected').val(), 10) >
               this.listing.fixedAvailability()
