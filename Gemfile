@@ -191,7 +191,6 @@ group :development do
   gem 'overcommit', require: false
   gem 'rubocop', require: false
   gem 'foreman', require: false
-  gem 'bootsnap'
 end
 
 group :test do
