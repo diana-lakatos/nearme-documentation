@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170620162620) do
+ActiveRecord::Schema.define(version: 20170626184922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1819,8 +1819,8 @@ ActiveRecord::Schema.define(version: 20170620162620) do
     t.string   "state",                                         limit: 255
     t.string   "type",                                          limit: 255
     t.string   "time_zone"
-    t.boolean  "use_billing",                                               default: false, null: false
-    t.string   "rejection_reason",                              limit: 255
+    t.boolean  "use_billing",                                                default: false, null: false
+    t.string   "rejection_reason",                              limit: 1500
     t.string   "completed_form_component_ids",                  limit: 255
     t.integer  "cancellation_policy_hours_for_cancellation",                default: 0
     t.integer  "cancellation_policy_penalty_percentage",                    default: 0
