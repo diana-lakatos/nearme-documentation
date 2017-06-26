@@ -45,6 +45,10 @@ class LiquidView
     "LiquidView.new(self).render(#{template.source.inspect}, local_assigns)"
   end
 
+  def self.sanitize_params(params)
+    (params.presence || {}).except(*Rails.application.config.filter_parameters)
+  end
+
   def initialize(view)
     @view = view
   end
@@ -91,11 +95,9 @@ class LiquidView
 
   def context_assigns
     assigns = @view.assigns.reject { |k, _v| PROTECTED_ASSIGNS.include?(k) }
-
     # TODO: Move to GraphQL? g.system.*
     assigns['current_year'] = Date.current.year
-    params = @view.try(:controller).try(:params) || {}
-    assigns['params'] = params.except(*Rails.application.config.filter_parameters)
+    assigns['params'] = self.class.sanitize_params(@view.try(:controller).try(:params))
     assigns['current_url'] = @view.try(:controller).try(:request).try(:original_url)
     assigns['is_xhr_request'] = @view.try(:controller).try(:request).try(:xhr?) # TODO: Deduplicate
     assigns['request_xhr'] = @view.try(:controller).try(:request).try(:xhr?)

@@ -16,7 +16,9 @@ class PagesController < ApplicationController
   private
 
   def page
-    @page ||= find_page
+    @page ||= find_page.tap do |page|
+      Authorize.new(object: page, user: current_user, params: params).call
+    end
   end
 
   def find_page

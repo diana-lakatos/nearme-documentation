@@ -27,7 +27,7 @@ class FormTagTag < Liquid::Block
     attributes_with_values = normalize_liquid_tag_attributes(@attributes, context)
     raise SyntaxError, 'Invalid syntax for Form Tag tag - must pass url' if attributes_with_values[:url].blank?
     context.stack do
-      context.registers[:action_view].form_tag(attributes_with_values[:url], attributes_with_values) do |f|
+      context.registers[:action_view].form_tag(attributes_with_values.delete(:url), attributes_with_values) do |f|
         context['form_tag_object'] = f
         @body.render(context).html_safe
       end

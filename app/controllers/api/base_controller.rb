@@ -23,6 +23,9 @@ module Api
 
     rescue_from ::DNM::Error, with: :nm_error
     rescue_from ::DNM::Unauthorized, with: :nm_unauthorized
+    rescue_from Authorize::UnauthorizedAction do |error|
+      HandleUnauthorizedError.new(controller: self, error: error).run
+    end
 
     # Return the current user
     def current_user

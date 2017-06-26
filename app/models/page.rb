@@ -32,10 +32,11 @@ class Page < ActiveRecord::Base
 
   before_save :convert_to_html, if: ->(page) { page.content.present? && (page.content_changed? || page.html_content.blank?) }
 
+  has_many :authorization_policies, through: :authorization_policy_associations
+  has_many :authorization_policy_associations, as: :authorizable, dependent: :destroy
   has_many :data_sources, as: :data_sourcable
-  has_many :page_data_source_contents, dependent: :destroy
-  has_many :page_forms
   has_many :form_configurations, through: :page_forms
+  has_many :page_data_source_contents, dependent: :destroy
 
   scope :admin_pages, -> { where(admin_page: true) }
 
