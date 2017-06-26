@@ -26,15 +26,13 @@ class PagesControllerTest < ActionController::TestCase
         end
 
         should 'raise standard exception and store it in session' do
-          assert_raises Page::NotFound do
-            get :show, slug: 'my-path-wrong'
-          end
+          get :show, slug: 'my-path-wrong'
+          assert_equal 404, response.status
         end
 
         should 'not find path even if initial slug matches' do
-          assert_raises Page::NotFound do
-            get :show, slug: 'my-path', slug2: 'wrong'
-          end
+          get :show, slug: 'my-path', slug2: 'wrong'
+          assert_equal 404, response.status
         end
 
         should 'find exact match' do
@@ -50,9 +48,8 @@ class PagesControllerTest < ActionController::TestCase
         end
 
         should 'ignore special sql characters' do
-          assert_raises Page::NotFound do
-            get :show, slug: 'my%'
-          end
+          get :show, slug: 'my%'
+          assert_equal 404, response.status
         end
       end
 
@@ -62,9 +59,8 @@ class PagesControllerTest < ActionController::TestCase
         end
 
         should 'raise standard exception and store it in session' do
-          assert_raises Page::NotFound do
-            get :show, slug: 'my-path-wrong'
-          end
+          get :show, slug: 'my-path-wrong'
+          assert_equal 404, response.status
         end
 
         should 'find path with additional slug' do
@@ -74,9 +70,8 @@ class PagesControllerTest < ActionController::TestCase
         end
 
         should 'not find path with third level slug' do
-          assert_raises Page::NotFound do
-            get :show, slug: 'my-path', slug2: 'correct', slug3: 'wrong'
-          end
+          get :show, slug: 'my-path', slug2: 'correct', slug3: 'wrong'
+          assert_equal 404, response.status
         end
 
         should 'find exact match' do
