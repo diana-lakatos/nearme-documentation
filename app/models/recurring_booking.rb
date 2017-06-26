@@ -102,21 +102,12 @@ class RecurringBooking < Order
     false
   end
 
-  # Temporary work around, change when there's time for it
   def start_on
-    Time.use_zone(time_zone) do
-      starts_at&.to_date
-    end
-  end
-
-  def next_charge_date
-    Time.use_zone(time_zone) do
-      super
-    end
+    starts_at.in_time_zone(time_zone).to_date
   end
 
   def end_on
-    ends_at.try(:to_date)
+    ends_at.in_time_zone(time_zone).to_date
   end
 
   def check_overbooking
