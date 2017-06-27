@@ -35,15 +35,64 @@ class EndpointSliderItemProvider implements SliderItemProvider {
   getPaginationSettings(
     startIndex: number = 0,
     endIndex: number = 0
-  ): { page: number, perPage: number } {
+  ): {
+    page: number,
+    objectsPerPage: number,
+    effectiveStartIndex: number,
+    effectiveEndIndex: number
+  } {
+    /*
+      Each slide can have more than object i.e. comments - there is one
+      slide with 8 comments
+    */
     let objectsPerSlide = this.loader.getObjectsCountInOneSlide();
 
+    /*
+      How many slides per page we want to show, considering there is a
+      minimum of N we need for large resolution
+    */
     let slidesPerPage = endIndex + 1 - startIndex || this.loader.getMinimumSlidesPerPageCount();
 
-    let perPaginationPage = slidesPerPage * objectsPerSlide;
-    let page = Math.ceil((startIndex * objectsPerSlide + 1) / perPaginationPage);
+    /*
+      how many objects in total there are on one page
+    */
+    let objectsPerPage = slidesPerPage * objectsPerSlide;
 
-    return { page: page, perPage: perPaginationPage };
+    /*
+      Page number for the first index. Pages start from 1
+    */
+    let page = Math.ceil((startIndex * objectsPerSlide + 1) / objectsPerPage);
+
+    /*
+      startIndex item is not necessarily the first item on that page.
+      Get effective first item index
+    */
+    let effectiveStartIndex = (page - 1) * objectsPerPage;
+
+    /*
+      endIndex is not necessarily last item on that page, calculate index of
+      last item on this page
+    */
+    let effectiveEndIndex = page * objectsPerPage - 1;
+
+    /*
+      If effectiveEndIndex is lower than the actual endIndex, then it means we
+      are between default pagination bounds, and we need to increase the scope
+      We can do that by decreasing the startIndex while keeping endIndex the
+      same, which adjusts the bounds and check again.
+
+      On startIndex == 0 we can simply fetch  page = 1, perPage = endIndex + 1
+    */
+    if (effectiveEndIndex < endIndex) {
+      return this.getPaginationSettings(startIndex - 1, endIndex);
+    }
+
+    return {
+      page: page,
+      objectsPerPage: objectsPerPage,
+      effectiveStartIndex: effectiveStartIndex,
+      effectiveEndIndex: effectiveEndIndex
+    };
   }
 
   load(startIndex: number, endIndex: number): Promise<any> {
@@ -63,16 +112,23 @@ class EndpointSliderItemProvider implements SliderItemProvider {
 
       this.buildPlaceholderElements(startIndex, endIndex);
 
-      let { page, perPage } = this.getPaginationSettings(startIndex, endIndex);
+      let { page, objectsPerPage } = this.getPaginationSettings(startIndex, endIndex);
 
-      fetch(this.loader.getEndpointUrl(page, perPage))
+      let firstReturnedSlideIndex =
+        (page - 1) * objectsPerPage / this.loader.getObjectsCountInOneSlide();
+
+      if (firstReturnedSlideIndex !== Math.floor(firstReturnedSlideIndex)) {
+        throw new Error(`Invalid item index: ${firstReturnedSlideIndex + ''}`);
+      }
+
+      fetch(this.loader.getEndpointUrl(page, objectsPerPage))
         .then((response: Response): Promise<CommentEndpointResponseType> => {
           return response.json();
         })
         .then(this.loader.parseEndpointData)
         .then((dataItems: Array<any>) => {
           dataItems.forEach((data: any, index) => {
-            let slide = this.slides[startIndex + index];
+            let slide = this.slides[firstReturnedSlideIndex + index];
             let element = slide.element;
 
             if (!slide || !(element instanceof HTMLElement)) {
@@ -101,10 +157,10 @@ class EndpointSliderItemProvider implements SliderItemProvider {
   }
 
   createTotalSlidesCountPromise(): Promise<number> {
-    let { page, perPage } = this.getPaginationSettings(0, 1);
+    let { page, objectsPerPage } = this.getPaginationSettings(0, 1);
 
     return new Promise(resolve => {
-      fetch(this.loader.getEndpointUrl(page, perPage, this.getSinceParam()))
+      fetch(this.loader.getEndpointUrl(page, objectsPerPage, this.getSinceParam()))
         .then((response: Response): Promise<any> => {
           return response.json();
         })
