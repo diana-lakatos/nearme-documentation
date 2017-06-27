@@ -173,7 +173,7 @@ SearchSearchController = (function(superClass) {
     );
     this.filters_container.on(
       'change',
-      'input[type=text], select',
+      'input[type=text]:not(.hasDatepicker), select',
       (function(_this) {
         return function() {
           return _this.fieldChanged();
