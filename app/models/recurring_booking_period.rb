@@ -81,6 +81,10 @@ class RecurringBookingPeriod < ActiveRecord::Base
     cancelled_witout_payment? || state == 'cancelled_by_enquirer_with_payment'
   end
 
+  def penalty_charge_apply?
+    false
+  end
+
   def generate_payment!
     return true if paid?
     return false if cancelled_witout_payment?
