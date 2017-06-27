@@ -62,6 +62,10 @@ module NewMarketplaceBuilder
         'custom_model_types' => {
           converter: Converters::CustomModelTypeConverter,
           parser: Parsers::YamlParser
+        },
+        'categories' => {
+          converter: Converters::CategoryConverter,
+          parser: Parsers::YamlParser
         }
       }.freeze
 

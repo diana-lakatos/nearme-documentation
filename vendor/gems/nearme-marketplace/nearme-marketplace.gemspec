@@ -7,10 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = "nearme-marketplace"
   spec.version       = NearmeMarketplace::VERSION
   spec.authors       = ["Michal Janeczek"]
-  spec.email         = ["michal.janeczek@ymail.com"]
+  spec.email         = ["michal@near-me.com"]
 
   spec.summary       = "Nearme gem for the marketplace builder."
-  spec.description   = "..."
+  spec.description   = "http://documentation.near-me.com/gs_install_marketplace_builder.html"
   spec.homepage      = "http://www.near-me.com/"
 
   if spec.respond_to?(:metadata)

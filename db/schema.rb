@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170620162620) do
+ActiveRecord::Schema.define(version: 20170627080445) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1906,8 +1906,8 @@ ActiveRecord::Schema.define(version: 20170620162620) do
     t.string   "layout_name",                           default: "application"
     t.boolean  "require_verified_user",                 default: false
     t.boolean  "admin_page",                            default: false
-    t.integer  "max_deep_level",                        default: 3
     t.integer  "format",                                default: 0
+    t.integer  "max_deep_level",                        default: 3
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
