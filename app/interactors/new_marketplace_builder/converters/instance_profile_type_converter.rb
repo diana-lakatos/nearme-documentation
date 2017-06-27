@@ -3,7 +3,7 @@ module NewMarketplaceBuilder
   module Converters
     class InstanceProfileTypeConverter < BaseConverter
       primary_key :name
-      properties :name, :profile_type
+      properties :name, :profile_type, :admin_approval
 
       convert :validation, using: CustomValidationConverter
       convert :custom_attributes, using: CustomAttributeConverter
