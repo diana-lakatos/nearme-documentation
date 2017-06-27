@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 class DateTimeHandler
-  def initialize
-  end
 
   def convert_to_datetime(object)
     case object
