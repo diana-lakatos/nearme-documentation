@@ -41,7 +41,7 @@ class OrderForm < BaseForm
         end
 
         inject_custom_attributes(configuration)
-        inject_dynamic_fields(configuration)
+        inject_dynamic_fields(configuration, whitelisted: [:state_event, :lister_confirm, :with_charge, :schedule_expiry])
       end
     end
   end
@@ -49,6 +49,14 @@ class OrderForm < BaseForm
   def validate_all_dates_available
     OverbookingValidator.new(model, self).validate
   end
+
+  # @!attribute reservations
+  #   @return [Array<ReservationForm>] reservation forms for actual reservations associated with this form
+  # @!attribute order_items
+  #   @return [Array<OrderItemForm>] array of {OrderItemForm} encapsulating the order items for this order
+  # @!attribute payment_subscription
+  #   @return [PaymentSubscriptionForm] {PaymentSubscriptionForm} encapsulating the PaymentSubscription
+  #     for this order
 
   def build_reservation_object
     rt = self.class.instance_variable_get(:'@reservation_type')

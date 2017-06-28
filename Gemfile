@@ -133,7 +133,7 @@ gem 'acts-as-taggable-on', '~> 3.4'
 
 gem 'validate_url'
 
-gem 'yard', '~> 0.9.5', require: false
+gem 'yard', '~> 0.9.9', require: false
 gem 'yard-activerecord', '~> 0.0.16', require: false
 
 gem 'jira-ruby', require: false
@@ -191,7 +191,6 @@ group :development do
   gem 'overcommit', require: false
   gem 'rubocop', require: false
   gem 'foreman', require: false
-  gem 'bootsnap'
 end
 
 group :test do

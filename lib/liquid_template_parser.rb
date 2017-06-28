@@ -7,7 +7,7 @@ class LiquidTemplateParser
     filters: [LiquidFilters],
     registers: {},
     logger: MarketplaceLogger,
-    default_data: { platform_context: PlatformContext.current.decorate },
+    default_data: { platform_context: PlatformContext.current&.decorate },
     raise_mode: ::Rails.env.development?
   )
     @filters = filters

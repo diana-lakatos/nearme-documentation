@@ -234,7 +234,14 @@ TimePicker = function() {
              */
               _this.disabledStartTimes.push(min);
               _this.disabledEndTimes.push(min + BOOKING_STEP);
-              _this.disabledEndTimes.push(min);
+              /*
+              * We want to disable minutes that are unbookable because of
+              * MinimumBookingMinutes constraint. If 11:30 is unbookable then
+              * 10:45, 11:00, 11:15 should be unbookable
+              */
+              if (!_this.listing.canBookDate(date, ref[i-1])) {
+                _this.disabledStartTimes.push(min - _this.listing.minimumBookingMinutes);
+              }
             }
           }
           _this.minutesWhichCantBeBooked = _this.closeMinute - _this.minimumBookingMinutes +

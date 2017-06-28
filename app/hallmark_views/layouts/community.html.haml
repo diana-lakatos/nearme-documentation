@@ -37,7 +37,7 @@
           .inner
             .contain
               %h1.logo
-                = link_to root_url(home: 1), accesskey: 'h' do
+                = link_to root_url, accesskey: 'h' do
                   = image_tag "hallmark/logo-white.svg", width: 109, height: 60, alt: current_instance.name
 
               = render 'shared/topnav' unless @omit_topnav

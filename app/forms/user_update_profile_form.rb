@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 class UserUpdateProfileForm < UserForm
+
+	# @!attribute password_confirmation
+	# 	@return [String] password confirmation string
   property :password_confirmation, virtual: true
   validate :password_confirmation_matches?, if: -> { password.present? }
 

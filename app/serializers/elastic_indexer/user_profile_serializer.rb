@@ -5,6 +5,7 @@ module ElasticIndexer
                :profile_type,
                :enabled,
                :availability_exceptions,
+               :onboarded_at,
                :category_ids, # legacy,
                :categories,
                :properties

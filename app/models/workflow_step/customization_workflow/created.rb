@@ -7,6 +7,8 @@ class WorkflowStep::CustomizationWorkflow::Created < WorkflowStep::Customization
       @enquirer ||= User.new(email: customization_properties[:enquirer_email],
                              name: customization_properties.try(:enquirer_name))
     end
+    @enquirer ||= @customization.customizable if @customization.customizable_type == 'User'
+    @enquirer
   end
 
   def lister

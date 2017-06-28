@@ -1,11 +1,23 @@
 # frozen_string_literal: true
 class ScheduleExceptionRuleForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
+
+  # @!attribute id
+  #   @return [Integer] numeric indentifier for the schedule exception
   property :id
+
   property :_destroy, virtual: true
 
+  # @!attribute label
+  #   @return [String] description label for the schedule exception
   property :label
+
+  # @!attribute user_duration_range_start
+  #   @return [Date] when this schedule exception rule starts
   property :user_duration_range_start
+
+  # @!attribute user_duration_range_end
+  #   @return [Date] when this schedule exception rule ends
   property :user_duration_range_end
 
   validate :end_time_after_start_time, unless: -> { model.marked_for_destruction? }
