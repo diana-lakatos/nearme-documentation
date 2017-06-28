@@ -6,7 +6,7 @@ module Graph
       possible_types [
         Types::User,
         Types::Location,
-        Types::Transactable
+        Types::Transactables::Transactable
       ]
     end
   end

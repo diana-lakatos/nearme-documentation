@@ -5,17 +5,6 @@ class TransactableForm < BaseForm
                             :subscription_booking, :purchase_action, :no_action_booking, :offer_action].freeze
   model :transactable
 
-  property :currency
-  validates :currency, presence: true, allow_nil: false, currency: true
-  property :enabled
-  property :transactable_type
-  property :action_type
-  property :company, populate_if_empty: -> { model.creator&.default_company },
-                     prepopulator: ->(_options) { self.company ||= model.creator&.default_company }
-  property :location, populate_if_empty: -> { model.company.locations.first if model.transactable_type.skip_location? }
-  property :photo_ids
-  property :_destroy, virtual: true
-
   def _destroy=(value)
     model.mark_for_destruction if checked?(value)
   end
@@ -35,10 +24,8 @@ class TransactableForm < BaseForm
     def decorate(configuration)
       configuration = configuration
       Class.new(self) do
-        if (properties_configuration = configuration.delete(:properties)).present?
-          add_validation(:properties, properties_configuration)
-          property :properties, form: PropertiesForm.decorate(properties_configuration)
-        end
+
+        inject_custom_attributes(configuration)
         if (custom_images_configuration = configuration.delete(:custom_images)).present?
           add_validation(:custom_images, custom_images_configuration)
           property :custom_images, form: CustomImagesForm.decorate(custom_images_configuration),
@@ -83,10 +70,68 @@ class TransactableForm < BaseForm
                                            model.action_type ||= send(action).model
                                          }
         end
-        inject_dynamic_fields(configuration)
+        inject_dynamic_fields(configuration, whitelisted: [:name, :description, :capacity, :confirm_reservations, :location_id, :draft, :enabled, :deposit_amount, :quantity, :currency, :last_request_photos_sent_at, :activated_at, :rank, :transactable_type_id, :transactable_type, :insurance_value, :rental_shipping_type, :dimensions_template_id, :shipping_profile_id, :tag_list, :minimum_booking_minutes, :seek_collaborators, :photo_ids, :category_ids, :attachment_ids, :waiver_agreement_template_ids, :topic_ids, :group_ids])
       end
     end
   end
+
+  # @!attribute currency
+  #   @return [String] currency used for this Transactable's pricings
+  property :currency
+  
+  # @!attribute enabled
+  #   @return [Boolean] whether the Transactable is enabled; if not enabled, it will not be visible in search
+  #     or purchasable
+  property :enabled
+
+  # @!attribute transactable_type
+  #   @return [TransactableType] TransactableType to which this Transactable belongs
+  property :transactable_type
+
+  # @!attribute action_type
+  #   @return [ActionTypeForm] {ActionTypeForm} to which this Transactable belongs
+  property :action_type
+
+  # @!attribute company
+  #   @return [CompanyForm] {CompanyForm} to which this Transactable belongs
+  property :company, populate_if_empty: -> { model.creator&.default_company },
+                     prepopulator: ->(_options) { self.company ||= model.creator&.default_company }
+
+  # @!attribute location
+  #   @return [LocationForm] the {LocationForm} for this Transactable
+  property :location, populate_if_empty: -> { model.company.locations.first if model.transactable_type.skip_location? }
+
+  # @!attribute photo_ids
+  #   @return [Array<Integer>] array of numeric identifiers for the photos associated with this Transactable
+  property :photo_ids
+
+  property :_destroy, virtual: true
+
+  # @!attribute custom_images
+  #   @return [CustomImagesForm] {CustomImagesForm} encapsulating the custom images for this Transactable
+  # @!attribute custom_attachments
+  #   @return [CustomAttachmentsForm] {CustomAttachmentsForm} encapsulating the custom attachments for this Transactable
+  # @!attribute categories
+  #   @return [CategoriesForm] {CategoriesForm} encapsulating the categories selected for this Transactable
+  # @!attribute customizations
+  #   @return [CustomizationsForm] {CustomizationsForm} encapsulating the customizations for this Transactable
+  # @!attribute time_based_booking
+  #   @return [TimeBasedBookingForm] {TimeBasedBookingForm} action for this Transactable (if available)
+  # @!attribute event_booking
+  #   @return [EventBookingForm] {EventBookingForm} action for this Transactable (if available)
+  # @!attribute subscription_booking
+  #   @return [SubscriptionBookingForm] {SubscriptionBookingForm} action for this Transactable (if available)
+  # @!attribute purchase_action
+  #   @return [PurchaseActionForm] {PurchaseActionForm} action for this Transactable (if available)
+  # @!attribute no_action_booking
+  #   @return [NoActionBookingForm] {NoActionBookingForm} action for this Transactable (if available)
+  # @!attribute offer_action
+  #   @return [OfferActionForm] {OfferActionForm} action for this Transactable (if available)
+
+  # @!attribute photos
+  #   @return [Array<PhotoForm>] array of {PhotoForm} forms encapsulating the photos for this Transactable
+
+  validates :currency, presence: true, allow_nil: false, currency: true
 
   def custom_images_open_struct!(fragment:, **_args)
     hash = {}

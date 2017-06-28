@@ -10,9 +10,10 @@ class CheckoutShoppingCart
   end
 
   def save
-    @payment_object_tree_builder = PaymentObjectTreeBuilder.new(@payment)
+    payment_object_tree_builder = PaymentObjectTreeBuilder.new(@payment)
+
     @shopping_cart.orders.each do |o|
-      @payment_object_tree_builder.build(o)
+      payment_object_tree_builder.build(o)
       raise PaymentProcessingError, "Can't process order #{o.id} (#{o.class.name})" unless o.process!
     end
     @shopping_cart.checkout_at = Time.zone.now
@@ -20,7 +21,8 @@ class CheckoutShoppingCart
   end
 
   class Payment
-    attr_accessor :credit_card_token, :payment_method_id
+    attr_accessor :credit_card_token, :payment_method_id, :with_delayed_charge
+
     def persisted?
       false
     end
@@ -40,16 +42,29 @@ class CheckoutShoppingCart
     end
 
     def build(order)
-      order.build_payment({
+      if @payment.with_delayed_charge
+        order.build_payment_subscription(
+          common_settings(order).reverse_merge(order.shared_payment_subscription_attributes)
+        )
+      else
+        order.build_payment(
+          common_settings(order).reverse_merge(order.shared_payment_attributes)
+        )
+      end
+    end
+
+    def common_settings(order)
+      {
         payer: order.user,
         company_id: order.creator.default_company.id,
         payment_method: @payment.payment_method,
         credit_card: CreditCard.new(credit_card_token: @payment.credit_card_token,
                                     payment_method: @payment.payment_method,
                                     payer: order.user)
-      }.reverse_merge(order.shared_payment_attributes))
+      }
     end
   end
+
   class PaymentProcessingError < StandardError
   end
 end

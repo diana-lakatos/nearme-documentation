@@ -5,11 +5,11 @@ var path = require('path');
 var webpack = require('webpack');
 var gutil = require('gulp-util');
 
-const appFolder = path.join(__dirname,'..','..');
+const appFolder = path.join(__dirname, '..', '..');
 
 var config = {
   appFolder: appFolder,
-    /* the base path which will be used to resolve entry points */
+  /* the base path which will be used to resolve entry points */
   context: path.join(appFolder, 'app', 'frontend', 'javascripts')
 };
 
@@ -52,12 +52,12 @@ config.resolve = {
 
 config.plugins = [
   new webpack.ProvidePlugin({
-    '$': 'jquery',
-    'jQuery': 'jquery',
+    $: 'jquery',
+    jQuery: 'jquery',
     'window.jQuery': 'jquery',
-    'Modernizr': 'modernizr',
-    '_': 'underscore',
-    'React': 'react'
+    Modernizr: 'modernizr',
+    _: 'underscore',
+    React: 'react'
   }),
   new webpack.optimize.DedupePlugin()
 ];

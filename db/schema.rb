@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170523191507) do
+ActiveRecord::Schema.define(version: 20170627142438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -259,6 +259,29 @@ ActiveRecord::Schema.define(version: 20170523191507) do
   add_index "authentications", ["instance_id", "provider", "user_id"], name: "one_provider_type_per_user_index", unique: true, using: :btree
   add_index "authentications", ["instance_id", "uid", "provider"], name: "one_active_provider_uid_pair_per_marketplace", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "authentications", ["user_id"], name: "index_authentications_on_user_id", using: :btree
+
+  create_table "authorization_policies", force: :cascade do |t|
+    t.string   "name"
+    t.string   "content"
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  add_index "authorization_policies", ["instance_id", "name"], name: "index_authorization_policies_on_instance_id_and_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
+  add_index "authorization_policies", ["instance_id"], name: "index_authorization_policies_on_instance_id", using: :btree
+
+  create_table "authorization_policy_associations", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "authorizable_id"
+    t.integer  "authorization_policy_id"
+    t.string   "authorizable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "authorization_policy_associations", ["instance_id", "authorization_policy_id", "authorizable_id", "authorizable_type"], name: "authorization_policy_association_unique_index", unique: true, using: :btree
 
   create_table "availability_rules", force: :cascade do |t|
     t.string   "target_type",  limit: 255
@@ -827,8 +850,8 @@ ActiveRecord::Schema.define(version: 20170523191507) do
     t.integer  "customizable_id"
     t.hstore   "properties"
     t.datetime "deleted_at"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "user_id"
   end
 
@@ -1685,6 +1708,7 @@ ActiveRecord::Schema.define(version: 20170523191507) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.json     "options"
   end
 
   add_index "marketplace_releases", ["instance_id"], name: "index_marketplace_releases_on_instance_id", using: :btree
@@ -1833,6 +1857,7 @@ ActiveRecord::Schema.define(version: 20170523191507) do
     t.datetime "enquirer_confirmed_at"
     t.datetime "draft_at"
     t.integer  "shopping_cart_id"
+    t.datetime "generate_order_item_at"
   end
 
   add_index "orders", ["billing_address_id"], name: "index_orders_on_billing_address_id", using: :btree
@@ -1858,16 +1883,6 @@ ActiveRecord::Schema.define(version: 20170523191507) do
 
   add_index "page_data_source_contents", ["instance_id", "page_id", "data_source_content_id", "slug"], name: "pdsc_on_foreign_keys", using: :btree
 
-  create_table "page_forms", force: :cascade do |t|
-    t.integer  "instance_id"
-    t.integer  "page_id"
-    t.integer  "form_configuration_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-  end
-
-  add_index "page_forms", ["instance_id", "page_id", "form_configuration_id"], name: "index_page_forms_on_instance_id_and_fks", unique: true, using: :btree
-
   create_table "pages", force: :cascade do |t|
     t.string   "path",                      limit: 255,                         null: false
     t.text     "content"
@@ -1891,11 +1906,12 @@ ActiveRecord::Schema.define(version: 20170523191507) do
     t.string   "layout_name",                           default: "application"
     t.boolean  "require_verified_user",                 default: false
     t.boolean  "admin_page",                            default: false
+    t.integer  "format",                                default: 0
     t.integer  "max_deep_level",                        default: 3
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
-  add_index "pages", ["slug", "theme_id"], name: "index_pages_on_slug_and_theme_id", unique: true, where: "(deleted_at IS NULL)", using: :btree
+  add_index "pages", ["slug", "theme_id", "format"], name: "index_pages_on_slug_and_theme_id_and_format", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "pages", ["theme_id"], name: "index_pages_on_theme_id", using: :btree
 
   create_table "partners", force: :cascade do |t|
@@ -2236,6 +2252,8 @@ ActiveRecord::Schema.define(version: 20170523191507) do
     t.string   "state"
     t.text     "rejection_reason"
     t.datetime "approve_at"
+    t.datetime "ends_at"
+    t.datetime "starts_at"
   end
 
   create_table "refunds", force: :cascade do |t|
@@ -2257,17 +2275,20 @@ ActiveRecord::Schema.define(version: 20170523191507) do
   create_table "reservation_periods", force: :cascade do |t|
     t.integer  "old_reservation_id"
     t.date     "date"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.datetime "deleted_at"
     t.integer  "start_minute"
     t.integer  "end_minute"
     t.integer  "instance_id"
     t.string   "description"
     t.integer  "reservation_id"
+    t.integer  "recurring_frequency"
+    t.string   "recurring_frequency_unit"
   end
 
   add_index "reservation_periods", ["old_reservation_id"], name: "index_reservation_periods_on_old_reservation_id", using: :btree
+  add_index "reservation_periods", ["recurring_frequency", "recurring_frequency_unit"], name: "reservation_periods_frequency_index", using: :btree
 
   create_table "reservation_types", force: :cascade do |t|
     t.string   "name"
@@ -3228,12 +3249,12 @@ ActiveRecord::Schema.define(version: 20170523191507) do
 
   create_table "user_message_types", force: :cascade do |t|
     t.integer  "instance_id"
-    t.string   "type"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string   "message_type"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
-  add_index "user_message_types", ["instance_id", "type"], name: "user_message_types_main_idx", using: :btree
+  add_index "user_message_types", ["instance_id", "message_type"], name: "user_message_types_main_idx", using: :btree
 
   create_table "user_messages", force: :cascade do |t|
     t.integer  "thread_owner_id"
@@ -3532,7 +3553,7 @@ ActiveRecord::Schema.define(version: 20170523191507) do
     t.integer  "api_call_count"
   end
 
-  add_index "workflow_alert_monthly_aggregated_logs", ["instance_id", "year", "month"], name: "wamal_instance_id_year_month_index", unique: true, using: :btree
+  add_index "workflow_alert_monthly_aggregated_logs", ["instance_id", "year", "month"], name: "wamal_instance_id_year_month_index", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "workflow_alert_weekly_aggregated_logs", force: :cascade do |t|
     t.integer  "instance_id"
@@ -3546,7 +3567,7 @@ ActiveRecord::Schema.define(version: 20170523191507) do
     t.integer  "api_call_count"
   end
 
-  add_index "workflow_alert_weekly_aggregated_logs", ["instance_id", "year", "week_number"], name: "wamal_instance_id_year_week_number_index", unique: true, using: :btree
+  add_index "workflow_alert_weekly_aggregated_logs", ["instance_id", "year", "week_number"], name: "wamal_instance_id_year_week_number_index", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "workflow_alerts", force: :cascade do |t|
     t.string   "name",                      limit: 255

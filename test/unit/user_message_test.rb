@@ -47,6 +47,24 @@ class UserMessageTest < ActiveSupport::TestCase
         assert @user_message.update_unread_message_counter_for(@user)
       end
     end
+
+    context 'with custom attribute' do
+      setup do
+        FactoryGirl.create(
+          :custom_attribute,
+          name: :foo, target: UserMessageType.default, attribute_type: 'string'
+        )
+      end
+
+      should 'have custom attributes' do
+        assert_equal({ 'foo' => nil }, @user_message.properties.to_h)
+
+        @user_message.properties = { foo: 'bar' }
+        @user_message.save!
+
+        assert_equal({ 'foo' => 'bar' }, @user_message.properties.to_h)
+      end
+    end
   end
 
   context 'author_has_access_to_message_context' do

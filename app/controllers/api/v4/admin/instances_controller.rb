@@ -55,6 +55,7 @@ class Api::V4::InstancesController < Api::BaseController
   end
 end
 
+# TODO: Duplicated CODE with V3
 class InstanceFactory
   attr_reader :instance, :user
 
@@ -100,6 +101,7 @@ class InstanceFactory
     end
     instance.set_context!
     instance.build_availability_templates
+    instance.marketplace_builder_settings = MarketplaceBuilderSettings.new(manifest: {}, status: :ready)
     instance.save!
 
     Utils::FormComponentsCreator.new(instance).create!
@@ -136,6 +138,7 @@ class InstanceFactory
       Utils::FormComponentsCreator.new(type).create!
     end
 
+    create_default_user_message_type
     tp = instance.transactable_types.new(name: instance.bookable_noun)
 
     tp.action_types << TransactableType::TimeBasedBooking.new(
@@ -184,5 +187,11 @@ class InstanceFactory
 
     WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, instance.id, user.id, @password)
     instance
+  end
+
+  private
+
+  def create_default_user_message_type
+    instance.user_message_types.create!(message_type: UserMessageType::DEFAULT)
   end
 end

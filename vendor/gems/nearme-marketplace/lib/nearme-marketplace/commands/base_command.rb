@@ -1,5 +1,9 @@
 module NearmeMarketplace
   class BaseCommand
+    def initialize(options)
+      @options = options
+    end
+
     def handle_server_response(response)
       if [200, 201, 302].include? response.status
         puts_status "success"

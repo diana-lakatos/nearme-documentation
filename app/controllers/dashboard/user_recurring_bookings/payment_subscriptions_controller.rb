@@ -17,7 +17,7 @@ class Dashboard::UserRecurringBookings::PaymentSubscriptionsController < Dashboa
         flash[:error] = t('flash_messages.payments.authorization_failed_anyway')
       end
       redirect_to dashboard_order_path(@recurring_booking)
-      render_redirect_url_as_json
+      render_redirect_url_as_json if request.xhr?
     else
       render :edit
     end

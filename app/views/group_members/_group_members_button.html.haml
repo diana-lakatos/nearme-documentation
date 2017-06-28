@@ -1,4 +1,4 @@
-- options ||= { class: 'button-a small', 'data-join-group' => group.id, 'data-current-user' => current_user }
+- options ||= { class: 'button-a small', 'data-join-group' => group.id, 'data-current-user' => current_user, 'data-disable-with' => t('general.processing') }
 - if current_user.nil?
   - path = '/users/sign_in?wizard=onboarding'
 - else
@@ -12,6 +12,6 @@
   %span.button-a.small.gray
     = t('group.request_sent')
 - elsif membership.waiting_for_user_response?
-  = link_to t('group.accept'), [:accept, group, membership], class: 'button-a small', method: :patch, remote: true
+  = link_to t('group.accept'), [:accept, group, membership], class: 'button-a small', method: :patch, remote: true, 'data-disable-with' => t('general.processing')
 - elsif membership.approved? && !group.is_owner?(current_user)
-  = link_to t('group.leave'), [group, membership], class: 'button-a small', method: :delete, remote: true
+  = link_to t('group.leave'), [group, membership], class: 'button-a small', method: :delete, remote: true, 'data-disable-with' => t('general.processing')

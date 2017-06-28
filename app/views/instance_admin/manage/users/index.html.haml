@@ -1,25 +1,11 @@
-- users_pending_approval = UserProfile.includes(:user).joins(:instance_profile_type).where(instance_profile_types: { admin_approval: true }, approved: false).where(users: { deleted_at: nil }).order('user_profiles.created_at DESC')
-- if users_pending_approval.any?
-  .content-container
-    %h4 Users pending approval
-    .row
-      .table-container.col-xs-12
-        %table.table
-          %tr
-            %th
-              = t('instance_admin.manage.users.name')
-            %th
-              = t('instance_admin.manage.users.email')
-            %th
-              = t('instance_admin.manage.users.signed_up')
-            %th
-            %th
-            %th
-          - users_pending_approval.find_each do |user_profile|
-            - next unless user_profile.user
-            = render 'index_row', :resource => user_profile.user
-
 .content-container.reports
+  .sub-header-nav
+    %ul
+      %li
+        = link_to t('instance_admin.manage.users.manage_users'), instance_admin_manage_users_path, class: "active"
+      %li
+        = link_to t('instance_admin.manage.users.users_pending_approval'), pending_approvals_instance_admin_manage_users_path
+
   %h4= t('instance_admin.manage.users.manage_users')
 
   .row
@@ -28,7 +14,7 @@
         .filters
           = filter_searchable_dates label: t('instance_admin.manage.admin_searchable.user.search_types.date_created'), param_name: 'date'
 
-          = filter_dropdown param_name: :state, label: t('instance_admin.manage.admin_searchable.user.search_types.account_standing'), allow_blank: true, blank_label: t('instance_admin.manage.admin_searchable.title_all'), all_values: User::ACCOUNT_STANDINGS.each_with_object({}) { |val, obj| obj[val.to_s] = val.capitalize }
+          = filter_dropdown param_name: :state, label: t('instance_admin.manage.admin_searchable.user.search_types.account_standing'), allow_blank: false, all_values: User::ACCOUNT_STANDINGS.each_with_object({}) { |val, obj| obj[val.to_s] = val.capitalize }
 
           = filter_dropdown param_name: :profile_type, label: t('instance_admin.manage.admin_searchable.user.search_types.profile_type'), allow_blank: true, blank_label: t('instance_admin.manage.admin_searchable.title_all'), all_values: [:buyer, :seller].each_with_object({}) { |val, obj| obj[val.to_s] = t("instance_admin.manage.admin_searchable.user.profile_types.#{val}") }
 

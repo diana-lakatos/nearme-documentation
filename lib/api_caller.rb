@@ -27,7 +27,7 @@ class ApiCaller
 
       result = true
     rescue => e
-      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::API_CALL_ERROR, "Failed to trigger api call for #{@step.class.name}, endpoint: #{parsed_endpoint}, body: #{parsed_body.inspect}, headers: #{parsed_headers}. Error: #{e}")
+      MarketplaceLogger.error(MarketplaceErrorLogger::BaseLogger::API_CALL_ERROR, "Failed to trigger api call for #{@step.class.name}, endpoint: #{parsed_endpoint}, body: #{parsed_body.inspect}, headers: #{parsed_headers}. Error: #{e}")
     end
     WorkflowAlertLogger.new(@workflow_alert).log!
     result

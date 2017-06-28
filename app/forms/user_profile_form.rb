@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 class UserProfileForm < BaseForm
-  property :id
   class << self
     def decorate(configuration)
       Class.new(self) do
-        if (properties_configuration = configuration.delete(:properties)).present?
-          add_validation(:properties, properties_configuration)
-          property :properties, form: PropertiesForm.decorate(properties_configuration)
-        end
+        inject_custom_attributes(configuration)
         if (custom_images_configuration = configuration.delete(:custom_images)).present?
           add_validation(:custom_images, custom_images_configuration)
           property :custom_images, form: CustomImagesForm.decorate(custom_images_configuration),
@@ -38,10 +34,27 @@ class UserProfileForm < BaseForm
                                            populate_if_empty: AvailabilityTemplate,
                                            prepopulator: ->(*) { self.availability_template ||= AvailabilityTemplate.new }
         end
-        inject_dynamic_fields(configuration)
+        inject_dynamic_fields(configuration, whitelisted: [:instance_profile_type_id, :profile_type, :enabled, :availability_template_id])
       end
     end
   end
+
+  # @!attribute id
+  #   @return [Integer] numeric identifier for the UserProfile object
+  property :id
+
+  # @!attribute custom_images
+  #   @return [CustomImagesForm] {CustomImagesForm} form encapsulating the custom images for this profile
+  # @!attribute custom_attachments
+  #   @return [CustomAttachmentsForm] {CustomAttachmentsForm} form encapsulating the custom attachments
+  #     for this profile
+  # @!attribute categories
+  #   @return [CategoriesForm] {CategoriesForm} form encapsulating the categories chosen for this profile
+  # @!attribute customizations
+  #   @return [CustomizationsForm] {CustomizationsForm} form encapsulating the customizations for the profile
+  # @!attribute availability_template
+  #   @return [AvailabilityTemplateForm] {AvailabilityTemplateForm} form encapsulating the availability
+  #     selected for this user profile
 
   def custom_images_open_struct!(fragment:, **_args)
     hash = {}

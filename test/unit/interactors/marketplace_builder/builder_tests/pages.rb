@@ -7,8 +7,9 @@ module MarketplaceBuilder
 
       def execute!
         page = @instance.pages.last
-        assert_equal page.content.strip, '<h1>Hello from page!</h1>'
-        assert_equal page.slug, 'about-overview'
+        assert_equal '<h1>Hello from page!</h1>', page.content.strip
+        assert_equal 'about-overview', page.slug
+        assert_equal %w(page_policy), page.authorization_policies.pluck(:name)
       end
     end
   end

@@ -10,7 +10,7 @@
 
 %div.schedule-exception-rules-container
   = f.simple_fields_for :schedule_exception_rules do |schedule_exception_rule_form|
-    - Time.use_zone((f.object.try(:parent) || f.object.try(:scheduable).try(:transactable)).try(:timezone) || current_instance.time_zone) do
+    - Time.use_zone((f.object.try(:parent) || f.object.try(:scheduable).try(:transactable)).try(:time_zone) || current_instance.time_zone) do
       = render 'schedules/schedule_exception_rule_fields', f: schedule_exception_rule_form
   .add-link
     = link_to_add_association f, :schedule_exception_rules, force_non_association_create: true, partial: 'schedules/schedule_exception_rule_fields', class: 'btn btn-primary btn-sm', data: { association_insertion_method: :before } do

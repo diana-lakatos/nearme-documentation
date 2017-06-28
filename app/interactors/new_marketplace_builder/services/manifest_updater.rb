@@ -22,6 +22,10 @@ module NewMarketplaceBuilder
         manifest.reject! {|path, _| used_paths.exclude? path }
       end
 
+      def clear_manifest
+        @manifest = {}
+      end
+
       private
 
       def manifest

@@ -1,24 +1,21 @@
 # frozen_string_literal: true
 module Graph
   module Resolvers
-    class Transactables
+    class Transactables < ActiveRecordCollection
       def call(_, arguments, ctx)
         @variables = ctx.query.variables
+        @arguments = arguments
         decorate(resolve_by(arguments))
       end
 
       def self.decorate(transactable)
-        TransactableDrop.new(transactable.decorate)
-      end
-
-      def resolve_by(arguments)
-        arguments.keys.reduce(main_scope) do |relation, argument_key|
-          public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])
-        end
+        ::TransactableDrop.new(transactable.decorate)
       end
 
       def decorate(relation)
-        relation.map { |transactable| self.class.decorate(transactable) }
+        WillPaginate::Collection.create(@arguments[:paginate][:page], @arguments[:paginate][:per_page], relation.count) do |pager|
+          pager.replace(relation.map { |transactable| self.class.decorate(transactable) })
+        end
       end
 
       def resolve_by_ids(relation, ids)
@@ -40,16 +37,15 @@ module Graph
         end
       end
 
-      def resolve_by_take(relation, number)
-        relation.take(number)
-      end
-
       private
 
       def main_scope
-        return ::Transactable.all unless @variables['follower_id']
-        ::Transactable.all
-                      .merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::Transactable))
+        all = ::Transactable.all.order(created_at: :desc)
+        if @variables['follower_id']
+          all.merge(ActivityFeedSubscription.with_user_id_as_follower(@variables['follower_id'], ::Transactable))
+        else
+          all
+        end
       end
 
       class CustomAttributePhotos < Resolvers::CustomAttributePhotosBase

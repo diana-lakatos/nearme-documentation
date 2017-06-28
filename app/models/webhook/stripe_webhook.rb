@@ -19,9 +19,9 @@ class Webhook::StripeWebhook < Webhook
   private
 
   def can_process_event?
+    return process_error('Mode mismatch') if payment_gateway_mode != payment_gateway.mode
     return process_error('Webhook not found') if event.blank?
     return process_error("Webhook type #{event.type} not allowed") unless event_known?
-    return process_error('Mode mismatch') if payment_gateway_mode != payment_gateway.mode
 
     increment!(:retry_count)
 

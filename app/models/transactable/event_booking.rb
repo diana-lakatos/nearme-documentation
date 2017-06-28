@@ -4,7 +4,7 @@ class Transactable::EventBooking < Transactable::ActionType
 
   accepts_nested_attributes_for :schedule, allow_destroy: true
 
-  before_validation :pass_timezone_to_schedule
+  before_validation :pass_time_zone_to_schedule
 
   validates :schedule, presence: true
   validates :pricings, presence: true, if: :enabled?
@@ -24,9 +24,9 @@ class Transactable::EventBooking < Transactable::ActionType
   def open_on?(date, start_min = nil, _end_min = nil)
     hour = start_min / 60
     minute = start_min - (60 * hour)
-    Time.use_zone(timezone) do
+    Time.use_zone(time_zone) do
       t = Time.zone.parse("#{date} #{hour}:#{minute}")
-      return false if schedule.schedule_exception_ranges(t).any? { |range| range.cover?(occurrence) }
+      return false if schedule.schedule_exception_ranges(t).any? { |range| range.cover?(t) }
       schedule.schedule.occurs_between?(t - 1.second, t) || schedule.schedule.occurs_on?(t)
     end
   end
@@ -34,13 +34,13 @@ class Transactable::EventBooking < Transactable::ActionType
   def next_available_occurrences(number_of_occurrences = 10, params = {})
     return [] if schedule.nil?
     occurrences = []
-    Time.use_zone(timezone) do
+    Time.use_zone(time_zone) do
       if params[:page].to_i <= 1
         @start_date = params[:start_date].try(:to_date).try(:beginning_of_day)
       else
         @start_date = Time.at(params[:last_occurrence].to_i)
       end
-      time_now = Time.now.in_time_zone(timezone)
+      time_now = Time.now.in_time_zone(time_zone)
       @start_date = time_now if @start_date.nil? || @start_date < time_now
       end_date = params[:end_date].try(:to_date).try(:end_of_day)
       exception_ranges = schedule.schedule_exception_ranges(@start_date)
@@ -49,7 +49,7 @@ class Transactable::EventBooking < Transactable::ActionType
         start_minute = occurrence.min + (60 * occurrence.hour)
         availability = quantity.to_i - desks_booked_on(occurrence.to_datetime, start_minute, start_minute)
         if availability > 0
-          occurrences << { id: occurrence.to_i, text: I18n.l(occurrence.in_time_zone(timezone), format: :long), availability: availability.to_i, occures_at: occurrence }
+          occurrences << { id: occurrence.to_i, text: I18n.l(occurrence.in_time_zone(time_zone), format: :long), availability: availability.to_i, occures_at: occurrence }
         end
         break if occurrences.size == number_of_occurrences
       end
@@ -73,7 +73,7 @@ class Transactable::EventBooking < Transactable::ActionType
 
   private
 
-  def pass_timezone_to_schedule
-    schedule.try(:timezone=, transactable.timezone)
+  def pass_time_zone_to_schedule
+    schedule.try(:time_zone=, transactable.time_zone)
   end
 end

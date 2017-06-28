@@ -5,13 +5,14 @@ module Graph
     User = GraphQL::ObjectType.define do
       name 'User'
       description 'A user'
+      implements GraphQL::Relay::Node.interface
 
       global_id_field :id
 
-      field :id, !types.Int
+      field :id, !types.ID
       field :is_followed, !types.Boolean do
         argument :follower_id, types.ID
-        resolve ->(user, arg, _) { ActivityFeedSubscription.followed_by_user?(user.id, ::User, arg['follower_id']) }
+        resolve ->(user, arg, _) { ::ActivityFeedSubscription.followed_by_user?(user.id, ::User, arg['follower_id']) }
       end
       field :name, types.String
       field :first_name, types.String
@@ -23,8 +24,8 @@ module Graph
             types.String,
             'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
         argument :name, !types.String
-        deprecation_reason 'Fetch custom_atrribute directly from profile'
-        resolve ->(obj, arg, _ctx) { Resolvers::User.find_model(obj).properties[arg[:name]] }
+        deprecation_reason 'Fetch custom_attribute directly from profile'
+        resolve ->(obj, arg, _ctx) { Graph::Resolvers::User.find_model(obj).properties[arg[:name]] }
       end
 
       field :profile, Types::Users::Profile do
@@ -101,7 +102,7 @@ module Graph
               )
             end
 
-      field :transactables, types[Types::Transactable] do
+      field :transactables, types[Types::Transactables::Transactable] do
         resolve ->(obj, _arg, _) { ::Transactable.where(creator_id: obj.id) }
       end
 

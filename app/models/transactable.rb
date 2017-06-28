@@ -26,7 +26,7 @@ class Transactable < ActiveRecord::Base
 
   DEFAULT_ATTRIBUTES = %w(name description capacity).freeze
 
-  SORT_OPTIONS_MAP = { all: 'All', featured: 'Featured', most_recent: 'Most Recent', most_popular: 'Most Popular', collaborators: 'Collaborators' }.freeze
+  SORT_OPTIONS_MAP = { all: 'All', featured: 'Featured', most_recent: 'Most Recent', most_popular: 'Most Popular', near_me: 'Near Me', collaborators: 'Collaborators' }.freeze
   SORT_OPTIONS = SORT_OPTIONS_MAP.values.freeze
 
   DATE_VALUES = %w(today yesterday week_ago month_ago 3_months_ago 6_months_ago).freeze
@@ -103,16 +103,7 @@ class Transactable < ActiveRecord::Base
   has_many :transactable_collaborators, dependent: :destroy
   has_many :group_transactables, dependent: :destroy
   has_many :groups, through: :group_transactables
-
-  has_many :activity_feed_events, as: :followed, dependent: :destroy
-  has_many :activity_feed_subscriptions, as: :followed, dependent: :destroy
-  has_many :comments, as: :commentable, dependent: :destroy
-  has_many :feed_followers, through: :activity_feed_subscriptions, source: :follower
   has_many :links, dependent: :destroy, as: :linkable
-  has_many :transactable_topics, dependent: :destroy
-  has_many :topics, through: :transactable_topics
-  has_many :group_transactables, dependent: :destroy
-  has_many :groups, through: :group_transactables
 
   accepts_nested_attributes_for :additional_charge_types, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :approval_requests
@@ -251,6 +242,7 @@ class Transactable < ActiveRecord::Base
   scope :feed_not_followed_by_user, lambda { |current_user|
     where.not(id: current_user.feed_followed_transactables.pluck(:id))
   }
+  scope :confidential, -> { joins(:groups).merge(::Group.confidential) }
 
   # == Validations
   validates_with CustomValidators
@@ -348,10 +340,10 @@ class Transactable < ActiveRecord::Base
     self.available_actions = action_type.pricings.pluck(:unit).uniq if action_type
   end
 
-  def availability_for(date, start_min = nil, end_min = nil)
+  def availability_for(date, start_min = nil, end_min = nil, recurring = false)
     if open_on?(date, start_min, end_min)
       # Return the number of free desks
-      [quantity - desks_booked_on(date, start_min, end_min), 0].max
+      [quantity - desks_booked_on(date, start_min, end_min, recurring), 0].max
     else
       0
     end
@@ -366,23 +358,14 @@ class Transactable < ActiveRecord::Base
     super.presence || creator
   end
 
-  def desks_booked_on(date, start_minute = nil, end_minute = nil)
-    scope = orders.confirmed.joins(:periods).where(reservation_periods: { date: date })
-
-    if start_minute
-      hourly_conditions = []
-      hourly_values = []
-      hourly_conditions << '(reservation_periods.start_minute IS NULL AND reservation_periods.end_minute IS NULL)'
-
-      [start_minute, end_minute].compact.each do |minute|
-        hourly_conditions << '(? BETWEEN reservation_periods.start_minute AND reservation_periods.end_minute)'
-        hourly_values << minute
-      end
-
-      scope = scope.where(hourly_conditions.join(' OR '), *hourly_values)
-    end
-
-    scope.sum(:quantity)
+  def desks_booked_on(date, start_minute = nil, end_minute = nil, recurring = false)
+    Order::ConflictingOrders.new(
+      dates: Array.wrap(date),
+      start_minute: start_minute,
+      end_minute: end_minute,
+      is_recurring: recurring,
+      transactable: self
+    ).get_scope.sum(:quantity)
   end
 
   def all_prices
@@ -457,9 +440,9 @@ class Transactable < ActiveRecord::Base
   end
 
   # TODO: price per unit
-  def available_on?(date, quantity = 1, start_min = nil, end_min = nil)
+  def available_on?(date, quantity = 1, start_min = nil, end_min = nil, recurring = false)
     quantity = 1 if transactable_type.action_price_per_unit?
-    availability_for(date, start_min, end_min) >= quantity
+    availability_for(date, start_min, end_min, recurring) >= quantity
   end
 
   def all_additional_charge_types_ids
@@ -608,19 +591,20 @@ class Transactable < ActiveRecord::Base
   end
 
   def zone_utc_offset
-    Time.now.in_time_zone(timezone).utc_offset / 3600
+    Time.now.in_time_zone(time_zone).utc_offset / 3600
   end
 
-  def timezone
-    case transactable_type.timezone_rule
-    when 'location' then location.try(:time_zone)
-    when 'seller' then (creator || location.try(:creator) || company.try(:creator) || location.try(:company).try(:creator)).try(:time_zone)
-    when 'instance' then instance.time_zone
-    end.presence || Time.zone.name
+  def time_zone(format: :rails)
+    case format
+    when :rails then rails_time_zone
+    when :standard then ActiveSupport::TimeZone.zones_map[rails_time_zone].tzinfo.name
+    else
+      raise "Unknown format"
+    end
   end
 
   def timezone_info
-    I18n.t('activerecord.attributes.transactable.timezone_info', timezone: timezone) unless Time.zone.name == timezone
+    I18n.t('activerecord.attributes.transactable.timezone_info', timezone: time_zone) unless Time.zone.name == time_zone
   end
 
   def get_error_messages
@@ -734,6 +718,14 @@ class Transactable < ActiveRecord::Base
   end
 
   private
+
+  def rails_time_zone
+    case transactable_type.timezone_rule
+    when 'location' then location.try(:time_zone)
+    when 'seller' then (creator || location.try(:creator) || company.try(:creator) || location.try(:company).try(:creator)).try(:time_zone)
+    when 'instance' then instance.time_zone
+    end.presence || Time.zone.name
+  end
 
   def set_seek_collaborators
     self.seek_collaborators = true

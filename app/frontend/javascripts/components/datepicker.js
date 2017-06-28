@@ -16,7 +16,7 @@ DatepickerView = require('./datepicker/view');
  * )
  *
  */
-Datepicker = function() {
+Datepicker = (function() {
   asEvented.call(Datepicker.prototype);
 
   Datepicker.prototype.defaultOptions = {
@@ -34,8 +34,21 @@ Datepicker = function() {
   function Datepicker(options) {
     this.options = options != null ? options : {};
     this.options = $.extend({}, this.defaultOptions, this.options);
-    this.model = this.options.model || new this.options.modelClass || DatepickerModel(this.options);
-    this.view = this.options.view || new this.options.viewClass || DatepickerView(this.options);
+    if (this.options.model) {
+      this.model = this.options.model;
+    } else if (this.options.modelClass) {
+      this.model = new this.options.modelClass(this.options);
+    } else {
+      this.model = new DatepickerModel(this.options);
+    }
+
+    if (this.options.view) {
+      this.view = this.options.view;
+    } else if (this.options.viewClass) {
+      this.view = new this.options.modelClass(this.options);
+    } else {
+      this.view = new DatepickerView(this.options);
+    }
     this.view.setModel(this.model);
     this.view.appendTo($(this.options.appendTo));
     this.bindViewEvents();
@@ -49,11 +62,11 @@ Datepicker = function() {
       }
       return $(this.options.trigger).on(
         'click',
-        function(_this) {
+        (function(_this) {
           return function() {
             return _this.view.toggle();
           };
-        }(this)
+        })(this)
       );
     }
   };
@@ -61,52 +74,52 @@ Datepicker = function() {
   Datepicker.prototype.bindViewEvents = function() {
     this.view.bind(
       'prevClicked',
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.model.advanceMonth(-1);
         };
-      }(this)
+      })(this)
     );
     this.view.bind(
       'nextClicked',
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.model.advanceMonth(1);
         };
-      }(this)
+      })(this)
     );
     this.view.bind(
       'dateClicked',
-      function(_this) {
+      (function(_this) {
         return function(date) {
           _this.model.toggleDate(date);
           return _this.trigger('datesChanged', _this.model.getDates());
         };
-      }(this)
+      })(this)
     );
     this.model.bind(
       'dateAdded',
-      function(_this) {
+      (function(_this) {
         return function(date) {
           return _this.view.dateAdded(date);
         };
-      }(this)
+      })(this)
     );
     this.model.bind(
       'dateRemoved',
-      function(_this) {
+      (function(_this) {
         return function(date) {
           return _this.view.dateRemoved(date);
         };
-      }(this)
+      })(this)
     );
     return this.model.bind(
       'monthChanged',
-      function(_this) {
+      (function(_this) {
         return function(newMonth) {
           return _this.view.renderMonth(newMonth);
         };
-      }(this)
+      })(this)
     );
   };
 
@@ -147,6 +160,6 @@ Datepicker = function() {
   };
 
   return Datepicker;
-}();
+})();
 
 module.exports = Datepicker;

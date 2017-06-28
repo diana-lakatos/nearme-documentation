@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module MarketplaceBuilder
   module BuilderTests
     class ShouldImportFormConfiguration < ActiveSupport::TestCase
@@ -7,12 +8,13 @@ module MarketplaceBuilder
 
       def execute!
         form_configuration = @instance.form_configurations.first
-
-        assert_equal form_configuration.name, 'refer_a_friend'
-        assert_equal form_configuration.base_form, 'CustomizationForm'
-        assert_equal form_configuration.workflow_steps.first.name, 'test step'
-        assert_equal form_configuration.configuration, {"properties"=>{"enquirer_name"=>{"validation"=>{"presence"=>true}}}}
+        assert_equal 'refer_a_friend', form_configuration.name
+        assert_equal 'CustomizationForm', form_configuration.base_form
+        assert_equal ['test step'], form_configuration.workflow_steps.pluck(:name)
+        assert_equal({ 'properties' => { 'enquirer_name' => { 'validation' => { 'presence' => true } } } },
+                     form_configuration.configuration)
         assert form_configuration.liquid_body.include?('<h1>Refer a Friend</h1>')
+        assert_equal %w(form_policy), form_configuration.authorization_policies.pluck(:name)
       end
     end
   end

@@ -4,8 +4,9 @@ module Graph
     module ActivityFeed
       Comment = GraphQL::ObjectType.define do
         interfaces [ActivityFeed::EventSourceInterface]
+        implements GraphQL::Relay::Node.interface
         name 'ActivityFeedComment'
-        field :id, !types.Int
+        field :id, !types.ID
         field :body, types.String
         field :created_at, types.String
         field :updated_at, types.String

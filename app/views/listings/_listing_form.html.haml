@@ -4,6 +4,12 @@
 - if only_inputs.empty? || only_inputs.include?(:approval_requests)
   = render 'dashboard/shared/fields/approval_requests', f: f
 
+- if only_inputs.empty? || only_inputs.include?(:additional_charges)
+  = render "dashboard/company/transactables/form_fields/additional_charges", f: f
+
+- if only_inputs.empty? || only_inputs.include?(:documents_upload)
+  = render "dashboard/company/transactables/form_fields/documents_upload", f: f
+
 - if only_inputs.empty? || only_inputs.include?(:transactable_type_id)
   = f.hidden_field :transactable_type_id, value: @transactable_type.id
 
@@ -51,9 +57,6 @@
 
 - if only_inputs.empty? || @transactable_type.custom_model_types.map { |c| "Custom Model - #{c.name}".to_sym }.include?(only_inputs.first)
   = render "dashboard/company/transactables/form_fields/custom_model", f: f, field: only_inputs.first.to_s
-
-- if only_inputs.empty? || only_inputs.include?(:minimum_booking_minutes)
-  = f.input :minimum_booking_minutes, required: f.object.required?(:minimum_booking_minutes)
 
 - if only_inputs.empty? || only_inputs.include?(:seller_attachments)
   = render "dashboard/company/transactables/form_fields/seller_attachments", f: f

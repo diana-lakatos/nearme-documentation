@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Transactable::ActionType < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
@@ -12,7 +13,7 @@ class Transactable::ActionType < ActiveRecord::Base
 
   validates :transactable_type_action_type, presence: true
 
-  delegate :timezone, :desks_booked_on, :quantity, to: :transactable
+  delegate :time_zone, :desks_booked_on, :quantity, to: :transactable
   delegate :favourable_pricing_rate, :service_fee_guest_percent,
            :service_fee_host_percent, :available_units, :allow_custom_pricings?,
            :allow_no_action?, :allow_action_rfq?, :action_continuous_dates_booking,
@@ -85,7 +86,7 @@ class Transactable::ActionType < ActiveRecord::Base
   end
 
   def open_now?
-    now = Time.now.in_time_zone(timezone)
+    now = Time.now.in_time_zone(time_zone)
     start_min = now.hour * 60 + now.min
     open_on?(now.to_date, start_min, start_min)
   end

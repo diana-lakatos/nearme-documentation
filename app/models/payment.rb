@@ -370,7 +370,7 @@ class Payment < ActiveRecord::Base
   def fetch
     return unless payment_gateway.gateway.respond_to?(:find_payment)
 
-    payment_gateway.find_payment(external_id, merchant_account.try(:external_id))
+    payment_gateway.find_payment(external_id, direct_charge? ? merchant_account.try(:external_id) : nil )
   end
 
   def can_activate?
@@ -545,9 +545,8 @@ class Payment < ActiveRecord::Base
 
   def payment_options
     options = { currency: currency, payment_gateway_mode: payment_gateway_mode }
-
     options.merge!(merchant_account.try(:custom_options) || {}) if merchant_account.try(:verified?)
-    options[:customer] = payment_source.customer_id if direct_token.blank?
+    options[:customer] = payment_source.customer_id if payment_source && direct_token.blank?
     options[:mns_params] = payment_response_params if payment_response_params
     options[:application_fee] = total_service_amount_cents if merchant_account.try(:verified?)
     options[:token] = express_token if express_token

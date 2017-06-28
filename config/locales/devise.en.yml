@@ -20,7 +20,7 @@ en:
       unlock_instructions:
         subject: 'Unlock Instructions'
     passwords:
-      send_instructions: 'You will receive an email with instructions on how to reset your password in a few minutes.'
+      send_instructions: 'If the email address is in our system, you will receive an email with instructions on how to reset your password in a few minutes.'
       updated: 'Your password was changed successfully. You are now signed in.'
     registrations:
       destroyed: 'Bye! Your account was successfully cancelled. We hope to see you again soon.'

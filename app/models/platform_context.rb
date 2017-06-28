@@ -29,7 +29,7 @@ class PlatformContext
 
   @@instance_view_cache_key = {}
 
-  attr_reader :domain, :platform_context_detail, :instance, :theme, :custom_theme, :domain,
+  attr_reader :domain, :platform_context_detail, :instance, :theme, :custom_theme,
               :white_label_company, :partner, :request_host, :blog_instance
 
   class_attribute :root_secured

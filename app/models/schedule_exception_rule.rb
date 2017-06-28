@@ -6,7 +6,7 @@ class ScheduleExceptionRule < ActiveRecord::Base
   belongs_to :schedule, touch: true
   belongs_to :availability_template, touch: true
 
-  attr_accessor :user_duration_range_start, :user_duration_range_end
+  attr_reader :user_duration_range_start, :user_duration_range_end
 
   [:user_duration_range_start, :user_duration_range_end].each do |method|
     define_method(method) do
@@ -57,6 +57,16 @@ class ScheduleExceptionRule < ActiveRecord::Base
 
   def schedulable
     availability_template || schedule
+  end
+
+  def user_duration_range_start=(value)
+    duration_range_start_will_change!
+    @user_duration_range_start = value
+  end
+
+  def user_duration_range_end=(value)
+    duration_range_end_will_change!
+    @user_duration_range_end = value
   end
 
   protected

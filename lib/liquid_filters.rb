@@ -52,6 +52,20 @@ module LiquidFilters
     )
   end
 
+  # @return Boolean returns true if provided user satisfies policy with specified name
+  #   two arguments are equal, nil otherwise
+  # @param user [UserDrop] user object - in most scenarios it will be current_user
+  # @param object_name [String] name  - name of the form_cofiguration or page slug to which
+  #   we want to check access
+  # @param object_type [String] name string - by default form_configuration, can also be page
+  def authorized?(user, object_name, object_type = 'form_configuration', _params = {})
+    AuthorizeAction.new(object: AuthorizationPolicy::AuthorizableFetcher.new(object_name: object_name,
+                                                                             object_type: object_type).fetch,
+                        user: user.source).authorize
+  rescue AuthorizeAction::UnauthorizedAction
+    false
+  end
+
   # @return [String, nil] returns class_name (by default 'active') if the first
   #   two arguments are equal, nil otherwise
   # @param arg1 [String] any string - will be used for comparison with the other string
@@ -69,8 +83,8 @@ module LiquidFilters
 
   # @return [Array] result contains all elements from both arrays.
   # @param array [Array] base array
-  # @param el [Object] we will transform object into array and add it to the other. Method
-  # is called soft, because it will not crash when nil is provided as argument
+  # @param obj [Object] we will transform object into array and add it to the other. Method
+  #   is called soft, because it will not crash when nil is provided as argument
   def soft_concat(array, obj)
     Array(array) + Array(obj)
   end
@@ -368,11 +382,11 @@ module LiquidFilters
   end
 
   # @return [String] time in string in HH:MM format 24h clock
-  # @param string [Int] number of minutes
+  # @param minutes [Integer] number of minutes
   def number_of_minutes_to_time(minutes)
     minutes = minutes.to_i % 1440 # in case we made overnight booking
     hours = (minutes.to_f / 60).floor
-    minutes = minutes - (hours * 60)
+    minutes -= (hours * 60)
     "#{'%.2d' % hours}:#{'%.2d' % minutes}"
   end
 
@@ -461,9 +475,14 @@ module LiquidFilters
   # @return [String] if the given url is supported, an HTML formatted string containing a video player (inside an iframe)
   #   which will play the video at the given url; otherwise an empty string is returned
   # @param url [String] url to a video on the internet
-  def videoify(url = '')
+  def videoify(url = '', options = {})
     return url if url.blank?
-    Videos::VideoEmbedder.new(url).html.html_safe
+
+    options.symbolize_keys!
+    embedder_options = {}
+    embedder_options = { iframe_attributes: options } if options.present?
+
+    Videos::VideoEmbedder.new(url, embedder_options).html.html_safe
   end
 
   # @return [String] JSON formatted string containing a representation of object
@@ -554,14 +573,23 @@ module LiquidFilters
     generate_url url_name, args.merge(TemporaryTokenAuthenticatable::PARAMETER_NAME => user.source.temporary_token)
   end
 
+  # @return [String] returns a url for the given page slug, which includes user temporary token;
+  # e.g: '/account' | url_for_with_token: current_user generates https://example.com/account?temporary_token=TOKEN_HERE
+  def url_for_path_with_token(path, user)
+    'https://' +
+      PlatformContext.current.decorate.host +
+      path +
+      "?#{TemporaryTokenAuthenticatable::PARAMETER_NAME}=#{user.source.temporary_token}"
+  end
+
   # @return [Time] a time object created from parsing the string representation of time given as input
   # @param time [String] a string representation of time for example 'today', '3 days ago' etc.
-  def parse_time(time, format=nil)
+  def parse_time(time, format = nil)
     parsed_time = case time
-    when /\A\d+\z/, Integer
-      Time.zone.at(time.to_i)
-    when String
-      Chronic.parse(time) || time&.to_time(:local)
+                  when /\A\d+\z/, Integer
+                    Time.zone.at(time.to_i)
+                  when String
+                    Chronic.parse(time) || time&.to_time(:local)
     end
 
     format.blank? ? parsed_time : parsed_time.strftime(format.to_s)
@@ -761,7 +789,7 @@ module LiquidFilters
   end
 
   # @return [Array<Object>] with objects
-  # @param objects [Array<Array>] array of arrays to be processed
+  # @param array [Array<Array>] array of arrays to be processed
   def flatten(array)
     array.flatten
   end

@@ -5,11 +5,11 @@ module Graph
       EventSource = GraphQL::UnionType.define do
         name 'ActivityFeedEventSource'
         possible_types [
-          ActivityFeed::Comment,
-          ActivityFeed::UserStatusUpdate,
-          ActivityFeed::Photo,
-          Types::Transactable,
-          ActivityFeed::Generic
+          Graph::Types::ActivityFeed::Comment,
+          Graph::Types::ActivityFeed::UserStatusUpdate,
+          Graph::Types::ActivityFeed::Photo,
+          Graph::Types::Transactables::Transactable,
+          Graph::Types::ActivityFeed::Generic
         ]
       end
     end

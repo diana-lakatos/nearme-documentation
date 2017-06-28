@@ -10,7 +10,10 @@ class Transactable::ActionTypeDrop < BaseDrop
   #   @return [Array<Transactable::PricingDrop>] array of pricings
   # @!method transactable_type_action_type
   #   @return [TransactableType::ActionTypeDrop] array of transactable_type_action_type
-  delegate :id, :pricings, :transactable_type_action_type, to: :action_type
+  # @!method minimum_booking_minutes
+  #   @return [Integer] minimum minutes that can be booked
+  delegate :id, :pricings, :transactable_type_action_type, :minimum_booking_minutes,
+           to: :action_type
 
   def initialize(action_type)
     @action_type = action_type

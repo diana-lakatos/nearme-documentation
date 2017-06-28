@@ -242,6 +242,7 @@ class FormComponentToFormConfiguration
         default: {
           properties: {
             short_bio: { validation: {} },
+            date_of_birth: { validation: {} },
             about_me: { validation: {} }
           }
         }
@@ -267,7 +268,7 @@ class FormComponentToFormConfiguration
                   when 'Default'
                     UserSignup::DefaultUserSignup
                   end
-      fc = FormConfiguration.where(base_form: base_form, name: "#{conf_role} Signup")
+      fc = FormConfiguration.where(base_form: base_form).with_parameterized_name("#{conf_role} signup")
                             .first_or_create!
       configuration = build_configuration_based_on_form_components(form_component, role)
       if PlatformContext.current.instance.force_accepting_tos?

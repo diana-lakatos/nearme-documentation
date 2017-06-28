@@ -30,7 +30,7 @@
                 = render :partial => 'addresses/form', :locals => { :f => address_form, label: t('simple_form.labels.reservations.address') }
             - if field.to_sym == :dates
               .small-inputs{data: {'reservation-dates-controller' => @recurring_booking.listing.skip_payment_authorization?, 'validator-url': detect_overlapping_listing_reservations_path(@listing) }}
-                = f.input :dates_fake, input_html: {class: 'jquery-datepicker', data: { except_periods: Time.use_zone(f.object.listing.timezone) { f.object.listing.availability_exceptions.map(&:range) }, open_on_days: f.object.listing.opened_on_days, days_with_ranges: f.object.listing.availability.days_with_ranges }}, required: true, label: t('simple_form.labels.reservations.dates')
+                = f.input :dates_fake, input_html: {class: 'jquery-datepicker', data: { except_periods: Time.use_zone(f.object.listing.time_zone) { f.object.listing.availability_exceptions.map(&:range) }, open_on_days: f.object.listing.opened_on_days, days_with_ranges: f.object.listing.availability.days_with_ranges }}, required: true, label: t('simple_form.labels.reservations.dates')
                 = f.input :dates, as: :hidden
                 = f.input :start_time, as: :select, collection: availability_time_options, required: true,  label: t('simple_form.labels.reservations.start_time'), input_html: { data: { no_options: t('general.no_options') } }
             - elsif custom_attribute_names.include?(field)

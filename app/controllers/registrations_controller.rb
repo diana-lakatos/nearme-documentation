@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class RegistrationsController < Devise::RegistrationsController
-  skip_before_action :redirect_unverified_user
+  skip_before_action :redirect_unverified_user, except: :show
   before_action :set_role_if_blank
   before_action :configure_permitted_parameters, only: :create
   skip_before_action :redirect_to_set_password_unless_unnecessary, only: [:update_password, :set_password]
@@ -31,8 +31,11 @@ class RegistrationsController < Devise::RegistrationsController
 
   def new
     @legal_page_present = Page.exists?(slug: 'legal')
-    setup_form_component
-    super unless already_signed_in?
+    if setup_form_component
+      super unless already_signed_in?
+    else
+      redirect_to :root
+    end
   end
 
   def status

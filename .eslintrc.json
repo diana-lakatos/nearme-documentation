@@ -12,7 +12,8 @@
   "globals": {
     "Modernizr": true,
     "Promise": true,
-    "_": true
+    "_": true,
+    "$": true
   },
   "env": {
     "es6": true,
@@ -28,10 +29,11 @@
   "rules": {
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "single", { "avoidEscape": true }],
-    "semi": ["error", "always"],
     "no-cond-assign": ["error", "always"],
     "no-console": "off",
+    "no-plusplus": "off",
+    "quotes": ["error", "single", { "avoidEscape": true }],
+    "semi": ["error", "always"],
     "strict": "off",
 
     "flowtype/boolean-style": [2, "boolean"],
@@ -39,7 +41,7 @@
     "flowtype/delimiter-dangle": [2, "never"],
     "flowtype/generic-spacing": [2, "never"],
     "flowtype/no-primitive-constructor-types": 2,
-    "flowtype/no-weak-types": 1,
+    "flowtype/no-weak-types": 0,
     "flowtype/object-type-delimiter": [2, "comma"],
     "flowtype/require-parameter-type": 0,
     "flowtype/require-return-type": [2, "always", {"annotateUndefined": "never"} ],

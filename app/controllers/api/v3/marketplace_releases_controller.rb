@@ -5,7 +5,8 @@ class Api::V3::MarketplaceReleasesController < Api::BaseController
       name: 'User import',
       status: 'ready_for_import',
       creator: "#{current_user.name} (#{current_user.id})",
-      zip_file: params[:marketplace_builder][:zip_file]
+      zip_file: params[:marketplace_builder][:zip_file],
+      options: { force_mode: params[:marketplace_builder][:force_mode] }
     )
 
     NewMarketplaceBuilder::Jobs::MarketplaceBuilderJob.perform(release.id)

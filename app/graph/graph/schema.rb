@@ -11,7 +11,7 @@ module Graph
       when ::UserStatusUpdate
         Types::ActivityFeed::UserStatusUpdate
       when ::Transactable
-        Types::Transactable
+        Types::Transactables::Transactable
       when ::Location
         Types::Location
       when ::Elastic::UserDrop
@@ -22,7 +22,7 @@ module Graph
     }
   end
 
-  def self.execute_query(*args)
+  def self.execute(*args)
     response = ::Graph::Schema.execute(*args)
     if response.key?('data') && !response.key?('errors')
       response.fetch('data')
@@ -31,7 +31,18 @@ module Graph
     end
   end
 
-  def self.execute(query_name, variables)
+  def self.execute_query(query_string, variables: {}, context: {})
+    execute(
+      query_string,
+      variables: variables,
+      context: {
+        current_user_id: context['current_user']&.id,
+        liquid_context: context
+      }
+    )
+  end
+
+  def self.execute_stored_query(query_name, variables)
     execute_query(
       Graph::QueryResolver.find_query(query_name),
       variables: variables

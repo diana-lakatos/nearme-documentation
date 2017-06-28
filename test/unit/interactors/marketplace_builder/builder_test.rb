@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'test_helper'
-Dir[File.dirname(__FILE__) + '/builder_tests/*.rb'].each {|file| require file }
+Dir[File.dirname(__FILE__) + '/builder_tests/*.rb'].each { |file| require file }
 
 class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
   EXAMPLE_MARKETPLACE_PATH = "#{Rails.root}/test/unit/interactors/marketplace_builder/example_marketplace"
@@ -18,7 +18,7 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
       end
 
       builder_test_classes.each do |test_class|
-        instance_of_test_class = "MarketplaceBuilder::BuilderTests::#{test_class.to_s}".constantize.new @instance
+        instance_of_test_class = "MarketplaceBuilder::BuilderTests::#{test_class}".constantize.new @instance
         instance_of_test_class.instance_variable_set(:@assertions, @assertions)
         instance_of_test_class.execute!
         @assertions = instance_of_test_class.instance_variable_get(:@assertions)
@@ -31,7 +31,7 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
       Locale.create! code: 'en', instance_id: @instance.id
 
       NewMarketplaceBuilder::Interactors::ImportInteractor.new(@instance.id, EXAMPLE_MARKETPLACE_PATH).execute!
-      instance_view = InstanceView.last
+      instance_view = InstanceView.where(view_type: 'view').last
       after_first_import_timestamp = instance_view.updated_at
 
       sleep 2
@@ -53,7 +53,7 @@ class MarketplaceBuilder::BuilderTest < ActiveSupport::TestCase
 
         NewMarketplaceBuilder::Interactors::ImportInteractor.new(@instance.id, EXAMPLE_MARKETPLACE_PATH).execute!
 
-        assert_equal 1, InstanceView.count
+        assert_equal 0, InstanceView.where(view_type: 'view').count
       ensure
         FileUtils.mv('tmp/index.liquid.mbuilder', "#{EXAMPLE_MARKETPLACE_PATH}/liquid_views/home/index.liquid")
       end

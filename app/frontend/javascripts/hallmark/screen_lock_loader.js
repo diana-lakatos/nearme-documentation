@@ -1,42 +1,39 @@
 /*
  * Class for displaying ajax loader locking other parts of the screen with transaparent div.
  */
-var ScreenLockLoader;
 
-ScreenLockLoader = function() {
-  ScreenLockLoader.prototype.lockerClass = 'screen-locker';
+const LOCKER_CLASS = 'screen-locker';
 
-  function ScreenLockLoader(containerCallback) {
+class ScreenLockLoader {
+  constructor(containerCallback) {
     this.containerCallback = containerCallback;
     this.showed = false;
   }
 
-  ScreenLockLoader.prototype.show = function() {
+  show() {
     if (this.showed) {
       return;
     }
     this.containerCallback().show();
     $('#content').append(this.locker());
-    return this.showed = true;
-  };
+    this.showed = true;
+  }
 
-  ScreenLockLoader.prototype.hide = function() {
+  hide() {
     this.containerCallback().hide();
     if (this.lockerElement) {
       this.lockerElement.remove();
     }
-    return this.showed = false;
-  };
+    this.showed = false;
+  }
 
-  ScreenLockLoader.prototype.showWithoutLocker = function() {
-    return this.containerCallback().show();
-  };
+  showWithoutLocker() {
+    this.containerCallback().show();
+  }
 
-  ScreenLockLoader.prototype.locker = function() {
-    return this.lockerElement = $('<div>').addClass(this.lockerClass);
-  };
-
-  return ScreenLockLoader;
-}();
+  locker() {
+    this.lockerElement = $('<div>').addClass(LOCKER_CLASS);
+  }
+}
 
 module.exports = ScreenLockLoader;

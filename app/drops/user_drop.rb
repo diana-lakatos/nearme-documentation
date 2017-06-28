@@ -111,6 +111,8 @@ class UserDrop < UserBaseDrop
   #   @return [String] user's country calling code
   # @!method mobile_number
   #   @return [String] user's mobile number without calling code
+  # @!method unsolved_company_tickets_count
+  #   @return [Integer] number of unsolved company tickets
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends,
            :first_name, :middle_name, :last_name, :reservations_count,
            :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
@@ -124,7 +126,8 @@ class UserDrop < UserBaseDrop
            :company_name, :instance_admins_metadata, :total_reviews_count, :reviews_counter, :companies, :instance_admin?,
            :avatar, :instance_admin?, :user_messages_received, :valid?, :last_sign_in_at,
            :left_by_seller_average_rating, :left_by_buyer_average_rating, :followers_count, :following_count,
-           :is_followed, :slug, :full_phone_number, :country_calling_code, :mobile_number, to: :source
+           :is_followed, :slug, :full_phone_number, :country_calling_code, :mobile_number,
+           :unsolved_company_tickets_count, to: :source
 
   # @return [String] path to the wishlisting this user
   # @todo -- depracate to url filter
@@ -422,19 +425,19 @@ class UserDrop < UserBaseDrop
   # @return [String] url to the "big" version of a user's avatar image
   # @todo -- depracate url for filter
   def avatar_url_big
-    asset_url(@source.avatar_url(:big))
+    asset_url(@source.avatar_url('big'))
   end
 
   # @return [String] url to the "thumb" version of a user's avatar image
   # @todo -- depracate url for filter
   def avatar_url_thumb
-    asset_url(@source.avatar_url(:thumb))
+    asset_url(@source.avatar_url('thumb'))
   end
 
   # @return [String] url to the "bigger" version of a user's avatar image
   # @todo -- depracate url for filter
   def avatar_url_bigger
-    asset_url(@source.avatar_url(:bigger))
+    asset_url(@source.avatar_url('bigger'))
   end
 
   # @return [Boolean] whether the marketplace has blogging enabled and the user has a blog enabled for his account

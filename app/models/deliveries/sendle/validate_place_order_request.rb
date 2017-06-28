@@ -8,7 +8,7 @@ module Deliveries
       attr_reader :delivery, :errors
 
       def initialize(delivery)
-        @delivery = delivery
+        @delivery = delivery.dup
         @errors = []
       end
 

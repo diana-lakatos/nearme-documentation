@@ -7,6 +7,7 @@ And('the instance is a community instance') do
 
   @instance = PlatformContext.current.instance
   @instance.update_attribute(:is_community, true)
+  @instance.default_profile_type.custom_attributes << FactoryGirl.build(:custom_attribute, name: 'role')
 
   query_string = <<EOQ
 query TransactableCoverPhotoQuery($transactable_id: ID!){

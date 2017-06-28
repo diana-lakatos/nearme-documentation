@@ -21,6 +21,8 @@ class OrderForm < BaseForm
   class << self
     def decorate(configuration)
       Class.new(self) do
+        validate :validate_all_dates_available if configuration.delete(:validate_all_dates_available)
+
         @reservation_type = configuration.delete(:reservation_type)
         if (reservations_configuration = configuration.delete(:reservations)).present?
           add_validation(:reservations, reservations_configuration)
@@ -28,14 +30,33 @@ class OrderForm < BaseForm
                                     populator: RESERVATIONS_POPULATOR,
                                     prepopulator: ->(_options) { reservations << build_reservation_object if reservations.size.zero? }
         end
-        if (properties_configuration = configuration.delete(:properties)).present?
-          add_validation(:properties, properties_configuration)
-          property :properties, form: PropertiesForm.decorate(properties_configuration)
+        if (payment_subscription_configuration = configuration.delete(:payment_subscription)).present?
+          add_validation(:payment_subscription, payment_subscription_configuration)
+          property :payment_subscription, form: PaymentSubscriptionForm.decorate(payment_subscription_configuration)
         end
-        inject_dynamic_fields(configuration)
+
+        if (order_items_configuration = configuration.delete(:order_items)).present?
+          add_validation(:order_items, order_items_configuration)
+          collection :order_items, form: OrderItemForm.decorate(order_items_configuration)
+        end
+
+        inject_custom_attributes(configuration)
+        inject_dynamic_fields(configuration, whitelisted: [:state_event, :lister_confirm, :with_charge, :schedule_expiry])
       end
     end
   end
+
+  def validate_all_dates_available
+    OverbookingValidator.new(model, self).validate
+  end
+
+  # @!attribute reservations
+  #   @return [Array<ReservationForm>] reservation forms for actual reservations associated with this form
+  # @!attribute order_items
+  #   @return [Array<OrderItemForm>] array of {OrderItemForm} encapsulating the order items for this order
+  # @!attribute payment_subscription
+  #   @return [PaymentSubscriptionForm] {PaymentSubscriptionForm} encapsulating the PaymentSubscription
+  #     for this order
 
   def build_reservation_object
     rt = self.class.instance_variable_get(:'@reservation_type')

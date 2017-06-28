@@ -15,12 +15,20 @@ module MarketplaceBuilder
 
       def read_exported_file(path, reader = :yml)
         if reader == :yml
-          YAML.load(File.read("#{MarketplaceBuilder::ExporterTest::EXPORT_DESTINATION_PATH}/ExportTestInstance/#{path}"))
+          YAML.load(exported_file(path))
         elsif reader == :liquid
-          MarketplaceBuilder::Creators::TemplatesCreator.load_file_with_yaml_front_matter("#{MarketplaceBuilder::ExporterTest::EXPORT_DESTINATION_PATH}/ExportTestInstance/#{path}", 'test')
+          MarketplaceBuilder::Creators::TemplatesCreator.load_file_with_yaml_front_matter(full_path(path), 'test')
         else
           raise 'Not implemented reader'
         end
+      end
+
+      def full_path(path)
+        "#{MarketplaceBuilder::ExporterTest::EXPORT_DESTINATION_PATH}/exporttestinstance/#{path}"
+      end
+
+      def exported_file(path)
+        File.read(full_path(path))
       end
     end
   end

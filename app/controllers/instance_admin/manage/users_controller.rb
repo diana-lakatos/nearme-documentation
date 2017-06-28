@@ -6,6 +6,15 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
   def index
   end
 
+  def pending_approvals
+    @user_profiles = UserProfile.joins('inner join users u ON u.id = user_profiles.user_id '\
+                                       'inner join instance_profile_types ipt ON ipt.id = user_profiles.instance_profile_type_id ')
+                                .where('ipt.admin_approval = ? and user_profiles.approved = ?', true, false)
+                                .where('u.deleted_at is null')
+                                .order('user_profiles.created_at DESC')
+                                .paginate(page: params[:page])
+  end
+
   def edit
     @user = User.with_deleted.find(params[:id])
     render :modal_edit, layout: false if request.xhr?

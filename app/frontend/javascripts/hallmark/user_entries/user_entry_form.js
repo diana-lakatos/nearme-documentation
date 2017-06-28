@@ -103,17 +103,16 @@ class UserEntryForm {
 
     event.preventDefault();
 
-    $
-      .ajax({
-        url: this.form.action,
-        method: 'POST',
-        data: data,
-        dataType: 'html',
-        contentType: false,
-        cache: false,
-        processData: false
-      })
-      .done(this.process.bind(this))
+    $.ajax({
+      url: this.form.action,
+      method: 'POST',
+      data: data,
+      dataType: 'html',
+      contentType: false,
+      cache: false,
+      processData: false
+    })
+      .then(this.process.bind(this))
       .fail(() => {
         alert('We couldn’t create this content. Please try again');
         this.disableProcessing();

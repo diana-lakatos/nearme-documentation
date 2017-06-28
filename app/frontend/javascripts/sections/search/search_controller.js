@@ -15,8 +15,7 @@ var SearchController,
   },
   extend = function(child, parent) {
     for (var key in parent) {
-      if (hasProp.call(parent, key))
-        child[key] = parent[key];
+      if (hasProp.call(parent, key)) child[key] = parent[key];
     }
     function ctor() {
       this.constructor = child;
@@ -59,7 +58,7 @@ require('../../vendor/jquery-ias/jquery-ias');
  *        a common "search query" input field which handles the geolocation of the query,
  *        and notifies observers when it is changed.
  */
-SearchSearchController = function(superClass) {
+SearchSearchController = (function(superClass) {
   extend(SearchSearchController, superClass);
 
   function SearchSearchController(form, container) {
@@ -70,13 +69,9 @@ SearchSearchController = function(superClass) {
     this.redirectIfNecessary();
     this.initializeDateRangeField();
     this.listings = {};
-    this.loader = new SearchScreenLockLoader(
-      function(_this) {
-        return function() {
-          return _this.container.find('.loading');
-        };
-      }(this)
-    );
+    this.loader = new SearchScreenLockLoader(() => {
+      return this.container.find('.loading');
+    });
     this.resultsCountContainer = $('#search_results_count');
     this.transactable_types = $('div[data-transactable-type-filter] input');
     this.date_range = $('div[data-date-range-filter] input');
@@ -93,11 +88,11 @@ SearchSearchController = function(superClass) {
     this.initializeEndlessScrolling();
     this.initializeConnectionsTooltip();
     setTimeout(
-      function(_this) {
+      (function(_this) {
         return function() {
-          return _this.processingResults = false;
+          return (_this.processingResults = false);
         };
-      }(this),
+      })(this),
       1000
     );
     this.responsiveCategoryTree();
@@ -114,39 +109,41 @@ SearchSearchController = function(superClass) {
   SearchSearchController.prototype.bindEvents = function() {
     this.form.bind(
       'submit',
-      function(_this) {
+      (function(_this) {
         return function(event) {
           event.preventDefault();
           return _this.triggerSearchFromQuery();
         };
-      }(this)
+      })(this)
     );
     this.transactable_types.on(
       'change',
-      function(_this) {
+      (function(_this) {
         return function(event) {
           var params;
           _this.form.find('input[name="transactable_type_id"]').val($(event.target).val());
           params = decodeURIComponent('?' + $.param(_this.getSearchParams()));
-          return document.location = window.location.href = document.location.protocol + '//' +
+          return (document.location = window.location.href =
+            document.location.protocol +
+            '//' +
             document.location.host +
             document.location.pathname +
-            params;
+            params);
         };
-      }(this)
+      })(this)
     );
     this.date_range_btn.on(
       'click',
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.triggerSearchFromQuery();
         };
-      }(this)
+      })(this)
     );
     this.closeFilterIfClickedOutside();
     this.filters.on(
       'click',
-      function(_this) {
+      (function(_this) {
         return function(event) {
           /*
          * allow to hide already opened element
@@ -160,45 +157,45 @@ SearchSearchController = function(superClass) {
           }
           return false;
         };
-      }(this)
+      })(this)
     );
     this.filters_container.on(
       'click',
       'input[type=checkbox]:not(.nav-heading > label > input), input[type=radio]',
-      function(_this) {
+      (function(_this) {
         return function(event) {
           if ($(event.target).attr('name') === 'parent_category_ids[]') {
             return;
           }
           return _this.fieldChanged();
         };
-      }(this)
+      })(this)
     );
     this.filters_container.on(
       'change',
-      'input[type=text], select',
-      function(_this) {
+      'input[type=text]:not(.hasDatepicker), select',
+      (function(_this) {
         return function() {
           return _this.fieldChanged();
         };
-      }(this)
+      })(this)
     );
     this.searchField = this.form.find('#search');
     this.searchField.on(
       'focus',
-      function(_this) {
+      (function(_this) {
         return function() {
           return $(_this.form).addClass('query-active');
         };
-      }(this)
+      })(this)
     );
     this.searchField.on(
       'blur',
-      function(_this) {
+      (function(_this) {
         return function() {
           return $(_this.form).removeClass('query-active');
         };
-      }(this)
+      })(this)
     );
     if (this.map != null) {
       return this.bindMapEvents();
@@ -208,15 +205,15 @@ SearchSearchController = function(superClass) {
   SearchSearchController.prototype.bindMapEvents = function() {
     this.map.on(
       'click',
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.searchField.blur();
         };
-      }(this)
+      })(this)
     );
     return this.map.on(
       'viewportChanged',
-      function(_this) {
+      (function(_this) {
         return function() {
           /*
          * NB: The viewport can change during 'query based' result loading, when the map fits
@@ -231,7 +228,7 @@ SearchSearchController = function(superClass) {
           }
           return _this.triggerSearchWithBoundsAfterDelay();
         };
-      }(this)
+      })(this)
     );
   };
 
@@ -239,7 +236,7 @@ SearchSearchController = function(superClass) {
     var filter, j, len, ref, results;
     ref = this.filters;
     results = [];
-    for (j = 0, len = ref.length; j < len; j++) {
+    for ((j = 0), (len = ref.length); j < len; j++) {
       filter = ref[j];
       $(filter).parent().find('ul').hide();
       results.push($(filter).parent().removeClass('active'));
@@ -250,13 +247,13 @@ SearchSearchController = function(superClass) {
   SearchSearchController.prototype.closeFilterIfClickedOutside = function() {
     return $('body').on(
       'click',
-      function(_this) {
+      (function(_this) {
         return function(event) {
           if ($(_this.filters_container).has(event.target).length === 0) {
             return _this.hideFilters();
           }
         };
-      }(this)
+      })(this)
     );
   };
 
@@ -277,7 +274,7 @@ SearchSearchController = function(superClass) {
         param = ref[k];
         if (param.name === 'loc') {
           if (param.value !== urlUtil.getParameterByName('loc')) {
-            results.push(document.location = History.getState().url);
+            results.push((document.location = History.getState().url));
           } else {
             results.push(void 0);
           }
@@ -290,15 +287,15 @@ SearchSearchController = function(superClass) {
   };
 
   SearchSearchController.prototype.initializeDateRangeField = function() {
-    return this.rangeDatePicker = new SearchRangeDatePickerFilter(
+    return (this.rangeDatePicker = new SearchRangeDatePickerFilter(
       this.form.find('.availability-date-start'),
       this.form.find('.availability-date-end'),
-      function(_this) {
+      (function(_this) {
         return function(dates) {
           return _this.fieldChanged('dateRange', dates);
         };
-      }(this)
-    );
+      })(this)
+    ));
   };
 
   SearchSearchController.prototype.initializeEndlessScrolling = function() {
@@ -315,14 +312,14 @@ SearchSearchController = function(superClass) {
       loader: '<div class="row-fluid span12"><h1><img src="' +
         $('img[alt=Spinner]').eq(0).attr('src') +
         '"><span>Loading More Results</span></h1></div>',
-      onRenderComplete: function(_this) {
+      onRenderComplete: (function(_this) {
         return function() {
           return _this.initializeConnectionsTooltip();
         };
-      }(this)
+      })(this)
     });
     return ias.on('rendered', function(items) {
-      return $(document).trigger('rendered-search:ias.nearme', [ items ]);
+      return $(document).trigger('rendered-search:ias.nearme', [items]);
     });
   };
 
@@ -343,11 +340,11 @@ SearchSearchController = function(superClass) {
     });
     this.map.addControl(this.redoSearchMapControl);
     resizeMapThrottle = _.throttle(
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.map.resizeToFillViewport();
         };
-      }(this),
+      })(this),
       200
     );
     $(window).resize(resizeMapThrottle);
@@ -360,8 +357,7 @@ SearchSearchController = function(superClass) {
     wrap = $('<div>' + html + '</div>');
     html = wrap.find('#results');
     this.resultsContainer().replaceWith(html);
-    this
-      .resultsContainer()
+    this.resultsContainer()
       .find('input[data-authenticity-token]')
       .val($('meta[name="authenticity_token"]').attr('content'));
     $('.pagination').hide();
@@ -392,20 +388,22 @@ SearchSearchController = function(superClass) {
        * Only show bounds of new results
        */
       bounds = new google.maps.LatLngBounds();
-      for (j = 0, len = listings.length; j < len; j++) {
+      for ((j = 0), (len = listings.length); j < len; j++) {
         listing = listings[j];
         bounds.extend(listing.latLng());
       }
-      bounds.extend(new google.maps.LatLng(
-        this.form.find('input[name=lat]').val(),
-        this.form.find('input[name=lng]').val()
-      ));
+      bounds.extend(
+        new google.maps.LatLng(
+          this.form.find('input[name=lat]').val(),
+          this.form.find('input[name=lng]').val()
+        )
+      );
       _.defer(
-        function(_this) {
+        (function(_this) {
           return function() {
             return _this.map.fitBounds(bounds);
           };
-        }(this)
+        })(this)
       );
       this.map.show();
 
@@ -425,7 +423,7 @@ SearchSearchController = function(superClass) {
   SearchSearchController.prototype.plotListingResultsWithinBounds = function() {
     var j, len, listing, ref, wasPlotted;
     ref = this.getListingsFromResults();
-    for (j = 0, len = ref.length; j < len; j++) {
+    for ((j = 0), (len = ref.length); j < len; j++) {
       listing = ref[j];
       wasPlotted = this.map.plotListingIfInMapBounds(listing);
       if (!wasPlotted) {
@@ -442,13 +440,13 @@ SearchSearchController = function(superClass) {
     var listings;
     listings = [];
     this.resultsContainer().find('.listing').each(
-      function(_this) {
+      (function(_this) {
         return function(i, el) {
           var listing;
           listing = _this.listingForElementOrBuild(el);
           return listings.push(listing);
         };
-      }(this)
+      })(this)
     );
     return listings;
   };
@@ -488,24 +486,21 @@ SearchSearchController = function(superClass) {
     });
     this.mapTrigger = true;
     return this.triggerSearchAndHandleResults(
-      function(_this) {
+      (function(_this) {
         return function() {
           _this.plotListingResultsWithinBounds();
           return _this.assignFormParams({ ignore_search_event: 1 });
         };
-      }(this)
+      })(this)
     );
   };
 
   /*
    * Provide a debounced method to trigger the search after a period of constant state
    */
-  SearchSearchController.prototype.triggerSearchWithBoundsAfterDelay = _.debounce(
-    function() {
-      return this.triggerSearchWithBounds();
-    },
-    300
-  );
+  SearchSearchController.prototype.triggerSearchWithBoundsAfterDelay = _.debounce(function() {
+    return this.triggerSearchWithBounds();
+  }, 300);
 
   /*
    * Trigger the search from manipulating the query.
@@ -553,7 +548,7 @@ SearchSearchController = function(superClass) {
       value = $(this).val();
       if (value && value !== '') {
         values = value.split(',');
-        return category_inputs = category_inputs.concat(values);
+        return (category_inputs = category_inputs.concat(values));
       }
     });
     all_categories = category_inputs.concat(categories_checkboxes, category_selects);
@@ -578,13 +573,14 @@ SearchSearchController = function(superClass) {
     });
     custom_attributes = {};
     ref = this.container.find('[data-custom-attribute]');
-    for (j = 0, len = ref.length; j < len; j++) {
+    for ((j = 0), (len = ref.length); j < len; j++) {
       custom_attribute = ref[j];
       custom_attribute = $(custom_attribute);
       custom_attributes[custom_attribute.data('custom-attribute')] = _.toArray(
         custom_attribute
           .find(
-            'input[name="lg_custom_attributes[' + custom_attribute.data('custom-attribute') +
+            'input[name="lg_custom_attributes[' +
+              custom_attribute.data('custom-attribute') +
               '][]"]:checked'
           )
           .map(function() {
@@ -600,7 +596,7 @@ SearchSearchController = function(superClass) {
      * we need to reenable it when it is necessary, and only then - otherwise we will get duplicates
      */
     return this.geocodeSearchQuery(
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.triggerSearchAndHandleResults(function() {
             if ($.ias) {
@@ -620,7 +616,7 @@ SearchSearchController = function(superClass) {
             return _this.updateLinks();
           });
         };
-      }(this)
+      })(this)
     );
   };
 
@@ -631,7 +627,7 @@ SearchSearchController = function(superClass) {
     $(document).trigger('loading:searchResults.nearme');
     this.loader.showWithoutLocker();
     return this.triggerSearchRequest().success(
-      function(_this) {
+      (function(_this) {
         return function(html) {
           _this.processingResults = true;
           _this.showResults(html);
@@ -648,11 +644,11 @@ SearchSearchController = function(superClass) {
             callback();
           }
           _.defer(function() {
-            return _this.processingResults = false;
+            return (_this.processingResults = false);
           });
           return $(document).trigger('load:searchResults.nearme');
         };
-      }(this)
+      })(this)
     );
   };
 
@@ -666,24 +662,23 @@ SearchSearchController = function(superClass) {
       this.currentAjaxRequest.abort();
     }
     data = this.form.serializeArray();
-    data.push({ 'name': 'map_moved', 'value': this.mapTrigger });
-    return this.currentAjaxRequest = $.ajax({
+    data.push({ name: 'map_moved', value: this.mapTrigger });
+    return (this.currentAjaxRequest = $.ajax({
       url: this.form.attr('action'),
       type: 'GET',
       data: $.param(data)
-    });
+    }));
   };
 
   SearchSearchController.prototype.updateListings = function(listings, callback, error_callback) {
     if (error_callback == null) {
       error_callback = function() {};
     }
-    return this
-      .triggerListingsRequest(listings)
+    return this.triggerListingsRequest(listings)
       .success(function(html) {
         var j, len, listing;
         html = '<div>' + html + '</div>';
-        for (j = 0, len = listings.length; j < len; j++) {
+        for ((j = 0), (len = listings.length); j < len; j++) {
           listing = listings[j];
           listing.setHtml($('article[data-id="' + listing.id() + '"]', html));
         }
@@ -699,7 +694,7 @@ SearchSearchController = function(superClass) {
   };
 
   SearchSearchController.prototype.updateListing = function(listing, callback) {
-    return this.triggerListingsRequest([ listing ]).success(function(html) {
+    return this.triggerListingsRequest([listing]).success(function(html) {
       listing.setHtml(html);
       if (callback) {
         return callback();
@@ -709,15 +704,15 @@ SearchSearchController = function(superClass) {
 
   SearchSearchController.prototype.triggerListingsRequest = function(listings) {
     var listing, listing_ids;
-    listing_ids = function() {
+    listing_ids = (function() {
       var j, len, results;
       results = [];
-      for (j = 0, len = listings.length; j < len; j++) {
+      for ((j = 0), (len = listings.length); j < len; j++) {
         listing = listings[j];
         results.push(listing.id());
       }
       return results;
-    }().toString();
+    })().toString();
     return $.ajax({ url: '/search/show/' + listing_ids + '?v=map', type: 'GET' });
   };
 
@@ -769,18 +764,18 @@ SearchSearchController = function(superClass) {
   SearchSearchController.prototype.updateLinks = function() {
     if (this.date_range.length > 1) {
       return $('div.locations a:not(.carousel-control)').each(
-        function(_this) {
+        (function(_this) {
           return function(index, link) {
             var href;
             if ($(link).closest('.pagination').length > 0) {
               return;
             }
             href = link.href.replace(/\?.*$/, '');
-            href += '?start_date=' + _this.date_range[0].value + '&end_date=' +
-              _this.date_range[1].value;
-            return link.href = href;
+            href +=
+              '?start_date=' + _this.date_range[0].value + '&end_date=' + _this.date_range[1].value;
+            return (link.href = href);
           };
-        }(this)
+        })(this)
       );
     }
   };
@@ -789,7 +784,7 @@ SearchSearchController = function(superClass) {
     return this.container.on(
       'click',
       '.load-more',
-      function(_this) {
+      (function(_this) {
         return function(event) {
           var nextPage;
           event.preventDefault();
@@ -799,11 +794,11 @@ SearchSearchController = function(superClass) {
             return _this.triggerSearchFromQuery();
           }
         };
-      }(this)
+      })(this)
     );
   };
 
   return SearchSearchController;
-}(SearchController);
+})(SearchController);
 
 module.exports = SearchSearchController;

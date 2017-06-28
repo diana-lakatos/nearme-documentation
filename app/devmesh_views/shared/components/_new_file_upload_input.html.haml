@@ -8,7 +8,7 @@
   %div{:'data-fileupload-wrapper' => true, :'data-url' => url, :'data-name' => name}
     .new-photo
       = label_tag name, text, for: options[:label_for] || name
-      = file_field_tag name, multiple: !options['no-multiple'], accept: "image/*", capture: 'capture', id: options[:label_for] || name
+      = file_field_tag name, multiple: !options['no-multiple'], accept: 'image/gif, image/jpeg, image/jpg, image/png', id: options[:label_for] || name
 
     - if hint
       %p.hint-block= hint

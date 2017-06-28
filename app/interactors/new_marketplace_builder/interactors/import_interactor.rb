@@ -1,20 +1,24 @@
 module NewMarketplaceBuilder
   module Interactors
     class ImportInteractor
-      def initialize(instance_id, source)
+      def initialize(instance_id, source, options = {})
         @instance_id = instance_id
         @source = source
+        @force_mode = options["force_mode"] == "true"
       end
 
       def execute!
-        instance.set_context!
-        manifest_updater.remove_outdated_paths builder_file_paths if should_remove_models
+        Instance.transaction do
+          instance.set_context!
+          manifest_updater.clear_manifest if @force_mode
+          manifest_updater.remove_outdated_paths builder_file_paths if should_remove_models
 
-        grouped_builder_files.each do |pattern, builder_files|
-          ResourceImporter.new(instance, manifest_updater, converters_config, pattern, builder_files, should_remove_models).call
+          grouped_builder_files.each do |pattern, builder_files|
+            ResourceImporter.new(instance, manifest_updater, converters_config, pattern, builder_files, should_remove_models).call
+          end
+
+          manifest_updater.update_md5
         end
-
-        manifest_updater.update_md5
       end
 
       private
@@ -94,7 +98,7 @@ module NewMarketplaceBuilder
       end
 
       def should_remove_records
-        [Converters::TranslationConverter].exclude? converter
+        [Converters::TranslationConverter, Converters::MailerConverter].exclude? converter
       end
 
       def converter_primary_key

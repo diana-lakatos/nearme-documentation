@@ -8,14 +8,6 @@ class AuthenticationsController < ApplicationController
   skip_before_action :force_fill_in_wizard_form
   before_action :set_role
 
-  def set_role
-    if current_instance.split_registration?
-      @role ||= 'buyer'
-      @role = %w(seller buyer).detect { |r| r == env['omniauth.params']['role'] } if env['omniauth.params'].present?
-    end
-    @role ||= 'default'
-  end
-
   def create
     @omniauth = request.env['omniauth.auth']
     @oauth = Auth::Omni.new(@omniauth)
@@ -145,8 +137,6 @@ class AuthenticationsController < ApplicationController
     redirect_to new_api_user_path(wizard: wizard_id, role: @role)
   end
 
-  private
-
   def update_profile
     @oauth.authentication.update_info
   end
@@ -179,4 +169,13 @@ class AuthenticationsController < ApplicationController
   def broadcast_profile_created
     WorkflowStepJob.perform(ROLE_STEPS[@role], @oauth.authentication.user.id, as: current_user)
   end
+
+  def set_role
+    if current_instance.split_registration?
+      @role ||= 'buyer'
+      @role = %w(seller buyer).detect { |r| r == env['omniauth.params']['role'] } if env['omniauth.params'].present?
+    end
+    @role ||= 'default'
+  end
+
 end

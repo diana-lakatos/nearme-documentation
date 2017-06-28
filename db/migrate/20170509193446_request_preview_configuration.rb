@@ -58,6 +58,14 @@ class RequestPreviewConfiguration < ActiveRecord::Migration
             search_in_query: false,
             searchable: false,
             input_html_options: {}
+          ),
+          CustomAttributes::CustomAttribute.new(
+            name: 'host_id',
+            attribute_type: 'integer',
+            html_tag: 'hidden',
+            search_in_query: false,
+            searchable: false,
+            input_html_options: {}
           )
         ]
       )
@@ -93,7 +101,9 @@ class RequestPreviewConfiguration < ActiveRecord::Migration
               <input value="{{ g.transactable.id }}" type="hidden" name="transactable_id" />
               {% fields_for properties, form: refer_a_friend %}
                 {% assign t_id = g.transactable.id %}
+                {% assign host_id = g.transactable.creator_id %}
                 {% input transactable_id, as: hidden, form: properties, input_html-value: @t_id %}
+                {% input host_id, as: hidden form: properties, input_html-value: @host_id%}
                 {% input message, as: limited_text, form: properties, label: 'Your message' %}
                 {% input date_of_visit, form: properties, label: 'Date of your visit' %}
                 {% input time_of_visit, form: properties, label: 'Time of your visit' %}
@@ -111,7 +121,7 @@ class RequestPreviewConfiguration < ActiveRecord::Migration
         use_ssl: true,
         request_type: 'POST',
         prevent_trigger_condition: '',
-        payload_data: '{"text": " ---- New Preview Request  --- \n\n *Date of visit:* {{customization.properties.date_of_visit}}\n *Time of visit* {{ customization.properties.time_of_visit }} \n *Message:* {{ customization.properties.message }} \n*Listing:* {% query_graph "get_transactable_by_id", result_name: g, id: {{customization.properties.transactable_id}} %}{{ g.transactable.name }}"}'
+        payload_data: '{"text": " ---- New Preview Request  --- \n*Date of visit:* {{customization.properties.date_of_visit}}\n*Time of visit* {{ customization.properties.time_of_visit }}\n*Message:* {{ customization.properties.message }}\n*Listing:* {% query_graph "get_transactable_by_id", result_name: g, id: {{customization.properties.transactable_id}} %}{{ g.transactable.name }}\n*Host:* {% query_graph "get_user_by_id", result_name: h, id: {{customization.properties.host_id}} %}{{ h.user.email }}\n*Guest:* {% query_graph "get_user_by_id", result_name: u, id: {{customization.user_id}} %}{{ u.user.email }}"}'
       )
       workflow_alert.workflow_step.update_attributes!(name: 'Preview Request Created')
 
@@ -126,6 +136,11 @@ class RequestPreviewConfiguration < ActiveRecord::Migration
                                     },
                                     transactable_id: {
                                       validation: {}
+                                    },
+                                    host_id: {
+                                      validation: {
+                                        presence: true
+                                      }
                                     },
                                     date_of_visit: {
                                       validation: {
@@ -146,10 +161,21 @@ class RequestPreviewConfiguration < ActiveRecord::Migration
             id
             name
             show_path
+            creator_id
           }
         }
       eos
       GraphQuery.create!(name: 'get_transactable_by_id', query_string: query)
+
+      query = <<-eos
+        query get_user_by_id($id: ID!) {
+          user(id: $id) {
+            id
+            email
+          }
+        }
+      eos
+      GraphQuery.create!(name: 'get_user_by_id', query_string: query)
 
       Translation.create!(locale: 'en',
                           key: 'flash.api.user.customizations.preview_request_form.notice',
@@ -165,6 +191,7 @@ class RequestPreviewConfiguration < ActiveRecord::Migration
       CustomModelType.find_by(parameterized_name: 'preview_request_form').try(:destroy)
       FormConfiguration.find_by(name: 'preview_request_form').try(:destroy)
       GraphQuery.find_by(name: 'get_transactable_by_id').try(:destroy)
+      GraphQuery.find_by(name: 'get_user_by_id').try(:destroy)
       WorkflowStep.find_by(name: 'Preview Request Created').try(:destroy)
       Translation.find_by(key: 'flash.api.user.customizations.preview_request_form.notice').try(:destroy)
     end

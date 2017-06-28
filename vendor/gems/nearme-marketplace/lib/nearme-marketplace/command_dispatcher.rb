@@ -13,7 +13,8 @@ require "nearme-marketplace/commands/sync_command"
 module NearmeMarketplace
   class CommandDispatcher
     def on_user_command
-      command_class_by_arg.new.execute!
+      options = ARGV[1..-1]
+      command_class_by_arg.new(options).execute!
     end
 
     private

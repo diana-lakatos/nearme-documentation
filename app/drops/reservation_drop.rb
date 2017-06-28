@@ -71,12 +71,14 @@ class ReservationDrop < OrderDrop
   #   @return [DateTime] Time when the lister confirmed the reservation
   # @!method enquirer_confirmed_at
   #   @return [DateTime] Time when the enquirer (buyer) confirmed the reservation
+  # @!method is_recurring?
+  #   @return [Boolean] Returns true if reservation recurrs ofer a period of time
   delegate :id, :quantity, :subtotal_price, :service_fee_guest, :total_price_cents, :total_price, :transactable, :state_to_string,
            :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, :created_at,
            :total_payable_to_host_formatted, :total_payable_to_host_cents, :total_units_text, :unit_price, :has_service_fee?, :transactable_line_items,
            :properties, :long_dates, :address, :periods, :comment, :cancellation_policy_penalty_hours, :tax_price,
            :manage_booking_status_info, :manage_booking_status_info_new, :lister_confirmed_at, :enquirer_confirmed_at,
-           to: :reservation
+           :is_recurring?, to: :reservation
 
   # @!method bookable_noun
   #   @return see TransactableTypeDrop#bookable_noun
@@ -252,10 +254,10 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [DateTime] reservation date/time (first date) in
-  #   the timezone of the associated transactable object
+  #   the time_zone of the associated transactable object
   # @todo -- again, maybe some general class of pulling out dates
   def starts_at
-    @reservation.starts_at.in_time_zone(@reservation.transactable.timezone)
+    @reservation.starts_at.in_time_zone(@reservation.transactable.time_zone)
   end
 
   # @return [String] if the payment is pending and the user doesn't need to
@@ -263,7 +265,7 @@ class ReservationDrop < OrderDrop
   #   will be returned, otherwise, the HTML-formatted total price will be returned
   # @todo -- we should not provide html in DIY approach at all. Also translations would be nice
   def total_amount_if_payment_at_least_authorized
-    if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
+    if !@reservation.payment.manual_payment? && @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
       I18n.t('dashboard.user_reservations.total_amount_to_be_determined')
     else
       "<strong>#{@reservation.total_price}</strong>"
@@ -276,7 +278,7 @@ class ReservationDrop < OrderDrop
   #   is returned
   # @todo -- we should not provide html in DIY approach at all. Also translations would be nice
   def total_amount_for_host_if_payment_at_least_authorized
-    if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
+    if !@reservation.payment.manual_payment? && @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
       I18n.t('dashboard.user_reservations.total_amount_to_be_determined')
     else
       "<strong>#{@reservation.total_payable_to_host_formatted}</strong>"

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 class ReservationPeriodForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
-  property :_destroy, virtual: true
-  property :date
+
   validates :date, presence: true
 
   class << self
@@ -12,8 +11,9 @@ class ReservationPeriodForm < BaseForm
           add_property(field, configuration[field])
           add_validation(field, configuration[field])
         end
-        validate :validate_minimum_booking_minutes if configuration[:validate_minimum_booking_minutes]
-        validate :validate_minimum_booking_hours if configuration[:validate_minimum_booking_hours]
+        validate :validate_minimum_booking_minutes if configuration.delete(:validate_minimum_booking_minutes)
+        validate :validate_minimum_booking_hours if configuration.delete(:validate_minimum_booking_hours)
+        inject_dynamic_fields(configuration)
 
         def hours=(hours)
           super(hours.to_f)
@@ -25,6 +25,12 @@ class ReservationPeriodForm < BaseForm
       end
     end
   end
+
+  property :_destroy, virtual: true
+
+  # @!attribute date
+  #   @return [Date] actual date for this reservation period
+  property :date
 
   # FIXME: find better way? :|
   def validate_minimum_booking_minutes

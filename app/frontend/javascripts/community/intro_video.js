@@ -8,7 +8,7 @@ var IntroVideo,
 
 require('jquery.cookie/jquery.cookie');
 
-IntroVideo = function() {
+IntroVideo = (function() {
   function IntroVideo(container) {
     this.onPlayerReady = bind(this.onPlayerReady, this);
     this.onPlayerStateChange = bind(this.onPlayerStateChange, this);
@@ -42,53 +42,53 @@ IntroVideo = function() {
   IntroVideo.prototype.bindEvents = function() {
     this.trigger.on(
       'click',
-      function(_this) {
+      (function(_this) {
         return function(e) {
           e.preventDefault();
           e.stopPropagation();
           return _this.showVideo();
         };
-      }(this)
+      })(this)
     );
     this.overlay.add(this.closeButton).add(this.videoWrap).on(
       'click.introvideo',
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.hideVideo();
         };
-      }(this)
+      })(this)
     );
     $(window).on(
       'resize',
-      function(_this) {
+      (function(_this) {
         return function() {
           return _this.resizePlayer();
         };
-      }(this)
+      })(this)
     );
-    return window.onYouTubeIframeAPIReady = function(_this) {
+    return (window.onYouTubeIframeAPIReady = (function(_this) {
       return function() {
-        return _this.player = new YT.Player('intro-player', {
+        return (_this.player = new YT.Player('intro-player', {
           height: 1280,
           width: 720,
           videoId: 'cBamideLh3g',
           events: { onReady: _this.onPlayerReady, onStateChange: _this.onPlayerStateChange },
           playerVars: { rel: 0, fs: 0 }
-        });
+        }));
       };
-    }(this);
+    })(this));
   };
 
   IntroVideo.prototype.bindOnShow = function() {
     return $('body').on(
       'keydown.introvideo',
-      function(_this) {
+      (function(_this) {
         return function(e) {
           if (e.which === 27) {
             return _this.hideVideo();
           }
         };
-      }(this)
+      })(this)
     );
   };
 
@@ -152,6 +152,6 @@ IntroVideo = function() {
   };
 
   return IntroVideo;
-}();
+})();
 
 module.exports = IntroVideo;
