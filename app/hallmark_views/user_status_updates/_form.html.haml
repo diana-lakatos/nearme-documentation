@@ -23,7 +23,7 @@
     = f.simple_fields_for :activity_feed_images, collection_or_new_object(f.object.activity_feed_images) do |afi|
       .image-upload-input
         = afi.input :image, wrapper: false, label: false do
-          = afi.file_field :image, data: { user_entry_form_file: '' }, accept: 'image/gif, image/jpeg, image/jpg, image/png', capture: 'camera'
+          = afi.file_field :image, data: { user_entry_form_file: '' }, accept: 'image/gif, image/jpeg, image/jpg, image/png'
 
       .user-entry-form-images{ data: { user_entry_form_images: '' } }
         - if afi.object.image.present?
