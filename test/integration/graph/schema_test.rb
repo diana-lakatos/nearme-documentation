@@ -390,8 +390,14 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
       assert_equal 1, result(query).dig('photos', 'total_entries')
     end
-  end
 
+    should 'exclude ids' do
+      photo = FactoryGirl.create(:photo)
+      query = %({ photos(exclude_ids: [#{photo.id}]){ total_entries items{ id image{url} } }} )
+
+      assert_equal 0, result(query).dig('photos', 'total_entries')
+    end
+  end
 
   def result(query)
     Graph.execute_query(
