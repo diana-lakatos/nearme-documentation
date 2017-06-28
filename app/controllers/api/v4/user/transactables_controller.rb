@@ -2,9 +2,8 @@
 module Api
   class V4::User::TransactablesController < V4::User::BaseController
     skip_before_action :require_authentication
-    skip_before_action :require_authorization
 
-    # TODO we need to get rid of this and convert this to custom json page
+    # TODO: we need to get rid of this and convert this to custom json page
     def index
       params[:v] = 'listing_mixed'
       search_params = params
@@ -20,23 +19,20 @@ module Api
     end
 
     def create
-      if transactable_form.validate(params[:form].presence || params[:transactable] || {})
-        transactable_form.save
-        raise "Create failed due to configuration issue: #{form_model.errors.full_messages.join(', ')}" if form_model.changed?
-        index_in_elastic_immediately(form_model)
-      end
+      SubmitForm.new(form_configuration: form_configuration,
+                     form: transactable_form, params: form_params,
+                     current_user: current_user).tap do |submit_form|
+        submit_form.add_success_observer(SubmitForm::IndexInElastic.new)
+      end.call
       respond(transactable_form, alert: false)
     end
 
     def update
-      if transactable_form.validate(params[:form].presence || params[:transactable] || {})
-        transactable_form.save
-        # tmp safety check - we still have validation in Transactable model itself
-        # so if model is invalid, it won't be saved and user won't be able to
-        # sign up - we want to be notified
-        raise "Update failed due to configuration issue: #{form_model.errors.full_messages.join(', ')}" if form_model.changed?
-        index_in_elastic_immediately(form_model)
-      end
+      SubmitForm.new(form_configuration: form_configuration,
+                     form: transactable_form, params: form_params,
+                     current_user: current_user).tap do |submit_form|
+        submit_form.add_success_observer(SubmitForm::IndexInElastic.new)
+      end.call
       respond(transactable_form, alert: false)
     end
 
@@ -49,6 +45,10 @@ module Api
 
     def transactable_form
       @transactable_form ||= form_configuration&.build(transactable)
+    end
+
+    def form_params
+      params[:form] || params[:transactable] || {}
     end
 
     def form_model

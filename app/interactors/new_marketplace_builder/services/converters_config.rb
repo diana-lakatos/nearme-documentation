@@ -7,6 +7,18 @@ module NewMarketplaceBuilder
           converter: Converters::WorkflowConverter,
           parser: Parsers::YamlParser
         },
+        'notifications/email_notifications' => {
+          converter: Converters::EmailNotificationConverter,
+          parser: Parsers::LiquidParser
+        },
+        'notifications/api_call_notifications' => {
+          converter: Converters::ApiCallNotificationConverter,
+          parser: Parsers::LiquidParser
+        },
+        'notifications/sms_notifications' => {
+          converter: Converters::SmsNotificationConverter,
+          parser: Parsers::LiquidParser
+        },
         'liquid_views' => {
           converter: Converters::LiquidViewConverter,
           parser: Parsers::LiquidParser

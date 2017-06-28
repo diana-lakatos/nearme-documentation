@@ -126,8 +126,9 @@ module Api
               should 'not create user without required custom attribute' do
                 assert_no_difference('::User.count') do
                   assert_no_difference('UserProfile.count') do
-                    post :create, role: FormBuilder::UserSignupBuilderFactory::LISTER, form: user_attributes.merge(profiles: { default: { properties: {} },
-                                                                                                                   seller: { properties: {} } })
+                    post :create, role: FormBuilder::UserSignupBuilderFactory::LISTER,
+                                  form: user_attributes.merge(profiles: { default: { properties: {} },
+                                                                          seller: { properties: {} } })
                     assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'profiles.default.properties.user_attr']
                     assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'profiles.seller.properties.lister_attr']
                   end
@@ -138,10 +139,10 @@ module Api
                 assert_difference('::User.count') do
                   assert_difference('UserProfile.count', 2) do
                     post :create, role: FormBuilder::UserSignupBuilderFactory::LISTER,
-                      form: user_attributes.merge(profiles: {
-                        default: { properties: { user_attr: 'my value' } },
-                        seller: { properties: { lister_attr: 'other value' } }
-                    })
+                                  form: user_attributes.merge(profiles: {
+                                                                default: { properties: { user_attr: 'my value' } },
+                                                                seller: { properties: { lister_attr: 'other value' } }
+                                                              })
                   end
                 end
                 assert_equal 'other value', ::User.last.seller_profile.properties.lister_attr
@@ -205,7 +206,7 @@ module Api
                   assert_no_difference('UserProfile.count') do
                     post :create, role: FormBuilder::UserSignupBuilderFactory::ENQUIRER, form: user_attributes
                       .merge(profiles: { default: { properties: {} },
-                    buyer: { properties: {} } })
+                                         buyer: { properties: {} } })
                     assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'profiles.default.properties.user_attr']
                     assert_equal ['can\'t be blank'], assigns(:user_signup).errors[:'profiles.buyer.properties.enquirer_attr']
                   end
@@ -216,10 +217,10 @@ module Api
                 assert_difference('::User.count') do
                   assert_difference('UserProfile.count', 2) do
                     post :create, role: FormBuilder::UserSignupBuilderFactory::ENQUIRER,
-                      form: user_attributes.merge(profiles: {
-                        default: { properties: { user_attr: 'my value' } },
-                        buyer: { properties: { enquirer_attr: 'other value' } }
-                    })
+                                  form: user_attributes.merge(profiles: {
+                                                                default: { properties: { user_attr: 'my value' } },
+                                                                buyer: { properties: { enquirer_attr: 'other value' } }
+                                                              })
                   end
                 end
                 assert_equal 'my value', ::User.last.default_profile.properties.user_attr

@@ -57,7 +57,7 @@ class LiquidView
     controller.headers['Content-Type'] ||= content_type if controller.respond_to?(:headers)
     register_tags
     assigns = context_assigns.merge(local_assigns.stringify_keys)
-    LiquidTemplateParser.new(
+    Liquify::LiquidTemplateParser.new(
       filters: filters_from_controller(controller) + [Liquid::LiquidFilters],
       registers: { action_view: @view, controller: controller }
     ).parse(source, assigns).html_safe
@@ -108,7 +108,7 @@ class LiquidView
     assigns['flash'] = @view.try(:flash).try(:to_hash) if [ApplicationController, Api::BaseController].any? { |klass| @view.try(:controller).is_a?(klass) }
     assigns['form_authenticity_token'] = @view.try(:form_authenticity_token)
 
-    custom_theme = PlatformContext.current.custom_theme
+    custom_theme = PlatformContext.current&.custom_theme
     if custom_theme.present?
       assigns['asset_url'] = Rails.cache.fetch("custom_themes.#{custom_theme.id}.#{custom_theme.updated_at}") do
         custom_theme.custom_theme_assets.each_with_object({}) do |custom_theme_asset, hash|

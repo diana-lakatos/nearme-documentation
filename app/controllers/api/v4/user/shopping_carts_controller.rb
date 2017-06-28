@@ -3,20 +3,31 @@ module Api
   module V4
     module User
       class ShoppingCartsController < Api::V4::User::BaseController
-        skip_before_action :require_authorization
-
         def create
-          shopping_cart_form.save if shopping_cart_form.validate(params[:form].presence || params[:shopping_cart].presence || {})
+          SubmitForm.new(
+            form_configuration: form_configuration,
+            form: shopping_cart_form,
+            params: form_params,
+            current_user: current_user
+          ).call
           respond(shopping_cart_form)
         end
 
         def update
-          # TODO: this is hotfix to recalculate hostfee properly in MyCSN
-          shopping_cart_form.save if shopping_cart_form.validate(params[:form].presence || {})
+          SubmitForm.new(
+            form_configuration: form_configuration,
+            form: shopping_cart_form,
+            params: form_params,
+            current_user: current_user
+          ).call
           respond(shopping_cart_form)
         end
 
         protected
+
+        def form_params
+          params[:form].presence || params[:shopping_cart].presence || {}
+        end
 
         def shopping_cart_form
           @shopping_cart_form ||= form_configuration.build(ShoppingCart.get_for_user(current_user))

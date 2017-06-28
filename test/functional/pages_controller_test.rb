@@ -153,7 +153,7 @@ class PagesControllerTest < ActionController::TestCase
 
         get :show, slug: @page.slug
 
-        assert response.body.include?(LiquidTemplateParser::LIQUID_ERROR)
+        assert response.body.include?(Liquify::LiquidTemplateParser::LIQUID_ERROR)
       end
 
       should 'store when liquid runtime error' do

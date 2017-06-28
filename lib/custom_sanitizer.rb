@@ -1,8 +1,8 @@
 require 'sanitize'
 
 class CustomSanitizer
-  def initialize(config = {})
-    @config = Sanitize::Config.merge(Sanitize::Config::BASIC, config)
+  def initialize(config)
+    @config = Sanitize::Config.merge(Sanitize::Config::BASIC, config.presence || {})
   end
 
   def sanitize(html)

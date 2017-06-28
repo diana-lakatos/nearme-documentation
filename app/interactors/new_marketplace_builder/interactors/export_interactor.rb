@@ -4,6 +4,9 @@ module NewMarketplaceBuilder
     class ExportInteractor
       EXPORTERS = {
         Converters::AuthorizationPolicyConverter => %w(authorization_policies liquid),
+        Converters::ApiCallNotificationConverter => %w(notifications/api_call_notifications liquid),
+        Converters::EmailNotificationConverter => %w(notifications/email_notifications liquid),
+        Converters::SmsNotificationConverter => %w(notifications/sms_notifications liquid),
         Converters::CategoryConverter => %w(categories yml),
         Converters::ContentHolderConverter => %w(content_holders liquid),
         Converters::CustomModelTypeConverter => %w(custom_model_types yml),

@@ -1,0 +1,17 @@
+---
+name: api_notification
+to: 'https://example.com/endpoint/{{ form.model.id }}'
+delay: 30
+enabled: true
+format: http
+trigger_condition: lack of condition
+request_type: DELETE
+headers: '{
+  "Cache-Control": "no-cache",
+  "Content-Type": "application/json"
+}'
+---
+{
+  name: {{ form.model.first_name }}
+  id: {{ form.model.id }}
+}

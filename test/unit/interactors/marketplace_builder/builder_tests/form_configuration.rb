@@ -15,6 +15,9 @@ module MarketplaceBuilder
                      form_configuration.configuration)
         assert form_configuration.liquid_body.include?('<h1>Refer a Friend</h1>')
         assert_equal %w(form_policy), form_configuration.authorization_policies.pluck(:name)
+        assert_equal %w(some_email_notification), form_configuration.email_notifications.pluck(:name)
+        assert_equal %w(api_notification), form_configuration.api_call_notifications.pluck(:name)
+        assert_equal %w(some_sms), form_configuration.sms_notifications.pluck(:name)
       end
     end
   end

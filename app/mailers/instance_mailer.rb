@@ -8,19 +8,15 @@ class InstanceMailer < ActionMailer::Base
   self.job_class = MailerJob
   attr_accessor :platform_context
 
-  def mail(options = {})
+  def mail(to:, from:, subject:, bcc: [], cc: [], reply_to: nil, **options)
     lookup_context.class.register_detail(:transactable_type_id) { nil }
-    @platform_context = PlatformContext.current.decorate
+    @platform_context = PlatformContext.current&.decorate
+
+    inline_content = options.delete(:content)
     template = options.delete(:template_name) || view_context.action_name
     layout_path = options.delete(:layout_path)
     lookup_context.transactable_type_id = options.delete(:transactable_type_id)
 
-    to = options[:to]
-    bcc = options.delete(:bcc)
-    cc = options.delete(:cc)
-    from = options.delete(:from)
-    subject  = options.delete(:subject)
-    reply_to = options.delete(:reply_to)
     # do not change name of this var :) if you change it to @user, it will overwrite variables set by workflow step :)
     @user_to_which_email_will_be_sent = User.with_deleted.find_by(email: Array(to).first)
 
@@ -32,24 +28,32 @@ class InstanceMailer < ActionMailer::Base
     render_options[:layout] = layout_path if layout_path.present?
 
     options.merge!(
+      to: to,
+      from: from,
       subject: subject,
       bcc: bcc,
       cc: cc,
-      from: from,
       reply_to: reply_to
     )
 
-    message = super(options) do |format|
-      format.html { render(template, render_options) }
-      format.text do
-        begin
-          render(template, render_options)
-        rescue ::ActionView::MissingTemplate
-          # do not require text format, html is enough
-          ''
-        end
-      end
-    end
+    message = if inline_content.present?
+                super(options) do |format|
+                  format.html { render render_options.merge(inline: inline_content) }
+                  format.text { '' }
+                end
+              else
+                super(options) do |format|
+                  format.html { render(template, render_options) }
+                  format.text do
+                    begin
+                      render(template, render_options)
+                    rescue ::ActionView::MissingTemplate
+                      # do not require text format, html is enough
+                      ''
+                    end
+                  end
+                end
+              end
 
     attachment_parts = []
     message.parts.each do |part|
@@ -83,6 +87,7 @@ class InstanceMailer < ActionMailer::Base
     if options.values_at(:to, :cc, :bcc).compact.flatten.size == 1 && @user_to_which_email_will_be_sent.present?
       UserDrop.new(@user_to_which_email_will_be_sent).unsubscribe_url
     else
+      return '' if @platform_context.nil?
       PlatformContextDrop.new(@platform_context).unsubscribe_url
     end
   end

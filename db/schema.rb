@@ -144,6 +144,26 @@ ActiveRecord::Schema.define(version: 20170711125610) do
   add_index "amenity_types", ["instance_id"], name: "index_amenity_types_on_instance_id", using: :btree
   add_index "amenity_types", ["name", "instance_id"], name: "index_amenity_types_on_name_and_instance_id", unique: true, using: :btree
 
+  create_table "api_call_notifications", force: :cascade do |t|
+    t.string   "name",                               null: false
+    t.text     "to",                                 null: false
+    t.text     "content",                            null: false
+    t.string   "format",            default: "http", null: false
+    t.integer  "delay",             default: 0
+    t.integer  "instance_id",                        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.boolean  "enabled",           default: true
+    t.text     "trigger_condition", default: "true"
+    t.string   "locale"
+    t.string   "time_zone"
+    t.string   "request_type",      default: "POST", null: false
+    t.text     "headers",           default: "{}"
+  end
+
+  add_index "api_call_notifications", ["instance_id", "name"], name: "index_api_call_notifications_on_instance_id_and_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
+
   create_table "api_keys", force: :cascade do |t|
     t.integer  "instance_id"
     t.datetime "deleted_at"
@@ -1067,6 +1087,29 @@ ActiveRecord::Schema.define(version: 20170711125610) do
   add_index "domains", ["name"], name: "index_domains_on_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "domains", ["target_id", "target_type"], name: "index_domains_on_target_id_and_target_type", using: :btree
 
+  create_table "email_notifications", force: :cascade do |t|
+    t.string   "name",                               null: false
+    t.text     "to",                                 null: false
+    t.text     "content",                            null: false
+    t.integer  "delay",             default: 0
+    t.integer  "instance_id",                        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.boolean  "enabled",           default: true
+    t.text     "trigger_condition", default: "true"
+    t.string   "locale"
+    t.string   "time_zone"
+    t.string   "from",                               null: false
+    t.string   "reply_to"
+    t.text     "cc"
+    t.text     "bcc"
+    t.text     "subject"
+    t.string   "layout_path"
+  end
+
+  add_index "email_notifications", ["instance_id", "name"], name: "index_email_notifications_on_instance_id_and_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
+
   create_table "event_store_events", force: :cascade do |t|
     t.integer  "instance_id",     null: false
     t.integer  "triggered_by_id"
@@ -1104,6 +1147,17 @@ ActiveRecord::Schema.define(version: 20170711125610) do
   end
 
   add_index "form_components", ["instance_id", "form_componentable_id", "form_type"], name: "ttfs_instance_tt_form_type", using: :btree
+
+  create_table "form_configuration_notifications", force: :cascade do |t|
+    t.integer  "instance_id",           null: false
+    t.integer  "form_configuration_id", null: false
+    t.integer  "notification_id",       null: false
+    t.string   "notification_type",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "form_configuration_notifications", ["instance_id", "form_configuration_id", "notification_id", "notification_type"], name: "index_on_form_configuration_notifications_unique", unique: true, using: :btree
 
   create_table "form_configurations", force: :cascade do |t|
     t.integer  "instance_id",                        null: false
@@ -2560,6 +2614,23 @@ ActiveRecord::Schema.define(version: 20170711125610) do
 
   add_index "shopping_carts", ["instance_id", "user_id", "checkout_at"], name: "index_shopping_carts_on_instance_id_and_user_id_and_checkout_at", using: :btree
 
+  create_table "sms_notifications", force: :cascade do |t|
+    t.string   "name",                               null: false
+    t.text     "to",                                 null: false
+    t.text     "content",                            null: false
+    t.integer  "delay",             default: 0
+    t.integer  "instance_id",                        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.boolean  "enabled",           default: true
+    t.text     "trigger_condition", default: "true"
+    t.string   "locale"
+    t.string   "time_zone"
+  end
+
+  add_index "sms_notifications", ["instance_id", "name"], name: "index_sms_notifications_on_instance_id_and_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
+
   create_table "spam_reports", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "spamable_id"
@@ -3601,6 +3672,7 @@ ActiveRecord::Schema.define(version: 20170711125610) do
     t.boolean  "enabled",                               default: true
   end
 
+  add_index "workflow_alerts", ["instance_id", "name", "alert_type", "workflow_step_id"], name: "index_workflow_alerts_on_name_unique", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
   add_index "workflow_alerts", ["template_path", "workflow_step_id", "recipient_type", "alert_type", "deleted_at"], name: "index_workflows_alerts_on_templ_step_recipient_alert_and_del", unique: true, using: :btree
 

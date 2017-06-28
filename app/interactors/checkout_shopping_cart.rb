@@ -2,7 +2,11 @@
 class CheckoutShoppingCart
   attr_reader :shopping_cart
   attr_accessor :payment
-  delegate :new_record?, :persisted?, to: :shopping_cart
+  delegate :new_record?, :persisted?, :id, to: :shopping_cart
+
+  def self.find(id)
+    new(ShoppingCart.find(id))
+  end
 
   def initialize(shopping_cart)
     @shopping_cart = shopping_cart
@@ -18,6 +22,10 @@ class CheckoutShoppingCart
     end
     @shopping_cart.checkout_at = Time.zone.now
     @shopping_cart.save!
+  end
+
+  def changed?
+    false
   end
 
   class Payment

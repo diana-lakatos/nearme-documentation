@@ -90,9 +90,9 @@ module Api
       def return_to_for_form(form)
         return if form_configuration.blank? || form_configuration.return_to.blank?
 
-        LiquidTemplateParser.new
-                            .parse(form_configuration.return_to, current_user: current_user, form: form)
-                            .presence
+        Liquify::ParsedValue.new(form_configuration.return_to,
+                                 current_user: current_user,
+                                 form: form).to_s.presence
       end
 
       def return_to_for_params
