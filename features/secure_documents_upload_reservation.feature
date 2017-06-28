@@ -23,25 +23,6 @@ Feature: Secure documents upload
     And I make booking request
     Then I should see page with booking requests with files
 
-  Scenario: User can make reservation without documents when documents upload is optional
-    Given a documents upload is optional
-    And I am logged in as the user
-    And I go to the transactable's page
-    And I book product
-    And I enter data in the credit card form
-    And I make booking request
-    Then I should see page with booking requests without files
-
-  Scenario: User can make reservation with documents when documents upload is optional
-    Given a documents upload is optional
-    And I am logged in as the user
-    And I go to the transactable's page
-    And I book product
-    And I enter data in the credit card form
-    And I choose file
-    And I make booking request
-    Then I should see page with booking requests with files
-
   Scenario: User can make reservation without documents
     Given a documents upload is vendor decides
     And I am logged in as the user
