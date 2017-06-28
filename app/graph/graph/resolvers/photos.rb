@@ -2,6 +2,10 @@
 module Graph
   module Resolvers
     class Photos < ActiveRecordCollection
+      def resolve_by_exclude_ids(relation, ids)
+        relation.where.not(id: ids)
+      end
+
       private
 
       def main_scope
