@@ -15,6 +15,10 @@ module NewMarketplaceBuilder
           converter: Converters::MailerConverter,
           parser: Parsers::LiquidParser
         },
+        'sms' => {
+          converter: Converters::SMSConverter,
+          parser: Parsers::LiquidParser
+        },
         'authorization_policies' => {
           converter: Converters::AuthorizationPolicyConverter,
           parser: Parsers::LiquidParser
