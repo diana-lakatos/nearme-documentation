@@ -15,6 +15,7 @@ module NewMarketplaceBuilder
         Converters::MailerConverter => %w(mailers liquid),
         Converters::PageConverter => %w(pages liquid),
         Converters::ReservationTypeConverter => %w(reservation_types yml),
+        Converters::SMSConverter => %w(sms liquid),
         Converters::TransactableTypeConverter => %w(transactable_types yml),
         Converters::TranslationConverter => %w(translations yml),
         Converters::WorkflowConverter => %w(workflows yml)
