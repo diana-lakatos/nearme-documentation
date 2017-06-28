@@ -1,7 +1,9 @@
+# frozen_string_literal: true
 module NewMarketplaceBuilder
   module Parsers
     class LiquidParser
       LIQUID_CONFIG_REGEX = /\A---(.|\n)*?---\n/
+      STRIPPED_FOLDER_NAME_REGEX = %r{^/?(liquid_views|mailers|sms)/}
 
       def initialize(liquid_body, file_path)
         @liquid_body = liquid_body
@@ -36,10 +38,7 @@ module NewMarketplaceBuilder
 
       def liquid_path
         @file_path.gsub(/\.[a-z]+$/, '')
-                  .gsub('/liquid_views/', '')
-                  .gsub('liquid_views/', '')
-                  .gsub('/mailers/', '')
-                  .gsub('mailers/', '')
+                  .gsub(STRIPPED_FOLDER_NAME_REGEX, '')
       end
 
       def file_format
