@@ -35,7 +35,6 @@ class Page < ActiveRecord::Base
   has_many :authorization_policies, through: :authorization_policy_associations
   has_many :authorization_policy_associations, as: :authorizable, dependent: :destroy
   has_many :data_sources, as: :data_sourcable
-  has_many :form_configurations, through: :page_forms
   has_many :page_data_source_contents, dependent: :destroy
 
   scope :admin_pages, -> { where(admin_page: true) }
