@@ -11,6 +11,10 @@ class UserMessageDrop < BaseDrop
   #   @return [Object] Conversation context: a listing, a booking, a user etc.
   # @!method recipient_name
   #   @return [String] first name of the recipient of the message
+  # @!method recipient
+  #   @return [User] Recipient of the message
+  # @!method author
+  #   @return [User] Author of the message
   # @!method create_path
   #   @return [String] path to creating a new message in the thread of this message
   # @!method replying_to_id
@@ -18,7 +22,7 @@ class UserMessageDrop < BaseDrop
   # @!method replied?
   #   @return [Boolean] returns true if message replied
   delegate :id, :body, :thread_context, :recipient_name, :create_path, :replying_to_id,
-           :created_at, :replied?, to: :user_message
+           :created_at, :recipient, :author, :replied?, to: :user_message
 
   def initialize(user_message)
     @user_message = user_message.decorate
