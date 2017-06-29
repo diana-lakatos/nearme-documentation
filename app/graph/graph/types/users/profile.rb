@@ -11,7 +11,7 @@ module Graph
         field :id, !types.Int
         field :enabled, !types.Boolean
         field :profile_type, !types.String
-        field :onboarded_at, !types.String
+        field :onboarded_at, types.String
         field :custom_attribute,
               types.String,
               'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
