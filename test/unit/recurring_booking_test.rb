@@ -50,6 +50,30 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal RecurringBooking::AmountCalculatorFactory::BaseAmountCalculator, @order.amount_calculator.class
         assert_equal (1670 * pro_rata).ceil, @order.order_items.first.payment.total_amount_cents
       end
+
+      should 'charge full month when starts first day of month' do
+        date_and_time = '%Y-%m-%d %H:%M:%S %Z'
+        starts_at =  DateTime.strptime(Date.today.end_of_month.to_s + " 16:00:00 +0000", date_and_time).utc
+        @order.update_columns(
+          time_zone: "Perth",
+          starts_at: starts_at,
+          next_charge_date: starts_at.to_date
+        )
+        @order.payment_subscription = FactoryGirl.build(:payment_subscription, subscriber: @order)
+        assert_equal true, @order.reload.pro_rated?
+        assert_equal RecurringBooking::AmountCalculatorFactory::FirstTimeMonthlyAmountCalculator, @order.reload.amount_calculator.class
+        @order.reload.process!
+        confirmed_at =  DateTime.strptime(Date.today.to_s + " 08:11:57 +0000", date_and_time)
+        travel_to confirmed_at do
+          Time.use_zone("Pacific Time (US & Canada)") do
+            @order.reload.confirm
+          end
+        end
+        assert @order.reload.confirmed?
+        assert_equal RecurringBooking::AmountCalculatorFactory::BaseAmountCalculator, @order.reload.amount_calculator.class
+        assert_equal 1670, @order.reload.order_items.first.payment.total_amount_cents
+        assert_equal confirmed_at, @order.reload.confirmed_at
+      end
     end
   end
 
