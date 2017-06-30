@@ -4,6 +4,7 @@ module NewMarketplaceBuilder
     class ExportInteractor
       EXPORTERS = {
         Converters::AuthorizationPolicyConverter => %w(authorization_policies liquid),
+        Converters::CategoryConverter => %w(categories yml),
         Converters::ContentHolderConverter => %w(content_holders liquid),
         Converters::CustomModelTypeConverter => %w(custom_model_types yml),
         Converters::CustomThemeConverter => %w(custom_themes theme_with_assets),
@@ -14,6 +15,7 @@ module NewMarketplaceBuilder
         Converters::MailerConverter => %w(mailers liquid),
         Converters::PageConverter => %w(pages liquid),
         Converters::ReservationTypeConverter => %w(reservation_types yml),
+        Converters::SMSConverter => %w(sms liquid),
         Converters::TransactableTypeConverter => %w(transactable_types yml),
         Converters::TranslationConverter => %w(translations yml),
         Converters::WorkflowConverter => %w(workflows yml)

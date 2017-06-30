@@ -1,12 +1,11 @@
 {% assign valid_roles = 'Black Belt,Innovator,Student Ambassador' | split: ',' %}
-{% assign has_role = valid_roles contains role %}
 
-{% if featured or has_role %}
+{% if valid_roles contains role %}
   <figcaption>
-    {% if has_role %}
-      {{ role }}
-    {% else %}
-     {{ 'featured' | t }}
-    {% endif %}
+    {{ role }}
+  </figcaption>
+{% elsif featured %}
+  <figcaption>
+   {{ 'featured' | t }}
   </figcaption>
 {% endif %}

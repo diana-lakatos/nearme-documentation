@@ -2,6 +2,7 @@
 module NewMarketplaceBuilder
   module Converters
     class TranslationConverter < BaseConverter
+      primary_key :key, find_by: [:key, :locale]
       def import(data_array)
         data_array.each do |data|
           locales_hash = convert_hash_to_dot_notation(data.values.first)

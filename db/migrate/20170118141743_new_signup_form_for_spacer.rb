@@ -515,7 +515,7 @@ class NewSignupFormForSpacer < ActiveRecord::Migration
             <div class="upload-photos-field-wrapper" data-upload-photos-field-wrapper>
               <label for="photos-upload">
                 Select photos you want to attach to your listing
-                <input type="file" name="{{ photo_prefix }}[0][image]" id="photos-upload" data-photo-field-name-template="{{ photo_prefix }}[%COUNTER%][image]" accept="image/gif, image/jpeg, image/jpg, image/png" capture="camera" disabled>
+                <input type="file" name="{{ photo_prefix }}[0][image]" id="photos-upload" data-photo-field-name-template="{{ photo_prefix }}[%COUNTER%][image]" accept="image/gif, image/jpeg, image/jpg, image/png" disabled>
               </label>
             </div>
 

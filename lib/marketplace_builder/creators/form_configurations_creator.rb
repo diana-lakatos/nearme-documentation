@@ -34,8 +34,6 @@ module MarketplaceBuilder
           p = Page.find_by(slug: slug)
           if p.nil?
             logger.warn "Unable to associate #{template.name} with nonexisting page: #{slug}"
-          elsif !form_configuration.page_forms.where(page_id: p.id).exists?
-            form_configuration.pages << p
           end
         end
       end

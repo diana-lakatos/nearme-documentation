@@ -37,8 +37,6 @@ class UserProfile < ActiveRecord::Base
   DEFAULT = 'default'
   PROFILE_TYPES = [SELLER, BUYER, DEFAULT].freeze
 
-  validates :profile_type, inclusion: { in: PROFILE_TYPES }
-
   before_create :assign_defaults
 
   scope :seller, -> { where(profile_type: SELLER) }

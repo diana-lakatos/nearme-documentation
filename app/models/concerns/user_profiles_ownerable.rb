@@ -2,7 +2,7 @@
 module UserProfilesOwnerable
   extend ActiveSupport::Concern
   included do
-    has_many :user_profiles
+    has_many :user_profiles, dependent: :destroy
 
     # FIXME: nead a cleaner solution - for now it's used by Form Object
     # to populate inputs

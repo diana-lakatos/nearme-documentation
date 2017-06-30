@@ -434,6 +434,17 @@ module Elastic
           end
         end
         @filters << date_range
+
+        @filters << {
+          not: {
+            range: {
+              availability_exceptions: {
+                gte: @query[:date_range].first,
+                lte: @query[:date_range].last
+              }
+            }
+          }
+        }
       end
     end
   end
