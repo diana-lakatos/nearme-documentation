@@ -3,7 +3,7 @@ module NewMarketplaceBuilder
   module Converters
     class AuthorizationPolicyConverter < BaseConverter
       primary_key :name
-      properties :name, :content
+      properties :name, :content, :redirect_to
 
       def scope
         AuthorizationPolicy.where(instance_id: @model.id)
