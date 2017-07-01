@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 module NewMarketplaceBuilder
   module Converters
+    class ConverterError < StandardError
+      attr_reader :details
+      def initialize(message, details)
+        super(message)
+        @details = details
+      end
+    end
+
     class BaseConverter
       class << self
         attr_reader :properties_value, :converters, :dynamic_properties, :primary_key_value, :primary_key_options
@@ -57,7 +65,7 @@ module NewMarketplaceBuilder
           rescue StandardError => error
             puts '########################################################'
             puts "Tried to convert: #{self.class} with #{model.errors.messages}"
-            raise error
+            raise ConverterError.new error, messages: model.errors.messages, model: model_hash
           end
         end
       end
