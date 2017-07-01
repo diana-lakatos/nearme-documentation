@@ -25,7 +25,11 @@
 
       {% comment %} Reviews menu {% endcomment %}
       {% assign visible = 'dashboard/reviews' | is_visible %}
-      {% assign show = platform_context.active_rating_systems_present? and visible %}
+      {% if platform_context.active_rating_systems_present? and visible %}
+        {% assign show = true %}
+      {% else %}
+        {% assign show = false %}
+      {% endif %}
       {% if show %}
         {% assign reviews_rate_show = 'dashboard/reviews_rate' | is_visible %}
         {% assign reviews_rate_path = 'rate_dashboard_reviews_path' | generate_url %}
@@ -75,14 +79,25 @@
 
       {% comment %} Projects menu {% endcomment %}
       {% if platform_context.transactable_types.first.name %}
-        {% assign projects_path = {{ platform_context.project_space_wizard_path }} %}
+        {% assign projects_path = platform_context.project_space_wizard_path %}
         {% assign projects_selected = current_path | matches: path %}
         {% assign projects_visible = 'dashboard/projects' | is_visible %}
-        {% assign projects_show = platform_context.projectable? and projects_visible %}
+
+        {% if platform_context.projectable? and projects_visible %}
+          {% assign projects_show = true %}
+        {% else %}
+          {% assign projects_show = false %}
+        {% endif %}
+
         {% assign transactables_path = 'dashboard_company_transactable_type_transactables_path' | generate_url: platform_context.transactable_types.first.id %}
         {% assign transactables_selected = current_path | matches: 'dashboard/company/(service_types|transactable_types)' %}
         {% assign transactables_visible = 'dashboard/transactables' | is_visible %}
-        {% assign transactables_show = current_user.registration_completed? and transactables_visible %}
+
+        {% if current_user.registration_completed? and transactables_visible %}
+          {% assign transactables_show = true %}
+        {% else %}
+          {% assign transactables_show = false %}        
+        {% endif %}
 
         {% if projects_show %}
           <li id="dashboard-nav_projects_header" class="{% if projects_selected %}selected{% endif %}">
@@ -111,7 +126,13 @@
           {% assign orders_path = 'dashboard_orders_path' | generate_url %}
           {% assign orders_selected = current_path | matches: orders_path %}
           {% assign orders_received_visible = 'dashboard/orders_received' | is_visible %}
-          {% assign orders_received_show = current_user.registration_completed? and orders_received_visible %}
+
+          {% if current_user.registration_completed? and orders_received_visible %}
+            {% assign orders_received_show = true %}
+          {% else %}
+            {% assign orders_received_show = false %}
+          {% endif %}
+
           {% assign orders_received_path = 'dashboard_company_orders_received_index_path' | generate_url %}
           {% assign orders_received_selected = current_path | matches: orders_received_path %}
           {% assign unconfirmed_orders_count = current_user.unconfirmed_received_orders_count %}
@@ -163,11 +184,23 @@
         {% assign white_labels_path = 'edit_dashboard_company_white_label_path' | generate_url: current_user.company_id %}
         {% assign white_labels_selected = current_path | matches: '/dashboard/white_labels' %}
         {% assign tickets_visible = 'dashboard/tickets' | is_visible %}
-        {% assign tickets_show = platform_context.instance.action_rfq? and tickets_visible %}
+        
+        {% if platform_context.instance.action_rfq? and tickets_visible %}
+          {% assign tickets_show = true %}
+        {% else %}
+          {% assign tickets_show = false %}
+        {% endif %}
+
         {% assign tickets_path = 'dashboard_company_support_tickets_path' | generate_url %}
         {% assign tickets_selected = current_path | matches: '/dashboard\/company\/support\/tickets(\/[0-9]+)?' %}
         {% assign sent_to_me_visible = 'dashboard/payment_documents/sent_to_me' | is_visible %}
-        {% assign sent_to_me_show = platform_context.instance.documents_upload_enabled? and sent_to_me_visible %}
+        
+        {% if platform_context.instance.documents_upload_enabled? and sent_to_me_visible %}
+          {% assign sent_to_me_show = true %}
+        {% else %}
+          {% assign sent_to_me_show = false %}
+        {% endif %}
+
         {% assign sent_to_me_path = 'sent_to_me_dashboard_company_payment_documents_path' | generate_url %}
         {% assign sent_to_me_selected = current_path | matches: sent_to_me_path %}
 

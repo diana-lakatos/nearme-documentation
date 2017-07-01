@@ -1,11 +1,11 @@
-<h2>{{ @reservation.total_units_text | titleize }}</h2>
+<h2>{{ reservation.total_units_text | titleize }}</h2>
 
-{% if @reservation_request.action_hourly_booking? %}
-  <p>{{ @reservation.hourly_summary }}</p>
+{% if reservation_request.action_hourly_booking? %}
+  <p>{{ reservation.hourly_summary }}</p>
 {% else %}
   <div class='selected-dates-summary'>
     <hr class='thin'>
-    {{ @reservation.dates_summary_with_hr }}
+    {{ reservation.dates_summary_with_hr }}
   </div>
 {% endif %}
 
@@ -22,10 +22,10 @@
         </button>
       {% endif %}
     </div>
-    <div class='summary-line-value subtotal-amount'>{{ @reservation.subtotal_price }}</div>
+    <div class='summary-line-value subtotal-amount'>{{ reservation.subtotal_price }}</div>
     <div class='clearfix'></div>
   </div>
-  {% if @reservation_request.with_delivery? %}
+  {% if reservation_request.with_delivery? %}
     <div class='summary-line'>
       <div class='summary-line-label'>
         {{ 'reservations_review.delivery' | translate }}
@@ -40,7 +40,7 @@
       <div class='clearfix'></div>
     </div>
   {% endif %}
-  {% if @reservation_request.has_service_fee? %}
+  {% if reservation_request.has_service_fee? %}
     <div class='summary-line'>
       <div class='summary-line-label'>
         {{ 'reservations_review.service_fee' | translate }}
@@ -51,13 +51,13 @@
           </button>
         {% endif %}
       </div>
-      <div class='summary-line-value service-fee-amount'>{{ @reservation.service_fee_guest }}</div>
+      <div class='summary-line-value service-fee-amount'>{{ reservation.service_fee_guest }}</div>
       <div class='clearfix'></div>
     </div>
   {% endif %}
 
-  {% if @reservation.additional_charges %}
-    {% for charge in @reservation.additional_charges %}
+  {% if reservation.additional_charges %}
+    {% for charge in reservation.additional_charges %}
       <div class='summary-line'>
         <div class='summary-line-label'>{{ charge.name }}</div>
         <div class='summary-line-value service-fee-amount'>{{ charge.amount_with_currency }}</div>
@@ -67,7 +67,7 @@
     {% endfor %}
   {% endif %}
 
-  {% if @reservation.tax_price %}
+  {% if reservation.tax_price %}
     <div class='summary-line'>
       <div class='summary-line-label'>
         {{ 'reservations_review.tax_included' | translate }}
@@ -78,7 +78,7 @@
           </button>
         {% endif %}
       </div>
-      <div class='summary-line-value delivery-amount'>{{ @reservation.tax_price }}</div>
+      <div class='summary-line-value delivery-amount'>{{ reservation.tax_price }}</div>
       <div class='clearfix'></div>
     </div>
   {% endif %}
@@ -93,6 +93,6 @@
         </button>
       {% endif %}
     </div>
-  <div class='summary-line-value total-amount' data-currency-symbol='{{ @reservation.currency }}' data-total-amount='{{ @reservation.total_amount_float }}'>{{ @reservation.total_price }}</div>
+  <div class='summary-line-value total-amount' data-currency-symbol='{{ reservation.currency }}' data-total-amount='{{ reservation.total_amount_float }}'>{{ reservation.total_price }}</div>
   <div class='clearfix'></div>
 </div>
