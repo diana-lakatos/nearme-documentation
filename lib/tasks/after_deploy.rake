@@ -16,7 +16,6 @@ namespace :after_deploy do
       SendSearchesDailyAlerts.schedule!
       PrepareFriendFinders.schedule!
       SendSearchesWeeklyAlerts.schedule!
-      SendAnalyticsMails.schedule!
       SendUnreadMessagesReminders.schedule!
       SendSpamReportsSummaryDaily.schedule!
       ScheduleChargeSubscriptions.schedule! if Rails.env.production?
