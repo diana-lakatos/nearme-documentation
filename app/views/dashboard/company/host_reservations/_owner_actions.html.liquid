@@ -24,7 +24,13 @@
 {% if reservation.can_reject? %}
   <a class="btn btn-warning" data-modal="true" href="{{ 'rejection_form_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id: reservation.transactable }}">{{ 'dashboard.host_reservations.actions.decline' | t }}</a>
 {% endif %}
-{% if reservation.paid? == false and (reservation.unconfirmed? or reservation.confirmed?) %}
+
+{% if reservation.unconfirmed? or reservation.confirmed? %}
+  {% assign active = true %}
+{% else %}
+  {% assign active = false %}
+{% endif %}
+{% if reservation.paid? == false and active %}
   {% if reservation.remote_payment? %}
     <a class="btn btn-warning" data-modal="true" href="{{ 'request_payment_dashboard_company_host_reservation_path' | generate_url: reservation.id, listing_id:reservation.transactable }}" data-confirm="{{ 'dashboard.host_reservations.confirmations.request_payment' | t }}">{{ 'dashboard.host_reservations.actions.request_payment' | t }}</a>
 
