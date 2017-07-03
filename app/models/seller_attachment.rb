@@ -7,7 +7,7 @@ class SellerAttachment < Ckeditor::Asset
 
   validates_inclusion_of :access_level, in: Ckeditor::Asset::ACCESS_LEVELS, allow_nil: true
 
-  validates :data, file_size: { maximum: 50.megabytes.to_i }
+  validates :data, file_size: { less_than_or_equal_to: 50.megabytes.to_i }
 
   validate :max_attachments_num, on: :create
   belongs_to :transactable, foreign_key: 'assetable_id'

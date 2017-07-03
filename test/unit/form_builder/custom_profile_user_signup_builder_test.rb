@@ -112,8 +112,10 @@ class CustomProfileUserSignupBuilderTest < ActiveSupport::TestCase
           },
           :custom_images => {
             "#{@driver_photo.name}": {
-              validation: {
-                'presence' => {}
+              image: {
+                validation: {
+                  'presence' => {}
+                }
               }
             }
           },
