@@ -92,7 +92,7 @@
       .col-xs-5
         %h3 #{user_profile.instance_profile_type.name}
       .col-xs-7
-        - if user_profile.instance_profile_type.searchable? && user_profile.instance_profile_type.admin_approval? && !user_profile.approved?
+        - if user_profile.instance_profile_type.searchable? && !user_profile.approved?
           = link_to t("instance_admin.locales.buttons.approve.on_#{user_profile.approved}"),
             approve_instance_admin_manage_user_user_profile_path(resource, user_profile),
             :method => :post,  class: 'btn pull-right btn-blue'
@@ -101,10 +101,9 @@
       %table.table.table-striped.sortable
         %tbody
           - if user_profile.instance_profile_type.searchable?
-            - if user_profile.instance_profile_type.admin_approval?
-              %tr
-                %td Approved
-                %td= user_profile.approved
+            %tr
+              %td Approved
+              %td= user_profile.approved
 
             - if user_profile.instance_profile_type.search_only_enabled_profiles?
               %tr
