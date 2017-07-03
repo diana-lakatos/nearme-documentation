@@ -200,7 +200,8 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def account_incomplete?
-    return true if data[:fields_needed].present?
+    return true if data.empty?
+    return true if data[:fields_needed].present? && data[:due_by].present?
     return true if data[:disabled_reason].present?
     return true if data[:verification_message].present?
     return true if data[:due_by].present?

@@ -107,7 +107,7 @@ module ActiveMerchant
         end
 
         if update_params[:legal_entity]
-          [:dob, :additional_owners, :address, :ssn_last_4, :business_tax_id, :business_name,
+          [:first_name, :last_name, :dob, :additional_owners, :address, :ssn_last_4, :business_tax_id, :business_name,
            :personal_id_number, :verification, :type].each do |needed_field|
             if update_params[:legal_entity][needed_field.to_sym].present?
               account.legal_entity.send("#{needed_field}=", update_params[:legal_entity][needed_field.to_sym])
@@ -118,7 +118,11 @@ module ActiveMerchant
         begin
           account.save
         rescue => e
-          OpenStruct.new(error: e.message)
+          if e.param == "bank_account"
+            OpenStruct.new(error: "Bank account: #{e.message}")
+          else
+            OpenStruct.new(error: e.message)
+          end
         end
       end
 
