@@ -8,6 +8,7 @@ module Graph
         description 'A profile'
 
         field :enabled, !types.Boolean
+        field :ondboarded_at, types.String
         field :profile_type, !types.String
         field :onboarded_at, types.String
         field :availability_template, Graph::Types::AvailabilityTemplate

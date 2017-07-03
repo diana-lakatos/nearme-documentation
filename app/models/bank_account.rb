@@ -139,7 +139,7 @@ class BankAccount < ActiveRecord::Base
       customer_response = payment_gateway.create_customer(token, payer.email)
       instance_client.response ||= customer_response.to_yaml
       instance_client.save!
-      customer_response = PaymentGateway::Response::Stripe::Customer.new(customer_response)
+      customer_response = Payment::Gateway::Response::Stripe::Customer.new(customer_response)
     end
 
     set_attributes_from_customer_response(customer_response, bank_account_response)

@@ -1,0 +1,8 @@
+.row
+  = simple_form_for [:instance_admin, :settings, @webhook_configuration.payment_gateway, @webhook_configuration], html: { class: 'form'} do |f|
+    .input-container.col-xs-12
+      =f.label :signing_secret
+    .input-container.col-xs-6
+      = f.input :signing_secret, input_html: {class: 'form-control' }, label: false
+    .input-container.col-xs-6
+      = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-left'

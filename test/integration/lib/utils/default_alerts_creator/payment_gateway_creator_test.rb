@@ -72,11 +72,15 @@ class Utils::DefaultAlertsCreator::PaymentGatewayCreatorTest < ActionDispatch::I
       should 'contain link to update payout if follow up action suggests this' do
         @date = Date.current
         assert_difference 'ActionMailer::Base.deliveries.size' do
-          WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::DisbursementFailed, @merchant_account.id,             'exception_message' => 'epic_fail',
-                                                                                                                              'follow_up_action' => 'update_funding_information',
-                                                                                                                              'amount' => 100.0,
-                                                                                                                              'disbursement_date' => @date,
-                                                                                                                              'transaction_ids' => [1, 2, 3])
+          WorkflowStepJob.perform(
+            WorkflowStep::PaymentGatewayWorkflow::DisbursementFailed,
+            @merchant_account.id,
+            'exception_message' => 'epic_fail',
+            'follow_up_action' => 'update_funding_information',
+            'amount' => 100.0,
+            'disbursement_date' => @date,
+            'transaction_ids' => [1, 2, 3]
+          )
         end
         mail = ActionMailer::Base.deliveries.last
         assert_contains "We are sorry, #{@merchant_account.merchantable.creator.first_name}!", mail.html_part.body

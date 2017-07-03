@@ -3486,10 +3486,20 @@ ActiveRecord::Schema.define(version: 20170711125610) do
   add_index "waiver_agreements", ["target_id", "target_type"], name: "index_waiver_agreements_on_target_id_and_target_type", using: :btree
   add_index "waiver_agreements", ["waiver_agreement_template_id"], name: "index_waiver_agreements_on_waiver_agreement_template_id", using: :btree
 
+  create_table "webhook_configurations", force: :cascade do |t|
+    t.datetime "deleted_at"
+    t.integer  "instance_id"
+    t.integer  "payment_gateway_id"
+    t.text     "encrypted_signing_secret"
+    t.string   "payment_gateway_mode"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "webhooks", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "webhookable_id"
-    t.string   "webhookable_type",     limit: 255
+    t.string   "webhookable_type",         limit: 255
     t.text     "encrypted_response"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -3500,8 +3510,9 @@ ActiveRecord::Schema.define(version: 20170711125610) do
     t.string   "state"
     t.text     "error"
     t.string   "payment_gateway_mode"
-    t.integer  "retry_count",                      default: 0
+    t.integer  "retry_count",                          default: 0
     t.string   "external_id"
+    t.integer  "wenhook_configuration_id"
   end
 
   add_index "webhooks", ["instance_id", "webhookable_id", "webhookable_type"], name: "index_webhooks_on_instance_id_and_webhookable", using: :btree

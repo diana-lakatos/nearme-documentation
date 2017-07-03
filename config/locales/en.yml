@@ -20,6 +20,7 @@ en:
               incrrect_account: "This account is not correct. Please provide different account."
         merchant_account:
           error_codes:
+            under_review: 'This account is currently under review'
             rejected_fraud: 'This account is rejected due to suspected fraud or illegal activity.'
             rejected_terms_of_service: 'This account is rejected due to suspected terms of service violations.'
             rejected_listed: 'This account is rejected due to a match on a third party prohibited persons or companies list (such as financial services provider or government).'
@@ -158,15 +159,11 @@ en:
         bank_routing_number: 'Routing Number'
         personal_id_number: 'Social Security Number'
         business_tax_id: 'Employer Identification Number'
-      merchant_account/owners:
-        last_name: "Last name"
-        first_name: "First name"
-        current_address: "Additonal owners address"
-        document: 'Photo ID'
-        attachements: 'Photo ID (front and back)'
       merchant_account/owners/current_address:
         address: "Additonal owners address"
       merchant_account_owner:
+        last_name: "Last name"
+        first_name: "First name"
         attachements: 'Photo ID (front and back)'
         document: 'Photo ID'
         dob_formated: 'Date of birth'
@@ -2047,6 +2044,7 @@ en:
       additional_owner: 'Additional owner'
       photo_id_1: 'Front side photo ID'
       photo_id_2: 'Back side photo ID'
+
 
 
     reservations:

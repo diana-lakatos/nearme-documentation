@@ -292,7 +292,9 @@ DesksnearMe::Application.routes.draw do
         end
 
         resources :payments
-        resources :payment_gateways, controller: 'payments/payment_gateways', except: [:show]
+        resources :payment_gateways, controller: 'payments/payment_gateways', except: [:show] do
+          resources :webhook_configurations, controller: 'payments/webhook_configurations', except: [:show]
+        end
         resources :tax_regions do
           collection do
             put :update_settings
@@ -1317,6 +1319,10 @@ DesksnearMe::Application.routes.draw do
 
     get '/sitemap.xml', to: 'seo#sitemap', format: 'xml', as: :sitemap
     get '/robots.txt', to: 'seo#robots', format: 'txt', as: :robots
+  end
+
+  resources :webhook_configuration, path: '/webhooks' do
+    post 'listen', to: 'webhooks/stripe#webhook'
   end
 
   namespace :webhooks do

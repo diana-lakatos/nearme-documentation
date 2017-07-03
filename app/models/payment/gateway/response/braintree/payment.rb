@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class PaymentGateway::Response::Braintree::Payment
+class Payment::Gateway::Response::Braintree::Payment
   attr_reader :refunds
 
   RESPONSE_STATES = {
