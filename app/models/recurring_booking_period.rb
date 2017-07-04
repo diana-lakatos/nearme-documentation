@@ -22,8 +22,8 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   state_machine :state, initial: :pending do
     event :approve do transition [:rejected, :pending] => :approved; end
-    event :cancel_by_enquirer                   do transition pending: :cancelled_by_enquirer; end
-    event :cancel_by_enquirer_with_payment      do transition pending: :cancelled_by_enquirer_with_payment; end
+    event :cancel_by_enquirer                   do transition all => :cancelled_by_enquirer; end
+    event :cancel_by_enquirer_with_payment      do transition all => :cancelled_by_enquirer_with_payment; end
     event :cancel_by_lister do transition pending: :cancelled_by_lister; end
     event :reject do transition pending: :rejected; end
 
@@ -73,12 +73,16 @@ class RecurringBookingPeriod < ActiveRecord::Base
     end
   end
 
-  def cancelled_witout_payment?
+  def cancelled_without_payment?
     state.in? %w(cancelled_by_lister cancelled_by_enquirer)
   end
 
   def cancelled?
-    cancelled_witout_payment? || state == 'cancelled_by_enquirer_with_payment'
+    cancelled_without_payment? || cancelled_by_enquirer_with_payment?
+  end
+
+  def penalty_charge_apply?
+    false
   end
 
   def penalty_charge_apply?
@@ -87,7 +91,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
   def generate_payment!
     return true if paid?
-    return false if cancelled_witout_payment?
+    return false if cancelled_without_payment?
 
     payment_object = payment || build_payment
 

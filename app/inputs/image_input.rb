@@ -10,8 +10,7 @@ class ImageInput < SimpleForm::Inputs::FileInput
         options[:delete_url] ||= "/api/user/custom_images/#{object.id}"
       end
     end
-    input_html_options[:accept] = 'image/*'
-    input_html_options[:capture] = 'capture'
+    input_html_options[:accept] = 'image/gif, image/jpeg, image/jpg, image/png'
     input_html_options['data-image-input'] = true
     input_html_options['data-object-name'] = object_name
     input_html_options['data-upload-url'] = options[:upload_url] if options[:upload_url].present?

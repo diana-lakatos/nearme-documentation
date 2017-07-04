@@ -4,15 +4,27 @@ class CustomImageForm < BaseForm
   class << self
     def decorate(options, attr_name)
       Class.new(self) do
-        add_validation(:image, options)
+        if (image_configuration = options.delete(:image))
+          add_validation(:image, image_configuration)
+        end
+        validates_with ImageWellFormednessValidator
         define_singleton_method(:human_attribute_name) do |_attr|
           attr_name
         end
       end
     end
   end
+
+  # @!attribute id
+  #   @return [Integer] numeric identifier for the custom image
   property :id, virtual: true
+
+  # @!attribute image
+  #   @return [File] image object associated with the custom image
   property :image, virtual: true
+
+  # @!attribute url
+  #   @return [String] url for the associated image
   property :url, virtual: true
 
   def id

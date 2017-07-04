@@ -14,7 +14,7 @@
         .filters
           = filter_searchable_dates label: t('instance_admin.manage.admin_searchable.user.search_types.date_created'), param_name: 'date'
 
-          = filter_dropdown param_name: :state, label: t('instance_admin.manage.admin_searchable.user.search_types.account_standing'), allow_blank: true, blank_label: t('instance_admin.manage.admin_searchable.title_all'), all_values: User::ACCOUNT_STANDINGS.each_with_object({}) { |val, obj| obj[val.to_s] = val.capitalize }
+          = filter_dropdown param_name: :state, label: t('instance_admin.manage.admin_searchable.user.search_types.account_standing'), allow_blank: false, all_values: User::ACCOUNT_STANDINGS.each_with_object({}) { |val, obj| obj[val.to_s] = val.capitalize }
 
           = filter_dropdown param_name: :profile_type, label: t('instance_admin.manage.admin_searchable.user.search_types.profile_type'), allow_blank: true, blank_label: t('instance_admin.manage.admin_searchable.title_all'), all_values: [:buyer, :seller].each_with_object({}) { |val, obj| obj[val.to_s] = t("instance_admin.manage.admin_searchable.user.profile_types.#{val}") }
 

@@ -11,7 +11,8 @@ class PlatformContextDecorator
   delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?, :projectable?, :biddable?,
            :transactable_types, :project_types, :wish_lists_icon_set, :seller_attachments_enabled?, :action_rfq?,
            :wish_lists_enabled?, :active_rating_systems_present?, :webhook_token, :enable_geo_localization,
-           :enquirer_blogs_enabled, :lister_blogs_enabled, :debugging_mode_for_admins?, to: :instance
+           :enquirer_blogs_enabled, :lister_blogs_enabled, :debugging_mode_for_admins?,
+           :use_cart?, to: :instance
 
   def initialize(platform_context)
     @platform_context = platform_context

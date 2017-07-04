@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 class NoActionBookingForm < ActionTypeForm
-  property :type, default: 'Transactable::NoActionBooking'
-
   class << self
     def decorate(configuration)
       Class.new(self) do
@@ -9,4 +7,8 @@ class NoActionBookingForm < ActionTypeForm
       end
     end
   end
+
+  # @!attribute type
+  #   @return [String] must be Transactable::NoActionBooking
+  property :type, default: 'Transactable::NoActionBooking'
 end

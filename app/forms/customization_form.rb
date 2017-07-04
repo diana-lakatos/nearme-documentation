@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 class CustomizationForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
-  property :id
-  property :custom_model_type_id
-  property :_destroy, virtual: true
 
   def _destroy=(value)
     model.mark_for_destruction if value == '1'
@@ -36,6 +33,32 @@ class CustomizationForm < BaseForm
       end
     end
   end
+
+  # @!attribute id
+  #   @return [Integer] numeric identifier of the associated object
+  property :id
+
+  # @!attribute custom_model_type_id
+  #   @return [Integer] numeric identifier of the associated
+  #     CustomModelType
+  property :custom_model_type_id
+
+  property :_destroy, virtual: true
+
+  # @!attribute customizable_id
+  #   @return [Integer] numeric identifier for the object to which the
+  #     customization is attached
+  property :customizable_id
+
+  # @!attribute customizable_type
+  #   @return [String] type of the object to which the customization is
+  #     attached; used in conjunction with customizable_id
+  property :customizable_type
+
+  # @!attribute custom_images
+  #   @return [CustomImagesForm] associated custom images
+  # @!attribute custom_attachments
+  #   @return [CustomAttachmentsForm] associated custom attachments
 
   def custom_images_open_struct!(fragment:, **_args)
     hash = {}

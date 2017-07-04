@@ -7,7 +7,7 @@
       = t :event_runs, scope: [:pricing, :schedule]
 
     = f.simple_fields_for :schedule_rules  do |schedule_rule_form|
-      - Time.use_zone(f.object.model.scheduable.try(:timezone).presence || f.object.model.timezone) do
+      - Time.use_zone(f.object.model.scheduable.try(:time_zone).presence || f.object.model.time_zone) do
         = render 'schedules/schedule_rule_fields', f: schedule_rule_form
 
     %p.sep.add-availability-wrapper
@@ -32,7 +32,7 @@
 
     - f.object.schedule_rules.build if f.object.schedule_rules.blank?
     = f.simple_fields_for :schedule_rules  do |schedule_rule_form|
-      - Time.use_zone(f.object.scheduable.try(:timezone).presence || f.object.timezone) do
+      - Time.use_zone(f.object.scheduable.try(:time_zone).presence || f.object.time_zone) do
         = render 'schedules/schedule_rule_fields', f: schedule_rule_form
 
     %p.sep.add-availability-wrapper

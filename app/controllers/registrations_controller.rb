@@ -31,8 +31,11 @@ class RegistrationsController < Devise::RegistrationsController
 
   def new
     @legal_page_present = Page.exists?(slug: 'legal')
-    setup_form_component
-    super unless already_signed_in?
+    if setup_form_component
+      super unless already_signed_in?
+    else
+      redirect_to :root
+    end
   end
 
   def status

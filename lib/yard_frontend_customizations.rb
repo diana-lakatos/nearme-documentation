@@ -3,7 +3,8 @@ class CustomVerifier < YARD::Verifier
     obj_list.reject do |obj|
       # Exclusions
       if (obj.is_a?(YARD::CodeObjects::ClassObject) && class_exclusions.any? { |pattern| pattern.match(obj.path) }) ||
-            (obj.is_a?(YARD::CodeObjects::MethodObject) && method_exclusions.any? { |pattern| pattern.match(obj.path) })
+            (obj.is_a?(YARD::CodeObjects::MethodObject) && method_exclusions.any? { |pattern| pattern.match(obj.path) }) ||
+            (obj.is_a?(YARD::CodeObjects::MethodObject) && obj.file.match(/^app\/forms\/.+?\.rb$/) && !obj.is_attribute?)
         true
       # Methods
       elsif obj.is_a?(YARD::CodeObjects::MethodObject)
@@ -18,7 +19,9 @@ class CustomVerifier < YARD::Verifier
         false
       else
         # All other objects
-        if (obj.is_a?(YARD::CodeObjects::ClassObject) && !(obj.path.match(/Drop$/) || obj.file.match(/^app\/liquid_tags\/.+?\.rb$/))) ||
+        if (obj.is_a?(YARD::CodeObjects::ClassObject) && !(obj.path.match(/Drop$/) ||
+                                                           obj.file.match(/^app\/liquid_tags\/.+?\.rb$/) ||
+                                                           obj.file.match(/^app\/forms\/.+?\.rb$/))) ||
            (obj.is_a?(YARD::CodeObjects::ModuleObject) && !obj.path.match(/LiquidFilters/))
           true
         else

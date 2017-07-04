@@ -1,5 +1,5 @@
 {% cache_for listing, listing.availability, listing.company, description %}
-  <h2>{{ 'transactable_types.locations.listings.the_listing' || translate }}</h2>
+  <h2>{{ 'transactable_types.locations.listings.the_listing' | translate }}</h2>
   <p>{{ listing.description | filter_text | custom_sanitize }}</p>
 
   <div class='amenities-block'>

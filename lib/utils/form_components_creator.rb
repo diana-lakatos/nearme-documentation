@@ -17,9 +17,9 @@ module Utils
                    when InstanceProfileType::BUYER
                      InstanceBuyerProfileCreator
                    when InstanceProfileType::DEFAULT
-                     InstanceProfileCreator
+                     InstanceDefaultProfileCreator
                    else
-                     raise NotImplementedError
+                     InstanceProfileCreator
                    end
                  when Instance
                    LocationFormComponentsCreator
@@ -181,6 +181,11 @@ module Utils
   end
 
   class InstanceProfileCreator < BaseComponentCreator
+    def create!
+    end
+  end
+
+  class InstanceDefaultProfileCreator < BaseComponentCreator
     def create!
       create_dashboard_form!
       create_default_registration!

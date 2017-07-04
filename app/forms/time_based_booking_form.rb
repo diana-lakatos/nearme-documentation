@@ -2,19 +2,6 @@
 class TimeBasedBookingForm < ActionTypeForm
   model 'transactable/time_based_booking'
 
-  property :type, default: 'Transactable::TimeBasedBooking'
-  property :availability_template
-  property :minimum_booking_minutes
-  property :minimum_booking_hours, virtual: true
-  property :availability_template_id,
-           populator: ->(fragment:, **) {
-             if fragment.to_i > 0
-               self.availability_template_id = fragment
-             else
-               return skip!
-             end
-           }
-
   class << self
     def decorate(configuration)
       Class.new(self) do
@@ -42,6 +29,38 @@ class TimeBasedBookingForm < ActionTypeForm
       end
     end
   end
+
+  # @!attribute type
+  #   @return [String] must be Transactable::TimeBasedBooking
+  property :type, default: 'Transactable::TimeBasedBooking'
+
+  # @!attribute availability_template
+  #   @return [AvailabilityTemplateForm] {AvailabilityTemplateForm} for the time based booking
+  property :availability_template
+
+  # @!attribute minimum_booking_minutes
+  #   @return [Integer] minimum number of minutes for a booking of this type
+  property :minimum_booking_minutes
+
+  # @!attribute minimum_booking_hours
+  #   @return [Integer] minimum number of hours for a booking of this type
+  property :minimum_booking_hours, virtual: true
+
+  # @!attribute availability_template_id
+  #   @return [Integer] numeric identifier for the associated availability template
+  property :availability_template_id,
+           populator: ->(fragment:, **) {
+             if fragment.to_i > 0
+               self.availability_template_id = fragment
+             else
+               return skip!
+             end
+           }
+
+  # @!attribute availability_templates
+  #   @return [Array<AvailabilityTemplateForm>] array of {AvailabilityTemplateForm} associated with the time
+  #     based booking; note: only the 'availability_template' property specifies the current availability
+  #     template for the time based booking
 
   def get_availability_template_object
     if model.availability_template && model.custom_availability_template?

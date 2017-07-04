@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 class UserVerificationForm < BaseForm
+
+  # @!attribute token
+  #   @return [String] token string to identify the user
   property :token, virtual: true
+
+  # @!attribute verified_at
+  #   @return [DateTime] when the user was verified
   property :verified_at, virtual: true
 
   validate :token do

@@ -437,7 +437,7 @@ class User < ActiveRecord::Base
     user_profiles.detect { |pt| pt.profile_type == 'seller' }
   end
 
-  def default_profile
+   def default_profile
     user_profiles.detect { |pt| pt.profile_type == 'default' }
   end
 
@@ -1215,7 +1215,7 @@ class User < ActiveRecord::Base
   end
 
   def time_zone
-    super || instance&.time_zone.presence || 'Pacific Time (US & Canada)'
+    super.presence || instance&.time_zone.presence || 'Pacific Time (US & Canada)'
   end
 
   def accessible_transactable_ids

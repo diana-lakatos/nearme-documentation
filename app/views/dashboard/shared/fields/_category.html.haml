@@ -1,5 +1,5 @@
 - if f.object.is_a?(BaseForm)
-  -if category.present?
+  - if category.present?
     - if category.autocomplete?
       = f.input :"#{category.name}", as: :string, label: category.translated_name, :placeholder => "Enter a category", input_html: { "data-category-autocomplete" => true, "data-category-id" => category.id, "data-items" => f.object.common_categories_json(category), :"data-api" => dashboard_api_category_path(category), value: f.object.common_categories(category).map(&:id).join(',')}, required: category.mandatory?
     - else

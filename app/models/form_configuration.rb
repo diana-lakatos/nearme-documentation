@@ -8,8 +8,8 @@ class FormConfiguration < ActiveRecord::Base
   serialize :configuration, Hash
   serialize :prepopulation_structure, Hash
 
-  has_many :page_forms, dependent: :destroy
-  has_many :pages, through: :page_forms
+  has_many :authorization_policies, through: :authorization_policy_associations
+  has_many :authorization_policy_associations, as: :authorizable, dependent: :destroy
   has_many :form_configurations_workflows, dependent: :destroy
   has_many :workflow_steps, through: :form_configurations_workflows
 

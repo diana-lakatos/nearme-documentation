@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
 
   force_ssl if: :require_ssl?
 
+  rescue_from Authorize::UnauthorizedAction do |error|
+    HandleUnauthorizedError.new(controller: self, error: error).run
+  end
+
   protect_from_forgery
   layout :layout_for_request_type
 

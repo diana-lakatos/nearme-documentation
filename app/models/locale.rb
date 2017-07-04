@@ -3,7 +3,7 @@ class Locale < ActiveRecord::Base
   scoped_to_platform_context
 
   # Generates /^\/(aa|ab|af|ak|sq|am|ar|an|hy|as|...|zu)(?=\/|$)/
-  DOMAIN_PATTERN = %r{^/(#{I18nData.languages.map { |l| Regexp.escape(l[0].downcase) }.join('|')})(?=/|$)}
+  DOMAIN_PATTERN = %r{^/(#{I18n::LanguagesWrapper.language_codes.join('|')})(?=/|$)}
 
   belongs_to :instance, touch: true
   has_many :locale_instance_views, dependent: :destroy
@@ -58,7 +58,7 @@ class Locale < ActiveRecord::Base
   end
 
   def name
-    I18nData.languages[code.upcase]
+    I18n::LanguagesWrapper.language_name(code)
   end
 
   def display_name

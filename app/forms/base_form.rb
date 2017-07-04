@@ -1,8 +1,12 @@
 # frozen_string_literal: true
+require './lib/validators/unique_validator'
+
 class BaseForm < Reform::Form
   class << self
-    def inject_dynamic_fields(configuration)
+    def inject_dynamic_fields(configuration, whitelisted: [])
       configuration.each do |field, options|
+        # Whitelisting disabled
+        # next if !whitelisted.include?(field.to_sym)
         add_property(field, options)
         add_validation(field, options)
       end

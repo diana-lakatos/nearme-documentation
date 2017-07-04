@@ -78,7 +78,9 @@ module Api
       helper_method :current_instance
 
       def form_configuration
-        @form_configuration ||= FormConfiguration.find_by(id: params[:form_configuration_id])
+        @form_configuration ||= FormConfiguration.find_by(id: params[:form_configuration_id]).tap do |fc|
+          Authorize.new(object: fc, user: current_user, params: params).call
+        end
       end
 
       def return_to(form)

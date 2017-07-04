@@ -254,10 +254,10 @@ class ReservationDrop < OrderDrop
   end
 
   # @return [DateTime] reservation date/time (first date) in
-  #   the timezone of the associated transactable object
+  #   the time_zone of the associated transactable object
   # @todo -- again, maybe some general class of pulling out dates
   def starts_at
-    @reservation.starts_at.in_time_zone(@reservation.transactable.timezone)
+    @reservation.starts_at.in_time_zone(@reservation.transactable.time_zone)
   end
 
   # @return [String] if the payment is pending and the user doesn't need to
@@ -265,7 +265,7 @@ class ReservationDrop < OrderDrop
   #   will be returned, otherwise, the HTML-formatted total price will be returned
   # @todo -- we should not provide html in DIY approach at all. Also translations would be nice
   def total_amount_if_payment_at_least_authorized
-    if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
+    if !@reservation.payment.manual_payment? && @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
       I18n.t('dashboard.user_reservations.total_amount_to_be_determined')
     else
       "<strong>#{@reservation.total_price}</strong>"
@@ -278,7 +278,7 @@ class ReservationDrop < OrderDrop
   #   is returned
   # @todo -- we should not provide html in DIY approach at all. Also translations would be nice
   def total_amount_for_host_if_payment_at_least_authorized
-    if @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
+    if !@reservation.payment.manual_payment? && @reservation.payment.pending? && !@reservation.has_to_update_credit_card?
       I18n.t('dashboard.user_reservations.total_amount_to_be_determined')
     else
       "<strong>#{@reservation.total_payable_to_host_formatted}</strong>"

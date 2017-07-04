@@ -37,7 +37,7 @@ class InstanceAdmin::UserSearchForm < SearchForm
 
     result[:deleted] = nil if state.present? && state == 'deleted'
 
-    result[:active_users] = nil if state.present? && state == 'active'
+    result[:active_users] = nil if state.blank? || state == 'active'
 
     result
   end

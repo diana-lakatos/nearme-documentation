@@ -17,7 +17,7 @@ class Dashboard::SellerAttachmentsController < Dashboard::AssetsController
       if attachment.save
         render partial: 'dashboard/shared/attachments/seller_attachment', locals: { attachment: attachment }
       else
-        render partial: 'errors', locals: { errors: attachment.errors.full_messages.join(', ') }
+        render partial: 'errors', locals: { errors: attachment.errors.full_messages.uniq.join(', ') }
       end
     else
       if attachment.save

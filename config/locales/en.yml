@@ -464,6 +464,7 @@ en:
       notices:
         key_created: "Custom translation key has been successfully created: %{key}."
         key_destroyed: 'Custom translation key has been deleted.'
+        invalid_search_string: 'Invalid search string.'
     projects:
       transactable_types:
         transactable_types: "Transactable Types"
@@ -967,6 +968,8 @@ en:
         email: Email
         signed_up: "Signed Up"
         login_as: "Login As"
+        current_address: 'Current address'
+        locations_addresses: 'Locations addresses'
         index:
           more_filters: "More filters"
           service: "Service"
@@ -3298,3 +3301,7 @@ en:
     user_status_text: 'Enter status'
     user_status_submit: 'Post'
     no_interactions_yet: 'No events yet'
+
+  uploaders:
+    image:
+      invalid_format: 'Image format is invalid.'

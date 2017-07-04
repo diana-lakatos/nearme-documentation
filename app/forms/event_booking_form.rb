@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 class EventBookingForm < ActionTypeForm
-  property :type, default: 'Transactable::EventBooking'
-  property :schedule
-
   class << self
     def decorate(configuration)
       Class.new(self) do
@@ -16,6 +13,15 @@ class EventBookingForm < ActionTypeForm
       end
     end
   end
+
+  # @!attribute type
+  #   @return [String] event booking type; must be Transactable::EventBooking
+  property :type, default: 'Transactable::EventBooking'
+
+  # @!attribute schedule
+  #   @return [ScheduleForm] schedule form containing the schedule rules and schedule
+  #     exception rules
+  property :schedule
 
   def build_schedule
     model.build_schedule(

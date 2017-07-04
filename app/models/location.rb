@@ -228,10 +228,8 @@ class Location < ActiveRecord::Base
     photos_metadata.try(:count).to_i > 0
   end
 
-  # This is to maintain interface compatibility with
-  # transactables
-  def timezone
-    time_zone.presence || get_default_timezone
+  def time_zone
+    super.presence || get_default_timezone
   end
 
   def jsonapi_serializer_class_name

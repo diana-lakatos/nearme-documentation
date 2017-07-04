@@ -15,9 +15,9 @@
   <address data-lat='{{location.latitude}}' data-lng='{{location.longitude}}' class="hidden">
     <div id="address-popover">
       <strong>{{ location.address_formatted }}</strong>
-      {{ if location.display_parts_of_address? }}
+      {% if location.display_parts_of_address? %}
         <span>{{ location.address_formatted_additional }}</span>
-      {{ endif }}
+      {% endif %}
       <a href="https://maps.google.com/maps?q={{location.address}}" target="_blank">
         <span class="ico-open-link padding"></span>
       </a>

@@ -219,6 +219,19 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
       assert_empty result(query)['users']
     end
+
+    should 'get current_user when no one logged' do
+      query = %({ current_user{ name } })
+
+      assert_nil result(query)['current_user']
+    end
+
+    should 'get current_user' do
+      query = %({ current_user{ name } })
+      @context = { 'current_user' => @user }
+
+      assert_equal @user.name, result(query).dig('current_user', 'name')
+    end
   end
 
   context 'wish_list_items' do

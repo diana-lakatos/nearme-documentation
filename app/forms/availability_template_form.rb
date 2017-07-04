@@ -2,10 +2,6 @@
 class AvailabilityTemplateForm < BaseForm
   model :availability_template
 
-  property :id
-  property :_destroy, virtual: true
-  property :name, default: 'Custom transactable availability'
-
   class << self
     def decorate(configuration)
       Class.new(self) do
@@ -16,6 +12,19 @@ class AvailabilityTemplateForm < BaseForm
     end
   end
 
+  # @!attribute id
+  #   @return [Integer] numeric identifier for the availability
+  #     template
+  property :id
+
+  property :_destroy, virtual: true
+
+  # @!attribute name
+  #   @return [String] name of the availability template
+  property :name, default: 'Custom transactable availability'
+
+  # @!attribute availability_rules
+  #   @return [Array<AvailabilityRuleForm>] array of availability rules
   collection :availability_rules, form: AvailabilityRuleForm,
                                   populator: ->(collection:, fragment:, index:, **) {
                                                item = availability_rules.find { |ar| ar.id.to_s == fragment['id'].to_s && fragment['id'].present? }
@@ -27,6 +36,8 @@ class AvailabilityTemplateForm < BaseForm
                                                availability_rules.append(model.availability_rules.build)
                                              }
 
+  # @!attribute schedule_exception_rules
+  #   @return [Array<ScheduleExceptionRuleForm>] array of schedule exception rules
   collection :schedule_exception_rules, form: ScheduleExceptionRuleForm,
                                         populator: ->(collection:, fragment:, index:, **) {
                                                      item = schedule_exception_rules.find { |ser| ser.id.to_s == fragment['id'].to_s && fragment['id'].present? }

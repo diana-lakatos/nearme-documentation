@@ -12,7 +12,7 @@ class DataUpload < ActiveRecord::Base
 
   mount_uploader :csv_file, DataImportFileUploader
   mount_uploader :xml_file, DataImportFileUploader
-  validates :csv_file, presence: true, file_size: { maximum: 50.megabytes.to_i }
+  validates :csv_file, presence: true, file_size: { less_than_or_equal_to: 50.megabytes.to_i }
 
   store :options, accessors: %i(send_invitational_email sync_mode enable_rfq default_shipping_category_id), coder: Hash
   scope :for_importable, -> (importable) { where(importable_type: importable.class.name, importable_id: importable.id) }

@@ -11,6 +11,9 @@ class Api::V3::MarketplaceReleasesController < Api::BaseController
 
     NewMarketplaceBuilder::Jobs::MarketplaceBuilderJob.perform(release.id)
     render json: release, status: :ok
+
+  rescue NewMarketplaceBuilder::Converters::ConverterError
+    render json: { error: $ERROR_INFO.details }, status: 500
   end
 
   def backup

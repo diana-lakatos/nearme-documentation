@@ -1,7 +1,7 @@
 {% query_graph 'location', result_name: g, location_id: location.id %}
 
 {% cache_for location, location.company, location.availability, description %}
-  <h2>{{ 'location.the_location' || translate }}</h2>
+  <h2>{{ 'location.the_location' | translate }}</h2>
   <p>{{ g.location.description | filter_text | custom_sanitize }}</p>
   <div class='amenities-block'>
     <div class='amenities-header'>

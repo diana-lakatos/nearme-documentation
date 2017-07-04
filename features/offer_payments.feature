@@ -52,19 +52,6 @@ Feature: Offer like end to end flow
     Then offer is confirmed
     And my credit card is saved
 
-  Scenario: 'Lister accepts an offer with manual payment'
-    Given a manual_payment_method exists
-    And an unconfirmed_offer exists
-    When I am logged in as lister
-    And I go to the dahboard transactables list
-    When I accept the offer
-    When I open manual payment method section
-    Then I should see "You will make payment in person"
-    And I press "Accept"
-    Then I should see "You have successfuly added credit card and accepted an offer"
-    When I cancel the project
-    Then I should see "Archived (1)"
-
   Scenario: 'Lister accepts pro bono offer'
     And a free_transactable_offer exists with creator: lister
     And an unconfirmed_offer exists with user: registered_enquirer

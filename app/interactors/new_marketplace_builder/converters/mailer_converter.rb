@@ -19,7 +19,7 @@ module NewMarketplaceBuilder
       end
 
       def resource_name(liquid)
-        return "#{liquid.path}.#{liquid.format}"unless liquid.partial
+        return "#{liquid.path}.#{liquid.format}" unless liquid.partial
         "#{File.dirname(liquid.path)}/_#{File.basename(liquid.path)}.#{liquid.format}"
       end
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 class PurchaseActionForm < ActionTypeForm
-  property :type, default: 'Transactable::PurchaseAction'
-
   class << self
     def decorate(configuration)
       Class.new(self) do
@@ -9,4 +7,8 @@ class PurchaseActionForm < ActionTypeForm
       end
     end
   end
+
+  # @!attribute type
+  #   @return [String] must be Transactable::PurchaseAction
+  property :type, default: 'Transactable::PurchaseAction'
 end

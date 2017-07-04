@@ -8,6 +8,7 @@ module CustomAttributes
     include ::CustomAttributes::Concerns::Models::Castable
 
     delegate :each, :with_indifferent_access, :key?, to: :@hash
+    attr_reader :model
 
     def initialize(model, store_accessor_name)
       @model = model

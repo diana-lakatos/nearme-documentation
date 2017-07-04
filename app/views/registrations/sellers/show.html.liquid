@@ -43,7 +43,7 @@
         {% endif %}
         {% if platform_context.active_rating_systems_present? %}
           <div id="reviews" class="tab-pane">
-            {% if @reviews_counter.total > 0 %}
+            {% if reviews_counter.total > 0 %}
               {% include 'registrations/sellers/profile/tabs/reviews.html' %}
             {% else %}
               {% assign tab = 'reviews' %}

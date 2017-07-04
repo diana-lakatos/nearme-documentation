@@ -15,8 +15,13 @@ class LocationForm < BaseForm
                                       populate_if_empty: Address,
                                       prepopulator: ->(*) { self.location_address ||= Address.new }
         end
-        inject_dynamic_fields(configuration)
+        inject_dynamic_fields(configuration, whitelisted: [:description, :email, :info, :currency, :phone, :availability_template_id, :special_notes, :location_type_id, :photos, :administrator_id, :name, :location_address, :availability_template_id, :time_zone])
       end
     end
   end
+
+  # @!attribute transactables
+  #   @return [TransactablesForm] transactables form for the associated transactables
+  # @!attribute location_address
+  #   @return [AddressForm] address form for the associated address
 end

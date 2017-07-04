@@ -18,4 +18,9 @@ class CheckoutForm < BaseForm
       end
     end
   end
+
+  # @!attribute payment
+  #   @return [Hash] contains payment_method_id (numeric identifier for the payment method)
+  #     and credit_card_token (represents a credit card with which the user is paying)
+
 end

@@ -57,7 +57,7 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
 
-  scope '(:language)', language: /[a-z]{2}/, defaults: { language: nil } do
+  scope '(:language)', language: /[a-z]{2}|([a-z]{2}-[A-Z]{2})/, defaults: { language: nil } do
     # Legacy pages redirect. Can be removed in Feb 16th. The redirect matches the route below.
     get '/pages/:slug(.:format)', to: 'pages#redirect'
 

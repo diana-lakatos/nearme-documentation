@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module NearmeMarketplace
   class BaseCommand
     def initialize(options)
@@ -6,9 +7,10 @@ module NearmeMarketplace
 
     def handle_server_response(response)
       if [200, 201, 302].include? response.status
-        puts_status "success"
+        puts_status 'success'
       else
-        puts_status "error", response.body
+        puts_status 'error', response.body
+        raise
       end
     end
 
@@ -40,18 +42,18 @@ module NearmeMarketplace
     end
 
     def puts_status(status, message = nil)
-      if status == "success"
+      if status == 'success'
         puts "Status: #{status}".green
       else
-        puts "*".red * 20
+        puts '*'.red * 20
         puts "Status: #{status}"
-        puts message if message != nil
-        puts "*".red * 20
+        puts message if message
+        puts '*'.red * 20
       end
     end
 
     def endpoint_name
-      ENV["ENDPOINT"] || 'local'
+      ENV['ENDPOINT'] || 'local'
     end
   end
 end
