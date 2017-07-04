@@ -42,6 +42,10 @@ class CommentsController < ApplicationController
                        Regexp.last_match(1).classify.constantize.find(value)
                      end
     end
+    if @commentable.blank?
+      flash[:error] = t('comments.could_not_find_commentable_object')
+      redirect_to :root
+    end
     nil
   end
 
