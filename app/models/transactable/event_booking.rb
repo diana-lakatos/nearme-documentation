@@ -26,7 +26,7 @@ class Transactable::EventBooking < Transactable::ActionType
     minute = start_min - (60 * hour)
     Time.use_zone(time_zone) do
       t = Time.zone.parse("#{date} #{hour}:#{minute}")
-      return false if schedule.schedule_exception_ranges(t).any? { |range| range.cover?(occurrence) }
+      return false if schedule.schedule_exception_ranges(t).any? { |range| range.cover?(t) }
       schedule.schedule.occurs_between?(t - 1.second, t) || schedule.schedule.occurs_on?(t)
     end
   end

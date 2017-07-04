@@ -437,7 +437,7 @@ class User < ActiveRecord::Base
     user_profiles.detect { |pt| pt.profile_type == 'seller' }
   end
 
-  def default_profile
+   def default_profile
     user_profiles.detect { |pt| pt.profile_type == 'default' }
   end
 

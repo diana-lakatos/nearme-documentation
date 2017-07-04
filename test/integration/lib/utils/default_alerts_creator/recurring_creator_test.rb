@@ -6,7 +6,6 @@ class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::Integr
   end
 
   should 'create all' do
-    @recurring_creator.expects(:create_analytics_email!).once
     @recurring_creator.expects(:create_share_email!).once
     @recurring_creator.expects(:create_request_photos_email!).once
     @recurring_creator.create_all!
@@ -17,21 +16,6 @@ class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::Integr
       @company = FactoryGirl.create(:company)
       @platform_context = PlatformContext.current
       PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, name: 'custom.domain.com'))
-    end
-
-    should 'create_analytics_email' do
-      @recurring_creator.create_analytics_email!
-      assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(WorkflowStep::RecurringWorkflow::Analytics, @company.id, @company.creator.id)
-      end
-      mail = ActionMailer::Base.deliveries.last
-      assert_equal "#{@company.creator.first_name}, we have potential guests for you!", mail.subject
-      assert mail.html_part.body.include?(@company.creator.first_name)
-      assert_equal [@company.creator.email], mail.to
-      assert mail.html_part.body.include?('Make sure you have plenty of photos, and that they are up to date. It will make your Desk look even better!')
-      assert_contains 'href="https://custom.domain.com', mail.html_part.body
-      assert_not_contains 'href="https://example.com', mail.html_part.body
-      assert_not_contains 'href="/', mail.html_part.body
     end
 
     should 'create_share_email' do

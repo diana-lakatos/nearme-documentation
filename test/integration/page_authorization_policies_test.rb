@@ -29,6 +29,17 @@ class PagePoliciesTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
+  should 'redirect to login page if policies are not met' do
+    please_log_in_page = FactoryGirl.create(:page, slug: 'please_log_in', content: '<h1>Please log in</h1>')
+    @page.authorization_policies.create!(
+      name: 'must_be_jane',
+      content: "{% if current_user.first_name == 'Jane'%}true{% endif %}",
+      redirect_to: '/please_log_in'
+    )
+    get page_slug
+    assert_redirected_to "/#{please_log_in_page.slug}?return_to=#{page_slug}"
+  end
+
   protected
 
   def page_slug

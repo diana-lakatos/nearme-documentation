@@ -26,7 +26,7 @@ class Transactable < ActiveRecord::Base
 
   DEFAULT_ATTRIBUTES = %w(name description capacity).freeze
 
-  SORT_OPTIONS_MAP = { all: 'All', featured: 'Featured', most_recent: 'Most Recent', most_popular: 'Most Popular', collaborators: 'Collaborators' }.freeze
+  SORT_OPTIONS_MAP = { all: 'All', featured: 'Featured', most_recent: 'Most Recent', most_popular: 'Most Popular', near_me: 'Near Me', collaborators: 'Collaborators' }.freeze
   SORT_OPTIONS = SORT_OPTIONS_MAP.values.freeze
 
   DATE_VALUES = %w(today yesterday week_ago month_ago 3_months_ago 6_months_ago).freeze

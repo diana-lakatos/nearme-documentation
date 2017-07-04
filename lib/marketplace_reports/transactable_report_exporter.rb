@@ -11,7 +11,7 @@ module MarketplaceReports
       csv = CSV.generate do |csv|
         csv << [attribute_names, 'creator_name', 'creator_email', 'url', 'latitude', 'longitude', 'address', 'street', 'suburb', 'city', 'country', 'state', 'postcode', 'prices', properties_columns].flatten
   
-        @collection.each do |record|
+        @collection.find_each do |record|
           record = record.decorate if record.is_a?(Transactable)
           values = record.attributes.values
           properties = record.send(:properties).to_h
@@ -44,7 +44,7 @@ module MarketplaceReports
     private
 
     def get_hstore_columns
-      CustomAttributes::CustomAttribute.with_deleted.where(target_type: 'TransactableType').order('name ASC').pluck(:name).uniq
+      CustomAttributes::CustomAttribute.where(target_type: 'TransactableType').order('name ASC').pluck(:name).uniq
     end
   end
 end

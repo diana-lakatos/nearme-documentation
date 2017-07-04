@@ -26,18 +26,24 @@ module MarketplaceBuilder
 
       def execute!
         yaml_content = read_exported_file('workflows/test.yml')
+        expected = {
+          'name' => 'test workflow', 'workflow_type' => 'test', 'events_metadata' => {}, 'workflow_steps' => [
+            { 'name' => 'test workflow',
+              'associated_class' => 'WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate',
+              'workflow_alerts' => [
+                { 'name' => 'test',
+                  'alert_type' => 'email',
+                  'recipient_type' => 'lister',
+                  'template_path' => 'user_mailer/user_commented_on_user_update',
+                  'enabled' => true,
+                  'headers' => '{}',
+                  'payload_data' => '{}',
+                  'prevent_trigger_condition' => '',
+                  'delay' => 0 }
+              ] }
+          ] }
 
-        assert_equal yaml_content, 'name' => 'test workflow', 'workflow_type' => 'test', 'events_metadata' => {}, 'workflow_steps' => [
-          { 'name' => 'test workflow',
-            'associated_class' => 'WorkflowStep::CommenterWorkflow::UserCommentedOnUserUpdate',
-            'workflow_alerts' => [
-              { 'name' => 'test',
-                'alert_type' => 'email',
-                'recipient_type' => 'lister',
-                'template_path' => 'user_mailer/user_commented_on_user_update',
-                'delay' => 0 }
-            ] }
-        ]
+        assert_equal(expected, yaml_content)
       end
     end
   end

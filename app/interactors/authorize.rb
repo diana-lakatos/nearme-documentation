@@ -19,7 +19,7 @@ class Authorize
     @unathorized_policy ||= @object.authorization_policies.detect do |authorization_policy|
       AuthorizationPolicy::PolicyAuthorizer.unauthorized?(
         AuthorizationPolicy::EvaluatedPolicy.new(user: @user,
-                                                 object: @form_configuration,
+                                                 object: @object,
                                                  params: ::LiquidView.sanitize_params(@params),
                                                  policy: authorization_policy.content)
       )

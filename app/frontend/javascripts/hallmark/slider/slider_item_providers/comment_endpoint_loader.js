@@ -82,7 +82,7 @@ class CommentEndpointLoader implements EndpointLoader {
         `
           <article${attachment ? ' class="has-attachment"' : ''}>
             <figure class="avatar"><a href="${comment.creator.profile_path}"><img src="${comment.creator.avatar.url}"></a></figure>
-            <h3 class="hx"><a href="${comment.creator.profile_path}">${comment.creator.name}</a> posted on <a href="${comment.commentable.url}">${comment.commentable.name}</a></h3>
+            <h3 class="hx"><a href="${comment.creator.profile_path}">${comment.creator.name}</a> posted on <a href="${this.getCommentableUrl(comment.commentable.url)}">${comment.commentable.name}</a></h3>
             <p>${truncate(comment.body, { length: truncateValue })}</p>
             ${attachmentString}
           </article>`
@@ -92,6 +92,14 @@ class CommentEndpointLoader implements EndpointLoader {
     el.innerHTML = `<div class="comments-wrapper">${output}</div>`;
     el.classList.remove('loading');
     item.loaded = true;
+  }
+
+  /* Modify commentable url for projects, as it needs additional anchor */
+  getCommentableUrl(str): string {
+    if (str.indexOf('/listings/') > -1) {
+      str = `${str}#activity-tab`;
+    }
+    return str;
   }
 
   afterLoadedCallback(element: HTMLElement) {

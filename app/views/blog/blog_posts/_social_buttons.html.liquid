@@ -1,5 +1,5 @@
-<div class='social-buttons-wrapper {% if not @blog_instance.facebook_app_id_present? %} without-facebook {% endif %}'>
-  {% if @blog_instance.facebook_app_id_present? %}
+<div class='social-buttons-wrapper {% if blog_instance.facebook_app_id_present? == blank %} without-facebook {% endif %}'>
+  {% if blog_instance.facebook_app_id_present? %}
     <div class='facebook'>
       <div class='fb-like' data-href='{{ blog_post.post_url }}' data-colorscheme="light"
         data-layout="button_count" data-action="like" data-show-faces="false" data-send="false">

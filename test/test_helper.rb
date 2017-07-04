@@ -162,6 +162,7 @@ ActiveSupport::TestCase.class_eval do
     credit_card.response = nil
     credit_card.instance_client.update_attribute(:encrypted_response, nil)
     credit_card.instance_client.send(:clear_decorator)
+    credit_card.instance_client.client.update_attributes(email: 'cc_user@near-me.com')
     credit_card.attributes = FactoryGirl.attributes_for(:credit_card_attributes).reject { |k, _v| k == :response }
     credit_card.process!
     credit_card.save!
