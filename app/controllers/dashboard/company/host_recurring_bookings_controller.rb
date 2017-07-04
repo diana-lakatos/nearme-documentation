@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::BaseController
+  include RejectionReasonErrorHelper
+
   before_action :find_listing, except: [:show, :index]
   before_action :find_recurring_booking, except: [:show, :index]
 
@@ -50,7 +52,7 @@ class Dashboard::Company::HostRecurringBookingsController < Dashboard::Company::
     if @recurring_booking.reject(rejection_reason)
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
     else
-      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
+      flash[:error] = rejection_error_messages(@recurring_booking)
     end
     redirect_to :back
     render_redirect_url_as_json if request.xhr?

@@ -1820,8 +1820,8 @@ ActiveRecord::Schema.define(version: 20170630090935) do
     t.string   "state",                                         limit: 255
     t.string   "type",                                          limit: 255
     t.string   "time_zone"
-    t.boolean  "use_billing",                                               default: false, null: false
-    t.string   "rejection_reason",                              limit: 255
+    t.boolean  "use_billing",                                                default: false, null: false
+    t.string   "rejection_reason",                              limit: 1500
     t.string   "completed_form_component_ids",                  limit: 255
     t.integer  "cancellation_policy_hours_for_cancellation",                default: 0
     t.integer  "cancellation_policy_penalty_percentage",                    default: 0
