@@ -168,15 +168,15 @@ DESC
 BANNER
 
         info = ''
-        info << "Branch: #{options[:branch]}\n" if options.key?('branch')
-        info << "Application: #{options[:app_name]}\n" if options.key?('app_name')
-        info << "Environment: #{options[:environment]}\n" if options.key?('environment')
-        info << "Migrate: #{options[:migrate]}\n" if options.key?('migrate')
-        info << "Watch: #{options[:watch]}\n" if options.key?('watch')
-        info << "Host: #{options[:host]}\n" if options.key?('host')
-        info << "Comment: #{options[:comment]}\n" if options.key?('comment')
+        info += "Branch: #{options[:branch]}\n" if options.key?('branch')
+        info += "Application: #{options[:app_name]}\n" if options.key?('app_name')
+        info += "Environment: #{options[:environment]}\n" if options.key?('environment')
+        info += "Migrate: #{options[:migrate]}\n" if options.key?('migrate')
+        info += "Watch: #{options[:watch]}\n" if options.key?('watch')
+        info += "Host: #{options[:host]}\n" if options.key?('host')
+        info += "Comment: #{options[:comment]}\n" if options.key?('comment')
 
-        banner << info
+        banner += info
 
         banner.each_line do |line|
           line.each_char do |ch|
