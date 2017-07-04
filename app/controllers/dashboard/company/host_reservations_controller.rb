@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseController
+  include RejectionReasonErrorHelper
+
   before_action :find_reservation, except: [:index]
   before_action :check_if_pending_guest_confirmation, only: [:complete_reservation, :submit_complete_reservation]
   before_action :redirect_to_account_if_verification_required
@@ -42,7 +44,7 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
     if @reservation.reject(rejection_reason)
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
     else
-      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
+      flash[:error] = rejection_error_messages(@reservation)
     end
 
     redirect_to redirection_path
