@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # Usage example:
 # ```
-#   {% link_to_remove_association_tag label, form, relation %}
+#   {% link_to_remove_association_tag label, form, class: 'btn btn-primary' %}
 # ```
 #
 # Renders nested fields
