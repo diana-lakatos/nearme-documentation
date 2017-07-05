@@ -3305,3 +3305,6 @@ en:
   uploaders:
     image:
       invalid_format: 'Image format is invalid.'
+
+  comments:
+    could_not_find_commentable_object: 'Could not find the commentable object.'
