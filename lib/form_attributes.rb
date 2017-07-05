@@ -86,9 +86,15 @@ class FormAttributes
   end
 
   def reservation(reservation_type = nil)
-    [:address, :dates, :guest_notes, :waiver_agreements, :payments, :payment_documents,
-     :billing_address, :shipping, :shipping_options, :price, :start_date, :shipping_address_google] +
-      extra_attributes(reservation_type.categories.roots, 'Category') +
+    base_attributes = [:dates, :guest_notes, :waiver_agreements, :payments, :payment_documents,
+                       :billing_address, :shipping, :shipping_options, :price, :start_date, :shipping_address_google]
+
+    if reservation_type.blank? ||
+       reservation_type.transactable_types.first&.action_types&.enabled&.first&.type != 'TransactableType::OfferAction'
+      base_attributes << :address
+    end
+
+    base_attributes + extra_attributes(reservation_type.categories.roots, 'Category') +
       reservation_type.custom_attributes.public_display.pluck(:name) +
       extra_attributes(reservation_type.custom_model_types, 'Custom Model')
   end
