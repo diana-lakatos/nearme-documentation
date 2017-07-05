@@ -7,7 +7,11 @@ module NearmeMarketplace
         changed_file_paths = added + modified
 
         changed_file_paths.each do |changed_file_path|
-          on_file_changed(changed_file_path)
+          begin
+            on_file_changed(changed_file_path)
+          rescue
+            puts_status "Sync failed. Fix a file! #{changed_file_path}"
+          end
         end
       end
 
