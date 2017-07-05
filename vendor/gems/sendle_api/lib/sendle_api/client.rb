@@ -47,7 +47,7 @@ module SendleApi
     private
 
     SENDLE_TEST_URL = 'https://sandbox.sendle.com/api/'
-    SENDLE_PRODUCTION_URL = 'https://api.sendle.com/'
+    SENDLE_PRODUCTION_URL = 'https://api.sendle.com/api/'
 
     def api
       SendleApi::HttpClient.new user: @sendle_id,
