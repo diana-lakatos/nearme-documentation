@@ -18,8 +18,12 @@ class AddressForm < BaseForm
   # @!attribute should_check_address
   #   @return [Boolean] virtual property; whether the system should
   #     check for the presence of an accurate address including
-  #     postcode, city, state, street 
+  #     postcode, city, state, street
   property :should_check_address, virtual: true
+
+  # @!attribute raw_address
+  #   @return [Boolean] tell if we should take address form postcode, city, street etc.
+  property :raw_address
 
   property :local_geocoding
 
@@ -54,6 +58,10 @@ class AddressForm < BaseForm
   # @!attribute country
   #   @return [String] country name for the address object
   property :country
+
+  # @!attribute iso_country_code
+  #   @return [String] iso country code
+  property :iso_country_code
 
   # @!attribute postcode
   #   @return [String] postcode for the address object
