@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # Usage example:
 # ```
-#   {% link_to_remove_association_tag label, form, relation %}
+#   {% link_to_remove_association_tag label, form, class: 'btn btn-primary' %}
 # ```
 #
 # Renders nested fields
@@ -23,6 +23,7 @@ class LinkToRemoveAssociationTag < Liquid::Tag
     raise LinkToAssociation::HelpfulLinkToAssociationError.raise_form_object_is_nil('LinkToRemoveAssociation', form_name) if form&.object.nil?
     context.registers[:action_view].send(:link_to_remove_association,
                                          @attributes[:label],
-                                         form)
+                                         form,
+                                         class: @attributes[:class])
   end
 end
