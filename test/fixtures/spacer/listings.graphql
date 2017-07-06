@@ -1,0 +1,75 @@
+query get_listings(
+  $per_page: Int,
+  $page: Int,
+  $query: String,
+  $state: String,
+  $city: String,
+  $suburb: String,
+  $street: String,
+  $country: String,
+  $is_deleted: Boolean = false,
+  $promo_code: [String],
+  $space_availability: String,
+  $sort: String,
+  $order: String,
+  $storage_types: [String],
+  $security_features: [String]
+) {
+
+  listings(
+    per_page: $per_page,
+    page: $page,
+    query: $query,
+    sort: [ { key: $sort, order: $order } ],
+    listing: {
+      is_deleted: $is_deleted,
+      custom_attributes: [
+        { name: "space_availability", value: $space_availability },
+        { name: "promo_code", values: $promo_code }
+      ],
+      categories: [
+        { name_of_root: "Storage Type", values: $storage_types }
+        { name_of_root: "Security Features", values: $security_features }
+      ],
+      address: {
+        city: $city,
+        country: $country,
+        street: $street,
+        state: $state,
+        suburb: $suburb
+      } }
+  ) {
+
+    total_entries
+
+    results {
+      slug
+      name
+      type
+      description
+      all_prices
+      creator {
+        name
+        slug
+        id
+      }
+      category_list { name name_of_root }
+      storage_types: category_list(name_of_root: "Storage Type") { name }
+      access_types: category_list(name_of_root: "Access") { name }
+
+      photos {
+        thumb: url(version: "thumb")
+        medium: url(version: "medium")
+      }
+      address {
+        city
+        street
+        country
+        suburb
+        state
+      }
+      size_of_space: custom_attribute(name: "size_of_space")
+      space_availability: custom_attribute(name: "space_availability")
+    }
+  }
+}

@@ -8,42 +8,23 @@ module Searchable
     include QuerySearchable
     include Elasticsearch::Model
 
-    after_commit :index_object_on_create, on: :create
-    after_commit :index_object_on_update, on: :update
-    after_commit :delete_from_index_on_destroy, on: :destroy
+    after_commit :refresh_index
 
     include "#{to_s.demodulize.pluralize}Index".constantize
 
-    index_name -> { define_index_name }
+    index_name -> { Elastic.index_for(PlatformContext.current.instance).index_name }
 
-    def self.define_index_name
-      raise PlatformContext::MissingContextError if PlatformContext.current.nil?
-
-      Elastic.index_for(PlatformContext.current.instance).alias_name
-    end
-
-    def self.indexer_helper
-      @elastic_indexer ||= Elastic::IndexerHelper.new(self)
-    end
+    scope :indexable, -> { with_deleted }
 
     private
 
-    def index_object_on_create
-      ElasticIndexerJob.perform(:index, self.class.to_s, id) if Rails.application.config.use_elastic_search
-    end
+    def refresh_index
+      if transaction_include_any_action? [:create, :update]
+        ElasticIndexerJob.perform(:index, self.class.to_s, id)
 
-    def index_object_on_update
-      if Rails.application.config.use_elastic_search
-        if deleted? || try(:banned?)
-          ElasticIndexerJob.perform(:delete, self.class.to_s, id)
-        else
-          ElasticIndexerJob.perform(:update, self.class.to_s, id)
-        end
+      elsif transaction_include_any_action? [:delete]
+        ElasticIndexerJob.perform(:delete, self.class.to_s, id)
       end
-    end
-
-    def delete_from_index_on_destroy
-      ElasticIndexerJob.perform(:delete, self.class.to_s, id) if Rails.application.config.use_elastic_search
     end
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'googl'
 require 'sanitize'
+require 'addressable'
 
 module LiquidFilters
   include MoneyRails::ActionViewExtension
@@ -11,6 +12,28 @@ module LiquidFilters
   include ActionView::RecordIdentifier
   include ActionView::Helpers::DateHelper
   include LiquidFormHelpers
+
+  # @param template - url template
+  # @param [String] url
+  # @return params [Hash]
+  # @example
+  # /search/Sydney/BlueRoad + /search/{city}/{street}
+  # returns { city: Sydney, street: 'BlueRoad'}
+  def extract_url_params(url, template)
+    Addressable::Template.new(template).extract(Addressable::URI.parse(url))
+  end
+
+  # @param template - url template
+  # @param params [Hash]
+  # @return [String] url
+  # @example
+  # /search/{city}/{street} + { city: Sydney, street: 'BlueRoad'} produces
+  # /search/Sydney/BlueRoad
+  def expand_url_template(template, params)
+    Addressable::Template.new(template).expand(params).to_s
+  rescue
+    template
+  end
 
   # @return [String] url shortened using the Google service
   # @param url [String] the original url to be shortened
@@ -923,5 +946,13 @@ module LiquidFilters
       grouped_hash[k] = v.sort_by { |r| [r['open_hour'], r['open_minute']] }
     end
     Hash[grouped_hash.sort]
+  end
+
+  # @return [Integer]
+  # @param query [param] value to be coersed to posivite integer
+  # @param arr [default] default value in case param is not valid positive integer
+
+  def to_positive_integer(param, default)
+    CoercionHelpers::SearchPaginationParams.to_positive_integer(param, default)
   end
 end

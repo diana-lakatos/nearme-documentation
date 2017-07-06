@@ -4,9 +4,9 @@ module Graph
     Wishlistable = GraphQL::UnionType.define do
       name 'Wishlistable'
       possible_types [
-        Types::User,
-        Types::Location,
-        Types::Transactables::Transactable
+        Graph::Types::User,
+        Graph::Types::Location,
+        Graph::Types::Transactables::Transactable
       ]
     end
   end

@@ -1,0 +1,12 @@
+index:
+  template: "{env}-{id}-{application_name}{stack_name}-user-transactables-{version}"
+doc_types:
+  user:
+    source: User
+    scope: indexable
+    mapping: {}
+
+  transactable:
+    source: Transactable
+    scope: indexable
+    mapping: {}

@@ -1,34 +1,51 @@
+# frozen_string_literal: true
 module Elastic
-  class IndexNameBuilder
-    def initialize(*attributes)
-      @attributes = attributes
+  class Factory
+    def initialize(config:)
+      @config = config
     end
 
     def build(version: 0)
-      IndexName.new(base, to_name(base, version), version)
-    end
-
-    def alias_name
-      base
-    end
-
-    def self.load(data)
-      *name, version = *data.keys.first.split('-')
-
-      IndexNameBuilder.new(*name).build(version: version.to_i)
+      Elastic::Index.new name: template.index_name(version: version),
+                         body: {
+                           aliases: template.aliases(version: version),
+                           mappings: template.mappings,
+                           settings: template.settings
+                         },
+                         alias_name: template.index_name(version: 'alias'),
+                         version: version
     end
 
     private
 
-    def base
-      to_name @attributes
+    def template
+      IndexTemplate.new config: @config
     end
 
-    def to_name(*args)
-      args.join('-')
-    end
-  end
+    class IndexTemplate
+      def initialize(config:)
+        @config = config
+      end
 
-  class IndexName < Struct.new(:alias_name, :name, :version)
+      def index_name(version:)
+        @config.index_name(version: version)
+      end
+
+      def aliases(version: 0)
+        return {} unless version.zero?
+
+        { index_name(version: 'alias') => {} }
+      end
+
+      def mappings
+        @config.doc_types.each_with_object({}) do |(_name, doc_type), memo|
+          memo.merge! doc_type.mapping
+        end
+      end
+
+      def settings
+        { index: { number_of_shards: 1 } }
+      end
+    end
   end
 end

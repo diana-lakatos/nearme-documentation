@@ -292,16 +292,17 @@ class DummyEvent < WorkflowStep::BaseStep
 end
 
 def enable_elasticsearch!(&_block)
+  Elasticsearch::Model.client.indices.delete index: 'test-*'
   Rails.application.config.use_elastic_search = true
+  instance = PlatformContext.current.instance
 
-  instance = Instance.last
+  Elastic::Configuration.set(type: instance.name, instance_id: instance.id)
 
+  factory = Elastic::Factory.new(config: Elastic::Configuration.current)
   engine = Elastic::Engine.new
-  builder = Elastic.default_index_name_builder(instance)
-  index_type = Elastic::IndexTypes::MultipleModel.new(sources: [User, Transactable])
 
-  Elastic::IndexZero.new(type: index_type, version: 0, builder: builder).tap do |index|
-    engine.create_index index unless engine.index_exists? index.alias_name
+  factory.build(version: 0).tap do |index|
+    engine.create_index index
   end
 
   yield if block_given?

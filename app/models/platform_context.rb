@@ -60,14 +60,8 @@ class PlatformContext
       CacheExpiration.update_memory_cache
     end
     NewRelic::Agent.add_custom_attributes(instance_id: platform_context.instance.id)
-    self.class.trace_execution_scoped(['PlatformContext/after_setting_current_callback/set_es_mapping']) do
-      set_es_mappings
-    end
-  end
 
-  def self.set_es_mappings
-    Transactable.set_es_mapping
-    User.set_es_mapping
+    Elastic::Configuration.set(type: platform_context.instance.name, instance_id: platform_context.instance.id)
   end
 
   def self.get_instance_view_cache_key(instance_id)

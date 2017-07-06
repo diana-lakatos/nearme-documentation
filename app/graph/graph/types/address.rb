@@ -18,6 +18,7 @@ module Graph
       field :state, types.String
       field :street, types.String
       field :street_number, types.String
+      field :country, types.String
     end
   end
 end

@@ -90,12 +90,14 @@ end
 Before('@elasticsearch') do
   Rails.application.config.use_elastic_search = true
 
+  instance = PlatformContext.current.instance
   engine = Elastic::Engine.new
-  builder = Elastic.default_index_name_builder(PlatformContext.current.instance)
-  index_type = Elastic::IndexTypes::MultipleModel.new(sources: [User, Transactable])
 
-  Elastic::IndexZero.new(type: index_type, version: 0, builder: builder).tap do |index|
-    engine.create_index index unless engine.index_exists? index.alias_name
+  Elastic::Configuration.set(type: instance.name, instance_id: instance.id)
+  factory = Elastic::Factory.new(config: Elastic::Configuration.current)
+
+  factory.build(version: 0).tap do |index|
+    engine.create_index index #unless engine.index_exists? index.alias_name
   end
 
   Elasticsearch::Model.client.indices.refresh

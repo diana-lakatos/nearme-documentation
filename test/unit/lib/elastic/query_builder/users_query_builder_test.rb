@@ -8,13 +8,14 @@ require 'ostruct'
 require './lib/elastic/query_builder_base'
 require './lib/elastic/aggregations'
 require './lib/elastic/query_builder/sorting_options'
+require './lib/elastic/query_builder/franco'
 require './lib/elastic/query_builder/users_query_builder'
 require './lib/elastic/query_builder/user_profile_builder'
 require './lib/elastic/query_builder/availability_exceptions'
 
-class Elastic::QueryBuilder::UsersQueryBuilderTest < ActiveSupport::TestCase
+class ::Elastic::QueryBuilder::UsersQueryBuilderTest < ActiveSupport::TestCase
   setup do
-    @builder = Elastic::QueryBuilder::UsersQueryBuilder
+    @builder = ::Elastic::QueryBuilder::UsersQueryBuilder
   end
 
   test 'find by id' do

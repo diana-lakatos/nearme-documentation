@@ -215,6 +215,12 @@ class Graph::SchemaTest < ActiveSupport::TestCase
     end
 
     should 'get users with filters' do
+      query = %({ users(featured: true) { id } })
+
+      assert_empty result(query)['users']
+    end
+
+    should 'get users with filters DEPRECATED' do
       query = %({ users(filters: FEATURED) { id } })
 
       assert_empty result(query)['users']

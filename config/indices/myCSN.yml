@@ -1,0 +1,17 @@
+index:
+  template: "{env}-{id}-{application_name}{stack_name}-user-transactables-{version}"
+doc_types:
+  user:
+    source: User
+    scope: indexable
+    mapping:
+      options: {}
+
+  transactable:
+    source: Transactable
+    scope: indexable
+    mapping:
+      options:
+        _parent:
+          type: 'user'
+    parent_id: creator_id

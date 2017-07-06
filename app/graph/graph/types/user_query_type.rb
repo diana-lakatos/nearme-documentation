@@ -7,6 +7,7 @@ module Graph
         argument :filters, types[Types::UserFilterEnum]
         argument :take, types.Int
         argument :ids, types[types.ID]
+        argument :featured, types.Boolean
 
         resolve Resolvers::Users.new
       end

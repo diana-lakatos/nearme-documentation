@@ -3,7 +3,6 @@ module Graph
   module Resolvers
     class Orders
       def call(_, arguments, ctx)
-        @variables = ctx.query.variables
         resolve_by(arguments)
       end
 

@@ -22,9 +22,7 @@ module Elastic
     end
 
     def delete_alias(index_name = @klass.base_index_name, alias_name = @klass.alias_index_name)
-      if @es_indices.exists_alias name: alias_name
-        @es_indices.delete_alias index: index_name, name: alias_name
-      end
+      @es_indices.delete_alias index: index_name, name: alias_name if @es_indices.exists_alias name: alias_name
     end
 
     def get_current_index_name

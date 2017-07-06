@@ -1,0 +1,14 @@
+index:
+  template: "{env}-{id}-{application_name}{stack_name}-user-transactables-{version}"
+doc_types:
+  user:
+    source: Elastic::IndexBuilderTest::UserMock
+    scope: indexable
+    mapping:
+      options: {}
+
+  transactable:
+    source: Elastic::IndexBuilderTest::TransactableMock
+    scope: indexable
+    mapping:
+      options: {}
