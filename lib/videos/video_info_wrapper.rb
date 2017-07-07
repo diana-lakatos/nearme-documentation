@@ -17,6 +17,8 @@ module Videos
     end
 
     def embed_code(attributes = {})
+      attributes = attributes.merge(url_attributes: { rel: 0 }) if @video_info.try(:provider) == 'YouTube'
+
       "<div class=\"video-wrapper #{@video_info.provider.downcase}\"><div class=\"video-constrainer\">#{@video_info.embed_code(attributes)}</div></div>"
     end
   end
