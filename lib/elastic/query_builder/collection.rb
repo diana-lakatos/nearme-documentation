@@ -13,9 +13,7 @@ module Elastic
       end
 
       def results
-        @response
-          .dig('hits', 'hits')
-          .map { |source| source_factory(source) }
+        @results ||= @response.dig('hits', 'hits').map { |source| source_factory(source) }
       end
 
       def source_factory(source)

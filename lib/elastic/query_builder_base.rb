@@ -220,7 +220,7 @@ module Elastic
         .map do |attr|
         {
           label: attr.name,
-          field: "custom_attributes.#{attr.name}",
+          field: "properties.#{attr.name}",
           size: attr.valid_values.size + 1 # plus one extra for empty
         }
       end
@@ -355,7 +355,7 @@ module Elastic
         next if value.blank? || value.empty? || value.none?(&:present?)
         @filters << {
           terms: {
-            "custom_attributes.#{key}" => value
+            "properties.#{key}" => value
           }
         }
       end

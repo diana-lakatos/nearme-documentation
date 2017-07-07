@@ -3,7 +3,11 @@ module Graph
   module Resolvers
     module Elastic
       class BaseResolver
-        attr_reader :builder, :arguments, :ctx
+        attr_reader :builder, :arguments, :ctx, :options
+
+        def initialize(options = {})
+          @options = options
+        end
 
         delegate :document_types, to: :builder
 
@@ -15,10 +19,15 @@ module Graph
           @builder = ::Elastic::QueryBuilder::Franco.new
 
           resolve
-          builder
+          prepare
         end
 
         private
+
+        # FIXME: name
+        def prepare
+          builder
+        end
 
         def resolve
           raise 'Implementation missing!'
@@ -45,6 +54,14 @@ module Graph
 
         def add(result)
           builder.add(result)
+        end
+
+        def should(nodes)
+          { filter: { should: nodes } }
+        end
+
+        def must(nodes)
+          { filter: { must: nodes } }
         end
       end
     end

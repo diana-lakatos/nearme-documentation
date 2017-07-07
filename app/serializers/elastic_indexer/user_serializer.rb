@@ -3,7 +3,7 @@ module ElasticIndexer
     attributes :email, :first_name, :last_name, :name, :slug,
                :created_at, :deleted_at,
                :country_name, :company_name,
-               :tags,
+               :tags, :tag_list,
                :instance_id, :instance_profile_type_ids,
                :seller_average_rating, :buyer_average_rating,
                :click_to_call,
@@ -26,6 +26,10 @@ module ElasticIndexer
 
     def tags
       object.tags_as_comma_string
+    end
+
+    def tag_list
+      object.tags.as_json(only: [:name, :slug])
     end
 
     def number_of_completed_orders_creator

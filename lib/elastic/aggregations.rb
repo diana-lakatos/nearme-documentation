@@ -5,7 +5,7 @@ module Elastic
       builder = Elastic::Aggregations::Builder.new
 
       builder.add_default(name: :filtered_aggregations, filters: options[:filters])
-      builder.add(name: :custom_attributes, filters: options[:filters], fields: options[:fields])
+      builder.add(name: :properties, filters: options[:filters], fields: options[:fields])
       builder.add_global(name: 'global', fields: options[:fields])
 
       { aggregations: builder.body }

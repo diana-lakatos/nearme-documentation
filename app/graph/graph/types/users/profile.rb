@@ -10,13 +10,17 @@ module Graph
         field :enabled, !types.Boolean
         field :profile_type, !types.String
         field :onboarded_at, types.String
-        field :custom_attribute,
-              types.String,
-              'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
-          argument :name, !types.String
-          resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
-        end
         field :availability_template, Graph::Types::AvailabilityTemplate
+        field :category_list, types[Graph::Types::Category] do
+          argument :name_of_root, types.String
+
+          resolve lambda { |obj, arg, _ctx|
+            obj
+              .category_list
+              .select { |c| arg[:name_of_root].blank? || c.name_of_root == arg[:name_of_root] }
+              .sort_by(&:permalink)
+          }
+        end
 
         field :customizations, !types[Graph::Types::Customization] do
           argument :name, !types.String

@@ -6,6 +6,10 @@ module Graph
         private
 
         def resolve
+          resolve_argument :has_creator do |args|
+            Graph::Resolvers::Elastic::ListingCreatorResolver.new.call(self, args, ctx)
+          end
+
           resolve_argument :is_deleted do |value|
             BooleanFieldResolver.new.call(self, { deleted_at: value }, ctx)
           end
@@ -15,15 +19,46 @@ module Graph
           end
 
           resolve_argument :address do |value|
-            ListingAddressResolver.new.call(self, value, ctx)
+            ListingAddressResolver.new(field_name: 'address').call(self, value, ctx)
           end
 
-          resolve_argument :custom_attributes do |value|
-            CustomAttributeGroupResolver.new.call(self, value, ctx)
+          resolve_argument :current_address do |value|
+            ListingAddressResolver.new(field_name: 'current_address').call(self, value, ctx)
+          end
+
+          resolve_argument :properties do |value|
+            PropertyGroupResolver.new.call(self, value, ctx)
           end
 
           resolve_argument :categories do |value|
             CategoryGroupResolver.new.call(self, value, ctx)
+          end
+
+          resolve_argument :profiles do |value|
+            UserProfileGroupResolver.new.call(self, value, ctx)
+          end
+
+          resolve_argument :state do |value|
+            {
+              filter: {
+                bool: {
+                  must: [{ terms: { 'state' => value } }]
+                }
+              }
+            }
+          end
+
+          resolve_argument :tags do |values|
+            {
+              filter: {
+                bool: {
+                  should: [
+                    { terms: { 'tag_list.slug' => values } },
+                    { terms: { 'tag_list.name' => values } }
+                  ]
+                }
+              }
+            }
           end
         end
 

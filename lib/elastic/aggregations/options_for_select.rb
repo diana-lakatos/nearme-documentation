@@ -2,7 +2,7 @@
 module Elastic
   module Aggregations
     class OptionsForSelect
-      def self.build(aggregations, key: :custom_attributes)
+      def self.build(aggregations, key: :properties)
         new(aggregations, key: key).build
       end
 

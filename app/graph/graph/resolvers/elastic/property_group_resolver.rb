@@ -2,17 +2,17 @@
 module Graph
   module Resolvers
     module Elastic
-      class CustomAttributeGroupResolver < BaseResolver
+      class PropertyGroupResolver < BaseResolver
         private
 
         def resolve
           resolve_each_argument do |argument|
-            CustomAttributeResolver.new.call(self, argument, ctx)
+            PropertyResolver.new.call(self, argument, ctx)
           end
         end
       end
 
-      class CustomAttributeResolver < BaseResolver
+      class PropertyResolver < BaseResolver
         private
 
         def resolve
@@ -26,10 +26,9 @@ module Graph
         end
 
         def custom_field_name(name)
-          "custom_attributes.#{name}"
+          "properties.#{name}"
         end
       end
-
     end
   end
 end

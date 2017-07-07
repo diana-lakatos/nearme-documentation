@@ -1,0 +1,72 @@
+query search_projects(
+  $per_page: Int,
+  $page: Int,
+  $query: String,
+  $workplace_types: [String],
+  $category_ids: [Int]
+)
+ {
+
+  projects: listings(
+    per_page: $per_page,
+    page: $page,
+    query: $query,
+    listing: {
+      has_creator: true,
+      is_deleted: false,
+      categories: [
+        { ids: $category_ids }
+      ],
+      properties: [
+        { name: "workplace_type", values: $workplace_types }
+      ],
+   }
+  ) {
+    total_entries
+
+    results {
+      slug
+      name
+      type
+      description
+      photos {
+        thumb: url(version: "thumb")
+        medium: url(version: "medium")
+      }
+
+      address {
+        city
+        street
+        country
+        suburb
+        state
+      }
+
+      category_list { name name_of_root permalink }
+
+      expertises: category_list(name_of_root: "Area Of Expertise") {
+        name permalink
+      }
+
+      industries: category_list(name_of_root: "Industry") {
+        name permalink
+      }
+
+      languages: category_list(name_of_root: "Languages") {
+        name permalink
+      }
+
+      project_owner: creator { name slug }
+
+      about_company: property(name: "about_company")
+      budget: property(name: "budget")
+      deadline: property(name: "deadline")
+      estimation: property(name: "estimation")
+      office_location: property(name: "office_location")
+      other_requirements: property(name: "other_requirements")
+      project_contact: property(name: "project_contact")
+      type_of_deliverable: property(name: "type_of_deliverable")
+      workplace_type: property(name: "workplace_type")
+    }
+  }
+}

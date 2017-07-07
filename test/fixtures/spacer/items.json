@@ -121,7 +121,7 @@
         "lon": 151.2033214
       },
       "geo_service_shape": null,
-      "custom_attributes": {
+      "properties": {
         "how_did_you_hear_about_us": "",
         "legally_rent_space": [],
         "promo_code": "",
@@ -242,7 +242,7 @@
         "lon": 151.2078604
       },
       "geo_service_shape": null,
-      "custom_attributes": {
+      "properties": {
         "how_did_you_hear_about_us": "",
         "legally_rent_space": "0",
         "promo_code": "",
@@ -355,7 +355,7 @@
         "lon": 151.2032848
       },
       "geo_service_shape": null,
-      "custom_attributes": {
+      "properties": {
         "how_did_you_hear_about_us": "",
         "legally_rent_space": "0",
         "promo_code": "GH1116",
@@ -460,7 +460,7 @@
         "lon": 151.2076428
       },
       "geo_service_shape": null,
-      "custom_attributes": {
+      "properties": {
         "how_did_you_hear_about_us": "",
         "legally_rent_space": "0",
         "promo_code": "GH1016",
@@ -581,7 +581,7 @@
         "lon": 151.2032848
       },
       "geo_service_shape": null,
-      "custom_attributes": {
+      "properties": {
         "how_did_you_hear_about_us": "",
         "legally_rent_space": "1",
         "promo_code": "",
@@ -779,7 +779,7 @@
         "lon": 151.2078604
       },
       "geo_service_shape": null,
-      "custom_attributes": {
+      "properties": {
         "how_did_you_hear_about_us": "Gumtree",
         "legally_rent_space": "0",
         "promo_code": "GH0417",
@@ -884,7 +884,7 @@
         "lon": 151.2076055
       },
       "geo_service_shape": null,
-      "custom_attributes": {
+      "properties": {
         "how_did_you_hear_about_us": "Gumtree",
         "legally_rent_space": "0",
         "promo_code": "GH0517",
@@ -997,7 +997,7 @@
         "lon": 151.2067469
       },
       "geo_service_shape": null,
-      "custom_attributes": {
+      "properties": {
         "how_did_you_hear_about_us": "Gumtree",
         "legally_rent_space": "0",
         "promo_code": "GH0517",
@@ -1141,7 +1141,7 @@
         "lon": 151.2024308
       },
       "geo_service_shape": null,
-      "custom_attributes": {
+      "properties": {
         "how_did_you_hear_about_us": "",
         "legally_rent_space": "0",
         "promo_code": "gh0317",
@@ -1315,7 +1315,7 @@
         "lon": 151.2033696
       },
       "geo_service_shape": null,
-      "custom_attributes": {
+      "properties": {
         "how_did_you_hear_about_us": "Gumtree",
         "legally_rent_space": "0",
         "promo_code": "GH0517",

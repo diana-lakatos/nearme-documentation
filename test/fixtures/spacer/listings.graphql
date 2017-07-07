@@ -22,8 +22,9 @@ query get_listings(
     query: $query,
     sort: [ { key: $sort, order: $order } ],
     listing: {
+      has_creator: true,
       is_deleted: $is_deleted,
-      custom_attributes: [
+      properties: [
         { name: "space_availability", value: $space_availability },
         { name: "promo_code", values: $promo_code }
       ],
@@ -68,8 +69,8 @@ query get_listings(
         suburb
         state
       }
-      size_of_space: custom_attribute(name: "size_of_space")
-      space_availability: custom_attribute(name: "space_availability")
+      size_of_space: property(name: "size_of_space")
+      space_availability: property(name: "space_availability")
     }
   }
 }
