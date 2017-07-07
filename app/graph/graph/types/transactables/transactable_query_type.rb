@@ -9,6 +9,7 @@ module Graph
           argument :listing_type_id, types.ID
           argument :filters, types[Types::Transactables::TransactableFilterEnum]
           argument :creator_id, types.ID
+          argument :state, types.String
           argument :since, types.Int, 'A Unix timestamp'
           argument :paginate, Types::PaginationParams, default_value: { page: 1, per_page: 10 }
 

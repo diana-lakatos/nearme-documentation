@@ -22,7 +22,8 @@ module Graph
           Graph::Types::TopicQueryType,
           Graph::Types::Transactables::TransactableQueryType,
           Graph::Types::UserQueryType,
-          Graph::Types::WishListItemQueryType
+          Graph::Types::WishListItemQueryType,
+          Graph::Types::Customizations::CustomizationQueryType
         ]
       )
     end
