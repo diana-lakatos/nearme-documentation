@@ -58,7 +58,7 @@ class LiquidView
     register_tags
     assigns = context_assigns.merge(local_assigns.stringify_keys)
     LiquidTemplateParser.new(
-      filters: filters_from_controller(controller) + [LiquidFilters],
+      filters: filters_from_controller(controller) + [Liquid::LiquidFilters],
       registers: { action_view: @view, controller: controller }
     ).parse(source, assigns).html_safe
   end

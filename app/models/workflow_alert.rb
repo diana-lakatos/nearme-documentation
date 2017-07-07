@@ -74,7 +74,7 @@ class WorkflowAlert < ActiveRecord::Base
         'metadata' => metadata,
         'platform_context' => PlatformContext.current.decorate
       )
-      .stringify_keys, filters: [LiquidFilters])
+      .stringify_keys, filters: [Liquid::LiquidFilters])
     rescue => e
       result = ''
       MarketplaceLogger.error('Workflow Alert Prevent Trigger Liquid Error',

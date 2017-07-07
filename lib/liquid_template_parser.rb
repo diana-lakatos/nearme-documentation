@@ -4,7 +4,7 @@ class LiquidTemplateParser
   RENDER_SAFE = :render
 
   def initialize(
-    filters: [LiquidFilters],
+    filters: [Liquid::LiquidFilters],
     registers: {},
     logger: MarketplaceLogger,
     default_data: { platform_context: PlatformContext.current&.decorate },
