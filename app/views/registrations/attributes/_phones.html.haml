@@ -18,4 +18,4 @@
 
     - if HiddenUiControls.find('registrations/click_to_call').visible?
       %p
-        = build_click_to_call_verify_button(f.object.mobile_number, f.object.country.try(:name))
+        = build_click_to_call_verify_button(f.object.mobile_number, f.object.country_name)
