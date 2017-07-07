@@ -388,7 +388,7 @@ module Liquid
       #   a nicer looking title; it is meant for creating pretty output
       # @param text [String] string to be processed
       def titleize(text)
-        text.titleize
+        text.to_s.titleize
       end
 
       # @return [String] a query string (e.g. "name=Dan&id=1") from a given Hash (e.g. { name: 'Dan', id: 1 })
