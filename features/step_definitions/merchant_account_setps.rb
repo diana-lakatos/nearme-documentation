@@ -90,7 +90,7 @@ end
 
 Then /^I should see all persisted errors$/ do
   expect(page).to have_css("div.errors-global")
-  ['This account is rejected for some other reason.', 'Scan failed for other reason.', 'Please provide additionl fields', 'Photo ID'].each do |error|
+  ['This account is rejected for some other reason.', 'Scan failed for other reason.'].each do |error|
     page.first('div.errors-global').text.should match(error)
   end
 end

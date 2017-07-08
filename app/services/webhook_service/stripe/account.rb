@@ -38,7 +38,7 @@ module WebhookService
           WorkflowStepJob.perform(
             WorkflowStep::PaymentGatewayWorkflow::MerchantAccountDeclined,
             merchant_account.id,
-            account.legal_entity.verification.details.presence || "Missing fields: #{account.verification.fields_needed.join(', ')}"
+            localize_error(account.verification.disabled_reason) || account.legal_entity.verification.details.presence || "Missing fields: #{account.verification.fields_needed.join(', ')}"
             )
         when 'incomplete'
           WorkflowStepJob.perform(
@@ -46,6 +46,11 @@ module WebhookService
             merchant_account.id
             )
         end
+      end
+
+      def localize_error(error_code)
+        return if error_code.blank?
+        I18n.t('activerecord.errors.models.merchant_account.error_codes.' + error_code.tr('.', '_'))
       end
     end
   end

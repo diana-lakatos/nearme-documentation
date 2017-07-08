@@ -15,6 +15,7 @@ class ImportHallmarkUsersJob < Job
   include Job::LongRunning
 
   def perform
+
     return unless Rails.env.production?
     instance = Instance.find_by(id: Instances::InstanceFinder::INSTANCE_IDS[:hallmark])
     return if instance.nil?
@@ -105,17 +106,20 @@ class ImportHallmarkUsersJob < Job
       File.open("#{Rails.root}/log/downloading_koc_#{@date}.log", 'rb') do |file|
         client.put_object(bucket: BUCKET_NAME, key: "logs/#{@date}.log", body: file)
       end
-      notifier.ping(':sweat_smile::sweat_smile::sweat_smile: I guess users were imported correctly :sweat_smile::sweat_smile::sweat_smile:', icon_emoji: ':sweat:')
+      notifier.ping(' I guess users were imported correctly ', icon_emoji: ':sweat_smile:')
     end
+  rescue => e
+    job.notifier("Job failed due to #{e} #{e.message} (#{backtrace.detect { |l| l.include?('/app/') }})", icon_emoji: ':cry:')
+
   end
 
   protected
 
-  def logger
-    @logger = Logger.new("#{Rails.root}/log/downloading_koc_#{@date}.log")
-  end
-
   def notifier
     @notifier ||= Slack::Notifier.new('https://hooks.slack.com/services/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')
+  end
+
+  def logger
+    @logger = Logger.new("#{Rails.root}/log/downloading_koc_#{@date}.log")
   end
 end
