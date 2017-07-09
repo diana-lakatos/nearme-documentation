@@ -33,7 +33,7 @@ class ElasticIndexerJob < Job
   private
 
   def mark_as_deleted
-    Elastic::Commands::MarkAsDeleted.new(record).call
+    Elastic::Commands::MarkRecordAsDeleted.new(record).call
   end
 
   def update_document

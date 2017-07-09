@@ -1,6 +1,6 @@
 module Elastic
   module Commands
-    class MarkAsDeleted
+    class MarkRecordAsDeleted
       attr_reader :record
 
       delegate :client, :index_name, to: :configuration
