@@ -33,6 +33,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
         attachments = @user_message.attachments.map { |att| { url: att.file.url, name: att.file.file_name } }
 
         response = {
+          id: @user_message.id,
           author: @user_message.author.first_name,
           time: @user_message.created_at,
           body: @user_message.body,
@@ -98,6 +99,25 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
 
     flash[:notice] = t('flash_messages.user_messages.message_archived')
     redirect_to dashboard_user_messages_path
+  end
+
+  def archive_one
+    um = current_user.user_messages.find(params[:id])
+
+    um.archive_for!(current_user)
+    um.archive_for!(um.the_other_user(current_user))
+
+    if request.xhr?
+      render nothing: true, status: 204
+    else
+      flash[:notice] = t('flash_messages.user_messages.message_archived')
+      redirect_to dashboard_user_messages_path
+    end
+  end
+
+  def search
+    users = User.where('lower(name) like ?', "%#{params[:term]}%").limit(20).order('name ASC')
+    render json: users.map { |u| { id: u.id, name: u.name, avatar_url: u.avatar.url(:thumb), profile_url: profile_path(u.slug) } }
   end
 
   private

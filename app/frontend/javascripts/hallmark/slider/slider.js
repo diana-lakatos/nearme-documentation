@@ -1,7 +1,7 @@
 /* @flow */
 import { findElement, findButton } from '../../toolkit/dom';
 import { requestNextAnimationFrame } from '../../toolkit/animation';
-const throttle = require('lodash/throttle');
+import throttle from 'lodash/throttle';
 
 const DISABLED_CLASS = 'disabled';
 const WRAPPER_SELECTOR = '[data-slider-wrap]';

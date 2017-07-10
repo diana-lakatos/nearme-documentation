@@ -5,20 +5,23 @@ const AUTHOR_SELECTOR = '[data-user-messages-meta-author]';
 const TIME_SELECTOR = 'time';
 const OWN_MESSAGE_CLASS = 'own-message';
 const ATTACHMENT_CLASS = 'attachment';
+const MESSAGE_BODY_SELECTOR = '.body';
 
 import { findElement } from '../../toolkit/dom';
 
 class UserMessagesInboxEntry {
   element: HTMLElement;
+  id: number;
   author: string;
   time: Date;
-  attachment: { name: string, url: string };
+  attachments: Array<{ name: string, url: string }>;
   body: ?string;
   isOwnMessage: boolean;
 
   constructor() {
     this.time = new Date();
     this.isOwnMessage = false;
+    this.attachments = [];
   }
 
   getElement(): HTMLElement {
@@ -32,9 +35,7 @@ class UserMessagesInboxEntry {
   build(): HTMLElement {
     let element = document.createElement('p');
 
-    if (this.isOwnMessage) {
-      element.classList.add(OWN_MESSAGE_CLASS);
-    }
+    element.dataset.id = this.id + '';
 
     if (this.author) {
       let meta = document.createElement('span');
@@ -48,14 +49,23 @@ class UserMessagesInboxEntry {
       element.appendChild(meta);
     }
 
-    if (this.attachment) {
-      element.classList.add(ATTACHMENT_CLASS);
-      let body = `Attachment: <a href="${this.attachment.url}">${this.attachment.name}</a>`;
-      element.insertAdjacentHTML('beforeend', body);
+    if (this.body) {
+      element.insertAdjacentHTML('beforeend', `<span class="body">${this.body}</span>`);
     }
 
-    if (this.body) {
-      element.insertAdjacentHTML('beforeend', this.body);
+    this.attachments.forEach((attachment: { name: string, url: string }) => {
+      element.insertAdjacentHTML(
+        'beforeend',
+        `<span class="attachment"><a href="${attachment.url}">${attachment.name}</a></span>`
+      );
+    });
+
+    if (this.isOwnMessage) {
+      element.classList.add(OWN_MESSAGE_CLASS);
+      element.insertAdjacentHTML(
+        'beforeend',
+        '<button type="button" class="remove-message" data-user-messages-remove-message>Remove this message</button>'
+      );
     }
 
     this.element = element;
@@ -83,18 +93,27 @@ class UserMessagesInboxEntry {
     this.body = body;
   }
 
+  getId(): number {
+    return this.id;
+  }
+
+  setId(id: number) {
+    this.id = id;
+  }
+
   setOwnMessage(isOwnMessage: boolean) {
     this.isOwnMessage = isOwnMessage;
   }
 
-  setAttachment(name: string, url: string) {
-    this.attachment = { name: name, url: url };
+  addAttachment(name: string, url: string) {
+    this.attachments.push({ name: name, url: url });
   }
 
   static parse(el: HTMLElement): UserMessagesInboxEntry {
     let meta = el.querySelector(META_SELECTOR);
     let entry = new UserMessagesInboxEntry();
     entry.setElement(el);
+    entry.setId(parseInt(el.dataset.id, 10));
 
     if (meta instanceof HTMLElement) {
       let author = findElement(AUTHOR_SELECTOR, meta);
@@ -107,25 +126,20 @@ class UserMessagesInboxEntry {
 
     entry.setOwnMessage(el.classList.contains(OWN_MESSAGE_CLASS));
 
-    if (el.classList.contains(ATTACHMENT_CLASS)) {
-      let link = findElement('a', el);
-      entry.setAttachment(link.innerHTML, link.getAttribute('href'));
-    } else {
-      entry.setBody(this.parseBody(el));
+    Array.prototype.forEach.call(
+      el.querySelectorAll(`.${ATTACHMENT_CLASS} a`),
+      (link: HTMLElement) => {
+        let url = link.getAttribute('href') || '';
+        entry.addAttachment(link.innerHTML, url);
+      }
+    );
+
+    let body = el.querySelector(MESSAGE_BODY_SELECTOR);
+    if (body instanceof HTMLElement) {
+      entry.setBody(body.innerHTML);
     }
 
     return entry;
-  }
-
-  static parseBody(el: HTMLElement): string {
-    if (!el.querySelector(META_SELECTOR)) {
-      return el.innerHTML;
-    }
-    /* We have to get rid of the meta selector when fetching message body, but can't modify actual content */
-    let clone = el.cloneNode(true);
-    let meta = findElement(META_SELECTOR, clone);
-    clone.removeChild(meta);
-    return clone.innerHTML;
   }
 }
 

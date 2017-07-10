@@ -16,6 +16,18 @@
   }
 }
 
+@keyframes removeEntry {
+  0% {
+    transform: translateX(-20px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+}
+
 $inbox-border-color: #eee;
 
 .user-messages-inbox {
@@ -31,11 +43,11 @@ $inbox-border-color: #eee;
     border-right: 1px solid $inbox-border-color;
     overflow-y: auto;
     overflow-x: hidden;
+  }
 
-    ul {
-      padding: 0;
-      list-style: none;
-    }
+  .contact-list {
+    padding: 0;
+    list-style: none;
 
     li {
       @include clear;
@@ -98,6 +110,24 @@ $inbox-border-color: #eee;
       > * {
         color: inherit;
       }
+    }
+  }
+
+  .user-search-form {
+    padding: 10px;
+    background: #fafafa;
+    margin-bottom: 0;
+    border-bottom: 1px solid #eee;
+
+    label, [type="submit"] {
+      @include sr-only;
+    }
+
+    .name-field {
+      padding: 5px 10px;
+      height: auto;
+      line-height: 1.6;
+      border-radius: 5px;
     }
   }
 
@@ -177,6 +207,7 @@ $inbox-border-color: #eee;
     margin: 0;
 
     p {
+      position: relative;
       clear: both;
       float: left;
       max-width: 90%;
@@ -191,6 +222,7 @@ $inbox-border-color: #eee;
     }
 
     .attachment {
+      display: block;
       font-weight: bold;
 
       a {
@@ -207,8 +239,16 @@ $inbox-border-color: #eee;
 
     .own-message {
       float: right;
+      text-align: right;
       background: rgba($color-blue, 0.2);
       border-radius: 10px 10px 0 10px;
+      transition: transform .3s ease;
+
+      &:hover, &:focus {
+        outline: none;
+        transition-delay: .5s;
+        transform: translateX(-20px);
+      }
     }
 
     .meta {
@@ -234,6 +274,40 @@ $inbox-border-color: #eee;
       transform-origin: 0 0;
       animation: newEntry .5s ease;
     }
+
+    .removed-entry {
+      opacity: 0;
+      animation: removeEntry 1s ease;
+    }
+  }
+
+  .remove-message {
+    opacity: 0;
+    transition: opacity .3s ease 0;
+    position: absolute;
+    top: 0;
+    right: -20px;
+    width: 20px;
+    text-align: center;
+    font-size: 0;
+    background: none;
+    border: none;
+    padding: 5px 0;
+
+    &::before {
+      font-family: FontAwesome;
+      content: $fa-var-remove;
+      font-size: 14px;
+      font-weight: normal;
+      color: #aaa;
+    }
+  }
+
+  p:focus .remove-message,
+  p:hover .remove-message,
+  .remove-message:focus {
+    transition-delay: .8s;
+    opacity: 1;
   }
 
   $action-button-size: 30px;
@@ -491,5 +565,19 @@ $inbox-border-color: #eee;
   @media screen and (max-width: 600px) {
     position: absolute;
     left: -999em;
+  }
+}
+
+.autocomplete-suggestion {
+  @include clear;
+
+  padding: 5px;
+
+  img {
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin-right: 8px;
+    vertical-align: middle;
   }
 }

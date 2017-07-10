@@ -1,0 +1,10 @@
+type UserSearchApiResponseType = {
+  user_messages: Array<UserSearchApiResponseItemType>
+};
+
+type UserSearchApiResponseItemType = {
+  id: string,
+  name: string,
+  avatar_url: string,
+  profile_url: string
+};

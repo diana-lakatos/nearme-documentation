@@ -80,6 +80,12 @@ class UserMessage < ActiveRecord::Base
     send archived_column_for(user)
   end
 
+  def archived_for_by_user_id?(id)
+    user = User.find_by(id: id)
+    return false unless user
+    archived_for?(user)
+  end
+
   def archive_for!(user)
     column = archived_column_for(user)
     update_column(column, true)

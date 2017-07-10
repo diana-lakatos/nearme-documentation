@@ -95,7 +95,7 @@ class CommentEndpointLoader implements EndpointLoader {
   }
 
   /* Modify commentable url for projects, as it needs additional anchor */
-  getCommentableUrl(str): string {
+  getCommentableUrl(str: string): string {
     if (str.indexOf('/listings/') > -1) {
       str = `${str}#activity-tab`;
     }
