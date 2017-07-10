@@ -50,7 +50,6 @@ class Location < ActiveRecord::Base
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
            :latitude, :longitude, :state_code, :iso_country_code, :street_number, to: :location_address, allow_nil: true
 
-  validates :company, presence: true
   validates :email, email: true, allow_nil: true
   validates_with CustomValidators
 

@@ -24,7 +24,6 @@ class TransactableForm < BaseForm
     def decorate(configuration)
       configuration = configuration
       Class.new(self) do
-
         inject_custom_attributes(configuration)
         if (custom_images_configuration = configuration.delete(:custom_images)).present?
           add_validation(:custom_images, custom_images_configuration)
@@ -54,6 +53,12 @@ class TransactableForm < BaseForm
           add_validation(:customizations, customizations_configuration)
           property :customizations, form: CustomizationsForm.decorate(customizations_configuration),
                                     from: :customizations_open_struct
+        end
+        if (location_configuration = configuration.delete(:location)).present?
+          add_validation(:location, location_configuration)
+          property :location, form: LocationForm.decorate(location_configuration),
+                              populate_if_empty: Location,
+                              prepopulator: ->(_options) { self.location ||= Location.new }
         end
         AVAILABLE_ACTION_TYPES.select { |key| configuration.key?(key) }.each do |action|
           next if (action_configuration = configuration.delete(action)).nil?
