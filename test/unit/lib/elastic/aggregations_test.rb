@@ -30,20 +30,20 @@ class Elastic::AggregationsTest < ActiveSupport::TestCase
 
   test 'prepare required custom-attrs aggregations' do
     definitions = [
-      { label: :color, field: 'custom_attributes.color', size: 25 },
-      { label: :designer_name, field: 'custom_attributes.designer_name', size: 25 }
+      { label: :color, field: 'properties.color', size: 25 },
+      { label: :designer_name, field: 'properties.designer_name', size: 25 }
     ]
 
     builder = Elastic::Aggregations::Builder.new
-    builder.add name: :custom_attrs, fields: definitions, filters: { some: 'filters' }
+    builder.add name: :aggre_name_custom_name, fields: definitions, filters: { some: 'filters' }
 
-    assert_includes builder.body.keys, :custom_attrs, 'has custom_attrs hey'
+    assert_includes builder.body.keys, :aggre_name_custom_name, 'has aggre_name_custom_name hey'
     assert_not_includes builder.body.keys, :filtered_aggregations
 
-    # assert builder.body.dig(:custom_attrs, :global)
-    assert_equal builder.body.dig(:custom_attrs, :aggregations).keys, [:color, :designer_name]
-    assert_equal builder.body.dig(:custom_attrs, :aggregations, :color), terms: { field: 'custom_attributes.color', size: 25, order: { _term: 'asc' } }
-    assert_equal builder.body.dig(:custom_attrs, :aggregations, :designer_name), terms: { field: 'custom_attributes.designer_name', size: 25, order: { _term: 'asc' } }
+    # assert builder.body.dig(:aggre_name_custom_name, :global)
+    assert_equal builder.body.dig(:aggre_name_custom_name, :aggregations).keys, [:color, :designer_name]
+    assert_equal builder.body.dig(:aggre_name_custom_name, :aggregations, :color), terms: { field: 'properties.color', size: 25, order: { _term: 'asc' } }
+    assert_equal builder.body.dig(:aggre_name_custom_name, :aggregations, :designer_name), terms: { field: 'properties.designer_name', size: 25, order: { _term: 'asc' } }
   end
 
   test 'prepare nested aggregations for user-profiles using fields' do

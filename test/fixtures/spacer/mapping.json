@@ -119,7 +119,7 @@
           "type": "date",
           "format": "strict_date_optional_time||epoch_millis"
         },
-        "custom_attributes": {
+        "properties": {
           "properties": {
             "additional_rules": {
               "type": "string",

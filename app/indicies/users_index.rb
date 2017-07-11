@@ -3,8 +3,6 @@ module UsersIndex
   extend ActiveSupport::Concern
 
   included do |_base|
-    cattr_accessor :custom_attributes
-
     settings(index: { number_of_shards: 1 })
 
     def self.build_es_mapping(options: {})
@@ -34,6 +32,10 @@ module UsersIndex
         end
 
         indexes :tags, type: 'string'
+        indexes :tag_list, type: 'object' do
+          indexes :name, type: 'string', index: 'not_analyzed'
+          indexes :slug, type: 'string', index: 'not_analyzed'
+        end
 
         indexes :instance_id, type: 'integer'
         indexes :instance_profile_type_ids, type: 'integer'
@@ -44,17 +46,24 @@ module UsersIndex
         indexes :geo_location, type: 'geo_point'
         indexes :geo_service_shape, type: 'geo_shape'
 
+        indexes :current_address, type: :object do
+          indexes :street, type: 'string', index: 'not_analyzed'
+          indexes :city, type: 'string', index: 'not_analyzed'
+          indexes :country, type: 'string', index: 'not_analyzed'
+          indexes :suburb, type: 'string', index: 'not_analyzed'
+          indexes :state, type: 'string', index: 'not_analyzed'
+          indexes :postcode, type: 'string', index: 'not_analyzed'
+        end
+
         indexes :user_profiles, type: 'nested' do
           indexes :enabled, type: 'boolean'
           indexes :availability_exceptions, type: 'date'
           indexes :profile_type, type: 'string'
           indexes :category_ids, type: 'integer'
-          indexes :categories, type: 'nested' do
-            indexes :id, type: 'integer'
-            indexes :name, type: 'string'
-            indexes :permalink, type: 'string', index: 'not_analyzed'
-            indexes :root, type: 'string'
-            indexes :position, type: 'integer'
+          indexes :category_list, type: 'nested' do
+            indexes :id, type: :integer
+            indexes :name, type: 'string', index: 'not_analyzed'
+            indexes :name_of_root, type: 'string', index: 'not_analyzed'
           end
 
           # TODO: add _nested_ mapping for custom-models
@@ -83,17 +92,17 @@ module UsersIndex
 
     def self.regular_search(query, instance_profile_type = nil)
       query_builder = ::Elastic::QueryBuilder::UsersQueryBuilder.new(query.with_indifferent_access,
-                                                                   searchable_custom_attributes: searchable_custom_attributes(instance_profile_type),
-                                                                   query_searchable_attributes: search_in_query_custom_attributes(instance_profile_type))
+                                                                     searchable_custom_attributes: searchable_custom_attributes(instance_profile_type),
+                                                                     query_searchable_attributes: search_in_query_custom_attributes(instance_profile_type))
 
       __elasticsearch__.search(query_builder.regular_query)
     end
 
     def self.simple_search(query, instance_profile_types:, instance_profile_type: nil)
       query_builder = ::Elastic::QueryBuilder::UsersQueryBuilder.new(query.with_indifferent_access,
-                                                                   searchable_custom_attributes: searchable_custom_attributes(instance_profile_type),
-                                                                   query_searchable_attributes: search_in_query_custom_attributes(instance_profile_type),
-                                                                   instance_profile_types: instance_profile_types)
+                                                                     searchable_custom_attributes: searchable_custom_attributes(instance_profile_type),
+                                                                     query_searchable_attributes: search_in_query_custom_attributes(instance_profile_type),
+                                                                     instance_profile_types: instance_profile_types)
       __elasticsearch__.search(query_builder.simple_query)
     end
 

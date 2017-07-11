@@ -32,11 +32,15 @@ module Graph
             filter: {
               bool: {
                 must: [
-                  { match: { "address.#{field}" => value } }
+                  { match: { "#{field_name}.#{field}" => value } }
                 ]
               }
             }
           }
+        end
+
+        def field_name
+          options[:field_name] || 'address'
         end
       end
     end

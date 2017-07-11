@@ -7,7 +7,7 @@ module ElasticIndexer
                :availability_exceptions,
                :onboarded_at,
                :category_ids, # legacy,
-               :categories,
+               :category_list,
                :properties
 
     has_many :customizations, serializer: CustomModelSerializer
@@ -25,7 +25,7 @@ module ElasticIndexer
       end
     end
 
-    def categories
+    def category_list
       object.categories.order(:lft).map { |c| CategorySerializer.new(c).as_json }
     end
 

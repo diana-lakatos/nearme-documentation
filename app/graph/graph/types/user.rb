@@ -19,9 +19,10 @@ module Graph
       field :email, !types.String
       field :slug, !types.String
       field :seller_average_rating, !types.Int
-      field :custom_attribute,
+
+      field :property,
             types.String,
-            'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
+            'Fetch any custom attribute by name, ex: hair_color: property(name: "hair_color")' do
         argument :name, !types.String
         deprecation_reason 'Fetch custom_attribute directly from profile'
         resolve ->(obj, arg, _ctx) { Graph::Resolvers::User.find_model(obj).properties[arg[:name]] }
@@ -63,7 +64,8 @@ module Graph
       field :display_location, types.String do
         resolve ->(obj, _arg, _ctx) { Resolvers::User.find_model(obj).to_liquid.display_location }
       end
-      field :current_address, Types::Address
+      field :current_address, Types::Address #, deprecation_reason: 'Use custom-address'
+
       field :collaborations, types[Types::Collaboration] do
         argument :filters, types[Resolvers::Collaborations::FilterEnum]
         resolve Graph::Resolvers::Collaborations.new

@@ -127,7 +127,7 @@ module AggregationsFixtures
        'minimum_price' => { 'value' => 200.0 },
        'distinct_locations' => { 'value' => 22 },
        'maximum_price' => { 'value' => 100_000.0 } },
-      'custom_attributes' =>
+      'properties' =>
      { 'doc_count' => 42,
        'item_style_accessories' =>
       { 'doc_count_error_upper_bound' => 0,

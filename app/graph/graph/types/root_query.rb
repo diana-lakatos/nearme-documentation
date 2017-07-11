@@ -10,7 +10,7 @@ module Graph
         [
           Graph::Types::ActivityFeed::FeedQueryType,
           Graph::Types::Authentications::LoginProvidersQueryType,
-          Graph::Types::Categories,
+          Graph::Types::CategoriesQueryType,
           Graph::Types::CreditCards::CreditCardQueryType,
           Graph::Types::CustomAttributes::CustomAttributeQueryType,
           Graph::Types::LocationQueryType,

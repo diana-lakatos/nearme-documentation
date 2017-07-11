@@ -2,11 +2,11 @@
 module Graph
   module Resolvers
     module Elastic
-      class Listings < BaseResolver
+      class People < BaseResolver
         private
 
         def resolve
-          document_types :transactable
+          document_types :user
 
           resolve_arguments do |args|
             Graph::Resolvers::Elastic::PageResolver.new.call(self, args, ctx)
@@ -20,7 +20,7 @@ module Graph
             Graph::Resolvers::Elastic::QueryResolver.new.call(self, value, ctx)
           end
 
-          resolve_argument :listing do |value|
+          resolve_argument :user do |value|
             Graph::Resolvers::Elastic::ListingResolver.new.call(self, value, ctx)
           end
         end

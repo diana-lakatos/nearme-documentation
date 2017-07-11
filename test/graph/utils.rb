@@ -1,29 +1,37 @@
 module ES
-  def self.query(query:, type: 'transactable')
-    client.search(type: type, q: query, body: { _source: ['name'] })
+  def self.index_name
+    'test-1--user-transactables-alias'
+  end
+
+  def self.search(query:, type: 'transactable')
+    client.search(type: type, q: query, body: { _source: ['name'] }, index: index_name)
   end
 
   def self.client
-    Setup.new(index: 'test-1--user-transactables-alias')
+    Client.new.instance
   end
 
-  def self.around
-    Setup.up
-    yield
-    Setup.down
+  def self.around(instance_name:)
+    Setup.new(instance_name: instance_name).up
+
+    graph = GraphExplorer.new(instance_name: instance_name)
+    yield(graph)
+    Setup.new(instance_name: instance_name).down
+  end
+
+  class Client
+    def instance
+      @client ||= Elasticsearch::Client.new log: ENV.key?('DEBUG_ES')
+    end
   end
 
   class Setup
-    def self.up
-      new(index: 'test-1--user-transactables-alias').up
-    end
+    attr_reader :client
 
-    def self.down
-      new(index: 'test-1--user-transactables-alias').down
-    end
-
-    def initialize(index:)
+    def initialize(index: ES.index_name, instance_name:, client: Client.new.instance)
       @index = index
+      @instance_name = instance_name
+      @client = client
     end
 
     def down
@@ -43,7 +51,7 @@ module ES
     end
 
     def mappings
-      JSON.parse File.open('./test/fixtures/spacer/mapping.json', 'r').read
+      JSON.parse File.open("./test/fixtures/#{@instance_name}/mapping.json", 'r').read
     end
 
     def bulk
@@ -56,25 +64,17 @@ module ES
       end
     end
 
-    def index(args)
-      client.index args
-    end
-
-    def search(type: , q:, body: {})
+    def search(type:, q:, body: {})
       client.search index: @index, q: q, body: body, type: type
     end
 
-    def client
-      Elasticsearch::Client.new
-    end
-
     def items
-      JSON.parse(File.open('./test/fixtures/spacer/items.json').read)
+      JSON.parse(File.open("./test/fixtures/#{@instance_name}/items.json").read)
     end
   end
 end
 
-module G
+class GraphExplorer
   RootQuery = GraphQL::ObjectType.define do
     name 'Root'
     description 'Test root query'
@@ -83,22 +83,25 @@ module G
   end
 
   Schema = GraphQL::Schema.define do
-    query G::RootQuery
-    resolve_type lambda { |record, _ctx|
-        Graph::Types::User
-    }
+    query GraphExplorer::RootQuery
+    resolve_type ->(_, _, _) { Graph::Types::User }
   end
 
-  def self.execute(query, variables = {})
+  def initialize(instance_name:)
+    @instance_name = instance_name
+  end
+
+  def execute(name, variables = {})
     puts variables if ENV['DEBUG_ES']
-    G::Schema.execute(query, variables: variables).tap do |response|
+
+    GraphExplorer::Schema.execute(query(name), variables: variables).tap do |response|
       raise response['errors'].map { |e| e['message'] }.inspect if response['errors']
     end
   end
-end
 
-module Queries
-  def self.listings
-    @file ||= File.read('./test/fixtures/spacer/listings.graphql')
+  private
+
+  def query(name)
+    File.read(format './test/fixtures/%s/%s.graphql', @instance_name, name)
   end
 end

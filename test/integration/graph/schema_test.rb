@@ -73,7 +73,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       query = %({
         user(id: #{@user.id}) {
           profile(profile_type: "default") {
-            hair_color: custom_attribute(name: "hair_color")
+            hair_color: property(name: "hair_color")
           }
         }
       })
@@ -113,7 +113,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
         user(id: #{@user.id}) {
           profile(profile_type: "default") {
             customizations(name: "Cars") {
-              car_model: custom_attribute(name: "car_model")
+              car_model: property(name: "car_model")
             }
           }
         }

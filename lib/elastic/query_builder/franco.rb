@@ -32,6 +32,18 @@ module Elastic
         @query
       end
 
+      def per_page
+        @query[:size]
+      end
+
+      def page
+        @query[:from] / @query[:size] + 1
+      end
+
+      def total_pages
+        (total_entries / per_page.to_f).ceil
+      end
+
       private
 
       def collection
@@ -40,6 +52,7 @@ module Elastic
 
       def response
         puts to_hash if ENV['DEBUG_ES']
+
         Fletcher.new(self).response
       end
 

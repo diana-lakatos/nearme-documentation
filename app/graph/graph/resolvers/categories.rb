@@ -2,10 +2,12 @@
 module Graph
   module Resolvers
     class Categories
-      attr_reader :scope, :arguments
-      def call(_, arguments, _ctx)
-        @scope = ::Category.all
+      attr_reader :scope, :arguments, :ctx
+      def call(_, arguments, ctx)
+        @ctx = ctx
         @arguments = arguments
+
+        @scope = ::Category.all
 
         resolve
         decorate_collection
@@ -38,7 +40,7 @@ module Graph
       end
 
       def decorate(category)
-        Hashie::Mash.new ::ElasticIndexer::CategorySerializer.new(category).as_json
+        Hashie::Mash.new ::ElasticIndexer::CategorySerializer.new(category, except: [:name_of_root]).as_json
       end
     end
   end

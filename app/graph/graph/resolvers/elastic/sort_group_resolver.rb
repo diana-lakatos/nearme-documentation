@@ -19,6 +19,21 @@ module Graph
           resolve_argument :key do |value, node|
             { sort: { value => { order: node[:order] } } }
           end
+
+          # { order: 'asc', nested_path: 'user_profiles', nested_filter: { term: { 'user_profiles.profile_type' => 'seller'}}}
+          resolve_argument :profile_key do |value, node|
+            {
+              sort: {
+                "user_profiles.#{value}" => {
+                  order: node[:order],
+                  nested_path: 'user_profiles',
+                  nested_filter: {
+                    term: { 'user_profiles.profile_type' => node[:profile_type] }
+                  }
+                }
+              }
+            }
+          end
         end
       end
     end
