@@ -46,7 +46,7 @@ module Graph
             {
               filter: {
                 bool: {
-                  must: [{ match: { 'slug' => value } }]
+                  must: [{ term: { 'slug' => value } }]
                 }
               }
             }
@@ -56,7 +56,7 @@ module Graph
             {
               filter: {
                 bool: {
-                  must: [{ match: { 'state' => value } }]
+                  must: [{ term: { 'state' => value } }]
                 }
               }
             }

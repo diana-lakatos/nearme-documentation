@@ -19,7 +19,6 @@ class TransactableTest < ActiveSupport::TestCase
     should belong_to(:transactable_type)
     should belong_to(:creator)
 
-    should validate_presence_of(:location)
     should validate_presence_of(:name)
     should validate_presence_of(:description)
     should validate_presence_of(:quantity)

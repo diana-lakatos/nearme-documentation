@@ -63,7 +63,7 @@ module TransactablesIndex
         indexes :average_rating, type: 'float'
         indexes :possible_payout, type: 'boolean'
         indexes :tags, type: 'string'
-        indexes :state, type: 'string'
+        indexes :state, type: 'string', index: 'not_analyzed'
 
         indexes :category_list, type: 'nested' do
           indexes :id, type: :integer
@@ -84,13 +84,13 @@ module TransactablesIndex
           indexes :id, type: :integer
           indexes :user_id, type: :integer
           indexes :created_at, type: :date
-          indexes :name, type: :string
+          indexes :name, type: :string, index: 'not_analyzed'
           indexes :human_name, type: :string
           indexes :custom_attachments, type: :object do
             indexes :id, type: :integer
-            indexes :name, type: :string
+            indexes :name, type: :string, index: 'not_analyzed'
             indexes :label, type: :string
-            indexes :file_name, type: :string
+            indexes :file_name, type: :string, index: 'not_analyzed'
             indexes :created_at, type: :date
             indexes :size_bytes, type: :integer
             indexes :content_type, type: :string

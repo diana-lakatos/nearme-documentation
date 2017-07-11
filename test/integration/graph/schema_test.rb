@@ -112,7 +112,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       query = %({
         user(id: #{@user.id}) {
           profile(profile_type: "default") {
-            customizations(name: "Cars") {
+            customizations(name: "cars") {
               car_model: property(name: "car_model")
             }
           }

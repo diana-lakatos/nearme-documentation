@@ -17,11 +17,11 @@ module Graph
 
         def resolve
           resolve_argument :name do |value|
-            base(match: { 'customizations.name' => value })
+            base(term: { 'customizations.name' => value })
           end
 
-          resolve_argument :parameterized_name do |value|
-            base(match: { 'customizations.parameterized_name' => value })
+          resolve_argument :human_name do |value|
+            base(match: { 'customizations.human_name' => value })
           end
 
           resolve_argument :user_id do |value|
