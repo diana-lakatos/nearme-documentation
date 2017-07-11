@@ -1,7 +1,7 @@
 module ElasticIndexer
-  class CustomModelSerializer < BaseSerializer
-    attributes :name,
-               :properties
+  class CustomizationSerializer < BaseSerializer
+    attributes :id, :user_id, :created_at, :properties, :name, :human_name
+
     has_many :custom_images, serializer: CustomImageSerializer
     has_many :custom_attachments, serializer: CustomAttachmentSerializer
 
@@ -9,8 +9,12 @@ module ElasticIndexer
       CustomModelPropertySerializer.new(object.properties, scope: object.custom_model_type).as_json
     end
 
-    def name
+    def human_name
       object.custom_model_type.name
+    end
+
+    def name
+      object.custom_model_type.parameterized_name
     end
   end
 end

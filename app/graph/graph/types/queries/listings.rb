@@ -67,9 +67,12 @@ module Graph
         argument :transactable_types, types[Graph::Types::Queries::TransactableType]
         argument :categories, types[Graph::Types::Queries::Category]
         argument :category_ids, Graph::Types::Queries::List
+        argument :customizations, types[Graph::Types::Queries::Customization]
 
         argument :name, types.String
         argument :state, types.String
+        argument :slug, types.String
+        argument :creator_id, types.Int
       end
 
       SortOrder = GraphQL::InputObjectType.define do
@@ -97,6 +100,16 @@ module Graph
         argument :name_of_root, types.String
         argument :value, types.String
         argument :values, types[types.String]
+      end
+
+      Customization = GraphQL::InputObjectType.define do
+        name 'QueryCustomization'
+
+        argument :id, types.Int
+        argument :ids, types[types.Int]
+        argument :name, types.String
+        argument :parameterized_name, types.String
+        argument :user_id, types.Int
       end
 
       CustomAttribute = GraphQL::InputObjectType.define do

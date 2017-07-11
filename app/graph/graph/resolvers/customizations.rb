@@ -2,34 +2,47 @@
 module Graph
   module Resolvers
     class Customizations
+      attr_reader :scope, :arguments
+
       def call(parent_object, arguments, _ctx)
         @parent_object = parent_object
-        resolve_by(arguments)
+        @scope = initial_scope
+        @arguments = arguments
+
+        resolve
       end
 
-      def resolve_by(arguments)
-        arguments.keys.reduce(initial_relation) do |relation, argument_key|
-          public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])
+      def resolve
+        resolve_argument :id do |value, scope|
+          scope.where(id: value)
+        end
+
+        resolve_argument :user_id do |value, scope|
+          scope.where(user_id: value)
+        end
+
+        resolve_argument :name do |value, scope|
+          scope.includes(:custom_model_type).where(
+            custom_model_types: {
+              parameterized_name: value
+            }
+          )
         end
       end
 
-      def resolve_by_id(relation, id)
-        relation.where(id: id)
+      private
+
+      def resolve_arguments
+        @scope = yield(scope)
       end
 
-      def resolve_by_user_id(relation, id)
-        relation.where(user_id: id)
+      def resolve_argument(argument)
+        return unless arguments.key? argument
+
+        @scope = yield(arguments[argument], scope)
       end
 
-      def resolve_by_custom_model_type_name(relation, model_name)
-        relation.includes(:custom_model_type).where(
-          custom_model_types: {
-            parameterized_name: model_name
-          }
-        )
-      end
-
-      def initial_relation
+      def initial_scope
         initial_relation = ::Customization
         return initial_relation unless @parent_object
 

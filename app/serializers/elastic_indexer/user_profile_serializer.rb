@@ -10,7 +10,7 @@ module ElasticIndexer
                :category_list,
                :properties
 
-    has_many :customizations, serializer: CustomModelSerializer
+    has_many :customizations, serializer: CustomizationSerializer
     has_many :custom_images, serializer: CustomImageSerializer
     has_one :availability_template, serializer: AvailabilityTemplateSerializer
 

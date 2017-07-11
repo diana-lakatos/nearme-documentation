@@ -90,7 +90,7 @@ module Graph
         field :customizations, !types[Types::Customizations::Customization],
               'Fetch any customization by name or id, ex: hair_color: customization(name: "hair_color")' do
           argument :id, types.ID
-          argument :custom_model_type_name, types.String
+          argument :name, types.String
           resolve ->(obj, arg, ctx) { Resolvers::Customizations.new.call(obj.source.object, arg, ctx) }
         end
       end

@@ -1,0 +1,773 @@
+{
+  "mappings": {
+    "transactable": {
+      "_parent": {
+        "type": "user"
+      },
+      "_routing": {
+        "required": true
+      },
+      "properties": {
+        "action_free_booking": {
+          "type": "boolean"
+        },
+        "action_rfq": {
+          "type": "boolean"
+        },
+        "address": {
+          "properties": {
+            "city": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "country": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "postcode": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "state": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "street": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "suburb": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "administrator_id": {
+          "type": "integer"
+        },
+        "all_price_types": {
+          "type": "string"
+        },
+        "all_prices": {
+          "type": "integer"
+        },
+        "availability": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "availability_exceptions": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "average_rating": {
+          "type": "float"
+        },
+        "categories": {
+          "type": "integer"
+        },
+        "category_list": {
+          "type": "nested",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "is_root": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "name_of_root": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "permalink": {
+              "type": "string"
+            },
+            "position": {
+              "type": "long"
+            },
+            "slug": {
+              "type": "string"
+            }
+          }
+        },
+        "company_id": {
+          "type": "integer"
+        },
+        "creator_id": {
+          "type": "integer"
+        },
+        "completed_reservations": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "properties": {
+          "properties": {
+            "budget": {
+              "type": "float"
+            },
+            "deadline": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "estimation": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "other_requirements": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "type_of_deliverable": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "workplace_type": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "deleted_at": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "description": {
+          "type": "string"
+        },
+        "draft": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "geo_location": {
+          "type": "geo_point"
+        },
+        "geo_service_shape": {
+          "type": "geo_shape"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "instance_id": {
+          "type": "integer"
+        },
+        "location_id": {
+          "type": "integer"
+        },
+        "location_type_id": {
+          "type": "integer"
+        },
+        "maximum_price_cents": {
+          "type": "integer"
+        },
+        "minimum_price_cents": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string",
+          "fields": {
+            "raw": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "object_properties": {
+          "type": "object"
+        },
+        "open_hours": {
+          "type": "integer"
+        },
+        "open_hours_during_week": {
+          "type": "integer"
+        },
+        "opened_on_days": {
+          "type": "integer"
+        },
+        "possible_payout": {
+          "type": "boolean"
+        },
+        "seller_average_rating": {
+          "type": "float"
+        },
+        "service_radius": {
+          "type": "integer"
+        },
+        "slug": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "state": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "string"
+        },
+        "tag_list": {
+          "properties": {
+            "name": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "slug": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "transactable_type": {
+          "properties": {
+            "id": {
+              "type": "long"
+            },
+            "name": {
+              "type": "string"
+            },
+            "parameterized_name": {
+              "type": "string"
+            }
+          }
+        },
+        "transactable_type_id": {
+          "type": "integer"
+        },
+        "customizations": {
+          "type": "nested",
+          "properties":{
+            "id":{
+              "type":"integer"
+            },
+            "user_id":{
+              "type":"integer"
+            },
+            "created_at":{
+              "type":"date"
+            },
+            "name":{
+              "type":"string"
+            },
+            "custom_attachments":{
+              "type":"object",
+              "properties":{
+                "id":{
+                  "type":"integer"
+                },
+                "name":{
+                  "type":"string"
+                },
+                "label":{
+                  "type":"string"
+                },
+                "file_name":{
+                  "type":"string"
+                },
+                "created_at":{
+                  "type":"date"
+                },
+                "size_bytes":{
+                  "type":"integer"
+                },
+                "content_type":{
+                  "type":"string"
+                }
+              }
+            },
+            "properties":{
+              "type":"object",
+              "properties":{
+                "member_id":{
+                  "type":"string",
+                  "fields":{
+                    "raw":{
+                      "type":"string",
+                      "index":"not_analyzed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "user": {
+      "properties": {
+        "avatar": {
+          "properties": {
+            "big": {
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "version_name": {
+                  "type": "string"
+                }
+              }
+            },
+            "bigger": {
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "version_name": {
+                  "type": "string"
+                }
+              }
+            },
+            "medium": {
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "version_name": {
+                  "type": "string"
+                }
+              }
+            },
+            "thumb": {
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "version_name": {
+                  "type": "string"
+                }
+              }
+            },
+            "transformed": {
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "version_name": {
+                  "type": "string"
+                }
+              }
+            },
+            "url": {
+              "type": "string"
+            }
+          }
+        },
+        "blog": {
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "header_icon": {
+              "type": "object"
+            },
+            "header_image": {
+              "type": "object"
+            },
+            "header_logo": {
+              "type": "object"
+            },
+            "id": {
+              "type": "long"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        },
+        "buyer_average_rating": {
+          "type": "float"
+        },
+        "click_to_call": {
+          "type": "boolean"
+        },
+        "communication": {
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            }
+          }
+        },
+        "company_name": {
+          "type": "string"
+        },
+        "country_name": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "current_address": {
+          "properties": {
+            "address": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "country": {
+              "type": "string" ,
+              "index": "not_analyzed"
+            },
+            "formatted_address": {
+              "type": "string"
+            },
+            "id": {
+              "type": "long"
+            },
+            "iso_country_code": {
+              "type": "string"
+            },
+            "lat": {
+              "type": "double"
+            },
+            "lon": {
+              "type": "double"
+            },
+            "postcode": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "state": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "street": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "street_number": {
+              "type": "string"
+            },
+            "suburb": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "deleted_at": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "email": {
+          "type": "string"
+        },
+        "featured": {
+          "type": "boolean"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "geo_location": {
+          "type": "geo_point"
+        },
+        "geo_service_shape": {
+          "type": "geo_shape"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "instance_id": {
+          "type": "integer"
+        },
+        "instance_profile_type_ids": {
+          "type": "integer"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "number_of_completed_orders_creator": {
+          "type": "integer"
+        },
+        "number_of_completed_orders_user": {
+          "type": "integer"
+        },
+        "seller_average_rating": {
+          "type": "float"
+        },
+        "slug": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "tags": {
+          "type": "string"
+        },
+        "user_profiles": {
+          "type": "nested",
+          "properties": {
+            "availability_exceptions": {
+              "type": "date",
+              "format": "strict_date_optional_time||epoch_millis"
+            },
+            "categories": {
+              "type": "nested",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "name_of_root": {
+                  "type": "string"
+                },
+                "permalink": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                },
+                "position": {
+                  "type": "integer"
+                },
+                "root": {
+                  "type": "string"
+                }
+              }
+            },
+            "category_ids": {
+              "type": "integer"
+            },
+            "customizations": {
+              "properties": {
+                "id": {
+                  "type": "long"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "properties": {
+                  "properties": {
+                    "author": {
+                      "type": "string"
+                    },
+                    "recommendation": {
+                      "type": "string"
+                    },
+                    "url_link": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "id": {
+              "type": "long"
+            },
+            "instance_profile_type_id": {
+              "type": "long"
+            },
+            "onboarded_at": {
+              "type": "date",
+              "format": "strict_date_optional_time||epoch_millis"
+            },
+            "profile_type": {
+              "type": "string"
+            },
+            "properties": {
+              "properties": {
+                "accomplishments": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "availability": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "awards": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "bio": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "cities": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "discounts_available": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "discounts_description": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "education": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "employers": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "giving_back": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "hobbies": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "hourly_rate": {
+                  "type": "integer",
+                  "fields": {
+                    "raw": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "hourly_rate_decimal": {
+                  "type": "float",
+                  "fields": {
+                    "raw": {
+                      "type": "float"
+                    }
+                  }
+                },
+                "linkedin_url": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "pro_service": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "profile_video_url": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "referred_by": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "referred_by_sme": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "teaching": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "travel": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                },
+                "workplace_type": {
+                  "type": "string",
+                  "fields": {
+                    "raw": {
+                      "type": "string",
+                      "index": "not_analyzed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

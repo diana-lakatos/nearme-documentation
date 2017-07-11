@@ -22,7 +22,7 @@ module Graph
           }
         end
 
-        field :customizations, !types[Types::Customizations::Customization] do
+        field :customizations, types[Graph::Types::Customizations::Customization] do
           argument :name, !types.String
           resolve ->(obj, args, _ctx) { obj.customizations.select { |c| c.name == args[:name] } }
         end

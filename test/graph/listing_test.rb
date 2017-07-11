@@ -22,6 +22,32 @@ module Graph
   module Types
     module Listings
       class ListingQueryTest < ActiveSupport::TestCase
+        test 'ATB setup' do
+          ES.around(instance_name: 'atb') do |graph|
+            graph.execute(:projects, 'per_page' => 20, 'page' => 1, 'customization_name' => "gig_invitation", "customization_user_id" => 123, "creator_id" => 1111, "state" => "pending").tap do |results|
+              assert_equal 2, results.dig('data', 'projects', 'total_entries')
+              assert_equal 'gig_invitation', results.dig('data', 'projects', 'results', 0, 'customizations', 0, 'name')
+              assert_equal 'Gig Invitation', results.dig('data', 'projects', 'results', 0, 'customizations', 0, 'human_name')
+              assert_equal 1, results.dig('data', 'projects', 'results', 0, 'customizations').size
+              assert_equal 1, results.dig('data', 'projects', 'results', 1, 'customizations').size
+            end
+
+            graph.execute(:projects, 'per_page' => 20, 'page' => 1, 'customization_id' => 50).tap do |results|
+              assert_equal 1, results.dig('data', 'projects', 'total_entries')
+              assert_equal 1, results.dig('data', 'projects', 'results', 0, 'customizations').size
+              assert_equal 'gig_invitation', results.dig('data', 'projects', 'results', 0, 'customizations', 0, 'name')
+            end
+
+            graph.execute(:projects, 'per_page' => 20, 'page' => 1, 'customization_name' => "gig_invitation", "customization_user_id" => 123, "creator_id" => 1111, "state" => "in_progress").tap do |results|
+              assert_equal 0, results.dig('data', 'projects', 'total_entries')
+            end
+
+            graph.execute(:projects, 'per_page' => 20, 'page' => 1, 'customization_name' => "gig_invitation", "customization_user_id" => 123, "creator_id" => 555, "state" => "in_progress").tap do |results|
+              assert_equal 0, results.dig('data', 'projects', 'total_entries')
+            end
+          end
+        end
+
         test 'SPACER setup' do
           ES.around(instance_name: 'spacer') do |graph|
             # ask ES directly

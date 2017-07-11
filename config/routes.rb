@@ -1276,18 +1276,36 @@ DesksnearMe::Application.routes.draw do
       resources :phone_calls, only: [:new, :create, :destroy]
     end
 
-    get '/:slug/(:slug2)/(:slug3)/(*slugs)(.:format)', to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
+    get '/:slug/(:slug2)/(:slug3)/(*slugs)/(.:format)',
+        to: 'pages#show',
+        as: :pages,
+        constraints: Constraints::PageConstraints.new
 
     get '/search/categories', to: 'search#categories'
     get '/search/(:search_type)', to: 'search#index', as: :search
 
-    get '/transactable_types/:transactable_type_id/locations/:location_id/listings/:id', to: 'listings#show', as: 'transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
-    get '/:transactable_type_id/locations/:location_id/listings/:id', to: 'listings#show', as: 'short_transactable_type_location_listing', constraints: Constraints::TransactableTypeConstraints.new
-    get '/:transactable_type_id/:location_id/listings/:id', to: 'listings#show', as: 'short_transactable_type_short_location_listing', constraints: Constraints::TransactableTypeConstraints.new
-    # making (:id) optional for now even though it's required for legacy urls in a format of locations/:location_id
+    get '/transactable_types/:transactable_type_id/locations/:location_id/listings/:id',
+        to: 'listings#show',
+        as: 'transactable_type_location_listing',
+        constraints: Constraints::TransactableTypeConstraints.new
+    get '/:transactable_type_id/locations/:location_id/listings/:id',
+        to: 'listings#show',
+        as: 'short_transactable_type_location_listing',
+        constraints: Constraints::TransactableTypeConstraints.new
+    get '/:transactable_type_id/:location_id/listings/:id',
+        to: 'listings#show',
+        as: 'short_transactable_type_short_location_listing',
+        constraints: Constraints::TransactableTypeConstraints.new
+    # making (:id) optional for now even though it's required for legacy urls
+    # in a format of locations/:location_id
     get '/locations/:location_id/(:id)', to: 'listings#show', as: 'location'
-    get '/locations/:location_id/listings/:id', to: 'listings#show', as: 'location_listing'
-    get '/:transactable_type_id/:id', to: 'listings#show', as: 'short_transactable_type_listing', constraints: Constraints::TransactableTypeConstraints.new
+    get '/locations/:location_id/listings/:id',
+        to: 'listings#show',
+        as: 'location_listing'
+    get '/:transactable_type_id/:id',
+        to: 'listings#show',
+        as: 'short_transactable_type_listing',
+        constraints: Constraints::TransactableTypeConstraints.new
 
     get '/w-hotels-desks-near-me', to: 'locations#w_hotels', as: :w_hotels_location
     get '/W-hotels-desks-near-me', to: 'locations#w_hotels'

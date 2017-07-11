@@ -6,9 +6,9 @@ module Graph
         field :customizations do
           type !types[Types::Customizations::Customization]
 
-          argument :id, types.ID
+          argument :id, types[types.ID]
           argument :user_id, types.ID
-          argument :custom_model_type_name, types.String
+          argument :name, types.String
           resolve Resolvers::Customizations.new
         end
 
@@ -16,7 +16,7 @@ module Graph
           type !Types::Customizations::Customization
 
           argument :id, types.ID
-          argument :custom_model_type_name, types.String
+          argument :name, types.String
           resolve Resolvers::Customization.new
         end
       end

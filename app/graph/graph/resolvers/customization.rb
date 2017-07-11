@@ -2,22 +2,37 @@
 module Graph
   module Resolvers
     class Customization
+      attr_reader :scope, :arguments, :conditions
+
       def call(_, arguments, _ctx)
-        ::Customization.includes(:custom_model_type).find_by(resolve_by(arguments))
+        @conditions = {}
+        @scope = ::Customization.includes(:custom_model_type).all
+        @arguments = arguments
+
       end
 
-      def resolve_by(arguments)
-        arguments.keys.reduce({}) do |conditions, argument_key|
-          conditions.merge(public_send("resolve_by_#{argument_key}", arguments[argument_key]))
+      def resolve
+        resolve_argument :id do |value|
+          { id: value }
         end
+
+        resolve_argument :custom_model_type_name do |value|
+          { custom_model_types: { parameterized_name: value } }
+        end
+
+        find_by_conditions
       end
 
-      def resolve_by_id(id)
-        { id: id }
+      private
+
+      def find_by_conditions
+        scope.find_by(conditions)
       end
 
-      def resolve_by_custom_model_type_name(model_name)
-        { custom_model_types: { parameterized_name: model_name } }
+      def resolve_argument(argument)
+        return unless arguments.key? argument
+
+        @conditions.merge(yield(arguments[argument]))
       end
     end
   end
