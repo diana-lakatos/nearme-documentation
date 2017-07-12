@@ -929,7 +929,7 @@ en:
         resource:
           plural:
             payment_transfer: "Payment tranfers"
-        transfers_are_generated_automatically: "Transfers are generated automatically depending on your setting in 'Settings > Configuration' for outstanding charges we've recieved on behalf of hosts. The next batch will be generated at about:"
+        transfers_are_generated_automatically: "Transfers are generated automatically depending on your setting in 'Settings > Configuration' for outstanding charges we've received on behalf of hosts. The next batch will be generated at about:"
         payments_awaiting_transfers:
           zero: "There are no payments awaiting for transfers."
           one: "There is one payment awaiting for transfer."

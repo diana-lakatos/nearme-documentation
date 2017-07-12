@@ -100,7 +100,7 @@ class Company < ActiveRecord::Base
   end
 
   # Schedules a new payment transfer for current outstanding payments for each
-  # of the currency payments recieved by the Company.
+  # of the currency payments received by the Company.
   def schedule_payment_transfer
     self.created_payment_transfers = []
     transaction do
