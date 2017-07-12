@@ -366,9 +366,9 @@ class Payment < ActiveRecord::Base
 
   # Use API to get payment object stored in payment gateway
   # This objec is stadardised with our response parser
-  # for example PaymentGateway::Response::Stripe::Payment
+  # for example Payment::Gateway::Response::Stripe::Payment
   def fetch
-    return unless payment_gateway.gateway.respond_to?(:find_payment)
+    return unless payment_gateway.gateway.respond_to?(:retrive_charge)
 
     payment_gateway.find_payment(external_id, direct_charge? ? merchant_account.try(:external_id) : nil )
   end
@@ -569,7 +569,7 @@ class Payment < ActiveRecord::Base
       company: company,
       payments: [self],
       payment_gateway_mode: payment_gateway_mode,
-      payment_gateway_id: payment_gateway_id,
+      payment_gateway: payment_gateway,
       token: transfer_id
     )
   end

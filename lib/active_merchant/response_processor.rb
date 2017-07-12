@@ -54,7 +54,10 @@ module ActiveMerchant
 
     def balance
       return unless params['balance_transaction']
-      @balance ||= payment_gateway.find_balance(params['balance_transaction'], merchant_account.try(:custom_options))
+      @balance ||= payment_gateway.find_balance(
+        params['balance_transaction'],
+        payment_gateway.direct_charge? ? merchant_account.try(:external_id) : nil
+      )
     end
   end
 end

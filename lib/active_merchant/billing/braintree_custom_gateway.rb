@@ -41,14 +41,14 @@ module ActiveMerchant
       def find_payment(token, _merchant_id = nil)
         payment = find_transaction(token)
 
-        PaymentGateway::Response::Braintree::Payment.new(
+        Payment::Gateway::Response::Braintree::Payment.new(
           payment,
           payment.refund_ids.map { |refund_id| find_refund(refund_id) }
         )
       end
 
       def find_refund(token)
-        PaymentGateway::Response::Braintree::Refund.new(find_transaction(token))
+        Payment::Gateway::Response::Braintree::Refund.new(find_transaction(token))
       end
 
       def find_transaction(token)

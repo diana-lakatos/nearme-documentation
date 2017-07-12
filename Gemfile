@@ -85,7 +85,7 @@ gem 'font-awesome-rails'
 gem 'delayed_job_active_record'
 gem 'delayed_job_recurring'
 gem 'attr_encrypted', '~> 1'
-gem 'stripe', '1.57.0', require: false
+gem 'stripe', '~> 3.0.0', require: false, git: 'git://github.com/stripe/stripe-ruby'
 gem 'plaid', '~> 4.0.0', require: false
 gem 'paypal-sdk-rest', '~> 1.3.2'
 gem 'paypal-sdk-merchant'

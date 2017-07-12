@@ -64,7 +64,6 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
 
   def validate_current_address
     return if current_address.blank?
-
     current_address.parse_address_components! unless current_address.raw_address?
     current_address.errors.clear
     errors.add(:current_address, :inacurate) if current_address.valid? && current_address.check_address

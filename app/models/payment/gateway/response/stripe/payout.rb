@@ -1,17 +1,13 @@
 # frozen_string_literal: true
-class PaymentGateway::Response::Stripe::Transfer
-  delegate :id, :reversed, to: :@response
+class Payment::Gateway::Response::Stripe::Payout
+  delegate :id, to: :@response
 
   def initialize(response)
     @response = response
   end
 
   def paid?
-    if status
-      status == 'paid'
-    else
-      !reversed
-    end
+    status == 'paid'
   end
 
   def failed?

@@ -106,7 +106,6 @@ class Dashboard::Company::NewTransactablesController < Dashboard::Company::BaseC
           flash[:error] = t('manage.listings.no_trust_explanation') unless @transactable.is_trusted?
           redirect_to url_for(controller_scope << 'transactables')
         else
-          # binding.pry
           @transactable_form.sync
           @transactable_form.prepopulate!
           @global_errors = filter_error_messages(@transactable.errors.full_messages)

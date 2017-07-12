@@ -20,9 +20,7 @@ class Webhook < ActiveRecord::Base
     event :success do transition [:pending, :failed] => :success; end
   end
 
-  # We use params method only to display saved YAML webhook request
-  # Use event method to fetch any webhook information
-  def params
+  def response_object
     YAML.load(response || '') || {}
   end
 

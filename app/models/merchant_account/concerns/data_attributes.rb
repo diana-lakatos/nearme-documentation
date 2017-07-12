@@ -6,7 +6,7 @@ module MerchantAccount::Concerns::DataAttributes
 
     self::ATTRIBUTES.each do |attr|
       define_method attr do
-        data[attr]
+        data.stringify_keys[attr]
       end
 
       define_method "#{attr}=" do |val|

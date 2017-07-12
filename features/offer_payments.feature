@@ -136,4 +136,3 @@ Feature: Offer like end to end flow
       |invoice                     | state    | total  | payment state | payment total |
       |order item "First Invoice"  | approved | 300    | paid          | 300           |
       |order item "Second Invoice" | rejected | 340    |               | 0             |
-
