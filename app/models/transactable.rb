@@ -250,7 +250,7 @@ class Transactable < ActiveRecord::Base
 
   validates :currency, presence: true, allow_nil: false, currency: true
   validates :transactable_type, :action_type, presence: true
-  validates :location, presence: true, unless: ->(record) { record.location_not_required }
+  validates :location, presence: true, unless: ->(record) { record.company.nil? || record.location_not_required }
   validates :photos, length: { minimum: 1 }, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates :quantity, presence: true, numericality: { greater_than: 0 }, unless: ->(record) { record.action_type.is_a?(Transactable::PurchaseAction) }
 

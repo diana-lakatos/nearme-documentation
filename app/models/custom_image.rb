@@ -19,7 +19,7 @@ class CustomImage < ActiveRecord::Base
   skip_callback :commit, :after, :remove_image!
 
   delegate :aspect_ratio, :settings_for_version,
-           :optimization_settings, to: :custom_attribute
+           :optimization_settings, :name, to: :custom_attribute
 
   scope :for_attribute, ->(attr_name) { joins(:custom_attribute).where(custom_attributes: { name: attr_name }) }
 

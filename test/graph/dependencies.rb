@@ -45,7 +45,7 @@ require './app/graph/graph/types/activity_feed/photo'
 require './app/graph/graph/types/activity_feed/user_status_update'
 
 require './app/graph/graph/types/availability_template'
-require './app/graph/graph/types/customization'
+require './app/graph/graph/types/customizations/customization'
 require './app/graph/graph/types/private_file'
 require './app/graph/graph/types/availability_template'
 require './app/graph/graph/types/availability_templates/availability_rule'

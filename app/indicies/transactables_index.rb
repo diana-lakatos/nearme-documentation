@@ -25,6 +25,7 @@ module TransactablesIndex
         indexes :object_properties, type: 'object'
         indexes :instance_id, type: 'integer'
         indexes :company_id, type: 'integer'
+        indexes :creator_id, type: 'integer'
         indexes :location_id, type: 'integer'
         indexes :transactable_type_id, type: 'integer'
 
@@ -62,7 +63,7 @@ module TransactablesIndex
         indexes :average_rating, type: 'float'
         indexes :possible_payout, type: 'boolean'
         indexes :tags, type: 'string'
-        indexes :state, type: 'string'
+        indexes :state, type: 'string', index: 'not_analyzed'
 
         indexes :category_list, type: 'nested' do
           indexes :id, type: :integer
@@ -77,6 +78,28 @@ module TransactablesIndex
           indexes :suburb, type: 'string', index: 'not_analyzed'
           indexes :state, type: 'string', index: 'not_analyzed'
           indexes :postcode, type: 'string', index: 'not_analyzed'
+        end
+
+        indexes :customizations, type: 'nested' do
+          indexes :id, type: :integer
+          indexes :user_id, type: :integer
+          indexes :created_at, type: :date
+          indexes :name, type: :string, index: 'not_analyzed'
+          indexes :human_name, type: :string
+          indexes :custom_attachments, type: :object do
+            indexes :id, type: :integer
+            indexes :name, type: :string, index: 'not_analyzed'
+            indexes :label, type: :string
+            indexes :file_name, type: :string, index: 'not_analyzed'
+            indexes :created_at, type: :date
+            indexes :size_bytes, type: :integer
+            indexes :content_type, type: :string
+          end
+          indexes :properties, type: :object do
+            CustomAttributes::CustomAttribute.custom_attributes_mapper(CustomModelType, CustomModelType.transactables) do |attribute_name, type|
+              indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
+            end
+          end
         end
       end
     end
@@ -127,7 +150,8 @@ module TransactablesIndex
         address: ElasticIndexer::AddressSerializer.new(location_address).as_json,
         transactable_type: ElasticIndexer::TransactableTypeSerializer.new(transactable_type).as_json,
         category_list: categories.order(:lft).map { |c| ElasticIndexer::CategorySerializer.new(c).as_json },
-        photos: photos.map { |photo| ElasticIndexer::LegacyPhotoSerializer.new(photo).as_json }
+        photos: photos.map { |photo| ElasticIndexer::LegacyPhotoSerializer.new(photo).as_json },
+        customizations: customizations.map{ |customization| ElasticIndexer::CustomizationSerializer.new(customization).as_json }
       )
     end
 

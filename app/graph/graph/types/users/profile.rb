@@ -11,6 +11,10 @@ module Graph
         field :profile_type, !types.String
         field :onboarded_at, types.String
         field :availability_template, Graph::Types::AvailabilityTemplate
+        field :customizations, types[Graph::Types::Customizations::Customization] do
+          argument :name, !types.String
+          resolve ->(obj, args, _ctx) { obj.customizations.select { |c| c.name == args[:name] } }
+        end
         field :category_list, types[Graph::Types::Category] do
           argument :name_of_root, types.String
 
@@ -20,11 +24,6 @@ module Graph
               .select { |c| arg[:name_of_root].blank? || c.name_of_root == arg[:name_of_root] }
               .sort_by(&:permalink)
           }
-        end
-
-        field :customizations, !types[Graph::Types::Customization] do
-          argument :name, !types.String
-          resolve ->(obj, args, _ctx) { obj.customizations.select { |c| c.name == args[:name] } }
         end
       end
     end

@@ -86,6 +86,14 @@ module Graph
           }
         end
 
+        field :customizations, types[Graph::Types::Customizations::Customization] do
+          argument :name, types.String
+          resolve lambda { |obj, args, _ctx|
+            return obj.customizations if args[:name].blank?
+            obj.customizations.select { |c| c.name == args[:name] }
+          }
+        end
+
         field :photos, types[Graph::Types::EsImage]
 
         field :property_array, types[types.String] do

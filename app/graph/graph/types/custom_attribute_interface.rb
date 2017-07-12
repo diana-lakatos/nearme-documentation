@@ -26,7 +26,7 @@ module Graph
 
       field :custom_attachment, Types::PrivateFile do
         argument :name, !types.String
-        resolve ->(obj, arg, _ctx) { obj.custom_attachments[arg[:name]] }
+        resolve ->(obj, args, _ctx) { obj.custom_attachments.find { |ca| ca.name == args[:name] } }
       end
     end
   end

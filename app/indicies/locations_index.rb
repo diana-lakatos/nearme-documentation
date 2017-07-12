@@ -28,7 +28,6 @@ module LocationsIndex
         indexes :street, type: 'string'
         indexes :suburb, type: 'string'
         indexes :city, type: 'string'
-        indexes :state, type: 'string'
         indexes :country, type: 'string'
         indexes :postcode, type: 'string'
 

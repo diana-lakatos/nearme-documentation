@@ -38,11 +38,25 @@ module Graph
             UserProfileGroupResolver.new.call(self, value, ctx)
           end
 
+          resolve_argument :customizations do |value|
+            CustomizationGroupResolver.new.call(self, value, ctx)
+          end
+
+          resolve_argument :slug do |value|
+            {
+              filter: {
+                bool: {
+                  must: [{ term: { 'slug' => value } }]
+                }
+              }
+            }
+          end
+
           resolve_argument :state do |value|
             {
               filter: {
                 bool: {
-                  must: [{ terms: { 'state' => value } }]
+                  must: [{ term: { 'state' => value } }]
                 }
               }
             }
