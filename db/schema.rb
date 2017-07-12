@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170711070922) do
+ActiveRecord::Schema.define(version: 20170711125610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1823,10 +1823,10 @@ ActiveRecord::Schema.define(version: 20170711070922) do
     t.boolean  "use_billing",                                                default: false, null: false
     t.string   "rejection_reason",                              limit: 1500
     t.string   "completed_form_component_ids",                  limit: 255
-    t.integer  "cancellation_policy_hours_for_cancellation",                default: 0
-    t.integer  "cancellation_policy_penalty_percentage",                    default: 0
-    t.integer  "cancellation_policy_penalty_hours",                         default: 0
-    t.integer  "minimum_booking_minutes",                                   default: 60
+    t.integer  "cancellation_policy_hours_for_cancellation",                 default: 0
+    t.integer  "cancellation_policy_penalty_percentage",                     default: 0
+    t.integer  "cancellation_policy_penalty_hours",                          default: 0
+    t.integer  "minimum_booking_minutes",                                    default: 60
     t.integer  "book_it_out_discount"
     t.text     "guest_notes"
     t.hstore   "properties"
@@ -1840,7 +1840,7 @@ ActiveRecord::Schema.define(version: 20170711070922) do
     t.datetime "confirmed_at"
     t.datetime "archived_at"
     t.datetime "deleted_at"
-    t.boolean  "insurance_enabled",                                         default: false, null: false
+    t.boolean  "insurance_enabled",                                          default: false, null: false
     t.string   "delivery_type",                                 limit: 255
     t.string   "confirmation_email",                            limit: 255
     t.text     "comment"
@@ -1850,10 +1850,10 @@ ActiveRecord::Schema.define(version: 20170711070922) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.hstore   "settings",                                                  default: {}
+    t.hstore   "settings",                                                   default: {}
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
-    t.boolean  "is_free_booking",                                           default: false
+    t.boolean  "is_free_booking",                                            default: false
     t.datetime "lister_confirmed_at"
     t.datetime "enquirer_confirmed_at"
     t.datetime "draft_at"
