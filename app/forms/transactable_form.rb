@@ -83,7 +83,7 @@ class TransactableForm < BaseForm
   # @!attribute currency
   #   @return [String] currency used for this Transactable's pricings
   property :currency
-  
+
   # @!attribute enabled
   #   @return [Boolean] whether the Transactable is enabled; if not enabled, it will not be visible in search
   #     or purchasable
