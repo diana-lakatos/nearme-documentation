@@ -2,11 +2,10 @@
 class ElasticIndexerJob < Job
   include Job::HighPriority
 
-  def after_initialize(operation, klass, record_id, options = {})
+  def after_initialize(operation, klass_name, record_id)
     @operation = operation
-    @klass = klass
+    @klass_name = klass_name
     @record_id = record_id
-    @options = options
   end
 
   def self.priority
@@ -15,10 +14,9 @@ class ElasticIndexerJob < Job
 
   def perform
     return unless should_update_index?
-    return postpone if delay_indexing?
     return unless record
 
-    Rails.logger.info format('Started reindexing ES: %s#%s', @klass, @record_id)
+    Rails.logger.info format('Started reindexing ES: %s#%s', @klass_name, @record_id)
 
     case operation
     when 'index', 'update'
@@ -48,21 +46,8 @@ class ElasticIndexerJob < Job
     @record ||= source_class.indexable.find_by(id: @record_id)
   end
 
-  def postpone
-    self.class.perform_later(1.minute.from_now, operation, @klass, @record_id, @options)
-  end
-
-  # check if index is writeable
-  def delay_indexing?
-    self.class.run_in_background? && settings.values.first['settings']['index']['blocks'].try(:[], 'write') == 'true'
-  end
-
   def should_update_index?
     Rails.application.config.use_elastic_search
-  end
-
-  def settings
-    @settings ||= client.indices.get_settings index: index_name
   end
 
   def index_name
@@ -70,6 +55,6 @@ class ElasticIndexerJob < Job
   end
 
   def source_class
-    @klass.constantize
+    @klass_name.constantize
   end
 end
