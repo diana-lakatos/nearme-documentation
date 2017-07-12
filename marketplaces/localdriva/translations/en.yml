@@ -282,7 +282,7 @@ en:
         guest_fee: "driver fee"
         host_fee: "Passenger fee"
         payout_failed: "We were notified that this payment transfer failed to be delivered, most likely due to wrong payout information. Please follow up with the Passenger and once issues are resolved, manually mark the payment as not failed."
-        transfers_are_generated_automatically: "Transfers are generated automatically depending on your setting in 'Settings > Configuration' for outstanding charges we've recieved on behalf of Passengers. The next batch will be generated at about:"
+        transfers_are_generated_automatically: "Transfers are generated automatically depending on your setting in 'Settings > Configuration' for outstanding charges we've received on behalf of Passengers. The next batch will be generated at about:"
     rating_systems:
       index:
         only_if_both_completed_products: "Only display reviews if both driver and Passenger have completed"
