@@ -492,7 +492,7 @@ DesksnearMe::Application.routes.draw do
           resources :user_bans, only: [:create, :index, :destroy], controller: 'users/user_bans'
           resources :user_profiles, only: [] do
             member do
-              post :approve
+              put :change_approval_status
             end
           end
         end
