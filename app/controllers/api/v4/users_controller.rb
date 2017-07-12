@@ -20,10 +20,10 @@ module Api
           # sign up - we want to be notified
           raise "Sign up failed due to configuration issue: #{user_signup.model.errors.full_messages.join(', ')}" unless user_signup.model.persisted?
           sign_in(user_signup.model)
-          index_in_elastic_immediatly(user_signup.model)
+          index_in_elastic_immediately(user_signup.model)
         end
         respond(user_signup, notice: I18n.t('devise.registrations.signed_up'),
-                              location: session.delete(:user_return_to).presence || params[:return_to].presence || root_path)
+                             location: session.delete(:user_return_to).presence || params[:return_to].presence || root_path)
       end
 
       def update
@@ -38,6 +38,7 @@ module Api
           # so if model is invalid, it won't be saved and user won't be able to
           # sign up - we want to be notified
           raise "Update failed due to configuration issue: #{user_update_form.model.errors.full_messages.join(', ')}" if user_update_form.model.changed?
+          index_in_elastic_immediately(user_signup.model)
         end
         respond(user_update_form)
       end
@@ -83,7 +84,7 @@ module Api
         end
       end
 
-      def index_in_elastic_immediatly(user)
+      def index_in_elastic_immediately(user)
         return unless Rails.application.config.use_elastic_search
 
         Elastic::Commands::InstantIndexRecord.new(user).call
