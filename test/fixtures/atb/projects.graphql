@@ -4,10 +4,10 @@ query search_projects(
   $query: String,
   $workplace_types: [String],
   $category_ids: [Int],
-  $customization_user_id: Int,
-  $customization_id: Int,
+  $customization_user_id: ID,
+  $customization_id: ID,
   $customization_name: String,
-  $creator_id: Int,
+  $creator_id: ID,
   $state: String
 )
  {
