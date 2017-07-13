@@ -19,6 +19,7 @@ class Dashboard::UserRecurringBookings::PaymentSubscriptionsController < Dashboa
       redirect_to dashboard_order_path(@recurring_booking)
       render_redirect_url_as_json if request.xhr?
     else
+      unpaid_recurring_booking_periods
       render :edit
     end
   end
