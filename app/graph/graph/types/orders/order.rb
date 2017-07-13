@@ -42,6 +42,13 @@ module Graph
         field :periods, types[Types::Orders::ReservationPeriod]
         field :order_items, types[Types::Orders::RecurringBookingPeriod]
         field :conflicting_orders, types[Types::Orders::Order]
+        field :customizations, !types[Types::Customizations::Customization],
+              'Fetch any customization by name or id, ex: hair_color: customization(name: "hair_color")' do
+          argument :id, types.ID
+          argument :name, types.String
+          resolve Resolvers::Customizations.new
+        end
+        field :payment_subscription, Types::Orders::PaymentSubscription
       end
 
       OrderStateEnum = GraphQL::EnumType.define do

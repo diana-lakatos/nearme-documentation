@@ -119,7 +119,7 @@ module TransactablesIndex
                       :created_at, :deleted_at, :draft, :location_id,
                       :transactable_type_id, :administrator_id, :enabled, :action_rfq, :action_free_booking,
                       :minimum_price_cents, :maximum_price_cents,
-                      :service_radius, :opened_on_days,
+                      :service_radius, :opened_on_days, :creator_id,
                       :average_rating, :possible_payout]
 
       availability_exceptions = self.availability_exceptions ? self.availability_exceptions.map(&:all_dates).flatten : nil

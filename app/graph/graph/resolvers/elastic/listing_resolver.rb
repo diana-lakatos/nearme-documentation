@@ -62,6 +62,16 @@ module Graph
             }
           end
 
+          resolve_argument :creator_id do |value|
+            {
+              filter: {
+                bool: {
+                  must: [{ term: { 'creator_id' => value.to_i } }]
+                }
+              }
+            }
+          end
+
           resolve_argument :tags do |values|
             {
               filter: {

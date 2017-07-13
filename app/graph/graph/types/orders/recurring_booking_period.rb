@@ -15,6 +15,12 @@ module Graph
         field :state, types.String
         field :starts_at, types.String
         field :ends_at, types.String
+        field :currency, types.String
+        field :comment, types.String
+        field :rejection_reason, types.String
+        field :total_amount, types.String
+        field :total_amount_cents, types.Int
+        field :transactable_line_items, types[Types::Transactables::TransactableLineItem]
       end
     end
   end
