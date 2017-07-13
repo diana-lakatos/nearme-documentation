@@ -77,11 +77,6 @@ class TransactableFormBuilderTest < ActiveSupport::TestCase
           'address' => 'adelaide'
         }
       }
-      # location: {
-      #   location_address: {
-      #     'address' => 'Adelaide'
-      #   }
-      # }
     }
     assert transactable_form.validate(params), transactable_form.errors.messages
     assert_difference 'Transactable.count', 1, [transactable_form.errors.messages, transactable_form.model.errors.messages] do
