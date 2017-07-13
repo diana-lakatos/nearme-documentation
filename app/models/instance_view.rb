@@ -91,8 +91,6 @@ class InstanceView < ActiveRecord::Base
     'recurring_booking_mailer/notify_host_with_confirmation',
     'recurring_booking_mailer/notify_host_without_confirmation',
     'recurring_booking_mailer/pre_booking',
-    'recurring_mailer/analytics',
-    'recurring_mailer/request_photos',
     'recurring_mailer/share',
     'reservation_mailer/notify_guest_of_cancellation_by_guest',
     'reservation_mailer/notify_guest_of_cancellation_by_host',

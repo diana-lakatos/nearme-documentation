@@ -167,7 +167,6 @@ en:
         capacity: Capacity
         quantity: Quantity
         confirm_reservations: Confirm reservations
-        last_request_photos_sent_at: Last request photos sent at
         about_company: About Company (short description)
         estimation: Approx. Time Required to Complete
         workplace_type: Workplace Type
@@ -210,7 +209,6 @@ en:
         confirm_reservations: Confirm reservations
         capacity: Capacity
         description: Description
-        last_request_photos_sent_at: Last request photos sent at
         name: Name
         quantity: Quantity
       name:
