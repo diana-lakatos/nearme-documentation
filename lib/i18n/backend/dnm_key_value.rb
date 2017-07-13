@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-require 'new_relic/agent/method_tracer'
 class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
-  include ::NewRelic::Agent::MethodTracer
   attr_accessor :instance_id, :default_locale
 
   def initialize(subtrees = true)
@@ -146,7 +144,4 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   def instance_key(instance_id)
     instance_id.present? ? instance_id.to_s.to_sym : :default
   end
-
-  add_method_tracer :store_translations, 'Translations/store_translations'
-  add_method_tracer :populate, 'Translations/populate'
 end

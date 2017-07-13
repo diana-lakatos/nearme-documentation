@@ -1,6 +1,4 @@
 class Listing::SearchFetcher
-  extend ::NewRelic::Agent::MethodTracer
-
   TOP_CITIES = ['san francisco', 'london', 'new york', 'los angeles', 'chicago']
 
   def initialize(filters = {}, transactable_type)
