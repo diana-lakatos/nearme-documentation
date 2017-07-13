@@ -97,13 +97,10 @@ class MerchantAccount < ActiveRecord::Base
   def update_onboard!(*_args)
   end
 
-  def retrieve_account
-    payment_gateway.retrieve_account(external_id)
-  end
-
-  # Fetch any response attribute
+  # Featch any response attribute
   # in example attribute('legal_entity.personal_id_number_provided')
   # would return true or false based on the response
+
   def attribute(attribute)
     return unless attribute
     return unless response_object
@@ -117,9 +114,7 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def response_object
-    return if new_record? || external_id.blank?
-
-    @response_object ||= retrieve_account
+    YAML.load(response.to_s)
   end
 
   def client

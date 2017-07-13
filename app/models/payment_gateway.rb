@@ -48,7 +48,6 @@ class PaymentGateway < ActiveRecord::Base
   has_many :payments, through: :payment_methods
   has_many :refunds
   has_many :webhooks, dependent: :destroy
-  has_many :webhook_configurations, dependent: :destroy
 
   accepts_nested_attributes_for :payment_methods, reject_if: :all_blank
 
@@ -103,7 +102,7 @@ class PaymentGateway < ActiveRecord::Base
 
   # supported/unsuppoted class method definition in config/initializers/act_as_supported.rb
 
-  not_implemented :gateway, :parse_webhook, :verify_webhook, :onboard!, :retrieve_account
+  not_implemented :gateway, :parse_webhook, :verify_webhook, :onboard!
 
   unsupported :payout, :any_country, :any_currency, :paypal_express_payment, :paypal_chain_payments,
               :multiple_currency, :express_checkout_payment, :nonce_payment, :company_onboarding, :remote_paymnt,

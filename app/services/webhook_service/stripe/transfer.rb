@@ -12,30 +12,61 @@ module WebhookService
 
       private
 
-      # Please not that transfer.created webhook should only be set
-      # when using direct payments, otherwise transfer is created (with proper id)
-      # with payment and only transfer.updated webhook should be configured.
       def transfer_created
-        Payment::Transfer::Create.new(payment_gateway, transfer, merchant_account).process
+        return if transfer_scope.any?
+        return if (payments = find_transfer_payments).blank?
+        return if (company = payments.first.company).blank?
+        return if payments.map(&:company_id).uniq.size != 1
+
+        transfer = payment_gateway.payment_transfers.create!(
+          company: company,
+          payments: payments,
+          payment_gateway_mode: payment_gateway.mode,
+          token: transfer_response.id,
+          merchant_account: merchant_account
+        )
+
+        update_transfer(payment_transfer)
       end
 
-      # Transfer updated webhook is fired when money is moved from MPO stripe account
-      # to connected account. If you want to update PaymentTransfer object when money
-      # is actually send to Merchant bank account use payout.updated webhook.
       def transfer_updated
-        Payment::Transfer::UpdateCollection.new(payment_gateway, transfer, [transfer.id]).process
+        update_transfer(payment_transfer)
       end
 
-      def transfer
-        if fetch_object?
-          @transfer ||= @payment_gateway.retrieve_transfer(event.data.object, event.user_id)
-        else
-          @transfer ||= wrapper_class.new(event.data.object)
+      def update_transfer(transfer)
+        if transfer_response.paid?
+          transfer.payout_attempts.last.payout_successful(event)
+        elsif transfer_response.failed?
+          transfer.payout_attempts.last.payout_failed(event)
         end
       end
 
-      def wrapper_class
-        Payment::Gateway::Response::Stripe::Transfer
+      def transfer_response
+        @transfer_response ||= PaymentGateway::Response::Stripe::Transfer.new(event.data.object)
+      end
+
+      def transfer_scope
+        payment_gateway.payment_transfers.with_token(transfer_response.id).where(payment_gateway_mode: payment_gateway.mode)
+      end
+
+      def find_transfer_payments
+        return if transfer_charges.blank?
+        charge_ids = transfer_charges.map(&:source).compact
+        payment_gateway.payments.where(external_id: charge_ids)
+      end
+
+      def payment_transfer
+        @payment_transfer ||= transfer_scope.pending.first!
+      end
+
+      def transfer_transactions
+        @transfer_transactions ||= payment_gateway.find_transfer_transactions(
+          transfer_response.id, merchant_account.try(:external_id)
+        ).try(:data)
+      end
+
+      def transfer_charges
+        @transfer_charges ||= transfer_transactions.select { |t| t.type == 'charge' }
       end
     end
   end

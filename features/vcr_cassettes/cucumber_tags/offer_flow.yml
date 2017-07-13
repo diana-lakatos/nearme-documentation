@@ -25,7 +25,7 @@ http_interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 11 Jul 2017 23:54:00 GMT
+      - Sun, 12 Feb 2017 21:21:44 GMT
       Last-Modified:
       - Fri, 26 Aug 2016 08:51:35 GMT
       Etag:
@@ -37,13 +37,13 @@ http_interactions:
       Server:
       - AmazonS3
       Age:
-      - '675'
+      - '1880618'
       X-Cache:
       - Hit from cloudfront
       Via:
-      - 1.1 28c3befe6cb083d157936569aca3d21e.cloudfront.net (CloudFront)
+      - 1.1 ff3ce960a0ccc4e856d99aad27febf7d.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - UWZttqMVddaE6H4partZBkOvso4F-qoUizXrtT2ZrrBbB2FU5YC6gA==
+      - "-cgQuJDYgQkCWhFl9SDjZwH5fl91KJRrvHpSMucKDFCx7QshpVW7Tw=="
     body:
       encoding: ASCII-8BIT
       string: !binary |-
@@ -88,7 +88,7 @@ http_interactions:
         SsrrKa9txuPsBMBqiyIrPZGc0SnMnDKKObljSBs66G4tAdz/Ayn5EhK6afei
         AAAAAElFTkSuQmCC
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:05:13 GMT
+  recorded_at: Mon, 06 Mar 2017 15:45:21 GMT
 - request:
     method: get
     uri: https://d2rw3as29v290b.cloudfront.net/instances/195/uploads/ckeditor/picture/data/2761/apple-touch-icon-60_2x.png
@@ -114,7 +114,7 @@ http_interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 11 Jul 2017 23:54:00 GMT
+      - Mon, 06 Mar 2017 15:09:21 GMT
       Last-Modified:
       - Fri, 26 Aug 2016 08:51:46 GMT
       Etag:
@@ -126,13 +126,13 @@ http_interactions:
       Server:
       - AmazonS3
       Age:
-      - '675'
+      - '2161'
       X-Cache:
       - Hit from cloudfront
       Via:
-      - 1.1 528e932a968fec7dcc37ac386f863bf3.cloudfront.net (CloudFront)
+      - 1.1 c95065ab41713dafc52549b6a4744fd4.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - PXqAPx4lV_BK03WlTh62v-C2oh14iPzgJChxRDnwqkha-Qgf6AHk2w==
+      - qFeEHh9as5yO176a49-YX2LSYB8Q4LrJiAOUH8NQFW70lJxVAS-1TA==
     body:
       encoding: ASCII-8BIT
       string: !binary |-
@@ -310,30 +310,32 @@ http_interactions:
         8AHsJUA6aoYPYEec8ZLnPoC9BEhHzfAB7IgzXvLcB7CXAOmoGT6AHXHGS577
         APYSIB01wwewI854yfP/B8uzfr4WONebAAAAAElFTkSuQmCC
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:05:14 GMT
+  recorded_at: Mon, 06 Mar 2017 15:45:21 GMT
 - request:
     method: post
     uri: https://api.stripe.com/v1/customers
     body:
       encoding: UTF-8
-      string: description=lister%40near-me.com&source=btok_1AeYM6K2MWM5GsITlGCzDClQ
+      string: description=lister%40near-me.com&source=btok_AErlDunj2YJRNs
     headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
       User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
+      - Stripe/v1 RubyBindings/1.57.0
       Authorization:
       - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
       Content-Type:
       - application/x-www-form-urlencoded
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Mon Jan  9 23:07:29 PST 2017;
+        root:xnu-3248.60.11.2.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+      Content-Length:
+      - '59'
   response:
     status:
       code: 200
@@ -342,7 +344,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Wed, 12 Jul 2017 00:05:28 GMT
+      - Mon, 06 Mar 2017 15:45:34 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -360,21 +362,21 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_B0ZVlyvJ8KxgQf
+      - req_AErltWowpZGj37
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Strict-Transport-Security:
       - max-age=31556926; includeSubDomains
     body:
       encoding: UTF-8
       string: |
         {
-          "id": "cus_B0ZVTCAPbaJdnI",
+          "id": "cus_AErlTvkWvicBxe",
           "object": "customer",
           "account_balance": 0,
-          "created": 1499817928,
+          "created": 1488815134,
           "currency": null,
-          "default_source": "ba_1AeYM6K2MWM5GsIT3RzwLfc2",
+          "default_source": "ba_19uO1gK2MWM5GsITTEsZsfxD",
           "delinquent": false,
           "description": "lister@near-me.com",
           "discount": null,
@@ -386,14 +388,14 @@ http_interactions:
             "object": "list",
             "data": [
               {
-                "id": "ba_1AeYM6K2MWM5GsIT3RzwLfc2",
+                "id": "ba_19uO1gK2MWM5GsITTEsZsfxD",
                 "object": "bank_account",
                 "account_holder_name": "Adam Brodway",
                 "account_holder_type": "individual",
                 "bank_name": "STRIPE TEST BANK",
                 "country": "US",
                 "currency": "usd",
-                "customer": "cus_B0ZVTCAPbaJdnI",
+                "customer": "cus_AErlTvkWvicBxe",
                 "fingerprint": "2Q888aHv8NHOnI3k",
                 "last4": "6789",
                 "metadata": {},
@@ -403,41 +405,43 @@ http_interactions:
             ],
             "has_more": false,
             "total_count": 1,
-            "url": "/v1/customers/cus_B0ZVTCAPbaJdnI/sources"
+            "url": "/v1/customers/cus_AErlTvkWvicBxe/sources"
           },
           "subscriptions": {
             "object": "list",
             "data": [],
             "has_more": false,
             "total_count": 0,
-            "url": "/v1/customers/cus_B0ZVTCAPbaJdnI/subscriptions"
+            "url": "/v1/customers/cus_AErlTvkWvicBxe/subscriptions"
           }
         }
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:05:27 GMT
+  recorded_at: Mon, 06 Mar 2017 15:45:34 GMT
 - request:
     method: post
     uri: https://api.stripe.com/v1/accounts
     body:
       encoding: UTF-8
-      string: bank_account[country]=US&bank_account[currency]=USD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=company&legal_entity[business_name]=NearMe&legal_entity[address][country]=US&legal_entity[address][state]=CA&legal_entity[address][city]=San+Francisco&legal_entity[address][postal_code]=94102&legal_entity[address][line1]=125+Ellis+St%2C+San+Francisco%2C+CA+94102&legal_entity[personal_address][country]=US&legal_entity[personal_address][state]=CA&legal_entity[personal_address][city]=San+Francisco&legal_entity[personal_address][postal_code]=94102&legal_entity[personal_address][line1]=125+Ellis+St%2C+San+Francisco%2C+CA+94102&legal_entity[dob][day]=24&legal_entity[dob][month]=2&legal_entity[dob][year]=1997&legal_entity[business_tax_id]=440-94-3290&legal_entity[personal_id_number]=440-94-3290&legal_entity[first_name]=John&legal_entity[last_name]=Rambo&type=custom&country=US&email=tomek%40near-me.com&tos_acceptance[ip]=1.1.1.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
+      string: bank_account[country]=US&bank_account[currency]=USD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=company&legal_entity[business_name]=NearMe&legal_entity[address][country]=US&legal_entity[personal_address][country]=US&legal_entity[dob][day]=24&legal_entity[dob][month]=2&legal_entity[dob][year]=1997&legal_entity[business_tax_id]=440-94-3290&legal_entity[personal_id_number]=440-94-3290&legal_entity[first_name]=John&legal_entity[last_name]=Rambo&legal_entity[additional_owners]=&managed=true&country=US&email=tomek%40near-me.com&tos_acceptance[ip]=1.1.1.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
     headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
       User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
+      - Stripe/v1 RubyBindings/1.57.0
       Authorization:
       - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
       Content-Type:
       - application/x-www-form-urlencoded
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Mon Jan  9 23:07:29 PST 2017;
+        root:xnu-3248.60.11.2.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+      Content-Length:
+      - '678'
   response:
     status:
       code: 200
@@ -446,11 +450,11 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Wed, 12 Jul 2017 00:05:39 GMT
+      - Mon, 06 Mar 2017 15:45:45 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '2670'
+      - '2682'
       Connection:
       - keep-alive
       Access-Control-Allow-Credentials:
@@ -464,16 +468,16 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_B0ZVuHHo6YPPEF
+      - req_AErlOLsrGgE1BT
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Strict-Transport-Security:
       - max-age=31556926; includeSubDomains
     body:
       encoding: UTF-8
       string: |
         {
-          "id": "acct_1AeYMIC1Tx3nr7FI",
+          "id": "acct_19uO1sEWnQBhv608",
           "object": "account",
           "business_logo": null,
           "business_name": "NearMe",
@@ -493,16 +497,16 @@ http_interactions:
             "object": "list",
             "data": [
               {
-                "id": "ba_1AeYMIC1Tx3nr7FIq7QSqpHw",
+                "id": "ba_19uO1sEWnQBhv608djXz4GUJ",
                 "object": "bank_account",
-                "account": "acct_1AeYMIC1Tx3nr7FI",
+                "account": "acct_19uO1sEWnQBhv608",
                 "account_holder_name": null,
                 "account_holder_type": null,
                 "bank_name": "STRIPE TEST BANK",
                 "country": "US",
                 "currency": "usd",
                 "default_for_currency": true,
-                "fingerprint": "jPUYZgaS3ZvKerGp",
+                "fingerprint": "JIObBLG53eIEgwtU",
                 "last4": "6789",
                 "metadata": {},
                 "routing_number": "110000000",
@@ -511,21 +515,21 @@ http_interactions:
             ],
             "has_more": false,
             "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYMIC1Tx3nr7FI/external_accounts"
+            "url": "/v1/accounts/acct_19uO1sEWnQBhv608/external_accounts"
           },
           "keys": {
-            "secret": "sk_test_mJhyJWRDgkbPGfCurL1SVf6h",
-            "publishable": "pk_test_fIdVQBcw6v9XOS6iMDOX2LNz"
+            "secret": "sk_test_RsHhImeTcZwCB4BW8hGpSD3h",
+            "publishable": "pk_test_mJLOPrhtiMl8g3WJQm6Td7UM"
           },
           "legal_entity": {
             "additional_owners": [],
             "address": {
-              "city": "San Francisco",
+              "city": null,
               "country": "US",
-              "line1": "125 Ellis St, San Francisco, CA 94102",
+              "line1": null,
               "line2": null,
-              "postal_code": "94102",
-              "state": "CA"
+              "postal_code": null,
+              "state": null
             },
             "business_name": "NearMe",
             "business_tax_id_provided": true,
@@ -537,12 +541,12 @@ http_interactions:
             "first_name": "John",
             "last_name": "Rambo",
             "personal_address": {
-              "city": "San Francisco",
+              "city": null,
               "country": "US",
-              "line1": "125 Ellis St, San Francisco, CA 94102",
+              "line1": null,
               "line2": null,
-              "postal_code": "94102",
-              "state": "CA"
+              "postal_code": null,
+              "state": null
             },
             "personal_id_number_provided": true,
             "ssn_last_4_provided": true,
@@ -554,13 +558,8 @@ http_interactions:
               "status": "unverified"
             }
           },
+          "managed": true,
           "metadata": {},
-          "payout_schedule": {
-            "delay_days": 2,
-            "interval": "daily"
-          },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
           "product_description": null,
           "statement_descriptor": null,
           "support_email": null,
@@ -571,23 +570,31 @@ http_interactions:
             "ip": "1.1.1.1",
             "user_agent": null
           },
-          "type": "custom",
+          "transfer_schedule": {
+            "delay_days": 2,
+            "interval": "daily"
+          },
+          "transfer_statement_descriptor": null,
+          "transfers_enabled": true,
           "verification": {
             "disabled_reason": null,
             "due_by": null,
             "fields_needed": [
-              "legal_entity.verification.document"
+              "legal_entity.address.city",
+              "legal_entity.address.line1",
+              "legal_entity.address.postal_code",
+              "legal_entity.address.state"
             ]
           }
         }
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:05:38 GMT
+  recorded_at: Mon, 06 Mar 2017 15:45:45 GMT
 - request:
     method: post
     uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/customers
     body:
       encoding: UTF-8
-      string: email=lister%40near-me.com&card=tok_1AeYMMK2MWM5GsITjH6pBvmH
+      string: email=lister%40near-me.com&card=tok_19uO1wK2MWM5GsITXzfSe9Ry
     headers:
       Content-Type:
       - application/x-www-form-urlencoded
@@ -598,7 +605,7 @@ http_interactions:
       X-Stripe-Client-User-Metadata:
       - '{"ip":null}'
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -611,7 +618,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Wed, 12 Jul 2017 00:05:43 GMT
+      - Mon, 06 Mar 2017 15:45:49 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -629,21 +636,21 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_B0ZV7ZGmRDp41o
+      - req_AErl3dlfdzrnuf
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Strict-Transport-Security:
       - max-age=31556926; includeSubDomains
     body:
       encoding: UTF-8
       string: |
         {
-          "id": "cus_B0ZVEua8IULSgJ",
+          "id": "cus_AErl1phbgKSBX4",
           "object": "customer",
           "account_balance": 0,
-          "created": 1499817943,
+          "created": 1488815149,
           "currency": null,
-          "default_source": "card_1AeYMMK2MWM5GsITFA0lA9wH",
+          "default_source": "card_19uO1wK2MWM5GsITibH07F6j",
           "delinquent": false,
           "description": null,
           "discount": null,
@@ -655,7 +662,7 @@ http_interactions:
             "object": "list",
             "data": [
               {
-                "id": "card_1AeYMMK2MWM5GsITFA0lA9wH",
+                "id": "card_19uO1wK2MWM5GsITibH07F6j",
                 "object": "card",
                 "address_city": null,
                 "address_country": null,
@@ -667,7 +674,7 @@ http_interactions:
                 "address_zip_check": null,
                 "brand": "Visa",
                 "country": "US",
-                "customer": "cus_B0ZVEua8IULSgJ",
+                "customer": "cus_AErl1phbgKSBX4",
                 "cvc_check": "pass",
                 "dynamic_last4": null,
                 "exp_month": 12,
@@ -682,24 +689,24 @@ http_interactions:
             ],
             "has_more": false,
             "total_count": 1,
-            "url": "/v1/customers/cus_B0ZVEua8IULSgJ/sources"
+            "url": "/v1/customers/cus_AErl1phbgKSBX4/sources"
           },
           "subscriptions": {
             "object": "list",
             "data": [],
             "has_more": false,
             "total_count": 0,
-            "url": "/v1/customers/cus_B0ZVEua8IULSgJ/subscriptions"
+            "url": "/v1/customers/cus_AErl1phbgKSBX4/subscriptions"
           }
         }
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:05:43 GMT
+  recorded_at: Mon, 06 Mar 2017 15:45:49 GMT
 - request:
     method: post
     uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/charges
     body:
       encoding: UTF-8
-      string: amount=5500&currency=usd&card=card_1AeYMMK2MWM5GsITFA0lA9wH&customer=cus_B0ZVEua8IULSgJ&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
+      string: amount=5500&currency=usd&card=card_19uO1wK2MWM5GsITibH07F6j&customer=cus_AErl1phbgKSBX4&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
     headers:
       Content-Type:
       - application/x-www-form-urlencoded
@@ -710,7 +717,7 @@ http_interactions:
       X-Stripe-Client-User-Metadata:
       - '{"ip":null}'
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -723,7 +730,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Wed, 12 Jul 2017 00:05:45 GMT
+      - Mon, 06 Mar 2017 15:45:50 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -741,26 +748,26 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_B0ZVEc0kWRfcm0
+      - req_AErlo9jFzac1cZ
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Strict-Transport-Security:
       - max-age=31556926; includeSubDomains
     body:
       encoding: UTF-8
       string: |
         {
-          "id": "ch_1AeYMOK2MWM5GsITnxhP0bLT",
+          "id": "ch_19uO1yK2MWM5GsITZxGJBA8a",
           "object": "charge",
           "amount": 5500,
           "amount_refunded": 0,
           "application": null,
           "application_fee": null,
-          "balance_transaction": "txn_1AeYMPK2MWM5GsITd9eKPz9X",
+          "balance_transaction": "txn_19uO1yK2MWM5GsITNi9HF5Bg",
           "captured": true,
-          "created": 1499817944,
+          "created": 1488815150,
           "currency": "usd",
-          "customer": "cus_B0ZVEua8IULSgJ",
+          "customer": "cus_AErl1phbgKSBX4",
           "description": null,
           "destination": null,
           "dispute": null,
@@ -788,12 +795,12 @@ http_interactions:
             "data": [],
             "has_more": false,
             "total_count": 0,
-            "url": "/v1/charges/ch_1AeYMOK2MWM5GsITnxhP0bLT/refunds"
+            "url": "/v1/charges/ch_19uO1yK2MWM5GsITZxGJBA8a/refunds"
           },
           "review": null,
           "shipping": null,
           "source": {
-            "id": "card_1AeYMMK2MWM5GsITFA0lA9wH",
+            "id": "card_19uO1wK2MWM5GsITibH07F6j",
             "object": "card",
             "address_city": null,
             "address_country": null,
@@ -805,7 +812,7 @@ http_interactions:
             "address_zip_check": null,
             "brand": "Visa",
             "country": "US",
-            "customer": "cus_B0ZVEua8IULSgJ",
+            "customer": "cus_AErl1phbgKSBX4",
             "cvc_check": "pass",
             "dynamic_last4": null,
             "exp_month": 12,
@@ -823,30 +830,30 @@ http_interactions:
           "transfer_group": null
         }
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:05:44 GMT
+  recorded_at: Mon, 06 Mar 2017 15:45:50 GMT
 - request:
     method: get
-    uri: https://api.stripe.com/v1/balance/history/txn_1AeYMPK2MWM5GsITd9eKPz9X
+    uri: https://api.stripe.com/v1/balance/history/txn_19uO1yK2MWM5GsITNi9HF5Bg
     body:
       encoding: US-ASCII
       string: ''
     headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
       User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
+      - Stripe/v1 RubyBindings/1.57.0
       Authorization:
       - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
       Content-Type:
       - application/x-www-form-urlencoded
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Mon Jan  9 23:07:29 PST 2017;
+        root:xnu-3248.60.11.2.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
   response:
     status:
       code: 200
@@ -855,11 +862,11 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Wed, 12 Jul 2017 00:05:46 GMT
+      - Mon, 06 Mar 2017 15:45:51 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '493'
+      - '680'
       Connection:
       - keep-alive
       Access-Control-Allow-Credentials:
@@ -873,20 +880,20 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_B0ZVIpPOEwjUfU
+      - req_AErlwk1hXp0YD5
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Strict-Transport-Security:
       - max-age=31556926; includeSubDomains
     body:
       encoding: UTF-8
       string: |
         {
-          "id": "txn_1AeYMPK2MWM5GsITd9eKPz9X",
+          "id": "txn_19uO1yK2MWM5GsITNi9HF5Bg",
           "object": "balance_transaction",
           "amount": 5500,
-          "available_on": 1500422400,
-          "created": 1499817944,
+          "available_on": 1489363200,
+          "created": 1488815150,
           "currency": "usd",
           "description": null,
           "fee": 190,
@@ -900,12 +907,19 @@ http_interactions:
             }
           ],
           "net": 5310,
-          "source": "ch_1AeYMOK2MWM5GsITnxhP0bLT",
+          "source": "ch_19uO1yK2MWM5GsITZxGJBA8a",
+          "sourced_transfers": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/transfers?source_transaction=ch_19uO1yK2MWM5GsITZxGJBA8a"
+          },
           "status": "pending",
           "type": "charge"
         }
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:05:45 GMT
+  recorded_at: Mon, 06 Mar 2017 15:45:51 GMT
 - request:
     method: post
     uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/customers
@@ -922,7 +936,7 @@ http_interactions:
       X-Stripe-Client-User-Metadata:
       - '{"ip":null}'
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -935,7 +949,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Wed, 12 Jul 2017 00:05:59 GMT
+      - Mon, 06 Mar 2017 15:46:04 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -953,21 +967,21 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_B0ZVjO5CA2BzdF
+      - req_AErlmS0PCUVeBf
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Strict-Transport-Security:
       - max-age=31556926; includeSubDomains
     body:
       encoding: UTF-8
       string: |
         {
-          "id": "cus_B0ZVGiYNjCLdTz",
+          "id": "cus_AErlrJvmLiKBcY",
           "object": "customer",
           "account_balance": 0,
-          "created": 1499817958,
+          "created": 1488815164,
           "currency": null,
-          "default_source": "card_1AeYMcK2MWM5GsIToQo7c19Y",
+          "default_source": "card_19uO2CK2MWM5GsITQnB8G4ae",
           "delinquent": false,
           "description": null,
           "discount": null,
@@ -979,7 +993,7 @@ http_interactions:
             "object": "list",
             "data": [
               {
-                "id": "card_1AeYMcK2MWM5GsIToQo7c19Y",
+                "id": "card_19uO2CK2MWM5GsITQnB8G4ae",
                 "object": "card",
                 "address_city": null,
                 "address_country": null,
@@ -991,7 +1005,7 @@ http_interactions:
                 "address_zip_check": null,
                 "brand": "Visa",
                 "country": "US",
-                "customer": "cus_B0ZVGiYNjCLdTz",
+                "customer": "cus_AErlrJvmLiKBcY",
                 "cvc_check": "pass",
                 "dynamic_last4": null,
                 "exp_month": 12,
@@ -1006,24 +1020,24 @@ http_interactions:
             ],
             "has_more": false,
             "total_count": 1,
-            "url": "/v1/customers/cus_B0ZVGiYNjCLdTz/sources"
+            "url": "/v1/customers/cus_AErlrJvmLiKBcY/sources"
           },
           "subscriptions": {
             "object": "list",
             "data": [],
             "has_more": false,
             "total_count": 0,
-            "url": "/v1/customers/cus_B0ZVGiYNjCLdTz/subscriptions"
+            "url": "/v1/customers/cus_AErlrJvmLiKBcY/subscriptions"
           }
         }
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:05:58 GMT
+  recorded_at: Mon, 06 Mar 2017 15:46:04 GMT
 - request:
     method: post
     uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/charges
     body:
       encoding: UTF-8
-      string: amount=10000&currency=usd&card=card_1AeYMcK2MWM5GsIToQo7c19Y&customer=cus_B0ZVGiYNjCLdTz&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
+      string: amount=10000&currency=usd&card=card_19uO2CK2MWM5GsITQnB8G4ae&customer=cus_AErlrJvmLiKBcY&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
     headers:
       Content-Type:
       - application/x-www-form-urlencoded
@@ -1034,7 +1048,7 @@ http_interactions:
       X-Stripe-Client-User-Metadata:
       - '{"ip":null}'
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -1047,7 +1061,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Wed, 12 Jul 2017 00:06:12 GMT
+      - Mon, 06 Mar 2017 15:46:30 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -1065,26 +1079,26 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_B0ZVpDWcI31twM
+      - req_AErmLr62z76WGI
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Strict-Transport-Security:
       - max-age=31556926; includeSubDomains
     body:
       encoding: UTF-8
       string: |
         {
-          "id": "ch_1AeYMqK2MWM5GsITuDaJenET",
+          "id": "ch_19uO2cK2MWM5GsIT9ZDusxJk",
           "object": "charge",
           "amount": 10000,
           "amount_refunded": 0,
           "application": null,
           "application_fee": null,
-          "balance_transaction": "txn_1AeYMqK2MWM5GsITaIESC8iA",
+          "balance_transaction": "txn_19uO2cK2MWM5GsIT9qauvjXn",
           "captured": true,
-          "created": 1499817972,
+          "created": 1488815190,
           "currency": "usd",
-          "customer": "cus_B0ZVGiYNjCLdTz",
+          "customer": "cus_AErlrJvmLiKBcY",
           "description": null,
           "destination": null,
           "dispute": null,
@@ -1112,12 +1126,12 @@ http_interactions:
             "data": [],
             "has_more": false,
             "total_count": 0,
-            "url": "/v1/charges/ch_1AeYMqK2MWM5GsITuDaJenET/refunds"
+            "url": "/v1/charges/ch_19uO2cK2MWM5GsIT9ZDusxJk/refunds"
           },
           "review": null,
           "shipping": null,
           "source": {
-            "id": "card_1AeYMcK2MWM5GsIToQo7c19Y",
+            "id": "card_19uO2CK2MWM5GsITQnB8G4ae",
             "object": "card",
             "address_city": null,
             "address_country": null,
@@ -1129,7 +1143,7 @@ http_interactions:
             "address_zip_check": null,
             "brand": "Visa",
             "country": "US",
-            "customer": "cus_B0ZVGiYNjCLdTz",
+            "customer": "cus_AErlrJvmLiKBcY",
             "cvc_check": "pass",
             "dynamic_last4": null,
             "exp_month": 12,
@@ -1147,30 +1161,32 @@ http_interactions:
           "transfer_group": null
         }
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:06:12 GMT
+  recorded_at: Mon, 06 Mar 2017 15:46:30 GMT
 - request:
     method: post
     uri: https://api.stripe.com/v1/accounts
     body:
       encoding: UTF-8
-      string: bank_account[country]=US&bank_account[currency]=USD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=individual&legal_entity[business_name]=Enquirer+Company&legal_entity[address][country]=US&legal_entity[address][state]=CA&legal_entity[address][city]=Mountain+View&legal_entity[address][postal_code]=94043&legal_entity[address][line1]=1600+Amphitheatre+Parkway&legal_entity[personal_address][country]=US&legal_entity[personal_address][state]=CA&legal_entity[personal_address][city]=Mountain+View&legal_entity[personal_address][postal_code]=94043&legal_entity[personal_address][line1]=1600+Amphitheatre+Parkway&legal_entity[dob][day]=22&legal_entity[dob][month]=1&legal_entity[dob][year]=1990&legal_entity[business_tax_id]=&legal_entity[personal_id_number]=694-07-7618&legal_entity[first_name]=Tomasz&legal_entity[last_name]=Lemkowski&type=custom&country=US&email=enquirer%40near-me.com&tos_acceptance[ip]=127.0.0.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
+      string: bank_account[country]=US&bank_account[currency]=USD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=individual&legal_entity[business_name]=My+Company&legal_entity[address][country]=US&legal_entity[address][state]=CA&legal_entity[address][city]=Mountain+View&legal_entity[address][postal_code]=94043&legal_entity[address][line1]=1600+Amphitheatre+Parkway&legal_entity[personal_address][country]=US&legal_entity[personal_address][state]=CA&legal_entity[personal_address][city]=Mountain+View&legal_entity[personal_address][postal_code]=94043&legal_entity[personal_address][line1]=1600+Amphitheatre+Parkway&legal_entity[dob][day]=22&legal_entity[dob][month]=1&legal_entity[dob][year]=1990&legal_entity[business_tax_id]=&legal_entity[personal_id_number]=694-07-7618&legal_entity[first_name]=Tomasz&legal_entity[last_name]=Lemkowski&legal_entity[additional_owners]=&managed=true&country=US&email=enquirer%40near-me.com&tos_acceptance[ip]=127.0.0.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
     headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
       User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
+      - Stripe/v1 RubyBindings/1.57.0
       Authorization:
       - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
       Content-Type:
       - application/x-www-form-urlencoded
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Mon Jan  9 23:07:29 PST 2017;
+        root:xnu-3248.60.11.2.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+      Content-Length:
+      - '1061'
   response:
     status:
       code: 200
@@ -1179,11 +1195,11 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Wed, 12 Jul 2017 00:06:27 GMT
+      - Mon, 06 Mar 2017 15:46:46 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '2681'
+      - '2645'
       Connection:
       - keep-alive
       Access-Control-Allow-Credentials:
@@ -1197,19 +1213,19 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_B0ZWz33K2Y4LsU
+      - req_AErmvVJpDP47zH
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Strict-Transport-Security:
       - max-age=31556926; includeSubDomains
     body:
       encoding: UTF-8
       string: |
         {
-          "id": "acct_1AeYN4A7QZq2DYh7",
+          "id": "acct_19uO2rD4xWgwTrAb",
           "object": "account",
           "business_logo": null,
-          "business_name": "Enquirer Company",
+          "business_name": "My Company",
           "business_url": null,
           "charges_enabled": true,
           "country": "US",
@@ -1226,16 +1242,16 @@ http_interactions:
             "object": "list",
             "data": [
               {
-                "id": "ba_1AeYN4A7QZq2DYh7hGFNAB7X",
+                "id": "ba_19uO2rD4xWgwTrAbTeviA5M1",
                 "object": "bank_account",
-                "account": "acct_1AeYN4A7QZq2DYh7",
+                "account": "acct_19uO2rD4xWgwTrAb",
                 "account_holder_name": null,
                 "account_holder_type": null,
                 "bank_name": "STRIPE TEST BANK",
                 "country": "US",
                 "currency": "usd",
                 "default_for_currency": true,
-                "fingerprint": "Ez5qnM6YuBO8sq1P",
+                "fingerprint": "oRtxH5uqhOIYnstb",
                 "last4": "6789",
                 "metadata": {},
                 "routing_number": "110000000",
@@ -1244,14 +1260,13 @@ http_interactions:
             ],
             "has_more": false,
             "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYN4A7QZq2DYh7/external_accounts"
+            "url": "/v1/accounts/acct_19uO2rD4xWgwTrAb/external_accounts"
           },
           "keys": {
-            "secret": "sk_test_qKJWopDNcB7sI1djOeqvJmXF",
-            "publishable": "pk_test_i5Q3UiQYHDNmMhUFfPoiqxtF"
+            "secret": "sk_test_2ITEkRGoAi0srbgoDyQkp9bK",
+            "publishable": "pk_test_XeCJ5Ds5gms3fTq1NWCceZbW"
           },
           "legal_entity": {
-            "additional_owners": [],
             "address": {
               "city": "Mountain View",
               "country": "US",
@@ -1260,7 +1275,7 @@ http_interactions:
               "postal_code": "94043",
               "state": "CA"
             },
-            "business_name": "Enquirer Company",
+            "business_name": "My Company",
             "business_tax_id_provided": false,
             "dob": {
               "day": 22,
@@ -1287,13 +1302,8 @@ http_interactions:
               "status": "unverified"
             }
           },
+          "managed": true,
           "metadata": {},
-          "payout_schedule": {
-            "delay_days": 2,
-            "interval": "daily"
-          },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
           "product_description": null,
           "statement_descriptor": null,
           "support_email": null,
@@ -1304,172 +1314,12 @@ http_interactions:
             "ip": "127.0.0.1",
             "user_agent": null
           },
-          "type": "custom",
-          "verification": {
-            "disabled_reason": null,
-            "due_by": null,
-            "fields_needed": [
-              "legal_entity.verification.document"
-            ]
-          }
-        }
-    http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:06:26 GMT
-- request:
-    method: get
-    uri: https://api.stripe.com/v1/accounts/acct_1AeYN4A7QZq2DYh7
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
-      Authorization:
-      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Stripe-Version:
-      - '2017-06-05'
-      X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx
-      Date:
-      - Wed, 12 Jul 2017 00:07:21 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '2560'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, HEAD, OPTIONS, DELETE
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Max-Age:
-      - '300'
-      Cache-Control:
-      - no-cache, no-store
-      Request-Id:
-      - req_B0ZX5qI9Y1RYIH
-      Stripe-Account:
-      - acct_1AeYN4A7QZq2DYh7
-      Stripe-Version:
-      - '2017-06-05'
-      Strict-Transport-Security:
-      - max-age=31556926; includeSubDomains
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "id": "acct_1AeYN4A7QZq2DYh7",
-          "object": "account",
-          "business_logo": null,
-          "business_name": "Enquirer Company",
-          "business_url": null,
-          "charges_enabled": true,
-          "country": "US",
-          "debit_negative_balances": false,
-          "decline_charge_on": {
-            "avs_failure": false,
-            "cvc_failure": true
-          },
-          "default_currency": "usd",
-          "details_submitted": true,
-          "display_name": null,
-          "email": "enquirer@near-me.com",
-          "external_accounts": {
-            "object": "list",
-            "data": [
-              {
-                "id": "ba_1AeYN4A7QZq2DYh7hGFNAB7X",
-                "object": "bank_account",
-                "account": "acct_1AeYN4A7QZq2DYh7",
-                "account_holder_name": null,
-                "account_holder_type": null,
-                "bank_name": "STRIPE TEST BANK",
-                "country": "US",
-                "currency": "usd",
-                "default_for_currency": true,
-                "fingerprint": "Ez5qnM6YuBO8sq1P",
-                "last4": "6789",
-                "metadata": {},
-                "routing_number": "110000000",
-                "status": "new"
-              }
-            ],
-            "has_more": false,
-            "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYN4A7QZq2DYh7/external_accounts"
-          },
-          "legal_entity": {
-            "additional_owners": [],
-            "address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "business_name": "Enquirer Company",
-            "business_tax_id_provided": false,
-            "dob": {
-              "day": 22,
-              "month": 1,
-              "year": 1990
-            },
-            "first_name": "Tomasz",
-            "last_name": "Lemkowski",
-            "personal_address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "personal_id_number_provided": true,
-            "ssn_last_4_provided": true,
-            "type": "individual",
-            "verification": {
-              "details": null,
-              "details_code": null,
-              "document": null,
-              "status": "unverified"
-            }
-          },
-          "metadata": {},
-          "payout_schedule": {
+          "transfer_schedule": {
             "delay_days": 2,
             "interval": "daily"
           },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
-          "product_description": null,
-          "statement_descriptor": null,
-          "support_email": null,
-          "support_phone": null,
-          "timezone": "Etc/UTC",
-          "tos_acceptance": {
-            "date": 1487963976,
-            "ip": "127.0.0.1",
-            "user_agent": null
-          },
-          "type": "custom",
+          "transfer_statement_descriptor": null,
+          "transfers_enabled": true,
           "verification": {
             "disabled_reason": null,
             "due_by": null,
@@ -1479,1327 +1329,7 @@ http_interactions:
           }
         }
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:07:20 GMT
-- request:
-    method: get
-    uri: https://api.stripe.com/v1/accounts/acct_1AeYN4A7QZq2DYh7
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
-      Authorization:
-      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Stripe-Version:
-      - '2017-06-05'
-      X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx
-      Date:
-      - Wed, 12 Jul 2017 00:07:39 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '2560'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, HEAD, OPTIONS, DELETE
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Max-Age:
-      - '300'
-      Cache-Control:
-      - no-cache, no-store
-      Request-Id:
-      - req_B0ZX9nzdJhySDu
-      Stripe-Account:
-      - acct_1AeYN4A7QZq2DYh7
-      Stripe-Version:
-      - '2017-06-05'
-      Strict-Transport-Security:
-      - max-age=31556926; includeSubDomains
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "id": "acct_1AeYN4A7QZq2DYh7",
-          "object": "account",
-          "business_logo": null,
-          "business_name": "Enquirer Company",
-          "business_url": null,
-          "charges_enabled": true,
-          "country": "US",
-          "debit_negative_balances": false,
-          "decline_charge_on": {
-            "avs_failure": false,
-            "cvc_failure": true
-          },
-          "default_currency": "usd",
-          "details_submitted": true,
-          "display_name": null,
-          "email": "enquirer@near-me.com",
-          "external_accounts": {
-            "object": "list",
-            "data": [
-              {
-                "id": "ba_1AeYN4A7QZq2DYh7hGFNAB7X",
-                "object": "bank_account",
-                "account": "acct_1AeYN4A7QZq2DYh7",
-                "account_holder_name": null,
-                "account_holder_type": null,
-                "bank_name": "STRIPE TEST BANK",
-                "country": "US",
-                "currency": "usd",
-                "default_for_currency": true,
-                "fingerprint": "Ez5qnM6YuBO8sq1P",
-                "last4": "6789",
-                "metadata": {},
-                "routing_number": "110000000",
-                "status": "new"
-              }
-            ],
-            "has_more": false,
-            "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYN4A7QZq2DYh7/external_accounts"
-          },
-          "legal_entity": {
-            "additional_owners": [],
-            "address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "business_name": "Enquirer Company",
-            "business_tax_id_provided": false,
-            "dob": {
-              "day": 22,
-              "month": 1,
-              "year": 1990
-            },
-            "first_name": "Tomasz",
-            "last_name": "Lemkowski",
-            "personal_address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "personal_id_number_provided": true,
-            "ssn_last_4_provided": true,
-            "type": "individual",
-            "verification": {
-              "details": null,
-              "details_code": null,
-              "document": null,
-              "status": "unverified"
-            }
-          },
-          "metadata": {},
-          "payout_schedule": {
-            "delay_days": 2,
-            "interval": "daily"
-          },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
-          "product_description": null,
-          "statement_descriptor": null,
-          "support_email": null,
-          "support_phone": null,
-          "timezone": "Etc/UTC",
-          "tos_acceptance": {
-            "date": 1487963976,
-            "ip": "127.0.0.1",
-            "user_agent": null
-          },
-          "type": "custom",
-          "verification": {
-            "disabled_reason": null,
-            "due_by": null,
-            "fields_needed": [
-              "legal_entity.verification.document"
-            ]
-          }
-        }
-    http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:07:38 GMT
-- request:
-    method: get
-    uri: https://api.stripe.com/v1/accounts/acct_1AeYN4A7QZq2DYh7
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
-      Authorization:
-      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Stripe-Version:
-      - '2017-06-05'
-      X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx
-      Date:
-      - Wed, 12 Jul 2017 00:08:35 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '2560'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, HEAD, OPTIONS, DELETE
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Max-Age:
-      - '300'
-      Cache-Control:
-      - no-cache, no-store
-      Request-Id:
-      - req_B0ZY4LxPOWv9bu
-      Stripe-Account:
-      - acct_1AeYN4A7QZq2DYh7
-      Stripe-Version:
-      - '2017-06-05'
-      Strict-Transport-Security:
-      - max-age=31556926; includeSubDomains
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "id": "acct_1AeYN4A7QZq2DYh7",
-          "object": "account",
-          "business_logo": null,
-          "business_name": "Enquirer Company",
-          "business_url": null,
-          "charges_enabled": true,
-          "country": "US",
-          "debit_negative_balances": false,
-          "decline_charge_on": {
-            "avs_failure": false,
-            "cvc_failure": true
-          },
-          "default_currency": "usd",
-          "details_submitted": true,
-          "display_name": null,
-          "email": "enquirer@near-me.com",
-          "external_accounts": {
-            "object": "list",
-            "data": [
-              {
-                "id": "ba_1AeYN4A7QZq2DYh7hGFNAB7X",
-                "object": "bank_account",
-                "account": "acct_1AeYN4A7QZq2DYh7",
-                "account_holder_name": null,
-                "account_holder_type": null,
-                "bank_name": "STRIPE TEST BANK",
-                "country": "US",
-                "currency": "usd",
-                "default_for_currency": true,
-                "fingerprint": "Ez5qnM6YuBO8sq1P",
-                "last4": "6789",
-                "metadata": {},
-                "routing_number": "110000000",
-                "status": "new"
-              }
-            ],
-            "has_more": false,
-            "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYN4A7QZq2DYh7/external_accounts"
-          },
-          "legal_entity": {
-            "additional_owners": [],
-            "address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "business_name": "Enquirer Company",
-            "business_tax_id_provided": false,
-            "dob": {
-              "day": 22,
-              "month": 1,
-              "year": 1990
-            },
-            "first_name": "Tomasz",
-            "last_name": "Lemkowski",
-            "personal_address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "personal_id_number_provided": true,
-            "ssn_last_4_provided": true,
-            "type": "individual",
-            "verification": {
-              "details": null,
-              "details_code": null,
-              "document": null,
-              "status": "unverified"
-            }
-          },
-          "metadata": {},
-          "payout_schedule": {
-            "delay_days": 2,
-            "interval": "daily"
-          },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
-          "product_description": null,
-          "statement_descriptor": null,
-          "support_email": null,
-          "support_phone": null,
-          "timezone": "Etc/UTC",
-          "tos_acceptance": {
-            "date": 1487963976,
-            "ip": "127.0.0.1",
-            "user_agent": null
-          },
-          "type": "custom",
-          "verification": {
-            "disabled_reason": null,
-            "due_by": null,
-            "fields_needed": [
-              "legal_entity.verification.document"
-            ]
-          }
-        }
-    http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:08:34 GMT
-- request:
-    method: get
-    uri: https://api.stripe.com/v1/accounts/acct_1AeYN4A7QZq2DYh7
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
-      Authorization:
-      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Stripe-Version:
-      - '2017-06-05'
-      X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx
-      Date:
-      - Wed, 12 Jul 2017 00:08:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '2560'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, HEAD, OPTIONS, DELETE
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Max-Age:
-      - '300'
-      Cache-Control:
-      - no-cache, no-store
-      Request-Id:
-      - req_B0ZYfTR5uY1izt
-      Stripe-Account:
-      - acct_1AeYN4A7QZq2DYh7
-      Stripe-Version:
-      - '2017-06-05'
-      Strict-Transport-Security:
-      - max-age=31556926; includeSubDomains
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "id": "acct_1AeYN4A7QZq2DYh7",
-          "object": "account",
-          "business_logo": null,
-          "business_name": "Enquirer Company",
-          "business_url": null,
-          "charges_enabled": true,
-          "country": "US",
-          "debit_negative_balances": false,
-          "decline_charge_on": {
-            "avs_failure": false,
-            "cvc_failure": true
-          },
-          "default_currency": "usd",
-          "details_submitted": true,
-          "display_name": null,
-          "email": "enquirer@near-me.com",
-          "external_accounts": {
-            "object": "list",
-            "data": [
-              {
-                "id": "ba_1AeYN4A7QZq2DYh7hGFNAB7X",
-                "object": "bank_account",
-                "account": "acct_1AeYN4A7QZq2DYh7",
-                "account_holder_name": null,
-                "account_holder_type": null,
-                "bank_name": "STRIPE TEST BANK",
-                "country": "US",
-                "currency": "usd",
-                "default_for_currency": true,
-                "fingerprint": "Ez5qnM6YuBO8sq1P",
-                "last4": "6789",
-                "metadata": {},
-                "routing_number": "110000000",
-                "status": "new"
-              }
-            ],
-            "has_more": false,
-            "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYN4A7QZq2DYh7/external_accounts"
-          },
-          "legal_entity": {
-            "additional_owners": [],
-            "address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "business_name": "Enquirer Company",
-            "business_tax_id_provided": false,
-            "dob": {
-              "day": 22,
-              "month": 1,
-              "year": 1990
-            },
-            "first_name": "Tomasz",
-            "last_name": "Lemkowski",
-            "personal_address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "personal_id_number_provided": true,
-            "ssn_last_4_provided": true,
-            "type": "individual",
-            "verification": {
-              "details": null,
-              "details_code": null,
-              "document": null,
-              "status": "unverified"
-            }
-          },
-          "metadata": {},
-          "payout_schedule": {
-            "delay_days": 2,
-            "interval": "daily"
-          },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
-          "product_description": null,
-          "statement_descriptor": null,
-          "support_email": null,
-          "support_phone": null,
-          "timezone": "Etc/UTC",
-          "tos_acceptance": {
-            "date": 1487963976,
-            "ip": "127.0.0.1",
-            "user_agent": null
-          },
-          "type": "custom",
-          "verification": {
-            "disabled_reason": null,
-            "due_by": null,
-            "fields_needed": [
-              "legal_entity.verification.document"
-            ]
-          }
-        }
-    http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:08:42 GMT
-- request:
-    method: get
-    uri: https://api.stripe.com/v1/accounts/acct_1AeYN4A7QZq2DYh7
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
-      Authorization:
-      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Stripe-Version:
-      - '2017-06-05'
-      X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx
-      Date:
-      - Wed, 12 Jul 2017 00:09:07 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '2560'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, HEAD, OPTIONS, DELETE
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Max-Age:
-      - '300'
-      Cache-Control:
-      - no-cache, no-store
-      Request-Id:
-      - req_B0ZYkEvFK2hcxF
-      Stripe-Account:
-      - acct_1AeYN4A7QZq2DYh7
-      Stripe-Version:
-      - '2017-06-05'
-      Strict-Transport-Security:
-      - max-age=31556926; includeSubDomains
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "id": "acct_1AeYN4A7QZq2DYh7",
-          "object": "account",
-          "business_logo": null,
-          "business_name": "Enquirer Company",
-          "business_url": null,
-          "charges_enabled": true,
-          "country": "US",
-          "debit_negative_balances": false,
-          "decline_charge_on": {
-            "avs_failure": false,
-            "cvc_failure": true
-          },
-          "default_currency": "usd",
-          "details_submitted": true,
-          "display_name": null,
-          "email": "enquirer@near-me.com",
-          "external_accounts": {
-            "object": "list",
-            "data": [
-              {
-                "id": "ba_1AeYN4A7QZq2DYh7hGFNAB7X",
-                "object": "bank_account",
-                "account": "acct_1AeYN4A7QZq2DYh7",
-                "account_holder_name": null,
-                "account_holder_type": null,
-                "bank_name": "STRIPE TEST BANK",
-                "country": "US",
-                "currency": "usd",
-                "default_for_currency": true,
-                "fingerprint": "Ez5qnM6YuBO8sq1P",
-                "last4": "6789",
-                "metadata": {},
-                "routing_number": "110000000",
-                "status": "new"
-              }
-            ],
-            "has_more": false,
-            "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYN4A7QZq2DYh7/external_accounts"
-          },
-          "legal_entity": {
-            "additional_owners": [],
-            "address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "business_name": "Enquirer Company",
-            "business_tax_id_provided": false,
-            "dob": {
-              "day": 22,
-              "month": 1,
-              "year": 1990
-            },
-            "first_name": "Tomasz",
-            "last_name": "Lemkowski",
-            "personal_address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "personal_id_number_provided": true,
-            "ssn_last_4_provided": true,
-            "type": "individual",
-            "verification": {
-              "details": null,
-              "details_code": null,
-              "document": null,
-              "status": "unverified"
-            }
-          },
-          "metadata": {},
-          "payout_schedule": {
-            "delay_days": 2,
-            "interval": "daily"
-          },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
-          "product_description": null,
-          "statement_descriptor": null,
-          "support_email": null,
-          "support_phone": null,
-          "timezone": "Etc/UTC",
-          "tos_acceptance": {
-            "date": 1487963976,
-            "ip": "127.0.0.1",
-            "user_agent": null
-          },
-          "type": "custom",
-          "verification": {
-            "disabled_reason": null,
-            "due_by": null,
-            "fields_needed": [
-              "legal_entity.verification.document"
-            ]
-          }
-        }
-    http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:09:07 GMT
-- request:
-    method: get
-    uri: https://api.stripe.com/v1/accounts/acct_1AeYN4A7QZq2DYh7
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
-      Authorization:
-      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Stripe-Version:
-      - '2017-06-05'
-      X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx
-      Date:
-      - Wed, 12 Jul 2017 00:10:20 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '2560'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, HEAD, OPTIONS, DELETE
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Max-Age:
-      - '300'
-      Cache-Control:
-      - no-cache, no-store
-      Request-Id:
-      - req_B0ZazA97yZ7GpZ
-      Stripe-Account:
-      - acct_1AeYN4A7QZq2DYh7
-      Stripe-Version:
-      - '2017-06-05'
-      Strict-Transport-Security:
-      - max-age=31556926; includeSubDomains
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "id": "acct_1AeYN4A7QZq2DYh7",
-          "object": "account",
-          "business_logo": null,
-          "business_name": "Enquirer Company",
-          "business_url": null,
-          "charges_enabled": true,
-          "country": "US",
-          "debit_negative_balances": false,
-          "decline_charge_on": {
-            "avs_failure": false,
-            "cvc_failure": true
-          },
-          "default_currency": "usd",
-          "details_submitted": true,
-          "display_name": null,
-          "email": "enquirer@near-me.com",
-          "external_accounts": {
-            "object": "list",
-            "data": [
-              {
-                "id": "ba_1AeYN4A7QZq2DYh7hGFNAB7X",
-                "object": "bank_account",
-                "account": "acct_1AeYN4A7QZq2DYh7",
-                "account_holder_name": null,
-                "account_holder_type": null,
-                "bank_name": "STRIPE TEST BANK",
-                "country": "US",
-                "currency": "usd",
-                "default_for_currency": true,
-                "fingerprint": "Ez5qnM6YuBO8sq1P",
-                "last4": "6789",
-                "metadata": {},
-                "routing_number": "110000000",
-                "status": "new"
-              }
-            ],
-            "has_more": false,
-            "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYN4A7QZq2DYh7/external_accounts"
-          },
-          "legal_entity": {
-            "additional_owners": [],
-            "address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "business_name": "Enquirer Company",
-            "business_tax_id_provided": false,
-            "dob": {
-              "day": 22,
-              "month": 1,
-              "year": 1990
-            },
-            "first_name": "Tomasz",
-            "last_name": "Lemkowski",
-            "personal_address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "personal_id_number_provided": true,
-            "ssn_last_4_provided": true,
-            "type": "individual",
-            "verification": {
-              "details": null,
-              "details_code": null,
-              "document": null,
-              "status": "unverified"
-            }
-          },
-          "metadata": {},
-          "payout_schedule": {
-            "delay_days": 2,
-            "interval": "daily"
-          },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
-          "product_description": null,
-          "statement_descriptor": null,
-          "support_email": null,
-          "support_phone": null,
-          "timezone": "Etc/UTC",
-          "tos_acceptance": {
-            "date": 1487963976,
-            "ip": "127.0.0.1",
-            "user_agent": null
-          },
-          "type": "custom",
-          "verification": {
-            "disabled_reason": null,
-            "due_by": null,
-            "fields_needed": [
-              "legal_entity.verification.document"
-            ]
-          }
-        }
-    http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:10:20 GMT
-- request:
-    method: get
-    uri: https://api.stripe.com/v1/accounts/acct_1AeYN4A7QZq2DYh7
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
-      Authorization:
-      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Stripe-Version:
-      - '2017-06-05'
-      X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx
-      Date:
-      - Wed, 12 Jul 2017 00:11:05 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '2560'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, HEAD, OPTIONS, DELETE
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Max-Age:
-      - '300'
-      Cache-Control:
-      - no-cache, no-store
-      Request-Id:
-      - req_B0ZaHjl7iQNzEP
-      Stripe-Account:
-      - acct_1AeYN4A7QZq2DYh7
-      Stripe-Version:
-      - '2017-06-05'
-      Strict-Transport-Security:
-      - max-age=31556926; includeSubDomains
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "id": "acct_1AeYN4A7QZq2DYh7",
-          "object": "account",
-          "business_logo": null,
-          "business_name": "Enquirer Company",
-          "business_url": null,
-          "charges_enabled": true,
-          "country": "US",
-          "debit_negative_balances": false,
-          "decline_charge_on": {
-            "avs_failure": false,
-            "cvc_failure": true
-          },
-          "default_currency": "usd",
-          "details_submitted": true,
-          "display_name": null,
-          "email": "enquirer@near-me.com",
-          "external_accounts": {
-            "object": "list",
-            "data": [
-              {
-                "id": "ba_1AeYN4A7QZq2DYh7hGFNAB7X",
-                "object": "bank_account",
-                "account": "acct_1AeYN4A7QZq2DYh7",
-                "account_holder_name": null,
-                "account_holder_type": null,
-                "bank_name": "STRIPE TEST BANK",
-                "country": "US",
-                "currency": "usd",
-                "default_for_currency": true,
-                "fingerprint": "Ez5qnM6YuBO8sq1P",
-                "last4": "6789",
-                "metadata": {},
-                "routing_number": "110000000",
-                "status": "new"
-              }
-            ],
-            "has_more": false,
-            "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYN4A7QZq2DYh7/external_accounts"
-          },
-          "legal_entity": {
-            "additional_owners": [],
-            "address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "business_name": "Enquirer Company",
-            "business_tax_id_provided": false,
-            "dob": {
-              "day": 22,
-              "month": 1,
-              "year": 1990
-            },
-            "first_name": "Tomasz",
-            "last_name": "Lemkowski",
-            "personal_address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "personal_id_number_provided": true,
-            "ssn_last_4_provided": true,
-            "type": "individual",
-            "verification": {
-              "details": null,
-              "details_code": null,
-              "document": null,
-              "status": "unverified"
-            }
-          },
-          "metadata": {},
-          "payout_schedule": {
-            "delay_days": 2,
-            "interval": "daily"
-          },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
-          "product_description": null,
-          "statement_descriptor": null,
-          "support_email": null,
-          "support_phone": null,
-          "timezone": "Etc/UTC",
-          "tos_acceptance": {
-            "date": 1487963976,
-            "ip": "127.0.0.1",
-            "user_agent": null
-          },
-          "type": "custom",
-          "verification": {
-            "disabled_reason": null,
-            "due_by": null,
-            "fields_needed": [
-              "legal_entity.verification.document"
-            ]
-          }
-        }
-    http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:11:05 GMT
-- request:
-    method: get
-    uri: https://api.stripe.com/v1/accounts/acct_1AeYN4A7QZq2DYh7
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
-      Authorization:
-      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Stripe-Version:
-      - '2017-06-05'
-      X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx
-      Date:
-      - Wed, 12 Jul 2017 00:11:24 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '2560'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, HEAD, OPTIONS, DELETE
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Max-Age:
-      - '300'
-      Cache-Control:
-      - no-cache, no-store
-      Request-Id:
-      - req_B0ZbpTTqVmGfdR
-      Stripe-Account:
-      - acct_1AeYN4A7QZq2DYh7
-      Stripe-Version:
-      - '2017-06-05'
-      Strict-Transport-Security:
-      - max-age=31556926; includeSubDomains
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "id": "acct_1AeYN4A7QZq2DYh7",
-          "object": "account",
-          "business_logo": null,
-          "business_name": "Enquirer Company",
-          "business_url": null,
-          "charges_enabled": true,
-          "country": "US",
-          "debit_negative_balances": false,
-          "decline_charge_on": {
-            "avs_failure": false,
-            "cvc_failure": true
-          },
-          "default_currency": "usd",
-          "details_submitted": true,
-          "display_name": null,
-          "email": "enquirer@near-me.com",
-          "external_accounts": {
-            "object": "list",
-            "data": [
-              {
-                "id": "ba_1AeYN4A7QZq2DYh7hGFNAB7X",
-                "object": "bank_account",
-                "account": "acct_1AeYN4A7QZq2DYh7",
-                "account_holder_name": null,
-                "account_holder_type": null,
-                "bank_name": "STRIPE TEST BANK",
-                "country": "US",
-                "currency": "usd",
-                "default_for_currency": true,
-                "fingerprint": "Ez5qnM6YuBO8sq1P",
-                "last4": "6789",
-                "metadata": {},
-                "routing_number": "110000000",
-                "status": "new"
-              }
-            ],
-            "has_more": false,
-            "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYN4A7QZq2DYh7/external_accounts"
-          },
-          "legal_entity": {
-            "additional_owners": [],
-            "address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "business_name": "Enquirer Company",
-            "business_tax_id_provided": false,
-            "dob": {
-              "day": 22,
-              "month": 1,
-              "year": 1990
-            },
-            "first_name": "Tomasz",
-            "last_name": "Lemkowski",
-            "personal_address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "personal_id_number_provided": true,
-            "ssn_last_4_provided": true,
-            "type": "individual",
-            "verification": {
-              "details": null,
-              "details_code": null,
-              "document": null,
-              "status": "unverified"
-            }
-          },
-          "metadata": {},
-          "payout_schedule": {
-            "delay_days": 2,
-            "interval": "daily"
-          },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
-          "product_description": null,
-          "statement_descriptor": null,
-          "support_email": null,
-          "support_phone": null,
-          "timezone": "Etc/UTC",
-          "tos_acceptance": {
-            "date": 1487963976,
-            "ip": "127.0.0.1",
-            "user_agent": null
-          },
-          "type": "custom",
-          "verification": {
-            "disabled_reason": null,
-            "due_by": null,
-            "fields_needed": [
-              "legal_entity.verification.document"
-            ]
-          }
-        }
-    http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:11:24 GMT
-- request:
-    method: get
-    uri: https://api.stripe.com/v1/accounts/acct_1AeYN4A7QZq2DYh7
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Stripe/v1 RubyBindings/3.0.0
-      Authorization:
-      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
-      Content-Type:
-      - application/x-www-form-urlencoded
-      Stripe-Version:
-      - '2017-06-05'
-      X-Stripe-Client-User-Agent:
-      - '{"bindings_version":"3.0.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
-        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
-        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx
-      Date:
-      - Wed, 12 Jul 2017 00:11:30 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '2560'
-      Connection:
-      - keep-alive
-      Access-Control-Allow-Credentials:
-      - 'true'
-      Access-Control-Allow-Methods:
-      - GET, POST, HEAD, OPTIONS, DELETE
-      Access-Control-Allow-Origin:
-      - "*"
-      Access-Control-Max-Age:
-      - '300'
-      Cache-Control:
-      - no-cache, no-store
-      Request-Id:
-      - req_B0ZbMoTIVmsJsP
-      Stripe-Account:
-      - acct_1AeYN4A7QZq2DYh7
-      Stripe-Version:
-      - '2017-06-05'
-      Strict-Transport-Security:
-      - max-age=31556926; includeSubDomains
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "id": "acct_1AeYN4A7QZq2DYh7",
-          "object": "account",
-          "business_logo": null,
-          "business_name": "Enquirer Company",
-          "business_url": null,
-          "charges_enabled": true,
-          "country": "US",
-          "debit_negative_balances": false,
-          "decline_charge_on": {
-            "avs_failure": false,
-            "cvc_failure": true
-          },
-          "default_currency": "usd",
-          "details_submitted": true,
-          "display_name": null,
-          "email": "enquirer@near-me.com",
-          "external_accounts": {
-            "object": "list",
-            "data": [
-              {
-                "id": "ba_1AeYN4A7QZq2DYh7hGFNAB7X",
-                "object": "bank_account",
-                "account": "acct_1AeYN4A7QZq2DYh7",
-                "account_holder_name": null,
-                "account_holder_type": null,
-                "bank_name": "STRIPE TEST BANK",
-                "country": "US",
-                "currency": "usd",
-                "default_for_currency": true,
-                "fingerprint": "Ez5qnM6YuBO8sq1P",
-                "last4": "6789",
-                "metadata": {},
-                "routing_number": "110000000",
-                "status": "new"
-              }
-            ],
-            "has_more": false,
-            "total_count": 1,
-            "url": "/v1/accounts/acct_1AeYN4A7QZq2DYh7/external_accounts"
-          },
-          "legal_entity": {
-            "additional_owners": [],
-            "address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "business_name": "Enquirer Company",
-            "business_tax_id_provided": false,
-            "dob": {
-              "day": 22,
-              "month": 1,
-              "year": 1990
-            },
-            "first_name": "Tomasz",
-            "last_name": "Lemkowski",
-            "personal_address": {
-              "city": "Mountain View",
-              "country": "US",
-              "line1": "1600 Amphitheatre Parkway",
-              "line2": null,
-              "postal_code": "94043",
-              "state": "CA"
-            },
-            "personal_id_number_provided": true,
-            "ssn_last_4_provided": true,
-            "type": "individual",
-            "verification": {
-              "details": null,
-              "details_code": null,
-              "document": null,
-              "status": "unverified"
-            }
-          },
-          "metadata": {},
-          "payout_schedule": {
-            "delay_days": 2,
-            "interval": "daily"
-          },
-          "payout_statement_descriptor": null,
-          "payouts_enabled": true,
-          "product_description": null,
-          "statement_descriptor": null,
-          "support_email": null,
-          "support_phone": null,
-          "timezone": "Etc/UTC",
-          "tos_acceptance": {
-            "date": 1487963976,
-            "ip": "127.0.0.1",
-            "user_agent": null
-          },
-          "type": "custom",
-          "verification": {
-            "disabled_reason": null,
-            "due_by": null,
-            "fields_needed": [
-              "legal_entity.verification.document"
-            ]
-          }
-        }
-    http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:11:30 GMT
+  recorded_at: Mon, 06 Mar 2017 15:46:46 GMT
 - request:
     method: post
     uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/customers
@@ -2816,7 +1346,7 @@ http_interactions:
       X-Stripe-Client-User-Metadata:
       - '{"ip":null}'
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -2829,7 +1359,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Wed, 12 Jul 2017 00:14:13 GMT
+      - Mon, 06 Mar 2017 15:47:00 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -2847,21 +1377,21 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_B0Zd0iiEkya3Gk
+      - req_AErmwdZMvb7qzG
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Strict-Transport-Security:
       - max-age=31556926; includeSubDomains
     body:
       encoding: UTF-8
       string: |
         {
-          "id": "cus_B0ZdlFDtmqoTBz",
+          "id": "cus_AErmCQNXzfvGnn",
           "object": "customer",
           "account_balance": 0,
-          "created": 1499818452,
+          "created": 1488815219,
           "currency": null,
-          "default_source": "card_1AeYUaK2MWM5GsIT9mzkr3V1",
+          "default_source": "card_19uO35K2MWM5GsITP1gPJ9wh",
           "delinquent": false,
           "description": null,
           "discount": null,
@@ -2873,7 +1403,7 @@ http_interactions:
             "object": "list",
             "data": [
               {
-                "id": "card_1AeYUaK2MWM5GsIT9mzkr3V1",
+                "id": "card_19uO35K2MWM5GsITP1gPJ9wh",
                 "object": "card",
                 "address_city": null,
                 "address_country": null,
@@ -2885,7 +1415,7 @@ http_interactions:
                 "address_zip_check": null,
                 "brand": "Visa",
                 "country": "US",
-                "customer": "cus_B0ZdlFDtmqoTBz",
+                "customer": "cus_AErmCQNXzfvGnn",
                 "cvc_check": "pass",
                 "dynamic_last4": null,
                 "exp_month": 1,
@@ -2900,24 +1430,24 @@ http_interactions:
             ],
             "has_more": false,
             "total_count": 1,
-            "url": "/v1/customers/cus_B0ZdlFDtmqoTBz/sources"
+            "url": "/v1/customers/cus_AErmCQNXzfvGnn/sources"
           },
           "subscriptions": {
             "object": "list",
             "data": [],
             "has_more": false,
             "total_count": 0,
-            "url": "/v1/customers/cus_B0ZdlFDtmqoTBz/subscriptions"
+            "url": "/v1/customers/cus_AErmCQNXzfvGnn/subscriptions"
           }
         }
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:14:13 GMT
+  recorded_at: Mon, 06 Mar 2017 15:47:00 GMT
 - request:
     method: post
     uri: https://sk_test_DoIom7ZOL848ziY39cC75lI0:@api.stripe.com/v1/charges
     body:
       encoding: UTF-8
-      string: amount=30000&currency=usd&card=card_1AeYUaK2MWM5GsIT9mzkr3V1&customer=cus_B0ZdlFDtmqoTBz&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
+      string: amount=30000&currency=usd&card=card_19uO35K2MWM5GsITP1gPJ9wh&customer=cus_AErmCQNXzfvGnn&payment_user_agent=Stripe%2Fv1+ActiveMerchantBindings%2F1.47.0
     headers:
       Content-Type:
       - application/x-www-form-urlencoded
@@ -2928,7 +1458,7 @@ http_interactions:
       X-Stripe-Client-User-Metadata:
       - '{"ip":null}'
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -2941,7 +1471,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Wed, 12 Jul 2017 00:14:18 GMT
+      - Mon, 06 Mar 2017 15:47:07 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -2959,26 +1489,26 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_B0Zdkrsq8oSbqu
+      - req_AErmwdV1k7ECZf
       Stripe-Version:
-      - '2017-06-05'
+      - '2016-07-06'
       Strict-Transport-Security:
       - max-age=31556926; includeSubDomains
     body:
       encoding: UTF-8
       string: |
         {
-          "id": "ch_1AeYUgK2MWM5GsITHi1BcC08",
+          "id": "ch_19uO3DK2MWM5GsITRpCMRFrd",
           "object": "charge",
           "amount": 30000,
           "amount_refunded": 0,
           "application": null,
           "application_fee": null,
-          "balance_transaction": "txn_1AeYUgK2MWM5GsIT2aPvpWWZ",
+          "balance_transaction": "txn_19uO3DK2MWM5GsIT075KeEHS",
           "captured": true,
-          "created": 1499818458,
+          "created": 1488815227,
           "currency": "usd",
-          "customer": "cus_B0ZdlFDtmqoTBz",
+          "customer": "cus_AErmCQNXzfvGnn",
           "description": null,
           "destination": null,
           "dispute": null,
@@ -3006,12 +1536,12 @@ http_interactions:
             "data": [],
             "has_more": false,
             "total_count": 0,
-            "url": "/v1/charges/ch_1AeYUgK2MWM5GsITHi1BcC08/refunds"
+            "url": "/v1/charges/ch_19uO3DK2MWM5GsITRpCMRFrd/refunds"
           },
           "review": null,
           "shipping": null,
           "source": {
-            "id": "card_1AeYUaK2MWM5GsIT9mzkr3V1",
+            "id": "card_19uO35K2MWM5GsITP1gPJ9wh",
             "object": "card",
             "address_city": null,
             "address_country": null,
@@ -3023,7 +1553,7 @@ http_interactions:
             "address_zip_check": null,
             "brand": "Visa",
             "country": "US",
-            "customer": "cus_B0ZdlFDtmqoTBz",
+            "customer": "cus_AErmCQNXzfvGnn",
             "cvc_check": "pass",
             "dynamic_last4": null,
             "exp_month": 1,
@@ -3041,5 +1571,684 @@ http_interactions:
           "transfer_group": null
         }
     http_version: 
-  recorded_at: Wed, 12 Jul 2017 00:14:19 GMT
+  recorded_at: Mon, 06 Mar 2017 15:47:07 GMT
+- request:
+    method: post
+    uri: https://api.stripe.com/v1/accounts
+    body:
+      encoding: UTF-8
+      string: bank_account[country]=US&bank_account[currency]=USD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=individual&legal_entity[business_name]=Enquirer+Company&legal_entity[address][country]=US&legal_entity[address][state]=CA&legal_entity[address][city]=Mountain+View&legal_entity[address][postal_code]=94043&legal_entity[address][line1]=1600+Amphitheatre+Parkway&legal_entity[personal_address][country]=US&legal_entity[personal_address][state]=CA&legal_entity[personal_address][city]=Mountain+View&legal_entity[personal_address][postal_code]=94043&legal_entity[personal_address][line1]=1600+Amphitheatre+Parkway&legal_entity[dob][day]=22&legal_entity[dob][month]=1&legal_entity[dob][year]=1990&legal_entity[business_tax_id]=&legal_entity[personal_id_number]=694-07-7618&legal_entity[first_name]=Tomasz&legal_entity[last_name]=Lemkowski&legal_entity[additional_owners]=&managed=true&country=US&email=enquirer%40near-me.com&tos_acceptance[ip]=127.0.0.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Stripe/v1 RubyBindings/1.57.0
+      Authorization:
+      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Stripe-Version:
+      - '2016-07-06'
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Mon Jan  9 23:07:29 PST 2017;
+        root:xnu-3248.60.11.2.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+      Content-Length:
+      - '1067'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 06 Mar 2017 17:47:03 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2657'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AEtiLuZwVMyzbQ
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "acct_19uPvGBgcsYPfdYm",
+          "object": "account",
+          "business_logo": null,
+          "business_name": "Enquirer Company",
+          "business_url": null,
+          "charges_enabled": true,
+          "country": "US",
+          "debit_negative_balances": false,
+          "decline_charge_on": {
+            "avs_failure": false,
+            "cvc_failure": true
+          },
+          "default_currency": "usd",
+          "details_submitted": true,
+          "display_name": null,
+          "email": "enquirer@near-me.com",
+          "external_accounts": {
+            "object": "list",
+            "data": [
+              {
+                "id": "ba_19uPvGBgcsYPfdYmiGnUvga8",
+                "object": "bank_account",
+                "account": "acct_19uPvGBgcsYPfdYm",
+                "account_holder_name": null,
+                "account_holder_type": null,
+                "bank_name": "STRIPE TEST BANK",
+                "country": "US",
+                "currency": "usd",
+                "default_for_currency": true,
+                "fingerprint": "oHun3AITybklmYHR",
+                "last4": "6789",
+                "metadata": {},
+                "routing_number": "110000000",
+                "status": "new"
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/accounts/acct_19uPvGBgcsYPfdYm/external_accounts"
+          },
+          "keys": {
+            "secret": "sk_test_H3GBMhaXDo6JNrXvw6P9SdsT",
+            "publishable": "pk_test_EzfEXanpPMLWOHCBh3tT7GkD"
+          },
+          "legal_entity": {
+            "address": {
+              "city": "Mountain View",
+              "country": "US",
+              "line1": "1600 Amphitheatre Parkway",
+              "line2": null,
+              "postal_code": "94043",
+              "state": "CA"
+            },
+            "business_name": "Enquirer Company",
+            "business_tax_id_provided": false,
+            "dob": {
+              "day": 22,
+              "month": 1,
+              "year": 1990
+            },
+            "first_name": "Tomasz",
+            "last_name": "Lemkowski",
+            "personal_address": {
+              "city": "Mountain View",
+              "country": "US",
+              "line1": "1600 Amphitheatre Parkway",
+              "line2": null,
+              "postal_code": "94043",
+              "state": "CA"
+            },
+            "personal_id_number_provided": true,
+            "ssn_last_4_provided": true,
+            "type": "individual",
+            "verification": {
+              "details": null,
+              "details_code": null,
+              "document": null,
+              "status": "unverified"
+            }
+          },
+          "managed": true,
+          "metadata": {},
+          "product_description": null,
+          "statement_descriptor": null,
+          "support_email": null,
+          "support_phone": null,
+          "timezone": "Etc/UTC",
+          "tos_acceptance": {
+            "date": 1487963976,
+            "ip": "127.0.0.1",
+            "user_agent": null
+          },
+          "transfer_schedule": {
+            "delay_days": 2,
+            "interval": "daily"
+          },
+          "transfer_statement_descriptor": null,
+          "transfers_enabled": true,
+          "verification": {
+            "disabled_reason": null,
+            "due_by": null,
+            "fields_needed": [
+              "legal_entity.verification.document"
+            ]
+          }
+        }
+    http_version: 
+  recorded_at: Mon, 06 Mar 2017 17:47:03 GMT
+- request:
+    method: post
+    uri: https://api.stripe.com/v1/accounts
+    body:
+      encoding: UTF-8
+      string: bank_account[country]=AU&bank_account[currency]=AUD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=company&legal_entity[business_name]=NearMe&legal_entity[address][country]=AU&legal_entity[personal_address][country]=AU&legal_entity[dob][day]=24&legal_entity[dob][month]=2&legal_entity[dob][year]=1997&legal_entity[business_tax_id]=440-94-3290&legal_entity[personal_id_number]=440-94-3290&legal_entity[first_name]=John&legal_entity[last_name]=Rambo&managed=true&country=AU&email=tomek%40near-me.com&tos_acceptance[ip]=1.1.1.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Stripe/v1 RubyBindings/1.57.0
+      Authorization:
+      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Stripe-Version:
+      - '2016-07-06'
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Fri Feb 17 10:21:18 PST 2017;
+        root:xnu-3248.60.11.4.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+      Content-Length:
+      - '645'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 16 May 2017 10:09:05 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2653'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AfNMQi94m62CrR
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "acct_1AK2c1GJMrSBEbFE",
+          "object": "account",
+          "business_logo": null,
+          "business_name": "NearMe",
+          "business_url": null,
+          "charges_enabled": true,
+          "country": "US",
+          "debit_negative_balances": false,
+          "decline_charge_on": {
+            "avs_failure": false,
+            "cvc_failure": true
+          },
+          "default_currency": "usd",
+          "details_submitted": true,
+          "display_name": null,
+          "email": "tomek@near-me.com",
+          "external_accounts": {
+            "object": "list",
+            "data": [
+              {
+                "id": "ba_1AK2c1GJMrSBEbFEfl6vvT6L",
+                "object": "bank_account",
+                "account": "acct_1AK2c1GJMrSBEbFE",
+                "account_holder_name": null,
+                "account_holder_type": null,
+                "bank_name": "STRIPE TEST BANK",
+                "country": "US",
+                "currency": "usd",
+                "default_for_currency": true,
+                "fingerprint": "KXLmBa1fPwOeso1D",
+                "last4": "6789",
+                "metadata": {},
+                "routing_number": "110000000",
+                "status": "new"
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/accounts/acct_1AK2c1GJMrSBEbFE/external_accounts"
+          },
+          "keys": {
+            "secret": "sk_test_1y8lZcsg7txC9dJH6vuj009l",
+            "publishable": "pk_test_VWkZkaqFwRs28DCTGAI3HL5Z"
+          },
+          "legal_entity": {
+            "address": {
+              "city": null,
+              "country": "US",
+              "line1": null,
+              "line2": null,
+              "postal_code": null,
+              "state": null
+            },
+            "business_name": "NearMe",
+            "business_tax_id_provided": true,
+            "dob": {
+              "day": 24,
+              "month": 2,
+              "year": 1997
+            },
+            "first_name": "John",
+            "last_name": "Rambo",
+            "personal_address": {
+              "city": null,
+              "country": "US",
+              "line1": null,
+              "line2": null,
+              "postal_code": null,
+              "state": null
+            },
+            "personal_id_number_provided": true,
+            "ssn_last_4_provided": true,
+            "type": "company",
+            "verification": {
+              "details": null,
+              "details_code": null,
+              "document": null,
+              "status": "unverified"
+            }
+          },
+          "managed": true,
+          "metadata": {},
+          "product_description": null,
+          "statement_descriptor": null,
+          "support_email": null,
+          "support_phone": null,
+          "timezone": "Etc/UTC",
+          "tos_acceptance": {
+            "date": 1487963976,
+            "ip": "1.1.1.1",
+            "user_agent": null
+          },
+          "verification": {
+            "disabled_reason": null,
+            "due_by": null,
+            "fields_needed": [
+              "legal_entity.address.city",
+              "legal_entity.address.line1",
+              "legal_entity.address.postal_code",
+              "legal_entity.address.state"
+            ]
+          },
+          "transfers_enabled": true,
+          "transfer_schedule": {
+            "delay_days": 2,
+            "interval": "daily"
+          },
+          "transfer_statement_descriptor": null
+        }
+    http_version: 
+  recorded_at: Tue, 16 May 2017 10:09:05 GMT
+- request:
+    method: post
+    uri: https://api.stripe.com/v1/accounts
+    body:
+      encoding: UTF-8
+      string: bank_account[country]=US&bank_account[currency]=USD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=individual&legal_entity[business_name]=&legal_entity[address][country]=US&legal_entity[address][state]=CA&legal_entity[address][city]=Mountain+View&legal_entity[address][postal_code]=94043&legal_entity[address][line1]=1600+Amphitheatre+Parkway&legal_entity[personal_address][country]=US&legal_entity[personal_address][state]=CA&legal_entity[personal_address][city]=Mountain+View&legal_entity[personal_address][postal_code]=94043&legal_entity[personal_address][line1]=1600+Amphitheatre+Parkway&legal_entity[dob][day]=22&legal_entity[dob][month]=1&legal_entity[dob][year]=1990&legal_entity[business_tax_id]=&legal_entity[personal_id_number]=694-07-7618&legal_entity[first_name]=Tomasz&legal_entity[last_name]=Lemkowski&managed=true&country=US&email=enquirer%40near-me.com&tos_acceptance[ip]=127.0.0.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Stripe/v1 RubyBindings/1.57.0
+      Authorization:
+      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Stripe-Version:
+      - '2016-07-06'
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        MacBook-Pro 15.6.0 Darwin Kernel Version 15.6.0: Fri Feb 17 10:21:18 PST 2017;
+        root:xnu-3248.60.11.4.1~1/RELEASE_X86_64 x86_64","hostname":"MacBook-Pro"}'
+      Content-Length:
+      - '1018'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 16 May 2017 10:10:04 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2629'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AfNN5XgbULGJAn
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "acct_1AK2cyGaN9SMrNWA",
+          "object": "account",
+          "business_logo": null,
+          "business_name": null,
+          "business_url": null,
+          "charges_enabled": true,
+          "country": "US",
+          "debit_negative_balances": false,
+          "decline_charge_on": {
+            "avs_failure": false,
+            "cvc_failure": true
+          },
+          "default_currency": "usd",
+          "details_submitted": true,
+          "display_name": null,
+          "email": "enquirer@near-me.com",
+          "external_accounts": {
+            "object": "list",
+            "data": [
+              {
+                "id": "ba_1AK2cyGaN9SMrNWA3XvluHbS",
+                "object": "bank_account",
+                "account": "acct_1AK2cyGaN9SMrNWA",
+                "account_holder_name": null,
+                "account_holder_type": null,
+                "bank_name": "STRIPE TEST BANK",
+                "country": "US",
+                "currency": "usd",
+                "default_for_currency": true,
+                "fingerprint": "kRI52C9rIv0WDnUQ",
+                "last4": "6789",
+                "metadata": {},
+                "routing_number": "110000000",
+                "status": "new"
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/accounts/acct_1AK2cyGaN9SMrNWA/external_accounts"
+          },
+          "keys": {
+            "secret": "sk_test_BCTn94AhjCTAtOi6dHkLTQ9Q",
+            "publishable": "pk_test_GPJUWNjGrg0XnrnQemv68Aqk"
+          },
+          "legal_entity": {
+            "address": {
+              "city": "Mountain View",
+              "country": "US",
+              "line1": "1600 Amphitheatre Parkway",
+              "line2": null,
+              "postal_code": "94043",
+              "state": "CA"
+            },
+            "business_name": null,
+            "business_tax_id_provided": false,
+            "dob": {
+              "day": 22,
+              "month": 1,
+              "year": 1990
+            },
+            "first_name": "Tomasz",
+            "last_name": "Lemkowski",
+            "personal_address": {
+              "city": "Mountain View",
+              "country": "US",
+              "line1": "1600 Amphitheatre Parkway",
+              "line2": null,
+              "postal_code": "94043",
+              "state": "CA"
+            },
+            "personal_id_number_provided": true,
+            "ssn_last_4_provided": true,
+            "type": "individual",
+            "verification": {
+              "details": null,
+              "details_code": null,
+              "document": null,
+              "status": "unverified"
+            }
+          },
+          "managed": true,
+          "metadata": {},
+          "product_description": null,
+          "statement_descriptor": null,
+          "support_email": null,
+          "support_phone": null,
+          "timezone": "Etc/UTC",
+          "tos_acceptance": {
+            "date": 1487963976,
+            "ip": "127.0.0.1",
+            "user_agent": null
+          },
+          "verification": {
+            "disabled_reason": null,
+            "due_by": null,
+            "fields_needed": [
+              "legal_entity.verification.document"
+            ]
+          },
+          "transfers_enabled": true,
+          "transfer_schedule": {
+            "delay_days": 2,
+            "interval": "daily"
+          },
+          "transfer_statement_descriptor": null
+        }
+    http_version: 
+  recorded_at: Tue, 16 May 2017 10:10:05 GMT
+- request:
+    method: post
+    uri: https://api.stripe.com/v1/accounts
+    body:
+      encoding: UTF-8
+      string: bank_account[country]=US&bank_account[currency]=USD&bank_account[account_number]=000123456789&bank_account[routing_number]=110000000&legal_entity[type]=company&legal_entity[business_name]=NearMe&legal_entity[address][country]=US&legal_entity[personal_address][country]=US&legal_entity[dob][day]=24&legal_entity[dob][month]=2&legal_entity[dob][year]=1997&legal_entity[business_tax_id]=440-94-3290&legal_entity[personal_id_number]=440-94-3290&legal_entity[first_name]=John&legal_entity[last_name]=Rambo&managed=true&country=US&email=tomek%40near-me.com&tos_acceptance[ip]=1.1.1.1&tos_acceptance[date]=1487963976&decline_charge_on[cvc_failure]=true
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Stripe/v1 RubyBindings/1.57.0
+      Authorization:
+      - Bearer sk_test_DoIom7ZOL848ziY39cC75lI0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Stripe-Version:
+      - '2016-07-06'
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.57.0","lang":"ruby","lang_version":"2.3.1 p112 (2016-04-26)","platform":"x86_64-darwin15","engine":"ruby","publisher":"stripe","uname":"Darwin
+        mbp-godot 15.6.0 Darwin Kernel Version 15.6.0: Tue Apr 11 16:00:51 PDT 2017;
+        root:xnu-3248.60.11.5.3~1/RELEASE_X86_64 x86_64","hostname":"mbp-godot"}'
+      Content-Length:
+      - '645'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 16 Jun 2017 07:37:15 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2673'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_AqwuYnYvvPIUIz
+      Stripe-Version:
+      - '2016-07-06'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "acct_1AVF14BRNwbPxmgW",
+          "object": "account",
+          "business_logo": null,
+          "business_name": "NearMe",
+          "business_url": null,
+          "charges_enabled": true,
+          "country": "US",
+          "debit_negative_balances": false,
+          "decline_charge_on": {
+            "avs_failure": false,
+            "cvc_failure": true
+          },
+          "default_currency": "usd",
+          "details_submitted": true,
+          "display_name": null,
+          "email": "tomek@near-me.com",
+          "external_accounts": {
+            "object": "list",
+            "data": [
+              {
+                "id": "ba_1AVF14BRNwbPxmgWTOnErOy7",
+                "object": "bank_account",
+                "account": "acct_1AVF14BRNwbPxmgW",
+                "account_holder_name": null,
+                "account_holder_type": null,
+                "bank_name": "STRIPE TEST BANK",
+                "country": "US",
+                "currency": "usd",
+                "default_for_currency": true,
+                "fingerprint": "vpsEl4gqGnZzlFF5",
+                "last4": "6789",
+                "metadata": {},
+                "routing_number": "110000000",
+                "status": "new"
+              }
+            ],
+            "has_more": false,
+            "total_count": 1,
+            "url": "/v1/accounts/acct_1AVF14BRNwbPxmgW/external_accounts"
+          },
+          "keys": {
+            "secret": "sk_test_nn5HkjjVzMmPr9kQVX54yywp",
+            "publishable": "pk_test_PGUtQRoSDn13LjuXrjcUQoD7"
+          },
+          "legal_entity": {
+            "address": {
+              "city": null,
+              "country": "US",
+              "line1": null,
+              "line2": null,
+              "postal_code": null,
+              "state": null
+            },
+            "business_name": "NearMe",
+            "business_tax_id_provided": true,
+            "dob": {
+              "day": 24,
+              "month": 2,
+              "year": 1997
+            },
+            "first_name": "John",
+            "last_name": "Rambo",
+            "personal_address": {
+              "city": null,
+              "country": "US",
+              "line1": null,
+              "line2": null,
+              "postal_code": null,
+              "state": null
+            },
+            "personal_id_number_provided": true,
+            "ssn_last_4_provided": true,
+            "type": "company",
+            "verification": {
+              "details": null,
+              "details_code": null,
+              "document": null,
+              "status": "unverified"
+            }
+          },
+          "metadata": {},
+          "product_description": null,
+          "statement_descriptor": null,
+          "support_email": null,
+          "support_phone": null,
+          "timezone": "Etc/UTC",
+          "tos_acceptance": {
+            "date": 1487963976,
+            "ip": "1.1.1.1",
+            "user_agent": null
+          },
+          "type": "custom",
+          "verification": {
+            "disabled_reason": null,
+            "due_by": null,
+            "fields_needed": [
+              "legal_entity.address.city",
+              "legal_entity.address.line1",
+              "legal_entity.address.postal_code",
+              "legal_entity.address.state"
+            ]
+          },
+          "managed": true,
+          "transfers_enabled": true,
+          "transfer_schedule": {
+            "delay_days": 2,
+            "interval": "daily"
+          },
+          "transfer_statement_descriptor": null
+        }
+    http_version: 
+  recorded_at: Fri, 16 Jun 2017 07:37:16 GMT
 recorded_with: VCR 3.0.3

@@ -4,6 +4,5 @@ FactoryGirl.define do
     document { fixture_file_upload(Rails.root.join('test', 'assets', 'foobear.jpeg'), 'image/jpeg') }
     first_name 'John'
     last_name 'Rambo'
-    current_address { FactoryGirl.build(:full_address_in_sf, address_components: nil, raw_address: true) }
   end
 end

@@ -7,7 +7,7 @@ class Webhooks::BaseWebhookController < Webhooks::BaseController
   protected
 
   def find_payment_gateway
-    @payment_gateway ||= PaymentGateway.where(type: payment_gateway_class).mode_scope.first!
+    @payment_gateway ||= payment_gateway_class.mode_scope.first!
   end
 
   def payment_gateway_class

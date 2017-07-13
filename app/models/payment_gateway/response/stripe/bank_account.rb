@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Payment::Gateway::Response::Stripe::BankAccount
+class PaymentGateway::Response::Stripe::BankAccount
   attr_reader :response
 
   delegate :id, :bank_name, :status, :last4, to: :@response

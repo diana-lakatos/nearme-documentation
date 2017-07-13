@@ -1,7 +1,7 @@
 class WorkflowStep::PaymentGatewayWorkflow::MerchantAccountDeclined < WorkflowStep::PaymentGatewayWorkflow::BaseStep
-  def initialize(merchant_account_id, error_message=nil)
+  def initialize(merchant_account_id, error_message)
     @merchant_account = MerchantAccount.find_by_id(merchant_account_id)
-    @error_message = error_message || @merchant_account.to_liquid.all_errors
+    @error_message = error_message.to_s
   end
 
   # merchant_account

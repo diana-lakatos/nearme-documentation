@@ -43,9 +43,6 @@ FactoryGirl.define do
       country 'United States'
       iso_country_code 'US'
       postcode '94102'
-      after(:build) do |model, evaluator|
-        model.instance_variable_set(:@state_code, 'CA')
-      end
     end
 
     factory :address_in_adelaide do

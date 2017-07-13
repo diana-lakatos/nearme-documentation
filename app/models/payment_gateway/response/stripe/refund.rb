@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Payment::Gateway::Response::Stripe::Refund
+class PaymentGateway::Response::Stripe::Refund
   delegate :id, to: :@response
 
   def amount_cents

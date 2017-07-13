@@ -1,9 +1,13 @@
 # frozen_string_literal: true
-class Payment::Gateway::Response::Stripe::Charge
-  delegate :id, :source_transfer, to: :@response
+class PaymentGateway::Response::Stripe::Payment
+  delegate :id, to: :@response
 
   def initialize(response)
     @response = response
+  end
+
+  def id
+    @response.id
   end
 
   def amount_cents
@@ -30,7 +34,7 @@ class Payment::Gateway::Response::Stripe::Charge
     return [] if @response.refunds.data.blank?
 
     @response.refunds.map do |refund_response|
-      Payment::Gateway::Response::Stripe::Refund.new(refund_response)
+      PaymentGateway::Response::Stripe::Refund.new(refund_response)
     end
   end
 

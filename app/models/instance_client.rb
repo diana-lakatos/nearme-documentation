@@ -31,9 +31,9 @@ class InstanceClient < ActiveRecord::Base
   def decorator
     @decorator ||= case payment_gateway.name
                    when 'Stripe'
-                     Payment::Gateway::Response::Stripe::Customer.new(response_object)
+                     InstanceClient::StripeDecorator.new(self)
                    when 'Stripe Connect'
-                     Payment::Gateway::Response::Stripe::Customer.new(response_object)
+                     InstanceClient::StripeDecorator.new(self)
                    when 'Braintree'
                      InstanceClient::BraintreeDecorator.new(self)
                    when 'Braintree Marketplace'
@@ -41,10 +41,6 @@ class InstanceClient < ActiveRecord::Base
                    when nil
                      nil
                    end
-  end
-
-  def response_object
-    YAML.load(self.response || '')
   end
 
   def customer_id
