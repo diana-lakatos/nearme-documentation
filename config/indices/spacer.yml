@@ -11,4 +11,7 @@ doc_types:
     source: Transactable
     scope: indexable
     mapping:
-      options: {}
+      options:
+        _parent:
+          type: 'user'
+    parent_id: creator_id

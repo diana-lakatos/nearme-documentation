@@ -17,10 +17,9 @@ module Graph
 
         def resolve
           resolve_argument :key do |value, node|
-            { sort: { value => { order: node[:order] } } }
+            { sort: { sort_field_name(value) => { order: node[:order] } } }
           end
 
-          # { order: 'asc', nested_path: 'user_profiles', nested_filter: { term: { 'user_profiles.profile_type' => 'seller'}}}
           resolve_argument :profile_key do |value, node|
             {
               sort: {
@@ -34,6 +33,10 @@ module Graph
               }
             }
           end
+        end
+
+        def sort_field_name(value)
+          value =~ /properties\./ && "#{value}.raw" || value
         end
       end
     end

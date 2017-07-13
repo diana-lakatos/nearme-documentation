@@ -166,36 +166,6 @@ module CustomAttributes
               'string'
             end
           end
-
-          def self.custom_attributes_indexer(_klass, object)
-            custom_attributes_by_type = _klass.all.flat_map do |obj|
-              obj.custom_attributes.pluck(:name, :attribute_type)
-            end.uniq
-
-            custom_attributes = {}
-            custom_attributes_by_type.each do |name, type|
-              next unless object.properties.respond_to?(name)
-              val = object.properties.send(name)
-              val = Array(val).map { |v| coerce(v, type) }
-              if custom_attributes[name].present?
-                custom_attributes[name].concat val
-              else
-                custom_attributes[name] = (val.size == 1 ? val.first : val)
-              end
-            end
-            custom_attributes
-          end
-
-          def self.coerce(value, type)
-            case type
-            when 'decimal'
-              value.to_f
-            when 'integer'
-              value.to_i
-            else
-              value.to_s
-            end
-          end
         end
       end
     end

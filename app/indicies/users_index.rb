@@ -66,16 +66,32 @@ module UsersIndex
             indexes :name_of_root, type: 'string', index: 'not_analyzed'
           end
 
-          # TODO: add _nested_ mapping for custom-models
-          # indexes :customizations, type: 'object' do
-          #   CustomAttributes::CustomAttribute.custom_attributes_mapper(CustomModelType, CustomModelType.user_profiles) do |attribute_name, type|
-          #     indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
-          #   end
-          # end
-
           indexes :properties, type: 'object' do
             CustomAttributes::CustomAttribute.custom_attributes_mapper(InstanceProfileType, InstanceProfileType.all) do |attribute_name, type|
               indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
+            end
+          end
+
+          indexes :customizations, type: 'nested' do
+            indexes :id, type: :integer
+            indexes :user_id, type: :integer
+            indexes :created_at, type: :date
+            indexes :name, type: :string, index: 'not_analyzed'
+            indexes :human_name, type: :string
+            indexes :custom_attachments, type: :object do
+              indexes :id, type: :integer
+              indexes :name, type: :string, index: 'not_analyzed'
+              indexes :label, type: :string
+              indexes :file_name, type: :string, index: 'not_analyzed'
+              indexes :created_at, type: :date
+              indexes :size_bytes, type: :integer
+              indexes :content_type, type: :string
+            end
+
+            indexes :properties, type: :object do
+              CustomAttributes::CustomAttribute.custom_attributes_mapper(CustomModelType, CustomModelType.transactables) do |attribute_name, type|
+                indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
+              end
             end
           end
         end

@@ -26,7 +26,7 @@ module Graph
         end
 
         def custom_field_name(name)
-          "properties.#{name}"
+          "properties.#{name}.raw"
         end
       end
     end

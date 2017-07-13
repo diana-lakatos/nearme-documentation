@@ -6,16 +6,7 @@ module TransactablesIndex
     settings(index: { number_of_shards: 1 })
 
     def self.build_es_mapping(options: {})
-
-      # TODO: allow customization without reloading the code
-      # TODO: move configuration to file / database
       mapping(options) do
-        indexes :properties, type: 'object' do
-          CustomAttributes::CustomAttribute.custom_attributes_mapper(TransactableType, TransactableType.all) do |attribute_name, type|
-            indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
-          end
-        end
-
         indexes :id, type: 'integer'
         indexes :slug, type: 'string', index: 'not_analyzed'
 
@@ -80,6 +71,12 @@ module TransactablesIndex
           indexes :postcode, type: 'string', index: 'not_analyzed'
         end
 
+        indexes :properties, type: 'object' do
+          CustomAttributes::CustomAttribute.custom_attributes_mapper(TransactableType, TransactableType.all) do |attribute_name, type|
+            indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
+          end
+        end
+
         indexes :customizations, type: 'nested' do
           indexes :id, type: :integer
           indexes :user_id, type: :integer
@@ -95,6 +92,7 @@ module TransactablesIndex
             indexes :size_bytes, type: :integer
             indexes :content_type, type: :string
           end
+
           indexes :properties, type: :object do
             CustomAttributes::CustomAttribute.custom_attributes_mapper(CustomModelType, CustomModelType.transactables) do |attribute_name, type|
               indexes attribute_name, type: type, fields: { raw: { type: type, index: 'not_analyzed' } }
@@ -105,16 +103,6 @@ module TransactablesIndex
     end
 
     def as_indexed_json(_options = {})
-      custom_attrs = {}
-      custom_attribs = transactable_type.cached_custom_attributes.map { |c| c[0] }
-
-      for custom_attribute in custom_attribs
-        next unless properties.respond_to?(custom_attribute)
-        val = properties.send(custom_attribute)
-        val = Array(val).map(&:to_s)
-        custom_attrs[custom_attribute] = (val.size == 1 ? val.first : val)
-      end
-
       allowed_keys = [:id, :slug, :name, :description, :object_properties, :instance_id, :company_id,
                       :created_at, :deleted_at, :draft, :location_id,
                       :transactable_type_id, :administrator_id, :enabled, :action_rfq, :action_free_booking,
@@ -133,7 +121,7 @@ module TransactablesIndex
       as_json(only: allowed_keys).merge(
         geo_location: geo_location,
         geo_service_shape: geo_service_shape,
-        properties: custom_attrs,
+        properties: ElasticIndexer::CustomModelPropertySerializer.new(properties, scope: transactable_type).as_json,
         location_type_id: location.try(:location_type_id),
         categories: categories.pluck(:id),
         availability: schedule_availability,
