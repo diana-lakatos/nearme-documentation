@@ -116,7 +116,6 @@ gem 'after_commit_action'
 
 gem 'premailer-rails'
 gem 'addressable', require: false
-gem 'newrelic_rpm'
 gem 'skylight'
 gem 'unicorn-worker-killer'
 

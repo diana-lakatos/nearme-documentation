@@ -52,7 +52,6 @@ DesksnearMe::Application.configure do
 
   Liquid.cache_classes = false
 
-  config.middleware.use NewRelic::Rack::DeveloperMode if ENV['ENABLE_PROFILER']
   config.active_record.logger = nil if ENV['NO_SQL_LOGS']
 
   if defined?(Bullet)

@@ -42,10 +42,4 @@ class PagesController < ApplicationController
       false
     end
   end
-
-  def set_new_relic_transaction_name
-    NewRelic::Agent.set_transaction_name(
-      "#{PlatformContext.current.instance.id} - #{page.slug}"
-    )
-  end
 end

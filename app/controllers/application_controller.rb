@@ -5,7 +5,6 @@ require 'addressable/uri'
 class ApplicationController < ActionController::Base
   include ViewsFromDb
   include RaygunExceptions
-  before_action :set_new_relic_transaction_name
   before_action :validate_request_parameters, if: -> { request.get? }
 
   force_ssl if: :require_ssl?
@@ -408,11 +407,5 @@ class ApplicationController < ActionController::Base
   # This will no longer be needed in Rails 5
   def redirect_back_or_default(default = root_path, options = {})
     redirect_to (request.referer.present? ? :back : default), options
-  end
-
-  def set_new_relic_transaction_name
-    NewRelic::Agent.set_transaction_name(
-      "#{PlatformContext.current.instance.id} - #{NewRelic::Agent.get_transaction_name}"
-    )
   end
 end
