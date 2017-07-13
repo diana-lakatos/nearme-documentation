@@ -45,7 +45,7 @@ module NearmeMarketplace
     end
 
     def force_mode
-      (@options & ['-force', '-f']).any?
+      (@options & ['--force', '-f']).any?
     end
   end
 end
