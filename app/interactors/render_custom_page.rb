@@ -53,7 +53,7 @@ class RenderCustomPage
   end
 
   def http_response
-    @controller.redirect_to(@page.redirect_url, status: @page.redirect_code) if @page.redirect?
+    @controller.redirect_to(@page.redirect_url, status: @page.redirect_code) && return if @page.redirect?
 
     @controller.respond_to do |format|
       format.html do
