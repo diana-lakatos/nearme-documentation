@@ -11,7 +11,7 @@ module Graph
 
         field :id, !types.ID
         field :created_at, types.String
-        field :customizable, Types::Customizations::Customizable
+        field :customizable, Graph::Types::Customizations::Customizable
         field :human_name, types.String
         field :name, types.String
         field :user, !Types::User do
