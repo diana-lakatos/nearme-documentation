@@ -125,7 +125,7 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
       assert mail.html_part.body.include?('You have been approved')
-      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end

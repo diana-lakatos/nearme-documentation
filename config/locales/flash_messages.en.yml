@@ -599,3 +599,7 @@ en:
         created: 'New attribute created.'
         updated: 'Attribute updated.'
         deleted: 'Attribute deleted.'
+    unsubscribe:
+      email_subject: 'Unsubscribe'
+      email_sent: 'The email with unsubscribe link has been send.'
+

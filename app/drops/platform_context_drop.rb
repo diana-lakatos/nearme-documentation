@@ -194,7 +194,7 @@ class PlatformContextDrop < BaseDrop
   # @return [String] url for editing the notification preferences
   # @todo depracate per DIY
   def unsubscribe_url
-    urlify(routes.edit_dashboard_notification_preferences_path)
+    urlify(routes.edit_subscribes_path)
   end
 
   # @return [String] the type of select for this marketplace to be used when

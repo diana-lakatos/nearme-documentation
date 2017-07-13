@@ -781,6 +781,12 @@ class UserDrop < UserBaseDrop
     @shopping_cart ||= ShoppingCart.get_for_user(@source)
   end
 
+  # @return [String] returns link to unsubscribe from email notifications
+  def unsubscribe_url
+    @unsubscribe_url ||= routes.unsubscribe_dashboard_notification_preferences_url(
+      token: UnsubscribeEmailsService.new.generate_token(@source.email))
+  end
+
   private
 
   # @return [Array<Authentication>] array of authentication objects representing authentications with 3rd party

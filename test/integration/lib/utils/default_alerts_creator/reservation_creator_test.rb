@@ -53,8 +53,6 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       mail = ActionMailer::Base.deliveries.last
       assert_contains @reservation.owner.first_name, mail.html_part.body
       assert_contains @reservation.transactable.name, mail.html_part.body
-      assert_contains 'https://custom.domain.com/dashboard/notification_preferences/edit', mail.html_part.body
-      assert_contains 'https://custom.domain.com/dashboard/notification_preferences/edit', mail.text_part.body
       assert_contains @reservation.transactable.transactable_type.bookable_noun.pluralize, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.transactable.name}' at #{@reservation.location.street} was cancelled by the host", mail.subject
@@ -317,7 +315,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
       assert_equal [@reservation.transactable.creator.email], mail.to
       assert_equal "[DesksNearMe] #{@reservation.owner.first_name} confirmed payment!", mail.subject
-      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
@@ -335,7 +333,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@reservation.transactable.creator.email], mail.to
       assert_equal "[DesksNearMe] #{@reservation.owner.first_name} declined payment!", mail.subject
-      assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="https://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
@@ -378,7 +376,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         assert_contains 'Please review it and approve or decline in your dashboard', mail.html_part.body
         assert_equal [@reservation.owner.email], mail.to
         assert_equal "[#{@platform_context.decorate.name}] #{@reservation.transactable.name} submitted invoice", mail.subject
-        assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+        assert_contains 'href="http://custom.domain.com/', mail.html_part.body
         assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
         assert_not_contains 'Liquid error:', mail.html_part.body
@@ -397,7 +395,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         assert_contains 'Unfortunately we had an issue with authorizing your credit card. Please update your payment information to be able to pay.', mail.html_part.body
         assert_equal [@reservation.owner.email], mail.to
         assert_equal "[#{@platform_context.decorate.name}] #{@reservation.transactable.name} submitted invoice", mail.subject
-        assert_contains 'href="https://custom.domain.com/', mail.html_part.body
+        assert_contains 'href="http://custom.domain.com/', mail.html_part.body
         assert_not_contains 'href="https://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
         assert_not_contains 'Liquid error:', mail.html_part.body

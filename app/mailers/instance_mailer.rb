@@ -25,6 +25,7 @@ class InstanceMailer < ActionMailer::Base
     @user_to_which_email_will_be_sent = User.with_deleted.find_by(email: Array(to).first)
 
     @email_method = template
+    @unsubscribe_url = generate_unsubscribe_url(options)
 
     self.class.layout _layout, platform_context: @platform_context, locale: I18n.locale
     render_options = { platform_context: @platform_context, locale: I18n.locale }
@@ -76,5 +77,13 @@ class InstanceMailer < ActionMailer::Base
       instance_id: PlatformContext.current.try(:instance).try(:id),
       i18n_locale: I18n.locale
     }
+  end
+
+  def generate_unsubscribe_url(options)
+    if options.values_at(:to, :cc, :bcc).compact.flatten.size == 1 && @user_to_which_email_will_be_sent.present?
+      UserDrop.new(@user_to_which_email_will_be_sent).unsubscribe_url
+    else
+      PlatformContextDrop.new(@platform_context).unsubscribe_url
+    end
   end
 end
