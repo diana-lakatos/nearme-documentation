@@ -116,8 +116,6 @@ class TransactableDrop < BaseDrop
   #   @return [Integer] Transactable type to which this object belongs
   # @!method tags
   #   @return [Array<TagDrop>] array of tags that this transactable has been tagged with
-  # @!method impressions_count
-  #   @return [Integer] number of impressions for this Transactable
   # @!method deleted?
   #   @return [Boolean] whether the transactable has been deleted
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :creator_id, :administrator, :last_booked_days,
@@ -127,7 +125,7 @@ class TransactableDrop < BaseDrop
            :to_key, :model_name, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
            :action_free_booking?, :average_rating, :time_based_booking, :time_based_booking?, :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators,
            :user_messages, :line_item_orders, :state, :created_at, :pending?, :completed?, :transactable_type_id, :tags,
-           :is_followed, :impressions_count, :deleted?, :formatted_address, to: :source
+           :is_followed, :deleted?, :formatted_address, to: :source
 
   # @!method action_price_per_unit
   #   @return [Boolean] whether there is a single unit available of the transactable item for a given time period

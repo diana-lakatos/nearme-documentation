@@ -25,8 +25,7 @@ class TransactableType < ActiveRecord::Base
   ].freeze
 
   INTERNAL_FIELDS = [
-    :name, :description, :capacity, :quantity, :confirm_reservations,
-    :last_request_photos_sent_at, :capacity
+    :name, :description, :capacity, :quantity, :confirm_reservations, :capacity
   ].freeze
 
   has_many :action_types, -> { enabled }, dependent: :destroy

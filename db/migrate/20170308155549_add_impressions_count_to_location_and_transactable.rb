@@ -1,4 +1,6 @@
 class AddImpressionsCountToLocationAndTransactable < ActiveRecord::Migration
+  class Impression < ActiveRecord::Base
+  end
   def change
     add_column :locations, :impressions_count, :integer, null: false, default: 0
     add_column :transactables, :impressions_count, :integer, null: false, default: 0

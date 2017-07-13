@@ -19,12 +19,6 @@ class ListingsControllerTest < ActionController::TestCase
   end
 
   context '#show' do
-    should 'track impression' do
-      assert_difference 'Impression.count' do
-        get :show, id: @listing
-      end
-    end
-
     should 'display two content holders' do
       holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: '{{ listing.street }} and whatever'
       holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: 'This is an id of listing: {{ listing.id }}'

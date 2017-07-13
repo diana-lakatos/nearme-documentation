@@ -70,7 +70,7 @@ class TransactableForm < BaseForm
                                            model.action_type ||= send(action).model
                                          }
         end
-        inject_dynamic_fields(configuration, whitelisted: [:name, :description, :capacity, :confirm_reservations, :location_id, :draft, :enabled, :deposit_amount, :quantity, :currency, :last_request_photos_sent_at, :activated_at, :rank, :transactable_type_id, :transactable_type, :insurance_value, :rental_shipping_type, :dimensions_template_id, :shipping_profile_id, :tag_list, :minimum_booking_minutes, :seek_collaborators, :photo_ids, :category_ids, :attachment_ids, :waiver_agreement_template_ids, :topic_ids, :group_ids])
+        inject_dynamic_fields(configuration, whitelisted: [:name, :description, :capacity, :confirm_reservations, :location_id, :draft, :enabled, :deposit_amount, :quantity, :currency, :activated_at, :rank, :transactable_type_id, :transactable_type, :insurance_value, :rental_shipping_type, :dimensions_template_id, :shipping_profile_id, :tag_list, :minimum_booking_minutes, :seek_collaborators, :photo_ids, :category_ids, :attachment_ids, :waiver_agreement_template_ids, :topic_ids, :group_ids])
       end
     end
   end
@@ -78,7 +78,7 @@ class TransactableForm < BaseForm
   # @!attribute currency
   #   @return [String] currency used for this Transactable's pricings
   property :currency
-  
+
   # @!attribute enabled
   #   @return [Boolean] whether the Transactable is enabled; if not enabled, it will not be visible in search
   #     or purchasable

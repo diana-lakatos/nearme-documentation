@@ -886,13 +886,6 @@ class User < ActiveRecord::Base
     @is_instance_admin ||= InstanceAdminAuthorizer.new(self).instance_admin?
   end
 
-  # @return [Integer] total number of pageviews for this user's administered locations during the last 30 days
-  def administered_locations_pageviews_30_day_total
-    scoped_locations = !companies.count.zero? && self == companies.first.creator ? companies.first.locations : administered_locations
-    scoped_locations = scoped_locations.with_searchable_listings
-    Impression.where('impressionable_type = ? AND impressionable_id IN (?) AND DATE(impressions.created_at) >= ?', 'Location', scoped_locations.pluck(:id), Date.current - 30.days).count
-  end
-
   def unsubscribe(mailer_name)
     mailer_unsubscriptions.create(mailer: mailer_name)
   end
