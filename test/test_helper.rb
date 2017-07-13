@@ -292,11 +292,11 @@ class DummyEvent < WorkflowStep::BaseStep
 end
 
 def enable_elasticsearch!(&_block)
-  Elasticsearch::Model.client.indices.delete index: 'test-*'
   Rails.application.config.use_elastic_search = true
   instance = PlatformContext.current.instance
 
   Elastic::Configuration.set(type: instance.name, instance_id: instance.id)
+  Elastic::Configuration.current.client.indices.delete index: 'test-*'
 
   factory = Elastic::Factory.new(config: Elastic::Configuration.current)
   engine = Elastic::Engine.new
@@ -311,7 +311,7 @@ def enable_elasticsearch!(&_block)
 end
 
 def disable_elasticsearch!
-  Elasticsearch::Model.client.indices.delete index: 'test-*'
+  Elastic::Configuration.current.client.indices.delete index: 'test-*'
   Rails.application.config.use_elastic_search = false
 end
 

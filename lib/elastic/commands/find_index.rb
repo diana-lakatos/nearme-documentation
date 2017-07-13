@@ -35,7 +35,7 @@ module Elastic
       end
 
       def client
-        Elasticsearch::Model.client
+        Elastic::Configuration.current.client
       end
     end
   end

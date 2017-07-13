@@ -94,11 +94,10 @@ module Elastic
         UserMock.reload_mappings(Fixtures.mappings[:user][0])
         TransactableMock.reload_mappings(Fixtures.mappings[:transactable][0])
 
-        engine = Elastic::Engine.new
-        engine.destroy! 'test-*'
-
         # - prepare index-type based on instance and type of required data [mixed, single]
-        config = Elastic::Configuration.new(type: :test, instance_id: 1)
+        config = Elastic::Configuration.set(type: :test, instance_id: 1)
+        engine = Elastic::Engine.new config: config
+        engine.destroy! 'test-*'
         factory = Elastic::Factory.new(config: config)
 
         # - create index-0 if no index
@@ -150,15 +149,15 @@ module Elastic
     end
 
     def assert_theres_only_one_alias(index)
-      assert_equal Elasticsearch::Model.client.indices.get_alias(name: index.alias_name).count, 1
+      assert_equal Elastic::Configuration.current.client.indices.get_alias(name: index.alias_name).count, 1
     end
 
     def assert_index_exists(index)
-      assert Elasticsearch::Model.client.indices.exists index: index.name
-      assert Elasticsearch::Model.client.indices.exists index: index.alias_name
-      assert Elasticsearch::Model.client.indices.exists_alias name: index.alias_name
+      assert Elastic::Configuration.current.client.indices.exists index: index.name
+      assert Elastic::Configuration.current.client.indices.exists index: index.alias_name
+      assert Elastic::Configuration.current.client.indices.exists_alias name: index.alias_name
 
-      Elasticsearch::Model.client.indices.get(index: index.name).tap do |es_index|
+      Elastic::Configuration.current.client.indices.get(index: index.name).tap do |es_index|
         assert_equal es_index.dig(index.name, 'mappings', 'user', 'properties').keys, ['id']
         assert_equal es_index.dig(index.name, 'mappings', 'transactable', 'properties').keys, ['id', 'transactable_type']
       end

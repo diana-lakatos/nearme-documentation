@@ -65,11 +65,11 @@ module Elastic
       end
 
       def factory
-        @factory ||= Elastic::Factory.new(config: Elastic::Configuration.current)
+        @factory ||= Elastic::Factory.new(config: configuration)
       end
 
       def configuration
-        Elastic::Configuration.set(type: instance.name, instance_id: instance.id)
+        Elastic::Configuration.current
       end
     end
 

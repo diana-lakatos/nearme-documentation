@@ -30,6 +30,7 @@ require './app/graph/graph/types/address'
 require './app/graph/graph/types/collection'
 
 require './app/graph/graph/types/pagination_params'
+require './app/graph/graph/types/blog'
 require './app/graph/graph/types/group'
 require './app/graph/graph/types/activity_feed/comment'
 require './app/graph/graph/types/activity_feed/commentable'

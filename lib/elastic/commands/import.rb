@@ -15,19 +15,20 @@ module Elastic
       end
 
       def print_import_details
-        puts format('Importing %d items from %s', source.count, source.name)
+        puts format('Importing %d items from %s', source.send(@doc_type.scope).count, source.name)
       end
 
       private
 
+      # TODO: drop usage of elasticsearch::model
       def import_documents
         source.import import_params
       end
 
       def import_params
         {
-          scope: @doc_type.scope,
-          batch_size: 150,
+          scope: @doc_type.scope.to_sym,
+          batch_size: 50,
           index: @index.name,
           transform: transform
         }

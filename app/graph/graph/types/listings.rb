@@ -44,6 +44,7 @@ module Graph
 
         field :photos, types[Graph::Types::EsImage]
         field :current_address, Types::Address # , deprecation_reason: 'Use custom-address'
+        field :blog, Graph::Types::Blog
 
         field :profile, Types::Users::Profile do
           argument :profile_type, !types.String

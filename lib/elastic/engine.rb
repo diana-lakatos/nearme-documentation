@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 module Elastic
   class Engine
+    attr_reader :config
+    delegate :client, to: :config
+
+    def initialize(config: Elastic::Configuration.current)
+      @config = config
+    end
+
     def create_index(index)
       indices.create index: index.name, body: index.body
     end
@@ -42,10 +49,6 @@ module Elastic
 
     def indices
       client.indices
-    end
-
-    def client
-      Elasticsearch::Model.client
     end
   end
 end

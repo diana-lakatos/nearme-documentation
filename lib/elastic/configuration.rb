@@ -43,6 +43,10 @@ module Elastic
       YAML.load(file)
     end
 
+    def valid?
+      client.indices.get index: index_name
+    end
+
     private
 
     def file
