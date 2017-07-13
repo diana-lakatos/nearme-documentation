@@ -38,6 +38,7 @@ module Graph
         field :time_zone, types.String
         field :url, types.String, deprecation_reason: 'Use generate_url filter'
         field :time_based_booking, Types::Transactables::TimeBasedBooking
+        field :offer_action, Types::Transactables::OfferAction
         field :orders, !types[Types::Orders::Order] do
           resolve ->(obj, _args, _ctx) { obj.source.orders }
         end

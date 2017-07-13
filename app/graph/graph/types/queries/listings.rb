@@ -72,7 +72,7 @@ module Graph
         argument :name, types.String
         argument :state, types.String
         argument :slug, types.String
-        argument :creator_id, types.Int
+        argument :creator_id, types.ID
       end
 
       SortOrder = GraphQL::InputObjectType.define do
@@ -105,11 +105,10 @@ module Graph
       Customization = GraphQL::InputObjectType.define do
         name 'QueryCustomization'
 
-        argument :id, types.Int
-        argument :ids, types[types.Int]
+        argument :id, types.ID
         argument :name, types.String
         argument :parameterized_name, types.String
-        argument :user_id, types.Int
+        argument :user_id, types.ID
       end
 
       CustomAttribute = GraphQL::InputObjectType.define do
