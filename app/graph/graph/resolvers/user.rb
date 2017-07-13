@@ -2,25 +2,17 @@
 module Graph
   module Resolvers
     class User
-      def call(_, args, ctx)
-        query = { term: { slug: args[:slug] } } if args[:slug]
-        query = { term: { _id: args[:id] } } if args[:id]
-
-        Graph::Resolvers::UserEs.new(
-          query: Elastic::QueryBuilder::Franco.new.add(query: query),
-          ctx: ctx
-        ).fetch.results.first.to_liquid
-      end
-
       def self.find_model(user)
         case user
         when ActiveRecord::Base
           user
-        when Elastic::UserDrop
-          ::User.find(user.id)
         else
-          raise NotImplementedError, "User class #{user.class.name} not supported. Valid classes: ::User, Elastic::UserDrop"
+          ::User.find(user.id)
         end
+      end
+
+      def call(_, arguments, ctx)
+        Graph::Resolvers::Users.new.call(self, arguments, ctx).first
       end
     end
   end

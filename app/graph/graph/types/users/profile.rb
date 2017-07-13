@@ -3,34 +3,29 @@ module Graph
   module Types
     module Users
       Profile = GraphQL::ObjectType.define do
+        interfaces [Graph::Types::CustomAttributeInterface]
         name 'Profile'
         description 'A profile'
 
-        global_id_field :id
-
-        field :id, !types.Int
         field :enabled, !types.Boolean
+        field :ondboarded_at, types.String
         field :profile_type, !types.String
-        field :custom_attribute,
-              types.String,
-              'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
+        field :onboarded_at, types.String
+        field :availability_template, Graph::Types::AvailabilityTemplate
+        field :customizations, types[Graph::Types::Customizations::Customization] do
           argument :name, !types.String
-          resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
+          resolve ->(obj, args, _ctx) { obj.customizations.select { |c| c.name == args[:name] } }
         end
+        field :category_list, types[Graph::Types::Category] do
+          argument :name_of_root, types.String
 
-        field :custom_attribute_array, types[types.String] do
-          argument :name, !types.String
-          resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
+          resolve lambda { |obj, arg, _ctx|
+            obj
+              .category_list
+              .select { |c| arg[:name_of_root].blank? || c.name_of_root == arg[:name_of_root] }
+              .sort_by(&:permalink)
+          }
         end
-        field :custom_image, Types::EsImage do
-          argument :name, !types.String
-          resolve ->(obj, arg, _ctx) { obj.custom_images[arg[:name]] }
-        end
-        field :customizations, !types[Types::Customization] do
-          argument :name, !types.String
-          resolve ->(obj, arg, _ctx) { obj.customizations.fetch(arg[:name], []) }
-        end
-        field :availability_template, Types::AvailabilityTemplate
       end
     end
   end

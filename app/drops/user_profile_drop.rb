@@ -13,7 +13,7 @@ class UserProfileDrop < BaseDrop
   #   @return [Boolean] whether the profile is enabled
   # @!method availability_template
   #   @return [Transactable::ActionType] shopping cart pending checkout
-  delegate :customizations, :availability_template, :onboarded_at, :approved?, :enabled, to: :source
+  delegate :customizations, :availability_template, :onboarded_at, :approved?, :enabled, :id, to: :source
 
   def initialize(profile)
     @source = profile

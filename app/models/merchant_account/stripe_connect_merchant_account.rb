@@ -3,9 +3,9 @@ require 'stripe'
 
 class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   ATTRIBUTES = %w(account_type currency bank_routing_number bank_account_number
-                  tos ssn_last_4 business_name business_tax_id).freeze
+                  tos ssn_last_4 business_name business_tax_id due_by verification_message
+                  disabled_reason fields_needed secret_key).freeze
   ACCOUNT_TYPES = %w(individual company).freeze
-
   SUPPORTED_CURRENCIES = {
     'NZ'   => %w(NZD),
     'US'   => %w(USD),
@@ -14,6 +14,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     'JP'   => %w(JPY),
     'EUUK' => %w(EUR GBP USD)
   }.freeze
+  CONNECTED_ACCOUNT_TYPE = 'custom'
 
   include MerchantAccount::Concerns::DataAttributes
 
@@ -58,18 +59,16 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   def update_onboard!
     result = payment_gateway.update_onboard!(external_id, update_params)
     handle_result(result)
+
   end
 
   def handle_result(result)
     if result.id
-      self.external_id = result.id
-      self.response = result.to_yaml
+      self.attributes = result.attributes
       self.bank_account_number = mask_number(bank_account_number)
 
       upload_documents(result)
-      set_data_attributes(result)
       change_state_if_needed(result)
-
       true
     elsif result.error
       errors.add(:base, result.error)
@@ -79,22 +78,13 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     end
   end
 
-  def set_data_attributes(result)
-    data[:fields_needed] = result.verification.fields_needed
-    data[:disabled_reason] = localize_error(result.verification.disabled_reason)
-    data[:due_by] = result.verification.due_by
-    data[:verification_message] = localize_error(result.legal_entity.verification.details_code)
-    data[:currency] = result.default_currency
-    data[:secret_key] = result.keys.secret if result.keys.is_a?(Stripe::StripeObject)
-  end
-
   def tos_acceptance_timestamp
     Time.now.to_i
   end
 
   def create_params
     update_params.deep_merge(
-      managed: true,
+      type: CONNECTED_ACCOUNT_TYPE,
       country: iso_country_code,
       email: merchantable.creator.email,
       tos_acceptance: {
@@ -185,13 +175,11 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     merchantable.company_address.try(:dup) || merchantable.creator.try(:current_address).try(:dup) || Address.new
   end
 
-  def change_state_if_needed(stripe_account, &_block)
-    if !verified? && stripe_account.charges_enabled && stripe_account.transfers_enabled
+  def change_state_if_needed(stripe_account)
+    if !verified? && stripe_account.verified?
       verify(persisted?)
       yield('verified') if block_given?
-    elsif verified? && !(stripe_account.charges_enabled && stripe_account.transfers_enabled)
-      # 'failed' state is only possible when account was verfied previously
-      # in case it's pending we just wait for verification first.
+    elsif verified? && !stripe_account.verified?
       failure(persisted?)
       yield('failed') if block_given?
     elsif account_incomplete?
@@ -200,10 +188,11 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
   end
 
   def account_incomplete?
-    return true if data[:fields_needed].present?
-    return true if data[:disabled_reason].present?
-    return true if data[:verification_message].present?
-    return true if data[:due_by].present?
+    return true if data.empty?
+    return true if fields_needed.present? && due_by.present?
+    return true if disabled_reason.present?
+    return true if verification_message.present?
+    return true if due_by.present?
   end
 
   def custom_options
@@ -237,10 +226,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     fields_needed.try(:include?, attribute)
   end
 
-  def fields_needed
-    data[:fields_needed] || []
-  end
-
   def iso_country_code
     @iso_country_code ||= current_address.iso_country_code || address.iso_country_code || merchantable.iso_country_code
   end
@@ -271,22 +256,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     business_name || merchantable.try(:name)
   end
   private
-
-  def individual_fields
-    verification_fields[:individual]
-  end
-
-  def company_fields
-    verification_fields[:company]
-  end
-
-  def verification_fields
-    @verification_fields ||= country_spec.verification_fields
-  end
-
-  def country_spec
-    @country_spec ||= payment_gateway.country_spec
-  end
 
   def payment_gateway_config
     if data[:payment_gateway_config].blank?
@@ -329,11 +298,6 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   def mask_number(number)
     number.sub(/.*(?=\d{4}$)/) { |x| '*' * x.size }
-  end
-
-  def localize_error(error_code)
-    return if error_code.blank?
-    I18n.t('activerecord.errors.models.merchant_account.error_codes.' + error_code.tr('.', '_'))
   end
 
   def based_in_us

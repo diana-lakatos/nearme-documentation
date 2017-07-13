@@ -2,11 +2,10 @@
 class ElasticIndexerJob < Job
   include Job::HighPriority
 
-  def after_initialize(operation, klass, record_id, options = {})
+  def after_initialize(operation, klass_name, record_id)
     @operation = operation
-    @klass = klass
+    @klass_name = klass_name
     @record_id = record_id
-    @options = options
   end
 
   def self.priority
@@ -15,44 +14,28 @@ class ElasticIndexerJob < Job
 
   def perform
     return unless should_update_index?
-    return postpone if delay_indexing?
+    return unless record
 
-    Rails.logger.info format('Started reindexing ES: %s#%s', @klass, @record_id)
+    Rails.logger.info format('Started reindexing ES: %s#%s', @klass_name, @record_id)
 
-    case @operation.to_s
+    case operation
     when 'index', 'update'
       update_document
     when 'delete'
       mark_as_deleted
     else
-      raise ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
+      raise ArgumentError, "ElasticIndexer Unknown operation '#{operation}'"
     end
   end
 
   private
 
   def mark_as_deleted
-    client.update default_params.merge(body: { doc: { deleted_at: record.deleted_at } },
-                                       index: index_name,
-                                       type: source_class.document_type,
-                                       id: record.id)
+    Elastic::Commands::MarkRecordAsDeleted.new(record).call
   end
 
   def update_document
-    return if record.try(:draft)
-
-    record.__elasticsearch__.tap do |es|
-      es.client = client
-      es.__send__ "#{operation}_document", default_params
-    end
-  end
-
-  # this sucks
-  def default_params
-    return {} unless PlatformContext.current.instance.multiple_types?
-    return {} unless source_class.mapping.options.key? :_parent
-
-    { parent: record.__parent_id }
+    Elastic::Commands::IndexRecord.new(record).call
   end
 
   def operation
@@ -60,28 +43,11 @@ class ElasticIndexerJob < Job
   end
 
   def record
-    @record ||= source_class.with_deleted.find(@record_id)
-  end
-
-  def postpone
-    self.class.perform_later(1.minute.from_now, @operation, @klass, @record_id, @options)
-  end
-
-  # check if index is writeable
-  def delay_indexing?
-    self.class.run_in_background? && settings.values.first['settings']['index']['blocks'].try(:[], 'write') == 'true'
+    @record ||= source_class.indexable.find_by(id: @record_id)
   end
 
   def should_update_index?
     Rails.application.config.use_elastic_search
-  end
-
-  def client
-    @client ||= Elasticsearch::Model.client
-  end
-
-  def settings
-    @settings ||= client.indices.get_settings index: index_name
   end
 
   def index_name
@@ -89,6 +55,6 @@ class ElasticIndexerJob < Job
   end
 
   def source_class
-    @klass.constantize
+    @klass_name.constantize
   end
 end

@@ -1,4 +1,4 @@
-{% assign target = target | default '_self' %}
+{% assign target = target | default: '_self' %}
 {% assign own_comment = comment_object.commented_own_thread %}
 
 <div class="comment-a {% if own_comment %}commented-own-thread{% endif %}" id="comment-{{ comment_object.id }}"

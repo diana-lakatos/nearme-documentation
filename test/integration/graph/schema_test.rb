@@ -73,7 +73,7 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       query = %({
         user(id: #{@user.id}) {
           profile(profile_type: "default") {
-            hair_color: custom_attribute(name: "hair_color")
+            hair_color: property(name: "hair_color")
           }
         }
       })
@@ -112,8 +112,8 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       query = %({
         user(id: #{@user.id}) {
           profile(profile_type: "default") {
-            customizations(name: "Cars") {
-              car_model: custom_attribute(name: "car_model")
+            customizations(name: "cars") {
+              car_model: property(name: "car_model")
             }
           }
         }
@@ -215,6 +215,12 @@ class Graph::SchemaTest < ActiveSupport::TestCase
     end
 
     should 'get users with filters' do
+      query = %({ users(featured: true) { id } })
+
+      assert_empty result(query)['users']
+    end
+
+    should 'get users with filters DEPRECATED' do
       query = %({ users(filters: FEATURED) { id } })
 
       assert_empty result(query)['users']
@@ -390,8 +396,14 @@ class Graph::SchemaTest < ActiveSupport::TestCase
 
       assert_equal 1, result(query).dig('photos', 'total_entries')
     end
-  end
 
+    should 'exclude ids' do
+      photo = FactoryGirl.create(:photo)
+      query = %({ photos(exclude_ids: [#{photo.id}]){ total_entries items{ id image{url} } }} )
+
+      assert_equal 0, result(query).dig('photos', 'total_entries')
+    end
+  end
 
   def result(query)
     Graph.execute_query(

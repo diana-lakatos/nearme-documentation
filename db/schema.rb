@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170627142438) do
+ActiveRecord::Schema.define(version: 20170711125610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -267,6 +267,7 @@ ActiveRecord::Schema.define(version: 20170627142438) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.string   "redirect_to"
   end
 
   add_index "authorization_policies", ["instance_id", "name"], name: "index_authorization_policies_on_instance_id_and_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
@@ -1819,13 +1820,13 @@ ActiveRecord::Schema.define(version: 20170627142438) do
     t.string   "state",                                         limit: 255
     t.string   "type",                                          limit: 255
     t.string   "time_zone"
-    t.boolean  "use_billing",                                               default: false, null: false
-    t.string   "rejection_reason",                              limit: 255
+    t.boolean  "use_billing",                                                default: false, null: false
+    t.string   "rejection_reason",                              limit: 1500
     t.string   "completed_form_component_ids",                  limit: 255
-    t.integer  "cancellation_policy_hours_for_cancellation",                default: 0
-    t.integer  "cancellation_policy_penalty_percentage",                    default: 0
-    t.integer  "cancellation_policy_penalty_hours",                         default: 0
-    t.integer  "minimum_booking_minutes",                                   default: 60
+    t.integer  "cancellation_policy_hours_for_cancellation",                 default: 0
+    t.integer  "cancellation_policy_penalty_percentage",                     default: 0
+    t.integer  "cancellation_policy_penalty_hours",                          default: 0
+    t.integer  "minimum_booking_minutes",                                    default: 60
     t.integer  "book_it_out_discount"
     t.text     "guest_notes"
     t.hstore   "properties"
@@ -1839,7 +1840,7 @@ ActiveRecord::Schema.define(version: 20170627142438) do
     t.datetime "confirmed_at"
     t.datetime "archived_at"
     t.datetime "deleted_at"
-    t.boolean  "insurance_enabled",                                         default: false, null: false
+    t.boolean  "insurance_enabled",                                          default: false, null: false
     t.string   "delivery_type",                                 limit: 255
     t.string   "confirmation_email",                            limit: 255
     t.text     "comment"
@@ -1849,10 +1850,10 @@ ActiveRecord::Schema.define(version: 20170627142438) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.hstore   "settings",                                                  default: {}
+    t.hstore   "settings",                                                   default: {}
     t.boolean  "exclusive_price"
     t.boolean  "book_it_out"
-    t.boolean  "is_free_booking",                                           default: false
+    t.boolean  "is_free_booking",                                            default: false
     t.datetime "lister_confirmed_at"
     t.datetime "enquirer_confirmed_at"
     t.datetime "draft_at"
@@ -1906,8 +1907,8 @@ ActiveRecord::Schema.define(version: 20170627142438) do
     t.string   "layout_name",                           default: "application"
     t.boolean  "require_verified_user",                 default: false
     t.boolean  "admin_page",                            default: false
-    t.integer  "format",                                default: 0
     t.integer  "max_deep_level",                        default: 3
+    t.integer  "format",                                default: 0
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
@@ -3485,10 +3486,20 @@ ActiveRecord::Schema.define(version: 20170627142438) do
   add_index "waiver_agreements", ["target_id", "target_type"], name: "index_waiver_agreements_on_target_id_and_target_type", using: :btree
   add_index "waiver_agreements", ["waiver_agreement_template_id"], name: "index_waiver_agreements_on_waiver_agreement_template_id", using: :btree
 
+  create_table "webhook_configurations", force: :cascade do |t|
+    t.datetime "deleted_at"
+    t.integer  "instance_id"
+    t.integer  "payment_gateway_id"
+    t.text     "encrypted_signing_secret"
+    t.string   "payment_gateway_mode"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "webhooks", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "webhookable_id"
-    t.string   "webhookable_type",     limit: 255
+    t.string   "webhookable_type",         limit: 255
     t.text     "encrypted_response"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -3499,8 +3510,9 @@ ActiveRecord::Schema.define(version: 20170627142438) do
     t.string   "state"
     t.text     "error"
     t.string   "payment_gateway_mode"
-    t.integer  "retry_count",                      default: 0
+    t.integer  "retry_count",                          default: 0
     t.string   "external_id"
+    t.integer  "wenhook_configuration_id"
   end
 
   add_index "webhooks", ["instance_id", "webhookable_id", "webhookable_type"], name: "index_webhooks_on_instance_id_and_webhookable", using: :btree

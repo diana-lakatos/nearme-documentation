@@ -26,6 +26,10 @@ module Graph
         relation.where(creator_id: creator_id)
       end
 
+      def resolve_by_state(relation, state)
+        relation.where(state: state)
+      end
+
       def resolve_by_listing_type_id(listing_type_id)
         relation.for_transactable_type_id(listing_type_id)
       end
@@ -52,7 +56,7 @@ module Graph
         private
 
         def custom_images_ids(custom_images)
-          transactable = @object.source
+          transactable = object.source
           images = custom_images.where(owner: transactable)
           customization_images = custom_images.where(
             owner_type: ::Customization.to_s,

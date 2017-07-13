@@ -1,12 +1,7 @@
 class Utils::DefaultAlertsCreator::RecurringCreator < Utils::DefaultAlertsCreator::WorkflowCreator
   def create_all!
-    create_analytics_email!
     create_share_email!
     create_request_photos_email!
-  end
-
-  def create_analytics_email!
-    create_alert!(associated_class: WorkflowStep::RecurringWorkflow::Analytics, name: 'analytics email', path: 'recurring_mailer/analytics', subject: '{{company.creator.first_name}}, we have potential guests for you!', alert_type: 'email', recipient_type: 'lister')
   end
 
   def create_share_email!

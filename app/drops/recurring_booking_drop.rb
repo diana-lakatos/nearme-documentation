@@ -116,7 +116,7 @@ class RecurringBookingDrop < OrderDrop
   # @return [String] reservation starting date formatted information
   # @todo -- date could be manager somewhere else + translation used in filter
   def dates_summary_with_hr
-    "#{I18n.t('recurring_reservations_review.starts_from')} #{I18n.l(@recurring_booking.starts_at.to_date, format: :short)}"
+    "#{I18n.t('recurring_reservations_review.starts_from')} #{I18n.l(@recurring_booking.start_on, format: :short)}"
   end
 
   # @return [String] url to the dashboard area for managing received bookings
@@ -146,7 +146,7 @@ class RecurringBookingDrop < OrderDrop
 
   # @return [DateTime] reservation date (first date)
   def start_date
-    @recurring_booking.starts_at
+    @recurring_booking.start_on
   end
 
   # @return [String] string representing the plural of the item to be booked (e.g. desks, rooms etc.),

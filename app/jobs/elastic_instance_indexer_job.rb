@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Updates all indexes for instance
 # parameter update_type (optional):
 # - refresh - uses ES reindex method to copy data from old index to new one
@@ -6,9 +7,8 @@
 class ElasticInstanceIndexerJob < Job
   include Job::LongRunning
 
-  def after_initialize(update_type: 'refresh', only_classes: [])
+  def after_initialize(update_type: 'refresh')
     @update_type = update_type
-    @only_classes = only_classes.map(&:constantize)
   end
 
   def self.priority
@@ -16,19 +16,19 @@ class ElasticInstanceIndexerJob < Job
   end
 
   def perform
-    klasses = @only_classes.presence || PlatformContext.current.instance.searchable_classes
-    klasses.each do |klass|
-      klass.indexer_helper.with_alias do |new_index_name, old_index_name|
-        case @update_type
-        when 'rebuild'
-          klass.__elasticsearch__.index_name = new_index_name
-          klass.searchable.import batch_size: 50
-        when 'refresh'
-          klass.__elasticsearch__.client.reindex body: {
-            source: { index: old_index_name }, dest: { index: new_index_name }
-          }
-        end
+    ActiveRecord::Base.logger.silence do
+      case @update_type
+      when 'rebuild'
+        Elastic::InstanceDocuments::Rebuild.new(instance_id).perform
+      when 'refresh'
+        Elastic::InstanceDocuments::Refresh.new(instance_id).perform
       end
     end
+  end
+
+  private
+
+  def instance_id
+    PlatformContext.current.instance.id
   end
 end

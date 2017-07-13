@@ -170,4 +170,3 @@ class AccessorsTest < ActionDispatch::IntegrationTest
   end
 
 end
-

@@ -40,6 +40,7 @@ class PaymentTransfer < ActiveRecord::Base
     where("DATE(#{table_name}.created_at) >= ? ", days_in_past.days.ago)
   }
   scope :with_token, ->(not_encrypted_token) { where(encrypted_token: PaymentTransfer.encrypt_token(not_encrypted_token, key: DesksnearMe::Application.config.secret_token)) }
+  scope :with_tokens, ->(not_encrypted_tokens) { where(encrypted_token: not_encrypted_tokens.map {|not_encrypted_token| PaymentTransfer.encrypt_token(not_encrypted_token, key: DesksnearMe::Application.config.secret_token)} ) }
 
   scope :with_created_date, ->(date) { where(created_at: date) }
 

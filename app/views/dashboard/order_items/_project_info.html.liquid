@@ -15,7 +15,7 @@
     <dd>{{ transactable.properties.workplace_type }}</dd>
   {% endif %}
 
-  {% if transactable.properties.workplace_type == 'On Site' && transactable.properties.office_location != blank %}
+  {% if transactable.properties.workplace_type == 'On Site' and transactable.properties.office_location != blank %}
     <dt>Office</dt>
     <dd>{{ transactable.properties.office_location }}</dd>
   {% endif %}

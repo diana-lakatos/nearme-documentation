@@ -4,110 +4,80 @@ require 'stripe'
 module ActiveMerchant
   module Billing
     class StripeConnectPayments < StripeGateway
+
+      RETRIVEABLE_OBJECTS = %w(balance_transaction charge event payout customer account)
+
       def initialize(settings)
         Stripe.api_key = settings[:login]
         Stripe.api_version = settings[:version] = PaymentGateway::StripePaymentGateway::API_VERSION
         super
       end
 
+      RETRIVEABLE_OBJECTS.each do |object_name|
+        define_method "retrieve_#{object_name}" do |id, merchant_account_id=nil|
+          call_stripe("Stripe::#{object_name.classify}".constantize, :retrieve, id, merchant_account_id)
+        end
+      end
+
+      # TODO remove aliases
+      alias find_payment retrieve_charge
+      alias parse_webhook retrieve_event
+      alias find_balance retrieve_balance_transaction
+
       def onboard!(create_params)
-        Stripe::Account.create(create_params)
+        call_stripe(Stripe::Account, :create, create_params)
+      end
+
+      # This method allows to call proper Stripe Account. If merchant id is passed
+      # we want to call merchant account otherwise we use MPO account
+      def call_stripe(stripe_class, action, args, merchant_id = nil)
+        response_wrapper(stripe_class.name) do
+          if merchant_id
+            stripe_class.send(action, args, { stripe_account: merchant_id })
+          else
+            stripe_class.send(action, args)
+          end
+        end
       rescue => e
-        OpenStruct.new(error: e.message)
+        raise_error(e)
+      end
+
+      def response_wrapper(response_class_name)
+        "Payment::Gateway::Response::#{response_class_name}".constantize.new(yield)
+      rescue
+        # in some cases we don't have wrapper we just return Stripe object then
+        yield
       end
 
       def create_token(credit_card_id, customer_id, merchant_id)
-        Stripe::Token.create(
-          { customer: customer_id, card: credit_card_id },
-          stripe_account: merchant_id # id of the connected account
-        )
-      rescue
-        nil
+        call_stripe(Stripe::Token, :create, { customer: customer_id, card: credit_card_id }, merchant_id)
       end
 
-      def create_customer(token, description, merchant_account_id = nil)
-        if merchant_account_id.present?
-          Stripe::Customer.create({ description: description, source: token}, stripe_account: merchant_account_id)
-        else
-          Stripe::Customer.create({ description: description, source: token })
-        end
-      end
-
-      def parse_webhook(id, merchant_account_id = nil)
-        if merchant_account_id.present?
-          Stripe::Event.retrieve({ id: id }, stripe_account: merchant_account_id)
-        else
-          Stripe::Event.retrieve(id)
-        end
-      rescue => e
-        raise_error(e)
+      def create_customer(token, description, merchant_id = nil)
+        call_stripe(Stripe::Customer, :create, { description: description, source: token }, merchant_id)
       end
 
       def find_transfer_transactions(transfer_id, merchant_account_id)
-        if merchant_account_id.present?
-          Stripe::BalanceTransaction.all({ transfer: transfer_id }, stripe_account: merchant_account_id)
-        else
-          Stripe::BalanceTransaction.all(transfer: transfer_id)
-        end
-      rescue => e
-        raise_error(e)
-      end
-
-      # @balance_id [String]
-      # @options [Hash] with one of the keys: :stripe_account, :destination. Can be nil
-      def find_balance(balance_id, options)
-        PaymentGateway::Response::Stripe::Balance.new(
-          Stripe::BalanceTransaction.retrieve({ id: balance_id }, options || {})
-        )
-      rescue => e
-        raise_error(e)
-      end
-
-      def find_payment(id, merchant_account_id = nil)
-        PaymentGateway::Response::Stripe::Payment.new(
-          if merchant_account_id.present?
-            Stripe::Charge.retrieve({ id: id }, stripe_account: merchant_account_id)
-          else
-            Stripe::Charge.retrieve(id)
-          end
-        )
-      end
-
-      def find_customer(id, merchant_account_id = nil)
-        PaymentGateway::Response::Stripe::Customer.new(
-          if merchant_account_id.present?
-            Stripe::Customer.retrieve({ id: id }, stripe_account: merchant_account_id)
-          else
-            Stripe::Customer.retrieve(id)
-          end
-        )
+        call_stripe(Stripe::BalanceTransaction, :all, { transfer: transfer_id }, merchant_account_id)
       end
 
       def raise_error(error)
-        if [404, 403].include?(error.http_status)
+        if [404, 403].include?(error.respond_to?(:http_status) && error.http_status)
           raise ActiveRecord::RecordNotFound
         else
           raise error
         end
       end
 
-      def retrieve_account(id)
-        Stripe::Account.retrieve(id)
-      end
-
-      def country_spec(id = 'US')
-        Stripe::CountrySpec.retrieve(id)
-      end
-
       def update_onboard!(stripe_account_id, update_params)
-        account = Stripe::Account.retrieve(stripe_account_id)
+        account = retrieve_account(stripe_account_id)
 
         if update_params[:bank_account].present? && update_params[:bank_account][:account_number].length > 4
           account.bank_account = update_params[:bank_account]
         end
 
         if update_params[:legal_entity]
-          [:dob, :additional_owners, :address, :ssn_last_4, :business_tax_id, :business_name,
+          [:first_name, :last_name, :dob, :additional_owners, :address, :ssn_last_4, :business_tax_id, :business_name,
            :personal_id_number, :verification, :type].each do |needed_field|
             if update_params[:legal_entity][needed_field.to_sym].present?
               account.legal_entity.send("#{needed_field}=", update_params[:legal_entity][needed_field.to_sym])
@@ -118,7 +88,11 @@ module ActiveMerchant
         begin
           account.save
         rescue => e
-          OpenStruct.new(error: e.message)
+          if e.param == "bank_account"
+            OpenStruct.new(error: "Bank account: #{e.message}")
+          else
+            OpenStruct.new(error: e.message)
+          end
         end
       end
 

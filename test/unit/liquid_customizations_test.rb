@@ -7,7 +7,7 @@ class LiquidCustomizationsTest < ActiveSupport::TestCase
       assert_equal 'TEST', liquid.render
 
       liquid = Liquid::Template.parse('{{ "<script>" | make_html_safe }}test')
-      assert_equal '<script>test', liquid.render(nil, filters: [LiquidFilters])
+      assert_equal '<script>test', liquid.render(nil, filters: [Liquid::LiquidFilters])
     end
   end
 end

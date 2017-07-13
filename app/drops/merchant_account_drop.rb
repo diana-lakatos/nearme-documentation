@@ -49,7 +49,7 @@ class MerchantAccountDrop < BaseDrop
   delegate :id, :state, :merchantable, :persisted?, :verified?, :payment_gateway, :permissions_granted,
            :chain_payments?, :chain_payment_set?, :pending?, :next_transfer_date, :iso_country_code,
            :weekly_or_monthly_transfers?, :owners, :supported_currencies,
-           :first_name, :last_name, :bank_account_number, :account_type, to: :merchant_account
+           :first_name, :last_name, :business_name, :bank_account_number, :account_type, to: :merchant_account
 
   def initialize(merchant_account)
     @merchant_account = merchant_account
@@ -62,7 +62,7 @@ class MerchantAccountDrop < BaseDrop
 
   # @return [String] timestamp - date until account is valid
   def due_by
-    I18n.l(Time.at(merchant_account.data[:due_by].to_i), format: :long) if merchant_account.data[:due_by]
+    I18n.l(Time.at(data["due_by"].to_i), format: :long) if data["due_by"]
   end
 
   # @return [String] object errors returned by Validation mechanims as html list
@@ -74,11 +74,13 @@ class MerchantAccountDrop < BaseDrop
   # @todo -- errorsdrop?
   def all_errors
     @all_errors = merchant_account.errors.full_messages || []
-    @all_errors << merchant_account.data[:disabled_reason] if merchant_account.data[:disabled_reason]
-    @all_errors << merchant_account.data[:verification_message] if merchant_account.data[:verification_message]
-    if merchant_account.data[:fields_needed].present?
+    @all_errors << data["disabled_reason"] if data["disabled_reason"]
+    @all_errors << data["verification_message"] if data["verification_message"]
+    return @all_errors.presence if stripe_wants_only_photo_but_without_due_date?
+
+    if fields_needed.present?
       @all_errors << I18n.t('dashboard.merchant_account.fields_needed.header')
-      merchant_account.data[:fields_needed].each do |field|
+      fields_needed.each do |field|
         @all_errors << I18n.t('dashboard.merchant_account.fields_needed.' + field)
       end
     end
@@ -116,5 +118,11 @@ class MerchantAccountDrop < BaseDrop
   # @return [Array] types that are supported in Stripe Connect merchant account creation
   def account_types
     MerchantAccount::StripeConnectMerchantAccount::ACCOUNT_TYPES.map { |at| [I18n.t("dashboard.merchant_account.#{at}"), at] }
+  end
+
+  private
+
+  def stripe_wants_only_photo_but_without_due_date?
+    fields_needed == ["legal_entity.verification.document"] && data["due_by"].nil?
   end
 end

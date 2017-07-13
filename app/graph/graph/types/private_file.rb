@@ -6,11 +6,16 @@ module Graph
       description 'A attachment file, to retrieve url please call /api/user/custom_attachments/:id'
 
       field :id, types.ID
-      field :name, !types.String do
-        resolve ->(obj, _, _) { obj.file_name }
+      field :created_at, types.String
+      field :size_bytes, types.Int do
+        resolve ->(obj, _, _) { obj.file.file.size }
       end
-      field :file_name, types.String
-      field :content_type, types.String
+      field :file_name, types.String do
+        resolve ->(obj, _, _) { obj.file.file.filename }
+      end
+      field :content_type, types.String do
+        resolve ->(obj, _, _) { obj.file.file.content_type }
+      end
     end
   end
 end

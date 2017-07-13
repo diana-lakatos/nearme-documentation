@@ -16,7 +16,7 @@
     name_with_affiliation
     display_location
     default_profile: profile(profile_type: "default"){
-      short_bio: custom_attribute(name: "short_bio")
+      short_bio: property(name: "short_bio")
     }
   }
   topics(filters: [FEATURED], arbitrary_order: ["Networking", "Dual Screen", "Big Data", "Open Source", "Android", "Real Sense"], take: 6) {

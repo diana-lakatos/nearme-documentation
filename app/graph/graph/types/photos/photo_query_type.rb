@@ -7,6 +7,7 @@ module Graph
           type !Graph::Types::Collection.build(Types::Photos::Photo)
           argument :since, types.Int, 'A Unix timestamp'
           argument :paginate, Types::PaginationParams, default_value: { page: 1, per_page: 10 }
+          argument :exclude_ids, types[types.ID]
 
           resolve Graph::Resolvers::Photos.new
         end

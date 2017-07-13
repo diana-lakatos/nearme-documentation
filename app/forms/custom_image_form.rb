@@ -4,7 +4,9 @@ class CustomImageForm < BaseForm
   class << self
     def decorate(options, attr_name)
       Class.new(self) do
-        add_validation(:image, options)
+        if (image_configuration = options.delete(:image))
+          add_validation(:image, image_configuration)
+        end
         define_singleton_method(:human_attribute_name) do |_attr|
           attr_name
         end
@@ -30,6 +32,39 @@ class CustomImageForm < BaseForm
 
   def image
     super.presence || model.image
+  end
+
+  # @return [String] file name for the associated file
+  def file_name
+    File.basename(image.path.to_s).presence || image.filename
+  end
+
+  # @return [String] file extension for the associated file
+  def file_extension
+    File.extname(image.path.to_s.presence || image.filename)&.tr('.', '')
+  end
+
+  # @return [String] file url for the associated file
+  def file_url
+    image.url
+  end
+
+  # @return [String] uploader id for the associated file
+  delegate :uploader_id, to: :image
+
+  # @return [String] mime type (ie. image/png) for the associated file
+  delegate :content_type, to: :image
+
+  # @return [Time] date when the associated object was created
+  def file_time
+    model.created_at || Time.zone.now
+  end
+
+  # @return [Integer] size of the associated file in bytes
+  def file_size
+    image.size
+  rescue
+    nil
   end
 
   def image=(value)

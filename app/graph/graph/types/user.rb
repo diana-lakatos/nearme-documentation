@@ -5,7 +5,6 @@ module Graph
     User = GraphQL::ObjectType.define do
       name 'User'
       description 'A user'
-      implements GraphQL::Relay::Node.interface
 
       global_id_field :id
 
@@ -20,9 +19,10 @@ module Graph
       field :email, !types.String
       field :slug, !types.String
       field :seller_average_rating, !types.Int
-      field :custom_attribute,
+
+      field :property,
             types.String,
-            'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
+            'Fetch any custom attribute by name, ex: hair_color: property(name: "hair_color")' do
         argument :name, !types.String
         deprecation_reason 'Fetch custom_attribute directly from profile'
         resolve ->(obj, arg, _ctx) { Graph::Resolvers::User.find_model(obj).properties[arg[:name]] }
@@ -30,7 +30,7 @@ module Graph
 
       field :profile, Types::Users::Profile do
         argument :profile_type, !types.String
-        resolve ->(obj, arg, _ctx) { obj.profiles[arg[:profile_type]] }
+        resolve ->(obj, args, _ctx) { obj.user_profiles.find { |up| up.profile_type == args[:profile_type] } }
       end
 
       field :custom_attribute_photos,
@@ -44,7 +44,10 @@ module Graph
         resolve Graph::Resolvers::Users::CustomAttributePhotos.new
       end
 
-      field :profile_path, !types.String, deprecation_reason: 'Use generate_url filter'
+      field :profile_path, !types.String, deprecation_reason: 'Use generate_url filter' do
+        resolve ->(obj, _arg, _ctx) { format('/users/%s', obj.slug) }
+      end
+
       field :avatar_url_thumb, types.String, deprecation_reason: 'Use avatar{}' do
         resolve ->(obj, _arg, _ctx) { obj.avatar&.thumb&.url }
       end
@@ -61,7 +64,8 @@ module Graph
       field :display_location, types.String do
         resolve ->(obj, _arg, _ctx) { Resolvers::User.find_model(obj).to_liquid.display_location }
       end
-      field :current_address, Types::Address
+      field :current_address, Types::Address #, deprecation_reason: 'Use custom-address'
+
       field :collaborations, types[Types::Collaboration] do
         argument :filters, types[Resolvers::Collaborations::FilterEnum]
         resolve Graph::Resolvers::Collaborations.new
@@ -73,10 +77,10 @@ module Graph
       end
 
       field :threads do
-        type !types[Types::Thread]
+        type !types[Graph::Types::Thread]
         argument :take, types.Int
 
-        resolve Resolvers::MessageThreads.new
+        resolve Graph::Resolvers::MessageThreads.new
       end
 
       field :thread do

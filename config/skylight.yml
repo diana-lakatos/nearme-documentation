@@ -1,0 +1,5 @@
+---
+# The authentication token for the application has been moved to ENV variables
+ignored_endpoints:
+  - /ping
+  - /assets

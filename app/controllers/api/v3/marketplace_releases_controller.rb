@@ -11,6 +11,9 @@ class Api::V3::MarketplaceReleasesController < Api::BaseController
 
     NewMarketplaceBuilder::Jobs::MarketplaceBuilderJob.perform(release.id)
     render json: release, status: :ok
+
+  rescue NewMarketplaceBuilder::Converters::ConverterError
+    render json: { error: $ERROR_INFO.details }, status: 500
   end
 
   def backup
@@ -32,5 +35,7 @@ class Api::V3::MarketplaceReleasesController < Api::BaseController
   def sync
     NewMarketplaceBuilder::Interactors::ImportInteractor.new(PlatformContext.current.instance.id, params).execute!
     render json: {}, status: :ok
+  rescue
+    render json: { error: $ERROR_INFO.details }, status: 500
   end
 end

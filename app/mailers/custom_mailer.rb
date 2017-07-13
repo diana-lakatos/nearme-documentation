@@ -85,7 +85,7 @@ class CustomMailer < InstanceMailer
       reply_to: get_email_for_type_with_fallback('reply_to'),
       cc: filter_emails_to_only_these_which_accepts_emails(@workflow_alert.cc.try(:split, ',') || []),
       bcc: filter_emails_to_only_these_which_accepts_emails(get_bcc_emails),
-      subject: Liquid::Template.parse(@workflow_alert.subject).render(@step.data.merge('platform_context' => PlatformContext.current.decorate).stringify_keys, filters: [LiquidFilters]),
+      subject: Liquid::Template.parse(@workflow_alert.subject).render(@step.data.merge('platform_context' => PlatformContext.current.decorate).stringify_keys, filters: [Liquid::LiquidFilters]),
       layout_path: @workflow_alert.layout_path,
       transactable_type_id: @step.transactable_type_id
     }

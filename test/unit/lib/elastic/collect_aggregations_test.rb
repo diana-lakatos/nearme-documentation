@@ -10,7 +10,7 @@ class Elastic::AggregationsTest < ActiveSupport::TestCase
   test 'require default aggregations' do
     fixtures = AggregationsFixtures.load
 
-    assert_equal fixtures.keys, %w(global filtered_aggregations custom_attributes)
+    assert_equal fixtures.keys, %w(global filtered_aggregations properties)
 
     options = Elastic::Aggregations::OptionsForSelect.prepare(fixtures)
 

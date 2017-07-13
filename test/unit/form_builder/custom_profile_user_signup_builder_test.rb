@@ -25,12 +25,12 @@ class CustomProfileUserSignupBuilderTest < ActiveSupport::TestCase
     model = FactoryGirl.create(:custom_model_type, name: 'Driver Model', instance_profile_types: [driver_profile_type])
     FactoryGirl.create(:custom_attribute, name: 'driver_model_attr', target: model)
 
-    @lister_user_signup_builder = FormBuilder.new(base_form: UserForm,
-                                                  configuration: configuration,
-                                                  object: User.new).build
   end
 
   should 'correctly validate empty params' do
+    @lister_user_signup_builder = FormBuilder.new(base_form: UserForm,
+                                                  configuration: configuration,
+                                                  object: User.new).build
     @lister_user_signup_builder.prepopulate!
     refute @lister_user_signup_builder.validate({})
     messages = [
@@ -45,6 +45,9 @@ class CustomProfileUserSignupBuilderTest < ActiveSupport::TestCase
   end
 
   should 'be able to save all parameters' do
+    @lister_user_signup_builder = FormBuilder.new(base_form: UserForm,
+                                                  configuration: configuration,
+                                                  object: User.new).build
     assert @lister_user_signup_builder.validate(parameters), @lister_user_signup_builder.errors.full_messages.join(', ')
     assert_difference 'User.count' do
       @lister_user_signup_builder.save
@@ -60,6 +63,50 @@ class CustomProfileUserSignupBuilderTest < ActiveSupport::TestCase
                  driver_profile.customizations.map { |c| c.properties.to_h }
     assert_equal ['bully.jpeg'], driver_profile.custom_images.pluck(:image)
   end
+
+  should 'be able to save custom profile only with configuration' do
+    configuration = {
+      'name' => {},
+      'profiles': {
+        'driver': {
+          'validation': {
+            'presence' => true
+          },
+          'enabled' => {
+            'property_options' => {
+              'default' => true,
+              'readonly' => true
+            }
+          }
+        }
+      }
+    }
+    params = {
+      'name' => 'Maciej',
+      'email' => 'maciej@example.com',
+      'password' => 'this is very long and secure password',
+      'profiles_attributes' => {
+        'driver_attributes' => {
+          'enabled' => '1'
+        }
+      }
+    }
+
+    @lister_user_signup_builder = FormBuilder.new(base_form: UserForm,
+                                                  configuration: configuration,
+                                                  object: User.new).build
+    assert @lister_user_signup_builder.validate(params)
+    assert @lister_user_signup_builder.errors.full_messages.join(', ')
+    assert_difference 'User.count' do
+      @lister_user_signup_builder.save
+    end
+    @user = User.last
+    assert_equal 'Maciej', @user.name
+
+    driver_profile = user_profile(@user, 'driver')
+    assert driver_profile.enabled
+  end
+
 
   protected
 
@@ -112,8 +159,10 @@ class CustomProfileUserSignupBuilderTest < ActiveSupport::TestCase
           },
           :custom_images => {
             "#{@driver_photo.name}": {
-              validation: {
-                'presence' => {}
+              image: {
+                validation: {
+                  'presence' => {}
+                }
               }
             }
           },

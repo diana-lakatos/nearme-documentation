@@ -1,0 +1,258 @@
+{
+  "mappings": {
+    "transactable": {
+      "_parent":{
+        "type": "user"
+      },
+      "_routing": {
+        "required": true
+      },
+      "properties": {
+        "action_free_booking": {
+          "type": "boolean"
+        },
+        "action_rfq": {
+          "type": "boolean"
+        },
+        "address": {
+          "properties": {
+            "address": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "country": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "formatted_address": {
+              "type": "string"
+            },
+            "id": {
+              "type": "long"
+            },
+            "iso_country_code": {
+              "type": "string"
+            },
+            "lat": {
+              "type": "double"
+            },
+            "lon": {
+              "type": "double"
+            },
+            "postcode": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "state": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "street": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "street_number": {
+              "type": "string"
+            },
+            "suburb": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "administrator_id": {
+          "type": "integer"
+        },
+        "all_price_types": {
+          "type": "string"
+        },
+        "all_prices": {
+          "type": "integer"
+        },
+        "availability": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "availability_exceptions": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "average_rating": {
+          "type": "float"
+        },
+        "categories": {
+          "type": "integer"
+        },
+        "category_list": {
+          "type": "nested",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "permalink": {
+              "type": "string"
+            },
+            "position": {
+              "type": "long"
+            },
+            "name_of_root": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+
+        "company_id": {
+          "type": "integer"
+        },
+        "completed_reservations": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "properties": {
+          "properties": {
+            "additional_rules": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "bond_or_deposit": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "how_did_you_hear_about_us": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "legally_rent_space": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "my_rules": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "other_space_details": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "promo_code": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "rules_for_my_space": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "size_of_space": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "space_availability": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "space_suitability": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "use_google_street_photos": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "deleted_at": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "description": {
+          "type": "string"
+        },
+        "draft": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "geo_location": {
+          "type": "geo_point"
+        },
+        "geo_service_shape": {
+          "type": "geo_shape"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "instance_id": {
+          "type": "integer"
+        },
+        "location_id": {
+          "type": "integer"
+        },
+        "location_type_id": {
+          "type": "integer"
+        },
+        "maximum_price_cents": {
+          "type": "integer"
+        },
+        "minimum_price_cents": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string",
+          "fields": {
+            "raw": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          }
+        },
+        "object_properties": {
+          "type": "object"
+        },
+        "open_hours": {
+          "type": "integer"
+        },
+        "open_hours_during_week": {
+          "type": "integer"
+        },
+        "opened_on_days": {
+          "type": "integer"
+        },
+        "possible_payout": {
+          "type": "boolean"
+        },
+        "seller_average_rating": {
+          "type": "float"
+        },
+        "service_radius": {
+          "type": "integer"
+        },
+        "slug": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "state": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "string"
+        },
+        "transactable_type_id": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

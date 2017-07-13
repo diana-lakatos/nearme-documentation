@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 class LocationForm < BaseForm
   include Reform::Form::ActiveModel::ModelReflections
+  WHITELISTED_ATTRIBUTES = [
+    :description, :email, :info, :currency, :phone, :availability_template_id, :special_notes,
+    :location_type_id, :photos, :administrator_id, :name, :location_address, :availability_template_id, :time_zone, :company_id
+  ].freeze
+
   class << self
     def decorate(configuration)
       Class.new(self) do
@@ -15,7 +20,7 @@ class LocationForm < BaseForm
                                       populate_if_empty: Address,
                                       prepopulator: ->(*) { self.location_address ||= Address.new }
         end
-        inject_dynamic_fields(configuration, whitelisted: [:description, :email, :info, :currency, :phone, :availability_template_id, :special_notes, :location_type_id, :photos, :administrator_id, :name, :location_address, :availability_template_id, :time_zone])
+        inject_dynamic_fields(configuration, whitelisted: WHITELISTED_ATTRIBUTES)
       end
     end
   end

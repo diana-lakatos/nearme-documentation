@@ -24,7 +24,6 @@ module Graph
         field :subtotal_amount_cents, !types.Int
         field :service_fee_amount_guest_cents, !types.Int
         field :service_fee_amount_host_cents, !types.Int
-        field :service_fee_amount_host_cents, !types.Int
         field :total_payable_to_host_cents, !types.Int
         field :time_zone, !types.String
         field :rejection_reason, !types.String
@@ -35,8 +34,8 @@ module Graph
         field :ends_at, types.String
         field :starts_at, types.String
         field :created_at, types.String
-        field :custom_attribute, !types.String,
-              'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
+        field :property, !types.String,
+              'Fetch any custom attribute by name, ex: hair_color: property(name: "hair_color")' do
           argument :name, !types.String
           resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
         end

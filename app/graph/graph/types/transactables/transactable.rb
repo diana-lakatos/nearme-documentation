@@ -33,6 +33,7 @@ module Graph
         field :photo_url, types.String
         field :show_path, !types.String, deprecation_reason: 'Use generate_url filter'
         field :slug, !types.String
+        field :state, types.String
         field :summary, types.String
         field :time_zone, types.String
         field :url, types.String, deprecation_reason: 'Use generate_url filter'
@@ -51,14 +52,14 @@ module Graph
           resolve Graph::Resolvers::Transactables::CustomAttributePhotos.new
         end
 
-        field :custom_attribute,
+        field :property,
               types.String,
-              'Fetch any custom attribute by name, ex: hair_color: custom_attribute(name: "hair_color")' do
+              'Fetch any custom attribute by name, ex: hair_color: property(name: "hair_color")' do
           argument :name, !types.String
           resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
         end
 
-        field :custom_attribute_array, !types[types.String] do
+        field :property_array, !types[types.String] do
           argument :name, !types.String
           resolve ->(obj, arg, _ctx) { obj.properties[arg[:name]] }
         end
@@ -84,6 +85,13 @@ module Graph
           argument :date, !types.String
           argument :step, !types.Int
           resolve -> (obj, args, ctx) { AvailabilityRule::HourlyListingStatus.new(obj.action_type, Date.parse(args[:date]), args[:step]).day_availability }
+        end
+
+        field :customizations, !types[Types::Customizations::Customization],
+              'Fetch any customization by name or id, ex: hair_color: customization(name: "hair_color")' do
+          argument :id, types.ID
+          argument :name, types.String
+          resolve ->(obj, arg, ctx) { Resolvers::Customizations.new.call(obj.source.object, arg, ctx) }
         end
       end
 

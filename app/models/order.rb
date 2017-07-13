@@ -55,6 +55,7 @@ class Order < ActiveRecord::Base
   validates :user, presence: true
   validates :currency, presence: true
   validate :validate_acceptance_of_waiver_agreements, on: :update, if: -> { should_validate_field?('reservation', 'waiver_agreements') }
+  validates :rejection_reason, length: { maximum: 1500 }
 
   before_validation :remove_empty_documents
   before_validation :set_owner, :skip_validation_for_custom_attributes, :set_owner_for_payment_documents

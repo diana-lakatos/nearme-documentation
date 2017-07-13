@@ -14,6 +14,13 @@ class SecuredParams
     ]
   end
 
+  def webhook_configuration
+    [
+      :signing_secret,
+      :payment_gateway_mode
+    ]
+  end
+
   def dimensions_template
     [
       :name,
@@ -510,7 +517,6 @@ class SecuredParams
       :single_location,
       :require_transactable_during_onboarding,
       restrict_countries: [],
-      custom_csv_fields: [],
       availability_templates_attributes: nested(availability_template),
       custom_csv_fields: [],
       allowed_currencies: [],

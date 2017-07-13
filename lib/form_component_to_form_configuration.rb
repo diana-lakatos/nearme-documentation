@@ -167,7 +167,7 @@ class FormComponentToFormConfiguration
               if ca.uploadable?
                 if ca.attribute_type == 'photo'
                   configuration[:profiles][:"#{model}"][:customizations][field][:custom_images] ||= {}
-                  configuration[:profiles][:"#{model}"][:customizations][field][:custom_images][ca.name] = ValidationBuilder.new(custom_model_type, ca.name).build
+                  configuration[:profiles][:"#{model}"][:customizations][field][:custom_images][ca.name] = { image: ValidationBuilder.new(custom_model_type, ca.name).build }
                   # if at least one image is required, we need to add validation to custom_images, not only custom_images[<attr.id>]
                   configuration[:profiles][:"#{model}"][:customizations][field][:custom_images][:validation] = { presence: {} } if configuration[:profiles][:"#{model}"][:customizations][field][:custom_images][ca.name][:validation].present?
                 elsif ca.attribute_type == 'file'
@@ -187,7 +187,7 @@ class FormComponentToFormConfiguration
             if ca.uploadable?
               if ca.attribute_type == 'photo'
                 configuration[:profiles][:"#{model}"][:custom_images] ||= {}
-                configuration[:profiles][:"#{model}"][:custom_images][ca.name] = ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), ca.name).build
+                configuration[:profiles][:"#{model}"][:custom_images][ca.name] = { image: ValidationBuilder.new(PlatformContext.current.instance.send(:"#{model}_profile_type"), ca.name).build }
                 # if at least one image is required, we need to add validation to custom_images, not only custom_images[<attr.id>]
                 configuration[:profiles][:"#{model}"][:custom_images][:validation] = { presence: {} } if configuration[:profiles][:"#{model}"][:custom_images][ca.name][:validation].present?
               elsif ca.attribute_type == 'file'

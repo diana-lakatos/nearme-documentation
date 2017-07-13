@@ -162,6 +162,7 @@ ActiveSupport::TestCase.class_eval do
     credit_card.response = nil
     credit_card.instance_client.update_attribute(:encrypted_response, nil)
     credit_card.instance_client.send(:clear_decorator)
+    credit_card.instance_client.client.update_attributes(email: 'cc_user@near-me.com')
     credit_card.attributes = FactoryGirl.attributes_for(:credit_card_attributes).reject { |k, _v| k == :response }
     credit_card.process!
     credit_card.save!
@@ -292,15 +293,16 @@ end
 
 def enable_elasticsearch!(&_block)
   Rails.application.config.use_elastic_search = true
+  instance = PlatformContext.current.instance
 
-  instance = Instance.last
+  Elastic::Configuration.set(type: instance.name, instance_id: instance.id)
+  Elastic::Configuration.current.client.indices.delete index: 'test-*'
 
+  factory = Elastic::Factory.new(config: Elastic::Configuration.current)
   engine = Elastic::Engine.new
-  builder = Elastic.default_index_name_builder(instance)
-  index_type = Elastic::IndexTypes::MultipleModel.new(sources: [User, Transactable])
 
-  Elastic::IndexZero.new(type: index_type, version: 0, builder: builder).tap do |index|
-    engine.create_index index unless engine.index_exists? index.alias_name
+  factory.build(version: 0).tap do |index|
+    engine.create_index index
   end
 
   yield if block_given?
@@ -309,7 +311,7 @@ def enable_elasticsearch!(&_block)
 end
 
 def disable_elasticsearch!
-  Elasticsearch::Model.client.indices.delete index: 'test-*'
+  Elastic::Configuration.current.client.indices.delete index: 'test-*'
   Rails.application.config.use_elastic_search = false
 end
 

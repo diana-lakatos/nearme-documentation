@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseController
+  include RejectionReasonErrorHelper
+
   before_action :find_order, except: :index
   before_action :prepare_order_for_shipping, only: [:show, :confirm, :confirmation_form]
   before_action :validate_deliveries, only: [:cancel]
@@ -119,7 +121,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
     if @order.reject(rejection_reason)
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
     else
-      flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
+      flash[:error] = rejection_error_messages(@order)
     end
 
     redirect_to request.referer.presence || dashboard_offers_path

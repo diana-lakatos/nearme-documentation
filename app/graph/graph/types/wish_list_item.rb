@@ -9,7 +9,7 @@ module Graph
       field :wishlistable, Types::Wishlistable do
         resolve lambda { |item, _, ctx|
           case item.wishlistable_type.downcase
-          when ::User.to_s.downcase
+          when 'user'
             Graph::Resolvers::User.new.call(nil, { id: item.wishlistable_id }, ctx)
           else
             item.wishlistable

@@ -5,10 +5,10 @@ require './lib/elastic/query_builder_base'
 require './lib/elastic/query_builder/users_query_builder'
 require './lib/elastic/query_builder/sorting_options'
 
-class Elastic::QueryBuilder::SortingOptions::SortOptionTest < ActiveSupport::TestCase
+class ::Elastic::QueryBuilder::SortingOptions::SortOptionTest < ActiveSupport::TestCase
 
   def build(*args)
-    Elastic::QueryBuilder::SortingOptions::SortOption.new(*args).to_h
+    ::Elastic::QueryBuilder::SortingOptions::SortOption.new(*args).to_h
   end
 
   def assert_equal_sort(key, expectation)
@@ -50,10 +50,10 @@ class Elastic::QueryBuilder::SortingOptions::SortOptionTest < ActiveSupport::Tes
   end
 end
 
-class Elastic::QueryBuilder::SortingOptions::SortOption::NestedSortTest < ActiveSupport::TestCase
+class ::Elastic::QueryBuilder::SortingOptions::SortOption::NestedSortTest < ActiveSupport::TestCase
 
   def build(*args)
-    Elastic::QueryBuilder::SortingOptions::SortOption::NestedSort.new(*args)
+    ::Elastic::QueryBuilder::SortingOptions::SortOption::NestedSort.new(*args)
   end
 
   test 'nested' do
@@ -63,10 +63,10 @@ class Elastic::QueryBuilder::SortingOptions::SortOption::NestedSortTest < Active
   end
 end
 
-class Elastic::QueryBuilder::SortingOptions::SortOption::SimpleSortTest < ActiveSupport::TestCase
+class ::Elastic::QueryBuilder::SortingOptions::SortOption::SimpleSortTest < ActiveSupport::TestCase
 
   def build(*args)
-    Elastic::QueryBuilder::SortingOptions::SortOption::SimpleSort.new(*args)
+    ::Elastic::QueryBuilder::SortingOptions::SortOption::SimpleSort.new(*args)
   end
 
   test 'simple' do
@@ -76,10 +76,10 @@ class Elastic::QueryBuilder::SortingOptions::SortOption::SimpleSortTest < Active
   end
 end
 
-class Elastic::QueryBuilder::SortingOptions::SortOption::ChildFieldSortTest < ActiveSupport::TestCase
+class ::Elastic::QueryBuilder::SortingOptions::SortOption::ChildFieldSortTest < ActiveSupport::TestCase
 
   def build(*args)
-    Elastic::QueryBuilder::SortingOptions::SortOption::ChildFieldSort.new(*args)
+    ::Elastic::QueryBuilder::SortingOptions::SortOption::ChildFieldSort.new(*args)
   end
 
   test 'simple' do

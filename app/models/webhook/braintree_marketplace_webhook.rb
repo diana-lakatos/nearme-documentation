@@ -29,7 +29,7 @@ class Webhook::BraintreeMarketplaceWebhook < Webhook
   end
 
   def event
-    @event ||= payment_gateway.parse_webhook(params[:bt_signature], params[:bt_payload])
+    @event ||= payment_gateway.parse_webhook(response_object[:bt_signature], response_object[:bt_payload])
   end
 
   def merchant_account_external_id

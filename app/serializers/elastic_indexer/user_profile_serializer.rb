@@ -7,10 +7,10 @@ module ElasticIndexer
                :availability_exceptions,
                :onboarded_at,
                :category_ids, # legacy,
-               :categories,
+               :category_list,
                :properties
 
-    has_many :customizations, serializer: CustomModelSerializer
+    has_many :customizations, serializer: CustomizationSerializer
     has_many :custom_images, serializer: CustomImageSerializer
     has_one :availability_template, serializer: AvailabilityTemplateSerializer
 
@@ -20,13 +20,19 @@ module ElasticIndexer
 
     # TODO: test twice
     def availability_exceptions
-      Time.use_zone(object.time_zone) do
+      Time.use_zone(user.time_zone) do
         Array(object.availability_exceptions).map(&:all_dates).flatten
       end
     end
 
-    def categories
+    def category_list
       object.categories.order(:lft).map { |c| CategorySerializer.new(c).as_json }
+    end
+
+    private
+
+    def user
+      User.with_deleted.find(object.user_id)
     end
   end
 end

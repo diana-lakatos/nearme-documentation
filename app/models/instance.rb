@@ -430,8 +430,4 @@ class Instance < ActiveRecord::Base
       _klass::DEPENDENT_CLASS if _klass.searchable.any?
     end.compact
   end
-
-  def multiple_types?
-    id == 5_032
-  end
 end

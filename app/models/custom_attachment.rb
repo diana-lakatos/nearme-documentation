@@ -14,6 +14,8 @@ class CustomAttachment < ActiveRecord::Base
   validates :custom_attribute, presence: true
   after_commit :set_uploader_id
 
+  delegate :name, to: :custom_attribute
+
   mount_uploader :file, CustomAttachmentUploader
 
   skip_callback :commit, :after, :remove_file!

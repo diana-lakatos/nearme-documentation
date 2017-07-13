@@ -13,9 +13,8 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
   delegate :iso_country_code, :payment_gateway, to: :merchant_account, allow_nil: true
 
   validates :last_name, :first_name, presence: true
-  validate :validate_dob_formated, on: :create
+  validate :validate_dob_formated
   validate :validate_current_address
-  validate :validate_attachements
 
   after_initialize :build_current_address_if_needed
 
@@ -65,7 +64,6 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
 
   def validate_current_address
     return if current_address.blank?
-
     current_address.parse_address_components! unless current_address.raw_address?
     current_address.errors.clear
     errors.add(:current_address, :inacurate) if current_address.valid? && current_address.check_address

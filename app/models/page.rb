@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class Page < ActiveRecord::Base
-  VALID_LAYOUTS = %w(community application dashboard instance_admin).freeze
+  include RankedModel
+  extend FriendlyId
   DEFAULT_FORMAT = 'html'
   auto_set_platform_context
   scoped_to_platform_context
@@ -8,37 +9,27 @@ class Page < ActiveRecord::Base
   has_paper_trail
   class NotFound < ActiveRecord::RecordNotFound; end
 
-  include RankedModel
-  ranks :position, with_same: :theme_id
-
-  extend FriendlyId
-  friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :theme
-
-  enum format: { html: 0, json: 1 }
-
-  validates :slug, uniqueness: { scope: [:theme_id, :format] }
-  validates :layout_name, inclusion: { in: ->(record) { record.valid_page_layouts }, allow_blank: true }
-
-  # FIXME: disabled Sitemap updates. Needs to be optimized.
-  # include SitemapService::Callbacks
-
-  mount_uploader :hero_image, HeroImageUploader
-  skip_callback :commit, :after, :remove_hero_image!
-
-  belongs_to :theme
   belongs_to :instance
-
-  default_scope -> { rank(:position) }
-
-  before_save :convert_to_html, if: ->(page) { page.content.present? && (page.content_changed? || page.html_content.blank?) }
-
+  belongs_to :theme
   has_many :authorization_policies, through: :authorization_policy_associations
   has_many :authorization_policy_associations, as: :authorizable, dependent: :destroy
   has_many :data_sources, as: :data_sourcable
-  has_many :form_configurations, through: :page_forms
   has_many :page_data_source_contents, dependent: :destroy
 
+  validates :slug, uniqueness: { scope: [:theme_id, :format] }
+
+  default_scope -> { rank(:position) }
   scope :admin_pages, -> { where(admin_page: true) }
+
+  before_save :convert_to_html, if: ->(page) { page.content.present? && (page.content_changed? || page.html_content.blank?) }
+
+  enum format: { html: 0, json: 1 }
+  mount_uploader :hero_image, HeroImageUploader
+  skip_callback :commit, :after, :remove_hero_image!
+  ranks :position, with_same: :theme_id
+  friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :theme
+  # FIXME: disabled Sitemap updates. Needs to be optimized.
+  # include SitemapService::Callbacks
 
   def to_liquid
     @page_drop ||= PageDrop.new(self)

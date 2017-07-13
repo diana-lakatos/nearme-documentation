@@ -17,22 +17,22 @@ module Elastic
       end
 
       def regular_query
-        Franco.new.tap do |builder|
+        ::Elastic::QueryBuilder::Franco.new.tap do |builder|
           builder.add build_query_branch
           builder.add filter: { bool: { must: [not_deleted] } }
           builder.add filter: { bool: { must: filters } }
           builder.add aggregations
           builder.add sorting
-        end.to_h
+        end.to_hash
       end
 
       def simple_query
-        Franco.new.tap do |builder|
-          builder.add _source: @query[:source]
-          builder.add query: @query[:query]
+        ::Elastic::QueryBuilder::Franco.new.tap do |builder|
+          builder.add _source: @query[:source] if @query[:source]
+          builder.add query: @query[:query] if @query[:query]
           builder.add filter: { bool: { must: filters } }
           builder.add sorting
-        end.to_h
+        end.to_hash
       end
 
       private

@@ -43,7 +43,7 @@ en:
         host_fee: Client fee
         transfers_are_generated_automatically: 'Transfers are generated automatically
           depending on your setting in ''Settings > Configuration'' for outstanding
-          charges we''ve recieved on behalf of Clients. The next batch will be generated
+          charges we''ve received on behalf of Clients. The next batch will be generated
           at about:'
       orders:
         order_amount: Total paid

@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 module Graph
   Schema = GraphQL::Schema.define do
-    query Types::RootQuery
+    query Graph::Types::RootQuery
     resolve_type lambda { |record, _ctx|
       case record
       when ::Comment
-        Types::ActivityFeed::Comment
+        Graph::Types::ActivityFeed::Comment
       when ::Photo
-        Types::ActivityFeed::Photo
+        Graph::Types::ActivityFeed::Photo
       when ::UserStatusUpdate
-        Types::ActivityFeed::UserStatusUpdate
+        Graph::Types::ActivityFeed::UserStatusUpdate
       when ::Transactable
-        Types::Transactables::Transactable
+        Graph::Types::Transactables::Transactable
       when ::Location
-        Types::Location
-      when ::Elastic::UserDrop
-        Types::User
+        Graph::Types::Location
+      when ::Elastic::UserDrop, ::Elastic::SourceTypes::UserSource
+        Graph::Types::User
       else
-        Types::ActivityFeed::Generic
+        Graph::Types::ActivityFeed::Generic
       end
     }
   end
