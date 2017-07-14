@@ -7,6 +7,7 @@ module Api
     module User
       class TransactablesControllerTest < ActionController::TestCase
         setup do
+          enable_elasticsearch!
           @user = FactoryGirl.create(:user)
           sign_in @user
           @company = FactoryGirl.create(:company, creator: @user)
@@ -16,14 +17,32 @@ module Api
                                                   skip_location: true)
         end
 
+        def teardown
+          disable_elasticsearch!
+        end
+
         should 'create transactable' do
           GmapsFake.stub_requests
+          Elastic::Commands::InstantIndexRecord.any_instance.expects(:call).once
 
           assert_difference 'Transactable.count' do
             post :create, form_configuration_id: form_configuration.id,
                           transactable: transactable_attributes,
                           transactable_type_id: @transactable_type.id
           end
+
+          assert_response :redirect
+        end
+
+        should 'update transactable' do
+          transactable = FactoryGirl.create(:transactable, transactable_type: @transactable_type, creator: @user)
+          Elastic::Commands::InstantIndexRecord.any_instance.expects(:call).once
+
+          put :update, id: transactable.id,
+                       form_configuration_id: form_configuration.id,
+                       transactable_type_id: @transactable_type.id,
+                       transactable: transactable_attributes
+
           assert_response :redirect
         end
 
