@@ -21,19 +21,21 @@ module Api
 
     def create
       if transactable_form.validate(params[:form].presence || params[:transactable] || {})
-        transactable_form.save && index_in_elastic_immediately(form_model)
+        transactable_form.save
         raise "Create failed due to configuration issue: #{form_model.errors.full_messages.join(', ')}" if form_model.changed?
+        index_in_elastic_immediately(form_model)
       end
       respond(transactable_form, alert: false)
     end
 
     def update
       if transactable_form.validate(params[:form].presence || params[:transactable] || {})
-        transactable_form.save && index_in_elastic_immediately(form_model)
+        transactable_form.save
         # tmp safety check - we still have validation in Transactable model itself
         # so if model is invalid, it won't be saved and user won't be able to
         # sign up - we want to be notified
         raise "Update failed due to configuration issue: #{form_model.errors.full_messages.join(', ')}" if form_model.changed?
+        index_in_elastic_immediately(form_model)
       end
       respond(transactable_form, alert: false)
     end
