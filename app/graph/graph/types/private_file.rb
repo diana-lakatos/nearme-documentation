@@ -11,7 +11,7 @@ module Graph
         resolve ->(obj, _, _) { obj.file.file.size }
       end
       field :file_name, types.String do
-        resolve ->(obj, _, _) { obj.file.file.filename }
+        resolve ->(obj, _, _) { obj[:file] }
       end
       field :content_type, types.String do
         resolve ->(obj, _, _) { obj.file.file.content_type }
