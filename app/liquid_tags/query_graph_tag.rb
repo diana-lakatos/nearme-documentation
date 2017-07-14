@@ -25,7 +25,8 @@ class QueryGraphTag < Liquid::Tag
   def render(context)
     result = execute_query(context)
     assign_variables(context, result)
-    Rails.env.debug_graphql? ? "<script>console.dir(#{result.to_json})</script>" : ''
+    log(result)
+    ''
   end
 
   private
@@ -48,5 +49,10 @@ class QueryGraphTag < Liquid::Tag
 
   def variables(context)
     Hash[@params.map { |key, variable_name| [key, context[variable_name]] }]
+  end
+
+  def log(result)
+    return unless Rails.env.debug_graphql?
+    "<script>console.dir(#{result.to_json})</script>"
   end
 end

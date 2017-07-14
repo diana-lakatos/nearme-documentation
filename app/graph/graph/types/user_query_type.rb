@@ -9,21 +9,21 @@ module Graph
         argument :ids, types[types.ID]
         argument :featured, types.Boolean
 
-        resolve Resolvers::Users.new
+        resolve Graph::Resolvers::Users.new
       end
 
       field :user do
         type Types::User
         argument :id, types.ID
         argument :slug, types.String
-        resolve Resolvers::User.new
+        resolve Graph::Resolvers::User.new
       end
 
       field :current_user do
         type Types::User
         resolve lambda { |_obj, _arg, ctx|
           user_id = ctx[:current_user_id]
-          Resolvers::User.new.call(nil, { id: user_id }, ctx) if user_id
+          Graph::Resolvers::User.new.call(nil, { id: user_id }, ctx) if user_id
         }
       end
     end

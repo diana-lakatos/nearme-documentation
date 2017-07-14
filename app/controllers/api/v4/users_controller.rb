@@ -15,12 +15,13 @@ module Api
       def create
         if user_signup.validate(params[:form].presence || params[:user] || {})
           user_signup.save
+          model = user_signup.model
           # tmp safety check - we still have validation in User model itself
           # so if model is invalid, it won't be saved and user won't be able to
           # sign up - we want to be notified
-          raise "Sign up failed due to configuration issue: #{user_signup.model.errors.full_messages.join(', ')}" unless user_signup.model.persisted?
-          sign_in(user_signup.model)
-          index_in_elastic_immediately(user_signup.model)
+          raise "Sign up failed due to configuration issue: #{model.errors.full_messages.join(', ')}" unless model.persisted?
+          sign_in(model)
+          index_in_elastic_immediately(model)
         end
         respond(user_signup, notice: I18n.t('devise.registrations.signed_up'),
                              location: session.delete(:user_return_to).presence || params[:return_to].presence || root_path)
@@ -34,11 +35,12 @@ module Api
             profile.model.mark_as_onboarded! if profile.try(:mark_as_onboarded)
           end
           I18n.locale = current_user.reload.language&.to_sym || :en
+          model = user_update_form.model
           # tmp safety check - we still have validation in User model itself
           # so if model is invalid, it won't be saved and user won't be able to
           # sign up - we want to be notified
-          raise "Update failed due to configuration issue: #{user_update_form.model.errors.full_messages.join(', ')}" if user_update_form.model.changed?
-          index_in_elastic_immediately(user_signup.model)
+          raise "Update failed due to configuration issue: #{model.errors.full_messages.join(', ')}" if model.changed?
+          index_in_elastic_immediately(model)
         end
         respond(user_update_form)
       end
