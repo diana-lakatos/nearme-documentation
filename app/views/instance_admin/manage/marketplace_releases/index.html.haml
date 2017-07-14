@@ -22,13 +22,16 @@
               %td
                 = release.creator
               %td
-                = release.status
+                - if release.zip_file.present?
+                  = release.status
+                - else
+                  This version is beeing generated
               %td
                 = release.created_at
               %td
                 = link_to 'Download', release.zip_file.url, class: 'btn btn-blue btn-small'
-                = link_to 'Load this version', restore_instance_admin_manage_marketplace_release_path(release), class: 'btn btn-blue btn-small'
-
+                - if release.zip_file.present?
+                  = link_to 'Load this version', restore_instance_admin_manage_marketplace_release_path(release), class: 'btn btn-blue btn-small'
 .content-container
   %h4= "Upload new release"
 

@@ -14,7 +14,8 @@ module Instances
       uot:         195,
       ninjunu:     175,
       mycsn:       5032,
-      atb:         5041
+      atb:         5041,
+      stashii:     203
     }.freeze
 
     # use it in data migrations ex. Instances::InstanceFinder.get(:uot).each

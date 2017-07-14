@@ -10,4 +10,8 @@ class MarketplaceRelease < ActiveRecord::Base
   belongs_to :instance
 
   validates :zip_file, presence: true, if: :ready_for_import?
+
+  def options
+    super || {}
+  end
 end

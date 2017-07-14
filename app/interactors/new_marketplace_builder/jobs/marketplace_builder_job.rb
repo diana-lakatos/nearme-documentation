@@ -24,4 +24,3 @@ module NewMarketplaceBuilder
     end
   end
 end
-
