@@ -185,6 +185,8 @@ module Elastic
             then { 'name.raw' => { order: sort[2] } }
           when 'all_prices'
             then { 'all_prices' => { order: sort[2], mode: 'min' } }
+          when /custom_attributes\./
+            { sort[1].gsub('custom_attributes', 'properties').concat('.raw') => { order: sort[2] } }
           else
             { sort[1] => { order: sort[2] } }
           end
@@ -220,7 +222,7 @@ module Elastic
         .map do |attr|
         {
           label: attr.name,
-          field: "properties.#{attr.name}",
+          field: "properties.#{attr.name}.raw",
           size: attr.valid_values.size + 1 # plus one extra for empty
         }
       end
@@ -355,7 +357,7 @@ module Elastic
         next if value.blank? || value.empty? || value.none?(&:present?)
         @filters << {
           terms: {
-            "properties.#{key}" => value
+            "properties.#{key}.raw" => value
           }
         }
       end
