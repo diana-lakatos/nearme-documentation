@@ -7,6 +7,7 @@ class PaymentGateway < ActiveRecord::Base
   class PaymentGateway::PaymentRefundError < StandardError; end
   class PaymentGateway::RefundNotSupportedError < StandardError; end
   class PaymentGateway::InvalidStateError < StandardError; end
+  class PaymentGateway::NoPaymentGatewayForCredirCards < StandardError; end
 
   self.inheritance_column = :type
 

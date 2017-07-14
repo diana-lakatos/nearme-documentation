@@ -27,7 +27,9 @@ module Api
     end
 
     def payment_gateway
-      @payment_gateway ||= PaymentGateway.with_credit_card.mode_scope.first
+      @payment_gateway ||= PaymentGateway.with_credit_card.mode_scope.first!
+    rescue ActiveRecord::RecordNotFound
+      raise PaymentGateway::NoPaymentGatewayForCredirCards, 'No PaymentGateway configured for credit card. Please add one.'
     end
 
     def company

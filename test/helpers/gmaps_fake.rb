@@ -6,6 +6,10 @@ module GmapsFake
     WebMock.stub_request(:get, /.*maps\.googleapis\.com.*/).to_return { |request| match_query(request) }
   end
 
+  def remove_stub_requests(stub)
+    WebMock.remove_request_stub(stub)
+  end
+
   private
 
   def match_query(request)
