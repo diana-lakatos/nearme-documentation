@@ -15,14 +15,15 @@ module Api
                                                   enable_photo_required: false,
                                                   searchable: false,
                                                   skip_location: true)
+          @stub = GmapsFake.stub_requests
         end
 
         def teardown
           disable_elasticsearch!
+          GmapsFake.remove_stub_requests(@stub)
         end
 
         should 'create transactable' do
-          GmapsFake.stub_requests
           Elastic::Commands::InstantIndexRecord.any_instance.expects(:call).once
 
           assert_difference 'Transactable.count' do
