@@ -1,4 +1,7 @@
 class SubscribesController < ApplicationController
+  skip_before_action :redirect_unverified_user, only: [:edit, :update]
+  skip_before_action :authenticate_user!, only: [:edit, :update]
+
   def edit
   end
 
