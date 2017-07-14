@@ -6,11 +6,20 @@ module Api
       skip_before_action :require_authorization
 
       def create
-        customization_form.save if customization_form.validate(params[:form].presence || params[:customization] || {})
+        SubmitForm.new(
+          form_configuration: form_configuration,
+          form: customization_form,
+          params: form_params,
+          current_user: current_user
+        ).call
         respond(customization_form)
       end
 
       protected
+
+      def form_params
+        params[:form].presence || params[:customization] || {}
+      end
 
       def customization_form
         @customization_form ||= form_configuration&.build(custom_model_type.customizations.new(user: current_user))

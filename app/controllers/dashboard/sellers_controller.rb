@@ -21,7 +21,7 @@ class Dashboard::SellersController < Dashboard::BaseController
         redirect_to edit_dashboard_seller_path
       end
     else
-      flash.now[:error] = @user_update_profile_form.pretty_errors_string
+      flash.now[:error] = ErrorsSummary.new(@user_update_profile_form).summary(separator: "\n")
       @user_update_profile_form.prepopulate!
       render :edit, layout: dashboard_or_community_layout
     end

@@ -27,8 +27,6 @@
 #   end
 class SmsNotifier < AbstractController::Base
   extend Job::SyntaxEnhancer
-  require 'sms_notifier/message'
-
   include AbstractController::Logger
   include AbstractController::Rendering
   include ActionView::Layouts
@@ -55,7 +53,7 @@ class SmsNotifier < AbstractController::Base
     alias_method :deliver!, :deliver
   end
 
-  def initialize(message_name, *args)
+  def initialize(message_name = nil, *args)
     super()
     @message_name = message_name
     process(@message_name, *args)
@@ -73,11 +71,15 @@ class SmsNotifier < AbstractController::Base
 
   # Build the SMS Message to send
   def sms(options)
-    lookup_context.class.register_detail(:transactable_type_id) { nil }
     @platform_context = PlatformContext.current.decorate
-    @template_path = options.fetch(:template_name, nil)
-    @transactable_type_id = options.fetch(:transactable_type_id, nil)
-    options[:body] ||= render_message.try(:strip)
+    if options.fetch(:content, nil)
+      options[:body] ||= options.delete(:content)
+    else
+      lookup_context.class.register_detail(:transactable_type_id) { nil }
+      @template_path = options.fetch(:template_name, nil)
+      @transactable_type_id = options.fetch(:transactable_type_id, nil)
+      options[:body] ||= render_message.try(:strip)
+    end
     @message = Message.new(options)
   end
 

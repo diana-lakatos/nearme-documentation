@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 module MarketplaceBuilder
   module BuilderTests
     class ShouldImportWorkflows < ActiveSupport::TestCase
-      def initialize(instance)
+      def initialize(_instance)
         @workflow = Workflow.last
-        @workflow_step = WorkflowStep.last
-        @workflow_alert = WorkflowAlert.last
+        @workflow_step = @workflow.workflow_steps.last
+        @workflow_alert = @workflow_step.workflow_alerts.last
       end
 
       def execute!
@@ -27,10 +28,10 @@ module MarketplaceBuilder
       end
 
       def compare_workflow_alert
-        assert_equal @workflow_alert.name, 'test alert'
-        assert_equal @workflow_alert.alert_type, 'email'
-        assert_equal @workflow_alert.recipient_type, 'lister'
-        assert_equal @workflow_alert.template_path, 'user_mailer/user_commented_on_user_update'
+        assert_equal 'test alert', @workflow_alert.name
+        assert_equal 'email', @workflow_alert.alert_type
+        assert_equal 'lister', @workflow_alert.recipient_type
+        assert_equal 'user_mailer/user_commented_on_user_update', @workflow_alert.template_path
       end
     end
   end

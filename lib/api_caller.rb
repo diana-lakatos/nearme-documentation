@@ -36,6 +36,6 @@ class ApiCaller
   protected
 
   def self.parser
-    @parser ||= LiquidTemplateParser.new
+    @parser ||= Liquify::LiquidTemplateParser.new
   end
 end

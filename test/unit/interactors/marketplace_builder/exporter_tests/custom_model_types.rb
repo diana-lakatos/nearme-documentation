@@ -8,7 +8,7 @@ module MarketplaceBuilder
       end
 
       def seed!
-        FactoryGirl.create(:instance_profile_type)
+        FactoryGirl.create(:instance_profile_type) unless @instance.reload.default_profile_type.present?
         @model_type = FactoryGirl.create(:custom_model_type, name: 'Vehicles', instance_profile_types: [@instance.default_profile_type])
         FactoryGirl.create(:custom_attribute, name: 'vehicle_type', label: 'Vehicle Type', target: @model_type)
       end

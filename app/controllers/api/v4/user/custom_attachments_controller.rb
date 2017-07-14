@@ -11,8 +11,9 @@ module Api
     end
 
     def destroy
-      custom_attachment = current_user.custom_attachments.find(params[:id])
-      custom_attachment.destroy
+      DestroyResource.new(resource: current_user.custom_attachments.find(params[:id]),
+                          params: params,
+                          current_user: current_user).call
       render nothing: true
     end
 

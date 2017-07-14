@@ -7,11 +7,17 @@ module Api
 
         def create
           begin
-            if checkout_form.validate(form_params)
-              checkout_form.save
-              WorkflowStepJob.perform(WorkflowStep::CheckoutWorkflow::Completed, shopping_cart.id, as: current_user)
-              # TODO: trigger workflow step for each checkout_form.orders -> to support multiple listers  in one checkout
-            end
+            SubmitForm.new(
+              form_configuration: form_configuration,
+              form: checkout_form,
+              params: form_params,
+              current_user: current_user
+            ).tap do |submit_form|
+              submit_form.add_success_observer(
+                SubmitForm::LegacyWorkflowStepTrigger.new(WorkflowStep::CheckoutWorkflow::Completed,
+                                                          shopping_cart.id)
+              )
+            end.call
           rescue CheckoutShoppingCart::PaymentProcessingError
             checkout_form.errors.add(:base, :payment_failed)
           end

@@ -7,14 +7,20 @@ module Api
         before_action :authorize_action, only: [:update]
 
         def update
-          if order_item_form.validate(params[:form].presence || {})
-            order_item_form.save
-            raise ArgumentError, "Order was not saved: #{model.errors.full_messages.join(', ')}" if model.changed?
-          end
+          SubmitForm.new(
+            form_configuration: form_configuration,
+            form: order_item_form,
+            params: form_params,
+            current_user: current_user
+          ).call
           respond(order_item_form)
         end
 
         protected
+
+        def form_params
+          params[:form].presence || {}
+        end
 
         def model
           @model ||= order_item_form.model

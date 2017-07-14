@@ -291,6 +291,7 @@ class User < ActiveRecord::Base
   scope :not_banned, -> { where('users.banned_at is null') }
   scope :active_users, -> { where('users.banned_at is null AND users.deleted_at is null') }
   scope :with_email, ->(email) { where('lower(email) = ?', email&.downcase) }
+  scope :with_emails, ->(emails) { where('lower(email) IN (?)', emails.each(&:downcase)) }
 
   validates_with CustomValidators
 

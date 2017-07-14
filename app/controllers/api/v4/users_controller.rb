@@ -13,54 +13,58 @@ module Api
       end
 
       def create
-        if user_signup.validate(params[:form].presence || params[:user] || {})
-          user_signup.save
-          model = user_signup.model
-          # tmp safety check - we still have validation in User model itself
-          # so if model is invalid, it won't be saved and user won't be able to
-          # sign up - we want to be notified
-          raise "Sign up failed due to configuration issue: #{model.errors.full_messages.join(', ')}" unless model.persisted?
-          sign_in(model)
-          index_in_elastic_immediately(model)
-        end
+        SubmitForm.new(form_configuration: form_configuration,
+                       form: user_signup, params: form_params,
+                       current_user: current_user).tap do |submit_form|
+          submit_form.add_success_observer(SubmitForm::IndexInElastic.new)
+          submit_form.add_success_observer(SubmitForm::SignIn.new(self))
+        end.call
         respond(user_signup, notice: I18n.t('devise.registrations.signed_up'),
-                             location: session.delete(:user_return_to).presence || params[:return_to].presence || root_path)
+                             location: return_to_path)
       end
 
       def update
-        if user_update_form.validate(params[:form].presence || params[:user] || {})
-          user_update_form.save
-          user_update_form.try(:profiles)&.model&.to_h&.keys&.try(:each) do |profile_name|
-            profile = user_update_form.profiles.send(:try, profile_name)
-            profile.model.mark_as_onboarded! if profile.try(:mark_as_onboarded)
-          end
-          I18n.locale = current_user.reload.language&.to_sym || :en
-          model = user_update_form.model
-          # tmp safety check - we still have validation in User model itself
-          # so if model is invalid, it won't be saved and user won't be able to
-          # sign up - we want to be notified
-          raise "Update failed due to configuration issue: #{model.errors.full_messages.join(', ')}" if model.changed?
-          index_in_elastic_immediately(model)
-        end
+        SubmitForm.new(
+          form_configuration: form_configuration,
+          form: user_update_form,
+          params: form_params,
+          current_user: current_user
+        ).tap do |submit_form|
+          submit_form.add_success_observer(SubmitForm::LegacyMarkAsOnboarded.new)
+          submit_form.add_success_observer(SubmitForm::ChangeLocale.new)
+        end.call
         respond(user_update_form)
       end
 
       def verify
-        if verification_form.validate(params)
-          verification_form.save
-          sign_in(verification_form.model)
-          flash[:success] = t('flash_messages.registrations.address_verified')
+        SubmitForm.new(
+          form_configuration: form_configuration,
+          form: verification_form,
+          params: params,
+          current_user: current_user
+        ).tap do |submit_form|
+          submit_form.add_success_observer(SubmitForm::SignIn.new(self))
+          submit_form.add_success_observer(SubmitForm::LegacySetFlashMessage.new(
+                                             self, :success, t('flash_messages.registrations.address_verified')
+          ))
+          submit_form.add_failure_observer(SubmitForm::LegacyDisplayValidationErrors.new(self))
+        end.call
+        if verification_form.valid?
           redirect_to root_path
         else
-          flash[:error] = verification_form.errors.full_messages.join(', ')
           respond(verification_form)
         end
       end
 
       protected
 
+      def form_params
+        params[:form].presence || params[:user] || {}
+      end
+
       def user_signup
-        @user_signup ||= form_configuration&.build(new_user) || FormBuilder::UserSignupBuilderFactory.builder(params[:role]).build(new_user)
+        @user_signup ||= form_configuration&.build(new_user) ||
+                         FormBuilder::UserSignupBuilderFactory.builder(params[:role]).build(new_user)
       end
 
       def user_update_form
@@ -86,10 +90,8 @@ module Api
         end
       end
 
-      def index_in_elastic_immediately(user)
-        return unless Rails.application.config.use_elastic_search
-
-        Elastic::Commands::InstantIndexRecord.new(user).call
+      def return_to_path
+        session.delete(:user_return_to).presence || params[:return_to].presence || root_path
       end
     end
   end

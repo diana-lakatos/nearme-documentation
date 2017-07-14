@@ -7,25 +7,22 @@ module Api
         before_action :authorize_action, only: [:update]
 
         def update
-          if order_form.validate(params[:form].presence || {})
-            order_form.save
-            raise ArgumentError, "Order was not saved: #{model.errors.full_messages.join(', ')}" if model.changed?
-
-            publish_event!
-            model.lister_confirmed! if order_form.try(:lister_confirm) && lister?
-            model.schedule_expiry if order_form.try(:schedule_expiry)
-            if order_form.try(:with_charge)
-              if model.recurring? || model.payment_subscription
-                Order::OrderItemCreator.new(model).create
-              elsif payment.present?
-                payment.authorized? ? payment.capture! : payment.purchase!
-              end
-            end
-          end
+          SubmitForm.new(form_configuration: form_configuration,
+                         form: order_form, params: form_params, current_user: current_user).tap do |submit_form|
+            submit_form.add_success_observer(SubmitForm::OrderActions.new(self))
+            submit_form.add_success_observer(
+              SubmitForm::LegacyWorkflowStepTrigger.new(WorkflowStep::OrderWorkflow::OrderUpdated,
+                                                        metadata: { state_event: state_event })
+            )
+          end.call
           respond(order_form)
         end
 
         protected
+
+        def form_params
+          params[:form].presence || {}
+        end
 
         def model
           @model ||= order_form.model
@@ -65,11 +62,6 @@ module Api
 
         def order_form
           @order_form ||= form_configuration.build(order)
-        end
-
-        def publish_event!
-          WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::OrderUpdated,
-                                  order.id, metadata: { state_event: state_event }, as: current_user)
         end
       end
     end

@@ -9,8 +9,8 @@ module NearmeMarketplace
         changed_file_paths.each do |changed_file_path|
           begin
             on_file_changed(changed_file_path)
-          rescue
-            puts_status "Sync failed. Fix a file! #{changed_file_path}"
+          rescue => e
+            puts_status "Sync failed due to: #{e} - #{e.message}. You might need to fix a file #{changed_file_path}"
           end
         end
       end
