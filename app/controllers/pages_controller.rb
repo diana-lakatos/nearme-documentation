@@ -3,6 +3,8 @@ class PagesController < ApplicationController
   layout :resolve_layout
   respond_to :html, :json
 
+  rescue_from(Page::NotFound) { render template: 'errors/not_found', status: 404, layout: 'errors', formats: [:html] }
+
   skip_before_action :redirect_unverified_user, unless: -> { page.require_verified_user? }
 
   def show

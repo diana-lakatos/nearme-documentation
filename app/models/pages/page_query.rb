@@ -22,7 +22,7 @@ module Pages
     private
 
     def pages
-      @pages ||= @relation.where(format: Page.formats.fetch(@format))
+      @pages ||= @relation.where(format: Page.formats.fetch(@format, nil))
     end
 
     def filter(page)
