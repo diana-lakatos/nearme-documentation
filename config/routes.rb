@@ -1253,6 +1253,7 @@ DesksnearMe::Application.routes.draw do
             end
           end
           resources :user_messages, only: [:create]
+          resources :merchant_accounts, only: [:create]
         end
         resources :sessions, only: [:create]
         resources :forms, only: [:create]

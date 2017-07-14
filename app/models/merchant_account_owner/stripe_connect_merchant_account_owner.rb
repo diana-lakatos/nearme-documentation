@@ -45,7 +45,7 @@ class MerchantAccountOwner::StripeConnectMerchantAccountOwner < MerchantAccountO
   end
 
   def default_date_format
-    '%Y-%m-%d'
+    DateOfBirthValidator::DEFAULT_FORMAT
   end
 
   def date_format
