@@ -21,7 +21,7 @@ module MarketplaceBuilder
 
       logger.info "Marketplace Builder loaded for #{@instance.name}"
 
-      raise MarketplaceBuilder::Error, "Mode #{options[:mode]} is not implemented" if [MarketplaceBuilder::MODE_REPLACE, MarketplaceBuilder::MODE_APPEND].include?(options[:mode]) == false
+      raise MarketplaceBuilder::MarketplaceBuilderError, "Mode #{options[:mode]} is not implemented" if [MarketplaceBuilder::MODE_REPLACE, MarketplaceBuilder::MODE_APPEND].include?(options[:mode]) == false
 
       @mode = options[:mode]
       logger.debug "Running in #{@mode.upcase} mode"
@@ -58,7 +58,7 @@ module MarketplaceBuilder
 
       logger.info "Finished in #{@last_run_time.round(2)}s"
 
-    rescue MarketplaceBuilder::Error => error
+    rescue MarketplaceBuilder::MarketplaceBuilderError => error
       logger.fatal error
     end
 

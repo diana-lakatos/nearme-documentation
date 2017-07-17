@@ -36,7 +36,7 @@ module MarketplaceBuilder
                    locales: Locale.all)
 
       rescue StandardError => error
-        raise MarketplaceBuilder::Error, "#{template.liquid_path}: #{error.message}"
+        raise MarketplaceBuilder::MarketplaceBuilderError, "#{template.liquid_path}: #{error.message}"
       end
     end
   end

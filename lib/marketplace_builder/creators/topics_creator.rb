@@ -15,7 +15,7 @@ module MarketplaceBuilder
           remote_cover_image_url = hash.delete(:remote_cover_image_url) || nil
 
           hash.each do |key, _value|
-            raise MarketplaceBuilder::Error, "#{key} is not allowed in Topic settings" unless whitelisted_properties.include?(key)
+            raise MarketplaceBuilder::MarketplaceBuilderError, "#{key} is not allowed in Topic settings" unless whitelisted_properties.include?(key)
           end
 
           topic = Topic.where(hash).first_or_create!
