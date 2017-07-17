@@ -67,6 +67,7 @@ class CommentEndpointLoader implements EndpointLoader {
       throw new Error('Missing placeholder for Slider item');
     }
     let lastComment = data.last_comment.items.pop();
+    let truncatedTitle = truncate(data.title, { length: 40 });
 
     el.innerHTML = `
       <article class="card-a" data-transactable-last-comment-date="${lastComment ? lastComment.created_at : ''}">
@@ -78,7 +79,7 @@ class CommentEndpointLoader implements EndpointLoader {
         </ul>
 
         <h3 class="hx">
-          <a href="${data.show_path}">${truncate(data.title, { length: 40 })}</a>
+          <a href="${data.show_path}">${truncatedTitle}</a>
         </h3>
         <p class="user"><a href="${data.creator.profile_path}"><img src="${data.creator.avatar.url}" width="30" height="30" />${data.creator.name}</a></p>
         <div class="action">

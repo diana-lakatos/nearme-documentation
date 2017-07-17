@@ -31,6 +31,7 @@ class UserMessagesInboxEntry {
 
   build(): HTMLElement {
     let element = document.createElement('p');
+    element.setAttribute('tabindex', '0');
 
     if (this.isOwnMessage) {
       element.classList.add(OWN_MESSAGE_CLASS);

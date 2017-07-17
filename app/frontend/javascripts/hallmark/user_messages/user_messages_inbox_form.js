@@ -4,34 +4,41 @@ const BODY_INPUT_SELECTOR = '[data-user-messages-inbox-body-input]';
 const FILE_INPUT_SELECTOR = '[data-user-messages-inbox-file-input]';
 const META_SELECTOR = 'meta[name="csrf-token"]';
 import Eventable from '../../toolkit/eventable';
-import { findInput, findTextArea, findMeta } from '../../toolkit/dom';
+import { findInput, findTextArea, findMeta, closest } from '../../toolkit/dom';
 import CommentTextarea from '../comment_textarea/comment_textarea';
 import LimitedInput from '../../components/limited_input';
 import UserMessagesInboxEntry from './user_messages_inbox_entry';
-import UserMessagesInboxFileInput from './user_messages_inbox_file_input';
+
+const FILE_PROCESSING_CLASS = 'processing';
+const FILE_WRAPPER_SELECTOR = '.attachment';
 
 class UserMessagesInboxForm extends Eventable {
   form: HTMLFormElement;
   commentTextarea: CommentTextarea;
-  fileInput: UserMessagesInboxFileInput;
+  fileInput: HTMLInputElement;
+  fileWrapper: HTMLElement;
   author: string;
   csrfToken: string;
   action: string;
+  processing: boolean;
 
   constructor(form: HTMLFormElement) {
     super();
 
     this.form = form;
+    this.processing = false;
 
     let textarea = findTextArea(BODY_INPUT_SELECTOR, this.form);
 
     new LimitedInput(textarea);
 
     this.commentTextarea = new CommentTextarea(textarea, { form: this.form });
-    this.fileInput = new UserMessagesInboxFileInput(
-      findInput(FILE_INPUT_SELECTOR, this.form),
-      this.form
-    );
+    this.fileInput = findInput(FILE_INPUT_SELECTOR, this.form);
+    let fileWrapper = closest(this.fileInput, FILE_WRAPPER_SELECTOR);
+    if (!(fileWrapper instanceof HTMLElement)) {
+      throw new Error('Unable to locate file input wrapper');
+    }
+    this.fileWrapper = fileWrapper;
 
     this.author = this.form.dataset.userMessagesInboxCurrentUser;
     if (!this.author) {
@@ -40,86 +47,102 @@ class UserMessagesInboxForm extends Eventable {
 
     let action = this.form.getAttribute('action');
     if (!action) {
-      throw new TypeError('Attachment form is missing action attribute');
+      throw new Error('Missing action attribute on form');
     }
     this.action = action;
-    let meta = findMeta(META_SELECTOR);
-    this.csrfToken = meta.getAttribute('content');
+    this.csrfToken = findMeta(META_SELECTOR).getAttribute('content');
 
     this.bindEvents();
   }
 
   bindEvents() {
-    this.fileInput.on('newfile', this.onFileInputChange.bind(this));
-    this.form.addEventListener('submit', this.onFormSubmit.bind(this));
+    this.fileInput.addEventListener('change', this.handleFileInputChange.bind(this));
+    this.form.addEventListener('submit', this.handleFormSubmit.bind(this));
   }
 
-  onFileInputChange({ name: name, url: url }: { name: string, url: string } = {}) {
-    let entry = new UserMessagesInboxEntry();
-    entry.setAuthor(this.author);
-    entry.setAttachment(name, url);
-    entry.setAuthor(this.author);
-    entry.setOwnMessage(true);
+  handleFileInputChange() {
+    this.fileWrapper.classList.add(FILE_PROCESSING_CLASS);
 
-    let body: string = this.commentTextarea.getValue();
-    if (body.trim() != '') {
-      let entry_text = new UserMessagesInboxEntry();
-      entry_text.setAuthor(this.author);
-      entry_text.setOwnMessage(true);
-      entry_text.setBody(body);
-
-      this.emit('newentry', entry_text);
-    }
-
-    this.emit('newentry', entry);
-
-    this.reset();
-  }
-
-  onFormSubmit(event: Event) {
-    event.preventDefault();
-
-    this.send();
-
-    let entry = new UserMessagesInboxEntry();
-    entry.setAuthor(this.author);
-    entry.setOwnMessage(true);
-
-    let body: string = this.commentTextarea.getValue();
-
-    if (body.trim() === '') {
+    if (this.processing) {
       return;
     }
-
-    entry.setBody(body);
-
-    this.emit('newentry', entry);
-    this.reset();
+    this.processing = true;
+    this.send()
+      .then(this.processResponse.bind(this))
+      .then((entry: UserMessagesInboxEntry) => {
+        this.emit('newentry', entry);
+        this.fileWrapper.classList.remove(FILE_PROCESSING_CLASS);
+        this.processing = false;
+        this.reset();
+      })
+      .catch(error => {
+        this.fileWrapper.classList.remove(FILE_PROCESSING_CLASS);
+        this.processing = false;
+        alert(error);
+      });
   }
 
-  send() {
-    let request = new XMLHttpRequest();
-    request.open('POST', this.action, true);
-    request.setRequestHeader('X-CSRF-Token', this.csrfToken);
-    request.setRequestHeader('Accept', 'application/json');
-    request.responseType = 'json';
+  handleFormSubmit(event: Event) {
+    event.preventDefault();
 
-    request.onload = () => {
-      if (request.status < 200 || request.status >= 400) {
-        // rollback ?
-        throw new Error('Unable to send attachment');
+    if (this.processing) {
+      return;
+    }
+    this.processing = true;
+
+    this.send().then(this.processResponse.bind(this)).then((entry: UserMessagesInboxEntry) => {
+      this.emit('newentry', entry);
+      this.processing = false;
+      this.reset();
+    });
+  }
+
+  send(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let request = new XMLHttpRequest();
+      request.open('POST', this.action, true);
+      request.setRequestHeader('X-CSRF-Token', this.csrfToken);
+      request.setRequestHeader('Accept', 'application/json');
+      request.responseType = 'json';
+
+      request.onload = () => {
+        if (request.status < 200 || request.status >= 400) {
+          reject('Unable to send the message');
+          return;
+        }
+        resolve(request.response);
+      };
+
+      request.onerror = () => {
+        reject('Unable to reach server to send the message');
+      };
+
+      request.send(new FormData(this.form));
+    });
+  }
+
+  processResponse(userMessageResponse: UserMessageResponseType): Promise<UserMessagesInboxEntry> {
+    return new Promise(resolve => {
+      let entry = new UserMessagesInboxEntry();
+
+      entry.setId(userMessageResponse.id);
+      entry.setAuthor(userMessageResponse.author);
+      entry.setOwnMessage(true);
+
+      userMessageResponse.attachments.forEach(({ name, url }: { name: string, url: string }) => {
+        entry.addAttachment(name, url);
+      });
+
+      if (userMessageResponse.body.trim() !== '') {
+        entry.setBody(userMessageResponse.body);
       }
-    };
 
-    request.onerror = () => {
-      throw new Error('Unable to reach server to send attachment');
-    };
-
-    request.send(new FormData(this.form));
+      resolve(entry);
+    });
   }
 
   reset() {
-    this.fileInput.empty();
+    this.fileInput.value = '';
     this.commentTextarea.empty();
   }
 }

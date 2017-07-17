@@ -1035,6 +1035,11 @@ DesksnearMe::Application.routes.draw do
       resources :user_messages, only: [:index, :show] do
         collection do
           get :archived
+          get :search
+        end
+
+        member do
+          patch :archive_one
         end
       end
 

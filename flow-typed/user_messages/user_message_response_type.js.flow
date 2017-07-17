@@ -1,0 +1,7 @@
+type UserMessageResponseType = {
+  id: number,
+  author: string,
+  time: string,
+  body: string,
+  attachments: Array<{ url: string, name: string }>
+};
