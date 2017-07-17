@@ -20,11 +20,16 @@ module Api
       context 'default user' do # rubocop:disable Metrics/BlockLength
         context 'create' do # rubocop:disable Metrics/BlockLength
           should 'successfully sign up without extra configuration' do
+            enable_elasticsearch!
+            Elastic::Commands::InstantIndexRecord.any_instance.expects(:call).once
+
             assert_difference('::User.count') do
               assert_difference('UserProfile.count') do
                 post :create, form: user_attributes
               end
             end
+
+            disable_elasticsearch!
           end
 
           context 'extra configuration' do # rubocop:disable Metrics/BlockLength
@@ -230,6 +235,31 @@ module Api
           end
         end
       end
+
+      context 'update' do
+        should 'update user' do
+          enable_elasticsearch!
+          Elastic::Commands::InstantIndexRecord.any_instance.expects(:call).once
+          user = FactoryGirl.create(:user)
+          form_configuration ||= FactoryGirl.create(
+            :form_configuration,
+            name: 'user_form',
+            base_form: 'UserForm',
+            configuration: {}
+          )
+          sign_in user
+
+          assert_difference('::User.count', 0) do
+            assert_difference('UserProfile.count', 0) do
+              put :update, id: user.id, form: user_attributes, form_configuration_id: form_configuration.id
+            end
+          end
+
+          assert_response :redirect
+          disable_elasticsearch!
+        end
+      end
+
 
       context 'verify' do
         should 'verify user if token and id are correct' do
