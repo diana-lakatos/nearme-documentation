@@ -30,6 +30,7 @@ module Api
           params: form_params,
           current_user: current_user
         ).tap do |submit_form|
+          submit_form.add_success_observer(SubmitForm::IndexInElastic.new)
           submit_form.add_success_observer(SubmitForm::LegacyMarkAsOnboarded.new)
           submit_form.add_success_observer(SubmitForm::ChangeLocale.new)
         end.call
