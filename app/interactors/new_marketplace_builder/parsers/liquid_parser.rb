@@ -19,6 +19,8 @@ module NewMarketplaceBuilder
           attributes['partial'] ||= is_partial
           attributes['format'] ||= file_format
         end
+      rescue Exception => e
+        raise "Error while parsing #{@file_path}: #{e.message}. The body: #{@liquid_body}"
       end
 
       private
