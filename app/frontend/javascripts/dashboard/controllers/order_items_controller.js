@@ -31,6 +31,7 @@ OrderItemsController = function() {
       '[data-quantity-input]',
       function(_this) {
         return function(event) {
+          _this.convertToPositive(event.target);
           return _this.calculateSubTotal($(event.target));
         };
       }(this)
@@ -40,6 +41,7 @@ OrderItemsController = function() {
       '[data-price-input]',
       function(_this) {
         return function(event) {
+          _this.convertToPositive(event.target);
           return _this.calculateSubTotal($(event.target));
         };
       }(this)
@@ -63,6 +65,10 @@ OrderItemsController = function() {
         };
       }(this)
     );
+  };
+
+  OrderItemsController.prototype.convertToPositive = function(target) {
+    target.value = (Math.abs(parseFloat(target.value)) || 0);
   };
 
   OrderItemsController.prototype.calculateSubTotal = function(target) {
