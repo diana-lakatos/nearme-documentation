@@ -25,7 +25,7 @@ class AvailabilityRuleForm < BaseForm
   validates :close_time, presence: true
   validates :days, presence: true
 
-  validate :open_time_after_close_time
+  #validate :open_time_after_close_time
 
   def open_time_after_close_time
     errors.add(:close_time, I18n.t('errors.messages.open_time_before_close_time')) if opening_time.negative?

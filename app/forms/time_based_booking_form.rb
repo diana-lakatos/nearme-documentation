@@ -85,7 +85,8 @@ class TimeBasedBookingForm < ActionTypeForm
   end
 
   def availability_rules_minimum_booking_minutes
-    return true if minimum_booking_minutes.blank?
+    # FIXME: the only client we have does not want it.. anyway, we might want to do it in a better way
+    return true if minimum_booking_minutes.blank? || true
     availability_templates.each do |at|
       at.availability_rules.each do |ar|
         errors.add(:availability_templates, :invalid) unless ar.validate_minimum_opening_times(minimum_booking_minutes)
