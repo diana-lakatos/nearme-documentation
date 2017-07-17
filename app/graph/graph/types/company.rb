@@ -11,6 +11,13 @@ module Graph
       field :url, types.String
       field :name, !types.String
       field :description, types.String
+      field :merchant_accounts, Graph::Types::Collection.build(Graph::Types::Payments::MerchantAccount) do
+        argument :page, types.Int, default_value: 1
+        argument :per_page, types.Int, default_value: 20
+        resolve lambda { |obj, args, ctx|
+          Graph::Types::Payments::MerchantAccountsResolver.new(::MerchantAccount.for_company(obj.id)).call(obj, args, ctx)
+        }
+      end
     end
   end
 end

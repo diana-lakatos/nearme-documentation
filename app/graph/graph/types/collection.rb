@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 module Graph
   module Types
@@ -23,9 +22,11 @@ module Graph
           field :has_previous_page, !types.Boolean do
             resolve ->(obj, _args, _ctx) { obj.current_page > FIRST_PAGE }
           end
-          field :items do
-            type types[type]
-            resolve ->(obj, _args, _ctx) { obj }
+          field :items, types[type], deprecation_reason: 'Use "results"' do
+            resolve ->(obj, _, _) { obj }
+          end
+          field :results, types[type] do
+            resolve ->(obj, _, _) { obj }
           end
         end
       end

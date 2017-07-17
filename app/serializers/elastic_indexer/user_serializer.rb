@@ -18,6 +18,7 @@ module ElasticIndexer
     has_one :current_address, serializer: AddressSerializer
     has_one :reviews_counter, serializer: ReviewAggregatorSerializer
 
+    has_many :companies, serializer: CompanySerializer
     has_many :user_profiles, serializer: UserProfileSerializer
 
     def instance_profile_type_ids
