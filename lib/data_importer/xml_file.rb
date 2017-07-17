@@ -130,7 +130,6 @@ class DataImporter::XmlFile < DataImporter::File
         Location.transaction do
           @location.update_column(:deleted_at, nil)
           ApprovalRequest.with_deleted.where(owner: @location).update_all(deleted_at: nil)
-          Impression.with_deleted.where(impressionable: @location).update_all(deleted_at: nil)
         end
       end
 
@@ -183,7 +182,6 @@ class DataImporter::XmlFile < DataImporter::File
           @listing.update_column(:deleted_at, nil)
           AvailabilityRule.with_deleted.where(target: @listing).update_all(deleted_at: nil)
           ApprovalRequest.with_deleted.where(owner: @listing).update_all(deleted_at: nil)
-          Impression.with_deleted.where(impressionable: @listing).update_all(deleted_at: nil)
         end
       end
 

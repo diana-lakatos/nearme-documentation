@@ -1,6 +1,0 @@
-<h2>Make a great first impression, {{ user.first_name }}!</h2>
-
-<p>Your listing, '<a href="{{ listing.listing_url }}">{{ listing.name }}</a>', needs some pictures! Listings with photos have 10x chances of getting booked. Choose great pictures of your {{ platform_context.bookable_noun }} and give potential {{ listing.lessees }} a good first impression.</p>
-
-<a class="btn" href="{{ platform_context.host | append:listing.manage_listing_url_with_tracking | append:signature_for_tracking }}">Upload Photos Now</a>
-

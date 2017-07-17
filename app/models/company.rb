@@ -25,7 +25,6 @@ class Company < ActiveRecord::Base
   has_many :instance_clients, as: :client, dependent: :destroy
   has_many :listings, class_name: 'Transactable', inverse_of: :company
   has_many :locations, dependent: :destroy, inverse_of: :company
-  has_many :locations_impressions, source: :impressions, through: :locations
   has_many :merchant_accounts, as: :merchantable
   has_many :orders
   has_many :purchases

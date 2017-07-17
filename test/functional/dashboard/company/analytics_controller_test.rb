@@ -91,27 +91,6 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
         end
       end
     end
-
-    context '#location_views' do
-      setup do
-        @listing = FactoryGirl.create(:transactable, quantity: 1000)
-        @listing.location.company.update_attribute(:creator_id, @user.id)
-        @listing.location.company.add_creator_to_company_users
-      end
-
-      context 'date' do
-        setup do
-          create_location_visit
-        end
-
-        should '@last_month_visits has one visit from today' do
-          get :show, analytics_mode: 'location_views'
-          date = I18n.l(Date.current.to_date, format: :day_and_month)
-          assert_equal date, I18n.l(assigns(:analytics).chart_data.last.chart_date, format: :day_and_month)
-          assert_equal 1, assigns(:analytics).list.size
-        end
-      end
-    end
   end
 
   private
@@ -123,9 +102,5 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
       options[:subtotal_amount] = amount
     end
     FactoryGirl.create(:confirmed_reservation, currency: 'USD', transactable: @listing, payment: FactoryGirl.build(:paid_payment, options)).payment
-  end
-
-  def create_location_visit
-    @listing.location.track_impression
   end
 end

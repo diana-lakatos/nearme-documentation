@@ -29,8 +29,6 @@ class UserDrop < UserBaseDrop
   #   @return [String] Email address of the user
   # @!method full_mobile_number
   #   @return [String, nil] the mobile number with the full international calling prefix
-  # @!method administered_locations_pageviews_30_day_total
-  #   @return [Integer] total number of pageviews for this user's administered locations during the last 30 days
   # @!method blog
   #   @return [UserBlogDrop] User's blog
   # @!method country_name
@@ -115,7 +113,7 @@ class UserDrop < UserBaseDrop
   #   @return [Integer] number of unsolved company tickets
   delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends,
            :first_name, :middle_name, :last_name, :reservations_count,
-           :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
+           :email, :full_mobile_number, :blog,
            :country_name, :phone, :current_address, :is_trusted?,
            :has_published_posts?, :seller_properties, :buyer_properties, :user_profiles,
            :external_id, :seller_average_rating, :default_wish_list, :buyer_profile, :seller_profile,

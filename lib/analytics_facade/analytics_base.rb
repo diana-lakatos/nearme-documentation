@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AnalyticsFacade::AnalyticsBase
-  AGREGATION_CHARTS = %w(orders listings listing_views location_views).freeze
+  AGREGATION_CHARTS = %w(orders listings).freeze
   MONEY_CHARTS = %w(revenue expenses transfers).freeze
   CHART_TYPES = MONEY_CHARTS + AGREGATION_CHARTS
   ADMIN_CHARTS = CHART_TYPES.except('expenses')

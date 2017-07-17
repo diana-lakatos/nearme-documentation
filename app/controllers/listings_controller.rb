@@ -20,7 +20,6 @@ class ListingsController < ApplicationController
     else
       @section_name = 'listings'
 
-      @listing.track_impression(request.remote_ip)
       @reviews = @listing.reviews.paginate(page: params[:reviews_page])
 
       @rating_questions = RatingSystem.active_with_subject(RatingConstants::TRANSACTABLE).try(:rating_questions)

@@ -56,11 +56,9 @@ class LocationDrop < BaseDrop
   #   @return [Transactable::PricingDrop] lowest price for this location (i.e. including service fees and mandatory additional charges)
   # @!method to_key
   #   @return [Array<Integer>] array of key attributes for the object
-  # @!method impressions_count
-  #   @return [Integer] number of impressions for this location
   # @!method address_components
   #   @return [Hash] returns all address components in Google Maps API format
-  delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, :creator, :administrator, :updated_at, :postcode, :country, :state, :lowest_full_price, :to_key, :model_name, :impressions_count, :location_address, :address_components, to: :location
+  delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, :creator, :administrator, :updated_at, :postcode, :country, :state, :lowest_full_price, :to_key, :model_name, :location_address, :address_components, to: :location
 
   def initialize(location)
     @location = location

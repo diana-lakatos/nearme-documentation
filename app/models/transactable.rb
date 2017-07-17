@@ -11,7 +11,6 @@ class Transactable < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  include Impressionable
   include Searchable
 
   # FIXME: disabled Sitemap updates. Needs to be optimized.
@@ -46,7 +45,6 @@ class Transactable < ActiveRecord::Base
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :billing_authorizations, as: :reference
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
-  has_many :impressions, as: :impressionable, dependent: :destroy
   has_many :photos, as: :owner, dependent: :destroy do
     def thumb
       (first || build).thumb

@@ -16,7 +16,6 @@ class Location < ActiveRecord::Base
   # notify_associations_about_column_update([:payments, :reservations, :listings], :company_id)
   inherits_columns_from_association([:creator_id], :company)
 
-  include Impressionable
   # Include a set of helpers for handling availability rules and interface onto them
   include AvailabilityRule::TargetHelper
 
@@ -28,7 +27,6 @@ class Location < ActiveRecord::Base
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :availability_templates, as: :parent
   has_many :approval_requests, as: :owner, dependent: :destroy
-  has_many :impressions, as: :impressionable, dependent: :destroy
   has_many :listings, dependent: :destroy, inverse_of: :location, class_name: 'Transactable'
   has_many :transactables, dependent: :destroy, inverse_of: :location
   has_many :payments, through: :reservations

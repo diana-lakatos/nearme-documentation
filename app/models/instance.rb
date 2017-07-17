@@ -41,10 +41,8 @@ class Instance < ActiveRecord::Base
   has_many :companies, inverse_of: :instance
   has_many :form_configurations, dependent: :destroy
   has_many :locations, inverse_of: :instance
-  has_many :locations_impressions, through: :locations, source: :impressions, class_name: 'Impression'
   has_many :location_types, inverse_of: :instance
   has_many :listings, class_name: 'Transactable', inverse_of: :instance
-  has_many :listings_impressions, through: :listings, source: :impressions, class_name: 'Impression'
   has_many :domains, as: :target, dependent: :destroy
   has_many :partners, inverse_of: :instance
   has_many :instance_admins, inverse_of: :instance
