@@ -31,9 +31,6 @@ class WorkflowAlert < ActiveRecord::Base
     where('workflow_alerts.from ilike :query', query: query)
   }
 
-  has_many :form_configuration_workflow_alerts, dependent: :destroy
-  has_many :form_configurations, through: :form_configuration_workflow_alerts
-
   belongs_to :workflow_step
   belongs_to :instance
 
