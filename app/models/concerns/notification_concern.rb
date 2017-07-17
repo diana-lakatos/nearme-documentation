@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Notification
+module NotificationConcern
   extend ActiveSupport::Concern
 
   included do

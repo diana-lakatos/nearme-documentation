@@ -1,0 +1,15 @@
+---
+name: forced_email_notification
+to: '{{ form.model.email }}'
+delay: 30
+enabled: true
+trigger_condition: lack of condition
+from: from@near-me.com
+reply_to: reply_to@near-me.com
+cc: cc@near-me.com
+bcc: bcc@near-me.com
+subject: 'Hi {{ form.model.first_name }}'
+layout_path: my_layout
+forced: true
+---
+Hello {{ form.model.first_name }}

@@ -35,6 +35,7 @@ module Notification
     end
 
     def apply_unsubscription(emails)
+      return emails if @notification.forced?
       filtered_emails ||= unsubscribed_emails(emails)
       return emails if filtered_emails.empty?
       emails.reject { |e| filtered_emails.include?(e.downcase) }
