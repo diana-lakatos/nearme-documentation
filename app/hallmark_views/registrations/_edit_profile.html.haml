@@ -73,4 +73,5 @@
         = render :partial => 'addresses/form', locals: { f: address_form, label: "Location"}
 
     %p.action
+      = link_to 'Cancel Account', '/dashboard/cancel-account', class: 'button-a alt alignleft'
       = f.button :submit

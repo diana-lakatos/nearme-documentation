@@ -4,7 +4,7 @@ class ApiCallNotification < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  include Notification
+  include NotificationConcern
 
   REQUEST_TYPE = %w(GET POST PUT DELETE).freeze
 

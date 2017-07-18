@@ -4,7 +4,7 @@ module NewMarketplaceBuilder
     class EmailNotificationConverter < BaseConverter
       primary_key :name
       properties :name, :to, :content, :delay, :enabled, :trigger_condition,
-                 :from, :reply_to, :cc, :bcc, :subject, :layout_path
+                 :from, :reply_to, :cc, :bcc, :subject, :layout_path, :forced
 
       def scope
         @model.email_notifications

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170711125610) do
+ActiveRecord::Schema.define(version: 20170717115146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1106,6 +1106,7 @@ ActiveRecord::Schema.define(version: 20170711125610) do
     t.text     "bcc"
     t.text     "subject"
     t.string   "layout_path"
+    t.boolean  "forced"
   end
 
   add_index "email_notifications", ["instance_id", "name"], name: "index_email_notifications_on_instance_id_and_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
@@ -3557,10 +3558,20 @@ ActiveRecord::Schema.define(version: 20170711125610) do
   add_index "waiver_agreements", ["target_id", "target_type"], name: "index_waiver_agreements_on_target_id_and_target_type", using: :btree
   add_index "waiver_agreements", ["waiver_agreement_template_id"], name: "index_waiver_agreements_on_waiver_agreement_template_id", using: :btree
 
+  create_table "webhook_configurations", force: :cascade do |t|
+    t.datetime "deleted_at"
+    t.integer  "instance_id"
+    t.integer  "payment_gateway_id"
+    t.text     "encrypted_signing_secret"
+    t.string   "payment_gateway_mode"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "webhooks", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "webhookable_id"
-    t.string   "webhookable_type",     limit: 255
+    t.string   "webhookable_type",         limit: 255
     t.text     "encrypted_response"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -3571,8 +3582,9 @@ ActiveRecord::Schema.define(version: 20170711125610) do
     t.string   "state"
     t.text     "error"
     t.string   "payment_gateway_mode"
-    t.integer  "retry_count",                      default: 0
+    t.integer  "retry_count",                          default: 0
     t.string   "external_id"
+    t.integer  "wenhook_configuration_id"
   end
 
   add_index "webhooks", ["instance_id", "webhookable_id", "webhookable_type"], name: "index_webhooks_on_instance_id_and_webhookable", using: :btree
@@ -3672,7 +3684,6 @@ ActiveRecord::Schema.define(version: 20170711125610) do
     t.boolean  "enabled",                               default: true
   end
 
-  add_index "workflow_alerts", ["instance_id", "name", "alert_type", "workflow_step_id"], name: "index_workflow_alerts_on_name_unique", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
   add_index "workflow_alerts", ["template_path", "workflow_step_id", "recipient_type", "alert_type", "deleted_at"], name: "index_workflows_alerts_on_templ_step_recipient_alert_and_del", unique: true, using: :btree
 
