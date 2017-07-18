@@ -81,7 +81,7 @@ module Liquid
       # @param obj [Object] we will transform object into array and add it to the other. Method
       #   is called soft, because it will not crash when nil is provided as argument
       def soft_concat(array, obj)
-        Array(array) + Array(obj)
+        Array.wrap(array) + Array.wrap(obj)
       end
 
       # @return [Array<Array<Object>>] the original array split into groups having the size
@@ -454,6 +454,13 @@ module Liquid
       # @param other_array [Array<Object>] array of objects to be processed
       def intersection(array, other_array)
         array & other_array
+      end
+
+      # @return [Array<Object>] that is a difference between two arrays
+      # @param array [Array<Object>] array of objects to be processed
+      # @param other_array [Array<Object>] array of objects to be processed
+      def subtract_array(array, other_array)
+        Array.wrap(array) - Array.wrap(other_array)
       end
 
       # @return [Array<Object>] with objects

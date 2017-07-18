@@ -89,9 +89,9 @@ module Graph
 
         field :customizations, types[Graph::Types::Customizations::Customization] do
           argument :name, types.String
-          resolve lambda { |obj, args, _ctx|
-            return obj.customizations if args[:name].blank?
-            obj.customizations.select { |c| c.name == args[:name] }
+          argument :user_id, types.ID, prepare: ->(string_id, _ctx) { string_id.to_i }
+          resolve lambda { |obj, args, ctx|
+            Graph::Resolvers::Elastic::HashResolver.new.call(obj.customizations, args, ctx)
           }
         end
 
