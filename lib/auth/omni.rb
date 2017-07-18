@@ -43,9 +43,13 @@ module Auth
       authentication.save!
     end
 
+    def email
+      @email ||= @auth_params['info']['email']
+    end
+
     def email_taken_by_other_user?(current_user)
-      if email = @auth_params['info']['email'].presence
-        user = User.find_by(email: @auth_params['info']['email'])
+      if email.present?
+        user = User.find_by(email: email)
         current_user.try(:email) != email && user.present? && Authentication.where('user_id = ? AND provider = ?', user.id, provider).count.zero?
       else
         false
