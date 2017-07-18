@@ -523,6 +523,13 @@ module Liquid
         str.to_s.rjust(count, symbol)
       end
 
+      # @return [String] returns mobile number in E.164 format; recommended for sending sms notifications
+      # @param number [String] the base part of mobile number
+      # @param country [String] country for which country code should be used. Can be anything - full name, iso2, iso3
+      def to_mobile_number(number, country)
+        PhoneHelper.new(number: number, country: country).full_number
+      end
+
       # @return [Boolean] checks if given array contains at least one queried string/number
       # @param arr [Array] array to search through
       # @param query [String, Number] String/Number compared to each item in the given array

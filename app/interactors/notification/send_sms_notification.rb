@@ -4,7 +4,7 @@ module Notification
     protected
 
     def send
-      # todo: bypassing a lot of abstraction created in CustomSmsNotifier
+      # TODO: bypassing a lot of abstraction created in CustomSmsNotifier
       # which can be deleted later on, and SmsNotifier::Message can be simplified
       # itself as well
       ::SmsNotifier::Message.new(options).deliver
