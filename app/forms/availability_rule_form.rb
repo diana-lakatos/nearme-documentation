@@ -27,6 +27,8 @@ class AvailabilityRuleForm < BaseForm
 
   #validate :open_time_after_close_time
 
+  property :skip_time_validation, default: true
+
   def open_time_after_close_time
     errors.add(:close_time, I18n.t('errors.messages.open_time_before_close_time')) if opening_time.negative?
   end
