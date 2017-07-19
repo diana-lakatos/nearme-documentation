@@ -180,7 +180,7 @@ module Liquid
       # @param key [String] translation key
       # @param options [Hash{String => String}] values passed to translation string
       def translate(key, options = {})
-        ::I18n.t(key, options.deep_symbolize_keys)
+        ::I18n.t(key, options.deep_symbolize_keys).html_safe
       end
       alias t translate
 
