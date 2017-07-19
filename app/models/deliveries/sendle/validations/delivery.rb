@@ -30,7 +30,7 @@ module Deliveries
 
         class DeliveryParamValidator < ActiveModel::Validator
           def validate(record)
-            validator = Deliveries::Sendle::ValidatePlaceOrderRequest.new(record)
+            validator = Deliveries::Sendle::Validations::ValidatePlaceOrderRequest.new(record)
 
             return if validator.valid?
 
