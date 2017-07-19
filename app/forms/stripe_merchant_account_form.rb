@@ -39,7 +39,7 @@ class StripeMerchantAccountForm < BaseForm
 
   def save(*args)
     super.tap do
-      propagate_errors unless model.valid?
+      propagate_errors if model.errors.any? || !model.valid?
     end
   end
 
