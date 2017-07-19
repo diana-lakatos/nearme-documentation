@@ -7,10 +7,10 @@ module Searchable
   included do
     include QuerySearchable
     include Elasticsearch::Model
+    include "#{to_s.demodulize.pluralize}Index".constantize
+    include ResetMapping
 
     after_commit :refresh_index
-
-    include "#{to_s.demodulize.pluralize}Index".constantize
 
     index_name -> { Elastic.index_for(PlatformContext.current.instance).index_name }
 
