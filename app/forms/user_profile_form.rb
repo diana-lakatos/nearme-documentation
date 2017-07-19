@@ -34,7 +34,7 @@ class UserProfileForm < BaseForm
                                            populate_if_empty: AvailabilityTemplate,
                                            prepopulator: ->(*) { self.availability_template ||= AvailabilityTemplate.new }
         end
-        inject_dynamic_fields(configuration, whitelisted: [:instance_profile_type_id, :profile_type, :enabled, :availability_template_id])
+        inject_dynamic_fields(configuration, whitelisted: [:instance_profile_type_id, :profile_type, :enabled, :availability_template_id, :mark_as_onboarded])
       end
     end
   end
