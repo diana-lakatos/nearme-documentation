@@ -2,12 +2,13 @@
 module Graph
   module Resolvers
     class Orders
-      def call(_, arguments, ctx)
-        resolve_by(arguments)
+      def call(parent_object, arguments, _ctx)
+        resolve_by(arguments, parent_object&.orders)
       end
 
-      def resolve_by(arguments)
-        arguments.keys.reduce(::Order.all) do |relation, argument_key|
+      def resolve_by(arguments, initial_relation)
+        initial_relation ||= ::Order.all
+        arguments.keys.reduce(initial_relation) do |relation, argument_key|
           public_send("resolve_by_#{argument_key}", relation, arguments[argument_key])
         end
       end
@@ -37,6 +38,10 @@ module Graph
 
       def resolve_by_state(relation, state)
         relation.where(state: state)
+      end
+
+      def resolve_by_states(relation, states)
+        relation.with_state(states)
       end
     end
   end

@@ -9,15 +9,16 @@ module Graph
         @scope = ::Customization.includes(:custom_model_type).all
         @arguments = arguments
 
+        resolve
       end
 
       def resolve
         resolve_argument :id do |value|
-          { id: value }
+          @conditions[:id] = value
         end
 
-        resolve_argument :custom_model_type_name do |value|
-          { custom_model_types: { parameterized_name: value } }
+        resolve_argument :name do |value|
+          @conditions[:custom_model_types] = { parameterized_name: value }
         end
 
         find_by_conditions
@@ -26,13 +27,12 @@ module Graph
       private
 
       def find_by_conditions
-        scope.find_by(conditions)
+        scope.find_by(@conditions)
       end
 
       def resolve_argument(argument)
         return unless arguments.key? argument
-
-        @conditions.merge(yield(arguments[argument]))
+        yield(arguments[argument])
       end
     end
   end

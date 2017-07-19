@@ -163,6 +163,12 @@ module Liquid
         render_money(money)
       end
 
+      # @return [Numeric] summarised value of array
+      # @param array [Array<Numeric>] array with values to be summarised
+      def sum_array(array)
+        Array.wrap(array).sum
+      end
+
       # @return [String] formatted price using the global price formatting rules, displayed as negative amount; the default currency will be used
       # @param money [Numeric] amount to be formatted
       def price_with_cents_with_currency_as_cost(money)

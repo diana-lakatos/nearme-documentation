@@ -40,7 +40,9 @@ module Graph
         field :time_based_booking, Types::Transactables::TimeBasedBooking
         field :offer_action, Types::Transactables::OfferAction
         field :orders, !types[Types::Orders::Order] do
-          resolve ->(obj, _args, _ctx) { obj.source.orders }
+          argument :user_id, types.ID
+          argument :state, types.String
+          resolve Graph::Resolvers::Orders.new
         end
         field :custom_attribute_photos,
               !types[Types::Image],
@@ -92,6 +94,7 @@ module Graph
               'Fetch any customization by name or id, ex: hair_color: customization(name: "hair_color")' do
           argument :id, types.ID
           argument :name, types.String
+          argument :user_id, types.ID
           resolve ->(obj, arg, ctx) { Resolvers::Customizations.new.call(obj.source.object, arg, ctx) }
         end
       end
