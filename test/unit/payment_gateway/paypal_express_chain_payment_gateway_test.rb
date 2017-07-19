@@ -127,7 +127,6 @@ class PaymentGateway::PaypalExpressChainPaymentGatewayTest < ActiveSupport::Test
     assert payment.paid?
 
     create_cancellation_policies(payment.payable, { guest_refund_options: { penalty_factor: 0.5 } })
-
     payment.payable.send(refund_with)
   end
 end

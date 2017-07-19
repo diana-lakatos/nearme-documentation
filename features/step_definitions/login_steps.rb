@@ -6,7 +6,6 @@ end
 Given /^form configuration includes custom attribute$/ do
 =begin
 # I was too eager to add it, but will be needed ;)
-  binding.pry
   FactoryGirl.create(:form_component_with_user_custom_attributes, form_componentable: model!('the transactable_type_listing'))
   fc = FormConfiguration.where(name: 'Default Signup').first
   fc.update_attribute(:configuration, fc.configuration.deep_merge({

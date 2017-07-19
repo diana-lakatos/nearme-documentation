@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require './lib/validators/unique_validator'
-
 class BaseForm < Reform::Form
   class << self
     def inject_dynamic_fields(configuration, whitelisted: [])

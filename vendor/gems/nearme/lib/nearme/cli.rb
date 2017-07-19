@@ -2,7 +2,6 @@
 require 'thor'
 require 'nearme'
 require 'slack-notifier'
-require_relative '../../../../../lib/jira_wrapper.rb'
 require_relative '../../../../../lib/raygun_deploy_notifier.rb'
 
 module NearMe
@@ -61,9 +60,9 @@ DESC
       notifier.ping(":airplane_departure: Deploy started by #{ENV['AWS_USER']}: #{options[:branch]} -> #{options[:stack]} (id: #{deployment_id})", icon_emoji: ':passenger_ship:')
       if @production_deploy.present?
         production_notifier = Slack::Notifier.new('https://hooks.slack.com/services/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')
-        jira_wrapper = JiraWrapper.new
-        jira_wrapper.release_version!(@production_deploy)
-        production_release_notes = jira_wrapper.release_notes(@production_deploy)
+        releaser = JiraWrapper::Releaser.new
+        releaser.release_version!(@production_deploy)
+        production_release_notes = releaser.release_notes(@production_deploy)
         production_notifier.ping("Production release started #{options[:branch]} -> #{options[:stack]}. You can <a href='#{production_release_notes}'>Check Release Notes</a>. Details in #eng-deploys", icon_emoji: ':see_no_evil:')
         RaygunDeployNotifier.send!
       end

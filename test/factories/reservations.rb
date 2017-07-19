@@ -5,7 +5,7 @@ FactoryGirl.define do
     association :transactable
     company { transactable.try(:company) || FactoryGirl.build(:company) }
     creator { transactable.creator }
-    date { Time.zone.now.next_week.to_date }
+    date { 1.week.from_now.to_date }
     quantity 1
     state 'inactive'
     time_zone { Time.zone.name }
@@ -24,7 +24,7 @@ FactoryGirl.define do
       after(:build) do |reservation|
         reservation.transactable_pricing = reservation.transactable.action_type.hour_pricings.first
         reservation.instance_variable_set('@price_calculator', nil)
-        make_valid_period(reservation, Time.zone.now.next_week.to_date + 1.day, 600, 660)
+        make_valid_period(reservation, 1.week.from_now.to_date + 1.day, 600, 660)
         reservation.payment ||= FactoryGirl.build(:pending_payment, payable: reservation)
       end
 
@@ -42,7 +42,7 @@ FactoryGirl.define do
 
     factory :unconfirmed_reservation do
       state 'unconfirmed'
-      expires_at { Time.zone.now.next_week.to_date }
+      expires_at { 1.week.from_now.to_date }
       after(:build) do |reservation|
         reservation.payment ||= FactoryGirl.build(:authorized_payment, payable: reservation)
       end
@@ -145,15 +145,16 @@ FactoryGirl.define do
     factory :future_reservation do
       after(:create) do |reservation|
         reservation.periods.reverse.each_with_index do |period, i|
-          period.date = Date.today.next_week + i.days
+          period.date = 1.week.from_now + i.days
           period.save!
         end
+        reservation.starts_at = Date.today.next_week
         reservation.save!
       end
 
       factory :future_unconfirmed_reservation do
         state 'unconfirmed'
-        expires_at { Time.zone.now.next_week.to_date }
+        expires_at { 1.week.from_now.to_date }
         after(:build) do |reservation|
           reservation.payment ||= FactoryGirl.build(:authorized_payment, payable: reservation)
         end
@@ -168,7 +169,7 @@ end
 
 private
 
-def make_valid_period(reservation, date = Time.zone.now.next_week.to_date, start_minute = nil, end_minute = nil, _options = {})
+def make_valid_period(reservation, date = 1.week.from_now.to_date, start_minute = nil, end_minute = nil, _options = {})
   reservation.periods = []
   reservation.add_period(date, start_minute, end_minute)
   reservation
