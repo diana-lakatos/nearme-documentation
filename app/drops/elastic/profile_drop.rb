@@ -28,7 +28,7 @@ module Elastic
     alias grouped_custom_images custom_images
 
     def category_tree
-      source.categories.sort(&:position).group_by(&:root)
+      source.category_list.sort(&:position).group_by(&:name_of_root)
     end
   end
 end
