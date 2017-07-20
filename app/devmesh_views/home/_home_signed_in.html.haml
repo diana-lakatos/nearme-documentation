@@ -8,7 +8,7 @@
             %h1.h2
               = t('activity_feed.title')
 
-            = render 'shared/activity_feed', feed: @feed, object: current_user
+            = render 'shared/activity_feed', feed: @feed, object: current_user, with_followed: true
 
         .secondary
 
