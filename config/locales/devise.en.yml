@@ -27,7 +27,7 @@ en:
       signed_up: 'You have signed up successfully.'
       updated: 'You have updated your account successfully.'
       user:
-        email_exists: "E-mail %{email} already exists in our system. Maybe try to %{link}"  
+        email_exists: "E-mail %{email} already exists in our system. Maybe try to %{link}"
     sessions:
       signed_in: 'Signed in successfully.'
       signed_out: 'Signed out successfully.'
@@ -40,4 +40,4 @@ en:
       not_found: "not found"
       not_locked: "was not locked"
   omniauth:
-    email_taken_html: "This email address (%{provider}) is already linked to an account. Please %{sign_in_link} or %{recovery_link}."
+    email_taken_html: "This email address %{email} is already linked to an account. Please %{sign_in_link} or %{recovery_link}."

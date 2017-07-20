@@ -112,7 +112,7 @@ class AuthenticationsController < ApplicationController
   end
 
   def user_changed_email_and_someone_else_picked_it
-    flash[:error] = t('omniauth.email_taken_html', provider: @omniauth['provider'].titleize,
+    flash[:error] = t('omniauth.email_taken_html', email: @oauth.email,
                                                    sign_in_link: view_context.link_to('sign in', new_user_session_path),
                                                    recovery_link: view_context.link_to('recover your password', new_user_password_path))
     redirect_to redirect_after_callback_to || root_path
