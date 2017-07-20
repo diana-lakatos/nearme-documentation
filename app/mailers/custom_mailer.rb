@@ -16,7 +16,7 @@ class CustomMailer < InstanceMailer
     if options[:to].blank? && options[:cc].blank? && options[:bcc].blank?
       MarketplaceLogger.error(
         MarketplaceErrorLogger::BaseLogger::MAILER_ERROR,
-        "Sending e-mail for workflow alert failed because of 'to' was empty"
+        "Sending e-mail \"#{@workflow_alert}(id=#{@workflow_alert.id}\" failed because of 'to' was empty"
       )
     else
       WorkflowAlertLogger.new(@workflow_alert).log!
