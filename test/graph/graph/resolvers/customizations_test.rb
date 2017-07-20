@@ -39,7 +39,7 @@ class Graph::Resolvers::CustomizationsTest < ActiveSupport::TestCase
       }
       customization = Graph::Resolvers::Customization.new.call(nil, args, nil)
 
-      assert_not_nil customization
+      assert_nil customization
     end
 
     should 'return parent objects only' do

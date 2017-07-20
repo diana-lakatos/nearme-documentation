@@ -30,7 +30,7 @@ module Api
             params: form_params,
             current_user: current_user
           ).tap do |submit_form|
-            submit_form.add_success_observer(SubmitForm::CallMethodOnModel.new(:destroy))
+            submit_form.add_success_observer(SubmitForm::DestroyModel.new)
           end.call
           respond(customization_form)
         end

@@ -40,7 +40,7 @@ module Graph
         field :time_based_booking, Types::Transactables::TimeBasedBooking
         field :offer_action, Types::Transactables::OfferAction
         field :orders, !types[Types::Orders::Order] do
-          argument :user_id, types.ID
+          argument :user_id, types.ID, 'ID of user that created the order'
           argument :state, types.String
           resolve Graph::Resolvers::Orders.new
         end
