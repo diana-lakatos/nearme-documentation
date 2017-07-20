@@ -4,22 +4,45 @@ module Api
     before_filter :redirect_unless_registration_completed
 
     def create
-      merchant_account_form.validate(form_params) && merchant_account_form.save
+      SubmitForm.new(
+        form_configuration: form_configuration,
+        form: merchant_account_form,
+        params: form_params,
+        current_user: current_user
+      ).call
       respond(merchant_account_form)
+    end
+
+    def update
+      SubmitForm.new(
+        form_configuration: form_configuration,
+        form: merchant_account_update_form,
+        params: form_params,
+        current_user: current_user
+      ).call
+      respond(merchant_account_update_form)
     end
 
     protected
 
     def merchant_account_form
-      @merchant_account_form ||= form_configuration.build(merchant_account)
+      @merchant_account_form ||= form_configuration.build(new_merchant_account)
     end
 
-    def merchant_account
-      @merchant_account = MerchantAccount.new(
+    def merchant_account_update_form
+      @merchant_account_update_form ||= form_configuration.build(merchant_account)
+    end
+
+    def new_merchant_account
+      MerchantAccount.new(
         merchantable: company,
         type: payment_gateway.merchant_account_type,
         payment_gateway: payment_gateway
       )
+    end
+
+    def merchant_account
+      company.merchant_accounts.mode_scope.find(params[:id])
     end
 
     def form_params
