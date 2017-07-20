@@ -50,7 +50,6 @@ class MerchantAccountTest < ActiveSupport::TestCase
     end
   end
 
-
   def create_merchant_account
     merchant_account = FactoryGirl.build(:stripe_connect_merchant_account)
     address = FactoryGirl.build(:full_address_in_sf)

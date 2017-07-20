@@ -1,0 +1,32 @@
+.row
+  %h4 Webhook configuration
+
+.content-container
+  .row
+    .input-container.col-xs-12
+      %b Please follow the instructions to set up webhooks in Stripe Dashboard
+      %ol
+        %li
+          Go to
+          = link_to 'https://dashboard.stripe.com/account/webhooks', 'https://dashboard.stripe.com/account/webhooks', target: '_blank'
+        %li
+          Click on
+          %b Add endpoint.
+        %li
+          Copy link
+          %b= 'https://' + request.host_with_port + @webhook_configuration.path
+          to
+          %b URL to be called.
+        %li
+          Save and view webhook endpoint details.
+        %li
+          From detailed webhook endpoint view copy
+          %b signing secret
+          value and paste to the field below.
+        %li
+          Click
+          %b Save.
+
+
+.content-container
+  = render 'form'

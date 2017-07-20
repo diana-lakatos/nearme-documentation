@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class PaymentGateway::StripePaymentGateway < PaymentGateway
-  API_VERSION = '2016-07-06'
+  API_VERSION = '2017-06-05'
 
   include PaymentGateways::StripeCommon
 
@@ -9,7 +9,7 @@ class PaymentGateway::StripePaymentGateway < PaymentGateway
   supported :multiple_currency, :ach_payment, :payment_source_store, :credit_card_payment, :partial_refunds, :any_country
 
   delegate :parse_webhook, :retrieve_account, :find_payment, :find_balance, :country_spec, :create_customer,
-    :find_customer, to: :gateway
+    :retrieve_customer, to: :gateway
 
   def self.settings
     {

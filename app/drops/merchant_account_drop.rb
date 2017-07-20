@@ -62,7 +62,7 @@ class MerchantAccountDrop < BaseDrop
 
   # @return [String] timestamp - date until account is valid
   def due_by
-    I18n.l(Time.at(merchant_account.data[:due_by].to_i), format: :long) if merchant_account.data[:due_by]
+    I18n.l(Time.at(data["due_by"].to_i), format: :long) if data["due_by"]
   end
 
   # @return [String] object errors returned by Validation mechanims as html list
@@ -74,13 +74,13 @@ class MerchantAccountDrop < BaseDrop
   # @todo -- errorsdrop?
   def all_errors
     @all_errors = merchant_account.errors.full_messages || []
-    @all_errors << merchant_account.data[:disabled_reason] if merchant_account.data[:disabled_reason]
-    @all_errors << merchant_account.data[:verification_message] if merchant_account.data[:verification_message]
+    @all_errors << data["disabled_reason"] if data["disabled_reason"]
+    @all_errors << data["verification_message"] if data["verification_message"]
     return @all_errors.presence if stripe_wants_only_photo_but_without_due_date?
 
-    if merchant_account.data[:fields_needed].present?
+    if fields_needed.present?
       @all_errors << I18n.t('dashboard.merchant_account.fields_needed.header')
-      merchant_account.data[:fields_needed].each do |field|
+      fields_needed.each do |field|
         @all_errors << I18n.t('dashboard.merchant_account.fields_needed.' + field)
       end
     end
@@ -123,6 +123,6 @@ class MerchantAccountDrop < BaseDrop
   private
 
   def stripe_wants_only_photo_but_without_due_date?
-    merchant_account.data[:fields_needed] == ["legal_entity.verification.document"] && merchant_account.data[:due_by].nil?
+    fields_needed == ["legal_entity.verification.document"] && data["due_by"].nil?
   end
 end

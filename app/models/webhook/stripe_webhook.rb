@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 class Webhook::StripeWebhook < Webhook
 
-  ALLOWED_EVENTS = %w{charge transfer account}
+  ALLOWED_EVENTS = %w{charge transfer account payout}
+
+  delegate :livemode?, to: :event
 
   def process!
+    return true if success?
     return false unless can_process_event?
-
     set_merchant_account
 
     "WebhookService::Stripe::#{event_base_type.capitalize}".constantize.new(
-      event, payment_gateway, merchant_account
+      event, payment_gateway, merchant_account, fetch_object?
     ).parse_event! ? success! : failed!
 
   rescue => e
@@ -17,6 +19,13 @@ class Webhook::StripeWebhook < Webhook
   end
 
   private
+
+  # We want to fetch related object from Stripe in case of error
+  # error can indicate that object is processed in uknown version
+  # that's why we are retrying in version specified in codebase
+  def fetch_object?
+    retry_count > 1 && error.present?
+  end
 
   def can_process_event?
     return process_error('Mode mismatch') if payment_gateway_mode != payment_gateway.mode
@@ -36,17 +45,13 @@ class Webhook::StripeWebhook < Webhook
     event.type.split('.').first
   end
 
-  def livemode?
-    !!params['livemode']
-  end
-
   def event
-    @event ||= payment_gateway.parse_webhook(params[:id], params[:user_id])
+    @event ||= response_object
   end
 
   def set_merchant_account
-    return if params[:user_id].blank?
+    return if event.user_id.blank?
 
-    self.merchant_account = payment_gateway.merchant_accounts.find_by!(external_id: params[:user_id])
+    self.merchant_account = payment_gateway.merchant_accounts.find_by!(external_id: event.user_id)
   end
 end

@@ -154,6 +154,7 @@
     = content_for :header_buttons do
       = button_tag t('instance_admin.save'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form',  disable_with: "Please wait..."}
       = link_to t('instance_admin.cancel'), instance_admin_settings_payments_url , class: 'btn btn-light pull-right'
+      = link_to t('instance_admin.edit_webhook_configuration'), instance_admin_settings_payment_gateway_webhook_configurations_url(@payment_gateway) , class: 'btn btn-light pull-right'
 
 - content_for :domready do
   $(document).trigger('init:paymentgateway.nearme', ['#edit-payment-gateway'])
