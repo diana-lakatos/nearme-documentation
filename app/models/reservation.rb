@@ -100,7 +100,7 @@ class Reservation < Order
     errors.clear
     action.try(:validate_all_dates_available, self) unless skip_payment_authorization?
     schedule_expiry if action.both_side_confirmation && (lister_confirmed_at.nil? || enquirer_confirmed_at.nil?)
-    if errors.empty? && valid? && check_double_confirmation
+    if errors.empty? && user.valid? && valid? && check_double_confirmation
       if block_given? ? yield : true
         confirm!
         # We need to touch transactable so it's reindexed by ElasticSearch
