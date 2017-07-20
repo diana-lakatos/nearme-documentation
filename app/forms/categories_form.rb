@@ -4,7 +4,7 @@ class CategoriesForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         configuration.each do |field, options|
-          inject_dynamic_fields(configuration)
+          inject_dynamic_fields(configuration, whitelisted: :all)
 
           define_method("#{field}=") do |value|
             super(value.is_a?(Array) ? value.reject(&:blank?) : value)

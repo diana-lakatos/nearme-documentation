@@ -214,6 +214,22 @@ class Graph::SchemaTest < ActiveSupport::TestCase
       )
     end
 
+    should 'user companies and merchant account' do
+      company = FactoryGirl.create(:company, creator: @user, name: 'ACME')
+      response = File.read(File.join(Rails.root, 'features', 'fixtures', 'stripe_responses', 'account_create.json'))
+      stub_request(:post, /https:\/\/api.stripe.com\/v1\/accounts*/).to_return(status: 200, body: response)
+      merchant_account = FactoryGirl.create(:stripe_connect_merchant_account, company: company, merchantable: company)
+      refresh_elastic
+      query = %({ user(id: #{@user.id}) { companies{ id, name, merchant_accounts{ results { id, first_name } } }}})
+
+      data = result(query)
+
+      assert_equal 'ACME', data.dig('user', 'companies', 0, 'name')
+      assert_equal merchant_account.id.to_s, data.dig('user', 'companies', 0, 'merchant_accounts', 'results', 0, 'id')
+      assert_equal merchant_account.first_name, data.dig('user', 'companies', 0, 'merchant_accounts', 'results', 0, 'first_name')
+    end
+
+
     should 'get users with filters' do
       query = %({ users(featured: true) { id } })
 

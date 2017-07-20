@@ -37,38 +37,24 @@ module Elastic
     class ESMock
       include Elasticsearch::Model
 
-      def self.with_deleted
-        self
-      end
-
-      def self.reset_mapping
-        __elasticsearch__
-          .instance_variable_set '@mapping',
-                                 Elasticsearch::Model::Indexing::Mappings.new(document_type)
-      end
-
-      def self.build_es_mapping(options: {})
-      end
-
-      def self.reload_mappings(custom_mappings = [])
-        reset_mapping
-
-        mappings do
-          custom_mappings.each do |key|
-            indexes key
-          end
-        end
+      def self.reset_mapping(options: {})
       end
     end
 
     class UserMock < ESMock
       document_type :user
+      mappings do
+        indexes :id
+      end
     end
 
     class TransactableMock < ESMock
       document_type :transactable
+      mappings do
+        indexes :id
+        indexes :transactable_type
+      end
     end
-
 
     test 'build initial configuration index' do
 
@@ -91,9 +77,6 @@ module Elastic
 
     test 'manipulating ES indexes' do
       begin
-        UserMock.reload_mappings(Fixtures.mappings[:user][0])
-        TransactableMock.reload_mappings(Fixtures.mappings[:transactable][0])
-
         # - prepare index-type based on instance and type of required data [mixed, single]
         config = Elastic::Configuration.set(type: :test, instance_id: 1)
         engine = Elastic::Engine.new config: config

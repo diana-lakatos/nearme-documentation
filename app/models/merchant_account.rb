@@ -41,6 +41,7 @@ class MerchantAccount < ActiveRecord::Base
   scope :active, -> { where(state: %w(pending verified)) }
   scope :mode_scope, ->(test_mode = PlatformContext.current.instance.test_mode?) { test_mode ? where(test: true) : where(test: false) }
   scope :paypal_express_chain, -> { where(type: 'MerchantAccount::PaypalExpressChainMerchantAccount') }
+  scope :for_company, ->(company_id) { where(merchantable_id: company_id) }
 
   attr_accessor :skip_validation, :redirect_url
 

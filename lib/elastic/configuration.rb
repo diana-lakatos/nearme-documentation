@@ -95,8 +95,7 @@ module Elastic
 
       # TODO: isn't pointless keeping dynamic mapping configuration in the code?
       def mapping
-        source.build_es_mapping(options: @data['mapping']['options'])
-
+        source.reset_mapping(options: @data['mapping']['options'])
         source.mappings
       end
     end

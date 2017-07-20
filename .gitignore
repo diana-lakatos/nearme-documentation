@@ -54,3 +54,4 @@ work_files
 .vscode
 .pryrc
 .byebug_history
+.nvmrc

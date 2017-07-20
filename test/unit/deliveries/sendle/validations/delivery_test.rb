@@ -11,23 +11,6 @@ require 'date'
 class MyOrderAddress
 end
 
-module Deliveries
-  class Sendle
-    class ValidatePlaceOrderRequest
-      def initialize(record)
-      end
-
-      def valid?
-        false
-      end
-
-      def errors
-        []
-      end
-    end
-  end
-end
-
 class MyDelivery
   include ActiveModel::Validations
 
@@ -36,9 +19,19 @@ class MyDelivery
   attr_accessor :sender_address, :receiver_address
 end
 
+
+class MyValidationDelivery < Deliveries::Sendle::Validations::Delivery
+  def validator_list
+    [
+      presence_validator(attributes: [:pickup_date, :sender_address, :receiver_address]),
+      pickup_busines_date_validator(attributes: [:pickup_date])
+    ]
+  end
+end
+
 class Deliveries::Sendle::Validations::DeliveryTest < ActiveSupport::TestCase
   def validator
-    Deliveries::Sendle::Validations::Delivery.new
+    MyValidationDelivery.new
   end
 
   test 'general validations' do

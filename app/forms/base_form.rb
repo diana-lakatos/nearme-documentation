@@ -5,8 +5,8 @@ class BaseForm < Reform::Form
   class << self
     def inject_dynamic_fields(configuration, whitelisted: [])
       configuration.each do |field, options|
-        # Whitelisting disabled
-        # next if !whitelisted.include?(field.to_sym)
+        next unless field_whitelisted(whitelisted, field)
+
         add_property(field, options)
         add_validation(field, options)
       end
@@ -36,6 +36,10 @@ class BaseForm < Reform::Form
 
     def checked?(value)
       value == '1' || value == 'true'
+    end
+
+    def field_whitelisted(whitelisted, field_name)
+      whitelisted == :all || whitelisted.include?(field_name.to_sym)
     end
   end
 
