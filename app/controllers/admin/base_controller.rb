@@ -147,10 +147,10 @@ class Admin::BaseController < ApplicationController
   def authorize_user!
     # To avoid errors and confusion until the new admin is ready we redirect non-global-admin users to the actual
     # admin interface
-    if !current_user.admin? && Rails.env.production?
-      redirect_to instance_admin_path
-      return
-    end
+    # if !current_user.admin? && Rails.env.production?
+    #  redirect_to instance_admin_path
+    #  return
+    # end
 
     @authorizer ||= InstanceAdminAuthorizer.new(current_user)
     if !@authorizer.instance_admin?

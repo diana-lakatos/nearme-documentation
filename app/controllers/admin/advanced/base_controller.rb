@@ -51,4 +51,8 @@ class Admin::Advanced::BaseController < Admin::BaseController
   def instance_params
     params.require(:instance).permit(secured_params.instance)
   end
+
+  def permitting_controller_class
+    'manage'
+  end
 end
