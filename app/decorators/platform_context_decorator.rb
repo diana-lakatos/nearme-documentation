@@ -14,6 +14,8 @@ class PlatformContextDecorator
            :enquirer_blogs_enabled, :lister_blogs_enabled, :debugging_mode_for_admins?,
            :use_cart?, to: :instance
 
+  delegate :google_analytics_tracking_code, to: :domain
+
   def initialize(platform_context)
     @platform_context = platform_context
   end
