@@ -229,7 +229,7 @@ class Order < ActiveRecord::Base
   end
 
   def process!
-    return false unless valid?
+    return false unless valid? && can_process?
     if skip_payment_authorization
       return false unless payment_processor.blank? || payment_processor.payment_source.try(:process!)
     else
@@ -588,6 +588,10 @@ class Order < ActiveRecord::Base
     @price_calculator ||= transactable_pricing.price_calculator(self)
   end
   alias amount_calculator price_calculator
+
+  def can_process?
+    true
+  end
 
   private
 
