@@ -29,7 +29,7 @@ class CustomizationForm < BaseForm
                                         prepopulator: ->(_options) { self.custom_attachments ||= model.default_custom_attachments_open_struct }
         end
         inject_custom_attributes(configuration)
-        inject_dynamic_fields(configuration, whitelisted: [:customizable_id, :customizable_type])
+        inject_dynamic_fields(configuration, whitelisted: [:customizable_id, :customizable_type, :user_id])
       end
     end
   end
