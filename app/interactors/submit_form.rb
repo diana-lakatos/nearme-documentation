@@ -14,8 +14,7 @@ class SubmitForm
   end
 
   def call
-    if @form.validate(@params)
-      @form.save
+    if @form.validate(@params) && @form.save
       notify_success_observers
     else
       notify_failure_observers
