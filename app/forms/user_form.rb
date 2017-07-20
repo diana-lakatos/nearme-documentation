@@ -28,7 +28,7 @@ class UserForm < BaseForm
                                      populator: ->(model:, **) { self.current_address ||= Address.new },
                                      prepopulator: ->(*) { self.current_address ||= Address.new }
         end
-        inject_dynamic_fields(configuration, whitelisted: [:group_member_ids, :banned_at, :email, :name, :phone, :country_name, :mobile_number, :company_name, :time_zone, :sms_notifications_enabled, :first_name, :middle_name, :last_name, :accept_emails, :saved_searches_alerts_frequency, :language, :featured, :click_to_call, :public_profile, :accept_terms_of_service, :avatar])
+        inject_dynamic_fields(configuration, whitelisted: [:group_member_ids, :banned_at, :email, :name, :phone, :country_name, :mobile_number, :company_name, :time_zone, :sms_notifications_enabled, :first_name, :middle_name, :last_name, :accept_emails, :saved_searches_alerts_frequency, :language, :featured, :click_to_call, :public_profile, :accept_terms_of_service, :avatar, :cover_image])
       end
     end
   end
