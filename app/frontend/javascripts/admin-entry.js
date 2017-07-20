@@ -19,5 +19,5 @@ NM.on('ready', () => {
   require('admin/initializers/file_manager.initializer');
   require('admin/initializers/graphql_editor.initializer');
 
-  require('admin/initializers/login_form.initializer');
+  // require('admin/initializers/login_form.initializer');
 });
