@@ -1,7 +1,7 @@
 .login-form
   %h3 Sign into your NearMe account
 
-  = admin_simple_form_for resource, :as => resource_name, :url => session_path(resource_name), html: { data: { login_form: '' }} do |f|
+  = admin_simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
     = f.input :email, :placeholder => "Your email address", :input_html => { :tabindex => 1, data: { login_form_email: '' } }
 
     = f.input :password, :placeholder => "Password", :input_html => { :tabindex => 2, data: { login_form_password: '' } }
