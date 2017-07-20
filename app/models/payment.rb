@@ -569,7 +569,7 @@ class Payment < ActiveRecord::Base
       company: company,
       payments: [self],
       payment_gateway_mode: payment_gateway_mode,
-      payment_gateway_id: payment_gateway_id,
+      payment_gateway: payment_gateway,
       token: transfer_id
     )
   end
@@ -590,7 +590,14 @@ class Payment < ActiveRecord::Base
 
   # TODO: move this flague to Payment from BillingAuthorization
   def immediate_payout?
-    successful_billing_authorization.try(:immediate_payout?) == true
+    if billing_authorizations.any?
+      successful_billing_authorization.try(:immediate_payout?) == true
+    else
+      # TODO this is temp solution for RecurrinbgBookingPeriod
+      # where billing_authorizations are not generated
+      # for payments.
+      payment_gateway.supports_immediate_payout? && merchant_account.try(:verified?)
+    end
   end
 
   def transferred_to_seller?
