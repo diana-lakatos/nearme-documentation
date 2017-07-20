@@ -22,7 +22,7 @@ module Api
             sign_in @user
           end
 
-          should 'send workflow alert for customization' do
+          should 'send workflow alert for customization and destroy object' do
             assert_difference 'Customization.count' do
               assert_difference 'ActionMailer::Base.deliveries.size' do
                 post :create, { custom_model_type_id: @model_type.id, form_configuration_id: form_configuration.id, form: { properties: { model_attr: 'hello' } } }
@@ -35,6 +35,10 @@ module Api
             assert_contains @user.email, email.to
             assert_contains "Hello #{@user.first_name}", email.html_part.body
             assert_contains "hello #{@user.first_name}", email.subject
+            assert_difference('Customization.count', -1) do
+              delete :destroy, { id: c.id, form_configuration_id: destroy_form_configuration.id, form: { id: c.id } }
+            end
+            assert c.reload.deleted?
           end
         end
 
@@ -61,6 +65,15 @@ module Api
                 }
               }
             }
+          )
+        end
+
+        def destroy_form_configuration
+          @destroy_form_configuration ||= FactoryGirl.create(
+            :form_configuration,
+            name: 'customization_form',
+            base_form: 'CustomizationForm',
+            configuration: {}
           )
         end
       end

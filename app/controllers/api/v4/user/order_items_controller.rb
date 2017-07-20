@@ -32,7 +32,11 @@ module Api
         end
 
         def order_item
-          @order_item ||= order.order_items.find(params[:id])
+          @order_item ||= if params[:id]
+                            order.order_items.find(params[:id])
+                          else
+                            order.order_items.new
+                          end
         end
 
         def authorize_action
