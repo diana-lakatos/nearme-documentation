@@ -11,8 +11,8 @@ module MarketplaceBuilder
         assert_equal 'api_notification', @email_notification.name
         assert_equal 'https://example.com/endpoint/{{ form.model.id }}', @email_notification.to
         assert_equal '{
-  name: {{ form.model.first_name }}
-  id: {{ form.model.id }}
+  "name": "{{ form.model.first_name }}",
+  "id": "{{ form.model.id }}"
 }', @email_notification.content.strip
         assert_equal 30, @email_notification.delay
         assert @email_notification.enabled
