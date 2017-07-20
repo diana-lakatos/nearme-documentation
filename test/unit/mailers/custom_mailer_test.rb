@@ -221,6 +221,8 @@ class CustomMailerTest < ActiveSupport::TestCase
   def default_hash
     { layout_path: nil,
       recipient: 'my_email@example.com',
+      id: 1,
+      name: 'A stub',
       recipient_type: nil,
       from: nil,
       from_type: nil,
