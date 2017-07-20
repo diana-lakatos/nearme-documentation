@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 class FaviconController < ApplicationController
+  skip_before_action :redirect_unverified_user
+  skip_before_action :redirect_if_marketplace_password_protected
   def show
     custom_icon = PlatformContext.current.theme.favicon_image
 
