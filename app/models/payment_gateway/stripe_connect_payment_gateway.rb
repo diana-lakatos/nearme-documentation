@@ -7,8 +7,8 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
 
   supported :immediate_payout, :ach_payment, :credit_card_payment, :multiple_currency, :partial_refunds, :payment_source_store
 
-  delegate :parse_webhook, :retrieve_account, :retrieve_transfer, :onboard!, :update_onboard!, :find_transfer_transactions,
-           :find_payment, :find_balance, :country_spec, :create_customer, :retrieve_customer, :retrieve_payout, to: :gateway
+  delegate :parse_webhook, :retrieve_account, :onboard!, :update_onboard!, :find_transfer_transactions,
+           :find_payment, :find_balance, :country_spec, :create_customer, :find_customer, to: :gateway
 
   validate :validate_config_hash
 
@@ -34,7 +34,7 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
   def self.settings
     {
       login: { validate: [:presence], label:  "#{test_mode? ? 'Test' : 'Live'} Secret Key" },
-      publishable_key: { validate: [:presence_if_direct], label: "#{test_mode? ? 'Test' : 'Live'} Publishable Key" },
+      publishable_key: { validate: [:presence_if_direct], label: "#{test_mode? ? 'Test' : 'Live'} Publishable Key" }
     }
   end
 

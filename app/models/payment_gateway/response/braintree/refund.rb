@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Payment::Gateway::Response::Braintree::Refund
+class PaymentGateway::Response::Braintree::Refund
   delegate :id, :amount, to: :@response
 
   def initialize(response)

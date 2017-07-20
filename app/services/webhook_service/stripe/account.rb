@@ -1,14 +1,7 @@
-# frozen_string_literal: true
 module WebhookService
   module Stripe
     class Account < WebhookService::Stripe::Event
       ALLOWED_EVENTS = %w{updated}
-      ACCOUNT_WORKFLOW_MAP = {
-        verified: WorkflowStep::PaymentGatewayWorkflow::MerchantAccountApproved,
-        failed: WorkflowStep::PaymentGatewayWorkflow::MerchantAccountDeclined,
-        incomplete: WorkflowStep::PaymentGatewayWorkflow::MerchantAccountPending
-      }
-
 
       def parse_event!
         return false unless ALLOWED_EVENTS.map {|e| "account." + e }.include?(event.type)
@@ -22,24 +15,42 @@ module WebhookService
       private
 
       def account
-        if fetch_object?
-          @account ||= payment_gateway.retrieve_account(event.data.object.id)
-        else
-          @account ||= Payment::Gateway::Response::Stripe::Account.new(event.data.object)
-        end
+        @account ||= payment_gateway.retrieve_account(event.data.object.id)
       end
 
       def account_updated
         merchant_account.skip_validation = true
-        merchant_account.update_attributes(account.attributes)
-        merchant_account.change_state_if_needed(account) do |state|
-          send_merchant_workflow(ACCOUNT_WORKFLOW_MAP[state.to_sym])
-        end
+        merchant_account.change_state_if_needed(account) { |state| workflow_for(state) }
+        update_needed_fields
         true
       end
 
-      def send_merchant_workflow(workflow_type_class)
-        WorkflowStepJob.perform(workflow_type_class, merchant_account.id)
+      def update_needed_fields
+        return unless account.verification.fields_needed.present?
+        merchant_account.update_column :data, merchant_account.data.merge(fields_needed: account.verification.fields_needed)
+      end
+
+      def workflow_for(state)
+        case state
+        when 'verified'
+          WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::MerchantAccountApproved, merchant_account.id)
+        when 'failed'
+          WorkflowStepJob.perform(
+            WorkflowStep::PaymentGatewayWorkflow::MerchantAccountDeclined,
+            merchant_account.id,
+            localize_error(account.verification.disabled_reason) || account.legal_entity.verification.details.presence || "Missing fields: #{account.verification.fields_needed.join(', ')}"
+            )
+        when 'incomplete'
+          WorkflowStepJob.perform(
+            WorkflowStep::PaymentGatewayWorkflow::MerchantAccountPending,
+            merchant_account.id
+            )
+        end
+      end
+
+      def localize_error(error_code)
+        return if error_code.blank?
+        I18n.t('activerecord.errors.models.merchant_account.error_codes.' + error_code.tr('.', '_'))
       end
     end
   end
