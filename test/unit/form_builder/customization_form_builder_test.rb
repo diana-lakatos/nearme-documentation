@@ -41,12 +41,14 @@ class CustomizationBuilderTest < ActiveSupport::TestCase
       customizable_type: 'User',
       properties: {
         'author' => 'James Joyce'
-      }
+      },
+      user_id: 1
     }
   end
 
   def configuration
     {
+      user_id: {},
       customizable_id: {
         validation: {
           unique: {
