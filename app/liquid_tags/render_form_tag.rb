@@ -32,6 +32,8 @@ class RenderFormTag < Liquid::Tag
     attributes['form'] = form
     attributes['form_configuration'] = form_configuration
     LiquidView.new(context.registers[:action_view]).render(form_configuration.liquid_body, attributes)
+  rescue => e
+    "RenderFormTag error: #{e.message}. form_name: #{@form_name}, attributes: #{@attributes.inspect}"
   end
 
   protected
