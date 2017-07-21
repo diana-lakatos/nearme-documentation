@@ -16,7 +16,6 @@ module Api
         SubmitForm.new(form_configuration: form_configuration,
                        form: user_signup, params: form_params,
                        current_user: current_user).tap do |submit_form|
-          submit_form.add_success_observer(SubmitForm::IndexInElastic.new)
           submit_form.add_success_observer(SubmitForm::SignIn.new(self))
         end.call
         respond(user_signup, notice: I18n.t('devise.registrations.signed_up'),
@@ -30,7 +29,6 @@ module Api
           params: form_params,
           current_user: current_user
         ).tap do |submit_form|
-          submit_form.add_success_observer(SubmitForm::IndexInElastic.new)
           submit_form.add_success_observer(SubmitForm::LegacyMarkAsOnboarded.new)
           submit_form.add_success_observer(SubmitForm::ChangeLocale.new)
         end.call
