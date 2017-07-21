@@ -14,6 +14,7 @@ class CustomModelType < ActiveRecord::Base
   has_many :customizations, dependent: :destroy, inverse_of: :custom_model_type
   has_many :custom_model_type_linkings, dependent: :destroy
   has_many :transactable_types, through: :custom_model_type_linkings
+  has_many :reservation_types, through: :custom_model_type_linkings
   has_many :project_types, through: :custom_model_type_linkings
   has_many :offer_types, through: :custom_model_type_linkings
   has_many :instance_profile_types, through: :custom_model_type_linkings

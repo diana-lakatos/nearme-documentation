@@ -4,7 +4,7 @@ class WorkflowStep::OrderItemWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def initialize(order_item_id)
-    @order_item = RecurringBookingPeriod.find_by_id(order_item_id)
+    @order_item = RecurringBookingPeriod.find_by(id: order_item_id)
   end
 
   def workflow_type
@@ -12,7 +12,7 @@ class WorkflowStep::OrderItemWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def lister
-    @order_item.company.creator
+    @order_item.creator
   end
 
   def enquirer

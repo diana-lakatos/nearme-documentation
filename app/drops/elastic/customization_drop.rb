@@ -10,7 +10,7 @@ module Elastic
     end
     def custom_attachments
       source.custom_attachments.each_with_object({}) do |attachment, group|
-        group[attachment.name] =attachment
+        group[attachment.name] = attachment
       end
     end
   end

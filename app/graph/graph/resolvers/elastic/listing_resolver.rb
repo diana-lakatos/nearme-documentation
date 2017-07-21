@@ -43,23 +43,15 @@ module Graph
           end
 
           resolve_argument :slug do |value|
-            {
-              filter: {
-                bool: {
-                  must: [{ term: { 'slug' => value } }]
-                }
-              }
-            }
+            term_argument('slug' => value)
+          end
+
+          resolve_argument :creator_id do |value|
+            term_argument('creator_id' => value.to_i)
           end
 
           resolve_argument :state do |value|
-            {
-              filter: {
-                bool: {
-                  must: [{ term: { 'state' => value } }]
-                }
-              }
-            }
+            term_argument('state' => value)
           end
 
           resolve_argument :creator_id do |value|
@@ -84,6 +76,16 @@ module Graph
               }
             }
           end
+        end
+
+        def term_argument(value)
+          {
+            filter: {
+              bool: {
+                must: [{ term: value }]
+              }
+            }
+          }
         end
 
         # FIXME: rethink and refactor

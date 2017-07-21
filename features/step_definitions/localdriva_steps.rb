@@ -32,7 +32,7 @@ Given /^a localdriva driver exists$/ do
 end
 
 Given /^localdriva booking exists$/ do
-  transactable = FactoryGirl.build(:transactable_offer, creator: model(:passenger))
+  transactable = FactoryGirl.build(:transactable_offer_with_collaborator, creator: model(:passenger))
   transactable.properties.trip_start_time = '9:00'
   transactable.properties.number_of_passengers = 2
   transactable.properties.duration = 2
@@ -63,7 +63,7 @@ Then /^I accept booking$/ do
     click_link('Accept Booking')
   end
   click_button 'Request Booking'
-  page.should have_content('Your reservation has been made!')
+  page.should have_content('Waiting for payment from Passenger')
 end
 
 Given /^service fee for pricing (\w+) is set to ([0-9.]+)\%$/ do |pricing, percent|

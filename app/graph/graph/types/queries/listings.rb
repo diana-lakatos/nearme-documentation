@@ -72,7 +72,7 @@ module Graph
         argument :name, types.String
         argument :state, types.String
         argument :slug, types.String
-        argument :creator_id, types.ID
+        argument :creator_id, types.ID, prepare: Graph::Arguments::PrepareInteger.new
       end
 
       SortOrder = GraphQL::InputObjectType.define do
@@ -105,10 +105,10 @@ module Graph
       Customization = GraphQL::InputObjectType.define do
         name 'QueryCustomization'
 
-        argument :id, types.ID
+        argument :id, types.ID, prepare: Graph::Arguments::PrepareInteger.new
         argument :name, types.String
         argument :parameterized_name, types.String
-        argument :user_id, types.ID
+        argument :user_id, types.ID, prepare: Graph::Arguments::PrepareInteger.new
       end
 
       CustomAttribute = GraphQL::InputObjectType.define do

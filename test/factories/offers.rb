@@ -8,7 +8,7 @@ FactoryGirl.define do
     currency 'USD'
 
     before(:create) do |offer, _|
-      transactable = Transactable.last || FactoryGirl.create(:transactable_offer)
+      transactable = Transactable.last || FactoryGirl.create(:transactable_offer_with_collaborator)
       offer.transactable_pricing = transactable.action_type.pricings.first
       offer.add_line_item!(
         transactable_id: transactable.id,

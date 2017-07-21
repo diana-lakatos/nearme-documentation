@@ -27,8 +27,9 @@ module Graph
         field :total_payable_to_host_cents, !types.Int
         field :time_zone, !types.String
         field :rejection_reason, !types.String
-        field :lister_confirmed_at, !types.String
-        field :enquirer_confirmed_at, !types.String
+        field :lister_confirmed_at, types.String
+        field :enquirer_confirmed_at, types.String
+        field :confirmed_at, types.String
         field :state, Types::Orders::OrderStateEnum
         field :archived_at, types.String
         field :ends_at, types.String

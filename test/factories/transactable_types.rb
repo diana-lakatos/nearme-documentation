@@ -12,7 +12,7 @@ FactoryGirl.define do
     show_path_format '/listings/:id'
     searcher_type 'geo'
     search_engine 'elasticsearch'
-    # reservation_type
+    enable_photo_required false
 
     ignore do
       generate_rating_systems false

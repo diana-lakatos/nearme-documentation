@@ -83,7 +83,7 @@ class Offer < Order
   end
 
   def transactable
-    transactables.first
+    transactables.first || super
   end
 
   def charge_and_confirm!

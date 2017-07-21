@@ -89,7 +89,7 @@ module Graph
 
         field :customizations, types[Graph::Types::Customizations::Customization] do
           argument :name, types.String
-          argument :user_id, types.ID, prepare: ->(string_id, _ctx) { string_id.to_i }
+          argument :user_id, types.ID, prepare: Graph::Arguments::PrepareInteger.new
           resolve lambda { |obj, args, ctx|
             Graph::Resolvers::Elastic::HashResolver.new.call(obj.customizations, args, ctx)
           }
@@ -110,6 +110,7 @@ module Graph
         end
 
         field :creator, Graph::Types::User
+        field :creator_id, types.ID
       end
     end
   end

@@ -14,6 +14,7 @@ class Order < ActiveRecord::Base
   include Shippings::Order
   include Validatable
   include PaypalExpressOrder
+  include CustomizationsOwnerable
 
   attr_accessor :skip_checkout_validation, :delivery_ids, :checkout_update, :save_draft, :cancel_draft
   attr_reader :external_redirect
@@ -51,6 +52,9 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :payment_documents
   accepts_nested_attributes_for :shipping_address
   accepts_nested_attributes_for :waiver_agreements, allow_destroy: true
+  accepts_nested_attributes_for :customizations, allow_destroy: true
+  accepts_nested_attributes_for :payment_subscription
+  accepts_nested_attributes_for :transactable
 
   validates :user, presence: true
   validates :currency, presence: true
@@ -309,8 +313,8 @@ class Order < ActiveRecord::Base
   end
 
   def checkout_completed?
-    return false if completed_form_component_ids.blank?
     return true unless reservation_type.step_checkout?
+    return false if completed_form_component_ids.blank?
     return false if reservation_type.form_components.where.not(id: completed_form_component_ids).any?
     true
   end
@@ -579,6 +583,11 @@ class Order < ActiveRecord::Base
   def conflicting_orders
     Order::ConflictingOrders.new(order: self).by_quantity
   end
+
+  def price_calculator
+    @price_calculator ||= transactable_pricing.price_calculator(self)
+  end
+  alias amount_calculator price_calculator
 
   private
 

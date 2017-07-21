@@ -220,17 +220,22 @@ FactoryGirl.define do
         listing.action_types.destroy_all
         listing.transactable_type.offer_action ||= FactoryGirl.create(:transactable_type_offer_action, transactable_type: listing.transactable_type)
         listing.action_type = FactoryGirl.build(:offer_action, transactable: listing, transactable_type_action_type: listing.transactable_type.offer_action)
-        listing.transactable_collaborators.build(approved_by_user_at: Time.current, approved_by_owner_at: Time.current, user: User.buyers.last)
       end
 
-      trait :free do
+      factory :transactable_offer_with_collaborator do
         after(:build) do |listing|
-          listing.action_types.destroy_all
-          listing.action_type = FactoryGirl.build(:offer_action, :free, transactable: listing, transactable_type_action_type: listing.transactable_type.action_types.first)
+          listing.transactable_collaborators.build(approved_by_user_at: Time.current, approved_by_owner_at: Time.current, user: User.buyers.last)
         end
-      end
 
-      factory :free_transactable_offer, traits: [:free]
+        trait :free do
+          after(:build) do |listing|
+            listing.action_types.destroy_all
+            listing.action_type = FactoryGirl.build(:offer_action, :free, transactable: listing, transactable_type_action_type: listing.transactable_type.action_types.first)
+          end
+        end
+
+        factory :free_transactable_offer, traits: [:free]
+      end
     end
 
     factory :transactable_project do

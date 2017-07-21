@@ -6,6 +6,16 @@ module Api
         skip_before_action :require_authorization
         before_action :authorize_action, only: [:update]
 
+        def create
+          SubmitForm.new(
+            form_configuration: form_configuration,
+            form: order_item_form,
+            params: form_params,
+            current_user: current_user
+          ).call
+          respond(order_item_form)
+        end
+
         def update
           SubmitForm.new(
             form_configuration: form_configuration,

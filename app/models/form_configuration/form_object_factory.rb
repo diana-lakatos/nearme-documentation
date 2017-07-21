@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 class FormConfiguration
   class FormObjectFactory
-    ALLOWED_OBJECT_CLASSES = %w(User UserProfile Transactable Customization ShoppingCart CheckoutShoppingCart Order UserMessage RecurringBookingPeriod MerchantAccount::StripeConnectMerchantAccount).freeze
-    ALLOWED_OBJECT_PARENT_CLASSES = %w(User InstanceProfileType TransactableType CustomModelType).freeze
+    ALLOWED_OBJECT_CLASSES = %w(User UserProfile Transactable Customization ShoppingCart CheckoutShoppingCart Order UserMessage RecurringBookingPeriod MerchantAccount::StripeConnectMerchantAccount OrderItem).freeze
+    ALLOWED_OBJECT_PARENT_CLASSES = %w(User InstanceProfileType TransactableType CustomModelType ReservationType Order).freeze
     CUSTOM_CLASSES = %w(ShoppingCart CheckoutShoppingCart).freeze
 
     def initialize(object_class:, object_id: nil, parent_object_class: nil, parent_object_id: nil, **)
@@ -63,7 +63,7 @@ class FormConfiguration
     end
 
     def object_class_name_to_association
-      @object_class_name_to_association ||= @object_class.demodulize.pluralize.downcase
+      @object_class_name_to_association ||= @object_class.demodulize.underscore.pluralize.downcase
     end
   end
 end

@@ -3,7 +3,7 @@ module Graph
   module Resolvers
     class Order
       def call(_, arguments, _ctx)
-        ::Order.find(arguments[:id])
+        ::Order.find_by(arguments.to_h)
       end
     end
   end

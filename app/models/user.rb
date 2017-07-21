@@ -147,6 +147,7 @@ class User < ActiveRecord::Base
   has_many :user_bans
   has_many :user_status_updates, class_name: 'UserStatusUpdate'
   has_many :wish_lists, dependent: :destroy
+  has_many :customizations, dependent: :destroy
 
   # QUESTION: why we need this?
   # has_many :dimensions_templates, as: :entity

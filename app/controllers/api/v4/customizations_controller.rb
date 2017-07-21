@@ -15,14 +15,27 @@ module Api
         respond(customization_form)
       end
 
+      def destroy
+        customization_form.model.destroy
+        respond(customization_form)
+      end
+
       protected
 
       def form_params
         params[:form].presence || params[:customization] || {}
       end
 
+      def customization
+        @customization ||= if params[:id]
+                             Customization.find(params[:id])
+                           else
+                             custom_model_type.customizations.new(user: current_user)
+                           end
+      end
+
       def customization_form
-        @customization_form ||= form_configuration&.build(custom_model_type.customizations.new(user: current_user))
+        @customization_form ||= form_configuration&.build(customization)
       end
 
       def custom_model_type

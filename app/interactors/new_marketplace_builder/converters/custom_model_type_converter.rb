@@ -8,6 +8,7 @@ module NewMarketplaceBuilder
       properties :name
       property :instance_profile_types
       property :transactable_types
+      property :reservation_types
       convert :custom_attributes, using: CustomAttributeConverter
 
       def scope
@@ -20,6 +21,14 @@ module NewMarketplaceBuilder
 
       def set_instance_profile_types(custom_model, value)
         custom_model.instance_profile_types = Array(value).map { |name| InstanceProfileType.find_by!(instance_id: @model.id, name: name) }
+      end
+
+      def reservation_types(custom_model)
+        custom_model.reservation_types.map(&:name)
+      end
+
+      def set_reservation_types(custom_model, value)
+        custom_model.reservation_types = Array(value).map { |name| ReservationType.find_by!(instance_id: @model.id, name: name) }
       end
 
       def transactable_types(custom_model)

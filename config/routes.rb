@@ -1241,15 +1241,15 @@ DesksnearMe::Application.routes.draw do
         namespace :instance_admin do
           resources :reverse_proxy_links, only: [:create, :index]
         end
-        resources :customizations, only: [:create]
+        resources :customizations, only: [:create, :destroy]
         namespace :user do
           resource :checkout, only: [:create]
           resource :shopping_cart, only: [:create, :update]
           resource :space_wizard, only: [:create]
           resources :transactables, only: [:index, :create, :update, :destroy]
           resources :custom_attachments, only: [:show, :destroy]
-          resources :orders, only: [:update]
-          resources :order_items, only: [:update]
+          resources :orders, only: [:create, :update]
+          resources :order_items, only: [:create, :update]
           resources :custom_images, only: [:destroy]
           resources :customizations, only: [:create, :update, :destroy]
           resources :transactable_collaborators, only: [:create, :destroy] do

@@ -31,7 +31,7 @@ class CustomAttachment < ActiveRecord::Base
     case custom_attribute.target_type
     when 'InstanceProfileType', 'TransactableType'
       uploader_id_from_owner(owner, custom_attribute.target_type)
-    when 'CustomModelType'
+    when 'CustomModelType', 'Customization'
       uploader_id_from_owner(owner&.customizable, owner&.customizable_type)
     else
       raise NotImplementedError
@@ -44,10 +44,10 @@ class CustomAttachment < ActiveRecord::Base
     case association_name
     when 'InstanceProfileType', 'UserProfile'
       object&.user_id
-    when 'TransactableType', 'Transactable'
+    when 'TransactableType', 'Transactable', 'Order', 'Offer', 'Reservation'
       object&.creator_id
     else
-      raise NotImplementedError, "Unknown owner: #{owner.class.name}"
+      raise NotImplementedError, "Unknown owner: #{object.class.name}"
     end
   end
 end

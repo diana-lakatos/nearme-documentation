@@ -17,20 +17,33 @@ class CustomizationsForm < BaseForm
     def decorate(configuration)
       Class.new(self) do
         configuration.each do |custom_model_name, fields|
+          property_options = fields.delete(:property_options)
+          custom_model_type = CustomModelType.with_parameterized_name(custom_model_name)
           @@mapping_hash ||= {}
           @@mapping_hash[custom_model_name] = fields.deep_dup
           add_validation(custom_model_name, fields)
           collection :"#{custom_model_name}",
                      form: CustomizationForm.decorate(fields),
-                     populator: POPULATOR
+                     populator: POPULATOR,
+                     prepopulator: ->(_options) { prepopulate_customization(property_options, custom_model_type) }
 
           # used by cocoon gem to create nested forms
           define_method("build_#{custom_model_name}") do
             cmt = CustomModelType.with_parameterized_name(custom_model_name)
-            raise "Couldn't find Custom Model Type with name: #{CustomModelType.with_parameterized_name(custom_model_name)}. Valid names are: #{CustomModelType.pluck(:parametrized_name).join(', ')}" if cmt.nil?
+            raise "Couldn't find Custom Model Type with name: #{CustomModelType.with_parameterized_name(custom_model_name)}. Valid names are: #{CustomModelType.pluck(:parameterized_name).join(', ')}" if cmt.nil?
             CustomizationForm.decorate(@@mapping_hash[custom_model_name].deep_dup)
                              .new(cmt.customizations.build).tap(&:prepopulate!)
           end
+        end
+
+        def prepopulate_customization(property_options, custom_model_type)
+          build_quantity = (property_options && property_options[:prepopulate]).to_i
+          return unless build_quantity.positive?
+          built_objects = []
+          build_quantity.times do
+            built_objects << custom_model_type.customizations.build
+          end
+          public_send("#{custom_model_type.parameterized_name}=", built_objects)
         end
       end
     end

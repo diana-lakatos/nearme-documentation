@@ -11,6 +11,7 @@ class ReservationType < ActiveRecord::Base
   has_many :transactable_types
   has_many :form_components, as: :form_componentable
   has_many :custom_validators, as: :validatable
+  has_many :orders
 
   has_many :custom_attributes_custom_validators, through: :custom_attributes, source: :custom_validators
   has_many :category_linkings, as: :category_linkable, dependent: :destroy

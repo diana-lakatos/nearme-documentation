@@ -34,6 +34,10 @@ module Graph
         relation.for_transactable_type_id(listing_type_id)
       end
 
+      def resolve_by_state(relation, state)
+        relation.where(state: state)
+      end
+
       def resolve_by_filters(relation, filters)
         scopes = filters.map(&:downcase)
         scopes.reduce(relation) do |scoped_relation, scope_name|

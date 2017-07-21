@@ -6,6 +6,16 @@ module Api
         skip_before_action :require_authorization
         before_action :authorize_action, only: [:update]
 
+        def create
+          prepare_order
+
+          SubmitForm.new(form_configuration: form_configuration,
+                         form: order_form,
+                         params: form_params,
+                         current_user: current_user).call
+          respond(order_form)
+        end
+
         def update
           SubmitForm.new(form_configuration: form_configuration,
                          form: order_form, params: form_params, current_user: current_user).tap do |submit_form|
@@ -24,6 +34,21 @@ module Api
           params[:form].presence || {}
         end
 
+        def prepare_order
+          @order = transactable_pricing.order_class.new(
+            reservation_type_id: form_params[:reservation_type_id],
+            user: current_user
+          )
+        end
+
+        def transactable
+          @transactable ||= Transactable.find(form_params[:transactable_id])
+        end
+
+        def transactable_pricing
+          @transactable_pricing ||= transactable.action_type.pricings.find(form_params[:transactable_pricing_id])
+        end
+
         def model
           @model ||= order_form.model
         end
@@ -33,10 +58,8 @@ module Api
         end
 
         def order
-          @order ||= Order.where('id = :id AND (user_id = :user_id OR creator_id = :user_id)',
-                                 id: params[:id], user_id: current_user.id).first.tap do |o|
-            raise ActiveRecord::NotFound if o.nil?
-          end
+          @order ||= Order.find_by!('id = :id AND (user_id = :user_id OR creator_id = :user_id)',
+                                    id: params[:id], user_id: current_user.id)
         end
 
         def authorize_action

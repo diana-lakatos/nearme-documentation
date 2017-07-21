@@ -227,11 +227,6 @@ class Reservation < Order
     transactable.availability_for(date, first_period.start_minute, first_period.end_minute)
   end
 
-  def price_calculator
-    @price_calculator ||= transactable_pricing.price_calculator(self)
-  end
-  alias amount_calculator price_calculator
-
   def set_minimum_booking_minutes
     self.minimum_booking_minutes = action.minimum_booking_minutes
   end

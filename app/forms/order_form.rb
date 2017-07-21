@@ -32,16 +32,27 @@ class OrderForm < BaseForm
         end
         if (payment_subscription_configuration = configuration.delete(:payment_subscription)).present?
           add_validation(:payment_subscription, payment_subscription_configuration)
-          property :payment_subscription, form: PaymentSubscriptionForm.decorate(payment_subscription_configuration)
+          property :payment_subscription, form: PaymentSubscriptionForm.decorate(payment_subscription_configuration),
+                                          populate_if_empty: ->(fragment:, **) { model.build_payment_subscription },
+                                          prepopulator: ->(_options) { self.payment_subscription ||= model.build_payment_subscription }
         end
 
         if (order_items_configuration = configuration.delete(:order_items)).present?
           add_validation(:order_items, order_items_configuration)
-          collection :order_items, form: OrderItemForm.decorate(order_items_configuration)
+          collection :order_items, form: OrderItemForm.decorate(order_items_configuration),
+                                   populate_if_empty: ->(fragment:, **) { model.order_items.new },
+                                   prepopulator: ->(_options) { order_items << model.order_items.new if order_items.empty? }
+        end
+
+        if (transactable_configuration = configuration.delete(:transactable)).present?
+          add_validation(:transactable, transactable_configuration)
+          property :transactable, form: TransactableForm.decorate(transactable_configuration),
+                                  populate_if_empty: ->(fragment:, **) { model.build_transactable },
+                                  prepopulator: ->(_options) { self.transactable ||= model.build_transactable }
         end
 
         inject_custom_attributes(configuration)
-        inject_dynamic_fields(configuration, whitelisted: [:state_event, :lister_confirm, :with_charge, :schedule_expiry])
+        inject_dynamic_fields(configuration, whitelisted: [:state_event, :reservation_type_id, :lister_confirm, :with_charge, :schedule_expiry])
       end
     end
   end
