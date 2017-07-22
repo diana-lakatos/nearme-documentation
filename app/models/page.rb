@@ -23,7 +23,7 @@ class Page < ActiveRecord::Base
 
   before_save :convert_to_html, if: ->(page) { page.content.present? && (page.content_changed? || page.html_content.blank?) }
 
-  enum format: { html: 0, json: 1 }
+  enum format: { html: 0, json: 1, xml: 2 }
   mount_uploader :hero_image, HeroImageUploader
   skip_callback :commit, :after, :remove_hero_image!
   ranks :position, with_same: :theme_id
