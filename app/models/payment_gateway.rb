@@ -115,6 +115,8 @@ class PaymentGateway < ActiveRecord::Base
 
   attr_accessor :country, :subject
 
+  delegate :create_token, to: :gateway
+
   #- CLASS METHODS STARTS HERE
 
   def self.supported_countries
@@ -283,11 +285,6 @@ class PaymentGateway < ActiveRecord::Base
 
   def force_mode(mode)
     @test_mode = (mode == LIVE_MODE ? false : true)
-  end
-
-  def create_token(credit_card, customer_id, merchant_id, mode)
-    force_mode(mode)
-    gateway.create_token(credit_card, customer_id, merchant_id)
   end
 
   def gateway_authorize(amount, cc, options)
