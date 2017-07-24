@@ -37,7 +37,8 @@ class LiquidView
   Liquid::Template.register_tag('link_to_remove_association', LinkToRemoveAssociationTag)
   Liquid::Template.register_tag('title', TitleTag)
   Liquid::Template.register_tag('meta_description', MetaDescriptionTag)
-  Liquid::Template.register_tag('query_graph', QueryGraphTag)
+  Liquid::Template.register_tag('query_graph', ExecuteGraphqlQueryTag)
+  Liquid::Template.register_tag('execute_query', ExecuteGraphqlQueryTag)
   Liquid::Template.register_tag('render_form', RenderFormTag)
   Liquid::Template.register_tag('placeholder', PlaceholderTag)
 

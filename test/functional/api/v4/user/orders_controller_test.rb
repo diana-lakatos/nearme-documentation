@@ -111,6 +111,29 @@ module Api
             put :update, form_configuration_id: with_charge_form_configuration.id,
                          id: @reservation.id
           end
+
+          should 'call custom actions on confirm reservation' do
+            FactoryGirl.create(
+              :form_configuration,
+              name: 'delete_invitation_form',
+              base_form: 'CustomizationForm',
+              configuration: {
+              }
+            )
+            query = %(mutation invitation_delete($id: ID!, $form_configuration: String!){
+              customization_delete(id: $id, form_configuration: $form_configuration){ id }
+            })
+            FactoryGirl.create(:graph_query, name: 'invitation_delete', query_string: query)
+            customization = add_custom_model(model_name: 'Cars', attr_name: 'model_attr', object: @reservation.creator.default_profile)
+            confirm_form_configuration.update_attributes!(
+              callback_actions: "{% query_graph invitation_delete, id: #{customization.id}, form_configuration: \"delete_invitation_form\" %}"
+            )
+            put :update, form_configuration_id: confirm_form_configuration.id,
+                         id: @reservation.id
+
+            assert_equal 'confirmed', @reservation.reload.state
+            refute Customization.exists?(customization.id)
+          end
         end
 
         protected
@@ -207,6 +230,15 @@ module Api
               }
             }
           )
+        end
+
+        def add_custom_model(model_name:, attr_name:, object:)
+          default_profile_type = PlatformContext.current.instance.default_profile_type
+          model = FactoryGirl.create(:custom_model_type, name: model_name, instance_profile_types: [default_profile_type])
+          FactoryGirl.create(:custom_attribute, name: attr_name, target: model)
+          customization = Customization.new(custom_model_type: model, properties: { attr_name => 'mazda' })
+          object.customizations << customization
+          customization
         end
       end
     end
