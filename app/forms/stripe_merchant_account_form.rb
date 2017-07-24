@@ -19,19 +19,20 @@ class StripeMerchantAccountForm < BaseForm
   property :tos, virtual: true
   validates :tos, acceptance: true, presence: true
 
-  collection :owners, form: StripeMerchantAccountOwnerForm.decorate({}),
-                      populator: ->(collection:, index:, **) do
-                        if item = collection[index]
-                          item
-                        else
-                          collection.insert(index, model.owners.new)
-                        end
-                      end,
-                      prepopulator: ->(_options) { owners << model.owners.build if owners.size.zero? }
-
   class << self
     def decorate(configuration)
       Class.new(self) do
+        collection :owners,
+                   form: StripeMerchantAccountOwnerForm.decorate(Hash(configuration.delete(:owners))),
+                   populator: ->(collection:, index:, **) do
+                     if item = collection[index]
+                       item
+                     else
+                       collection.insert(index, model.owners.new)
+                     end
+                   end,
+                   prepopulator: ->(_options) { owners << model.owners.build if owners.size.zero? }
+
         inject_dynamic_fields(configuration, whitelisted: [:business_tax_id, :business_name])
       end
     end

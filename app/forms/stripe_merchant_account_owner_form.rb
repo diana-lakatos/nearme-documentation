@@ -3,6 +3,7 @@ class StripeMerchantAccountOwnerForm < BaseForm
   class << self
     def decorate(configuration)
       Class.new(self) do
+        property :current_address, form: AddressForm.decorate(Hash(configuration.delete(:current_address)))
         inject_dynamic_fields(configuration, whitelisted: [])
       end
     end
@@ -23,6 +24,4 @@ class StripeMerchantAccountOwnerForm < BaseForm
     validates :file, presence: true
   end
   validates :attachements, length: { minimum: 2 }
-
-  property :current_address, form: AddressForm
 end

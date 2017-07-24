@@ -13,7 +13,9 @@ class StripeMerchantAccountBuilderTest < ActiveSupport::TestCase
     @merchant_account.payment_gateway = @payment_gateway
 
     @merchant_account_builder = FormBuilder.new(base_form: StripeMerchantAccountForm,
-                                                configuration: {},
+                                                configuration: {
+                                                  owners: { current_address: address_configuration }
+                                                },
                                                 object: @merchant_account).build
   end
 
@@ -21,17 +23,22 @@ class StripeMerchantAccountBuilderTest < ActiveSupport::TestCase
     @merchant_account_builder.prepopulate!
 
     refute @merchant_account_builder.validate({})
-    messages = [
-      "Bank account number can't be blank",
-      "Bank routing number can't be blank",
-      'Account type is not included in the list',
-      "Tos can't be blank",
-      "Owners first name can't be blank",
-      "Owners last name can't be blank",
-      "Owners dob formated can't be blank",
-      "Owners attachements file can't be blank"
-    ]
-    assert_equal messages, @merchant_account_builder.errors.full_messages
+    messages = {
+      bank_account_number: ["can't be blank"],
+      bank_routing_number: ["can't be blank"],
+      account_type: ['is not included in the list'],
+      tos: ["can't be blank"],
+      "owners.first_name": ["can't be blank"],
+      "owners.last_name": ["can't be blank"],
+      "owners.dob_formated": ["can't be blank"],
+      "owners.attachements.file": ["can't be blank"],
+      "owners.current_address.street": ["can't be blank"],
+      "owners.current_address.city": ["can't be blank"],
+      "owners.current_address.state": ["can't be blank"],
+      "owners.current_address.postcode": ["can't be blank"]
+    }
+
+    assert_equal messages, @merchant_account_builder.errors.messages
   end
 
   should 'correctly validate dob' do
@@ -133,6 +140,15 @@ class StripeMerchantAccountBuilderTest < ActiveSupport::TestCase
           ]
         }
       ]
+    }
+  end
+
+  def address_configuration
+    {
+      street: { validation: { presence: true } },
+      city: { validation: { presence: true } },
+      state: { validation: { presence: true } },
+      postcode: { validation: { presence: true } }
     }
   end
 
