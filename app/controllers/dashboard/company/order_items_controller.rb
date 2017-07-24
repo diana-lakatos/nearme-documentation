@@ -16,7 +16,7 @@ class Dashboard::Company::OrderItemsController < Dashboard::Company::BaseControl
     if @order_item.total_amount.cents != params[:total].to_i
       flash[:error] = t('flash_messages.dashboard.order_items.recently_edited')
     else
-      if @order_item.charge_and_approve!
+      if @order_item.charge_and_approve
         flash[:notice] = t('flash_messages.dashboard.order_items.approved')
       else
         flash[:error] = t('flash_messages.dashboard.order_items.approve_failed')

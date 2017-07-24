@@ -11,10 +11,10 @@ class LineItem < ActiveRecord::Base
   belongs_to :user, -> { with_deleted }
   belongs_to :order, foreign_key: 'line_itemable_id'
 
-  monetize :net_price_cents, with_model_currency: :currency
-  monetize :gross_price_cents, with_model_currency: :currency
+  monetize :net_price_cents, with_model_currency: :currency, disable_validation: true
+  monetize :gross_price_cents, with_model_currency: :currency, disable_validation: true
   monetize :unit_price_cents, with_model_currency: :currency
-  monetize :total_price_cents, with_model_currency: :currency
+  monetize :total_price_cents, with_model_currency: :currency, disable_validation: true
   monetize :additional_tax_price_cents, with_model_currency: :currency
   monetize :included_tax_price_cents, with_model_currency: :currency
 
