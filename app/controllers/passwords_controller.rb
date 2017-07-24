@@ -6,6 +6,23 @@ class PasswordsController < Devise::PasswordsController
   before_action :redirect_if_logged_in, only: [:new], if: ->(_c) { request.xhr? }
   after_action :render_or_redirect_after_create, only: [:create]
 
+  def update
+    # We can't use Devise validatable as it would interfere with our own
+    # email and password validations
+    if params[:user][:password] == params[:user][:password_confirmation]
+      super
+    else
+      self.resource = User.find_by(
+        reset_password_token: Devise.token_generator.digest(
+          nil, :reset_password_token, resource_params[:reset_password_token]
+        )
+      )
+      self.resource.reset_password_token = resource_params[:reset_password_token]
+      flash[:error] = t('reset_password_form.password_confirmation_doesnt_match')
+      render :edit
+    end
+  end
+
   def create
     self.resource = resource_class.send_reset_password_instructions(resource_params)
     yield resource if block_given?
