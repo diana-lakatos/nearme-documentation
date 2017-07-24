@@ -11,7 +11,7 @@ class Order
 
     def create
       @last_order_item = @order.order_items.create!(order_item_attributes)
-      GeneratePaymentJob.perform_later(@last_order_item.starts_at.end_of_day, @last_order_item.class.name, @last_order_item.id)
+      GeneratePaymentJob.perform_later(@last_order_item.ends_at.end_of_day, @last_order_item.class.name, @last_order_item.id)
       @order.update_attributes!(generate_order_item_at: next_period_starts_at) if @order.is_recurring?
       @last_order_item
     end
@@ -36,7 +36,7 @@ class Order
     end
 
     def next_period_at(minute)
-      next_period_date.in_time_zone(@order.time_zone).change(hour: minute / 60, minute: minute % 60)
+      next_period_date.in_time_zone(@order.time_zone).change(hour:  minute / 60 % 24, minute: minute % 60) + (minute / 60 / 24).days
     end
 
     def next_period_date
