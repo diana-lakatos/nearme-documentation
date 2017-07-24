@@ -34,7 +34,7 @@ class SubmitForm
           when Transactable then [record.customizable]
           end
         when Order then [record.transactable]
-        when OrderItem then [record.order.transactable]
+        when RecurringBookingPeriod then [record.order.transactable]
         when CustomImage then
           case record.owner
           when UserProfile then record.owner.user

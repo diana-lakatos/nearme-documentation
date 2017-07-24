@@ -3,7 +3,7 @@ class PaymentSubscriptionForm < BaseForm
   class << self
     def decorate(configuration)
       Class.new(self) do
-        inject_dynamic_fields(configuration, whitelisted: [:payer_id, :payment_method_id, :credit_card_id, :bank_account_id, :payment_source_id, :payment_source_type, :chosen_credit_card_id])
+        inject_dynamic_fields(configuration, whitelisted: [:company_id, :payer_id, :payment_method_id, :credit_card_id, :bank_account_id, :payment_source_id, :payment_source_type, :chosen_credit_card_id])
 
         def credit_card_token=(token)
           model.payer = model.subscriber.creator
@@ -16,8 +16,8 @@ class PaymentSubscriptionForm < BaseForm
   end
 
   def save!(*args)
-    super
     model.process!
+    super
   end
 
   # @!attribute credit_card_token

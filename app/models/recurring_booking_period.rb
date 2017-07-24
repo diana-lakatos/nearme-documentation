@@ -21,6 +21,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
   scope :not_rejected, -> { where.not(state: 'rejected') }
 
   state_machine :state, initial: :pending do
+    event :charge_and_approve do transition [:rejected, :pending] => :approved; end
     event :approve do transition [:rejected, :pending] => :approved; end
     event :cancel_by_enquirer                   do transition all => :cancelled_by_enquirer; end
     event :cancel_by_enquirer_with_payment      do transition all => :cancelled_by_enquirer_with_payment; end
@@ -29,6 +30,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
 
     after_transition [:rejected, :pending] => :approved, do: :send_approve_alert
     after_transition pending: :rejected, do: :send_reject_alert
+    before_transition on: :charge_and_approve, do: :charge!
   end
 
   def skip_payment_authorization
@@ -63,14 +65,11 @@ class RecurringBookingPeriod < ActiveRecord::Base
     order.amount_calculator
   end
 
-  def charge_and_approve!
+  def charge!
     generate_payment!
-    if paid? && !approved?
-      approve!
-    else
-      errors.add(:base, I18n.t('order.order_items.already_approved')) if approved?
-      false
-    end
+    return true if  paid? && !approved?
+    errors.add(:base, I18n.t('order.order_items.already_approved')) if approved?
+    false
   end
 
   def cancelled_without_payment?
@@ -134,7 +133,7 @@ class RecurringBookingPeriod < ActiveRecord::Base
     return unless approve_at
     return if approve_at > Time.current
 
-    charge_and_approve!
+    charge_and_approve
   end
 
   def paid?
