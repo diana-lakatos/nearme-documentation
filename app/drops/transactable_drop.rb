@@ -127,9 +127,10 @@ class TransactableDrop < BaseDrop
            :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at,
            :attachments, :express_checkout_payment?, :overnight_booking?, :is_trusted?, :lowest_full_price, :slug, :attachments, :confirm_reservations,
            :to_key, :model_name, :customizations, :to_param, :hours_for_guest_to_confirm_payment, :availability_exceptions,
-           :action_free_booking?, :average_rating, :time_based_booking, :time_based_booking?, :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators,
+           :action_free_booking?, :average_rating, :time_based_booking, :time_based_booking?,
            :user_messages, :line_item_orders, :state, :created_at, :pending?, :completed?, :transactable_type_id, :tags,
-           :is_followed, :impressions_count, :deleted?, :formatted_address, :offer_action,
+           :transactable_collaborators, :collaborating_users, :approved_transactable_collaborators, :seek_collaborators,
+           :is_followed, :deleted?, :formatted_address, :offer_action,
            :enabled, to: :source
 
   # @!method action_price_per_unit

@@ -134,13 +134,44 @@ class ListingsController < ApplicationController
   end
 
   def redirect_if_no_access_granted
-    unless current_user && (current_user.can_manage_listing?(@listing) || @listing.transactable_collaborators.where(user: current_user).where.not(approved_by_owner_at: nil).exists?)
-      if current_user&.admin? || current_user&.instance_admins.present?
-        flash.now[:notice] = 'You are using administator account to view this project. <a href="/instance_admin/manage/orders">Back</a>'.html_safe
-      else
-        flash[:warning] = t('flash_messages.listings.no_longer_have_access')
-        redirect_to root_path
-      end
+    return true if ListingAccessDetailsPolicy.new(listing: @listing, user: current_user).allowed?
+
+    if current_user&.instance_admins.present?
+      flash.now[:warning] = 'You are using administator account to view this project. <a href="/instance_admin/manage/orders">Back</a>'.html_safe
+    else
+      flash[:warning] = t('flash_messages.listings.no_longer_have_access')
+      redirect_to root_path
+    end
+  end
+
+  class ListingAccessDetailsPolicy
+    def initialize(listing:, user:)
+      @user = user
+      @listing = listing
+    end
+
+    def allowed?
+      return unless logged?
+
+      can_manage_listing? || awaiting_approval_collaboratator? || public_listing?
+    end
+
+    private
+
+    def logged?
+      @user.present?
+    end
+
+    def can_manage_listing?
+      @user.can_manage_listing?(@listing)
+    end
+
+    def awaiting_approval_collaboratator?
+      @listing.transactable_collaborators.where(user: @user).where.not(approved_by_owner_at: nil).exists?
+    end
+
+    def public_listing?
+      @listing.pending? && @listing.properties&.visibility == 'open'
     end
   end
 
