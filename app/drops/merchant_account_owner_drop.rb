@@ -9,7 +9,7 @@ class MerchantAccountOwnerDrop < BaseDrop
   #   @return [string] personal_id_number of the merchant account
 
   delegate :date_format_readable, :personal_id_number, :address, :first_name, :last_name,
-           :dob_formated, to: :merchant_account_owner
+           :dob_formated, :attachements, to: :merchant_account_owner
 
   def initialize(merchant_account_owner)
     @merchant_account_owner = merchant_account_owner
