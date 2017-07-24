@@ -1,21 +1,31 @@
 - title t('sign_up_form.title')
 
-%section.user-session-form
-  %header
-    %h2= t 'sign_up_form.log_in_to', marketplace_name: platform_context.name
+- if params[:return_to] =~ /cancel-confirmation/
+  %section.user-session-form
+    .box-a
+      %h2 CONFIRMED
+      %p Your Keepsake Community Account has been canceled.
+      %p
+        If you have any questions, please contact the Keepsake Community team at
+        %a{href: 'mailto:KOCCommunity@hallmark.com'}KOCCommunity@hallmark.com
+        or contact Hallmark Consumer Care at 1-800-HALLMARK (1-800-425-5627).
 
-  = render 'authentications/services'
+- else
+  %section.user-session-form
+    %header
+      %h2= t 'sign_up_form.log_in_to', marketplace_name: platform_context.name
 
-  = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
+    = render 'authentications/services'
 
-    = f.input :email, :input_html => { :tabindex => '1', autofocus: '' }
+    = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
 
-    = f.input :password, placeholder: t('simple_form.placeholders.session.password'), :input_html => { :tabindex => '2' }
+      = f.input :email, :input_html => { :tabindex => '1', autofocus: '' }
 
-    .actions
-      = f.submit t('sign_up_form.buttons.log_in'), :tabindex => '3', class: 'btn'
+      = f.input :password, placeholder: t('simple_form.placeholders.session.password'), :input_html => { :tabindex => '2' }
 
-  %footer
-    .forgotten-password
-      = link_to t('sign_up_form.buttons.reset_password'), new_user_password_url(return_to: params[:return_to])
+      .actions
+        = f.submit t('sign_up_form.buttons.log_in'), :tabindex => '3', class: 'btn'
 
+    %footer
+      .forgotten-password
+        = link_to t('sign_up_form.buttons.reset_password'), new_user_password_url(return_to: params[:return_to])
