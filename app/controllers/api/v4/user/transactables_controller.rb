@@ -21,18 +21,14 @@ module Api
     def create
       SubmitForm.new(form_configuration: form_configuration,
                      form: transactable_form, params: form_params,
-                     current_user: current_user).tap do |submit_form|
-        submit_form.add_success_observer(SubmitForm::IndexInElastic.new)
-      end.call
+                     current_user: current_user).call
       respond(transactable_form, alert: false)
     end
 
     def update
       SubmitForm.new(form_configuration: form_configuration,
                      form: transactable_form, params: form_params,
-                     current_user: current_user).tap do |submit_form|
-        submit_form.add_success_observer(SubmitForm::IndexInElastic.new)
-      end.call
+                     current_user: current_user).call
       respond(transactable_form, alert: false)
     end
 
@@ -89,12 +85,6 @@ module Api
         prev: page > 1 ? api_transactables_url(query.merge(page: page - 1)) : nil,
         next: page < @searcher.total_pages ? api_transactables_url(query.merge(page: page + 1)) : nil
       }
-    end
-
-    def index_in_elastic_immediately(record)
-      return unless Rails.application.config.use_elastic_search
-
-      Elastic::Commands::InstantIndexRecord.new(record).call
     end
   end
 end

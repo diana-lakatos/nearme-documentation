@@ -8,7 +8,8 @@ class SubmitForm
     @success_observers = [
       SubmitForm::DataIntegrityCheck.new, # order is important :|
       SubmitForm::SendNotifications.new,
-      SubmitForm::SendWorkflowSteps.new
+      SubmitForm::SendWorkflowSteps.new,
+      SubmitForm::IndexInElastic.new
     ]
     @failure_observers = []
   end
