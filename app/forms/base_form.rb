@@ -6,7 +6,6 @@ class BaseForm < Reform::Form
     def inject_dynamic_fields(configuration, whitelisted: [])
       configuration.each do |field, options|
         next unless field_whitelisted(whitelisted, field)
-
         add_property(field, options)
         add_validation(field, options)
       end
