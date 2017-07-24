@@ -10,7 +10,6 @@ module PaypalExpressOrder
     PlatformContext.current.decorate.build_url_for_path("/orders/#{id}/express_checkout/cancel")
   end
 
-
   def setup_authorization_options
     {
       allow_guest_checkout: true,
@@ -31,7 +30,7 @@ module PaypalExpressOrder
     line_items.map do |i|
       {
         name: i.name.try(:strip),
-        description: i.respond_to?(:description) ? CustomSanitizer.new.strip_tags(i.description.to_s.strip) : '',
+        description: i.respond_to?(:description) ? CustomSanitizer.new({}).strip_tags(i.description.to_s.strip) : '',
         quantity: i.quantity.to_i,
         amount: i.gross_price_cents
       }
