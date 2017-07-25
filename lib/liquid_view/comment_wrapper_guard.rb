@@ -3,6 +3,7 @@ class LiquidView
   class CommentWrapperGuard
     class << self
       def authorized?(context)
+        return false unless context
         new(context).authorized?
       end
     end
