@@ -280,7 +280,9 @@ module Liquid
       # @param transactable [TransactableDrop] Transactable object
       def find_collaborator(user, transactable)
         return false if user.try(:id).blank?
-        transactable.transactable_collaborators.where(user: user.id).first
+        return false if user['id'].blank?
+
+        TransactableCollaborator.find_by(transactable_id: transactable['id'], user_id: user['id'])
       end
 
       # @return [Array<Integer>] array of ids of the TransactableCollaborator objects defining collaborations of the
@@ -311,7 +313,7 @@ module Liquid
       # @param user [UserDrop] user whose orders we want to show
       # @param transactable [TransactableDrop] orders are for this transactable
       def get_enquirer_draft_orders(user, transactable)
-        transactable.line_item_orders.where(user_id: user.id).order('created_at ASC')
+        LineItem::Order.where(transactable_id: transactable['id'], user_id: user['id']).order('created_at ASC')
       end
 
       # @return [Array<OrderDrop>] array of order objects containing orders placed by the user given
