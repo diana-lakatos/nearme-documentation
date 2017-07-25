@@ -1,8 +1,15 @@
 # frozen_string_literal: true
+
 require 'thor'
 require 'nearme'
 require 'slack-notifier'
 require_relative '../../../../../lib/raygun_deploy_notifier.rb'
+require_relative '../../../../../lib/git_helper.rb'
+require_relative '../../../../../lib/jira_wrapper/releaser.rb'
+require_relative '../../../../../lib/jira_wrapper/client.rb'
+require_relative '../../../../../lib/jira_wrapper/project.rb'
+require_relative '../../../../../lib/jira_wrapper/issue.rb'
+
 
 module NearMe
   class CLI < Thor
