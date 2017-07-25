@@ -14,7 +14,7 @@ class NotificationJob < Job
   def perform
     @notification = @notification_type.constantize.find(@notification_id)
     @form = FormConfiguration.find(@form_configuration_id)
-                             .build(@model_class.find(@model_id))
+                             .build(@model_class.with_deleted.find(@model_id))
                              .tap { |f| f.validate(@params) }
     Notification::SendNotification.call(notification: @notification, form: @form, params: @params)
   end
