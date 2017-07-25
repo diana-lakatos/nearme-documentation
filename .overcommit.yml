@@ -58,7 +58,7 @@ CommitMsg:
   MessageFormat:
     enabled: true
     description: 'Check commit message matches expected pattern'
-    pattern: '\A[A-Z]{2,4}[-]\d{2,5}(.+)'
+    pattern: '\A[A-Z]{2,4}[-]\d{1,5}(.+)'
     expected_pattern_message: '<Project>-<Number> <Commit Message Description>'
     sample_message: 'NM-1234 Sample message'
 
