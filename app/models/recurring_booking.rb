@@ -119,6 +119,11 @@ class RecurringBooking < Order
     end
   end
 
+  def can_process?
+    return check_overbooking unless transactable.confirm_reservations?
+    true
+  end
+
   def cancel
     update_attribute :ends_at, paid_until
     if cancelled_by_guest?
