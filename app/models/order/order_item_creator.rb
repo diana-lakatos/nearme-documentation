@@ -28,15 +28,15 @@ class Order
     end
 
     def next_period_starts_at
-      next_period_at(@period.start_minute)
+      next_period_at(Minute.new(@period.start_minute))
     end
 
     def next_period_ends_at
-      next_period_at(@period.end_minute)
+      next_period_at(Minute.new(@period.end_minute))
     end
 
     def next_period_at(minute)
-      next_period_date.in_time_zone(@order.time_zone).change(hour:  minute / 60 % 24, minute: minute % 60) + (minute / 60 / 24).days
+      next_period_date.in_time_zone(@order.time_zone).change(hour: minute.to_day_hours, minute: minute.to_hour_minutes) + minute.day_offset.days
     end
 
     def next_period_date
