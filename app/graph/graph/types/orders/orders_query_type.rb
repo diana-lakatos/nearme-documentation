@@ -5,6 +5,7 @@ module Graph
       OrdersQueryType = GraphQL::ObjectType.define do
         connection :orders, Graph::Types::RelayConnection.build(Types::Orders::Order) do
           argument :user_id, types.ID
+          argument :transactable_ids, types[types.ID]
           argument :creator_id, types.ID
           argument :archived, types.Boolean
           argument :state, types[Types::Orders::OrderStateEnum]

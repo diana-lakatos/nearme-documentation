@@ -22,6 +22,10 @@ module Graph
         relation.where(user_id: id)
       end
 
+      def resolve_by_transactable_ids(relation, id)
+        relation.where(transactable_id: id)
+      end
+
       def resolve_by_archived(relation, archived)
         if archived
           relation.where.not(archived_at: nil)
