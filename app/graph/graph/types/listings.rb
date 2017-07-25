@@ -42,7 +42,7 @@ module Graph
 
         field :tag_list, types[Graph::Types::Tag]
 
-        field :photos, types[Graph::Types::EsImage]
+        field :avatar, Graph::Types::EsImage
         field :current_address, Types::Address # , deprecation_reason: 'Use custom-address'
         field :blog, Graph::Types::Blog
 
