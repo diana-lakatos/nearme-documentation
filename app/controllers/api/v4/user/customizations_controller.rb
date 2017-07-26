@@ -14,25 +14,15 @@ module Api
         end
 
         def update
-          SubmitForm.new(
-            form_configuration: form_configuration,
-            form: customization_form,
-            params: form_params,
-            current_user: current_user
-          ).call
-          respond(customization_form)
+          command = CustomizationUpdate.new(current_user: current_user, id: params[:id], params: form_params, form_configuration_id: form_configuration.id)
+          command.call
+          respond(command.form)
         end
 
         def destroy
-          SubmitForm.new(
-            form_configuration: form_configuration,
-            form: customization_form,
-            params: form_params,
-            current_user: current_user
-          ).tap do |submit_form|
-            submit_form.add_success_observer(SubmitForm::DestroyModel.new)
-          end.call
-          respond(customization_form)
+          command = CustomizationDelete.new(current_user: current_user, id: params[:id], params: form_params, form_configuration_id: form_configuration.id)
+          command.call
+          respond(command.form)
         end
 
         protected
@@ -42,11 +32,7 @@ module Api
         end
 
         def customization
-          @customization ||= if params[:id]
-                               Customization.find(params[:id])
-                             else
-                               custom_model_type.customizations.new(user: current_user)
-                             end
+          @customization ||= custom_model_type.customizations.new(user: current_user)
         end
 
         def customization_form

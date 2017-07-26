@@ -1170,6 +1170,7 @@ ActiveRecord::Schema.define(version: 20170725091003) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "return_to"
+    t.text     "callback_actions"
   end
 
   add_index "form_configurations", ["instance_id"], name: "index_form_configurations_on_instance_id", using: :btree

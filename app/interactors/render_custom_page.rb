@@ -70,6 +70,11 @@ class RenderCustomPage
         @controller.headers['Content-Type'] = 'application/json'
         @controller.render 'pages/show', layout: false
       end
+
+      format.xml do
+        @controller.headers['Content-Type'] = 'text/xml'
+        @controller.render 'pages/show', layout: false
+      end
     end
   end
 end

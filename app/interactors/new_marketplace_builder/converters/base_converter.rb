@@ -64,7 +64,7 @@ module NewMarketplaceBuilder
             end if converters.present?
           rescue StandardError => error
             puts '########################################################'
-            puts "Tried to convert: #{self.class} with #{model.errors.messages}"
+            puts "Tried to convert: #{self.class} with #{model.errors.messages}. Error #{error}: #{error.message}"
             raise ConverterError.new error, messages: model.errors.messages, model: model_hash
           end
         end

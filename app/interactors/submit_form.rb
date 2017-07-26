@@ -9,7 +9,8 @@ class SubmitForm
       SubmitForm::DataIntegrityCheck.new, # order is important :|
       SubmitForm::SendNotifications.new,
       SubmitForm::SendWorkflowSteps.new,
-      SubmitForm::IndexInElastic.new
+      SubmitForm::IndexInElastic.new,
+      SubmitForm::CustomCallbackActions.new
     ]
     @failure_observers = []
   end

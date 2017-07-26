@@ -3,7 +3,7 @@ module NewMarketplaceBuilder
   module Converters
     class FormConfigurationConverter < BaseConverter
       primary_key :name
-      properties :name, :base_form, :configuration
+      properties :name, :base_form, :configuration, :callback_actions
       property :body
 
       %i(workflow_steps authorization_policies email_notifications

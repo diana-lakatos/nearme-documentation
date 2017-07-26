@@ -70,7 +70,7 @@ class MarketplaceReportTest < ActiveSupport::TestCase
 
     csv_array = CSV.parse(data)
 
-    assert_equal 'Second user', csv_array[1][56]
+    assert_equal 'Second user', csv_array[1][41]
     assert_equal 2, csv_array.length
 
     marketplace_report.remove_zip_file!

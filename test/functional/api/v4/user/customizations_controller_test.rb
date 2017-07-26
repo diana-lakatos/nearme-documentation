@@ -40,6 +40,17 @@ module Api
             end
             assert c.reload.deleted?
           end
+
+          should 'update customization object' do
+            assert_difference 'Customization.count' do
+              post :create, { custom_model_type_id: @model_type.id, form_configuration_id: form_configuration.id, form: { properties: { model_attr: 'hello' } } }
+            end
+            c = Customization.last
+
+            put :update, form_configuration_id: form_configuration.id, id: c.id, form: { properties: { model_attr: 'bar' } }
+
+            assert_response :redirect
+          end
         end
 
         protected

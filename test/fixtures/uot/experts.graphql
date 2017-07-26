@@ -56,9 +56,8 @@ query search_experts(
       slug
       name
 
-      photos {
-        thumb: url(version: "thumb")
-        medium: url(version: "medium")
+      avatar {
+        url: url(version: "big")
       }
 
       address: current_address {

@@ -23,6 +23,7 @@ namespace :after_deploy do
       ScheduleSitemapsRefresh.schedule!
       ScheduleLongtailApiParse.schedule!
       ScheduleImportHallmarkUsers.schedule!
+      ScheduleDevmeshExportDataUsers.schedule!
     end
 
     puts 'Creating default locales'

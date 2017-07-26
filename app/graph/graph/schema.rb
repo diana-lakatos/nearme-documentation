@@ -2,6 +2,7 @@
 module Graph
   Schema = GraphQL::Schema.define do
     query Graph::Types::RootQuery
+    mutation Graph::Mutations::RootMutation
     resolve_type lambda { |record, _ctx|
       case record
       when ::Comment

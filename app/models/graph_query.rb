@@ -38,6 +38,10 @@ class GraphQuery < ActiveRecord::Base
     "{% query_graph '#{name}', result_name: g #{tag_params_clause} %}"
   end
 
+  def self.exists_by_name?(name)
+    where(name: name).exists?
+  end
+
   private
 
   def variables

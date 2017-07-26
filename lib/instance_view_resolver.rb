@@ -6,6 +6,10 @@ class InstanceViewResolver < DbViewResolver
 
   def find_templates(name, prefix, partial, details, _outside_app_allowed = false)
     ActiveRecord::Base.logger.silence do
+      # FIXME: we want to be able to use partials in xml pages
+      # the format abstraction is hidden there, so this is a hack
+      # to disregard it
+      details[:formats] << :html if details[:formats].include?(:xml)
       views = _find_templates name, prefix, partial, details
 
       # Fallback to primary

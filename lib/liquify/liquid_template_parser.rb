@@ -43,6 +43,7 @@ module Liquify
       return if !liquid || liquid.errors.empty?
 
       render_liquid(liquid, data, RENDER_WITH_RAISE)
+      return
     rescue StandardError => e
       log_error(e.message, source)
     end
