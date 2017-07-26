@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class ScheduleDevmeshExportDataUsers
+class ScheduleDevmeshExportData
   include Delayed::RecurringJob
   run_every 1.day
   run_at '3:00am'
