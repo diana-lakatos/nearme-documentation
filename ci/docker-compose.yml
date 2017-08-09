@@ -1,0 +1,8 @@
+version: "2"
+services:
+  documentation:
+    tty: true
+    stdin_open: true
+    build: ..
+    ports:
+      - "8000:8000"

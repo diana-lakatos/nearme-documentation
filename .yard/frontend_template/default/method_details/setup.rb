@@ -1,5 +1,3 @@
 # frozen_string_literal: true
-def init
-  super
-  sections.first.delete(:source)
+def source
 end

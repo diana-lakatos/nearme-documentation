@@ -1,0 +1,8 @@
+log/
+node_modules/
+tmp/
+public/assets/
+public/instances/
+public/uploads/
+config/database.yml
+config/elasticsearch.yml

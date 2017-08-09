@@ -562,8 +562,8 @@ module Liquid
       end
 
       # @return [Integer]
-      # @param query [param] value to be coersed to posivite integer
-      # @param arr [default] default value in case param is not valid positive integer
+      # @param param [Any] value to be coersed to posivite integer
+      # @param default [Integer] default value in case param is not valid positive integer
 
       def to_positive_integer(param, default)
         CoercionHelpers::SearchPaginationParams.to_positive_integer(param, default)

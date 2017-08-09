@@ -2,7 +2,9 @@
 def init
   is_liquid_tag = object.file.match(/^app\/liquid_tags\/.+?\.rb$/)
   is_form = object.file.match(/^app\/forms\/.+?\.rb$/)
-  return if !object.path.match(/Drop$/) && !is_liquid_tag && !is_form
+
+  return unless object.path.match(/Drop$/) || is_liquid_tag || is_form
+
   super
   if is_liquid_tag
     sections.delete_if do |section|

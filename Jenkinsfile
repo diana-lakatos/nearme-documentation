@@ -6,10 +6,7 @@ pipeline {
         stage('Build') {
             steps {
                 checkout scm
-
-                sh "gem install yard --no-ri --no-rdoc && \
-                    export RUBY_THREAD_VM_STACK_SIZE=5000000 && \
-                    yard -e lib/yard_frontend_customizations.rb -p .yard/frontend_template/ --hide-tag todo --markup markdown 'lib/liquid/**/*.rb' 'app/liquid_tags/*.rb' 'app/forms/**/*.rb'"
+                sh "docker-compose -f ci/docker-compose.yml build"
             }
         }
 
