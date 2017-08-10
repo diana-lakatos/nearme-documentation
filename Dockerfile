@@ -20,9 +20,9 @@ ADD lib/liquid/filters/platform_filters.rb lib/liquid/filters/platform_filters.r
 ADD app/liquid_tags/ app/liquid_tags/
 ADD app/forms/ app/forms/
 
-RUN yard --one-file -p .yard/frontend_template/ -o doc/liquid/ --hide-tag todo --markup markdown lib/liquid/**/*
-RUN yard --one-file -p .yard/frontend_template/ -o doc/liquid_tags/ --hide-tag todo --markup markdown app/liquid_tags/**
-RUN yard --one-file -p .yard/frontend_template/ -o doc/forms/ --hide-tag todo --markup markdown app/forms/**
+RUN yard --one-file -p .yard/frontend_template/ -o doc/pages/reference/liquid-filters/ --hide-tag todo --markup markdown lib/liquid/**/*
+RUN yard --one-file -p .yard/frontend_template/ -o doc/pages/reference/liquid-tags/ --hide-tag todo --markup markdown app/liquid_tags/**
+RUN yard --one-file -p .yard/frontend_template/ -o doc/pages/reference/form-configurations/ --hide-tag todo --markup markdown app/forms/**
 
 EXPOSE 8000
 
