@@ -1,0 +1,6 @@
+task default: %w[build]
+
+task :build do
+  require 'graphql-docs'
+  GraphQLDocs.build(filename: '../../desksnearme/app/graph/graph/schema.graphql')
+end

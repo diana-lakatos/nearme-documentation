@@ -31,3 +31,8 @@ Configuration is located in `.stylelintrc`. For rules description go to [Styleli
 There are several checks done using [HTML Proofer](https://github.com/gjtorikian/html-proofer). Most notable one is the broken links check, which will point out any broken links that may result from changes in URL structure or removing any sites.
 
     npm run lint:html
+    
+## GraphQL documentation
+
+    cd graphql-docs/
+    rake build
