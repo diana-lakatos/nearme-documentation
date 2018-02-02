@@ -1,0 +1,111 @@
+---
+title: PlatformOS Documentation Style Guide
+permalink: /style-guide/documentation-style-guide
+---
+Thank you for contributing to our documentation! 
+
+To keep the tone and style of our documentation consistent, we created this style guide that contains organization, writing, style, and image guidelines for both the user and developer documentation of the PlatformOS marketplace solution. 
+
+The style guide contains writing guidelines for: 
+* Technical content (e.g. language, tone, etc.) 
+* Each content type in our documentation (e.g. tutorials, release notes, etc.) and corresponding documentation templates (where applicable) 
+
+#Writing guidelines
+
+##Audience
+We have identified the following proto-personas using our product and visiting our documentation site. 
+
+Proto-personas are descriptions for the types of users that will be interacting with our documentation site. The user personas help us share a specific, consistent understanding of various audience groups. Proposed solutions can be guided by how well they meet the needs of individual user personas. Features can be prioritised based on how well they address the needs of one or more personas. 
+
+[insert images about personas]
+
+Address these personas when writing documentation. 
+
+##Format
+Use Markdown formatting for all documentation content (except auto-generated API reference documentation). Wrap inline snippets of code with `. 
+
+[Markdown cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+
+##Language, tone and style 
+
+*Language*
+Use U.S. English according to the Chicago Manual of Style.  
+
+*Present tense*
+Use present tense and try to only use future tense when you need to emphasize that something occurs later, from the users' perspective.
+
+Example:
+* Use: PlatformOS prompts you to save your changes.  
+* Avoid: PlatformOS will prompt you to save your changes.   
+
+*Second person*
+Talk to the users in the second person, and address the user as “you”. Avoid the use of gender-specific, third-person pronouns such as he, she, his, and hers. 
+Exception: Use the first-person singular pronoun “I” in the question part of FAQs. 
+
+Example: 
+* Use: Click ‘Save’ to save your changes. 
+* Avoid: The user has to click ‘Save’ to save his changes. 
+
+*Active voice*
+Write in active voice. Active voice makes the performer of the action (usually the user) the subject of the sentence. * Active-voice sentences are more direct and easier to understand than passive-voice sentences. 
+
+Example:
+* Use: Click the ‘OK’ button to save your changes. 
+* Avoid: Changes will be saved after clicking the OK button. 
+
+*Capitalization*
+Title case topic titles (each major word is uppercase). Sentence case headings (only the initial word is uppercase). Don’t use terminal punctuation in titles and headings unless a question mark is required.  
+
+Example:
+* Use: (title) Creating Your PlatformOS Marketplace
+* Avoid: (title) Creating your PlatformOS marketplace
+
+*Punctuation*
+Use the serial comma (the comma preceding the “and” before the last element in a list) except in titles, headlines and subheads.
+
+Example: 
+* Use: List of all APIs, Liquid filters, and GraphQL schema
+* Avoid: List of all APIs, Liquid filters and GraphQL schema
+
+*Lists*
+Use numbered lists for sequential task steps, and bullet lists for sets of options, notes, and the like. Only use a list if it has at least two items in it. 
+
+Precede an ordered or bulleted list with a sentence or phrase ending in a colon. 
+
+Begin each item with a capital letter. Complete sentences in a list should have a period at the end. If a line item is not a complete sentence, do not use a period. If you are breaking a sentence into a list, periods aren't necessary.
+
+Be consistent, if possible, when writing the items in the list. Make them "parallel." E.g. start each item with a verb in the same tense and form. 
+
+##Screenshots, images
+
+Images should be JPG or PNG files. 
+
+[add information about uploading and linking to images]
+
+#Style guides for content types
+
+##API reference documentation
+
+##Documentation overview page
+
+##Quickstart guides 
+
+Quickstart guides target the newcomer audience segment, and play an important role in the adoption of our product. Because newcomers starting to work with PlatformOS and implement our APIs face many obstacles (steep learning curve, unfamiliar structure, domain, and ideas behind the API, difficult to figure out where to start), quickstart guides should make the learning process easier for them. 
+
+Many users learn best by doing, so a quickstart guide should include steps that walk the user through the process of completing a task. The guide should be short and simple, and list the minimum number of steps required to complete a meaningful task (e.g., creating a PlatformOS marketplace).
+
+Quickstart guides usually have to include information about the domain and introduce domain-related expressions and methods in more detail. It’s safest to assume that the user has never before heard of our service. 
+ 
+*[Quickstart guide template]()* 
+
+##Tutorials
+
+##How-to guides
+
+##Release notes 
+
+
+
+
+
+
