@@ -11,7 +11,7 @@ Creating a marketplace is a two-step process:
 ## Step 1: Get access to the marketplace platform
 
 Send us an email, or call us to register an account for you on our Channel Partner Portal. 
-* Email: [help@marketplace-platform.com](mailto:help@marketplace-platform.com) 
+* Email: [to be added]() 
 * Call: [+64 1337 128 MPP](tel:+641337128MPP)
 
 Once registered, enter your email address on our [Channel Partner Portal](http://ec2-52-37-196-54.us-west-2.compute.amazonaws.com/) to access the PlatformOS marketplace platform. 
