@@ -141,7 +141,7 @@ Use screenshots to:
 Don't use screenshots to show:
 * Code (use Markdown code examples instead) 
 * Example server response (use Markdown code examples instead)
-* Form configuration view [to be added: what contributors should use instead]
+* Form configuration view (use Markdown code examples instead)
 * Table with parameters description (use Markdown table instead)
 
 [to be added: information about uploading and linking to images]
