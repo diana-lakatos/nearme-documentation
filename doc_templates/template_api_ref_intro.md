@@ -4,7 +4,7 @@ permalink: [link, e.g. /apis/api1_introduction]
 ---
 Welcome to the [API name] documentation!
 
-The [API name] [API type, e.g. REST] A_intróoPI allows you to [describe what the API does + test mode, live mode, what you need to get started, e.g. API key, etc.].
+The [API name] [API type, e.g. REST] API allows you to [describe what the API does + test mode, live mode, what you need to get started, e.g. API key, etc.].
  
 We send information on new additions and changes to our API to our Channel Partner Mailing List. Be sure to [subscribe]() to stay informed.
  
